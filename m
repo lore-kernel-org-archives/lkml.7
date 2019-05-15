@@ -2,243 +2,106 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E29C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BD4C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2622E20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:05:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HBjxddWr"
+	by mail.kernel.org (Postfix) with ESMTP id 22C5520843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfEOIFJ (ORCPT
+        id S1726495AbfEOIFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 04:05:09 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:42213 "EHLO
+        Wed, 15 May 2019 04:05:38 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:39781 "EHLO
         mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfEOIFI (ORCPT
+        with ESMTP id S1725876AbfEOIFh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 04:05:08 -0400
-Received: by mail-qk1-f195.google.com with SMTP id d4so918274qkc.9
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 01:05:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/OwKq9p84i2/xGC4AlB0OPPUgteXA2DpsLtmyrQVPow=;
-        b=HBjxddWrM72GTH03FudyKlFjf0EAc2kmqvATogHYekVnzn0iSya43TiMTlu3bvk6Vf
-         zGBffYEogLm4LTefEWgwBwijCCoq7Oy63+lxEOj4opvTrzfXBXyEZcVav/8+PPWAkzc8
-         8yginRXIX4Nm7quRzPYxd8VB0WH1TI5XoYM/I=
+        Wed, 15 May 2019 04:05:37 -0400
+Received: by mail-qk1-f195.google.com with SMTP id z128so931249qkb.6;
+        Wed, 15 May 2019 01:05:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/OwKq9p84i2/xGC4AlB0OPPUgteXA2DpsLtmyrQVPow=;
-        b=f84hJDZ8kKPINjYRhp+fPTP1OdFs5s0B7/qFXWhDtJNE4EV1euCdjgzL3+59NGdvZd
-         Qeh7nR+B86YeSrNBPWdfzG1ITJi7n57TdUKFA84QTzgPmjDimClr5ENFr1LKEIu9ccS7
-         uX9do0UrGKxeftdGzwVrnUDRUN5d1k/meBEzuddCJrwiFkDIcHp+SaTlzkfRF+I3vXDE
-         4ukVXcUSGmI2GTswOuSZXEJ/vTbLW1Gk0PxZkZL/u62+jM+ieX9QOy7GewuY18Sv64c/
-         XCF7hUBEkNz4L04ZDWVeGxE1zNfTdg9fk2RJyCjJhh/ROZ+HuVhB19Nk69nRPHaBCeIg
-         KZdw==
-X-Gm-Message-State: APjAAAUV5oWQeSl6d2nnMYFBexRLXBLIPkKzMwfWIy76dW0SMNJiE+ZT
-        YKPTNWHDvjpcSAHrRXfgMkmSezFkavA8acn5u9wcIg==
-X-Google-Smtp-Source: APXvYqy0B8Rp5XpugkmB7Yzu6NldADhm4mke3NQmQY+5OtcMUsYVEAs74skOAaj7/SDzGYHpzEqIcJqpr3CnPsfaZTM=
-X-Received: by 2002:a37:6394:: with SMTP id x142mr32548216qkb.323.1557907506787;
- Wed, 15 May 2019 01:05:06 -0700 (PDT)
+        bh=Q+ccq2l1YBXRacKh6NL0gv9RFQ3XL6hLCYeRFYOlzPA=;
+        b=UkS/ONOvFGrWAFYD7mnzpauai+AHYBQQNKgOY6g1o8HWGrHG/GAxTmksYfT4sWpuCv
+         iUn6l9lORkUYBNkn2uPo5Yq8LnHw+Mbm2Ynpi4SELKCj/YyTlAoVa3wWlg1vN2IBQ+29
+         4zqKXtDQES5LnLIfV1k4eE4Siq50D7iXV7kDzG8CzGk95OwkQMlLPls6XT/zIJGjsM7w
+         x46DkBZU8V7qXP/CqHrD5meO8RK1l+GWc6IjjDdjNTAwRre/AFg94GLbFM1Nflxf3+4Y
+         CtmlCwpeZuzoXEoh+h8drBZTwvgwM7XjBMk9t0ITcf9cwNSMEHM6abpIdX7SXDysDFpp
+         yr0w==
+X-Gm-Message-State: APjAAAWoYwZlGzDI+cTHGvfiGrPDuYfYHZyEtDH2cF27ZfaBBmkReu0R
+        9wUC+qJw+5U0T28iVvsHe5CRu9DXzeIstOagVCs=
+X-Google-Smtp-Source: APXvYqyIH5XViMS1a+4nEhLjKpZlbMQT/F6wM51bbNHL491ybxO9CDxjXoTFt4avIv9Jz3PVxDBDwzIn6dZ25APRqtI=
+X-Received: by 2002:a37:c441:: with SMTP id h1mr5276612qkm.291.1557907536423;
+ Wed, 15 May 2019 01:05:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190429035515.73611-1-drinkcat@chromium.org> <20190429035515.73611-3-drinkcat@chromium.org>
- <155778659317.14659.136626364818483852@swboyd.mtv.corp.google.com>
- <CANMq1KBMd7eR3dP=V9gJ6G4OgE6DsXad_gzvuNJ25_pee4+6eg@mail.gmail.com> <155786487644.14659.17142525593824613967@swboyd.mtv.corp.google.com>
-In-Reply-To: <155786487644.14659.17142525593824613967@swboyd.mtv.corp.google.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 15 May 2019 16:04:55 +0800
-Message-ID: <CANMq1KCNzn-5sYJZGivUedsNaQfVW_MjgDZn27W6sz8Fk3beNA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: mediatek: Update cur_mask in mask/mask ops
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-gpio@vger.kernel.org,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
-        Evan Green <evgreen@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>
+References: <20190515072747.39941-1-xiaowei.bao@nxp.com> <20190515072747.39941-2-xiaowei.bao@nxp.com>
+In-Reply-To: <20190515072747.39941-2-xiaowei.bao@nxp.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 15 May 2019 10:05:19 +0200
+Message-ID: <CAK8P3a3AXRp_v_7hkoJA28tUCiSh1eYzbk4Q4h29OqL6y-KL8A@mail.gmail.com>
+Subject: Re: [PATCH 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        Kishon <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        gregkh <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 4:14 AM Stephen Boyd <swboyd@chromium.org> wrote:
+On Wed, May 15, 2019 at 9:36 AM Xiaowei Bao <xiaowei.bao@nxp.com> wrote:
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> ---
+>  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   52 ++++++++++++++++++++++++
+>  1 files changed, 52 insertions(+), 0 deletions(-)
 >
-> Quoting Nicolas Boichat (2019-05-13 18:37:58)
-> > On Tue, May 14, 2019 at 6:29 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> > >
-> > > Quoting Nicolas Boichat (2019-04-28 20:55:15)
-> > > > During suspend/resume, mtk_eint_mask may be called while
-> > > > wake_mask is active. For example, this happens if a wake-source
-> > > > with an active interrupt handler wakes the system:
-> > > > irq/pm.c:irq_pm_check_wakeup would disable the interrupt, so
-> > > > that it can be handled later on in the resume flow.
-> > > >
-> > > > However, this may happen before mtk_eint_do_resume is called:
-> > > > in this case, wake_mask is loaded, and cur_mask is restored
-> > > > from an older copy, re-enabling the interrupt, and causing
-> > > > an interrupt storm (especially for level interrupts).
-> > > >
-> > > > Instead, we just record mask/unmask changes in cur_mask. This
-> > > > also avoids the need to read the current mask in eint_do_suspend,
-> > > > and we can remove mtk_eint_chip_read_mask function.
-> > > >
-> > > > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
-> > >
-> > > It looks an awful lot like you should just use IRQCHIP_MASK_ON_SUSPEND
-> > > here. Isn't that what's happening? All non-wake irqs should be masked at
-> > > the hardware level so they can't cause a wakeup during suspend and on
-> > > resume they can be unmasked?
-> >
-> > No, this is for an line that has both wake and interrupt enabled. To
-> > reword the commit message above:
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> index b045812..50b579b 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+> @@ -398,6 +398,58 @@
+>                         status = "disabled";
+>                 };
 >
-> Is my understanding correct that there isn't a different "wake up"
-> register that can be written to cause a GPIO to be configured to wake
-> the system from suspend? The only way to do so is to leave the GPIO
-> unmasked in the hardware by having EINT_EN[irq] = 1? And thus any
-> interrupts that we don't want to wake us up during suspend should be
-> masked in the hardware?
+> +               pcie@3400000 {
+> +                       compatible = "fsl,ls1028a-pcie";
+> +                       reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
+> +                              0x80 0x00000000 0x0 0x00002000>; /* configuration space */
+> +                       reg-names = "regs", "config";
+> +                       interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
+> +                                    <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
+> +                       interrupt-names = "pme", "aer";
+> +                       #address-cells = <3>;
+> +                       #size-cells = <2>;
+> +                       device_type = "pci";
+> +                       dma-coherent;
+> +                       num-lanes = <4>;
+> +                       bus-range = <0x0 0xff>;
+> +                       ranges = <0x81000000 0x0 0x00000000 0x80 0x00010000 0x0 0x00010000   /* downstream I/O */
+> +                                 0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
 
-Yes, that's my understanding as well.
+Are you sure there is no support for 64-bit BARs or prefetchable memory?
 
-And then, what this driver does is to emulate the behaviour of a
-controller that would actually have separate irq and wake enable
-registers.
+Is this a hardware bug, or something that can be fixed in firmware?
 
-> If that's true, the code here that's trying to keep track of enabled
-> irqs and wakeup enabled irqs can be replaced with the irqchip flag so
-> that wakeup irqs are not masked while non-wakeups are masked.
-
-Correct, but with the caveat that I don't see anything that definitely
-requires an interrupt to be enabled to be a wake source. See below...
-
->
-> >  1. cur_mask[irq] = 1; wake_mask[irq] = 1; EINT_EN[irq] = 1 (interrupt
-> > enabled at hardware level)
-> >  2. System suspends, resumes due to that line (at this stage EINT_HW
-> > == wake_mask)
-> >  3. irq_pm_check_wakeup is called, and disables the interrupt =>
-> > EINT_EN[irq] = 0, but we still have cur_mask[irq] = 1
-> >  4. mtk_eint_do_resume is called, and restores EINT_EN = cur_mask, so
-> > it reenables EINT_EN[irq] = 1 => interrupt storm.
-> >
-> > This patch fixes the issue in step 3. So that the interrupt can be
-> > re-enabled properly later on, sometimes after mtk_eint_do_resume, when
-> > the driver is ready to handle it.
->
-> Right, we'd rather not see irqchip drivers working around the genirq
-> layer to do these things like tracking cur_mask and wake_mask. That
-> leads to subtle bugs and makes the driver maintain state across the
-> irqchip callbacks and system suspend/resume.
->
-> >
-> > Also, IRQCHIP_MASK_ON_SUSPEND does not handle lines that are enabled
-> > as a wake source, but without interrupt enabled (e.g. cros_ec driver
-> > does that), which we do want to support.
->
-> Hmm. I thought that even if the irq is disabled by a driver, that would
-> be a lazy disable so it isn't really masked in the hardware. Then if an
-> interrupt comes in during suspend on a wake configured irq line, the
-> hardware will have left it unmasked because IRQCHIP_MASK_ON_SUSPEND in
-> combination with lazy disable would mean that the line is left unmasked
-> (ignoring whatever this mediatek driver is doing to mask and unmask in
-> PM hooks).
-
-At the very least, that's not what happens with this system. The
-interrupt is definitely not kept enabled in suspend, and the system
-would not wake from an EC interrupt. (see also this series, BTW:
-https://patchwork.kernel.org/cover/10921121/).
-
-> Just reading Documentation/power/suspend-and-interrupts.txt I'm led to
-> believe that the cros_ec driver shouldn't call disable_irq() on the
-> interrupt if it wants to wakeup from it:
->
-> "Calling enable_irq_wake() causes suspend_device_irqs() to treat the
-> given IRQ in a special way.  Namely, the IRQ remains enabled, by on the
-> first interrupt it will be disabled, marked as pending and "suspended"
-> so that it will be re-enabled by resume_device_irqs() during the
-> subsequent system resume.  Also the PM core is notified about the event
-> which causes the system suspend in progress to be aborted (that doesn't
-> have to happen immediately, but at one of the points where the suspend
-> thread looks for pending wakeup events)."
-
-I think this describes the behaviour when you keep both enabled.
-
-> I suppose the problem is an irq line disabled in hardware that has
-> wakeup armed on it? Is this even valid? Shouldn't an irq be enabled for
-> wakeup to work?
-
-I couldn't really find a definite answer, but there are a bunch of
-examples of other drivers in the kernel:
- - drivers/extcon/extcon-usb-gpio.c:usb_extcon_suspend
- - drivers/hid/i2c-hid/i2c-hid.c:i2c_hid_suspend
- - drivers/mfd/max77843.c:max77843_suspend
-(not exhaustive, this is quite hard to grep for...)
-
-> We could immediately unmask those lines in the hardware when the
-> set_wake() callback is called. That way the genirq layer can use the
-> driver to do what it wants with the hardware and the driver can make
-> sure that set_wake() will always cause the wakeup interrupt to be
-> delivered to genirq even when software has disabled it.
->
-> But I think that there might be a problem with how genirq understands
-> the masked state of a line when the wakeup implementation conflates
-> masked state with wakeup armed state. Consider this call-flow:
->
->         irq masked in hardware, IRQD_IRQ_MASKED is set
->         enable_irq_wake()
->           unmask_irq in hardware
->         IRQD_WAKEUP_ARMED is set
->         <suspend and wakeup from irq>
->         handle_level_irq()
->           mask_ack_irq()
->             mask_irq()
->               if (irqd_irq_masked()) -> returns true and skips masking!
->             if (desc->irq_data.chip->irq_ack)
->               ...
->           irq_may_run()
->             irq_pm_check_wakeup()
->               irq_disable()
->                 mask_irq() -> does nothing again
->
-> In the above flow, we never mask the irq because we thought it was
-> already masked when it was disabled, but the irqchip implementation
-> unmasked it to make wakeup work. Maybe we should always mask the irq if
-> wakeup is armed and we're trying to call mask_irq()? Looks hacky.
->
-> diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-> index 51128bea3846..20257d528880 100644
-> --- a/kernel/irq/chip.c
-> +++ b/kernel/irq/chip.c
-> @@ -411,7 +411,7 @@ static inline void mask_ack_irq(struct irq_desc *desc)
->
->  void mask_irq(struct irq_desc *desc)
->  {
-> -       if (irqd_irq_masked(&desc->irq_data))
-> +       if (!irqd_is_wakeup_armed(&desc->irq_data) && irqd_irq_masked(&desc->irq_data))
->                 return;
->
->         if (desc->irq_data.chip->irq_mask) {
-
-I'm... really not sure what's the best approach here. But basically,
-yes, if we can find a way to properly handle wake and interrupt
-behaviour for drivers with a single mask, that'd be good.
-IRQCHIP_MASK_ON_SUSPEND only seems to be doing half of the work, since
-it does not cover the disable+wake source case.
-
-Thanks,
+       Arnd
