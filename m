@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59443C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9F4C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D71620818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60FF72166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919307;
-	bh=kjJVS+8XxdE6bWNKF25v4fMqxNityECM0bk9SW1LRFk=;
+	s=default; t=1557919310;
+	bh=UmMYLfISrXlZixYjykw0EVKAEAFriWONhw33thiL0oU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LWXhG20rcdwE4razt4vqJLnUBRMKalWqzMjOoX8CBDNt/M7zFj8wsYO+boYK3z6dC
-	 sSvTsrMp8c3reWzrv0ZAC7aXASJ9YfngapBs7WMnFPNWLIHHZBmWYmzUYTiTzkTor2
-	 AL+GQ27Mv/CP7Y+/JSV5HgKU/yvIo3EJCK6IOs9Q=
+	b=0nl+rb8WJsPm/LoWQCE4U6MJHgpu7liEukCc5wcHZQV6x4FY4GwMWHY440wz0QZYJ
+	 Li6Ua9zl5K15Dk9S+iMJNWWFl6Hq5QGKspxi6Uy9D9BSAAFk4qx2AmT2s5pResly+p
+	 M/iUh2OeVZ86mkKwrMlxsztIPRSuf8RL1MPCQoIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731340AbfEOLVp (ORCPT
+        id S1731350AbfEOLVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:21:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59660 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:21:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731331AbfEOLVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:21:42 -0400
+        id S1731334AbfEOLVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:21:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00A0E20818;
-        Wed, 15 May 2019 11:21:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83C3C20818;
+        Wed, 15 May 2019 11:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919301;
-        bh=kjJVS+8XxdE6bWNKF25v4fMqxNityECM0bk9SW1LRFk=;
+        s=default; t=1557919304;
+        bh=UmMYLfISrXlZixYjykw0EVKAEAFriWONhw33thiL0oU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iLk8yo86jgoSe3v8/hOoldsAamA++LOtlAYD6cCHeRCP5RWIVTlF2z/EqFTnH6Vn5
-         iz4s5d2KPTKnBzFGPdbt7nJ6Au4EAmbCCF0wdI5jICLOUtCZOcjTmZLworRnqtEljv
-         TF/PWY8SDhQo+n4P1cloJq06/0LEYYPUGCFKL+xA=
+        b=2Q0E/pYulkTKFRYKUEE4WZElqaBJ2yLRRF5O744d8BnO6GrI3pK+cjHQlxqgHdGRy
+         r/xXXKgkULxNiaArVRur+FTLgyQZ1Fs+QAN6CjAHwJeno07B75z2tNzyGaD9Z1yVuU
+         dv4Zcht5RfV25nxj9qMES4Cmi2l7NNsNaGqDX4c8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sunil Dutt <usdutt@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Liang ZhiCheng <liangzhicheng@baidu.com>,
+        Li RongQing <lirongqing@baidu.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 023/113] nl80211: Add NL80211_FLAG_CLEAR_SKB flag for other NL commands
-Date:   Wed, 15 May 2019 12:55:14 +0200
-Message-Id: <20190515090655.241690094@linuxfoundation.org>
+Subject: [PATCH 4.19 024/113] libnvdimm/pmem: fix a possible OOB access when read and write pmem
+Date:   Wed, 15 May 2019 12:55:15 +0200
+Message-Id: <20190515090655.323788736@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -60,86 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d6db02a88a4aaa1cd7105137c67ddec7f3bdbc05 ]
+[ Upstream commit 9dc6488e84b0f64df17672271664752488cd6a25 ]
 
-This commit adds NL80211_FLAG_CLEAR_SKB flag to other NL commands
-that carry key data to ensure they do not stick around on heap
-after the SKB is freed.
+If offset is not zero and length is bigger than PAGE_SIZE,
+this will cause to out of boundary access to a page memory
 
-Also introduced this flag for NL80211_CMD_VENDOR as there are sub
-commands which configure the keys.
-
-Signed-off-by: Sunil Dutt <usdutt@codeaurora.org>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 98cc093cba1e ("block, THP: make block_device_operations.rw_page support THP")
+Co-developed-by: Liang ZhiCheng <liangzhicheng@baidu.com>
+Signed-off-by: Liang ZhiCheng <liangzhicheng@baidu.com>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/nl80211.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/nvdimm/pmem.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 295cd8d5554f6..048e004ed0ee8 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -13392,7 +13392,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_UNS_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_DEAUTHENTICATE,
-@@ -13443,7 +13444,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_UNS_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_UPDATE_CONNECT_PARAMS,
-@@ -13451,7 +13453,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_DISCONNECT,
-@@ -13480,7 +13483,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_UNS_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_DEL_PMKSA,
-@@ -13832,7 +13836,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_UNS_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_WIPHY |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_SET_QOS_MAP,
-@@ -13887,7 +13892,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.doit = nl80211_set_pmk,
- 		.policy = nl80211_policy,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_DEL_PMK,
+diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+index 1d432c5ed2753..cff027fc26761 100644
+--- a/drivers/nvdimm/pmem.c
++++ b/drivers/nvdimm/pmem.c
+@@ -113,13 +113,13 @@ static void write_pmem(void *pmem_addr, struct page *page,
+ 
+ 	while (len) {
+ 		mem = kmap_atomic(page);
+-		chunk = min_t(unsigned int, len, PAGE_SIZE);
++		chunk = min_t(unsigned int, len, PAGE_SIZE - off);
+ 		memcpy_flushcache(pmem_addr, mem + off, chunk);
+ 		kunmap_atomic(mem);
+ 		len -= chunk;
+ 		off = 0;
+ 		page++;
+-		pmem_addr += PAGE_SIZE;
++		pmem_addr += chunk;
+ 	}
+ }
+ 
+@@ -132,7 +132,7 @@ static blk_status_t read_pmem(struct page *page, unsigned int off,
+ 
+ 	while (len) {
+ 		mem = kmap_atomic(page);
+-		chunk = min_t(unsigned int, len, PAGE_SIZE);
++		chunk = min_t(unsigned int, len, PAGE_SIZE - off);
+ 		rem = memcpy_mcsafe(mem + off, pmem_addr, chunk);
+ 		kunmap_atomic(mem);
+ 		if (rem)
+@@ -140,7 +140,7 @@ static blk_status_t read_pmem(struct page *page, unsigned int off,
+ 		len -= chunk;
+ 		off = 0;
+ 		page++;
+-		pmem_addr += PAGE_SIZE;
++		pmem_addr += chunk;
+ 	}
+ 	return BLK_STS_OK;
+ }
 -- 
 2.20.1
 
