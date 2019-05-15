@@ -2,51 +2,51 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7948C072AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8D0C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B38252053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2EA12053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:50:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921025;
-	bh=6yewCPOiOdHUs0aQTSaM5h9YTqiRcgLS4eo6foYu5Is=;
+	s=default; t=1557921020;
+	bh=bm66xKRLhd7zHtRL+0BEHuLQckw6arjnAi9uTkJzrAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nlk9wTe/dTWlzk1XTFpL65KKWHQY7fAM8iYRePDT8Nq7AW3PeCAOg5FLiaPcWM77X
-	 dENKFhBCRX9/oCI+5NKEY0qbXl/aR/JwW2Bf3U4kOlo/eYjOpMGgm6A9pfTCbuNzhW
-	 fEyLjrFN4IroP9+s6QxogF+muqjgK/2WPICgadls=
+	b=2fgtKQs8MIV/fNISaA9Pe3jr/TJvjWmcUgNazy9k+DtXN86N1SU/wZiWgqeThwseK
+	 itBCm76DBs7FDn1HaEeHyChNH6m5FdhaltsunSWsCOfHLB8iKQ/x6DpcsOaTGPf254
+	 0sjAbT55ht6MHGIeHOFD0nWJAEnrXJy1xQb8tg9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731459AbfEOLW3 (ORCPT
+        id S1731684AbfEOLuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:22:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60676 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:50:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731441AbfEOLWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:22:23 -0400
+        id S1731458AbfEOLW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:22:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE44A20843;
-        Wed, 15 May 2019 11:22:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A8AF20862;
+        Wed, 15 May 2019 11:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919343;
-        bh=6yewCPOiOdHUs0aQTSaM5h9YTqiRcgLS4eo6foYu5Is=;
+        s=default; t=1557919348;
+        bh=bm66xKRLhd7zHtRL+0BEHuLQckw6arjnAi9uTkJzrAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zr1QImUvtVe1HHFmCVpAcfe/QzvkI9z+Dl/nPI5ALdbSkfxtQwRjJrrflk95l4sW3
-         RRoVv830u5A/ngtjW/zTF9aCuUWZLFBKihqReDQFC9TrUps7KixRMK/EF9rNr7urhj
-         b1V0JLMtult+dUPzputSumj+QzUJnlLCAirChUsU=
+        b=YnV8xpLYDLMQ691b5MmnDo4Cwo5/YXVDom+ZdoYtQhdRlhwXq/GyT9ZGUnagr7CFd
+         7aqtF+s3lvdLndU2yqFp6xBa0ef/p6Puh6ErTw3Ttq8733ZWoQYhDzHwopjCJcQoY8
+         URXaW7PjWYTHdSQrnUMQMrOk6wM2Ybi59WcicHc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 038/113] KVM: fix spectrev1 gadgets
-Date:   Wed, 15 May 2019 12:55:29 +0200
-Message-Id: <20190515090656.509320646@linuxfoundation.org>
+        stable@vger.kernel.org, Guenter Rock <linux@roeck-us.net>,
+        Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH 4.19 005/113] hwmon: (pwm-fan) Disable PWM if fetching cooling data fails
+Date:   Wed, 15 May 2019 12:54:56 +0200
+Message-Id: <20190515090653.460107239@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -59,133 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1d487e9bf8ba66a7174c56a0029c54b1eca8f99c ]
+From: Stefan Wahren <stefan.wahren@i2se.com>
 
-These were found with smatch, and then generalized when applicable.
+commit 53f1647da3e8fb3e89066798f0fdc045064d353d upstream.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In case pwm_fan_of_get_cooling_data() fails we should disable the PWM
+just like in the other error cases.
+
+Fixes: 2e5219c77183 ("hwmon: (pwm-fan) Read PWM FAN configuration from device tree")
+Cc: <stable@vger.kernel.org> # 4.14+
+Reported-by: Guenter Rock <linux@roeck-us.net>
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kvm/lapic.c     |  4 +++-
- include/linux/kvm_host.h | 10 ++++++----
- virt/kvm/irqchip.c       |  5 +++--
- virt/kvm/kvm_main.c      |  6 ++++--
- 4 files changed, 16 insertions(+), 9 deletions(-)
+ drivers/hwmon/pwm-fan.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 3692de84c4201..d2f5aa220355f 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -133,6 +133,7 @@ static inline bool kvm_apic_map_get_logical_dest(struct kvm_apic_map *map,
- 		if (offset <= max_apic_id) {
- 			u8 cluster_size = min(max_apic_id - offset + 1, 16U);
+--- a/drivers/hwmon/pwm-fan.c
++++ b/drivers/hwmon/pwm-fan.c
+@@ -250,7 +250,7 @@ static int pwm_fan_probe(struct platform
  
-+			offset = array_index_nospec(offset, map->max_apic_id + 1);
- 			*cluster = &map->phys_map[offset];
- 			*mask = dest_id & (0xffff >> (16 - cluster_size));
- 		} else {
-@@ -896,7 +897,8 @@ static inline bool kvm_apic_map_get_dest_lapic(struct kvm *kvm,
- 		if (irq->dest_id > map->max_apic_id) {
- 			*bitmap = 0;
- 		} else {
--			*dst = &map->phys_map[irq->dest_id];
-+			u32 dest_id = array_index_nospec(irq->dest_id, map->max_apic_id + 1);
-+			*dst = &map->phys_map[dest_id];
- 			*bitmap = 1;
- 		}
- 		return true;
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 23c242a7ac524..30efb36638923 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -28,6 +28,7 @@
- #include <linux/irqbypass.h>
- #include <linux/swait.h>
- #include <linux/refcount.h>
-+#include <linux/nospec.h>
- #include <asm/signal.h>
+ 	ret = pwm_fan_of_get_cooling_data(&pdev->dev, ctx);
+ 	if (ret)
+-		return ret;
++		goto err_pwm_disable;
  
- #include <linux/kvm.h>
-@@ -491,10 +492,10 @@ static inline struct kvm_io_bus *kvm_get_bus(struct kvm *kvm, enum kvm_bus idx)
- 
- static inline struct kvm_vcpu *kvm_get_vcpu(struct kvm *kvm, int i)
- {
--	/* Pairs with smp_wmb() in kvm_vm_ioctl_create_vcpu, in case
--	 * the caller has read kvm->online_vcpus before (as is the case
--	 * for kvm_for_each_vcpu, for example).
--	 */
-+	int num_vcpus = atomic_read(&kvm->online_vcpus);
-+	i = array_index_nospec(i, num_vcpus);
-+
-+	/* Pairs with smp_wmb() in kvm_vm_ioctl_create_vcpu.  */
- 	smp_rmb();
- 	return kvm->vcpus[i];
- }
-@@ -578,6 +579,7 @@ void kvm_put_kvm(struct kvm *kvm);
- 
- static inline struct kvm_memslots *__kvm_memslots(struct kvm *kvm, int as_id)
- {
-+	as_id = array_index_nospec(as_id, KVM_ADDRESS_SPACE_NUM);
- 	return srcu_dereference_check(kvm->memslots[as_id], &kvm->srcu,
- 			lockdep_is_held(&kvm->slots_lock) ||
- 			!refcount_read(&kvm->users_count));
-diff --git a/virt/kvm/irqchip.c b/virt/kvm/irqchip.c
-index b1286c4e07122..0bd0683640bdf 100644
---- a/virt/kvm/irqchip.c
-+++ b/virt/kvm/irqchip.c
-@@ -144,18 +144,19 @@ static int setup_routing_entry(struct kvm *kvm,
- {
- 	struct kvm_kernel_irq_routing_entry *ei;
- 	int r;
-+	u32 gsi = array_index_nospec(ue->gsi, KVM_MAX_IRQ_ROUTES);
- 
- 	/*
- 	 * Do not allow GSI to be mapped to the same irqchip more than once.
- 	 * Allow only one to one mapping between GSI and non-irqchip routing.
- 	 */
--	hlist_for_each_entry(ei, &rt->map[ue->gsi], link)
-+	hlist_for_each_entry(ei, &rt->map[gsi], link)
- 		if (ei->type != KVM_IRQ_ROUTING_IRQCHIP ||
- 		    ue->type != KVM_IRQ_ROUTING_IRQCHIP ||
- 		    ue->u.irqchip.irqchip == ei->irqchip.irqchip)
- 			return -EINVAL;
- 
--	e->gsi = ue->gsi;
-+	e->gsi = gsi;
- 	e->type = ue->type;
- 	r = kvm_set_routing_entry(kvm, e, ue);
- 	if (r)
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 6a79df88b5469..e909d9907b506 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2887,12 +2887,14 @@ static int kvm_ioctl_create_device(struct kvm *kvm,
- 	struct kvm_device_ops *ops = NULL;
- 	struct kvm_device *dev;
- 	bool test = cd->flags & KVM_CREATE_DEVICE_TEST;
-+	int type;
- 	int ret;
- 
- 	if (cd->type >= ARRAY_SIZE(kvm_device_ops_table))
- 		return -ENODEV;
- 
--	ops = kvm_device_ops_table[cd->type];
-+	type = array_index_nospec(cd->type, ARRAY_SIZE(kvm_device_ops_table));
-+	ops = kvm_device_ops_table[type];
- 	if (ops == NULL)
- 		return -ENODEV;
- 
-@@ -2907,7 +2909,7 @@ static int kvm_ioctl_create_device(struct kvm *kvm,
- 	dev->kvm = kvm;
- 
- 	mutex_lock(&kvm->lock);
--	ret = ops->create(dev, cd->type);
-+	ret = ops->create(dev, type);
- 	if (ret < 0) {
- 		mutex_unlock(&kvm->lock);
- 		kfree(dev);
--- 
-2.20.1
-
+ 	ctx->pwm_fan_state = ctx->pwm_fan_max_state;
+ 	if (IS_ENABLED(CONFIG_THERMAL)) {
 
 
