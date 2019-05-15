@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21D2C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4B3C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3EB020881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB05320843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919460;
-	bh=h3xdNg/q9zhRaJaNp3VWSoaqbdpc4FxgzygEbgsDw2c=;
+	s=default; t=1557919465;
+	bh=7V09QRjt60ZoGduRDcBVlYnjKvUofVsyA/iKeUO4JdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eAF0z3VCrsxvsiaSEZHQaM7NbiiS+AOt2I8IBmC0zlhuk+AEcrbtNThz1/sARUHfU
-	 5fcBySYQCKw1oPTbPU5Uns9GqIEDTMVOb6Kv9if6UwF4MiwzGoAVlJRP9k77WxmxWr
-	 xBJMLJoWh2zWlP2mZ3YKWl0CICy7gzL1yksxLgjM=
+	b=Us57Rfw7O1MCdl5z6PmIfoR/pHUxxx4Y5rUp2PBY46rlGz7AQnaMaOYehR55bp63e
+	 s2qWkjEEkdG5RXCgx3BHQeUQwiJereV9qtHJkjCSPG0nOCLAJmYAjUgKXROMdSshh0
+	 GuDjNwPxMKdMaC9Usw0vHaKuQ15dpp6Xb/zn90m0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731794AbfEOLYT (ORCPT
+        id S1731804AbfEOLYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:24:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34792 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:24:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731781AbfEOLYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:24:14 -0400
+        id S1731783AbfEOLYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:24:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1D57206BF;
-        Wed, 15 May 2019 11:24:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F589217D8;
+        Wed, 15 May 2019 11:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919454;
-        bh=h3xdNg/q9zhRaJaNp3VWSoaqbdpc4FxgzygEbgsDw2c=;
+        s=default; t=1557919456;
+        bh=7V09QRjt60ZoGduRDcBVlYnjKvUofVsyA/iKeUO4JdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DkHWy/TgBRh+H0tzqWMcafDeZqfsMe10+TWzAvT7P0jqKBwL/GlRDJmFLtOrvCrZV
-         aEhgTcG3TKHSrgc5kOlolm/hPBjGeTJ1euuzKoNsQqZBiuzlPB5YuZ8iaZrdPY9Mtl
-         GSZW+jzph8ws3OMzVZaYkGAuDN6/aIBaI6ih0tjI=
+        b=KLX96XknAXzCKbJ2achNFKEjTafwNRVI9sQGXWYNL/BcG9/DV58gWagttUAOlmSu8
+         aaNnHnPopsQtrQQK6XIVZRq8NTV9+s7h/aPT5qw2EFmR2IJQ0lBgBCQOTLRR0xx6f/
+         gewJxhxSqjJXUSXQu7XST3e68fQfkgJmowxTB0/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.19 079/113] NFC: nci: Add some bounds checking in nci_hci_cmd_received()
-Date:   Wed, 15 May 2019 12:56:10 +0200
-Message-Id: <20190515090659.611321443@linuxfoundation.org>
+Subject: [PATCH 4.19 080/113] nfc: nci: Potential off by one in ->pipes[] array
+Date:   Wed, 15 May 2019 12:56:11 +0200
+Message-Id: <20190515090659.690377978@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -60,53 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d7ee81ad09f072eab1681877fc71ec05f9c1ae92 ]
+[ Upstream commit 6491d698396fd5da4941980a35ca7c162a672016 ]
 
-This is similar to commit 674d9de02aa7 ("NFC: Fix possible memory
-corruption when handling SHDLC I-Frame commands").
+This is similar to commit e285d5bfb7e9 ("NFC: Fix the number of pipes")
+where we changed NFC_HCI_MAX_PIPES from 127 to 128.
 
-I'm not totally sure, but I think that commit description may have
-overstated the danger.  I was under the impression that this data came
-from the firmware?  If you can't trust your networking firmware, then
-you're already in trouble.
+As the comment next to the define explains, the pipe identifier is 7
+bits long.  The highest possible pipe is 127, but the number of possible
+pipes is 128.  As the code is now, then there is potential for an
+out of bounds array access:
 
-Anyway, these days we add bounds checking where ever we can and we call
-it kernel hardening.  Better safe than sorry.
+    net/nfc/nci/hci.c:297 nci_hci_cmd_received() warn: array off by one?
+    'ndev->hci_dev->pipes[pipe]' '0-127 == 127'
 
 Fixes: 11f54f228643 ("NFC: nci: Add HCI over NCI protocol support")
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- net/nfc/nci/hci.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ include/net/nfc/nci_core.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/nfc/nci/hci.c b/net/nfc/nci/hci.c
-index ddfc52ac1f9b4..c0d323b58e732 100644
---- a/net/nfc/nci/hci.c
-+++ b/net/nfc/nci/hci.c
-@@ -312,6 +312,10 @@ static void nci_hci_cmd_received(struct nci_dev *ndev, u8 pipe,
- 		create_info = (struct nci_hci_create_pipe_resp *)skb->data;
- 		dest_gate = create_info->dest_gate;
- 		new_pipe = create_info->pipe;
-+		if (new_pipe >= NCI_HCI_MAX_PIPES) {
-+			status = NCI_HCI_ANY_E_NOK;
-+			goto exit;
-+		}
+diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
+index 87499b6b35d6d..df5c69db68afc 100644
+--- a/include/net/nfc/nci_core.h
++++ b/include/net/nfc/nci_core.h
+@@ -166,7 +166,7 @@ struct nci_conn_info {
+  * According to specification 102 622 chapter 4.4 Pipes,
+  * the pipe identifier is 7 bits long.
+  */
+-#define NCI_HCI_MAX_PIPES          127
++#define NCI_HCI_MAX_PIPES          128
  
- 		/* Save the new created pipe and bind with local gate,
- 		 * the description for skb->data[3] is destination gate id
-@@ -336,6 +340,10 @@ static void nci_hci_cmd_received(struct nci_dev *ndev, u8 pipe,
- 			goto exit;
- 		}
- 		delete_info = (struct nci_hci_delete_pipe_noti *)skb->data;
-+		if (delete_info->pipe >= NCI_HCI_MAX_PIPES) {
-+			status = NCI_HCI_ANY_E_NOK;
-+			goto exit;
-+		}
- 
- 		ndev->hci_dev->pipes[delete_info->pipe].gate =
- 						NCI_HCI_INVALID_GATE;
+ struct nci_hci_gate {
+ 	u8 gate;
 -- 
 2.20.1
 
