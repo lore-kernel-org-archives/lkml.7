@@ -2,144 +2,86 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8A4C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:38:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617FDC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:38:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C53A2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:38:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ddtr6DU1"
+	by mail.kernel.org (Postfix) with ESMTP id 3CFD52084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:38:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfEOSi3 (ORCPT
+        id S1727611AbfEOSiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 14:38:29 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37952 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfEOSi3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 14:38:29 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b76so412374pfb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 11:38:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=EjtI0jB6q0on8T68O7ooSG3HJ/G6aXVuh7Fa8bUtB3c=;
-        b=ddtr6DU1QjLaiimdHvjnm5OyLPSkWpepiD03f53/1yEoCpWWVeGz/iO+mseYcXP/0O
-         3rvOy0GL8UzZ93ASbLEqgNb0DgWjjJCKufFzgqhqDCCnw59UFOltLi7VTMwa0aCCWQIq
-         cX43LNEflo4mYTocYshtFVRRly1IwJ4xLGuMU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=EjtI0jB6q0on8T68O7ooSG3HJ/G6aXVuh7Fa8bUtB3c=;
-        b=Ics0LJ+Q3wpe2lPHxIFC+v4RN84iAeOd/hWiUV26NjNBjJTxmxVSidDh9T8j2A/GL2
-         Bd280oX5ARckOtEb3Od5Nekt8sRanYfp/TVy2i5utewh319UnFJA5Gm1KtnVa8tg33Lc
-         ObCBZ1J1s5n5BkyowVCLe1u9Vx6vtJ6g4WCmlvfS+b+xaqj4cnBJAbEGJcjMjUD5uqTw
-         ACFa35ZoPXljS4RfS0DM2jHSiDYBj9DikhKhHhHw6wBnw1ooq0fX/Ev/1NuOBTehO3vq
-         GHvbPPVMn3trbfs0FxMtCwj38nOgZl2NWBC9dEDAe/bjToYqEig5jUjMJxKgki5NxDck
-         rwYw==
-X-Gm-Message-State: APjAAAUpiZWbY7j61iNLUsN/YJw9fxTvdVOsi3GFtEQWvKsEVbZ7HPem
-        ZWGVi6uAlNkHF/yTl9vmvj1fEQ==
-X-Google-Smtp-Source: APXvYqyfZajspCc+MoqfqS4jkc9YOLiR0rXd0nQy8a8u/vchdAbnxT1lHXCHdIq1M/MzfUHuvHElrw==
-X-Received: by 2002:a62:4c5:: with SMTP id 188mr49579806pfe.29.1557945508686;
-        Wed, 15 May 2019 11:38:28 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c127sm5764398pfb.107.2019.05.15.11.38.27
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 May 2019 11:38:27 -0700 (PDT)
-Date:   Wed, 15 May 2019 11:38:26 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] kbuild: check uniqueness of basename of modules
-Message-ID: <201905151131.EBB45E5@keescook>
-References: <20190515073818.22486-1-yamada.masahiro@socionext.com>
- <CAK7LNAQgBKq9JDGtQUD1kgKrfLZ4jOjuLJi7_tpSPLJZsWtmag@mail.gmail.com>
- <201905150913.C23BD99AD@keescook>
- <CAK7LNARezpQgcK9O9K3ZFeebMVNroWStno_brvSLadsKXVfm-Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNARezpQgcK9O9K3ZFeebMVNroWStno_brvSLadsKXVfm-Q@mail.gmail.com>
+        Wed, 15 May 2019 14:38:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58032 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726422AbfEOSix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 14:38:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 794F3AD72;
+        Wed, 15 May 2019 18:38:52 +0000 (UTC)
+From:   Juergen Gross <jgross@suse.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+        boris.ostrovsky@oracle.com
+Subject: [GIT PULL] xen: fixes and features for 5.2-rc1
+Date:   Wed, 15 May 2019 20:38:50 +0200
+Message-Id: <20190515183850.26413-1-jgross@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 02:55:02AM +0900, Masahiro Yamada wrote:
-> 
-> On Thu, May 16, 2019 at 1:20 AM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Wed, May 15, 2019 at 04:53:15PM +0900, Masahiro Yamada wrote:
-> > > On Wed, May 15, 2019 at 4:40 PM Masahiro Yamada
-> > > <yamada.masahiro@socionext.com> wrote:
-> > > >
-> > > > [...]
-> > > > diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
-> > > > new file mode 100755
-> > > > index 000000000000..944e68bd22b0
-> > > > --- /dev/null
-> > > > +++ b/scripts/modules-check.sh
-> > > > @@ -0,0 +1,18 @@
-> > > > +#!/bin/sh
-> > > > +# SPDX-License-Identifier: GPL-2.0
-> > > > +
-> > > > +# Warn if two or more modules have the same basename
-> > > > +check_same_name_modules()
-> > > > +{
-> > > > +       same_name_modules=$(cat modules.order modules.builtin | \
-> > > > +                               xargs basename -a | sort | uniq -d)
-> >
-> > While probably it'll never be a problem, just for robustness, I'd add "--"
-> > to the end basename to terminate argument interpretation:
-> >
-> >     xargs basename -a -- | sort | ...
-> 
-> 
-> Sorry for my ignorance, but could you
-> teach me the effect of "--" ?
-> 
-> 
-> I sometimes use "--" as a separator
-> when there is ambiguity in arguments
-> for example, "git log <revision> -- <path>"
-> 
-> 
-> In this case, what is intended by "--"?
+Linus,
 
-It means "end of arguments" so that whatever xargs passes into the
-program aren't interpretted as an argument. In this case, if there was
-a module path somehow ever named --weird/build/path/foo.o, xargs would
-launch basename as:
+Please git pull the following tag:
 
-	basename -a --weird/build/path/foo.o
+ git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.2b-rc1-tag
 
-and basename would fail since it didn't recognize the argument. Having
-"--" will stop argument parsing:
+xen: fixes and features for 5.2-rc1
 
-	basename -a -- --weird/build/path/foo.o
+It contains:
+- some minor cleanups
+- 2 small corrections for Xen on ARM
+- 2 fixes for Xen PVH guest support
+- a patch for a new command line option to tune virtual timer handling
 
-This is just a robustness suggestion that I always recommend for xargs
-piping, since this can turn into a security flaw (though not here) when
-an argument may have behavioral side-effects. So, it's just a thing that
-always jumps out at me, though in this particular case I don't think
-we could ever see it cause a problem, but better to always write these
-xargs patterns as safely as possible.
+Thanks.
 
--- 
-Kees Cook
+Juergen
+
+ Documentation/admin-guide/kernel-parameters.txt |  7 +++++++
+ arch/arm/xen/p2m.c                              |  4 +++-
+ arch/x86/platform/pvh/enlighten.c               |  8 ++++----
+ arch/x86/xen/efi.c                              | 12 ++++++------
+ arch/x86/xen/enlighten_pv.c                     |  2 +-
+ arch/x86/xen/enlighten_pvh.c                    |  7 ++++++-
+ arch/x86/xen/time.c                             | 20 +++++++++++++++++---
+ arch/x86/xen/xen-ops.h                          |  4 ++--
+ drivers/xen/xen-pciback/xenbus.c                |  2 +-
+ drivers/xen/xenbus/xenbus_dev_frontend.c        |  2 --
+ 10 files changed, 47 insertions(+), 21 deletions(-)
+
+Gustavo A. R. Silva (1):
+      xen-netfront: mark expected switch fall-through
+
+Hariprasad Kelam (1):
+      xen: xen-pciback: fix warning Using plain integer as NULL pointer
+
+Hillf Danton (2):
+      xen/arm: Free p2m entry if fail to add it to RB tree
+      xen/arm: Use p2m entry with lock protection
+
+Mao Wenan (1):
+      xenbus: drop useless LIST_HEAD in xenbus_write_watch() and xenbus_file_write()
+
+Roger Pau Monne (2):
+      xen/pvh: set xen_domain_type to HVM in xen_pvh_init
+      xen/pvh: correctly setup the PV EFI interface for dom0
+
+Ryan Thibodeaux (1):
+      x86/xen: Add "xen_timer_slop" command line option
