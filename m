@@ -2,52 +2,54 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17A6C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A80C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7475E20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37CDF20644
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918910;
-	bh=WSi2F3UmA+pw0fP1sHBvGdLDfQyed5uZVYLj3tIf/V0=;
+	s=default; t=1557918914;
+	bh=rCb+uBo+T9INmPBv9rpAsKWN6V+tUL6i3hHpei7j564=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ed3Gj5NswxI1tSTrx+yt+15udkQJ7rnP3AtbP2QfYx7NasohvG7LwrrtecW2NBhB0
-	 WyNcFCdvSnyMLQbyNpvK1T7Vl7jCtXP2IvedjZPRXg5Of329C2+XLHg0WyOb2mIT0d
-	 IMkNBLfC62qD5+i4vpk6y+/s6N/IOr0r3Wd91/sQ=
+	b=wjUipN+8q+qw4GTKgMlk00K9MSvRFyMN+9u7baxFSe5uj6/P+nFBuU7xIu1/Cx0ir
+	 W0XWNtaVCPrZz/3dknqb5+WM3W8WaKEy8yTudysbcREmIxiS3aQ0ZgBgRqOU3a1+o2
+	 /2bGIsRa/IMi1igBju0UHXA2ZCkzL24MDcFjWlUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730250AbfEOLPI (ORCPT
+        id S1729846AbfEOLPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:15:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51484 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:15:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730239AbfEOLPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:15:05 -0400
+        id S1730245AbfEOLPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:15:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A156A2084F;
-        Wed, 15 May 2019 11:15:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32EB92084F;
+        Wed, 15 May 2019 11:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918905;
-        bh=WSi2F3UmA+pw0fP1sHBvGdLDfQyed5uZVYLj3tIf/V0=;
+        s=default; t=1557918907;
+        bh=rCb+uBo+T9INmPBv9rpAsKWN6V+tUL6i3hHpei7j564=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gYq6x0MsJQGafRP0+fCPkosw41joUYkMJjzgkTAxkM9VDpCfSQ4044NfvoD+66rNM
-         cl8qZ/2QG1Lm6kTom5m3CcP1s2mo8C5CcUIJxlc4XjAGG9hvX3Y7UPWi+BFT+Tr654
-         neN9YVN0NTvToaIvzcJsdIIpWLPQbTZaAKaPYxqk=
+        b=cLSPd/usWxC92bgBTRbGoN3brwbDysauMdYscfeiLExu8RMS6KfHE8JJSRjdyFPXZ
+         6NOE5T/Q8x9Zc0b5K4z1xJPXMwy2BDXKhAU5Wm4Yvk5BxEH+FtsLjZD/bO0ZtMK0IB
+         mToYpAMLwY3J8H5e7vU/2GdWC5avfbofwHu7XpQo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Suryaputra <ssuryaextr@gmail.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 45/51] vrf: sit mtu should not be updated when vrf netdev is the link
-Date:   Wed, 15 May 2019 12:56:20 +0200
-Message-Id: <20190515090629.026454910@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        Daniel Gomez <dagmcr@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 28/51] spi: ST ST95HF NFC: declare missing of table
+Date:   Wed, 15 May 2019 12:56:03 +0200
+Message-Id: <20190515090625.146480803@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
 References: <20190515090616.669619870@linuxfoundation.org>
@@ -60,34 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Suryaputra <ssuryaextr@gmail.com>
+[ Upstream commit d04830531d0c4a99c897a44038e5da3d23331d2f ]
 
-[ Upstream commit ff6ab32bd4e073976e4d8797b4d514a172cfe6cb ]
+Add missing <of_device_id> table for SPI driver relying on SPI
+device match since compatible is in a DT binding or in a DTS.
 
-VRF netdev mtu isn't typically set and have an mtu of 65536. When the
-link of a tunnel is set, the tunnel mtu is changed from 1480 to the link
-mtu minus tunnel header. In the case of VRF netdev is the link, then the
-tunnel mtu becomes 65516. So, fix it by not setting the tunnel mtu in
-this case.
+Before this patch:
+modinfo drivers/nfc/st95hf/st95hf.ko | grep alias
+alias:          spi:st95hf
 
-Signed-off-by: Stephen Suryaputra <ssuryaextr@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
+After this patch:
+modinfo drivers/nfc/st95hf/st95hf.ko | grep alias
+alias:          spi:st95hf
+alias:          of:N*T*Cst,st95hfC*
+alias:          of:N*T*Cst,st95hf
+
+Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
+Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/sit.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nfc/st95hf/core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/net/ipv6/sit.c
-+++ b/net/ipv6/sit.c
-@@ -1069,7 +1069,7 @@ static void ipip6_tunnel_bind_dev(struct
- 	if (!tdev && tunnel->parms.link)
- 		tdev = __dev_get_by_index(tunnel->net, tunnel->parms.link);
+diff --git a/drivers/nfc/st95hf/core.c b/drivers/nfc/st95hf/core.c
+index c2840e4129624..850e75571c8ee 100644
+--- a/drivers/nfc/st95hf/core.c
++++ b/drivers/nfc/st95hf/core.c
+@@ -1074,6 +1074,12 @@ static const struct spi_device_id st95hf_id[] = {
+ };
+ MODULE_DEVICE_TABLE(spi, st95hf_id);
  
--	if (tdev) {
-+	if (tdev && !netif_is_l3_master(tdev)) {
- 		int t_hlen = tunnel->hlen + sizeof(struct iphdr);
- 
- 		dev->hard_header_len = tdev->hard_header_len + sizeof(struct iphdr);
++static const struct of_device_id st95hf_spi_of_match[] = {
++        { .compatible = "st,st95hf" },
++        { },
++};
++MODULE_DEVICE_TABLE(of, st95hf_spi_of_match);
++
+ static int st95hf_probe(struct spi_device *nfc_spi_dev)
+ {
+ 	int ret;
+@@ -1260,6 +1266,7 @@ static struct spi_driver st95hf_driver = {
+ 	.driver = {
+ 		.name = "st95hf",
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(st95hf_spi_of_match),
+ 	},
+ 	.id_table = st95hf_id,
+ 	.probe = st95hf_probe,
+-- 
+2.20.1
+
 
 
