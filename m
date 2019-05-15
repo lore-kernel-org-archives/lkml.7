@@ -2,137 +2,137 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1020FC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E34C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D02E620818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:30:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r19YdC+4"
+	by mail.kernel.org (Postfix) with ESMTP id 5456820818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:32:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557963132;
+	bh=DdQxNOhT2rkARm+F4+I9o5A8l2BLuAeEqMtxCtDdsTs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NRuPffovwNRh4IcH/tdZDIOwzBE4b7U4cqIy0eNZWUoHH/x+guK6jHTaJpm7LJUr6
+	 ITx2qJkd2bPBkYHE04EIkoNxoKm4b4qEYXGXkVyNsl4j3iBYaOIViS/buPpHo8QlYo
+	 DGur8fL7lesSqFQGOSDIvGtUlSVVCOudnleXtfc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfEOXad (ORCPT
+        id S1726574AbfEOXcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 19:30:33 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35343 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbfEOX2c (ORCPT
+        Wed, 15 May 2019 19:32:10 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40606 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbfEOXaK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 19:28:32 -0400
-Received: by mail-pg1-f193.google.com with SMTP id h1so567295pgs.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 16:28:31 -0700 (PDT)
+        Wed, 15 May 2019 19:30:10 -0400
+Received: by mail-lj1-f194.google.com with SMTP id d15so1340280ljc.7
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 16:30:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VP1NFQHy4JKVhFQCt2SvEPh1FtfBgQTCzFt7PPPiHN0=;
-        b=r19YdC+4jFPF4C6oNXLtZiD/yJ01hydYRuZk1MseAZx+4lHCzKKfKNBqPCMiQNgjjw
-         y+XUOAL2LYXIoPZ2sDD87sMC4hU7uwfIsW+GbDN3Lxx25GfJYmgqSEwk8laVGuzLl4vX
-         0hCVm86fR4TNkcInpQp1gG0DWLrZ0uMAV5XWLtpdvU3qYpnRYRyDd7Fh8z3B5vI8EJtQ
-         pXVbEsVbyX6IMqN9PY5FbeJoBScWxUxMuaKgtBq3XMAr17PSL1OzQgkOyr6KfM4rP8BI
-         RtKHJFbfs0eeqWp+thjyfqgO9ssQPHOhxUH8I9XKAsaxTsqvDudU6xuThvMRoR4HXqP9
-         bu+g==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rj8eiKEfKQp+r4kU9L07lOLZVjOy1p00iMYQoQzNM1g=;
+        b=Jd4/tDKEvp+hE+t3buf26fXCZjFpIqo785n5ciqv6R11gys8cOxk924sG82V47MMTS
+         KWGX4flrn9O1MphiePtZy6rBOY4DrEPz4wddSOpILtzncpeasMMd3u2vobOU5muw2mWm
+         kFhZckpJrzaMMWO/ZPNRKFhPu4YsTQU3KZsKs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VP1NFQHy4JKVhFQCt2SvEPh1FtfBgQTCzFt7PPPiHN0=;
-        b=rYvJJLqGg/VW3P/o+DPjiXZembK+pIoloUui5D7e2BcbQPbw1GKHQXz1ihmCY+4qZf
-         s05NoouF3Qu15gZ9nVl88YoBXYe4FT3cWqnfuReRM9DTB9h9Fv46zB3cCgQKX59KsEbV
-         epbc+RuZDqpt3HdBQj88AjIgkHEPtqVqXWU5hNrYn45UEpS6rxzGhuRqq8q/6IlIlpXT
-         2e5khkM1/uFhuMJo8irpFlOWJYj5BxLpyR2+D3F9/qoIR+FI9OX2zZGYuUUQaNe9mWxN
-         rZVqTH+M7JKCDT0XpYWVfvGT8xOOa97H5BC6ejlZDH77yLrFZYKbcMdkqEPUqXrTgpGX
-         w0Qg==
-X-Gm-Message-State: APjAAAVlbsRcKuYfjQBog047w9s6gODUGKM2WgjSNa61sTi3Wl6Gw0+U
-        d9Wf5DA/INzAvhb9oe5PPWNL3w==
-X-Google-Smtp-Source: APXvYqyfISGJkEneRhKoTrm95W3GwtHgtb8DnEpPiMopvw65z/c6R+ndccT+6r5I+RscVIxx1q1EjQ==
-X-Received: by 2002:a62:f247:: with SMTP id y7mr49632055pfl.18.1557962368601;
-        Wed, 15 May 2019 16:19:28 -0700 (PDT)
-Received: from google.com ([2620:15c:2cd:2:d714:29b4:a56b:b23b])
-        by smtp.gmail.com with ESMTPSA id j19sm4304797pfr.155.2019.05.15.16.19.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 15 May 2019 16:19:27 -0700 (PDT)
-Date:   Wed, 15 May 2019 16:19:23 -0700
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     shuah <shuah@kernel.org>
-Cc:     Dhaval Giani <dhaval.giani@gmail.com>,
-        Sasha Levin <alexander.levin@microsoft.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Tim Bird <tbird20d@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Carpenter,Dan" <dan.carpenter@oracle.com>, willy@infradead.org,
-        gustavo.padovan@collabora.co.uk,
-        Dmitry Vyukov <dvyukov@google.com>, knut.omang@oracle.com
-Subject: Re: Linux Testing Microconference at LPC
-Message-ID: <20190515231923.GA193527@google.com>
-References: <CAPhKKr_uVTFAzne0QkZFUGfb8RxQdVFx41G9kXRY7sFN-=pZ6w@mail.gmail.com>
- <3c6c9405-7e90-fb03-aa1c-0ada13203980@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rj8eiKEfKQp+r4kU9L07lOLZVjOy1p00iMYQoQzNM1g=;
+        b=o4zqlku6LBEqk2tYBiOxs46TnJ//5YO7QOzhtW57G7pZu6ZKKkljL7/J8LclRoyDHI
+         FKrEUKtGRy88YBIpV9XyQEtTcinX386CoiZCzY6db/7M243dhsH59j7qXqMu5Am8GnSK
+         TxpvE+twiDhIWwkji4WaNG7T1shb4UsS67QGhYPtLk5dstQ43cTe54Zn7/SUBM+3ltUP
+         wDzjDubC9dTFhITYy5w5GzlACQyCbFIH4pzIa9Z3JL0l/s3eONH6pod2zLQb/q60XMrm
+         eQz9GgdQO+IwUyFKeig+qhiuGDKmomjcu8EmaYCtqHQxfL9CFreMGDdahPbcngOAt3fh
+         AF2g==
+X-Gm-Message-State: APjAAAV7nPR9z0IkIz/D89df3jtRtAs0kEPIk5yIltwsGE3F2MNp9Q+S
+        GeyjNj1zzw7APE3IVxLafdEVECuilZw=
+X-Google-Smtp-Source: APXvYqwQUE5IcUrTUezootSnL09xtH5PQ3Gih+UhJhtIA24/y+KGQYFnlBaEjd9N4JGJOXSvYGBOxA==
+X-Received: by 2002:a2e:9142:: with SMTP id q2mr2574573ljg.18.1557963008240;
+        Wed, 15 May 2019 16:30:08 -0700 (PDT)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id y7sm578688ljj.34.2019.05.15.16.30.07
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 16:30:07 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id u27so1085114lfg.10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 16:30:07 -0700 (PDT)
+X-Received: by 2002:a19:4f54:: with SMTP id a20mr21404667lfk.136.1557963006849;
+ Wed, 15 May 2019 16:30:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3c6c9405-7e90-fb03-aa1c-0ada13203980@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190515133614.31dcbbe0@oasis.local.home>
+In-Reply-To: <20190515133614.31dcbbe0@oasis.local.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 15 May 2019 16:29:50 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wihYB8w__YQjgYjYZsVniu5CtkTcFycmCGdqVg8GUje7g@mail.gmail.com>
+Message-ID: <CAHk-=wihYB8w__YQjgYjYZsVniu5CtkTcFycmCGdqVg8GUje7g@mail.gmail.com>
+Subject: Re: [GIT PULL] tracing: Updates for 5.2
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 04:44:19PM -0600, shuah wrote:
-> Hi Sasha and Dhaval,
-> 
-> On 4/11/19 11:37 AM, Dhaval Giani wrote:
-> > Hi Folks,
-> > 
-> > This is a call for participation for the Linux Testing microconference
-> > at LPC this year.
-> > 
-> > For those who were at LPC last year, as the closing panel mentioned,
-> > testing is probably the next big push needed to improve quality. From
-> > getting more selftests in, to regression testing to ensure we don't
-> > break realtime as more of PREEMPT_RT comes in, to more stable distros,
-> > we need more testing around the kernel.
-> > 
-> > We have talked about different efforts around testing, such as fuzzing
-> > (using syzkaller and trinity), automating fuzzing with syzbot, 0day
-> > testing, test frameworks such as ktests, smatch to find bugs in the
-> > past. We want to push this discussion further this year and are
-> > interested in hearing from you what you want to talk about, and where
-> > kernel testing needs to go next.
-> > 
-> > Please let us know what topics you believe should be a part of the
-> > micro conference this year.
-> > 
-> > Thanks!
-> > Sasha and Dhaval
-> > 
-> 
-> A talk on KUnit from Brendan Higgins will be good addition to this
-> Micro-conference. I am cc'ing Brendan on this thread.
-> 
-> Please consider adding it.
+On Wed, May 15, 2019 at 10:36 AM Steven Rostedt <rostedt@goodmis.org> wrote=
+:
+>
+> The major changes in this tracing update includes:
 
-Thanks Shuah!
+This is not directly related to this pull request, but newer versions
+of gcc hate your trace_iterator clearing trick.
 
-Presumably I should still submit the talk on the website (however, it
-looks like the Testing Microconference isn't available as a track option
-yet...)? Or is it okay if I just post the proposal here?
+This code:
 
-Also, for the framing of the talk (assuming people are indeed
-interested). I figure people will want an intro along with some
-background context, and a discussion of future work. Nevertheless, would
-people like more of a demo talk or more of an audience driven discussion
-on where we should go and what we should do? Or something else? Really,
-I am open to talk about whatever everyone else wants.
+                /* reset all but tr, trace, and overruns */
+                memset(&iter.seq, 0,
+                       sizeof(struct trace_iterator) -
+                       offsetof(struct trace_iterator, seq));
 
-For context on KUnit, you can read the LWN article about it here[1], or
-you can see the current version of the patchset here[2].
+not only has a completely misleading comment (it resets a lot more
+than the comment states), but modern gcc looks at that code and says
+"oh, you're passing it a pointer to 'iter.seq', but then clearing a
+lot more than a 'trace_seq'":
 
-Thanks!
+  In function =E2=80=98memset=E2=80=99,
+      inlined from =E2=80=98ftrace_dump=E2=80=99 at kernel/trace/trace.c:89=
+14:3:
+ /include/linux/string.h:344:9: warning: =E2=80=98__builtin_memset=E2=80=99=
+ offset
+[8505, 8560] from the object at =E2=80=98iter=E2=80=99 is out of the bounds=
+ of
+referenced subobject =E2=80=98seq=E2=80=99 with type =E2=80=98struct trace_=
+seq=E2=80=99 at offset 4368
+[-Warray-bounds]
+    344 |  return __builtin_memset(p, c, size);
+        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[1] https://lwn.net/Articles/780985/
-[2] https://lkml.org/lkml/2019/5/14/834
+It's a somewhat annoying warning because the code itself is
+technically correct, but at the same time, I think the gcc warning is
+reasonable. You *are* passing it a 'struct trace_seq' pointer, and
+then you're clearing a whole lot more than that.
+
+One option is to just rewrite it something like
+
+        const unsigned int offset =3D offsetof(struct trace_iterator, seq);
+        memset(offset+(void *)&iter, 0, sizeof(iter) - offset);
+
+which should compile cleanly - because now you're doing the memset on
+a part of the much bigger 'iter' structure, not on one member (and
+overflowing that one member).
+
+Another option might be to separate the zeroed part of the structure
+into a sub-structure of its own, and then just use
+
+        memset(&iter.sub, 0, sizeof(iter.sub));
+
+but then you'd obviously have to change all the uses of the sub-fields..
+
+                      Linus
