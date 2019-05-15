@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5497C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA344C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD4A20818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9F1206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919892;
-	bh=oIQEaM9ehbUGjQp2n7XmPHer5wa2e7e8ImVmL2y+yzI=;
+	s=default; t=1557919896;
+	bh=GtcRU5ZM3n54XN/gJfZc+nyZGktY5oRZUcZIHhUpe/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qJ3c7Yhii9QA3h+RkOze6j4n3dr5Qhxlp1WFwgUWkeA8Q4Xga3p8z1WLZtVfWPgnk
-	 hsaoObtag5o67RP/ZXa0LHWl57JCp/dC4S3ogXzb21YLBIHCvZWG7+ghwV1aYcqyrx
-	 Zr9Y/7LjMdph+mpCDvt7ocfoiTQdTUIvB36NmXKc=
+	b=ck0e1ONb/Tmd8gx+REgguaiq9xaDpWjeJ2jCH2ZWlsWNoODo7JinxIHHoZX7owfbe
+	 Cwss0qY+R2oI1M/v/JXmPYDSn5aq4KaguyG2P6kz7R0rsjNlG0zD7YqygO8NxQ8Kbw
+	 yjcZ6H7Nqquhz8eVemryU0wZYgN/vONozgFNqr+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732608AbfEOLbb (ORCPT
+        id S1732905AbfEOLbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:31:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43264 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:31:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731386AbfEOLb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:31:29 -0400
+        id S1726964AbfEOLbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:31:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B34EE20818;
-        Wed, 15 May 2019 11:31:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75DB3206BF;
+        Wed, 15 May 2019 11:31:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919889;
-        bh=oIQEaM9ehbUGjQp2n7XmPHer5wa2e7e8ImVmL2y+yzI=;
+        s=default; t=1557919891;
+        bh=GtcRU5ZM3n54XN/gJfZc+nyZGktY5oRZUcZIHhUpe/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C4KBKLSrNRZjSq8tND2BrWyA4cuhsiDY/TCITx3AyM+fGuQMI39lIQ95OVZHDVYCK
-         wJDYN4UN6tE1i25IPk5CryqmMQu22+TBNsAYMjZF0mhXoHS0cdXXJYOkzcN/xVxkE0
-         uDdawZuPnJb/D1Ixzb7Kz+zf7fiikzPBv3BoR55k=
+        b=ybvuPSvLRTCdwFv37PFCliD7qsfDQ+UHiWhu+YXKstqcGXIvUtzzokV6yvdK9cwqp
+         1Q6fSNw1dFxTrazu/jNCKE63HEY7Fra9kRSa6zCXQy2v0cfVDCsfg7IXzHNPIpLGie
+         Uzl5Cd4TMuytLpbVlHhIiVZFAChjgY2Q2o4yc+ak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Subject: [PATCH 5.0 133/137] virtio_ring: Fix potential mem leak in virtqueue_add_indirect_packed
-Date:   Wed, 15 May 2019 12:56:54 +0200
-Message-Id: <20190515090703.537212784@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [PATCH 5.0 134/137] PCI: hv: Fix a memory leak in hv_eject_device_work()
+Date:   Wed, 15 May 2019 12:56:55 +0200
+Message-Id: <20190515090703.600457250@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -60,32 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-commit df0bfe7501e9319546ea380d39674a4179e059c3 upstream.
+commit 05f151a73ec2b23ffbff706e5203e729a995cdc2 upstream.
 
-'desc' should be freed before leaving from err handing path.
+When a device is created in new_pcichild_device(), hpdev->refs is set
+to 2 (i.e. the initial value of 1 plus the get_pcichild()).
 
-Fixes: 1ce9e6055fa0 ("virtio_ring: introduce packed ring support")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-stable@vger.kernel.org
+When we hot remove the device from the host, in a Linux VM we first call
+hv_pci_eject_device(), which increases hpdev->refs by get_pcichild() and
+then schedules a work of hv_eject_device_work(), so hpdev->refs becomes
+3 (let's ignore the paired get/put_pcichild() in other places). But in
+hv_eject_device_work(), currently we only call put_pcichild() twice,
+meaning the 'hpdev' struct can't be freed in put_pcichild().
+
+Add one put_pcichild() to fix the memory leak.
+
+The device can also be removed when we run "rmmod pci-hyperv". On this
+path (hv_pci_remove() -> hv_pci_bus_exit() -> hv_pci_devices_present()),
+hpdev->refs is 2, and we do correctly call put_pcichild() twice in
+pci_devices_present_work().
+
+Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+[lorenzo.pieralisi@arm.com: commit log rework]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Stephen Hemminger <stephen@networkplumber.org>
+Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/virtio/virtio_ring.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/pci/controller/pci-hyperv.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -993,6 +993,7 @@ static int virtqueue_add_indirect_packed
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1905,6 +1905,9 @@ static void hv_eject_device_work(struct
+ 			 sizeof(*ejct_pkt), (unsigned long)&ctxt.pkt,
+ 			 VM_PKT_DATA_INBAND, 0);
  
- 	if (unlikely(vq->vq.num_free < 1)) {
- 		pr_debug("Can't add buf len 1 - avail = 0\n");
-+		kfree(desc);
- 		END_USE(vq);
- 		return -ENOSPC;
- 	}
++	/* For the get_pcichild() in hv_pci_eject_device() */
++	put_pcichild(hpdev);
++	/* For the two refs got in new_pcichild_device() */
+ 	put_pcichild(hpdev);
+ 	put_pcichild(hpdev);
+ 	put_hvpcibus(hpdev->hbus);
 
 
