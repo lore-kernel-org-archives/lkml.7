@@ -2,71 +2,224 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70B4C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDA2C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC01220873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:44:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D76B20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:44:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="klUG8QeF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bTKvpeHf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727386AbfEOQoS (ORCPT
+        id S1727414AbfEOQo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 12:44:18 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41004 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbfEOQoS (ORCPT
+        Wed, 15 May 2019 12:44:58 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45981 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbfEOQo5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 12:44:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5ezG1QqiXOsGRIp+0lQFxeCPHGaBgx8UHJEuCr5YONE=; b=klUG8QeFGmsCRjeSJK/tDVlTy
-        tdK1XAdGw7GzfngQy2PAeSbPud32JoJrsqrb6OxUAzgnTVOTk9XWdXB3jg0kXcG9QBwxxeiRZOyBP
-        sH9afp9Ry4qtgzgHVgawvA3OzeZekW+/t8pwgbm8/68eQADOWqIQaD2kSrtzy80mJtw6IUzZzEC/2
-        YjIowxQ9cYpgIAFOTXpo+cFxOrxzDLUKJUnXmn5MlHF4Y8Aon4c6iVjsqPXCxI3DsW7ousEEJLYEC
-        Zsu4XJKw2tiMsWLI6bH63HdsKUH0kxBLcB5E68MpnvVpnqJ89CDLsX/YgJxuba5vN/Edzvr4JIgxu
-        P9zslws4Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hQx0p-0007zE-MC; Wed, 15 May 2019 16:44:15 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 302932029906B; Wed, 15 May 2019 18:44:14 +0200 (CEST)
-Date:   Wed, 15 May 2019 18:44:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Parth Shah <parth@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, dietmar.eggemann@arm.com, dsmythies@telus.net
-Subject: Re: [RFCv2 6/6] sched/fair: Bound non idle core search by DIE domain
-Message-ID: <20190515164414.GY2589@hirez.programming.kicks-ass.net>
-References: <20190515135322.19393-1-parth@linux.ibm.com>
- <20190515135322.19393-7-parth@linux.ibm.com>
+        Wed, 15 May 2019 12:44:57 -0400
+Received: by mail-lf1-f66.google.com with SMTP id n22so311648lfe.12
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 09:44:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pJOvi18L7fqK+4eFB/vQ8Hw8akTbJRCqM8gnrvSMvQs=;
+        b=bTKvpeHfA/y9f0nD0G2wvBnlydD3DkqNv+iHtpU6rlFbyz3nk4VDc96vqzrFsQsUPn
+         U3Xsj7BeVtcuZrsHNiVYeIROCBzb7CeBAkzgXAZ2wdW8Q5Vav0YS+fIshjbvuwl5RiPs
+         do9JEhNsm34DhRg/afRZu/4CveGjJhU4khSc/Fo72nQDHNL7bheI1kXthh2bbkJXwR8w
+         0ZdLlDMcPV3YJ+VjD4quA3f/EAqYWUzHpMd51tEmB3k2buj2kAtpYXzIh+NGmaBdTs7i
+         z2zIro74b+kDFSOGlg6ACYvX8afsQfbMVoXdbigrfKkKk0rmXKKbLBZcc7TJUkOkT33i
+         BxxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pJOvi18L7fqK+4eFB/vQ8Hw8akTbJRCqM8gnrvSMvQs=;
+        b=IhMDr7j83XTxnEm7m8l+qoHIdzRu0qcD6//+X8UQX2lM2oJ48WdESKChl2FGXEIoHZ
+         D/5DsMY0iWhBzv2UT6JV3l9ltOzd9esNSut3CK9/xyHslrmtcE8ynExcL/Wxbl4Ht6PA
+         EcI6bznxqwHsB4ZPs/ThnvEVIsCS6eIR84xgV2qlPFrCbPD3MaysX2/u+qoAgrvGYk0Z
+         SIUQqkzXWG1JgTXs79jYqnwoIgixJkLFTcUvCZzmWA+DM+ExGIo/T5FX60djBMY6z0FK
+         ylfGfFMf9SKOjOYXCPNAcS465d4aK+ZGg6cYtEcvOVGnLI4EeRsJb/GSkDfyUOGmibCn
+         uotQ==
+X-Gm-Message-State: APjAAAXUsj64RGUt5rwuWz7lusMwny09sGL7JM/Oyvt8e0oKq6Yws3SU
+        1bF6J1GXNnbIZTdsT3LKqGbCQE5osnvMZazHok82Xw==
+X-Google-Smtp-Source: APXvYqwXj4idJmJE1DtEImIBJtns+QbL27f5YRYiCBVu3dzN4Bnicdpw+haJRw7uLfsMmZP8j0DFdTZreKxntaSbx+8=
+X-Received: by 2002:a19:f817:: with SMTP id a23mr12334507lff.123.1557938694539;
+ Wed, 15 May 2019 09:44:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190515135322.19393-7-parth@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1557317799-39866-1-git-send-email-pbonzini@redhat.com>
+ <20190508142023.GA13834@linux.intel.com> <CAAAPnDE0ujH4eTX=4umTTEmUMyaZ7M0B3qxWa7oUUD-Ls7Ta+A@mail.gmail.com>
+ <20190508181339.GD19656@linux.intel.com> <CAAAPnDF=T8FHqLrHUDB9g9QzWJcct2mddqUW0O7zja7Ae0uy-Q@mail.gmail.com>
+In-Reply-To: <CAAAPnDF=T8FHqLrHUDB9g9QzWJcct2mddqUW0O7zja7Ae0uy-Q@mail.gmail.com>
+From:   Aaron Lewis <aaronlewis@google.com>
+Date:   Wed, 15 May 2019 09:44:43 -0700
+Message-ID: <CAAAPnDHLxRe9htqT9P_G1HufWuxq-+xE+Kff+fhXB6xPRcHNbw@mail.gmail.com>
+Subject: Re: [PATCH v2] kvm: nVMX: Set nested_run_pending in
+ vmx_set_nested_state after checks complete
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Peter Shier <pshier@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 07:23:22PM +0530, Parth Shah wrote:
-> This patch specifies the sched domain to search for a non idle core.
-> 
-> The select_non_idle_core searches for the non idle cores across whole
-> system. But in the systems with multiple NUMA domains, the Turbo frequency
-> can be sustained within the NUMA domain without being affected from other
-> NUMA.
-> 
-> This patch provides an architecture specific implementation for defining
-> the turbo domain to make searching of the core to be bound within the NUMA.
+On Wed, May 8, 2019 at 2:13 PM Aaron Lewis <aaronlewis@google.com> wrote:
+>
+> From: Sean Christopherson <sean.j.christopherson@intel.com>
+> Date: Wed, May 8, 2019 at 11:13 AM
+> To: Aaron Lewis
+> Cc: Paolo Bonzini, <linux-kernel@vger.kernel.org>,
+> <kvm@vger.kernel.org>, Peter Shier
+>
+> > On Wed, May 08, 2019 at 10:53:12AM -0700, Aaron Lewis wrote:
+> > > nested_run_pending is also checked in
+> > > nested_vmx_check_vmentry_postreqs
+> > > (https://elixir.bootlin.com/linux/v5.1/source/arch/x86/kvm/vmx/nested.c#L2709)
+> > > so I think the setting needs to be moved to just prior to that call
+> > > with Paolo's rollback along with another for if the prereqs and
+> > > postreqs fail.  I put a patch together below:
+> >
+> > Gah, I missed that usage (also, it's now nested_vmx_check_guest_state()).
+> >
+> > Side topic, I think the VM_ENTRY_LOAD_BNDCFGS check should be gated by
+> > nested_run_pending, a la the EFER check.'
+> >
+> > > ------------------------------------
+> > >
+> > > nested_run_pending=1 implies we have successfully entered guest mode.
+> > > Move setting from external state in vmx_set_nested_state() until after
+> > > all other checks are complete.
+> > >
+> > > Signed-off-by: Aaron Lewis <aaronlewis@google.com>
+> > > Reviewed-by: Peter Shier <pshier@google.com>
+> > > ---
+> > >  arch/x86/kvm/vmx/nested.c | 14 +++++++++-----
+> > >  1 file changed, 9 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> > > index 6401eb7ef19c..cf1f810223d2 100644
+> > > --- a/arch/x86/kvm/vmx/nested.c
+> > > +++ b/arch/x86/kvm/vmx/nested.c
+> > > @@ -5460,9 +5460,6 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+> > >   if (!(kvm_state->flags & KVM_STATE_NESTED_GUEST_MODE))
+> > >   return 0;
+> > >
+> > > - vmx->nested.nested_run_pending =
+> > > - !!(kvm_state->flags & KVM_STATE_NESTED_RUN_PENDING);
+> >
+> > Alternatively, it might be better to leave nested_run_pending where it
+> > is and instead add a label to handle clearing the flag on error.  IIUC,
+> > the real issue is that nested_run_pending is left set after a failed
+> > vmx_set_nested_state(), not that its shouldn't be set in the shadow
+> > VMCS handling.
+> >
+> > Patch attached, though it's completely untested.  The KVM selftests are
+> > broken for me right now, grrr.
+> >
+> > > -
+> > >   if (nested_cpu_has_shadow_vmcs(vmcs12) &&
+> > >       vmcs12->vmcs_link_pointer != -1ull) {
+> > >   struct vmcs12 *shadow_vmcs12 = get_shadow_vmcs12(vcpu);
+> > > @@ -5480,14 +5477,21 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+> > >   return -EINVAL;
+> > >   }
+> > >
+> > > + vmx->nested.nested_run_pending =
+> > > + !!(kvm_state->flags & KVM_STATE_NESTED_RUN_PENDING);
+> > > +
+> > >   if (nested_vmx_check_vmentry_prereqs(vcpu, vmcs12) ||
+> > > -     nested_vmx_check_vmentry_postreqs(vcpu, vmcs12, &exit_qual))
+> > > +     nested_vmx_check_vmentry_postreqs(vcpu, vmcs12, &exit_qual)) {
+> > > +     vmx->nested.nested_run_pending = 0;
+> > >   return -EINVAL;
+> > > + }
+> > >
+> > >   vmx->nested.dirty_vmcs12 = true;
+> > >   ret = nested_vmx_enter_non_root_mode(vcpu, false);
+> > > - if (ret)
+> > > + if (ret) {
+> > > + vmx->nested.nested_run_pending = 0;
+> > >   return -EINVAL;
+> > > + }
+> > >
+> > >   return 0;
+> > >  }
+>
+> Here is an update based on your patch.  I ran these changes against
+> the test vmx_set_nested_state_test, and it run successfully.
+>
+> That's correct that we are only concerned about restoring the state of
+> nested_run_pending, so it's fine to set it where we do as long as we
+> back the state change out before returning if we get an error.
+>
+> ---------------------------------------------
+>
+> nested_run_pending=1 implies we have successfully entered guest mode.
+> Move setting from external state in vmx_set_nested_state() until after
+> all other checks are complete.
+>
+> Signed-off-by: Aaron Lewis <aaronlewis@google.com>
+> Tested-by: Aaron Lewis <aaronlewis@google.com>
+> Reviewed-by: Peter Shier <pshier@google.com>
+> ---
+>  arch/x86/kvm/vmx/nested.c | 20 ++++++++++++++------
+>  1 file changed, 14 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> index 6401eb7ef19c..fe5814df5149 100644
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -5468,28 +5468,36 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+>   struct vmcs12 *shadow_vmcs12 = get_shadow_vmcs12(vcpu);
+>
+>   if (kvm_state->size < sizeof(kvm_state) + 2 * sizeof(*vmcs12))
+> - return -EINVAL;
+> + goto error_guest_mode_einval;
+>
+>   if (copy_from_user(shadow_vmcs12,
+>      user_kvm_nested_state->data + VMCS12_SIZE,
+> -    sizeof(*vmcs12)))
+> - return -EFAULT;
+> +    sizeof(*vmcs12))) {
+> + ret = -EFAULT;
+> + goto error_guest_mode;
+> + }
+>
+>   if (shadow_vmcs12->hdr.revision_id != VMCS12_REVISION ||
+>       !shadow_vmcs12->hdr.shadow_vmcs)
+> - return -EINVAL;
+> + goto error_guest_mode_einval;
+>   }
+>
+>   if (nested_vmx_check_vmentry_prereqs(vcpu, vmcs12) ||
+>       nested_vmx_check_vmentry_postreqs(vcpu, vmcs12, &exit_qual))
+> - return -EINVAL;
+> + goto error_guest_mode_einval;
+>
+>   vmx->nested.dirty_vmcs12 = true;
+>   ret = nested_vmx_enter_non_root_mode(vcpu, false);
+>   if (ret)
+> - return -EINVAL;
+> + goto error_guest_mode_einval;
+>
+>   return 0;
+> +
+> +error_guest_mode_einval:
+> + ret = -EINVAL;
+> +error_guest_mode:
+> + vmx->nested.nested_run_pending = 0;
+> + return ret;
+>  }
+>
+>  void nested_vmx_vcpu_setup(void)
 
-NAK, this is insane. You don't need arch hooks to find the numa domain.
+Sean, I updated this patch based on the one you sent out.  Does it
+look good now?
