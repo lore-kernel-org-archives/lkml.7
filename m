@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A0EC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F5CC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A810220675
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED236206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:15:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922511;
-	bh=nQD2RP6IQV12KN5CGMPv+6Od8vaWpd0IIdQBglLgkkc=;
+	s=default; t=1557922515;
+	bh=++UBiiiSza5chgC0MTfNpc7+6jP7+knBuzcFNRQ+J0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rCBYnSxgYY5YhhHVbyiP2oElL9aaBIzxN2GysnLWrC++87/OuG8FEZkfAr54PBkED
-	 ajqu0hIsIi482s+InDUClpnFzLT68Opa2XfmdKHhUBwWL5fFD1s34YhQIW3OC58HMi
-	 CReZsqDt0U8mCymCXcPCwM9Hu0p7FlpSkBUnM1PU=
+	b=vI27Ymgccpt0znntCPiheT03UHHJ+P94bOOu7YooxxKg5b8lsvuhFm2tAFCm7l751
+	 e/n2Je7tySza7P18Sfu1kDSclrdADlxMuTayG2ZIOr5ev/jcQeAZxVK1+vMhc+dqm4
+	 lCcvYM88CSDQv0mEd8wXJakKVkYRNBBF/iTjbCVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfEOLDr (ORCPT
+        id S1728255AbfEOLDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:03:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33122 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:03:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728248AbfEOLDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:03:44 -0400
+        id S1728233AbfEOLDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:03:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E8F320881;
-        Wed, 15 May 2019 11:03:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0443C2084F;
+        Wed, 15 May 2019 11:03:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918224;
-        bh=nQD2RP6IQV12KN5CGMPv+6Od8vaWpd0IIdQBglLgkkc=;
+        s=default; t=1557918221;
+        bh=++UBiiiSza5chgC0MTfNpc7+6jP7+knBuzcFNRQ+J0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EvunsdOCOY5vxwzNzpg86ZmXYdZxnQb4dzI17aSiOO68t+/Ay+65mh4pVOdPBBJT9
-         /gQgCaEwwryliT5b1BIt3+MDeEpLF1V/E+O+xqWbbYoPP5jK1HOvY4s41Yi4OHUNPY
-         HjK47AK8nb+sGtNzzJazsblYdDrcBvrP7/pqek7c=
+        b=2PfEU2K1YVwfLhpv/5vmb+xXKusDRuBEfXb6rF7vyKSI/J3x3JOjxhpiH221+Vfig
+         MIiwxtxxdwuylkH0rv5AnicUV7/gkGQfCUGdeJ/0AgYWl7zxm6n7HazJFpdshmHBGH
+         EJtcV8gnw97i77L78eqCex+wXwf7RzPPfoSFQsHM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.4 052/266] powerpc/64s: Add new security feature flags for count cache flush
-Date:   Wed, 15 May 2019 12:52:39 +0200
-Message-Id: <20190515090724.207045865@linuxfoundation.org>
+Subject: [PATCH 4.4 051/266] powerpc/asm: Add a patch_site macro & helpers for patching instructions
+Date:   Wed, 15 May 2019 12:52:38 +0200
+Message-Id: <20190515090724.174251222@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,39 +60,88 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit dc8c6cce9a26a51fc19961accb978217a3ba8c75 upstream.
+commit 06d0bbc6d0f56dacac3a79900e9a9a0d5972d818 upstream.
 
-Add security feature flags to indicate the need for software to flush
-the count cache on context switch, and for the presence of a hardware
-assisted count cache flush.
+Add a macro and some helper C functions for patching single asm
+instructions.
+
+The gas macro means we can do something like:
+
+  1:	nop
+  	patch_site 1b, patch__foo
+
+Which is less visually distracting than defining a GLOBAL symbol at 1,
+and also doesn't pollute the symbol table which can confuse eg. perf.
+
+These are obviously similar to our existing feature sections, but are
+not automatically patched based on CPU/MMU features, rather they are
+designed to be manually patched by C code at some arbitrary point.
 
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/include/asm/security_features.h |    6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/powerpc/include/asm/code-patching-asm.h |   18 ++++++++++++++++++
+ arch/powerpc/include/asm/code-patching.h     |    2 ++
+ arch/powerpc/lib/code-patching.c             |   16 ++++++++++++++++
+ 3 files changed, 36 insertions(+)
+ create mode 100644 arch/powerpc/include/asm/code-patching-asm.h
 
---- a/arch/powerpc/include/asm/security_features.h
-+++ b/arch/powerpc/include/asm/security_features.h
-@@ -59,6 +59,9 @@ static inline bool security_ftr_enabled(
- // Indirect branch prediction cache disabled
- #define SEC_FTR_COUNT_CACHE_DISABLED	0x0000000000000020ull
- 
-+// bcctr 2,0,0 triggers a hardware assisted count cache flush
-+#define SEC_FTR_BCCTR_FLUSH_ASSIST	0x0000000000000800ull
+--- /dev/null
++++ b/arch/powerpc/include/asm/code-patching-asm.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Copyright 2018, Michael Ellerman, IBM Corporation.
++ */
++#ifndef _ASM_POWERPC_CODE_PATCHING_ASM_H
++#define _ASM_POWERPC_CODE_PATCHING_ASM_H
 +
- 
- // Features indicating need for Spectre/Meltdown mitigations
- 
-@@ -74,6 +77,9 @@ static inline bool security_ftr_enabled(
- // Firmware configuration indicates user favours security over performance
- #define SEC_FTR_FAVOUR_SECURITY		0x0000000000000200ull
- 
-+// Software required to flush count cache on context switch
-+#define SEC_FTR_FLUSH_COUNT_CACHE	0x0000000000000400ull
++/* Define a "site" that can be patched */
++.macro patch_site label name
++	.pushsection ".rodata"
++	.balign 4
++	.global \name
++\name:
++	.4byte	\label - .
++	.popsection
++.endm
 +
++#endif /* _ASM_POWERPC_CODE_PATCHING_ASM_H */
+--- a/arch/powerpc/include/asm/code-patching.h
++++ b/arch/powerpc/include/asm/code-patching.h
+@@ -28,6 +28,8 @@ unsigned int create_cond_branch(const un
+ 				unsigned long target, int flags);
+ int patch_branch(unsigned int *addr, unsigned long target, int flags);
+ int patch_instruction(unsigned int *addr, unsigned int instr);
++int patch_instruction_site(s32 *addr, unsigned int instr);
++int patch_branch_site(s32 *site, unsigned long target, int flags);
  
- // Features enabled by default
- #define SEC_FTR_DEFAULT \
+ int instr_is_relative_branch(unsigned int instr);
+ int instr_is_branch_to_addr(const unsigned int *instr, unsigned long addr);
+--- a/arch/powerpc/lib/code-patching.c
++++ b/arch/powerpc/lib/code-patching.c
+@@ -32,6 +32,22 @@ int patch_branch(unsigned int *addr, uns
+ 	return patch_instruction(addr, create_branch(addr, target, flags));
+ }
+ 
++int patch_branch_site(s32 *site, unsigned long target, int flags)
++{
++	unsigned int *addr;
++
++	addr = (unsigned int *)((unsigned long)site + *site);
++	return patch_instruction(addr, create_branch(addr, target, flags));
++}
++
++int patch_instruction_site(s32 *site, unsigned int instr)
++{
++	unsigned int *addr;
++
++	addr = (unsigned int *)((unsigned long)site + *site);
++	return patch_instruction(addr, instr);
++}
++
+ unsigned int create_branch(const unsigned int *addr,
+ 			   unsigned long target, int flags)
+ {
 
 
