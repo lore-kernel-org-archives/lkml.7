@@ -2,265 +2,111 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 264BCC04AA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:20:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CF8C04AA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB80720862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2E220862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:21:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="BU1cJkg5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o375KU68"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbfEOGUZ (ORCPT
+        id S1726338AbfEOGVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 02:20:25 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:38467 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725871AbfEOGUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 02:20:25 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 453ktt3LDPz9vDbS;
-        Wed, 15 May 2019 08:20:22 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=BU1cJkg5; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 95-jRXc61RUu; Wed, 15 May 2019 08:20:22 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 453ktt2Brtz9vDbR;
-        Wed, 15 May 2019 08:20:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1557901222; bh=pbPsZWHgsG18WLzIgAsalkAzc3NcABdvO82mAnSRanI=;
-        h=From:Subject:To:Cc:Date:From;
-        b=BU1cJkg5nRmsWyhdQYUxNb+jq1ORO3+xcCtJoNkPnL93K6khYka3V2AzbTA9wU1gl
-         tcr8GLdCk0Vg91WWlDKBGxVhkRbBVOLzJ7F0BV8Ipd6wXaVxJtY566aG5WqHBrb+9e
-         LYukW5Mle0KWlljVxpk+yOoI9DpjL0/VvQuQIxA8=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 30D358B77A;
-        Wed, 15 May 2019 08:20:23 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id TLvEQgxFveHK; Wed, 15 May 2019 08:20:23 +0200 (CEST)
-Received: from po16846vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.231.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 067538B756;
-        Wed, 15 May 2019 08:20:23 +0200 (CEST)
-Received: by po16846vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id CF744682A6; Wed, 15 May 2019 06:20:22 +0000 (UTC)
-Message-Id: <df502ffe07caa38c46b0144fc824fff447f4105b.1557901092.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [RFC PATCH] powerpc/mm: Implement STRICT_MODULE_RWX
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
+        Wed, 15 May 2019 02:21:17 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34063 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbfEOGVQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 02:21:16 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w7so820478plz.1;
+        Tue, 14 May 2019 23:21:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vpr9qeWej7/xdaLzfL7kzDfFrVNMEMZWeQ2yDGuvcWA=;
+        b=o375KU68c6cq1L9rhDvFqMLy/36KzkumU5eyglTJpzMIPwAslM+THguYtGV24yszrB
+         AfYo9WtSVI4YPeApa2se9off1OySDBkrKN7buQLJmfCNI/aUK7RfjMnE/bGxwyACd7HW
+         g43h4W/w7cF1ebM7p3GlKDoMC/No0MM/60V7FFaBW4jE3VheGcBQfsSDliKPbh80RMYI
+         dOTUBqDXrX4eE2LtTtSOQAHYRUCrNB5AZxKgRYAE1MmJfuYWQBqZx6l5sqSUhtrZ1gg1
+         924TKUokkcN8xRTqUfEE68pHktdBzMgi/pqoWUNqh/12ErYeobF1s95PpggCN9DKAtsk
+         f1rQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vpr9qeWej7/xdaLzfL7kzDfFrVNMEMZWeQ2yDGuvcWA=;
+        b=f8nL02xSEYVSbcj6sJKVmwUBPhGsE4ITx1ly+NWa0OYFUyFGyYGRWfoL5YNj46+0hT
+         qRCZeAFD2MHkWsLxZ2I1gEVzKQ7fqPfopCQTAai3Nqib5FzIBrzfCxg6G/bF1dhbykPU
+         bZweLAuWJcjxVg64qxDgTt/TvGYD+yjRycN3FzffI3chGVYwd0ZqNyIj+/OIIUQnF+mP
+         gt3e0y1+9uF4SQdgeSYK2E7HOXm/OD/4b1UKfo7nhC5hCZIu9hfmZhmC3U/t5iCjwZjd
+         c60dyfnbzfONgwCXTrzS7zz+3CnEdGQ9x2kb8/E1VS/eKEsJFHVvw8m4La8dJrReiMA2
+         IZyQ==
+X-Gm-Message-State: APjAAAUoi/Lg/x/VT3FgLL1CnuH/RZJSrZcEWbYnKKJSmVCM3DJOnyO4
+        mPzG4XMVCNU2/diw0kZFz3I=
+X-Google-Smtp-Source: APXvYqzRJKRDGGgSFBUw3D9wrq2bEKNWyL8HrksRCPNPrE+2T1MlywAkkHnSpqiXENFfwknkCI68dQ==
+X-Received: by 2002:a17:902:6bc8:: with SMTP id m8mr41177371plt.227.1557901275995;
+        Tue, 14 May 2019 23:21:15 -0700 (PDT)
+Received: from localhost ([110.70.52.120])
+        by smtp.gmail.com with ESMTPSA id f4sm1300687pfn.118.2019.05.14.23.21.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 23:21:14 -0700 (PDT)
+Date:   Wed, 15 May 2019 15:21:11 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@aculab.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        christophe leroy <christophe.leroy@c-s.fr>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Russell Currey <ruscur@russell.cc>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Wed, 15 May 2019 06:20:22 +0000 (UTC)
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Russell Currey <ruscur@russell.cc>,
+        Stephen Rothwell <sfr@ozlabs.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
+Message-ID: <20190515062111.GA30030@jagdpanzerIV>
+References: <20190510122401.21a598f6@gandalf.local.home>
+ <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
+ <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
+ <20190513091320.GK9224@smile.fi.intel.com>
+ <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
+ <20190514020730.GA651@jagdpanzerIV>
+ <45348cf615fe40d383c1a25688d4a88f@AcuMS.aculab.com>
+ <CAMuHMdXaMObq9h2Sb49PW1-HUysPeaWXB7wJmKFz=xLmSoUDZg@mail.gmail.com>
+ <20190514143751.48e81e05@oasis.local.home>
+ <CAMuHMdUhy3uB+G23uXh__F2Y_Jsam5uS1Q5jJC95kWAOEM8WRA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUhy3uB+G23uXh__F2Y_Jsam5uS1Q5jJC95kWAOEM8WRA@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Strict module RWX is just like strict kernel RWX, but for modules - so
-loadable modules aren't marked both writable and executable at the same
-time.  This is handled by the generic code in kernel/module.c, and
-simply requires the architecture to implement the set_memory() set of
-functions, declared with ARCH_HAS_SET_MEMORY.
+On (05/14/19 21:13), Geert Uytterhoeven wrote:
+> I would immediately understand there's a missing IS_ERR() check in a
+> function that can return  -EINVAL, without having to add a new printk()
+> to find out what kind of bogus value has been received, and without
+> having to reboot, and trying to reproduce...
 
-There's nothing other than these functions required to turn
-ARCH_HAS_STRICT_MODULE_RWX on, so turn that on too.
+But chances are that missing IS_ERR() will crash the kernel sooner
+or later (in general case), if not in sprintf() then somewhere else.
 
-With STRICT_MODULE_RWX enabled, there are as many W+X pages at runtime
-as there are with CONFIG_MODULES=n (none), so in Russel's testing it works
-well on both Hash and Radix book3s64.
-
-There's a TODO in the code for also applying the page permission changes
-to the backing pages in the linear mapping: this is pretty simple for
-Radix and (seemingly) a lot harder for Hash, so I've left it for now
-since there's still a notable security benefit for the patch as-is.
-
-Technically can be enabled without STRICT_KERNEL_RWX, but
-that doesn't gets you a whole lot, so we should leave it off by default
-until we can get STRICT_KERNEL_RWX to the point where it's enabled by
-default.
-
-Signed-off-by: Russell Currey <ruscur@russell.cc>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- Generic implementation based on Russel's patch ("powerpc/mm/book3s64: Implement STRICT_MODULE_RWX")
- Untested
-
- arch/powerpc/Kconfig                  |  2 +
- arch/powerpc/include/asm/set_memory.h | 32 +++++++++++++
- arch/powerpc/mm/Makefile              |  2 +-
- arch/powerpc/mm/pageattr.c            | 85 +++++++++++++++++++++++++++++++++++
- 4 files changed, 120 insertions(+), 1 deletion(-)
- create mode 100644 arch/powerpc/include/asm/set_memory.h
- create mode 100644 arch/powerpc/mm/pageattr.c
-
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index d7996cfaceca..1f1423e3d818 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -131,7 +131,9 @@ config PPC
- 	select ARCH_HAS_PTE_SPECIAL
- 	select ARCH_HAS_MEMBARRIER_CALLBACKS
- 	select ARCH_HAS_SCALED_CPUTIME		if VIRT_CPU_ACCOUNTING_NATIVE && PPC64
-+	select ARCH_HAS_SET_MEMORY
- 	select ARCH_HAS_STRICT_KERNEL_RWX	if ((PPC_BOOK3S_64 || PPC32) && !RELOCATABLE && !HIBERNATION)
-+	select ARCH_HAS_STRICT_MODULE_RWX	if PPC_BOOK3S_64 || PPC32
- 	select ARCH_HAS_TICK_BROADCAST		if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_HAS_UACCESS_FLUSHCACHE	if PPC64
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
-diff --git a/arch/powerpc/include/asm/set_memory.h b/arch/powerpc/include/asm/set_memory.h
-new file mode 100644
-index 000000000000..4b9683f3b3dd
---- /dev/null
-+++ b/arch/powerpc/include/asm/set_memory.h
-@@ -0,0 +1,32 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+#ifndef _ASM_POWERPC_SET_MEMORY_H
-+#define _ASM_POWERPC_SET_MEMORY_H
-+
-+#define SET_MEMORY_RO	1
-+#define SET_MEMORY_RW	2
-+#define SET_MEMORY_NX	3
-+#define SET_MEMORY_X	4
-+
-+int change_memory(unsigned long addr, int numpages, int action);
-+
-+static inline int set_memory_ro(unsigned long addr, int numpages)
-+{
-+	return change_memory(addr, numpages, SET_MEMORY_RO);
-+}
-+
-+static inline int set_memory_rw(unsigned long addr, int numpages)
-+{
-+	return change_memory(addr, numpages, SET_MEMORY_RW);
-+}
-+
-+static inline int set_memory_nx(unsigned long addr, int numpages)
-+{
-+	return change_memory(addr, numpages, SET_MEMORY_NX);
-+}
-+
-+static inline int set_memory_x(unsigned long addr, int numpages)
-+{
-+	return change_memory(addr, numpages, SET_MEMORY_X);
-+}
-+
-+#endif
-diff --git a/arch/powerpc/mm/Makefile b/arch/powerpc/mm/Makefile
-index 0f499db315d6..b683d1c311b3 100644
---- a/arch/powerpc/mm/Makefile
-+++ b/arch/powerpc/mm/Makefile
-@@ -7,7 +7,7 @@ ccflags-$(CONFIG_PPC64)	:= $(NO_MINIMAL_TOC)
- 
- obj-y				:= fault.o mem.o pgtable.o mmap.o \
- 				   init_$(BITS).o pgtable_$(BITS).o \
--				   pgtable-frag.o \
-+				   pgtable-frag.o pageattr.o \
- 				   init-common.o mmu_context.o drmem.o
- obj-$(CONFIG_PPC_MMU_NOHASH)	+= nohash/
- obj-$(CONFIG_PPC_BOOK3S_32)	+= book3s32/
-diff --git a/arch/powerpc/mm/pageattr.c b/arch/powerpc/mm/pageattr.c
-new file mode 100644
-index 000000000000..3e8f2c203a00
---- /dev/null
-+++ b/arch/powerpc/mm/pageattr.c
-@@ -0,0 +1,85 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+/*
-+ * Page attribute and set_memory routines
-+ *
-+ * Derived from the arm64 implementation.
-+ *
-+ * Author: Russell Currey <ruscur@russell.cc>
-+ *
-+ * Copyright 2019, IBM Corporation.
-+ *
-+ */
-+
-+#include <linux/mm.h>
-+#include <linux/set_memory.h>
-+#include <linux/vmalloc.h>
-+
-+#include <asm/mmu.h>
-+#include <asm/page.h>
-+#include <asm/pgtable.h>
-+
-+static int change_page_ro(pte_t *ptep, pgtable_t token, unsigned long addr, void *data)
-+{
-+	set_pte_at(&init_mm, addr, ptep, pte_wrprotect(READ_ONCE(*ptep)));
-+	return 0;
-+}
-+
-+static int change_page_rw(pte_t *ptep, pgtable_t token, unsigned long addr, void *data)
-+{
-+	set_pte_at(&init_mm, addr, ptep, pte_mkwrite(READ_ONCE(*ptep)));
-+	return 0;
-+}
-+
-+static int change_page_nx(pte_t *ptep, pgtable_t token, unsigned long addr, void *data)
-+{
-+	set_pte_at(&init_mm, addr, ptep, pte_exprotect(READ_ONCE(*ptep)));
-+	return 0;
-+}
-+
-+static int change_page_x(pte_t *ptep, pgtable_t token, unsigned long addr, void *data)
-+{
-+	set_pte_at(&init_mm, addr, ptep, pte_mkexec(READ_ONCE(*ptep)));
-+	return 0;
-+}
-+
-+int change_memory(unsigned long addr, int numpages, int action)
-+{
-+	unsigned long size = numpages * PAGE_SIZE;
-+	unsigned long start = ALIGN_DOWN(addr, PAGE_SIZE);
-+	unsigned long end = start + size;
-+	struct vm_struct *area;
-+	int ret;
-+
-+	if (!numpages)
-+		return 0;
-+
-+	// only operate on VM areas for now
-+	area = find_vm_area((void *)addr);
-+	if (!area || end > (unsigned long)area->addr + area->size ||
-+	    !(area->flags & VM_ALLOC))
-+		return -EINVAL;
-+
-+	// TODO: also apply change to the backing pages in the linear mapping
-+
-+	switch (action) {
-+	case SET_MEMORY_RO:
-+		ret = apply_to_page_range(&init_mm, start, size, change_page_ro, NULL);
-+		break;
-+	case SET_MEMORY_RW:
-+		ret = apply_to_page_range(&init_mm, start, size, change_page_rw, NULL);
-+		break;
-+	case SET_MEMORY_NX:
-+		ret = apply_to_page_range(&init_mm, start, size, change_page_nx, NULL);
-+		break;
-+	case SET_MEMORY_X:
-+		ret = apply_to_page_range(&init_mm, start, size, change_page_x, NULL);
-+		break;
-+	default:
-+		WARN_ON(true);
-+		return -EINVAL;
-+	}
-+
-+	flush_tlb_kernel_range(start, end);
-+	return ret;
-+}
--- 
-2.13.3
-
+	-ss
