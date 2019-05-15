@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32E9C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64235C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94B582089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3665020843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919804;
-	bh=ZXfI5rOLK+JAyxi0GMFDARkhQbo+4KCbdDkLOuPMubI=;
+	s=default; t=1557919808;
+	bh=27o0n0tSSQ4ROIQfDrmsXsWggqIdruEl+279LB0TF+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YKSBVek9MIhRt16kttFhpOuQ0Dn5hmlywhRA/De8IOJlmDxef84Jr7QZGSOUe6mof
-	 0VN8JVJQngVwjfWmSf73c9U/gi3jMxJb1uxGUA11h4xnWQJsKe7Xcex//iS7lr4Koa
-	 M7jzhsRsX9EAgubZ767SrtP1b4cXgvQmF/U3kmQY=
+	b=XIMdevjurSbrfKclVN5lmJhpB0Q++j8xA3ucc2hWu192xN4MvIwUdZz3CjmuF/wry
+	 cQXv1VPEB/l+g0FS3USeh3L3OjA9Qrbq/aNQiLepAChvY+PVnqPMk6cvbf5qNgUQjY
+	 QRskGvSlRrFh38M3hZ63Z3dyX0yA23bFgbrB8Cqs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732666AbfEOLaD (ORCPT
+        id S1732363AbfEOLaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:30:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41326 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:30:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732166AbfEOL35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:29:57 -0400
+        id S1732166AbfEOLaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:30:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 763FB20881;
-        Wed, 15 May 2019 11:29:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4588D206BF;
+        Wed, 15 May 2019 11:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919796;
-        bh=ZXfI5rOLK+JAyxi0GMFDARkhQbo+4KCbdDkLOuPMubI=;
+        s=default; t=1557919804;
+        bh=27o0n0tSSQ4ROIQfDrmsXsWggqIdruEl+279LB0TF+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aw1dyJjv57zo79um3izrNAt5cqdy+vvDE8x8lW45zfU/dHVAOOAzoTMpJwGBdTf2K
-         qjl2vUOMSjDJnN8IfBDbVuqk8QUZ8QjidjFM9iCAXiC/5Ixc61y49rBksJNA5TjJT6
-         LyfyCI1UKXhxPn85xLdoleQIB9cFMxshxweJjwj0=
+        b=IFvyisip33+i5RlxfVdAHSm42NKd4XcaIAmqh1nfWWQhwTVOFEL2tklgV/W4kkB8b
+         jt3Q8njUR5SEQ/aIoFDgU3YuhDNTsI2f0fCR+tJvvR7m/vfMIMAEKOz9U89mfBJBr+
+         EzY/oe3OwSaT9yPecJw7jh1bgwYt5vEzcq9Y//VI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
-        Yonghong Song <yhs@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Damian Kos <dkos@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 5.0 097/137] bpf: only test gso type on gso packets
-Date:   Wed, 15 May 2019 12:56:18 +0200
-Message-Id: <20190515090700.580924077@linuxfoundation.org>
+Subject: [PATCH 5.0 100/137] drm/rockchip: fix for mailbox read validation.
+Date:   Wed, 15 May 2019 12:56:21 +0200
+Message-Id: <20190515090700.786125615@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -61,79 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4c3024debf62de4c6ac6d3cb4c0063be21d4f652 ]
+[ Upstream commit e4056bbb6719fe713bfc4030ac78e8e97ddf7574 ]
 
-BPF can adjust gso only for tcp bytestreams. Fail on other gso types.
+This is basically the same fix as in
+commit fa68d4f8476b ("drm/rockchip: fix for mailbox read size")
+but for cdn_dp_mailbox_validate_receive function.
 
-But only on gso packets. It does not touch this field if !gso_size.
+See patchwork.kernel.org/patch/10671981/ for details.
 
-Fixes: b90efd225874 ("bpf: only adjust gso_size on bytestream protocols")
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Acked-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Damian Kos <dkos@cadence.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/1542640463-18332-1-git-send-email-dkos@cadence.com
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- include/linux/skbuff.h | 4 ++--
- net/core/filter.c      | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/rockchip/cdn-dp-reg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
-index bdb9563c64a01..b8679dcba96f8 100644
---- a/include/linux/skbuff.h
-+++ b/include/linux/skbuff.h
-@@ -4212,10 +4212,10 @@ static inline bool skb_is_gso_sctp(const struct sk_buff *skb)
- 	return skb_shinfo(skb)->gso_type & SKB_GSO_SCTP;
- }
+diff --git a/drivers/gpu/drm/rockchip/cdn-dp-reg.c b/drivers/gpu/drm/rockchip/cdn-dp-reg.c
+index 5a485489a1e23..6c8b14fb1d2f3 100644
+--- a/drivers/gpu/drm/rockchip/cdn-dp-reg.c
++++ b/drivers/gpu/drm/rockchip/cdn-dp-reg.c
+@@ -113,7 +113,7 @@ static int cdp_dp_mailbox_write(struct cdn_dp_device *dp, u8 val)
  
-+/* Note: Should be called only if skb_is_gso(skb) is true */
- static inline bool skb_is_gso_tcp(const struct sk_buff *skb)
+ static int cdn_dp_mailbox_validate_receive(struct cdn_dp_device *dp,
+ 					   u8 module_id, u8 opcode,
+-					   u8 req_size)
++					   u16 req_size)
  {
--	return skb_is_gso(skb) &&
--	       skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6);
-+	return skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6);
- }
- 
- static inline void skb_gso_reset(struct sk_buff *skb)
-diff --git a/net/core/filter.c b/net/core/filter.c
-index f7d0004fc1609..ff07996515f2d 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -2789,7 +2789,7 @@ static int bpf_skb_proto_4_to_6(struct sk_buff *skb)
- 	u32 off = skb_mac_header_len(skb);
- 	int ret;
- 
--	if (!skb_is_gso_tcp(skb))
-+	if (skb_is_gso(skb) && !skb_is_gso_tcp(skb))
- 		return -ENOTSUPP;
- 
- 	ret = skb_cow(skb, len_diff);
-@@ -2830,7 +2830,7 @@ static int bpf_skb_proto_6_to_4(struct sk_buff *skb)
- 	u32 off = skb_mac_header_len(skb);
- 	int ret;
- 
--	if (!skb_is_gso_tcp(skb))
-+	if (skb_is_gso(skb) && !skb_is_gso_tcp(skb))
- 		return -ENOTSUPP;
- 
- 	ret = skb_unclone(skb, GFP_ATOMIC);
-@@ -2955,7 +2955,7 @@ static int bpf_skb_net_grow(struct sk_buff *skb, u32 len_diff)
- 	u32 off = skb_mac_header_len(skb) + bpf_skb_net_base_len(skb);
- 	int ret;
- 
--	if (!skb_is_gso_tcp(skb))
-+	if (skb_is_gso(skb) && !skb_is_gso_tcp(skb))
- 		return -ENOTSUPP;
- 
- 	ret = skb_cow(skb, len_diff);
-@@ -2984,7 +2984,7 @@ static int bpf_skb_net_shrink(struct sk_buff *skb, u32 len_diff)
- 	u32 off = skb_mac_header_len(skb) + bpf_skb_net_base_len(skb);
- 	int ret;
- 
--	if (!skb_is_gso_tcp(skb))
-+	if (skb_is_gso(skb) && !skb_is_gso_tcp(skb))
- 		return -ENOTSUPP;
- 
- 	ret = skb_unclone(skb, GFP_ATOMIC);
+ 	u32 mbox_size, i;
+ 	u8 header[4];
 -- 
 2.20.1
 
