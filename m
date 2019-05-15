@@ -3,161 +3,118 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6E9C04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0C6C04AB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F6720862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:30:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557880224;
-	bh=ZojYX+XFjV2N7qXQysduMskFQDMyHJ4OxPsm/itdzvg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OUzGktAEiovNCikkRKljy6djRuR2PupixqmR7k11yi1UZOC3H0wRXR33aFNrBzhkz
-	 3jmf88DPYTp0G1rGJf3JsnfXTsm+xNSX8JWC48X8MV4YTIbBozzvsgEv7gAO0iIY/i
-	 BO0NDHcxmgLo5z1t4VUJuGES1alPP2xM2ytoMn3A=
+	by mail.kernel.org (Postfix) with ESMTP id 7CEA020862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:30:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="HoaR3fob"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726702AbfEOAaW (ORCPT
+        id S1726783AbfEOAa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:30:22 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:46795 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726604AbfEOAaT (ORCPT
+        Tue, 14 May 2019 20:30:27 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:38638 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726707AbfEOAaX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:30:19 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id C388D2574D;
-        Tue, 14 May 2019 20:30:18 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 14 May 2019 20:30:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=orANEqMzXIgVGZXxePffekYMyPICqeToBFW7oY8WfmU=; b=SleR9YEo
-        JW5xCCmvg4Eb+fov3kT3Z6bWf11UrljdP0IbFFDZNQAdRIkMsXKuJgXRCbyZlAb3
-        jZMKp4JDn4R+oxxvmGqpDRR33yUAmvkAAT28Vr0zqetc/zOhUdgoL+bSYmmo2W8b
-        J5v7noZi8KEt9bTIWQw0QuMJPI4NyYYK5J/of/QAOO6/q8vZOV/RzqnyyK2xvTzQ
-        hXv/QuvBpx/u65v7lSFqFRm9/Zr79uv6mVR8bcNeRKIScEkrRsR01NPx2MXDV27m
-        HsQm60EJ1KrjrjB9XlYntp3a7NDZEelDxYBUFCG4thPO6l7buSjxjMzID1C3MeMD
-        PC3cXv31EA1lXQ==
-X-ME-Sender: <xms:ml3bXKGahcxcFpJcvz3j_LZad81zf73_8cVzYTl95UdRIRTpJXkMSQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrleejgdefiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
-    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
-    epuddvuddrgeegrddvvdefrddvuddunecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
-    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedv
-X-ME-Proxy: <xmx:ml3bXAqyrhI4sZyc9B921D2Z4Ml7LfUfSGqDSQSx306ClY9y-ucBRw>
-    <xmx:ml3bXAPCXBKJCo8F4F6NH3nJH6w0DcPw_77snogLNnsUwVB8UfRuHQ>
-    <xmx:ml3bXAowHnoUJSlqbsK7OaffnHe9_-1kRQq-iSkATHNI6qVtnzNm5g>
-    <xmx:ml3bXDYfcgVc6nwZRT2xc4S8QdYEQN5xwERQ1fOXVXOcrVpYrmaDeA>
-Received: from eros.localdomain (ppp121-44-223-211.bras1.syd2.internode.on.net [121.44.223.211])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 617D9103CF;
-        Tue, 14 May 2019 20:30:15 -0400 (EDT)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Neil Brown <neilb@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/9] docs: filesystems: vfs: Use uniform spacing around headings
-Date:   Wed, 15 May 2019 10:29:08 +1000
-Message-Id: <20190515002913.12586-5-tobin@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515002913.12586-1-tobin@kernel.org>
-References: <20190515002913.12586-1-tobin@kernel.org>
+        Tue, 14 May 2019 20:30:23 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 91053C125D;
+        Wed, 15 May 2019 00:30:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1557880228; bh=93f71ZD3+EurATqopDmH75w385G69mhgd8zJncs+9Rk=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=HoaR3fobjpKsYMDby8xp+QxzN2t5qSrJf5H3K7JYvInIR+3RI/BeNz4pkj7Ob3K8T
+         SnkBG0G4nkd5g/D1azqUQd2lbmpAgzm8a9QFTzZ0FaS+ZMSVhFcolC3DytYX1R72tC
+         bvuEky12aDX/QFmFsR5Hk3/uLWc7x0p7J+D5qDqAUGhlqh/6dizBRckWkPf5zf3JIe
+         2lQvfFAJElDXxEW6GmWF+tCvKhjPtpWX0asQU+O1eygfrJpIX3XIu2GjRzdOzQRuty
+         8WCsTCOfRR0Ht30/h4SDceHamgm7NXVPQtjfNo93BCyxA/qXv4/L2aEllk30LSFeB1
+         eyZV1FoRi6Cfg==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 6F9E7A023D;
+        Wed, 15 May 2019 00:30:23 +0000 (UTC)
+Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
+ US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 14 May 2019 17:30:15 -0700
+Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
+ IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 15 May 2019 06:00:11 +0530
+Received: from vineetg-Latitude-E7450.internal.synopsys.com (10.13.182.230) by
+ IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 15 May 2019 06:00:23 +0530
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     <linux-snps-arc@lists.infradead.org>
+CC:     <paltsev@snyopsys.com>, <linux-kernel@vger.kernel.org>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: [PATCH 6/9] ARC: mm: do_page_fault refactor #5: scoot no_context to end
+Date:   Tue, 14 May 2019 17:29:33 -0700
+Message-ID: <1557880176-24964-7-git-send-email-vgupta@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1557880176-24964-1-git-send-email-vgupta@synopsys.com>
+References: <1557880176-24964-1-git-send-email-vgupta@synopsys.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.13.182.230]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently spacing before and after headings is non-uniform.  Use two
-blank lines before a heading and one after the heading.
+This is different than the rest of signal handling stuff
 
-Use uniform spacing around headings.
+No functional change
 
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 ---
- Documentation/filesystems/vfs.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arc/mm/fault.c | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/filesystems/vfs.txt b/Documentation/filesystems/vfs.txt
-index 14839bc84d38..ed12d28bda62 100644
---- a/Documentation/filesystems/vfs.txt
-+++ b/Documentation/filesystems/vfs.txt
-@@ -321,6 +321,7 @@ Whoever sets up the inode is responsible for filling in the "i_op"
- field.  This is a pointer to a "struct inode_operations" which describes
- the methods that can be performed on individual inodes.
+diff --git a/arch/arc/mm/fault.c b/arch/arc/mm/fault.c
+index 7f211b493170..c0a60aeb4abd 100644
+--- a/arch/arc/mm/fault.c
++++ b/arch/arc/mm/fault.c
+@@ -201,20 +201,6 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
+ 		return;
+ 	}
  
+-no_context:
+-	/* Are we prepared to handle this kernel fault?
+-	 *
+-	 * (The kernel has valid exception-points in the source
+-	 *  when it accesses user-memory. When it fails in one
+-	 *  of those points, we find it in a table and do a jump
+-	 *  to some fixup code that loads an appropriate error
+-	 *  code)
+-	 */
+-	if (fixup_exception(regs))
+-		return;
+-
+-	die("Oops", regs, address);
+-
+ out_of_memory:
+ 	up_read(&mm->mmap_sem);
+ 
+@@ -233,4 +219,11 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
+ 
+ 	tsk->thread.fault_address = address;
+ 	force_sig_fault(SIGBUS, BUS_ADRERR, (void __user *)address, tsk);
++	return;
 +
- struct xattr_handlers
- ---------------------
- 
-@@ -507,6 +508,7 @@ otherwise noted.
-   tmpfile: called in the end of O_TMPFILE open().  Optional, equivalent to
- 	atomically creating, opening and unlinking a file in given directory.
- 
++no_context:
++	if (fixup_exception(regs))
++		return;
 +
- The Address Space Object
- ========================
- 
-@@ -580,8 +582,10 @@ and the constraints under which it is being done.  It is also used to
- return information back to the caller about the result of a writepage or
- writepages request.
- 
-+
- Handling errors during writeback
- --------------------------------
-+
- Most applications that do buffered I/O will periodically call a file
- synchronization call (fsync, fdatasync, msync or sync_file_range) to
- ensure that data written has made it to the backing store.  When there
-@@ -612,6 +616,7 @@ file->fsync operation, they should call file_check_and_advance_wb_err to
- ensure that the struct file's error cursor has advanced to the correct
- point in the stream of errors emitted by the backing device(s).
- 
-+
- struct address_space_operations
- -------------------------------
- 
-@@ -1203,9 +1208,11 @@ manipulate dentries:
- 	and the dentry is returned.  The caller must use dput()
- 	to free the dentry when it finishes using it.
- 
-+
- Mount Options
- =============
- 
-+
- Parsing options
- ---------------
- 
-@@ -1220,6 +1227,7 @@ The <linux/parser.h> header defines an API that helps parse these
- options.  There are plenty of examples on how to use it in existing
- filesystems.
- 
-+
- Showing options
- ---------------
- 
-@@ -1241,6 +1249,7 @@ The underlying reason for the above rules is to make sure, that a mount
- can be accurately replicated (e.g. umounting and mounting again) based
- on the information found in /proc/mounts.
- 
-+
- Resources
- =========
- 
++	die("Oops", regs, address);
+ }
 -- 
-2.21.0
+2.7.4
 
