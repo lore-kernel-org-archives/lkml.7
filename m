@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E87C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94252C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82FDB217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6684C216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918762;
-	bh=XsmRuaVSuXz3ZV2ZKFt8qydn1JZ6+/JIQ9dbv+67QQo=;
+	s=default; t=1557918767;
+	bh=QXI3nrZ26GPuYgikXChVsPWBbXrsAubn0NqfcnrEJaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JC4P1YlEsgCvWKaDqWLBW66fDDGPm0XtbO3+0jzeDHtx2gCgt1aIVkmB5NRzizdip
-	 i7Yim/YRFbxsEDKEMaef4wTKQwRFFEbvESZAivJU102FNjbde94MUWgU/EBzC1xRe1
-	 s8wDQ8BvfRzO7oy8CKVtJqEz0rH8acWbmC8EFbdU=
+	b=ON30pwtOjObO6xASc76JIr0eCyhvQ3BFomwBa9OeHri2EofBVNjK57J4wM6QG+QAY
+	 ox0o2kpfFlWkw03rP3vd9jmqp5mkXLo5J/ZHckzP8TGHXEJD/4ebtdganlrvPkkQbp
+	 Z4BfgtrtKCLQZ3S+78bwCWTX02eXv8w11pNbNt0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729850AbfEOLMl (ORCPT
+        id S1729865AbfEOLMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:12:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48018 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:12:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729805AbfEOLMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:12:38 -0400
+        id S1729840AbfEOLMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:12:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40D7421734;
-        Wed, 15 May 2019 11:12:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98DA021783;
+        Wed, 15 May 2019 11:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918757;
-        bh=XsmRuaVSuXz3ZV2ZKFt8qydn1JZ6+/JIQ9dbv+67QQo=;
+        s=default; t=1557918760;
+        bh=QXI3nrZ26GPuYgikXChVsPWBbXrsAubn0NqfcnrEJaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1q4b2LbbYrtC28c1mBpeLrQNujx67iIdCm11nKLr04vsKj8AJae3xijUa3JjQse9q
-         zPpOxqLvuWH1vMZrDXjjSADyWqg67JR+MlgGxnB/7oON0X0oP4mvQoMAkzWUa4fCrf
-         jsWvY5Cp2EoJY6CKaF7IT5rUsRjqBdsrEnAGewD0=
+        b=j8Bsk8ukx6oNHrzCITQOmSvQydINT/rKTccPqti3Bvd6ddJ7ViGnP7En58QW/khjz
+         D0Tz8czPpNWO0+7oTrX2MLqHpYgzcO+F2hK9gZkc9O8JS7nFupT3gQTGvCuBy9PC48
+         3DCUIXiQ2Br2h+P/PzYKXxmI0FvRKIHiYuii/LWw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -63,9 +63,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Dave Stewart <david.c.stewart@intel.com>,
         Kees Cook <keescook@chromium.org>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 213/266] x86/speculataion: Mark command line parser data __initdata
-Date:   Wed, 15 May 2019 12:55:20 +0200
-Message-Id: <20190515090730.179562208@linuxfoundation.org>
+Subject: [PATCH 4.4 214/266] x86/speculation: Unify conditional spectre v2 print functions
+Date:   Wed, 15 May 2019 12:55:21 +0200
+Message-Id: <20190515090730.216368988@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -80,9 +80,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 30ba72a990f5096ae08f284de17986461efcc408 upstream.
+commit 495d470e9828500e0155027f230449ac5e29c025 upstream.
 
-No point to keep that around.
+There is no point in having two functions and a conditional at the call
+site.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
@@ -105,32 +106,46 @@ Cc: Waiman Long <longman9394@gmail.com>
 Cc: Greg KH <gregkh@linuxfoundation.org>
 Cc: Dave Stewart <david.c.stewart@intel.com>
 Cc: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20181125185004.893886356@linutronix.de
+Link: https://lkml.kernel.org/r/20181125185004.986890749@linutronix.de
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/cpu/bugs.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/bugs.c |   17 ++++-------------
+ 1 file changed, 4 insertions(+), 13 deletions(-)
 
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -240,7 +240,7 @@ static const struct {
- 	const char *option;
- 	enum spectre_v2_mitigation_cmd cmd;
- 	bool secure;
--} mitigation_options[] = {
-+} mitigation_options[] __initdata = {
- 	{ "off",		SPECTRE_V2_CMD_NONE,		  false },
- 	{ "on",			SPECTRE_V2_CMD_FORCE,		  true  },
- 	{ "retpoline",		SPECTRE_V2_CMD_RETPOLINE,	  false },
-@@ -483,7 +483,7 @@ static const char * const ssb_strings[]
- static const struct {
- 	const char *option;
- 	enum ssb_mitigation_cmd cmd;
--} ssb_mitigation_options[] = {
-+} ssb_mitigation_options[]  __initdata = {
- 	{ "auto",	SPEC_STORE_BYPASS_CMD_AUTO },    /* Platform decides */
- 	{ "on",		SPEC_STORE_BYPASS_CMD_ON },      /* Disable Speculative Store Bypass */
- 	{ "off",	SPEC_STORE_BYPASS_CMD_NONE },    /* Don't touch Speculative Store Bypass */
+@@ -249,15 +249,9 @@ static const struct {
+ 	{ "auto",		SPECTRE_V2_CMD_AUTO,		  false },
+ };
+ 
+-static void __init spec2_print_if_insecure(const char *reason)
++static void __init spec_v2_print_cond(const char *reason, bool secure)
+ {
+-	if (boot_cpu_has_bug(X86_BUG_SPECTRE_V2))
+-		pr_info("%s selected on command line.\n", reason);
+-}
+-
+-static void __init spec2_print_if_secure(const char *reason)
+-{
+-	if (!boot_cpu_has_bug(X86_BUG_SPECTRE_V2))
++	if (boot_cpu_has_bug(X86_BUG_SPECTRE_V2) != secure)
+ 		pr_info("%s selected on command line.\n", reason);
+ }
+ 
+@@ -305,11 +299,8 @@ static enum spectre_v2_mitigation_cmd __
+ 		return SPECTRE_V2_CMD_AUTO;
+ 	}
+ 
+-	if (mitigation_options[i].secure)
+-		spec2_print_if_secure(mitigation_options[i].option);
+-	else
+-		spec2_print_if_insecure(mitigation_options[i].option);
+-
++	spec_v2_print_cond(mitigation_options[i].option,
++			   mitigation_options[i].secure);
+ 	return cmd;
+ }
+ 
 
 
