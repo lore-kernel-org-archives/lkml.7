@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EFAC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A91C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69E482053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E901D2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:49:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920947;
-	bh=OGmgcPDYmpGZoe6b7p5Kka/NjwDpmejKew+gZBRRk08=;
+	s=default; t=1557920958;
+	bh=G08EOD78zEpORirvpBeVsiOgbsiUyzW0Pne5MwRHESU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bHmKiSRBC4kpn3oRykjQd+AdujG6EcPu6tn7BCNczq2/5gemTqG5fduLUcsBNqJUw
-	 67V1B1BWI8Dn6AMQ9yNtedMUjlBeR0fM6wUPFaNUE8SjZyW3RKIhIBvEukXfgqGTko
-	 u8FOBu1W5V5MKok4PUnWT8+w1+jv6La9+g5a5JyU=
+	b=mVzvxrqlzJ2kTLCkQFJL5xdR0r820l/6Vd96sI1X1FHSabIJj8qm8YSRlc1Xatd2r
+	 WbgcCG+4+PFkqQx1wimSnJZ/y/FtVr/00tAaWfjto2+jA9m8yHjWxmRe3eeGaFMnr9
+	 FjE8tSLWpRK5S8Eo6yAYFTqAW310CNkae1H/TONc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731618AbfEOLXV (ORCPT
+        id S1731790AbfEOLtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:23:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33676 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:49:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730404AbfEOLXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:23:19 -0400
+        id S1731579AbfEOLXI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:23:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D444206BF;
-        Wed, 15 May 2019 11:23:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8585206BF;
+        Wed, 15 May 2019 11:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919398;
-        bh=OGmgcPDYmpGZoe6b7p5Kka/NjwDpmejKew+gZBRRk08=;
+        s=default; t=1557919388;
+        bh=G08EOD78zEpORirvpBeVsiOgbsiUyzW0Pne5MwRHESU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MGq4N46bitv9NeYqupu4MqBpqI8/kkWvhjBxjxgi2V1hiSEq/Kbm00nE2p5M9oBOQ
-         by1mMPnOmlD1UhxdFOIpJuY/5BY/Ic59FczU+vjj7rf0xPTv5yexuLnlLk+ATITcIv
-         Uz4a0n5jQWj2CuGDeS97zp5BGTgE4qD10JZ4aqCk=
+        b=UpMrp+d0tkFACDXjYrRELjCMLaHQWFLnqTWdy8ElZwQiK2rGWYQpGpvbFZTJzymmu
+         YUr2jmpOiggZY0Hhyn1Kun1B11RQRLuJi0W+tcm1A0tu7AJFfR4jYOwfTllqahqTOr
+         QrcVANZNEbQIuWmVz02mnOiW7W59Jhh7VXJ0UxHg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Javier Martinez Canillas <javier@dowhile0.org>,
-        Daniel Gomez <dagmcr@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 060/113] spi: ST ST95HF NFC: declare missing of table
-Date:   Wed, 15 May 2019 12:55:51 +0200
-Message-Id: <20190515090658.139662955@linuxfoundation.org>
+Subject: [PATCH 4.19 057/113] drm/imx: dont skip DP channel disable for background plane
+Date:   Wed, 15 May 2019 12:55:48 +0200
+Message-Id: <20190515090657.950294457@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -62,54 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d04830531d0c4a99c897a44038e5da3d23331d2f ]
+[ Upstream commit 7bcde275eb1d0ac8793c77c7e666a886eb16633d ]
 
-Add missing <of_device_id> table for SPI driver relying on SPI
-device match since compatible is in a DT binding or in a DTS.
+In order to make sure that the plane color space gets reset correctly.
 
-Before this patch:
-modinfo drivers/nfc/st95hf/st95hf.ko | grep alias
-alias:          spi:st95hf
-
-After this patch:
-modinfo drivers/nfc/st95hf/st95hf.ko | grep alias
-alias:          spi:st95hf
-alias:          of:N*T*Cst,st95hfC*
-alias:          of:N*T*Cst,st95hf
-
-Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
-Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/st95hf/core.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/imx/ipuv3-crtc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nfc/st95hf/core.c b/drivers/nfc/st95hf/core.c
-index 2b26f762fbc3b..01acb6e533655 100644
---- a/drivers/nfc/st95hf/core.c
-+++ b/drivers/nfc/st95hf/core.c
-@@ -1074,6 +1074,12 @@ static const struct spi_device_id st95hf_id[] = {
- };
- MODULE_DEVICE_TABLE(spi, st95hf_id);
+diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
+index 7d4b710b837ac..11e2dcdd6b18c 100644
+--- a/drivers/gpu/drm/imx/ipuv3-crtc.c
++++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
+@@ -78,7 +78,7 @@ static void ipu_crtc_disable_planes(struct ipu_crtc *ipu_crtc,
+ 	if (disable_partial)
+ 		ipu_plane_disable(ipu_crtc->plane[1], true);
+ 	if (disable_full)
+-		ipu_plane_disable(ipu_crtc->plane[0], false);
++		ipu_plane_disable(ipu_crtc->plane[0], true);
+ }
  
-+static const struct of_device_id st95hf_spi_of_match[] = {
-+        { .compatible = "st,st95hf" },
-+        { },
-+};
-+MODULE_DEVICE_TABLE(of, st95hf_spi_of_match);
-+
- static int st95hf_probe(struct spi_device *nfc_spi_dev)
- {
- 	int ret;
-@@ -1260,6 +1266,7 @@ static struct spi_driver st95hf_driver = {
- 	.driver = {
- 		.name = "st95hf",
- 		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(st95hf_spi_of_match),
- 	},
- 	.id_table = st95hf_id,
- 	.probe = st95hf_probe,
+ static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
 -- 
 2.20.1
 
