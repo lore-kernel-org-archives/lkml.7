@@ -2,346 +2,106 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611D8C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC18AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E7BB2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:35:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557909312;
-	bh=etyY+/JbPRpWZQSHG6IyL5FXnQDk0SyITRkNbDXB6AY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=M4drmf684URfPThLB8c19V2dXUvHeNMOktilKcuz3fX9CVPrzsSrlodamj+p1q+TF
-	 bEM/NfXjxqOf2juDKad+MVr35dYRhK0gdnZ5MzqZTlzVy9n3IjP/bxdKxSz4/+PKxn
-	 mk21Be59sq3yxC004xrT7aikKHRCXWNHs13LLdPA=
+	by mail.kernel.org (Postfix) with ESMTP id 7E5932084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:36:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="fG6szY4A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbfEOIfK (ORCPT
+        id S1726290AbfEOIgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 04:35:10 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43577 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfEOIfJ (ORCPT
+        Wed, 15 May 2019 04:36:38 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:53876 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725871AbfEOIgh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 04:35:09 -0400
-Received: by mail-ot1-f65.google.com with SMTP id i8so1468107oth.10;
-        Wed, 15 May 2019 01:35:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qGDvjhuqwyZ9tac5+2DRA2DTVD+KM6zUhqbXQAxYbK0=;
-        b=RPGtf+Vm1AB6ox0PhFVsjGheZirrqpi0YSzw0ConWTI6lKSIrW9a43YJuHE5MtzzTj
-         aqs5j75u0l2lP1CSINBiT170mjpaUpb0ZXQzeGMVPQYHcPjGrJH3wImJNvxdv+tXoAg8
-         0VkwmQcnM281vQamFlI7cXdZAT7opFC+MCzZ1S7CEAoEwRzU+zxScwzUH0FOQI0KX2Jh
-         Zq0BzIuSvEmYY7Tf7TPKjZjBDlDqExh2xjdJ6CnN1T/usibuJY7i/T+RR1QxblQa27Zy
-         qL92sxP49+Ah2S20lj4he+YUVZCHcKmcm4ScxWcDufEub18DU7hUSfGNxwm86B3QJNvE
-         P2pg==
-X-Gm-Message-State: APjAAAVbCUmr0ZXvlQDyRUyt7J000ipy2wFwsOmF4MARHLrnd6R5TQ4O
-        5fpOLoWaTO48G0D4SIErwWJ1bzCsDEfGN6EbtPQ=
-X-Google-Smtp-Source: APXvYqzE59NGA+Cc6Kgj3bHAnAwdU+grNRr9QJ/08hhNfPsLt2nPn0NAbP1CeUiSkybt7WtOU/M65zLVNkPi26UEzu0=
-X-Received: by 2002:a9d:7b46:: with SMTP id f6mr139072oto.324.1557909307949;
- Wed, 15 May 2019 01:35:07 -0700 (PDT)
+        Wed, 15 May 2019 04:36:37 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id BEA8F2E14C9;
+        Wed, 15 May 2019 11:36:33 +0300 (MSK)
+Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
+        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id FiL44lb1Xj-aXwiN7Xh;
+        Wed, 15 May 2019 11:36:33 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1557909393; bh=+V/qixzhLPwbC9jsVHGnQ96lDXhr7tMgZ+aRfAzVw2k=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=fG6szY4AI+sLKK0Ror9iZxVfH8KcIEIjDFDqPEpGgy5aw9sgoY4eXQrnKLKdMCUVp
+         lkCjNFVFoGT6SsD+bCEIXfiPtyQuzbVhAGbwy2/3uAj0l8Gx4i7QqeF9OZsIcCqirl
+         E6oaDZeudZXfcsdJP8n7pE7CsY9JkJr2vQ+sYzCM=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:ed19:3833:7ce1:2324])
+        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id elKpxPcxty-aW8q7Dnp;
+        Wed, 15 May 2019 11:36:33 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] mm: fix protection of mm_struct fields in get_cmdline()
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>, mkoutny@suse.com
+References: <155790813764.2995.13706842444028749629.stgit@buzz>
+ <20190515082222.GA21259@linux>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <e86ce7c9-5093-816d-3141-1cc0d3ba8ad9@yandex-team.ru>
+Date:   Wed, 15 May 2019 11:36:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190515005716.4019-1-smuchun@gmail.com>
-In-Reply-To: <20190515005716.4019-1-smuchun@gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 15 May 2019 10:34:56 +0200
-Message-ID: <CAJZ5v0hRZ8aLvNJdYFNNF9nT9nmts7-sAu-Uw+x8MOYdDfFLDg@mail.gmail.com>
-Subject: Re: [PATCH v3] driver core: Fix use-after-free and double free on
- glue directory
-To:     Muchun Song <smuchun@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Prateek Sood <prsood@codeaurora.org>, mojha@codeaurora.org,
-        gkohli@codeaurora.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        zhaowuyun@wingtech.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190515082222.GA21259@linux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 2:57 AM Muchun Song <smuchun@gmail.com> wrote:
->
-> There is a race condition between removing glue directory and adding a new
-> device under the glue directory. It can be reproduced in following test:
->
-> path 1: Add the child device under glue dir
-> device_add()
->     get_device_parent()
->         mutex_lock(&gdp_mutex);
->         ....
->         /*find parent from glue_dirs.list*/
->         list_for_each_entry(k, &dev->class->p->glue_dirs.list, entry)
->             if (k->parent == parent_kobj) {
->                 kobj = kobject_get(k);
->                 break;
->             }
->         ....
->         mutex_unlock(&gdp_mutex);
->         ....
->     ....
->     kobject_add()
->         kobject_add_internal()
->             create_dir()
->                 sysfs_create_dir_ns()
->                     if (kobj->parent)
->                         parent = kobj->parent->sd;
->                     ....
->                     kernfs_create_dir_ns(parent)
->                         kernfs_new_node()
->                             kernfs_get(parent)
->                         ....
->                         /* link in */
->                         rc = kernfs_add_one(kn);
->                         if (!rc)
->                             return kn;
->
->                         kernfs_put(kn)
->                             ....
->                             repeat:
->                             kmem_cache_free(kn)
->                             kn = parent;
->
->                             if (kn) {
->                                 if (atomic_dec_and_test(&kn->count))
->                                     goto repeat;
->                             }
->                         ....
->
-> path2: Remove last child device under glue dir
-> device_del()
->     cleanup_device_parent()
->         cleanup_glue_dir()
->             mutex_lock(&gdp_mutex);
->             if (!kobject_has_children(glue_dir))
->                 kobject_del(glue_dir);
->             kobject_put(glue_dir);
->             mutex_unlock(&gdp_mutex);
->
-> Before path2 remove last child device under glue dir, If path1 add a new
-> device under glue dir, the glue_dir kobject reference count will be
-> increase to 2 via kobject_get(k) in get_device_parent(). And path1 has
-> been called kernfs_new_node(), but not call kernfs_get(parent).
-> Meanwhile, path2 call kobject_del(glue_dir) beacause 0 is returned by
-> kobject_has_children(). This result in glue_dir->sd is freed and it's
-> reference count will be 0. Then path1 call kernfs_get(parent) will trigger
-> a warning in kernfs_get()(WARN_ON(!atomic_read(&kn->count))) and increase
-> it's reference count to 1. Because glue_dir->sd is freed by path2, the next
-> call kernfs_add_one() by path1 will fail(This is also use-after-free)
-> and call atomic_dec_and_test() to decrease reference count. Because the
-> reference count is decremented to 0, it will also call kmem_cache_free()
-> to free glue_dir->sd again. This will result in double free.
->
-> In order to avoid this happening, we we should not call kobject_del() on
-> path2 when the reference count of glue_dir is greater than 1. So we add a
-> conditional statement to fix it.
->
-> The following calltrace is captured in kernel 4.14 with the following patch
-> applied:
->
-> commit 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
->
-> --------------------------------------------------------------------------
-> [    3.633703] WARNING: CPU: 4 PID: 513 at .../fs/kernfs/dir.c:494
->                 Here is WARN_ON(!atomic_read(&kn->count) in kernfs_get().
-> ....
-> [    3.633986] Call trace:
-> [    3.633991]  kernfs_create_dir_ns+0xa8/0xb0
-> [    3.633994]  sysfs_create_dir_ns+0x54/0xe8
-> [    3.634001]  kobject_add_internal+0x22c/0x3f0
-> [    3.634005]  kobject_add+0xe4/0x118
-> [    3.634011]  device_add+0x200/0x870
-> [    3.634017]  _request_firmware+0x958/0xc38
-> [    3.634020]  request_firmware_into_buf+0x4c/0x70
-> ....
-> [    3.634064] kernel BUG at .../mm/slub.c:294!
->                 Here is BUG_ON(object == fp) in set_freepointer().
-> ....
-> [    3.634346] Call trace:
-> [    3.634351]  kmem_cache_free+0x504/0x6b8
-> [    3.634355]  kernfs_put+0x14c/0x1d8
-> [    3.634359]  kernfs_create_dir_ns+0x88/0xb0
-> [    3.634362]  sysfs_create_dir_ns+0x54/0xe8
-> [    3.634366]  kobject_add_internal+0x22c/0x3f0
-> [    3.634370]  kobject_add+0xe4/0x118
-> [    3.634374]  device_add+0x200/0x870
-> [    3.634378]  _request_firmware+0x958/0xc38
-> [    3.634381]  request_firmware_into_buf+0x4c/0x70
-> --------------------------------------------------------------------------
->
-> Fixes: 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
->
-> Signed-off-by: Muchun Song <smuchun@gmail.com>
-> ---
->
-> Change in v3:
->        add change log.
-> Change in v2:
->        Fix device_move() also.
->
->  drivers/base/core.c | 47 ++++++++++++++++++++++++++++++++++++---------
->  1 file changed, 38 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/base/core.c b/drivers/base/core.c
-> index 4aeaa0c92bda..e7810329223a 100644
-> --- a/drivers/base/core.c
-> +++ b/drivers/base/core.c
-> @@ -1739,8 +1739,9 @@ class_dir_create_and_add(struct class *class, struct kobject *parent_kobj)
->
->  static DEFINE_MUTEX(gdp_mutex);
->
-> -static struct kobject *get_device_parent(struct device *dev,
-> -                                        struct device *parent)
-> +static struct kobject *__get_device_parent(struct device *dev,
-> +                                          struct device *parent,
-> +                                          bool lock)
->  {
->         if (dev->class) {
->                 struct kobject *kobj = NULL;
-> @@ -1779,14 +1780,16 @@ static struct kobject *get_device_parent(struct device *dev,
->                         }
->                 spin_unlock(&dev->class->p->glue_dirs.list_lock);
->                 if (kobj) {
-> -                       mutex_unlock(&gdp_mutex);
-> +                       if (!lock)
-> +                               mutex_unlock(&gdp_mutex);
->                         return kobj;
->                 }
 
-There is an unconditional mutex_lock(&gdp_mutex) above this, so the
-idea appears to be to leave the function with the mutex locked in some
-cases.
 
-That is far away from straightforward, so there needs to be a
-kerneldoc comment explaining that behavior.
+On 15.05.2019 11:22, Oscar Salvador wrote:
+> On Wed, May 15, 2019 at 11:15:37AM +0300, Konstantin Khlebnikov wrote:
+>> Since commit 88aa7cc688d4 ("mm: introduce arg_lock to protect arg_start|
+>> end and env_start|end in mm_struct") related mm fields are protected with
+>> separate spinlock and mmap_sem held for read is not enough for protection.
+>>
+>> Fixes: 88aa7cc688d4 ("mm: introduce arg_lock to protect arg_start|end and env_start|end in mm_struct")
+>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> 
+> This was already addressed by [1]?
 
-It also may be necessary to annotate the function with __acquires().
+Yep.
 
->
->                 /* or create a new class-directory at the parent device */
->                 k = class_dir_create_and_add(dev->class, parent_kobj);
->                 /* do not emit an uevent for this simple "glue" directory */
-> -               mutex_unlock(&gdp_mutex);
-> +               if (!lock || IS_ERR(k))
-> +                       mutex_unlock(&gdp_mutex);
-
-So it needs to be unlocked in the error case too, because the
-conditional unlock down the road doesn't work then, right?
-
-There needs to be a comment to that effect here, please.
-
->                 return k;
->         }
->
-> @@ -1799,6 +1802,19 @@ static struct kobject *get_device_parent(struct device *dev,
->         return NULL;
->  }
->
-> +static inline struct kobject *get_device_parent(struct device *dev,
-> +                                               struct device *parent)
-> +{
-> +       return __get_device_parent(dev, parent, false);
-> +}
-> +
-> +static inline struct kobject *
-> +get_device_parent_locked_if_glue_dir(struct device *dev,
-> +                                    struct device *parent)
-
-The name is long and it doesn't explain much IMO.
-
-I guess the idea is to pair this wrapper with unlock_if_glue_dir() to
-produce a kind of lock/unlock pattern, but this doesn't work anyway
-IMO because of the extra glue dir arg that needs to be passed to
-unlock_if_glue_dir().
-
-I would just use the raw __get_device_parent(dev, parent, true)
-instead which should be clear enough as long as the (missing now)
-kerneldoc comment (and possibly annotation) is added to it.
-
-> +{
-> +       return __get_device_parent(dev, parent, true);
-> +}
-> +
->  static inline bool live_in_glue_dir(struct kobject *kobj,
->                                     struct device *dev)
->  {
-> @@ -1831,6 +1847,16 @@ static void cleanup_glue_dir(struct device *dev, struct kobject *glue_dir)
->         mutex_unlock(&gdp_mutex);
->  }
->
-> +static inline void unlock_if_glue_dir(struct device *dev,
-> +                                     struct kobject *glue_dir)
-> +{
-> +       /* see if we live in a "glue" directory */
-> +       if (!live_in_glue_dir(glue_dir, dev))
-> +               return;
-> +
-> +       mutex_unlock(&gdp_mutex);
-
-This can be written in fewer lines of code and one negation less as follows:
-
-if (live_in_glue_dir(glue_dir, dev))
-       mutex_unlock(&gdp_mutex);
-
-which IMO is self-explanatory, so the comment is redundant.
-
-And I would use it directly, without the static wrapper around it,
-possibly with a comment to say that it drops the mutex possibly
-acquired by __get_device_parent().
-
-> +}
-> +
->  static int device_add_class_symlinks(struct device *dev)
->  {
->         struct device_node *of_node = dev_of_node(dev);
-> @@ -2040,7 +2066,7 @@ int device_add(struct device *dev)
->         pr_debug("device: '%s': %s\n", dev_name(dev), __func__);
->
->         parent = get_device(dev->parent);
-> -       kobj = get_device_parent(dev, parent);
-> +       kobj = get_device_parent_locked_if_glue_dir(dev, parent);
->         if (IS_ERR(kobj)) {
->                 error = PTR_ERR(kobj);
->                 goto parent_error;
-> @@ -2055,10 +2081,12 @@ int device_add(struct device *dev)
->         /* first, register with generic layer. */
->         /* we require the name to be set before, and pass NULL */
->         error = kobject_add(&dev->kobj, dev->kobj.parent, NULL);
-> -       if (error) {
-> -               glue_dir = get_glue_dir(dev);
-> +
-> +       glue_dir = get_glue_dir(dev);
-> +       unlock_if_glue_dir(dev, glue_dir);
-> +
-> +       if (error)
->                 goto Error;
-> -       }
->
->         /* notify platform of device entry */
->         error = device_platform_notify(dev, KOBJ_ADD);
-> @@ -2972,7 +3000,7 @@ int device_move(struct device *dev, struct device *new_parent,
->
->         device_pm_lock();
->         new_parent = get_device(new_parent);
-> -       new_parent_kobj = get_device_parent(dev, new_parent);
-> +       new_parent_kobj = get_device_parent_locked_if_glue_dir(dev, new_parent);
->         if (IS_ERR(new_parent_kobj)) {
->                 error = PTR_ERR(new_parent_kobj);
->                 put_device(new_parent);
-> @@ -2982,6 +3010,7 @@ int device_move(struct device *dev, struct device *new_parent,
->         pr_debug("device: '%s': %s: moving to '%s'\n", dev_name(dev),
->                  __func__, new_parent ? dev_name(new_parent) : "<NULL>");
->         error = kobject_move(&dev->kobj, new_parent_kobj);
-> +       unlock_if_glue_dir(dev, new_parent_kobj);
->         if (error) {
->                 cleanup_glue_dir(dev, new_parent_kobj);
->                 put_device(new_parent);
-> --
+> 
+> [1] https://patchwork.kernel.org/patch/10923003/
+> 
+>> ---
+>>   mm/util.c |    4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/mm/util.c b/mm/util.c
+>> index e2e4f8c3fa12..540e7c157cf2 100644
+>> --- a/mm/util.c
+>> +++ b/mm/util.c
+>> @@ -717,12 +717,12 @@ int get_cmdline(struct task_struct *task, char *buffer, int buflen)
+>>   	if (!mm->arg_end)
+>>   		goto out_mm;	/* Shh! No looking before we're done */
+>>   
+>> -	down_read(&mm->mmap_sem);
+>> +	spin_lock(&mm->arg_lock);
+>>   	arg_start = mm->arg_start;
+>>   	arg_end = mm->arg_end;
+>>   	env_start = mm->env_start;
+>>   	env_end = mm->env_end;
+>> -	up_read(&mm->mmap_sem);
+>> +	spin_unlock(&mm->arg_lock);
+>>   
+>>   	len = arg_end - arg_start;
+>>   
+>>
+> 
