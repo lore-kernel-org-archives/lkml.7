@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EBCBC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9E4C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD6920843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13C9B20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557917977;
-	bh=jm02f6r3ja8E6ZgprEgR7RUosz5EhAKEbLMC+rj/3Ps=;
+	s=default; t=1557917980;
+	bh=LgIVwm/ISNxIIfAYNQfx/Ogib/xLG1rbp5oCzcoEd0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LxnvHyA5TOd96o+C6gmnRR9BZM7UflJUT/JmCN43uqIAio/ahok87RU/hdIuLGv1K
-	 U50skrkHs+SJtopEGdp8eKkt/5pTLODOTu0D0aeAXc2B12mjyZyafRBrR6K5WJbhX/
-	 Rubwkrg5zqe2htaMwx2932Ft14ufSR7+00m7EBfw=
+	b=jSeNQpkpaj261XYpb0ns0YqUNfA14Rz+6h8DQPk+CswdVrY3ZLEbmwMcmDKoc+3Yn
+	 jB5ECifyhXRq83tYPcXXTVvGaFf7oF4lc3qbuOBoIFwbCkOjLzfDi8xqvQxTJLocPy
+	 jozE+mYKjMeN0tQwFh3nVt7Sn9vDGzGTe0KFP8C4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727192AbfEOK7g (ORCPT
+        id S1726663AbfEOK7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:59:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56124 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 06:59:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbfEOK7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:59:33 -0400
+        id S1727189AbfEOK7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:59:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B0CF21726;
-        Wed, 15 May 2019 10:59:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15FF92084F;
+        Wed, 15 May 2019 10:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557917973;
-        bh=jm02f6r3ja8E6ZgprEgR7RUosz5EhAKEbLMC+rj/3Ps=;
+        s=default; t=1557917975;
+        bh=LgIVwm/ISNxIIfAYNQfx/Ogib/xLG1rbp5oCzcoEd0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YCjIKCzc+XooxsdY6h7f/z4VbzdNxSee+rBbMtVyoYxJ4NvNlCf/d86z4PltYzIc5
-         DGRWN+41GvXUNHYOtIImuo/KctS50T8aRA+LyszfKHbGlXP9zBOqQ0dnHSEM3yr6h8
-         J/Ry3dD++U4Y1ZFOFaYXstOB8q1ZcEnCTEJC2axY=
+        b=YXqWTT2zkxn4XYwqKJNr18MWEuOLN4W7UlPzmRt7XU1D0peDEFA6WaybYyU8VOhlB
+         0uQCotiePOQQyTfowPJjYEy4m9MoQux15XJ8roz54jwbbWzyV5FjFnzSJyylGwnOQd
+         TR3Z8uBDqniU0zF+fx6fgerPb3Maa2jFBQlRXnYs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Frank Pavlic <f.pavlic@kunbus.de>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Nishanth Menon <nm@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 3.18 18/86] net: ks8851: Reassert reset pin if chip ID check fails
-Date:   Wed, 15 May 2019 12:54:55 +0200
-Message-Id: <20190515090646.270274808@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 45/86] ARM: orion: dont use using 64-bit DMA masks
+Date:   Wed, 15 May 2019 12:55:22 +0200
+Message-Id: <20190515090651.374681058@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -63,45 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 761cfa979a0c177d6c2d93ef5585cd79ae49a7d5 ]
+[ Upstream commit cd92d74d67c811dc22544430b9ac3029f5bd64c5 ]
 
-Commit 73fdeb82e963 ("net: ks8851: Add optional vdd_io regulator and
-reset gpio") amended the ks8851 driver to briefly assert the chip's
-reset pin on probe. It also amended the probe routine's error path to
-reassert the reset pin if a subsequent initialization step fails.
+clang warns about statically defined DMA masks from the DMA_BIT_MASK
+macro with length 64:
 
-However the commit misplaced reassertion of the reset pin in the error
-path such that it is not performed if the check of the Chip ID and
-Enable Register (CIDER) fails. The error path is therefore slightly
-asymmetrical to the probe routine's body. Fix it.
+arch/arm/plat-orion/common.c:625:29: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+                .coherent_dma_mask      = DMA_BIT_MASK(64),
+                                          ^~~~~~~~~~~~~~~~
+include/linux/dma-mapping.h:141:54: note: expanded from macro 'DMA_BIT_MASK'
+ #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
 
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Frank Pavlic <f.pavlic@kunbus.de>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Nishanth Menon <nm@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+The ones in orion shouldn't really be 64 bit masks, so changing them
+to what the driver can support avoids the warning.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/plat-orion/common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
-index 4a29e191819f..e218e45dcf35 100644
---- a/drivers/net/ethernet/micrel/ks8851.c
-+++ b/drivers/net/ethernet/micrel/ks8851.c
-@@ -1567,9 +1567,9 @@ static int ks8851_probe(struct spi_device *spi)
- 	free_irq(ndev->irq, ks);
- 
- err_irq:
-+err_id:
- 	if (gpio_is_valid(gpio))
- 		gpio_set_value(gpio, 0);
--err_id:
- 	regulator_disable(ks->vdd_reg);
- err_reg:
- 	regulator_disable(ks->vdd_io);
+diff --git a/arch/arm/plat-orion/common.c b/arch/arm/plat-orion/common.c
+index b8b6e22f9987..c774011131e2 100644
+--- a/arch/arm/plat-orion/common.c
++++ b/arch/arm/plat-orion/common.c
+@@ -649,7 +649,7 @@ static struct platform_device orion_xor0_shared = {
+ 	.resource	= orion_xor0_shared_resources,
+ 	.dev            = {
+ 		.dma_mask               = &orion_xor_dmamask,
+-		.coherent_dma_mask      = DMA_BIT_MASK(64),
++		.coherent_dma_mask      = DMA_BIT_MASK(32),
+ 		.platform_data          = &orion_xor0_pdata,
+ 	},
+ };
+@@ -710,7 +710,7 @@ static struct platform_device orion_xor1_shared = {
+ 	.resource	= orion_xor1_shared_resources,
+ 	.dev            = {
+ 		.dma_mask               = &orion_xor_dmamask,
+-		.coherent_dma_mask      = DMA_BIT_MASK(64),
++		.coherent_dma_mask      = DMA_BIT_MASK(32),
+ 		.platform_data          = &orion_xor1_pdata,
+ 	},
+ };
 -- 
-2.19.1
+2.20.1
 
 
 
