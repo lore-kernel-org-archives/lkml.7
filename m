@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAC7C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D893C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01B3120818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2FF2206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919876;
-	bh=150jhkgBPAGqDHBLd7kUBOwIldgeC8zcqCG3Pz6Cp34=;
+	s=default; t=1557919880;
+	bh=oHXUAOsbOGuTuFUb/ynXgCuDOCmUrG66929WmRtc8iw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lzlC7ytkMA6pIWIC86XB297Ow8tY7Aj7xbuM593RwdOlEo4zmT89UFshiugyRUVUl
-	 2tRGxNu+4a13hYdEpaRJ3s3hZqY/zwYrdJhlDCG46CZVotFAIlP0t/qBnK+cVpg9o0
-	 ebISqBSMNzxJfZBkEju2d+wwLx8kyW9z3UP7cHZ8=
+	b=lX8nQQKpZE3TTaBPEr7xP3cHIKOlD3AMWMaXM5X8f5Lvx/5c4e64zF/u8kIB1Mp3V
+	 WWFAGLK73/OwOI6uJqdS/Kt7GQpfEYWAt58KG3DhB0roIBMgyadE9vdI9BYdMVmhzb
+	 ZTiW+BvnPI/vbT6ffo4Ig6lRnuvvRgCpNjNzcn7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732873AbfEOLbP (ORCPT
+        id S1732885AbfEOLbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:31:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42888 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:31:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732855AbfEOLbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:31:11 -0400
+        id S1732587AbfEOLbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:31:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B3FC20843;
-        Wed, 15 May 2019 11:31:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A693C206BF;
+        Wed, 15 May 2019 11:31:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919870;
-        bh=150jhkgBPAGqDHBLd7kUBOwIldgeC8zcqCG3Pz6Cp34=;
+        s=default; t=1557919876;
+        bh=oHXUAOsbOGuTuFUb/ynXgCuDOCmUrG66929WmRtc8iw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Udxz9BWkaBGQolMyWkcfU9bNN4sMKrd04kDVYez989voV07muqCYqG5rPjC4Wp8Go
-         6Wr3Z8nlxFDfarU3+lQBbYxW+ex1QnwwKLBLFxefK7DS8iBCshsASV/eG1mkrpjcht
-         gaHgsvzzMhTIeRc7SnJdvhNE8/WWi7UU6Z3w0X0E=
+        b=cuqhsiFC6IMSYw+PGdm1s1/pmycBzdK8HytjeoLFO6YsD9+6KDprG6StQXBlBiXU1
+         irxBLsB5zHkrV926XJbbh+5q4CL5x7VUNDBULDTJtYoCgvWMcH+OA9IbgTGLeVErq6
+         pJ8yOzRneJpfoRH4TbPfqGHS2AKnGBwfq3y6wBCg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>
-Subject: [PATCH 5.0 081/137] gpu: ipu-v3: dp: fix CSC handling
-Date:   Wed, 15 May 2019 12:56:02 +0200
-Message-Id: <20190515090659.363951177@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 083/137] ARM: fix function graph tracer and unwinder dependencies
+Date:   Wed, 15 May 2019 12:56:04 +0200
+Message-Id: <20190515090659.543869830@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -61,67 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d4fad0a426c6e26f48c9a7cdd21a7fe9c198d645 ]
+[ Upstream commit 503621628b32782a07b2318e4112bd4372aa3401 ]
 
-Initialize the flow input colorspaces to unknown and reset to that value
-when the channel gets disabled. This avoids the state getting mixed up
-with a previous mode.
+Naresh Kamboju recently reported that the function-graph tracer crashes
+on ARM. The function-graph tracer assumes that the kernel is built with
+frame pointers.
 
-Also keep the CSC settings for the background flow intact when disabling
-the foreground flow.
+We explicitly disabled the function-graph tracer when building Thumb2,
+since the Thumb2 ABI doesn't have frame pointers.
 
-Root-caused-by: Jonathan Marek <jonathan@marek.ca>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+We recently changed the way the unwinder method was selected, which
+seems to have made it more likely that we can end up with the function-
+graph tracer enabled but without the kernel built with frame pointers.
+
+Fix up the function graph tracer dependencies so the option is not
+available when we have no possibility of having frame pointers, and
+adjust the dependencies on the unwinder option to hide the non-frame
+pointer unwinder options if the function-graph tracer is enabled.
+
+Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/ipu-v3/ipu-dp.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/arm/Kconfig       | 2 +-
+ arch/arm/Kconfig.debug | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/ipu-v3/ipu-dp.c b/drivers/gpu/ipu-v3/ipu-dp.c
-index 9b2b3fa479c46..5e44ff1f20851 100644
---- a/drivers/gpu/ipu-v3/ipu-dp.c
-+++ b/drivers/gpu/ipu-v3/ipu-dp.c
-@@ -195,7 +195,8 @@ int ipu_dp_setup_channel(struct ipu_dp *dp,
- 		ipu_dp_csc_init(flow, flow->foreground.in_cs, flow->out_cs,
- 				DP_COM_CONF_CSC_DEF_BOTH);
- 	} else {
--		if (flow->foreground.in_cs == flow->out_cs)
-+		if (flow->foreground.in_cs == IPUV3_COLORSPACE_UNKNOWN ||
-+		    flow->foreground.in_cs == flow->out_cs)
- 			/*
- 			 * foreground identical to output, apply color
- 			 * conversion on background
-@@ -261,6 +262,8 @@ void ipu_dp_disable_channel(struct ipu_dp *dp, bool sync)
- 	struct ipu_dp_priv *priv = flow->priv;
- 	u32 reg, csc;
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index e5d56d9b712c2..3b353af9c48dc 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -69,7 +69,7 @@ config ARM
+ 	select HAVE_EFFICIENT_UNALIGNED_ACCESS if (CPU_V6 || CPU_V6K || CPU_V7) && MMU
+ 	select HAVE_EXIT_THREAD
+ 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+-	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL
++	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
+ 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
+ 	select HAVE_GCC_PLUGINS
+ 	select HAVE_GENERIC_DMA_COHERENT
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index 6d6e0330930b5..e388af4594a6e 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -47,8 +47,8 @@ config DEBUG_WX
  
-+	dp->in_cs = IPUV3_COLORSPACE_UNKNOWN;
-+
- 	if (!dp->foreground)
- 		return;
+ choice
+ 	prompt "Choose kernel unwinder"
+-	default UNWINDER_ARM if AEABI && !FUNCTION_GRAPH_TRACER
+-	default UNWINDER_FRAME_POINTER if !AEABI || FUNCTION_GRAPH_TRACER
++	default UNWINDER_ARM if AEABI
++	default UNWINDER_FRAME_POINTER if !AEABI
+ 	help
+ 	  This determines which method will be used for unwinding kernel stack
+ 	  traces for panics, oopses, bugs, warnings, perf, /proc/<pid>/stack,
+@@ -65,7 +65,7 @@ config UNWINDER_FRAME_POINTER
  
-@@ -268,8 +271,9 @@ void ipu_dp_disable_channel(struct ipu_dp *dp, bool sync)
- 
- 	reg = readl(flow->base + DP_COM_CONF);
- 	csc = reg & DP_COM_CONF_CSC_DEF_MASK;
--	if (csc == DP_COM_CONF_CSC_DEF_FG)
--		reg &= ~DP_COM_CONF_CSC_DEF_MASK;
-+	reg &= ~DP_COM_CONF_CSC_DEF_MASK;
-+	if (csc == DP_COM_CONF_CSC_DEF_BOTH || csc == DP_COM_CONF_CSC_DEF_BG)
-+		reg |= DP_COM_CONF_CSC_DEF_BG;
- 
- 	reg &= ~DP_COM_CONF_FG_EN;
- 	writel(reg, flow->base + DP_COM_CONF);
-@@ -347,6 +351,8 @@ int ipu_dp_init(struct ipu_soc *ipu, struct device *dev, unsigned long base)
- 	mutex_init(&priv->mutex);
- 
- 	for (i = 0; i < IPUV3_NUM_FLOWS; i++) {
-+		priv->flow[i].background.in_cs = IPUV3_COLORSPACE_UNKNOWN;
-+		priv->flow[i].foreground.in_cs = IPUV3_COLORSPACE_UNKNOWN;
- 		priv->flow[i].foreground.foreground = true;
- 		priv->flow[i].base = priv->base + ipu_dp_flow_base[i];
- 		priv->flow[i].priv = priv;
+ config UNWINDER_ARM
+ 	bool "ARM EABI stack unwinder"
+-	depends on AEABI
++	depends on AEABI && !FUNCTION_GRAPH_TRACER
+ 	select ARM_UNWIND
+ 	help
+ 	  This option enables stack unwinding support in the kernel
 -- 
 2.20.1
 
