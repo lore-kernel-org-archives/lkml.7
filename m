@@ -4,58 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38520C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DBAC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0335120881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04BB2206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:27:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919674;
-	bh=WP8nx96AyUwtzheXvIEkzb0woVh6i/h8Y4boJ+lHJWY=;
+	s=default; t=1557919677;
+	bh=YXvlJ+LYPlctHCbyngWWM6lJnrkxtn7txe7xCyn4dbY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QhNfFW8yYzYNBGn/BJ711gwB/BiWOEjCQO7MCYBmtRrZ8CPDsE8xp4Us8NWsSXBQz
-	 i5v5t40TBzZxY1PV3RPfIiOoLY+4NqwR2QNLnWqjd1i+W5CSS3i1/6V2OQwJgTXCZo
-	 r4A1UyFhKpuQfD6CChRbUJrxqqdA3/tqkbkmWDec=
+	b=na+h1/3I56fs4gYnFOmwAfi08jK0k88EdRyaT+ck1Zj7czrV4Glhy8flX51N6QuJO
+	 iswwaR3H09zVjIuwpkQgWLgxV8mcyt5mE4hKgmccsJNgUvCC7Ba8AGf1nCSKsrOFRE
+	 vPbLNOej1/PcOUjg+G65GS4Xx3Yi2YUBfMy7qY0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732303AbfEOL1x (ORCPT
+        id S1732312AbfEOL14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:27:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38700 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:27:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731569AbfEOL1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:27:48 -0400
+        id S1732301AbfEOL1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:27:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A531206BF;
-        Wed, 15 May 2019 11:27:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45C6120881;
+        Wed, 15 May 2019 11:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919667;
-        bh=WP8nx96AyUwtzheXvIEkzb0woVh6i/h8Y4boJ+lHJWY=;
+        s=default; t=1557919672;
+        bh=YXvlJ+LYPlctHCbyngWWM6lJnrkxtn7txe7xCyn4dbY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zkKSWTWxB4yIsvoPyiak/pcfgYMqWRnFUbe4GAqDqd1IuGkHQ+63FjUv3CAzWMFk8
-         2r8WlJrnn6oVRsl0SpzgUJIDqQtoHUTfCEyBx5IqUvT6It+9aKb7H0hgxJxZ0zdOkg
-         uQd7hKFDMSBTOlpsesNdEYJrjYpwbyMpFJbhXRzk=
+        b=njl7tF+ke1wkAdjKhe5PF7oWZLDAJA/fI6lzAyBlar8NvGo4AGs6yX5sFCkGHNwq0
+         p0nqV8T/UeTwwYSaxUvjUPswJNlwedh/85eZygQV68tQil8Fyx0urkZDMNjoTg6ex/
+         JzDecGVJY3zWtoY2YSi831ykqySAaUUfu7LzaQfo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Xose Vazquez Perez <xose.vazquez@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 048/137] x86/mm: Prevent bogus warnings with "noexec=off"
-Date:   Wed, 15 May 2019 12:55:29 +0200
-Message-Id: <20190515090656.954493420@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 050/137] KVM: nVMX: always use early vmcs check when EPT is disabled
+Date:   Wed, 15 May 2019 12:55:31 +0200
+Message-Id: <20190515090657.112102592@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -68,76 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 510bb96fe5b3480b4b22d815786377e54cb701e7 ]
+[ Upstream commit 2b27924bb1d48e3775f432b70bdad5e6dd4e7798 ]
 
-Xose Vazquez Perez reported boot warnings when NX is disabled on the kernel command line.
+The remaining failures of vmx.flat when EPT is disabled are caused by
+incorrectly reflecting VMfails to the L1 hypervisor.  What happens is
+that nested_vmx_restore_host_state corrupts the guest CR3, reloading it
+with the host's shadow CR3 instead, because it blindly loads GUEST_CR3
+from the vmcs01.
 
-__early_set_fixmap() triggers this warning:
+For simplicity let's just always use hardware VMCS checks when EPT is
+disabled.  This way, nested_vmx_restore_host_state is not reached at
+all (or at least shouldn't be reached).
 
-  attempted to set unsupported pgprot:    8000000000000163
-			       bits:      8000000000000000
-			       supported: 7fffffffffffffff
-
-  WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/pgtable.h:537
-			    __early_set_fixmap+0xa2/0xff
-
-because it uses __default_kernel_pte_mask to mask out unsupported bits.
-
-Use __supported_pte_mask instead.
-
-Disabling NX on the command line also triggers the NX warning in the page
-table mapping check:
-
-  WARNING: CPU: 1 PID: 1 at arch/x86/mm/dump_pagetables.c:262 note_page+0x2ae/0x650
-  ....
-
-Make the warning depend on NX set in __supported_pte_mask.
-
-Reported-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
-Tested-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@surriel.com>
-Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1904151037530.1729@nanos.tec.linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/mm/dump_pagetables.c | 3 ++-
- arch/x86/mm/ioremap.c         | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/include/uapi/asm/vmx.h |  1 +
+ arch/x86/kvm/vmx/nested.c       | 22 ++++++++++++++++++++--
+ 2 files changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
-index e3cdc85ce5b6e..84304626b1cb8 100644
---- a/arch/x86/mm/dump_pagetables.c
-+++ b/arch/x86/mm/dump_pagetables.c
-@@ -259,7 +259,8 @@ static void note_wx(struct pg_state *st)
- #endif
- 	/* Account the WX pages */
- 	st->wx_pages += npages;
--	WARN_ONCE(1, "x86/mm: Found insecure W+X mapping at address %pS\n",
-+	WARN_ONCE(__supported_pte_mask & _PAGE_NX,
-+		  "x86/mm: Found insecure W+X mapping at address %pS\n",
- 		  (void *)st->start_address);
- }
+diff --git a/arch/x86/include/uapi/asm/vmx.h b/arch/x86/include/uapi/asm/vmx.h
+index f0b0c90dd3982..d213ec5c3766d 100644
+--- a/arch/x86/include/uapi/asm/vmx.h
++++ b/arch/x86/include/uapi/asm/vmx.h
+@@ -146,6 +146,7 @@
  
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index 5378d10f1d31d..3b76fe954978c 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -825,7 +825,7 @@ void __init __early_set_fixmap(enum fixed_addresses idx,
- 	pte = early_ioremap_pte(addr);
+ #define VMX_ABORT_SAVE_GUEST_MSR_FAIL        1
+ #define VMX_ABORT_LOAD_HOST_PDPTE_FAIL       2
++#define VMX_ABORT_VMCS_CORRUPTED             3
+ #define VMX_ABORT_LOAD_HOST_MSR_FAIL         4
  
- 	/* Sanitize 'prot' against any unsupported bits: */
--	pgprot_val(flags) &= __default_kernel_pte_mask;
-+	pgprot_val(flags) &= __supported_pte_mask;
+ #endif /* _UAPIVMX_H */
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 8f8c42b048757..2a16bd8877297 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -3790,8 +3790,18 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
+ 	vmx_set_cr4(vcpu, vmcs_readl(CR4_READ_SHADOW));
  
- 	if (pgprot_val(flags))
- 		set_pte(pte, pfn_pte(phys >> PAGE_SHIFT, flags));
+ 	nested_ept_uninit_mmu_context(vcpu);
+-	vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
+-	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
++
++	/*
++	 * This is only valid if EPT is in use, otherwise the vmcs01 GUEST_CR3
++	 * points to shadow pages!  Fortunately we only get here after a WARN_ON
++	 * if EPT is disabled, so a VMabort is perfectly fine.
++	 */
++	if (enable_ept) {
++		vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
++		__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
++	} else {
++		nested_vmx_abort(vcpu, VMX_ABORT_VMCS_CORRUPTED);
++	}
+ 
+ 	/*
+ 	 * Use ept_save_pdptrs(vcpu) to load the MMU's cached PDPTRs
+@@ -5739,6 +5749,14 @@ __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct kvm_vcpu *))
+ {
+ 	int i;
+ 
++	/*
++	 * Without EPT it is not possible to restore L1's CR3 and PDPTR on
++	 * VMfail, because they are not available in vmcs01.  Just always
++	 * use hardware checks.
++	 */
++	if (!enable_ept)
++		nested_early_check = 1;
++
+ 	if (!cpu_has_vmx_shadow_vmcs())
+ 		enable_shadow_vmcs = 0;
+ 	if (enable_shadow_vmcs) {
 -- 
 2.20.1
 
