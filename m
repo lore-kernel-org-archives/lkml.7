@@ -2,57 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41FB0C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4AAC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1377920657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F38A2089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:09:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922161;
-	bh=EMkLnOSZMMv4MZEje/xzNx+RTKH8T3X3TlZQylSguD4=;
+	s=default; t=1557922163;
+	bh=lE20jdYG3yjU+ZsTMNEbAzSia0Kdo16515jEQPwHTBM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OWG0YiI9OcT2epxXBeQnjzuzY8QN6po9KGX0/XkRfOX1j8CJkSl9kKiG1TCj48LTh
-	 WxFfewOGJDLSBWkkf1yd8KafaAOe++L5qaxey1JbU8GV/Y4HxAQC/qwjbC41t1J+Q9
-	 3BaXNjiYwfkG1Q33txTmnp/PpSyWwX+Tg/uNx/gU=
+	b=iRYIpDCI3SXUvqCS6yURn5vBgn3Ntxh7SIWbhEjYOYdVnryzISrLfdg9u3ubNkZ/A
+	 ukjWqCATnGksc5Vqd8rA7qhS6xsFzhM7dukfYP4GdBfMENBD/xjOdIRpaHI9Y/YFJ3
+	 B5oaG9YSW8OIAOAwUPVQ130Wp5hlEuQb6+WNmL/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbfEOLH4 (ORCPT
+        id S1729021AbfEOMJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:07:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39878 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:09:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728454AbfEOLHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:07:52 -0400
+        id S1729019AbfEOLH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:07:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC89720843;
-        Wed, 15 May 2019 11:07:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C20020862;
+        Wed, 15 May 2019 11:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918471;
-        bh=EMkLnOSZMMv4MZEje/xzNx+RTKH8T3X3TlZQylSguD4=;
+        s=default; t=1557918476;
+        bh=lE20jdYG3yjU+ZsTMNEbAzSia0Kdo16515jEQPwHTBM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hQxKYp7mxch0BKRZIz/cvYifdoyljBIBFjUpz50Oi53IjwfmuqrWlzeuXlqZF7ssX
-         y5iCzhDh3fKXfs1/bm3TGf3TRwfV2MjWULz8FF1pI7WSLX5hqJP/iWWfglgiKVPIRN
-         A+riTtZEAvtXlLIYAnxYxczMbJKVn8QesKANNk1o=
+        b=drZeLwTe+bV+n0CwFowhQW32WisMfM7A+iXLxR6sAPPxHSBlkOk2vr5OkOSVqxely
+         HFSvNPOIotefbT8JX/y3Kzn7RACeTmEfpN3LaX7lC4yStXkV8g9V1lQjCnOmJdlllS
+         e1R7ul0s9WLLvgNKCZ5XodSirgnV7MWtqXOPm/HA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, chenxiang <chenxiang66@hisilicon.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Ewan Milne <emilne@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Tomas Henzl <thenzl@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Hannes Reinecke <hare@suse.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.4 143/266] scsi: libsas: fix a race condition when smp task timeout
-Date:   Wed, 15 May 2019 12:54:10 +0200
-Message-Id: <20190515090727.740821768@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Mack <daniel@zonque.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 145/266] ASoC: cs4270: Set auto-increment bit for register writes
+Date:   Wed, 15 May 2019 12:54:12 +0200
+Message-Id: <20190515090727.806775251@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -65,65 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
+[ Upstream commit f0f2338a9cfaf71db895fa989ea7234e8a9b471d ]
 
-commit b90cd6f2b905905fb42671009dc0e27c310a16ae upstream.
+The CS4270 does not by default increment the register address on
+consecutive writes. During normal operation it doesn't matter as all
+register accesses are done individually. At resume time after suspend,
+however, the regcache code gathers the biggest possible block of
+registers to sync and sends them one on one go.
 
-When the lldd is processing the complete sas task in interrupt and set the
-task stat as SAS_TASK_STATE_DONE, the smp timeout timer is able to be
-triggered at the same time. And smp_task_timedout() will complete the task
-wheter the SAS_TASK_STATE_DONE is set or not. Then the sas task may freed
-before lldd end the interrupt process. Thus a use-after-free will happen.
+To fix this, set the INCR bit in all cases.
 
-Fix this by calling the complete() only when SAS_TASK_STATE_DONE is not
-set. And remove the check of the return value of the del_timer(). Once the
-LLDD sets DONE, it must call task->done(), which will call
-smp_task_done()->complete() and the task will be completed and freed
-correctly.
-
-Reported-by: chenxiang <chenxiang66@hisilicon.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-CC: John Garry <john.garry@huawei.com>
-CC: Johannes Thumshirn <jthumshirn@suse.de>
-CC: Ewan Milne <emilne@redhat.com>
-CC: Christoph Hellwig <hch@lst.de>
-CC: Tomas Henzl <thenzl@redhat.com>
-CC: Dan Williams <dan.j.williams@intel.com>
-CC: Hannes Reinecke <hare@suse.com>
-Reviewed-by: Hannes Reinecke <hare@suse.com>
-Reviewed-by: John Garry <john.garry@huawei.com>
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Cc: Guenter Roeck <linux@roeck-us.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Daniel Mack <daniel@zonque.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/libsas/sas_expander.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ sound/soc/codecs/cs4270.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -47,17 +47,16 @@ static void smp_task_timedout(unsigned l
- 	unsigned long flags;
+diff --git a/sound/soc/codecs/cs4270.c b/sound/soc/codecs/cs4270.c
+index 3670086b9227c..f273533c66535 100644
+--- a/sound/soc/codecs/cs4270.c
++++ b/sound/soc/codecs/cs4270.c
+@@ -641,6 +641,7 @@ static const struct regmap_config cs4270_regmap = {
+ 	.reg_defaults =		cs4270_reg_defaults,
+ 	.num_reg_defaults =	ARRAY_SIZE(cs4270_reg_defaults),
+ 	.cache_type =		REGCACHE_RBTREE,
++	.write_flag_mask =	CS4270_I2C_INCR,
  
- 	spin_lock_irqsave(&task->task_state_lock, flags);
--	if (!(task->task_state_flags & SAS_TASK_STATE_DONE))
-+	if (!(task->task_state_flags & SAS_TASK_STATE_DONE)) {
- 		task->task_state_flags |= SAS_TASK_STATE_ABORTED;
-+		complete(&task->slow_task->completion);
-+	}
- 	spin_unlock_irqrestore(&task->task_state_lock, flags);
--
--	complete(&task->slow_task->completion);
- }
- 
- static void smp_task_done(struct sas_task *task)
- {
--	if (!del_timer(&task->slow_task->timer))
--		return;
-+	del_timer(&task->slow_task->timer);
- 	complete(&task->slow_task->completion);
- }
- 
+ 	.readable_reg =		cs4270_reg_is_readable,
+ 	.volatile_reg =		cs4270_reg_is_volatile,
+-- 
+2.20.1
+
 
 
