@@ -2,153 +2,91 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96572C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3317C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 596A320862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B75120862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:59:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Jug8I0tk"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kosd0lCi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726124AbfEOI6z (ORCPT
+        id S1726261AbfEOI7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 04:58:55 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:28366 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfEOI6y (ORCPT
+        Wed, 15 May 2019 04:59:32 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46402 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfEOI7c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 04:58:54 -0400
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x4F8wRhu014705;
-        Wed, 15 May 2019 17:58:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x4F8wRhu014705
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557910708;
-        bh=2MrrSHdBxYxVtPj2/DVwtwR68DpWBrQh9eRHG+q/Ras=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Jug8I0tk1Pn8hz6j2xUe4+x8GdPnAVwmlUAm1/isDl2mGqcSUUtwj6wj0pMUccZ0b
-         +Rt4R//uYCdeIiNh6m5fV/5nrm4/2yVXFTw+nV0B7vuP2jmZ9CnszTkb6++4kt/pYC
-         iuY8I6ELpoQf+hmzmLAg8FwoqoicqhKxnAWQoS6HiUNJkdBHMe3FwjIzY3cNLA5gjA
-         gVtGOugd/ZMGFNMZV0FbGl7+tPSKSowweC/CJOjoUGUjH42eWeVMK7ytaDakjsKnFZ
-         b0wJfwCmXQ3mK0iFffBCXDuDeeYHS05SJHqRPSZk/2ZI4QgNH81cnEwg44D6R0KDEe
-         cvNU2PJaBTtmQ==
-X-Nifty-SrcIP: [209.85.217.43]
-Received: by mail-vs1-f43.google.com with SMTP id m1so1183920vsr.6;
-        Wed, 15 May 2019 01:58:27 -0700 (PDT)
-X-Gm-Message-State: APjAAAXjUv4QPa+g9QKFUvVdd4DLduLfaIbI8aPEgtxLJcNtHYB/idgt
-        vM1vnkh/MRrelGqF9/58wN5EWLQ9OFJcED88NRM=
-X-Google-Smtp-Source: APXvYqwiIrHwReJgRh15IRutCI+xHlWSLgVpa+JYsXecdQqZvMW8wM9FCJc2CnGJ7JtW/ROzngXadei4gINSatKZNMA=
-X-Received: by 2002:a67:fc4:: with SMTP id 187mr19815232vsp.215.1557910706916;
- Wed, 15 May 2019 01:58:26 -0700 (PDT)
+        Wed, 15 May 2019 04:59:32 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4F8x9if014833;
+        Wed, 15 May 2019 03:59:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1557910749;
+        bh=BacRUcskBltX/i52n+AsRzYrFd9sD+yl78NxjnBclHI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=kosd0lCiXD8DfciWJXgCLGiMS3sPUTeM9UTJb7F+LGGGDWrRIhWRO52LCSzguBNxS
+         b85NOQ30jcnHydbCZGnp0jGVCQGu7xqAaO7XpBTr1+2h6UGLIot4TIik4aTSdOVIMG
+         HF1nzvt3kzN5eLChYNMwXGwVWVULMtyRjoK6Bp5g=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4F8x8A8010345
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 15 May 2019 03:59:09 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 15
+ May 2019 03:59:08 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 15 May 2019 03:59:08 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4F8x2MI071131;
+        Wed, 15 May 2019 03:59:04 -0500
+Subject: Re: [PATCH] clk: Remove io.h from clk-provider.h
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Heiko Stuebner <heiko@sntech.de>
+References: <20190514170931.56312-1-sboyd@kernel.org>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <a3aecc47-aa1e-bc12-2170-4c55b491f891@ti.com>
+Date:   Wed, 15 May 2019 11:58:26 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190515073818.22486-1-yamada.masahiro@socionext.com>
- <CAK8P3a1y7hxME0me_Zu-F8a8jU6n=T+c32mv83utOtsL-+gc0A@mail.gmail.com> <20190515081422.GA22750@kroah.com>
-In-Reply-To: <20190515081422.GA22750@kroah.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 15 May 2019 17:57:50 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASpJFAgvuak=mz5kkM3oGh9-M8y_84KZv-xcUkQ0h=d_A@mail.gmail.com>
-Message-ID: <CAK7LNASpJFAgvuak=mz5kkM3oGh9-M8y_84KZv-xcUkQ0h=d_A@mail.gmail.com>
-Subject: Re: [RFC PATCH] kbuild: check uniqueness of basename of modules
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sam Ravnborg <sam@ravnborg.org>, Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Kees Cook <keescook@chromium.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190514170931.56312-1-sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 5:14 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Wed, May 15, 2019 at 10:08:12AM +0200, Arnd Bergmann wrote:
-> > On Wed, May 15, 2019 at 9:39 AM Masahiro Yamada
-> > <yamada.masahiro@socionext.com> wrote:
-> > >
-> > > In the recent build test of linux-next, Stephen saw a build error
-> > > caused by a broken .tmp_versions/*.mod file:
-> > >
-> > >   https://lkml.org/lkml/2019/5/13/991
-> > >
-> > > drivers/net/phy/asix.ko and drivers/net/usb/asix.ko have the same
-> > > basename, and there is a race in generating .tmp_versions/asix.mod
-> > >
-> > > Kbuild has not checked this before, and it occasionally shows up with
-> > > obscure error message when this kind of race occurs.
-> > >
-> > > It is not trivial to catch this potential issue by eyes.
-> > >
-> > > Hence, this script.
-> > >
-> > > I compile-tested allmodconfig for the latest kernel as of writing,
-> > > it detected the following:
-> > >
-> > > warning: same basename '88pm800.ko' if the following are built as modules:
-> > >   drivers/regulator/88pm800.ko
-> > >   drivers/mfd/88pm800.ko
-> > > warning: same basename 'adv7511.ko' if the following are built as modules:
-> > >   drivers/gpu/drm/bridge/adv7511/adv7511.ko
-> > >   drivers/media/i2c/adv7511.ko
-> > > warning: same basename 'asix.ko' if the following are built as modules:
-> > >   drivers/net/phy/asix.ko
-> > >   drivers/net/usb/asix.ko
-> > > warning: same basename 'coda.ko' if the following are built as modules:
-> > >   fs/coda/coda.ko
-> > >   drivers/media/platform/coda/coda.ko
-> > > warning: same basename 'realtek.ko' if the following are built as modules:
-> > >   drivers/net/phy/realtek.ko
-> > >   drivers/net/dsa/realtek.ko
-> > >
-> > > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> >
-> > That looks great!
-> >
-> > > ---
-> > >
-> > >  [Alternative fix ? ]
-> > >
-> > > I do not know about the user experience of modprobe etc.
-> > > when two different modules have the same name.
-> > > It does not matter if this is correctly handled by modules.order?
-> > >
-> > > If this is just a problem of the build system, it is pretty easy to fix.
-> > > For example, if we prepend the directory path, parallel build will
-> > > never write to the same file simultanously.
-> > >
-> > >   asix.mod -> drivers/net/phy/asix.mod
-> > >   asix.mod -> drivers/net/usb/asix.mod
-> >
-> > non-unique module names cause all kinds of problems, and
-> > modprobe can certainly not handle them correctly, and there
-> > are issues with symbols exported from a module when another
-> > one has the same name.
->
-> /sys/modules/ will fall over when this happens as well.  I thought we
-> had the "rule" that module names had to be unique, I guess it was only a
-> matter of time before they started colliding :(
->
-> So warning is good, but forbidding this is better, as things will break.
->
-> Or we need to fix up the places where things will break.
+On 14/05/2019 20:09, Stephen Boyd wrote:
+> Now that we've gotten rid of clk_readl() we can remove io.h from the
+> clk-provider header and push out the io.h include to any code that isn't
+> already including the io.h header but using things like readl/writel,
+> etc.
+> 
 
+For drivers/clk/ti portions:
 
-If we intentionally break the build,
-we need to send fix-up patches to subsystems first.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+Acked-by: Tero Kristo <t-kristo@ti.com>
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
