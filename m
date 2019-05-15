@@ -2,113 +2,143 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C79AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8C0C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E17452089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C53421473
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:54:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="phkhaaNi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbfEOHxn (ORCPT
+        id S1726510AbfEOHyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 03:53:43 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57100 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725902AbfEOHxm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 03:53:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8FDD9AF3F;
-        Wed, 15 May 2019 07:53:40 +0000 (UTC)
-Date:   Wed, 15 May 2019 09:53:39 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@aculab.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
-Message-ID: <20190515075339.7biocrjfpxj77l3b@pathway.suse.cz>
-References: <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
- <20190513091320.GK9224@smile.fi.intel.com>
- <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
- <20190514020730.GA651@jagdpanzerIV>
- <45348cf615fe40d383c1a25688d4a88f@AcuMS.aculab.com>
- <CAMuHMdXaMObq9h2Sb49PW1-HUysPeaWXB7wJmKFz=xLmSoUDZg@mail.gmail.com>
- <20190514143751.48e81e05@oasis.local.home>
- <CAMuHMdUhy3uB+G23uXh__F2Y_Jsam5uS1Q5jJC95kWAOEM8WRA@mail.gmail.com>
- <20190514153503.6b7faaa7@oasis.local.home>
- <CAMuHMdUFEwxwQUWg0HNUiz75hP6S7TVGSx7fWXnsQ_3qsVfotQ@mail.gmail.com>
+        Wed, 15 May 2019 03:54:00 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:59053 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725902AbfEOHyA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 03:54:00 -0400
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x4F7rpK8004335;
+        Wed, 15 May 2019 16:53:52 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x4F7rpK8004335
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557906832;
+        bh=h8aUMqSjFhFTzxGtS0eQk15Ap/Kh5ZwDzppa2eG7Jz4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=phkhaaNiL4RSl0dwv6qsOlLxFd6FhymD8fs4j7KQFbN431WA7K//nUf3dnBEEbWfj
+         yfuhnUQ/ONC2k7DJcy3PYKovKOkR0yJXk0X4DAOwnsFGaduMF+AeI00lTK26KB+Kdr
+         qsGfJqHnbiOxkljUtkqVl4rnN/LakI1d7bQeFrQeFsk6TYLFRnNBb7wKksWKVRYeE5
+         XcbTEyPDlChR+LLJNOL33rLtdzvzO+qcoI+qLo90n3xEKaJtY49elsQJkfd+UxmFmT
+         vNY3qEX7R7DamkT2rEzusFyZBRu9Ly8l5HQ0Fkkxz4m4K9IzbmZ78u85Y13HpI9Hz7
+         AYmGuMOzNjC7Q==
+X-Nifty-SrcIP: [209.85.222.53]
+Received: by mail-ua1-f53.google.com with SMTP id e9so661231uar.9;
+        Wed, 15 May 2019 00:53:51 -0700 (PDT)
+X-Gm-Message-State: APjAAAV9nWRiJFHFY5gGP0TSjWHlHTcy0oT5X/0qnkOAiaUlSdjNkU2w
+        pXmDDIBxxl6iGLDTXwAEVYqbXBVeK+A8Qe0VnDc=
+X-Google-Smtp-Source: APXvYqxmvII94whKLCXDmQ+neOgMzj0hp1Ty2I7Wuinbpwm3/DrSgP+yEtioF73Sy4Ya9UwTBmSP1VMGn2/FLKHBsQk=
+X-Received: by 2002:a9f:3381:: with SMTP id p1mr12017844uab.40.1557906830783;
+ Wed, 15 May 2019 00:53:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUFEwxwQUWg0HNUiz75hP6S7TVGSx7fWXnsQ_3qsVfotQ@mail.gmail.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+References: <20190515073818.22486-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190515073818.22486-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 15 May 2019 16:53:15 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQgBKq9JDGtQUD1kgKrfLZ4jOjuLJi7_tpSPLJZsWtmag@mail.gmail.com>
+Message-ID: <CAK7LNAQgBKq9JDGtQUD1kgKrfLZ4jOjuLJi7_tpSPLJZsWtmag@mail.gmail.com>
+Subject: Re: [RFC PATCH] kbuild: check uniqueness of basename of modules
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Kees Cook <keescook@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 2019-05-15 09:23:05, Geert Uytterhoeven wrote:
-> Hi Steve,
-> 
-> On Tue, May 14, 2019 at 9:35 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> > On Tue, 14 May 2019 21:13:06 +0200
-> > Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > > Do we care about the value? "(-E%u)"?
-> > > >
-> > > > That too could be confusing. What would (-E22) be considered by a user
-> > > > doing an sprintf() on some string. I know that would confuse me, or I
-> > > > would think that it was what the %pX displayed, and wonder why it
-> > > > displayed it that way. Whereas "(fault)" is quite obvious for any %p
-> > > > use case.
-> > >
-> > > I would immediately understand there's a missing IS_ERR() check in a
-> > > function that can return  -EINVAL, without having to add a new printk()
-> > > to find out what kind of bogus value has been received, and without
-> > > having to reboot, and trying to reproduce...
-> >
-> > I have to ask. Has there actually been a case that you used a %pX and
-> > it faulted, and you had to go back to find what the value of the
-> > failure was?
-> 
-> If it faulted, the bad pointer value is obvious from the backtrace.
-> If the code avoids the fault by verifying the pointer and returning
-> "(efault)" instead, the bad pointer value is lost.
-> 
-> Or am I missing something?
+On Wed, May 15, 2019 at 4:40 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> In the recent build test of linux-next, Stephen saw a build error
+> caused by a broken .tmp_versions/*.mod file:
+>
+>   https://lkml.org/lkml/2019/5/13/991
+>
+> drivers/net/phy/asix.ko and drivers/net/usb/asix.ko have the same
+> basename, and there is a race in generating .tmp_versions/asix.mod
+>
+> Kbuild has not checked this before, and it occasionally shows up with
+> obscure error message when this kind of race occurs.
+>
+> It is not trivial to catch this potential issue by eyes.
+>
+> Hence, this script.
+>
+> I compile-tested allmodconfig for the latest kernel as of writing,
+> it detected the following:
+>
+> warning: same basename '88pm800.ko' if the following are built as modules:
+>   drivers/regulator/88pm800.ko
+>   drivers/mfd/88pm800.ko
+> warning: same basename 'adv7511.ko' if the following are built as modules:
+>   drivers/gpu/drm/bridge/adv7511/adv7511.ko
+>   drivers/media/i2c/adv7511.ko
+> warning: same basename 'asix.ko' if the following are built as modules:
+>   drivers/net/phy/asix.ko
+>   drivers/net/usb/asix.ko
+> warning: same basename 'coda.ko' if the following are built as modules:
+>   fs/coda/coda.ko
+>   drivers/media/platform/coda/coda.ko
+> warning: same basename 'realtek.ko' if the following are built as modules:
+>   drivers/net/phy/realtek.ko
+>   drivers/net/dsa/realtek.ko
+>
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
 
-Should buggy printk() crash the system?
+> diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
+> new file mode 100755
+> index 000000000000..944e68bd22b0
+> --- /dev/null
+> +++ b/scripts/modules-check.sh
+> @@ -0,0 +1,18 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +# Warn if two or more modules have the same basename
+> +check_same_name_modules()
+> +{
+> +       same_name_modules=$(cat modules.order modules.builtin | \
+> +                               xargs basename -a | sort | uniq -d)
+> +
+> +       for m in $same_name_modules
+> +       do
+> +               echo "warning: same basename '$m' if the following are built as modules:"
+> +               grep --no-filename -e /$m modules.order modules.builtin | \
+> +                                                       sed 's:^kernel/:  :'
 
-Another problem is that vsprintf() is called in printk() under
-lockbuf_lock. The messages are stored into printk_safe per CPU
-buffers. It allows to see the nested messages. But there is still
-a bigger risk of missing them than with a "normal" fault.
 
-Finally, various variants of these checks were already used
-in "random" printf formats. The only change is that we are
-using them consistently everywhere[*] a pointer is accessed.
+Self nit-picking:
+It might be better to send these messages to stderr instead of stdout.
 
-[*] Just the top level pointer is checked. Some pointer modifiers
-are accessing ptr->ptr->val. The lower level pointers are not
-checked to avoid too much complexity.
 
-Best Regards,
-Petr
+
+
+--
+Best Regards
+Masahiro Yamada
