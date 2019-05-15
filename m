@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E827C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0D8C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D45020657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 040CC20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:54:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921270;
-	bh=8xr0UHmS66hpz9oJZ6WyCqf5D5qb+7B5XC1ifioSG54=;
+	s=default; t=1557921275;
+	bh=HmAkxD5WGmy/RoY864NLyadG6VXokwA+13jgf0iy0Co=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=umNF3oJe5JAXJ7CAcqd+ZwFc5Jie1YS3fdPFAapdiPPl5FoQoMuvllK0F0X06uXqF
-	 +4/Th7bEMCGPjudWRbbiO0Uo7ZEwBExyekfk9EAMWpgAzS3zdt5Zp5OmRkBFbMybM+
-	 jezVYUkuXgiMw0YqY1AgqgiG6Vh/QVBQ0amq7+I8=
+	b=U1SbP9idab7Zc9rM74OkWQHq4B4aL4FjRzRW6aMAcQJJE+tPNAKNiIrAqyzV35w3B
+	 t3yuNfumhEDm15ho2eFLmV24WB83tUT8KfcrEgqAtLLRi6WwCvmWtAZwEg/TUcxTFp
+	 rrzN1oOu9IRD5OFB5tciZLicYWBcvRLWN5IW/68k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731258AbfEOLy3 (ORCPT
+        id S1730875AbfEOLTA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:54:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56624 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:19:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730869AbfEOLTB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:19:01 -0400
+        id S1729422AbfEOLSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:18:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12438206BF;
-        Wed, 15 May 2019 11:18:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CE2420818;
+        Wed, 15 May 2019 11:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919140;
-        bh=8xr0UHmS66hpz9oJZ6WyCqf5D5qb+7B5XC1ifioSG54=;
+        s=default; t=1557919132;
+        bh=HmAkxD5WGmy/RoY864NLyadG6VXokwA+13jgf0iy0Co=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bPtNuBo4PWMKS4U88vLP6WC7xNjxaNefGIJ8GRnAPYvj25je4GKRh9yuHMp93Z3VG
-         qe3yJICwlyUuEcHl5P8r/wXlziGN2ANJjvtMVw7y47XS8+/EkHgToqwT6Zg22YMeYS
-         zI70BWhujjVR21CLH48dQgcjcTy82G+99ejyrH38=
+        b=DHAIw/BW7dd0f+zrYViEALHN/Q0aypX1hdquGm/aaz3+qY4SxhAkJmqm+pf/Ha/st
+         YZzr1RQRM3KhN/vvKDLh0XetJEyj5uQoMYQ1aQ4GFJYuxlhvzoaxFMoj7wG/W/AID3
+         /xDcyjRW+J1k71nuC+uWsl+EWiDc0rfP+T58qIyA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hugues Fruchet <hugues.fruchet@st.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, KT Liao <kt.liao@emc.com.tw>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 055/115] media: ov5640: fix wrong binning value in exposure calculation
-Date:   Wed, 15 May 2019 12:55:35 +0200
-Message-Id: <20190515090703.596067527@linuxfoundation.org>
+Subject: [PATCH 4.14 079/115] Input: elan_i2c - add hardware ID for multiple Lenovo laptops
+Date:   Wed, 15 May 2019 12:55:59 +0200
+Message-Id: <20190515090705.130414779@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -63,56 +60,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c2c3f42df4dd9bb231d756bacb0c897f662c6d3c ]
+[ Upstream commit 738c06d0e4562e0acf9f2c7438a22b2d5afc67aa ]
 
-ov5640_set_mode_exposure_calc() is checking binning value but
-binning value read is buggy, fix this.
-Rename ov5640_binning_on() to ov5640_get_binning() as per other
-similar functions.
+There are many Lenovo laptops which need elan_i2c support, this patch adds
+relevant IDs to the Elan driver so that touchpads are recognized.
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: KT Liao <kt.liao@emc.com.tw>
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/media/i2c/ov5640.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/input/mouse/elan_i2c_core.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index 39a2269c0beef..0366c8dc6ecf7 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -1216,7 +1216,7 @@ static int ov5640_set_ae_target(struct ov5640_dev *sensor, int target)
- 	return ov5640_write_reg(sensor, OV5640_REG_AEC_CTRL1F, fast_low);
- }
- 
--static int ov5640_binning_on(struct ov5640_dev *sensor)
-+static int ov5640_get_binning(struct ov5640_dev *sensor)
- {
- 	u8 temp;
- 	int ret;
-@@ -1224,8 +1224,8 @@ static int ov5640_binning_on(struct ov5640_dev *sensor)
- 	ret = ov5640_read_reg(sensor, OV5640_REG_TIMING_TC_REG21, &temp);
- 	if (ret)
- 		return ret;
--	temp &= 0xfe;
--	return temp ? 1 : 0;
-+
-+	return temp & BIT(0);
- }
- 
- static int ov5640_set_virtual_channel(struct ov5640_dev *sensor)
-@@ -1293,7 +1293,7 @@ static int ov5640_set_mode_exposure_calc(
- 	if (ret < 0)
- 		return ret;
- 	prev_shutter = ret;
--	ret = ov5640_binning_on(sensor);
-+	ret = ov5640_get_binning(sensor);
- 	if (ret < 0)
- 		return ret;
- 	if (ret && mode->id != OV5640_MODE_720P_1280_720 &&
+diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+index 2ce805d31ed13..ad89ba143a0e3 100644
+--- a/drivers/input/mouse/elan_i2c_core.c
++++ b/drivers/input/mouse/elan_i2c_core.c
+@@ -1254,22 +1254,47 @@ static const struct acpi_device_id elan_acpi_id[] = {
+ 	{ "ELAN0600", 0 },
+ 	{ "ELAN0601", 0 },
+ 	{ "ELAN0602", 0 },
++	{ "ELAN0603", 0 },
++	{ "ELAN0604", 0 },
+ 	{ "ELAN0605", 0 },
++	{ "ELAN0606", 0 },
++	{ "ELAN0607", 0 },
+ 	{ "ELAN0608", 0 },
+ 	{ "ELAN0605", 0 },
+ 	{ "ELAN0609", 0 },
+ 	{ "ELAN060B", 0 },
+ 	{ "ELAN060C", 0 },
++	{ "ELAN060F", 0 },
++	{ "ELAN0610", 0 },
+ 	{ "ELAN0611", 0 },
+ 	{ "ELAN0612", 0 },
++	{ "ELAN0615", 0 },
++	{ "ELAN0616", 0 },
+ 	{ "ELAN0617", 0 },
+ 	{ "ELAN0618", 0 },
++	{ "ELAN0619", 0 },
++	{ "ELAN061A", 0 },
++	{ "ELAN061B", 0 },
+ 	{ "ELAN061C", 0 },
+ 	{ "ELAN061D", 0 },
+ 	{ "ELAN061E", 0 },
++	{ "ELAN061F", 0 },
+ 	{ "ELAN0620", 0 },
+ 	{ "ELAN0621", 0 },
+ 	{ "ELAN0622", 0 },
++	{ "ELAN0623", 0 },
++	{ "ELAN0624", 0 },
++	{ "ELAN0625", 0 },
++	{ "ELAN0626", 0 },
++	{ "ELAN0627", 0 },
++	{ "ELAN0628", 0 },
++	{ "ELAN0629", 0 },
++	{ "ELAN062A", 0 },
++	{ "ELAN062B", 0 },
++	{ "ELAN062C", 0 },
++	{ "ELAN062D", 0 },
++	{ "ELAN0631", 0 },
++	{ "ELAN0632", 0 },
+ 	{ "ELAN1000", 0 },
+ 	{ }
+ };
 -- 
 2.20.1
 
