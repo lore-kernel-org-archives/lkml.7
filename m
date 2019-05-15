@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF58DC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C09A9C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81CF12084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9157421744
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918028;
-	bh=7x3Adozaa64oTBpdwFSjRDCfOoqmldrh7ZB+3Q+gZuE=;
+	s=default; t=1557918034;
+	bh=8h2+eYVUnwyN4zDs1fgarkI9kYsmPRaRdslM8QT/jos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z/lDTdwBKYQb/xFegkm0dfZmvl51qPDNwcFOd4wIHjJYHnshbbnb2paWXaoO/aLT0
-	 zSz53LaZUr0YKQopFMmkzQ/zdJc+BKI4Ek+uKr00kc/DxAIymiUO0ytQJLO/2TBC2D
-	 bG0o0dJ5aedizgjdP9i9JecSKvx3sP1U838If+kA=
+	b=HBLmRNwUm601HWcH6+LKBkVgtHS+fDTNtR4/3TEnO9zVIyqd57AyBaZFNjEWGRIHg
+	 UqT1NCraBIjm08mCx99EHzXWZfu5hM1ymAFse/GepP34lwhOFbfiR99DH3oFXDRVin
+	 bFDq+C1zSkcrddsoj+UZpnyUh3ANJrS5i7IvIkwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfEOLAW (ORCPT
+        id S1727468AbfEOLAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:00:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57076 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:00:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727376AbfEOLAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:00:17 -0400
+        id S1727423AbfEOLA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:00:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 621B621734;
-        Wed, 15 May 2019 11:00:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C790F2173C;
+        Wed, 15 May 2019 11:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918016;
-        bh=7x3Adozaa64oTBpdwFSjRDCfOoqmldrh7ZB+3Q+gZuE=;
+        s=default; t=1557918027;
+        bh=8h2+eYVUnwyN4zDs1fgarkI9kYsmPRaRdslM8QT/jos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1qAf7G8+MNwcgWm+JIcL4QToH0AriFEJXWMCP9TfviQZkGf8/5qTeyOkL+U3ju775
-         Ube76QoOzIplhKyZ0SUIxphBmKJd8FJnWxHRTaZnbgPziz7M480BBplC3k/2wP8iAv
-         M2q37v2qzH0a0M3Tiw4TKPXBpL0kP73HYmBNLvLo=
+        b=Q+6qT4ifrae2jSw/+nlSqBmycaLP1NGKdaGRFZLS8zTxcmED0QvJxxrPaq3tcBI5D
+         jZ07NnD8PilBP06xUbJb5Ocbs1F8+wEjgFCl46I7HYXTYxfRyp2P3Y1nsiNvVSdmW6
+         mFWydShBAs8lBMz75erA8jM0c8RfYtQibxYbh2z8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
-        Douglas Miller <dougmill@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Guido Kiener <guido.kiener@rohde-schwarz.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 3.18 21/86] net: ibm: fix possible object reference leak
-Date:   Wed, 15 May 2019 12:54:58 +0200
-Message-Id: <20190515090646.852161099@linuxfoundation.org>
+Subject: [PATCH 3.18 15/86] usb: gadget: net2280: Fix overrun of OUT messages
+Date:   Wed, 15 May 2019 12:54:52 +0200
+Message-Id: <20190515090645.715262232@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -61,38 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit be693df3cf9dd113ff1d2c0d8150199efdba37f6 ]
+[ Upstream commit 9d6a54c1430647355a5e23434881b2ca3d192b48 ]
 
-The call to ehea_get_eth_dn returns a node pointer with refcount
-incremented thus it must be explicitly decremented after the last
-usage.
+The OUT endpoint normally blocks (NAK) subsequent packets when a
+short packet was received and returns an incomplete queue entry to
+the gadget driver. Thereby the gadget driver can detect a short packet
+when reading queue entries with a length that is not equal to a
+multiple of packet size.
 
-Detected by coccinelle with the following warnings:
-./drivers/net/ethernet/ibm/ehea/ehea_main.c:3163:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3154, but without a corresponding object release within this function.
+The start_queue() function enables receiving OUT packets regardless of
+the content of the OUT FIFO. This results in a race: With the current
+code, it's possible that the "!ep->is_in && (readl(&ep->regs->ep_stat)
+& BIT(NAK_OUT_PACKETS))" test in start_dma() will fail, then a short
+packet will be received, and then start_queue() will call
+stop_out_naking(). That's what we don't want (OUT naking gets turned
+off while there is data in the FIFO) because then the next driver
+request might receive a mixture of old and new packets.
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Douglas Miller <dougmill@linux.ibm.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: David S. Miller <davem@davemloft.net>
+With the patch, this race can't occur because the FIFO's state is
+tested after we know that OUT naking is already turned on, and OUT
+naking is stopped only when both of the conditions are met.  This
+ensures that all received data is delivered to the gadget driver,
+which can detect a short packet now before new packets are appended
+to the last short packet.
+
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/ibm/ehea/ehea_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/gadget/udc/net2280.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
-index 566b17db135a..a718066bb99f 100644
---- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
-+++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
-@@ -3183,6 +3183,7 @@ static ssize_t ehea_probe_port(struct device *dev,
+diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
+index 8d13337e2dde..931765208286 100644
+--- a/drivers/usb/gadget/udc/net2280.c
++++ b/drivers/usb/gadget/udc/net2280.c
+@@ -800,9 +800,6 @@ static void start_queue(struct net2280_ep *ep, u32 dmactl, u32 td_dma)
+ 	(void) readl(&ep->dev->pci->pcimstctl);
  
- 	if (ehea_add_adapter_mr(adapter)) {
- 		pr_err("creating MR failed\n");
-+		of_node_put(eth_dn);
- 		return -EIO;
+ 	writel(BIT(DMA_START), &dma->dmastat);
+-
+-	if (!ep->is_in)
+-		stop_out_naking(ep);
+ }
+ 
+ static void start_dma(struct net2280_ep *ep, struct net2280_request *req)
+@@ -841,6 +838,7 @@ static void start_dma(struct net2280_ep *ep, struct net2280_request *req)
+ 			writel(BIT(DMA_START), &dma->dmastat);
+ 			return;
+ 		}
++		stop_out_naking(ep);
  	}
  
+ 	tmp = dmactl_default;
 -- 
 2.19.1
 
