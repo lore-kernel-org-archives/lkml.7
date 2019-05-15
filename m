@@ -7,65 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC98C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0C2C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79EE920657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FB0620657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921820;
-	bh=IkVquPmi2ENgpVsO/PiNee7bREyvEPL0sBJQjUPvmto=;
+	s=default; t=1557921841;
+	bh=/Tbe6qeLDDvit17MLfzrZarMMLypuT7YzG0hJorRKFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cQMs/9Y0rVg0FJGU7TTom9/CgBS3BdKOMfrH6ZREd9Y39UnjD9hWCc0n4+zpSagqv
-	 nXaOv0hIbaiHJWMy8SbTRx8ZnnYtBSKDHWZNFs9z1ro1HS1xlvALjff/54SgydCYcR
-	 9osG9rRNSPvQxXHwXeu+26xlEAsMPpTjx38WiQjA=
+	b=A1t2vC2BRlFIHV66GEQwGQrG5u3MfIJzYHKFTFVUTrmsPkC+FD03KC8xlJvHEapju
+	 XSkD2UHGtPukt9nG+oYtgj/1WfKwIy2yj5Y3R5Or3y4+pfAthXf/ITrb5a0a8sxK3Q
+	 NsMJqAhZhHi5lbd1S7qY3Grvb+Ra2UD+hL/rPcGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbfEOMDi (ORCPT
+        id S1729705AbfEOLMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:03:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47686 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:12:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729787AbfEOLMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:12:30 -0400
+        id S1729692AbfEOLMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:12:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD1FD216FD;
-        Wed, 15 May 2019 11:12:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D1212084E;
+        Wed, 15 May 2019 11:12:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918750;
-        bh=IkVquPmi2ENgpVsO/PiNee7bREyvEPL0sBJQjUPvmto=;
+        s=default; t=1557918721;
+        bh=/Tbe6qeLDDvit17MLfzrZarMMLypuT7YzG0hJorRKFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pf/be454uTJ++mMblqSN2INmpUWeM6oIuw+EW0xztKTK/rEIeT+YX6VvEZVtbDgKm
-         Dtqn703ioLzR1zGWM1bhiSLXMw5qSxpkDJcAsYOG3h+T759fswWR77U/ET3AmfS9JY
-         MqqEBElecJnkNBttPRqd50EvRkjl2KbHNqvRkAHc=
+        b=upL9r9ZgE9aNRckM6UzRNE6JJ9nVRNYsINPhCl8hVnTeCkT/ztFomZcvnUPokM3kT
+         wIOvhe71Nwp76xpXnaFiBGocH84RWwfOaBZXtkxmOmK8HtXE4wxlIAfMDzRjFcrfLH
+         +IF/AEO7kP/Tr1xfK7ZgiOE2PdV/8E2jfdiIg6IY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Casey Schaufler <casey.schaufler@intel.com>,
-        Asit Mallick <asit.k.mallick@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Jon Masters <jcm@redhat.com>,
-        Waiman Long <longman9394@gmail.com>,
-        Dave Stewart <david.c.stewart@intel.com>,
-        Kees Cook <keescook@chromium.org>,
+        Borislav Petkov <bp@suse.de>, Jon Masters <jcm@redhat.com>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 210/266] x86/speculation: Rework SMT state change
-Date:   Wed, 15 May 2019 12:55:17 +0200
-Message-Id: <20190515090730.071222249@linuxfoundation.org>
+Subject: [PATCH 4.4 239/266] x86/speculation/mds: Add mitigation mode VMWERV
+Date:   Wed, 15 May 2019 12:55:46 +0200
+Message-Id: <20190515090731.087091202@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -80,128 +62,125 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-commit a74cfffb03b73d41e08f84c2e5c87dec0ce3db9f upstream.
+commit 22dd8365088b6403630b82423cf906491859b65e upstream.
 
-arch_smt_update() is only called when the sysfs SMT control knob is
-changed. This means that when SMT is enabled in the sysfs control knob the
-system is considered to have SMT active even if all siblings are offline.
+In virtualized environments it can happen that the host has the microcode
+update which utilizes the VERW instruction to clear CPU buffers, but the
+hypervisor is not yet updated to expose the X86_FEATURE_MD_CLEAR CPUID bit
+to guests.
 
-To allow finegrained control of the speculation mitigations, the actual SMT
-state is more interesting than the fact that siblings could be enabled.
+Introduce an internal mitigation mode VMWERV which enables the invocation
+of the CPU buffer clearing even if X86_FEATURE_MD_CLEAR is not set. If the
+system has no updated microcode this results in a pointless execution of
+the VERW instruction wasting a few CPU cycles. If the microcode is updated,
+but not exposed to a guest then the CPU buffers will be cleared.
 
-Rework the code, so arch_smt_update() is invoked from each individual CPU
-hotplug function, and simplify the update function while at it.
+That said: Virtual Machines Will Eventually Receive Vaccine
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Casey Schaufler <casey.schaufler@intel.com>
-Cc: Asit Mallick <asit.k.mallick@intel.com>
-Cc: Arjan van de Ven <arjan@linux.intel.com>
-Cc: Jon Masters <jcm@redhat.com>
-Cc: Waiman Long <longman9394@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Dave Stewart <david.c.stewart@intel.com>
-Cc: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20181125185004.521974984@linutronix.de
-[bwh: Backported to 4.4: adjust context]
+Reviewed-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Jon Masters <jcm@redhat.com>
+Tested-by: Jon Masters <jcm@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/cpu/bugs.c |   11 +++++------
- include/linux/sched/smt.h  |    2 ++
- kernel/cpu.c               |   10 +++++++++-
- 3 files changed, 16 insertions(+), 7 deletions(-)
+ Documentation/x86/mds.rst        |   27 +++++++++++++++++++++++++++
+ arch/x86/include/asm/processor.h |    1 +
+ arch/x86/kernel/cpu/bugs.c       |   18 ++++++++++++------
+ 3 files changed, 40 insertions(+), 6 deletions(-)
 
+--- a/Documentation/x86/mds.rst
++++ b/Documentation/x86/mds.rst
+@@ -93,11 +93,38 @@ The kernel provides a function to invoke
+ The mitigation is invoked on kernel/userspace, hypervisor/guest and C-state
+ (idle) transitions.
+ 
++As a special quirk to address virtualization scenarios where the host has
++the microcode updated, but the hypervisor does not (yet) expose the
++MD_CLEAR CPUID bit to guests, the kernel issues the VERW instruction in the
++hope that it might actually clear the buffers. The state is reflected
++accordingly.
++
+ According to current knowledge additional mitigations inside the kernel
+ itself are not required because the necessary gadgets to expose the leaked
+ data cannot be controlled in a way which allows exploitation from malicious
+ user space or VM guests.
+ 
++Kernel internal mitigation modes
++--------------------------------
++
++ ======= ============================================================
++ off      Mitigation is disabled. Either the CPU is not affected or
++          mds=off is supplied on the kernel command line
++
++ full     Mitigation is eanbled. CPU is affected and MD_CLEAR is
++          advertised in CPUID.
++
++ vmwerv	  Mitigation is enabled. CPU is affected and MD_CLEAR is not
++	  advertised in CPUID. That is mainly for virtualization
++	  scenarios where the host has the updated microcode but the
++	  hypervisor does not expose MD_CLEAR in CPUID. It's a best
++	  effort approach without guarantee.
++ ======= ============================================================
++
++If the CPU is affected and mds=off is not supplied on the kernel command
++line then the kernel selects the appropriate mitigation mode depending on
++the availability of the MD_CLEAR CPUID bit.
++
+ Mitigation points
+ -----------------
+ 
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -849,6 +849,7 @@ void df_debug(struct pt_regs *regs, long
+ enum mds_mitigations {
+ 	MDS_MITIGATION_OFF,
+ 	MDS_MITIGATION_FULL,
++	MDS_MITIGATION_VMWERV,
+ };
+ 
+ #endif /* _ASM_X86_PROCESSOR_H */
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -13,6 +13,7 @@
- #include <linux/module.h>
- #include <linux/nospec.h>
- #include <linux/prctl.h>
-+#include <linux/sched/smt.h>
+@@ -213,7 +213,8 @@ static enum mds_mitigations mds_mitigati
  
- #include <asm/spec-ctrl.h>
- #include <asm/cmdline.h>
-@@ -340,16 +341,14 @@ void arch_smt_update(void)
- 		return;
+ static const char * const mds_strings[] = {
+ 	[MDS_MITIGATION_OFF]	= "Vulnerable",
+-	[MDS_MITIGATION_FULL]	= "Mitigation: Clear CPU buffers"
++	[MDS_MITIGATION_FULL]	= "Mitigation: Clear CPU buffers",
++	[MDS_MITIGATION_VMWERV]	= "Vulnerable: Clear CPU buffers attempted, no microcode",
+ };
  
- 	mutex_lock(&spec_ctrl_mutex);
--	mask = x86_spec_ctrl_base;
--	if (IS_ENABLED(CONFIG_SMP))
-+
-+	mask = x86_spec_ctrl_base & ~SPEC_CTRL_STIBP;
-+	if (sched_smt_active())
- 		mask |= SPEC_CTRL_STIBP;
--	else
--		mask &= ~SPEC_CTRL_STIBP;
- 
- 	if (mask != x86_spec_ctrl_base) {
- 		pr_info("Spectre v2 cross-process SMT mitigation: %s STIBP\n",
--				IS_ENABLED(CONFIG_SMP) ?
--				"Enabling" : "Disabling");
-+			mask & SPEC_CTRL_STIBP ? "Enabling" : "Disabling");
- 		x86_spec_ctrl_base = mask;
- 		on_each_cpu(update_stibp_msr, NULL, 1);
+ static void __init mds_select_mitigation(void)
+@@ -224,10 +225,9 @@ static void __init mds_select_mitigation
  	}
---- a/include/linux/sched/smt.h
-+++ b/include/linux/sched/smt.h
-@@ -15,4 +15,6 @@ static __always_inline bool sched_smt_ac
- static inline bool sched_smt_active(void) { return false; }
- #endif
  
-+void arch_smt_update(void);
-+
- #endif
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -8,6 +8,7 @@
- #include <linux/init.h>
- #include <linux/notifier.h>
- #include <linux/sched.h>
-+#include <linux/sched/smt.h>
- #include <linux/unistd.h>
- #include <linux/cpu.h>
- #include <linux/oom.h>
-@@ -199,6 +200,12 @@ void cpu_hotplug_enable(void)
- EXPORT_SYMBOL_GPL(cpu_hotplug_enable);
- #endif	/* CONFIG_HOTPLUG_CPU */
- 
-+/*
-+ * Architectures that need SMT-specific errata handling during SMT hotplug
-+ * should override this.
-+ */
-+void __weak arch_smt_update(void) { }
-+
- /* Need to know about CPUs going up/down? */
- int register_cpu_notifier(struct notifier_block *nb)
- {
-@@ -434,6 +441,7 @@ out_release:
- 	cpu_hotplug_done();
- 	if (!err)
- 		cpu_notify_nofail(CPU_POST_DEAD | mod, hcpu);
-+	arch_smt_update();
- 	return err;
+ 	if (mds_mitigation == MDS_MITIGATION_FULL) {
+-		if (boot_cpu_has(X86_FEATURE_MD_CLEAR))
+-			static_branch_enable(&mds_user_clear);
+-		else
+-			mds_mitigation = MDS_MITIGATION_OFF;
++		if (!boot_cpu_has(X86_FEATURE_MD_CLEAR))
++			mds_mitigation = MDS_MITIGATION_VMWERV;
++		static_branch_enable(&mds_user_clear);
+ 	}
+ 	pr_info("%s\n", mds_strings[mds_mitigation]);
  }
+@@ -687,8 +687,14 @@ void arch_smt_update(void)
+ 		break;
+ 	}
  
-@@ -537,7 +545,7 @@ out_notify:
- 		__cpu_notify(CPU_UP_CANCELED | mod, hcpu, nr_calls, NULL);
- out:
- 	cpu_hotplug_done();
--
-+	arch_smt_update();
- 	return ret;
+-	if (mds_mitigation == MDS_MITIGATION_FULL)
++	switch (mds_mitigation) {
++	case MDS_MITIGATION_FULL:
++	case MDS_MITIGATION_VMWERV:
+ 		update_mds_branch_idle();
++		break;
++	case MDS_MITIGATION_OFF:
++		break;
++	}
+ 
+ 	mutex_unlock(&spec_ctrl_mutex);
  }
- 
 
 
