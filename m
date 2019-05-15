@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD77C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A506C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8222173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC4E21848
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918319;
-	bh=eVlJ+zk+ssm+9J1mWh7TqSbZOEEqNko1lH+GcUZ3KsU=;
+	s=default; t=1557918323;
+	bh=OYTIbF2jgOSmXqzbTcTHi5tWBXlnP5dmRSJdcUoc7M8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Df0A//dq6ECggGonUsMZtbhfI1s3f09ZU+Ma8hcCemIoO6cL4JC2l5rWqL1qVotB/
-	 kGwRUZOFDtwrwd7R06xihVmClRNs47PJh3QkLDH1gVp2szRjQV77xsRXTaJP925n8C
-	 ehYRQEnPJwRY2UHGZlRocg2cRb+1r7Bpun2vbflc=
+	b=GW79mAUF/Vn8pENCLLtB9wZ66guGziKt9YTTNNZjc2bqqXDdCLiIEud7EXrvBDlPR
+	 Mm9ZVRFvNJdratZJrBMjUwGR9VZgnK9o01OJWoMz22HT9pd13iuhmMb0ADqRAVF/RG
+	 nyccaJK+Ezt4Q6g/Oc+dnrvE3+sTOPnHDNIZ/jYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbfEOLFR (ORCPT
+        id S1728609AbfEOLFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:05:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35258 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:05:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728584AbfEOLFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:05:14 -0400
+        id S1727091AbfEOLFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:05:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29635216FD;
-        Wed, 15 May 2019 11:05:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B61221734;
+        Wed, 15 May 2019 11:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918313;
-        bh=eVlJ+zk+ssm+9J1mWh7TqSbZOEEqNko1lH+GcUZ3KsU=;
+        s=default; t=1557918319;
+        bh=OYTIbF2jgOSmXqzbTcTHi5tWBXlnP5dmRSJdcUoc7M8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j1yxq075iGfQOaB8mZiEzKamTTBMkrIABOPSZWeXbK3+TdQ+rHqcROhFEsnYi9WLn
-         de7IFiZQDWOjkS15JdcIt+56VbVJsszaGXPOTcPvB3rFhoxIkrALJRPPJl9Y6QFCqY
-         xmnwOmV8nO3ZvpVZgCVd2TMQDsiAdKTukw1dtCKc=
+        b=HYdS/v0gK3jcFRc2ToxW8HDxa3aCEjvy2yQTfFbvb9UOp15/od6KN8fgrJrP8U6KF
+         cmahOLfjqx+z6NqclbRbbOV/A6m1eB+l2xyDwmC6qDHB8N2nNgOfUBYZE2by1xzJqr
+         +wy7fZEZ7LroYprLQKazX6XYDfpyvRVRojTrrKR4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 4.4 069/266] NFS: Forbid setting AF_INET6 to "struct sockaddr_in"->sin_family.
-Date:   Wed, 15 May 2019 12:52:56 +0200
-Message-Id: <20190515090724.772236899@linuxfoundation.org>
+        "Gustavo A. R. Silva" <garsilva@embeddedor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.4 088/266] usbnet: ipheth: fix potential null pointer dereference in ipheth_carrier_set
+Date:   Wed, 15 May 2019 12:53:15 +0200
+Message-Id: <20190515090725.421847241@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -61,43 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Gustavo A. R. Silva <garsilva@embeddedor.com>
 
-commit 7c2bd9a39845bfb6d72ddb55ce737650271f6f96 upstream.
+commit 61c59355e0154a938b28710dfa6c1d8be2ddcefa upstream.
 
-syzbot is reporting uninitialized value at rpc_sockaddr2uaddr() [1]. This
-is because syzbot is setting AF_INET6 to "struct sockaddr_in"->sin_family
-(which is embedded into user-visible "struct nfs_mount_data" structure)
-despite nfs23_validate_mount_data() cannot pass sizeof(struct sockaddr_in6)
-bytes of AF_INET6 address to rpc_sockaddr2uaddr().
+_dev_ is being dereferenced before it is null checked, hence there
+is a potential null pointer dereference.
 
-Since "struct nfs_mount_data" structure is user-visible, we can't change
-"struct nfs_mount_data" to use "struct sockaddr_storage". Therefore,
-assuming that everybody is using AF_INET family when passing address via
-"struct nfs_mount_data"->addr, reject if its sin_family is not AF_INET.
+Fix this by moving the pointer dereference after _dev_ has been null
+checked.
 
-[1] https://syzkaller.appspot.com/bug?id=599993614e7cbbf66bc2656a919ab2a95fb5d75c
-
-Reported-by: syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Addresses-Coverity-ID: 1462020
+Fixes: bb1b40c7cb86 ("usbnet: ipheth: prevent TX queue timeouts when device not ready")
+Signed-off-by: Gustavo A. R. Silva <garsilva@embeddedor.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/super.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/usb/ipheth.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -2020,7 +2020,8 @@ static int nfs23_validate_mount_data(voi
- 		memcpy(sap, &data->addr, sizeof(data->addr));
- 		args->nfs_server.addrlen = sizeof(data->addr);
- 		args->nfs_server.port = ntohs(data->addr.sin_port);
--		if (!nfs_verify_server_address(sap))
-+		if (sap->sa_family != AF_INET ||
-+		    !nfs_verify_server_address(sap))
- 			goto out_no_address;
+--- a/drivers/net/usb/ipheth.c
++++ b/drivers/net/usb/ipheth.c
+@@ -290,12 +290,15 @@ static void ipheth_sndbulk_callback(stru
  
- 		if (!(data->flags & NFS_MOUNT_TCP))
+ static int ipheth_carrier_set(struct ipheth_device *dev)
+ {
+-	struct usb_device *udev = dev->udev;
++	struct usb_device *udev;
+ 	int retval;
++
+ 	if (!dev)
+ 		return 0;
+ 	if (!dev->confirmed_pairing)
+ 		return 0;
++
++	udev = dev->udev;
+ 	retval = usb_control_msg(udev,
+ 			usb_rcvctrlpipe(udev, IPHETH_CTRL_ENDP),
+ 			IPHETH_CMD_CARRIER_CHECK, /* request */
 
 
