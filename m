@@ -2,52 +2,53 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03BE4C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A81C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAFB521473
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3985F21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557917896;
-	bh=gaXPwypWFs2EK0kOMSYhLWkH/Kn8KmJVLLdo5p7KngU=;
+	s=default; t=1557917898;
+	bh=O51IcFakGuOgXhOuci8TbJmMC0n8xvIIuyNT2UA6TJ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hJkxoVkqsVrrcBTqj74QYNjvqV6HAtSydqRwrCjiDVv8bpzsJtK4FjJLlUwOW7Zyj
-	 YWoLAOP47YDdXLYCtZuZrfx1n+/tDRD0aNz9P2lrSSi2ClVHOW7B3PvkCXL9KQRtaH
-	 yQMevSk5O0uDGIIcplOtGd8ugt//4srTfY12OXlk=
+	b=rUR8mMZds2OkzOoYO/+dmUlRXOSi4ioVuCW+kjp860brygr8welL/vv1eLV9IUhTw
+	 DUZnkfHNKh6nHG8TZLSVj7IIYiVAufMJko+5zh/MrdSfXptZjPsGAqe7unQY6jrxDu
+	 dE91eBwZSjI6F3gKeTTVo1K6AEkoxI3gLchldVfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfEOK6O (ORCPT
+        id S1726732AbfEOK6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:58:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54322 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 06:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbfEOK6K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:58:10 -0400
+        id S1726586AbfEOK6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:58:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE2E92084E;
-        Wed, 15 May 2019 10:58:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F10621473;
+        Wed, 15 May 2019 10:58:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557917890;
-        bh=gaXPwypWFs2EK0kOMSYhLWkH/Kn8KmJVLLdo5p7KngU=;
+        s=default; t=1557917887;
+        bh=O51IcFakGuOgXhOuci8TbJmMC0n8xvIIuyNT2UA6TJ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QAplHc3Fyxam/bYJSTukKw6EvMI2NZMUcHkjj1O4zvgmHmfmk3woLTozcEZ12qIWP
-         qtqR136fsVnUQ278xeBqtiWjmdCDoitCg80qSP4atTvMDJtEghJA6WG1hq5J6T+hvU
-         uITNylPjXJ/pSS68nKwupcN52k3rT+5O6ed4M0oE=
+        b=2JRC9RNTqEzTBLVkOcX2k4D5yDmI8DVC0Z8yEWrDrSz44iPLHUrMz29D0uB1n+WGY
+         expDRBhHc+myHmC7Z/QYQgynacqC4mT4CVuw4OuC0Tlyp/oJZEq0mtFYvqdpDwW0ro
+         OaQ7USDlQy/3vnz+0GtleZ5QgZ3I8M+B84boK6uI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 3.18 14/86] qlcnic: Avoid potential NULL pointer dereference
-Date:   Wed, 15 May 2019 12:54:51 +0200
-Message-Id: <20190515090645.396837204@linuxfoundation.org>
+        stable@vger.kernel.org, Xiaofei Shen <xiaofeis@codeaurora.org>,
+        Sneh Shah <snehshah@codeaurora.org>,
+        Vinod Koul <vkoul@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 3.18 13/86] net: stmmac: move stmmac_check_ether_addr() to driver probe
+Date:   Wed, 15 May 2019 12:54:50 +0200
+Message-Id: <20190515090645.283801074@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -60,33 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5bf7295fe34a5251b1d241b9736af4697b590670 ]
+From: Vinod Koul <vkoul@kernel.org>
 
-netdev_alloc_skb can fail and return a NULL pointer which is
-dereferenced without a check. The patch avoids such a scenario.
+[ Upstream commit b561af36b1841088552464cdc3f6371d92f17710 ]
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+stmmac_check_ether_addr() checks the MAC address and assigns one in
+driver open(). In many cases when we create slave netdevice, the dev
+addr is inherited from master but the master dev addr maybe NULL at
+that time, so move this call to driver probe so that address is
+always valid.
+
+Signed-off-by: Xiaofei Shen <xiaofeis@codeaurora.org>
+Tested-by: Xiaofei Shen <xiaofeis@codeaurora.org>
+Signed-off-by: Sneh Shah <snehshah@codeaurora.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
-index 0a2318cad34d..63ebc491057b 100644
---- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
-+++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ethtool.c
-@@ -1038,6 +1038,8 @@ int qlcnic_do_lb_test(struct qlcnic_adapter *adapter, u8 mode)
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -1736,8 +1736,6 @@ static int stmmac_open(struct net_device
+ 	struct stmmac_priv *priv = netdev_priv(dev);
+ 	int ret;
  
- 	for (i = 0; i < QLCNIC_NUM_ILB_PKT; i++) {
- 		skb = netdev_alloc_skb(adapter->netdev, QLCNIC_ILB_PKT_SIZE);
-+		if (!skb)
-+			break;
- 		qlcnic_create_loopback_buff(skb->data, adapter->mac_addr);
- 		skb_put(skb, QLCNIC_ILB_PKT_SIZE);
- 		adapter->ahw->diag_cnt = 0;
--- 
-2.19.1
-
+-	stmmac_check_ether_addr(priv);
+-
+ 	if (priv->pcs != STMMAC_PCS_RGMII && priv->pcs != STMMAC_PCS_TBI &&
+ 	    priv->pcs != STMMAC_PCS_RTBI) {
+ 		ret = stmmac_init_phy(dev);
+@@ -2824,6 +2822,8 @@ struct stmmac_priv *stmmac_dvr_probe(str
+ 	if (ret)
+ 		goto error_hw_init;
+ 
++	stmmac_check_ether_addr(priv);
++
+ 	ndev->netdev_ops = &stmmac_netdev_ops;
+ 
+ 	ndev->hw_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM |
 
 
