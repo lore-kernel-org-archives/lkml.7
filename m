@@ -2,278 +2,225 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3543AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BAE0C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2159206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:41:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="JZJQkfh5"
+	by mail.kernel.org (Postfix) with ESMTP id 4B94C206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbfEOHlt (ORCPT
+        id S1726295AbfEOHqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 03:41:49 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:38336 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725966AbfEOHls (ORCPT
+        Wed, 15 May 2019 03:46:10 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33156 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725912AbfEOHqJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 03:41:48 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w11so2763773edl.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 00:41:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2zskjbN09R5wendyqZQRHX/H4SiND0VyVsc8hHlWH90=;
-        b=JZJQkfh5WJgpd9RQilQ/pHLDXquURzd9PP7da/2TJy+L6MibswSPsSTQCbNlnr0bG1
-         H1IOgDxbiga6cG2caK4SV6oMYSjkhxEj+JDTxsL4iMvHGMPynSqbwQ1+W1ZidZdyDUfp
-         A4O6d8SaTe4aarn+lAeSUMg2L9dS5IRK1y5uA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=2zskjbN09R5wendyqZQRHX/H4SiND0VyVsc8hHlWH90=;
-        b=dJrQbD9S7kZYpOH14AMfdoDq5o6P2rxz15s/ydugyYipqbP91CHOaRHav7ANA+JRgG
-         gl7mM1Ap4XvAQh83wyTaSsTtoExOWNhpQoKoyz7UkVuVD+xpml7KOPJH0/iC1PrIN74c
-         Z4iozdTmMehSfH62KP1N2JCD4/YpDlp8PJ7s+ziQQsp37sQ74qakGYdweYq4qJKO3eBv
-         Mwa9BfYIdUtddP7isM29MFvtWrLDR9x6yePDlhYe/SKKtkahLxBn3PmnN8ADZ2G3uu5a
-         LBTLCiqVMSleKqS84Vk4dej6nRZQiKPTSOvaO3/U7ZQLqdNhxV+EOy6VwnhqNd0Wh/Ic
-         uL7Q==
-X-Gm-Message-State: APjAAAV4N197IsQRlhmC/mBpnAB9Hph423wZ9WW4neLu2Sw5SyVmeOSQ
-        GOFM8NKgwJIzYCiLogV1SwVKAA==
-X-Google-Smtp-Source: APXvYqxlVorrQMT/bjOZ2bxd9Tq8NFaUM6+xiZePbw/NWhiH17BnzbbypQzqxmDX8X/b0giy2e7tHQ==
-X-Received: by 2002:a50:8dcd:: with SMTP id s13mr40466209edh.247.1557906106265;
-        Wed, 15 May 2019 00:41:46 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id b48sm515288edb.28.2019.05.15.00.41.44
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 May 2019 00:41:45 -0700 (PDT)
-Date:   Wed, 15 May 2019 09:41:41 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, Theodore Ts'o <tytso@mit.edu>,
-        Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
-        Knut Omang <knut.omang@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, sboyd@kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>, jdike@addtoit.com,
-        Joel Stanley <joel@jms.id.au>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
+        Wed, 15 May 2019 03:46:09 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4F7ge2g051761
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 03:46:08 -0400
+Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sgbw5q2ca-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 03:46:08 -0400
+Received: from localhost
+        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ego@linux.vnet.ibm.com>;
+        Wed, 15 May 2019 08:46:07 +0100
+Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
+        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 15 May 2019 08:46:04 +0100
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4F7k3vs6619434
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 May 2019 07:46:03 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3C30ABE053;
+        Wed, 15 May 2019 07:46:03 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EBCEEBE051;
+        Wed, 15 May 2019 07:46:02 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.124.35.248])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 15 May 2019 07:46:02 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 351052E3579; Wed, 15 May 2019 13:15:59 +0530 (IST)
+From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+To:     Paul Mackerras <paulus@samba.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Message-ID: <20190515074141.GY17751@phenom.ffwll.local>
-Mail-Followup-To: Brendan Higgins <brendanhiggins@google.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
-        Knut Omang <knut.omang@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@google.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        "Luis R. Rodriguez" <mcgrof@kernel.org>,
-        Rob Herring <robh@kernel.org>, sboyd@kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kunit-dev@googlegroups.com,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>, jdike@addtoit.com,
-        Joel Stanley <joel@jms.id.au>, Julia Lawall <julia.lawall@lip6.fr>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Petr Mladek <pmladek@suse.com>, Richard Weinberger <richard@nod.at>,
-        David Rientjes <rientjes@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
-References: <20190509133551.GD29703@mit.edu>
- <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
- <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
- <20190509214233.GA20877@mit.edu>
- <80c72e64-2665-bd51-f78c-97f50f9a53ba@gmail.com>
- <20190511173344.GA8507@mit.edu>
- <20190513144451.GQ17751@phenom.ffwll.local>
- <20190514060433.GA181462@google.com>
- <CAKMK7uHqtSF_sazJTbFL+xmQJRk4iwukCKZHoDHhsKkLXk=ECQ@mail.gmail.com>
- <20190514183618.GC109557@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514183618.GC109557@google.com>
-X-Operating-System: Linux phenom 4.14.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Subject: [PATCH v3] powerpc/pseries: Fix cpu_hotplug_lock acquisition in resize_hpt()
+Date:   Wed, 15 May 2019 13:15:52 +0530
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19051507-0036-0000-0000-00000ABA5ECD
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011100; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01203565; UDB=6.00631764; IPR=6.00984492;
+ MB=3.00026899; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-15 07:46:06
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051507-0037-0000-0000-00004BCB7361
+Message-Id: <1557906352-29048-1-git-send-email-ego@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905150050
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 11:36:18AM -0700, Brendan Higgins wrote:
-> On Tue, May 14, 2019 at 02:05:05PM +0200, Daniel Vetter wrote:
-> > On Tue, May 14, 2019 at 8:04 AM Brendan Higgins
-> > <brendanhiggins@google.com> wrote:
-> > >
-> > > On Mon, May 13, 2019 at 04:44:51PM +0200, Daniel Vetter wrote:
-> > > > On Sat, May 11, 2019 at 01:33:44PM -0400, Theodore Ts'o wrote:
-> > > > > On Fri, May 10, 2019 at 02:12:40PM -0700, Frank Rowand wrote:
-> > > > > > However, the reply is incorrect.  Kselftest in-kernel tests (which
-> > > > > > is the context here) can be configured as built in instead of as
-> > > > > > a module, and built in a UML kernel.  The UML kernel can boot,
-> > > > > > running the in-kernel tests before UML attempts to invoke the
-> > > > > > init process.
-> > > > >
-> > > > > Um, Citation needed?
-> > > > >
-> > > > > I don't see any evidence for this in the kselftest documentation, nor
-> > > > > do I see any evidence of this in the kselftest Makefiles.
-> > > > >
-> > > > > There exists test modules in the kernel that run before the init
-> > > > > scripts run --- but that's not strictly speaking part of kselftests,
-> > > > > and do not have any kind of infrastructure.  As noted, the
-> > > > > kselftests_harness header file fundamentally assumes that you are
-> > > > > running test code in userspace.
-> > > >
-> > > > Yeah I really like the "no userspace required at all" design of kunit,
-> > > > while still collecting results in a well-defined way (unless the current
-> > > > self-test that just run when you load the module, with maybe some
-> > > > kselftest ad-hoc wrapper around to collect the results).
-> > > >
-> > > > What I want to do long-term is to run these kernel unit tests as part of
-> > > > the build-testing, most likely in gitlab (sooner or later, for drm.git
-> > >
-> > > Totally! This is part of the reason I have been insisting on a minimum
-> > > of UML compatibility for all unit tests. If you can suffiently constrain
-> > > the environment that is required for tests to run in, it makes it much
-> > > easier not only for a human to run your tests, but it also makes it a
-> > > lot easier for an automated service to be able to run your tests.
-> > >
-> > > I actually have a prototype presubmit already working on my
-> > > "stable/non-upstream" branch. You can checkout what presubmit results
-> > > look like here[1][2].
-> > 
-> > ug gerrit :-)
-> 
-> Yeah, yeah, I know, but it is a lot easier for me to get a project set
-> up here using Gerrit, when we already use that for a lot of other
-> projects.
-> 
-> Also, Gerrit has gotten a lot better over the last two years or so. Two
-> years ago, I wouldn't touch it with a ten foot pole. It's not so bad
-> anymore, at least if you are used to using a web UI to review code.
+From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 
-I was somewhat joking, I'm just not used to gerrit ... And seems to indeed
-be a lot more polished than last time I looked at it seriously.
+The calls to arch_add_memory()/arch_remove_memory() are always made
+with the read-side cpu_hotplug_lock acquired via
+memory_hotplug_begin().  On pSeries,
+arch_add_memory()/arch_remove_memory() eventually call resize_hpt()
+which in turn calls stop_machine() which acquires the read-side
+cpu_hotplug_lock again, thereby resulting in the recursive acquisition
+of this lock.
 
-> > > > only ofc). So that people get their pull requests (and patch series, we
-> > > > have some ideas to tie this into patchwork) automatically tested for this
-> > >
-> > > Might that be Snowpatch[3]? I talked to Russell, the creator of Snowpatch,
-> > > and he seemed pretty open to collaboration.
-> > >
-> > > Before I heard about Snowpatch, I had an intern write a translation
-> > > layer that made Prow (the presubmit service that I used in the prototype
-> > > above) work with LKML[4].
-> > 
-> > There's about 3-4 forks/clones of patchwork. snowpatch is one, we have
-> > a different one on freedesktop.org. It's a bit a mess :-/
-> 
-> Oh, I didn't realize that. I found your patchwork instance here[5], but
-> do you have a place where I can see the changes you have added to
-> support presubmit?
+Lockdep complains as follows in these code-paths.
 
-Ok here's a few links. Aside from the usual patch view we've also added a
-series view:
+ swapper/0/1 is trying to acquire lock:
+ (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: stop_machine+0x2c/0x60
 
-https://patchwork.freedesktop.org/project/intel-gfx/series/?ordering=-last_updated
+but task is already holding lock:
+(____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
 
-This ties the patches + cover letter together, and it even (tries to at
-least) track revisions. Here's an example which is currently at revision
-9:
+ other info that might help us debug this:
+  Possible unsafe locking scenario:
 
-https://patchwork.freedesktop.org/series/57232/
+        CPU0
+        ----
+   lock(cpu_hotplug_lock.rw_sem);
+   lock(cpu_hotplug_lock.rw_sem);
 
-Below the patch list for each revision we also have the test result list.
-If you click on the grey bar it'll expand with the summary from CI, the
-"See full logs" is link to the full results from our CI. This is driven
-with some REST api from our jenkins.
+  *** DEADLOCK ***
 
-Patchwork also sends out mails for these results.
+  May be due to missing lock nesting notation
 
-Source is on gitlab: https://gitlab.freedesktop.org/patchwork-fdo
+ 3 locks held by swapper/0/1:
+  #0: (____ptrval____) (&dev->mutex){....}, at: __driver_attach+0x12c/0x1b0
+  #1: (____ptrval____) (cpu_hotplug_lock.rw_sem){++++}, at: mem_hotplug_begin+0x20/0x50
+  #2: (____ptrval____) (mem_hotplug_lock.rw_sem){++++}, at: percpu_down_write+0x54/0x1a0
+
+stack backtrace:
+ CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.0.0-rc5-58373-gbc99402235f3-dirty #166
+ Call Trace:
+ [c0000000feb03150] [c000000000e32bd4] dump_stack+0xe8/0x164 (unreliable)
+ [c0000000feb031a0] [c00000000020d6c0] __lock_acquire+0x1110/0x1c70
+ [c0000000feb03320] [c00000000020f080] lock_acquire+0x240/0x290
+ [c0000000feb033e0] [c00000000017f554] cpus_read_lock+0x64/0xf0
+ [c0000000feb03420] [c00000000029ebac] stop_machine+0x2c/0x60
+ [c0000000feb03460] [c0000000000d7f7c] pseries_lpar_resize_hpt+0x19c/0x2c0
+ [c0000000feb03500] [c0000000000788d0] resize_hpt_for_hotplug+0x70/0xd0
+ [c0000000feb03570] [c000000000e5d278] arch_add_memory+0x58/0xfc
+ [c0000000feb03610] [c0000000003553a8] devm_memremap_pages+0x5e8/0x8f0
+ [c0000000feb036c0] [c0000000009c2394] pmem_attach_disk+0x764/0x830
+ [c0000000feb037d0] [c0000000009a7c38] nvdimm_bus_probe+0x118/0x240
+ [c0000000feb03860] [c000000000968500] really_probe+0x230/0x4b0
+ [c0000000feb038f0] [c000000000968aec] driver_probe_device+0x16c/0x1e0
+ [c0000000feb03970] [c000000000968ca8] __driver_attach+0x148/0x1b0
+ [c0000000feb039f0] [c0000000009650b0] bus_for_each_dev+0x90/0x130
+ [c0000000feb03a50] [c000000000967dd4] driver_attach+0x34/0x50
+ [c0000000feb03a70] [c000000000967068] bus_add_driver+0x1a8/0x360
+ [c0000000feb03b00] [c00000000096a498] driver_register+0x108/0x170
+ [c0000000feb03b70] [c0000000009a7400] __nd_driver_register+0xd0/0xf0
+ [c0000000feb03bd0] [c00000000128aa90] nd_pmem_driver_init+0x34/0x48
+ [c0000000feb03bf0] [c000000000010a10] do_one_initcall+0x1e0/0x45c
+ [c0000000feb03cd0] [c00000000122462c] kernel_init_freeable+0x540/0x64c
+ [c0000000feb03db0] [c00000000001110c] kernel_init+0x2c/0x160
+ [c0000000feb03e20] [c00000000000bed4] ret_from_kernel_thread+0x5c/0x68
+
+Fix this issue by
+  1) Requiring all the calls to pseries_lpar_resize_hpt() be made
+     with cpu_hotplug_lock held.
+
+  2) In pseries_lpar_resize_hpt() invoke stop_machine_cpuslocked()
+     as a consequence of 1)
+
+  3) To satisfy 1), in hpt_order_set(), call mmu_hash_ops.resize_hpt()
+     with cpu_hotplug_lock held.
+
+Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+---
+v2 -> v3 : Updated the comment for pseries_lpar_resize_hpt()
+           Updated the commit-log with the full backtrace.
+v1 -> v2 : Rebased against powerpc/next instead of linux/master
+
+ arch/powerpc/mm/book3s64/hash_utils.c | 9 ++++++++-
+ arch/powerpc/platforms/pseries/lpar.c | 8 ++++++--
+ 2 files changed, 14 insertions(+), 3 deletions(-)
+
+diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
+index 919a861..d07fcafd 100644
+--- a/arch/powerpc/mm/book3s64/hash_utils.c
++++ b/arch/powerpc/mm/book3s64/hash_utils.c
+@@ -38,6 +38,7 @@
+ #include <linux/libfdt.h>
+ #include <linux/pkeys.h>
+ #include <linux/hugetlb.h>
++#include <linux/cpu.h>
  
-> > > I am not married to either approach, but I think between the two of
-> > > them, most of the initial legwork has been done to make presubmit on
-> > > LKML a reality.
-> > 
-> > We do have presubmit CI working already with our freedesktop.org
-> > patchwork. The missing glue is just tying that into gitlab CI somehow
-> > (since we want to unify build testing more and make it easier for
-> > contributors to adjust things).
-> 
-> I checked out a couple of your projects on your patchwork instance: AMD
-> X.Org drivers, DRI devel, and Wayland. I saw the tab you added for
-> tests, but none of them actually had any test results. Can you point me
-> at one that does?
-
-Atm we use the CI stuff only on intel-gfx, with the our gpu CI farm, see
-links above.
-
-Cheers, Daniel
-
-> 
-> Cheers!
-> 
-> [5] https://patchwork.freedesktop.org/
-> 
-> > > > super basic stuff.
-> > >
-> > > I am really excited to hear back on what you think!
-> > >
-> > > Cheers!
-> > >
-> > > [1] https://kunit-review.googlesource.com/c/linux/+/1509/10#message-7bfa40efb132e15c8388755c273837559911425c
-> > > [2] https://kunit-review.googlesource.com/c/linux/+/1509/10#message-a6784496eafff442ac98fb068bf1a0f36ee73509
-> > > [3] https://developer.ibm.com/open/projects/snowpatch/
-> > > [4] https://kunit.googlesource.com/prow-lkml/
-> > > _______________________________________________
-> > > dri-devel mailing list
-> > > dri-devel@lists.freedesktop.org
-> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
-
+ #include <asm/debugfs.h>
+ #include <asm/processor.h>
+@@ -1928,10 +1929,16 @@ static int hpt_order_get(void *data, u64 *val)
+ 
+ static int hpt_order_set(void *data, u64 val)
+ {
++	int ret;
++
+ 	if (!mmu_hash_ops.resize_hpt)
+ 		return -ENODEV;
+ 
+-	return mmu_hash_ops.resize_hpt(val);
++	cpus_read_lock();
++	ret = mmu_hash_ops.resize_hpt(val);
++	cpus_read_unlock();
++
++	return ret;
+ }
+ 
+ DEFINE_DEBUGFS_ATTRIBUTE(fops_hpt_order, hpt_order_get, hpt_order_set, "%llu\n");
+diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
+index 1034ef1..557d592 100644
+--- a/arch/powerpc/platforms/pseries/lpar.c
++++ b/arch/powerpc/platforms/pseries/lpar.c
+@@ -859,7 +859,10 @@ static int pseries_lpar_resize_hpt_commit(void *data)
+ 	return 0;
+ }
+ 
+-/* Must be called in user context */
++/*
++ * Must be called in process context. The caller must hold the
++ * cpus_lock.
++ */
+ static int pseries_lpar_resize_hpt(unsigned long shift)
+ {
+ 	struct hpt_resize_state state = {
+@@ -913,7 +916,8 @@ static int pseries_lpar_resize_hpt(unsigned long shift)
+ 
+ 	t1 = ktime_get();
+ 
+-	rc = stop_machine(pseries_lpar_resize_hpt_commit, &state, NULL);
++	rc = stop_machine_cpuslocked(pseries_lpar_resize_hpt_commit,
++				     &state, NULL);
+ 
+ 	t2 = ktime_get();
+ 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+1.9.4
+
