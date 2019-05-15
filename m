@@ -3,103 +3,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAB3C04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 02:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B71C04AB4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 02:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F091F20879
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 02:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E1C62084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 02:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfEOC5e (ORCPT
+        id S1726511AbfEOC7S convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 22:57:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54030 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726218AbfEOC5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 22:57:33 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 319FF307D93E;
-        Wed, 15 May 2019 02:57:33 +0000 (UTC)
-Received: from [10.72.12.103] (ovpn-12-103.pek2.redhat.com [10.72.12.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D27A5608A6;
-        Wed, 15 May 2019 02:57:28 +0000 (UTC)
-Subject: Re: [PATCH net] vhost_net: fix possible infinite loop
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ppandit@redhat.com
-References: <1556177599-56248-1-git-send-email-jasowang@redhat.com>
- <20190425131021-mutt-send-email-mst@kernel.org>
- <f4b4ff70-d64f-c3fb-fe2e-97ef6c55bda0@redhat.com>
- <999ef863-2994-e0c0-fbb1-a6e92de3fd24@redhat.com>
- <20190512125959-mutt-send-email-mst@kernel.org>
- <a0d99d7a-2323-a6a8-262d-9fdc5d926384@redhat.com>
- <20190514173016-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <4b51161e-37b1-cf76-d418-1574b8f6e73b@redhat.com>
-Date:   Wed, 15 May 2019 10:57:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 14 May 2019 22:59:18 -0400
+Received: from ipmail03.adl6.internode.on.net ([150.101.137.143]:10888 "EHLO
+        ipmail03.adl6.internode.on.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726211AbfEOC7S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 22:59:18 -0400
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A2AWAACO3/JbAKWMfQENVQ4LAQEBAQEBA?=
+ =?us-ascii?q?QEBAQEBBwEBAQEBAYFlhBODeIJek0OZMIR5AoQPOBIBAwEBAgEBAhABNIYNAQE?=
+ =?us-ascii?q?BAyNWEAsNCwICJgICVwYBDQWDIahZcIEvGoUmhFyBC4Fzil4/gREnH4JMhF4BA?=
+ =?us-ascii?q?R6DBDGCBCICkAWPagcCghoEjyGBWIUIgxEDhwmZc4F2MxoubwGCQZAgSmIBjB2?=
+ =?us-ascii?q?CPgEB?=
+Received: from unknown (HELO [10.135.5.170]) ([1.125.140.165])
+  by ipmail03.adl6.internode.on.net with ESMTP; 15 May 2019 12:29:14 +0930
+Date:   Wed, 15 May 2019 12:29:10 +0930
+User-Agent: K-9 Mail for Android
+In-Reply-To: <850EDDE2-5B82-4354-AF1C-A2D0B8571093@internode.on.net>
+References: <48BA4A6E-5E2A-478E-A96E-A31FA959964C@internode.on.net> <CAFLxGvwnKKHOnM2w8i9hn7LTVYKh5PQP2zYMBmma2k9z7HBpzw@mail.gmail.com> <20190511220659.GB8507@mit.edu> <09D87554-6795-4AEA-B8D0-FEBCB45673A9@internode.on.net> <850EDDE2-5B82-4354-AF1C-A2D0B8571093@internode.on.net>
 MIME-Version: 1.0
-In-Reply-To: <20190514173016-mutt-send-email-mst@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 15 May 2019 02:57:33 +0000 (UTC)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: ext3/ext4 filesystem corruption under post 5.1.0 kernels
+To:     Theodore Ts'o <tytso@mit.edu>,
+        Richard Weinberger <richard.weinberger@gmail.com>
+CC:     LKML <linux-kernel@vger.kernel.org>, linux-ext4@vger.kernel.org
+From:   Arthur Marsh <arthur.marsh@internode.on.net>
+Message-ID: <17C30FA3-1AB3-4DAD-9B86-9FA9088F11C9@internode.on.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2019/5/15 上午5:39, Michael S. Tsirkin wrote:
-> Let me try to explain again.
-> At the moment how does handle_tx_copy exit?
-> It's for(;;) so you know you need to look for a break.
->
-> When reading code you also notice there's a goto done
-> which could exit the loop. if you scan forward
-> you notice that it does not.
-> This is confusing, but oh well. Worth fixing maybe ...
->
-> Now you add the next round check.
-> And there is also special code that
-> detects whether you exited with break
-> and whenever you did it acts specially.
->
-> Yea it works. But I think it's clearer if we
-> just make things obvious.
-> If we want something to happen on error then
->
-> 	if (error)
-> 		handle
-> 		break
->
-> is imho clearer than
->
-> 	flag = true
-> 	if (error)
-> 		break
-> 	flag = false
->
->
-> if (flag)
-> 	handle
->
-> in partucular - less branches on data path.
->
-> you point out code duplication correctly,
-> but we can solve it just by adding functions.
-> like i suggested.
 
+On 14 May 2019 11:29:37 am ACST, Arthur Marsh <arthur.marsh@internode.on.net> wrote:
+>Apologies, I had forgotten to
+>
+>git bisect - - hard origin/master
+>
+>I am still seeing the corruption leading to the invalid block error on
+>5.1.0+ kernels on both my machines.
+>
+>Arthur. 
 
-Ok, I think I get you.
+After the mm commits, the 32 bit kernel on Pentium-D still exhibits the "invalid block" issue when running git gc on the kernel source. 
 
-Will try in next version.
+The 64 bit kernel on Athlon II X4 640 has since the mm commits had less problems running git gc on the kernel source but had an "invalid block" error after a second run of git gc. 
 
-Thanks
+Arthur. 
 
+Arthur. 
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
