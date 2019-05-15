@@ -2,153 +2,122 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C03C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC4DC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7801F20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD512089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:42:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557938390;
-	bh=MTEha5fRGojdwXOS8OjWxkdxwE+qp3d58CzLpCynDXw=;
+	s=default; t=1557938539;
+	bh=XCMuehsqXD5hXI8GXAW5pMiN0xlhJr3/Luwp6WgYULw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L0PLplk0ivhDO6gG9ysl9Nh0N77j/HGq/7CjtSl44w8VAv24QnMQ3ZDhct7/p/Aee
-	 V/nTcjBgjwgAhYg4/CKHrPkvUPzcvxpWXgs5LDFpvUWjL/1f7l6YrS3JsKmG12ltTt
-	 ZR7bwRvisqdDwjp9YDaUb9BpXA1OZeKwRixwC6Lg=
+	b=sHYb+3K0Kok134KkqgdS22lqYMXMhNaI0A5zkbcPUgb1fH9bk0bc35VHl3q8YxU2L
+	 s2P+dOqlYMSbNO5jVfUwiH2V8rSnXoe7jN+cH1XYZc173g31wpT7ymxpterxqCIufT
+	 YlwVvXU4R8/VoLAcoDufTCyx1y81Tp5BxlPaEpJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbfEOQjt (ORCPT
+        id S1727190AbfEOQmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 12:39:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33764 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 12:42:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbfEOQjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 12:39:49 -0400
+        id S1726406AbfEOQmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 12:42:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34D5720873;
-        Wed, 15 May 2019 16:39:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 943F720881;
+        Wed, 15 May 2019 16:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557938387;
-        bh=MTEha5fRGojdwXOS8OjWxkdxwE+qp3d58CzLpCynDXw=;
+        s=default; t=1557938538;
+        bh=XCMuehsqXD5hXI8GXAW5pMiN0xlhJr3/Luwp6WgYULw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rReZiZSVA5nqbhubOHlCX1qMleMf6VBef4sHEY6UEYHvvZtETCvPZJTFqsUnofHpz
-         Rg8UFnlDbjMBwfWoMmXjH3VhnxaIUWcsu6v7P9dRwR+ryXuGkBC2WJLGUARdMRINHK
-         3uRO+g4pwtwWNLDCd/JhDi3bmWqj+alrVEMuygqs=
-Date:   Wed, 15 May 2019 18:39:45 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Subject: Re: [PATCH] staging: Add rtl8821ce PCIe WiFi driver
-Message-ID: <20190515163945.GA5719@kroah.com>
-References: <20190515112401.15373-1-kai.heng.feng@canonical.com>
- <20190515114022.GA18824@kroah.com>
- <6D5557B8-8140-48A8-BED7-9587936902D8@canonical.com>
- <20190515123319.GA435@kroah.com>
- <63833AA2-AC8B-4EEA-AF36-EF2A9BFD4F9F@canonical.com>
+        b=BzDoaEWpO9VpZ07inczQvDAzK8GuQ4pGODVCgRO+J82My1abChqbf0MDwmj7Diq1a
+         MocbdVCh/SBL38jo9deh/Itq5M+TxtBEo8ceRNU5M22GjEZnqb+VnPZogva+5Z3jns
+         sbFD8SrHSjocyhsqEvyHA4fU41CG7jgW8bZ4gcD8=
+Date:   Wed, 15 May 2019 18:42:15 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 000/115] 4.14.120-stable review
+Message-ID: <20190515164215.GA6053@kroah.com>
+References: <20190515090659.123121100@linuxfoundation.org>
+ <20190515162638.GA25612@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <63833AA2-AC8B-4EEA-AF36-EF2A9BFD4F9F@canonical.com>
+In-Reply-To: <20190515162638.GA25612@roeck-us.net>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 09:06:44PM +0800, Kai-Heng Feng wrote:
-> at 20:33, Greg KH <gregkh@linuxfoundation.org> wrote:
-> 
-> > On Wed, May 15, 2019 at 07:54:58PM +0800, Kai-Heng Feng wrote:
-> > > at 19:40, Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > 
-> > > > On Wed, May 15, 2019 at 07:24:01PM +0800, Kai-Heng Feng wrote:
-> > > > > The rtl8821ce can be found on many HP and Lenovo laptops.
-> > > > > Users have been using out-of-tree module for a while,
-> > > > > 
-> > > > > The new Realtek WiFi driver, rtw88, will support rtl8821ce in 2020 or
-> > > > > later.
-> > > > 
-> > > > Where is that driver, and why is it going to take so long to get merged?
-> > > 
-> > > rtw88 is in 5.2 now, but it doesn’t support 8821ce yet.
-> > > 
-> > > They plan to add the support in 2020.
+On Wed, May 15, 2019 at 09:26:38AM -0700, Guenter Roeck wrote:
+> On Wed, May 15, 2019 at 12:54:40PM +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 4.14.120 release.
+> > There are 115 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
 > > 
-> > Who is "they" and what is needed to support this device and why wait a
-> > full year?
-> 
-> “They” refers to Realtek.
-> It’s their plan so I can’t really answer that on behalf of Realtek.
-
-Where did they say that?  Any reason their developers are not on this
-patch?
-
-> > > > > 296 files changed, 206166 insertions(+)
-> > > > 
-> > > > Ugh, why do we keep having to add the whole mess for every single one of
-> > > > these devices?
-> > > 
-> > > Because Realtek devices are unfortunately ubiquitous so the support is
-> > > better come from kernel.
+> > Responses should be made by Fri 17 May 2019 09:04:39 AM UTC.
+> > Anything received after that time might be too late.
 > > 
-> > That's not the issue here.  The issue is that we keep adding the same
-> > huge driver files to the kernel tree, over and over, with no real change
-> > at all.  We have seen almost all of these files in other realtek
-> > drivers, right?
 > 
-> Yes. They use one single driver to support different SoCs, different
-> architectures and even different OSes.
-
-Well, they try to, it doesn't always work :(
-
-> That’s why it’s a mess.
-
-Oh we all know why this is a mess.  But they have been saying for
-_years_ they would clean up this mess.  So push back, I'm not going to
-take another 200k lines for a simple wifi driver, again.
-
-Along those lines, we should probably just delete the other old realtek
-drivers that don't seem to be going anywhere from staging as well,
-because those are just confusing people.
-
-> > Why not use the ones we already have?
+> There is a build error with s390 builds.
 > 
-> It’s virtually impossible because Realtek’s mega wifi driver uses tons of
-> #ifdefs, only one chip can be selected to be supported at compile time.
-
-That's not what I asked.
-
-I want to know why they can't just add support for their new devices to
-one of the many existing realtek drivers we already have.  That is the
-simpler way, and the correct way to do this.  We don't do this by adding
-200k lines, again.
-
-> > But better yet, why not add proper support for this hardware and not use
-> > a staging driver?
+> arch/s390/kernel/nospec-branch.c: In function 'nospec_auto_detect':
+> arch/s390/kernel/nospec-branch.c:84:19: error:
+> 	invalid storage class for function 'spectre_v2_setup_early'
 > 
-> Realtek plans to add the support in 2020, if everything goes well.
+> arch/s390/kernel/nospec-branch.c:96:27: error:
+> 	initializer element is not constant
+> 
+> and more. The file has merge damage in function nospec_auto_detect().
+> Culprit is commit 91788fcb21d0 ("s390/speculation: Support 'mitigations='
+> cmdline option"). That patch is in v4.14.119, so you'll have to patch
+> it up manually. Example patch (compile tested) below.
+> 
+> Guenter
+> 
+> ---
+> >From c4430ee29bf57cb1327d52b38acf3f616be9d7f5 Mon Sep 17 00:00:00 2001
+> From: Guenter Roeck <linux@roeck-us.net>
+> Date: Wed, 15 May 2019 09:22:31 -0700
+> Subject: [PATCH] s390/speculation: Fix build error caused by bad backport
+> 
+> The backport of commit 0336e04a6520 ("s390/speculation: Support
+> 'mitigations=' cmdline option") introduces a build error. Fix it up.
+> 
+> Fixes: 91788fcb21d0 ("s390/speculation: Support 'mitigations=' cmdline option")
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+>  arch/s390/kernel/nospec-branch.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/s390/kernel/nospec-branch.c b/arch/s390/kernel/nospec-branch.c
+> index 83e597688562..6956902bba12 100644
+> --- a/arch/s390/kernel/nospec-branch.c
+> +++ b/arch/s390/kernel/nospec-branch.c
+> @@ -66,6 +66,7 @@ void __init nospec_auto_detect(void)
+>  		if (IS_ENABLED(CC_USING_EXPOLINE))
+>  			nospec_disable = 1;
+>  		__clear_facility(82, S390_lowcore.alt_stfle_fac_list);
+> +	}
+>  	if (IS_ENABLED(CC_USING_EXPOLINE)) {
+>  		/*
+>  		 * The kernel has been compiled with expolines.
+> -- 
+> 2.7.4
+> 
 
-Device "goes well" please.  And when in 2020?  And why 2020?  Why not
-2022?  2024?
-
-> Meanwhile, many users of HP and Lenovo laptops are using out-of-tree driver,
-> some of them are stuck to older kernels because they don’t know how to fix
-> the driver. So I strongly think having this in kernel is beneficial to many
-> users, even it’s only for a year.
-
-So who is going to be responsible for "fixing the driver" for all new
-kernel api updates?  I'm tired of seeing new developers get lost in the
-maze of yet-another realtek wifi driver.  We've been putting up with
-this crud for years, and it has not gotten any better if you want to add
-another 200k lines for some unknown amount of time with the hope that a
-driver might magically show up one day.
-
-thanks,
+Yes, that backport was broken, good catch.  Now queued up, thanks.
 
 greg k-h
