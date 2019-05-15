@@ -2,120 +2,99 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E4A0C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA19C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67CA720862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4509F20862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:21:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="fHGe8418"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbfEOIQ7 (ORCPT
+        id S1726039AbfEOIVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 04:16:59 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33365 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725876AbfEOIQ6 (ORCPT
+        Wed, 15 May 2019 04:21:23 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:56004 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725871AbfEOIVW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 04:16:58 -0400
-Received: by mail-qt1-f194.google.com with SMTP id m32so2302669qtf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 01:16:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Fgcbi+I+ApUj6lK5BMoQniFPniwMRp5CE2A76F6GDCY=;
-        b=C9yVr5rqxconl8dT1xTu193iOcM85yKkFS/DY5o50TZnVgPF8sIfjmrsDmQiUytxpo
-         iikS50RTBTAwtIA+QVb5rsFG7wtfz80+vsILaNJpfwMJ0PZtZfHyBJlfCocWTetFFVMa
-         4gXpMfCYVWdusSGOq0mhj9ljHAD0+RRURAFczh3zG3hpwatLmq+46T7mdaNMhz/9uHZL
-         sCNPRp/pdiFqJ+xLVJFQEojz3gFzON14okF4d+yKzzN3ojQcuLmYFgzdw3tsh+Ms+0YE
-         9vKM7cnYanT84qXoHIYpTMnrkGmX/lec0j7Q5ZGLuYCEdIW1Pbnw/tdYXKMc2mNPkLrE
-         5RPA==
-X-Gm-Message-State: APjAAAXkClHd4SE5kY2oAIsmZl2sVUvFx/UIZ15g8p9js/W4hbxkVqWF
-        B72NBSLK7oB3y10R+zqqlFsN1KPOu2mZhIShJwo=
-X-Google-Smtp-Source: APXvYqwgMePXe1ACH3tNN3bPaz1CHFs1on6Saxqxv+vADc9fvaQmk5mkqQiSHO/jxgsFbdBj0pQrlVqLqEO6VpNjF6w=
-X-Received: by 2002:ac8:2d21:: with SMTP id n30mr32912118qta.96.1557908217673;
- Wed, 15 May 2019 01:16:57 -0700 (PDT)
+        Wed, 15 May 2019 04:21:22 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id A784B2E147B;
+        Wed, 15 May 2019 11:21:19 +0300 (MSK)
+Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
+        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id DwA5FsojOl-LJ0GRkIN;
+        Wed, 15 May 2019 11:21:19 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1557908479; bh=rH/t30KXMBGr4dF0FJuUrEPHJpTL3NQhSuLj3xwva+0=;
+        h=Message-ID:Date:To:From:Subject;
+        b=fHGe8418tN46yDfQFsQ6wSmHFaUCKDn9hk25OB75c5F8CZaDVuzJE3eqbZhBq6oTD
+         KIU4i3rNGp8X6ahgcORt5JIudN3gzYuTn/Q8xJy2ex/jLMfmHd5kABXrLZg/WNLYXo
+         n7e5PNwGicPSEkyRzqIMK5WMjAeFBYiNWrHhO/lE=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:ed19:3833:7ce1:2324])
+        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id fxC6AkQBIj-LJd0oVGu;
+        Wed, 15 May 2019 11:21:19 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH] mm: use down_read_killable for locking mmap_sem in
+ access_remote_vm
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>
+Date:   Wed, 15 May 2019 11:21:18 +0300
+Message-ID: <155790847881.2798.7160461383704600177.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-References: <20190512012508.10608-1-elder@linaro.org> <20190512012508.10608-13-elder@linaro.org>
-In-Reply-To: <20190512012508.10608-13-elder@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 15 May 2019 10:16:41 +0200
-Message-ID: <CAK8P3a3v2fzSBmYk1vG7sKJ9jnAWGt_u91EuLC7f5jq_PqrKXQ@mail.gmail.com>
-Subject: Re: [PATCH 12/18] soc: qcom: ipa: immediate commands
-To:     Alex Elder <elder@linaro.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        syadagir@codeaurora.org, mjavid@codeaurora.org,
-        evgreen@chromium.org, Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 3:25 AM Alex Elder <elder@linaro.org> wrote:
+This function is used by ptrace and proc files like /proc/pid/cmdline and
+/proc/pid/environ. Return 0 (bytes read) if current task is killed.
 
-> +/* Initialize header space in IPA local memory */
-> +int ipa_cmd_hdr_init_local(struct ipa *ipa, u32 offset, u32 size)
-> +{
-> +       struct ipa_imm_cmd_hw_hdr_init_local *payload;
-> +       struct device *dev = &ipa->pdev->dev;
-> +       dma_addr_t addr;
-> +       void *virt;
-> +       u32 flags;
-> +       u32 max;
-> +       int ret;
-> +
-> +       /* Note: size *can* be zero in this case */
-> +       if (size > field_max(IPA_CMD_HDR_INIT_FLAGS_TABLE_SIZE_FMASK))
-> +               return -EINVAL;
-> +
-> +       max = field_max(IPA_CMD_HDR_INIT_FLAGS_HDR_ADDR_FMASK);
-> +       if (offset > max || ipa->shared_offset > max - offset)
-> +               return -EINVAL;
-> +       offset += ipa->shared_offset;
-> +
-> +       /* A zero-filled buffer of the right size is all that's required */
-> +       virt = dma_alloc_coherent(dev, size, &addr, GFP_KERNEL);
-> +       if (!virt)
-> +               return -ENOMEM;
-> +
-> +       payload = kzalloc(sizeof(*payload), GFP_KERNEL);
-> +       if (!payload) {
-> +               ret = -ENOMEM;
-> +               goto out_dma_free;
-> +       }
-> +
-> +       payload->hdr_table_addr = addr;
-> +       flags = u32_encode_bits(size, IPA_CMD_HDR_INIT_FLAGS_TABLE_SIZE_FMASK);
-> +       flags |= u32_encode_bits(offset, IPA_CMD_HDR_INIT_FLAGS_HDR_ADDR_FMASK);
-> +       payload->flags = flags;
-> +
-> +       ret = ipa_cmd(ipa, IPA_CMD_HDR_INIT_LOCAL, payload, sizeof(*payload));
-> +
-> +       kfree(payload);
-> +out_dma_free:
-> +       dma_free_coherent(dev, size, virt, addr);
-> +
-> +       return ret;
-> +}
+Mmap_sem could be locked for a long time or forever if something wrong.
 
-This looks rather strange. I think I looked at it before and you explained
-it, but I have since forgotten what you do it for, so I assume everyone else
-that tries to understand this will have problems too.
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+---
+ mm/memory.c |    4 +++-
+ mm/nommu.c  |    3 ++-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-The issue I see is that you do an expensive dma_alloc_coherent()
-but then never actually use the pointer returned by it, only the
-dma address that cannot be turned back into a virtual address
-in order to access the data in it.
+diff --git a/mm/memory.c b/mm/memory.c
+index 96f1d473c89a..2e6846d09023 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4348,7 +4348,9 @@ int __access_remote_vm(struct task_struct *tsk, struct mm_struct *mm,
+ 	void *old_buf = buf;
+ 	int write = gup_flags & FOLL_WRITE;
+ 
+-	down_read(&mm->mmap_sem);
++	if (down_read_killable(&mm->mmap_sem))
++		return 0;
++
+ 	/* ignore errors, just check how much was successfully transferred */
+ 	while (len) {
+ 		int bytes, ret, offset;
+diff --git a/mm/nommu.c b/mm/nommu.c
+index b492fd1fcf9f..cad8fb34088f 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -1791,7 +1791,8 @@ int __access_remote_vm(struct task_struct *tsk, struct mm_struct *mm,
+ 	struct vm_area_struct *vma;
+ 	int write = gup_flags & FOLL_WRITE;
+ 
+-	down_read(&mm->mmap_sem);
++	if (down_read_killable(&mm->mmap_sem))
++		return 0;
+ 
+ 	/* the access must start within one of the target process's mappings */
+ 	vma = find_vma(mm, addr);
 
-If you can't actually use payload->hdr_table_addr, why even allocate
-it here?
-
-     Arnd
