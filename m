@@ -2,115 +2,109 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65437C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319ECC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40AAC2084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 083A520881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726491AbfEOJ6i (ORCPT
+        id S1726464AbfEOKEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 05:58:38 -0400
-Received: from mga09.intel.com ([134.134.136.24]:11059 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbfEOJ6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 05:58:37 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 02:58:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,472,1549958400"; 
-   d="scan'208";a="171908010"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
-  by fmsmga002.fm.intel.com with ESMTP; 15 May 2019 02:58:31 -0700
-Date:   Wed, 15 May 2019 12:58:40 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v20 00/28] Intel SGX1 support
-Message-ID: <20190515095840.GA10917@linux.intel.com>
-References: <979615a8-fd03-e3fd-fbdb-65c1e51afd93@fortanix.com>
- <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
- <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
- <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
- <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com>
- <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190515084909.GA10043@linux.intel.com>
+        Wed, 15 May 2019 06:04:06 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:42089 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfEOKEF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:04:05 -0400
+Received: from [192.168.178.167] ([109.104.37.15]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mf0yy-1gkOTQ1SsU-00gZHW; Wed, 15 May 2019 12:03:54 +0200
+Subject: Re: [PATCH] Staging: vc04_services: Fix kernel type 'u32' over
+ 'uint32_t'
+To:     Madhumitha Prabakaran <madhumithabiw@gmail.com>, eric@anholt.net,
+        gregkh@linuxfoundation.org, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+References: <20190514160207.11573-1-madhumithabiw@gmail.com>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Message-ID: <43fc8207-6b5b-1caa-3d19-f44074fffd0b@i2se.com>
+Date:   Wed, 15 May 2019 12:03:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190515084909.GA10043@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190514160207.11573-1-madhumithabiw@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:ZZ/Aph7ySsODYCaWcBvIhpYEYIK+oOwwTCobv8+RoU/h78qB+pX
+ ZjgwxWVD58BI6VP2C47FP4oCKkw98WDnibwVSehCZ05isrEROxFXD0z/yqHJYydb0CpfZwO
+ wTXQd4GwzoIsCYPEFp6LX3bg2uWkFH9AUXhlW4taQObJyPboLnEBTNUd6hfldgDSWmspJR2
+ 9BELG2jOY2nWHif04sEoQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:l/NocFB9fqM=:dgBXAKqJG7ZUkxWbz2pGBe
+ MtAPLIMZA+jYGEi78sP8NJnywlwlQZEed8KaCYTIFsxiyLSuEGWy8OADJQXJNTfMjLCs69uKP
+ hVoybyusQoo0FfU/wCyt9YBY+rpSw+fSmNEY65AKWYr7eoerTGY7S/YuUyAG8551iGSERxkks
+ SecXVW7oMn3yNZcU+lXy6py7PQ1RdqEmUfmxZQg8qlon+e2yvyTwYqpiyjl3UPiYo/gIweji8
+ qqNzn9pxCOSIq8BhBiHv42W18Fsh3+Jv572LgNgsNFKyZhbrsgRjPFs3+a3ghKkx8+zX90plw
+ ZiW+h8mYUiCtGCacRqfCENa7f6rtyIKcWkbUsEkzqju+xhxeqsa+5cYqOlWQ1e3jNDS+m+K55
+ sEHn3ilyeRQnCgqzMe//pIVFzM9yHkeUNbDWDGLvAiOf2BfmzxIYRH1pIenu88oGIWSD4KPWj
+ XW7DGeAydV7j5f4MUfc3Ykezo9u+p//xaq9iBLO589Nas1m5SFZ/UNMBi5GAE6CCS8HEa9Z30
+ 2iMb7qVF0wWmExUUJAR8eKhsPsJsdIpp/1YoQx8y6mymFxsTfwdtIkOBOMJ3VKA9T5URIVM6Y
+ 7+voQq1cOhf9JqDsBcjMPnOCL9f3ncBSaM8stdXc8NsDH3HytjrYa8UCLoO0+9yCEoblx0SWv
+ dkEHGI5ZmTPNXKMHnP1cqbYYKiG0X3IuHiWKdjIlDUocoxBpEIRXkNuzZUDszOuAoAGcM/jj1
+ BcaUGXh6VAMXcf+E6/CFkXZoHLcyQCGEZnk8cufoHHWDZm6ll07UuFMN73s=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 11:49:09AM +0300, Jarkko Sakkinen wrote:
-> On Tue, May 14, 2019 at 08:13:36AM -0700, Andy Lutomirski wrote:
-> > On Tue, May 14, 2019 at 3:43 AM Jarkko Sakkinen
-> > <jarkko.sakkinen@linux.intel.com> wrote:
-> > >
-> > > On Mon, May 13, 2019 at 01:29:26PM +0300, Jarkko Sakkinen wrote:
-> > > > I did study through SDK's file format and realized that it does not
-> > > > does make sense after all to embed one.
-> > > >
-> > > > To implement it properly you would probably need a new syscall (lets say
-> > > > sgx_load_enclave) and also that enclaves are not just executables
-> > > > binaries. It is hard to find a generic format for them as applications
-> > > > range from simply protecting part of an application to running a
-> > > > containter inside enclave.
-> > >
-> > > I'm still puzzling what kind of changes you were discussing considering
-> > > SGX_IOC_ENCLAVE_ADD_PAGE.
-> > 
-> > I think it's as simple as requiring that, if SECINFO.X is set, then
-> > the src pointer points to the appropriate number of bytes of
-> > executable memory.  (Unless there's some way for an enclave to change
-> > SECINFO after the fact -- is there?)  Sadly, we don't really have the
-> > a nice in-kernel API for that right now.  You could do
-> > down_read(mmap_sem) and find_vma().  Arguably there is no value to
-> > checking that PKRU allows execute to the data.
-> 
-> OK, so you would actually go on to check whether the VMA where the data
-> is copied contains executable data?
-> 
-> What if SECINFO.X is not set and you EADD to region that is executable
-> in the enclave VMA? E.g. have RWX VMA for the enclave just to give a
-> simple example. Then you could carry executable code in the data
-> sections of the binary.
+Hi Madhumitha,
 
-This would require to be done after the enclave is initialized of course
-with EMODPR, which requires the enclave to accept the permission change
-with EACCEPT, which limits somewhat. This means that the static enclave
-would be fully covered.
+On 14.05.19 18:02, Madhumitha Prabakaran wrote:
+> Fix the warning issued by checkpatch
+> Prefer kernel type 'u32' over 'uint32_t'
 
-/Jarkko
+grepping the sources within vc04_services shows a lot more occurences.
+
+I suggest to fix this style issue at least for the whole camera driver
+and name the patch like
+
+staging: bcm2835-camera: prefer kernel types
+
+Regards
+Stefan
+
+>
+> Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
+> ---
+>  drivers/staging/vc04_services/bcm2835-camera/mmal-msg.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/staging/vc04_services/bcm2835-camera/mmal-msg.h b/drivers/staging/vc04_services/bcm2835-camera/mmal-msg.h
+> index d1c57edbe2b8..90793c9f9a0f 100644
+> --- a/drivers/staging/vc04_services/bcm2835-camera/mmal-msg.h
+> +++ b/drivers/staging/vc04_services/bcm2835-camera/mmal-msg.h
+> @@ -309,7 +309,7 @@ struct mmal_msg_port_parameter_set {
+>  	u32 port_handle;      /* port */
+>  	u32 id;     /* Parameter ID  */
+>  	u32 size;      /* Parameter size */
+> -	uint32_t value[MMAL_WORKER_PORT_PARAMETER_SPACE];
+> +	u32 value[MMAL_WORKER_PORT_PARAMETER_SPACE];
+>  };
+>  
+>  struct mmal_msg_port_parameter_set_reply {
+> @@ -331,7 +331,7 @@ struct mmal_msg_port_parameter_get_reply {
+>  	u32 status;           /* Status of mmal_port_parameter_get call */
+>  	u32 id;     /* Parameter ID  */
+>  	u32 size;      /* Parameter size */
+> -	uint32_t value[MMAL_WORKER_PORT_PARAMETER_SPACE];
+> +	u32 value[MMAL_WORKER_PORT_PARAMETER_SPACE];
+>  };
+>  
+>  /* event messages */
