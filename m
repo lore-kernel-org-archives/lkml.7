@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25750C04E53
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9631C072AD
 	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3DDB206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E75216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919213;
-	bh=fdAxxYuQHXHBmmCsWwGri8WNL8YF7p9yqpkK8dCSjMw=;
+	s=default; t=1557919215;
+	bh=Mdzso0n6Y2cRilWrPApcH6XZH0UplbFVE/NfqqY9/s8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R0f0+vcPdXjihhldtz2QWmEV98W6HCFAEllCTC3CQumecH1s7lZ31iiAIu5veuZT/
-	 zdXN6hb4xbBL8VDzj2A9T0t1AWX/RmbPuJoDWOEhXkyiwzCsoInkCiFvIHRTpuVsAK
-	 Iybr4eU65H/sZCfVbid82y7iuIzgS5f/OGcMcRY8=
+	b=s/uE8E9XNRozCTxHEjchpUJBrfc3o68SoBHmomg8rdePbO7Z80sYYtVafvHAGADH3
+	 S4jr1LG4MsZkgEjce44fhoqZfiOEehvLXVrGUKqpZS2BTHQYPkoPZGsYh3l9wZIjuz
+	 iJh07MPVtahBsUZvMdyCCB00ca4NgQr2GpMgPy+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbfEOLUD (ORCPT
+        id S1731067AbfEOLUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:20:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57820 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:20:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729438AbfEOLUC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:20:02 -0400
+        id S1729438AbfEOLUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:20:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE17821473;
-        Wed, 15 May 2019 11:20:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F0DB2084F;
+        Wed, 15 May 2019 11:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919201;
-        bh=fdAxxYuQHXHBmmCsWwGri8WNL8YF7p9yqpkK8dCSjMw=;
+        s=default; t=1557919203;
+        bh=Mdzso0n6Y2cRilWrPApcH6XZH0UplbFVE/NfqqY9/s8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VBIG9AeEzdZjR3hhfUsuqMRTOdcfZ25vsD605WiPxN4tdPmtRy3FGatymyauFJZyW
-         dR6o6lbmofRWAjBp6cx6ntlEW01tgW1euum6Qy3KXjOU7wIE3td3a4QTXfotC4FhqI
-         pFFtyII3VOw/T8wXrkLFc9CmoDQdzGCgtoOHlAhY=
+        b=mEs9W5eX/qm/W94pLyGkzh8HzasM8TrMu0rhIKxsl1Hz85ZTgywSbC73SqfaKFgGx
+         y4+tgJjBTxZkxAO8y/52W1p2FLHwEKrohsSKalxqTxeaD0+5d4DbagevVMfgbYz5eE
+         xbiKEjw1z9LlR8czUBZHyt48K6m1WzDWQQaZ7QkA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 060/115] scsi: raid_attrs: fix unused variable warning
-Date:   Wed, 15 May 2019 12:55:40 +0200
-Message-Id: <20190515090703.912770000@linuxfoundation.org>
+Subject: [PATCH 4.14 061/115] staging: olpc_dcon: add a missing dependency
+Date:   Wed, 15 May 2019 12:55:41 +0200
+Message-Id: <20190515090703.975269496@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -60,47 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0eeec01488da9b1403c8c29e73eacac8af9e4bf2 ]
+[ Upstream commit 33f49571d75024b1044cd02689ad2bdb4924cc80 ]
 
-I ran into a new warning on randconfig kernels:
+  WARNING: unmet direct dependencies detected for BACKLIGHT_CLASS_DEVICE
+    Depends on [n]: HAS_IOMEM [=y] && BACKLIGHT_LCD_SUPPORT [=n]
+    Selected by [y]:
+    - FB_OLPC_DCON [=y] && STAGING [=y] && X86 [=y] && OLPC [=y] && FB [=y]
+                        && I2C [=y] && (GPIO_CS5535 [=n] || GPIO_CS5535 [=n]=n)
 
-drivers/scsi/raid_class.c: In function 'raid_match':
-drivers/scsi/raid_class.c:64:24: error: unused variable 'i' [-Werror=unused-variable]
-
-This looks like a very old problem that for some reason was very hard to
-run into, but it is very easy to fix, by replacing the incorrect #ifdef
-with a simpler IS_ENABLED() check.
-
-Fixes: fac829fdcaf4 ("[SCSI] raid_attrs: fix dependency problems")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/scsi/raid_class.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/staging/olpc_dcon/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/raid_class.c b/drivers/scsi/raid_class.c
-index 2c146b44d95fc..cddd78893b46c 100644
---- a/drivers/scsi/raid_class.c
-+++ b/drivers/scsi/raid_class.c
-@@ -63,8 +63,7 @@ static int raid_match(struct attribute_container *cont, struct device *dev)
- 	 * emulated RAID devices, so start with SCSI */
- 	struct raid_internal *i = ac_to_raid_internal(cont);
- 
--#if defined(CONFIG_SCSI) || defined(CONFIG_SCSI_MODULE)
--	if (scsi_is_sdev_device(dev)) {
-+	if (IS_ENABLED(CONFIG_SCSI) && scsi_is_sdev_device(dev)) {
- 		struct scsi_device *sdev = to_scsi_device(dev);
- 
- 		if (i->f->cookie != sdev->host->hostt)
-@@ -72,7 +71,6 @@ static int raid_match(struct attribute_container *cont, struct device *dev)
- 
- 		return i->f->is_raid(dev);
- 	}
--#endif
- 	/* FIXME: look at other subsystems too */
- 	return 0;
- }
+diff --git a/drivers/staging/olpc_dcon/Kconfig b/drivers/staging/olpc_dcon/Kconfig
+index d277f048789e6..8c6cc61d634bf 100644
+--- a/drivers/staging/olpc_dcon/Kconfig
++++ b/drivers/staging/olpc_dcon/Kconfig
+@@ -2,6 +2,7 @@ config FB_OLPC_DCON
+ 	tristate "One Laptop Per Child Display CONtroller support"
+ 	depends on OLPC && FB
+ 	depends on I2C
++	depends on BACKLIGHT_LCD_SUPPORT
+ 	depends on (GPIO_CS5535 || GPIO_CS5535=n)
+ 	select BACKLIGHT_CLASS_DEVICE
+ 	---help---
 -- 
 2.20.1
 
