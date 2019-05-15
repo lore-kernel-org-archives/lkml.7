@@ -2,53 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35226C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CABC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 068B821734
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A9421743
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918387;
-	bh=cZvZJ5rBO4jVNkFmdyOxxRgZvGaiMgdhCQFYrQvBLSk=;
+	s=default; t=1557918394;
+	bh=UxxP16QCIPhoLx3KhYdXtv4AQlgH/cih9ULv5+o93Hc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jPnVJ4SvGXobjb33IddjHVX+676QpQ6u9C2tLWfXQ3zDUrKwPjlZJiCsbskrFCLHl
-	 Xb+7Fs9PNDaH6w7XFcxtrKUPWwidOUYnJitDq/lHwboepvNM1Nw2gJstybFRMmmedN
-	 DI5ss2/VVh1y6+b7no/3jjm9Dz/ZuOIsHSENkuC8=
+	b=HXdTCOhQd6+IjL5htfRPuUrgOkt4LmQIZBQDM1feG2hMgnrHj0K3nyBcUXfkuFBlF
+	 bzyOBVdB8fzepXq0j/HeaFKMAt2Cb+nsxHx4dB/J+Y0742cOTzwlR1CpKMJzoTSF1A
+	 Y1PFf3y/lW+EzEsRdGym/5eXqYWXuNnJzZt2q38E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728754AbfEOLGZ (ORCPT
+        id S1727878AbfEOLGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:06:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36982 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:06:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728747AbfEOLGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:06:19 -0400
+        id S1727978AbfEOLGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:06:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39EF721773;
-        Wed, 15 May 2019 11:06:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53979216FD;
+        Wed, 15 May 2019 11:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918378;
-        bh=cZvZJ5rBO4jVNkFmdyOxxRgZvGaiMgdhCQFYrQvBLSk=;
+        s=default; t=1557918383;
+        bh=UxxP16QCIPhoLx3KhYdXtv4AQlgH/cih9ULv5+o93Hc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iHcYq5a0XtC93zrafiAOBKrMs+EDR63VDylfk4mlE6eAKSZ1cUdBlwTpSqWVS3YJQ
-         iiEt1nqiJxSCY1SXhn+DM8YryVSJYhvu5dnUYUTG617aaMMgcoSCe7Q98G3ECTDT4N
-         h30VTPR2BMIv+BTQyiXZIMUEkVKNNHbHPPPz8Xvw=
+        b=1VDvoy/y3XlrA3L9SOr3qX0N/mT6nPjPPMn5BexnJnjSY+PCGPgMLJ+7MsXoQZ26f
+         Miv36JG5zTM0qqNe4howrWjpbkks4j1V5kaXIGVxiGrmlM8TL6qODd4NwkW3ONpe59
+         9gMl71Ead9ImJ6YTUT5afqdc9iNiO3edPEuI9qbE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+8b707430713eb46e1e45@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 071/266] tipc: check bearer name with right length in tipc_nl_compat_bearer_enable
-Date:   Wed, 15 May 2019 12:52:58 +0200
-Message-Id: <20190515090724.838736823@linuxfoundation.org>
+        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 4.4 108/266] kconfig/[mn]conf: handle backspace (^H) key
+Date:   Wed, 15 May 2019 12:53:35 +0200
+Message-Id: <20190515090726.108033289@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -61,69 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+[ Upstream commit 9c38f1f044080392603c497ecca4d7d09876ff99 ]
 
-commit 6f07e5f06c8712acc423485f657799fc8e11e56c upstream.
+Backspace is not working on some terminal emulators which do not send the
+key code defined by terminfo. Terminals either send '^H' (8) or '^?' (127).
+But currently only '^?' is handled. Let's also handle '^H' for those
+terminals.
 
-Syzbot reported the following crash:
-
-BUG: KMSAN: uninit-value in memchr+0xce/0x110 lib/string.c:961
-  memchr+0xce/0x110 lib/string.c:961
-  string_is_valid net/tipc/netlink_compat.c:176 [inline]
-  tipc_nl_compat_bearer_enable+0x2c4/0x910 net/tipc/netlink_compat.c:401
-  __tipc_nl_compat_doit net/tipc/netlink_compat.c:321 [inline]
-  tipc_nl_compat_doit+0x3aa/0xaf0 net/tipc/netlink_compat.c:354
-  tipc_nl_compat_handle net/tipc/netlink_compat.c:1162 [inline]
-  tipc_nl_compat_recv+0x1ae7/0x2750 net/tipc/netlink_compat.c:1265
-  genl_family_rcv_msg net/netlink/genetlink.c:601 [inline]
-  genl_rcv_msg+0x185f/0x1a60 net/netlink/genetlink.c:626
-  netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2477
-  genl_rcv+0x63/0x80 net/netlink/genetlink.c:637
-  netlink_unicast_kernel net/netlink/af_netlink.c:1310 [inline]
-  netlink_unicast+0xf3e/0x1020 net/netlink/af_netlink.c:1336
-  netlink_sendmsg+0x127f/0x1300 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:622 [inline]
-  sock_sendmsg net/socket.c:632 [inline]
-
-Uninit was created at:
-  __alloc_skb+0x309/0xa20 net/core/skbuff.c:208
-  alloc_skb include/linux/skbuff.h:1012 [inline]
-  netlink_alloc_large_skb net/netlink/af_netlink.c:1182 [inline]
-  netlink_sendmsg+0xb82/0x1300 net/netlink/af_netlink.c:1892
-  sock_sendmsg_nosec net/socket.c:622 [inline]
-  sock_sendmsg net/socket.c:632 [inline]
-
-It was triggered when the bearer name size < TIPC_MAX_BEARER_NAME,
-it would check with a wrong len/TLV_GET_DATA_LEN(msg->req), which
-also includes priority and disc_domain length.
-
-This patch is to fix it by checking it with a right length:
-'TLV_GET_DATA_LEN(msg->req) - offsetof(struct tipc_bearer_config, name)'.
-
-Reported-by: syzbot+8b707430713eb46e1e45@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- net/tipc/netlink_compat.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ scripts/kconfig/lxdialog/inputbox.c | 3 ++-
+ scripts/kconfig/nconf.c             | 2 +-
+ scripts/kconfig/nconf.gui.c         | 3 ++-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -388,7 +388,12 @@ static int tipc_nl_compat_bearer_enable(
- 	if (!bearer)
- 		return -EMSGSIZE;
- 
--	len = min_t(int, TLV_GET_DATA_LEN(msg->req), TIPC_MAX_BEARER_NAME);
-+	len = TLV_GET_DATA_LEN(msg->req);
-+	len -= offsetof(struct tipc_bearer_config, name);
-+	if (len <= 0)
-+		return -EINVAL;
-+
-+	len = min_t(int, len, TIPC_MAX_BEARER_NAME);
- 	if (!string_is_valid(b->name, len))
- 		return -EINVAL;
- 
+diff --git a/scripts/kconfig/lxdialog/inputbox.c b/scripts/kconfig/lxdialog/inputbox.c
+index d58de1dc5360..510049a7bd1d 100644
+--- a/scripts/kconfig/lxdialog/inputbox.c
++++ b/scripts/kconfig/lxdialog/inputbox.c
+@@ -126,7 +126,8 @@ int dialog_inputbox(const char *title, const char *prompt, int height, int width
+ 			case KEY_DOWN:
+ 				break;
+ 			case KEY_BACKSPACE:
+-			case 127:
++			case 8:   /* ^H */
++			case 127: /* ^? */
+ 				if (pos) {
+ 					wattrset(dialog, dlg.inputbox.atr);
+ 					if (input_x == 0) {
+diff --git a/scripts/kconfig/nconf.c b/scripts/kconfig/nconf.c
+index d42d534a66cd..f7049e288e93 100644
+--- a/scripts/kconfig/nconf.c
++++ b/scripts/kconfig/nconf.c
+@@ -1046,7 +1046,7 @@ static int do_match(int key, struct match_state *state, int *ans)
+ 		state->match_direction = FIND_NEXT_MATCH_UP;
+ 		*ans = get_mext_match(state->pattern,
+ 				state->match_direction);
+-	} else if (key == KEY_BACKSPACE || key == 127) {
++	} else if (key == KEY_BACKSPACE || key == 8 || key == 127) {
+ 		state->pattern[strlen(state->pattern)-1] = '\0';
+ 		adj_match_dir(&state->match_direction);
+ 	} else
+diff --git a/scripts/kconfig/nconf.gui.c b/scripts/kconfig/nconf.gui.c
+index 4b2f44c20caf..9a65035cf787 100644
+--- a/scripts/kconfig/nconf.gui.c
++++ b/scripts/kconfig/nconf.gui.c
+@@ -439,7 +439,8 @@ int dialog_inputbox(WINDOW *main_window,
+ 		case KEY_F(F_EXIT):
+ 		case KEY_F(F_BACK):
+ 			break;
+-		case 127:
++		case 8:   /* ^H */
++		case 127: /* ^? */
+ 		case KEY_BACKSPACE:
+ 			if (cursor_position > 0) {
+ 				memmove(&result[cursor_position-1],
+-- 
+2.19.1
+
 
 
