@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82B1C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AC4C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9A2F20578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:26:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 041F220578
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:26:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="h+LrIjbW";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SfllZBh9"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oxW5omhH";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MoPgbp/X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfEOM0U (ORCPT
+        id S1726857AbfEOM0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:26:20 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:42700 "EHLO
+        Wed, 15 May 2019 08:26:48 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:42918 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726652AbfEOM0T (ORCPT
+        with ESMTP id S1726441AbfEOM0r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 08:26:19 -0400
+        Wed, 15 May 2019 08:26:47 -0400
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1B6DC6072E; Wed, 15 May 2019 12:26:18 +0000 (UTC)
+        id 22E636072E; Wed, 15 May 2019 12:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557923178;
-        bh=9MqGVcO6uYUQ2aNqwWZf4c/ySF737WfbAu840JeYXQE=;
+        s=default; t=1557923207;
+        bh=Jq8r59j8L9cuyE+iEkCCfN3oZ7FkZj2PtazceDgQIjs=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=h+LrIjbWVYhw3DeNZQ3ebZLBfDoaCcSwaAkgVBr+WjcDi6/pdKVXYH/hDqwJr8wh6
-         6/34sreNw60+j4YjrQzsE9t1rEej5Gg+Z/EeTPep8kEPD7hZVKUSFgGRo5flyhD6ZL
-         qTzYz+ADMjkDjQVP/g+Nix1HohRAsnmdLFtBzADE=
+        b=oxW5omhHHyz7C9XvHRLXNw5dodUZ1FGR3SDDAHbzIJKj69TEsCuwCuMHEGRRbidUb
+         CUOWf9faIeT0AQAccSZ7dMzPTahYJiUB/x7YuaCjaO/ydYZM9j8n6k6FubPJ8uZj9z
+         0JvL4BuxqD+LREygXFYvQRobAgfA+W5EAS59ZADc=
 Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 37937607F4;
-        Wed, 15 May 2019 12:26:13 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4DF336072E;
+        Wed, 15 May 2019 12:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557923177;
-        bh=9MqGVcO6uYUQ2aNqwWZf4c/ySF737WfbAu840JeYXQE=;
+        s=default; t=1557923206;
+        bh=Jq8r59j8L9cuyE+iEkCCfN3oZ7FkZj2PtazceDgQIjs=;
         h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=SfllZBh9wAj1akKJtLKrDfIvh8upprGZG7nEkfm+T67WrefhLWfdeXAnwBwndDmHB
-         T4HKEhkJHBfAyjJXBd7c26dXsLtxVf2j+KyqyyqYm9Ip4M2bV0hsPU/G0079fZl3ml
-         GuX/HBVcME0N78YkxKntfJgJaUt3+cjMN3KAcLFI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 37937607F4
+        b=MoPgbp/Xauv8laEhwNTlkhgZ2bVtQ1U1SDf8IfsQqY4VSnd2bSnTWIriAbPiMcu76
+         Ycm+5nIoOdpmSiqxx4RE6/feZYh8xgI++0BVVMCFl5oLbuHKYkyMwCFXbNkPxVokLa
+         pYJpINMcVfPd1N/SbBZv3QTsV0W3Efs1ckc6aIQ0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4DF336072E
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] libertas/libertas_tf: fix spelling mistake "Donwloading"
- -> "Downloading"
+Subject: Re: [PATCH] drm/nouveau/bios/init: fix spelling mistake "CONDITON" ->
+ "CONDITION"
 To:     Colin King <colin.king@canonical.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
+        Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
 Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190514211406.6353-1-colin.king@canonical.com>
+References: <20190514205701.5750-1-colin.king@canonical.com>
 From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <2661269b-7404-5534-05e1-b3b963dc2036@codeaurora.org>
-Date:   Wed, 15 May 2019 17:56:11 +0530
+Message-ID: <c214275e-912b-9cec-d0c1-4eadd07a100e@codeaurora.org>
+Date:   Wed, 15 May 2019 17:56:40 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190514211406.6353-1-colin.king@canonical.com>
+In-Reply-To: <20190514205701.5750-1-colin.king@canonical.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
@@ -73,10 +73,10 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 5/15/2019 2:44 AM, Colin King wrote:
+On 5/15/2019 2:27 AM, Colin King wrote:
 > From: Colin Ian King <colin.king@canonical.com>
 >
-> There is are two spelling mistakes in lbtf_deb_usb2 messages, fix these.
+> There is a spelling mistake in a warning message. Fix it.
 >
 > Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
@@ -85,33 +85,19 @@ Cheers,
 -Mukesh
 
 > ---
->   drivers/net/wireless/marvell/libertas/if_usb.c    | 2 +-
->   drivers/net/wireless/marvell/libertas_tf/if_usb.c | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
+>   drivers/gpu/drm/nouveau/nvkm/subdev/bios/init.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/net/wireless/marvell/libertas/if_usb.c b/drivers/net/wireless/marvell/libertas/if_usb.c
-> index 220dcdee8d2b..1d06fa564e28 100644
-> --- a/drivers/net/wireless/marvell/libertas/if_usb.c
-> +++ b/drivers/net/wireless/marvell/libertas/if_usb.c
-> @@ -367,7 +367,7 @@ static int if_usb_send_fw_pkt(struct if_usb_card *cardp)
->   			     cardp->fwseqnum, cardp->totalbytes);
->   	} else if (fwdata->hdr.dnldcmd == cpu_to_le32(FW_HAS_LAST_BLOCK)) {
->   		lbs_deb_usb2(&cardp->udev->dev, "Host has finished FW downloading\n");
-> -		lbs_deb_usb2(&cardp->udev->dev, "Donwloading FW JUMP BLOCK\n");
-> +		lbs_deb_usb2(&cardp->udev->dev, "Downloading FW JUMP BLOCK\n");
->   
->   		cardp->fwfinalblk = 1;
+> diff --git a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/init.c b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/init.c
+> index ec0e9f7224b5..3f4f27d191ae 100644
+> --- a/drivers/gpu/drm/nouveau/nvkm/subdev/bios/init.c
+> +++ b/drivers/gpu/drm/nouveau/nvkm/subdev/bios/init.c
+> @@ -834,7 +834,7 @@ init_generic_condition(struct nvbios_init *init)
+>   		init_exec_set(init, false);
+>   		break;
+>   	default:
+> -		warn("INIT_GENERIC_CONDITON: unknown 0x%02x\n", cond);
+> +		warn("INIT_GENERIC_CONDITION: unknown 0x%02x\n", cond);
+>   		init->offset += size;
+>   		break;
 >   	}
-> diff --git a/drivers/net/wireless/marvell/libertas_tf/if_usb.c b/drivers/net/wireless/marvell/libertas_tf/if_usb.c
-> index a4b9ede70705..38f77b1a02ca 100644
-> --- a/drivers/net/wireless/marvell/libertas_tf/if_usb.c
-> +++ b/drivers/net/wireless/marvell/libertas_tf/if_usb.c
-> @@ -319,7 +319,7 @@ static int if_usb_send_fw_pkt(struct if_usb_card *cardp)
->   	} else if (fwdata->hdr.dnldcmd == cpu_to_le32(FW_HAS_LAST_BLOCK)) {
->   		lbtf_deb_usb2(&cardp->udev->dev,
->   			"Host has finished FW downloading\n");
-> -		lbtf_deb_usb2(&cardp->udev->dev, "Donwloading FW JUMP BLOCK\n");
-> +		lbtf_deb_usb2(&cardp->udev->dev, "Downloading FW JUMP BLOCK\n");
->   
->   		/* Host has finished FW downloading
->   		 * Donwloading FW JUMP BLOCK
