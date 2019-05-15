@@ -2,54 +2,53 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B59E1C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC12C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 866FE218A0
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2BC320644
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:05:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918345;
-	bh=sgZSSDMED22/aKLOlCAcmow8+TnAKPF7apieVi8FTq8=;
+	s=default; t=1557918349;
+	bh=98T42Obg+ObNGusBSKV0hHVybMy2mq4DF1Xi7sRkvso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=erBQ1aRZRv8JS6/4K7uYZBZcBxwYbURO6GpIwTIhxrbUpvElmf7yT011FP80ft3hO
-	 BE6V5hT+P4W6KYan3wqk9r4OLV3/j2KYN3sH+pIry5HqJCM4M3Dpw61PjjfZKn1p90
-	 NomrbI8G5iV4AA+QvS0FqZpUtP8op8WVcovIxY7M=
+	b=J7oDhg1kDhFR39TL89/EY+dns1aqaSkLvkPc1eqPBlFeEk1VSKKdMUCgTiXJ/UMpw
+	 Gh1wU9/BE/m92r9uMfCTfEq9X3As14f7JZTo2EUQtmAeYsJXR1NWwwUabd27KwOw9+
+	 LQYAHEfdPCAimpmXuYgPyyYdsTXWLTgQJcPmNDM8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbfEOLFn (ORCPT
+        id S1728671AbfEOLFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:05:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35940 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:05:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727832AbfEOLFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:05:38 -0400
+        id S1728111AbfEOLFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:05:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EED6A216FD;
-        Wed, 15 May 2019 11:05:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37F57216FD;
+        Wed, 15 May 2019 11:05:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918337;
-        bh=sgZSSDMED22/aKLOlCAcmow8+TnAKPF7apieVi8FTq8=;
+        s=default; t=1557918342;
+        bh=98T42Obg+ObNGusBSKV0hHVybMy2mq4DF1Xi7sRkvso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SH9xqn5a4fWMxoEKSx07HWa76L6g6cWmUAVKRhgsXnknOyQecNhx0j2P1kr0rxcRk
-         kvKpulyzMoTben2i0QNAhDf1kvEbbyZ5SDk7/krXFM6a0saU8Y9rDalFLPbe+ftkvB
-         QqYGFU8ymiHBADJbCP+GTF0PstHaxCg0pYNYc6bs=
+        b=IGmnv4DGajZ/cksTPfKmULo/zuKe3QoID0Inm8Hsy/F/VgSS0ADWQhwGxXlvB7r+u
+         n2hu7UnadDkALTLkG4hRqd/Fh9O76KDJJIssVeTNgLaoPWR9jgb60Tfw+AXZyzCwuo
+         XH+L0E8cDq8E6tGwyhCfgv4HKGNPMPW0+sfF6nNQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Christ <s.christ@phytec.de>,
-        Christian Hemp <c.hemp@phytec.de>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.4 095/266] ARM: dts: pfla02: increase phy reset duration
-Date:   Wed, 15 May 2019 12:53:22 +0200
-Message-Id: <20190515090725.662678460@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+659574e7bcc7f7eb4df7@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 4.4 070/266] netfilter: ebtables: CONFIG_COMPAT: drop a bogus WARN_ON
+Date:   Wed, 15 May 2019 12:52:57 +0200
+Message-Id: <20190515090724.805162997@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -62,48 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 032f85c9360fb1a08385c584c2c4ed114b33c260 ]
+From: Florian Westphal <fw@strlen.de>
 
-Increase the reset duration to ensure correct phy functionality. The
-reset duration is taken from barebox commit 52fdd510de ("ARM: dts:
-pfla02: use long enough reset for ethernet phy"):
+commit 7caa56f006e9d712b44f27b32520c66420d5cbc6 upstream.
 
-  Use a longer reset time for ethernet phy Micrel KSZ9031RNX. Otherwise a
-  small percentage of modules have 'transmission timeouts' errors like
+It means userspace gave us a ruleset where there is some other
+data after the ebtables target but before the beginning of the next rule.
 
-  barebox@Phytec phyFLEX-i.MX6 Quad Carrier-Board:/ ifup eth0
-  warning: No MAC address set. Using random address 7e:94:4d:02:f8:f3
-  eth0: 1000Mbps full duplex link detected
-  eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
-  T eth0: transmission timeout
+Fixes: 81e675c227ec ("netfilter: ebtables: add CONFIG_COMPAT support")
+Reported-by: syzbot+659574e7bcc7f7eb4df7@syzkaller.appspotmail.com
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Cc: Stefan Christ <s.christ@phytec.de>
-Cc: Christian Hemp <c.hemp@phytec.de>
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Fixes: 3180f956668e ("ARM: dts: Phytec imx6q pfla02 and pbab01 support")
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ net/bridge/netfilter/ebtables.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-index d6d98d426384..cae04e806036 100644
---- a/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-phytec-pfla02.dtsi
-@@ -90,6 +90,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
- 	phy-mode = "rgmii";
-+	phy-reset-duration = <10>; /* in msecs */
- 	phy-reset-gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
- 	phy-supply = <&vdd_eth_io_reg>;
- 	status = "disabled";
--- 
-2.19.1
-
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -2046,7 +2046,8 @@ static int ebt_size_mwt(struct compat_eb
+ 		if (match_kern)
+ 			match_kern->match_size = ret;
+ 
+-		if (WARN_ON(type == EBT_COMPAT_TARGET && size_left))
++		/* rule should have no remaining data after target */
++		if (type == EBT_COMPAT_TARGET && size_left)
+ 			return -EINVAL;
+ 
+ 		match32 = (struct compat_ebt_entry_mwt *) buf;
 
 
