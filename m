@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8F4C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 101A8C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51292084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D70A9217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557917912;
-	bh=v//jKv/3KD8xFB6an3CV5uDN/kZd5PBtM9Avw20RODM=;
+	s=default; t=1557917913;
+	bh=IDSfyyVtTppBd7d4I/r6YphAvNbicpX1/1cHlU4Wcao=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cipSqgMm4OduBwS/dwVw445WNsYFF1yCxcMoqgcgrCjf59gcCkPaIiF76oHk6j7FA
-	 yMYyWi5FINIiUXLovHsEOyzahkE+fMQSP7Q1RooWNyo2gcyF4Sb5FkAp7nxGjMN5hU
-	 pDc6P2uVmWfGFAjLo5R61fxZXdw0HtIYSrv/EYaE=
+	b=XSepzskY7H256WAb5mXrQz5KHc9bdZtCoW1zZRdUUCi28MfLuZqL/czggYdLIom0H
+	 wHY2WvJbdRSEROOHdn3T1rY5J0mfOxCFYNG1YmGp07vFvD0HTJVC/fWOOyxV/5EgaD
+	 aB/lrzHCCoeRf3dKT5KIr0W71gB2iVTwuUGK5QAA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726866AbfEOK6b (ORCPT
+        id S1726887AbfEOK6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:58:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54744 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 06:58:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726827AbfEOK62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:58:28 -0400
+        id S1726865AbfEOK6b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:58:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D6EE20881;
-        Wed, 15 May 2019 10:58:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D2DF2166E;
+        Wed, 15 May 2019 10:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557917908;
-        bh=v//jKv/3KD8xFB6an3CV5uDN/kZd5PBtM9Avw20RODM=;
+        s=default; t=1557917910;
+        bh=IDSfyyVtTppBd7d4I/r6YphAvNbicpX1/1cHlU4Wcao=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nV4K2fci/z3afb+c5QMIT6AaQt/oA6sNkoI1T7n8OwTuaH70koDXF60KPMtJtmH8N
-         l96H5hM/qHZWe2DerQU9XzuWPN49xWU3YayEcYnVJC+Knixr0KU1djJq6U5Nr26JGw
-         AwV3BAjTbiTK9C7KVEwXgnPPZOajZDXuNW1xi+Lg=
+        b=vmf3GqIsGaxMMVH6VFEYS5nVVIAlmf/LsSvOZ8MoTNZ2GGjSgHjWwve142KmZNdl1
+         xuJN+tHevMQMAtgFZEeXeuWz0lSn6BCy1u9QXQ+eN/JEhEIjrouH3htKO+qOW/4C5z
+         d6khVaAeZ2mXraQWGDiQy/lT8a4mTEpPTzvYvU4k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 3.18 08/86] NFS: Forbid setting AF_INET6 to "struct sockaddr_in"->sin_family.
-Date:   Wed, 15 May 2019 12:54:45 +0200
-Message-Id: <20190515090644.307170738@linuxfoundation.org>
+        syzbot+659574e7bcc7f7eb4df7@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 3.18 09/86] netfilter: ebtables: CONFIG_COMPAT: drop a bogus WARN_ON
+Date:   Wed, 15 May 2019 12:54:46 +0200
+Message-Id: <20190515090644.373933627@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -61,43 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Florian Westphal <fw@strlen.de>
 
-commit 7c2bd9a39845bfb6d72ddb55ce737650271f6f96 upstream.
+commit 7caa56f006e9d712b44f27b32520c66420d5cbc6 upstream.
 
-syzbot is reporting uninitialized value at rpc_sockaddr2uaddr() [1]. This
-is because syzbot is setting AF_INET6 to "struct sockaddr_in"->sin_family
-(which is embedded into user-visible "struct nfs_mount_data" structure)
-despite nfs23_validate_mount_data() cannot pass sizeof(struct sockaddr_in6)
-bytes of AF_INET6 address to rpc_sockaddr2uaddr().
+It means userspace gave us a ruleset where there is some other
+data after the ebtables target but before the beginning of the next rule.
 
-Since "struct nfs_mount_data" structure is user-visible, we can't change
-"struct nfs_mount_data" to use "struct sockaddr_storage". Therefore,
-assuming that everybody is using AF_INET family when passing address via
-"struct nfs_mount_data"->addr, reject if its sin_family is not AF_INET.
-
-[1] https://syzkaller.appspot.com/bug?id=599993614e7cbbf66bc2656a919ab2a95fb5d75c
-
-Reported-by: syzbot <syzbot+047a11c361b872896a4f@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Fixes: 81e675c227ec ("netfilter: ebtables: add CONFIG_COMPAT support")
+Reported-by: syzbot+659574e7bcc7f7eb4df7@syzkaller.appspotmail.com
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/super.c |    3 ++-
+ net/bridge/netfilter/ebtables.c |    3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -2019,7 +2019,8 @@ static int nfs23_validate_mount_data(voi
- 		memcpy(sap, &data->addr, sizeof(data->addr));
- 		args->nfs_server.addrlen = sizeof(data->addr);
- 		args->nfs_server.port = ntohs(data->addr.sin_port);
--		if (!nfs_verify_server_address(sap))
-+		if (sap->sa_family != AF_INET ||
-+		    !nfs_verify_server_address(sap))
- 			goto out_no_address;
+--- a/net/bridge/netfilter/ebtables.c
++++ b/net/bridge/netfilter/ebtables.c
+@@ -2042,7 +2042,8 @@ static int ebt_size_mwt(struct compat_eb
+ 		if (match_kern)
+ 			match_kern->match_size = ret;
  
- 		if (!(data->flags & NFS_MOUNT_TCP))
+-		if (WARN_ON(type == EBT_COMPAT_TARGET && size_left))
++		/* rule should have no remaining data after target */
++		if (type == EBT_COMPAT_TARGET && size_left)
+ 			return -EINVAL;
+ 
+ 		match32 = (struct compat_ebt_entry_mwt *) buf;
 
 
