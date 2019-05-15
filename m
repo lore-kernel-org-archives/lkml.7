@@ -6,46 +6,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2479C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C173AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 741E12166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9373220881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557917904;
-	bh=Ki/lqeMWa63OFB/l5JNakbt9V1E+X/jrXnjqHeKs3TM=;
+	s=default; t=1557917906;
+	bh=M2A9iqhs/KVUvfAoeL7RgXhLq80Db758QtOaHvcXZro=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y7VdK4E96pjILrjGC/KTK66R5hDsK8dyv/xnXyOEVWEio9KrkWYXy3trc7/ZzbNm5
-	 FKUMy2DX7jaq8gNdxoLLjTCQTdDmmnsT5Nu3nU/hsHWQzOuqvUOTIHn6FCNeJsNEP4
-	 /Id7/40lSyUxcOzH8wyP7UHNpQP6Uy3VO3zjjyzk=
+	b=sZ8Jf9/8sKtZpric6iVY7tLzlx97PIaqea4EaJIrfaZPd+r31aURVvzXdw9APeJad
+	 ak/5Y9X946+gx1iKJsQ2rJzNuku3MLkEHbfc9raxsU+Y+Fe3k1LAbAu+Rg2EUlMEmC
+	 BvXlBME2+xsorMJJRLD2Pa+m6FXz4aNJv+8Y5uNY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfEOK6X (ORCPT
+        id S1726817AbfEOK6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:58:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54584 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 06:58:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbfEOK6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:58:21 -0400
+        id S1726793AbfEOK6X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:58:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0429221473;
-        Wed, 15 May 2019 10:58:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C32C2084E;
+        Wed, 15 May 2019 10:58:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557917900;
-        bh=Ki/lqeMWa63OFB/l5JNakbt9V1E+X/jrXnjqHeKs3TM=;
+        s=default; t=1557917903;
+        bh=M2A9iqhs/KVUvfAoeL7RgXhLq80Db758QtOaHvcXZro=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FXTJS37m7t2kNpTRYZJwPLniW1jvAGYfy9O1Njhr4iUwuJq5Znq6v9EakLbafP+K/
-         8RomDOIL/ThDiM/Bo3lITHhMT/OGUN2G5U6d1cqoTAToFcVA82GjtEL3XG9q3YStao
-         p8eIgegifrgo5Hs5JhiZqd5LRn+Tsj1NXLz3HO88=
+        b=depS9i4vB8FrTecKnwwrWpqoYMBTgzi93FMuDgeksU9alJZskIfw+r0WW5csZkTIM
+         Dj3qBxzmXu5c4hKrW1Gy0hRd00lYUV/lD/mPyfRDPPFXxubJjAutZGhuLBSARJMu3U
+         pkHe48i2JogcWhXBKyoRyt8wGnRf0vv6H08vvxg4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, NeilBrown <neilb@suse.com>,
-        "J. Bruce Fields" <bfields@redhat.com>, stable@kernel.org
-Subject: [PATCH 3.18 05/86] sunrpc: dont mark uninitialised items as VALID.
-Date:   Wed, 15 May 2019 12:54:42 +0200
-Message-Id: <20190515090643.489678828@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com,
+        Ben Hutchings <ben@decadent.org.uk>,
+        David Miller <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 3.18 06/86] slip: make slhc_free() silently accept an error pointer
+Date:   Wed, 15 May 2019 12:54:43 +0200
+Message-Id: <20190515090643.765376645@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -58,57 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: NeilBrown <neilb@suse.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit d58431eacb226222430940134d97bfd72f292fcd upstream.
+commit baf76f0c58aec435a3a864075b8f6d8ee5d1f17e upstream.
 
-A recent commit added a call to cache_fresh_locked()
-when an expired item was found.
-The call sets the CACHE_VALID flag, so it is important
-that the item actually is valid.
-There are two ways it could be valid:
-1/ If ->update has been called to fill in relevant content
-2/ if CACHE_NEGATIVE is set, to say that content doesn't exist.
+This way, slhc_free() accepts what slhc_init() returns, whether that is
+an error or not.
 
-An expired item that is waiting for an update will be neither.
-Setting CACHE_VALID will mean that a subsequent call to cache_put()
-will be likely to dereference uninitialised pointers.
+In particular, the pattern in sl_alloc_bufs() is
 
-So we must make sure the item is valid, and we already have code to do
-that in try_to_negate_entry().  This takes the hash lock and so cannot
-be used directly, so take out the two lines that we need and use them.
+        slcomp = slhc_init(16, 16);
+        ...
+        slhc_free(slcomp);
 
-Now cache_fresh_locked() is certain to be called only on
-a valid item.
+for the error handling path, and rather than complicate that code, just
+make it ok to always free what was returned by the init function.
 
-Cc: stable@kernel.org # 2.6.35
-Fixes: 4ecd55ea0742 ("sunrpc: fix cache_head leak due to queued request")
-Signed-off-by: NeilBrown <neilb@suse.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+That's what the code used to do before commit 4ab42d78e37a ("ppp, slip:
+Validate VJ compression slot parameters completely") when slhc_init()
+just returned NULL for the error case, with no actual indication of the
+details of the error.
+
+Reported-by: syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com
+Fixes: 4ab42d78e37a ("ppp, slip: Validate VJ compression slot parameters completely")
+Acked-by: Ben Hutchings <ben@decadent.org.uk>
+Cc: David Miller <davem@davemloft.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/cache.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/slip/slhc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/sunrpc/cache.c
-+++ b/net/sunrpc/cache.c
-@@ -50,6 +50,7 @@ static void cache_init(struct cache_head
- 	h->last_refresh = now;
- }
+--- a/drivers/net/slip/slhc.c
++++ b/drivers/net/slip/slhc.c
+@@ -153,7 +153,7 @@ out_fail:
+ void
+ slhc_free(struct slcompress *comp)
+ {
+-	if ( comp == NULLSLCOMPR )
++	if ( IS_ERR_OR_NULL(comp) )
+ 		return;
  
-+static inline int cache_is_valid(struct cache_head *h);
- static void cache_fresh_locked(struct cache_head *head, time_t expiry);
- static void cache_fresh_unlocked(struct cache_head *head,
- 				struct cache_detail *detail);
-@@ -98,6 +99,8 @@ struct cache_head *sunrpc_cache_lookup(s
- 				*hp = tmp->next;
- 				tmp->next = NULL;
- 				detail->entries --;
-+				if (cache_is_valid(tmp) == -EAGAIN)
-+					set_bit(CACHE_NEGATIVE, &tmp->flags);
- 				cache_fresh_locked(tmp, 0);
- 				freeme = tmp;
- 				break;
+ 	if ( comp->tstate != NULLSLSTATE )
 
 
