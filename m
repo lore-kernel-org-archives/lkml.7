@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FDEC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 978B7C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F58821734
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56904216F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:33:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920005;
-	bh=U+bVO08RSkFhXJCb1d6WIQYF9KG8SlPWxmTuRrDvIx0=;
+	s=default; t=1557920008;
+	bh=JJBWEW4rFuZYofcRX2sw185XPT0gitrj1qgq87qq7Sk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iB4QSUWGN+pjCdT+B5qVeImTEZLqI5qWcs1IruF6Ps6C57Nm1UD04GhtECaycLIWk
-	 UWpg0AlT3rhDmzMoOUvKnBQy/ZGWkrQi6fD5YA7jGBwwUJZUKlvybd0ZNpexXDYEY8
-	 aI6uWrhKXypybqk5akKmUE1/zxhL8YycBfG12u1A=
+	b=bjg8E6siPu2JKA+RbhPMgHMdtAzBgoNfq0d+1ZRnWpTjJsXeA4gnnR72fzoGEakfm
+	 GzqGuWgeKqZ+tbMhP9KePYk1gP6+S52m+Iz1gp9qTH/9QBmD6b/3CivUjCbZUs8C2Q
+	 2ZCrUYtBXPqzrwNaCwiD7lxjd7q7jMTUzdl7XKL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733188AbfEOLdY (ORCPT
+        id S1733195AbfEOLd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:33:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45254 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:33:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733176AbfEOLdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:33:20 -0400
+        id S1731338AbfEOLdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:33:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2965D2084A;
-        Wed, 15 May 2019 11:33:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E408420843;
+        Wed, 15 May 2019 11:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919999;
-        bh=U+bVO08RSkFhXJCb1d6WIQYF9KG8SlPWxmTuRrDvIx0=;
+        s=default; t=1557920002;
+        bh=JJBWEW4rFuZYofcRX2sw185XPT0gitrj1qgq87qq7Sk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C0tYWMNXAOBKku63FGGQxvK3vopt2wbyvIghiU6enAzbCoW5Tcn3/teUYCFXwErWz
-         PYsoFVb381RaK+I2HNt+ddz38AJv4GUHcE78IdfLJIK/bhrWijnILpol7KRmpwh92p
-         pxt/2zkcmvFEkUoQhcnzpL+cGPwdblVe7zaufnf0=
+        b=zq38laBKVk/e3XNef9o9Rc2270q9tnuLboqPKlQgdVWUen82yNfBG45pJnsVCssX1
+         myCZ1V4ymfG6CSU4icT2JV4mDc/wPx8wWxmjaVBgOSMgxYF0cFOwrpGzXPNfQhhu50
+         vKQJg8JW05xkRXBCsrDFQ9bxsVCSDozgdyPWdNRQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Rock <linux@roeck-us.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 5.1 04/46] hwmon: (pwm-fan) Disable PWM if fetching cooling data fails
-Date:   Wed, 15 May 2019 12:56:28 +0200
-Message-Id: <20190515090619.129811625@linuxfoundation.org>
+        stable@vger.kernel.org, Lei YU <mine260309@gmail.com>,
+        Eddie James <eajames@linux.ibm.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 5.1 05/46] hwmon: (occ) Fix extended status bits
+Date:   Wed, 15 May 2019 12:56:29 +0200
+Message-Id: <20190515090619.562701155@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -59,34 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <stefan.wahren@i2se.com>
+From: Lei YU <mine260309@gmail.com>
 
-commit 53f1647da3e8fb3e89066798f0fdc045064d353d upstream.
+commit b88c5049219a7f322bb1fd65fc30d17472a23563 upstream.
 
-In case pwm_fan_of_get_cooling_data() fails we should disable the PWM
-just like in the other error cases.
+The occ's extended status is checked and shown as sysfs attributes. But
+the code was incorrectly checking the "status" bits.
+Fix it by checking the "ext_status" bits.
 
-Fixes: 2e5219c77183 ("hwmon: (pwm-fan) Read PWM FAN configuration from device tree")
-Cc: <stable@vger.kernel.org> # 4.14+
-Reported-by: Guenter Rock <linux@roeck-us.net>
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: stable@vger.kernel.org
+Fixes: df04ced684d4 ("hwmon (occ): Add sysfs attributes for additional OCC data")
+Signed-off-by: Lei YU <mine260309@gmail.com>
+Reviewed-by: Eddie James <eajames@linux.ibm.com>
 Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwmon/pwm-fan.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hwmon/occ/sysfs.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/hwmon/pwm-fan.c
-+++ b/drivers/hwmon/pwm-fan.c
-@@ -271,7 +271,7 @@ static int pwm_fan_probe(struct platform
- 
- 	ret = pwm_fan_of_get_cooling_data(&pdev->dev, ctx);
- 	if (ret)
--		return ret;
-+		goto err_pwm_disable;
- 
- 	ctx->pwm_fan_state = ctx->pwm_fan_max_state;
- 	if (IS_ENABLED(CONFIG_THERMAL)) {
+--- a/drivers/hwmon/occ/sysfs.c
++++ b/drivers/hwmon/occ/sysfs.c
+@@ -42,16 +42,16 @@ static ssize_t occ_sysfs_show(struct dev
+ 		val = !!(header->status & OCC_STAT_ACTIVE);
+ 		break;
+ 	case 2:
+-		val = !!(header->status & OCC_EXT_STAT_DVFS_OT);
++		val = !!(header->ext_status & OCC_EXT_STAT_DVFS_OT);
+ 		break;
+ 	case 3:
+-		val = !!(header->status & OCC_EXT_STAT_DVFS_POWER);
++		val = !!(header->ext_status & OCC_EXT_STAT_DVFS_POWER);
+ 		break;
+ 	case 4:
+-		val = !!(header->status & OCC_EXT_STAT_MEM_THROTTLE);
++		val = !!(header->ext_status & OCC_EXT_STAT_MEM_THROTTLE);
+ 		break;
+ 	case 5:
+-		val = !!(header->status & OCC_EXT_STAT_QUICK_DROP);
++		val = !!(header->ext_status & OCC_EXT_STAT_QUICK_DROP);
+ 		break;
+ 	case 6:
+ 		val = header->occ_state;
 
 
