@@ -2,51 +2,53 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E977C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E680C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03C92084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A6EB21473
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918475;
-	bh=UaSRcyMnz8YwZQ5JXfK4M9gajoohZJeJ7Jei2hd85AU=;
+	s=default; t=1557918480;
+	bh=9PorQw6wI6nmwpcY/qHdGn/33vFC21FkBTQj9GRvmUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rDU4ZROuI72R0DnTc3gy03fqO+Vy7HrJOd0bRRcqKdkrfl2OcZF2tIjRiLn2IKSGA
-	 YzyE3uUGBgdzsx/ol5vYChpCnAUepJuhHnnNu7p0ZwzVV+iYfMdHZPlTTlYAVytxTl
-	 XKUKXb0v0uLpxjXQ14QcHrKFO1OlcBJdeKXdTrH0=
+	b=OVV7NrlzJYfkJ5XDqiyJpIrLkowkcmZCoGsSxIPJbbgyvRS71RTNwsbRT+Attqf7n
+	 CZ3gkGvvDmajX0vyAT4mrmUMbvJ2KeCJF3r/cEs0pquD59HCLz9BeEnSdK1Qhsn8dz
+	 KztJaZXSNPfIfT6OZGSJwMKx9D6JBJaEJyEkkqn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbfEOLHx (ORCPT
+        id S1729027AbfEOLH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:07:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39780 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:07:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728435AbfEOLHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:07:49 -0400
+        id S1728444AbfEOLHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:07:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80AB62084F;
-        Wed, 15 May 2019 11:07:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A65BE2084F;
+        Wed, 15 May 2019 11:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918469;
-        bh=UaSRcyMnz8YwZQ5JXfK4M9gajoohZJeJ7Jei2hd85AU=;
+        s=default; t=1557918474;
+        bh=9PorQw6wI6nmwpcY/qHdGn/33vFC21FkBTQj9GRvmUw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A+lbarvJDwTVloqW0/AC3xVi0a1ZxKfuhsxIt/nmnXKJZl+LdFpj/AYtBQcNRm7oE
-         6mZf2o9KvRqDp30yez1z2fOFD65XYRTl1EfNLH6gW8T6sXDQNBsDFUm11puqmffd0Q
-         s3k7QofGB1qPo6AidQocfohyV7knIfLTdAUiOxvk=
+        b=SjxjL8SpVYLICnmO7otdRjD4W3ifuzDH+aMwDGIYQUHWB38sTnBi8NjwEG98R+Rfq
+         mZI9o4+BCHbSWqyWDuccbSgCY2pEfEcu9RvujyC9EbcIhkW3+ktyn7/ZOumd1ZSLH5
+         ai46X6Bo+THEjlZ8/kT8OIKRicyT9fOEyzycC7Gw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
-Subject: [PATCH 4.4 116/266] USB: yurex: Fix protection fault after device removal
-Date:   Wed, 15 May 2019 12:53:43 +0200
-Message-Id: <20190515090726.382811751@linuxfoundation.org>
+        stable@vger.kernel.org, Rander Wang <rander.wang@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 144/266] ASoC:soc-pcm:fix a codec fixup issue in TDM case
+Date:   Wed, 15 May 2019 12:54:11 +0200
+Message-Id: <20190515090727.773563652@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -59,40 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+[ Upstream commit 570f18b6a8d1f0e60e8caf30e66161b6438dcc91 ]
 
-commit ef61eb43ada6c1d6b94668f0f514e4c268093ff3 upstream.
+On HDaudio platforms, if playback is started when capture is working,
+there is no audible output.
 
-The syzkaller USB fuzzer found a general-protection-fault bug in the
-yurex driver.  The fault occurs when a device has been unplugged; the
-driver's interrupt-URB handler logs an error message referring to the
-device by name, after the device has been unregistered and its name
-deallocated.
+This can be root-caused to the use of the rx|tx_mask to store an HDaudio
+stream tag.
 
-This problem is caused by the fact that the interrupt URB isn't
-cancelled until the driver's private data structure is released, which
-can happen long after the device is gone.  The cure is to make sure
-that the interrupt URB is killed before yurex_disconnect() returns;
-this is exactly the sort of thing that usb_poison_urb() was meant for.
+If capture is stared before playback, rx_mask would be non-zero on HDaudio
+platform, then the channel number of playback, which is in the same codec
+dai with the capture, would be changed by soc_pcm_codec_params_fixup based
+on the tx_mask at first, then overwritten by this function based on rx_mask
+at last.
 
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
-CC: <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+According to the author of tx|rx_mask, tx_mask is for playback and rx_mask
+is for capture. And stream direction is checked at all other references of
+tx|rx_mask in ASoC, so here should be an error. This patch checks stream
+direction for tx|rx_mask for fixup function.
 
+This issue would affect not only HDaudio+ASoC, but also I2S codecs if the
+channel number based on rx_mask is not equal to the one for tx_mask. It could
+be rarely reproduecd because most drivers in kernel set the same channel number
+to tx|rx_mask or rx_mask is zero.
+
+Tested on all platforms using stream_tag & HDaudio and intel I2S platforms.
+
+Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/yurex.c |    1 +
- 1 file changed, 1 insertion(+)
+ sound/soc/soc-pcm.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/misc/yurex.c
-+++ b/drivers/usb/misc/yurex.c
-@@ -332,6 +332,7 @@ static void yurex_disconnect(struct usb_
- 	usb_deregister_dev(interface, &yurex_class);
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index f99eb8f442829..1c0d44c86c018 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -882,10 +882,13 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
+ 		codec_params = *params;
  
- 	/* prevent more I/O from starting */
-+	usb_poison_urb(dev->urb);
- 	mutex_lock(&dev->io_mutex);
- 	dev->interface = NULL;
- 	mutex_unlock(&dev->io_mutex);
+ 		/* fixup params based on TDM slot masks */
+-		if (codec_dai->tx_mask)
++		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK &&
++		    codec_dai->tx_mask)
+ 			soc_pcm_codec_params_fixup(&codec_params,
+ 						   codec_dai->tx_mask);
+-		if (codec_dai->rx_mask)
++
++		if (substream->stream == SNDRV_PCM_STREAM_CAPTURE &&
++		    codec_dai->rx_mask)
+ 			soc_pcm_codec_params_fixup(&codec_params,
+ 						   codec_dai->rx_mask);
+ 
+-- 
+2.20.1
+
 
 
