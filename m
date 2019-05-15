@@ -2,136 +2,65 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F56C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28748C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A8C020881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:31:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557937869;
-	bh=oXIY+mWZAJM18zAlnx3Vpiv5R60H6x3FTXcrG/cdL6I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pAR3V8qAgGUZt3KQ1ZXf6TRCHQc3tbkTRJLgcYTdP6GqScP2XwQ3T8tPc5j2wxCw1
-	 VZA4ri69mP89lhlJVNzfzViiR/16c2Wmr4HcBJ6/E3u1q9qHQYzoWrPz5pStFZhOFR
-	 vUe6ZMnEmHb0WY7k5cPUT/RSrLuYE6E3VCTDbpJg=
+	by mail.kernel.org (Postfix) with ESMTP id E3C0D20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:31:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gsty7Si8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfEOQbI (ORCPT
+        id S1727264AbfEOQbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 12:31:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60662 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbfEOQbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 12:31:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEFD220818;
-        Wed, 15 May 2019 16:31:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557937867;
-        bh=oXIY+mWZAJM18zAlnx3Vpiv5R60H6x3FTXcrG/cdL6I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=T0ZjblAvtCU6LxqojVR9If6yhXX0jEF/u0rEPiHhPvJNwg7d8e8cq3aH3DrMmJuTt
-         pT47h+v4nM7VeSvLHmIDlP0mHQlXhC9fnhGcrpoi//2ME94xl2AUPeFJs9ZSl33qbW
-         8kbLFhCDWbf7o/XgneclAQbcF9kKsHmEsEvKtG1g=
-Date:   Wed, 15 May 2019 18:31:05 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jinpu Wang <jinpuwang@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "v3.14+, only the raid10 part" <stable@vger.kernel.org>,
-        Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: Re: [PATCH 4.14 067/115] crypto: testmgr - add AES-CFB tests
-Message-ID: <20190515163105.GB30626@kroah.com>
-References: <20190515090659.123121100@linuxfoundation.org>
- <20190515090704.367472403@linuxfoundation.org>
- <CAD9gYJ+zOgwe5mxns=0m=Lpz0Dthn0f1_YkyR+n0w7JaAswL1w@mail.gmail.com>
+        Wed, 15 May 2019 12:31:22 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48698 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726677AbfEOQbV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 12:31:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lrDbCxLPOQmnTKtI7+fVuZnBx56mAdej3C4tjV05qA8=; b=gsty7Si8cMOJ7hPROVkuUgGw5
+        VpKVbc8kxM6Vgqebuw/qvY72+EEMkVgBD5EWo6smYaaOBtyLDfSJBQC5+4HjF870a291U4w3xdAYr
+        ET2qhEBg1iSiHdNNsY6X/+6DdYp5rzgHJvBgZlkRVo89Eor1g3B5FZmZHTTJxFfLkzyXMSfqm3cGX
+        WNshTolEjd3qVcl+RAEN3/86on1K/NKem7ZPn3KHZA0u1I8agv/yMioL5lqAVdBXRKE1htGpOLvf7
+        jleFmzsLxofBUYxj1Zh/MPG4tuONYFkFT8Y346RpEsMXmVi6twUihhcpl/2Im5awaNVk0MS83uPED
+        /cn62Vd2g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQwoG-0001CT-EZ; Wed, 15 May 2019 16:31:17 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 3FF8D2029906B; Wed, 15 May 2019 18:31:15 +0200 (CEST)
+Date:   Wed, 15 May 2019 18:31:15 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Parth Shah <parth@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        mingo@redhat.com, dietmar.eggemann@arm.com, dsmythies@telus.net
+Subject: Re: [RFCv2 3/6] sched/core: Update turbo_sched count only when
+ required
+Message-ID: <20190515163115.GV2589@hirez.programming.kicks-ass.net>
+References: <20190515135322.19393-1-parth@linux.ibm.com>
+ <20190515135322.19393-4-parth@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAD9gYJ+zOgwe5mxns=0m=Lpz0Dthn0f1_YkyR+n0w7JaAswL1w@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190515135322.19393-4-parth@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 05:59:38PM +0200, Jinpu Wang wrote:
-> Hi Greg,
-> 
-> This patch causes build failure for me:
-> 
-> In file included from crypto/testmgr.c:54:
-> crypto/testmgr.h:16081:4: error: 'const struct cipher_testvec' has no
-> member named 'ptext'
->    .ptext = "\x6b\xc1\xbe\xe2\x2e\x40\x9f\x96"
->     ^~~~~
-> crypto/testmgr.h:16089:4: error: 'const struct cipher_testvec' has no
-> member named 'ctext'
->    .ctext = "\x3b\x3f\xd9\x2e\xb7\x2d\xad\x20"
->     ^~~~~
-> crypto/testmgr.h:16097:4: error: 'const struct cipher_testvec' has no
-> member named 'len'; did you mean 'klen'?
->    .len = 64,
->     ^~~
->     klen
-> crypto/testmgr.h:16097:10: warning: initialization of 'const char *'
-> from 'int' makes pointer from integer without a cast
-> [-Wint-conversion]
->    .len = 64,
->           ^~
-> crypto/testmgr.h:16097:10: note: (near initialization for
-> 'aes_cfb_tv_template[0].result')
-> crypto/testmgr.h:16105:4: error: 'const struct cipher_testvec' has no
-> member named 'ptext'
->    .ptext = "\x6b\xc1\xbe\xe2\x2e\x40\x9f\x96"
->     ^~~~~
-> crypto/testmgr.h:16113:4: error: 'const struct cipher_testvec' has no
-> member named 'ctext'
->    .ctext = "\xcd\xc8\x0d\x6f\xdd\xf1\x8c\xab"
->     ^~~~~
-> crypto/testmgr.h:16121:4: error: 'const struct cipher_testvec' has no
-> member named 'len'; did you mean 'klen'?
->    .len = 64,
->     ^~~
->     klen
-> crypto/testmgr.h:16121:10: warning: initialization of 'const char *'
-> from 'int' makes pointer from integer without a cast
-> [-Wint-conversion]
->    .len = 64,
->           ^~
-> crypto/testmgr.h:16121:10: note: (near initialization for
-> 'aes_cfb_tv_template[1].result')
-> crypto/testmgr.h:16130:4: error: 'const struct cipher_testvec' has no
-> member named 'ptext'
->    .ptext = "\x6b\xc1\xbe\xe2\x2e\x40\x9f\x96"
->     ^~~~~
-> crypto/testmgr.h:16138:4: error: 'const struct cipher_testvec' has no
-> member named 'ctext'
->    .ctext = "\xdc\x7e\x84\xbf\xda\x79\x16\x4b"
->     ^~~~~
-> crypto/testmgr.h:16146:4: error: 'const struct cipher_testvec' has no
-> member named 'len'; did you mean 'klen'?
->    .len = 64,
->     ^~~
->     klen
-> crypto/testmgr.h:16146:10: warning: initialization of 'const char *'
-> from 'int' makes pointer from integer without a cast
-> [-Wint-conversion]
->    .len = 64,
->           ^~
-> crypto/testmgr.h:16146:10: note: (near initialization for
-> 'aes_cfb_tv_template[2].result')
->   CC      drivers/edac/wq.o
-> crypto/testmgr.c:2353:23: error: 'struct cipher_test_suite' has no
-> member named 'vecs'; did you mean 'dec'?
->  #define __VECS(tv) { .vecs = tv, .count = ARRAY_SIZE(tv) }
-> 
-> Can you drop the patch?
+On Wed, May 15, 2019 at 07:23:19PM +0530, Parth Shah wrote:
+> Use the get/put methods to add/remove the use of TurboSched support from
+> the cgroup.
 
-Yes, now dropped.  Sasha, I think I did this same thing in the past :)
+Didn't anybody tell you that cgroup only interfaces are frowned upon?
