@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F982C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4873EC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2361C20644
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4382084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919028;
-	bh=PsE3L0Tytn+xs1zWFdeYNbl+o7QgsJvAnDvvDVgEk5c=;
+	s=default; t=1557919031;
+	bh=OGmgcPDYmpGZoe6b7p5Kka/NjwDpmejKew+gZBRRk08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ly9ZBr6r3J5Xdm/Y9uNvI5eX9AIqeee+0ag6V9APAu5saO4WTlAgZeLbHTJsAC83U
-	 es//5K8J39XJEtrEtHyVlhwmEe2cbYXfB0HUsKT3Ck+K4THTZAuOONmceFoCdbphR4
-	 23pUGGRcimj9cvOT7F4rZ7BVNPNKy7vJV8jz1XEA=
+	b=GNgsMCWrJFYwtURvBfDEukYfb1diCsHB22GPNbveZPJAFQnLvFLlQfx8nCuxuA2KW
+	 qcW8zMDX2l7YgQUgH3tNNy0cNrQoEiM9qdBbZeBQ/BxtAVpcNnLba5i1ztS0y4kH9w
+	 FBPwYHJXL50JmqSY0+Bhf86cgr3oc8Pu7Bg3AjDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730161AbfEOLRH (ORCPT
+        id S1730627AbfEOLRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:17:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54124 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:17:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728181AbfEOLRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:17:05 -0400
+        id S1728261AbfEOLRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:17:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE51720644;
-        Wed, 15 May 2019 11:17:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1D9420644;
+        Wed, 15 May 2019 11:17:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919024;
-        bh=PsE3L0Tytn+xs1zWFdeYNbl+o7QgsJvAnDvvDVgEk5c=;
+        s=default; t=1557919027;
+        bh=OGmgcPDYmpGZoe6b7p5Kka/NjwDpmejKew+gZBRRk08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x4QsHcuoRJAlmyo3gEFpRcI36+TfIhVAWrlptFAaL/+HzYrlqY4ovN3JZS7bGCALu
-         AlM0PzliOce6dosmQK7hVA36JR7X3DznkmbmQehO+chQQTjsjLyeqTLGYdk3T4x+Dr
-         jxeZ5Yl/V/XGjyyJMnD0N2Iw4AFJktq0BsiFsZ8U=
+        b=NN5r6cwpiuVubtn3Zc5OTQKExrNtnafFO2z4IIF/uqrytlnjusR0+MS5rBs0gPhMI
+         fUZ6nNGASMeauvCIq8EoHLrUfDwd+yREwEXVgLAONUhj1KMPKSbinwJ3ElGbgnG9+c
+         p+GgyJhw/f++wEYiso2SQEtUrGr77jxMksJzPtDI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Daniel Gomez <dagmcr@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 037/115] spi: Micrel eth switch: declare missing of table
-Date:   Wed, 15 May 2019 12:55:17 +0200
-Message-Id: <20190515090702.139538082@linuxfoundation.org>
+Subject: [PATCH 4.14 038/115] spi: ST ST95HF NFC: declare missing of table
+Date:   Wed, 15 May 2019 12:55:18 +0200
+Message-Id: <20190515090702.220165255@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -62,64 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2f23a2a768bee7ad2ff1e9527c3f7e279e794a46 ]
+[ Upstream commit d04830531d0c4a99c897a44038e5da3d23331d2f ]
 
 Add missing <of_device_id> table for SPI driver relying on SPI
 device match since compatible is in a DT binding or in a DTS.
 
 Before this patch:
-modinfo drivers/net/phy/spi_ks8995.ko | grep alias
-alias:          spi:ksz8795
-alias:          spi:ksz8864
-alias:          spi:ks8995
+modinfo drivers/nfc/st95hf/st95hf.ko | grep alias
+alias:          spi:st95hf
 
 After this patch:
-modinfo drivers/net/phy/spi_ks8995.ko | grep alias
-alias:          spi:ksz8795
-alias:          spi:ksz8864
-alias:          spi:ks8995
-alias:          of:N*T*Cmicrel,ksz8795C*
-alias:          of:N*T*Cmicrel,ksz8795
-alias:          of:N*T*Cmicrel,ksz8864C*
-alias:          of:N*T*Cmicrel,ksz8864
-alias:          of:N*T*Cmicrel,ks8995C*
-alias:          of:N*T*Cmicrel,ks8995
+modinfo drivers/nfc/st95hf/st95hf.ko | grep alias
+alias:          spi:st95hf
+alias:          of:N*T*Cst,st95hfC*
+alias:          of:N*T*Cst,st95hf
 
 Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
 Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/spi_ks8995.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/nfc/st95hf/core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/phy/spi_ks8995.c b/drivers/net/phy/spi_ks8995.c
-index 1e2d4f1179da3..45df03673e010 100644
---- a/drivers/net/phy/spi_ks8995.c
-+++ b/drivers/net/phy/spi_ks8995.c
-@@ -162,6 +162,14 @@ static const struct spi_device_id ks8995_id[] = {
+diff --git a/drivers/nfc/st95hf/core.c b/drivers/nfc/st95hf/core.c
+index 2b26f762fbc3b..01acb6e533655 100644
+--- a/drivers/nfc/st95hf/core.c
++++ b/drivers/nfc/st95hf/core.c
+@@ -1074,6 +1074,12 @@ static const struct spi_device_id st95hf_id[] = {
  };
- MODULE_DEVICE_TABLE(spi, ks8995_id);
+ MODULE_DEVICE_TABLE(spi, st95hf_id);
  
-+static const struct of_device_id ks8895_spi_of_match[] = {
-+        { .compatible = "micrel,ks8995" },
-+        { .compatible = "micrel,ksz8864" },
-+        { .compatible = "micrel,ksz8795" },
++static const struct of_device_id st95hf_spi_of_match[] = {
++        { .compatible = "st,st95hf" },
 +        { },
-+ };
-+MODULE_DEVICE_TABLE(of, ks8895_spi_of_match);
++};
++MODULE_DEVICE_TABLE(of, st95hf_spi_of_match);
 +
- static inline u8 get_chip_id(u8 val)
+ static int st95hf_probe(struct spi_device *nfc_spi_dev)
  {
- 	return (val >> ID1_CHIPID_S) & ID1_CHIPID_M;
-@@ -529,6 +537,7 @@ static int ks8995_remove(struct spi_device *spi)
- static struct spi_driver ks8995_driver = {
+ 	int ret;
+@@ -1260,6 +1266,7 @@ static struct spi_driver st95hf_driver = {
  	.driver = {
- 		.name	    = "spi-ks8995",
-+		.of_match_table = of_match_ptr(ks8895_spi_of_match),
+ 		.name = "st95hf",
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(st95hf_spi_of_match),
  	},
- 	.probe	  = ks8995_probe,
- 	.remove	  = ks8995_remove,
+ 	.id_table = st95hf_id,
+ 	.probe = st95hf_probe,
 -- 
 2.20.1
 
