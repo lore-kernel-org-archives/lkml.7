@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1410EC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25952C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:38:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D36AA2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC82720843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920281;
-	bh=f+/E2dM8tseZgOi6tp1gOUPwluA21xqL5ItupbIbfPI=;
+	s=default; t=1557920285;
+	bh=6zO7tVXG4/5IUdBroFzjK/pJRlz3x3muihcqwl8q3JA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kY2QUhU4foAzsQavp4ce9kOjdyNCAJvuKzuk3dzxXnwZbig1fVjeIAuNzm2rtt4Mr
-	 pjhQ5FB9m9D/Eo/0dmRmCxCMC5yGJwylb3qDV2RYpxRqgJEVfNn4mGDkvGgoN15kUh
-	 PtUvoDiJGqXKvs044sw605ZSSiQKfxVSt+DxblOY=
+	b=joDSEJJ2BdrTGKbg+slI1KnvseyjeItVxejlSfzFYV9l1bexCrajJqdXn/QIFIMAY
+	 dKkIF44+tvh1JFbG+P5p7XR/gGrIZ3zYIuAoL+l5nCuZUVSehEg3wu/9Almb1ODJXj
+	 QI8N2O6mevAjgDBnk07tCp8E+QvIJRQBSO/BUROE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732900AbfEOLb1 (ORCPT
+        id S1727938AbfEOLiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:31:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43132 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:38:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732379AbfEOLbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:31:22 -0400
+        id S1731226AbfEOLb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:31:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D701F2084F;
-        Wed, 15 May 2019 11:31:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28A5A206BF;
+        Wed, 15 May 2019 11:31:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919881;
-        bh=f+/E2dM8tseZgOi6tp1gOUPwluA21xqL5ItupbIbfPI=;
+        s=default; t=1557919886;
+        bh=6zO7tVXG4/5IUdBroFzjK/pJRlz3x3muihcqwl8q3JA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qvuve4d970pqV9AeelC/vHeRiihj8Hxl7KIDQCgOuReK9XXIaXmJ4DgaF90a/RnR9
-         CKUobI38OzkTaGRJCasR5YoloAKdi5KW2SYAVPR+ZtfjlPI1aOuyLlvm/RcCSLhYni
-         x19ksNck+KbbwRWjIU6wnQ09El2TjZVoXEHKpRM8=
+        b=nCV4y51TQguAiyFowtvoomoQiInWXefBFY0DnSyDNXMt/ysgQwWdAjZYN90nEbzHN
+         OMr4ac1glrq6pYBkcpPrP6SO7q7F++OPOzRJgx+nlQ3rX9LWZaFUVWDegme6MerQ/N
+         7thILZXbOwln+nEhrpp+emVvLWO9Jw82uZLZUJjc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 122/137] aqc111: fix double endianness swap on BE
-Date:   Wed, 15 May 2019 12:56:43 +0200
-Message-Id: <20190515090702.572049973@linuxfoundation.org>
+        stable@vger.kernel.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.0 132/137] powerpc/booke64: set RI in default MSR
+Date:   Wed, 15 May 2019 12:56:53 +0200
+Message-Id: <20190515090703.457545678@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -59,44 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-[ Upstream commit 2cf672709beb005f6e90cb4edbed6f2218ba953e ]
+commit 5266e58d6cd90ac85c187d673093ad9cb649e16d upstream.
 
-If you are using a function that does a swap in place,
-you cannot just reuse the buffer on the assumption that it has
-not been changed.
+Set RI in the default kernel's MSR so that the architected way of
+detecting unrecoverable machine check interrupts has a chance to work.
+This is inline with the MSR setup of the rest of booke powerpc
+architectures configured here.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/usb/aqc111.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/net/usb/aqc111.c
-+++ b/drivers/net/usb/aqc111.c
-@@ -1428,7 +1428,7 @@ static int aqc111_resume(struct usb_inte
- {
- 	struct usbnet *dev = usb_get_intfdata(intf);
- 	struct aqc111_data *aqc111_data = dev->driver_priv;
--	u16 reg16;
-+	u16 reg16, oldreg16;
- 	u8 reg8;
+---
+ arch/powerpc/include/asm/reg_booke.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/arch/powerpc/include/asm/reg_booke.h
++++ b/arch/powerpc/include/asm/reg_booke.h
+@@ -41,7 +41,7 @@
+ #if defined(CONFIG_PPC_BOOK3E_64)
+ #define MSR_64BIT	MSR_CM
  
- 	netif_carrier_off(dev->net);
-@@ -1444,9 +1444,11 @@ static int aqc111_resume(struct usb_inte
- 	/* Configure RX control register => start operation */
- 	reg16 = aqc111_data->rxctl;
- 	reg16 &= ~SFR_RX_CTL_START;
-+	/* needs to be saved in case endianness is swapped */
-+	oldreg16 = reg16;
- 	aqc111_write16_cmd_nopm(dev, AQ_ACCESS_MAC, SFR_RX_CTL, 2, &reg16);
- 
--	reg16 |= SFR_RX_CTL_START;
-+	reg16 = oldreg16 | SFR_RX_CTL_START;
- 	aqc111_write16_cmd_nopm(dev, AQ_ACCESS_MAC, SFR_RX_CTL, 2, &reg16);
- 
- 	aqc111_set_phy_speed(dev, aqc111_data->autoneg,
+-#define MSR_		(MSR_ME | MSR_CE)
++#define MSR_		(MSR_ME | MSR_RI | MSR_CE)
+ #define MSR_KERNEL	(MSR_ | MSR_64BIT)
+ #define MSR_USER32	(MSR_ | MSR_PR | MSR_EE)
+ #define MSR_USER64	(MSR_USER32 | MSR_64BIT)
 
 
