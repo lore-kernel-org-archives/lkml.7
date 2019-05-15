@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEFAC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A89B0C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27EB12053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:48:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 710572053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920918;
-	bh=BydgRU944q1yiGz9rk6nQF6qmhXifbIUFUdaxDokuM8=;
+	s=default; t=1557920936;
+	bh=xOLBCSAStprb0C6iQ2nis4ye9Oz+cCxKK8aQHE2OgS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nf/3jpyp8ey6FOyeXJl9suk2tFpg7jONAIlew8BVlwmJ9pFpT3p123bm12KjzMyvf
-	 7+kyU7nRfn8vqchbcigTmMz9+y7SuXOdWpifZtYLRTsHWiy2N8PNUDkaB35Ua9KbZy
-	 eTvkijfgg/o9Nl9aNzX7WjM6ndqRxdS+a8hxhIVw=
+	b=iu7k7xPd33k9drFBwVWJpxOTtdHuSmUgkGIyQPSpjAig/ifmSgWynMAU1LFzVd2Kt
+	 8+wI32B/BxRVAQTGqyJ6YinPfrI8w7jCqyMNKk/4zTXPQxOszzgPgKjbbxuNdoDGx9
+	 sXTf8vkGIYz5Ayu9ChMR9cnFdjbwvJoXrr/ImS5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731716AbfEOLXu (ORCPT
+        id S1731842AbfEOLsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:23:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34236 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:48:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731701AbfEOLXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:23:46 -0400
+        id S1729355AbfEOLX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:23:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD7DF206BF;
-        Wed, 15 May 2019 11:23:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44F81206BF;
+        Wed, 15 May 2019 11:23:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919425;
-        bh=BydgRU944q1yiGz9rk6nQF6qmhXifbIUFUdaxDokuM8=;
+        s=default; t=1557919406;
+        bh=xOLBCSAStprb0C6iQ2nis4ye9Oz+cCxKK8aQHE2OgS0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WX4S+M3E7qXwNC4SwyOvlv+IlkGYbsLTmrzcaGhDCqGlX2afOSD8amwljWzXDNPPG
-         aycC8CLub8zZwzpXTTL6pAiaeb6rSKEV66JKhnCXYPUo7FOnKIqCMd5Ris1DVaYjAy
-         /oc6cdVxmh4vKmUj5rPlfGgvNJX11cGaz6nGnTl4=
+        b=umORqie1/eqQwxlWgqII1DFiVeKeXE9kPbLn7ORZpr8mgXi1wVcg2xuN6/V+prn0/
+         h3JK35br9zqNyV+pcK6VDf4hJwO8lZI3Of5WdZ3XS87bEydFqiA5LW8QnAthuCg4wv
+         1eC3ixwpRBb2FUVo8z0dc/j8+4E6FC4y95nckJqo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.19 069/113] usb: typec: Fix unchecked return value
-Date:   Wed, 15 May 2019 12:56:00 +0200
-Message-Id: <20190515090658.761496210@linuxfoundation.org>
+        stable@vger.kernel.org, Lijun Ou <oulijun@huawei.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 063/113] RDMA/hns: Bugfix for mapping user db
+Date:   Wed, 15 May 2019 12:55:54 +0200
+Message-Id: <20190515090658.342043883@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -62,48 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e82adc1074a7356f1158233551df9e86b7ebfb82 ]
+[ Upstream commit 2557fabd6e29f349bfa0ac13f38ac98aa5eafc74 ]
 
-Currently there is no check on platform_get_irq() return value
-in case it fails, hence never actually reporting any errors and
-causing unexpected behavior when using such value as argument
-for function regmap_irq_get_virq().
+When the maximum send wr delivered by the user is zero, the qp does not
+have a sq.
 
-Fix this by adding a proper check, a message error and return
-*irq* in case platform_get_irq() fails.
+When allocating the sq db buffer to store the user sq pi pointer and map
+it to the kernel mode, max_send_wr is used as the trigger condition, while
+the kernel does not consider the max_send_wr trigger condition when
+mapmping db. It will cause sq record doorbell map fail and create qp fail.
 
-Addresses-Coverity-ID: 1443899 ("Improper use of negative value")
-Fixes: d2061f9cc32d ("usb: typec: add driver for Intel Whiskey Cove PMIC USB Type-C PHY")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+The failed print information as follows:
+
+ hns3 0000:7d:00.1: Send cmd: tail - 418, opcode - 0x8504, flag - 0x0011, retval - 0x0000
+ hns3 0000:7d:00.1: Send cmd: 0xe59dc000 0x00000000 0x00000000 0x00000000 0x00000116 0x0000ffff
+ hns3 0000:7d:00.1: sq record doorbell map failed!
+ hns3 0000:7d:00.1: Create RC QP failed
+
+Fixes: 0425e3e6e0c7 ("RDMA/hns: Support flush cqe for hip08 in kernel space")
+Signed-off-by: Lijun Ou <oulijun@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/typec/typec_wcove.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_qp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/typec/typec_wcove.c b/drivers/usb/typec/typec_wcove.c
-index 423208e19383c..6770afd407654 100644
---- a/drivers/usb/typec/typec_wcove.c
-+++ b/drivers/usb/typec/typec_wcove.c
-@@ -615,8 +615,13 @@ static int wcove_typec_probe(struct platform_device *pdev)
- 	wcove->dev = &pdev->dev;
- 	wcove->regmap = pmic->regmap;
+diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
+index efb7e961ca651..2fa4fb17f6d3c 100644
+--- a/drivers/infiniband/hw/hns/hns_roce_qp.c
++++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
+@@ -494,7 +494,7 @@ static int hns_roce_set_kernel_sq_size(struct hns_roce_dev *hr_dev,
  
--	irq = regmap_irq_get_virq(pmic->irq_chip_data_chgr,
--				  platform_get_irq(pdev, 0));
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", irq);
-+		return irq;
-+	}
-+
-+	irq = regmap_irq_get_virq(pmic->irq_chip_data_chgr, irq);
- 	if (irq < 0)
- 		return irq;
+ static int hns_roce_qp_has_sq(struct ib_qp_init_attr *attr)
+ {
+-	if (attr->qp_type == IB_QPT_XRC_TGT)
++	if (attr->qp_type == IB_QPT_XRC_TGT || !attr->cap.max_send_wr)
+ 		return 0;
  
+ 	return 1;
 -- 
 2.20.1
 
