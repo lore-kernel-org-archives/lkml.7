@@ -2,174 +2,76 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA22C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95746C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35EC82084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:18:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hkf6YYNN"
+	by mail.kernel.org (Postfix) with ESMTP id 67E3D2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:19:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfEOKSx (ORCPT
+        id S1726528AbfEOKTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:18:53 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39455 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfEOKSw (ORCPT
+        Wed, 15 May 2019 06:19:20 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:12170 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725939AbfEOKTT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:18:52 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a10so1985492ljf.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 03:18:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KFvZDl23y035feTSM2upuZ1LCAcrX8ykiQojg4IcAkQ=;
-        b=Hkf6YYNNErzxvv5/SAw6jPm1nxRGPXBx754mOPzdNOiyOQtDOOhR/b5ZIKJPxxuFLC
-         atqV38GudEL/shOEA7TbbpYUTd26wB3pnWTXAeqnSTxsgZXcBKo9I6rzgYNTbiGB5R6e
-         v84ceroUvmWprEM6kcSAhw3vUXWV+fWFbxvbOQxRczzeZsKVzDjSROUMJtI0KaUkeW7w
-         /LSmvZfRWIrs/vjBpnAiCFpikTqAP0lVUV97xoXaa/Jgi8A7KZGby9FV0Xs3Rf/oh593
-         J94cwao/g2KFbLoPwOcq9gOe2K6UJgiTmLzWuYi/ajn3a+ufG080Vo2mnFa59dmQVZMU
-         BQoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KFvZDl23y035feTSM2upuZ1LCAcrX8ykiQojg4IcAkQ=;
-        b=c3elvw3fEdf+MJYtdcziwwalTZz3wwSNgKRa4fXo1uTLrecCFQzZuXcH8D+lm8Kkhr
-         1m5Gjyq9RJt110wJvwhmSX1Exthoxmzylk/Am5vOezpF2Dpzv4caRYJRfNX0u2YPNI1m
-         tCXUsprXGQ3yyCs3IhWKag8w1QGevuftDnGKqRzgPM5FVR2XW/+/seth+N4q5gc/cG3w
-         Y7cmyW5qIJ7HfO9mk5n9GGGJicTtU3Oz94aVbz5WLBuFbnyQRxAU+nOPTqxLuA68cjez
-         zhycRm1+OLrGhELElKe1hdCgiDfNC5bzWzuraKbVelte44Qt73Em4mVwKsfTW7/KvzVr
-         pfbQ==
-X-Gm-Message-State: APjAAAXk690vTxQ9A61iQkHJNU6wJcziWJVYAGIx84C1doqRc6TAiuMz
-        suLSg2Jv02XsLi9h+GUgTvO/5qqqLI3wNYOf89d5HA==
-X-Google-Smtp-Source: APXvYqzXSDxXzZaIHvQv6Hj8D6hBJyT94LQx5AB4o8tdiEegklyUu4UzQksSBOnXrPhXrqYrL4XuiKLaYNjTPBZT1qg=
-X-Received: by 2002:a2e:9c51:: with SMTP id t17mr20054268ljj.104.1557915529294;
- Wed, 15 May 2019 03:18:49 -0700 (PDT)
+        Wed, 15 May 2019 06:19:19 -0400
+X-IronPort-AV: E=Sophos;i="5.60,472,1549926000"; 
+   d="scan'208";a="383262488"
+Received: from vaio-julia.rsr.lip6.fr ([132.227.76.33])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 12:19:17 +0200
+Date:   Wed, 15 May 2019 12:19:13 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Coccinelle <cocci@systeme.lip6.fr>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Ma Jiang <ma.jiang@zte.com.cn>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Wen Yang <wen.yang99@zte.com.cn>,
+        Yi Wang <wang.yi59@zte.com.cn>
+Subject: Re: [3/3] Coccinelle: pci_free_consistent: Extend when constraints
+ for two SmPL ellipses
+In-Reply-To: <c53d5a80-7f80-535c-8394-a3289399feba@web.de>
+Message-ID: <alpine.DEB.2.20.1905151217380.3231@hadrien>
+References: <201905151043340243098@zte.com.cn> <alpine.DEB.2.21.1905150808180.2591@hadrien> <bfde9b91-0c5d-31a0-4b1b-5f675152b2f8@web.de> <alpine.DEB.2.20.1905151119070.3231@hadrien> <c53d5a80-7f80-535c-8394-a3289399feba@web.de>
+User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
 MIME-Version: 1.0
-References: <20190408214539.2705660-1-songliubraving@fb.com>
- <20190410115907.GE19434@e105550-lin.cambridge.arm.com> <A2E9A149-9EAA-478D-A096-1D4D4BA442B3@fb.com>
- <CAKfTPtAFB3gSZYJN1BcjU_XoY=Pfu2xtea+2MEw7FkVc3mwTSA@mail.gmail.com>
- <E97E73F4-CE8C-4CD7-B6B6-5F63A4E881B1@fb.com> <F0A127DD-F9B6-4FBE-B9AD-8E8B00A7D676@fb.com>
- <CAKfTPtA_ouYCes9LnYn0quAKm273mi3vP-++GTBtYcQn07xc6Q@mail.gmail.com>
- <A62E5068-4A1E-44E3-99BB-02E98229C1E2@fb.com> <CAKfTPtAG3v=37wyLjzkNNK_6HdoMK6WO7AMYfa+G24rq2iyAfg@mail.gmail.com>
- <19AF6556-A2A2-435B-9358-CD22CF7BFD9F@fb.com> <2E7A1CDA-0384-474E-9011-5B209A1A58DF@fb.com>
- <0C1325C9-DE18-42C6-854D-64433ABD6FC3@fb.com>
-In-Reply-To: <0C1325C9-DE18-42C6-854D-64433ABD6FC3@fb.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 15 May 2019 12:18:37 +0200
-Message-ID: <CAKfTPtDxhjh0LsjgTwKhMMtFqhyDW6qtU-=9K1p-fCR6YLjxCQ@mail.gmail.com>
-Subject: Re: [PATCH 0/7] introduce cpu.headroom knob to cpu controller
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Morten Rasmussen <morten.rasmussen@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Kernel Team <Kernel-team@fb.com>,
-        viresh kumar <viresh.kumar@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; BOUNDARY="8323329-210433361-1557915553=:3231"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Song,
+--8323329-210433361-1557915553=:3231
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-On Tue, 14 May 2019 at 22:58, Song Liu <songliubraving@fb.com> wrote:
->
-> Hi Vincent,
->
 
-[snip]
 
-> >
-> > Here are some more results with both Viresh's patch and the cpu.headroom
-> > set. In these tests, the side job runs with SCHED_IDLE, so we get benefit
-> > of Viresh's patch.
-> >
-> > We collected another metric here, average "cpu time" used by the requests.
-> > We also presented "wall time" and "wall - cpu" time. "wall time" is the
-> > same as "latency" in previous results. Basically, "wall time" includes cpu
-> > time, scheduling latency, and time spent waiting for data (from data base,
-> > memcache, etc.). We don't have good data that separates scheduling latency
-> > and time spent waiting for data, so we present "wall - cpu" time, which is
-> > the sum of the two. Time spent waiting for data should not change in these
-> > tests, so changes in "wall - cpu" mostly comes from scheduling latency.
-> > All the latency numbers are normalized based on the "wall time" of the
-> > first row.
-> >
-> > side job | cpu.headroom |  cpu-idle | wall time | cpu time | wall - cpu
-> > ------------------------------------------------------------------------
-> > none    |     n/a      |    42.4%  |   1.00    |   0.31   |   0.69
-> > ffmpeg   |       0      |    10.8%  |   1.17    |   0.38   |   0.79
-> > ffmpeg   |     25%      |    22.8%  |   1.08    |   0.35   |   0.73
-> >
-> > From these results, we can see that Viresh's patch reduces the latency
-> > overhead of the side job, from 42% (in previous results) to 17%. And
-> > a 25% cpu.headroom further reduces the latency overhead to 8%.
-> > cpu.headroom reduces time spent in "cpu time" and "wall - cpu" time,
-> > which means cpu.headroom yields better IPC and lower scheduling latency.
-> >
-> > I think these data demonstrate that
-> >
-> >  1. Viresh's work is helpful in reducing scheduling latency introduced
-> >     by SCHED_IDLE side jobs.
-> >  2. cpu.headroom work provides mechanism to further reduce scheduling
-> >     latency on top of Viresh's work.
-> >
-> > Therefore, the combination of the two work would give us mechanisms to
-> > control the latency overhead of side workloads.
-> >
-> > @Vincent, do these data and analysis make sense from your point of view?
->
-> Do you have further questions/concerns with this set?
+On Wed, 15 May 2019, Markus Elfring wrote:
 
-Viresh's patchset takes into account CPU running only sched_idle task
-only for the fast wakeup path. But nothing special is (yet) done for
-the slow path or during idle load balance.
-The histogram that you provided for "Fallback to sched-idle CPU for
-better performance", shows that even if we have significantly reduced
-the long wakeup latency, there are still some wakeup latency evenly
-distributed in the range [16us-2msec]. Such values are most probably
-because of sched_other task doesn't always preempt sched_idle task and
-sometime waits for the next tick. This means that there are still
-margin for improving the results with sched_idle without adding a new
-knob.
-The headroom knob forces cpus to be idle from time to time and the
-scheduler fallbacks to the normal scheduling policy that tries to fill
-idle CPU in this case. I'm still not convinced that most of the
-increase of the latency increase is linked to contention when
-accessing shared resources.
+> >>> On the other hand, I do care about causing false negatives.
+> >>
+> >> Do you find the missing warning after the addition of such an exclusion
+> >> specification interesting?
+> >
+> > I already suggested how to improve the code.
+>
+> I find that the idea “e2->fld” needs further clarification.
+> Such a SmPL specification will be resolved also to an expression,
+> won't it?
 
->
-> As the data shown, scheduling latency is not the only resource of high
-> latency here. In fact, with hyper threading and other shared system
-> resources (cache, memory, etc.), side workload would always negatively
-> impact the latency of the main workload. It is impossible to eliminate
-> these impacts with scheduler optimizations. On the other hand,
-> cpu.headroom provides mechanism to limit such impact.
->
-> Optimization and protection are two sides of the problem. While we
-> spend a lot of time optimizing the workload (so Viresh's work is really
-> interesting for us), cpu.headroom works on the protection side. There
-> are multiple reasons behind the high latencies. cpu.headroom provides
-> universal protection against all these.
->
-> With the protection of cpu.headroom, we can actually do optimizations
-> more efficiently, as we can safely start with a high headroom, and
-> then try to lower it.
->
-> Please let me know your thoughts on this.
->
-> Thanks,
-> Song
->
->
->
+Saving in a local variable doesn't impact the need to free the object.  A
+field is the most obvious case where the object may not need freeing.  But
+there are many expressions that e2->fld will not match.
+
+julia
+--8323329-210433361-1557915553=:3231--
