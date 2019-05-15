@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10015C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A11C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA79F2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE1292053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:40:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920399;
-	bh=+Bq+1OUrbIMMls5ArfRU3FchkR5hnXbKHBa0wWxYGWA=;
+	s=default; t=1557920409;
+	bh=oy2kEOxIb6zKFnVnzlNUiUlY5ldvM1xcaN4RpTUfQFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cja3vTAGpwFzWFon7aNasc5f6a0y5hpx/iVyvtJrEt/UlxWzFBEURif3+RDtZbvhA
-	 BKeCQMzq/Nxk1lwC8tgVZUbst0MXsqI1/0DP6V6GK72DRcrxyYvRuV6JUzSUQNNi6X
-	 Ak6738J+rsQB1lAzOojXIczyMoivPkzw0yJo2hZ4=
+	b=h/fYH7w0KWFs5DE83PWsPo2O3kSs5UuY3I4hAYR6eki6TNB/bWSekQJtUCp4VYV6p
+	 92u7rDCFGez4ro9MhNfkkMoiZ5vaRepuTPX6L3CPkFtjEya+iq5sTetv2GkjvBmEST
+	 57XG6V9fnzr5fX6UeVoszbAQr5TX6TyrZJqtX90Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732635AbfEOL37 (ORCPT
+        id S1732603AbfEOL3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:29:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41200 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:29:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732625AbfEOL3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:29:49 -0400
+        id S1732589AbfEOL3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:29:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C189216F4;
-        Wed, 15 May 2019 11:29:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFC0A206BF;
+        Wed, 15 May 2019 11:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919789;
-        bh=+Bq+1OUrbIMMls5ArfRU3FchkR5hnXbKHBa0wWxYGWA=;
+        s=default; t=1557919778;
+        bh=oy2kEOxIb6zKFnVnzlNUiUlY5ldvM1xcaN4RpTUfQFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jn83hj8cPFzhWxVIGEMPwlM4YfzKxZs9BiqrZ4EjSs2S2jz2ltcPaG96h2lUbhYMk
-         xUbbx6nJR8UfEeQ7tLXfvs3k3uzOtEMHnEiTWtk7R2zqxlZRrICGyg7zFW8Uwt58E3
-         q//qphPzhba8D6uUsoLOItSFDZqCDz5Ay8a7VBlE=
+        b=k4xqxnIomJCOlPtUnVMUKPJCqS89JcFPwZPUfIZryY5eki+Aeos036xy2FqQwGTPH
+         XU5/BsXzjiYFhSlY1ndBDQzl4eJRzYb1lGzKmK1vSyxeNvgYpOOqimTZP47TAyG+nD
+         eshuT7m/pCOiBRgCCnOcIM4alGkbltLYWGWQW1rQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lijun Ou <oulijun@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 094/137] RDMA/hns: Bugfix for mapping user db
-Date:   Wed, 15 May 2019 12:56:15 +0200
-Message-Id: <20190515090700.360688224@linuxfoundation.org>
+Subject: [PATCH 5.0 091/137] Input: synaptics-rmi4 - fix possible double free
+Date:   Wed, 15 May 2019 12:56:12 +0200
+Message-Id: <20190515090700.146221339@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -60,44 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2557fabd6e29f349bfa0ac13f38ac98aa5eafc74 ]
+[ Upstream commit bce1a78423961fce676ac65540a31b6ffd179e6d ]
 
-When the maximum send wr delivered by the user is zero, the qp does not
-have a sq.
+The RMI4 function structure has been released in rmi_register_function
+if error occurs. However, it will be released again in the function
+rmi_create_function, which may result in a double-free bug.
 
-When allocating the sq db buffer to store the user sq pi pointer and map
-it to the kernel mode, max_send_wr is used as the trigger condition, while
-the kernel does not consider the max_send_wr trigger condition when
-mapmping db. It will cause sq record doorbell map fail and create qp fail.
-
-The failed print information as follows:
-
- hns3 0000:7d:00.1: Send cmd: tail - 418, opcode - 0x8504, flag - 0x0011, retval - 0x0000
- hns3 0000:7d:00.1: Send cmd: 0xe59dc000 0x00000000 0x00000000 0x00000000 0x00000116 0x0000ffff
- hns3 0000:7d:00.1: sq record doorbell map failed!
- hns3 0000:7d:00.1: Create RC QP failed
-
-Fixes: 0425e3e6e0c7 ("RDMA/hns: Support flush cqe for hip08 in kernel space")
-Signed-off-by: Lijun Ou <oulijun@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_qp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/rmi4/rmi_driver.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
-index 54031c5b53fa9..89dd2380fc812 100644
---- a/drivers/infiniband/hw/hns/hns_roce_qp.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
-@@ -517,7 +517,7 @@ static int hns_roce_set_kernel_sq_size(struct hns_roce_dev *hr_dev,
+diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
+index fc3ab93b7aea4..7fb358f961957 100644
+--- a/drivers/input/rmi4/rmi_driver.c
++++ b/drivers/input/rmi4/rmi_driver.c
+@@ -860,7 +860,7 @@ static int rmi_create_function(struct rmi_device *rmi_dev,
  
- static int hns_roce_qp_has_sq(struct ib_qp_init_attr *attr)
- {
--	if (attr->qp_type == IB_QPT_XRC_TGT)
-+	if (attr->qp_type == IB_QPT_XRC_TGT || !attr->cap.max_send_wr)
- 		return 0;
+ 	error = rmi_register_function(fn);
+ 	if (error)
+-		goto err_put_fn;
++		return error;
  
- 	return 1;
+ 	if (pdt->function_number == 0x01)
+ 		data->f01_container = fn;
+@@ -870,10 +870,6 @@ static int rmi_create_function(struct rmi_device *rmi_dev,
+ 	list_add_tail(&fn->node, &data->function_list);
+ 
+ 	return RMI_SCAN_CONTINUE;
+-
+-err_put_fn:
+-	put_device(&fn->dev);
+-	return error;
+ }
+ 
+ void rmi_enable_irq(struct rmi_device *rmi_dev, bool clear_wake)
 -- 
 2.20.1
 
