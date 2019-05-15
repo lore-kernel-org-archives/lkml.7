@@ -2,83 +2,112 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A31C04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 01:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF954C04AB4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 02:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74B8320862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 01:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88ED920862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 02:02:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dXjwoQpn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfEOB4d (ORCPT
+        id S1726369AbfEOCCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 21:56:33 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35434 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbfEOB4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 21:56:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60CE1374;
-        Tue, 14 May 2019 18:56:32 -0700 (PDT)
-Received: from [10.163.1.137] (unknown [10.163.1.137])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6AED13F71E;
-        Tue, 14 May 2019 18:56:23 -0700 (PDT)
-Subject: Re: [PATCH V3 2/4] arm64/mm: Hold memory hotplug lock while walking
- for kernel page table dump
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        akpm@linux-foundation.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, mhocko@suse.com, mgorman@techsingularity.net,
-        james.morse@arm.com, robin.murphy@arm.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
-        david@redhat.com, cai@lca.pw, logang@deltatee.com,
-        ira.weiny@intel.com
-References: <1557824407-19092-1-git-send-email-anshuman.khandual@arm.com>
- <1557824407-19092-3-git-send-email-anshuman.khandual@arm.com>
- <20190514154000.GA20935@lakrids.cambridge.arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <107ce10f-622c-7914-6269-cff5509b084f@arm.com>
-Date:   Wed, 15 May 2019 07:26:32 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 14 May 2019 22:02:30 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:39927 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbfEOCC3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 22:02:29 -0400
+Received: by mail-vs1-f68.google.com with SMTP id m1so641044vsr.6
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 19:02:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AxA0x4PyivVs2YLv3eXq9QQMTB5geMHM8Hexc+yQ7mo=;
+        b=dXjwoQpnVsDqYDrL0Cnicd2MotWpdOFr7GH9DOjbDlq67I4sZGEfis+5EBw95xXMvF
+         IbOJ8aq5o2OSe/E7ekC9qYayFL/4Wjs7wGz4Vkxxeyhz7svrgu3CUlX0qU6XlLarlsQE
+         XLWo7ChQkbI13KqRlSEnD8eB0HxjVgLq5LeTWAevPIARzl9nozOucpkTw+LRMnlA7+18
+         /O/337lLvdFHIcpZmhd14DxEzXu03cShUorZmYGRMoofO+96lypySevQRzuJXtRpwv2S
+         sGVTvHKEtLmNl/s4FHPbSoCR0/QUdyBpjEvrq0s48VL5Xh62HHKjEgOThv0ACml6uYjh
+         ncvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AxA0x4PyivVs2YLv3eXq9QQMTB5geMHM8Hexc+yQ7mo=;
+        b=mgEglVRs3psIZSFeKEyhOEUFeWrcBbhnVgfuhlWIZZFN8qBjM852jQHWwLx6LqTjyB
+         ctQk6RAbGSBC2Jj46yZouDKEm0vV1wwQuQwnK/fS2dvzT9U0zGnLNl5+S+0SFGF7U3zM
+         d0m/WPALFkoDIyX4eNAH1ELGXN3hvLG3c35VySHx6jeZ/hLWL2sBU45KhsHycS9sjHb8
+         cB2FpbKvMr8o5BPcaQL/JYXj0r6i9uX/Ikoay+9GksyDJEVazLV4M3sRDXhuv1vxOXpR
+         Y6VjAEZCqfAiCOoqZwE094d3rJbEUZgbz+WLm9ZQExFjlRWgUW5RVqcfbSDGUXAfqYd7
+         0FSA==
+X-Gm-Message-State: APjAAAXH1iwMlcpG6P1vUN1iXcEpF/Of+/JQ0uaxAeSNq9sOLSs4FTc1
+        j/zSa/HGXHBlB5ozuJMWo+p0G686dxu222uSmsdRiQ==
+X-Google-Smtp-Source: APXvYqxIRDuESb28VHPDBf2noVQZmbwLgfSNzYuspFpDWguKCT7rP6ucq1S57/0nWplSsbRvDowflcDST1f72rVZ2Dk=
+X-Received: by 2002:a67:2781:: with SMTP id n123mr1212734vsn.141.1557885748720;
+ Tue, 14 May 2019 19:02:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190514154000.GA20935@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190415155636.32748-1-sashal@kernel.org> <20190507174020.GH1747@sasha-vm>
+ <20190508124436.GE7642@linux.intel.com> <20190514193056.GN11972@sasha-vm>
+In-Reply-To: <20190514193056.GN11972@sasha-vm>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Wed, 15 May 2019 07:32:17 +0530
+Message-ID: <CAFA6WYM06E0y9o6+CLNPe48spiL=UDEqoGsidMbk1dBa5Rbmkg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/2] ftpm: a firmware based TPM driver
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        peterhuewe@gmx.de, jgg@ziepe.ca, corbet@lwn.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@microsoft.com, thiruan@microsoft.com,
+        bryankel@microsoft.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 15 May 2019 at 01:00, Sasha Levin <sashal@kernel.org> wrote:
+>
+> On Wed, May 08, 2019 at 03:44:36PM +0300, Jarkko Sakkinen wrote:
+> >On Tue, May 07, 2019 at 01:40:20PM -0400, Sasha Levin wrote:
+> >> On Mon, Apr 15, 2019 at 11:56:34AM -0400, Sasha Levin wrote:
+> >> > From: "Sasha Levin (Microsoft)" <sashal@kernel.org>
+> >> >
+> >> > Changes since v2:
+> >> >
+> >> > - Drop the devicetree bindings patch (we don't add any new ones).
+> >> > - More code cleanups based on Jason Gunthorpe's review.
+> >> >
+> >> > Sasha Levin (2):
+> >> >  ftpm: firmware TPM running in TEE
+> >> >  ftpm: add documentation for ftpm driver
+> >>
+> >> Ping? Does anyone have any objections to this?
+> >
+> >Sorry I've been on vacation week before last week and last week
+> >I was extremely busy because I had been on vacation. This in
+> >my TODO list. Will look into it tomorrow in detail.
+> >
+> >Apologies for the delay with this!
+>
+> Hi Jarkko,
+>
+> If there aren't any big objections to this, can we get it merged in?
+> We'll be happy to address any comments that come up.
 
+I guess you have missed or ignored this comment [1]. Please address it.
 
-On 05/14/2019 09:10 PM, Mark Rutland wrote:
-> On Tue, May 14, 2019 at 02:30:05PM +0530, Anshuman Khandual wrote:
->> The arm64 pagetable dump code can race with concurrent modification of the
->> kernel page tables. When a leaf entries are modified concurrently, the dump
->> code may log stale or inconsistent information for a VA range, but this is
->> otherwise not harmful.
->>
->> When intermediate levels of table are freed, the dump code will continue to
->> use memory which has been freed and potentially reallocated for another
->> purpose. In such cases, the dump code may dereference bogus addressses,
->> leading to a number of potential problems.
->>
->> Intermediate levels of table may by freed during memory hot-remove, or when
->> installing a huge mapping in the vmalloc region. To avoid racing with these
->> cases, take the memory hotplug lock when walking the kernel page table.
->>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> Can we please move this after the next patch (which addresses the huge
-> vmap case), and change the last paragraph to:
-> 
->   Intermediate levels of table may by freed during memory hot-remove,
->   which will be enabled by a subsequent patch. To avoid racing with
->   this, take the memory hotplug lock when walking the kernel page table.
-> 
-> With that, this looks good to me.
+[1] https://lkml.org/lkml/2019/5/8/11
 
-Sure will do.
+-Sumit
+
+>
+> --
+> Thanks,
+> Sasha
