@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B833AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:40:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A998C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95B8D2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:40:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 270452089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:40:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbfEORka (ORCPT
+        id S1727480AbfEORkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 13:40:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49724 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 13:40:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727200AbfEORk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 13:40:27 -0400
+        id S1727297AbfEORk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 13:40:26 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4C5F216F4;
-        Wed, 15 May 2019 17:40:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17E972166E;
+        Wed, 15 May 2019 17:40:26 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hQxtA-0006Pd-R8; Wed, 15 May 2019 13:40:24 -0400
-Message-Id: <20190515174024.733293269@goodmis.org>
+        id 1hQxtB-0006R6-8I; Wed, 15 May 2019 13:40:25 -0400
+Message-Id: <20190515174025.143536583@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Wed, 15 May 2019 13:39:54 -0400
+Date:   Wed, 15 May 2019 13:39:57 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     "John Warthog9 Hawley" <warthog9@kernel.org>,
         Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-Subject: [for-next][PATCH 3/6] ktest: introduce grub2bls REBOOT_TYPE option
+Subject: [for-next][PATCH 6/6] ktest: update sample.conf for grub2bls
 References: <20190515173951.753467660@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -45,107 +45,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 
-Fedora 30 introduces Boot Loader Specification (BLS),
-it changes around grub entry configuration.
+Update sample.conf for grub2bls
 
-kernel entries aren't in grub.cfg. We can get the entries
-by "grubby --info=ALL" command.
-
-Introduce grub2bls as REBOOT_TYPE option for BLS.
-
-Link: http://lkml.kernel.org/r/20190509213647.6276-4-msys.mizuma@gmail.com
+Link: http://lkml.kernel.org/r/20190509213647.6276-7-msys.mizuma@gmail.com
 
 Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- tools/testing/ktest/ktest.pl | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ tools/testing/ktest/sample.conf | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
-index ff43f8336da1..df0c609c7c50 100755
---- a/tools/testing/ktest/ktest.pl
-+++ b/tools/testing/ktest/ktest.pl
-@@ -64,6 +64,7 @@ my %default = (
-     "STOP_TEST_AFTER"		=> 600,
-     "MAX_MONITOR_WAIT"		=> 1800,
-     "GRUB_REBOOT"		=> "grub2-reboot",
-+    "GRUB_BLS_GET"		=> "grubby --info=ALL",
-     "SYSLINUX"			=> "extlinux",
-     "SYSLINUX_PATH"		=> "/boot/extlinux",
-     "CONNECT_TIMEOUT"		=> 25,
-@@ -125,6 +126,7 @@ my $last_grub_menu;
- my $grub_file;
- my $grub_number;
- my $grub_reboot;
-+my $grub_bls_get;
- my $syslinux;
- my $syslinux_path;
- my $syslinux_label;
-@@ -295,6 +297,7 @@ my %option_map = (
-     "GRUB_MENU"			=> \$grub_menu,
-     "GRUB_FILE"			=> \$grub_file,
-     "GRUB_REBOOT"		=> \$grub_reboot,
-+    "GRUB_BLS_GET"		=> \$grub_bls_get,
-     "SYSLINUX"			=> \$syslinux,
-     "SYSLINUX_PATH"		=> \$syslinux_path,
-     "SYSLINUX_LABEL"		=> \$syslinux_label,
-@@ -440,7 +443,7 @@ EOF
-     ;
- $config_help{"REBOOT_TYPE"} = << "EOF"
-  Way to reboot the box to the test kernel.
-- Only valid options so far are "grub", "grub2", "syslinux", and "script".
-+ Only valid options so far are "grub", "grub2", "grub2bls", "syslinux", and "script".
+diff --git a/tools/testing/ktest/sample.conf b/tools/testing/ktest/sample.conf
+index 8c893a58b68e..c3bc933d437b 100644
+--- a/tools/testing/ktest/sample.conf
++++ b/tools/testing/ktest/sample.conf
+@@ -349,13 +349,13 @@
+ # option to boot to with GRUB_REBOOT
+ #GRUB_FILE = /boot/grub2/grub.cfg
  
-  If you specify grub, it will assume grub version 1
-  and will search in /boot/grub/menu.lst for the title \$GRUB_MENU
-@@ -454,6 +457,8 @@ $config_help{"REBOOT_TYPE"} = << "EOF"
-  If you specify grub2, then you also need to specify both \$GRUB_MENU
-  and \$GRUB_FILE.
+-# The tool for REBOOT_TYPE = grub2 to set the next reboot kernel
++# The tool for REBOOT_TYPE = grub2 or grub2bls to set the next reboot kernel
+ # to boot into (one shot mode).
+ # (default grub2_reboot)
+ #GRUB_REBOOT = grub2_reboot
  
-+ If you specify grub2bls, then you also need to specify \$GRUB_MENU.
+ # The grub title name for the test kernel to boot
+-# (Only mandatory if REBOOT_TYPE = grub or grub2)
++# (Only mandatory if REBOOT_TYPE = grub or grub2 or grub2bls)
+ #
+ # Note, ktest.pl will not update the grub menu.lst, you need to
+ # manually add an option for the test. ktest.pl will search
+@@ -374,6 +374,10 @@
+ # do a: GRUB_MENU = 'Test Kernel'
+ # For customizing, add your entry in /etc/grub.d/40_custom.
+ #
++# For grub2bls, a search of "title"s are done. The menu is found
++# by searching for the contents of GRUB_MENU in the line that starts
++# with "title".
++#
+ #GRUB_MENU = Test Kernel
+ 
+ # For REBOOT_TYPE = syslinux, the name of the syslinux executable
+@@ -479,6 +483,11 @@
+ # default (undefined)
+ #POST_KTEST = ${SSH} ~/dismantle_test
+ 
++# If you want to remove the kernel entry in Boot Loader Specification (BLS)
++# environment, use kernel-install command.
++# Here's the example:
++#POST_KTEST = ssh root@Test "/usr/bin/kernel-install remove $KERNEL_VERSION"
 +
-  If you specify syslinux, then you may use SYSLINUX to define the syslinux
-  command (defaults to extlinux), and SYSLINUX_PATH to specify the path to
-  the syslinux install (defaults to /boot/extlinux). But you have to specify
-@@ -479,6 +484,9 @@ $config_help{"GRUB_MENU"} = << "EOF"
-  menu must be a non-nested menu. Add the quotes used in the menu
-  to guarantee your selection, as the first menuentry with the content
-  of \$GRUB_MENU that is found will be used.
+ # The default test type (default test)
+ # The test types may be:
+ #   build   - only build the kernel, do nothing else
+@@ -530,6 +539,11 @@
+ # or on some systems:
+ #POST_INSTALL = ssh user@target /sbin/dracut -f /boot/initramfs-test.img $KERNEL_VERSION
+ 
++# If you want to add the kernel entry in Boot Loader Specification (BLS)
++# environment, use kernel-install command.
++# Here's the example:
++#POST_INSTALL = ssh root@Test "/usr/bin/kernel-install add $KERNEL_VERSION /boot/vmlinuz-$KERNEL_VERSION"
 +
-+ For grub2bls, \$GRUB_MENU is searched on the result of \$GRUB_BLS_GET
-+ command for the lines that begin with "title".
- EOF
-     ;
- $config_help{"GRUB_FILE"} = << "EOF"
-@@ -695,7 +703,7 @@ sub get_mandatory_configs {
- 	}
-     }
- 
--    if ($rtype eq "grub") {
-+    if (($rtype eq "grub") or ($rtype eq "grub2bls")) {
- 	get_mandatory_config("GRUB_MENU");
-     }
- 
-@@ -1965,6 +1973,10 @@ sub get_grub_index {
- 	$command = "cat $grub_file";
- 	$target = '^menuentry.*' . $grub_menu_qt;
- 	$skip = '^menuentry\s|^submenu\s';
-+    } elsif ($reboot_type eq "grub2bls") {
-+        $command = $grub_bls_get;
-+        $target = '^title=.*' . $grub_menu_qt;
-+        $skip = '^title=';
-     } else {
- 	return;
-     }
-@@ -4324,7 +4336,7 @@ for (my $i = 1; $i <= $opt{"NUM_TESTS"}; $i++) {
- 
-     if (!$buildonly) {
- 	$target = "$ssh_user\@$machine";
--	if ($reboot_type eq "grub") {
-+	if (($reboot_type eq "grub") or ($reboot_type eq "grub2bls")) {
- 	    dodie "GRUB_MENU not defined" if (!defined($grub_menu));
- 	} elsif ($reboot_type eq "grub2") {
- 	    dodie "GRUB_MENU not defined" if (!defined($grub_menu));
+ # If for some reason you just want to boot the kernel and you do not
+ # want the test to install anything new. For example, you may just want
+ # to boot test the same kernel over and over and do not want to go through
+@@ -593,6 +607,8 @@
+ # For REBOOT_TYPE = grub2, you must define both GRUB_MENU and
+ # GRUB_FILE.
+ #
++# For REBOOT_TYPE = grub2bls, you must define GRUB_MENU.
++#
+ # For REBOOT_TYPE = syslinux, you must define SYSLINUX_LABEL, and
+ # perhaps modify SYSLINUX (default extlinux) and SYSLINUX_PATH
+ # (default /boot/extlinux)
 -- 
 2.20.1
 
