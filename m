@@ -2,102 +2,81 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=FAKE_REPLY_C,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 173DBC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15CCC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E78A72082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C17B62082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:38:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726462AbfEOIiI (ORCPT
+        id S1726517AbfEOIi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 04:38:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39098 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbfEOIiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 04:38:07 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DF0FB59454;
-        Wed, 15 May 2019 08:38:06 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CB90F64422;
-        Wed, 15 May 2019 08:38:06 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id A90F818089C9;
-        Wed, 15 May 2019 08:38:06 +0000 (UTC)
-Date:   Wed, 15 May 2019 04:38:06 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     snitzer@redhat.com, stable@vger.kernel.org,
-        Jan Kara <jack@suse.cz>, Ira Weiny <ira.weiny@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        dm-devel@redhat.com, linux-kernel@vger.kernel.org
-Message-ID: <34965939.28870107.1557909486195.JavaMail.zimbra@redhat.com>
-In-Reply-To: <155789172402.748145.11853718580748830476.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <155789172402.748145.11853718580748830476.stgit@dwillia2-desk3.amr.corp.intel.com>
-Subject: Re: [PATCH] dax: Arrange for dax_supported check to span multiple
- devices
+        Wed, 15 May 2019 04:38:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35728 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725933AbfEOIi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 04:38:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B52BAAF95;
+        Wed, 15 May 2019 08:38:27 +0000 (UTC)
+Date:   Wed, 15 May 2019 10:38:26 +0200
+From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
+To:     khlebnikov@yandex-team.ru
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, oleg@redhat.com
+Subject: Re: mm: use down_read_killable for locking mmap_sem in
+ access_remote_vm
+Message-ID: <20190515083825.GJ13687@blackbody.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.16.80, 10.4.195.16]
-Thread-Topic: Arrange for dax_supported check to span multiple devices
-Thread-Index: DFYzSsTeR2lh7L09oG6Kp02APnkUKQ==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 15 May 2019 08:38:07 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="451BZW+OUuJBCAYj"
+Content-Disposition: inline
+In-Reply-To: <155790847881.2798.7160461383704600177.stgit@buzz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--451BZW+OUuJBCAYj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> 
-> Pankaj reports that starting with commit ad428cdb525a "dax: Check the
-> end of the block-device capacity with dax_direct_access()" device-mapper
-> no longer allows dax operation. This results from the stricter checks in
-> __bdev_dax_supported() that validate that the start and end of a
-> block-device map to the same 'pagemap' instance.
-> 
-> Teach the dax-core and device-mapper to validate the 'pagemap' on a
-> per-target basis. This is accomplished by refactoring the
-> bdev_dax_supported() internals into generic_fsdax_supported() which
-> takes a sector range to validate. Consequently generic_fsdax_supported()
-> is suitable to be used in a device-mapper ->iterate_devices() callback.
-> A new ->dax_supported() operation is added to allow composite devices to
-> split and route upper-level bdev_dax_supported() requests.
-> 
-> Fixes: ad428cdb525a ("dax: Check the end of the block-device...")
-> Cc: <stable@vger.kernel.org>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Dave Jiang <dave.jiang@intel.com>
-> Cc: Mike Snitzer <snitzer@redhat.com>
-> Cc: Keith Busch <keith.busch@intel.com>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> Reported-by: Pankaj Gupta <pagupta@redhat.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Hi,
+making this holder of mmap_sem killable was for the reasons of /proc/...
+diagnostics was an idea I was pondeering too. However, I think the
+approach of pretending we read 0 bytes is not correct. The API would IMO
+need to be extended to allow pass a result such as EINTR to the end
+caller.
+Why do you think it's safe to return just 0?
 
-Thank you for the patch. Looks good to me. 
-I also tested the patch and it works well.
-
-Reviewed-and-Tested-by: Pankaj Gupta <pagupta@redhat.com> 
-
-Best regards,
-Pankaj
+Michal
 
 
+--451BZW+OUuJBCAYj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+amhwRV4jZeXdUhoK2l36XSZ9y4FAlzbz/sACgkQK2l36XSZ
+9y72Dw//WSCQl+uR7hQKCcZgc6M3EGW5FhKKiFTfagIYPeGFx8co6rAG2XFCBn89
+PiCHJjcjY5BtRaCnLV/AmLbSGSj/j7aX0FIM/nKkP7z78HTrSBjkd30HIXV1Vig8
+wQY4JGC5bK2rUkd/D5Fjjrg93wMvwRfyj3wZ6/dXObPU8tfbrbOTeD+JNFlk1WZf
+WitkTbX3mD/xC3P3ItZ9+mTRXK+0MCMu/Bazf90yDFRB2uXvA788CTGVzsqzyfpG
+vkZmBDTzT/jJJhYKd4gR4ecaQbD3zzZdJiz5AEZFGJFSpK6nwYXz9jarjIWP2T6e
+OSZ4mGj+RjL3YBk9sqNgHPXMMS6IQoIgbpjVxwQlNN+6sSfGVm4qVGLn5N+69LwR
+iQtCQSv2JS5afnWSaahWQsxzvmkE/6OC6Qs1D1EdclP7ph1PgrkV2NJ+0VVBZfRA
+m0VNzZ6APLLoPc7yGaBP36yw6pjgycrVQaDtgZa1hqf1bpLnoqwrSlUQTTN2475Q
+ig/ZEnDjlB/X85OkdEB26SLw5CtH35EL64DhfNU9l1dZ5Ygw5O4nOevkPwL2XC3F
+mtftFgxxtFN2zDqg3s5gz7K5AAef7jn9TySNze2l7OVFwfpd96b8SXfyPxRMOgcy
+aUFG3qyAdXEoPQHQPWtTrKsnhbu+qNCaIbhxZAL9j5iVKnHc/cA=
+=vcUI
+-----END PGP SIGNATURE-----
+
+--451BZW+OUuJBCAYj--
