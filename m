@@ -2,127 +2,55 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4547C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6651CC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB8512084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404CA2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:43:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbfEOMke (ORCPT
+        id S1726995AbfEOMnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:40:34 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:38985 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfEOMkd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 08:40:33 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y42so3027567qtk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 05:40:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qwxYLcAXWfjkqmWMw2YaydohNEg09KMHkCzxeJMo9TA=;
-        b=Q0Uvb9WHl1+eJhLtRVxjEYlFHLRVyViZPSqzqSByA+diAqrTncVPoo2ANJ4Jq8Pa+9
-         4u0Q1KmmNSadWmYWQyXcCdkaNlA9EogMjOl7h15+h1yjwWwFyKh7nZgSQQxToXa/1ApQ
-         f/gTdhv8/WfygIDG/IXPsTlG3NdrKfnUBElKnaoOj9lfvPxqlsz0nb1ZdKf2RTUZl3XW
-         OpzCZqfpP/dFxmCOe4FJ6ESxkvT0RL5AQnrznRluhwuOtm8K/f7K0XmcSA6FXhO8QKOT
-         uAa4z/JeMUULJ+okKAibaBFs8ybNYHhWVgjltARbfU2qcU6+8xq4E2GB0JLsIBrBeqel
-         wzag==
-X-Gm-Message-State: APjAAAU/NU5U8b9NDpgifZaeMWfD4gYLJ/iHGa5MHmVK2SoQS3E044/N
-        gNHZBmfBpqxlJ2ETUMMeBbLdy/nnfAKnWe5qwH8=
-X-Google-Smtp-Source: APXvYqy6+ImJxnSBa9VYXjyyEIfv40fT7yAp26ih7RvEJzRLwPLstx/aRCvtRbCr0f/ELALWipPwXP0km+QhQTgSQqc=
-X-Received: by 2002:ac8:2d21:: with SMTP id n30mr33991548qta.96.1557924032651;
- Wed, 15 May 2019 05:40:32 -0700 (PDT)
+        Wed, 15 May 2019 08:43:12 -0400
+Received: from verein.lst.de ([213.95.11.211]:52449 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726677AbfEOMnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 08:43:11 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 5D86867358; Wed, 15 May 2019 14:42:50 +0200 (CEST)
+Date:   Wed, 15 May 2019 14:42:50 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "marex@denx.de" <marex@denx.de>, Leo Li <leoyang.li@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>
+Subject: Re: [RFC PATCH v2 1/3] USB: use genalloc for USB HCs with local
+ memory
+Message-ID: <20190515124250.GA13754@lst.de>
+References: <20190514143807.7745-1-laurentiu.tudor@nxp.com> <20190514143807.7745-2-laurentiu.tudor@nxp.com> <20190514144210.GA14625@lst.de> <f4fc0151-5e49-77fd-7736-37cdfe57c268@nxp.com>
 MIME-Version: 1.0
-References: <20190512012508.10608-1-elder@linaro.org> <20190512012508.10608-9-elder@linaro.org>
- <CAK8P3a1gi2pbjh8+Ev1=hMXrnUeQuHxdFubcC50PVVXVpjhSmQ@mail.gmail.com> <72869c32-c2c5-54f9-10d9-8c0ed9f6300d@linaro.org>
-In-Reply-To: <72869c32-c2c5-54f9-10d9-8c0ed9f6300d@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 15 May 2019 14:40:16 +0200
-Message-ID: <CAK8P3a3RCHF0UyKunaoCNvEd0X9EiD62PPfnfGxKG1L95Jz7dA@mail.gmail.com>
-Subject: Re: [PATCH 08/18] soc: qcom: ipa: the generic software interface
-To:     Alex Elder <elder@linaro.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        syadagir@codeaurora.org, mjavid@codeaurora.org,
-        evgreen@chromium.org, Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f4fc0151-5e49-77fd-7736-37cdfe57c268@nxp.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 2:13 PM Alex Elder <elder@linaro.org> wrote:
-> On 5/15/19 2:21 AM, Arnd Bergmann wrote:
+On Wed, May 15, 2019 at 09:57:12AM +0000, Laurentiu Tudor wrote:
+> Glad I could help. On the remoteproc_virtio.c case, I had a cursory look 
+> and found out that the dma_declare_coherent_memory() usage was 
+> introduced quite recently, by this patch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=086d08725d34c6b3333db710344ae9c4fdafb2d5
 
-
-> >> +/* Wait for all transaction activity on a channel to complete */
-> >> +void gsi_channel_trans_quiesce(struct gsi *gsi, u32 channel_id)
-> >> +{
-> >> +       struct gsi_channel *channel = &gsi->channel[channel_id];
-> >> +       struct gsi_trans_info *trans_info;
-> >> +       struct gsi_trans *trans = NULL;
-> >> +       struct gsi_evt_ring *evt_ring;
-> >> +       struct list_head *list;
-> >> +       unsigned long flags;
-> >> +
-> >> +       trans_info = &channel->trans_info;
-> >> +       evt_ring = &channel->gsi->evt_ring[channel->evt_ring_id];
-> >> +
-> >> +       spin_lock_irqsave(&evt_ring->ring.spinlock, flags);
-> >> +
-> >> +       /* Find the last list to which a transaction was added */
-> >> +       if (!list_empty(&trans_info->alloc))
-> >> +               list = &trans_info->alloc;
-> >> +       else if (!list_empty(&trans_info->pending))
-> >> +               list = &trans_info->pending;
-> >> +       else if (!list_empty(&trans_info->complete))
-> >> +               list = &trans_info->complete;
-> >> +       else if (!list_empty(&trans_info->polled))
-> >> +               list = &trans_info->polled;
-> >> +       else
-> >> +               list = NULL;
-> >> +
-> >> +       if (list) {
-> >> +               struct gsi_trans *trans;
-> >> +
-> >> +               /* The last entry on this list is the last one allocated.
-> >> +                * Grab a reference so we can wait for it.
-> >> +                */
-> >> +               trans = list_last_entry(list, struct gsi_trans, links);
-> >> +               refcount_inc(&trans->refcount);
-> >> +       }
-> >> +
-> >> +       spin_lock_irqsave(&evt_ring->ring.spinlock, flags);
-> >> +
-> >> +       /* If there is one, wait for it to complete */
-> >> +       if (trans) {
-> >> +               wait_for_completion(&trans->completion);
-> >
-> > Since you are waiting here, you clearly can't be called
-> > from interrupt context, or with interrupts disabled, so it's
-> > clearer to use spin_lock_irq() instead of spin_lock_irqsave().
-> >
-> > I generally try to avoid the _irqsave versions altogether, unless
-> > it is really needed for a function that is called both from
-> > irq-disabled and irq-enabled context.
->
-> OK.  And I appreciate what your saying here because I do prefer
-> code that communicates more about the context in ways like
-> you describe.
-
-Right, also reading the status of the irq-enable flag can be
-expensive on some CPUs, so spin_lock_irqsave() ends up
-much more slower than spin_lock() or spin_lock_irq(). Not sure
-if it makes a huge difference on this particular platform, but
-it's better not to have to worry about it.
-
-     Arnd
+Yes.  I took a look at it to, and while it isn't exactly a clean
+usage of the API it at least declares system memory and not a resource.
+So it doesn't really affect our plan.
