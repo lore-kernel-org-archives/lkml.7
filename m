@@ -2,136 +2,166 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 633BEC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC69C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF9320881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:30:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="cVOJomie"
+	by mail.kernel.org (Postfix) with ESMTP id ECB6320873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:31:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728440AbfEOPau (ORCPT
+        id S1728449AbfEOPbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 11:30:50 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40607 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728404AbfEOPas (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 11:30:48 -0400
-Received: by mail-ed1-f65.google.com with SMTP id j12so393222eds.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 08:30:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aA/9xJj7LTMF1BWw8aRur3CJhiNYxnU3NsvAQ/tm1xk=;
-        b=cVOJomieev/iQakiPOTryvyjScY68JwrcjZ9tnp9aeBqv3wRx4Edk6Zam5C4dpe1lU
-         ogJ1bz/0uxayIY+dTGNRsGRKQE6a7udSOJYX/3GGdfJsVPiUlo9NIVE5wtEn+5hBwiSU
-         gwP9J1DGbHYliH8LbuzUv/B66fmaNK+5+P4Nf0pkHXalxp2DHQe3TjDimH0gP6oUwq5l
-         okb7EvO9DMTE9eTKyMdqlLNyrY47JfXoH49cTCN0H2L4KRmjYeMaDxi5FvoPvo3asXpV
-         5VjgjpZVUupeOdTmVGMkhRg4ZLi1nCgbsXBRTgk7m9FRnUbqV0616Vj7CPnf3pkdvUzD
-         ZpUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aA/9xJj7LTMF1BWw8aRur3CJhiNYxnU3NsvAQ/tm1xk=;
-        b=Wal+ttjjwFldc3lUWn0MMKylccvAxjjraoBl3awhyWDQs28rM+VrI7NESK8oZT6P5H
-         RMSMH/QBnC90OV+uks7lYh/TeT0Sj71leX2Dt9xVI0ASax4R8hmtgiV85kh7Th86PXj2
-         Hlib/0V1pQmjDuzClsktrw7omJhnoE/snfDhCTcLIkVw7X1KFebu1NIqeRwfJ6d+GfyL
-         y9dmKIUQb376EZb2kKcm9xMkMaJ4e57syk8z0abDBBvjx03T1EHC8MUsI1XmENdU0beh
-         PWo4gBo828/GXIHFMCEaZDUX7dzKwM2LkOB1i5uG1DLrwiDpmZtlvG+dXAJilCoxlXSc
-         2wig==
-X-Gm-Message-State: APjAAAWPvkW6yEiXE39y24L2S8UD1ajYVtdo4xoHP1sy8drns8BotxSZ
-        zZbW9tdVtNTpnNxoapBC/kYWfg==
-X-Google-Smtp-Source: APXvYqw0QCYB7YlBSERFfTRieSPZ+dY7tEzUwoL9QiWp8tjx2MbhTffXtauytMVbchs42mNvhzDMIw==
-X-Received: by 2002:a50:99ca:: with SMTP id n10mr44141540edb.279.1557934246270;
-        Wed, 15 May 2019 08:30:46 -0700 (PDT)
-Received: from brauner.io ([193.96.224.243])
-        by smtp.gmail.com with ESMTPSA id d4sm924077edk.46.2019.05.15.08.30.43
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 15 May 2019 08:30:45 -0700 (PDT)
-Date:   Wed, 15 May 2019 17:30:42 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     jannh@google.com, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de, dhowells@redhat.com, akpm@linux-foundation.org,
-        cyphar@cyphar.com, ebiederm@xmission.com,
-        elena.reshetova@intel.com, keescook@chromium.org,
-        luto@amacapital.net, luto@kernel.org, tglx@linutronix.de,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/2] pid: add pidfd_open()
-Message-ID: <20190515153041.cshzaj7xhf2p4zv7@brauner.io>
-References: <20190515100400.3450-1-christian@brauner.io>
- <20190515143857.GB18892@redhat.com>
- <20190515144927.f2yxyi6w6lhn3xx7@brauner.io>
- <20190515151912.GE18892@redhat.com>
+        Wed, 15 May 2019 11:31:10 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55362 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727528AbfEOPbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 11:31:10 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 09D863D7F10CCB1EF08C;
+        Wed, 15 May 2019 23:31:02 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.55) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Wed, 15 May 2019
+ 23:30:54 +0800
+Subject: Re: Does it make sense to flush ap_list of offlined vcpu?
+To:     Marc Zyngier <marc.zyngier@arm.com>
+References: <73927ccf-1582-2e91-051b-b22854df3290@huawei.com>
+ <86mujucftn.wl-marc.zyngier@arm.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        wanghaibin 00208455 <wanghaibin.wang@huawei.com>
+From:   Heyi Guo <guoheyi@huawei.com>
+Message-ID: <01dda493-29d9-34e3-d35a-4ea3de1e1618@huawei.com>
+Date:   Wed, 15 May 2019 23:30:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190515151912.GE18892@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <86mujucftn.wl-marc.zyngier@arm.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.55]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 05:19:13PM +0200, Oleg Nesterov wrote:
-> On 05/15, Christian Brauner wrote:
-> >
-> > On Wed, May 15, 2019 at 04:38:58PM +0200, Oleg Nesterov wrote:
-> > >
-> > > it seems that you can do a single check
-> > >
-> > > 	tsk = pid_task(p, PIDTYPE_TGID);
-> > > 	if (!tsk)
-> > > 		ret = -ESRCH;
-> > >
-> > > this even looks more correct if we race with exec changing the leader.
-> >
-> > The logic here being that you can only reach the thread_group leader
-> > from struct pid if PIDTYPE_PID == PIDTYPE_TGID for this struct pid?
-> 
-> Not exactly... it is not that PIDTYPE_PID == PIDTYPE_TGID for this pid,
-> struct pid has no "type" or something like this.
-> 
-> The logic is that pid->tasks[PIDTYPE_XXX] is the list of task which use
-> this pid as "XXX" type.
-> 
-> For example, clone(CLONE_THREAD) creates a pid which has a single non-
-> empty list, pid->tasks[PIDTYPE_PID]. This pid can't be used as TGID or
-> SID.
-> 
-> So if pid_task(PIDTYPE_TGID) returns non-NULL we know that this pid was
-> used for a group-leader, see copy_process() which does
+Hi Marc,
 
-Ah, this was what I was asking myself when I worked on thread-specific
-signal sending. This clarifies quite a lot of things!
+Our situation is for guest system crash and kdump feature. The detailed steps are as below:
 
-Though I wonder how one reliably gets a the PGID or SID from a
-PIDTYPE_PID.
+1. Guest system crash.
+2. One of VCPU is chosen as primary VCPU.
+3. The primary VCPU sends IPIs to other VCPUs (by crash_smp_send_stop), to request them to offline.
+4. The other VCPUs receiving the IPI will run ipi_cpu_crash_stop(), and finally call psci CPU_OFF interface.
+5. The primary VCPU will restart the kernel from the beginning, re-initializing GIC, ITS, and some devices.
+5.1. ITS device table baser will be written and in KVM all devices will be freed by vgic_its_free_device_list().
+5.2. Guest OS re-maps the device and event ID, and KVM adds LPI irq by vgic_add_lpi().
 
-> 
-> 	if (thread_group_leader(p))
-> 		attach_pid(p, PIDTYPE_TGID);
-> 
-> 
-> If we race with exec which changes the leader pid_task(TGID) can return
-> the old leader. We do not care, but this means that we should not check
-> thread_group_leader().
+Since the system is in emergency mode, it does try to move IRQs from other VCPUs to the primary VCPU.
 
-Nice!
+The issue happens if qemu still tries to inject MSI irq to offlined VCPU; it will increase the ref_count of the irq, so the irq will not be really freed in vgic_its_free_device_list()->vgic_put_irq(). Then in vgic_add_lpi(), it will still find the old irq with the same LPI number and try to reuse it. But the old irq is targeted to the offlined VCPU, so it will never get a chance to be processed, and finally the kdump process hangs.
 
-Thank you, Oleg! :)
-Christian
+This issue can reproduced by below commands in guest OS with kdump support (like centos), in a VM with a virtio SCSI disk:
+
+dd if=/dev/zero of=/home/tmp bs=512 count=2000000 oflag=direct &
+sleep 10
+taskset -c 1 echo c > /proc/sysrq-trigger
+
+We wrote a rough patch as below to fix this issue. Please advise.
+Thanks,
+Heyi
+
+---
+  virt/kvm/arm/psci.c      | 2 ++
+  virt/kvm/arm/vgic/vgic.c | 9 ++++++++-
+  2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/virt/kvm/arm/psci.c b/virt/kvm/arm/psci.c
+index 34d08ee..ab908e5 100644
+--- a/virt/kvm/arm/psci.c
++++ b/virt/kvm/arm/psci.c
+@@ -26,6 +26,7 @@
+  #include <asm/kvm_host.h>
+
+  #include <kvm/arm_psci.h>
++#include "vgic.h"
+
+  /*
+   * This is an implementation of the Power State Coordination Interface
+@@ -99,6 +100,7 @@ static void kvm_psci_vcpu_off(struct kvm_vcpu *vcpu)
+  {
+      vcpu->arch.power_off = true;
+      kvm_make_request(KVM_REQ_SLEEP, vcpu);
++    vgic_flush_pending_lpis(vcpu);
+      kvm_vcpu_kick(vcpu);
+  }
+
+diff --git a/virt/kvm/arm/vgic/vgic.c b/virt/kvm/arm/vgic/vgic.c
+index 7115acf..645c96a 100644
+--- a/virt/kvm/arm/vgic/vgic.c
++++ b/virt/kvm/arm/vgic/vgic.c
+@@ -157,10 +157,13 @@ void vgic_flush_pending_lpis(struct kvm_vcpu *vcpu)
+      struct vgic_irq *irq, *tmp;
+      unsigned long flags;
+
++    pr_debug("Start to flush irqs for vcpu %d\n", vcpu->vcpu_id);
++
+      spin_lock_irqsave(&vgic_cpu->ap_list_lock, flags);
+
+      list_for_each_entry_safe(irq, tmp, &vgic_cpu->ap_list_head, ap_list) {
+          if (irq->intid >= VGIC_MIN_LPI) {
++            pr_debug("flush irq %d\n", irq->intid);
+              spin_lock(&irq->irq_lock);
+              list_del(&irq->ap_list);
+              irq->vcpu = NULL;
+@@ -336,7 +339,7 @@ bool vgic_queue_irq_unlock(struct kvm *kvm, struct vgic_irq *irq,
+
+  retry:
+      vcpu = vgic_target_oracle(irq);
+-    if (irq->vcpu || !vcpu) {
++    if (irq->vcpu || !vcpu || unlikely(vcpu->arch.power_off)) {
+          /*
+           * If this IRQ is already on a VCPU's ap_list, then it
+           * cannot be moved or modified and there is no more work for
+@@ -348,6 +351,10 @@ bool vgic_queue_irq_unlock(struct kvm *kvm, struct vgic_irq *irq,
+           */
+          spin_unlock_irqrestore(&irq->irq_lock, flags);
+
++        if (unlikely(vcpu && vcpu->arch.power_off))
++            pr_debug("Attempt to inject irq %d to offlined VCPU %d",
++                 irq->intid, vcpu->vcpu_id);
++
+          /*
+           * We have to kick the VCPU here, because we could be
+           * queueing an edge-triggered interrupt for which we
+-- 
+1.8.3.1
+
+
+
+On 2019/5/11 2:41, Marc Zyngier wrote:
+> On Thu, 09 May 2019 16:26:04 +0100,
+> Heyi Guo <guoheyi@huawei.com> wrote:
+>> Hi folks,
+>>
+>> When guest OS calls PSCI CPU_OFF, the corresponding VCPU will be put
+>> in sleep state. But if there is still IRQ remaining in this VCPU's
+>> ap_list, this will block all the following triggers of this IRQ even
+>> to other VCPUs. Does it make sense to flush the ap_list of the VCPU
+>> when it is requested to be offlined? Or did I miss something?
+> I can't see a good reason to do so: If a vcpu gets offlined, the guest
+> OS has to move interrupt routed to that vcpu to another one. There is
+> nothing in the GIC architecture that the interrupt will be moved to
+> another vcpu (well, it could be done with 1:N, which is not really
+> virtualizable, and not advertised by KVM). That's not different from
+> what would happen on bare metal.
+>
+> Thanks,
+>
+> 	M.
+>
+
+
