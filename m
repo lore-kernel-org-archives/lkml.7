@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C60C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C44C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C85D720657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DED320843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:56:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921370;
-	bh=HQIh4KcyQf14BV/XbrXXSEJ70bvl4TWjTTTLcOv9l4c=;
+	s=default; t=1557921382;
+	bh=MsKpJu/rQsGhNAgoIkic8uElXoSBcNcLmOK452GreJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UxvmV3ag13otwsggcRsXaEFi4bw4jsB1UP16rO6icpfs/ztWvd/9BNZh6dVHiDifi
-	 yDA5Bz7BifTDlPMwwry9ccf/Wey2j2WekLYhm66lfcIPiyAMyPM0a8qLQxrnmQvce8
-	 C8uNZEOJzoVvnxL57E5N8jmC0LJl7Lflj7omjFJU=
+	b=JQyMN3f0ESgoeP/noae3egmPwDlZbSx1qVZhSyOdXkyuua4VtwEj/nYKI61vdRN4Y
+	 5hn73oqEVaY2UIhzRtPQxfYsukKz049bGL4iTYZJnKvcge9FO8LHgvnxO5LeU5AiGA
+	 zTSyKjAhcgRoVY3JCaxXPtHISlisNKX2+AXU7wUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731498AbfEOL4K (ORCPT
+        id S1731343AbfEOL4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:56:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55438 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:56:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730552AbfEOLSD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:18:03 -0400
+        id S1730721AbfEOLRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:17:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0803E20843;
-        Wed, 15 May 2019 11:18:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 655A320843;
+        Wed, 15 May 2019 11:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919082;
-        bh=HQIh4KcyQf14BV/XbrXXSEJ70bvl4TWjTTTLcOv9l4c=;
+        s=default; t=1557919071;
+        bh=MsKpJu/rQsGhNAgoIkic8uElXoSBcNcLmOK452GreJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U30MtWE/oIxZuXZslHhugfsWFSnb+9E38FHOsJrQ7LN3dMzpqxEJT77PudloTL5Wu
-         ZYGNo0H46Vx45k5KI/YomMZoF7m/Lowo2Id+UBHFxg6ohAOJBe5tU9dxm2spKYpGeb
-         DBaAklvMiMr0hbMhTCnioUr2DWXnGuDjKeDMzDx8=
+        b=u3CbxytG3On8hM1kgv3p1u3fTfye4aZ7qx/XjyP9Cpgm4YOQDOpnFau5QAUALSQSO
+         HIL8dRkaMF2mswO7oFKBLbSUOw9nR46ao+bYfNqEUyD5Lo4vo9yRg37a0+sFn8+QGq
+         H59+IDZw/VRMirr+NQf6miSkDmRycPKpUDAtsh4s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vignesh R <vigneshr@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 053/115] i2c: omap: Enable for ARCH_K3
-Date:   Wed, 15 May 2019 12:55:33 +0200
-Message-Id: <20190515090703.440094029@linuxfoundation.org>
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 012/115] libnvdimm/btt: Fix a kmemdup failure check
+Date:   Wed, 15 May 2019 12:54:52 +0200
+Message-Id: <20190515090700.176180833@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -61,31 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5b277402deac0691226a947df71c581686bd4020 ]
+[ Upstream commit 486fa92df4707b5df58d6508728bdb9321a59766 ]
 
-Allow I2C_OMAP to be built for K3 platforms.
+In case kmemdup fails, the fix releases resources and returns to
+avoid the NULL pointer dereference.
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nvdimm/btt_devs.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 45a3f3ca29b38..75ea367ffd833 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -759,7 +759,7 @@ config I2C_OCORES
+diff --git a/drivers/nvdimm/btt_devs.c b/drivers/nvdimm/btt_devs.c
+index d58925295aa79..e610dd890263b 100644
+--- a/drivers/nvdimm/btt_devs.c
++++ b/drivers/nvdimm/btt_devs.c
+@@ -190,14 +190,15 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
+ 		return NULL;
  
- config I2C_OMAP
- 	tristate "OMAP I2C adapter"
--	depends on ARCH_OMAP
-+	depends on ARCH_OMAP || ARCH_K3
- 	default y if MACH_OMAP_H3 || MACH_OMAP_OSK
- 	help
- 	  If you say yes to this option, support will be included for the
+ 	nd_btt->id = ida_simple_get(&nd_region->btt_ida, 0, 0, GFP_KERNEL);
+-	if (nd_btt->id < 0) {
+-		kfree(nd_btt);
+-		return NULL;
+-	}
++	if (nd_btt->id < 0)
++		goto out_nd_btt;
+ 
+ 	nd_btt->lbasize = lbasize;
+-	if (uuid)
++	if (uuid) {
+ 		uuid = kmemdup(uuid, 16, GFP_KERNEL);
++		if (!uuid)
++			goto out_put_id;
++	}
+ 	nd_btt->uuid = uuid;
+ 	dev = &nd_btt->dev;
+ 	dev_set_name(dev, "btt%d.%d", nd_region->id, nd_btt->id);
+@@ -212,6 +213,13 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
+ 		return NULL;
+ 	}
+ 	return dev;
++
++out_put_id:
++	ida_simple_remove(&nd_region->btt_ida, nd_btt->id);
++
++out_nd_btt:
++	kfree(nd_btt);
++	return NULL;
+ }
+ 
+ struct device *nd_btt_create(struct nd_region *nd_region)
 -- 
 2.20.1
 
