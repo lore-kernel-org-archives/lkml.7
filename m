@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91726C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66354C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58D6C2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E542053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:48:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920901;
-	bh=x78V6glkD3FrZhsB1aPYUajBeskWtj2i4dms4jnPZ8A=;
+	s=default; t=1557920908;
+	bh=mm+4p/CDHlIOW4P9dnJH9ZwrZ+oZpM1uzBgx3qcwYew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g983rmnRCbI0rK2TggzKGdlSiJAV6Ix73Lm/JPgplNIAB48TTEu6L3KhjFOO2bCsj
-	 xz6LNDBdd81UDVqI/VIZq9xSRt6FIHfqZvUSSilF8okyUTNaRSQCMxCo+UDt6eiS21
-	 Tcog3+AAoOb6bdLN4FWE8EN9LgPd4iMolbNbeGGw=
+	b=BDfNCjJC3KvPwFx47D9QxA6LUJfoES/NrhHYHi6CD9+AgfpoqRQwzUmUpiogbNlLy
+	 lOAl4f3li4Ic3aW9qBN4Hb1xARohxmvW2nKRq+/WkBsV7QW2AUsNnP0KQl4LeN8RKG
+	 Q7RaR+Da23SEyc6HAfejEpQBMOpfw76uLLs1CRbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731921AbfEOLsU (ORCPT
+        id S1731960AbfEOLs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:48:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34616 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:48:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731754AbfEOLYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:24:04 -0400
+        id S1731044AbfEOLX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:23:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 396AA20818;
-        Wed, 15 May 2019 11:24:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35DEF2089E;
+        Wed, 15 May 2019 11:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919443;
-        bh=x78V6glkD3FrZhsB1aPYUajBeskWtj2i4dms4jnPZ8A=;
+        s=default; t=1557919435;
+        bh=mm+4p/CDHlIOW4P9dnJH9ZwrZ+oZpM1uzBgx3qcwYew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eozuOcJ8pBdh+Wom+j0TmTevZBGMxzqCqdOkNZrvxoWKxRWqNRE5IAQTO96KcaPnb
-         dGDrPLRFGqtfCJ1A5+oQOlSruGjOL2YB174iCebQvxg0AhrTADz96jKGpFnEvUANRW
-         gKWjeY0oX0pM1GIUmRsvSEMnDUUW8RtGK3lwffAo=
+        b=YAhswP9KSPnOk7i6l+KFXMA/GcmJNGAYw6AQtwx23X3KNYDKvxl1B56fDJBzwu5Ym
+         Vp8VPiEVqkiQmKGDsj6J4Cs+GU+ujBs1kfcyujxBg1V41nZ0ON3gnewSqDhABEzLnY
+         LsfAdIegOA1AZKoXXjGdieRt3oFoHelo3vpdQDTA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Alex Kushnarov <alexanderk@mellanox.com>,
         Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.19 076/113] mlxsw: core: Do not use WQ_MEM_RECLAIM for mlxsw workqueue
-Date:   Wed, 15 May 2019 12:56:07 +0200
-Message-Id: <20190515090659.330723241@linuxfoundation.org>
+Subject: [PATCH 4.19 073/113] mlxsw: spectrum_switchdev: Add MDB entries in prepare phase
+Date:   Wed, 15 May 2019 12:56:04 +0200
+Message-Id: <20190515090659.078978131@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -61,37 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b442fed1b724af0de087912a5718ddde1b87acbb ]
+[ Upstream commit d4d0e40977ac450f32f2db5e4d8e23c9d2578899 ]
 
-The workqueue is used to periodically update the networking stack about
-activity / statistics of various objects such as neighbours and TC
-actions.
+The driver cannot guarantee in the prepare phase that it will be able to
+write an MDB entry to the device. In case the driver returned success
+during the prepare phase, but then failed to add the entry in the commit
+phase, a WARNING [1] will be generated by the switchdev core.
 
-It should not be called as part of memory reclaim path, so remove the
-WQ_MEM_RECLAIM flag.
+Fix this by doing the work in the prepare phase instead.
 
-Fixes: 3d5479e92087 ("mlxsw: core: Remove deprecated create_workqueue")
+[1]
+[  358.544486] swp12s0: Commit of object (id=2) failed.
+[  358.550061] WARNING: CPU: 0 PID: 30 at net/switchdev/switchdev.c:281 switchdev_port_obj_add_now+0x9b/0xe0
+[  358.560754] CPU: 0 PID: 30 Comm: kworker/0:1 Not tainted 5.0.0-custom-13382-gf2449babf221 #1350
+[  358.570472] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
+[  358.580582] Workqueue: events switchdev_deferred_process_work
+[  358.587001] RIP: 0010:switchdev_port_obj_add_now+0x9b/0xe0
+...
+[  358.614109] RSP: 0018:ffffa6b900d6fe18 EFLAGS: 00010286
+[  358.619943] RAX: 0000000000000000 RBX: ffff8b00797ff000 RCX: 0000000000000000
+[  358.627912] RDX: ffff8b00b7a1d4c0 RSI: ffff8b00b7a152e8 RDI: ffff8b00b7a152e8
+[  358.635881] RBP: ffff8b005c3f5bc0 R08: 000000000000022b R09: 0000000000000000
+[  358.643850] R10: 0000000000000000 R11: ffffa6b900d6fcc8 R12: 0000000000000000
+[  358.651819] R13: dead000000000100 R14: ffff8b00b65a23c0 R15: 0ffff8b00b7a2200
+[  358.659790] FS:  0000000000000000(0000) GS:ffff8b00b7a00000(0000) knlGS:0000000000000000
+[  358.668820] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  358.675228] CR2: 00007f00aad90de0 CR3: 00000001ca80d000 CR4: 00000000001006f0
+[  358.683188] Call Trace:
+[  358.685918]  switchdev_port_obj_add_deferred+0x13/0x60
+[  358.691655]  switchdev_deferred_process+0x6b/0xf0
+[  358.696907]  switchdev_deferred_process_work+0xa/0x10
+[  358.702548]  process_one_work+0x1f5/0x3f0
+[  358.707022]  worker_thread+0x28/0x3c0
+[  358.711099]  ? process_one_work+0x3f0/0x3f0
+[  358.715768]  kthread+0x10d/0x130
+[  358.719369]  ? __kthread_create_on_node+0x180/0x180
+[  358.724815]  ret_from_fork+0x35/0x40
+
+Fixes: 3a49b4fde2a1 ("mlxsw: Adding layer 2 multicast support")
 Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Alex Kushnarov <alexanderk@mellanox.com>
+Tested-by: Alex Kushnarov <alexanderk@mellanox.com>
 Acked-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/net/ethernet/mellanox/mlxsw/core.c | 2 +-
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
-index 7482db0767afb..2e6df5804b356 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/core.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
-@@ -1875,7 +1875,7 @@ static int __init mlxsw_core_module_init(void)
- {
- 	int err;
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
+index af673abdb4823..a4f237f815d1a 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
+@@ -1585,7 +1585,7 @@ static int mlxsw_sp_port_mdb_add(struct mlxsw_sp_port *mlxsw_sp_port,
+ 	u16 fid_index;
+ 	int err = 0;
  
--	mlxsw_wq = alloc_workqueue(mlxsw_core_driver_name, WQ_MEM_RECLAIM, 0);
-+	mlxsw_wq = alloc_workqueue(mlxsw_core_driver_name, 0, 0);
- 	if (!mlxsw_wq)
- 		return -ENOMEM;
- 	mlxsw_owq = alloc_ordered_workqueue("%s_ordered", 0,
+-	if (switchdev_trans_ph_prepare(trans))
++	if (switchdev_trans_ph_commit(trans))
+ 		return 0;
+ 
+ 	bridge_port = mlxsw_sp_bridge_port_find(mlxsw_sp->bridge, orig_dev);
 -- 
 2.20.1
 
