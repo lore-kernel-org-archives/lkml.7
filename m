@@ -1,120 +1,105 @@
-Return-Path: <SRS0=uOpN=TO=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2B8C04AB4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFAEC04AB4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99890206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 May 2019 23:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E67532082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:01:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="dZV9RO/I";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="dZV9RO/I"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tX7XsRCa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbfENXyP (ORCPT
+        id S1726581AbfEOABk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 19:54:15 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:53400 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726265AbfENXyP (ORCPT
+        Tue, 14 May 2019 20:01:40 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:42344 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfEOABj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 19:54:15 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 58BE08EE109;
-        Tue, 14 May 2019 16:54:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1557878054;
-        bh=j9GFywY1HLyNTdpWDqU6DRZqFaBO1GawDh8yt+cMaqU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=dZV9RO/IA1wL58RbfktzvhF4K1xZl/4zGz3TLRxcm5GlTLjC8covABFSucBWREaS9
-         OSBPyqqim2IdYRtdQFIEyy2fzVtY/Vq9MwU3Jngf6/fjS6Z38hRGtcegh99WZyvLSm
-         aWkuGylJdngUC4YlL6U49VhosDHd1xpTt5qV56rc=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id woy7T4AMZn2a; Tue, 14 May 2019 16:54:14 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.68.20])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 9FDBB8EE0ED;
-        Tue, 14 May 2019 16:54:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1557878054;
-        bh=j9GFywY1HLyNTdpWDqU6DRZqFaBO1GawDh8yt+cMaqU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=dZV9RO/IA1wL58RbfktzvhF4K1xZl/4zGz3TLRxcm5GlTLjC8covABFSucBWREaS9
-         OSBPyqqim2IdYRtdQFIEyy2fzVtY/Vq9MwU3Jngf6/fjS6Z38hRGtcegh99WZyvLSm
-         aWkuGylJdngUC4YlL6U49VhosDHd1xpTt5qV56rc=
-Message-ID: <1557878052.2873.6.camel@HansenPartnership.com>
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Rob Landley <rob@landley.net>, Andy Lutomirski <luto@kernel.org>
-Cc:     Arvind Sankar <niveditas98@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        initramfs@vger.kernel.org
-Date:   Tue, 14 May 2019 16:54:12 -0700
-In-Reply-To: <4da3dbda-bb76-5d71-d5c5-c03d98350ab0@landley.net>
-References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
-         <20190512194322.GA71658@rani.riverdale.lan>
-         <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
-         <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
-         <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
-         <CALCETrV3b205L38xqPr6QqwGn6-vxQdPoJGUygJJpgM-JqqXfQ@mail.gmail.com>
-         <1557861511.3378.19.camel@HansenPartnership.com>
-         <4da3dbda-bb76-5d71-d5c5-c03d98350ab0@landley.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 14 May 2019 20:01:39 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 145so356355pgg.9
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 17:01:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=Fl4BRNGtm92dLl/qzsGLS8SvffFbPXXhiHpwATSSiyU=;
+        b=tX7XsRCaevKkmFvq8xy+sLXC6agZnWKTOukEF5WmKqJWO7syyKlQ2wsBCfil36LpLc
+         mGlid7DLUx1dXCo0KeqHIx2sUi4nerLRHCzysY+ERtFErlU4bgmKwSpt/kEySf9ShL99
+         Nc1Wp8TqRW/KaqEa81fDD/8gvS/tDUs/3ZYzDJmihvXXvXBvle3OYpXPWYJXo/JUYG06
+         CxmiHlVfWhvL9JU7Cbk4RjA7TQt6iOY0+pKbm5iXrCqvis9BcB18g49DkbteGGEx0pOM
+         ILitRlt7sHfp1a3edNzxFH+/qX+a8srD/b5530Ze8vMyEgOu4CRVYuJiqaNMeCH9g1vi
+         weIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=Fl4BRNGtm92dLl/qzsGLS8SvffFbPXXhiHpwATSSiyU=;
+        b=UnFnExa4EtL0PjB73z0fPMh7U1kYBpCHHglxCn9yu4ktDtdNbKR874XGYmIi0KguL6
+         kCQiZsSStR+gNUDZSiHZCADBOUJRyywyuee2wLkgNEhC0BGggoRKJopYO7uphN1mTre9
+         Q09dz7xB82fNhE5v+9mdeZ5gQ8n3p3JtC8ogAYABgsmvk8zIGuJkN2pPH1Vc44uFmr+U
+         gZm5xh60qr/xAlDCTnTeSK70/nlZyaGk9aiwaGPmBVL6tzxIkcL8Wpc+bhcA9Geay18C
+         wwnOXMtyiXnaq24XrjZjASQ+H0GGyd/9YtBvHPRbqGew6f+bIsiAwx4sr+xUYZgxsGfE
+         j30Q==
+X-Gm-Message-State: APjAAAW88eO8FJPgwdJ+auG7GOHx0tPQEu0cUmIxYARtL6MfhY7hPTaF
+        l11sriqg74D+krVykzSAWJY4kQ==
+X-Google-Smtp-Source: APXvYqwHZa5sICwqraZ9H1QVEAfGb9MwKOmlBlqopDcas/BnamGKzAjjpLLEttGsYJaVEihf/p/OVQ==
+X-Received: by 2002:a63:5211:: with SMTP id g17mr11987172pgb.405.1557878498529;
+        Tue, 14 May 2019 17:01:38 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:fd66:a9bc:7c2c:636a])
+        by smtp.googlemail.com with ESMTPSA id a80sm331973pfj.105.2019.05.14.17.01.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 17:01:37 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        linux-amlogic@lists.infradead.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 1/1] ARM: dts: meson8b: fix the operating voltage of the Mali GPU
+In-Reply-To: <20190512193936.26557-2-martin.blumenstingl@googlemail.com>
+References: <20190512193936.26557-1-martin.blumenstingl@googlemail.com> <20190512193936.26557-2-martin.blumenstingl@googlemail.com>
+Date:   Tue, 14 May 2019 17:01:37 -0700
+Message-ID: <7hwoisd1r2.fsf@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-05-14 at 18:39 -0500, Rob Landley wrote:
-> On 5/14/19 2:18 PM, James Bottomley wrote:
-> > > I think Rob is right here.  If /init was statically built into
-> > > the kernel image, it has no more ability to compromise the kernel
-> > > than anything else in the kernel.  What's the problem here?
-> > 
-> > The specific problem is that unless you own the kernel signing key,
-> > which is really untrue for most distribution consumers because the
-> > distro owns the key, you cannot build the initrd statically into
-> > the kernel.  You can take the distro signed kernel, link it with
-> > the initrd then resign the combination with your key, provided you
-> > insert your key into the MoK variables as a trusted secure boot
-> > key, but the distros have been unhappy recommending this as
-> > standard practice.
-> > 
-> > If our model for security is going to be to link the kernel and the
-> > initrd statically to give signature protection over the aggregate
-> > then we need to figure out how to execute this via the distros.  If
-> > we accept that the split model, where the distro owns and signs the
-> > kernel but the machine owner builds and is responsible for the
-> > initrd, then we need to explore split security models like this
-> > proposal.
-> 
-> You can have a built-in and an external initrd? The second extracts
-> over the first? (I know because once upon a time conflicting files
-> would append. It sounds like the desired behavior here is O_EXCL fail
-> and move on.)
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-Technically yes, because the first initrd could find the second by some
-predefined means, extract it to a temporary directory and do a
-pivot_root() and then the second would do some stuff, find the real
-root and do a pivot_root() again.  However, while possible, wouldn't it
-just add to the rendezvous complexity without adding any benefits? even
-if the first initrd is built and signed by the distro and the second is
-built by you, the first has to verify the second somehow.  I suppose
-the second could be tar extracted, which would add xattrs, if that's
-the goal?
+> Amlogic's vendor kernel defines an OPP for the GPU on Meson8b boards
+> with a voltage of 1.15V. It turns out that the vendor kernel relies on
+> the bootloader to set up the voltage. The bootloader however sets a
+> fixed voltage of 1.10V.
+>
+> Amlogic's patched u-boot sources (uboot-2015-01-15-23a3562521) confirm
+> this:
+> $ grep -oiE "VDD(EE|AO)_VOLTAGE[ ]+[0-9]+" board/amlogic/configs/m8b_*
+>   board/amlogic/configs/m8b_m100_v1.h:VDDAO_VOLTAGE            1100
+>   board/amlogic/configs/m8b_m101_v1.h:VDDAO_VOLTAGE            1100
+>   board/amlogic/configs/m8b_m102_v1.h:VDDAO_VOLTAGE            1100
+>   board/amlogic/configs/m8b_m200_v1.h:VDDAO_VOLTAGE            1100
+>   board/amlogic/configs/m8b_m201_v1.h:VDDEE_VOLTAGE            1100
+>   board/amlogic/configs/m8b_m201_v1.h:VDDEE_VOLTAGE            1100
+>   board/amlogic/configs/m8b_m202_v1.h:VDDEE_VOLTAGE            1100
+>
+> Another hint at this is the VDDEE voltage on the EC-100 and Odroid-C1
+> boards. The VDDEE regulator supplies the Mali GPU. It's basically a copy
+> of the VCCK (CPU supply) which means it's limited to 0.86V to 1.14V.
+>
+> Update the operating voltage of the Mali GPU on Meson8b to 1.10V so it
+> matches with what the vendor u-boot sets.
+>
+> Fixes: c3ea80b6138cae ("ARM: dts: meson8b: add the Mali-450 MP2 GPU")
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-James
+Queued as a fix for v5.2-rc (branch: v5.2/fixes)
 
+Kevin
