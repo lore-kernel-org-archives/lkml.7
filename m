@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6541C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57A8DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC4B20818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E4562053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919964;
-	bh=HZn80yW1KMV5AsYLespaT2hnbht7qg6UOiGB/yOZGmI=;
+	s=default; t=1557919967;
+	bh=A5n4mTZtTb5EEfrTR3AlfarJ5yVRdt4gFPUi2LZqFk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p/uH7xxWk1cDd5fQqgnfElBCemv67xx0oa32FfFBZgAv6N6qjkLyiTOCBjviP+VEK
-	 DVqWQ6L7PnoMw4rCYuEs9hBCXS/pjzhFOeuItLLfUjRAgEr268RiY1FwybgLO+3ZQp
-	 9dGXxG/yJAsWk/QaXsvyL76U/l7YjKSFU+T1bikw=
+	b=E+JN+UqXaWjAhcN8KTrbs9prTxw2Wd4vKHdnDw85pFQhqoxlbouEsuyoWSDWGeN/O
+	 2phUJGHA/c2wr8AmVCFuJEK+DgIyIwk9K2aczTMIUVU2+MC7thpbyc7/TsBwwOa4EJ
+	 zAGWcOhRbrGKxsoKqGg4RRz1wxLTyZs4Jd4s5wVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733071AbfEOLcn (ORCPT
+        id S1732763AbfEOLcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:32:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44532 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:32:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733038AbfEOLcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:32:41 -0400
+        id S1733073AbfEOLcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:32:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AD202053B;
-        Wed, 15 May 2019 11:32:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECB712053B;
+        Wed, 15 May 2019 11:32:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919960;
-        bh=HZn80yW1KMV5AsYLespaT2hnbht7qg6UOiGB/yOZGmI=;
+        s=default; t=1557919963;
+        bh=A5n4mTZtTb5EEfrTR3AlfarJ5yVRdt4gFPUi2LZqFk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dOwzZ/5Fz13c2EOmyZHqgxfJvYYI5/TXf1Wdi+nmFdK/SAJN6CJc8hfjj1Hn44vyy
-         /jIKZydNFy+bFui/xZPH1uVc/jcMTItR7Y5GYnh1ToZuLsV7y0qQ1xgBkRIm6IkUVK
-         bFaqujxOPMEb/zsuhTolCuv4FoXijH8pTmGq+UYw=
+        b=FVhqW6mPWJz2lxcvrLyX2jXHM+b9nngX9ReAYeeLmM0elQbfk8kAxE/tJ+E0+mQLY
+         1ixEe8PX0h7iEafkY/ei1kmBypTIv5t80xB3FsD8KFeiu2nxBaZfYgjWTOrDUd526m
+         iHHbIo41XKXdB6X0BCM+1NSzYBYXClJQKwZY/khE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harini Katakam <harini.katakam@xilinx.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        stable@vger.kernel.org,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 21/46] net: macb: Change interrupt and napi enable order in open
-Date:   Wed, 15 May 2019 12:56:45 +0200
-Message-Id: <20190515090624.035657060@linuxfoundation.org>
+Subject: [PATCH 5.1 22/46] net: seeq: fix crash caused by not set dev.parent
+Date:   Wed, 15 May 2019 12:56:46 +0200
+Message-Id: <20190515090624.564026538@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -60,52 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harini Katakam <harini.katakam@xilinx.com>
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-[ Upstream commit 0504453139ef5a593c9587e1e851febee859c7d8 ]
+[ Upstream commit 5afcd14cfc7fed1bcc8abcee2cef82732772bfc2 ]
 
-Current order in open:
--> Enable interrupts (macb_init_hw)
--> Enable NAPI
--> Start PHY
+The old MIPS implementation of dma_cache_sync() didn't use the dev argument,
+but commit c9eb6172c328 ("dma-mapping: turn dma_cache_sync into a
+dma_map_ops method") changed that, so we now need to set dev.parent.
 
-Sequence of RX handling:
--> RX interrupt occurs
--> Interrupt is cleared and interrupt bits disabled in handler
--> NAPI is scheduled
--> In NAPI, RX budget is processed and RX interrupts are re-enabled
-
-With the above, on QEMU or fixed link setups (where PHY state doesn't
-matter), there's a chance macb RX interrupt occurs before NAPI is
-enabled. This will result in NAPI being scheduled before it is enabled.
-Fix this macb open by changing the order.
-
-Fixes: ae1f2a56d273 ("net: macb: Added support for many RX queues")
-Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/cadence/macb_main.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/seeq/sgiseeq.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -2461,12 +2461,12 @@ static int macb_open(struct net_device *
- 		goto pm_exit;
+--- a/drivers/net/ethernet/seeq/sgiseeq.c
++++ b/drivers/net/ethernet/seeq/sgiseeq.c
+@@ -735,6 +735,7 @@ static int sgiseeq_probe(struct platform
  	}
  
--	bp->macbgem_ops.mog_init_rings(bp);
--	macb_init_hw(bp);
--
- 	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue)
- 		napi_enable(&queue->napi);
+ 	platform_set_drvdata(pdev, dev);
++	SET_NETDEV_DEV(dev, &pdev->dev);
+ 	sp = netdev_priv(dev);
  
-+	bp->macbgem_ops.mog_init_rings(bp);
-+	macb_init_hw(bp);
-+
- 	/* schedule a link state check */
- 	phy_start(dev->phydev);
- 
+ 	/* Make private data page aligned */
 
 
