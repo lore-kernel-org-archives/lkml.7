@@ -2,180 +2,118 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76431C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACF1FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5351B20881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D42A20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:56:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557932208;
+	bh=T7XrePeRGhR4m//teerk+Y27hpO5cnbjtJZspej/iTg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qG44YMvh7pwl6pmrU+lSrXRP1aF3uVo4IvTF/u6xiqQaPn0P9bf4H+xBoLdtE1Pso
+	 2G0T2WWU3uPUzYi5IfdFFjw6I4mnPh2AiiFDpp+7aZRtTHMVDTYQiAj8jOl0obTjp+
+	 mktKdIL9mXEGZfc4gYZWgFFSBpxMnjwmr3kpLWqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbfEOOyT (ORCPT
+        id S1726942AbfEOO4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 10:54:19 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48524 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725966AbfEOOyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 10:54:17 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 65276E3A67B464E2C90D;
-        Wed, 15 May 2019 22:54:14 +0800 (CST)
-Received: from [127.0.0.1] (10.184.225.177) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 15 May 2019
- 22:54:06 +0800
-Subject: Re: [PATCH next] sysctl: add proc_dointvec_jiffies_minmax to limit
- the min/max write value
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-To:     <mcgrof@kernel.org>, <keescook@chromium.org>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <ebiederm@xmission.com>, <pbonzini@redhat.com>,
-        <viro@zeniv.linux.org.uk>, <adobriyan@gmail.com>
-CC:     <mingfangsen@huawei.com>, <wangxiaogang3@huawei.com>,
-        "Zhoukang (A)" <zhoukang7@huawei.com>
-References: <032e024f-2b1b-a980-1b53-d903bc8db297@huawei.com>
- <3e421384-a9cb-e534-3370-953c56883516@huawei.com>
-Message-ID: <d5138655-41a8-0177-ae0d-c4674112bf56@huawei.com>
-Date:   Wed, 15 May 2019 22:53:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        Wed, 15 May 2019 10:56:47 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53584 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfEOO4q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 10:56:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=tMMwCkIhSKNuN46CCLZ+HPK8zIH9a55x1v9yGOdHZN8=; b=efKuWkAuR7gdoaxyK76NDlPln
+        vhr7wVoYqnmnbgDquleYq3fgOgItX9pA8kx1K/zIpDnOtaCA28t1OgHlynPTuLsFRFbU9F4fplE2N
+        6zwORjNSWupiM4cL6LTo0O5utbV5shoeG/Ln4O5kWTG+524osX7J2KZzTYEEuxwqny4ac=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hQvKk-000421-MJ; Wed, 15 May 2019 14:56:42 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id DED161121C02; Wed, 15 May 2019 15:56:35 +0100 (BST)
+Date:   Wed, 15 May 2019 15:56:35 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v1 6/6] soc/tegra: regulators: Add regulators coupler
+ for Tegra30
+Message-ID: <20190515145635.GG5613@sirena.org.uk>
+References: <20190414175939.12368-1-digetx@gmail.com>
+ <20190414175939.12368-7-digetx@gmail.com>
+ <20190508075848.GX14916@sirena.org.uk>
+ <af6de446-ab45-1745-30e5-426c6b34421f@gmail.com>
+ <20190512090446.GN21483@sirena.org.uk>
+ <3988cfb6-55fe-48c4-5365-ac79871f7fd2@gmail.com>
+ <20190513174000.GH5168@sirena.org.uk>
+ <9e13bbd1-ff28-1570-b1a6-0cc6337b8f6c@gmail.com>
+ <20190515090557.GB5613@sirena.org.uk>
+ <3be50306-d3e0-f931-9d6b-0ae0ad5c78ce@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <3e421384-a9cb-e534-3370-953c56883516@huawei.com>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.225.177]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9Iq5ULCa7nGtWwZS"
+Content-Disposition: inline
+In-Reply-To: <3be50306-d3e0-f931-9d6b-0ae0ad5c78ce@gmail.com>
+X-Cookie: You will lose an important tape file.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Friendly ping...
 
-ÔÚ 2019/4/24 12:04, Zhiqiang Liu Ð´µÀ:
-> 
-> Friendly ping...
-> 
->> From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
->>
->> In proc_dointvec_jiffies func, the write value is only checked
->> whether it is larger than INT_MAX. If the write value is less
->> than zero, it can also be successfully writen in the data.
->>
->> However, in some scenarios, users would adopt the data to
->> set timers or check whether time is expired. Generally, the data
->> will be cast to an unsigned type variable, then the negative data
->> becomes a very large unsigned value, which leads to long waits
->> or other unpredictable problems.
->>
->> Here, we add a new func, proc_dointvec_jiffies_minmax, to limit the
->> min/max write value, which is similar to the proc_dointvec_minmax func.
->>
->> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
->> Reported-by: Qiang Ning <ningqiang1@huawei.com>
->> Reviewed-by: Jie Liu <liujie165@huawei.com>
->> ---
->>  include/linux/sysctl.h |  2 ++
->>  kernel/sysctl.c        | 44 +++++++++++++++++++++++++++++++++++++++++++-
->>  2 files changed, 45 insertions(+), 1 deletion(-)
->>
->> diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
->> index b769ecf..8bde8a0 100644
->> --- a/include/linux/sysctl.h
->> +++ b/include/linux/sysctl.h
->> @@ -53,6 +53,8 @@ extern int proc_douintvec_minmax(struct ctl_table *table, int write,
->>  				 loff_t *ppos);
->>  extern int proc_dointvec_jiffies(struct ctl_table *, int,
->>  				 void __user *, size_t *, loff_t *);
->> +extern int proc_dointvec_jiffies_minmax(struct ctl_table *, int,
->> +				 void __user *, size_t *, loff_t *);
->>  extern int proc_dointvec_userhz_jiffies(struct ctl_table *, int,
->>  					void __user *, size_t *, loff_t *);
->>  extern int proc_dointvec_ms_jiffies(struct ctl_table *, int,
->> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
->> index c9ec050..8e1eb59 100644
->> --- a/kernel/sysctl.c
->> +++ b/kernel/sysctl.c
->> @@ -2967,10 +2967,15 @@ static int do_proc_dointvec_jiffies_conv(bool *negp, unsigned long *lvalp,
->>  					 int *valp,
->>  					 int write, void *data)
->>  {
->> +	struct do_proc_dointvec_minmax_conv_param *param = data;
->> +
->>  	if (write) {
->>  		if (*lvalp > INT_MAX / HZ)
->>  			return 1;
->>  		*valp = *negp ? -(*lvalp*HZ) : (*lvalp*HZ);
->> +		if ((param->min && (*param->min)*HZ > *valp) ||
->> +		    (param->max && (*param->max)*HZ < *valp))
->> +			return -EINVAL;
->>  	} else {
->>  		int val = *valp;
->>  		unsigned long lval;
->> @@ -3053,7 +3058,37 @@ int proc_dointvec_jiffies(struct ctl_table *table, int write,
->>  			  void __user *buffer, size_t *lenp, loff_t *ppos)
->>  {
->>      return do_proc_dointvec(table,write,buffer,lenp,ppos,
->> -		    	    do_proc_dointvec_jiffies_conv,NULL);
->> +			    do_proc_dointvec_jiffies_conv, NULL);
->> +}
->> +
->> +/**
->> + * proc_dointvec_jiffies_minmax - read a vector of integers as seconds with min/max values
->> + * @table: the sysctl table
->> + * @write: %TRUE if this is a write to the sysctl file
->> + * @buffer: the user buffer
->> + * @lenp: the size of the user buffer
->> + * @ppos: file position
->> + *
->> + * Reads/writes up to table->maxlen/sizeof(unsigned int) integer
->> + * values from/to the user buffer, treated as an ASCII string.
->> + * The values read are assumed to be in seconds, and are converted into
->> + * jiffies.
->> + *
->> + * This routine will ensure the values are within the range specified by
->> + * table->extra1 (min) and table->extra2 (max).
->> + *
->> + * Returns 0 on success or -EINVAL on write when the range check fails.
->> + */
->> +int proc_dointvec_jiffies_minmax(struct ctl_table *table, int write,
->> +			  void __user *buffer, size_t *lenp, loff_t *ppos)
->> +{
->> +	struct do_proc_dointvec_minmax_conv_param param = {
->> +		.min = (int *) table->extra1,
->> +		.max = (int *) table->extra2,
->> +	};
->> +
->> +	return do_proc_dointvec(table, write, buffer, lenp, ppos,
->> +				do_proc_dointvec_jiffies_conv, &param);
->>  }
->>
->>  /**
->> @@ -3301,6 +3336,12 @@ int proc_dointvec_jiffies(struct ctl_table *table, int write,
->>  	return -ENOSYS;
->>  }
->>
->> +int proc_dointvec_jiffies_minmax(struct ctl_table *table, int write,
->> +		    void __user *buffer, size_t *lenp, loff_t *ppos)
->> +{
->> +	return -ENOSYS;
->> +}
->> +
->>  int proc_dointvec_userhz_jiffies(struct ctl_table *table, int write,
->>  		    void __user *buffer, size_t *lenp, loff_t *ppos)
->>  {
->> @@ -3359,6 +3400,7 @@ static int proc_dointvec_minmax_bpf_stats(struct ctl_table *table, int write,
->>  EXPORT_SYMBOL(proc_dointvec);
->>  EXPORT_SYMBOL(proc_douintvec);
->>  EXPORT_SYMBOL(proc_dointvec_jiffies);
->> +EXPORT_SYMBOL(proc_dointvec_jiffies_minmax);
->>  EXPORT_SYMBOL(proc_dointvec_minmax);
->>  EXPORT_SYMBOL_GPL(proc_douintvec_minmax);
->>  EXPORT_SYMBOL(proc_dointvec_userhz_jiffies);
->>
-> 
-> 
-> .
-> 
+--9Iq5ULCa7nGtWwZS
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, May 15, 2019 at 02:44:33PM +0300, Dmitry Osipenko wrote:
+> 15.05.2019 12:05, Mark Brown =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > On Tue, May 14, 2019 at 09:30:05PM +0300, Dmitry Osipenko wrote:
+
+> >> I'm afraid this is just a way of abusing the OPP's. I actually already
+
+> > There's nothing wrong with handling regulators in an OPP, that's a
+> > totally normal thing.
+
+> Only if those regulators are directly related to the hardware unit,
+> which is not the case here. Regulators coupling is the right abstraction
+> that glues things together, there is absolutely no need in trying to
+> make workarounds using OPP.
+
+The thing with OPPs is that they are often system level rather than
+related to one specific parrt of the device - one of the reasons people
+use them is that they eliminate the needs to think about dynamic
+combinations of things and instead pick a suitable configuration off a
+relatively short menu.  This makes both validation and runtime easier.
+
+--9Iq5ULCa7nGtWwZS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzcKKMACgkQJNaLcl1U
+h9B+NwgAgLI94SGFcIjf5e/zV+qGvk219uqkypT4TVitsRux+TDwXPBqqpipHToV
+Y2NXTgG5QUiNeMvAYRKlJaOc4JKTm6kUiU1EKyhOfjom9CbyNUZt6hkzDssVP4L+
+wg7iQ3Xs19lWCMOXLjrmJmfUhDvvXsT5SQl0xxyzLmlXeq6QQ/saeGi6QXorG6Uz
+GDz6A+BItUayv1ZLakLeGoUcRKngFHpUjJzIy8yO/zJ9WzWkS252z2u8z4TnhTms
+59I9K9q2ia/syGa//PM2mNT2cbCGsHQykgYSlWIRWlldgL/OnxtIdS5vUvUhnl9G
++Vv/NLM9ommlZnjuTVxUCVp4J81D/A==
+=JHHM
+-----END PGP SIGNATURE-----
+
+--9Iq5ULCa7nGtWwZS--
