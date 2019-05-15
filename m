@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C09A9C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A315C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9157421744
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED6372084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918034;
-	bh=8h2+eYVUnwyN4zDs1fgarkI9kYsmPRaRdslM8QT/jos=;
+	s=default; t=1557918037;
+	bh=Rgk/QmC5wuH4m2huAqS/Q36BitkKH5LjgBwJaV2cB7E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HBLmRNwUm601HWcH6+LKBkVgtHS+fDTNtR4/3TEnO9zVIyqd57AyBaZFNjEWGRIHg
-	 UqT1NCraBIjm08mCx99EHzXWZfu5hM1ymAFse/GepP34lwhOFbfiR99DH3oFXDRVin
-	 bFDq+C1zSkcrddsoj+UZpnyUh3ANJrS5i7IvIkwY=
+	b=CxbYNdQPgjW7whWbbKUnkNoy2DtrvKcAv0Au0aMpWWpZpr/9k4byLnxUUmwSuQ9Cj
+	 J++nE49+A49S34Q+YBlrQLtpwiuWvAbukrbP89LV+Pf0QliCcc2sRWTXRD/eLtHnQQ
+	 f2QS2gan3Lv3LJYetl4rE24JD9flwMR8fITn0OX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfEOLAd (ORCPT
+        id S1727483AbfEOLAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:00:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57272 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:00:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727423AbfEOLA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:00:28 -0400
+        id S1727455AbfEOLAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:00:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C790F2173C;
-        Wed, 15 May 2019 11:00:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E638020881;
+        Wed, 15 May 2019 11:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918027;
-        bh=8h2+eYVUnwyN4zDs1fgarkI9kYsmPRaRdslM8QT/jos=;
+        s=default; t=1557918032;
+        bh=Rgk/QmC5wuH4m2huAqS/Q36BitkKH5LjgBwJaV2cB7E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q+6qT4ifrae2jSw/+nlSqBmycaLP1NGKdaGRFZLS8zTxcmED0QvJxxrPaq3tcBI5D
-         jZ07NnD8PilBP06xUbJb5Ocbs1F8+wEjgFCl46I7HYXTYxfRyp2P3Y1nsiNvVSdmW6
-         mFWydShBAs8lBMz75erA8jM0c8RfYtQibxYbh2z8=
+        b=kdAl6cN7ddlnGbcvraY2uFYGde9E53Iysc5YEPFuYNVNEjybliefSr0qvWubJHSDc
+         MRvSYCoaMIitpk7SvxVVg3fwF136b9AUzxeVAo7sMiv5ayJggQayICWPhSkPZOqUzr
+         aeQXxOSqbEeFnKbAdNuQhmd7+k5FljAQ2d7a4ScM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Guido Kiener <guido.kiener@rohde-schwarz.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 3.18 15/86] usb: gadget: net2280: Fix overrun of OUT messages
-Date:   Wed, 15 May 2019 12:54:52 +0200
-Message-Id: <20190515090645.715262232@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 67/86] s390/dasd: Fix capacity calculation for large volumes
+Date:   Wed, 15 May 2019 12:55:44 +0200
+Message-Id: <20190515090654.762720869@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -61,62 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9d6a54c1430647355a5e23434881b2ca3d192b48 ]
+[ Upstream commit 2cc9637ce825f3a9f51f8f78af7474e9e85bfa5f ]
 
-The OUT endpoint normally blocks (NAK) subsequent packets when a
-short packet was received and returns an incomplete queue entry to
-the gadget driver. Thereby the gadget driver can detect a short packet
-when reading queue entries with a length that is not equal to a
-multiple of packet size.
+The DASD driver incorrectly limits the maximum number of blocks of ECKD
+DASD volumes to 32 bit numbers. Volumes with a capacity greater than
+2^32-1 blocks are incorrectly recognized as smaller volumes.
 
-The start_queue() function enables receiving OUT packets regardless of
-the content of the OUT FIFO. This results in a race: With the current
-code, it's possible that the "!ep->is_in && (readl(&ep->regs->ep_stat)
-& BIT(NAK_OUT_PACKETS))" test in start_dma() will fail, then a short
-packet will be received, and then start_queue() will call
-stop_out_naking(). That's what we don't want (OUT naking gets turned
-off while there is data in the FIFO) because then the next driver
-request might receive a mixture of old and new packets.
+This results in the following volume capacity limits depending on the
+formatted block size:
 
-With the patch, this race can't occur because the FIFO's state is
-tested after we know that OUT naking is already turned on, and OUT
-naking is stopped only when both of the conditions are met.  This
-ensures that all received data is delivered to the gadget driver,
-which can detect a short packet now before new packets are appended
-to the last short packet.
+  BLKSIZE  MAX_GB   MAX_CYL
+      512    2047   5843492
+     1024    4095   8676701
+     2048    8191  13634816
+     4096   16383  23860929
 
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+The same problem occurs when a volume with more than 17895697 cylinders
+is accessed in raw-track-access mode.
+
+Fix this problem by adding an explicit type cast when calculating the
+maximum number of blocks.
+
+Signed-off-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/net2280.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/s390/block/dasd_eckd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/net2280.c b/drivers/usb/gadget/udc/net2280.c
-index 8d13337e2dde..931765208286 100644
---- a/drivers/usb/gadget/udc/net2280.c
-+++ b/drivers/usb/gadget/udc/net2280.c
-@@ -800,9 +800,6 @@ static void start_queue(struct net2280_ep *ep, u32 dmactl, u32 td_dma)
- 	(void) readl(&ep->dev->pci->pcimstctl);
+diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
+index 4bbcdf991c262..4856e5bbb42fa 100644
+--- a/drivers/s390/block/dasd_eckd.c
++++ b/drivers/s390/block/dasd_eckd.c
+@@ -2031,14 +2031,14 @@ static int dasd_eckd_end_analysis(struct dasd_block *block)
+ 	blk_per_trk = recs_per_track(&private->rdc_data, 0, block->bp_block);
  
- 	writel(BIT(DMA_START), &dma->dmastat);
--
--	if (!ep->is_in)
--		stop_out_naking(ep);
- }
+ raw:
+-	block->blocks = (private->real_cyl *
++	block->blocks = ((unsigned long) private->real_cyl *
+ 			  private->rdc_data.trk_per_cyl *
+ 			  blk_per_trk);
  
- static void start_dma(struct net2280_ep *ep, struct net2280_request *req)
-@@ -841,6 +838,7 @@ static void start_dma(struct net2280_ep *ep, struct net2280_request *req)
- 			writel(BIT(DMA_START), &dma->dmastat);
- 			return;
- 		}
-+		stop_out_naking(ep);
- 	}
- 
- 	tmp = dmactl_default;
+ 	dev_info(&device->cdev->dev,
+-		 "DASD with %d KB/block, %d KB total size, %d KB/track, "
++		 "DASD with %u KB/block, %lu KB total size, %u KB/track, "
+ 		 "%s\n", (block->bp_block >> 10),
+-		 ((private->real_cyl *
++		 (((unsigned long) private->real_cyl *
+ 		   private->rdc_data.trk_per_cyl *
+ 		   blk_per_trk * (block->bp_block >> 9)) >> 1),
+ 		 ((blk_per_trk * block->bp_block) >> 10),
 -- 
-2.19.1
+2.20.1
 
 
 
