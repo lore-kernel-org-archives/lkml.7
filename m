@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C780C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA67C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E20216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B8C7206A3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918438;
-	bh=JlwyHEohO2xv4+EVF62uG8Sb9qrBFeL13jZxwz/qLaY=;
+	s=default; t=1557918442;
+	bh=Uf0AHVJu6yPNntVN2NijqXaa7UTWJ8gYvQmPSYC/pTw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YaIzzyhIVsNTA+jwfYUlqqB6VqclkkwopRLAm/G+7wL16NukzWTRXsMEEhrboUQP6
-	 bDLSVW1e9kmW7yvFymfhMHq+XepMQOynZXc5bCLXXuO+frwFTXMQCoYl37cWxHgFfG
-	 iRoEdZEDW74a20MP0ik+vNq80L7qA6KUJofxIzPY=
+	b=nQVhIYuSPI2yQJ53gz/3hmDFG9PmcA0W4s1/uwsDXcaf7ahmYsDB8bOgvs4pEsxkL
+	 6I1feSAXDbDaiG7xbo88k5Xms37KBC9ROgGvRoSwNTSVjIJDWWqD3ryIl8aUwmUv5v
+	 XrWiXj6QXWMPLUf143a9yzViYX3ow5dEUp6IWIFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbfEOLHR (ORCPT
+        id S1728905AbfEOLHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:07:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38492 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:07:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728868AbfEOLHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:07:11 -0400
+        id S1728868AbfEOLHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:07:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DACE621734;
-        Wed, 15 May 2019 11:07:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80B882084F;
+        Wed, 15 May 2019 11:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918430;
-        bh=JlwyHEohO2xv4+EVF62uG8Sb9qrBFeL13jZxwz/qLaY=;
+        s=default; t=1557918438;
+        bh=Uf0AHVJu6yPNntVN2NijqXaa7UTWJ8gYvQmPSYC/pTw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wZJAm6MMpkcnIYlsALhGzauByraeXxfNZOv3kg0KUA6o05RcAcmdVUmUcRm7Hl77L
-         O2FfGonQ3kHpeRQKZAKoZdb6eQQf4USpSQuZl3KuWWJU5yI50bxnqYLnjHsZlEHcXb
-         tiNYO+zGLjyOGprJ0/Cr9Ndaop57Q6GkxKR46+3E=
+        b=jZcND5iUdo73loyzqerSv9KslIY4YmL32IhdN5mipCcyNBoTZd6BdGWT9ByBDP0kl
+         xE9DO67RxRbNu5QWXcGRBdkBxk3qYgHHpaZdeCxOpjPO4tMP1ac66ztg7ZMXOYpxU6
+         ez/erbxRv/jLL2ssku6jczrhzUk5ULrmwm8Hj6Sc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 129/266] net: hns: Use NAPI_POLL_WEIGHT for hns driver
-Date:   Wed, 15 May 2019 12:53:56 +0200
-Message-Id: <20190515090727.330762691@linuxfoundation.org>
+        stable@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 132/266] xsysace: Fix error handling in ace_setup
+Date:   Wed, 15 May 2019 12:53:59 +0200
+Message-Id: <20190515090727.416812720@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -61,57 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit acb1ce15a61154aa501891d67ebf79bc9ea26818 ]
+[ Upstream commit 47b16820c490149c2923e8474048f2c6e7557cab ]
 
-When the HNS driver loaded, always have an error print:
-"netif_napi_add() called with weight 256"
+If xace hardware reports a bad version number, the error handling code
+in ace_setup() calls put_disk(), followed by queue cleanup. However, since
+the disk data structure has the queue pointer set, put_disk() also
+cleans and releases the queue. This results in blk_cleanup_queue()
+accessing an already released data structure, which in turn may result
+in a crash such as the following.
 
-This is because the kernel checks the NAPI polling weights
-requested by drivers and it prints an error message if a driver
-requests a weight bigger than 64.
+[   10.681671] BUG: Kernel NULL pointer dereference at 0x00000040
+[   10.681826] Faulting instruction address: 0xc0431480
+[   10.682072] Oops: Kernel access of bad area, sig: 11 [#1]
+[   10.682251] BE PAGE_SIZE=4K PREEMPT Xilinx Virtex440
+[   10.682387] Modules linked in:
+[   10.682528] CPU: 0 PID: 1 Comm: swapper Tainted: G        W         5.0.0-rc6-next-20190218+ #2
+[   10.682733] NIP:  c0431480 LR: c043147c CTR: c0422ad8
+[   10.682863] REGS: cf82fbe0 TRAP: 0300   Tainted: G        W          (5.0.0-rc6-next-20190218+)
+[   10.683065] MSR:  00029000 <CE,EE,ME>  CR: 22000222  XER: 00000000
+[   10.683236] DEAR: 00000040 ESR: 00000000
+[   10.683236] GPR00: c043147c cf82fc90 cf82ccc0 00000000 00000000 00000000 00000002 00000000
+[   10.683236] GPR08: 00000000 00000000 c04310bc 00000000 22000222 00000000 c0002c54 00000000
+[   10.683236] GPR16: 00000000 00000001 c09aa39c c09021b0 c09021dc 00000007 c0a68c08 00000000
+[   10.683236] GPR24: 00000001 ced6d400 ced6dcf0 c0815d9c 00000000 00000000 00000000 cedf0800
+[   10.684331] NIP [c0431480] blk_mq_run_hw_queue+0x28/0x114
+[   10.684473] LR [c043147c] blk_mq_run_hw_queue+0x24/0x114
+[   10.684602] Call Trace:
+[   10.684671] [cf82fc90] [c043147c] blk_mq_run_hw_queue+0x24/0x114 (unreliable)
+[   10.684854] [cf82fcc0] [c04315bc] blk_mq_run_hw_queues+0x50/0x7c
+[   10.685002] [cf82fce0] [c0422b24] blk_set_queue_dying+0x30/0x68
+[   10.685154] [cf82fcf0] [c0423ec0] blk_cleanup_queue+0x34/0x14c
+[   10.685306] [cf82fd10] [c054d73c] ace_probe+0x3dc/0x508
+[   10.685445] [cf82fd50] [c052d740] platform_drv_probe+0x4c/0xb8
+[   10.685592] [cf82fd70] [c052abb0] really_probe+0x20c/0x32c
+[   10.685728] [cf82fda0] [c052ae58] driver_probe_device+0x68/0x464
+[   10.685877] [cf82fdc0] [c052b500] device_driver_attach+0xb4/0xe4
+[   10.686024] [cf82fde0] [c052b5dc] __driver_attach+0xac/0xfc
+[   10.686161] [cf82fe00] [c0528428] bus_for_each_dev+0x80/0xc0
+[   10.686314] [cf82fe30] [c0529b3c] bus_add_driver+0x144/0x234
+[   10.686457] [cf82fe50] [c052c46c] driver_register+0x88/0x15c
+[   10.686610] [cf82fe60] [c09de288] ace_init+0x4c/0xac
+[   10.686742] [cf82fe80] [c0002730] do_one_initcall+0xac/0x330
+[   10.686888] [cf82fee0] [c09aafd0] kernel_init_freeable+0x34c/0x478
+[   10.687043] [cf82ff30] [c0002c6c] kernel_init+0x18/0x114
+[   10.687188] [cf82ff40] [c000f2f0] ret_from_kernel_thread+0x14/0x1c
+[   10.687349] Instruction dump:
+[   10.687435] 3863ffd4 4bfffd70 9421ffd0 7c0802a6 93c10028 7c9e2378 93e1002c 38810008
+[   10.687637] 7c7f1b78 90010034 4bfffc25 813f008c <81290040> 75290100 4182002c 80810008
+[   10.688056] ---[ end trace 13c9ff51d41b9d40 ]---
 
-So use NAPI_POLL_WEIGHT to fix it.
+Fix the problem by setting the disk queue pointer to NULL before calling
+put_disk(). A more comprehensive fix might be to rearrange the code
+to check the hardware version before initializing data structures,
+but I don't know if this would have undesirable side effects, and
+it would increase the complexity of backporting the fix to older kernels.
 
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 74489a91dd43a ("Add support for Xilinx SystemACE CompactFlash interface")
+Acked-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_enet.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/block/xsysace.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-index 2fa54b0b0679..6d649e7b45a9 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -28,9 +28,6 @@
+diff --git a/drivers/block/xsysace.c b/drivers/block/xsysace.c
+index c4328d9d9981..f838119d12b2 100644
+--- a/drivers/block/xsysace.c
++++ b/drivers/block/xsysace.c
+@@ -1062,6 +1062,8 @@ static int ace_setup(struct ace_device *ace)
+ 	return 0;
  
- #define SERVICE_TIMER_HZ (1 * HZ)
- 
--#define NIC_TX_CLEAN_MAX_NUM 256
--#define NIC_RX_CLEAN_MAX_NUM 64
--
- #define RCB_IRQ_NOT_INITED 0
- #define RCB_IRQ_INITED 1
- 
-@@ -1408,7 +1405,7 @@ static int hns_nic_init_ring_data(struct hns_nic_priv *priv)
- 		rd->fini_process = hns_nic_tx_fini_pro;
- 
- 		netif_napi_add(priv->netdev, &rd->napi,
--			       hns_nic_common_poll, NIC_TX_CLEAN_MAX_NUM);
-+			       hns_nic_common_poll, NAPI_POLL_WEIGHT);
- 		rd->ring->irq_init_flag = RCB_IRQ_NOT_INITED;
- 	}
- 	for (i = h->q_num; i < h->q_num * 2; i++) {
-@@ -1420,7 +1417,7 @@ static int hns_nic_init_ring_data(struct hns_nic_priv *priv)
- 		rd->fini_process = hns_nic_rx_fini_pro;
- 
- 		netif_napi_add(priv->netdev, &rd->napi,
--			       hns_nic_common_poll, NIC_RX_CLEAN_MAX_NUM);
-+			       hns_nic_common_poll, NAPI_POLL_WEIGHT);
- 		rd->ring->irq_init_flag = RCB_IRQ_NOT_INITED;
- 	}
- 
+ err_read:
++	/* prevent double queue cleanup */
++	ace->gd->queue = NULL;
+ 	put_disk(ace->gd);
+ err_alloc_disk:
+ 	blk_cleanup_queue(ace->queue);
 -- 
 2.20.1
 
