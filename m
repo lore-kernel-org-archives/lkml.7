@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 887B3C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9529EC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F0FA20578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B2C2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920387;
-	bh=A2HWa2eMV8cNpLlt3TpLLCMT1YnL9BzX46XVNAsJMbk=;
+	s=default; t=1557920395;
+	bh=ayrtaRKLFTddBdapRIYDnBNthvhOC139DJzg+GvaDf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WqIJp9/Ua6Gzv9cv7vJ+SZQ/or6fh6VM1lx/5qHzZqvXGg5zKQDU4sdr6/7XKfgzo
-	 Qze9dPL3gt6CVW/OPzQaiBSJPmvYtCQ9E0R92BJZlQfmdJ4AoXKvbaxCDvDEn6OsoB
-	 6RD5VBcdL+HMjNXw38PwMggtpD7zbFsb+tATGWPE=
+	b=stHWNiZY5ru3gjImzYSg2+Slnpf7izH55AP8i6sCp9ix3I1vDvzOcarRM32BbENSG
+	 V3doCAjptqan//KPHm1VOsbz3fzvxEIcgnMRAVwNOKRaJHEauDznYZ73vOS6dc8q1J
+	 Z6SdmCIo3uOcVkn6sS4Jo2kHC9sfuy17WSZuVRGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732174AbfEOLaC (ORCPT
+        id S1732454AbfEOLjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:30:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41298 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:39:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726589AbfEOL3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:29:55 -0400
+        id S1732638AbfEOLaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:30:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5A74206BF;
-        Wed, 15 May 2019 11:29:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C683206BF;
+        Wed, 15 May 2019 11:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919794;
-        bh=A2HWa2eMV8cNpLlt3TpLLCMT1YnL9BzX46XVNAsJMbk=;
+        s=default; t=1557919799;
+        bh=ayrtaRKLFTddBdapRIYDnBNthvhOC139DJzg+GvaDf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gsMIWM2qtrzIN07IT2uJdI7FyOpBP6H6AOeV1nvLrZ2mtWfJDEXkpZKxp2T9XkJXq
-         e6qBs+exVuDuV9f0eSvuu2l1ZDqSzHzf78N/CawTx4O+Duq+s/C3YIGdfXVrEoVXEx
-         ccYIQLhhRBHCUsJ1ZhZ+gsQrKOzo0vCb4eK3oZ+o=
+        b=GTbCbOTpPPKGdvKShm+YAJ8vZL8rUHSTeEQxd1G5hyZoy0oh3C43z4uO3dBrIhZkG
+         Q53UFhu87UTDipMqVDxOJNMgB7uVr6axlSH8EtwS+oWFc1Ctqho2HjalVEHsTZCddE
+         AraGnwIM2pzUBW9QjEY5+ivZ5oIx9ErISkKC97tg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 096/137] mm/page_alloc.c: avoid potential NULL pointer dereference
-Date:   Wed, 15 May 2019 12:56:17 +0200
-Message-Id: <20190515090700.506837533@linuxfoundation.org>
+        stable@vger.kernel.org, John Hurley <john.hurley@netronome.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: [PATCH 5.0 098/137] net: sched: fix cleanup NULL pointer exception in act_mirr
+Date:   Wed, 15 May 2019 12:56:19 +0200
+Message-Id: <20190515090700.644808978@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -62,39 +62,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8139ad043d632c0e9e12d760068a7a8e91659aa1 ]
+[ Upstream commit 064c5d6881e897077639e04973de26440ee205e6 ]
 
-ac.preferred_zoneref->zone passed to alloc_flags_nofragment() can be NULL.
-'zone' pointer unconditionally derefernced in alloc_flags_nofragment().
-Bail out on NULL zone to avoid potential crash.  Currently we don't see
-any crashes only because alloc_flags_nofragment() has another bug which
-allows compiler to optimize away all accesses to 'zone'.
+A new mirred action is created by the tcf_mirred_init function. This
+contains a list head struct which is inserted into a global list on
+successful creation of a new action. However, after a creation, it is
+still possible to error out and call the tcf_idr_release function. This,
+in turn, calls the act_mirr cleanup function via __tcf_idr_release and
+__tcf_action_put. This cleanup function tries to delete the list entry
+which is as yet uninitialised, leading to a NULL pointer exception.
 
-Link: http://lkml.kernel.org/r/20190423120806.3503-1-aryabinin@virtuozzo.com
-Fixes: 6bb154504f8b ("mm, page_alloc: spread allocations across zones before introducing fragmentation")
-Signed-off-by: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix this by initialising the list entry on creation of a new action.
+
+Bug report:
+
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
+PGD 8000000840c73067 P4D 8000000840c73067 PUD 858dcc067 PMD 0
+Oops: 0002 [#1] SMP PTI
+CPU: 32 PID: 5636 Comm: handler194 Tainted: G           OE     5.0.0+ #186
+Hardware name: Dell Inc. PowerEdge R730/0599V5, BIOS 1.3.6 06/03/2015
+RIP: 0010:tcf_mirred_release+0x42/0xa7 [act_mirred]
+Code: f0 90 39 c0 e8 52 04 57 c8 48 c7 c7 b8 80 39 c0 e8 94 fa d4 c7 48 8b 93 d0 00 00 00 48 8b 83 d8 00 00 00 48 c7 c7 f0 90 39 c0 <48> 89 42 08 48 89 10 48 b8 00 01 00 00 00 00 ad de 48 89 83 d0 00
+RSP: 0018:ffffac4aa059f688 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: ffff9dcd1b214d00 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffff9dcd1fa165f8 RDI: ffffffffc03990f0
+RBP: ffff9dccf9c7af80 R08: 0000000000000a3b R09: 0000000000000000
+R10: ffff9dccfa11f420 R11: 0000000000000000 R12: 0000000000000001
+R13: ffff9dcd16b433c0 R14: ffff9dcd1b214d80 R15: 0000000000000000
+FS:  00007f441bfff700(0000) GS:ffff9dcd1fa00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000008 CR3: 0000000839e64004 CR4: 00000000001606e0
+Call Trace:
+tcf_action_cleanup+0x59/0xca
+__tcf_action_put+0x54/0x6b
+__tcf_idr_release.cold.33+0x9/0x12
+tcf_mirred_init.cold.20+0x22e/0x3b0 [act_mirred]
+tcf_action_init_1+0x3d0/0x4c0
+tcf_action_init+0x9c/0x130
+tcf_exts_validate+0xab/0xc0
+fl_change+0x1ca/0x982 [cls_flower]
+tc_new_tfilter+0x647/0x8d0
+? load_balance+0x14b/0x9e0
+rtnetlink_rcv_msg+0xe3/0x370
+? __switch_to_asm+0x40/0x70
+? __switch_to_asm+0x34/0x70
+? _cond_resched+0x15/0x30
+? __kmalloc_node_track_caller+0x1d4/0x2b0
+? rtnl_calcit.isra.31+0xf0/0xf0
+netlink_rcv_skb+0x49/0x110
+netlink_unicast+0x16f/0x210
+netlink_sendmsg+0x1df/0x390
+sock_sendmsg+0x36/0x40
+___sys_sendmsg+0x27b/0x2c0
+? futex_wake+0x80/0x140
+? do_futex+0x2b9/0xac0
+? ep_scan_ready_list.constprop.22+0x1f2/0x210
+? ep_poll+0x7a/0x430
+__sys_sendmsg+0x47/0x80
+do_syscall_64+0x55/0x100
+entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: 4e232818bd32 ("net: sched: act_mirred: remove dependency on rtnl lock")
+Signed-off-by: John Hurley <john.hurley@netronome.com>
+Reviewed-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- mm/page_alloc.c | 3 +++
+ net/sched/act_mirred.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index eedb57f9b40b5..d59be95ba45cf 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3385,6 +3385,9 @@ alloc_flags_nofragment(struct zone *zone, gfp_t gfp_mask)
- 		alloc_flags |= ALLOC_KSWAPD;
+diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
+index c8cf4d10c4355..971dc03304f42 100644
+--- a/net/sched/act_mirred.c
++++ b/net/sched/act_mirred.c
+@@ -159,6 +159,9 @@ static int tcf_mirred_init(struct net *net, struct nlattr *nla,
+ 	}
+ 	m = to_mirred(*a);
  
- #ifdef CONFIG_ZONE_DMA32
-+	if (!zone)
-+		return alloc_flags;
++	if (ret == ACT_P_CREATED)
++		INIT_LIST_HEAD(&m->tcfm_list);
 +
- 	if (zone_idx(zone) != ZONE_NORMAL)
- 		goto out;
- 
+ 	spin_lock_bh(&m->tcf_lock);
+ 	m->tcf_action = parm->action;
+ 	m->tcfm_eaction = parm->eaction;
 -- 
 2.20.1
 
