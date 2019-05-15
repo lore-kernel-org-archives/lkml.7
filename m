@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A40AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D903C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F11520843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E12320843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919095;
-	bh=qe0NEEBfQyHz+s/aUOwt23GSKbbMg/UR2UXQUUVIQHI=;
+	s=default; t=1557919103;
+	bh=D7EnULU8oBcN9EbF/XpSx7OzJ9YpRX7s1ZUymWx+6Kw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TjaOlmgeMlkHtiDCTwDUIbWtXjqXKYKE4WS0o9fj4CtyApVK37jkWe+JU/3tq02BR
-	 lH83A12FK0KFUdlIAD/90RBScVHIb1VxOr2PDtqCIvX4lWRBmgchTZm2UMTqc+SLpa
-	 fTnJQkAWgS2In80U+uxAkgj7FCoOc8biQ7zvA/88=
+	b=vb3CoEL6Bt46XOZQlfmx8DEe7qhP24srmqkPtts1EltGxTdxAYsKYmyPZiwoR42OK
+	 ikn87HyrY71FCG9x7qeavR63Qj/S0OhwCKE6eZy+hIDOZJ5HDDA6bX4n0D+9bzGxaS
+	 zrkEPRD50t05BMzsYGbTAeeONJsaKRRCW3sqSjBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730769AbfEOLSN (ORCPT
+        id S1730794AbfEOLSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:18:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55552 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:18:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729590AbfEOLSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:18:08 -0400
+        id S1728176AbfEOLST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:18:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A30A216F4;
-        Wed, 15 May 2019 11:18:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E68322084F;
+        Wed, 15 May 2019 11:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919088;
-        bh=qe0NEEBfQyHz+s/aUOwt23GSKbbMg/UR2UXQUUVIQHI=;
+        s=default; t=1557919098;
+        bh=D7EnULU8oBcN9EbF/XpSx7OzJ9YpRX7s1ZUymWx+6Kw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kPe38SgFGEomicUPA/DDgbPB931gTIruCgAlDf4TJ8W/xDeOEjnP+FAZrbDvSYiLT
-         1+vd0nK54fmryIrzmLjXvUvd3wDTsPLuBLmpPLFxPUyAaiSlJj8d/a7BhmDW809iBS
-         /wf1GSdPY1qmDlDpQLuBVI7lEWZRbPfw6t93U/Ok=
+        b=tOANTBhpF0pJx+iDYa03Op/YAxr/PEirzv0phTAbhoUEyhfIc7rtnaeqPLpaaZtOb
+         9UAXiWqaZ6UIRnSq7/iLjKtIS1WnIzMn42jAmx8Fe9PpJM0QiBH+T/hIkhHJ0F5Mqa
+         Bctgz8fJD4/uR55dBE0WCsew8Ntc4VRdxiWFBo74=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
-        David Sterba <dsterba@suse.com>,
+        stable@vger.kernel.org,
+        Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 063/115] Btrfs: fix missing delayed iputs on unmount
-Date:   Wed, 15 May 2019 12:55:43 +0200
-Message-Id: <20190515090704.117076835@linuxfoundation.org>
+Subject: [PATCH 4.14 067/115] crypto: testmgr - add AES-CFB tests
+Date:   Wed, 15 May 2019 12:55:47 +0200
+Message-Id: <20190515090704.367472403@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -60,154 +61,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d6fd0ae25c6495674dc5a41a8d16bc8e0073276d ]
+[ Upstream commit 7da66670775d201f633577f5b15a4bbeebaaa2b0 ]
 
-There's a race between close_ctree() and cleaner_kthread().
-close_ctree() sets btrfs_fs_closing(), and the cleaner stops when it
-sees it set, but this is racy; the cleaner might have already checked
-the bit and could be cleaning stuff. In particular, if it deletes unused
-block groups, it will create delayed iputs for the free space cache
-inodes. As of "btrfs: don't run delayed_iputs in commit", we're no
-longer running delayed iputs after a commit. Therefore, if the cleaner
-creates more delayed iputs after delayed iputs are run in
-btrfs_commit_super(), we will leak inodes on unmount and get a busy
-inode crash from the VFS.
+Add AES128/192/256-CFB testvectors from NIST SP800-38A.
 
-Fix it by parking the cleaner before we actually close anything. Then,
-any remaining delayed iputs will always be handled in
-btrfs_commit_super(). This also ensures that the commit in close_ctree()
-is really the last commit, so we can get rid of the commit in
-cleaner_kthread().
-
-The fstest/generic/475 followed by 476 can trigger a crash that
-manifests as a slab corruption caused by accessing the freed kthread
-structure by a wake up function. Sample trace:
-
-[ 5657.077612] BUG: unable to handle kernel NULL pointer dereference at 00000000000000cc
-[ 5657.079432] PGD 1c57a067 P4D 1c57a067 PUD da10067 PMD 0
-[ 5657.080661] Oops: 0000 [#1] PREEMPT SMP
-[ 5657.081592] CPU: 1 PID: 5157 Comm: fsstress Tainted: G        W         4.19.0-rc8-default+ #323
-[ 5657.083703] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626cc-prebuilt.qemu-project.org 04/01/2014
-[ 5657.086577] RIP: 0010:shrink_page_list+0x2f9/0xe90
-[ 5657.091937] RSP: 0018:ffffb5c745c8f728 EFLAGS: 00010287
-[ 5657.092953] RAX: 0000000000000074 RBX: ffffb5c745c8f830 RCX: 0000000000000000
-[ 5657.094590] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff9a8747fdf3d0
-[ 5657.095987] RBP: ffffb5c745c8f9e0 R08: 0000000000000000 R09: 0000000000000000
-[ 5657.097159] R10: ffff9a8747fdf5e8 R11: 0000000000000000 R12: ffffb5c745c8f788
-[ 5657.098513] R13: ffff9a877f6ff2c0 R14: ffff9a877f6ff2c8 R15: dead000000000200
-[ 5657.099689] FS:  00007f948d853b80(0000) GS:ffff9a877d600000(0000) knlGS:0000000000000000
-[ 5657.101032] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 5657.101953] CR2: 00000000000000cc CR3: 00000000684bd000 CR4: 00000000000006e0
-[ 5657.103159] Call Trace:
-[ 5657.103776]  shrink_inactive_list+0x194/0x410
-[ 5657.104671]  shrink_node_memcg.constprop.84+0x39a/0x6a0
-[ 5657.105750]  shrink_node+0x62/0x1c0
-[ 5657.106529]  try_to_free_pages+0x1a4/0x500
-[ 5657.107408]  __alloc_pages_slowpath+0x2c9/0xb20
-[ 5657.108418]  __alloc_pages_nodemask+0x268/0x2b0
-[ 5657.109348]  kmalloc_large_node+0x37/0x90
-[ 5657.110205]  __kmalloc_node+0x236/0x310
-[ 5657.111014]  kvmalloc_node+0x3e/0x70
-
-Fixes: 30928e9baac2 ("btrfs: don't run delayed_iputs in commit")
-Signed-off-by: Omar Sandoval <osandov@fb.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-[ add trace ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- fs/btrfs/disk-io.c | 51 ++++++++++++++--------------------------------
- 1 file changed, 15 insertions(+), 36 deletions(-)
+ crypto/tcrypt.c  |  5 ++++
+ crypto/testmgr.c |  7 +++++
+ crypto/testmgr.h | 76 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 88 insertions(+)
 
-diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-index e0bdc0c902e44..813834552aa10 100644
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -1688,9 +1688,8 @@ static int cleaner_kthread(void *arg)
- 	struct btrfs_root *root = arg;
- 	struct btrfs_fs_info *fs_info = root->fs_info;
- 	int again;
--	struct btrfs_trans_handle *trans;
+diff --git a/crypto/tcrypt.c b/crypto/tcrypt.c
+index f7affe7cf0b47..76df552f099ba 100644
+--- a/crypto/tcrypt.c
++++ b/crypto/tcrypt.c
+@@ -1099,6 +1099,7 @@ static int do_test(const char *alg, u32 type, u32 mask, int m)
+ 		ret += tcrypt_test("xts(aes)");
+ 		ret += tcrypt_test("ctr(aes)");
+ 		ret += tcrypt_test("rfc3686(ctr(aes))");
++		ret += tcrypt_test("cfb(aes)");
+ 		break;
  
--	do {
-+	while (1) {
- 		again = 0;
+ 	case 11:
+@@ -1422,6 +1423,10 @@ static int do_test(const char *alg, u32 type, u32 mask, int m)
+ 				speed_template_16_24_32);
+ 		test_cipher_speed("ctr(aes)", DECRYPT, sec, NULL, 0,
+ 				speed_template_16_24_32);
++		test_cipher_speed("cfb(aes)", ENCRYPT, sec, NULL, 0,
++				speed_template_16_24_32);
++		test_cipher_speed("cfb(aes)", DECRYPT, sec, NULL, 0,
++				speed_template_16_24_32);
+ 		break;
  
- 		/* Make the cleaner go to sleep early. */
-@@ -1739,42 +1738,16 @@ static int cleaner_kthread(void *arg)
- 		 */
- 		btrfs_delete_unused_bgs(fs_info);
- sleep:
-+		if (kthread_should_park())
-+			kthread_parkme();
-+		if (kthread_should_stop())
-+			return 0;
- 		if (!again) {
- 			set_current_state(TASK_INTERRUPTIBLE);
--			if (!kthread_should_stop())
--				schedule();
-+			schedule();
- 			__set_current_state(TASK_RUNNING);
+ 	case 201:
+diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+index d91278c01ea89..e65c8228ea47a 100644
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -2631,6 +2631,13 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 				.dec = __VECS(aes_ccm_dec_tv_template)
+ 			}
  		}
--	} while (!kthread_should_stop());
--
--	/*
--	 * Transaction kthread is stopped before us and wakes us up.
--	 * However we might have started a new transaction and COWed some
--	 * tree blocks when deleting unused block groups for example. So
--	 * make sure we commit the transaction we started to have a clean
--	 * shutdown when evicting the btree inode - if it has dirty pages
--	 * when we do the final iput() on it, eviction will trigger a
--	 * writeback for it which will fail with null pointer dereferences
--	 * since work queues and other resources were already released and
--	 * destroyed by the time the iput/eviction/writeback is made.
--	 */
--	trans = btrfs_attach_transaction(root);
--	if (IS_ERR(trans)) {
--		if (PTR_ERR(trans) != -ENOENT)
--			btrfs_err(fs_info,
--				  "cleaner transaction attach returned %ld",
--				  PTR_ERR(trans));
--	} else {
--		int ret;
--
--		ret = btrfs_commit_transaction(trans);
--		if (ret)
--			btrfs_err(fs_info,
--				  "cleaner open transaction commit returned %d",
--				  ret);
- 	}
--
--	return 0;
- }
++	}, {
++		.alg = "cfb(aes)",
++		.test = alg_test_skcipher,
++		.fips_allowed = 1,
++		.suite = {
++			.cipher = __VECS(aes_cfb_tv_template)
++		},
+ 	}, {
+ 		.alg = "chacha20",
+ 		.test = alg_test_skcipher,
+diff --git a/crypto/testmgr.h b/crypto/testmgr.h
+index 12835f072614f..5bd9c1400fee0 100644
+--- a/crypto/testmgr.h
++++ b/crypto/testmgr.h
+@@ -16071,6 +16071,82 @@ static const struct cipher_testvec aes_cbc_dec_tv_template[] = {
+ 	},
+ };
  
- static int transaction_kthread(void *arg)
-@@ -3713,6 +3686,13 @@ void close_ctree(struct btrfs_fs_info *fs_info)
- 	int ret;
- 
- 	set_bit(BTRFS_FS_CLOSING_START, &fs_info->flags);
-+	/*
-+	 * We don't want the cleaner to start new transactions, add more delayed
-+	 * iputs, etc. while we're closing. We can't use kthread_stop() yet
-+	 * because that frees the task_struct, and the transaction kthread might
-+	 * still try to wake up the cleaner.
-+	 */
-+	kthread_park(fs_info->cleaner_kthread);
- 
- 	/* wait for the qgroup rescan worker to stop */
- 	btrfs_qgroup_wait_for_completion(fs_info, false);
-@@ -3740,9 +3720,8 @@ void close_ctree(struct btrfs_fs_info *fs_info)
- 
- 	if (!sb_rdonly(fs_info->sb)) {
- 		/*
--		 * If the cleaner thread is stopped and there are
--		 * block groups queued for removal, the deletion will be
--		 * skipped when we quit the cleaner thread.
-+		 * The cleaner kthread is stopped, so do one final pass over
-+		 * unused block groups.
- 		 */
- 		btrfs_delete_unused_bgs(fs_info);
- 
++static const struct cipher_testvec aes_cfb_tv_template[] = {
++	{ /* From NIST SP800-38A */
++		.key	= "\x2b\x7e\x15\x16\x28\xae\xd2\xa6"
++			  "\xab\xf7\x15\x88\x09\xcf\x4f\x3c",
++		.klen	= 16,
++		.iv	= "\x00\x01\x02\x03\x04\x05\x06\x07"
++			  "\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
++		.ptext	= "\x6b\xc1\xbe\xe2\x2e\x40\x9f\x96"
++			  "\xe9\x3d\x7e\x11\x73\x93\x17\x2a"
++			  "\xae\x2d\x8a\x57\x1e\x03\xac\x9c"
++			  "\x9e\xb7\x6f\xac\x45\xaf\x8e\x51"
++			  "\x30\xc8\x1c\x46\xa3\x5c\xe4\x11"
++			  "\xe5\xfb\xc1\x19\x1a\x0a\x52\xef"
++			  "\xf6\x9f\x24\x45\xdf\x4f\x9b\x17"
++			  "\xad\x2b\x41\x7b\xe6\x6c\x37\x10",
++		.ctext	= "\x3b\x3f\xd9\x2e\xb7\x2d\xad\x20"
++			  "\x33\x34\x49\xf8\xe8\x3c\xfb\x4a"
++			  "\xc8\xa6\x45\x37\xa0\xb3\xa9\x3f"
++			  "\xcd\xe3\xcd\xad\x9f\x1c\xe5\x8b"
++			  "\x26\x75\x1f\x67\xa3\xcb\xb1\x40"
++			  "\xb1\x80\x8c\xf1\x87\xa4\xf4\xdf"
++			  "\xc0\x4b\x05\x35\x7c\x5d\x1c\x0e"
++			  "\xea\xc4\xc6\x6f\x9f\xf7\xf2\xe6",
++		.len	= 64,
++	}, {
++		.key	= "\x8e\x73\xb0\xf7\xda\x0e\x64\x52"
++			  "\xc8\x10\xf3\x2b\x80\x90\x79\xe5"
++			  "\x62\xf8\xea\xd2\x52\x2c\x6b\x7b",
++		.klen	= 24,
++		.iv	= "\x00\x01\x02\x03\x04\x05\x06\x07"
++			  "\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
++		.ptext	= "\x6b\xc1\xbe\xe2\x2e\x40\x9f\x96"
++			  "\xe9\x3d\x7e\x11\x73\x93\x17\x2a"
++			  "\xae\x2d\x8a\x57\x1e\x03\xac\x9c"
++			  "\x9e\xb7\x6f\xac\x45\xaf\x8e\x51"
++			  "\x30\xc8\x1c\x46\xa3\x5c\xe4\x11"
++			  "\xe5\xfb\xc1\x19\x1a\x0a\x52\xef"
++			  "\xf6\x9f\x24\x45\xdf\x4f\x9b\x17"
++			  "\xad\x2b\x41\x7b\xe6\x6c\x37\x10",
++		.ctext	= "\xcd\xc8\x0d\x6f\xdd\xf1\x8c\xab"
++			  "\x34\xc2\x59\x09\xc9\x9a\x41\x74"
++			  "\x67\xce\x7f\x7f\x81\x17\x36\x21"
++			  "\x96\x1a\x2b\x70\x17\x1d\x3d\x7a"
++			  "\x2e\x1e\x8a\x1d\xd5\x9b\x88\xb1"
++			  "\xc8\xe6\x0f\xed\x1e\xfa\xc4\xc9"
++			  "\xc0\x5f\x9f\x9c\xa9\x83\x4f\xa0"
++			  "\x42\xae\x8f\xba\x58\x4b\x09\xff",
++		.len	= 64,
++	}, {
++		.key	= "\x60\x3d\xeb\x10\x15\xca\x71\xbe"
++			  "\x2b\x73\xae\xf0\x85\x7d\x77\x81"
++			  "\x1f\x35\x2c\x07\x3b\x61\x08\xd7"
++			  "\x2d\x98\x10\xa3\x09\x14\xdf\xf4",
++		.klen	= 32,
++		.iv	= "\x00\x01\x02\x03\x04\x05\x06\x07"
++			  "\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f",
++		.ptext	= "\x6b\xc1\xbe\xe2\x2e\x40\x9f\x96"
++			  "\xe9\x3d\x7e\x11\x73\x93\x17\x2a"
++			  "\xae\x2d\x8a\x57\x1e\x03\xac\x9c"
++			  "\x9e\xb7\x6f\xac\x45\xaf\x8e\x51"
++			  "\x30\xc8\x1c\x46\xa3\x5c\xe4\x11"
++			  "\xe5\xfb\xc1\x19\x1a\x0a\x52\xef"
++			  "\xf6\x9f\x24\x45\xdf\x4f\x9b\x17"
++			  "\xad\x2b\x41\x7b\xe6\x6c\x37\x10",
++		.ctext	= "\xdc\x7e\x84\xbf\xda\x79\x16\x4b"
++			  "\x7e\xcd\x84\x86\x98\x5d\x38\x60"
++			  "\x39\xff\xed\x14\x3b\x28\xb1\xc8"
++			  "\x32\x11\x3c\x63\x31\xe5\x40\x7b"
++			  "\xdf\x10\x13\x24\x15\xe5\x4b\x92"
++			  "\xa1\x3e\xd0\xa8\x26\x7a\xe2\xf9"
++			  "\x75\xa3\x85\x74\x1a\xb9\xce\xf8"
++			  "\x20\x31\x62\x3d\x55\xb1\xe4\x71",
++		.len	= 64,
++	},
++};
++
+ static const struct aead_testvec hmac_md5_ecb_cipher_null_enc_tv_template[] = {
+ 	{ /* Input data from RFC 2410 Case 1 */
+ #ifdef __LITTLE_ENDIAN
 -- 
 2.20.1
 
