@@ -2,112 +2,178 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26032C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8526AC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D966220843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E9F221473
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:55:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VWWOqMdp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G+u5IIni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbfEOTzE (ORCPT
+        id S1727526AbfEOTzL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:55:04 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39837 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfEOTzE (ORCPT
+        Wed, 15 May 2019 15:55:11 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38279 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727245AbfEOTzL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 15:55:04 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w8so808587wrl.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 12:55:03 -0700 (PDT)
+        Wed, 15 May 2019 15:55:11 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y19so766961lfy.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 12:55:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=faSObUUDhzWCbTecxagBTtZE6cIWm5DcuCOMti7xnXk=;
-        b=VWWOqMdpNmF+ZoF8YVE9C0qKG2dKyZbC3SSkb6TrM8bqqTDvvgo2EZajTjyG54Oinq
-         ThywjMpAfFVB+8wdu9gR9QktsHSL8UoRq/5Tt7ZzE4J3CXIX+kP5rM8Ayd5Sed4s8oue
-         ZNxO4KIx+D3/YQtcZtN8oPJBj13yl4Fnvm1MHoJA50+tyZxGEuv3qGkNB054dyOR1Qhp
-         FQIxuzehK+epcXEQOwnW4aJxrdZQUZbNzDiaxLvQ8krx3WHeXI6HJ1cE0cRircw2llF/
-         Y7e1FnK7ticBSgU71MxduKPIQpKrP9eLKnaHwDDeTOLbk/626p1quCnQ+dI2uXyrKMYT
-         nHXA==
+         :cc:content-transfer-encoding;
+        bh=NtfqLj3FhKROou9UKTE3EFKT9RcYcoszb1MLPx30lFQ=;
+        b=G+u5IIniRj4n2jVDbLdo30jx9xK/uF8MHnlPtEbAAan4ENjhFhfJSZkxYgiTdMHjKX
+         MjTZGVljpan9IvVvqOPYytWZTydGoWAOzy5eUooVl3qlNRLhTPnP0Qk89KgNVFNMETpP
+         cd90m0N1xkE7oJDbyENL7HEG46X9l7JtzuGabd+d8fGCAY10lizqIQ3gEZgb7QV5+GTn
+         ehF4Gal3GiHk8oNfQAWv5L6Fyt0DDzFC4SxTQqhkWHXqbvLKITBIjWgUHFrBNSnibIE3
+         BK5oG5McUhfA4dkc9lm5FFqiNKUZ+/e9ygrDIuoyL7V7g3R8i1kb21kyUJ3l7vyRYolV
+         YHOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=faSObUUDhzWCbTecxagBTtZE6cIWm5DcuCOMti7xnXk=;
-        b=ZmLWaUsKcwHqpyn/3DQ5jsJLZvTgli8VEIUT6bABmUIFbStfO6MCJfBFwxwYjr0rZX
-         5I5U4y9hjAdMj9mon56JXeKO2XW+MeR12Kzo8UMIkGET6/w4x+xUHtsCtMfcrCNNoEO2
-         xeYbnS1dad/R6l2d4GAifbSiYgY6bz6ylLuQbX6iU9ElfbfZF+ZmkcSBWjDYjgKOsdIG
-         skUABZJVbFXyA93gqiS3lWCJZ3IJcItcIpoUd9xgcNDnf1WQhvBU5UZIbUiHBjIRTpG0
-         GSLEiNr1spfGc8TktbqVz6XzxgAMZKWnpalvQ7lPjZaxPCvxElZ/rjZmPfVrVql1b2iw
-         NJFw==
-X-Gm-Message-State: APjAAAXgGQckw4wHkGR+bKiK6v9w+FFm4jpuxNN0amjkaokVCKG6YXsY
-        r7kWKJA3wjzXFMWTTtuua01qsM5u1l3v4X7CIH8=
-X-Google-Smtp-Source: APXvYqywK2MKVrTXU7jzIoWkVf5WOTwoiC3FOjhBWPLHCphBNN+LAp2NOQcjlLwDN2AmNe8h/E0RGJipLur6+qgJVaI=
-X-Received: by 2002:adf:cf05:: with SMTP id o5mr11796362wrj.262.1557950103165;
- Wed, 15 May 2019 12:55:03 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=NtfqLj3FhKROou9UKTE3EFKT9RcYcoszb1MLPx30lFQ=;
+        b=MfrsMFufVZ+LoiNkl20B5oWUhEeORV5RmlA5lZ1efJdso3yLhkXBN0H2rEddw5aUHU
+         bVrOqaRCm+lezDVaW7VuBWPDYsHVv308cm8pkgIZwY1jWuIjm8hVOIQ5rbe4WOMU63gd
+         wHj7/MKNYst+OilLxs3KhH19zuMnXyq24KhTJAQEfIiDanZkN4P3tKvQNXoAW5e6JcON
+         UC/L+kwQYgpwxN9mbXZu5d5BCpUovcD966Onp1GV0JhutyfiJEJ8kwekfl812bYZ5aZK
+         Q6axwXnuMNhJ2fHQzckHxYibax8mIjQGYwNLb9aRzNEliWxXS1E4woZwPiWxq0aeqhXo
+         gvnQ==
+X-Gm-Message-State: APjAAAV4soQCnT5x+BG7ZgqQN8yaiirSpRRyYKgsy6cUWJ5bUecO81K1
+        J6Fnejo+PG+i6VbgUUkpVHhtvdxJO5IFVXEDUFLHgA==
+X-Google-Smtp-Source: APXvYqygxC8I60Gii3BAVOi7/kv8DkejMYTrPGUZcafSABk+fFUr2otdv9FE4d620oBRzmmj0rYX0soirAwobnuJkvg=
+X-Received: by 2002:ac2:4d07:: with SMTP id r7mr6019438lfi.142.1557950108945;
+ Wed, 15 May 2019 12:55:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190514191050.13181-1-richard@nod.at>
-In-Reply-To: <20190514191050.13181-1-richard@nod.at>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Wed, 15 May 2019 21:54:51 +0200
-Message-ID: <CAFLxGvz1OAbqj=Hf4dyJ2SuUJjYCj2KMFhj-9nVE3mQzNoKH2A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ubifs: Use correct config name for encryption
-To:     Richard Weinberger <richard@nod.at>
-Cc:     linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
+References: <20190515090616.669619870@linuxfoundation.org>
+In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 16 May 2019 01:24:56 +0530
+Message-ID: <CA+G9fYvH+ywdrsbZ9R8=UG5CeuqLvjs4kCjm3rRQ31=gfsa_Bg@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/51] 4.9.177-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 9:11 PM Richard Weinberger <richard@nod.at> wrote:
+On Wed, 15 May 2019 at 16:45, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> CONFIG_UBIFS_FS_ENCRYPTION is gone, fscrypt is now
-> controlled via CONFIG_FS_ENCRYPTION.
-> This problem slipped into the tree because of a mis-merge on
-> my side.
+> This is the start of the stable review cycle for the 4.9.177 release.
+> There are 51 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Reported-by: Eric Biggers <ebiggers@kernel.org>
-> Fixes: eea2c05d927b ("ubifs: Remove #ifdef around CONFIG_FS_ENCRYPTION")
-> Signed-off-by: Richard Weinberger <richard@nod.at>
-> ---
->  fs/ubifs/sb.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Responses should be made by Fri 17 May 2019 09:04:42 AM UTC.
+> Anything received after that time might be too late.
 >
-> diff --git a/fs/ubifs/sb.c b/fs/ubifs/sb.c
-> index 2afc8b1d4c3b..3ca41965db6e 100644
-> --- a/fs/ubifs/sb.c
-> +++ b/fs/ubifs/sb.c
-> @@ -748,7 +748,7 @@ int ubifs_read_superblock(struct ubifs_info *c)
->                 goto out;
->         }
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.177-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
 >
-> -       if (!IS_ENABLED(CONFIG_UBIFS_FS_ENCRYPTION) && c->encrypted) {
-> +       if (!IS_ENABLED(CONFIG_FS_ENCRYPTION) && c->encrypted) {
->                 ubifs_err(c, "file system contains encrypted files but UBIFS"
->                              " was built without crypto support.");
->                 err = -EINVAL;
-> @@ -941,7 +941,7 @@ int ubifs_enable_encryption(struct ubifs_info *c)
->         int err;
->         struct ubifs_sb_node *sup = c->sup_node;
+> thanks,
 >
-> -       if (!IS_ENABLED(CONFIG_UBIFS_FS_ENCRYPTION))
-> +       if (!IS_ENABLED(CONFIG_FS_ENCRYPTION))
->                 return -EOPNOTSUPP;
+> greg k-h
 >
->         if (c->encrypted)
-> --
-> 2.16.4
 
-Applied both.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
--- 
-Thanks,
-//richard
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.9.177-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: 2647f24152a78a686e9e2c8382f5b292cc31b99a
+git describe: v4.9.176-52-g2647f24152a7
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.176-52-g2647f24152a7
+
+
+No regressions (compared to build v4.9.176)
+
+No fixes (compared to build v4.9.176)
+
+
+Ran 21640 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-open-posix-tests
+* prep-tmp-disk
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
