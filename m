@@ -2,111 +2,81 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58CF8C04AA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0201C04AA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2E220862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:21:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o375KU68"
+	by mail.kernel.org (Postfix) with ESMTP id CC3312084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:23:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfEOGVR (ORCPT
+        id S1726084AbfEOGXX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 02:21:17 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34063 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfEOGVQ (ORCPT
+        Wed, 15 May 2019 02:23:23 -0400
+Received: from mail.fireflyinternet.com ([109.228.58.192]:58195 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725857AbfEOGXX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 02:21:16 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w7so820478plz.1;
-        Tue, 14 May 2019 23:21:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vpr9qeWej7/xdaLzfL7kzDfFrVNMEMZWeQ2yDGuvcWA=;
-        b=o375KU68c6cq1L9rhDvFqMLy/36KzkumU5eyglTJpzMIPwAslM+THguYtGV24yszrB
-         AfYo9WtSVI4YPeApa2se9off1OySDBkrKN7buQLJmfCNI/aUK7RfjMnE/bGxwyACd7HW
-         g43h4W/w7cF1ebM7p3GlKDoMC/No0MM/60V7FFaBW4jE3VheGcBQfsSDliKPbh80RMYI
-         dOTUBqDXrX4eE2LtTtSOQAHYRUCrNB5AZxKgRYAE1MmJfuYWQBqZx6l5sqSUhtrZ1gg1
-         924TKUokkcN8xRTqUfEE68pHktdBzMgi/pqoWUNqh/12ErYeobF1s95PpggCN9DKAtsk
-         f1rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vpr9qeWej7/xdaLzfL7kzDfFrVNMEMZWeQ2yDGuvcWA=;
-        b=f8nL02xSEYVSbcj6sJKVmwUBPhGsE4ITx1ly+NWa0OYFUyFGyYGRWfoL5YNj46+0hT
-         qRCZeAFD2MHkWsLxZ2I1gEVzKQ7fqPfopCQTAai3Nqib5FzIBrzfCxg6G/bF1dhbykPU
-         bZweLAuWJcjxVg64qxDgTt/TvGYD+yjRycN3FzffI3chGVYwd0ZqNyIj+/OIIUQnF+mP
-         gt3e0y1+9uF4SQdgeSYK2E7HOXm/OD/4b1UKfo7nhC5hCZIu9hfmZhmC3U/t5iCjwZjd
-         c60dyfnbzfONgwCXTrzS7zz+3CnEdGQ9x2kb8/E1VS/eKEsJFHVvw8m4La8dJrReiMA2
-         IZyQ==
-X-Gm-Message-State: APjAAAUoi/Lg/x/VT3FgLL1CnuH/RZJSrZcEWbYnKKJSmVCM3DJOnyO4
-        mPzG4XMVCNU2/diw0kZFz3I=
-X-Google-Smtp-Source: APXvYqzRJKRDGGgSFBUw3D9wrq2bEKNWyL8HrksRCPNPrE+2T1MlywAkkHnSpqiXENFfwknkCI68dQ==
-X-Received: by 2002:a17:902:6bc8:: with SMTP id m8mr41177371plt.227.1557901275995;
-        Tue, 14 May 2019 23:21:15 -0700 (PDT)
-Received: from localhost ([110.70.52.120])
-        by smtp.gmail.com with ESMTPSA id f4sm1300687pfn.118.2019.05.14.23.21.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 23:21:14 -0700 (PDT)
-Date:   Wed, 15 May 2019 15:21:11 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@aculab.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
-Message-ID: <20190515062111.GA30030@jagdpanzerIV>
-References: <20190510122401.21a598f6@gandalf.local.home>
- <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
- <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
- <20190513091320.GK9224@smile.fi.intel.com>
- <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
- <20190514020730.GA651@jagdpanzerIV>
- <45348cf615fe40d383c1a25688d4a88f@AcuMS.aculab.com>
- <CAMuHMdXaMObq9h2Sb49PW1-HUysPeaWXB7wJmKFz=xLmSoUDZg@mail.gmail.com>
- <20190514143751.48e81e05@oasis.local.home>
- <CAMuHMdUhy3uB+G23uXh__F2Y_Jsam5uS1Q5jJC95kWAOEM8WRA@mail.gmail.com>
+        Wed, 15 May 2019 02:23:23 -0400
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 16559056-1500050 
+        for multiple; Wed, 15 May 2019 07:23:12 +0100
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUhy3uB+G23uXh__F2Y_Jsam5uS1Q5jJC95kWAOEM8WRA@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8BIT
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+In-Reply-To: <20190515043753.9853-1-yamada.masahiro@socionext.com>
+Cc:     Dave Airlie <airlied@redhat.com>, Sam Ravnborg <sam@ravnborg.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+References: <20190515043753.9853-1-yamada.masahiro@socionext.com>
+Message-ID: <155790139253.21839.18331243986827594086@skylake-alporthouse-com>
+User-Agent: alot/0.6
+Subject: Re: [PATCH] drm/i915: drop unneeded -Wall addition
+Date:   Wed, 15 May 2019 07:23:12 +0100
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (05/14/19 21:13), Geert Uytterhoeven wrote:
-> I would immediately understand there's a missing IS_ERR() check in a
-> function that can return  -EINVAL, without having to add a new printk()
-> to find out what kind of bogus value has been received, and without
-> having to reboot, and trying to reproduce...
+Quoting Masahiro Yamada (2019-05-15 05:37:53)
+> The top level Makefile adds -Wall globally:
+> 
+>   KBUILD_CFLAGS   := -Wall -Wundef -Werror=strict-prototypes -Wno-trigraphs \
+> 
+> I see two "-Wall" added for compiling under drivers/gpu/drm/i915/.
 
-But chances are that missing IS_ERR() will crash the kernel sooner
-or later (in general case), if not in sprintf() then somewhere else.
+Does it matter? Is the statement in i915/Makefile not more complete for
+saying "-Wall -Wextra -Werror"?
 
-	-ss
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+> BTW, I have a question in the comment:
+> 
+>  "Note the danger in using -Wall -Wextra is that when CI updates gcc we
+>   will most likely get a sudden build breakage... Hopefully we will fix
+>   new warnings before CI updates!"
+> 
+> Enabling whatever warning options does not cause build breakage.
+> -Werror does.
+> 
+> So, I think the correct statement is:
+> 
+>  "Note the danger in using -Werror is that when CI updates gcc we ...
+
+No. CI enforces -Werror and that is constant, so the uncontrolled
+variable, the danger, lies in using the unreliable heuristics gcc may
+arbitrary enable between versions. That the set of warnings causing an
+error may be different between CI and the developer.
+-Chris
