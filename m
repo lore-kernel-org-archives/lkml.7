@@ -3,141 +3,224 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56222C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF52C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:28:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CAA52084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A97512084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:28:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbfEOT2v (ORCPT
+        id S1728054AbfEOT2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:28:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36196 "EHLO mx1.redhat.com"
+        Wed, 15 May 2019 15:28:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42882 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727628AbfEOT1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727266AbfEOT1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 May 2019 15:27:34 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 168B130C1AC2;
-        Wed, 15 May 2019 19:27:34 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7D84333027E;
+        Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E5DF65D9CC;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5491B1001DE1;
         Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 0C9CF22548D; Wed, 15 May 2019 15:27:30 -0400 (EDT)
+        id C56EC225483; Wed, 15 May 2019 15:27:29 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, linux-nvdimm@lists.01.org
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
         dgilbert@redhat.com, swhiteho@redhat.com
-Subject: [PATCH v2 25/30] fuse: Maintain a list of busy elements
-Date:   Wed, 15 May 2019 15:27:10 -0400
-Message-Id: <20190515192715.18000-26-vgoyal@redhat.com>
+Subject: [PATCH v2 15/30] virtio: Implement get_shm_region for PCI transport
+Date:   Wed, 15 May 2019 15:27:00 -0400
+Message-Id: <20190515192715.18000-16-vgoyal@redhat.com>
 In-Reply-To: <20190515192715.18000-1-vgoyal@redhat.com>
 References: <20190515192715.18000-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 15 May 2019 19:27:34 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This list will be used selecting fuse_dax_mapping to free when number of
-free mappings drops below a threshold.
+From: Sebastien Boeuf <sebastien.boeuf@intel.com>
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+On PCI the shm regions are found using capability entries;
+find a region by searching for the capability.
+
+Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
+Signed-off-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
 ---
- fs/fuse/file.c   | 8 ++++++++
- fs/fuse/fuse_i.h | 7 +++++++
- fs/fuse/inode.c  | 4 ++++
- 3 files changed, 19 insertions(+)
+ drivers/virtio/virtio_pci_modern.c | 108 +++++++++++++++++++++++++++++
+ include/uapi/linux/virtio_pci.h    |  10 +++
+ 2 files changed, 118 insertions(+)
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index e536a04aaa06..3f0f7a387341 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -273,6 +273,10 @@ static int fuse_setup_one_mapping(struct inode *inode,
- 	/* Protected by fi->i_dmap_sem */
- 	fuse_dax_interval_tree_insert(dmap, &fi->dmap_tree);
- 	fi->nr_dmaps++;
-+	spin_lock(&fc->lock);
-+	list_add_tail(&dmap->busy_list, &fc->busy_ranges);
-+	fc->nr_busy_ranges++;
-+	spin_unlock(&fc->lock);
- 	return 0;
+diff --git a/drivers/virtio/virtio_pci_modern.c b/drivers/virtio/virtio_pci_modern.c
+index 07571daccfec..51c9e6eca5ac 100644
+--- a/drivers/virtio/virtio_pci_modern.c
++++ b/drivers/virtio/virtio_pci_modern.c
+@@ -446,6 +446,112 @@ static void del_vq(struct virtio_pci_vq_info *info)
+ 	vring_del_virtqueue(vq);
  }
  
-@@ -317,6 +321,10 @@ void fuse_removemapping(struct inode *inode)
- 		if (dmap) {
- 			fuse_dax_interval_tree_remove(dmap, &fi->dmap_tree);
- 			fi->nr_dmaps--;
-+			spin_lock(&fc->lock);
-+			list_del_init(&dmap->busy_list);
-+			fc->nr_busy_ranges--;
-+			spin_unlock(&fc->lock);
- 		}
- 
- 		if (!dmap)
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index a234cf30538d..c93e9155b723 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -114,6 +114,9 @@ struct fuse_dax_mapping {
- 	__u64 end;
- 	__u64 __subtree_last;
- 
-+	/* Will connect in fc->busy_ranges to keep track busy memory */
-+	struct list_head busy_list;
++static int virtio_pci_find_shm_cap(struct pci_dev *dev,
++                                   u8 required_id,
++                                   u8 *bar, u64 *offset, u64 *len)
++{
++	int pos;
 +
-        /** Position in DAX window */
-        u64 window_offset;
- 
-@@ -873,6 +876,10 @@ struct fuse_conn {
- 	/** DAX device, non-NULL if DAX is supported */
- 	struct dax_device *dax_dev;
- 
-+	/* List of memory ranges which are busy */
-+	unsigned long nr_busy_ranges;
-+	struct list_head busy_ranges;
++        for (pos = pci_find_capability(dev, PCI_CAP_ID_VNDR);
++             pos > 0;
++             pos = pci_find_next_capability(dev, pos, PCI_CAP_ID_VNDR)) {
++		u8 type, cap_len, id;
++                u32 tmp32;
++                u64 res_offset, res_length;
 +
- 	/*
- 	 * DAX Window Free Ranges. TODO: This might not be best place to store
- 	 * this free list
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index 713c5f32ab35..f57f7ce02acc 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -626,6 +626,8 @@ static void fuse_free_dax_mem_ranges(struct list_head *mem_list)
- 	/* Free All allocated elements */
- 	list_for_each_entry_safe(range, temp, mem_list, list) {
- 		list_del(&range->list);
-+		if (!list_empty(&range->busy_list))
-+			list_del(&range->busy_list);
- 		kfree(range);
- 	}
- }
-@@ -670,6 +672,7 @@ static int fuse_dax_mem_range_init(struct fuse_conn *fc,
- 		 */
- 		range->window_offset = i * FUSE_DAX_MEM_RANGE_SZ;
- 		range->length = FUSE_DAX_MEM_RANGE_SZ;
-+		INIT_LIST_HEAD(&range->busy_list);
- 		list_add_tail(&range->list, &mem_ranges);
- 	}
++		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
++                                                         cfg_type),
++                                     &type);
++                if (type != VIRTIO_PCI_CAP_SHARED_MEMORY_CFG)
++                        continue;
++
++		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
++                                                         cap_len),
++                                     &cap_len);
++                if (cap_len != sizeof(struct virtio_pci_shm_cap)) {
++		        printk(KERN_ERR "%s: shm cap with bad size offset: %d size: %d\n",
++                               __func__, pos, cap_len);
++                        continue;
++                };
++
++		pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_shm_cap,
++                                                         id),
++                                     &id);
++                if (id != required_id)
++                        continue;
++
++                /* Type, and ID match, looks good */
++                pci_read_config_byte(dev, pos + offsetof(struct virtio_pci_cap,
++                                                         bar),
++                                     bar);
++
++                /* Read the lower 32bit of length and offset */
++                pci_read_config_dword(dev, pos + offsetof(struct virtio_pci_cap, offset),
++                                      &tmp32);
++                res_offset = tmp32;
++                pci_read_config_dword(dev, pos + offsetof(struct virtio_pci_cap, length),
++                                      &tmp32);
++                res_length = tmp32;
++
++                /* and now the top half */
++                pci_read_config_dword(dev,
++                                      pos + offsetof(struct virtio_pci_shm_cap,
++                                                     offset_hi),
++                                      &tmp32);
++                res_offset |= ((u64)tmp32) << 32;
++                pci_read_config_dword(dev,
++                                      pos + offsetof(struct virtio_pci_shm_cap,
++                                                     length_hi),
++                                      &tmp32);
++                res_length |= ((u64)tmp32) << 32;
++
++                *offset = res_offset;
++                *len = res_length;
++
++                return pos;
++        }
++        return 0;
++}
++
++static bool vp_get_shm_region(struct virtio_device *vdev,
++			      struct virtio_shm_region *region, u8 id)
++{
++	struct virtio_pci_device *vp_dev = to_vp_device(vdev);
++	struct pci_dev *pci_dev = vp_dev->pci_dev;
++	u8 bar;
++	u64 offset, len;
++	phys_addr_t phys_addr;
++	size_t bar_len;
++	char *bar_name;
++	int ret;
++
++	if (!virtio_pci_find_shm_cap(pci_dev, id, &bar, &offset, &len)) {
++		return false;
++	}
++
++	ret = pci_request_region(pci_dev, bar, "virtio-pci-shm");
++	if (ret < 0) {
++		dev_err(&pci_dev->dev, "%s: failed to request BAR\n",
++			__func__);
++		return false;
++	}
++
++	phys_addr = pci_resource_start(pci_dev, bar);
++	bar_len = pci_resource_len(pci_dev, bar);
++
++        if (offset + len > bar_len) {
++                dev_err(&pci_dev->dev,
++                        "%s: bar shorter than cap offset+len\n",
++                        __func__);
++                return false;
++        }
++
++	region->len = len;
++	region->addr = (u64) phys_addr + offset;
++
++	return true;
++}
++
+ static const struct virtio_config_ops virtio_pci_config_nodev_ops = {
+ 	.get		= NULL,
+ 	.set		= NULL,
+@@ -460,6 +566,7 @@ static const struct virtio_config_ops virtio_pci_config_nodev_ops = {
+ 	.bus_name	= vp_bus_name,
+ 	.set_vq_affinity = vp_set_vq_affinity,
+ 	.get_vq_affinity = vp_get_vq_affinity,
++	.get_shm_region  = vp_get_shm_region,
+ };
  
-@@ -720,6 +723,7 @@ void fuse_conn_init(struct fuse_conn *fc, struct user_namespace *user_ns,
- 	fc->user_ns = get_user_ns(user_ns);
- 	fc->max_pages = FUSE_DEFAULT_MAX_PAGES_PER_REQ;
- 	INIT_LIST_HEAD(&fc->free_ranges);
-+	INIT_LIST_HEAD(&fc->busy_ranges);
- }
- EXPORT_SYMBOL_GPL(fuse_conn_init);
+ static const struct virtio_config_ops virtio_pci_config_ops = {
+@@ -476,6 +583,7 @@ static const struct virtio_config_ops virtio_pci_config_ops = {
+ 	.bus_name	= vp_bus_name,
+ 	.set_vq_affinity = vp_set_vq_affinity,
+ 	.get_vq_affinity = vp_get_vq_affinity,
++	.get_shm_region  = vp_get_shm_region,
+ };
  
+ /**
+diff --git a/include/uapi/linux/virtio_pci.h b/include/uapi/linux/virtio_pci.h
+index 90007a1abcab..31841a60a4ad 100644
+--- a/include/uapi/linux/virtio_pci.h
++++ b/include/uapi/linux/virtio_pci.h
+@@ -113,6 +113,8 @@
+ #define VIRTIO_PCI_CAP_DEVICE_CFG	4
+ /* PCI configuration access */
+ #define VIRTIO_PCI_CAP_PCI_CFG		5
++/* Additional shared memory capability */
++#define VIRTIO_PCI_CAP_SHARED_MEMORY_CFG 8
+ 
+ /* This is the PCI capability header: */
+ struct virtio_pci_cap {
+@@ -163,6 +165,14 @@ struct virtio_pci_cfg_cap {
+ 	__u8 pci_cfg_data[4]; /* Data for BAR access. */
+ };
+ 
++/* Fields in VIRTIO_PCI_CAP_SHARED_MEMORY_CFG */
++struct virtio_pci_shm_cap {
++       struct virtio_pci_cap cap;
++       __le32 offset_hi;             /* Most sig 32 bits of offset */
++       __le32 length_hi;             /* Most sig 32 bits of length */
++        __u8   id;                    /* To distinguish shm chunks */
++};
++
+ /* Macro versions of offsets for the Old Timers! */
+ #define VIRTIO_PCI_CAP_VNDR		0
+ #define VIRTIO_PCI_CAP_NEXT		1
 -- 
 2.20.1
 
