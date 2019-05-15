@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 750E4C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0C1C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36E282053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:46:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46EE420578
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920761;
-	bh=kndu8SAtUtlE6O5XFX8Lvk1NrcXtcxLc7hvEAE7f7uk=;
+	s=default; t=1557920770;
+	bh=hntAyRFrvw6Cr9yi4hm6U6Z3YwulC1viRtaaSaqeOA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D7l+9dkJqnRAcypmvKSK1ml8d2XDwWuJWnS6BTGPs6bmOC1dz/NTOg1/5FtC+1g3f
-	 g2RNnIM9yWfDhH4IDLEubJIYLF4coGPsCRsDxUD74hmobkxB4k68jXf9Dk0eJerwYn
-	 +xnk4IOegj4zjv8UteOY4zPzAN0YNsNYwxww02vc=
+	b=ZH8edOK64ls5MNnv/KuqpSIOKCXMo0UmMjH6zEysl/ZVfW/W90qzgjBl6zP4by2bJ
+	 I3KS0+ihT+K7fVasbrinQwyESAQ9TG6dpNRNNIKKyur5QBGAB1A+Wn21YJj1UuNs9a
+	 5KBixVd4CBWlgk2zb3r7ckioW3aG03dI7j4m6cYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731403AbfEOLp7 (ORCPT
+        id S1732231AbfEOLqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:45:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36566 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:46:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732038AbfEOLZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:25:47 -0400
+        id S1732025AbfEOLZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:25:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCBFC20818;
-        Wed, 15 May 2019 11:25:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A4A2206BF;
+        Wed, 15 May 2019 11:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919546;
-        bh=kndu8SAtUtlE6O5XFX8Lvk1NrcXtcxLc7hvEAE7f7uk=;
+        s=default; t=1557919538;
+        bh=hntAyRFrvw6Cr9yi4hm6U6Z3YwulC1viRtaaSaqeOA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rrVGil3f0xxXfuHmiHR/UnBzhU5L2qSZxHM8STjL3nO3pHCiCxpu1wxO1XzcMhark
-         Hq+saB1mK0OYYwg+97ZDpxC5N1bfHdJGZR01PKgIrI5R4slNTLZ5+VDu/LsnQuMnnF
-         P9px8e88EQAXHUkO16HBs3JXC/qgnftaXr0PF4GQ=
+        b=DvXQ2+N+7aocL6bHBzUHOgkReqyb6U3J76Fh0PWjeo1fw6SaYmnF6+JicRbLon01n
+         eBcMNkXHv4QO+G/572NqpaCEEX4Aiagqm5KLehRrh6WEpKv34laazVKfWmqnoJ2Csy
+         ABZpOxMJdtpTuQ1b/pIGaLtJtl7AvhCVaYlouYGI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Haller <thaller@redhat.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 091/113] fib_rules: return 0 directly if an exactly same rule exists when NLM_F_EXCL not supplied
-Date:   Wed, 15 May 2019 12:56:22 +0200
-Message-Id: <20190515090700.540421230@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [PATCH 4.19 113/113] PCI: hv: Add pci_destroy_slot() in pci_devices_present_work(), if necessary
+Date:   Wed, 15 May 2019 12:56:44 +0200
+Message-Id: <20190515090702.312252361@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -60,47 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit e9919a24d3022f72bcadc407e73a6ef17093a849 ]
+commit 340d455699400f2c2c0f9b3f703ade3085cdb501 upstream.
 
-With commit 153380ec4b9 ("fib_rules: Added NLM_F_EXCL support to
-fib_nl_newrule") we now able to check if a rule already exists. But this
-only works with iproute2. For other tools like libnl, NetworkManager,
-it still could add duplicate rules with only NLM_F_CREATE flag, like
+When we hot-remove a device, usually the host sends us a PCI_EJECT message,
+and a PCI_BUS_RELATIONS message with bus_rel->device_count == 0.
 
-[localhost ~ ]# ip rule
-0:      from all lookup local
-32766:  from all lookup main
-32767:  from all lookup default
-100000: from 192.168.7.5 lookup 5
-100000: from 192.168.7.5 lookup 5
+When we execute the quick hot-add/hot-remove test, the host may not send
+us the PCI_EJECT message if the guest has not fully finished the
+initialization by sending the PCI_RESOURCES_ASSIGNED* message to the
+host, so it's potentially unsafe to only depend on the
+pci_destroy_slot() in hv_eject_device_work() because the code path
 
-As it doesn't make sense to create two duplicate rules, let's just return
-0 if the rule exists.
+create_root_hv_pci_bus()
+ -> hv_pci_assign_slots()
 
-Fixes: 153380ec4b9 ("fib_rules: Added NLM_F_EXCL support to fib_nl_newrule")
-Reported-by: Thomas Haller <thaller@redhat.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+is not called in this case. Note: in this case, the host still sends the
+guest a PCI_BUS_RELATIONS message with bus_rel->device_count == 0.
+
+In the quick hot-add/hot-remove test, we can have such a race before
+the code path
+
+pci_devices_present_work()
+ -> new_pcichild_device()
+
+adds the new device into the hbus->children list, we may have already
+received the PCI_EJECT message, and since the tasklet handler
+
+hv_pci_onchannelcallback()
+
+may fail to find the "hpdev" by calling
+
+get_pcichild_wslot(hbus, dev_message->wslot.slot)
+
+hv_pci_eject_device() is not called; Later, by continuing execution
+
+create_root_hv_pci_bus()
+ -> hv_pci_assign_slots()
+
+creates the slot and the PCI_BUS_RELATIONS message with
+bus_rel->device_count == 0 removes the device from hbus->children, and
+we end up being unable to remove the slot in
+
+hv_pci_remove()
+ -> hv_pci_remove_slots()
+
+Remove the slot in pci_devices_present_work() when the device
+is removed to address this race.
+
+pci_devices_present_work() and hv_eject_device_work() run in the
+singled-threaded hbus->wq, so there is not a double-remove issue for the
+slot.
+
+We cannot offload hv_pci_eject_device() from hv_pci_onchannelcallback()
+to the workqueue, because we need the hv_pci_onchannelcallback()
+synchronously call hv_pci_eject_device() to poll the channel
+ringbuffer to work around the "hangs in hv_compose_msi_msg()" issue
+fixed in commit de0aa7b2f97d ("PCI: hv: Fix 2 hang issues in
+hv_compose_msi_msg()")
+
+Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+[lorenzo.pieralisi@arm.com: rewritten commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Stephen Hemminger <stephen@networkplumber.org>
+Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/fib_rules.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -756,9 +756,9 @@ int fib_nl_newrule(struct sk_buff *skb,
- 	if (err)
- 		goto errout;
- 
--	if ((nlh->nlmsg_flags & NLM_F_EXCL) &&
--	    rule_exists(ops, frh, tb, rule)) {
--		err = -EEXIST;
-+	if (rule_exists(ops, frh, tb, rule)) {
-+		if (nlh->nlmsg_flags & NLM_F_EXCL)
-+			err = -EEXIST;
- 		goto errout_free;
+---
+ drivers/pci/controller/pci-hyperv.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1781,6 +1781,10 @@ static void pci_devices_present_work(str
+ 		hpdev = list_first_entry(&removed, struct hv_pci_dev,
+ 					 list_entry);
+ 		list_del(&hpdev->list_entry);
++
++		if (hpdev->pci_slot)
++			pci_destroy_slot(hpdev->pci_slot);
++
+ 		put_pcichild(hpdev);
  	}
  
 
