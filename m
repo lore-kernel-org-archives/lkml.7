@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3DFC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6CEC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8608E20578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 432FB2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920691;
-	bh=dD7zTEz88dOfkKYT0g9JV76fjXUG+y9OtNgz7xfOd64=;
+	s=default; t=1557920696;
+	bh=7zpMCgIPMTHieUH/kBsQzSjOK6LEHevYPbzwmbMoFgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MWi5FK8/5niy1wHXZswvoC2odyq49wJJCm6qLmcsiJpmTPVEJSXxJZhVwDIwPQvyU
-	 ca6654pm657w1uA5D4soKBRESpgy3wCj/q0Oyrvxv/RdFfNvzOfojwkNInjAZaY5Pc
-	 sWQiTp+HettJro3pwLl/ilQkBDtLdWHJaJ2EmNOo=
+	b=dBWssLl/TgRAl+UgkBLO9qbwRZrD1GEc7+ORibft8ExBpji3xRJxyaaAscuwBHTtH
+	 jB+hCRkAhp8JD59t2l2JNSlhXn/CLYWpkInEcV9ou7armJ969M4EcGq2xNoaGdMd2k
+	 LKKNTr9wo2AlJb2xMERLrLHVG2K3MZeEe1V0Ej+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732137AbfEOL0W (ORCPT
+        id S1726462AbfEOL0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:26:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37126 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:26:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732119AbfEOL0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:26:18 -0400
+        id S1726669AbfEOL0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:26:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78E8320818;
-        Wed, 15 May 2019 11:26:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EE3A20818;
+        Wed, 15 May 2019 11:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919578;
-        bh=dD7zTEz88dOfkKYT0g9JV76fjXUG+y9OtNgz7xfOd64=;
+        s=default; t=1557919570;
+        bh=7zpMCgIPMTHieUH/kBsQzSjOK6LEHevYPbzwmbMoFgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=woX4pzql8RRSu/CLPOj/Qei/7EqnPRn9IyzwVhbA24ufvWrD0VwH4qk1jMlCRfA6A
-         +vOw8NLmyS8eQtotmcYUsxaCnAZlShinEaz26sWPABMO0KWgWiK0EARktUTxscmg2f
-         2Crz7vXlDWkbc3IurR8tgQO6JCTKFHfJJ/Kw4IQ8=
+        b=Ug2sRnOY1umVHdC5H7CwLrOGUXAJFzuPSohaLdpKS8e1hiB/HdfjI7g4rtz5vwSVE
+         WsAa2ofiWqyB50em5gFztEjOqdAu6dWFuvrl33NqYcqO1cT9fK9aQ6Yz+HOmQkLSrc
+         VH56F6YiSPm31oRP5HgLYY8sFwU68v7GQIolnXkY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 015/137] libnvdimm/namespace: Fix a potential NULL pointer dereference
-Date:   Wed, 15 May 2019 12:54:56 +0200
-Message-Id: <20190515090654.479892163@linuxfoundation.org>
+Subject: [PATCH 5.0 012/137] iio: adc: xilinx: fix potential use-after-free on probe
+Date:   Wed, 15 May 2019 12:54:53 +0200
+Message-Id: <20190515090654.181268620@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -60,36 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 55c1fc0af29a6c1b92f217b7eb7581a882e0c07c ]
+[ Upstream commit 862e4644fd2d7df8998edc65e0963ea2f567bde9 ]
 
-In case kmemdup fails, the fix goes to blk_err to avoid NULL
-pointer dereference.
+If probe errors out after request_irq(), its error path
+does not explicitly cancel the delayed work, which may
+have been scheduled by the interrupt handler.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+This means the delayed work may still be running when
+the core frees the private structure (struct xadc).
+This is a potential use-after-free.
+
+Fix by inserting cancel_delayed_work_sync() in the probe
+error path.
+
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/namespace_devs.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/iio/adc/xilinx-xadc-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-index 33a3b23b3db71..e761b29f71606 100644
---- a/drivers/nvdimm/namespace_devs.c
-+++ b/drivers/nvdimm/namespace_devs.c
-@@ -2249,9 +2249,12 @@ static struct device *create_namespace_blk(struct nd_region *nd_region,
- 	if (!nsblk->uuid)
- 		goto blk_err;
- 	memcpy(name, nd_label->name, NSLABEL_NAME_LEN);
--	if (name[0])
-+	if (name[0]) {
- 		nsblk->alt_name = kmemdup(name, NSLABEL_NAME_LEN,
- 				GFP_KERNEL);
-+		if (!nsblk->alt_name)
-+			goto blk_err;
-+	}
- 	res = nsblk_add_resource(nd_region, ndd, nsblk,
- 			__le64_to_cpu(nd_label->dpa));
- 	if (!res)
+diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
+index 1960694e80076..15e1a103f37da 100644
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -1290,6 +1290,7 @@ static int xadc_probe(struct platform_device *pdev)
+ 
+ err_free_irq:
+ 	free_irq(xadc->irq, indio_dev);
++	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
+ err_clk_disable_unprepare:
+ 	clk_disable_unprepare(xadc->clk);
+ err_free_samplerate_trigger:
 -- 
 2.20.1
 
