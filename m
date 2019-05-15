@@ -2,112 +2,125 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87947C04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 682D7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:32:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49BB020862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3612520862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:32:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="gK3oowQ0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v/iBtmpp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726604AbfEOAcE (ORCPT
+        id S1727023AbfEOAcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:32:04 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37282 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726406AbfEOAcE (ORCPT
+        Tue, 14 May 2019 20:32:09 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:46696 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfEOAcI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:32:04 -0400
-Received: by mail-qt1-f193.google.com with SMTP id o7so1340058qtp.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 17:32:03 -0700 (PDT)
+        Tue, 14 May 2019 20:32:08 -0400
+Received: by mail-pf1-f202.google.com with SMTP id d9so456356pfo.13
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 17:32:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZuvtE8LhLnWnwrO3r/AvCgAsMqtJ3U02RYveyfJTTbU=;
-        b=gK3oowQ0w4DMwVTNL1TIUlhxFvd1aXJCyiqugZPR5YvRVjwgL90DccyZfjk/QopKld
-         Nkb6mmiB4CVkN5PZJAf5PuA2d1DWlLxLA2R9BVpDFPq5Bll/7aw+cPU3IzgUlGwZA2pL
-         CncGKbWtYm7mU5ehYLMcdjU/W4Lxyhav2LF564uwe3Wmue3wJoL8ltjucjZ+6jvKOtAo
-         Mya+oH4SHVxCN0yoyf6J0lMrs9G0SACQmwiZjrt8x8+Yr+/1VHr/437L9iJabaLvk+mm
-         icdMbqNajjJjFsvLni/iFgsHAOafsSElB8iay+NsCjNPWh0gnuBRjTse5tWXbY0U0vYk
-         8JVg==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=RTskpJzrqjSfKamQuryjYgpBB8UNg8rBhhyvKDtP8Jc=;
+        b=v/iBtmppsGFx8fleVlGl5FyzcENGHfuP9fHcZoab0NyXIBDYPrxa5R32Jvgpl7IU6F
+         xXjqQZdjrTjRiyYIwg1LJfSqon7Gau5FSrRXq7C84LbOwMIC/DyhUk23yNOdp6647IQj
+         pJHSJlvQD8aItNKPUtiF4HEz14o0wFtx7cDJ1fgmKWvokxJma08MNDOeRRtSsSSJm5VV
+         vxIlYi3Z0x8CfQJS0gcZ7kVdnCRkbt7tVhJx3w1hEAEMWq5HQctSS2j9xy4lqNiq7K80
+         mXoaW5Ytl9RJfZYE8A1Qk3ZF/iauoztRI0B4B8d21HU+sXtfhrH6fj0R0o1kcY+zwOJa
+         oLJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZuvtE8LhLnWnwrO3r/AvCgAsMqtJ3U02RYveyfJTTbU=;
-        b=CbtPAJ40DaGviJwy5nCoUf+p6ktnNiykfGrlnjT0DktsihLSUqm4Xc3ndKnBxKS5L0
-         C/mggKazChWqfjZeLIYNhqnZF4b94rL59ps/4CKVgy8zjriqxi93ERfa2iTUjNVY1fc5
-         byhaCXncMTlZEleYj+nX38uaOWNvm52CL2v1KWZq1sIrf62OvUpqHVtX+fM4DKMwtA/A
-         EupS8Hl+p9i7u0T69npBYtB0Y11HyGid+ZhOy8SACjzhD7hhzaWRwVoh+9LyDd5KKBtB
-         baRVXqWwY41jmpfvGEMltV+7u9v2Zamoak9PyrxaDkvCa1PPJgBVWN9ngr9LvctdIrHz
-         9HIQ==
-X-Gm-Message-State: APjAAAVp9Tyq8CbpPPJNS5RmgRZ+9RK/mjp/wfD3Xu+egXcg9XU17PGg
-        2xud/uzzI1OgAeJhJNfGVoARwCHiW+k=
-X-Google-Smtp-Source: APXvYqzMkFqpeQKTNm3VakW3JvjhtHcNW/1n5iqTqinImhuSdZ3N/zJFAS1xPsN7Uo4Vt2rZGUlT9g==
-X-Received: by 2002:ac8:610e:: with SMTP id a14mr30710259qtm.51.1557880323092;
-        Tue, 14 May 2019 17:32:03 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-49-251.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.49.251])
-        by smtp.gmail.com with ESMTPSA id t2sm188687qkm.11.2019.05.14.17.32.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 17:32:02 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hQhpy-0001qH-34; Tue, 14 May 2019 21:32:02 -0300
-Date:   Tue, 14 May 2019 21:32:02 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        fengguang.wu@intel.com, kbuild@01.org
-Cc:     Ariel Levkovich <lariel@mellanox.com>,
-        Eli Cohen <eli@mellanox.com>, Mark Bloch <markb@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: undefined reference to `__aeabi_uldivmod' after 25c13324d03d
- ("IB/mlx5: Add steering SW ICM device memory type")
-Message-ID: <20190515003202.GA14522@ziepe.ca>
-References: <20190514194510.GA15465@archlinux-i9>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514194510.GA15465@archlinux-i9>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=RTskpJzrqjSfKamQuryjYgpBB8UNg8rBhhyvKDtP8Jc=;
+        b=m4ooY08/MqXpumpiXfzvpsqwC7qh4CaGiJ0ORqizfPVE5qgzp/3mkBOtIqD8Z/G66C
+         W9arQrFVaxWMm8ywxKl5mHtblDX9W033iZcOrBwmx1WCWaThVIcTFZfMwmX36io8lW7h
+         aBfD31dLNjYyp9V3Ks0E4lwFNbOFOI/WjJXPOAA+w7Q6fg5zmcgVHdlH3eUaX1PF0gUM
+         /2n1PskHR8e5AJCSlwOtt58p/slxz0qe6mND+sQISOK2DPT1k41fC1URIoONX5JKiqUW
+         H+9pwH7qocig14hGdy96CEqMtFCnBEIYb3rA7GeTMYeN2U3taKanJciKj+QSrbD2nxpL
+         H+7g==
+X-Gm-Message-State: APjAAAUnJofggfPLlw4YYhSoXW2rMpzZLiH0TeTkmlOEGQexQPlBi02o
+        EK56dsF9NBma1VzJMbFhYyMBrMbnJg==
+X-Google-Smtp-Source: APXvYqxXVEDKuBgb5OQ4XZpudHbVkE8PutAYv0Z8IBFEIzSl+Wtc/MG9h9QzPY0Stjw+V/+iaO6JvwQotSs=
+X-Received: by 2002:a63:4006:: with SMTP id n6mr41416529pga.424.1557880327498;
+ Tue, 14 May 2019 17:32:07 -0700 (PDT)
+Date:   Tue, 14 May 2019 17:30:59 -0700
+Message-Id: <20190515003059.23920-1-yabinc@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: [PATCH] perf/ring_buffer: Fix exposing a temporarily decreased data_head.
+From:   Yabin Cui <yabinc@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Yabin Cui <yabinc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 12:45:10PM -0700, Nathan Chancellor wrote:
-> Hi all,
-> 
-> I checked the RDMA mailing list and trees and I haven't seen this
-> reported/fixed yet (forgive me if it has) but when building for arm32
-> with multi_v7_defconfig and the following configs (distilled from
-> allyesconfig):
-> 
-> CONFIG_INFINIBAND=y
-> CONFIG_INFINIBAND_ON_DEMAND_PAGING=y
-> CONFIG_INFINIBAND_USER_ACCESS=y
-> CONFIG_MLX5_CORE=y
-> CONFIG_MLX5_INFINIBAND=y
-> 
-> The following link time errors occur:
-> 
-> arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/main.o: in function `mlx5_ib_alloc_dm':
-> main.c:(.text+0x60c): undefined reference to `__aeabi_uldivmod'
-> arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/cmd.o: in function `mlx5_cmd_alloc_sw_icm':
-> cmd.c:(.text+0x6d4): undefined reference to `__aeabi_uldivmod'
-> arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/cmd.o: in function `mlx5_cmd_dealloc_sw_icm':
-> cmd.c:(.text+0x9ec): undefined reference to `__aeabi_uldivmod'
+In perf_output_put_handle(), an IRQ/NMI can happen in below location and
+write records to the same ring buffer:
+	...
+	local_dec_and_test(&rb->nest)
+	...                          <-- an IRQ/NMI can happen here
+	rb->user_page->data_head = head;
+	...
 
-Fengguang, I'm surprised that 0-day didn't report this earlier.. 
+In this case, a value A is written to data_head in the IRQ, then a value
+B is written to data_head after the IRQ. And A > B. As a result,
+data_head is temporarily decreased from A to B. And a reader may see
+data_head < data_tail if it read the buffer frequently enough, which
+creates unexpected behaviors.
 
-and come to think of it, I haven't seen a success email from 0-day for
-the rdma trees in some time - is it still working?
+This can be fixed by moving dec(&rb->nest) to after updating data_head,
+which prevents the IRQ/NMI above from updating data_head.
 
-Thanks,
-Jason
+Signed-off-by: Yabin Cui <yabinc@google.com>
+---
+ kernel/events/ring_buffer.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 674b35383491..0b9aefe13b04 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -54,8 +54,10 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
+ 	 * IRQ/NMI can happen here, which means we can miss a head update.
+ 	 */
+ 
+-	if (!local_dec_and_test(&rb->nest))
++	if (local_read(&rb->nest) > 1) {
++		local_dec(&rb->nest);
+ 		goto out;
++	}
+ 
+ 	/*
+ 	 * Since the mmap() consumer (userspace) can run on a different CPU:
+@@ -86,6 +88,13 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
+ 	smp_wmb(); /* B, matches C */
+ 	rb->user_page->data_head = head;
+ 
++	/*
++	 * Clear rb->nest after updating data_head. This prevents IRQ/NMI from
++	 * updating data_head before us. If that happens, we will expose a
++	 * temporarily decreased data_head.
++	 */
++	local_set(&rb->nest, 0);
++
+ 	/*
+ 	 * Now check if we missed an update -- rely on previous implied
+ 	 * compiler barriers to force a re-read.
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
