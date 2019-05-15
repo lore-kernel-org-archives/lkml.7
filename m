@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF84C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8EAC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD2FC20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D34D21473
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919197;
-	bh=svzfr6ww1SG7IFsfc8tDxKlG+G/RnbdZqTMRIy6WTvw=;
+	s=default; t=1557919200;
+	bh=Ee8mM+gnRVtmIddSliWwiOhemwiP45Xe3su0PkhNLDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yugQxAjcw7NbMR7bY9x62rSI2nYl/lWaZhqMlYeCm9w5Av/3N4H+YiJYc8cdH57QJ
-	 pCQioVTWP644h/UR3lx5bOO21YW2Fh5zX71AaLD/vLBV3QjtdijKjuyHrUawH0gZ+b
-	 vNtRo+9gDdmrQion+w+yv7OyyKRXqRSLGCOVRB3M=
+	b=OqSgP9Ucwj3b+W6ES2fHADqdV6VhVZd5XcKAdwyIGEieDZQ5XYMgwnzLQ0wnGdWuN
+	 HupvKxYJaxtytWTCrmkrI8uTQ6TgpvaYakjCOg6XrmWJ4VQwO0+hI3BFpGzOgFEWwh
+	 3j70UBlEmfHzdhM4qLnEZlmPSyY6O/K3h/+OnIAI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731037AbfEOLT4 (ORCPT
+        id S1727526AbfEOLT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:19:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57598 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:19:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730109AbfEOLTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:19:51 -0400
+        id S1728444AbfEOLTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:19:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C0A52166E;
-        Wed, 15 May 2019 11:19:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB8A620862;
+        Wed, 15 May 2019 11:19:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919190;
-        bh=svzfr6ww1SG7IFsfc8tDxKlG+G/RnbdZqTMRIy6WTvw=;
+        s=default; t=1557919193;
+        bh=Ee8mM+gnRVtmIddSliWwiOhemwiP45Xe3su0PkhNLDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wq7yXbkQ4Vd6Pfc+Mqr7IU/UHMtmGLwkMjgmc3NzIvu7d0I9othUeQRSE4WMy8WhZ
-         iTp9+FB+doRec/ke7hpCEilHYPjI1PeVvKS50jzsM+f5aMQa6ytjefF3jzCF6xiMcH
-         nUD8dso1/uAUjQNJraXyX3HkpOF+5LhSZhHU+iJs=
+        b=LfIySBxT0ZNPXJJI+17ef1ZCap7oDwJvzqNFXFyYt90o8zoPk+Aa17cO13YYv6zAT
+         4Yt091mkjn39kL7/ja+u3VcxE03NUpYoPq15qPJ0GqowaITZMgeNxrVMiEBth1MfvN
+         TIXRwZKmQY7KU8oodeWExUjL3qdPiS3OFtgcRDlU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jarod Wilson <jarod@redhat.com>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>
-Subject: [PATCH 4.14 099/115] bonding: fix arp_validate toggling in active-backup mode
-Date:   Wed, 15 May 2019 12:56:19 +0200
-Message-Id: <20190515090706.340590100@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: [PATCH 4.14 057/115] net: dont keep lonely packets forever in the gro hash
+Date:   Wed, 15 May 2019 12:55:37 +0200
+Message-Id: <20190515090703.721732360@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -63,81 +63,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarod Wilson <jarod@redhat.com>
+[ Upstream commit 605108acfe6233b72e2f803aa1cb59a2af3001ca ]
 
-[ Upstream commit a9b8a2b39ce65df45687cf9ef648885c2a99fe75 ]
+Eric noted that with UDP GRO and NAPI timeout, we could keep a single
+UDP packet inside the GRO hash forever, if the related NAPI instance
+calls napi_gro_complete() at an higher frequency than the NAPI timeout.
+Willem noted that even TCP packets could be trapped there, till the
+next retransmission.
+This patch tries to address the issue, flushing the old packets -
+those with a NAPI_GRO_CB age before the current jiffy - before scheduling
+the NAPI timeout. The rationale is that such a timeout should be
+well below a jiffy and we are not flushing packets eligible for sane GRO.
 
-There's currently a problem with toggling arp_validate on and off with an
-active-backup bond. At the moment, you can start up a bond, like so:
+v1  -> v2:
+ - clarified the commit message and comment
 
-modprobe bonding mode=1 arp_interval=100 arp_validate=0 arp_ip_targets=192.168.1.1
-ip link set bond0 down
-echo "ens4f0" > /sys/class/net/bond0/bonding/slaves
-echo "ens4f1" > /sys/class/net/bond0/bonding/slaves
-ip link set bond0 up
-ip addr add 192.168.1.2/24 dev bond0
+RFC -> v1:
+ - added 'Fixes tags', cleaned-up the wording.
 
-Pings to 192.168.1.1 work just fine. Now turn on arp_validate:
-
-echo 1 > /sys/class/net/bond0/bonding/arp_validate
-
-Pings to 192.168.1.1 continue to work just fine. Now when you go to turn
-arp_validate off again, the link falls flat on it's face:
-
-echo 0 > /sys/class/net/bond0/bonding/arp_validate
-dmesg
-...
-[133191.911987] bond0: Setting arp_validate to none (0)
-[133194.257793] bond0: bond_should_notify_peers: slave ens4f0
-[133194.258031] bond0: link status definitely down for interface ens4f0, disabling it
-[133194.259000] bond0: making interface ens4f1 the new active one
-[133197.330130] bond0: link status definitely down for interface ens4f1, disabling it
-[133197.331191] bond0: now running without any active interface!
-
-The problem lies in bond_options.c, where passing in arp_validate=0
-results in bond->recv_probe getting set to NULL. This flies directly in
-the face of commit 3fe68df97c7f, which says we need to set recv_probe =
-bond_arp_recv, even if we're not using arp_validate. Said commit fixed
-this in bond_option_arp_interval_set, but missed that we can get to that
-same state in bond_option_arp_validate_set as well.
-
-One solution would be to universally set recv_probe = bond_arp_recv here
-as well, but I don't think bond_option_arp_validate_set has any business
-touching recv_probe at all, and that should be left to the arp_interval
-code, so we can just make things much tidier here.
-
-Fixes: 3fe68df97c7f ("bonding: always set recv_probe to bond_arp_rcv in arp monitor")
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: netdev@vger.kernel.org
-Signed-off-by: Jarod Wilson <jarod@redhat.com>
-Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
+Fixes: 3b47d30396ba ("net: gro: add a per device gro flush timer")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Acked-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/net/bonding/bond_options.c | 7 -------
- 1 file changed, 7 deletions(-)
+ net/core/dev.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/bonding/bond_options.c b/drivers/net/bonding/bond_options.c
-index 4d5d01cb8141..80867bd8f44c 100644
---- a/drivers/net/bonding/bond_options.c
-+++ b/drivers/net/bonding/bond_options.c
-@@ -1098,13 +1098,6 @@ static int bond_option_arp_validate_set(struct bonding *bond,
- {
- 	netdev_dbg(bond->dev, "Setting arp_validate to %s (%llu)\n",
- 		   newval->string, newval->value);
--
--	if (bond->dev->flags & IFF_UP) {
--		if (!newval->value)
--			bond->recv_probe = NULL;
--		else if (bond->params.arp_interval)
--			bond->recv_probe = bond_arp_rcv;
--	}
- 	bond->params.arp_validate = newval->value;
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 93a1b07990b8d..90ec30d5b8514 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -5308,11 +5308,14 @@ bool napi_complete_done(struct napi_struct *n, int work_done)
+ 		if (work_done)
+ 			timeout = n->dev->gro_flush_timeout;
  
- 	return 0;
++		/* When the NAPI instance uses a timeout and keeps postponing
++		 * it, we need to bound somehow the time packets are kept in
++		 * the GRO layer
++		 */
++		napi_gro_flush(n, !!timeout);
+ 		if (timeout)
+ 			hrtimer_start(&n->timer, ns_to_ktime(timeout),
+ 				      HRTIMER_MODE_REL_PINNED);
+-		else
+-			napi_gro_flush(n, false);
+ 	}
+ 	if (unlikely(!list_empty(&n->poll_list))) {
+ 		/* If n->poll_list is not empty, we need to mask irqs */
 -- 
 2.20.1
 
