@@ -2,263 +2,309 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F67C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D55C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B362F20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D41E920873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:45:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CviqV5yd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rXMOIof5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbfEORpW (ORCPT
+        id S1727200AbfEORpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 13:45:22 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:34182 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726799AbfEORpV (ORCPT
+        Wed, 15 May 2019 13:45:44 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37073 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfEORpo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 13:45:21 -0400
-Received: by mail-ua1-f68.google.com with SMTP id 7so197012uah.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 10:45:20 -0700 (PDT)
+        Wed, 15 May 2019 13:45:44 -0400
+Received: by mail-pg1-f193.google.com with SMTP id e6so144062pgc.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 10:45:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=y2m7yv1XhZnPjtDDyBcaCJV3OfxxWTymy93VR6KaE5U=;
-        b=CviqV5ydQdEcHOiodPrSzU5jMvwQcoHtcBbzWljh20l7kJfiKaNVIzcADvvKuuu2lZ
-         D5dv2aAqIdF3YAbFDCrxnTcTBU90PWElfvdDYQCMrr+nOoGhBZEoDopVuiUf5M58ccQ5
-         2tsQw9iTnMF7r9zi5Sax0dbLHIsqOuXqo8Xfad/2eoJL05xFPBEVJVo7Bpy74nSJSWJp
-         tiCTG9TdzKLOLYvR9JjOrasUQhZxX3L73rtKi0MnSX2QN8wYp4yV5eT8d6JR0AW98TkG
-         CWnq5Zzgpx7YK5fuwC3vCdixJtYQICLk60N+E5r9tJiENbkf1RQcDw4tlX99XRV1SGwF
-         SySQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=7KG4gphMSYoVpwzM1ZvQMXqTiTL0xVi44Ka8WYWEN9k=;
+        b=rXMOIof5bJoNGedyoGRMhQK3gtYhVrqcBF9HPv53m0ylAxn3tUv71F+cKeAN+9WdsV
+         bdp5sJuCOwLpyuvz++9fJFKJYPD+SoPH9kEZ8QydNN6WSQnFkc+XzvNyeYPUhXz/WFV7
+         1EANcHBtSRLQjZEf9mf0kEn1x7IIEy9Ukyra6DpUpGTye+7hNTWJskKBWjB3Zcc51NXr
+         HbH8DP7MrYthvNSbmchyvJDGnFyMibNo11h1t0FTmuea5MGQGiqWSz3yXo+8gGeZ/vDf
+         CNHIK2xMcOuQ9vxGNrRXXKN9bV+tw87D3BXHo+B5XSrc1Wg0sfRczW6YVpvbPS+Yu39f
+         8z/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=y2m7yv1XhZnPjtDDyBcaCJV3OfxxWTymy93VR6KaE5U=;
-        b=muuM67LJkMzJkCXtyT++CRlreBr8bW0MeTFipXJeDFERgB/X8vISLQE0nYhq/sdCeC
-         lWh/tU3WLJUUk7DueZ+uXbwwq5pihgnNqcgu77HBoeVjWpuPnX0pfDdg36mOtkwBqj6B
-         cunzFufxlVKSUWnhEH06T2pIFoAvJDxTNC/EgDE2tLCIDEnzvSfnSzVJyF08gtAm3Kbl
-         rOQTvt5cPUzk52LgpoSNm5aEQAVFghJ3mMmIaRrwbIqTtJFWRt9anc7VjsrcFUCY9zrI
-         BUkZjRLu2NGRmn73lWAP5vbnM1VTezb/2K0jGlQuFGOCLSIPfSg/+tFaewxmJ/25stdJ
-         ZsKw==
-X-Gm-Message-State: APjAAAUQTzwXTWoicY8Y7XojgKWMalCCG9dPY4Tc5f04wbNHV74+v2Jv
-        ElTqf5ifckWf1+Q46OjBDxZ0U4ULcOJDjEaY6gBDkA==
-X-Google-Smtp-Source: APXvYqywR4mX+Nl6g9f5/Sp0unLUl+sgnKvLBMi1P4KMj6h1ZwXo6NEp9s5gtpFZIlqrfauTRtA7ILfjhAlSpHxYz88=
-X-Received: by 2002:ab0:14ab:: with SMTP id d40mr21334220uae.41.1557942319615;
- Wed, 15 May 2019 10:45:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=7KG4gphMSYoVpwzM1ZvQMXqTiTL0xVi44Ka8WYWEN9k=;
+        b=rOwOSNhf/79IzLL68QdFigHbsqwbNO4quf9H8yLE1Y6QqI8tMiGw92yGIPz8dfQ2iL
+         2QQMuKvgir/4rW+Ad+OidHvnNdWjlnyJM/3UTK7Nfs4k6FepPWrQpGSKJUgt8HCrL1XE
+         T8oU37yLmqUm0XmniI1S5Zneso3qEVsdZZaz+uoU+CAoXZpNzyLtMi2wpQHyEAfLBDic
+         HZ9qYj/qFtZUK7vavdkOxp/j1KHdlT3Pp6vaUYqRw65+HGGahv6PZ1Rg8BCU8BzvULRt
+         oAMz0XYK3ROm8fdD2V1ESkDFXtfiCbXcBhN0wozNV84RTAmhoLxOwbl1uxu3aqDYZ52u
+         o8EA==
+X-Gm-Message-State: APjAAAWn18pOxmqhqVIGZfTByG3EEDJ5S+RIdV9E0dt+5nYitrnn1Kim
+        s66oyx9IRMPA1anvye5BikDaQDDD
+X-Google-Smtp-Source: APXvYqyZeqGHhO5cXnk+znQ4rksWE3oO0D1M/EflXlGIPxjNHyiGwAMMvgyXLUYHZXYEDuGPaI4cWA==
+X-Received: by 2002:a65:5647:: with SMTP id m7mr44591222pgs.348.1557942343300;
+        Wed, 15 May 2019 10:45:43 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id t26sm3239577pgk.62.2019.05.15.10.45.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 10:45:41 -0700 (PDT)
+Date:   Wed, 15 May 2019 23:15:36 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8723bs: core: rtw_recv: fix warning Comparison
+ to NULL
+Message-ID: <20190515174536.GA4965@hari-Inspiron-1545>
 MIME-Version: 1.0
-References: <20190515100400.3450-1-christian@brauner.io>
-In-Reply-To: <20190515100400.3450-1-christian@brauner.io>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Wed, 15 May 2019 10:45:06 -0700
-Message-ID: <CAKOZuesPF+ftwqsNDMBy1LpwJgWTNuQm9-E=C90sSTBYEEsDww@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pid: add pidfd_open()
-To:     Christian Brauner <christian@brauner.io>
-Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        elena.reshetova@intel.com, Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 3:04 AM Christian Brauner <christian@brauner.io> wrote:
->
-> This adds the pidfd_open() syscall. It allows a caller to retrieve pollable
-> pidfds for a process which did not get created via CLONE_PIDFD, i.e. for a
-> process that is created via traditional fork()/clone() calls that is only
-> referenced by a PID:
+fix below warning reported by checkpatch
 
-Thanks for doing this work. I'm really looking forward to this new
-approach to process management.
+CHECK: Comparison to NULL could be written
+"!precvpriv->pallocated_frame_buf"
+CHECK: Comparison to NULL could be written "padapter"
 
-> int pidfd = pidfd_open(1234, 0);
-> ret = pidfd_send_signal(pidfd, SIGSTOP, NULL, 0);
->
-> With the introduction of pidfds through CLONE_PIDFD it is possible to
-> created pidfds at process creation time.
-> However, a lot of processes get created with traditional PID-based calls
-> such as fork() or clone() (without CLONE_PIDFD). For these processes a
-> caller can currently not create a pollable pidfd. This is a huge problem
-> for Android's low memory killer (LMK) and service managers such as systemd.
-> Both are examples of tools that want to make use of pidfds to get reliable
-> notification of process exit for non-parents (pidfd polling) and race-free
-> signal sending (pidfd_send_signal()). They intend to switch to this API for
-> process supervision/management as soon as possible. Having no way to get
-> pollable pidfds from PID-only processes is one of the biggest blockers for
-> them in adopting this api. With pidfd_open() making it possible to retrieve
-> pidfd for PID-based processes we enable them to adopt this api.
->
-> In line with Arnd's recent changes to consolidate syscall numbers across
-> architectures, I have added the pidfd_open() syscall to all architectures
-> at the same time.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8723bs/core/rtw_recv.c | 48 +++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
-I'm glad it's easier now.
+diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c b/drivers/staging/rtl8723bs/core/rtw_recv.c
+index b543e97..b01dae5 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_recv.c
++++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
+@@ -50,7 +50,7 @@ sint _rtw_init_recv_priv(struct recv_priv *precvpriv, struct adapter *padapter)
+ 
+ 	precvpriv->pallocated_frame_buf = vzalloc(NR_RECVFRAME * sizeof(union recv_frame) + RXFRAME_ALIGN_SZ);
+ 
+-	if (precvpriv->pallocated_frame_buf == NULL) {
++	if (!precvpriv->pallocated_frame_buf) {
+ 		res = _FAIL;
+ 		goto exit;
+ 	}
+@@ -122,7 +122,7 @@ union recv_frame *_rtw_alloc_recvframe(struct __queue *pfree_recv_queue)
+ 
+ 		list_del_init(&precvframe->u.hdr.list);
+ 		padapter = precvframe->u.hdr.adapter;
+-		if (padapter != NULL) {
++		if (padapter) {
+ 			precvpriv = &padapter->recvpriv;
+ 			if (pfree_recv_queue == &precvpriv->free_recv_queue)
+ 				precvpriv->free_recvframe_cnt--;
+@@ -160,7 +160,7 @@ int rtw_free_recvframe(union recv_frame *precvframe, struct __queue *pfree_recv_
+ 
+ 	list_add_tail(&(precvframe->u.hdr.list), get_list_head(pfree_recv_queue));
+ 
+-	if (padapter != NULL) {
++	if (padapter) {
+ 		if (pfree_recv_queue == &precvpriv->free_recv_queue)
+ 				precvpriv->free_recvframe_cnt++;
+ 	}
+@@ -183,7 +183,7 @@ sint _rtw_enqueue_recvframe(union recv_frame *precvframe, struct __queue *queue)
+ 
+ 	list_add_tail(&(precvframe->u.hdr.list), get_list_head(queue));
+ 
+-	if (padapter != NULL)
++	if (padapter)
+ 		if (queue == &precvpriv->free_recv_queue)
+ 			precvpriv->free_recvframe_cnt++;
+ 
+@@ -334,7 +334,7 @@ sint recvframe_chkmic(struct adapter *adapter,  union recv_frame *precvframe)
+ 			prxattrib->ra[0], prxattrib->ra[1], prxattrib->ra[2], prxattrib->ra[3], prxattrib->ra[4], prxattrib->ra[5]));
+ 
+ 		/* calculate mic code */
+-		if (stainfo != NULL) {
++		if (stainfo) {
+ 			if (IS_MCAST(prxattrib->ra)) {
+ 				/* mickey =&psecuritypriv->dot118021XGrprxmickey.skey[0]; */
+ 				/* iv = precvframe->u.hdr.rx_data+prxattrib->hdrlen; */
+@@ -570,7 +570,7 @@ union recv_frame *portctrl(struct adapter *adapter, union recv_frame *precv_fram
+ 	RT_TRACE(_module_rtl871x_recv_c_, _drv_info_, ("########portctrl:adapter->securitypriv.dot11AuthAlgrthm =%d\n", adapter->securitypriv.dot11AuthAlgrthm));
+ 
+ 	if (auth_alg == 2) {
+-		if ((psta != NULL) && (psta->ieee8021x_blocked)) {
++		if ((psta) && (psta->ieee8021x_blocked)) {
+ 			__be16 be_tmp;
+ 
+ 			/* blocked */
+@@ -859,7 +859,7 @@ sint sta2sta_data_frame(
+ 	else
+ 		*psta = rtw_get_stainfo(pstapriv, sta_addr); /*  get ap_info */
+ 
+-	if (*psta == NULL) {
++	if (!*psta) {
+ 		RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("can't get psta under sta2sta_data_frame ; drop pkt\n"));
+ 		ret = _FAIL;
+ 		goto exit;
+@@ -942,7 +942,7 @@ sint ap2sta_data_frame(
+ 		else
+ 			*psta = rtw_get_stainfo(pstapriv, pattrib->bssid); /*  get ap_info */
+ 
+-		if (*psta == NULL) {
++		if (!*psta) {
+ 			RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("ap2sta: can't get psta under STATION_MODE ; drop pkt\n"));
+ 			#ifdef DBG_RX_DROP_FRAME
+ 			DBG_871X("DBG_RX_DROP_FRAME %s can't get psta under STATION_MODE ; drop pkt\n", __func__);
+@@ -974,7 +974,7 @@ sint ap2sta_data_frame(
+ 
+ 
+ 		*psta = rtw_get_stainfo(pstapriv, pattrib->bssid); /*  get sta_info */
+-		if (*psta == NULL) {
++		if (!*psta) {
+ 			RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("can't get psta under MP_MODE ; drop pkt\n"));
+ 			#ifdef DBG_RX_DROP_FRAME
+ 			DBG_871X("DBG_RX_DROP_FRAME %s can't get psta under WIFI_MP_STATE ; drop pkt\n", __func__);
+@@ -991,7 +991,7 @@ sint ap2sta_data_frame(
+ 	} else {
+ 		if (!memcmp(myhwaddr, pattrib->dst, ETH_ALEN) && (!bmcast)) {
+ 			*psta = rtw_get_stainfo(pstapriv, pattrib->bssid); /*  get sta_info */
+-			if (*psta == NULL) {
++			if (!*psta) {
+ 
+ 				/* for AP multicast issue , modify by yiwei */
+ 				static unsigned long send_issue_deauth_time;
+@@ -1042,7 +1042,7 @@ sint sta2ap_data_frame(
+ 		}
+ 
+ 		*psta = rtw_get_stainfo(pstapriv, pattrib->src);
+-		if (*psta == NULL) {
++		if (!*psta == NULL) {
+ 			RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("can't get psta under AP_MODE; drop pkt\n"));
+ 			DBG_871X("issue_deauth to sta =" MAC_FMT " for the reason(7)\n", MAC_ARG(pattrib->src));
+ 
+@@ -1099,7 +1099,7 @@ sint validate_recv_ctrl_frame(struct adapter *padapter, union recv_frame *precv_
+ 		return _FAIL;
+ 
+ 	psta = rtw_get_stainfo(pstapriv, GetAddr2Ptr(pframe));
+-	if (psta == NULL)
++	if (!psta)
+ 		return _FAIL;
+ 
+ 	/* for rx pkt statistics */
+@@ -1226,7 +1226,7 @@ sint validate_recv_mgnt_frame(struct adapter *padapter, union recv_frame *precv_
+ 	RT_TRACE(_module_rtl871x_recv_c_, _drv_info_, ("+validate_recv_mgnt_frame\n"));
+ 
+ 	precv_frame = recvframe_chk_defrag(padapter, precv_frame);
+-	if (precv_frame == NULL) {
++	if (!precv_frame) {
+ 		RT_TRACE(_module_rtl871x_recv_c_, _drv_notice_, ("%s: fragment packet\n", __func__));
+ 		return _SUCCESS;
+ 	}
+@@ -1274,7 +1274,7 @@ sint validate_recv_data_frame(struct adapter *adapter, union recv_frame *precv_f
+ 	psa = get_sa(ptr);
+ 	pbssid = get_hdr_bssid(ptr);
+ 
+-	if (pbssid == NULL) {
++	if (!pbssid) {
+ 		#ifdef DBG_RX_DROP_FRAME
+ 		DBG_871X("DBG_RX_DROP_FRAME %s pbssid == NULL\n", __func__);
+ 		#endif
+@@ -1329,7 +1329,7 @@ sint validate_recv_data_frame(struct adapter *adapter, union recv_frame *precv_f
+ 	}
+ 
+ 
+-	if (psta == NULL) {
++	if (!psta) {
+ 		RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, (" after to_fr_ds_chk; psta == NULL\n"));
+ 		#ifdef DBG_RX_DROP_FRAME
+ 		DBG_871X("DBG_RX_DROP_FRAME %s psta == NULL\n", __func__);
+@@ -1426,7 +1426,7 @@ static sint validate_80211w_mgmt(struct adapter *adapter, union recv_frame *prec
+ 			/* actual management data frame body */
+ 			data_len = pattrib->pkt_len - pattrib->hdrlen - pattrib->iv_len - pattrib->icv_len;
+ 			mgmt_DATA = rtw_zmalloc(data_len);
+-			if (mgmt_DATA == NULL) {
++			if (!mgmt_DATA) {
+ 				DBG_871X("%s mgmt allocate fail  !!!!!!!!!\n", __func__);
+ 				goto validate_80211w_fail;
+ 			}
+@@ -1812,7 +1812,7 @@ union recv_frame *recvframe_chk_defrag(struct adapter *padapter, union recv_fram
+ 
+ 	psta_addr = pfhdr->attrib.ta;
+ 	psta = rtw_get_stainfo(pstapriv, psta_addr);
+-	if (psta == NULL) {
++	if (!psta) {
+ 		u8 type = GetFrameType(pfhdr->rx_data);
+ 		if (type != WIFI_DATA_TYPE) {
+ 			psta = rtw_get_bcmc_stainfo(padapter);
+@@ -1828,7 +1828,7 @@ union recv_frame *recvframe_chk_defrag(struct adapter *padapter, union recv_fram
+ 	if (ismfrag == 1) {
+ 		/* 0~(n-1) fragment frame */
+ 		/* enqueue to defraf_g */
+-		if (pdefrag_q != NULL) {
++		if (pdefrag_q) {
+ 			if (fragnum == 0)
+ 				/* the first fragment */
+ 				if (!list_empty(&pdefrag_q->queue))
+@@ -1859,7 +1859,7 @@ union recv_frame *recvframe_chk_defrag(struct adapter *padapter, union recv_fram
+ 	if ((ismfrag == 0) && (fragnum != 0)) {
+ 		/* the last fragment frame */
+ 		/* enqueue the last fragment */
+-		if (pdefrag_q != NULL) {
++		if (pdefrag_q) {
+ 			/* spin_lock(&pdefrag_q->lock); */
+ 			phead = get_list_head(pdefrag_q);
+ 			list_add_tail(&pfhdr->list, phead);
+@@ -1880,7 +1880,7 @@ union recv_frame *recvframe_chk_defrag(struct adapter *padapter, union recv_fram
+ 	}
+ 
+ 
+-	if ((prtnframe != NULL) && (prtnframe->u.hdr.attrib.privacy)) {
++	if ((prtnframe) && (prtnframe->u.hdr.attrib.privacy)) {
+ 		/* after defrag we must check tkip mic code */
+ 		if (recvframe_chkmic(padapter,  prtnframe) == _FAIL) {
+ 			RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("recvframe_chkmic(padapter,  prtnframe) == _FAIL\n"));
+@@ -1924,7 +1924,7 @@ static int amsdu_to_msdu(struct adapter *padapter, union recv_frame *prframe)
+ 		}
+ 
+ 		sub_pkt = rtw_os_alloc_msdu_pkt(prframe, nSubframe_Length, pdata);
+-		if (sub_pkt == NULL) {
++		if (!sub_pkt) {
+ 			DBG_871X("%s(): allocate sub packet fail !!!\n", __func__);
+ 			break;
+ 		}
+@@ -2453,7 +2453,7 @@ static int recv_func_posthandle(struct adapter *padapter, union recv_frame *prfr
+ 	DBG_COUNTER(padapter->rx_logs.core_rx_post);
+ 
+ 	prframe = decryptor(padapter, prframe);
+-	if (prframe == NULL) {
++	if (!prframe) {
+ 		RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("decryptor: drop pkt\n"));
+ 		#ifdef DBG_RX_DROP_FRAME
+ 		DBG_871X("DBG_RX_DROP_FRAME %s decryptor: drop pkt\n", __func__);
+@@ -2464,7 +2464,7 @@ static int recv_func_posthandle(struct adapter *padapter, union recv_frame *prfr
+ 	}
+ 
+ 	prframe = recvframe_chk_defrag(padapter, prframe);
+-	if (prframe == NULL)	{
++	if (!prframe)	{
+ 		RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("recvframe_chk_defrag: drop pkt\n"));
+ 		#ifdef DBG_RX_DROP_FRAME
+ 		DBG_871X("DBG_RX_DROP_FRAME %s recvframe_chk_defrag: drop pkt\n", __func__);
+@@ -2474,7 +2474,7 @@ static int recv_func_posthandle(struct adapter *padapter, union recv_frame *prfr
+ 	}
+ 
+ 	prframe = portctrl(padapter, prframe);
+-	if (prframe == NULL) {
++	if (!prframe) {
+ 		RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("portctrl: drop pkt\n"));
+ 		#ifdef DBG_RX_DROP_FRAME
+ 		DBG_871X("DBG_RX_DROP_FRAME %s portctrl: drop pkt\n", __func__);
+-- 
+2.7.4
 
->  arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
->  arch/arm64/include/asm/unistd32.h           |  2 +
->  arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
->  arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
->  arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
->  arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
->  arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
->  arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
->  arch/s390/kernel/syscalls/syscall.tbl       |  1 +
->  arch/sh/kernel/syscalls/syscall.tbl         |  1 +
->  arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
->  arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
->  arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
->  arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
-
-It'd be nice to arrange the system call tables so that we need to
-change only one file when adding a new system call.
-
-[Snip system call wiring]
-
-> --- a/include/linux/pid.h
-> +++ b/include/linux/pid.h
-> @@ -67,6 +67,7 @@ struct pid
->  extern struct pid init_struct_pid;
->
->  extern const struct file_operations pidfd_fops;
-> +extern int pidfd_create(struct pid *pid);
->
->  static inline struct pid *get_pid(struct pid *pid)
->  {
-> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-> index e2870fe1be5b..989055e0b501 100644
-> --- a/include/linux/syscalls.h
-> +++ b/include/linux/syscalls.h
-> @@ -929,6 +929,7 @@ asmlinkage long sys_clock_adjtime32(clockid_t which_clock,
->                                 struct old_timex32 __user *tx);
->  asmlinkage long sys_syncfs(int fd);
->  asmlinkage long sys_setns(int fd, int nstype);
-> +asmlinkage long sys_pidfd_open(pid_t pid, unsigned int flags);
->  asmlinkage long sys_sendmmsg(int fd, struct mmsghdr __user *msg,
->                              unsigned int vlen, unsigned flags);
->  asmlinkage long sys_process_vm_readv(pid_t pid,
-> diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-> index dee7292e1df6..94a257a93d20 100644
-> --- a/include/uapi/asm-generic/unistd.h
-> +++ b/include/uapi/asm-generic/unistd.h
-> @@ -832,9 +832,11 @@ __SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
->  __SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
->  #define __NR_io_uring_register 427
->  __SYSCALL(__NR_io_uring_register, sys_io_uring_register)
-> +#define __NR_pidfd_open 428
-> +__SYSCALL(__NR_pidfd_open, sys_pidfd_open)
->
->  #undef __NR_syscalls
-> -#define __NR_syscalls 428
-> +#define __NR_syscalls 429
->
->  /*
->   * 32 bit systems traditionally used different
-> diff --git a/kernel/fork.c b/kernel/fork.c
-> index 737db1828437..980cc1d2b8d4 100644
-> --- a/kernel/fork.c
-> +++ b/kernel/fork.c
-> @@ -1714,7 +1714,7 @@ const struct file_operations pidfd_fops = {
->   * Return: On success, a cloexec pidfd is returned.
->   *         On error, a negative errno number will be returned.
->   */
-> -static int pidfd_create(struct pid *pid)
-> +int pidfd_create(struct pid *pid)
->  {
->         int fd;
->
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index 20881598bdfa..237d18d6ecb8 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -38,6 +38,7 @@
->  #include <linux/syscalls.h>
->  #include <linux/proc_ns.h>
->  #include <linux/proc_fs.h>
-> +#include <linux/sched/signal.h>
->  #include <linux/sched/task.h>
->  #include <linux/idr.h>
->
-> @@ -451,6 +452,53 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
->         return idr_get_next(&ns->idr, &nr);
->  }
->
-> +/**
-> + * pidfd_open() - Open new pid file descriptor.
-> + *
-> + * @pid:   pid for which to retrieve a pidfd
-> + * @flags: flags to pass
-> + *
-> + * This creates a new pid file descriptor with the O_CLOEXEC flag set for
-> + * the process identified by @pid. Currently, the process identified by
-> + * @pid must be a thread-group leader. This restriction currently exists
-> + * for all aspects of pidfds including pidfd creation (CLONE_PIDFD cannot
-> + * be used with CLONE_THREAD) and pidfd polling (only supports thread group
-> + * leaders).
-> + *
-> + * Return: On success, a cloexec pidfd is returned.
-> + *         On error, a negative errno number will be returned.
-> + */
-> +SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
-> +{
-> +       int fd, ret;
-> +       struct pid *p;
-> +       struct task_struct *tsk;
-> +
-> +       if (flags)
-> +               return -EINVAL;
-
-If we support blocking operations on pidfds, we'll want to be able to
-put them in non-blocking mode. Does it make sense to accept and ignore
-O_NONBLOCK here now?
-
-> +       if (pid <= 0)
-> +               return -EINVAL;
-
-WDYT of defining pid == 0 to mean "open myself"?
-
-> +       p = find_get_pid(pid);
-> +       if (!p)
-> +               return -ESRCH;
-> +
-> +       rcu_read_lock();
-> +       tsk = pid_task(p, PIDTYPE_PID);
-> +       if (!tsk)
-> +               ret = -ESRCH;
-> +       else if (unlikely(!thread_group_leader(tsk)))
-> +               ret = -EINVAL;
-> +       else
-> +               ret = 0;
-> +       rcu_read_unlock();
-> +
-> +       fd = ret ?: pidfd_create(p);
-> +       put_pid(p);
-> +       return fd;
-> +}
