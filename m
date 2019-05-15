@@ -2,171 +2,89 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF556C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AECC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 955AF2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:33:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="od0YKRz9"
+	by mail.kernel.org (Postfix) with ESMTP id 346D72084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbfEONdA (ORCPT
+        id S1727564AbfEONez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 09:33:00 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41259 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfEONdA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 09:33:00 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d12so2696186wrm.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 06:32:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=27IAE7Wks+dMK219yk2LbZVal7GDcc13jyTzLKW45iY=;
-        b=od0YKRz9Kouau/54+gp2YgD4pP+188LOMdYqpNdewsAMS4Lu38hKs+dpfwPMQkKmRM
-         YzHgSZZxi+ompodBvoXTkBdA8e7EWBQbrB+48V0HS6rGaQmh9n69PO7SmTz9YsYIyAJG
-         D7Lh+Z/1YLoyZE28v43yJvJXN4EfGXiJcE7IAwCBflbQSgNu4oLH8WStxw0//GCxuJTZ
-         aFx5j65IqQ4sgCxNECE1qfK/PNKziRY1wGHwB5/C22VhGDxQM/u2pY9eh3npayiYPTLO
-         1WJ+1qtbhDO/f3c0Au8WAjgo/M/5Hof44ISYjMv4sH7QTGU1JdmIlFCV+m5xSsbEM2Yi
-         n+dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=27IAE7Wks+dMK219yk2LbZVal7GDcc13jyTzLKW45iY=;
-        b=W/0WAX49LMXpvM9C+sNeU0QFLhk9kkvuzZ6JUfjyAx5x9D/eMoG+dLz4lclOb+Y3+a
-         m3v+uEo2cQw2x3pZ0wwDLf2MXFmU6VO+8swW2rJZUB9GnLsT4O3N8YNNFbf5A3rgO+Ad
-         Fy5K8Ksv5YwPzJe5+f1xZvhXhN6MSDPcX4N80iQ8WXSXn1Lp0rDlfRB20ItOo1/R2r3b
-         beyEa2wHUg1yo+SrixXREyj4lxOJUalOQEjAdroiHYmTCt/gYlqAJl6EMYZeA4cXtdJm
-         XRh+h92oa3HsH+3CZ0ZbhBxg8VmBS7ihGp84g4+k0cDMpEf4ztthmtAGV9gmny4v2hic
-         JXLA==
-X-Gm-Message-State: APjAAAUPJkbbEqcg4gmjEXBpws7nioSWUgMqsciskrIhdkjLdzCWfZPT
-        vOy4V43GbZlQrYJDFYn2cVJ98exAhpdy1A==
-X-Google-Smtp-Source: APXvYqz8PVaiHUgy/dyloifcw/qXOIQZunCyVrCksmCSCuaOJOIbms/fIqh9n6kPm+D/b1tXWBZ1kg==
-X-Received: by 2002:adf:e8cf:: with SMTP id k15mr22781328wrn.185.1557927177346;
-        Wed, 15 May 2019 06:32:57 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id e8sm4468676wrc.34.2019.05.15.06.32.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 06:32:56 -0700 (PDT)
-Subject: Re: [PATCH 0/5] ASoC: meson: add hdmitx glue support
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20190515131858.32130-1-jbrunet@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <f7bafd16-1332-e124-79fb-7f045975aed9@baylibre.com>
-Date:   Wed, 15 May 2019 15:32:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 15 May 2019 09:34:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38618 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726659AbfEONey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 09:34:54 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 89FDCAD36;
+        Wed, 15 May 2019 13:34:53 +0000 (UTC)
+Date:   Wed, 15 May 2019 15:34:52 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCHv2 1/4] printk: factor out __unregister_console() code
+Message-ID: <20190515133452.o4dvf4p6dxzggvoa@pathway.suse.cz>
+References: <20190426053302.4332-1-sergey.senozhatsky@gmail.com>
+ <20190426053302.4332-2-sergey.senozhatsky@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190515131858.32130-1-jbrunet@baylibre.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190426053302.4332-2-sergey.senozhatsky@gmail.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/05/2019 15:18, Jerome Brunet wrote:
-> On the Amlogic SoC, there is a glue between the SoC audio outputs and the
-> input of the embedded Synopsys HDMI controller.
+On Fri 2019-04-26 14:32:59, Sergey Senozhatsky wrote:
+> The following pattern in register_console() is not completely safe:
 > 
-> On the g12a, this glue is mostly a couple of muxes to select the i2s and
-> spdif inputs of the hdmi controller. Each of these inputs may have
-> different hw_params and fmt which makes our life a little bit more
-> interesting, especially when switching between to active inputs.
+>      for_each_console(bcon)
+>          if (bcon->flags & CON_BOOT)
+>              unregister_console(bcon);
 > 
-> This glue is modeled as codec driver and uses codec-to-codec links to
-> connect to the Synopsys controller. This allows to use the regular
-> hdmi-codec driver (used by dw-hdmi i2s).
+> Because, in theory, console drivers list and console drivers
+> can be modified concurrently from another CPU. We need to grab
+> console_sem lock, which protects console drivers list and console
+> drivers, before we start iterating console drivers list.
 > 
-> To avoid glitches while switching input, the trick is to temporarily
-> force a disconnection of the mux output, which shutdowns the output dai
-> link. This also ensure that the stream parameters and fmt are updated
-> when the output is connected back.
+> Factor out __unregister_console(), which will be called from
+> unregister_console() and register_console(), in both cases
+> under console_sem lock.
 > 
-> Jerome Brunet (5):
->   ASoC: meson: axg-card: set link name based on link node name
->   ASoC: dapm: allow muxes to force a disconnect
->   ASoC: meson: add tohdmitx DT bindings
->   ASoC: meson: axg-card: add basic codec-to-codec link support
->   ASoC: meson: add g12a tohdmitx control
-> 
->  .../bindings/sound/amlogic,g12a-tohdmitx.txt  |  55 +++
->  .../dt-bindings/sound/meson-g12a-tohdmitx.h   |  13 +
->  sound/soc/meson/Kconfig                       |   8 +
->  sound/soc/meson/Makefile                      |   2 +
->  sound/soc/meson/axg-card.c                    |  31 +-
->  sound/soc/meson/g12a-tohdmitx.c               | 413 ++++++++++++++++++
->  sound/soc/soc-dapm.c                          |   2 +-
->  7 files changed, 518 insertions(+), 6 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
->  create mode 100644 include/dt-bindings/sound/meson-g12a-tohdmitx.h
->  create mode 100644 sound/soc/meson/g12a-tohdmitx.c
-> 
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 17102fd4c136..b0e361ca1bea 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -2605,6 +2605,48 @@ static int __init keep_bootcon_setup(char *str)
+>  
+>  early_param("keep_bootcon", keep_bootcon_setup);
+>  
+> +static int __unregister_console(struct console *console)
+> +{
+> +	struct console *a, *b;
+> +	int res;
+> +
+> +	pr_info("%sconsole [%s%d] disabled\n",
+> +		(console->flags & CON_BOOT) ? "boot" : "",
+> +		console->name, console->index);
+> +
+> +	res = _braille_unregister_console(console);
 
-Tested-by: Neil Armstrong <narmstrong@baylibre.com>
+It looks safe to call _braille_unregister_console() under
+console_lock().
+
+Therefore this patch looks fine and make sense, so:
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Best Regards,
+Petr
