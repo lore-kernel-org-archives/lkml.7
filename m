@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59164C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B18C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E39920843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:15:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 414DF20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918935;
-	bh=7mdAG++hHPV5dcH9i80MCr5GlBNWq0L2PV9ChcBDkYQ=;
+	s=default; t=1557918940;
+	bh=zqQoN131saNSYS/pt4U54XR9qZdMRzLTkdcDYSFm1T8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GKjwmPAS82ZAkiw7C7vjypGdIZ6+tdi+3FvTsn7SK2OMX1q3rZcjf8vGddEhCGj6G
-	 SvSp16rEbbIV4u6b4XqvJKLKeUch0ximm1qYZyc3VBJDkUHK1FPQMmKz56Z3zB371x
-	 z0d+ze7BoKKNtsEUB5OUE/FZpBOlj/hdNmO+hquE=
+	b=dbInT7gBHTartbrAEwHj7It3XbzrNyieRPeUUx+UTdO6rPG/cX6Eux4p02YBRWEA9
+	 V3eU5A5QNp7PO0OTdOXEr5YmwZk5nN7Fkm8Vf98nL0Zi29stENTR4E8R/lSSRoU2cB
+	 o+/WKI4XEYD/XI190cfqDdJosNvnUAeVcWJe1/fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbfEOLPe (ORCPT
+        id S1730330AbfEOLPi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:15:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51978 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:15:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730261AbfEOLP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:15:28 -0400
+        id S1730315AbfEOLPd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:15:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE6C820644;
-        Wed, 15 May 2019 11:15:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2BE220644;
+        Wed, 15 May 2019 11:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918928;
-        bh=7mdAG++hHPV5dcH9i80MCr5GlBNWq0L2PV9ChcBDkYQ=;
+        s=default; t=1557918933;
+        bh=zqQoN131saNSYS/pt4U54XR9qZdMRzLTkdcDYSFm1T8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JrotjxiXwvzh93xygsTE1H6wnsaGhcIlG4ncZmZU7WTweUbUPptLwqhaLZzAKOB0J
-         tWToDW4GoGWk7Wa1Se4SfR7Vt8EwMLzBqmO4nFj6I4ctGZm/kynebWGQ+brh+uZQzK
-         kp/jThBIIawpVcgX0mNVj/OXbyQZCFp2s/XdQ5tI=
+        b=yWZB4t7b5w/5d21r1if/LtxkB7Nfeqb1J29NwrYoO5TuFVYTLX0JZU79Ta1NKOmUi
+         8kZlMAWmSOpJcWaUyh6WRvMOKOwHfqZZND12PhYKaVdwlkAiUAhMY8QgsfxXVxb3MJ
+         5rYZt2KgLfsmujyrSZmn/ADV1IOciJ2lNepRcidY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
         Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.9 30/51] cw1200: fix missing unlock on error in cw1200_hw_scan()
-Date:   Wed, 15 May 2019 12:56:05 +0200
-Message-Id: <20190515090625.639425719@linuxfoundation.org>
+Subject: [PATCH 4.9 32/51] rtlwifi: rtl8723ae: Fix missing break in switch statement
+Date:   Wed, 15 May 2019 12:56:07 +0200
+Message-Id: <20190515090626.172154640@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
 References: <20190515090616.669619870@linuxfoundation.org>
@@ -60,37 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 51c8d24101c79ffce3e79137e2cee5dfeb956dd7 upstream.
+commit 84242b82d81c54e009a2aaa74d3d9eff70babf56 upstream.
 
-Add the missing unlock before return from function cw1200_hw_scan()
-in the error handling case.
+Add missing break statement in order to prevent the code from falling
+through to case 0x1025, and erroneously setting rtlhal->oem_id to
+RT_CID_819X_ACER when rtlefuse->eeprom_svid is equal to 0x10EC and
+none of the cases in switch (rtlefuse->eeprom_smid) match.
 
-Fixes: 4f68ef64cd7f ("cw1200: Fix concurrency use-after-free bugs in cw1200_hw_scan()")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Acked-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+This bug was found thanks to the ongoing efforts to enable
+-Wimplicit-fallthrough.
+
+Fixes: 238ad2ddf34b ("rtlwifi: rtl8723ae: Clean up the hardware info routine")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/st/cw1200/scan.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/wireless/st/cw1200/scan.c
-+++ b/drivers/net/wireless/st/cw1200/scan.c
-@@ -84,8 +84,11 @@ int cw1200_hw_scan(struct ieee80211_hw *
- 
- 	frame.skb = ieee80211_probereq_get(hw, priv->vif->addr, NULL, 0,
- 		req->ie_len);
--	if (!frame.skb)
-+	if (!frame.skb) {
-+		mutex_unlock(&priv->conf_mutex);
-+		up(&priv->scan.lock);
- 		return -ENOMEM;
-+	}
- 
- 	if (req->ie_len)
- 		memcpy(skb_put(frame.skb, req->ie_len), req->ie, req->ie_len);
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
+@@ -1703,6 +1703,7 @@ static void _rtl8723e_read_adapter_info(
+ 					rtlhal->oem_id = RT_CID_819X_LENOVO;
+ 					break;
+ 				}
++				break;
+ 			case 0x1025:
+ 				rtlhal->oem_id = RT_CID_819X_ACER;
+ 				break;
 
 
