@@ -2,140 +2,108 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D46C04AA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 04:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 789B8C04AA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 04:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A136520862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 04:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A3120881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 04:11:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Zw+MHNOW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pIx3SabZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726362AbfEOEKH (ORCPT
+        id S1726665AbfEOELh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 00:10:07 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33669 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726261AbfEOEKH (ORCPT
+        Wed, 15 May 2019 00:11:37 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:34615 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfEOELg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 00:10:07 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 66so1022071otq.0
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 21:10:06 -0700 (PDT)
+        Wed, 15 May 2019 00:11:36 -0400
+Received: by mail-pf1-f195.google.com with SMTP id n19so653900pfa.1;
+        Tue, 14 May 2019 21:11:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NuXfmQVzJzIUN6QMgtr2lj+FKodDhh6kmn0H209EmlA=;
-        b=Zw+MHNOW3jKoyH7f70J7Co+t4ONgYnwoKc2lxCTbPrms9reJqPp7+0KpSABdItJ9hr
-         zjOKiGAMT0TnwlgB/JzVse+gpraINrRM1wNOrh2gPFiVLw4/8rwI74e8qYxmN+TWkn2C
-         CXCuAVjofde4OrmRvTmdRG4k6PhO+DcGVASmc=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=p98OlGu9SV+BFYem5XMwnXe15at0yFGCsMrG4alRIQ4=;
+        b=pIx3SabZFC0lSb9tUT09jqGksi9P3BLToB76wJHDVOisRhsqmEV/xiMeHyns3sFVCE
+         XBYXFz/ZylP7at2Pa9TH8ZQsR/swbRfyFrlaEgFDSuQ2Y0gDs5BQw/Rpgx2t9Pp92el3
+         8Dnc1QURoR5TWf0cV6su6+loENMwgf1iznkIlQZb168kWKraLSTFz4ael8IruXQaBjnv
+         1xFR+O4/2ygV2mqQvD6/BjQkidtyfgvoWTWv7LneCSZ3xiDo7pRcBuU+SQGBZ7Tid1vq
+         7jHJEOophbHiKdCXA85NjmRionhnef0D5IzDmGw5XpFWTQj3MTxZaXZ5f/pugQE+WRbI
+         KyQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NuXfmQVzJzIUN6QMgtr2lj+FKodDhh6kmn0H209EmlA=;
-        b=fXQ8idHmYUAfebR6S0I3bO4bW094ZztRY42E00HBVa0C4RmzmuPOL6ikTBgsT4otsW
-         nJ2gYFzSyg4el+W1dG1EBhCF95xWbptxcUiXcD14rGSFn/sDSecKN7U+qDI19irgXWPa
-         6tO3ncNE29MYRGtHcAZkc9Q62GViEQU4eEh8sPkjAgTCQfq9To+x5V1euiwlb2RXLnEw
-         bjjEcGaQdK51e6RE/BmaWVNpT7owM9kITdAgbZ33yywd5KNudPLlrobSPV/fFv+QqDy9
-         +WGGxY5KgI8nHBh070FjXbhBscH5QLrjhhL+inE5ez4/nhQW5CDLVcsaXERM2tIB1j+m
-         nE2g==
-X-Gm-Message-State: APjAAAWFMQ2RI857/M98pPzTMI5+wge+/X28JnRU4li/777zR0hnClTl
-        07uP35cegvbVZs1Z9p2F76vtCGbS8CvyfloW0M5S3Q==
-X-Google-Smtp-Source: APXvYqw2JdNkDxjGFIXwgPT3GGh6Xp2NuW/QtkUGrRaVRu5pEmDf80zbu2By0aQPNwhMa3+quKzI8BVED+EKfYAmZEg=
-X-Received: by 2002:a9d:526:: with SMTP id 35mr21132700otw.163.1557893406456;
- Tue, 14 May 2019 21:10:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190509184415.11592-1-robdclark@gmail.com> <20190509184415.11592-3-robdclark@gmail.com>
- <CAD=FV=WXW3aApS=c7baxhtfr1Nf-UnBN2s=rEBBkjj4=TCdT+g@mail.gmail.com>
-In-Reply-To: <CAD=FV=WXW3aApS=c7baxhtfr1Nf-UnBN2s=rEBBkjj4=TCdT+g@mail.gmail.com>
-From:   Rob Clark <robdclark@chromium.org>
-Date:   Tue, 14 May 2019 21:09:55 -0700
-Message-ID: <CAJs_Fx5PDj+T+DVixzHjun_wCG5fhZsxH8xUqRwmkfwN87UP_A@mail.gmail.com>
-Subject: Re: [RFC 2/3] arm64: dts: qcom: sdm845-cheza: Re-add reserved memory
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Rob Clark <robdclark@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=p98OlGu9SV+BFYem5XMwnXe15at0yFGCsMrG4alRIQ4=;
+        b=jyvcV7U2ekc8I8CEs2QYDzQTGQiJsKAJvCux/GImXCPZEkJZSHmEnuulIRcfJmYoZ0
+         IVaW3/ITvvzH1lovIh564eRnNPZ/1xcTuWfNv9HapplcRdMKtlsRhfZ6RpjOaQZzdHQY
+         Y8ZYKesw+U+Rml6oo30ZIfGgpV2Q8nI/S7ZrR3tim9YLlMkXMw41LdZuxakqM2NFp6O3
+         Q4XHUIl/oLaIOJYut1M+TjbjZ5AwXbYAgHuF6/M0C4Q55nbgDsyT3Hm2KyFI+XiRy8EJ
+         X7eSr/rLWGTlH9p6R5gzitszguPCUsL8VoPdMPL7IWiDaIN9svFNV5CTzzwCeaghyHcA
+         H4GA==
+X-Gm-Message-State: APjAAAXCNyqJCo4jgCAeDHpC/jds9pckKaQXpdb2aMuMe2yopnLznu1k
+        JkYVUD4pozJ7FDLeVjKJnZVkfZ7U
+X-Google-Smtp-Source: APXvYqzNjIHeV+2C5d2WxNNM5MKUn7P54T4iPAtFq1vaBto7GQfmQfmbL3xO6pvnEFkgPmdJCZ2cTA==
+X-Received: by 2002:a62:7513:: with SMTP id q19mr44835622pfc.108.1557893495865;
+        Tue, 14 May 2019 21:11:35 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id i12sm808026pfd.33.2019.05.14.21.11.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 14 May 2019 21:11:35 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Subject: [PATCH v2 0/4] KVM: LAPIC: Optimize timer latency further
+Date:   Wed, 15 May 2019 12:11:30 +0800
+Message-Id: <1557893490-5715-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 3:48 PM Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Thu, May 9, 2019 at 11:44 AM Rob Clark <robdclark@gmail.com> wrote:
->
-> > From: Douglas Anderson <dianders@chromium.org>
-> >
-> > Let's fixup the reserved memory to re-add the things we deleted in
-> > ("CHROMIUM: arm64: dts: qcom: sdm845-cheza: Temporarily delete
-> > reserved-mem changes") in a way that plays nicely with the new
-> > upstream definitions.
->
-> The message above makes no sense since that commit you reference isn't
-> in upstream.
->
-> ...but in any case, why not squash this in with the previous commit?
+Advance lapic timer tries to hidden the hypervisor overhead between the 
+host emulated timer fires and the guest awares the timer is fired. However, 
+it just hidden the time between apic_timer_fn/handle_preemption_timer -> 
+wait_lapic_expire, instead of the real position of vmentry which is 
+mentioned in the orignial commit d0659d946be0 ("KVM: x86: add option to 
+advance tscdeadline hrtimer expiration"). There is 700+ cpu cycles between 
+the end of wait_lapic_expire and before world switch on my haswell desktop, 
+it will be 2400+ cycles if vmentry_l1d_flush is tuned to always. 
 
-Yeah, I should have mentioned this was my intention, I just left it
-unsquashed since (at the time) it was something I had cherry-picked on
-top of current 4.19 cros kernel..
+This patchset tries to narrow the last gap(wait_lapic_expire -> world switch), 
+it takes the real overhead time between apic_timer_fn/handle_preemption_timer
+and before world switch into consideration when adaptively tuning timer 
+advancement. The patchset can reduce 40% latency (~1600+ cycles to ~1000+ 
+cycles on a haswell desktop) for kvm-unit-tests/tscdeadline_latency when 
+testing busy waits.
 
-anyways, I pushed an (unsquashed, converted to fixup!'s) update to:
+v1 -> v2:
+ * fix indent in patch 1/4
+ * remove the wait_lapic_expire() tracepoint and expose by debugfs
+ * move the call to wait_lapic_expire() into vmx.c and svm.c
 
-https://github.com/freedreno/kernel-msm/commits/wip/cheza-dtb-upstreaming
+Wanpeng Li (4):
+  KVM: LAPIC: Extract adaptive tune timer advancement logic
+  KVM: LAPIC: Fix lapic_timer_advance_ns parameter overflow
+  KVM: LAPIC: Expose per-vCPU timer adavance information to userspace
+  KVM: LAPIC: Optimize timer latency further
 
-which has updates based on you're review comments (at least assuming I
-understood them correctly).. plus some unrelated to cheza-dt patches
-on top to get things actually working (ie. ignore everything on top of
-the fixup!'s)
+ arch/x86/kvm/debugfs.c | 16 +++++++++++++
+ arch/x86/kvm/lapic.c   | 62 +++++++++++++++++++++++++++++---------------------
+ arch/x86/kvm/lapic.h   |  3 ++-
+ arch/x86/kvm/svm.c     |  4 ++++
+ arch/x86/kvm/trace.h   | 20 ----------------
+ arch/x86/kvm/vmx/vmx.c |  4 ++++
+ arch/x86/kvm/x86.c     |  5 +---
+ 7 files changed, 63 insertions(+), 51 deletions(-)
 
-I didn't see any comments on the 'delete zap-shader' patch, so
-hopefully that means what I did there was a sane (or at least not
-insane) way to handle android/linux tz vs what we have on cheza?
+-- 
+2.7.4
 
-BR,
--R
-
-
->
->
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
->
-> Remove Stephen's Reviewed-by.  In general reviews that happen in the
-> Chrome OS gerrit shouldn't be carried over when things are posted
-> upstream.
->
->
-> > +/* Increase the size from 2MB to 8MB */
-> > +&rmtfs_mem {
-> > +       reg = <0 0x88f00000 0 0x800000>;
-> > +};
-> > +
-> > +/ {
-> > +       reserved-memory {
-> > +               venus_mem: memory@96000000 {
-> > +                       reg = <0 0x96000000 0 0x500000>;
-> > +                       no-map;
-> > +               };
-> > +       };
-> > +};
->
-> nit: blank line?
->
-> -Doug
