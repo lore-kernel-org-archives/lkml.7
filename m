@@ -7,54 +7,56 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 353B0C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE32C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 049D02053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC52E2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920512;
-	bh=OBQuELnhqmPV0sBmv0eweVPY123OuzMvGNhslJ0/i7U=;
+	s=default; t=1557920524;
+	bh=ydrEjqHEAiyBRNf7KIBx4f+PYX63jEF42xjZ88975Do=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nx+fn2ve8pr/njm4XwyK52GU8qC0RAupWPNNXwTUvm5mGGRqi/+mPb8phfibG55Ff
-	 OoHfafyB6yaFt6n7t+vqqHCMmpVV60C0O72nBGg7s2m8aRnlIJxfZbVmiEA6GyI7B2
-	 CU2Yy3bqrhqcOvMdDi6YFiQ7OOifqwH6eh6KDRME=
+	b=PThDhgW8QnvvX+aJ9bpBD4FbfQxKVImc6uCrvi/fq0iTskzlCNvabsRrGs6t/xo5N
+	 kIHwgqkzrjA8IaEnyX4RqouUYrhQHOFw/gD1A3Zs1szv1MIsuIgg+ondt0yRrjJozZ
+	 QWoWJUdYjMPqGzRRg82RJe07TpTscK8ET+81OfIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732706AbfEOLlu (ORCPT
+        id S1732366AbfEOL2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:41:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39550 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:28:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732027AbfEOL22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:28:28 -0400
+        id S1731867AbfEOL2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:28:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97C2420881;
-        Wed, 15 May 2019 11:28:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7096021473;
+        Wed, 15 May 2019 11:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919707;
-        bh=OBQuELnhqmPV0sBmv0eweVPY123OuzMvGNhslJ0/i7U=;
+        s=default; t=1557919693;
+        bh=ydrEjqHEAiyBRNf7KIBx4f+PYX63jEF42xjZ88975Do=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=khQt5NtuxZA7CortcvVu/ctQQoBsxzNXgFzTQG7ip2NLGmb8sS4f1ev5oCr9u8hLV
-         goxX6jeTFuBIC+amzk3iMZRGpyiLGVRYQExk71N3mJ58SCfWd79YjCSvp9mGJMNmOp
-         maiDjIi1zb+DMsnCcoh/47PIxlRSYOipwMhgNlwU=
+        b=mteid7n3fzJM6LqLMpk9CwYXhL33QLMeYot/RmxinrsmJtMqqiT9ZcBa4Ec6YpnsH
+         xUnSTotoiuoYXN1YYir+drHYKiGXweA6mGGkS5dkEpmIEJeImM4rg0oOcx5cuBmOkz
+         LGBUAupvNu1yizcx6M/grmrmag1U1FL92OuFpE1o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Guenter Roeck <groeck@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Russell King <rmk@armlinux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 062/137] init: initialize jump labels before command line option parsing
-Date:   Wed, 15 May 2019 12:55:43 +0200
-Message-Id: <20190515090657.981383435@linuxfoundation.org>
+Subject: [PATCH 5.0 057/137] perf tools: Fix map reference counting
+Date:   Wed, 15 May 2019 12:55:38 +0200
+Message-Id: <20190515090657.634665827@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -67,77 +69,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6041186a32585fc7a1d0f6cfe2f138b05fdc3c82 ]
+[ Upstream commit b9abbdfa88024d52c8084d8f46ea4f161606c692 ]
 
-When a module option, or core kernel argument, toggles a static-key it
-requires jump labels to be initialized early.  While x86, PowerPC, and
-ARM64 arrange for jump_label_init() to be called before parse_args(),
-ARM does not.
+By calling maps__insert() we assume to get 2 references on the map,
+which we relese within maps__remove call.
 
-  Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1 console=ttyAMA0,115200 page_alloc.shuffle=1
-  ------------[ cut here ]------------
-  WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
-  page_alloc_shuffle+0x12c/0x1ac
-  static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
-  before call to jump_label_init()
-  Modules linked in:
-  CPU: 0 PID: 0 Comm: swapper Not tainted
-  5.1.0-rc4-next-20190410-00003-g3367c36ce744 #1
-  Hardware name: ARM Integrator/CP (Device Tree)
-  [<c0011c68>] (unwind_backtrace) from [<c000ec48>] (show_stack+0x10/0x18)
-  [<c000ec48>] (show_stack) from [<c07e9710>] (dump_stack+0x18/0x24)
-  [<c07e9710>] (dump_stack) from [<c001bb1c>] (__warn+0xe0/0x108)
-  [<c001bb1c>] (__warn) from [<c001bb88>] (warn_slowpath_fmt+0x44/0x6c)
-  [<c001bb88>] (warn_slowpath_fmt) from [<c0b0c4a8>]
-  (page_alloc_shuffle+0x12c/0x1ac)
-  [<c0b0c4a8>] (page_alloc_shuffle) from [<c0b0c550>] (shuffle_store+0x28/0x48)
-  [<c0b0c550>] (shuffle_store) from [<c003e6a0>] (parse_args+0x1f4/0x350)
-  [<c003e6a0>] (parse_args) from [<c0ac3c00>] (start_kernel+0x1c0/0x488)
+However if there's already same map name, we currently don't bump the
+reference and can crash, like:
 
-Move the fallback call to jump_label_init() to occur before
-parse_args().
+  Program received signal SIGABRT, Aborted.
+  0x00007ffff75e60f5 in raise () from /lib64/libc.so.6
 
-The redundant calls to jump_label_init() in other archs are left intact
-in case they have static key toggling use cases that are even earlier
-than option parsing.
+  (gdb) bt
+  #0  0x00007ffff75e60f5 in raise () from /lib64/libc.so.6
+  #1  0x00007ffff75d0895 in abort () from /lib64/libc.so.6
+  #2  0x00007ffff75d0769 in __assert_fail_base.cold () from /lib64/libc.so.6
+  #3  0x00007ffff75de596 in __assert_fail () from /lib64/libc.so.6
+  #4  0x00000000004fc006 in refcount_sub_and_test (i=1, r=0x1224e88) at tools/include/linux/refcount.h:131
+  #5  refcount_dec_and_test (r=0x1224e88) at tools/include/linux/refcount.h:148
+  #6  map__put (map=0x1224df0) at util/map.c:299
+  #7  0x00000000004fdb95 in __maps__remove (map=0x1224df0, maps=0xb17d80) at util/map.c:953
+  #8  maps__remove (maps=0xb17d80, map=0x1224df0) at util/map.c:959
+  #9  0x00000000004f7d8a in map_groups__remove (map=<optimized out>, mg=<optimized out>) at util/map_groups.h:65
+  #10 machine__process_ksymbol_unregister (sample=<optimized out>, event=0x7ffff7279670, machine=<optimized out>) at util/machine.c:728
+  #11 machine__process_ksymbol (machine=<optimized out>, event=0x7ffff7279670, sample=<optimized out>) at util/machine.c:741
+  #12 0x00000000004fffbb in perf_session__deliver_event (session=0xb11390, event=0x7ffff7279670, tool=0x7fffffffc7b0, file_offset=13936) at util/session.c:1362
+  #13 0x00000000005039bb in do_flush (show_progress=false, oe=0xb17e80) at util/ordered-events.c:243
+  #14 __ordered_events__flush (oe=0xb17e80, how=OE_FLUSH__ROUND, timestamp=<optimized out>) at util/ordered-events.c:322
+  #15 0x00000000005005e4 in perf_session__process_user_event (session=session@entry=0xb11390, event=event@entry=0x7ffff72a4af8,
+  ...
 
-Link: http://lkml.kernel.org/r/155544804466.1032396.13418949511615676665.stgit@dwillia2-desk3.amr.corp.intel.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Reported-by: Guenter Roeck <groeck@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Russell King <rmk@armlinux.org.uk>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Add the map to the list and getting the reference event if we find the
+map with same name.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Fixes: 1e6285699b30 ("perf symbols: Fix slowness due to -ffunction-section")
+Link: http://lkml.kernel.org/r/20190416160127.30203-10-jolsa@kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- init/main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/map.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/init/main.c b/init/main.c
-index c86a1c8f19f40..7ae8245452650 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -574,6 +574,8 @@ asmlinkage __visible void __init start_kernel(void)
- 	page_alloc_init();
- 
- 	pr_notice("Kernel command line: %s\n", boot_command_line);
-+	/* parameters may set static keys */
-+	jump_label_init();
- 	parse_early_param();
- 	after_dashes = parse_args("Booting kernel",
- 				  static_command_line, __start___param,
-@@ -583,8 +585,6 @@ asmlinkage __visible void __init start_kernel(void)
- 		parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
- 			   NULL, set_init_arg);
- 
--	jump_label_init();
--
- 	/*
- 	 * These use large bootmem allocations and must precede
- 	 * kmem_cache_init()
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 2b37f56f05493..e33f20d16c8d6 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -904,10 +904,8 @@ static void __maps__insert_name(struct maps *maps, struct map *map)
+ 		rc = strcmp(m->dso->short_name, map->dso->short_name);
+ 		if (rc < 0)
+ 			p = &(*p)->rb_left;
+-		else if (rc  > 0)
+-			p = &(*p)->rb_right;
+ 		else
+-			return;
++			p = &(*p)->rb_right;
+ 	}
+ 	rb_link_node(&map->rb_node_name, parent, p);
+ 	rb_insert_color(&map->rb_node_name, &maps->names);
 -- 
 2.20.1
 
