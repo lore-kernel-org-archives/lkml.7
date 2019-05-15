@@ -2,187 +2,87 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD3AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0921C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3E520644
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918677;
-	bh=I6d+9dKOeglrTD2kyHydzbVP6se/isQi7Sw1aONqFQo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NweSPE7wpGjGODoUrFGvwBDaSy+kSfeLRd8Zd8KGXeSlCkRcuarWg+OqHPRK7E+2b
-	 ql4uQ78I+n/MROsIh4tWOqfxG/YHsSL46fzZboo+pLskbqM8F0YitsoJLgwlUb83ma
-	 ISBm+GotbhQIQeOsf0dKOqbIhcGUSsLzWY13jUkw=
+	by mail.kernel.org (Postfix) with ESMTP id 6DF0A2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8t4CDah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbfEOLLQ (ORCPT
+        id S1729568AbfEOLLS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:11:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728026AbfEOLLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:11:18 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42930 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729102AbfEOLLL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 May 2019 07:11:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B73FE216F4;
-        Wed, 15 May 2019 11:11:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918670;
-        bh=I6d+9dKOeglrTD2kyHydzbVP6se/isQi7Sw1aONqFQo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w5cY4FcCy57vQGSM/s1uhibOL10zRl/azxMxejWWtLum+hY9VED4X+iqnyx1V+EHZ
-         LMYYVCq0uPJISIZhiRqecf6t9x6Az+2HU+TERNkCvMQYS+mLuGSebLnBK0A/f5wWei
-         GHfArRCAPe5KWmHckPrlIGAWQHmczQM4oNbXuE9M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Casey Schaufler <casey.schaufler@intel.com>,
-        Asit Mallick <asit.k.mallick@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Jon Masters <jcm@redhat.com>,
-        Waiman Long <longman9394@gmail.com>,
-        Dave Stewart <david.c.stewart@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 221/266] x86/speculation: Prepare arch_smt_update() for PRCTL mode
-Date:   Wed, 15 May 2019 12:55:28 +0200
-Message-Id: <20190515090730.469845973@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
-References: <20190515090722.696531131@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-wr1-f66.google.com with SMTP id l2so2184300wrb.9;
+        Wed, 15 May 2019 04:11:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RfpyiRccRRz5dbumgmGOhQSt6RCKbWXqfWgcImNA2S8=;
+        b=K8t4CDah4BvgpilXqXw5zfSnz0BO2nlRqhLz2gBt2pODiwL4kv8u3l6llr5cwm1NMz
+         cgjs8gfhoBuBlaXma2hIzzXKOHnJIY55Z/RQyQEz9GQRx0FTCMyRfQQ0kZoQLqZ8toG2
+         URD0M9gTxxP3ivyMbkmXAVXh0xlkLqK7wON2A/Md2d7bN+7V1FSBsJFbiLEfdAPl11HY
+         q2QgOryr7QcwIHGew7YmpsJY2YsmBnZh4byZbIyNgyt2awx0qzkJlOcGGENIf8hH0k41
+         E2/+zrNVGv5uXVDKvKDWd8knOGnk3aafQyO7ChMWO5weTw5myZirdUM1jeu643nFh8mW
+         qWlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RfpyiRccRRz5dbumgmGOhQSt6RCKbWXqfWgcImNA2S8=;
+        b=F8PeZ7ZZN9eBEaEvWcJIFwXcUz79YIhgpoZ7jNxQXYzFWHuilcIRl86zFam2ihalUW
+         gmYw81Zo1U45ogI4h5F3ppaBAtUyYZn7quUND+5X4Du+k9GN7xU6PdQH8G+u7Yiij7G9
+         j5aNvdFEPkheTOmoe2AvyrcDlgLMzMxGYLPGeI+P9vwY2vMmUouHdXc+CZGQ6DJ0vjEO
+         3HxOKZAxXYZNXUQbwf1KBVvOmasuoQ5TZ9t4up5/GQ6GQDhtlyNIXREgLATRMid33Fi6
+         54bLAjYYx9fvBkGvqmsmR5+tA886O0vj4x8/2IxHT4JUEDgtYI1MBJEPo2B+fRmaI3RK
+         eedA==
+X-Gm-Message-State: APjAAAWWAGWS8TF8NWT/yNzrZBQ91zB3pOPb1YGDGSzOUf5k1RgLk+2b
+        27tYawGyK1pqYJrG7nW8Ty1M3ZcsoCEV/GxODMs=
+X-Google-Smtp-Source: APXvYqwy9wBDuoVo1pQ2ozYfDPbfcbqcr1FX+HUxx/FMBvDgFydGuewMLp2+gLO8zuWIDfWHm/LYc3Kw0RoFoklukJQ=
+X-Received: by 2002:a5d:440a:: with SMTP id z10mr10309482wrq.157.1557918668653;
+ Wed, 15 May 2019 04:11:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190509173849.11825-1-hch@lst.de> <20190509173849.11825-3-hch@lst.de>
+In-Reply-To: <20190509173849.11825-3-hch@lst.de>
+From:   Manuel Lauss <manuel.lauss@gmail.com>
+Date:   Wed, 15 May 2019 13:10:32 +0200
+Message-ID: <CAOLZvyG14NvbgX4PA5aafk=reLcHbqDswqS-8j4+7QJMx02d7A@mail.gmail.com>
+Subject: Re: [PATCH 2/3] au1200fb: fix DMA API abuse
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linux-MIPS <linux-mips@vger.kernel.org>,
+        linux-fbdev <linux-fbdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+Servus Christoph,
 
-commit 6893a959d7fdebbab5f5aa112c277d5a44435ba1 upstream.
+On Thu, May 9, 2019 at 7:39 PM Christoph Hellwig <hch@lst.de> wrote:
+> Virtual addresses return from dma(m)_alloc_attrs are opaque in what
+> backs then, and drivers must not poke into them.  Similarly caching
+> modes are not supposed to be directly set by the driver.  Switch the
+> driver to use the generic DMA API mmap helper to avoid these problems.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/video/fbdev/au1200fb.c | 19 ++++---------------
+>  1 file changed, 4 insertions(+), 15 deletions(-)
 
-The upcoming fine grained per task STIBP control needs to be updated on CPU
-hotplug as well.
+Runs fine on my test system.
 
-Split out the code which controls the strict mode so the prctl control code
-can be added later. Mark the SMP function call argument __unused while at it.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Casey Schaufler <casey.schaufler@intel.com>
-Cc: Asit Mallick <asit.k.mallick@intel.com>
-Cc: Arjan van de Ven <arjan@linux.intel.com>
-Cc: Jon Masters <jcm@redhat.com>
-Cc: Waiman Long <longman9394@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Dave Stewart <david.c.stewart@intel.com>
-Cc: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20181125185005.759457117@linutronix.de
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/x86/kernel/cpu/bugs.c |   46 ++++++++++++++++++++++++---------------------
- 1 file changed, 25 insertions(+), 21 deletions(-)
-
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -525,40 +525,44 @@ specv2_set_mode:
- 	arch_smt_update();
- }
- 
--static bool stibp_needed(void)
-+static void update_stibp_msr(void * __unused)
- {
--	/* Enhanced IBRS makes using STIBP unnecessary. */
--	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
--		return false;
--
--	/* Check for strict user mitigation mode */
--	return spectre_v2_user == SPECTRE_V2_USER_STRICT;
-+	wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
- }
- 
--static void update_stibp_msr(void *info)
-+/* Update x86_spec_ctrl_base in case SMT state changed. */
-+static void update_stibp_strict(void)
- {
--	wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
-+	u64 mask = x86_spec_ctrl_base & ~SPEC_CTRL_STIBP;
-+
-+	if (sched_smt_active())
-+		mask |= SPEC_CTRL_STIBP;
-+
-+	if (mask == x86_spec_ctrl_base)
-+		return;
-+
-+	pr_info("Update user space SMT mitigation: STIBP %s\n",
-+		mask & SPEC_CTRL_STIBP ? "always-on" : "off");
-+	x86_spec_ctrl_base = mask;
-+	on_each_cpu(update_stibp_msr, NULL, 1);
- }
- 
- void arch_smt_update(void)
- {
--	u64 mask;
--
--	if (!stibp_needed())
-+	/* Enhanced IBRS implies STIBP. No update required. */
-+	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
- 		return;
- 
- 	mutex_lock(&spec_ctrl_mutex);
- 
--	mask = x86_spec_ctrl_base & ~SPEC_CTRL_STIBP;
--	if (sched_smt_active())
--		mask |= SPEC_CTRL_STIBP;
--
--	if (mask != x86_spec_ctrl_base) {
--		pr_info("Spectre v2 cross-process SMT mitigation: %s STIBP\n",
--			mask & SPEC_CTRL_STIBP ? "Enabling" : "Disabling");
--		x86_spec_ctrl_base = mask;
--		on_each_cpu(update_stibp_msr, NULL, 1);
-+	switch (spectre_v2_user) {
-+	case SPECTRE_V2_USER_NONE:
-+		break;
-+	case SPECTRE_V2_USER_STRICT:
-+		update_stibp_strict();
-+		break;
- 	}
-+
- 	mutex_unlock(&spec_ctrl_mutex);
- }
- 
-
-
+Tested-by: Manuel Lauss <manuel.lauss@gmail.com>
