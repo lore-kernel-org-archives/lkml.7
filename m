@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF9AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A66C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0682089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A5BF20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922524;
-	bh=QnGRBBOKsC3EgzmdCurkiDL3HEHZU7zxAVd+0MEfDx0=;
+	s=default; t=1557922531;
+	bh=sJY81SqPFx9uVWpwlWxULDpYpvZNuIz5WuqgmFvI8MM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R+EfhY/WP+f3WM0sHlXh3z2kHniwoi+6e6EJlw6j/b7iV4otGT3090nWsayBKWhPB
-	 xOuudyTV/PAPdeoPVyTBAM+itrpfpnM6/eDhvULAk6CHsH9toCsxzXvwAMCU6xt2cF
-	 qJW/s1aGQ4pXczgEFa+T7R3V2C3l6Co9hgb4Loqc=
+	b=14RHzCwZ4Pv1LJU5CbkHwsIxY9Ia/CWprkY5B/t2Geu/fanEOzV2ep+tJUjVA4x1e
+	 m6lPwM8X0u9idqyLhcDM382sPP46lGW+DDfam3amia6wjJqLO8ckpD5YzbywS2YZy7
+	 IXyiiSn5r+OnK0jzWC7MMVUL572XI6Wh1vrwCRlg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfEOMPX (ORCPT
+        id S1728195AbfEOLDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:15:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32950 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:03:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727662AbfEOLDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:03:36 -0400
+        id S1727264AbfEOLD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:03:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5D932084F;
-        Wed, 15 May 2019 11:03:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB72C20881;
+        Wed, 15 May 2019 11:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918216;
-        bh=QnGRBBOKsC3EgzmdCurkiDL3HEHZU7zxAVd+0MEfDx0=;
+        s=default; t=1557918208;
+        bh=sJY81SqPFx9uVWpwlWxULDpYpvZNuIz5WuqgmFvI8MM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cp5WL4A0pJsc2Y0AeFBnmhudYQJ1pA1DStFIaR4rvLyxdVgmLyJanguONORU5x3QB
-         4+aAv6tiQTkLD0iaYGnOM7tGAbikTSoKMPHZIfplmK2+5YiHly8pwr0rB59H8hsXtB
-         AorOLn2cOqTrb0AjIIYpI+SRzMUPaZeUeCnHJ20Y=
+        b=G7246WlpTVg+56ciS+Ndi6RnaGLSOJDNW57JTb21zonqD2gcZKtz1wZjNhesagd72
+         uaApk30H6b4Ms9tgBkGLlikH7jdgQVzlgwiN5lo7G3Zb2QXCMkQS2F3tGMul+7mPSH
+         DLbUN777B1waY/zMEPJgjjUSQdB7uJw6s9u7TCCk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.4 049/266] powerpc/64: Make meltdown reporting Book3S 64 specific
-Date:   Wed, 15 May 2019 12:52:36 +0200
-Message-Id: <20190515090724.109908692@linuxfoundation.org>
+Subject: [PATCH 4.4 046/266] powerpc/64: Make stf barrier PPC_BOOK3S_64 specific.
+Date:   Wed, 15 May 2019 12:52:33 +0200
+Message-Id: <20190515090724.023961338@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -61,14 +61,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Diana Craciun <diana.craciun@nxp.com>
 
-commit 406d2b6ae3420f5bb2b3db6986dc6f0b6dbb637b upstream.
+commit 6453b532f2c8856a80381e6b9a1f5ea2f12294df upstream.
 
-In a subsequent patch we will enable building security.c for Book3E.
-However the NXP platforms are not vulnerable to Meltdown, so make the
-Meltdown vulnerability reporting PPC_BOOK3S_64 specific.
+NXP Book3E platforms are not vulnerable to speculative store
+bypass, so make the mitigations PPC_BOOK3S_64 specific.
 
 Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
-[mpe: Split out of larger patch]
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
@@ -77,21 +75,18 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/arch/powerpc/kernel/security.c
 +++ b/arch/powerpc/kernel/security.c
-@@ -93,6 +93,7 @@ static __init int barrier_nospec_debugfs
- device_initcall(barrier_nospec_debugfs_init);
- #endif /* CONFIG_DEBUG_FS */
+@@ -177,6 +177,7 @@ ssize_t cpu_show_spectre_v2(struct devic
+ 	return s.len;
+ }
  
 +#ifdef CONFIG_PPC_BOOK3S_64
- ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, char *buf)
- {
- 	bool thread_priv;
-@@ -125,6 +126,7 @@ ssize_t cpu_show_meltdown(struct device
- 
- 	return sprintf(buf, "Vulnerable\n");
+ /*
+  * Store-forwarding barrier support.
+  */
+@@ -322,3 +323,4 @@ static __init int stf_barrier_debugfs_in
  }
-+#endif
- 
- ssize_t cpu_show_spectre_v1(struct device *dev, struct device_attribute *attr, char *buf)
- {
+ device_initcall(stf_barrier_debugfs_init);
+ #endif /* CONFIG_DEBUG_FS */
++#endif /* CONFIG_PPC_BOOK3S_64 */
 
 
