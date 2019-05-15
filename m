@@ -2,195 +2,113 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B30C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58527C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE6E20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:53:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aUFcPFAP";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EdtPLgV7"
+	by mail.kernel.org (Postfix) with ESMTP id 1C99C20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:53:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557921216;
+	bh=h3xdNg/q9zhRaJaNp3VWSoaqbdpc4FxgzygEbgsDw2c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HWwpK9bbJDBQvVLvDi8muqt0db9X4dIbkAikwjfSE3M73LRVhY5QZRur3sd1zanz0
+	 DrblBTK9t0UUNzeQfpKm0nbh43SYHFLAeFRBb9y12TL5jG0p8qdNOruw7cpXwQO56j
+	 BJR0JLBVWSYRkJdOqSkTB0nCwvFhWExFzhjM3pAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731479AbfEOLxV (ORCPT
+        id S1731414AbfEOLxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:53:21 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:36522 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730983AbfEOLTl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:19:41 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3B615611DC; Wed, 15 May 2019 11:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557919179;
-        bh=ttr2xmvM52sCyNpkVv5zDVmk1ljobJDPrByM3R11jRY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aUFcPFAPLg6qXk44y4Irrk2TF9lEpM3XeQguMeoeLFbdDxdvZOLYKq2yXua0TJzw1
-         Rb3P0KNXUyZ0D+fWBFsEjgn5lrdz390J7dPgPdmtsMLp6rAwum5D7lr3kKp25sWe9d
-         KKMlI+8bDxWE1Lt6+E4bfZpXHPKeLpI3Hu3HAPO8=
-Received: from rocky-HP-EliteBook-8460p.wlan.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Wed, 15 May 2019 07:53:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730963AbfEOLT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:19:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: rjliao@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7C17960CF1;
-        Wed, 15 May 2019 11:19:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557919176;
-        bh=ttr2xmvM52sCyNpkVv5zDVmk1ljobJDPrByM3R11jRY=;
+        by mail.kernel.org (Postfix) with ESMTPSA id 69C7120843;
+        Wed, 15 May 2019 11:19:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557919166;
+        bh=h3xdNg/q9zhRaJaNp3VWSoaqbdpc4FxgzygEbgsDw2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EdtPLgV75AeYe41YGMg7P/pin5N8SyT+RQ1G2MX8xD2C5vn9honkFsMIpe0w4JDeM
-         LIo1ftqix7yIWHU0+EerWvyjUJl6aEs8G3dzDLqZt9DrtvBXQeIoCCTd/Dyb8eB4tM
-         Q+7Qf0OXWCbtz7oeh5o7GkXW83SIwGHTC06IEAIM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7C17960CF1
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rjliao@codeaurora.org
-From:   Rocky Liao <rjliao@codeaurora.org>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org,
-        johan.hedberg@gmail.com, thierry.escande@linaro.org
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, Rocky Liao <rjliao@codeaurora.org>
-Subject: [PATCH v5 1/2] Bluetooth: hci_qca: Load customized NVM based on the device property
-Date:   Wed, 15 May 2019 19:19:21 +0800
-Message-Id: <1557919161-11010-1-git-send-email-rjliao@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1557631148-5120-1-git-send-email-rjliao@codeaurora.org>
-References: <1557631148-5120-1-git-send-email-rjliao@codeaurora.org>
+        b=bsZQBtRe+sJxpZpx5a4OtpG+Xf1VE5ZQTmVKejEQUPhYv+RubP9HZcgVt1FqhWfNy
+         ANu/laCs0dxkXlJDb9I+qAMz7JIX/H8gyNi8/JW7QWmH4JhYvDiJQWTqFFNIk1mTwU
+         KCWPtabiamskDeLLiFJA8zJUXbr1Wx6qTb6yWTLY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: [PATCH 4.14 091/115] NFC: nci: Add some bounds checking in nci_hci_cmd_received()
+Date:   Wed, 15 May 2019 12:56:11 +0200
+Message-Id: <20190515090705.861199865@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
+References: <20190515090659.123121100@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QCA BTSOC NVM is a customized firmware file and different vendors may
-want to have different BTSOC configuration (e.g. Configure SCO over PCM
-or I2S, Setting Tx power, etc.) via this file. This patch will allow
-vendors to download different NVM firmware file by reading a device
-property "firmware-name".
+[ Upstream commit d7ee81ad09f072eab1681877fc71ec05f9c1ae92 ]
 
-Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
----
-Changes in v5:
-  * Made the change applicable to the wcn399x series chip sets
----
- drivers/bluetooth/btqca.c   |  8 ++++++--
- drivers/bluetooth/btqca.h   |  6 ++++--
- drivers/bluetooth/hci_qca.c | 19 ++++++++++++++++++-
- 3 files changed, 28 insertions(+), 5 deletions(-)
+This is similar to commit 674d9de02aa7 ("NFC: Fix possible memory
+corruption when handling SHDLC I-Frame commands").
 
-diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-index cc12eec..a78b80e 100644
---- a/drivers/bluetooth/btqca.c
-+++ b/drivers/bluetooth/btqca.c
-@@ -332,7 +332,8 @@ int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr)
- EXPORT_SYMBOL_GPL(qca_set_bdaddr_rome);
+I'm not totally sure, but I think that commit description may have
+overstated the danger.  I was under the impression that this data came
+from the firmware?  If you can't trust your networking firmware, then
+you're already in trouble.
+
+Anyway, these days we add bounds checking where ever we can and we call
+it kernel hardening.  Better safe than sorry.
+
+Fixes: 11f54f228643 ("NFC: nci: Add HCI over NCI protocol support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+---
+ net/nfc/nci/hci.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/net/nfc/nci/hci.c b/net/nfc/nci/hci.c
+index ddfc52ac1f9b4..c0d323b58e732 100644
+--- a/net/nfc/nci/hci.c
++++ b/net/nfc/nci/hci.c
+@@ -312,6 +312,10 @@ static void nci_hci_cmd_received(struct nci_dev *ndev, u8 pipe,
+ 		create_info = (struct nci_hci_create_pipe_resp *)skb->data;
+ 		dest_gate = create_info->dest_gate;
+ 		new_pipe = create_info->pipe;
++		if (new_pipe >= NCI_HCI_MAX_PIPES) {
++			status = NCI_HCI_ANY_E_NOK;
++			goto exit;
++		}
  
- int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
--		   enum qca_btsoc_type soc_type, u32 soc_ver)
-+		   enum qca_btsoc_type soc_type, u32 soc_ver,
-+		   const char *firmware_name)
- {
- 	struct rome_config config;
- 	int err;
-@@ -365,7 +366,10 @@ int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
- 
- 	/* Download NVM configuration */
- 	config.type = TLV_TYPE_NVM;
--	if (qca_is_wcn399x(soc_type))
-+	if (firmware_name)
-+		snprintf(config.fwname, sizeof(config.fwname),
-+			 "qca/%s", firmware_name);
-+	else if (qca_is_wcn399x(soc_type))
- 		snprintf(config.fwname, sizeof(config.fwname),
- 			 "qca/crnv%02x.bin", rom_ver);
- 	else
-diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
-index 4c4fe2b..8c037bb 100644
---- a/drivers/bluetooth/btqca.h
-+++ b/drivers/bluetooth/btqca.h
-@@ -140,7 +140,8 @@ enum qca_btsoc_type {
- 
- int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdaddr);
- int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
--		   enum qca_btsoc_type soc_type, u32 soc_ver);
-+		   enum qca_btsoc_type soc_type, u32 soc_ver,
-+		   const char *firmware_name);
- int qca_read_soc_version(struct hci_dev *hdev, u32 *soc_version);
- int qca_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
- static inline bool qca_is_wcn399x(enum qca_btsoc_type soc_type)
-@@ -155,7 +156,8 @@ static inline int qca_set_bdaddr_rome(struct hci_dev *hdev, const bdaddr_t *bdad
- }
- 
- static inline int qca_uart_setup(struct hci_dev *hdev, uint8_t baudrate,
--				 enum qca_btsoc_type soc_type, u32 soc_ver)
-+				 enum qca_btsoc_type soc_type, u32 soc_ver,
-+				 const char *firmware_name)
- {
- 	return -EOPNOTSUPP;
- }
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 57322c4..9590602 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -169,6 +169,7 @@ struct qca_serdev {
- 	struct qca_power *bt_power;
- 	u32 init_speed;
- 	u32 oper_speed;
-+	const char *firmware_name;
- };
- 
- static int qca_power_setup(struct hci_uart *hu, bool on);
-@@ -190,6 +191,17 @@ static enum qca_btsoc_type qca_soc_type(struct hci_uart *hu)
- 	return soc_type;
- }
- 
-+static const char *qca_get_firmware_name(struct hci_uart *hu)
-+{
-+	if (hu->serdev) {
-+		struct qca_serdev *qsd = serdev_device_get_drvdata(hu->serdev);
-+
-+		return qsd->firmware_name;
-+	} else {
-+		return NULL;
-+	}
-+}
-+
- static void __serial_clock_on(struct tty_struct *tty)
- {
- 	/* TODO: Some chipset requires to enable UART clock on client
-@@ -1195,6 +1207,7 @@ static int qca_setup(struct hci_uart *hu)
- 	struct qca_data *qca = hu->priv;
- 	unsigned int speed, qca_baudrate = QCA_BAUDRATE_115200;
- 	enum qca_btsoc_type soc_type = qca_soc_type(hu);
-+	const char *firmware_name = qca_get_firmware_name(hu);
- 	int ret;
- 	int soc_ver = 0;
- 
-@@ -1245,7 +1258,8 @@ static int qca_setup(struct hci_uart *hu)
- 
- 	bt_dev_info(hdev, "QCA controller version 0x%08x", soc_ver);
- 	/* Setup patch / NVM configurations */
--	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver);
-+	ret = qca_uart_setup(hdev, qca_baudrate, soc_type, soc_ver,
-+			firmware_name);
- 	if (!ret) {
- 		set_bit(QCA_IBS_ENABLED, &qca->flags);
- 		qca_debugfs_init(hdev);
-@@ -1477,6 +1491,9 @@ static int qca_serdev_probe(struct serdev_device *serdev)
- 			return PTR_ERR(qcadev->bt_en);
+ 		/* Save the new created pipe and bind with local gate,
+ 		 * the description for skb->data[3] is destination gate id
+@@ -336,6 +340,10 @@ static void nci_hci_cmd_received(struct nci_dev *ndev, u8 pipe,
+ 			goto exit;
  		}
+ 		delete_info = (struct nci_hci_delete_pipe_noti *)skb->data;
++		if (delete_info->pipe >= NCI_HCI_MAX_PIPES) {
++			status = NCI_HCI_ANY_E_NOK;
++			goto exit;
++		}
  
-+		device_property_read_string(&serdev->dev, "firmware-name",
-+					 &qcadev->firmware_name);
-+
- 		qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
- 		if (IS_ERR(qcadev->susclk)) {
- 			dev_err(&serdev->dev, "failed to acquire clk\n");
+ 		ndev->hci_dev->pipes[delete_info->pipe].gate =
+ 						NCI_HCI_INVALID_GATE;
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+2.20.1
+
+
 
