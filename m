@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 432D5C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2212C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1735D2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 850CD20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:02:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918169;
-	bh=C/41zQokk2RkWXL4oom5Y6XlHM52K9uDoMPwKvbFLmM=;
+	s=default; t=1557918175;
+	bh=MssDB12zE7v7+lx5h55D6vGmX//645lmACRKe8OHhyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rn6AbwW/GYovRbuEBCySXAw3jjqRWr6vlNer2T79r0VhNEQiqR4FE/bfVbDv/C2BU
-	 Gbq6aS+zsyQwaidy1Zu16n3G1jayQLXu7TzJ/FhlnvxaHSv345BPMZgfdQf74R1Wmr
-	 tpWpoR9Uh8ZuybJ4NUlJzWUCnJ202yRuUrOWmhWc=
+	b=ts0eghpU/wYzlNztf7Rn2KNtSK8vw1GYJ2osupj6zdZ0FakCjSlj+jYauZ7tSxRg/
+	 EF6RDn+iFsMP6QCKqQ7ERPDG6k7uHi6OL9YVxD65UEgBe7KNz48fy53x6Ef0/D6Ul2
+	 vdygpQ65HQbe42Kq3KI6BY34NKWuL04Nulle6m04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbfEOLCs (ORCPT
+        id S1728024AbfEOLCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:02:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60118 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:02:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727993AbfEOLCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:02:44 -0400
+        id S1725939AbfEOLCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:02:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E054321773;
-        Wed, 15 May 2019 11:02:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3656A216FD;
+        Wed, 15 May 2019 11:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918163;
-        bh=C/41zQokk2RkWXL4oom5Y6XlHM52K9uDoMPwKvbFLmM=;
+        s=default; t=1557918168;
+        bh=MssDB12zE7v7+lx5h55D6vGmX//645lmACRKe8OHhyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IOp9LwCLQ1D8NpZ9Us6Gszmine5TTNUAt5xYZ0z7UH34RMs+IYTWzkvvHQk9adSzL
-         nmea41HzeNBP+wFdjAi79wzDbld5QHcfjPZL5damy3otOHgqHRo2rdDXLEnNwUYWZP
-         jnjt4U5kIV98ByvAY8VrgPEvWAX4lumwpG3ovtVU=
+        b=KJbax8H0SDyxOkZG2vsS0xnDlwXNGYEs8ynS79cVOj5e5onoA9D88/7ai+SfcMhx+
+         ux+UlRhvhWP/wpkGpMWVyULePmibQEQTdvXcGdl0hM9BhfZoypCqTj5sjk+qezAT2u
+         panTIhNPCVI6dy2mR2HFdijhcg79wVSkxqFwTavs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.4 009/266] nfsd: Dont release the callback slot unless it was actually held
-Date:   Wed, 15 May 2019 12:51:56 +0200
-Message-Id: <20190515090722.973000199@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.4 024/266] powerpc/pseries: Set or clear security feature flags
+Date:   Wed, 15 May 2019 12:52:11 +0200
+Message-Id: <20190515090723.398874702@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,82 +58,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit e6abc8caa6deb14be2a206253f7e1c5e37e9515b upstream.
+commit f636c14790ead6cc22cf62279b1f8d7e11a67116 upstream.
 
-If there are multiple callbacks queued, waiting for the callback
-slot when the callback gets shut down, then they all currently
-end up acting as if they hold the slot, and call
-nfsd4_cb_sequence_done() resulting in interesting side-effects.
+Now that we have feature flags for security related things, set or
+clear them based on what we receive from the hypercall.
 
-In addition, the 'retry_nowait' path in nfsd4_cb_sequence_done()
-causes a loop back to nfsd4_cb_prepare() without first freeing the
-slot, which causes a deadlock when nfsd41_cb_get_slot() gets called
-a second time.
-
-This patch therefore adds a boolean to track whether or not the
-callback did pick up the slot, so that it can do the right thing
-in these 2 cases.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/nfsd/nfs4callback.c |    8 +++++++-
- fs/nfsd/state.h        |    1 +
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/setup.c |   43 +++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -874,8 +874,9 @@ static void nfsd4_cb_prepare(struct rpc_
- 	cb->cb_seq_status = 1;
- 	cb->cb_status = 0;
- 	if (minorversion) {
--		if (!nfsd41_cb_get_slot(clp, task))
-+		if (!cb->cb_holds_slot && !nfsd41_cb_get_slot(clp, task))
- 			return;
-+		cb->cb_holds_slot = true;
- 	}
- 	rpc_call_start(task);
- }
-@@ -902,6 +903,9 @@ static bool nfsd4_cb_sequence_done(struc
- 		return true;
- 	}
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -67,6 +67,7 @@
+ #include <asm/eeh.h>
+ #include <asm/reg.h>
+ #include <asm/plpar_wrappers.h>
++#include <asm/security_features.h>
  
-+	if (!cb->cb_holds_slot)
-+		goto need_restart;
+ #include "pseries.h"
+ 
+@@ -499,6 +500,40 @@ static void __init find_and_init_phbs(vo
+ 	of_pci_check_probe_only();
+ }
+ 
++static void init_cpu_char_feature_flags(struct h_cpu_char_result *result)
++{
++	if (result->character & H_CPU_CHAR_SPEC_BAR_ORI31)
++		security_ftr_set(SEC_FTR_SPEC_BAR_ORI31);
 +
- 	switch (cb->cb_seq_status) {
- 	case 0:
- 		/*
-@@ -939,6 +943,7 @@ static bool nfsd4_cb_sequence_done(struc
- 			cb->cb_seq_status);
++	if (result->character & H_CPU_CHAR_BCCTRL_SERIALISED)
++		security_ftr_set(SEC_FTR_BCCTRL_SERIALISED);
++
++	if (result->character & H_CPU_CHAR_L1D_FLUSH_ORI30)
++		security_ftr_set(SEC_FTR_L1D_FLUSH_ORI30);
++
++	if (result->character & H_CPU_CHAR_L1D_FLUSH_TRIG2)
++		security_ftr_set(SEC_FTR_L1D_FLUSH_TRIG2);
++
++	if (result->character & H_CPU_CHAR_L1D_THREAD_PRIV)
++		security_ftr_set(SEC_FTR_L1D_THREAD_PRIV);
++
++	if (result->character & H_CPU_CHAR_COUNT_CACHE_DISABLED)
++		security_ftr_set(SEC_FTR_COUNT_CACHE_DISABLED);
++
++	/*
++	 * The features below are enabled by default, so we instead look to see
++	 * if firmware has *disabled* them, and clear them if so.
++	 */
++	if (!(result->character & H_CPU_BEHAV_FAVOUR_SECURITY))
++		security_ftr_clear(SEC_FTR_FAVOUR_SECURITY);
++
++	if (!(result->character & H_CPU_BEHAV_L1D_FLUSH_PR))
++		security_ftr_clear(SEC_FTR_L1D_FLUSH_PR);
++
++	if (!(result->character & H_CPU_BEHAV_BNDS_CHK_SPEC_BAR))
++		security_ftr_clear(SEC_FTR_BNDS_CHK_SPEC_BAR);
++}
++
+ void pseries_setup_rfi_flush(void)
+ {
+ 	struct h_cpu_char_result result;
+@@ -512,6 +547,8 @@ void pseries_setup_rfi_flush(void)
+ 
+ 	rc = plpar_get_cpu_characteristics(&result);
+ 	if (rc == H_SUCCESS) {
++		init_cpu_char_feature_flags(&result);
++
+ 		if (result.character & H_CPU_CHAR_L1D_FLUSH_TRIG2)
+ 			types |= L1D_FLUSH_MTTRIG;
+ 		if (result.character & H_CPU_CHAR_L1D_FLUSH_ORI30)
+@@ -522,6 +559,12 @@ void pseries_setup_rfi_flush(void)
+ 			enable = false;
  	}
  
-+	cb->cb_holds_slot = false;
- 	clear_bit(0, &clp->cl_cb_slot_busy);
- 	rpc_wake_up_next(&clp->cl_cb_waitq);
- 	dprintk("%s: freed slot, new seqid=%d\n", __func__,
-@@ -1146,6 +1151,7 @@ void nfsd4_init_cb(struct nfsd4_callback
- 	cb->cb_seq_status = 1;
- 	cb->cb_status = 0;
- 	cb->cb_need_restart = false;
-+	cb->cb_holds_slot = false;
++	/*
++	 * We're the guest so this doesn't apply to us, clear it to simplify
++	 * handling of it elsewhere.
++	 */
++	security_ftr_clear(SEC_FTR_L1D_FLUSH_HV);
++
+ 	setup_rfi_flush(types, enable);
  }
  
- void nfsd4_run_cb(struct nfsd4_callback *cb)
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -70,6 +70,7 @@ struct nfsd4_callback {
- 	int cb_seq_status;
- 	int cb_status;
- 	bool cb_need_restart;
-+	bool cb_holds_slot;
- };
- 
- struct nfsd4_callback_ops {
 
 
