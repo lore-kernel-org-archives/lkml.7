@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1A6C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0118DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3A320843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E202084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918449;
-	bh=pWx+gOD2V8JM4p0svlMqSMD6Grb5nz9Xoi1IWHwocTI=;
+	s=default; t=1557918452;
+	bh=08Z4xd9D9Qz6dSAragbPoj3DMIMll9Ryx2BIS7iaqD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S1abyAt0IYTn9rPAgHSa/VrkLIsIou0Mg6h27J0ns8wKkvX4R+v4/dr0s2OnZZHjj
-	 dtyptnEMMzqaZglMCAQIgB8jWvWt6O3wlSPHbp8OgGd47vMxOcH6VLBDR0S+YYO5++
-	 YaC3sH1hbikGrScD5NOkadUmeDV1sWnM/cgm/14M=
+	b=pS0lgQL7ThhGLkIOEO85EIN/12Ux0qIRdWXjoarnWf7BNcCol/yazt1SoI8gGvOuQ
+	 HyyrV6o4sAAw4Es7N6rQ3giLTCoEkgxeLdVfNQjhneb/KNeRMOLtuWoAekHrW2K8s8
+	 jPpkVmfWRCPP2MGnj4/Q1FdATz6+WIL/uSi0RwIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728923AbfEOLH2 (ORCPT
+        id S1728934AbfEOLHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:07:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38932 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:07:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728523AbfEOLHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:07:23 -0400
+        id S1728921AbfEOLH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:07:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6E0C21473;
-        Wed, 15 May 2019 11:07:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAB282084E;
+        Wed, 15 May 2019 11:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918443;
-        bh=pWx+gOD2V8JM4p0svlMqSMD6Grb5nz9Xoi1IWHwocTI=;
+        s=default; t=1557918448;
+        bh=08Z4xd9D9Qz6dSAragbPoj3DMIMll9Ryx2BIS7iaqD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U7omnVXfV0iI4fBGe1udqgrPGxp6t7vdI3zon10vRhcXh+V0ws7wmHlJl06qky8LZ
-         CAO7uP3kBwbBabcTOeWbeqOQtnAYz0pqWIQN3SxuMZo5pFhHoNWD9CeUX3oZLIZ1g5
-         0oGBlaJZNYcqGy3l2MwqVmtBluCWfMiSlHalWgh4=
+        b=QN/OssqEhC7rF4QO6+fwiPlqonkeDBsDwR48wCmyY2XgHPhxTUU2HcckUP1WtMYlw
+         CEpYlkapJECOdbqdxSbBuUF7ASHeiOs68xGiP8iNKcd1njzC0W5F6UdQpczueSsDjr
+         Zt/VXcv9fMdVQCUxt0312xVN5wOuVZVb4pkN69rI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>,
+        stable@vger.kernel.org, Malte Leip <malte@leip.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 133/266] ARM: orion: dont use using 64-bit DMA masks
-Date:   Wed, 15 May 2019 12:54:00 +0200
-Message-Id: <20190515090727.444360804@linuxfoundation.org>
+Subject: [PATCH 4.4 135/266] usb: usbip: fix isoc packet num validation in get_pipe
+Date:   Wed, 15 May 2019 12:54:02 +0200
+Message-Id: <20190515090727.498704313@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,49 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cd92d74d67c811dc22544430b9ac3029f5bd64c5 ]
+commit c409ca3be3c6ff3a1eeb303b191184e80d412862 upstream.
 
-clang warns about statically defined DMA masks from the DMA_BIT_MASK
-macro with length 64:
+Backport of the upstream commit, which fixed c6688ef9f297.
+c6688ef9f297 got backported as commit b6f826ba10dc, as the unavailable
+function usb_endpoint_maxp_mult had to be replaced. The upstream commit
+removed the call to this function, so the backport is straightforward.
 
-arch/arm/plat-orion/common.c:625:29: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
-                .coherent_dma_mask      = DMA_BIT_MASK(64),
-                                          ^~~~~~~~~~~~~~~~
-include/linux/dma-mapping.h:141:54: note: expanded from macro 'DMA_BIT_MASK'
- #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
+Original commit message:
 
-The ones in orion shouldn't really be 64 bit masks, so changing them
-to what the driver can support avoids the warning.
+Change the validation of number_of_packets in get_pipe to compare the
+number of packets to a fixed maximum number of packets allowed, set to
+be 1024. This number was chosen due to it being used by other drivers as
+well, for example drivers/usb/host/uhci-q.c
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+Background/reason:
+The get_pipe function in stub_rx.c validates the number of packets in
+isochronous mode and aborts with an error if that number is too large,
+in order to prevent malicious input from possibly triggering large
+memory allocations. This was previously done by checking whether
+pdu->u.cmd_submit.number_of_packets is bigger than the number of packets
+that would be needed for pdu->u.cmd_submit.transfer_buffer_length bytes
+if all except possibly the last packet had maximum length, given by
+usb_endpoint_maxp(epd) *  usb_endpoint_maxp_mult(epd). This leads to an
+error if URBs with packets shorter than the maximum possible length are
+submitted, which is allowed according to
+Documentation/driver-api/usb/URB.rst and occurs for example with the
+snd-usb-audio driver.
+
+Fixes: b6f826ba10dc ("usbip: fix stub_rx: harden CMD_SUBMIT path to handle malicious input")
+Signed-off-by: Malte Leip <malte@leip.net>
+Cc: stable <stable@vger.kernel.org> # 4.4.x
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/plat-orion/common.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/usbip/stub_rx.c      | 18 +++---------------
+ drivers/usb/usbip/usbip_common.h |  7 +++++++
+ 2 files changed, 10 insertions(+), 15 deletions(-)
 
-diff --git a/arch/arm/plat-orion/common.c b/arch/arm/plat-orion/common.c
-index 8861c367d061..51c3737ddba7 100644
---- a/arch/arm/plat-orion/common.c
-+++ b/arch/arm/plat-orion/common.c
-@@ -645,7 +645,7 @@ static struct platform_device orion_xor0_shared = {
- 	.resource	= orion_xor0_shared_resources,
- 	.dev            = {
- 		.dma_mask               = &orion_xor_dmamask,
--		.coherent_dma_mask      = DMA_BIT_MASK(64),
-+		.coherent_dma_mask      = DMA_BIT_MASK(32),
- 		.platform_data          = &orion_xor0_pdata,
- 	},
- };
-@@ -706,7 +706,7 @@ static struct platform_device orion_xor1_shared = {
- 	.resource	= orion_xor1_shared_resources,
- 	.dev            = {
- 		.dma_mask               = &orion_xor_dmamask,
--		.coherent_dma_mask      = DMA_BIT_MASK(64),
-+		.coherent_dma_mask      = DMA_BIT_MASK(32),
- 		.platform_data          = &orion_xor1_pdata,
- 	},
- };
+diff --git a/drivers/usb/usbip/stub_rx.c b/drivers/usb/usbip/stub_rx.c
+index 56cacb68040c..808e3a317954 100644
+--- a/drivers/usb/usbip/stub_rx.c
++++ b/drivers/usb/usbip/stub_rx.c
+@@ -380,22 +380,10 @@ static int get_pipe(struct stub_device *sdev, struct usbip_header *pdu)
+ 	}
+ 
+ 	if (usb_endpoint_xfer_isoc(epd)) {
+-		/* validate packet size and number of packets */
+-		unsigned int maxp, packets, bytes;
+-
+-#define USB_EP_MAXP_MULT_SHIFT  11
+-#define USB_EP_MAXP_MULT_MASK   (3 << USB_EP_MAXP_MULT_SHIFT)
+-#define USB_EP_MAXP_MULT(m) \
+-	(((m) & USB_EP_MAXP_MULT_MASK) >> USB_EP_MAXP_MULT_SHIFT)
+-
+-		maxp = usb_endpoint_maxp(epd);
+-		maxp *= (USB_EP_MAXP_MULT(
+-				__le16_to_cpu(epd->wMaxPacketSize)) + 1);
+-		bytes = pdu->u.cmd_submit.transfer_buffer_length;
+-		packets = DIV_ROUND_UP(bytes, maxp);
+-
++		/* validate number of packets */
+ 		if (pdu->u.cmd_submit.number_of_packets < 0 ||
+-		    pdu->u.cmd_submit.number_of_packets > packets) {
++		    pdu->u.cmd_submit.number_of_packets >
++		    USBIP_MAX_ISO_PACKETS) {
+ 			dev_err(&sdev->udev->dev,
+ 				"CMD_SUBMIT: isoc invalid num packets %d\n",
+ 				pdu->u.cmd_submit.number_of_packets);
+diff --git a/drivers/usb/usbip/usbip_common.h b/drivers/usb/usbip/usbip_common.h
+index 0fc5ace57c0e..af903aa4ad90 100644
+--- a/drivers/usb/usbip/usbip_common.h
++++ b/drivers/usb/usbip/usbip_common.h
+@@ -134,6 +134,13 @@ extern struct device_attribute dev_attr_usbip_debug;
+ #define USBIP_DIR_OUT	0x00
+ #define USBIP_DIR_IN	0x01
+ 
++/*
++ * Arbitrary limit for the maximum number of isochronous packets in an URB,
++ * compare for example the uhci_submit_isochronous function in
++ * drivers/usb/host/uhci-q.c
++ */
++#define USBIP_MAX_ISO_PACKETS 1024
++
+ /**
+  * struct usbip_header_basic - data pertinent to every request
+  * @command: the usbip request type
 -- 
 2.20.1
 
