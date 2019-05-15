@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D8CC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E402C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE7162053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F384C2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920164;
-	bh=NhgZtDE+kJfP2c9ihs85vwuYjgcxXW1BjKaxNGSvzRo=;
+	s=default; t=1557920172;
+	bh=ZqMG5L0+ZatJsxYrAh8Rw1P0KrbO2SXV10BRXd0BA4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cbrRLz4UPag213cuqyT9PMN1hvENLi/nnNHQ8LId9tFWDX2bE9qA1w7JuBHkA9EiY
-	 DU02j2Xnef/5xr4oNdsTsoSj2GefdMQBdIPXBA7gNe1fGTaXwwqvVJnE6krTfvjnzc
-	 q+WMOTRD2+li04kVb5BXed2pOuwGbnjBB8f0DYc0=
+	b=oh8mviyRLm7+bEsMzxvNyPiHuvIufHl5psGg04ZKoSdwVk/o8kO9uUg3OnC0njiGp
+	 7nx9volWraJA7hytkgNF6TJWtaF7InxvGT5ssxqUWf67mzRGoKxObOKUDnKDFyXpAW
+	 yhj5ErXIoxW3U3khNuJdWNyMTVvkS+jSs86GCPeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732729AbfEOLgD (ORCPT
+        id S1732792AbfEOLc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:36:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44958 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:32:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732717AbfEOLdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:33:02 -0400
+        id S1729882AbfEOLct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:32:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 146472053B;
-        Wed, 15 May 2019 11:33:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E1C72053B;
+        Wed, 15 May 2019 11:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919981;
-        bh=NhgZtDE+kJfP2c9ihs85vwuYjgcxXW1BjKaxNGSvzRo=;
+        s=default; t=1557919968;
+        bh=ZqMG5L0+ZatJsxYrAh8Rw1P0KrbO2SXV10BRXd0BA4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SHspNJj/9kMn0915QchZBFnp+HLwVHyDdgf3Q8EntvVT2eIpgzRhaYVqNmAsH7wVk
-         qia+VsGe0AZDsTp4cb4ypor0ErRT4sAq/dpheVUfQXBm9Q/MOgeASfX1FPCGfDJVQX
-         5tXj0vFnrJlL6fzX9fYhbmExqzn/vNTrfhZfvZXE=
+        b=vEi5ohyABC5oJgSzlDs4iQWzrmAxh1RmOv6Mji7bFoAwvdCa5m6LdwnE5kcg8mKBy
+         SFUR/ksKgwqYolfAWi+ekG4pDpvDULza8M7eu8yTyacC3Xm9nTcGThgb3WiUv5IFwT
+         /A/W29QRYzTFYDaPvdQs5IuKtCW5xrH5jvwr4keA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 29/46] aqc111: fix endianness issue in aqc111_change_mtu
-Date:   Wed, 15 May 2019 12:56:53 +0200
-Message-Id: <20190515090626.092268427@linuxfoundation.org>
+Subject: [PATCH 5.1 24/46] packet: Fix error path in packet_init
+Date:   Wed, 15 May 2019 12:56:48 +0200
+Message-Id: <20190515090624.895030897@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -59,32 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit b8b277525e9df2fd2dc3d1f4fe01c6796bb107fc ]
+[ Upstream commit 36096f2f4fa05f7678bc87397665491700bae757 ]
 
-If the MTU is large enough, the first write to the device
-is just repeated. On BE architectures, however, the first
-word of the command will be swapped a second time and garbage
-will be written. Avoid that.
+kernel BUG at lib/list_debug.c:47!
+invalid opcode: 0000 [#1
+CPU: 0 PID: 12914 Comm: rmmod Tainted: G        W         5.1.0+ #47
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:__list_del_entry_valid+0x53/0x90
+Code: 48 8b 32 48 39 fe 75 35 48 8b 50 08 48 39 f2 75 40 b8 01 00 00 00 5d c3 48
+89 fe 48 89 c2 48 c7 c7 18 75 fe 82 e8 cb 34 78 ff <0f> 0b 48 89 fe 48 c7 c7 50 75 fe 82 e8 ba 34 78 ff 0f 0b 48 89 f2
+RSP: 0018:ffffc90001c2fe40 EFLAGS: 00010286
+RAX: 000000000000004e RBX: ffffffffa0184000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffff888237a17788 RDI: 00000000ffffffff
+RBP: ffffc90001c2fe40 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffc90001c2fe10 R11: 0000000000000000 R12: 0000000000000000
+R13: ffffc90001c2fe50 R14: ffffffffa0184000 R15: 0000000000000000
+FS:  00007f3d83634540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555c350ea818 CR3: 0000000231677000 CR4: 00000000000006f0
+Call Trace:
+ unregister_pernet_operations+0x34/0x120
+ unregister_pernet_subsys+0x1c/0x30
+ packet_exit+0x1c/0x369 [af_packet
+ __x64_sys_delete_module+0x156/0x260
+ ? lockdep_hardirqs_on+0x133/0x1b0
+ ? do_syscall_64+0x12/0x1f0
+ do_syscall_64+0x6e/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
+When modprobe af_packet, register_pernet_subsys
+fails and does a cleanup, ops->list is set to LIST_POISON1,
+but the module init is considered to success, then while rmmod it,
+BUG() is triggered in __list_del_entry_valid which is called from
+unregister_pernet_subsys. This patch fix error handing path in
+packet_init to avoid possilbe issue if some error occur.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/aqc111.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/packet/af_packet.c |   25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
---- a/drivers/net/usb/aqc111.c
-+++ b/drivers/net/usb/aqc111.c
-@@ -453,6 +453,8 @@ static int aqc111_change_mtu(struct net_
- 		reg16 = 0x1420;
- 	else if (dev->net->mtu <= 16334)
- 		reg16 = 0x1A20;
-+	else
-+		return 0;
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -4603,14 +4603,29 @@ static void __exit packet_exit(void)
  
- 	aqc111_write16_cmd(dev, AQ_ACCESS_MAC, SFR_PAUSE_WATERLVL_LOW,
- 			   2, &reg16);
+ static int __init packet_init(void)
+ {
+-	int rc = proto_register(&packet_proto, 0);
++	int rc;
+ 
+-	if (rc != 0)
++	rc = proto_register(&packet_proto, 0);
++	if (rc)
+ 		goto out;
++	rc = sock_register(&packet_family_ops);
++	if (rc)
++		goto out_proto;
++	rc = register_pernet_subsys(&packet_net_ops);
++	if (rc)
++		goto out_sock;
++	rc = register_netdevice_notifier(&packet_netdev_notifier);
++	if (rc)
++		goto out_pernet;
+ 
+-	sock_register(&packet_family_ops);
+-	register_pernet_subsys(&packet_net_ops);
+-	register_netdevice_notifier(&packet_netdev_notifier);
++	return 0;
++
++out_pernet:
++	unregister_pernet_subsys(&packet_net_ops);
++out_sock:
++	sock_unregister(PF_PACKET);
++out_proto:
++	proto_unregister(&packet_proto);
+ out:
+ 	return rc;
+ }
 
 
