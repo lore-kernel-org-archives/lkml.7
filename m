@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6E5C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64022C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F18720862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 350172084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918504;
-	bh=Nq5g+FcXcN8sgE2vPPqNBhPp7NQ0UqVZLrGtpsz1Z/M=;
+	s=default; t=1557918507;
+	bh=3s485M+LWeT8MncYdT3mtF1nFnXOQ9inBgm8ZFbXAmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KfQe4IaKeF4BaunPHs0K7tMRloX8ZTWmkIHd4x23dIFyCPGHGnT0Ib3ayyuDM638b
-	 BPC72ATE5Xkwoh0ucL5dCOoO3Ck0KSncFA0OKzeu7vA04zME28fwr8gA39Pe/Lpf6C
-	 50e4II355n6ufpk1T9JziIGkURIBgjY/wAJHJXmE=
+	b=lWziWo65G7Iq+sfjTY0ILin1eNppXrNTg/X2ShNZceKJK/GosyEEm34XQafJO0CAK
+	 3cOnAQZ16018liYtfsVfP4FJLPue+d3IIbjqCz+If9tWHWutiWqAn8YiAPzWVx4vN+
+	 2ByOBk+jE+fPuwln5iLUIw45Vo6csjfhL5TDERxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbfEOLIW (ORCPT
+        id S1729099AbfEOLIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:08:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40518 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:08:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729067AbfEOLIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:08:18 -0400
+        id S1729090AbfEOLIX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:08:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2E6B20644;
-        Wed, 15 May 2019 11:08:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF9322166E;
+        Wed, 15 May 2019 11:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918497;
-        bh=Nq5g+FcXcN8sgE2vPPqNBhPp7NQ0UqVZLrGtpsz1Z/M=;
+        s=default; t=1557918502;
+        bh=3s485M+LWeT8MncYdT3mtF1nFnXOQ9inBgm8ZFbXAmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YXrHjnEcJYYVCXm+XKfSH0Athr1evE04FQOgL/kHaXrlIlOJnFiSKHnyTb63heUKJ
-         RS/UB67BD4tfpMxuS31HdMQswGso/ubV2dFP6GWW5g2kCuWBuNfIPV4cWoRdJedReF
-         o/VumYYsKTFj3hhf7YUOF+jfUsphv+1yTtqXPuk4=
+        b=Moyu5DG6JmNqtgzWhobeom2k+zFt3yzC8Ll3yMnBwjsaBD5Ejuf4tlOtbbALXzUyN
+         rzg+jbanQ44LemvIW5ZOfHbHWoM0nwNIZ/PdUJHXf8rjFOXPBpvVqDwSv0fmWUKdnw
+         FLA1cdQ6RZj9JnzgpOAzuAIBtOAk5GZmMaoNVWNI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+d65f673b847a1a96cdba@syzkaller.appspotmail.com
-Subject: [PATCH 4.4 117/266] USB: w1 ds2490: Fix bug caused by improper use of altsetting array
-Date:   Wed, 15 May 2019 12:53:44 +0200
-Message-Id: <20190515090726.416774609@linuxfoundation.org>
+        stable@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@intel.com>
+Subject: [PATCH 4.4 154/266] Bluetooth: Align minimum encryption key size for LE and BR/EDR connections
+Date:   Wed, 15 May 2019 12:54:21 +0200
+Message-Id: <20190515090728.123038312@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -58,50 +58,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Marcel Holtmann <marcel@holtmann.org>
 
-commit c114944d7d67f24e71562fcfc18d550ab787e4d4 upstream.
+commit d5bb334a8e171b262e48f378bd2096c0ea458265 upstream.
 
-The syzkaller USB fuzzer spotted a slab-out-of-bounds bug in the
-ds2490 driver.  This bug is caused by improper use of the altsetting
-array in the usb_interface structure (the array's entries are not
-always stored in numerical order), combined with a naive assumption
-that all interfaces probed by the driver will have the expected number
-of altsettings.
+The minimum encryption key size for LE connections is 56 bits and to
+align LE with BR/EDR, enforce 56 bits of minimum encryption key size for
+BR/EDR connections as well.
 
-The bug can be fixed by replacing references to the possibly
-non-existent intf->altsetting[alt] entry with the guaranteed-to-exist
-intf->cur_altsetting entry.
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+d65f673b847a1a96cdba@syzkaller.appspotmail.com
-CC: <stable@vger.kernel.org>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Signed-off-by: Johan Hedberg <johan.hedberg@intel.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/w1/masters/ds2490.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/net/bluetooth/hci_core.h |    3 +++
+ net/bluetooth/hci_conn.c         |    8 ++++++++
+ 2 files changed, 11 insertions(+)
 
---- a/drivers/w1/masters/ds2490.c
-+++ b/drivers/w1/masters/ds2490.c
-@@ -1039,15 +1039,15 @@ static int ds_probe(struct usb_interface
- 	/* alternative 3, 1ms interrupt (greatly speeds search), 64 byte bulk */
- 	alt = 3;
- 	err = usb_set_interface(dev->udev,
--		intf->altsetting[alt].desc.bInterfaceNumber, alt);
-+		intf->cur_altsetting->desc.bInterfaceNumber, alt);
- 	if (err) {
- 		dev_err(&dev->udev->dev, "Failed to set alternative setting %d "
- 			"for %d interface: err=%d.\n", alt,
--			intf->altsetting[alt].desc.bInterfaceNumber, err);
-+			intf->cur_altsetting->desc.bInterfaceNumber, err);
- 		goto err_out_clear;
- 	}
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -174,6 +174,9 @@ struct adv_info {
  
--	iface_desc = &intf->altsetting[alt];
-+	iface_desc = intf->cur_altsetting;
- 	if (iface_desc->desc.bNumEndpoints != NUM_EP-1) {
- 		pr_info("Num endpoints=%d. It is not DS9490R.\n",
- 			iface_desc->desc.bNumEndpoints);
+ #define HCI_MAX_SHORT_NAME_LENGTH	10
+ 
++/* Min encryption key size to match with SMP */
++#define HCI_MIN_ENC_KEY_SIZE		7
++
+ /* Default LE RPA expiry time, 15 minutes */
+ #define HCI_DEFAULT_RPA_TIMEOUT		(15 * 60)
+ 
+--- a/net/bluetooth/hci_conn.c
++++ b/net/bluetooth/hci_conn.c
+@@ -1177,6 +1177,14 @@ int hci_conn_check_link_mode(struct hci_
+ 	    !test_bit(HCI_CONN_ENCRYPT, &conn->flags))
+ 		return 0;
+ 
++	/* The minimum encryption key size needs to be enforced by the
++	 * host stack before establishing any L2CAP connections. The
++	 * specification in theory allows a minimum of 1, but to align
++	 * BR/EDR and LE transports, a minimum of 7 is chosen.
++	 */
++	if (conn->enc_key_size < HCI_MIN_ENC_KEY_SIZE)
++		return 0;
++
+ 	return 1;
+ }
+ 
 
 
