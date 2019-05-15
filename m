@@ -2,151 +2,134 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7E1C04AA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEFDC04AA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D6E20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A23B20862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:03:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="hBZdGePH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbfEOFBO (ORCPT
+        id S1726360AbfEOFDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 01:01:14 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33056 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725876AbfEOFBO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 01:01:14 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4F4w0BL120299
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 01:01:12 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sgaxgtyqw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 01:01:12 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 15 May 2019 06:01:10 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 15 May 2019 06:01:03 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4F512xp42795236
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 May 2019 05:01:02 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8CD14A4057;
-        Wed, 15 May 2019 05:01:02 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36EDBA406E;
-        Wed, 15 May 2019 05:01:01 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.112])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 15 May 2019 05:01:01 +0000 (GMT)
-Date:   Wed, 15 May 2019 08:00:59 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Architecture Mailman List <boot-architecture@lists.linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Miles Chen <miles.chen@mediatek.com>,
-        James Morse <james.morse@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH v2 2/2] amr64: map FDT as RW for early_init_dt_scan()
-References: <20190513003819.356-1-hsinyi@chromium.org>
- <20190513003819.356-2-hsinyi@chromium.org>
- <20190513085853.GB9271@rapoport-lnx>
- <CAJMQK-hKrU2J0_uGe3eO_JTNwM=HRkXbDx2u45izcdD7wqwGeQ@mail.gmail.com>
- <155786794318.14659.2925897827978978040@swboyd.mtv.corp.google.com>
+        Wed, 15 May 2019 01:03:39 -0400
+Received: from mail-eopbgr30045.outbound.protection.outlook.com ([40.107.3.45]:25574
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725933AbfEOFDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 01:03:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CqOv5jNRa1UMiYUc/LXhcMNbOJ+Q0B4YqG9x4oj4cpU=;
+ b=hBZdGePHEEzhnyxvZGNq9ypZKgNHcGl0mBhOwk74vFt06PmpfIhNCY/Zn3bIY2ixafWcnkIv3M5ZISShW/gnzvmWVhaauLsUmDoaPtv/8usyEIQYFyXH84x4qvVG9w9ruRINv2bcd7mdJzTJpjSrwfuwlDLqA4iStevgbL9P5pw=
+Received: from AM4PR05MB3137.eurprd05.prod.outlook.com (10.171.186.14) by
+ AM4PR05MB3330.eurprd05.prod.outlook.com (10.171.191.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Wed, 15 May 2019 05:03:33 +0000
+Received: from AM4PR05MB3137.eurprd05.prod.outlook.com
+ ([fe80::74f5:6663:e5fa:3d6a]) by AM4PR05MB3137.eurprd05.prod.outlook.com
+ ([fe80::74f5:6663:e5fa:3d6a%5]) with mapi id 15.20.1878.024; Wed, 15 May 2019
+ 05:03:33 +0000
+From:   Leon Romanovsky <leonro@mellanox.com>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+CC:     Nathan Chancellor <natechancellor@gmail.com>,
+        "fengguang.wu@intel.com" <fengguang.wu@intel.com>,
+        "kbuild@01.org" <kbuild@01.org>,
+        Ariel Levkovich <lariel@mellanox.com>,
+        Eli Cohen <eli@mellanox.com>, Mark Bloch <markb@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: undefined reference to `__aeabi_uldivmod' after 25c13324d03d
+ ("IB/mlx5: Add steering SW ICM device memory type")
+Thread-Topic: undefined reference to `__aeabi_uldivmod' after 25c13324d03d
+ ("IB/mlx5: Add steering SW ICM device memory type")
+Thread-Index: AQHVCo2O9TJIO+iNpUCG510W44rIF6ZrVh8AgABL2oA=
+Date:   Wed, 15 May 2019 05:03:33 +0000
+Message-ID: <20190515050331.GC5225@mtr-leonro.mtl.com>
+References: <20190514194510.GA15465@archlinux-i9>
+ <20190515003202.GA14522@ziepe.ca>
+In-Reply-To: <20190515003202.GA14522@ziepe.ca>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM6PR0402CA0020.eurprd04.prod.outlook.com
+ (2603:10a6:209::33) To AM4PR05MB3137.eurprd05.prod.outlook.com
+ (2603:10a6:205:3::14)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonro@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [37.142.3.125]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 584dad70-3f43-43ef-8af0-08d6d8f2ae0f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM4PR05MB3330;
+x-ms-traffictypediagnostic: AM4PR05MB3330:
+x-microsoft-antispam-prvs: <AM4PR05MB33303D8580AB40538286C44DB0090@AM4PR05MB3330.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0038DE95A2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(396003)(39860400002)(376002)(366004)(53754006)(199004)(189003)(486006)(476003)(71190400001)(71200400001)(25786009)(11346002)(68736007)(316002)(446003)(4326008)(6246003)(256004)(53936002)(5660300002)(2906002)(6916009)(186003)(14444005)(26005)(86362001)(6116002)(3846002)(1076003)(64756008)(66476007)(102836004)(66446008)(66946007)(73956011)(386003)(6506007)(52116002)(14454004)(99286004)(66066001)(54906003)(305945005)(6436002)(6512007)(9686003)(508600001)(6486002)(76176011)(8936002)(81166006)(81156014)(229853002)(33656002)(7736002)(66556008)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR05MB3330;H:AM4PR05MB3137.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: CDIqezZwABcksyJS952/ceN07/N25DH5MJX/91ynfHyqHTeK2ayUJFMbxlfLsXguBPb4kcEZbirCy8xdvuYBKj4nvqcaznhW4UITC4IglrtO0d7UzaC/ARua4qJwa4Gginn7Qge56n8bsSicrJKCgdNDbAEwF6efg00gMqffJEiYpWGdNF3HGRC36Ng+KsDhN/AGwGMVWkVnRBYAq9flEnLXYKIykWogF1ayIVOaT4MqvgmK9jDlJk8VqnEvGWUvbrNzj/jBatSSM73YCkcTJjdUS5hgcNeCo1YL4nc3HyQ7x3j7RYa5nMV0ZcPCdBAVBtawJjEPue/+9LvQAr3NpPpyjCGbM/GEjut9W6pt47H7QuuuwIyfQ8vrzrjz4vtJcLFHXskbuqEXYFzYVE5K8pJMgObV9AqSFWKSBZvNasY=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A61103C5E14CC1499F108762A7D8805C@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155786794318.14659.2925897827978978040@swboyd.mtv.corp.google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19051505-0028-0000-0000-0000036DCC02
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051505-0029-0000-0000-0000242D606A
-Message-Id: <20190515050059.GA4081@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905150031
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 584dad70-3f43-43ef-8af0-08d6d8f2ae0f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 05:03:33.7840
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR05MB3330
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 02:05:43PM -0700, Stephen Boyd wrote:
-> Quoting Hsin-Yi Wang (2019-05-13 04:14:32)
-> > On Mon, May 13, 2019 at 4:59 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> > 
-> > >
-> > > This makes the fdt mapped without the call to meblock_reserve(fdt) which
-> > > makes the fdt memory available for memblock allocations.
-> > >
-> > > Chances that is will be actually allocated are small, but you know, things
-> > > happen.
-> > >
-> > > IMHO, instead of calling directly __fixmap_remap_fdt() it would be better
-> > > to add pgprot parameter to fixmap_remap_fdt(). Then here and in kaslr.c it
-> > > can be called with PAGE_KERNEL and below with PAGE_KERNEL_RO.
-> > >
-> > > There is no problem to call memblock_reserve() for the same area twice,
-> > > it's essentially a NOP.
-> > >
-> > Thanks for the suggestion. Will update fixmap_remap_fdt() in next patch.
-> > 
-> > However, I tested on some arm64 platform, if we also call
-> > memblock_reserve() in kaslr.c, would cause warning[1] when
-> > memblock_reserve() is called again in setup_machine_fdt(). The warning
-> > comes from https://elixir.bootlin.com/linux/latest/source/mm/memblock.c#L601
-> > ```
-> > if (type->regions[0].size == 0) {
-> >   WARN_ON(type->cnt != 1 || type->total_size);
-> >   ...
-> > ```
-> > 
-> > Call memblock_reserve() multiple times after setup_machine_fdt()
-> > doesn't have such warning though.
-> > 
-> > I didn't trace the real reason causing this. But in this case, maybe
-> > don't call memblock_reserve() in kaslr?
-> > 
-> 
-> Why not just have fixmap_remap_fdt() that maps it as RW and reserves
-> memblock once, and then call __fixmap_remap_fdt() with RO after
-> early_init_dt_scan() or unflatten_device_tree() is called? Why the
-> desire to call memblock_reserve() twice or even three times?
+On Tue, May 14, 2019 at 09:32:02PM -0300, Jason Gunthorpe wrote:
+> On Tue, May 14, 2019 at 12:45:10PM -0700, Nathan Chancellor wrote:
+> > Hi all,
+> >
+> > I checked the RDMA mailing list and trees and I haven't seen this
+> > reported/fixed yet (forgive me if it has) but when building for arm32
+> > with multi_v7_defconfig and the following configs (distilled from
+> > allyesconfig):
+> >
+> > CONFIG_INFINIBAND=3Dy
+> > CONFIG_INFINIBAND_ON_DEMAND_PAGING=3Dy
+> > CONFIG_INFINIBAND_USER_ACCESS=3Dy
+> > CONFIG_MLX5_CORE=3Dy
+> > CONFIG_MLX5_INFINIBAND=3Dy
+> >
+> > The following link time errors occur:
+> >
+> > arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/main.o: in function `m=
+lx5_ib_alloc_dm':
+> > main.c:(.text+0x60c): undefined reference to `__aeabi_uldivmod'
+> > arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/cmd.o: in function `ml=
+x5_cmd_alloc_sw_icm':
+> > cmd.c:(.text+0x6d4): undefined reference to `__aeabi_uldivmod'
+> > arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/cmd.o: in function `ml=
+x5_cmd_dealloc_sw_icm':
+> > cmd.c:(.text+0x9ec): undefined reference to `__aeabi_uldivmod'
+>
+> Fengguang, I'm surprised that 0-day didn't report this earlier..
 
-There's no desire to call memblock_reserve() twice. It's just that leaving
-the call for it in kaslr rather than in setup_arch() may end up with
-unreserved FDT because kaslr was disabled or even compiled out.
+I got many successful emails after I pushed this patch to 0-day testing.
 
-I've suggested to use fixmap_remap_fdt() everywhere because IMHO this
-improves readability and allows to un-export __fixmap_remap_fdt().
-
--- 
-Sincerely yours,
-Mike.
-
+>
+> and come to think of it, I haven't seen a success email from 0-day for
+> the rdma trees in some time - is it still working?
+>
+> Thanks,
+> Jason
