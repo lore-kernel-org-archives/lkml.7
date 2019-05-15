@@ -2,111 +2,117 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC7FC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9167C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB5E02089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:49:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557910172;
-	bh=5yrVffrVhaiJci/m6e+eB28C+yVItJeTAl4JbS9fw8s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vBTBNQG5Jlb21kvNPpLoOWCghnCTbNLucroBvJGR0C0DmmkiPjZ1DXINHBT59SXJq
-	 MA6eRUK+tbaws6aS2i8SFlrUTRsisPVV4NYR3JtXk4ixKI0113NztJGi+9SFVGgkoN
-	 b3sKjhYf3HLeU0HB/5mDYxB7RzgnA3BeCQ8pvHTU=
+	by mail.kernel.org (Postfix) with ESMTP id 8C67B2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:52:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726519AbfEOIta (ORCPT
+        id S1726122AbfEOIwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 04:49:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49270 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726098AbfEOIta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 04:49:30 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BA4C2084F;
-        Wed, 15 May 2019 08:49:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557910169;
-        bh=5yrVffrVhaiJci/m6e+eB28C+yVItJeTAl4JbS9fw8s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TYDo7u5Y1hG5Mhzio5nl+T0ybgMm0U6Qx8bXqmM92WKd1sfC/bTUtnb66E3AiGXAa
-         INb7avaebiiMa90I3+rOWtfipKFf/05lPqHpuiorv849dIf77GBJ4dR6VO8YTpB2+P
-         FeTWcD2kfmuRkM7UrR7BBE4TRn2WhjRItYNAqqkk=
-Date:   Wed, 15 May 2019 17:49:23 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Changbin Du <changbin.du@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Nadav Amit <namit@vmware.com>,
-        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
-Subject: Re: [PATCH -tip v9 0/6] tracing/probes: uaccess: Add support
- user-space access
-Message-Id: <20190515174923.609532fe901b1e28761a2e6f@kernel.org>
-In-Reply-To: <20190515055534.GA39270@gmail.com>
-References: <155789866428.26965.8344923934342528416.stgit@devnote2>
-        <20190515055534.GA39270@gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 15 May 2019 04:52:02 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41144 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfEOIwB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 04:52:01 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d12so1684966wrm.8
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 01:52:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=F6DFe62CqcWW1zROhCHNbimDkV4rEZq8vvGMAT2Is98=;
+        b=n3RAxT/pe7iUiMaNhNB/CvmXdvkEH32UlNZPfDF+QzLLEfWufPRyh4kZK0cgZYisjl
+         9/EUiet5nYxVqriU8WCnMDy6ChQyxVeKUi8QWgBiq39KpJ4EZOSmHpeyHSkRQAcTPA39
+         3tYLIBzv8W1tciA0ten5bNjIr2p4Ex2C80KXKjZ+kmCdUjRFr7+Dmjy/5h8qzEqNdKXj
+         Wum7DbLi69KHZFMj5FJWV7P/DmSJiju92yTcxo6cbqYa82yKpYVaoYz16lHFTzFIZ2dn
+         19trQagjWua40M3jaTPQuPuraqOlChqjWGMhjmkPgppsEMPyp4+x5cmC8Ib53KYZVdJJ
+         uo3w==
+X-Gm-Message-State: APjAAAVZ5LqkRj6xUKkgCr5VO6DABmjUcbwNL1KUQaHEeQrK9yhx/6qk
+        n0fGU/9sgMeF6JJF6jqkeYpTwQ==
+X-Google-Smtp-Source: APXvYqwLCZxxNevBY2k96AGejabdkmuyTgj3ImDiVQ15+XN1UfSnqKNGvxTjlaeeXG7DlIrNyVO6Ew==
+X-Received: by 2002:adf:ba10:: with SMTP id o16mr15326042wrg.89.1557910320163;
+        Wed, 15 May 2019 01:52:00 -0700 (PDT)
+Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id o16sm1915596wro.63.2019.05.15.01.51.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 May 2019 01:51:59 -0700 (PDT)
+Date:   Wed, 15 May 2019 10:51:58 +0200
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Timofey Titovets <nefelim4ag@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Grzegorz Halat <ghalat@redhat.com>, linux-mm@kvack.org,
+        linux-api@vger.kernel.org, Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH RFC v2 0/4] mm/ksm: add option to automerge VMAs
+Message-ID: <20190515085158.hyuamrxkxhjhx6go@butterfly.localdomain>
+References: <20190514131654.25463-1-oleksandr@redhat.com>
+ <20190514144105.GF4683@dhcp22.suse.cz>
+ <20190514145122.GG4683@dhcp22.suse.cz>
+ <20190515062523.5ndf7obzfgugilfs@butterfly.localdomain>
+ <20190515065311.GB16651@dhcp22.suse.cz>
+ <20190515073723.wbr522cpyjfelfav@butterfly.localdomain>
+ <20190515083321.GC16651@dhcp22.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190515083321.GC16651@dhcp22.suse.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ingo,
+On Wed, May 15, 2019 at 10:33:21AM +0200, Michal Hocko wrote:
+> > For my current setup with 2 Firefox instances I get 100 to 200 MiB saved
+> > for the second instance depending on the amount of tabs.
+> 
+> What does prevent Firefox (an opensource project) to be updated to use
+> the explicit merging?
 
-On Wed, 15 May 2019 07:55:34 +0200
-Ingo Molnar <mingo@kernel.org> wrote:
+This was rather an example of a big project. Other big projects may be
+closed source, of course.
 
-> 
-> * Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > Hi,
-> > 
-> > Here is the v9 series of probe-event to support user-space access.
-> > Previous version is here.
-> > 
-> > https://lkml.kernel.org/r/155741476971.28419.15837024173365724167.stgit@devnote2
-> > 
-> > In this version, I fixed more typos/style issues.
-> > 
-> > Changes in v9:
-> >  [3/6]
-> >       - Fix other style & coding issues (Thanks Ingo!)
-> >       - Update fetch_store_string() for style consistency.
-> >  [4/6]
-> >       - Remove an unneeded line break.
-> >       - Move || and && in if-condition at the end of line.
-> 
-> LGTM:
-> 
-> Acked-by: Ingo Molnar <mingo@kernel.org>
+And yes, with regard to FF specifically I think nothing prevents it from
+being modified appropriately.
 
-Thank you for your Ack!
-
+> > Answering your question regarding using existing interfaces, since
+> > there's only one, madvise(2), this requires modifying all the
+> > applications one wants to de-duplicate. In case of containers with
+> > arbitrary content or in case of binary-only apps this is pretty hard if
+> > not impossible to do properly.
 > 
-> Thanks,
-> 
-> 	Ingo
+> OK, this makes more sense. Please note that there are other people who
+> would like to see certain madvise operations to be done on a remote
+> process - e.g. to allow external memory management (Android would like
+> to control memory aging so something like MADV_DONTNEED without loosing
+> content and more probably) and potentially other madvise operations.
+> Or maybe we need a completely new interface other than madvise.
 
+I didn't know about those intentions. Could you please point me to a
+relevant discussion so that I can check the details?
+
+> In general, having a more generic API that would cover more usecases is
+> definitely much more preferable than one ad-hoc API that handles a very
+> specific usecase. So please try to think about a more generic
+
+Yup, I see now. Since you are aware of ongoing intentions, please do Cc
+those people then and/or let me know about previous discussions please.
+That way thinking of how a new API should be implemented (be it a sysfs
+file or something else) should be easier and more visible.
+
+Thanks.
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+  Best regards,
+    Oleksandr Natalenko (post-factum)
+    Senior Software Maintenance Engineer
