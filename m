@@ -2,196 +2,218 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C15C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143CCC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3F7520881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5D4A2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726490AbfEOJgs (ORCPT
+        id S1726523AbfEOJhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 05:36:48 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8197 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725977AbfEOJgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 05:36:46 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 16B02876CAAD1739BACF;
-        Wed, 15 May 2019 17:36:44 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Wed, 15 May 2019
- 17:36:34 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <wensong@linux-vs.org>,
-        <horms@verge.net.au>, <ja@ssi.bg>, <pablo@netfilter.org>,
-        <kadlec@blackhole.kfki.hu>, <fw@strlen.de>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <lvs-devel@vger.kernel.org>, <netfilter-devel@vger.kernel.org>,
-        <coreteam@netfilter.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] ipvs: Fix use-after-free in ip_vs_in
-Date:   Wed, 15 May 2019 17:36:14 +0800
-Message-ID: <20190515093614.21176-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 15 May 2019 05:37:35 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:40498 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbfEOJhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 05:37:34 -0400
+Received: from p5b127b5a.dip0.t-ipconnect.de ([91.18.123.90] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hQqLq-0006Xp-5g; Wed, 15 May 2019 11:37:30 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        John Crispin <john@phrozen.org>
+Subject: Re: [PATCH] clk: Remove io.h from clk-provider.h
+Date:   Wed, 15 May 2019 11:37:28 +0200
+Message-ID: <1633148.JVzFjimNce@phil>
+In-Reply-To: <20190514170931.56312-1-sboyd@kernel.org>
+References: <20190514170931.56312-1-sboyd@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BUG: KASAN: use-after-free in ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
-Read of size 4 at addr ffff8881e9b26e2c by task sshd/5603
+Am Dienstag, 14. Mai 2019, 19:09:31 CEST schrieb Stephen Boyd:
+> Now that we've gotten rid of clk_readl() we can remove io.h from the
+> clk-provider header and push out the io.h include to any code that isn't
+> already including the io.h header but using things like readl/writel,
+> etc.
+> 
+> Found with this grep:
+> 
+>   git grep -l clk-provider.h | grep '.c$' | xargs git grep -L 'linux/io.h' | \
+>   	xargs git grep -l \
+> 	-e '\<__iowrite32_copy\>' --or \
+> 	-e '\<__ioread32_copy\>' --or \
+> 	-e '\<__iowrite64_copy\>' --or \
+> 	-e '\<ioremap_page_range\>' --or \
+> 	-e '\<ioremap_huge_init\>' --or \
+> 	-e '\<arch_ioremap_pud_supported\>' --or \
+> 	-e '\<arch_ioremap_pmd_supported\>' --or \
+> 	-e '\<devm_ioport_map\>' --or \
+> 	-e '\<devm_ioport_unmap\>' --or \
+> 	-e '\<IOMEM_ERR_PTR\>' --or \
+> 	-e '\<devm_ioremap\>' --or \
+> 	-e '\<devm_ioremap_nocache\>' --or \
+> 	-e '\<devm_ioremap_wc\>' --or \
+> 	-e '\<devm_iounmap\>' --or \
+> 	-e '\<devm_ioremap_release\>' --or \
+> 	-e '\<devm_memremap\>' --or \
+> 	-e '\<devm_memunmap\>' --or \
+> 	-e '\<__devm_memremap_pages\>' --or \
+> 	-e '\<pci_remap_cfgspace\>' --or \
+> 	-e '\<arch_has_dev_port\>' --or \
+> 	-e '\<arch_phys_wc_add\>' --or \
+> 	-e '\<arch_phys_wc_del\>' --or \
+> 	-e '\<memremap\>' --or \
+> 	-e '\<memunmap\>' --or \
+> 	-e '\<arch_io_reserve_memtype_wc\>' --or \
+> 	-e '\<arch_io_free_memtype_wc\>' --or \
+> 	-e '\<__io_aw\>' --or \
+> 	-e '\<__io_pbw\>' --or \
+> 	-e '\<__io_paw\>' --or \
+> 	-e '\<__io_pbr\>' --or \
+> 	-e '\<__io_par\>' --or \
+> 	-e '\<__raw_readb\>' --or \
+> 	-e '\<__raw_readw\>' --or \
+> 	-e '\<__raw_readl\>' --or \
+> 	-e '\<__raw_readq\>' --or \
+> 	-e '\<__raw_writeb\>' --or \
+> 	-e '\<__raw_writew\>' --or \
+> 	-e '\<__raw_writel\>' --or \
+> 	-e '\<__raw_writeq\>' --or \
+> 	-e '\<readb\>' --or \
+> 	-e '\<readw\>' --or \
+> 	-e '\<readl\>' --or \
+> 	-e '\<readq\>' --or \
+> 	-e '\<writeb\>' --or \
+> 	-e '\<writew\>' --or \
+> 	-e '\<writel\>' --or \
+> 	-e '\<writeq\>' --or \
+> 	-e '\<readb_relaxed\>' --or \
+> 	-e '\<readw_relaxed\>' --or \
+> 	-e '\<readl_relaxed\>' --or \
+> 	-e '\<readq_relaxed\>' --or \
+> 	-e '\<writeb_relaxed\>' --or \
+> 	-e '\<writew_relaxed\>' --or \
+> 	-e '\<writel_relaxed\>' --or \
+> 	-e '\<writeq_relaxed\>' --or \
+> 	-e '\<readsb\>' --or \
+> 	-e '\<readsw\>' --or \
+> 	-e '\<readsl\>' --or \
+> 	-e '\<readsq\>' --or \
+> 	-e '\<writesb\>' --or \
+> 	-e '\<writesw\>' --or \
+> 	-e '\<writesl\>' --or \
+> 	-e '\<writesq\>' --or \
+> 	-e '\<inb\>' --or \
+> 	-e '\<inw\>' --or \
+> 	-e '\<inl\>' --or \
+> 	-e '\<outb\>' --or \
+> 	-e '\<outw\>' --or \
+> 	-e '\<outl\>' --or \
+> 	-e '\<inb_p\>' --or \
+> 	-e '\<inw_p\>' --or \
+> 	-e '\<inl_p\>' --or \
+> 	-e '\<outb_p\>' --or \
+> 	-e '\<outw_p\>' --or \
+> 	-e '\<outl_p\>' --or \
+> 	-e '\<insb\>' --or \
+> 	-e '\<insw\>' --or \
+> 	-e '\<insl\>' --or \
+> 	-e '\<outsb\>' --or \
+> 	-e '\<outsw\>' --or \
+> 	-e '\<outsl\>' --or \
+> 	-e '\<insb_p\>' --or \
+> 	-e '\<insw_p\>' --or \
+> 	-e '\<insl_p\>' --or \
+> 	-e '\<outsb_p\>' --or \
+> 	-e '\<outsw_p\>' --or \
+> 	-e '\<outsl_p\>' --or \
+> 	-e '\<ioread8\>' --or \
+> 	-e '\<ioread16\>' --or \
+> 	-e '\<ioread32\>' --or \
+> 	-e '\<ioread64\>' --or \
+> 	-e '\<iowrite8\>' --or \
+> 	-e '\<iowrite16\>' --or \
+> 	-e '\<iowrite32\>' --or \
+> 	-e '\<iowrite64\>' --or \
+> 	-e '\<ioread16be\>' --or \
+> 	-e '\<ioread32be\>' --or \
+> 	-e '\<ioread64be\>' --or \
+> 	-e '\<iowrite16be\>' --or \
+> 	-e '\<iowrite32be\>' --or \
+> 	-e '\<iowrite64be\>' --or \
+> 	-e '\<ioread8_rep\>' --or \
+> 	-e '\<ioread16_rep\>' --or \
+> 	-e '\<ioread32_rep\>' --or \
+> 	-e '\<ioread64_rep\>' --or \
+> 	-e '\<iowrite8_rep\>' --or \
+> 	-e '\<iowrite16_rep\>' --or \
+> 	-e '\<iowrite32_rep\>' --or \
+> 	-e '\<iowrite64_rep\>' --or \
+> 	-e '\<__io_virt\>' --or \
+> 	-e '\<pci_iounmap\>' --or \
+> 	-e '\<virt_to_phys\>' --or \
+> 	-e '\<phys_to_virt\>' --or \
+> 	-e '\<ioremap_uc\>' --or \
+> 	-e '\<ioremap\>' --or \
+> 	-e '\<__ioremap\>' --or \
+> 	-e '\<iounmap\>' --or \
+> 	-e '\<ioremap\>' --or \
+> 	-e '\<ioremap_nocache\>' --or \
+> 	-e '\<ioremap_uc\>' --or \
+> 	-e '\<ioremap_wc\>' --or \
+> 	-e '\<ioremap_wc\>' --or \
+> 	-e '\<ioremap_wt\>' --or \
+> 	-e '\<ioport_map\>' --or \
+> 	-e '\<ioport_unmap\>' --or \
+> 	-e '\<ioport_map\>' --or \
+> 	-e '\<ioport_unmap\>' --or \
+> 	-e '\<xlate_dev_kmem_ptr\>' --or \
+> 	-e '\<xlate_dev_mem_ptr\>' --or \
+> 	-e '\<unxlate_dev_mem_ptr\>' --or \
+> 	-e '\<virt_to_bus\>' --or \
+> 	-e '\<bus_to_virt\>' --or \
+> 	-e '\<memset_io\>' --or \
+> 	-e '\<memcpy_fromio\>' --or \
+> 	-e '\<memcpy_toio\>'
+> 
+> I also reordered a couple includes when they weren't alphabetical and
+> removed clk.h from kona, replacing it with clk-provider.h because
+> that driver doesn't use clk consumer APIs.
+> 
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> Cc: Tero Kristo <t-kristo@ti.com>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Chris Zankel <chris@zankel.net>
+> Cc: Max Filippov <jcmvbkbc@gmail.com> 
+> Cc: John Crispin <john@phrozen.org>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 
-CPU: 0 PID: 5603 Comm: sshd Not tainted 4.19.39+ #30
-Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-Call Trace:
- dump_stack+0x71/0xab
- print_address_description+0x6a/0x270
- kasan_report+0x179/0x2c0
- ? ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
- ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
- ? tcp_in_window+0xfe0/0xfe0 [nf_conntrack]
- ? ip_vs_in_icmp+0xcc0/0xcc0 [ip_vs]
- ? ipt_do_table+0x4f1/0xad0 [ip_tables]
- ? ip_vs_out+0x126/0x8f0 [ip_vs]
- ? common_interrupt+0xa/0xf
- ip_vs_in+0xd8/0x170 [ip_vs]
- ? ip_vs_in.part.29+0xd20/0xd20 [ip_vs]
- ? nf_nat_ipv4_fn+0x21/0xc0 [nf_nat_ipv4]
- ? nf_nat_packet+0x4b/0x90 [nf_nat]
- ? nf_nat_ipv4_local_fn+0xf9/0x160 [nf_nat_ipv4]
- ? ip_vs_remote_request4+0x50/0x50 [ip_vs]
- nf_hook_slow+0x5f/0xe0
- ? sock_write_iter+0x121/0x1c0
- __ip_local_out+0x1d5/0x250
- ? ip_finish_output+0x430/0x430
- ? ip_forward_options+0x2d0/0x2d0
- ? ip_copy_addrs+0x2d/0x40
- ? __ip_queue_xmit+0x2ca/0x730
- ip_local_out+0x19/0x60
- __tcp_transmit_skb+0xba1/0x14f0
- ? __tcp_select_window+0x330/0x330
- ? pvclock_clocksource_read+0xd1/0x180
- ? kvm_sched_clock_read+0xd/0x20
- ? sched_clock+0x5/0x10
- ? sched_clock_cpu+0x18/0x100
- tcp_write_xmit+0x41f/0x1ed0
- ? _copy_from_iter_full+0xca/0x340
- __tcp_push_pending_frames+0x52/0x140
- tcp_sendmsg_locked+0x787/0x1600
- ? __wake_up_common_lock+0x80/0x130
- ? tcp_sendpage+0x60/0x60
- ? remove_wait_queue+0x84/0xb0
- ? mutex_unlock+0x1d/0x40
- ? n_tty_read+0x4f7/0xd20
- ? check_stack_object+0x21/0x60
- ? inet_sk_set_state+0xb0/0xb0
- tcp_sendmsg+0x27/0x40
- sock_sendmsg+0x6d/0x80
- sock_write_iter+0x121/0x1c0
- ? sock_sendmsg+0x80/0x80
- ? ldsem_up_read+0x13/0x40
- ? iov_iter_init+0x77/0xb0
- __vfs_write+0x23e/0x370
- ? kernel_read+0xa0/0xa0
- ? do_vfs_ioctl+0x134/0x900
- ? __set_current_blocked+0x7e/0x90
- ? __audit_syscall_entry+0x18e/0x1f0
- ? ktime_get_coarse_real_ts64+0x51/0x70
- vfs_write+0xe7/0x230
- ksys_write+0xa1/0x120
- ? __ia32_sys_read+0x50/0x50
- ? __audit_syscall_exit+0x3ce/0x450
- do_syscall_64+0x73/0x200
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7ff6f6147c60
-Code: 73 01 c3 48 8b 0d 28 12 2d 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 5d 73 2d 00 00 75 10 b8 01 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83
-RSP: 002b:00007ffd772ead18 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 0000000000000034 RCX: 00007ff6f6147c60
-RDX: 0000000000000034 RSI: 000055df30a31270 RDI: 0000000000000003
-RBP: 000055df30a31270 R08: 0000000000000000 R09: 0000000000000000
-R10: 00007ffd772ead70 R11: 0000000000000246 R12: 00007ffd772ead74
-R13: 00007ffd772eae20 R14: 00007ffd772eae24 R15: 000055df2f12ddc0
-
-Allocated by task 6052:
- kasan_kmalloc+0xa0/0xd0
- __kmalloc+0x10a/0x220
- ops_init+0x97/0x190
- register_pernet_operations+0x1ac/0x360
- register_pernet_subsys+0x24/0x40
- 0xffffffffc0ea016d
- do_one_initcall+0x8b/0x253
- do_init_module+0xe3/0x335
- load_module+0x2fc0/0x3890
- __do_sys_finit_module+0x192/0x1c0
- do_syscall_64+0x73/0x200
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 6067:
- __kasan_slab_free+0x130/0x180
- kfree+0x90/0x1a0
- ops_free_list.part.7+0xa6/0xc0
- unregister_pernet_operations+0x18b/0x1f0
- unregister_pernet_subsys+0x1d/0x30
- ip_vs_cleanup+0x1d/0xd2f [ip_vs]
- __x64_sys_delete_module+0x20c/0x300
- do_syscall_64+0x73/0x200
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff8881e9b26600 which belongs to the cache kmalloc-4096 of size 4096
-The buggy address is located 2092 bytes inside of 4096-byte region [ffff8881e9b26600, ffff8881e9b27600)
-The buggy address belongs to the page:
-page:ffffea0007a6c800 count:1 mapcount:0 mapping:ffff888107c0e600 index:0x0 compound_mapcount: 0
-flags: 0x17ffffc0008100(slab|head)
-raw: 0017ffffc0008100 dead000000000100 dead000000000200 ffff888107c0e600
-raw: 0000000000000000 0000000080070007 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881e9b26d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881e9b26d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8881e9b26e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                  ^
- ffff8881e9b26e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8881e9b26f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-while unregistering ipvs module, ops_free_list calls
-__ip_vs_cleanup, then nf_unregister_net_hooks be called to
-do remove nf hook entries. It need a RCU period to finish,
-however net->ipvs is set to NULL immediately, which will
-trigger NULL pointer dereference when a packet is hooked
-and handled by ip_vs_in where net->ipvs is dereferenced.
-
-Another scene is ops_free_list call ops_free to free the
-net_generic directly while __ip_vs_cleanup finished, then
-calling ip_vs_in will triggers use-after-free.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: efe41606184e ("ipvs: convert to use pernet nf_hook api")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- net/netfilter/ipvs/ip_vs_core.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-index 1445755..33205db 100644
---- a/net/netfilter/ipvs/ip_vs_core.c
-+++ b/net/netfilter/ipvs/ip_vs_core.c
-@@ -2320,6 +2320,7 @@ static void __net_exit __ip_vs_cleanup(struct net *net)
- 	ip_vs_control_net_cleanup(ipvs);
- 	ip_vs_estimator_net_cleanup(ipvs);
- 	IP_VS_DBG(2, "ipvs netns %d released\n", ipvs->gen);
-+	synchronize_net();
- 	net->ipvs = NULL;
- }
- 
--- 
-2.7.4
+For the Rockchip parts (both arch/arm + drivers/clk)
+Acked-by: Heiko Stuebner <heiko@sntech.de>
 
 
