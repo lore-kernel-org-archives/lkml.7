@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6302AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0DAC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D322084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C5A72084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919260;
-	bh=P9Zh7+HnD1W3x/1vNoZfd7eNpw8kPS7quFmk9SEtTrw=;
+	s=default; t=1557919263;
+	bh=4KE3ZTkoR0YVNfHkUGQ8P13ld2UoF5ZNG68E0RJRvfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nkDaPL80IOTfwZTVDdPLs+PuHKulswZUhbLP0CW670XXf0HreEV6DUxa6KI7ptWmU
-	 GfLWyQmsqUHnUIPkmrw/4aZlWdsJIzsWN1VEqvKXPAQEvKiSBQF+71ytFkBO/4oFuK
-	 UJxGtbAfVcDS0p99J9yE4Qu1Q1vpEMaJ5ku99K8w=
+	b=XSQiyJOsG5oyKDpf6BJnCtRSUxj8YRQ54mYjkZ/kmGKueNus+NkBWfNTfAG1EsPrl
+	 cBIwBR6gKrLrPLvQvFOT+Ms3Qgys8Rtn7s9YylaAKSDS5U+lJmNTnfcHFI0OGfWkm0
+	 5IZzMPQ+Vr4Zvr9eqPSFjH9FSpaRjfAzlbqvNAXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731190AbfEOLU7 (ORCPT
+        id S1731198AbfEOLVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:20:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58798 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:21:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731173AbfEOLU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:20:57 -0400
+        id S1731173AbfEOLU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:20:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ED8C2084F;
-        Wed, 15 May 2019 11:20:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B788D206BF;
+        Wed, 15 May 2019 11:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919256;
-        bh=P9Zh7+HnD1W3x/1vNoZfd7eNpw8kPS7quFmk9SEtTrw=;
+        s=default; t=1557919259;
+        bh=4KE3ZTkoR0YVNfHkUGQ8P13ld2UoF5ZNG68E0RJRvfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WrjERdRnihSEJu498dcDs9GY2nM2i8SV2r70yr3WTb4xpLKEkcBJ2NMjcrDYWkkIi
-         w8zk+qd1teD9gqjfDyeX2l0THeMlozAqeKZ/HOQg7Mof5V/I6QpngeJ7LqFSpM3hz5
-         NmLAjVUNaIMApV4tT//MaDkiluu5OUjvu5EMf1Zg=
+        b=gFwg4WtncrdHQjE8Pz9AgbDYtFhOu7xdAqBpTYHxfX9/lehS0FLoPNJYNC5MJpi9l
+         faUYUnp/oOCsC/tB26ePS0KGehlnGVtT5s9oyv2W9a60Ph3Hwbkebr2k8vtoagS8O2
+         z2mhnhY/a3qPL1T1hTkcyCOo+9CWJbF1/DT0Tjzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
+        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 109/115] vlan: disable SIOCSHWTSTAMP in container
-Date:   Wed, 15 May 2019 12:56:29 +0200
-Message-Id: <20190515090707.009482489@linuxfoundation.org>
+Subject: [PATCH 4.14 100/115] bridge: Fix error path for kobject_init_and_add()
+Date:   Wed, 15 May 2019 12:56:20 +0200
+Message-Id: <20190515090706.394787101@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -60,39 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: "Tobin C. Harding" <tobin@kernel.org>
 
-[ Upstream commit 873017af778439f2f8e3d87f28ddb1fcaf244a76 ]
+[ Upstream commit bdfad5aec1392b93495b77b864d58d7f101dc1c1 ]
 
-With NET_ADMIN enabled in container, a normal user could be mapped to
-root and is able to change the real device's rx filter via ioctl on
-vlan, which would affect the other ptp process on host. Fix it by
-disabling SIOCSHWTSTAMP in container.
+Currently error return from kobject_init_and_add() is not followed by a
+call to kobject_put().  This means there is a memory leak.  We currently
+set p to NULL so that kfree() may be called on it as a noop, the code is
+arguably clearer if we move the kfree() up closer to where it is
+called (instead of after goto jump).
 
-Fixes: a6111d3c93d0 ("vlan: Pass SIOC[SG]HWTSTAMP ioctls to real device")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+Remove a goto label 'err1' and jump to call to kobject_put() in error
+return from kobject_init_and_add() fixing the memory leak.  Re-name goto
+label 'put_back' to 'err1' now that we don't use err1, following current
+nomenclature (err1, err2 ...).  Move call to kfree out of the error
+code at bottom of function up to closer to where memory was allocated.
+Add comment to clarify call to kfree().
+
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/8021q/vlan_dev.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/bridge/br_if.c |   13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
---- a/net/8021q/vlan_dev.c
-+++ b/net/8021q/vlan_dev.c
-@@ -366,10 +366,12 @@ static int vlan_dev_ioctl(struct net_dev
- 	ifrr.ifr_ifru = ifr->ifr_ifru;
+--- a/net/bridge/br_if.c
++++ b/net/bridge/br_if.c
+@@ -518,13 +518,15 @@ int br_add_if(struct net_bridge *br, str
+ 	call_netdevice_notifiers(NETDEV_JOIN, dev);
  
- 	switch (cmd) {
-+	case SIOCSHWTSTAMP:
-+		if (!net_eq(dev_net(dev), &init_net))
-+			break;
- 	case SIOCGMIIPHY:
- 	case SIOCGMIIREG:
- 	case SIOCSMIIREG:
--	case SIOCSHWTSTAMP:
- 	case SIOCGHWTSTAMP:
- 		if (netif_device_present(real_dev) && ops->ndo_do_ioctl)
- 			err = ops->ndo_do_ioctl(real_dev, &ifrr, cmd);
+ 	err = dev_set_allmulti(dev, 1);
+-	if (err)
+-		goto put_back;
++	if (err) {
++		kfree(p);	/* kobject not yet init'd, manually free */
++		goto err1;
++	}
+ 
+ 	err = kobject_init_and_add(&p->kobj, &brport_ktype, &(dev->dev.kobj),
+ 				   SYSFS_BRIDGE_PORT_ATTR);
+ 	if (err)
+-		goto err1;
++		goto err2;
+ 
+ 	err = br_sysfs_addif(p);
+ 	if (err)
+@@ -607,12 +609,9 @@ err3:
+ 	sysfs_remove_link(br->ifobj, p->dev->name);
+ err2:
+ 	kobject_put(&p->kobj);
+-	p = NULL; /* kobject_put frees */
+-err1:
+ 	dev_set_allmulti(dev, -1);
+-put_back:
++err1:
+ 	dev_put(dev);
+-	kfree(p);
+ 	return err;
+ }
+ 
 
 
