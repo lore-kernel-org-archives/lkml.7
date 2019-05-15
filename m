@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C688C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF58DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27D221773
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CF12084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918025;
-	bh=vo7pB0BKLG9yBOtmC9NETLZsnrgre1dFnVX5xGVxn7c=;
+	s=default; t=1557918028;
+	bh=7x3Adozaa64oTBpdwFSjRDCfOoqmldrh7ZB+3Q+gZuE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dVxKxtd7TW2vGlJu9twWNvFyWze8Tgu1U1qV+70nHwwREHil9fwnqSEQplX96OpyI
-	 kFz1Q4F2X7OMwPLWihbFkIqylAly4gTXcUivvjJPm4HycOB8G9E/MoQzVE5uQfFWw6
-	 FWLruby/t/2ChiS7avjJXZEdMGbLvZuQiyDlxyZ0=
+	b=Z/lDTdwBKYQb/xFegkm0dfZmvl51qPDNwcFOd4wIHjJYHnshbbnb2paWXaoO/aLT0
+	 zSz53LaZUr0YKQopFMmkzQ/zdJc+BKI4Ek+uKr00kc/DxAIymiUO0ytQJLO/2TBC2D
+	 bG0o0dJ5aedizgjdP9i9JecSKvx3sP1U838If+kA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfEOLAY (ORCPT
+        id S1727412AbfEOLAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:00:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57138 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:00:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726871AbfEOLAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:00:20 -0400
+        id S1727376AbfEOLAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:00:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 006062173C;
-        Wed, 15 May 2019 11:00:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 621B621734;
+        Wed, 15 May 2019 11:00:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918019;
-        bh=vo7pB0BKLG9yBOtmC9NETLZsnrgre1dFnVX5xGVxn7c=;
+        s=default; t=1557918016;
+        bh=7x3Adozaa64oTBpdwFSjRDCfOoqmldrh7ZB+3Q+gZuE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ediuh3tiM+UiPAq6hW7l1G+pSWAoGfq/l90QkSn5sS622dEqaQAyxhMnhTA3GzT5g
-         nmu8q3T1r4gQxLloUmgLjLzcVjePx4pMg+7B8aNYoUn4GWUSLOZ+4l6Pa7Cn6Cgo2L
-         vtPYSGjjDeFB04atdSRW/fzmxGWAhoxklwT+a5gw=
+        b=1qAf7G8+MNwcgWm+JIcL4QToH0AriFEJXWMCP9TfviQZkGf8/5qTeyOkL+U3ju775
+         Ube76QoOzIplhKyZ0SUIxphBmKJd8FJnWxHRTaZnbgPziz7M480BBplC3k/2wP8iAv
+         M2q37v2qzH0a0M3Tiw4TKPXBpL0kP73HYmBNLvLo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Wen Yang <wen.yang99@zte.com.cn>,
+        Douglas Miller <dougmill@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 3.18 22/86] scsi: qla4xxx: fix a potential NULL pointer dereference
-Date:   Wed, 15 May 2019 12:54:59 +0200
-Message-Id: <20190515090647.105586549@linuxfoundation.org>
+Subject: [PATCH 3.18 21/86] net: ibm: fix possible object reference leak
+Date:   Wed, 15 May 2019 12:54:58 +0200
+Message-Id: <20190515090646.852161099@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -62,33 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fba1bdd2a9a93f3e2181ec1936a3c2f6b37e7ed6 ]
+[ Upstream commit be693df3cf9dd113ff1d2c0d8150199efdba37f6 ]
 
-In case iscsi_lookup_endpoint fails, the fix returns -EINVAL to avoid NULL
-pointer dereference.
+The call to ehea_get_eth_dn returns a node pointer with refcount
+incremented thus it must be explicitly decremented after the last
+usage.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Detected by coccinelle with the following warnings:
+./drivers/net/ethernet/ibm/ehea/ehea_main.c:3163:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 3154, but without a corresponding object release within this function.
+
+Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
+Cc: Douglas Miller <dougmill@linux.ibm.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/scsi/qla4xxx/ql4_os.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/ibm/ehea/ehea_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
-index a9fac1eb8306..28f6d5ef04e0 100644
---- a/drivers/scsi/qla4xxx/ql4_os.c
-+++ b/drivers/scsi/qla4xxx/ql4_os.c
-@@ -3213,6 +3213,8 @@ static int qla4xxx_conn_bind(struct iscsi_cls_session *cls_session,
- 	if (iscsi_conn_bind(cls_session, cls_conn, is_leading))
- 		return -EINVAL;
- 	ep = iscsi_lookup_endpoint(transport_fd);
-+	if (!ep)
-+		return -EINVAL;
- 	conn = cls_conn->dd_data;
- 	qla_conn = conn->dd_data;
- 	qla_conn->qla_ep = ep->dd_data;
+diff --git a/drivers/net/ethernet/ibm/ehea/ehea_main.c b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+index 566b17db135a..a718066bb99f 100644
+--- a/drivers/net/ethernet/ibm/ehea/ehea_main.c
++++ b/drivers/net/ethernet/ibm/ehea/ehea_main.c
+@@ -3183,6 +3183,7 @@ static ssize_t ehea_probe_port(struct device *dev,
+ 
+ 	if (ehea_add_adapter_mr(adapter)) {
+ 		pr_err("creating MR failed\n");
++		of_node_put(eth_dn);
+ 		return -EIO;
+ 	}
+ 
 -- 
 2.19.1
 
