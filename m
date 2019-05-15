@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE3AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C5AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF6072053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224FD2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920479;
-	bh=8ezDlsKr35RmZhEH5S5vIFwp/wkEY5n5UFVlWdhEcIo=;
+	s=default; t=1557920490;
+	bh=KLC6BQWde4LBvhsgm4LS88CDcXSeNDvL6sN9ngIrdIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kb2H+gtCuySFCL42rLP6DoyDC22NH4IgjJVyWo6JvrDQp0Kh08wc1l/PkQ7ZtXiSk
-	 HLDB+UmPxvVXxjM1O0G/IonEwRyQyvYfMpH+xtHtxi9i4RtjIe3z0fGSjEGWk9qyzo
-	 EsclICesCvEOUV8/vPagWEmGOyvntju6nzIet+Jk=
+	b=J3fl21FD16JTAUUplZm+kO3hY7aWnV2D43PBSli9m/cdeyl+3RwvHwSid0EKiVDz0
+	 7Lded9x/x4oWvCHrEFCC4EoEDuih6bSynKiYPBcKPOJQjEhfLY9tE9wTF0Vp8Cwr+C
+	 VkGYA8Qtf+KpylwaKnbmSARjWfcAwjus41Je1aVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732406AbfEOLlS (ORCPT
+        id S1730486AbfEOLl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:41:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40128 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:41:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732458AbfEOL24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:28:56 -0400
+        id S1731786AbfEOL2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:28:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DA8220843;
-        Wed, 15 May 2019 11:28:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30EBF2084A;
+        Wed, 15 May 2019 11:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919736;
-        bh=8ezDlsKr35RmZhEH5S5vIFwp/wkEY5n5UFVlWdhEcIo=;
+        s=default; t=1557919730;
+        bh=KLC6BQWde4LBvhsgm4LS88CDcXSeNDvL6sN9ngIrdIQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GE4dhFCGy/ZkX/YegIWAdDxgMDHDXG2iwrf9YH7+Wuw9SXxdRpDLwEDphMxMuQ7mf
-         KwMzCEXHDTvQGIDJ88kHuPNekwzWOcLagUX+sCuWz+kaskrK7AYb8Rs69zyXY7OyEt
-         urTBDuky3zWeDkPLMo/uDrU5ZE32rFDvmUgQECMw=
+        b=URAFFn8OGJ8CK8s8kR+B1dwQ9pAyjm7u+bUb52RncnlgfWUjKiAefCqXPen8YMKgS
+         /XTEI6kzqIaipcVWyonNWKggQdBOfsRe3Gw0XKDPFftK7wvTcYknYEEKMidMz/E1/5
+         NMIrYSsIavXzZYNQyNZlicpubCmfNemOPt+miLcE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
+        stable@vger.kernel.org, Guy Levi <guyle@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 072/137] drm/sun4i: Set device driver data at bind time for use in unbind
-Date:   Wed, 15 May 2019 12:55:53 +0200
-Message-Id: <20190515090658.660331445@linuxfoundation.org>
+Subject: [PATCH 5.0 070/137] IB/mlx5: Fix scatter to CQE in DCT QP creation
+Date:   Wed, 15 May 2019 12:55:51 +0200
+Message-Id: <20190515090658.524283824@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -61,35 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 02b92adbe33e6dbd15dc6e32540b22f47c4ff0a2 ]
+[ Upstream commit 7249c8ea227a582c14f63e9e8853eb7369122f10 ]
 
-Our sun4i_drv_unbind gets the drm device using dev_get_drvdata.
-However, that driver data is never set in sun4i_drv_bind.
+When scatter to CQE is enabled on a DCT QP it corrupts the mailbox command
+since it tried to treat it as as QP create mailbox command instead of a
+DCT create command.
 
-Set it there to avoid getting a NULL pointer at unbind time.
+The corrupted mailbox command causes userspace to malfunction as the
+device doesn't create the QP as expected.
 
-Fixes: 9026e0d122ac ("drm: Add Allwinner A10 Display Engine support")
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190418132727.5128-3-paul.kocialkowski@bootlin.com
+A new mlx5 capability is exposed to user-space which ensures that it will
+not enable the feature on DCT without this fix in the kernel.
+
+Fixes: 5d6ff1babe78 ("IB/mlx5: Support scatter to CQE for DC transport type")
+Signed-off-by: Guy Levi <guyle@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_drv.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/infiniband/hw/mlx5/main.c |  2 ++
+ drivers/infiniband/hw/mlx5/qp.c   | 11 +++++++----
+ include/uapi/rdma/mlx5-abi.h      |  1 +
+ 3 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-index 9e4c375ccc96f..c6b65a9699794 100644
---- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-@@ -85,6 +85,8 @@ static int sun4i_drv_bind(struct device *dev)
- 		ret = -ENOMEM;
- 		goto free_drm;
- 	}
+diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
+index 497181f5ba091..c6bdd0d16c4b6 100644
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -1025,6 +1025,8 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 		if (MLX5_CAP_GEN(mdev, qp_packet_based))
+ 			resp.flags |=
+ 				MLX5_IB_QUERY_DEV_RESP_PACKET_BASED_CREDIT_MODE;
 +
-+	dev_set_drvdata(dev, drm);
- 	drm->dev_private = drv;
- 	INIT_LIST_HEAD(&drv->frontend_list);
- 	INIT_LIST_HEAD(&drv->engine_list);
++		resp.flags |= MLX5_IB_QUERY_DEV_RESP_FLAGS_SCAT2CQE_DCT;
+ 	}
+ 
+ 	if (field_avail(typeof(resp), sw_parsing_caps,
+diff --git a/drivers/infiniband/hw/mlx5/qp.c b/drivers/infiniband/hw/mlx5/qp.c
+index 7db778d96ef5c..afc88e6e172e7 100644
+--- a/drivers/infiniband/hw/mlx5/qp.c
++++ b/drivers/infiniband/hw/mlx5/qp.c
+@@ -1724,13 +1724,16 @@ static void configure_responder_scat_cqe(struct ib_qp_init_attr *init_attr,
+ 
+ 	rcqe_sz = mlx5_ib_get_cqe_size(init_attr->recv_cq);
+ 
+-	if (rcqe_sz == 128) {
+-		MLX5_SET(qpc, qpc, cs_res, MLX5_RES_SCAT_DATA64_CQE);
++	if (init_attr->qp_type == MLX5_IB_QPT_DCT) {
++		if (rcqe_sz == 128)
++			MLX5_SET(dctc, qpc, cs_res, MLX5_RES_SCAT_DATA64_CQE);
++
+ 		return;
+ 	}
+ 
+-	if (init_attr->qp_type != MLX5_IB_QPT_DCT)
+-		MLX5_SET(qpc, qpc, cs_res, MLX5_RES_SCAT_DATA32_CQE);
++	MLX5_SET(qpc, qpc, cs_res,
++		 rcqe_sz == 128 ? MLX5_RES_SCAT_DATA64_CQE :
++				  MLX5_RES_SCAT_DATA32_CQE);
+ }
+ 
+ static void configure_requester_scat_cqe(struct mlx5_ib_dev *dev,
+diff --git a/include/uapi/rdma/mlx5-abi.h b/include/uapi/rdma/mlx5-abi.h
+index 87b3198f4b5d7..f4d4010b7e3e5 100644
+--- a/include/uapi/rdma/mlx5-abi.h
++++ b/include/uapi/rdma/mlx5-abi.h
+@@ -238,6 +238,7 @@ enum mlx5_ib_query_dev_resp_flags {
+ 	MLX5_IB_QUERY_DEV_RESP_FLAGS_CQE_128B_COMP = 1 << 0,
+ 	MLX5_IB_QUERY_DEV_RESP_FLAGS_CQE_128B_PAD  = 1 << 1,
+ 	MLX5_IB_QUERY_DEV_RESP_PACKET_BASED_CREDIT_MODE = 1 << 2,
++	MLX5_IB_QUERY_DEV_RESP_FLAGS_SCAT2CQE_DCT = 1 << 3,
+ };
+ 
+ enum mlx5_ib_tunnel_offloads {
 -- 
 2.20.1
 
