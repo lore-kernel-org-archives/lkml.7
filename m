@@ -2,262 +2,131 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02AC4C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1500AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF34120657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:04:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921895;
-	bh=7BFzbaLC0yakN2DUl3F+/sEjUg4rbbg9o+p02h4w2cw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zTYcJq4ln+WJABhgJ808ag5nRuxbTFCDICh9frq7ZsBL1RKBuRc17e9C0O+Qbx80a
-	 aGdTh72vfwK/VoW8rQ+pWdLQXPBmomEFikHr4IxITBGrfIcoxwsT72nTMh6NFJWOds
-	 rZs3rw3ViSuRLWPi+9FfiquOKW3F+fv7urkwpFP4=
+	by mail.kernel.org (Postfix) with ESMTP id DAE3320843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:04:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Akbiq8u5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729950AbfEOMEy (ORCPT
+        id S1730096AbfEOME6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 May 2019 08:04:58 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:52626 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729869AbfEOMEy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 May 2019 08:04:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729564AbfEOLLS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:11:18 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEEFD20881;
-        Wed, 15 May 2019 11:11:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918677;
-        bh=7BFzbaLC0yakN2DUl3F+/sEjUg4rbbg9o+p02h4w2cw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wjjPM9QIqUhYf00tLkymMzlZy8sQ/h9hP9nqwhfWD7fK27BMBjDOetmUR7H29/bHE
-         LYTJQd4M5HjQmlLJhL1H6Dvho3gsXpiy5GC0ehvwPtaDD/0DkCtqCZoltW/gLj+VMQ
-         +nD9cbrNgsJLDgam4LoLJzU01AgMOkUh60KsUACQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Casey Schaufler <casey.schaufler@intel.com>,
-        Asit Mallick <asit.k.mallick@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Jon Masters <jcm@redhat.com>,
-        Waiman Long <longman9394@gmail.com>,
-        Dave Stewart <david.c.stewart@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 224/266] x86/speculation: Enable prctl mode for spectre_v2_user
-Date:   Wed, 15 May 2019 12:55:31 +0200
-Message-Id: <20190515090730.573725348@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
-References: <20190515090722.696531131@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-it1-f194.google.com with SMTP id q65so2760167itg.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 05:04:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gWDGHQlINMY637LA0rkzmHJ184n+4lXL69Jz1SVmEeg=;
+        b=Akbiq8u5JFtbaEC1MDoNI4f4D7f7lBbSGAF9vRhIGnRTC+IrcgwYeCbvHl1DlPGrd/
+         uLlMVXOol3moj0DitDDLOTcdB/zL11V1ry4lDhtpBU7Ty72egPL9gLXZtr2KsD0pbt8Y
+         ujJG/oLEFjuMICLG2racJPZIDBjmUK0W9bsefTQLk9da9Pmn9iaJzeM23AcM7jyxogBv
+         GEFZTu8ZmJZs0XCtXOla1MzrFNArPIaD+Hq9XJ+vzb9BKZqK33+eub/o+xi8kpB605O0
+         XT2jezPKFug2wmK21/WeVXOZcEZpE+YO+pMJDbiTHM5EIiv80p+FXtvfl7CwLEaIc7bs
+         lgaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gWDGHQlINMY637LA0rkzmHJ184n+4lXL69Jz1SVmEeg=;
+        b=eLAXo4BZZa5dJsKs/6bT0I1O+Wh91/Qs9l5vuKkuQGhuzRO7QDiWSuC2Q/yIuPiwUQ
+         xUf93uJvmU6WROm9JAxbskRMT6uhEca5AFMeu3JRUBY+F6FTOib0Go0sqJJqRn390CGm
+         IxMzHuVHLHynJ9XVZrPYVSt9rMWXSKUS0eLDyCdToQL1FlgKmQy4W4ZbfGwt4D7ZKm2S
+         yaqBPdrfpv7pKiC3qOyLV1e1p6h7NfC7WZtNIYGgIHehnONNCR4tUw7dOoYsOS/b993e
+         KsNtJO7IKh5u4Pe6EwX1hf2yPve252rTpjGW1qgrN17+eHLZpxjUaJ6zh2uzjmYZ7bA7
+         wFrw==
+X-Gm-Message-State: APjAAAUZZ4XKOuhELwH0KNDpK/F/lMNWY/PVBrLA4yTqmuIHrSk1i13P
+        mqm6ayWCcTd3qekhK8a7oOb+rqztKno=
+X-Google-Smtp-Source: APXvYqztxRurLYFbNqlUSgw9PHMnGWQUtrrC+MpUHTY7IRcD8rWRKxZEIo9cIrTPKoHE1Nxs+Ou5wA==
+X-Received: by 2002:a24:5255:: with SMTP id d82mr8296250itb.104.1557921892588;
+        Wed, 15 May 2019 05:04:52 -0700 (PDT)
+Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
+        by smtp.googlemail.com with ESMTPSA id x77sm41767ita.1.2019.05.15.05.04.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 05:04:51 -0700 (PDT)
+Subject: Re: [PATCH 03/18] dt-bindings: soc: qcom: add IPA bindings
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>, syadagir@codeaurora.org,
+        mjavid@codeaurora.org, evgreen@chromium.org, benchan@google.com,
+        ejcaruso@google.com, abhishek.esse@gmail.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190512012508.10608-1-elder@linaro.org>
+ <20190512012508.10608-4-elder@linaro.org>
+ <CAK8P3a3KLj5x-5VS5eUQfNVhPL101Dg_rezEzra4GFY5Dva2Cg@mail.gmail.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <fa75eb5e-90bc-b164-740f-4dbba8bccc46@linaro.org>
+Date:   Wed, 15 May 2019 07:04:50 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a3KLj5x-5VS5eUQfNVhPL101Dg_rezEzra4GFY5Dva2Cg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+On 5/15/19 2:03 AM, Arnd Bergmann wrote:
+> On Sun, May 12, 2019 at 3:25 AM Alex Elder <elder@linaro.org> wrote:
+>>
+>> Add the binding definitions for the "qcom,ipa" device tree node.
+>>
+>> Signed-off-by: Alex Elder <elder@linaro.org>
+>> ---
+>>  .../devicetree/bindings/net/qcom,ipa.txt      | 164 ++++++++++++++++++
+>>  1 file changed, 164 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipa.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.txt b/Documentation/devicetree/bindings/net/qcom,ipa.txt
+>> new file mode 100644
+>> index 000000000000..2705e198f12e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/qcom,ipa.txt
+> 
+> For new bindings, we should use the yaml format so we can verify the
+> device tree files against the binding.
 
-commit 7cc765a67d8e04ef7d772425ca5a2a1e2b894c15 upstream.
+OK.  I didn't realize that was upstream yet.  I will convert.
 
-Now that all prerequisites are in place:
+>> +
+>> +- reg:
+>> +       Resources specifying the physical address spaces of the IPA and GSI.
+>> +
+>> +- reg-names:
+>> +       The names of the two address space ranges defined by the "reg"
+>> +       property.  Must be:
+>> +               "ipa-reg"
+>> +               "ipa-shared"
+>> +               "gsi"
+> 
+> Those are three, not two ;-)
 
- - Add the prctl command line option
+Oops!  I added one recently and I guess I missed that.  Thanks
+for catching it.
 
- - Default the 'auto' mode to 'prctl'
+					-Alex
 
- - When SMT state changes, update the static key which controls the
-   conditional STIBP evaluation on context switch.
-
- - At init update the static key which controls the conditional IBPB
-   evaluation on context switch.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Casey Schaufler <casey.schaufler@intel.com>
-Cc: Asit Mallick <asit.k.mallick@intel.com>
-Cc: Arjan van de Ven <arjan@linux.intel.com>
-Cc: Jon Masters <jcm@redhat.com>
-Cc: Waiman Long <longman9394@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Dave Stewart <david.c.stewart@intel.com>
-Cc: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20181125185005.958421388@linutronix.de
-[bwh: Backported to 4.4: adjust filename]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- Documentation/kernel-parameters.txt |    7 +++++-
- arch/x86/kernel/cpu/bugs.c          |   41 ++++++++++++++++++++++++++++--------
- 2 files changed, 38 insertions(+), 10 deletions(-)
-
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -3646,9 +3646,14 @@ bytes respectively. Such letter suffixes
- 			off     - Unconditionally disable mitigations. Is
- 				  enforced by spectre_v2=off
- 
-+			prctl   - Indirect branch speculation is enabled,
-+				  but mitigation can be enabled via prctl
-+				  per thread.  The mitigation control state
-+				  is inherited on fork.
-+
- 			auto    - Kernel selects the mitigation depending on
- 				  the available CPU features and vulnerability.
--				  Default is off.
-+				  Default is prctl.
- 
- 			Not specifying this option is equivalent to
- 			spectre_v2_user=auto.
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -244,11 +244,13 @@ enum spectre_v2_user_cmd {
- 	SPECTRE_V2_USER_CMD_NONE,
- 	SPECTRE_V2_USER_CMD_AUTO,
- 	SPECTRE_V2_USER_CMD_FORCE,
-+	SPECTRE_V2_USER_CMD_PRCTL,
- };
- 
- static const char * const spectre_v2_user_strings[] = {
- 	[SPECTRE_V2_USER_NONE]		= "User space: Vulnerable",
- 	[SPECTRE_V2_USER_STRICT]	= "User space: Mitigation: STIBP protection",
-+	[SPECTRE_V2_USER_PRCTL]		= "User space: Mitigation: STIBP via prctl",
- };
- 
- static const struct {
-@@ -259,6 +261,7 @@ static const struct {
- 	{ "auto",	SPECTRE_V2_USER_CMD_AUTO,	false },
- 	{ "off",	SPECTRE_V2_USER_CMD_NONE,	false },
- 	{ "on",		SPECTRE_V2_USER_CMD_FORCE,	true  },
-+	{ "prctl",	SPECTRE_V2_USER_CMD_PRCTL,	false },
- };
- 
- static void __init spec_v2_user_print_cond(const char *reason, bool secure)
-@@ -312,12 +315,15 @@ spectre_v2_user_select_mitigation(enum s
- 		smt_possible = false;
- 
- 	switch (spectre_v2_parse_user_cmdline(v2_cmd)) {
--	case SPECTRE_V2_USER_CMD_AUTO:
- 	case SPECTRE_V2_USER_CMD_NONE:
- 		goto set_mode;
- 	case SPECTRE_V2_USER_CMD_FORCE:
- 		mode = SPECTRE_V2_USER_STRICT;
- 		break;
-+	case SPECTRE_V2_USER_CMD_AUTO:
-+	case SPECTRE_V2_USER_CMD_PRCTL:
-+		mode = SPECTRE_V2_USER_PRCTL;
-+		break;
- 	}
- 
- 	/* Initialize Indirect Branch Prediction Barrier */
-@@ -328,6 +334,9 @@ spectre_v2_user_select_mitigation(enum s
- 		case SPECTRE_V2_USER_STRICT:
- 			static_branch_enable(&switch_mm_always_ibpb);
- 			break;
-+		case SPECTRE_V2_USER_PRCTL:
-+			static_branch_enable(&switch_mm_cond_ibpb);
-+			break;
- 		default:
- 			break;
- 		}
-@@ -340,6 +349,12 @@ spectre_v2_user_select_mitigation(enum s
- 	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
- 		return;
- 
-+	/*
-+	 * If SMT is not possible or STIBP is not available clear the STIPB
-+	 * mode.
-+	 */
-+	if (!smt_possible || !boot_cpu_has(X86_FEATURE_STIBP))
-+		mode = SPECTRE_V2_USER_NONE;
- set_mode:
- 	spectre_v2_user = mode;
- 	/* Only print the STIBP mode when SMT possible */
-@@ -547,6 +562,15 @@ static void update_stibp_strict(void)
- 	on_each_cpu(update_stibp_msr, NULL, 1);
- }
- 
-+/* Update the static key controlling the evaluation of TIF_SPEC_IB */
-+static void update_indir_branch_cond(void)
-+{
-+	if (sched_smt_active())
-+		static_branch_enable(&switch_to_cond_stibp);
-+	else
-+		static_branch_disable(&switch_to_cond_stibp);
-+}
-+
- void arch_smt_update(void)
- {
- 	/* Enhanced IBRS implies STIBP. No update required. */
-@@ -562,6 +586,7 @@ void arch_smt_update(void)
- 		update_stibp_strict();
- 		break;
- 	case SPECTRE_V2_USER_PRCTL:
-+		update_indir_branch_cond();
- 		break;
- 	}
- 
-@@ -950,7 +975,8 @@ static char *stibp_state(void)
- 	case SPECTRE_V2_USER_STRICT:
- 		return ", STIBP: forced";
- 	case SPECTRE_V2_USER_PRCTL:
--		return "";
-+		if (static_key_enabled(&switch_to_cond_stibp))
-+			return ", STIBP: conditional";
- 	}
- 	return "";
- }
-@@ -958,14 +984,11 @@ static char *stibp_state(void)
- static char *ibpb_state(void)
- {
- 	if (boot_cpu_has(X86_FEATURE_IBPB)) {
--		switch (spectre_v2_user) {
--		case SPECTRE_V2_USER_NONE:
--			return ", IBPB: disabled";
--		case SPECTRE_V2_USER_STRICT:
-+		if (static_key_enabled(&switch_mm_always_ibpb))
- 			return ", IBPB: always-on";
--		case SPECTRE_V2_USER_PRCTL:
--			return "";
--		}
-+		if (static_key_enabled(&switch_mm_cond_ibpb))
-+			return ", IBPB: conditional";
-+		return ", IBPB: disabled";
- 	}
- 	return "";
- }
-
+> 
+>         Arnd
+> 
 
