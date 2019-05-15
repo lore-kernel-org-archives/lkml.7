@@ -2,141 +2,149 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E24C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:46:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873BCC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53B5820881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:46:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6291120881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:47:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfEOIqW (ORCPT
+        id S1726286AbfEOIrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 04:46:22 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34354 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725902AbfEOIqV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 04:46:21 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4F8h8e5071632
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 04:46:20 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sge3x4tmk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 04:46:19 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
-        Wed, 15 May 2019 09:46:03 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 15 May 2019 09:45:59 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4F8jwVB56557678
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 May 2019 08:45:58 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C8998A4055;
-        Wed, 15 May 2019 08:45:58 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6876CA4040;
-        Wed, 15 May 2019 08:45:58 +0000 (GMT)
-Received: from mschwideX1 (unknown [9.152.212.60])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 15 May 2019 08:45:58 +0000 (GMT)
-Date:   Wed, 15 May 2019 10:45:57 +0200
-From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org, Greentime Hu <green.hu@gmail.com>,
-        linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        linux-riscv@lists.infradead.org, Albert Ou <aou@eecs.berkeley.edu>
-Subject: Re: [PATCH] s390: move arch/s390/defconfig to
- arch/s390/configs/defconfig
-In-Reply-To: <20190513021116.12191-1-yamada.masahiro@socionext.com>
-References: <20190513021116.12191-1-yamada.masahiro@socionext.com>
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19051508-0020-0000-0000-0000033CDC18
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051508-0021-0000-0000-0000218F9C91
-Message-Id: <20190515104557.1d5a389f@mschwideX1>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905150057
+        Wed, 15 May 2019 04:47:45 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:39150 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbfEOIrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 04:47:45 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4C0961A0171;
+        Wed, 15 May 2019 10:47:43 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9A30A1A006B;
+        Wed, 15 May 2019 10:47:37 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C17CA4029A;
+        Wed, 15 May 2019 16:47:30 +0800 (SGT)
+From:   Yinbo Zhu <yinbo.zhu@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     yinbo.zhu@nxp.com, xiaobo.xie@nxp.com,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        yangbo.lu@nxp.com, jiafei.pan@nxp.com,
+        Ashish Kumar <Ashish.Kumar@nxp.com>
+Subject: [PATCH v3] arm64: dts: ls1028a: Add esdhc node in dts
+Date:   Wed, 15 May 2019 16:49:25 +0800
+Message-Id: <20190515084925.30155-1-yinbo.zhu@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 May 2019 11:11:16 +0900
-Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+From: Ashish Kumar <Ashish.Kumar@nxp.com>
 
-> As of Linux 5.1, alpha and s390 are the last architectures that
-> have defconfig in arch/*/ instead of arch/*/configs/.
-> 
->   $ find arch -name defconfig | sort
->   arch/alpha/defconfig
->   arch/arm64/configs/defconfig
->   arch/csky/configs/defconfig
->   arch/nds32/configs/defconfig
->   arch/riscv/configs/defconfig
->   arch/s390/defconfig
-> 
-> The arch/$(ARCH)/defconfig is the hard-coded default in Kconfig,
-> and I want to deprecate it after evacuating the remaining defconfig
-> into the standard location, arch/*/configs/.
-> 
-> Define KBUILD_DEFCONFIG like other architectures, and move defconfig
-> into the configs/ subdirectory.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+This patch is to add esdhc node and enable SD UHS-I,
+eMMC HS200 for ls1028ardb/ls1028aqds board.
 
-I have added this patch to my linux/s390 tree and will push it upstream
-soon. Thanks!
+Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
+Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+---
+Change in v3:
+		replace "esdhc@" with "mmc@"
 
-> ---
-> 
->  arch/s390/Makefile                | 2 ++
->  arch/s390/{ => configs}/defconfig | 0
->  2 files changed, 2 insertions(+)
->  rename arch/s390/{ => configs}/defconfig (100%)
-> 
-> diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-> index df1d6a150f30..de8521fc9de5 100644
-> --- a/arch/s390/Makefile
-> +++ b/arch/s390/Makefile
-> @@ -10,6 +10,8 @@
->  # Copyright (C) 1994 by Linus Torvalds
->  #
-> 
-> +KBUILD_DEFCONFIG := defconfig
-> +
->  LD_BFD		:= elf64-s390
->  KBUILD_LDFLAGS	:= -m elf64_s390
->  KBUILD_AFLAGS_MODULE += -fPIC
-> diff --git a/arch/s390/defconfig b/arch/s390/configs/defconfig
-> similarity index 100%
-> rename from arch/s390/defconfig
-> rename to arch/s390/configs/defconfig
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |    8 ++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |   13 ++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    |   27 +++++++++++++++++++++
+ 3 files changed, 48 insertions(+), 0 deletions(-)
 
-
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+index 14c79f4..180e5d2 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
+@@ -42,6 +42,14 @@
+ 	status = "okay";
+ };
+ 
++&esdhc {
++	status = "okay";
++};
++
++&esdhc1 {
++	status = "okay";
++};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+index f86b054..1bfaf42 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+@@ -30,6 +30,19 @@
+ 	};
+ };
+ 
++&esdhc {
++	status = "okay";
++	sd-uhs-sdr104;
++	sd-uhs-sdr50;
++	sd-uhs-sdr25;
++	sd-uhs-sdr12;
++	};
++
++&esdhc1 {
++	status = "okay";
++	mmc-hs200-1_8v;
++	};
++
+ &i2c0 {
+ 	status = "okay";
+ 
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 2896bbc..462833c 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -274,6 +274,33 @@
+ 			status = "disabled";
+ 		};
+ 
++		esdhc: mmc@2140000 {
++			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
++			reg = <0x0 0x2140000 0x0 0x10000>;
++			interrupts = <0 28 0x4>; /* Level high type */
++			clock-frequency = <0>; /* fixed up by bootloader */
++			clocks = <&clockgen 2 1>;
++			voltage-ranges = <1800 1800 3300 3300>;
++			sdhci,auto-cmd12;
++			little-endian;
++			bus-width = <4>;
++			status = "disabled";
++		};
++
++		esdhc1: mmc@2150000 {
++			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
++			reg = <0x0 0x2150000 0x0 0x10000>;
++			interrupts = <0 63 0x4>; /* Level high type */
++			clock-frequency = <0>; /* fixed up by bootloader */
++			clocks = <&clockgen 2 1>;
++			voltage-ranges = <1800 1800 3300 3300>;
++			sdhci,auto-cmd12;
++			broken-cd;
++			little-endian;
++			bus-width = <4>;
++			status = "disabled";
++		};
++
+ 		sata: sata@3200000 {
+ 			compatible = "fsl,ls1028a-ahci";
+ 			reg = <0x0 0x3200000 0x0 0x10000>,
 -- 
-blue skies,
-   Martin.
-
-"Reality continues to ruin my life." - Calvin.
+1.7.1
 
