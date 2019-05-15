@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D743C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7E7C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF9520843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 309132084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918971;
-	bh=FgOaEdWXWdI9Uio6JxtBlVsp/ME4wbq9iRoBd2VUNTI=;
+	s=default; t=1557918974;
+	bh=qgZc3Z8zdzh1B2U9Bb7zVLAoHdp/V4YW9HmbOzLst04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g7pd33bpbYuUwKbkF21nVNKbqsVqi3spKBjIBtG5cxUPQjD2YowvwRVU7SYsrjOYq
-	 Z8sO4P4rsKm+wMUanDstD75Bd1Vi80DhZZaotd0h92Jfgzmay0EyC1OBPlNWDx54MO
-	 l02+cf2xEzFqSO9+iiSa6NZsCWPrqHmIKidz7OwQ=
+	b=NPl2nfBYN7SA0wjXgElNaTiEus8C3jNe3FJksIlwRk90lI30ljKELmKL/pVf0kjFm
+	 w6cjvl0ENdDQoSjXiuY7uZA5zAjmsJdwfH+vhUXsmA7fsKklOakTE6OtkMjcqsKnIJ
+	 LYR9Lsko6GBWFAL14DEFLu994rJih6W9ENBkqntI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730439AbfEOLQK (ORCPT
+        id S1730448AbfEOLQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:16:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52786 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:16:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730424AbfEOLQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:16:08 -0400
+        id S1730434AbfEOLQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:16:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F96A20843;
-        Wed, 15 May 2019 11:16:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0762220862;
+        Wed, 15 May 2019 11:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918966;
-        bh=FgOaEdWXWdI9Uio6JxtBlVsp/ME4wbq9iRoBd2VUNTI=;
+        s=default; t=1557918969;
+        bh=qgZc3Z8zdzh1B2U9Bb7zVLAoHdp/V4YW9HmbOzLst04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T2CJP5npm9+FImBEs4AoI1iZDMXLBV0cZWMl2wTENvMKd6vBPM2M9jJL6tjxijE5j
-         0i3Q/yGSADbfUNnh1Y40hftCeGarx9rHMu+ubhJByA8vF3vpv/cENnkqI/xpWxHA/2
-         RJiyES1S7M2mco71l6vba5g3vMO7rPJC7s8C9pOg=
+        b=0KwFk8CrPMlnDUxvhCTswe5DnPr3vSP0lXu7By/eSy26ItgyO5d5s8447XrlKjqTD
+         YzHyyZIN7qpZTXpdWFGDdfqnGz0H1EVv700ABTKMyIsW9b9tgcM3Oh7hO3ZJKHxvrD
+         zYxQ3d5oMTetYnqm+jLedTM6YA7pgsHY+75cMa8g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sunil Dutt <usdutt@codeaurora.org>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 017/115] nl80211: Add NL80211_FLAG_CLEAR_SKB flag for other NL commands
-Date:   Wed, 15 May 2019 12:54:57 +0200
-Message-Id: <20190515090700.546516764@linuxfoundation.org>
+Subject: [PATCH 4.14 018/115] s390/3270: fix lockdep false positive on view->lock
+Date:   Wed, 15 May 2019 12:54:58 +0200
+Message-Id: <20190515090700.611806320@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -60,86 +60,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d6db02a88a4aaa1cd7105137c67ddec7f3bdbc05 ]
+[ Upstream commit 5712f3301a12c0c3de9cc423484496b0464f2faf ]
 
-This commit adds NL80211_FLAG_CLEAR_SKB flag to other NL commands
-that carry key data to ensure they do not stick around on heap
-after the SKB is freed.
+The spinlock in the raw3270_view structure is used by con3270, tty3270
+and fs3270 in different ways. For con3270 the lock can be acquired in
+irq context, for tty3270 and fs3270 the highest context is bh.
 
-Also introduced this flag for NL80211_CMD_VENDOR as there are sub
-commands which configure the keys.
+Lockdep sees the view->lock as a single class and if the 3270 driver
+is used for the console the following message is generated:
 
-Signed-off-by: Sunil Dutt <usdutt@codeaurora.org>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+WARNING: inconsistent lock state
+5.1.0-rc3-05157-g5c168033979d #12 Not tainted
+--------------------------------
+inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
+swapper/0/1 [HC0[0]:SC1[1]:HE1:SE0] takes:
+(____ptrval____) (&(&view->lock)->rlock){?.-.}, at: tty3270_update+0x7c/0x330
+
+Introduce a lockdep subclass for the view lock to distinguish bh from
+irq locks.
+
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/nl80211.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/s390/char/con3270.c | 2 +-
+ drivers/s390/char/fs3270.c  | 3 ++-
+ drivers/s390/char/raw3270.c | 3 ++-
+ drivers/s390/char/raw3270.h | 4 +++-
+ drivers/s390/char/tty3270.c | 3 ++-
+ 5 files changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 46e9812d13c02..c1a2ad050e617 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -12761,7 +12761,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_UNS_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_DEAUTHENTICATE,
-@@ -12812,7 +12813,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_UNS_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_UPDATE_CONNECT_PARAMS,
-@@ -12820,7 +12822,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_DISCONNECT,
-@@ -12849,7 +12852,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_UNS_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_DEL_PMKSA,
-@@ -13201,7 +13205,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_UNS_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_WIPHY |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_SET_QOS_MAP,
-@@ -13256,7 +13261,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.doit = nl80211_set_pmk,
- 		.policy = nl80211_policy,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_DEL_PMK,
+diff --git a/drivers/s390/char/con3270.c b/drivers/s390/char/con3270.c
+index be3e3c1206c24..1868ff803f439 100644
+--- a/drivers/s390/char/con3270.c
++++ b/drivers/s390/char/con3270.c
+@@ -629,7 +629,7 @@ con3270_init(void)
+ 		     (void (*)(unsigned long)) con3270_read_tasklet,
+ 		     (unsigned long) condev->read);
+ 
+-	raw3270_add_view(&condev->view, &con3270_fn, 1);
++	raw3270_add_view(&condev->view, &con3270_fn, 1, RAW3270_VIEW_LOCK_IRQ);
+ 
+ 	INIT_LIST_HEAD(&condev->freemem);
+ 	for (i = 0; i < CON3270_STRING_PAGES; i++) {
+diff --git a/drivers/s390/char/fs3270.c b/drivers/s390/char/fs3270.c
+index c4518168fd02c..4f73a38c7cbd2 100644
+--- a/drivers/s390/char/fs3270.c
++++ b/drivers/s390/char/fs3270.c
+@@ -463,7 +463,8 @@ fs3270_open(struct inode *inode, struct file *filp)
+ 
+ 	init_waitqueue_head(&fp->wait);
+ 	fp->fs_pid = get_pid(task_pid(current));
+-	rc = raw3270_add_view(&fp->view, &fs3270_fn, minor);
++	rc = raw3270_add_view(&fp->view, &fs3270_fn, minor,
++			      RAW3270_VIEW_LOCK_BH);
+ 	if (rc) {
+ 		fs3270_free_view(&fp->view);
+ 		goto out;
+diff --git a/drivers/s390/char/raw3270.c b/drivers/s390/char/raw3270.c
+index 5d4f053d7c38c..0f47fec35acc0 100644
+--- a/drivers/s390/char/raw3270.c
++++ b/drivers/s390/char/raw3270.c
+@@ -919,7 +919,7 @@ raw3270_deactivate_view(struct raw3270_view *view)
+  * Add view to device with minor "minor".
+  */
+ int
+-raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor)
++raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor, int subclass)
+ {
+ 	unsigned long flags;
+ 	struct raw3270 *rp;
+@@ -941,6 +941,7 @@ raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor)
+ 		view->cols = rp->cols;
+ 		view->ascebc = rp->ascebc;
+ 		spin_lock_init(&view->lock);
++		lockdep_set_subclass(&view->lock, subclass);
+ 		list_add(&view->list, &rp->view_list);
+ 		rc = 0;
+ 		spin_unlock_irqrestore(get_ccwdev_lock(rp->cdev), flags);
+diff --git a/drivers/s390/char/raw3270.h b/drivers/s390/char/raw3270.h
+index 114ca7cbf8897..3afaa35f73513 100644
+--- a/drivers/s390/char/raw3270.h
++++ b/drivers/s390/char/raw3270.h
+@@ -150,6 +150,8 @@ struct raw3270_fn {
+ struct raw3270_view {
+ 	struct list_head list;
+ 	spinlock_t lock;
++#define RAW3270_VIEW_LOCK_IRQ	0
++#define RAW3270_VIEW_LOCK_BH	1
+ 	atomic_t ref_count;
+ 	struct raw3270 *dev;
+ 	struct raw3270_fn *fn;
+@@ -158,7 +160,7 @@ struct raw3270_view {
+ 	unsigned char *ascebc;		/* ascii -> ebcdic table */
+ };
+ 
+-int raw3270_add_view(struct raw3270_view *, struct raw3270_fn *, int);
++int raw3270_add_view(struct raw3270_view *, struct raw3270_fn *, int, int);
+ int raw3270_activate_view(struct raw3270_view *);
+ void raw3270_del_view(struct raw3270_view *);
+ void raw3270_deactivate_view(struct raw3270_view *);
+diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
+index e5ebe2fbee235..401688bf8fd37 100644
+--- a/drivers/s390/char/tty3270.c
++++ b/drivers/s390/char/tty3270.c
+@@ -978,7 +978,8 @@ static int tty3270_install(struct tty_driver *driver, struct tty_struct *tty)
+ 		return PTR_ERR(tp);
+ 
+ 	rc = raw3270_add_view(&tp->view, &tty3270_fn,
+-			      tty->index + RAW3270_FIRSTMINOR);
++			      tty->index + RAW3270_FIRSTMINOR,
++			      RAW3270_VIEW_LOCK_BH);
+ 	if (rc) {
+ 		tty3270_free_view(tp);
+ 		return rc;
 -- 
 2.20.1
 
