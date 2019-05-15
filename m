@@ -2,122 +2,100 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA771C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6A1C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3BE220843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D9EE20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:12:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="G40l7Jyr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfEONLo (ORCPT
+        id S1727495AbfEONMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 09:11:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34838 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725977AbfEONLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 09:11:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E9ECAABC1;
-        Wed, 15 May 2019 13:11:42 +0000 (UTC)
-Date:   Wed, 15 May 2019 15:11:42 +0200
-Message-ID: <s5hk1erj20h.wl-tiwai@suse.de>
-From:   Takashi Iwai <tiwai@suse.de>
-To:     "Ayman Bagabas" <ayman.bagabas@gmail.com>
-Cc:     <alsa-devel@alsa-project.org>, "Hui Wang" <hui.wang@canonical.com>,
-        "Chris Chiu" <chiu@endlessm.com>,
-        "Daniel Drake" <drake@endlessm.com>,
-        "Jian-Hong Pan" <jian-hong@endlessm.com>,
-        "Andy Shevchenko" <andy@infradead.org>,
-        "Darren Hart" <dvhart@infradead.org>,
-        "Jaroslav Kysela" <perex@perex.cz>,
-        "Kailang Yang" <kailang@realtek.com>,
+        Wed, 15 May 2019 09:12:18 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:60880 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725977AbfEONMR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 09:12:17 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4FDBiB5004311;
+        Wed, 15 May 2019 15:12:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=hsoagTcEmJBlum5Zj5KDBo7ERhzML01L3nfhfLigSUo=;
+ b=G40l7JyrSWymwzpB5rECgcNxInszg90AWT5SP2l5Wl4F1V6dcnrMUwbBAfOwWVjPQmA2
+ v7TQK1b4iUArK889X2XELYHapjDuKjiP3DcZjBhA0JfqHnpIlhxaDyWx2IkQY0kcF9S2
+ 7v8ZuJmNfjoyL6Vt38unKf0okgL5+U908M0LC+EEK4AAP9iicnLrz9EHzOo3+VDRGAkb
+ 4mqJM3X3eXN273oAkNI8M2pmNCEayMwl7RKhwQvsVKZQS/bLwcs2OVd8lNaqUZvB2Da0
+ gmOdTdSe99L52jz/3dbt4kA8BJbsvd+Kxm5NMomvzcxhhi9UXYZdkqr5R4xIYMSDU+RD Sg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sdn9g0yeq-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 15 May 2019 15:12:05 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BB91638;
+        Wed, 15 May 2019 13:12:03 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9EE0627F5;
+        Wed, 15 May 2019 13:12:03 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 15 May
+ 2019 15:12:03 +0200
+Received: from localhost (10.201.20.122) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 15 May 2019 15:12:03
+ +0200
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <rafael.j.wysocki@intel.com>, <dmitry.torokhov@gmail.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <hadess@hadess.net>,
+        <frowand.list@gmail.com>, <m.felsch@pengutronix.de>,
+        <agx@sigxcpu.org>, <arnd@arndb.de>
+CC:     <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
-        <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v1 2/2] sound: Enable micmute led for Huawei laptops
-In-Reply-To: <20190513203009.28686-3-ayman.bagabas@gmail.com>
-References: <20190513203009.28686-1-ayman.bagabas@gmail.com>
-        <20190513203009.28686-3-ayman.bagabas@gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
- (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
-Content-Type: text/plain; charset=US-ASCII
+        <linux-stm32@st-md-mailman.stormreply.com>, <broonie@kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v2 2/5] Input: edt-ft5x06: Document suspend-dependencies property
+Date:   Wed, 15 May 2019 15:11:51 +0200
+Message-ID: <20190515131154.18373-3-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
+In-Reply-To: <20190515131154.18373-1-benjamin.gaignard@st.com>
+References: <20190515131154.18373-1-benjamin.gaignard@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.201.20.122]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_07:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 May 2019 22:30:06 +0200,
-Ayman Bagabas wrote:
-> 
-> Since this LED is found on huawei laptops, we can hook it to
-> huawei-wmi platform driver which uses the common WMI interface present
-> in these laptops to control the LED.
-> 
-> I've also made some renames and used product name instead of common name
-> to avoid confusion.
-> 
-> Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
+Explain the purpose of suspend-dependencies property.
 
-This looks applicable independently from the patch 1?
-If so, it can go via sound git tree while another via x86-platform
-tree.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+ Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+index 870b8c5cce9b..81e8eb44d720 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+@@ -60,6 +60,8 @@ Optional properties:
+  - touchscreen-inverted-x  : See touchscreen.txt
+  - touchscreen-inverted-y  : See touchscreen.txt
+  - touchscreen-swapped-x-y : See touchscreen.txt
++ - suspend-dependencies	: Phandle list of devices which have to be suspended
++			  after touchscreen device and resumed before it.
+ 
+ Example:
+ 	polytouch: edt-ft5x06@38 {
+-- 
+2.15.0
 
-thanks,
-
-Takashi
-
-> ---
->  sound/pci/hda/patch_realtek.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-> index 42cd3945e0de..3661470766ba 100644
-> --- a/sound/pci/hda/patch_realtek.c
-> +++ b/sound/pci/hda/patch_realtek.c
-> @@ -5684,7 +5684,7 @@ enum {
->  	ALC298_FIXUP_TPT470_DOCK,
->  	ALC255_FIXUP_DUMMY_LINEOUT_VERB,
->  	ALC255_FIXUP_DELL_HEADSET_MIC,
-> -	ALC256_FIXUP_HUAWEI_MBXP_PINS,
-> +	ALC256_FIXUP_HUAWEI_MACH_WX9_PINS,
->  	ALC295_FIXUP_HP_X360,
->  	ALC221_FIXUP_HP_HEADSET_MIC,
->  	ALC285_FIXUP_LENOVO_HEADPHONE_NOISE,
-> @@ -5975,7 +5975,7 @@ static const struct hda_fixup alc269_fixups[] = {
->  		.chained = true,
->  		.chain_id = ALC269_FIXUP_HEADSET_MIC
->  	},
-> -	[ALC256_FIXUP_HUAWEI_MBXP_PINS] = {
-> +	[ALC256_FIXUP_HUAWEI_MACH_WX9_PINS] = {
->  		.type = HDA_FIXUP_PINS,
->  		.v.pins = (const struct hda_pintbl[]) {
->  			{0x12, 0x90a60130},
-> @@ -6996,9 +6996,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
->  	SND_PCI_QUIRK(0x17aa, 0x511f, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
->  	SND_PCI_QUIRK(0x17aa, 0x3bf8, "Quanta FL1", ALC269_FIXUP_PCM_44K),
->  	SND_PCI_QUIRK(0x17aa, 0x9e54, "LENOVO NB", ALC269_FIXUP_LENOVO_EAPD),
-> -	SND_PCI_QUIRK(0x19e5, 0x3200, "Huawei MBX", ALC255_FIXUP_MIC_MUTE_LED),
-> -	SND_PCI_QUIRK(0x19e5, 0x3201, "Huawei MBX", ALC255_FIXUP_MIC_MUTE_LED),
-> -	SND_PCI_QUIRK(0x19e5, 0x3204, "Huawei MBXP", ALC256_FIXUP_HUAWEI_MBXP_PINS),
-> +	SND_PCI_QUIRK(0x19e5, 0x3204, "Huawei MACH-WX9", ALC256_FIXUP_HUAWEI_MACH_WX9_PINS),
->  	SND_PCI_QUIRK(0x1b7d, 0xa831, "Ordissimo EVE2 ", ALC269VB_FIXUP_ORDISSIMO_EVE2), /* Also known as Malata PC-B1303 */
->  
->  #if 0
-> @@ -7057,6 +7055,7 @@ static const struct snd_pci_quirk alc269_fixup_vendor_tbl[] = {
->  	SND_PCI_QUIRK_VENDOR(0x103c, "HP", ALC269_FIXUP_HP_MUTE_LED),
->  	SND_PCI_QUIRK_VENDOR(0x104d, "Sony VAIO", ALC269_FIXUP_SONY_VAIO),
->  	SND_PCI_QUIRK_VENDOR(0x17aa, "Thinkpad", ALC269_FIXUP_THINKPAD_ACPI),
-> +	SND_PCI_QUIRK_VENDOR(0x19e5, "Huawei Matebook", ALC255_FIXUP_MIC_MUTE_LED),
->  	{}
->  };
->  
-> -- 
-> 2.20.1
-> 
-> 
