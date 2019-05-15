@@ -2,53 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C3CC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AABFC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29F9F2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22319206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921081;
-	bh=pL0hkTf2rl78dlcSOKzwSlb/2Hh1mO15LS8IoPCp9ww=;
+	s=default; t=1557921086;
+	bh=aMXqOInozZ644Gqg7arfG9d601anbcRvdiTfGF7h3IU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GNxQsCVjt6OYF7TxDB7ksE6ummEYoxjm826yLbF8ay6a6U5lMrfibV4lxuFlzAK8+
-	 jp9Ct1Nb+poibCyaOexzPTRmkifdDkWdPvA+CbFXq/rrCl92tnBcZ3dOC1zCuMvqCF
-	 vV2OMUNIOT6fjSMIEZjhTIYasC4/fD0qLgrymDVw=
+	b=ZQHq0WoqR9UugYTVZGi6ghhp2zyA4gpGRKuF6gOCzsb/AZU7q7wdH6+lISWHahL3Y
+	 uTrYffjrcrMz0SXT/RKjCBFNimkIphST4AWoIR8MvUOpzK0S5N8uSpJrIrFLG95KkN
+	 /XtcR8/7xyLpN23hrEBlvQKZ7NP+UbHl/Z2nsuks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731313AbfEOLVh (ORCPT
+        id S1731281AbfEOLV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:21:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59504 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:21:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731295AbfEOLVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:21:31 -0400
+        id S1727046AbfEOLVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:21:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F404206BF;
-        Wed, 15 May 2019 11:21:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 724CA206BF;
+        Wed, 15 May 2019 11:21:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919290;
-        bh=pL0hkTf2rl78dlcSOKzwSlb/2Hh1mO15LS8IoPCp9ww=;
+        s=default; t=1557919282;
+        bh=aMXqOInozZ644Gqg7arfG9d601anbcRvdiTfGF7h3IU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w66YnCRVKToR7yR5oWEohRJA3hZAhZwjpzU73v6lm3JanzqraO57nTxkMf8ON/fH8
-         9x7/bSt+4XRRcN11WIG5v3Jv7QdG1Zhv+9pXGxpXKMRpa7ZCCCsiP9kiO0rXbr9acq
-         TUZHG/fe350AWIVxy7ec7xy7DthQmWNV13L6uLl8=
+        b=OVxfrLF5Ad0D7qeltd+m15svQ4z/uG1vbv/as2X0ohwbpxAPXkht9zgBS/qPD6Rj0
+         NHVlsYsqoFSCh5jsajboNkS4a56iIBkdJyw0HpJoR7SL1yM/sB8Rsgd+W23g2tdQ0V
+         YoyarZ3a+icmCi0ZFE8rZj5mGbLoWfO97xQ3tdlU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.19 002/113] platform/x86: sony-laptop: Fix unintentional fall-through
-Date:   Wed, 15 May 2019 12:54:53 +0200
-Message-Id: <20190515090652.993636012@linuxfoundation.org>
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 017/113] libnvdimm/btt: Fix a kmemdup failure check
+Date:   Wed, 15 May 2019 12:55:08 +0200
+Message-Id: <20190515090654.789677303@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -61,53 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+[ Upstream commit 486fa92df4707b5df58d6508728bdb9321a59766 ]
 
-commit 1cbd7a64959d33e7a2a1fa2bf36a62b350a9fcbd upstream.
+In case kmemdup fails, the fix releases resources and returns to
+avoid the NULL pointer dereference.
 
-It seems that the default case should return AE_CTRL_TERMINATE, instead
-of falling through to case ACPI_RESOURCE_TYPE_END_TAG and returning AE_OK;
-otherwise the line of code at the end of the function is unreachable and
-makes no sense:
-
-return AE_CTRL_TERMINATE;
-
-This fix is based on the following thread of discussion:
-
-https://lore.kernel.org/patchwork/patch/959782/
-
-Fixes: 33a04454527e ("sony-laptop: Add SNY6001 device handling (sonypi reimplementation)")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/sony-laptop.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/nvdimm/btt_devs.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -4424,14 +4424,16 @@ sony_pic_read_possible_resource(struct a
- 			}
- 			return AE_OK;
- 		}
-+
-+	case ACPI_RESOURCE_TYPE_END_TAG:
-+		return AE_OK;
-+
- 	default:
- 		dprintk("Resource %d isn't an IRQ nor an IO port\n",
- 			resource->type);
-+		return AE_CTRL_TERMINATE;
+diff --git a/drivers/nvdimm/btt_devs.c b/drivers/nvdimm/btt_devs.c
+index 795ad4ff35caf..e341498876cad 100644
+--- a/drivers/nvdimm/btt_devs.c
++++ b/drivers/nvdimm/btt_devs.c
+@@ -190,14 +190,15 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
+ 		return NULL;
  
--	case ACPI_RESOURCE_TYPE_END_TAG:
--		return AE_OK;
+ 	nd_btt->id = ida_simple_get(&nd_region->btt_ida, 0, 0, GFP_KERNEL);
+-	if (nd_btt->id < 0) {
+-		kfree(nd_btt);
+-		return NULL;
+-	}
++	if (nd_btt->id < 0)
++		goto out_nd_btt;
+ 
+ 	nd_btt->lbasize = lbasize;
+-	if (uuid)
++	if (uuid) {
+ 		uuid = kmemdup(uuid, 16, GFP_KERNEL);
++		if (!uuid)
++			goto out_put_id;
++	}
+ 	nd_btt->uuid = uuid;
+ 	dev = &nd_btt->dev;
+ 	dev_set_name(dev, "btt%d.%d", nd_region->id, nd_btt->id);
+@@ -212,6 +213,13 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
+ 		return NULL;
  	}
--	return AE_CTRL_TERMINATE;
+ 	return dev;
++
++out_put_id:
++	ida_simple_remove(&nd_region->btt_ida, nd_btt->id);
++
++out_nd_btt:
++	kfree(nd_btt);
++	return NULL;
  }
  
- static int sony_pic_possible_resources(struct acpi_device *device)
+ struct device *nd_btt_create(struct nd_region *nd_region)
+-- 
+2.20.1
+
 
 
