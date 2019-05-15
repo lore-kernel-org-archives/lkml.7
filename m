@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38700C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B560CC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0162420881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7908E20862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918559;
-	bh=423qx8iQkZ+vVAvBzaXWv0lUweCOgXbgLNXcZqm9p+M=;
+	s=default; t=1557918562;
+	bh=E/QplMbYRvZFMcE7kvxtMT1Yn314I8iaQxe4vB216Jo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F3XLZRb4DXbk5ysoEEm0UkF0Z5arm2G0wB868/Esh0iT6R/vuJLsn0fQblJTSx3+n
-	 jqLB+4ewL9GzfXmm9JxMoc3t/QHhG3SL8W1xH2Nuq3laiprAwhX1RssoKGWg5xWMzq
-	 093q79uJt3815byWJgYHX1OxrK+bKp/Q7NgygruI=
+	b=p2NIFGvDS6tb11LGNGCBSUQfrQgHPcb2CT8ZDsUWpJnW0YQsSfZ5dy+6hczoO1mQ3
+	 V8WMJud+iDJB5fcNKrPyBvAF1d87dpAwsGiHzkao2ZMEH7UJ2Yuo/Ab1x3ACt6X1w7
+	 yqiQFRDOCSCyAkhHcmV0a8+KZvNy/i/xmUTi2oEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729234AbfEOLJS (ORCPT
+        id S1729237AbfEOLJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:09:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42004 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:09:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729220AbfEOLJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:09:14 -0400
+        id S1728719AbfEOLJT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:09:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC51C2084F;
-        Wed, 15 May 2019 11:09:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05BC32166E;
+        Wed, 15 May 2019 11:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918553;
-        bh=423qx8iQkZ+vVAvBzaXWv0lUweCOgXbgLNXcZqm9p+M=;
+        s=default; t=1557918558;
+        bh=E/QplMbYRvZFMcE7kvxtMT1Yn314I8iaQxe4vB216Jo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pxY87N9Oj/0J2mfq1gxOe9no9KEjWL4rZUc9ptzm/v3cCw1lFP1MUg6m67ODQedyy
-         SxrIYv3yQJacKKag/+Txqyd1tDAlVmLoclOiH/d7sI6H+dS2OoLnUlfZnI0aQmQF/s
-         wvNIsCa84XcRu+PQIsjqRuOf4IWSGn7O2PyHfnEg=
+        b=x9S2RKiyZQ5cVBHUFR70gE5pO2gRhmVlnXBmEDUvj1YkQyDkGDPf00jhFKCBCOBaC
+         r4ItFLMVMP4MqmW0FLjx/VV+yQjXlsRIw8X1OaGACrapff4Tts0WgSWvRQCpqp/kMk
+         c5L9p0plhsTbJrF3pj4QiMP5tdvatLSAwMzK74AU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
-        David Jeffery <djeffery@redhat.com>,
-        Nigel Croxon <ncroxon@redhat.com>,
-        Song Liu <songliubraving@fb.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.4 177/266] Dont jump to compute_result state from check_result state
-Date:   Wed, 15 May 2019 12:54:44 +0200
-Message-Id: <20190515090728.911312243@linuxfoundation.org>
+        stable@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 179/266] x86/microcode/intel: Add a helper which gives the microcode revision
+Date:   Wed, 15 May 2019 12:54:46 +0200
+Message-Id: <20190515090728.982698665@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -61,115 +60,175 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nigel Croxon <ncroxon@redhat.com>
+From: Borislav Petkov <bp@suse.de>
 
-commit 4f4fd7c5798bbdd5a03a60f6269cf1177fbd11ef upstream.
+commit 4167709bbf826512a52ebd6aafda2be104adaec9 upstream.
 
-Changing state from check_state_check_result to
-check_state_compute_result not only is unsafe but also doesn't
-appear to serve a valid purpose.  A raid6 check should only be
-pushing out extra writes if doing repair and a mis-match occurs.
-The stripe dev management will already try and do repair writes
-for failing sectors.
+Since on Intel we're required to do CPUID(1) first, before reading
+the microcode revision MSR, let's add a special helper which does the
+required steps so that we don't forget to do them next time, when we
+want to read the microcode revision.
 
-This patch makes the raid6 check_state_check_result handling
-work more like raid5's.  If somehow too many failures for a
-check, just quit the check operation for the stripe.  When any
-checks pass, don't try and use check_state_compute_result for
-a purpose it isn't needed for and is unsafe for.  Just mark the
-stripe as in sync for passing its parity checks and let the
-stripe dev read/write code and the bad blocks list do their
-job handling I/O errors.
-
-Repro steps from Xiao:
-
-These are the steps to reproduce this problem:
-1. redefined OPT_MEDIUM_ERR_ADDR to 12000 in scsi_debug.c
-2. insmod scsi_debug.ko dev_size_mb=11000  max_luns=1 num_tgts=1
-3. mdadm --create /dev/md127 --level=6 --raid-devices=5 /dev/sde1 /dev/sde2 /dev/sde3 /dev/sde5 /dev/sde6
-sde is the disk created by scsi_debug
-4. echo "2" >/sys/module/scsi_debug/parameters/opts
-5. raid-check
-
-It panic:
-[ 4854.730899] md: data-check of RAID array md127
-[ 4854.857455] sd 5:0:0:0: [sdr] tag#80 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
-[ 4854.859246] sd 5:0:0:0: [sdr] tag#80 Sense Key : Medium Error [current]
-[ 4854.860694] sd 5:0:0:0: [sdr] tag#80 Add. Sense: Unrecovered read error
-[ 4854.862207] sd 5:0:0:0: [sdr] tag#80 CDB: Read(10) 28 00 00 00 2d 88 00 04 00 00
-[ 4854.864196] print_req_error: critical medium error, dev sdr, sector 11656 flags 0
-[ 4854.867409] sd 5:0:0:0: [sdr] tag#100 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
-[ 4854.869469] sd 5:0:0:0: [sdr] tag#100 Sense Key : Medium Error [current]
-[ 4854.871206] sd 5:0:0:0: [sdr] tag#100 Add. Sense: Unrecovered read error
-[ 4854.872858] sd 5:0:0:0: [sdr] tag#100 CDB: Read(10) 28 00 00 00 2e e0 00 00 08 00
-[ 4854.874587] print_req_error: critical medium error, dev sdr, sector 12000 flags 4000
-[ 4854.876456] sd 5:0:0:0: [sdr] tag#101 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
-[ 4854.878552] sd 5:0:0:0: [sdr] tag#101 Sense Key : Medium Error [current]
-[ 4854.880278] sd 5:0:0:0: [sdr] tag#101 Add. Sense: Unrecovered read error
-[ 4854.881846] sd 5:0:0:0: [sdr] tag#101 CDB: Read(10) 28 00 00 00 2e e8 00 00 08 00
-[ 4854.883691] print_req_error: critical medium error, dev sdr, sector 12008 flags 4000
-[ 4854.893927] sd 5:0:0:0: [sdr] tag#166 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
-[ 4854.896002] sd 5:0:0:0: [sdr] tag#166 Sense Key : Medium Error [current]
-[ 4854.897561] sd 5:0:0:0: [sdr] tag#166 Add. Sense: Unrecovered read error
-[ 4854.899110] sd 5:0:0:0: [sdr] tag#166 CDB: Read(10) 28 00 00 00 2e e0 00 00 10 00
-[ 4854.900989] print_req_error: critical medium error, dev sdr, sector 12000 flags 0
-[ 4854.902757] md/raid:md127: read error NOT corrected!! (sector 9952 on sdr1).
-[ 4854.904375] md/raid:md127: read error NOT corrected!! (sector 9960 on sdr1).
-[ 4854.906201] ------------[ cut here ]------------
-[ 4854.907341] kernel BUG at drivers/md/raid5.c:4190!
-
-raid5.c:4190 above is this BUG_ON:
-
-    handle_parity_checks6()
-        ...
-        BUG_ON(s->uptodate < disks - 1); /* We don't need Q to recover */
-
-Cc: <stable@vger.kernel.org> # v3.16+
-OriginalAuthor: David Jeffery <djeffery@redhat.com>
-Cc: Xiao Ni <xni@redhat.com>
-Tested-by: David Jeffery <djeffery@redhat.com>
-Signed-off-by: David Jeffy <djeffery@redhat.com>
-Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: http://lkml.kernel.org/r/20170109114147.5082-4-bp@alien8.de
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+[bwh: Backported to 4.4:
+ - Don't touch prev_rev variable in apply_microcode()
+ - Keep using sync_core(), which will alway includes the necessary CPUID
+ - Adjust context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/md/raid5.c |   19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
+ arch/x86/include/asm/microcode_intel.h |   15 ++++++++++++
+ arch/x86/kernel/cpu/intel.c            |   11 ++-------
+ arch/x86/kernel/cpu/microcode/intel.c  |   39 +++++++++------------------------
+ 3 files changed, 29 insertions(+), 36 deletions(-)
 
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -3897,26 +3897,15 @@ static void handle_parity_checks6(struct
- 	case check_state_check_result:
- 		sh->check_state = check_state_idle;
+--- a/arch/x86/include/asm/microcode_intel.h
++++ b/arch/x86/include/asm/microcode_intel.h
+@@ -53,6 +53,21 @@ struct extended_sigtable {
  
-+		if (s->failed > 1)
-+			break;
- 		/* handle a successful check operation, if parity is correct
- 		 * we are done.  Otherwise update the mismatch count and repair
- 		 * parity if !MD_RECOVERY_CHECK
- 		 */
- 		if (sh->ops.zero_sum_result == 0) {
--			/* both parities are correct */
--			if (!s->failed)
--				set_bit(STRIPE_INSYNC, &sh->state);
--			else {
--				/* in contrast to the raid5 case we can validate
--				 * parity, but still have a failure to write
--				 * back
--				 */
--				sh->check_state = check_state_compute_result;
--				/* Returning at this point means that we may go
--				 * off and bring p and/or q uptodate again so
--				 * we make sure to check zero_sum_result again
--				 * to verify if p or q need writeback
--				 */
--			}
-+			/* Any parity checked was correct */
-+			set_bit(STRIPE_INSYNC, &sh->state);
- 		} else {
- 			atomic64_add(STRIPE_SECTORS, &conf->mddev->resync_mismatches);
- 			if (test_bit(MD_RECOVERY_CHECK, &conf->mddev->recovery))
+ #define exttable_size(et) ((et)->count * EXT_SIGNATURE_SIZE + EXT_HEADER_SIZE)
+ 
++static inline u32 intel_get_microcode_revision(void)
++{
++	u32 rev, dummy;
++
++	native_wrmsrl(MSR_IA32_UCODE_REV, 0);
++
++	/* As documented in the SDM: Do a CPUID 1 here */
++	sync_core();
++
++	/* get the current revision from MSR 0x8B */
++	native_rdmsr(MSR_IA32_UCODE_REV, dummy, rev);
++
++	return rev;
++}
++
+ extern int has_newer_microcode(void *mc, unsigned int csig, int cpf, int rev);
+ extern int microcode_sanity_check(void *mc, int print_err);
+ extern int find_matching_signature(void *mc, unsigned int csig, int cpf);
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -14,6 +14,7 @@
+ #include <asm/bugs.h>
+ #include <asm/cpu.h>
+ #include <asm/intel-family.h>
++#include <asm/microcode_intel.h>
+ 
+ #ifdef CONFIG_X86_64
+ #include <linux/topology.h>
+@@ -102,14 +103,8 @@ static void early_init_intel(struct cpui
+ 		(c->x86 == 0x6 && c->x86_model >= 0x0e))
+ 		set_cpu_cap(c, X86_FEATURE_CONSTANT_TSC);
+ 
+-	if (c->x86 >= 6 && !cpu_has(c, X86_FEATURE_IA64)) {
+-		unsigned lower_word;
+-
+-		wrmsr(MSR_IA32_UCODE_REV, 0, 0);
+-		/* Required by the SDM */
+-		sync_core();
+-		rdmsr(MSR_IA32_UCODE_REV, lower_word, c->microcode);
+-	}
++	if (c->x86 >= 6 && !cpu_has(c, X86_FEATURE_IA64))
++		c->microcode = intel_get_microcode_revision();
+ 
+ 	/* Now if any of them are set, check the blacklist and clear the lot */
+ 	if ((cpu_has(c, X86_FEATURE_SPEC_CTRL) ||
+--- a/arch/x86/kernel/cpu/microcode/intel.c
++++ b/arch/x86/kernel/cpu/microcode/intel.c
+@@ -376,15 +376,8 @@ static int collect_cpu_info_early(struct
+ 		native_rdmsr(MSR_IA32_PLATFORM_ID, val[0], val[1]);
+ 		csig.pf = 1 << ((val[1] >> 18) & 7);
+ 	}
+-	native_wrmsr(MSR_IA32_UCODE_REV, 0, 0);
+ 
+-	/* As documented in the SDM: Do a CPUID 1 here */
+-	sync_core();
+-
+-	/* get the current revision from MSR 0x8B */
+-	native_rdmsr(MSR_IA32_UCODE_REV, val[0], val[1]);
+-
+-	csig.rev = val[1];
++	csig.rev = intel_get_microcode_revision();
+ 
+ 	uci->cpu_sig = csig;
+ 	uci->valid = 1;
+@@ -654,7 +647,7 @@ static inline void print_ucode(struct uc
+ static int apply_microcode_early(struct ucode_cpu_info *uci, bool early)
+ {
+ 	struct microcode_intel *mc_intel;
+-	unsigned int val[2];
++	u32 rev;
+ 
+ 	mc_intel = uci->mc;
+ 	if (mc_intel == NULL)
+@@ -664,21 +657,16 @@ static int apply_microcode_early(struct
+ 	native_wrmsr(MSR_IA32_UCODE_WRITE,
+ 	      (unsigned long) mc_intel->bits,
+ 	      (unsigned long) mc_intel->bits >> 16 >> 16);
+-	native_wrmsr(MSR_IA32_UCODE_REV, 0, 0);
+ 
+-	/* As documented in the SDM: Do a CPUID 1 here */
+-	sync_core();
+-
+-	/* get the current revision from MSR 0x8B */
+-	native_rdmsr(MSR_IA32_UCODE_REV, val[0], val[1]);
+-	if (val[1] != mc_intel->hdr.rev)
++	rev = intel_get_microcode_revision();
++	if (rev != mc_intel->hdr.rev)
+ 		return -1;
+ 
+ #ifdef CONFIG_X86_64
+ 	/* Flush global tlb. This is precaution. */
+ 	flush_tlb_early();
+ #endif
+-	uci->cpu_sig.rev = val[1];
++	uci->cpu_sig.rev = rev;
+ 
+ 	if (early)
+ 		print_ucode(uci);
+@@ -852,7 +840,7 @@ static int apply_microcode_intel(int cpu
+ {
+ 	struct microcode_intel *mc_intel;
+ 	struct ucode_cpu_info *uci;
+-	unsigned int val[2];
++	u32 rev;
+ 	int cpu_num = raw_smp_processor_id();
+ 	struct cpuinfo_x86 *c = &cpu_data(cpu_num);
+ 
+@@ -877,27 +865,22 @@ static int apply_microcode_intel(int cpu
+ 	wrmsr(MSR_IA32_UCODE_WRITE,
+ 	      (unsigned long) mc_intel->bits,
+ 	      (unsigned long) mc_intel->bits >> 16 >> 16);
+-	wrmsr(MSR_IA32_UCODE_REV, 0, 0);
+-
+-	/* As documented in the SDM: Do a CPUID 1 here */
+-	sync_core();
+ 
+-	/* get the current revision from MSR 0x8B */
+-	rdmsr(MSR_IA32_UCODE_REV, val[0], val[1]);
++	rev = intel_get_microcode_revision();
+ 
+-	if (val[1] != mc_intel->hdr.rev) {
++	if (rev != mc_intel->hdr.rev) {
+ 		pr_err("CPU%d update to revision 0x%x failed\n",
+ 		       cpu_num, mc_intel->hdr.rev);
+ 		return -1;
+ 	}
+ 	pr_info("CPU%d updated to revision 0x%x, date = %04x-%02x-%02x\n",
+-		cpu_num, val[1],
++		cpu_num, rev,
+ 		mc_intel->hdr.date & 0xffff,
+ 		mc_intel->hdr.date >> 24,
+ 		(mc_intel->hdr.date >> 16) & 0xff);
+ 
+-	uci->cpu_sig.rev = val[1];
+-	c->microcode = val[1];
++	uci->cpu_sig.rev = rev;
++	c->microcode = rev;
+ 
+ 	return 0;
+ }
 
 
