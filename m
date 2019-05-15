@@ -2,192 +2,105 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB37C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3C24C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF6D20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:55:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B62B520657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921326;
-	bh=8RHVO+10NxukgSSMUXCmh1zYFBhN+AswZQe7EY0lr+M=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=WrazIO8YR0w08sZZGpW/+pcZ9UGj7oU0hsd8OcUnWxZ4+0K4V6LpBBTUtb/Eisr87
-	 GZJbIWI5PZYBo6m0lWidNoDqCfKci9u+SNjiCMNCthgEgJIiL444qfcWOI+m+4EiD7
-	 7pLtdS12qnfoydZLZyQIQXo3cbOOQBWOh/SezSWg=
+	s=default; t=1557921330;
+	bh=jjRElJ+4KvTzOVhPURmM6wWAWQNChEvRFpKFGG/w1xM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sibRouw9dk2f2q/2uidWYlsz3VYwWkGF1KKlPEzUlQodCmN9BeIg8EkzKgZMaOIGM
+	 8dU56G+FgFIWrO5+TQhwDqBkwrkH3kcB3r/qlyCisZJdu/F4DMb3hj1RnTYOlWMAsV
+	 webnQnkDczucylji/6tj65eHC0rdS+MlRMmRiakk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731413AbfEOLzZ (ORCPT
+        id S1730817AbfEOLSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:55:25 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54520 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730815AbfEOLSc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:18:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=fD191BWt3Mk159coCvNwMJ2L4tNuIv/BNCkxSDNHmnI=; b=hKRliB2yjCdw
-        EXrpSoWYRKKGqKf77Gwj8lTMTvb63QZwgEzmT2LqaoBVridkTB4sSuA/Us3W6Fkpq6ceN9DHin8Oh
-        OnvR3oleoCfNAbFXnV6QgQVrr2BVEqXGhFGireqB3zWQbWIEffAZvTCdUxdiGKT4wNmVfmRgW2ogj
-        dPKos=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hQrvX-0003c7-H5; Wed, 15 May 2019 11:18:27 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id E25FB1126D6C; Wed, 15 May 2019 12:18:23 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     broonie@kernel.org, jonathanh@nvidia.com, ldewangan@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-tegra@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        thierry.reding@gmail.com
-Subject: Applied "spi: tegra114: add support for HW CS timing" to the spi tree
-In-Reply-To: <1557810235-16401-4-git-send-email-skomatineni@nvidia.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190515111823.E25FB1126D6C@debutante.sirena.org.uk>
-Date:   Wed, 15 May 2019 12:18:23 +0100 (BST)
+        Wed, 15 May 2019 07:18:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55888 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728176AbfEOLS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:18:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7066206BF;
+        Wed, 15 May 2019 11:18:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557919106;
+        bh=jjRElJ+4KvTzOVhPURmM6wWAWQNChEvRFpKFGG/w1xM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=BrFjlSfDvFkhDFxw4t+H/VUZgKkqdILyTKsqKSyix3t/jY221f4lo4RoFFE+y9Wcs
+         pbAamiyIU8TjpPZy2CZiqbZBYqXsNdFGCiHSRAq8fm89NTmIPtc6yJIJ89bOfbUM6q
+         /JmNwZ8MBVSSkNxlfU1/+3JSBwoP6vCVl3/cpSQE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: [PATCH 4.14 070/115] drm/rockchip: psr: do not dereference encoder before it is null checked.
+Date:   Wed, 15 May 2019 12:55:50 +0200
+Message-Id: <20190515090704.563089521@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
+References: <20190515090659.123121100@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+[ Upstream commit 4eda776c3cefcb1f01b2d85bd8753f67606282b5 ]
 
-   spi: tegra114: add support for HW CS timing
+'encoder' is dereferenced before it is null sanity checked, hence we
+potentially have a null pointer dereference bug. Instead, initialise
+drm_drv from encoder->dev->dev_private after we are sure 'encoder' is
+not null.
 
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 9b76ef39b7fbc2ddb0869725f9745a402d93cce5 Mon Sep 17 00:00:00 2001
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Date: Mon, 13 May 2019 22:03:54 -0700
-Subject: [PATCH] spi: tegra114: add support for HW CS timing
-
-This patch implements set_cs_timing SPI controller method to allow
-SPI client driver to configure device specific SPI CS timings.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 5182c1a556d7f ("drm/rockchip: add an common abstracted PSR driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181013105654.11827-1-enric.balletbo@collabora.com
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/spi/spi-tegra114.c | 48 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 46 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/rockchip/rockchip_drm_psr.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index 0cb0932d32fd..e59ff7c1cee6 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -95,8 +95,10 @@
- 		(reg = (((val) & 0x1) << ((cs) * 8 + 5)) |	\
- 			((reg) & ~(1 << ((cs) * 8 + 5))))
- #define SPI_SET_CYCLES_BETWEEN_PACKETS(reg, cs, val)		\
--		(reg = (((val) & 0xF) << ((cs) * 8)) |		\
--			((reg) & ~(0xF << ((cs) * 8))))
-+		(reg = (((val) & 0x1F) << ((cs) * 8)) |		\
-+			((reg) & ~(0x1F << ((cs) * 8))))
-+#define MAX_SETUP_HOLD_CYCLES			16
-+#define MAX_INACTIVE_CYCLES			32
+diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_psr.c b/drivers/gpu/drm/rockchip/rockchip_drm_psr.c
+index a553e182ff538..32e7dba2bf5ea 100644
+--- a/drivers/gpu/drm/rockchip/rockchip_drm_psr.c
++++ b/drivers/gpu/drm/rockchip/rockchip_drm_psr.c
+@@ -221,13 +221,15 @@ EXPORT_SYMBOL(rockchip_drm_psr_flush_all);
+ int rockchip_drm_psr_register(struct drm_encoder *encoder,
+ 			void (*psr_set)(struct drm_encoder *, bool enable))
+ {
+-	struct rockchip_drm_private *drm_drv = encoder->dev->dev_private;
++	struct rockchip_drm_private *drm_drv;
+ 	struct psr_drv *psr;
+ 	unsigned long flags;
  
- #define SPI_TRANS_STATUS			0x010
- #define SPI_BLK_CNT(val)			(((val) >> 0) & 0xFFFF)
-@@ -206,6 +208,8 @@ struct tegra_spi_data {
- 	u32					command1_reg;
- 	u32					dma_control_reg;
- 	u32					def_command1_reg;
-+	u32					spi_cs_timing1;
-+	u32					spi_cs_timing2;
+ 	if (!encoder || !psr_set)
+ 		return -EINVAL;
  
- 	struct completion			xfer_completion;
- 	struct spi_transfer			*curr_xfer;
-@@ -723,6 +727,43 @@ static void tegra_spi_deinit_dma_param(struct tegra_spi_data *tspi,
- 	dma_release_channel(dma_chan);
- }
- 
-+static void tegra_spi_set_hw_cs_timing(struct spi_device *spi, u8 setup_dly,
-+				       u8 hold_dly, u8 inactive_dly)
-+{
-+	struct tegra_spi_data *tspi = spi_master_get_devdata(spi->master);
-+	u32 setup_hold;
-+	u32 spi_cs_timing;
-+	u32 inactive_cycles;
-+	u8 cs_state;
++	drm_drv = encoder->dev->dev_private;
 +
-+	setup_dly = min_t(u8, setup_dly, MAX_SETUP_HOLD_CYCLES);
-+	hold_dly = min_t(u8, hold_dly, MAX_SETUP_HOLD_CYCLES);
-+	if (setup_dly && hold_dly) {
-+		setup_hold = SPI_SETUP_HOLD(setup_dly - 1, hold_dly - 1);
-+		spi_cs_timing = SPI_CS_SETUP_HOLD(tspi->spi_cs_timing1,
-+						  spi->chip_select,
-+						  setup_hold);
-+		if (tspi->spi_cs_timing1 != spi_cs_timing) {
-+			tspi->spi_cs_timing1 = spi_cs_timing;
-+			tegra_spi_writel(tspi, spi_cs_timing, SPI_CS_TIMING1);
-+		}
-+	}
-+
-+	inactive_cycles = min_t(u8, inactive_dly, MAX_INACTIVE_CYCLES);
-+	if (inactive_cycles)
-+		inactive_cycles--;
-+	cs_state = inactive_cycles ? 0 : 1;
-+	spi_cs_timing = tspi->spi_cs_timing2;
-+	SPI_SET_CS_ACTIVE_BETWEEN_PACKETS(spi_cs_timing, spi->chip_select,
-+					  cs_state);
-+	SPI_SET_CYCLES_BETWEEN_PACKETS(spi_cs_timing, spi->chip_select,
-+				       inactive_cycles);
-+	if (tspi->spi_cs_timing2 != spi_cs_timing) {
-+		tspi->spi_cs_timing2 = spi_cs_timing;
-+		tegra_spi_writel(tspi, spi_cs_timing, SPI_CS_TIMING2);
-+	}
-+}
-+
- static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
- 					struct spi_transfer *t,
- 					bool is_first_of_msg,
-@@ -1232,6 +1273,7 @@ static int tegra_spi_probe(struct platform_device *pdev)
- 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(4, 32);
- 	master->setup = tegra_spi_setup;
- 	master->transfer_one_message = tegra_spi_transfer_one_message;
-+	master->set_cs_timing = tegra_spi_set_hw_cs_timing;
- 	master->num_chipselect = MAX_CHIP_SELECT;
- 	master->auto_runtime_pm = true;
- 	bus_num = of_alias_get_id(pdev->dev.of_node, "spi");
-@@ -1307,6 +1349,8 @@ static int tegra_spi_probe(struct platform_device *pdev)
- 	reset_control_deassert(tspi->rst);
- 	tspi->def_command1_reg  = SPI_M_S;
- 	tegra_spi_writel(tspi, tspi->def_command1_reg, SPI_COMMAND1);
-+	tspi->spi_cs_timing1 = tegra_spi_readl(tspi, SPI_CS_TIMING1);
-+	tspi->spi_cs_timing2 = tegra_spi_readl(tspi, SPI_CS_TIMING2);
- 	pm_runtime_put(&pdev->dev);
- 	ret = request_threaded_irq(tspi->irq, tegra_spi_isr,
- 				   tegra_spi_isr_thread, IRQF_ONESHOT,
+ 	psr = kzalloc(sizeof(struct psr_drv), GFP_KERNEL);
+ 	if (!psr)
+ 		return -ENOMEM;
 -- 
 2.20.1
+
+
 
