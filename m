@@ -2,104 +2,84 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C43C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFE7C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A189320843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE0720843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:07:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbfEONHF (ORCPT
+        id S1727400AbfEONHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 09:07:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60172 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbfEONHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 09:07:05 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 685F330832EA;
-        Wed, 15 May 2019 13:07:04 +0000 (UTC)
-Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1A0A01995D;
-        Wed, 15 May 2019 13:06:59 +0000 (UTC)
-Subject: Re: [PATCH v7 04/23] iommu: Introduce attach/detach_pasid_table API
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        eric.auger.pro@gmail.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, will.deacon@arm.com, robin.murphy@arm.com
-Cc:     peter.maydell@linaro.org, kevin.tian@intel.com,
-        vincent.stehle@arm.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        christoffer.dall@arm.com
-References: <20190408121911.24103-1-eric.auger@redhat.com>
- <20190408121911.24103-5-eric.auger@redhat.com>
- <21bfdab4-846c-1dc7-6dff-62a46cc9c829@arm.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <b4c47851-0269-5aa2-682a-77677f756205@redhat.com>
-Date:   Wed, 15 May 2019 15:06:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 15 May 2019 09:07:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34306 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727178AbfEONHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 09:07:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BEA1FABC1;
+        Wed, 15 May 2019 13:07:33 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id DF5971E3C5A; Wed, 15 May 2019 15:07:30 +0200 (CEST)
+Date:   Wed, 15 May 2019 15:07:30 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        syzbot <syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com>,
+        dvyukov@google.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        linux-block@vger.kernel.org
+Subject: Re: INFO: task hung in __get_super
+Message-ID: <20190515130730.GA9526@quack2.suse.cz>
+References: <0000000000002cd22305879b22c4@google.com>
+ <201905150102.x4F12b6o009249@www262.sakura.ne.jp>
+ <20190515102133.GA16193@quack2.suse.cz>
+ <024bba2a-4d2f-1861-bfd9-819511bdf6eb@i-love.sakura.ne.jp>
 MIME-Version: 1.0
-In-Reply-To: <21bfdab4-846c-1dc7-6dff-62a46cc9c829@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 15 May 2019 13:07:04 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <024bba2a-4d2f-1861-bfd9-819511bdf6eb@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jean-Philippe,
-
-On 5/15/19 2:09 PM, Jean-Philippe Brucker wrote:
-> On 08/04/2019 13:18, Eric Auger wrote:
->> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
->> index edcc0dda7993..532a64075f23 100644
->> --- a/include/uapi/linux/iommu.h
->> +++ b/include/uapi/linux/iommu.h
->> @@ -112,4 +112,51 @@ struct iommu_fault {
->>  		struct iommu_fault_page_request prm;
->>  	};
->>  };
->> +
->> +/**
->> + * SMMUv3 Stream Table Entry stage 1 related information
->> + * The PASID table is referred to as the context descriptor (CD) table.
->> + *
->> + * @s1fmt: STE s1fmt (format of the CD table: single CD, linear table
->> +   or 2-level table)
+On Wed 15-05-19 20:32:27, Tetsuo Handa wrote:
+> On 2019/05/15 19:21, Jan Kara wrote:
+> > The question is how to fix this problem. The simplest fix I can see is that
+> > we'd just refuse to do LOOP_SET_FD if someone has the block device
+> > exclusively open as there are high chances such user will be unpleasantly
+> > surprised by the device changing under him. OTOH this has some potential
+> > for userspace visible regressions. But I guess it's worth a try. Something
+> > like attached patch?
 > 
-> Running "scripts/kernel-doc -v -none" on this header produces some
-> warnings. Not sure if we want to get rid of all of them, but we should
-> at least fix the coding style for this comment (line must start with
-> " * "). I'm fixing it up on my sva/api branch
-Thanks!
+> (1) If I understand correctly, FMODE_EXCL is set at blkdev_open() only if
+> O_EXCL is specified.
 
-Let me know if you want me to do the job for additional fixes.
+Yes.
 
-Eric
+> How can we detect if O_EXCL was not used, for the reproducer (
+> https://syzkaller.appspot.com/text?tag=ReproC&x=135385a8a00000 ) is not
+> using O_EXCL ?
 
+mount_bdev() is using O_EXCL and that's what matters.
 
-> 
-> Thanks,
-> Jean
-> 
->> + * @s1dss: STE s1dss (specifies the behavior when pasid_bits != 0
->> +   and no pasid is passed along with the incoming transaction)
->> + * Please refer to the smmu 3.x spec (ARM IHI 0070A) for full details
->> + */
->> +struct iommu_pasid_smmuv3 {
->> +#define PASID_TABLE_SMMUV3_CFG_VERSION_1 1
->> +	__u32	version;
->> +	__u8 s1fmt;
->> +	__u8 s1dss;
->> +	__u8 padding[2];
->> +};
+> (2) There seems to be no serialization. What guarantees that mount_bdev()
+>     does not start due to preempted after the check added by this patch?
+
+That's a good question. lo_ctl_mutex actually synchronizes most of this
+(taken in both loop_set_fd() and lo_open()) but you're right that there's
+still a small race window where loop_set_fd() need not see bdev->bd_holders
+elevated while blkdev_get() will succeed. So I need to think a bit more
+about proper synchronization of this.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
