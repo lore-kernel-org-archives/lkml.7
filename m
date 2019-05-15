@@ -4,74 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5627EC04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC27BC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 263002168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F9A720862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557936617;
-	bh=S3xsJ9D2FBrUrUut4SDDJZr9fkFftSXWha+RF701Ghk=;
+	s=default; t=1557936620;
+	bh=3yl49mVeBbP+KSgFEV0CCubl636y06G4IGOr52wcoGU=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=XUezEmw/sMnrcsmd9ysUSylOJHeJxchfzE/h8S01qba4cGuxzo+XSi6aojvbMx/+R
-	 UnBuyscARsD/iy3DQcqUx4QOQqP6S4DwwqfkQ+9T5k1XLx8Nhn1v5UjnWO9XqQuxzU
-	 ZIF4c/AU82RQ0uR/tvBvCF8F5iJUamlQ3k8Mw0f8=
+	b=RJmvG2JxfP5Dutbm58s4qeYIUlpqkJ336XJerbVnBgr1d18HaaAtk+D0FnFiFR8Mq
+	 0LGSZOAx1Sh/RonhlEs3QKulTBtYnv7fjMBsPXzWrURpoWEIoViT4pIcggHbPxKBug
+	 MH6/zpdYF04aVXndLcpl/25/ZpDHl+b3EglKWGXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727382AbfEOQKP (ORCPT
+        id S1727465AbfEOQKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 12:10:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52534 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 12:10:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726325AbfEOQKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 12:10:15 -0400
-Subject: Re: [GIT] Crypto Fixes for 5.2
+        id S1726325AbfEOQKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 12:10:17 -0400
+Subject: Re: [GIT PULL] More power management updates for v5.2-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557936614;
-        bh=S3xsJ9D2FBrUrUut4SDDJZr9fkFftSXWha+RF701Ghk=;
+        s=default; t=1557936616;
+        bh=3yl49mVeBbP+KSgFEV0CCubl636y06G4IGOr52wcoGU=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=GWkWaVgsXPQ+oFpx0EdKaSI3uHOcIPf85Cr4ZnFBEP0vQHqjXu6pbXFkMGPaSSOlp
-         sXRJGofYq6r8luO49u2QPUPCaJK5vbd5wMb10gZ3zuANMKyuzMfH5wJvByPvbukz6/
-         cPy3+LJk3Rk+M7xnaYQAlB/18XsnV4HMjO4dI98I=
+        b=fHy9m+8JyzC9rgUWidC7OLDyHef3xlNLIDVzpi3llsfdU2HokkNUCCUClH3TA4EZM
+         RRoDkO64+C6a+cHLjr+DgQjUeaYlBs5auX00TPI/UWPBgomD9dp0700xTJ6E3Tk3dv
+         rOUjHSmU8StgR9T/pqpkeTmL75z1yLULIaH87Lh4=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190515060552.ecfwhazt2fnthepg@gondor.apana.org.au>
-References: <20180212031702.GA26153@gondor.apana.org.au>
- <20180428080517.haxgpvqrwgotakyo@gondor.apana.org.au>
- <20180622145403.6ltjip7che227fuo@gondor.apana.org.au>
- <20180829033353.agnzxra3jk2r2mzg@gondor.apana.org.au>
- <20181116063146.e7a3mep3ghnfltxe@gondor.apana.org.au>
- <20181207061409.xflg423nknleuddw@gondor.apana.org.au>
- <20190118104006.ye5amhxkgd4xrbmc@gondor.apana.org.au>
- <20190201054204.ehl7u7aaqmkdh5b6@gondor.apana.org.au>
- <20190215024738.fynl64d5u5htcy2l@gondor.apana.org.au>
- <20190312045818.bgpiuxogmaxyscdv@gondor.apana.org.au>
- <20190515060552.ecfwhazt2fnthepg@gondor.apana.org.au>
+In-Reply-To: <CAJZ5v0i-sU2cXVdVUW1CCvbCmaTsqphXYXocS=ufeGFAChYOag@mail.gmail.com>
+References: <CAJZ5v0i-sU2cXVdVUW1CCvbCmaTsqphXYXocS=ufeGFAChYOag@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190515060552.ecfwhazt2fnthepg@gondor.apana.org.au>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-X-PR-Tracked-Commit-Id: cbc22b062106993980df43a7ffa93351d3218844
+X-PR-Tracked-Message-Id: <CAJZ5v0i-sU2cXVdVUW1CCvbCmaTsqphXYXocS=ufeGFAChYOag@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git
+ pm-5.2-rc1-2
+X-PR-Tracked-Commit-Id: 2a8d69f6139b605b2e36c80540cb8e8da2d016be
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 88f76bc31b93cc228f5a43d5b565dc53615970ae
-Message-Id: <155793661488.5377.14250847400138191195.pr-tracker-bot@kernel.org>
-Date:   Wed, 15 May 2019 16:10:14 +0000
-To:     Herbert Xu <herbert@gondor.apana.org.au>
+X-PR-Merge-Commit-Id: bfbfbf7368627860dd769567599d73ad8f6d8191
+Message-Id: <155793661622.5377.2666256998734937173.pr-tracker-bot@kernel.org>
+Date:   Wed, 15 May 2019 16:10:16 +0000
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+        Linux PM <linux-pm@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 15 May 2019 14:05:52 +0800:
+The pull request you sent on Wed, 15 May 2019 12:13:25 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.2-rc1-2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/88f76bc31b93cc228f5a43d5b565dc53615970ae
+https://git.kernel.org/torvalds/c/bfbfbf7368627860dd769567599d73ad8f6d8191
 
 Thank you!
 
