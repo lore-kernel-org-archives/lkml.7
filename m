@@ -2,132 +2,89 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FF6C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB45C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3829720881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:22:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mvista-com.20150623.gappssmtp.com header.i=@mvista-com.20150623.gappssmtp.com header.b="uOrgnAPc"
+	by mail.kernel.org (Postfix) with ESMTP id DE36A20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfEOQWS (ORCPT
+        id S1726956AbfEOQWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 12:22:18 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43867 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfEOQWR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 12:22:17 -0400
-Received: by mail-ot1-f65.google.com with SMTP id i8so536258oth.10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 09:22:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mvista-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WYwUsFSH86jSsfL1qchJ6LUvivM63x63FlzlKbdmfas=;
-        b=uOrgnAPc8uE+qBTcPGAZ/2bMJlapwUBTljMhCFiyEwWUGqnQvxXHV8F+8obCeEJm8s
-         4YEBF0qNhKDuYxgiEBDbbH6EhCxggKc1eEW4sDFugrOG2PktbT5uc67ibB2sLTrcPf+5
-         ZhSA3Ngg82GvDbiMSF0TfjCxvmNMjxxAn2XNp3eOw4nhOFt9CDOK010JZ0FTXf2jMdFR
-         NOlzt+CwucWaXURdPwb34To7dVoBPfvl45gkPIpLbI3iacAWIKZ//joKraLZuIchN8It
-         LQY55M8O5+xi3GZO/972ZZM7qsHCyEvyUDOEBFPoUSvVfj8cTfhWkg7X6MFdUOSrPYNd
-         IzOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WYwUsFSH86jSsfL1qchJ6LUvivM63x63FlzlKbdmfas=;
-        b=SCb+WiBtd1WYDsPAWoheAg3aQ8zk+F6TGCoDaEay460aj4Y6IU/biWamPIk1o4mShz
-         Aud7S/BI2zeCKFNpSaPVZTLQ/B93ScF9vOsQUGFyL6pj8iIxaEa/BQzLAOlLkoht9WfV
-         bNpSXnbBr91aMwYvXL3wb9n9MxvDvockaolTaFtzNrHr8WgTCgV5xb4FL4FK/JDZ7GvO
-         96mpk52Kt8wkytJGMTn0JB1SCYl0Q7rgT61qIP2EzKdrXQuqaNyqLntGpbQmvEvjjv6D
-         hrLzw4uhWzG77dwQ11O7F8nFf8fujwojmlOhssd5qeYPslo8zFEZP+KHSFcVGKPf6Z/H
-         /pdw==
-X-Gm-Message-State: APjAAAW37Zx+MJvBg2KXWPHpmThpWPS4YGMNsHD+Z5Ar1Gutdkefi/C9
-        XcXil6/sO5bk3d1SF5k5zG+ccQJpDtbZMw==
-X-Google-Smtp-Source: APXvYqx9YX6jALD3ezMYYUSQ97jbTW9srhfNABwloH1YvDooZkHcqR7PZkAP4Lndj8fbIzC9xyZS+w==
-X-Received: by 2002:a9d:7657:: with SMTP id o23mr26614794otl.358.1557937334761;
-        Wed, 15 May 2019 09:22:14 -0700 (PDT)
-Received: from minyard.net ([2001:470:b8f6:1b:9c84:ae86:ff6:562c])
-        by smtp.gmail.com with ESMTPSA id r23sm885582otg.49.2019.05.15.09.22.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 May 2019 09:22:13 -0700 (PDT)
-Date:   Wed, 15 May 2019 11:22:12 -0500
-From:   Corey Minyard <cminyard@mvista.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>, minyard@acm.org,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
-Message-ID: <20190515162212.GB6050@minyard.net>
-Reply-To: cminyard@mvista.com
-References: <20190508205728.25557-1-minyard@acm.org>
- <20190509161925.kul66w54wpjcinuc@linutronix.de>
- <20190514084356.GJ2589@hirez.programming.kicks-ass.net>
- <20190514091219.nesriqe7qplk3476@linutronix.de>
- <20190514121350.GA6050@minyard.net>
- <20190514153647.wri6ivffbq7r263y@linutronix.de>
+        Wed, 15 May 2019 12:22:22 -0400
+Received: from mga01.intel.com ([192.55.52.88]:34513 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726667AbfEOQWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 12:22:20 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 09:22:19 -0700
+X-ExtLoop1: 1
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by fmsmga007.fm.intel.com with ESMTP; 15 May 2019 09:22:19 -0700
+Date:   Wed, 15 May 2019 09:25:13 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     Auger Eric <eric.auger@redhat.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v3 02/16] iommu: Introduce cache_invalidate API
+Message-ID: <20190515092513.3e4a2f77@jacob-builder>
+In-Reply-To: <d555d96d-a3ec-53e2-2c49-b783bb2d6806@arm.com>
+References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1556922737-76313-3-git-send-email-jacob.jun.pan@linux.intel.com>
+        <d32d3d19-11c9-4af9-880b-bb8ebefd4f7f@redhat.com>
+        <44d5ba37-a9e9-cc7a-2a3a-d32b840afa29@arm.com>
+        <7807afe9-efab-9f48-4ca0-2332a7a54950@redhat.com>
+        <1a5a5fad-ed21-5c79-9a9e-ff21fadfb95f@arm.com>
+        <1edd45e6-4da3-e393-36b2-9e63cd5f7607@redhat.com>
+        <4094baf1-6cf5-a33b-4717-08ced0673c50@arm.com>
+        <5d2c0279-7fa9-3d11-9999-583f9ed329ba@redhat.com>
+        <20190514105509.7865ebc0@jacob-builder>
+        <d555d96d-a3ec-53e2-2c49-b783bb2d6806@arm.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514153647.wri6ivffbq7r263y@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 05:36:47PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-05-14 07:13:50 [-0500], Corey Minyard wrote:
-> > > Corey, would it make any change which waiter is going to be woken up?
+On Wed, 15 May 2019 16:52:46 +0100
+Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
+
+> On 14/05/2019 18:55, Jacob Pan wrote:
+> > Yes, I agree to replace the standalone __64 pasid with this struct.
+> > Looks more inline with address selective info., Just to double
+> > confirm the new struct.
 > > 
-> > In the application that found this, the wake order probably isn't
-> > relevant.
+> > Jean, will you put this in your sva/api repo?  
 > 
-> what I expected.
+> Yes, I pushed it along with some documentation fixes (mainly getting
+> rid of scripts/kernel-doc warnings and outputting valid rst)
 > 
-> > For other applications, I really doubt that very many are using multiple
-> > waiters.  If so, this bug would have been reported sooner, I think.
-> 
-> most other do either one waiter/waker pair or one waker and multiple
-> waiter. And then reinit_completion() is used for the next round.
-> 
-> > As you mention, for RT you would want waiter woken by priority and FIFO
-> > within priority.  I don't think POSIX says anything about FIFO within
-> > priority, but that's probably a good idea.  That's no longer a simple
-> > wait queue  The way it is now is probably closer to that than what Peter
-> > suggested, but not really that close.
-> > 
-> > This is heavily used in drivers and fs code, where it probably doesn't
-> > matter.  I looked through a few users in mm and kernel, and they had
-> > one waiter or were init/shutdown type things where order is not important.
-> > 
-> > So I'm not sure it's important.
-> 
-> Why did you bring POSIX into this? This isn't an API exported to
-> userland which would fall into that category.
+Just pulled, I am rebasing on top of this branch. If you could also
+include our api for bind guest pasid, then we have a complete set of
+common APIs in one place.
+https://lkml.org/lkml/2019/5/3/775
 
-My understanding is that POSIX.1b scheduling classes affect everything.
-So if you have two processes blocked on the same things for any reason,
-you need to wake up the higher priority one first.  In reality, it
-probably doesn't matter unless something more critical uses completions. 
+I just need to add a small tweak for supporting non-identity guest-host
+PASID mapping for the next version.
 
-> 
-> Peter's suggestion for FIFO is that we probably don't want to starve one
-> thread/waiter if it is always enqueued at the end of the list. As you
-> said, in your case it does not matter because (I assume) each waiter is
-> equal and the outcome would be the same.
+> Thanks,
+> Jean
 
-Yeah, my case is not relevant to this, I'm more concerned with the cases
-that are.
-
--corey
-
-> 
-> > -corey
-> 
-> Sebastian
+[Jacob Pan]
