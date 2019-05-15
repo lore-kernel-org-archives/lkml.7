@@ -3,176 +3,175 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BCEC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B4EC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CE0C2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404BE2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:31:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbfEOTan (ORCPT
+        id S1728424AbfEOTbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:30:43 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34990 "EHLO mx1.redhat.com"
+        Wed, 15 May 2019 15:31:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49836 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727009AbfEOT1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726124AbfEOT1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 May 2019 15:27:33 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 56312C0624A1;
+        by mx1.redhat.com (Postfix) with ESMTPS id 1999230001DA;
         Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C759519C71;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EA71B1001DE1;
         Wed, 15 May 2019 19:27:32 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 9F35D22547E; Wed, 15 May 2019 15:27:29 -0400 (EDT)
+        id B7996225481; Wed, 15 May 2019 15:27:29 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, linux-nvdimm@lists.01.org
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
         dgilbert@redhat.com, swhiteho@redhat.com
-Subject: [PATCH v2 10/30] fuse: Separate fuse device allocation and installation in fuse_conn
-Date:   Wed, 15 May 2019 15:26:55 -0400
-Message-Id: <20190515192715.18000-11-vgoyal@redhat.com>
+Subject: [PATCH v2 13/30] dax: Pass dax_dev to dax_writeback_mapping_range()
+Date:   Wed, 15 May 2019 15:26:58 -0400
+Message-Id: <20190515192715.18000-14-vgoyal@redhat.com>
 In-Reply-To: <20190515192715.18000-1-vgoyal@redhat.com>
 References: <20190515192715.18000-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 15 May 2019 19:27:33 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As of now fuse_dev_alloc() both allocates a fuse device and installs it
-in fuse_conn list. fuse_dev_alloc() can fail if fuse_device allocation
-fails.
+Right now dax_writeback_mapping_range() is passed a bdev and dax_dev
+is searched from that bdev name.
 
-virtio-fs needs to initialize multiple fuse devices (one per virtio
-queue). It initializes one fuse device as part of call to
-fuse_fill_super_common() and rest of the devices are allocated and
-installed after that.
-
-But, we can't affort to fail after calling fuse_fill_super_common() as
-we don't have a way to undo all the actions done by fuse_fill_super_common().
-So to avoid failures after the call to fuse_fill_super_common(),
-pre-allocate all fuse devices early and install them into fuse connection
-later.
-
-This patch provides two separate helpers for fuse device allocation and
-fuse device installation in fuse_conn.
+virtio-fs does not have a bdev. So pass in dax_dev also to
+dax_writeback_mapping_range(). If dax_dev is passed in, bdev is not
+used otherwise dax_dev is searched using bdev.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- fs/fuse/cuse.c   |  2 +-
- fs/fuse/dev.c    |  2 +-
- fs/fuse/fuse_i.h |  4 +++-
- fs/fuse/inode.c  | 25 ++++++++++++++++++++-----
- 4 files changed, 25 insertions(+), 8 deletions(-)
+ fs/dax.c            | 16 ++++++++++------
+ fs/ext2/inode.c     |  2 +-
+ fs/ext4/inode.c     |  2 +-
+ fs/xfs/xfs_aops.c   |  2 +-
+ include/linux/dax.h |  6 ++++--
+ 5 files changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/fs/fuse/cuse.c b/fs/fuse/cuse.c
-index a6ed7a036b50..a509747153a7 100644
---- a/fs/fuse/cuse.c
-+++ b/fs/fuse/cuse.c
-@@ -506,7 +506,7 @@ static int cuse_channel_open(struct inode *inode, struct file *file)
- 	 */
- 	fuse_conn_init(&cc->fc, file->f_cred->user_ns, &fuse_dev_fiq_ops, NULL);
- 
--	fud = fuse_dev_alloc(&cc->fc);
-+	fud = fuse_dev_alloc_install(&cc->fc);
- 	if (!fud) {
- 		kfree(cc);
- 		return -ENOMEM;
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index ef489beadf58..ee9dd38bc0f0 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -2318,7 +2318,7 @@ static int fuse_device_clone(struct fuse_conn *fc, struct file *new)
- 	if (new->private_data)
- 		return -EINVAL;
- 
--	fud = fuse_dev_alloc(fc);
-+	fud = fuse_dev_alloc_install(fc);
- 	if (!fud)
- 		return -ENOMEM;
- 
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index 0b578e07156d..4008ed65a48d 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -1050,7 +1050,9 @@ void fuse_conn_init(struct fuse_conn *fc, struct user_namespace *user_ns,
+diff --git a/fs/dax.c b/fs/dax.c
+index 815bc32fd967..c944c1efc78f 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -932,12 +932,12 @@ static int dax_writeback_one(struct xa_state *xas, struct dax_device *dax_dev,
+  * on persistent storage prior to completion of the operation.
   */
- void fuse_conn_put(struct fuse_conn *fc);
- 
--struct fuse_dev *fuse_dev_alloc(struct fuse_conn *fc);
-+struct fuse_dev *fuse_dev_alloc_install(struct fuse_conn *fc);
-+struct fuse_dev *fuse_dev_alloc(void);
-+void fuse_dev_install(struct fuse_dev *fud, struct fuse_conn *fc);
- void fuse_dev_free(struct fuse_dev *fud);
- void fuse_send_init(struct fuse_conn *fc, struct fuse_req *req);
- 
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index 126e77854dac..9b0114437a14 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -1027,8 +1027,7 @@ static int fuse_bdi_init(struct fuse_conn *fc, struct super_block *sb)
- 	return 0;
- }
- 
--struct fuse_dev *fuse_dev_alloc(struct fuse_conn *fc)
--{
-+struct fuse_dev *fuse_dev_alloc(void) {
- 	struct fuse_dev *fud;
- 	struct list_head *pq;
- 
-@@ -1043,16 +1042,32 @@ struct fuse_dev *fuse_dev_alloc(struct fuse_conn *fc)
- 	}
- 
- 	fud->pq.processing = pq;
--	fud->fc = fuse_conn_get(fc);
- 	fuse_pqueue_init(&fud->pq);
- 
-+	return fud;
-+}
-+EXPORT_SYMBOL_GPL(fuse_dev_alloc);
-+
-+void fuse_dev_install(struct fuse_dev *fud, struct fuse_conn *fc) {
-+	fud->fc = fuse_conn_get(fc);
- 	spin_lock(&fc->lock);
- 	list_add_tail(&fud->entry, &fc->devices);
- 	spin_unlock(&fc->lock);
-+}
-+EXPORT_SYMBOL_GPL(fuse_dev_install);
- 
-+struct fuse_dev *fuse_dev_alloc_install(struct fuse_conn *fc)
-+{
-+	struct fuse_dev *fud;
-+
-+	fud = fuse_dev_alloc();
-+	if (!fud)
-+		return NULL;
-+
-+	fuse_dev_install(fud, fc);
- 	return fud;
- }
--EXPORT_SYMBOL_GPL(fuse_dev_alloc);
-+EXPORT_SYMBOL_GPL(fuse_dev_alloc_install);
- 
- void fuse_dev_free(struct fuse_dev *fud)
+ int dax_writeback_mapping_range(struct address_space *mapping,
+-		struct block_device *bdev, struct writeback_control *wbc)
++		struct block_device *bdev, struct dax_device *dax_dev,
++		struct writeback_control *wbc)
  {
-@@ -1122,7 +1137,7 @@ int fuse_fill_super_common(struct super_block *sb,
- 		       mount_data->fiq_priv);
- 	fc->release = fuse_free_conn;
+ 	XA_STATE(xas, &mapping->i_pages, wbc->range_start >> PAGE_SHIFT);
+ 	struct inode *inode = mapping->host;
+ 	pgoff_t end_index = wbc->range_end >> PAGE_SHIFT;
+-	struct dax_device *dax_dev;
+ 	void *entry;
+ 	int ret = 0;
+ 	unsigned int scanned = 0;
+@@ -948,9 +948,12 @@ int dax_writeback_mapping_range(struct address_space *mapping,
+ 	if (!mapping->nrexceptional || wbc->sync_mode != WB_SYNC_ALL)
+ 		return 0;
  
--	fud = fuse_dev_alloc(fc);
-+	fud = fuse_dev_alloc_install(fc);
- 	if (!fud)
- 		goto err_put_conn;
+-	dax_dev = dax_get_by_host(bdev->bd_disk->disk_name);
+-	if (!dax_dev)
+-		return -EIO;
++	if (bdev) {
++		WARN_ON(dax_dev);
++		dax_dev = dax_get_by_host(bdev->bd_disk->disk_name);
++		if (!dax_dev)
++			return -EIO;
++	}
  
+ 	trace_dax_writeback_range(inode, xas.xa_index, end_index);
+ 
+@@ -972,7 +975,8 @@ int dax_writeback_mapping_range(struct address_space *mapping,
+ 		xas_lock_irq(&xas);
+ 	}
+ 	xas_unlock_irq(&xas);
+-	put_dax(dax_dev);
++	if (bdev)
++		put_dax(dax_dev);
+ 	trace_dax_writeback_range_done(inode, xas.xa_index, end_index);
+ 	return ret;
+ }
+diff --git a/fs/ext2/inode.c b/fs/ext2/inode.c
+index c27c27300d95..9b0131c53429 100644
+--- a/fs/ext2/inode.c
++++ b/fs/ext2/inode.c
+@@ -956,7 +956,7 @@ static int
+ ext2_dax_writepages(struct address_space *mapping, struct writeback_control *wbc)
+ {
+ 	return dax_writeback_mapping_range(mapping,
+-			mapping->host->i_sb->s_bdev, wbc);
++			mapping->host->i_sb->s_bdev, NULL, wbc);
+ }
+ 
+ const struct address_space_operations ext2_aops = {
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index b32a57bc5d5d..cb8cf5eddd9b 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -2972,7 +2972,7 @@ static int ext4_dax_writepages(struct address_space *mapping,
+ 	percpu_down_read(&sbi->s_journal_flag_rwsem);
+ 	trace_ext4_writepages(inode, wbc);
+ 
+-	ret = dax_writeback_mapping_range(mapping, inode->i_sb->s_bdev, wbc);
++	ret = dax_writeback_mapping_range(mapping, inode->i_sb->s_bdev, NULL, wbc);
+ 	trace_ext4_writepages_result(inode, wbc, ret,
+ 				     nr_to_write - wbc->nr_to_write);
+ 	percpu_up_read(&sbi->s_journal_flag_rwsem);
+diff --git a/fs/xfs/xfs_aops.c b/fs/xfs/xfs_aops.c
+index 3619e9e8d359..27f71ff55096 100644
+--- a/fs/xfs/xfs_aops.c
++++ b/fs/xfs/xfs_aops.c
+@@ -994,7 +994,7 @@ xfs_dax_writepages(
+ {
+ 	xfs_iflags_clear(XFS_I(mapping->host), XFS_ITRUNCATED);
+ 	return dax_writeback_mapping_range(mapping,
+-			xfs_find_bdev_for_inode(mapping->host), wbc);
++			xfs_find_bdev_for_inode(mapping->host), NULL, wbc);
+ }
+ 
+ STATIC int
+diff --git a/include/linux/dax.h b/include/linux/dax.h
+index 0dd316a74a29..bf3b00b5f0bf 100644
+--- a/include/linux/dax.h
++++ b/include/linux/dax.h
+@@ -87,7 +87,8 @@ static inline void fs_put_dax(struct dax_device *dax_dev)
+ 
+ struct dax_device *fs_dax_get_by_bdev(struct block_device *bdev);
+ int dax_writeback_mapping_range(struct address_space *mapping,
+-		struct block_device *bdev, struct writeback_control *wbc);
++		struct block_device *bdev, struct dax_device *dax_dev,
++		struct writeback_control *wbc);
+ 
+ struct page *dax_layout_busy_page(struct address_space *mapping);
+ dax_entry_t dax_lock_page(struct page *page);
+@@ -119,7 +120,8 @@ static inline struct page *dax_layout_busy_page(struct address_space *mapping)
+ }
+ 
+ static inline int dax_writeback_mapping_range(struct address_space *mapping,
+-		struct block_device *bdev, struct writeback_control *wbc)
++		struct block_device *bdev, struct dax_device *dax_dev,
++		struct writeback_control *wbc)
+ {
+ 	return -EOPNOTSUPP;
+ }
 -- 
 2.20.1
 
