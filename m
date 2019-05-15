@@ -2,199 +2,193 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F1BC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD93C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C39D12084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D412084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921315;
-	bh=Q0Ztr0B9zxmhQRnN4y07cY0f8kqAAmOyzoC/lyOMvbw=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=VmEkevZQBBDKdgHy9YqPuvfTls2c+xwDPzxNQ7n/MFn09degxOKgomTYe4TdoeU4k
-	 p73ofb9HAPVGQ2Jn9vOQ+8u7PQhhQv89qIi4zOgrx05j8taKGIrdAyM5j+qTfZz5T+
-	 U0d5GtwhoQc/kYWYmV/9YCS+eikODfx0d5Wrjoro=
+	s=default; t=1557921318;
+	bh=fya0K4A2B5AA1H7SCysVvWjdhaVu9BpWOOUQwW7H79U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sq3a36WFxiKysgEron6uw/klXUlANmvvqXAgpxjrtULreW7zAuTkGZerQgK5gYwMw
+	 e7ZItle8gnFkzwy1FjjNHFGvPST+aH9t142pXQnOMTfoHOsBDjuQ0FT1Ivv1Lzfd+6
+	 HiW8Tg5O2DAhFn9tbjjJWEjL+8YtJtL8fHArp3Uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730826AbfEOLSd (ORCPT
+        id S1731232AbfEOLzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:18:33 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54428 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730797AbfEOLS3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:18:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=XueWC9NaAC+a0tui5U5SBbamkvqq+xEVAEG1fYGi7Q0=; b=cTl3bAQnWO80
-        JrRi8wG+XyPxS1+2l9ILterwGc4TVopTiVu/a8aLhDOSELEa9VlfdRpHlFZXabb9Od5/o3JfKgQ5V
-        XUfRgaZ2TXmeQRwo5BQFC1wIyN8+R0n4LoVaJlTzil958dV0qzdOrQICcxWoL5MDYWwcFH941U3kP
-        B14K0=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hQrvU-0003bw-NW; Wed, 15 May 2019 11:18:24 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 1C34E1126D6D; Wed, 15 May 2019 12:18:24 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     broonie@kernel.org, jonathanh@nvidia.com, ldewangan@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-tegra@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        thierry.reding@gmail.com
-Subject: Applied "spi: tegra114: add support for hw based cs" to the spi tree
-In-Reply-To: <1557810235-16401-3-git-send-email-skomatineni@nvidia.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190515111824.1C34E1126D6D@debutante.sirena.org.uk>
-Date:   Wed, 15 May 2019 12:18:24 +0100 (BST)
+        Wed, 15 May 2019 07:55:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730350AbfEOLSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:18:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 337D9206BF;
+        Wed, 15 May 2019 11:18:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557919111;
+        bh=fya0K4A2B5AA1H7SCysVvWjdhaVu9BpWOOUQwW7H79U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DZhzwe7Mg3YxfLdhIn5ZoqqxwXKGbiXc1VBdrGnWGYXSgS/KdKZ9ihSs4C5ptQibd
+         gfIbAKoZqMUWar3HgF1BKOc+OiQ63qE8PxEPwSz03OoRyYK7YyL+xP0l9Pz+heAHsT
+         kwpGlIRvUjULPti81nesp14/6XKR+rThMmXfjKc8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: [PATCH 4.14 054/115] drm/i915: Disable LP3 watermarks on all SNB machines
+Date:   Wed, 15 May 2019 12:55:34 +0200
+Message-Id: <20190515090703.534551972@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
+References: <20190515090659.123121100@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+[ Upstream commit 03981c6ebec4fc7056b9b45f847393aeac90d060 ]
 
-   spi: tegra114: add support for hw based cs
+I have a Thinkpad X220 Tablet in my hands that is losing vblank
+interrupts whenever LP3 watermarks are used.
 
-has been applied to the spi tree at
+If I nudge the latency value written to the WM3 register just
+by one in either direction the problem disappears. That to me
+suggests that the punit will not enter the corrsponding
+powersave mode (MPLL shutdown IIRC) unless the latency value
+in the register matches exactly what we read from SSKPD. Ie.
+it's not really a latency value but rather just a cookie
+by which the punit can identify the desired power saving state.
+On HSW/BDW this was changed such that we actually just write
+the WM level number into those bits, which makes much more
+sense given the observed behaviour.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
+We could try to handle this by disallowing LP3 watermarks
+only when vblank interrupts are enabled but we'd first have
+to prove that only vblank interrupts are affected, which
+seems unlikely. Also we can't grab the wm mutex from the
+vblank enable/disable hooks because those are called with
+various spinlocks held. Thus we'd have to redesigne the
+watermark locking. So to play it safe and keep the code
+simple we simply disable LP3 watermarks on all SNB machines.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+To do that we simply zero out the latency values for
+watermark level 3, and we adjust the watermark computation
+to check for that. The behaviour now matches that of the
+g4x/vlv/skl wm code in the presence of a zeroed latency
+value.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+v2: s/USHRT_MAX/U32_MAX/ for consistency with the types (Chris)
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 1bf9f3c9232d08651aa6990001e7b042c95303dc Mon Sep 17 00:00:00 2001
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Date: Mon, 13 May 2019 22:03:53 -0700
-Subject: [PATCH] spi: tegra114: add support for hw based cs
-
-Tegra SPI controller supports both HW and SW based CS control
-for SPI transfers.
-
-This patch adds support for HW based CS control where CS is driven
-to active state during the transfer and is driven inactive at the
-end of the transfer directly by the HW.
-
-This patch enables the use of HW based CS only for single transfers
-without cs_change request.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
+Cc: Chris Wilson <chris@chris-wilson.co.uk>
+Acked-by: Chris Wilson <chris@chris-wilson.co.uk>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=101269
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=103713
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20181114173440.6730-1-ville.syrjala@linux.intel.com
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/spi/spi-tegra114.c | 39 ++++++++++++++++++++++++++------------
- 1 file changed, 27 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/i915/intel_pm.c | 41 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 40 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index f47417dd9edb..0cb0932d32fd 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -193,6 +193,7 @@ struct tegra_spi_data {
- 	unsigned				dma_buf_size;
- 	unsigned				max_buf_size;
- 	bool					is_curr_dma_xfer;
-+	bool					use_hw_based_cs;
+diff --git a/drivers/gpu/drm/i915/intel_pm.c b/drivers/gpu/drm/i915/intel_pm.c
+index 87cccb5f8c5da..96a5237741e0c 100644
+--- a/drivers/gpu/drm/i915/intel_pm.c
++++ b/drivers/gpu/drm/i915/intel_pm.c
+@@ -2471,6 +2471,9 @@ static uint32_t ilk_compute_pri_wm(const struct intel_crtc_state *cstate,
+ 	uint32_t method1, method2;
+ 	int cpp;
  
- 	struct completion			rx_dma_complete;
- 	struct completion			tx_dma_complete;
-@@ -723,7 +724,9 @@ static void tegra_spi_deinit_dma_param(struct tegra_spi_data *tspi,
- }
- 
- static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
--		struct spi_transfer *t, bool is_first_of_msg)
-+					struct spi_transfer *t,
-+					bool is_first_of_msg,
-+					bool is_single_xfer)
- {
- 	struct tegra_spi_data *tspi = spi_master_get_devdata(spi->master);
- 	u32 speed = t->speed_hz;
-@@ -780,11 +783,17 @@ static u32 tegra_spi_setup_transfer_one(struct spi_device *spi,
- 		if (spi->cs_gpiod)
- 			gpiod_set_value(spi->cs_gpiod, 1);
- 
--		command1 |= SPI_CS_SW_HW;
--		if (spi->mode & SPI_CS_HIGH)
--			command1 |= SPI_CS_SW_VAL;
--		else
--			command1 &= ~SPI_CS_SW_VAL;
-+		if (is_single_xfer && !(t->cs_change)) {
-+			tspi->use_hw_based_cs = true;
-+			command1 &= ~(SPI_CS_SW_HW | SPI_CS_SW_VAL);
-+		} else {
-+			tspi->use_hw_based_cs = false;
-+			command1 |= SPI_CS_SW_HW;
-+			if (spi->mode & SPI_CS_HIGH)
-+				command1 |= SPI_CS_SW_VAL;
-+			else
-+				command1 &= ~SPI_CS_SW_VAL;
-+		}
- 
- 		tegra_spi_writel(tspi, 0, SPI_COMMAND2);
- 	} else {
-@@ -905,11 +914,14 @@ static void tegra_spi_transfer_end(struct spi_device *spi)
- 	if (spi->cs_gpiod)
- 		gpiod_set_value(spi->cs_gpiod, 0);
- 
--	if (cs_val)
--		tspi->command1_reg |= SPI_CS_SW_VAL;
--	else
--		tspi->command1_reg &= ~SPI_CS_SW_VAL;
--	tegra_spi_writel(tspi, tspi->command1_reg, SPI_COMMAND1);
-+	if (!tspi->use_hw_based_cs) {
-+		if (cs_val)
-+			tspi->command1_reg |= SPI_CS_SW_VAL;
-+		else
-+			tspi->command1_reg &= ~SPI_CS_SW_VAL;
-+		tegra_spi_writel(tspi, tspi->command1_reg, SPI_COMMAND1);
-+	}
++	if (mem_value == 0)
++		return U32_MAX;
 +
- 	tegra_spi_writel(tspi, tspi->def_command1_reg, SPI_COMMAND1);
+ 	if (!intel_wm_plane_visible(cstate, pstate))
+ 		return 0;
+ 
+@@ -2500,6 +2503,9 @@ static uint32_t ilk_compute_spr_wm(const struct intel_crtc_state *cstate,
+ 	uint32_t method1, method2;
+ 	int cpp;
+ 
++	if (mem_value == 0)
++		return U32_MAX;
++
+ 	if (!intel_wm_plane_visible(cstate, pstate))
+ 		return 0;
+ 
+@@ -2523,6 +2529,9 @@ static uint32_t ilk_compute_cur_wm(const struct intel_crtc_state *cstate,
+ {
+ 	int cpp;
+ 
++	if (mem_value == 0)
++		return U32_MAX;
++
+ 	if (!intel_wm_plane_visible(cstate, pstate))
+ 		return 0;
+ 
+@@ -2981,6 +2990,34 @@ static void snb_wm_latency_quirk(struct drm_i915_private *dev_priv)
+ 	intel_print_wm_latency(dev_priv, "Cursor", dev_priv->wm.cur_latency);
  }
  
-@@ -936,16 +948,19 @@ static int tegra_spi_transfer_one_message(struct spi_master *master,
- 	struct spi_device *spi = msg->spi;
- 	int ret;
- 	bool skip = false;
-+	int single_xfer;
++static void snb_wm_lp3_irq_quirk(struct drm_i915_private *dev_priv)
++{
++	/*
++	 * On some SNB machines (Thinkpad X220 Tablet at least)
++	 * LP3 usage can cause vblank interrupts to be lost.
++	 * The DEIIR bit will go high but it looks like the CPU
++	 * never gets interrupted.
++	 *
++	 * It's not clear whether other interrupt source could
++	 * be affected or if this is somehow limited to vblank
++	 * interrupts only. To play it safe we disable LP3
++	 * watermarks entirely.
++	 */
++	if (dev_priv->wm.pri_latency[3] == 0 &&
++	    dev_priv->wm.spr_latency[3] == 0 &&
++	    dev_priv->wm.cur_latency[3] == 0)
++		return;
++
++	dev_priv->wm.pri_latency[3] = 0;
++	dev_priv->wm.spr_latency[3] = 0;
++	dev_priv->wm.cur_latency[3] = 0;
++
++	DRM_DEBUG_KMS("LP3 watermarks disabled due to potential for lost interrupts\n");
++	intel_print_wm_latency(dev_priv, "Primary", dev_priv->wm.pri_latency);
++	intel_print_wm_latency(dev_priv, "Sprite", dev_priv->wm.spr_latency);
++	intel_print_wm_latency(dev_priv, "Cursor", dev_priv->wm.cur_latency);
++}
++
+ static void ilk_setup_wm_latency(struct drm_i915_private *dev_priv)
+ {
+ 	intel_read_wm_latency(dev_priv, dev_priv->wm.pri_latency);
+@@ -2997,8 +3034,10 @@ static void ilk_setup_wm_latency(struct drm_i915_private *dev_priv)
+ 	intel_print_wm_latency(dev_priv, "Sprite", dev_priv->wm.spr_latency);
+ 	intel_print_wm_latency(dev_priv, "Cursor", dev_priv->wm.cur_latency);
  
- 	msg->status = 0;
- 	msg->actual_length = 0;
+-	if (IS_GEN6(dev_priv))
++	if (IS_GEN6(dev_priv)) {
+ 		snb_wm_latency_quirk(dev_priv);
++		snb_wm_lp3_irq_quirk(dev_priv);
++	}
+ }
  
-+	single_xfer = list_is_singular(&msg->transfers);
- 	list_for_each_entry(xfer, &msg->transfers, transfer_list) {
- 		u32 cmd1;
- 
- 		reinit_completion(&tspi->xfer_completion);
- 
--		cmd1 = tegra_spi_setup_transfer_one(spi, xfer, is_first_msg);
-+		cmd1 = tegra_spi_setup_transfer_one(spi, xfer, is_first_msg,
-+						    single_xfer);
- 
- 		if (!xfer->len) {
- 			ret = 0;
+ static void skl_setup_wm_latency(struct drm_i915_private *dev_priv)
 -- 
 2.20.1
+
+
 
