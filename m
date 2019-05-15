@@ -2,95 +2,102 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02648C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7761CC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:41:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C578120873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:39:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37D0821734
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:41:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BZfYFguX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727825AbfEOTj2 (ORCPT
+        id S1727969AbfEOTk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:39:28 -0400
-Received: from tartarus.angband.pl ([54.37.238.230]:48672 "EHLO
-        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727785AbfEOTj0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 15:39:26 -0400
-Received: from kilobyte by tartarus.angband.pl with local (Exim 4.92)
-        (envelope-from <kilobyte@angband.pl>)
-        id 1hQzjd-0008AI-LV; Wed, 15 May 2019 21:38:41 +0200
-Date:   Wed, 15 May 2019 21:38:41 +0200
-From:   Adam Borowski <kilobyte@angband.pl>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
-        mhocko@suse.com, keith.busch@intel.com,
-        kirill.shutemov@linux.intel.com, pasha.tatashin@oracle.com,
-        alexander.h.duyck@linux.intel.com, ira.weiny@intel.com,
-        andreyknvl@google.com, arunks@codeaurora.org, vbabka@suse.cz,
-        cl@linux.com, riel@surriel.com, keescook@chromium.org,
-        hannes@cmpxchg.org, npiggin@gmail.com,
-        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
-        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
-        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH RFC 0/5] mm: process_vm_mmap() -- syscall for duplication
- a process mapping
-Message-ID: <20190515193841.GA29728@angband.pl>
-References: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
+        Wed, 15 May 2019 15:40:59 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:44141 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727927AbfEOTk7 (ORCPT
+        <rfc822;Linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 15:40:59 -0400
+Received: by mail-qk1-f193.google.com with SMTP id w25so743452qkj.11
+        for <Linux-kernel@vger.kernel.org>; Wed, 15 May 2019 12:40:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aXpxd4a79fcfVqLxkskReUgy/Rl3Pd6pqIUAKCO54xQ=;
+        b=BZfYFguX/CCLWpISY9P83xd0JZ6m5oon4hcHqdXAZewaGuhvB7Ix+zwiXyyIIH+G66
+         tLp3yF705azLPCi4DffXx5f7U4tAmwbPVRLyakA6XJOjEVX0BwGXBkxlatqZekuFgLNP
+         2qL+Jd9XhUa0VqZyQiBaNT2p6HL6ljx92VoJXuPQdwW4tBGZJTNlxIkM1ikL6zYUz7Xp
+         DYQ2RK+hs+ffW8+T+P4RkzX6AUvuujpuKSrrMO/2twEWEyzoyrXmszjYz6IZKQjUwYAT
+         e4WwnFQMxYf5ht0S5SIuUkA0xaKkrGysxOgsyg3b2Mq9Fx2sF2POyStb2D6DR+A8MlNk
+         /Kmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aXpxd4a79fcfVqLxkskReUgy/Rl3Pd6pqIUAKCO54xQ=;
+        b=luC7FrWf9VpXYAwHpBmWp7Z3Z424JPtBA1cp3Z1uIFT6AtPxxLIc0LG8uSa8aC9FRM
+         GLDdB7Y96r5r4ZpdynOgNSOzeImh3jwhu5Vv4URF+bglIy1y5fJ+bWKQN+obO3XvGz5J
+         Zy4+fjmRJ1aVkxo830DkUwW43SlJhLEJX4/xaz5uDrX4/wuhCrBgTwA5NrpmWYPaMcd+
+         2vcwBJ/koBm7uPBGralJyQoeJbNzI2WpGvoi0rM+D8DOAzfNMsVZFr8XOX4Wk+FgdBOZ
+         72wYu/CDxShvv1acABIHY2QpOAm5/+SEEJMxT22KPBSgGrkMEno/jaWYShGudj7Kk1B+
+         N5dA==
+X-Gm-Message-State: APjAAAVL8f4l4AS2nP6cWuNxGfTI69TrlfVvbwkkoptkBTjSpb9dDFvZ
+        zFwX+Jawk07XUOQEt38uBoU=
+X-Google-Smtp-Source: APXvYqyZAwqDaYRrfXH3a+M8Aef3z0ERk3DUr2qaNiisUN6fAs0whCl/9kVSxz4rIZa0M6Rmv39TSw==
+X-Received: by 2002:a37:67c6:: with SMTP id b189mr8684760qkc.331.1557949258441;
+        Wed, 15 May 2019 12:40:58 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id e4sm1392996qkl.17.2019.05.15.12.40.57
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 May 2019 12:40:57 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 834E6404A1; Wed, 15 May 2019 16:40:54 -0300 (-03)
+Date:   Wed, 15 May 2019 16:40:54 -0300
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v4 0/4] perf: Support a new 'percore' event qualifier
+Message-ID: <20190515194054.GH23162@kernel.org>
+References: <1555077590-27664-1-git-send-email-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
-X-Junkbait: aaron@angband.pl, zzyx@angband.pl
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: kilobyte@angband.pl
-X-SA-Exim-Scanned: No (on tartarus.angband.pl); SAEximRunCond expanded to false
+In-Reply-To: <1555077590-27664-1-git-send-email-yao.jin@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 06:11:15PM +0300, Kirill Tkhai wrote:
-> This patchset adds a new syscall, which makes possible
-> to clone a mapping from a process to another process.
-> The syscall supplements the functionality provided
-> by process_vm_writev() and process_vm_readv() syscalls,
-> and it may be useful in many situation.
+Em Fri, Apr 12, 2019 at 09:59:46PM +0800, Jin Yao escreveu:
+> The 'percore' event qualifier which sums up the event counts for both
+> hardware threads in a core. For example,
 > 
-> For example, it allows to make a zero copy of data,
-> when process_vm_writev() was previously used:
-
-I wonder, why not optimize the existing interfaces to do zero copy if
-properly aligned?  No need for a new syscall, and old code would immediately
-benefit.
-
-> There are several problems with process_vm_writev() in this example:
+> perf stat -e cpu/event=0,umask=0x3,percore=1/,cpu/event=0,umask=0x3/
 > 
-> 1)it causes pagefault on remote process memory, and it forces
->   allocation of a new page (if was not preallocated);
+> In this example, we count the event 'ref-cycles' per-core and per-CPU in
+> one perf stat command-line.
 > 
-> 2)amount of memory for this example is doubled in a moment --
->   n pages in current and n pages in remote tasks are occupied
->   at the same time;
+> We can already support per-core counting with --per-core, but it's
+> often useful to do this together with other metrics that are collected
+> per CPU (per hardware thread). So this patch series supports this
+> per-core counting on a event level.
 > 
-> 3)received data has no a chance to be properly swapped for
->   a long time.
+>  v4:
+>  ---
+>  Add percore qualifier to documantation.
+>  Rebase to latest perf/core branch
 
-That'll handle all of your above problems, except for making pages
-subject to CoW if written to.  But if making pages writeably shared is
-desired, the old functions have a "flags" argument that doesn't yet have a
-single bit defined.
+Thanks, applied.
 
-
-Meow!
--- 
-⢀⣴⠾⠻⢶⣦⠀ Latin:   meow 4 characters, 4 columns,  4 bytes
-⣾⠁⢠⠒⠀⣿⡁ Greek:   μεου 4 characters, 4 columns,  8 bytes
-⢿⡄⠘⠷⠚⠋  Runes:   ᛗᛖᛟᚹ 4 characters, 4 columns, 12 bytes
-⠈⠳⣄⠀⠀⠀⠀ Chinese: 喵   1 character,  2 columns,  3 bytes <-- best!
+- Arnaldo
