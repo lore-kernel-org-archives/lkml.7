@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147BBC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903CEC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF6E20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:20:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E1C20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:21:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922848;
-	bh=plE012NQ+1bYzoTFV2vgl5WIUXe9rwr5zOTkVSuvId8=;
+	s=default; t=1557922861;
+	bh=kLulZLzUhkByAZrZe2XqhPOfttVK+QVkjuEqGDQP47E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XGgzOg4GFFSD6xLaG5r44Iw1qr33YUKBU0Kj2xAQ4qOBiwYJobpX5QOwCaTdk9yer
-	 6rx1heSSicwH4c1i38xDzMeFfd4D0hnUDhrE5BhkMqh9xBPJctYEnTAr56aeNiHNMz
-	 Mb0LUmRIQcTFkH23TrhnbEKSxjWw7ZzU/ECqTX8s=
+	b=EnwRudVim6UmHSsqood4FQOcnMyJoSJOgA+0Hn95qTHy/VCgLAN4Amjqck+z9PC/B
+	 FSk23RSX02doCz0S67lkHH1fEYW4cT7aY6YsYapJ1TiTpSb8tP1et2zp9EqnqwRjnK
+	 6jsAVRlBoEyweUeipFdTnw6zNtutayFBQYjZamiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfEOK7U (ORCPT
+        id S1727519AbfEOMVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:59:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55786 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:21:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbfEOK7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:59:18 -0400
+        id S1727035AbfEOK7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:59:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EEC402084E;
-        Wed, 15 May 2019 10:59:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EF2C216F4;
+        Wed, 15 May 2019 10:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557917957;
-        bh=plE012NQ+1bYzoTFV2vgl5WIUXe9rwr5zOTkVSuvId8=;
+        s=default; t=1557917944;
+        bh=kLulZLzUhkByAZrZe2XqhPOfttVK+QVkjuEqGDQP47E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JyaIA4deJizPJlhmm7rS/MtLw1DlUh+a+/33QVjvKjpkIn6hb56J8Z8zFPyaTs6zA
-         P+U53xmKKpnraFbydGewVZQYmrhW9ESlF0tD+RPSWzo5w+BGlA8/qUBClfnH3kpzfy
-         WdHL0ubEugeHLTnQ9uxh+/Jq9m0BGwgASBTyEcao=
+        b=r4nyXwdJtUdZHtTkdjMQts8wYmDMUJzQSBZQgTPPHVbWukySJFCV04jBjc2K9Qh6C
+         UGKKa5d3X4elwNRDT0/Gb7zLHRqgsf8U2uyLVw52JQ2DqM67fwde8mLWubO2E3975E
+         /i6RuH7+SL0zTsEH9ZCF4vilyzIFeqLqNwDhFRHQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arvind Sankar <niveditas98@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 39/86] igb: Fix WARN_ONCE on runtime suspend
-Date:   Wed, 15 May 2019 12:55:16 +0200
-Message-Id: <20190515090650.365060295@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Frank Pavlic <f.pavlic@kunbus.de>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Tristram Ha <Tristram.Ha@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 3.18 17/86] net: ks8851: Dequeue RX packets explicitly
+Date:   Wed, 15 May 2019 12:54:54 +0200
+Message-Id: <20190515090645.962899484@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -62,155 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit dabb8338be533c18f50255cf39ff4f66d4dabdbe ]
+[ Upstream commit 536d3680fd2dab5c39857d62a3e084198fc74ff9 ]
 
-The runtime_suspend device callbacks are not supposed to save
-configuration state or change the power state. Commit fb29f76cc566
-("igb: Fix an issue that PME is not enabled during runtime suspend")
-changed the driver to not save configuration state during runtime
-suspend, however the driver callback still put the device into a
-low-power state. This causes a warning in the pci pm core and results in
-pci_pm_runtime_suspend not calling pci_save_state or pci_finish_runtime_suspend.
+The ks8851 driver lets the chip auto-dequeue received packets once they
+have been read in full. It achieves that by setting the ADRFE flag in
+the RXQCR register ("Auto-Dequeue RXQ Frame Enable").
 
-Fix this by not changing the power state either, leaving that to pci pm
-core, and make the same change for suspend callback as well.
+However if allocation of a packet's socket buffer or retrieval of the
+packet over the SPI bus fails, the packet will not have been read in
+full and is not auto-dequeued. Such partial retrieval of a packet
+confuses the chip's RX queue management:  On the next RX interrupt,
+the first packet read from the queue will be the one left there
+previously and this one can be retrieved without issues. But for any
+newly received packets, the frame header status and byte count registers
+(RXFHSR and RXFHBCR) contain bogus values, preventing their retrieval.
 
-Also move a couple of defines into the appropriate header file instead
-of inline in the .c file.
+The chip allows explicitly dequeueing a packet from the RX queue by
+setting the RRXEF flag in the RXQCR register ("Release RX Error Frame").
+This could be used to dequeue the packet in case of an error, but if
+that error is a failed SPI transfer, it is unknown if the packet was
+transferred in full and was auto-dequeued or if it was only transferred
+in part and requires an explicit dequeue. The safest approach is thus
+to always dequeue packets explicitly and forgo auto-dequeueing.
 
-Fixes: fb29f76cc566 ("igb: Fix an issue that PME is not enabled during runtime suspend")
-Signed-off-by: Arvind Sankar <niveditas98@gmail.com>
-Reviewed-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Tested-by: Aaron Brown <aaron.f.brown@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Without this change, I've witnessed packet retrieval break completely
+when an SPI DMA transfer fails, requiring a chip reset. Explicit
+dequeueing magically fixes this and makes packet retrieval absolutely
+robust for me.
+
+The chip's documentation suggests auto-dequeuing and uses the RRXEF
+flag only to dequeue error frames which the driver doesn't want to
+retrieve. But that seems to be a fair-weather approach.
+
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Frank Pavlic <f.pavlic@kunbus.de>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Tristram Ha <Tristram.Ha@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- .../net/ethernet/intel/igb/e1000_defines.h    |  2 +
- drivers/net/ethernet/intel/igb/igb_main.c     | 57 +++----------------
- 2 files changed, 10 insertions(+), 49 deletions(-)
+ drivers/net/ethernet/micrel/ks8851.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/igb/e1000_defines.h b/drivers/net/ethernet/intel/igb/e1000_defines.h
-index 217f8138851b..bd92291e531d 100644
---- a/drivers/net/ethernet/intel/igb/e1000_defines.h
-+++ b/drivers/net/ethernet/intel/igb/e1000_defines.h
-@@ -193,6 +193,8 @@
- /* enable link status from external LINK_0 and LINK_1 pins */
- #define E1000_CTRL_SWDPIN0  0x00040000  /* SWDPIN 0 value */
- #define E1000_CTRL_SWDPIN1  0x00080000  /* SWDPIN 1 value */
-+#define E1000_CTRL_ADVD3WUC 0x00100000  /* D3 WUC */
-+#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000 /* PHY PM enable */
- #define E1000_CTRL_SDP0_DIR 0x00400000  /* SDP0 Data direction */
- #define E1000_CTRL_SDP1_DIR 0x00800000  /* SDP1 Data direction */
- #define E1000_CTRL_RST      0x04000000  /* Global reset */
-diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-index 390d96ae4147..9bd84498cbe7 100644
---- a/drivers/net/ethernet/intel/igb/igb_main.c
-+++ b/drivers/net/ethernet/intel/igb/igb_main.c
-@@ -7337,9 +7337,7 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 	struct e1000_hw *hw = &adapter->hw;
- 	u32 ctrl, rctl, status;
- 	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
--#ifdef CONFIG_PM
--	int retval = 0;
--#endif
-+	bool wake;
+diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
+index 66d4ab703f45..4a29e191819f 100644
+--- a/drivers/net/ethernet/micrel/ks8851.c
++++ b/drivers/net/ethernet/micrel/ks8851.c
+@@ -547,9 +547,8 @@ static void ks8851_rx_pkts(struct ks8851_net *ks)
+ 		/* set dma read address */
+ 		ks8851_wrreg16(ks, KS_RXFDPR, RXFDPR_RXFPAI | 0x00);
  
- 	rtnl_lock();
- 	netif_device_detach(netdev);
-@@ -7350,14 +7348,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 	igb_clear_interrupt_scheme(adapter);
- 	rtnl_unlock();
+-		/* start the packet dma process, and set auto-dequeue rx */
+-		ks8851_wrreg16(ks, KS_RXQCR,
+-			       ks->rc_rxqcr | RXQCR_SDA | RXQCR_ADRFE);
++		/* start DMA access */
++		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
  
--#ifdef CONFIG_PM
--	if (!runtime) {
--		retval = pci_save_state(pdev);
--		if (retval)
--			return retval;
--	}
--#endif
--
- 	status = rd32(E1000_STATUS);
- 	if (status & E1000_STATUS_LU)
- 		wufc &= ~E1000_WUFC_LNKC;
-@@ -7374,10 +7364,6 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
+ 		if (rxlen > 4) {
+ 			unsigned int rxalign;
+@@ -580,7 +579,8 @@ static void ks8851_rx_pkts(struct ks8851_net *ks)
+ 			}
  		}
  
- 		ctrl = rd32(E1000_CTRL);
--		/* advertise wake from D3Cold */
--		#define E1000_CTRL_ADVD3WUC 0x00100000
--		/* phy power management enable */
--		#define E1000_CTRL_EN_PHY_PWR_MGMT 0x00200000
- 		ctrl |= E1000_CTRL_ADVD3WUC;
- 		wr32(E1000_CTRL, ctrl);
- 
-@@ -7391,12 +7377,15 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- 		wr32(E1000_WUFC, 0);
+-		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
++		/* end DMA access and dequeue packet */
++		ks8851_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_RRXEF);
  	}
- 
--	*enable_wake = wufc || adapter->en_mng_pt;
--	if (!*enable_wake)
-+	wake = wufc || adapter->en_mng_pt;
-+	if (!wake)
- 		igb_power_down_link(adapter);
- 	else
- 		igb_power_up_link(adapter);
- 
-+	if (enable_wake)
-+		*enable_wake = wake;
-+
- 	/* Release control of h/w to f/w.  If f/w is AMT enabled, this
- 	 * would have already happened in close and is redundant.
- 	 */
-@@ -7411,22 +7400,7 @@ static int __igb_shutdown(struct pci_dev *pdev, bool *enable_wake,
- #ifdef CONFIG_PM_SLEEP
- static int igb_suspend(struct device *dev)
- {
--	int retval;
--	bool wake;
--	struct pci_dev *pdev = to_pci_dev(dev);
--
--	retval = __igb_shutdown(pdev, &wake, 0);
--	if (retval)
--		return retval;
--
--	if (wake) {
--		pci_prepare_to_sleep(pdev);
--	} else {
--		pci_wake_from_d3(pdev, false);
--		pci_set_power_state(pdev, PCI_D3hot);
--	}
--
--	return 0;
-+	return __igb_shutdown(to_pci_dev(dev), NULL, 0);
- }
- #endif /* CONFIG_PM_SLEEP */
- 
-@@ -7495,22 +7469,7 @@ static int igb_runtime_idle(struct device *dev)
- 
- static int igb_runtime_suspend(struct device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev);
--	int retval;
--	bool wake;
--
--	retval = __igb_shutdown(pdev, &wake, 1);
--	if (retval)
--		return retval;
--
--	if (wake) {
--		pci_prepare_to_sleep(pdev);
--	} else {
--		pci_wake_from_d3(pdev, false);
--		pci_set_power_state(pdev, PCI_D3hot);
--	}
--
--	return 0;
-+	return __igb_shutdown(to_pci_dev(dev), NULL, 1);
  }
  
- static int igb_runtime_resume(struct device *dev)
 -- 
-2.20.1
+2.19.1
 
 
 
