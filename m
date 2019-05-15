@@ -2,122 +2,162 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D36C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BB6C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A5520881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:47:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vaisala.com header.i=@vaisala.com header.b="NImhMCYx"
+	by mail.kernel.org (Postfix) with ESMTP id B0FCA2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:48:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbfEOKr1 (ORCPT
+        id S1726672AbfEOKsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:47:27 -0400
-Received: from mail-eopbgr130053.outbound.protection.outlook.com ([40.107.13.53]:61093
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725953AbfEOKrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:47:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vaisala.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r54AwftpI7UmhWN40o91BXoJitUTqd+cCRlfhGz16Wg=;
- b=NImhMCYxXhO3nWcRDdVHtX0a2ibl4GfgafqtPD61I5ELjpy/i0g8GLgirj2s5mZZGdfw4GGCnS6xm4ZRt60/0agReWfJ4T4Pd5gf00lANca4juby+7pA/GAjFmarzB+8qoQH87k3qPgVXB9JkHa9MbHrwGWCVt5dgrHhpHa87vw=
-Received: from DB7PR06MB5563.eurprd06.prod.outlook.com (20.178.104.212) by
- DB7PR06MB4775.eurprd06.prod.outlook.com (20.177.192.88) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Wed, 15 May 2019 10:47:16 +0000
-Received: from DB7PR06MB5563.eurprd06.prod.outlook.com
- ([fe80::b431:2268:b6f:7fe4]) by DB7PR06MB5563.eurprd06.prod.outlook.com
- ([fe80::b431:2268:b6f:7fe4%7]) with mapi id 15.20.1900.010; Wed, 15 May 2019
- 10:47:16 +0000
-From:   Han Nandor <nandor.han@vaisala.com>
-To:     "sre@kernel.org" <sre@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-CC:     Han Nandor <nandor.han@vaisala.com>
-Subject: [PATCH v4 2/2] dt-bindings: power: reset: add document for NVMEM
- based reboot-mode
-Thread-Topic: [PATCH v4 2/2] dt-bindings: power: reset: add document for NVMEM
- based reboot-mode
-Thread-Index: AQHVCwuP61JINGm00UuEGyPYjcnSfw==
-Date:   Wed, 15 May 2019 10:47:15 +0000
-Message-ID: <20190515104658.25535-3-nandor.han@vaisala.com>
-References: <20190515104658.25535-1-nandor.han@vaisala.com>
-In-Reply-To: <20190515104658.25535-1-nandor.han@vaisala.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0501CA0041.eurprd05.prod.outlook.com
- (2603:10a6:3:1a::51) To DB7PR06MB5563.eurprd06.prod.outlook.com
- (2603:10a6:10:83::20)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=nandor.han@vaisala.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.2
-x-originating-ip: [193.143.230.131]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 73cda900-28dc-408e-2daa-08d6d922b1e4
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DB7PR06MB4775;
-x-ms-traffictypediagnostic: DB7PR06MB4775:
-x-tenant-id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
-x-microsoft-antispam-prvs: <DB7PR06MB4775ABC67F077DA7859DEF0B85090@DB7PR06MB4775.eurprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(376002)(39860400002)(346002)(396003)(199004)(189003)(1076003)(50226002)(68736007)(2906002)(6506007)(386003)(81166006)(5660300002)(53936002)(36756003)(8936002)(52116002)(6486002)(99286004)(76176011)(71200400001)(6116002)(71190400001)(4326008)(6436002)(256004)(3846002)(81156014)(110136005)(316002)(446003)(186003)(26005)(25786009)(8676002)(64756008)(2201001)(66556008)(66446008)(66476007)(478600001)(66946007)(73956011)(102836004)(7736002)(86362001)(66066001)(107886003)(2501003)(6512007)(14454004)(476003)(11346002)(486006)(2616005)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR06MB4775;H:DB7PR06MB5563.eurprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vaisala.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YnkE/7b6jekbebMJoAF88kuwYkzL4h9DaLVguEGhThRmzR7U0BtGgdDkfvZ6bCxHdOrpmukSgXcBxZ+EvUQKg/1dV6CR/8y0qrcwHG6/JaiByxsjyQE0WqAD4OPI1d0Z72Sm0DvRI6leaEOZTOZ3kdL/Ywuu+eRdlilS+hE8+MIFBRBub4au6hxCjzVkBtf2dCfgSVnG4jZELpJiwBhOKnEorcT6i4bm+vrYAV0xr5daepovz5VXWucg/V0dD1x4gUNB4Pj1NN2gAjEeGlYUxyKZZt1sq8dcfCzwasccGCMpHRy1ZjoZhneuMQJL6NeFABQQvrm6zy4mlAwvTqc31KGfCY0MMp6mfF1jhZq0rWt1pENJ4SSfsg4A3BGFHOYsO2CgL7rYlb+MNCO/q+Kbg6p3qQP4vVtjIarUglztXS4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 15 May 2019 06:48:15 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46510 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbfEOKsP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:48:15 -0400
+Received: by mail-qt1-f195.google.com with SMTP id z19so2595102qtz.13
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 03:48:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4gZYwYdV7q8QDeTTZWUnY8ifdtmwlYBuJRTK/kQFSoo=;
+        b=TvItq2gK2vyiCLAgUBTWYrLoVuli/b8UXSjFemSOSO2OfWBChgfHL1K1mpbEcYNrXO
+         0bVdIIlTgkK3/5NmtaxBf4lJXKL1gRsv6cvVhYNnqQ3kEmZBfjZ1tgP2qC+x1YnUs7ze
+         87lvyXAzD1VzHADPySADdJMIer3d8mHzQVXwkNShiKbIriP3i7RMsvLZ78J7Jnrx1kaQ
+         xgp07xbTpYxv3NmfcaJni+CGk3GbhroyNDglHVVdgZUhAqinr4aGZK5nIWDqmjmGQJeY
+         eEef4cr4nZWdsmBg+W0bw9sr0BBu8w4IJFBuF634J7ANMz8oH0hbqWWMK7LEeNDW5aqE
+         u+tA==
+X-Gm-Message-State: APjAAAVU3YNMAfDq2GmWvx2qnzcJwYpJJBbSH0bxnD8fhqVXtSUxmpds
+        xzCWl0x1UphqTlOJVN0hq79j4mXCSKqji1nkvJM=
+X-Google-Smtp-Source: APXvYqxRoI0q2OGN6GbVhrk5jmHWu7TGkiTHYPmPP1u5t5qX2nKN5Fu+XpYP2rpSa1K+4pKahIf3rh57LHMarN1Y+ps=
+X-Received: by 2002:ac8:2924:: with SMTP id y33mr34295279qty.212.1557917294353;
+ Wed, 15 May 2019 03:48:14 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: vaisala.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73cda900-28dc-408e-2daa-08d6d922b1e4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 10:47:15.9148
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 6d7393e0-41f5-4c2e-9b12-4c2be5da5c57
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR06MB4775
+References: <20190512012508.10608-1-elder@linaro.org> <20190512012508.10608-9-elder@linaro.org>
+In-Reply-To: <20190512012508.10608-9-elder@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 15 May 2019 12:47:58 +0200
+Message-ID: <CAK8P3a0r5rg-_Vet+aUUzq3S9g=TJHPz9-0yQ0sY21NGd+4J0w@mail.gmail.com>
+Subject: Re: [PATCH 08/18] soc: qcom: ipa: the generic software interface
+To:     Alex Elder <elder@linaro.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        syadagir@codeaurora.org, mjavid@codeaurora.org,
+        evgreen@chromium.org, Ben Chan <benchan@google.com>,
+        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5ncyBkb2N1bWVudCBmb3IgdGhlIE5WTUVNIGJhc2Vk
-IHJlYm9vdC1tb2RlDQpkcml2ZXIuDQoNClNpZ25lZC1vZmYtYnk6IE5hbmRvciBIYW4gPG5hbmRv
-ci5oYW5AdmFpc2FsYS5jb20+DQotLS0NCiAuLi4vcG93ZXIvcmVzZXQvbnZtZW0tcmVib290LW1v
-ZGUudHh0ICAgICAgICAgfCAyNiArKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQs
-IDI2IGluc2VydGlvbnMoKykNCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3Jlc2V0L252bWVtLXJlYm9vdC1tb2RlLnR4dA0KDQpkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3Jlc2V0L252
-bWVtLXJlYm9vdC1tb2RlLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
-b3dlci9yZXNldC9udm1lbS1yZWJvb3QtbW9kZS50eHQNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQpp
-bmRleCAwMDAwMDAwMDAwMDAuLjc1MmQ2MTI2ZDVkYQ0KLS0tIC9kZXYvbnVsbA0KKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3Jlc2V0L252bWVtLXJlYm9vdC1t
-b2RlLnR4dA0KQEAgLTAsMCArMSwyNiBAQA0KK05WTUVNIHJlYm9vdCBtb2RlIGRyaXZlcg0KKw0K
-K1RoaXMgZHJpdmVyIGdldHMgcmVib290IG1vZGUgbWFnaWMgdmFsdWUgZnJvbSByZWJvb3QtbW9k
-ZSBkcml2ZXINCithbmQgc3RvcmVzIGl0IGluIGEgTlZNRU0gY2VsbCBuYW1lZCAicmVib290LW1v
-ZGUiLiBUaGVuIHRoZSBib290bG9hZGVyDQorY2FuIHJlYWQgaXQgYW5kIHRha2UgZGlmZmVyZW50
-IGFjdGlvbiBhY2NvcmRpbmcgdG8gdGhlIG1hZ2ljDQordmFsdWUgc3RvcmVkLg0KKw0KK1JlcXVp
-cmVkIHByb3BlcnRpZXM6DQorLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgIm52bWVtLXJlYm9vdC1t
-b2RlIi4NCistIG52bWVtLWNlbGxzOiBBIHBoYW5kbGUgdG8gdGhlIHJlYm9vdCBtb2RlIHByb3Zp
-ZGVkIGJ5IGEgbnZtZW0gZGV2aWNlLg0KKy0gbnZtZW0tY2VsbC1uYW1lczogU2hvdWxkIGJlICJy
-ZWJvb3QtbW9kZSIuDQorDQorVGhlIHJlc3Qgb2YgdGhlIHByb3BlcnRpZXMgc2hvdWxkIGZvbGxv
-dyB0aGUgZ2VuZXJpYyByZWJvb3QtbW9kZSBkZXNjcmlwdGlvbg0KK2ZvdW5kIGluIHJlYm9vdC1t
-b2RlLnR4dA0KKw0KK0V4YW1wbGU6DQorCXJlYm9vdC1tb2RlIHsNCisJCWNvbXBhdGlibGUgPSAi
-bnZtZW0tcmVib290LW1vZGUiOw0KKwkJbnZtZW0tY2VsbHMgPSA8JnJlYm9vdF9tb2RlPjsNCisJ
-CW52bWVtLWNlbGwtbmFtZXMgPSAicmVib290LW1vZGUiOw0KKw0KKwkJbW9kZS1ub3JtYWwgICAg
-ID0gPDB4QUFBQTU1MDE+Ow0KKwkJbW9kZS1ib290bG9hZGVyID0gPDB4QkJCQjU1MDA+Ow0KKwkJ
-bW9kZS1yZWNvdmVyeSAgID0gPDB4Q0NDQzU1MDI+Ow0KKwkJbW9kZS10ZXN0ICAgICAgID0gPDB4
-RERERDU1MDM+Ow0KKwl9Ow0KLS0gDQoyLjE3LjINCg0K
+On Sun, May 12, 2019 at 3:25 AM Alex Elder <elder@linaro.org> wrote:
+
+The per-event interrupt handling seems to be more complex than
+necessary:
+
+> +/* Enable or disable an event interrupt */
+> +static void
+> +_gsi_irq_control_event(struct gsi *gsi, u32 evt_ring_id, bool enable)
+> +{
+> +       u32 mask = BIT(evt_ring_id);
+> +       u32 val;
+> +
+> +       if (enable)
+> +               gsi->event_enable_bitmap |= mask;
+> +       else
+> +               gsi->event_enable_bitmap &= ~mask;
+> +
+> +       val = gsi->event_enable_bitmap;
+> +       iowrite32(val, gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET);
+> +}
+> +
+> +static void gsi_irq_enable_event(struct gsi *gsi, u32 evt_ring_id)
+> +{
+> +       _gsi_irq_control_event(gsi, evt_ring_id, true);
+
+You maintain a bitmap here of the enabled-state, and have
+to use a spinlock to ensure that the two are in sync.
+
+> +/* Returns true if the interrupt state (enabled or not) changed */
+> +static bool gsi_channel_intr(struct gsi_channel *channel, bool enable)
+> +{
+> +       u32 evt_ring_id = channel->evt_ring_id;
+> +       struct gsi *gsi = channel->gsi;
+> +       u32 mask = BIT(evt_ring_id);
+> +       unsigned long flags;
+> +       bool different;
+> +       u32 enabled;
+> +
+> +       spin_lock_irqsave(&gsi->spinlock, flags);
+> +
+> +       enabled = gsi->event_enable_bitmap & mask;
+> +       different = enable == !enabled;
+> +
+> +       if (different) {
+> +               if (enabled)
+> +                       gsi_irq_disable_event(channel->gsi, evt_ring_id);
+> +               else
+> +                       gsi_irq_enable_event(channel->gsi, evt_ring_id);
+> +       }
+> +
+> +       spin_unlock_irqrestore(&gsi->spinlock, flags);
+> +
+> +       return different;
+> +}
+
+This gets called for each active channel, so you repeatedly
+have to get the spinlock and read the irq-enabled state for it.
+
+> +static void gsi_isr_ieob(struct gsi *gsi)
+> +{
+> +       u32 evt_mask;
+> +
+> +       evt_mask = ioread32(gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_OFFSET);
+> +       evt_mask &= ioread32(gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET);
+> +       iowrite32(evt_mask, gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_CLR_OFFSET);
+> +
+> +       while (evt_mask) {
+> +               u32 evt_ring_id = __ffs(evt_mask);
+> +
+> +               evt_mask ^= BIT(evt_ring_id);
+> +
+> +               gsi_event_handle(gsi, evt_ring_id);
+> +       }
+> +}
+
+However, you start out by clearing all bits here.
+
+Why not skip the clearing and and leave the interrupts enabled,
+while moving the GSI_CNTXT_SRC_IEOB_IRQ_CLR_OFFSET
+write (for a single channel that was completed) to the end of
+gsi_channel_poll()?
+
+Something like
+
+static void gsi_isr_ieob(struct gsi *gsi)
+{
+      u32 evt_mask;
+
+      evt_mask = ioread32(gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_OFFSET);
+      while (evt_mask) {
+               u32 evt_ring_id = __ffs(evt_mask);
+               evt_mask ^= BIT(evt_ring_id);
+
+               napi_schedule(gsi->evt_ring[evt_ring_id].channel.napi);
+      }
+}
+
+I also removed the GSI_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET
+read here, as that is probably more expensive than calling napi_schedule()
+for a channel that is already scheduled. Most of the time, I'd expect the
+interrupt to only signal a single channel anyway.
+
+        Arnd
