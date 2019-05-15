@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8E0C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354ACC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2AF92084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06C8B206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919547;
-	bh=FojP+nXiRvBcWpMCM3FS04aD2Od+btT7ex4k/BSAnjA=;
+	s=default; t=1557919551;
+	bh=JDCjz2uejUGz1Wl/+wSooTpOrcmdF/YYT9dMSQKOIF8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ix5xdAJ2TbOmT0xOVYFbGAWaPrNVKm81eyW4UqyeT4N6m/F+B18grUD5JG56uqrMz
-	 8tjs1fzCS8S/1jesH7IMSas97J85348d4cakjEmeWLtxFz4Kvmpc3WD7fMRRsGfZ3Y
-	 glKxkRtvti/dkEbD7i1uajjCa4EuXdYyh2NsRWNA=
+	b=XdsulC/NESy2Ht/0ButuR0YXoYRIkgQK0jClDiOCQ8CEWNtxW3zgMg+sdUgngEdrn
+	 3VzQnuNWn0ZifO542p6KGDwzZLnvENgNhavOaRiUcsUuk5qsmqv1trJd10AoRjTeVw
+	 rZvBjdcKhtfLF23kpYntU6h0p9KuO/OabWsfG9bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732044AbfEOLZp (ORCPT
+        id S1732053AbfEOLZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:25:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36416 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732018AbfEOLZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:25:36 -0400
+        id S1732039AbfEOLZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:25:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 584152084F;
-        Wed, 15 May 2019 11:25:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45F90206BF;
+        Wed, 15 May 2019 11:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919535;
-        bh=FojP+nXiRvBcWpMCM3FS04aD2Od+btT7ex4k/BSAnjA=;
+        s=default; t=1557919543;
+        bh=JDCjz2uejUGz1Wl/+wSooTpOrcmdF/YYT9dMSQKOIF8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eHBTeqeHpUPHjvHMp0TMcxcs2DovgIzDNdhH3GBSIeIPxgz8atlh5AV4jQ6+cVt8z
-         Lz766A63xErDrQauYgWO8Z5xGpg7tMgEInLKP9xWh7XeKXJW8LxSkWDydIF2YIy/ep
-         1QOYVZS0jmfSuXPcEnQxH6uaFZ0GgExPTpe0ibC0=
+        b=s40kOWwPflBqEnDHrp/CUExCnxGwkOoAAc2D+0UwwF9K9bOm1YFi9lfCldGuDv679
+         /ISYl7JlTOwP4+sea/9sYwTTLSGY3MxBBewGO0KDNJg/i3946IKitkTTzOlG8o03T4
+         35U1HdWehz1iP42Scy9nS0MV4Eito3qNGcUUxmiE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: [PATCH 4.19 112/113] PCI: hv: Add hv_pci_remove_slots() when we unload the driver
-Date:   Wed, 15 May 2019 12:56:43 +0200
-Message-Id: <20190515090702.219380752@linuxfoundation.org>
+        stable@vger.kernel.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 090/113] dpaa_eth: fix SG frame cleanup
+Date:   Wed, 15 May 2019 12:56:21 +0200
+Message-Id: <20190515090700.466456129@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -61,78 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-commit 15becc2b56c6eda3d9bf5ae993bafd5661c1fad1 upstream.
+[ Upstream commit 17170e6570c082717c142733d9a638bcd20551f8 ]
 
-When we unload the pci-hyperv host controller driver, the host does not
-send us a PCI_EJECT message.
+Fix issue with the entry indexing in the sg frame cleanup code being
+off-by-1. This problem showed up when doing some basic iperf tests and
+manifested in traffic coming to a halt.
 
-In this case we also need to make sure the sysfs PCI slot directory is
-removed, otherwise a command on a slot file eg:
-
-"cat /sys/bus/pci/slots/2/address"
-
-will trigger a
-
-"BUG: unable to handle kernel paging request"
-
-and, if we unload/reload the driver several times we would end up with
-stale slot entries in PCI slot directories in /sys/bus/pci/slots/
-
-root@localhost:~# ls -rtl  /sys/bus/pci/slots/
-total 0
-drwxr-xr-x 2 root root 0 Feb  7 10:49 2
-drwxr-xr-x 2 root root 0 Feb  7 10:49 2-1
-drwxr-xr-x 2 root root 0 Feb  7 10:51 2-2
-
-Add the missing code to remove the PCI slot and fix the current
-behaviour.
-
-Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-[lorenzo.pieralisi@arm.com: reformatted the log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Stephen Hemminger <sthemmin@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Acked-by: Madalin Bucur <madalin.bucur@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/pci/controller/pci-hyperv.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1491,6 +1491,21 @@ static void hv_pci_assign_slots(struct h
- 	}
- }
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -1648,7 +1648,7 @@ static struct sk_buff *dpaa_cleanup_tx_f
+ 				 qm_sg_entry_get_len(&sgt[0]), dma_dir);
  
-+/*
-+ * Remove entries in sysfs pci slot directory.
-+ */
-+static void hv_pci_remove_slots(struct hv_pcibus_device *hbus)
-+{
-+	struct hv_pci_dev *hpdev;
-+
-+	list_for_each_entry(hpdev, &hbus->children, list_entry) {
-+		if (!hpdev->pci_slot)
-+			continue;
-+		pci_destroy_slot(hpdev->pci_slot);
-+		hpdev->pci_slot = NULL;
-+	}
-+}
-+
- /**
-  * create_root_hv_pci_bus() - Expose a new root PCI bus
-  * @hbus:	Root PCI bus, as understood by this driver
-@@ -2685,6 +2700,7 @@ static int hv_pci_remove(struct hv_devic
- 		pci_lock_rescan_remove();
- 		pci_stop_root_bus(hbus->pci_bus);
- 		pci_remove_root_bus(hbus->pci_bus);
-+		hv_pci_remove_slots(hbus);
- 		pci_unlock_rescan_remove();
- 		hbus->state = hv_pcibus_removed;
- 	}
+ 		/* remaining pages were mapped with skb_frag_dma_map() */
+-		for (i = 1; i < nr_frags; i++) {
++		for (i = 1; i <= nr_frags; i++) {
+ 			WARN_ON(qm_sg_entry_is_ext(&sgt[i]));
+ 
+ 			dma_unmap_page(dev, qm_sg_addr(&sgt[i]),
 
 
