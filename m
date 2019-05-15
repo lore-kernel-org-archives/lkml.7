@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DEAC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A30C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CBC820657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A54420657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:52:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921161;
-	bh=+1rS1IlIuU6Wjo4t/c07oOlRDeqXadqsu86lY80L76A=;
+	s=default; t=1557921176;
+	bh=CwKmjeNc1xs6XBSFabOt0+UWXuBe99oN0HyQ1p5eFkI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mZxgdCgcHfQkslwN3iWiSBeoE/bQGKF6EEzKkwse3hv0QinzILOyFSeSWodzr74XQ
-	 RbaGqPdZKvdiMaNyVAZANzD+3uS254d4WQJsQjcd9h6XCrLETrDrSH3Ch2RkcTUR3S
-	 VanAOfl0BpPa/315GGw16AOJq8SjF7rYBSi0XtVg=
+	b=o2enElxar+g+dFdRbfeobGy3b9Df1pRbpwY4dwxRE/Au8XRGZGmIG3nqEON45jbXJ
+	 kKN44j+DddufZuXo9yugMuOlIlUS6AxE/dtozbCCAS2ZCtuCkFGgYYp9iWuiAI9+OQ
+	 Z2VkcquI2cEX3U0iWLQmMI1iChiqDkTphp7S97Co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730496AbfEOLwk (ORCPT
+        id S1731028AbfEOLTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:52:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58134 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:19:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731082AbfEOLUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:20:22 -0400
+        id S1730818AbfEOLTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:19:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB9C720843;
-        Wed, 15 May 2019 11:20:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90BEB20862;
+        Wed, 15 May 2019 11:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919222;
-        bh=+1rS1IlIuU6Wjo4t/c07oOlRDeqXadqsu86lY80L76A=;
+        s=default; t=1557919188;
+        bh=CwKmjeNc1xs6XBSFabOt0+UWXuBe99oN0HyQ1p5eFkI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z/Cu2sAS75kT8XwVJR+uRYUX+AQVKsRYJCc9ff/0Lt3cd9EutSjN5wkflUrCCEnGG
-         +gPrbTOqgY3m5Frb421E5nqdNjda2OwZAbxTdaANNHB1xftNuJfKJ7u0gQNmZ5Yu+H
-         0giQeLhOEtSWYKVf+vnqdG3awavXJfihHuMm7I2A=
+        b=Sdtvklx0p/D8kY0Y+73H8UHLiT81AwKc4Emh+1mhdk0xHNNEXUSjqxRb3D6a3V+Lq
+         xTky5ROuljMeLWXvSiRH6oUR+GIsM/aO0Xmylj8r3UvBiLmMOxofZ5OPoMEkNUOLeo
+         1H6E8GDyQnZSuwS7OxNAjgFyAuREo0SPMQ6p+mlQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Suryaputra <ssuryaextr@gmail.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 110/115] vrf: sit mtu should not be updated when vrf netdev is the link
-Date:   Wed, 15 May 2019 12:56:30 +0200
-Message-Id: <20190515090707.067558287@linuxfoundation.org>
+        stable@vger.kernel.org, Breno Leitao <leitao@debian.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Major Hayden <major@redhat.com>
+Subject: [PATCH 4.14 098/115] powerpc/64s: Include cpu header
+Date:   Wed, 15 May 2019 12:56:18 +0200
+Message-Id: <20190515090706.285431349@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -60,34 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Suryaputra <ssuryaextr@gmail.com>
+From: Breno Leitao <leitao@debian.org>
 
-[ Upstream commit ff6ab32bd4e073976e4d8797b4d514a172cfe6cb ]
+commit 42e2acde1237878462b028f5a27d9cc5bea7502c upstream.
 
-VRF netdev mtu isn't typically set and have an mtu of 65536. When the
-link of a tunnel is set, the tunnel mtu is changed from 1480 to the link
-mtu minus tunnel header. In the case of VRF netdev is the link, then the
-tunnel mtu becomes 65516. So, fix it by not setting the tunnel mtu in
-this case.
+Current powerpc security.c file is defining functions, as
+cpu_show_meltdown(), cpu_show_spectre_v{1,2} and others, that are being
+declared at linux/cpu.h header without including the header file that
+contains these declarations.
 
-Signed-off-by: Stephen Suryaputra <ssuryaextr@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This is being reported by sparse, which thinks that these functions are
+static, due to the lack of declaration:
+
+	arch/powerpc/kernel/security.c:105:9: warning: symbol 'cpu_show_meltdown' was not declared. Should it be static?
+	arch/powerpc/kernel/security.c:139:9: warning: symbol 'cpu_show_spectre_v1' was not declared. Should it be static?
+	arch/powerpc/kernel/security.c:161:9: warning: symbol 'cpu_show_spectre_v2' was not declared. Should it be static?
+	arch/powerpc/kernel/security.c:209:6: warning: symbol 'stf_barrier' was not declared. Should it be static?
+	arch/powerpc/kernel/security.c:289:9: warning: symbol 'cpu_show_spec_store_bypass' was not declared. Should it be static?
+
+This patch simply includes the proper header (linux/cpu.h) to match
+function definition and declaration.
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Joel Stanley <joel@jms.id.au>
+Cc: Nathan Chancellor <natechancellor@gmail.com>
+Cc: Major Hayden <major@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv6/sit.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv6/sit.c
-+++ b/net/ipv6/sit.c
-@@ -1070,7 +1070,7 @@ static void ipip6_tunnel_bind_dev(struct
- 	if (!tdev && tunnel->parms.link)
- 		tdev = __dev_get_by_index(tunnel->net, tunnel->parms.link);
+---
+ arch/powerpc/kernel/security.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -4,6 +4,7 @@
+ //
+ // Copyright 2018, Michael Ellerman, IBM Corporation.
  
--	if (tdev) {
-+	if (tdev && !netif_is_l3_master(tdev)) {
- 		int t_hlen = tunnel->hlen + sizeof(struct iphdr);
- 
- 		dev->hard_header_len = tdev->hard_header_len + sizeof(struct iphdr);
++#include <linux/cpu.h>
+ #include <linux/kernel.h>
+ #include <linux/device.h>
+ #include <linux/seq_buf.h>
 
 
