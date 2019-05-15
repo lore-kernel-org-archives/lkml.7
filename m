@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 393FCC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C73FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB23206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F10D206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919603;
-	bh=FEcgngtZEuyg9UX8fft4+eshJZJxiuhsK5c2ub4emgc=;
+	s=default; t=1557919606;
+	bh=6T7DTnJvlepcNYEel292yVTdQishux3nsFtCGuEjgS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=faq6NEXCsWrsli+14g5s/laZpfFZMv+g6voO/8mxA1g1OA616vsnD9z1I1giSyIUQ
-	 doqDMJxLdVUvt/ge8K5Syqx18d69YADL3DBBWJn6V7miO5zmQP9kbVWepAO3/XtY5h
-	 j6WOn7W51eH3vsgZEw4O6aywkqdnzzn0VSkKjTQM=
+	b=HE8zzQh7DqnlkDd8nJutIfzhhjYe0VrLXX1zIffhH0sIRbIH2mNZ508cpYtD5RGJr
+	 5GTgUuvF5NRx0LRVhQrgotRiAj1HJpFNyx90qHq6rlccgiaySJyiNxhnKUsJ3GiPJO
+	 Omjzk/yrtbpiXY7ocvBpY3NYQpf22JGcwj9dzmuw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731691AbfEOL0m (ORCPT
+        id S1731700AbfEOL0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:26:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37504 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:26:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729499AbfEOL0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:26:39 -0400
+        id S1729499AbfEOL0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:26:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 869D520843;
-        Wed, 15 May 2019 11:26:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F53820818;
+        Wed, 15 May 2019 11:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919599;
-        bh=FEcgngtZEuyg9UX8fft4+eshJZJxiuhsK5c2ub4emgc=;
+        s=default; t=1557919601;
+        bh=6T7DTnJvlepcNYEel292yVTdQishux3nsFtCGuEjgS0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yGvCWY7Cte65FuTR1pMC7vQ1SPvQ2xgFOxKmrcA02tX+vGRI21UvDe+Wuq+YYlfKa
-         tP0u5sTh6g63s5WAQT3CP7yDk6wZP5wNMYUXQdnr/NQBwdFPar3blLp8ZlCVugaVlW
-         wC2vhJOEaA0K50GdV13cqpnv61Dw5Ui4JHZ8qLgg=
+        b=TtfOnuR7tdjPORhTPT8sDeknJiHyG9fNZFyPnfGmEPkTnKPuDyB96+jW5jqb0C6jr
+         4ACKKXpdMy1RfEjm0vikbeFUpWMQp1Q+XpCR9DlOMjfvGJ11ThWF+I/NKdVPaZNYgw
+         FxDDHKTAEiiCeLtuTFMqGSR+bnckr1ZtOmqOfz30=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
+        stable@vger.kernel.org, Ilan Peer <ilan.peer@intel.com>,
         Luca Coelho <luciano.coelho@intel.com>,
         Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 022/137] mac80211: Increase MAX_MSG_LEN
-Date:   Wed, 15 May 2019 12:55:03 +0200
-Message-Id: <20190515090654.879914351@linuxfoundation.org>
+Subject: [PATCH 5.0 023/137] cfg80211: Handle WMM rules in regulatory domain intersection
+Date:   Wed, 15 May 2019 12:55:04 +0200
+Message-Id: <20190515090654.957087348@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -62,43 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 78be2d21cc1cd3069c6138dcfecec62583130171 ]
+[ Upstream commit 08a75a887ee46828b54600f4bb7068d872a5edd5 ]
 
-Looks that 100 chars isn't enough for messages, as we keep getting
-warnings popping from different places due to message shortening.
-Instead of trying to shorten the prints, just increase the buffer size.
+The support added for regulatory WMM rules did not handle
+the case of regulatory domain intersections. Fix it.
 
-Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+Signed-off-by: Ilan Peer <ilan.peer@intel.com>
+Fixes: 230ebaa189af ("cfg80211: read wmm rules from regulatory database")
 Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/trace_msg.h | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ net/wireless/reg.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/net/mac80211/trace_msg.h b/net/mac80211/trace_msg.h
-index 366b9e6f043e2..40141df09f255 100644
---- a/net/mac80211/trace_msg.h
-+++ b/net/mac80211/trace_msg.h
-@@ -1,4 +1,9 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Portions of this file
-+ * Copyright (C) 2019 Intel Corporation
-+ */
+diff --git a/net/wireless/reg.c b/net/wireless/reg.c
+index dd58b9909ac99..649c89946dec1 100644
+--- a/net/wireless/reg.c
++++ b/net/wireless/reg.c
+@@ -1298,6 +1298,16 @@ reg_intersect_dfs_region(const enum nl80211_dfs_regions dfs_region1,
+ 	return dfs_region1;
+ }
+ 
++static void reg_wmm_rules_intersect(const struct ieee80211_wmm_ac *wmm_ac1,
++				    const struct ieee80211_wmm_ac *wmm_ac2,
++				    struct ieee80211_wmm_ac *intersect)
++{
++	intersect->cw_min = max_t(u16, wmm_ac1->cw_min, wmm_ac2->cw_min);
++	intersect->cw_max = max_t(u16, wmm_ac1->cw_max, wmm_ac2->cw_max);
++	intersect->cot = min_t(u16, wmm_ac1->cot, wmm_ac2->cot);
++	intersect->aifsn = max_t(u8, wmm_ac1->aifsn, wmm_ac2->aifsn);
++}
 +
- #ifdef CONFIG_MAC80211_MESSAGE_TRACING
+ /*
+  * Helper for regdom_intersect(), this does the real
+  * mathematical intersection fun
+@@ -1312,6 +1322,8 @@ static int reg_rules_intersect(const struct ieee80211_regdomain *rd1,
+ 	struct ieee80211_freq_range *freq_range;
+ 	const struct ieee80211_power_rule *power_rule1, *power_rule2;
+ 	struct ieee80211_power_rule *power_rule;
++	const struct ieee80211_wmm_rule *wmm_rule1, *wmm_rule2;
++	struct ieee80211_wmm_rule *wmm_rule;
+ 	u32 freq_diff, max_bandwidth1, max_bandwidth2;
  
- #if !defined(__MAC80211_MSG_DRIVER_TRACE) || defined(TRACE_HEADER_MULTI_READ)
-@@ -11,7 +16,7 @@
- #undef TRACE_SYSTEM
- #define TRACE_SYSTEM mac80211_msg
+ 	freq_range1 = &rule1->freq_range;
+@@ -1322,6 +1334,10 @@ static int reg_rules_intersect(const struct ieee80211_regdomain *rd1,
+ 	power_rule2 = &rule2->power_rule;
+ 	power_rule = &intersected_rule->power_rule;
  
--#define MAX_MSG_LEN	100
-+#define MAX_MSG_LEN	120
++	wmm_rule1 = &rule1->wmm_rule;
++	wmm_rule2 = &rule2->wmm_rule;
++	wmm_rule = &intersected_rule->wmm_rule;
++
+ 	freq_range->start_freq_khz = max(freq_range1->start_freq_khz,
+ 					 freq_range2->start_freq_khz);
+ 	freq_range->end_freq_khz = min(freq_range1->end_freq_khz,
+@@ -1365,6 +1381,29 @@ static int reg_rules_intersect(const struct ieee80211_regdomain *rd1,
+ 	intersected_rule->dfs_cac_ms = max(rule1->dfs_cac_ms,
+ 					   rule2->dfs_cac_ms);
  
- DECLARE_EVENT_CLASS(mac80211_msg_event,
- 	TP_PROTO(struct va_format *vaf),
++	if (rule1->has_wmm && rule2->has_wmm) {
++		u8 ac;
++
++		for (ac = 0; ac < IEEE80211_NUM_ACS; ac++) {
++			reg_wmm_rules_intersect(&wmm_rule1->client[ac],
++						&wmm_rule2->client[ac],
++						&wmm_rule->client[ac]);
++			reg_wmm_rules_intersect(&wmm_rule1->ap[ac],
++						&wmm_rule2->ap[ac],
++						&wmm_rule->ap[ac]);
++		}
++
++		intersected_rule->has_wmm = true;
++	} else if (rule1->has_wmm) {
++		*wmm_rule = *wmm_rule1;
++		intersected_rule->has_wmm = true;
++	} else if (rule2->has_wmm) {
++		*wmm_rule = *wmm_rule2;
++		intersected_rule->has_wmm = true;
++	} else {
++		intersected_rule->has_wmm = false;
++	}
++
+ 	if (!is_valid_reg_rule(intersected_rule))
+ 		return -EINVAL;
+ 
 -- 
 2.20.1
 
