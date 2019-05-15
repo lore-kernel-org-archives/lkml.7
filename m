@@ -2,91 +2,126 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67E8C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 762E8C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E02920881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:01:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="nMdKe4p3"
+	by mail.kernel.org (Postfix) with ESMTP id 3F49D20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:04:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726813AbfEOQBu (ORCPT
+        id S1726812AbfEOQEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 12:01:50 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33740 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726168AbfEOQBu (ORCPT
+        Wed, 15 May 2019 12:04:49 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:37493 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726168AbfEOQEt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 12:01:50 -0400
-Received: by mail-qt1-f196.google.com with SMTP id m32so305940qtf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 09:01:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2C5ZLXS5pnK1SekssJfYLby68kNl/Hg91yqFVlQmDMw=;
-        b=nMdKe4p3aF+xVyxfSk0pT8Zlqzg6/bn0U+5PqM0uOEZbamU2dToVvVrtN1ODTZKa0X
-         EFkVsBDayJ2NH3cs7kMkrA1sYkJSKH7rRTHYhXvjPOx9CTVgQgCWE7Lj2XmmrwVM9hf+
-         T5psHQVnACl/TqF+KUv18k3P/VR2QhgByTB1xwMGgmqa/mnfQD1M4JGZcuwvfOFFtxRz
-         CItw9xiMnUyGWj6YFfe0jVyKELSEInBr+SoekmkF7yEPzwjMmBZHiTU7469kTxaRUd5x
-         TN6749/HLAk/HJl7jGdpNlnbOhNeM5C7tzfPOwSxCOjB65QuEoEa8VHvIRnQfO/GWGLR
-         o5TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2C5ZLXS5pnK1SekssJfYLby68kNl/Hg91yqFVlQmDMw=;
-        b=GW/fKQX2eA8ZHIRhnapXKShPrQMG/pqDsg1t+Ez90Bxo3EOjpbwuOZu/nJjB4hhPaF
-         /3QG1SjWhbQqu8OY8kQaqQQokoMVxJaOCWzqA3Mt0kCA0wUJaXiioheE58fNIwxFAap9
-         vjZkpLuu5bC+4sdasVim5H+byyw/+L3X2zjZhs8i51+u56biJmzXnYWO5nVRQAXqrQWJ
-         jX2pJd1Dnv1AQgRcltZfA09dUxnmWTf+VHkasVTBOLARB1mOTBA4A46dDQJhCX9TvyUq
-         e8lAPp5btHLjYZaEYGpFHFgoX0FGYBDu8IVvs+jd3Nx3VfcF7CzvJc8sCq3o+1esWZQ5
-         EZuA==
-X-Gm-Message-State: APjAAAVstU2lNS9ARpdsHp7mmML/ZfQJm77rGzA0wrW04LarkovJtfvU
-        03rENCM5gwch9MUCrzjmuGmNTQ==
-X-Google-Smtp-Source: APXvYqwV4+KcNeGJbIdrCbzY3gisqJkBjc81DjssqjrPCuGEYTm4AuvHyXhtYW5MdQ4zAHHbU5Ue8w==
-X-Received: by 2002:a0c:9ac8:: with SMTP id k8mr34276654qvf.132.1557936109209;
-        Wed, 15 May 2019 09:01:49 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::bca1])
-        by smtp.gmail.com with ESMTPSA id z63sm1204403qkb.7.2019.05.15.09.01.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 09:01:48 -0700 (PDT)
-Date:   Wed, 15 May 2019 12:01:47 -0400
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     josef@toxicpanda.com, akpm@linux-foundation.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: filemap: correct the comment about VM_FAULT_RETRY
-Message-ID: <20190515160146.te5tpydtclguxs6a@macbook-pro-91.dhcp.thefacebook.com>
-References: <1556234531-108228-1-git-send-email-yang.shi@linux.alibaba.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556234531-108228-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: NeoMutt/20180716
+        Wed, 15 May 2019 12:04:49 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 453zsB4SbJz1rFrb;
+        Wed, 15 May 2019 18:04:46 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 453zsB3QvGz1qqkL;
+        Wed, 15 May 2019 18:04:46 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id 5kj7UBK9TA2A; Wed, 15 May 2019 18:04:44 +0200 (CEST)
+X-Auth-Info: yb3aXatXonqrkdakbIW4956qityxBqYXZDTyuzRUq58=
+Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Wed, 15 May 2019 18:04:44 +0200 (CEST)
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH v4 1/2] dt-bindings: display/panel: Add KOE tx14d24vm1bpa display description
+Date:   Wed, 15 May 2019 18:04:28 +0200
+Message-Id: <20190515160428.6114-1-lukma@denx.de>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20180412143715.6828-1-lukma@denx.de>
+References: <20180412143715.6828-1-lukma@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 07:22:11AM +0800, Yang Shi wrote:
-> The commit 6b4c9f446981 ("filemap: drop the mmap_sem for all blocking
-> operations") changed when mmap_sem is dropped during filemap page fault
-> and when returning VM_FAULT_RETRY.
-> 
-> Correct the comment to reflect the change.
-> 
-> Cc: Josef Bacik <josef@toxicpanda.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
+This commit adds documentation entry description for KOE's 5.7" display.
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
 
-Thanks,
+---
+Previous discussion (and Rob's Reviewed-by) about this patch
+https://patchwork.kernel.org/patch/10339595/
 
-Josef
+Changes for v4:
+- Rebase on top of newest mainline
+SHA1: 5ac94332248ee017964ba368cdda4ce647e3aba7
+
+Changes for v3 :
+- New patch
+---
+ .../bindings/display/panel/koe,tx14d24vm1bpa.txt   | 42 ++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+
+diff --git a/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+new file mode 100644
+index 000000000000..be7ac666807b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/koe,tx14d24vm1bpa.txt
+@@ -0,0 +1,42 @@
++Kaohsiung Opto-Electronics Inc. 5.7" QVGA (320 x 240) TFT LCD panel
++
++Required properties:
++- compatible: should be "koe,tx14d24vm1bpa"
++- backlight: phandle of the backlight device attached to the panel
++- power-supply: single regulator to provide the supply voltage
++
++Required nodes:
++- port: Parallel port mapping to connect this display
++
++This panel needs single power supply voltage. Its backlight is conntrolled
++via PWM signal.
++
++Example:
++--------
++
++Example device-tree definition when connected to iMX53 based board
++
++	lcd_panel: lcd-panel {
++		compatible = "koe,tx14d24vm1bpa";
++		backlight = <&backlight_lcd>;
++		power-supply = <&reg_3v3>;
++
++		port {
++			lcd_panel_in: endpoint {
++				remote-endpoint = <&lcd_display_out>;
++			};
++		};
++	};
++
++Then one needs to extend the dispX node:
++
++	lcd_display: disp1 {
++
++		port@1 {
++			reg = <1>;
++
++			lcd_display_out: endpoint {
++				remote-endpoint = <&lcd_panel_in>;
++			};
++		};
++	};
+-- 
+2.11.0
+
