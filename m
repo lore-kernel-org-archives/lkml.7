@@ -2,109 +2,97 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C83AEC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC368C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970EC20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C65D20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:14:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="e8yA7Gku"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rYCXmxJt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbfEONMg (ORCPT
+        id S1727347AbfEONOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 09:12:36 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1044 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725977AbfEONMT (ORCPT
+        Wed, 15 May 2019 09:14:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47304 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbfEONOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 09:12:19 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4FDBBEr031840;
-        Wed, 15 May 2019 15:12:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=8NQw4ybPrTmbk6atvWzEug5p4ly6IPD/vByobMwQlWs=;
- b=e8yA7GkuwUcHC8QJYOGT8O1YoxLYncnlRByUHHNUM9lp8CmbJhlaZ0Tcimuib+Kd+o3j
- d9wdsyRaC7zQycrq4LVU0a8n/j37ao0UeUNV4uqcs7fzqZ+IlqmfsrEiTGZQmfPwxtKj
- agjUF5W0v4vQSbKHqFnCF8K4EMUNVVJRC6PXOIRAW+kM1JD8QAcabrUiuGZrpKFkyud2
- fmgIAyj3E8esjWDtKCQWa+0vDCCa+bYIcDKjYoTgACs109MJiQ6F6DfCSl12cqPuOaOv
- pFGxp9om4w13kCeu/X2etTnhrHqBM3v77JAlRpUvz05i4g7Zwi4vainoclLczKLyyOgm bg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2sg0an6gk1-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 15 May 2019 15:12:08 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4356A34;
-        Wed, 15 May 2019 13:12:07 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 23ED727F6;
-        Wed, 15 May 2019 13:12:07 +0000 (GMT)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 15 May
- 2019 15:12:06 +0200
-Received: from localhost (10.201.20.122) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 15 May 2019 15:12:06
- +0200
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <rafael.j.wysocki@intel.com>, <dmitry.torokhov@gmail.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>, <hadess@hadess.net>,
-        <frowand.list@gmail.com>, <m.felsch@pengutronix.de>,
-        <agx@sigxcpu.org>, <arnd@arndb.de>
-CC:     <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>, <broonie@kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2 5/5] input: goodix - Call of_device_links_add() to create links
-Date:   Wed, 15 May 2019 15:11:54 +0200
-Message-ID: <20190515131154.18373-6-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20190515131154.18373-1-benjamin.gaignard@st.com>
-References: <20190515131154.18373-1-benjamin.gaignard@st.com>
+        Wed, 15 May 2019 09:14:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qShoqLt0JmHyoHgAq3sjRJ0pBZKTFY+W/Ie1+Gslfcs=; b=rYCXmxJt7WIVkj4UyET3hLn4H
+        OmfbIB7jIAwSa9Jv4QvcOVmdEuLtr4hR6GYVoIViMZ7bWW94ldFI3s2GeCcXaveKviEIC88Yi5364
+        90FxvdcJw6lodstcqCiNE2IioHmGFIGm1uVuP+hLxOXY/UrQHLUWMASdv6psi37jJPfIip/Wxz3Xc
+        BTzsy2JNdKHNbhpUAFNeSMPGbiElM4NDeYb8AH1+3ZiU8nrOih5wfVNc1BQUc3TgRe7/4oBj52ZV3
+        FJPXQm7UWb0JuyMa2ZJNdmKpwTqgwGQEB9yNibzD05AHHDBxIA4D78Dc377GEBv4O6nuBOghgN5kd
+        Y8Kp+Ki5Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQtk1-0000z1-RR; Wed, 15 May 2019 13:14:41 +0000
+Date:   Wed, 15 May 2019 06:14:41 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Mathieu Malaterre <malat@debian.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Neuling <mikey@neuling.org>,
+        linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc: silence a -Wcast-function-type warning in
+ dawr_write_file_bool
+Message-ID: <20190515131441.GA3072@infradead.org>
+References: <20190515120942.3812-1-malat@debian.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.20.122]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_07:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190515120942.3812-1-malat@debian.org>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a call to of_device_links_add() to create links with
-suspend dependencies at probe time.
+On Wed, May 15, 2019 at 02:09:42PM +0200, Mathieu Malaterre wrote:
+> In commit c1fe190c0672 ("powerpc: Add force enable of DAWR on P9
+> option") the following piece of code was added:
+> 
+>    smp_call_function((smp_call_func_t)set_dawr, &null_brk, 0);
+> 
+> Since GCC 8 this trigger the following warning about incompatible
+> function types:
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
- drivers/input/touchscreen/goodix.c | 3 +++
- 1 file changed, 3 insertions(+)
+And the warning is there for a reason, and should not be hidden
+behind a cast.  This should instead be fixed by something like this:
 
-diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
-index f57d82220a88..49fd4763f17b 100644
---- a/drivers/input/touchscreen/goodix.c
-+++ b/drivers/input/touchscreen/goodix.c
-@@ -30,6 +30,7 @@
- #include <linux/slab.h>
- #include <linux/acpi.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <asm/unaligned.h>
+diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
+index da307dd93ee3..a26b67a1be83 100644
+--- a/arch/powerpc/kernel/hw_breakpoint.c
++++ b/arch/powerpc/kernel/hw_breakpoint.c
+@@ -384,6 +384,12 @@ void hw_breakpoint_pmu_read(struct perf_event *bp)
+ bool dawr_force_enable;
+ EXPORT_SYMBOL_GPL(dawr_force_enable);
  
- struct goodix_ts_data;
-@@ -812,6 +813,8 @@ static int goodix_ts_probe(struct i2c_client *client,
- 
- 	ts->chip = goodix_get_chip_data(ts->id);
- 
-+	of_device_links_add(&client->dev);
 +
- 	if (ts->gpiod_int && ts->gpiod_rst) {
- 		/* update device config */
- 		ts->cfg_name = devm_kasprintf(&client->dev, GFP_KERNEL,
--- 
-2.15.0
-
++static void set_dawr_cb(void *info)
++{
++	set_dawr(info);
++}
++
+ static ssize_t dawr_write_file_bool(struct file *file,
+ 				    const char __user *user_buf,
+ 				    size_t count, loff_t *ppos)
+@@ -403,7 +409,7 @@ static ssize_t dawr_write_file_bool(struct file *file,
+ 
+ 	/* If we are clearing, make sure all CPUs have the DAWR cleared */
+ 	if (!dawr_force_enable)
+-		smp_call_function((smp_call_func_t)set_dawr, &null_brk, 0);
++		smp_call_function(set_dawr_cb, &null_brk, 0);
+ 
+ 	return rc;
+ }
