@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B203CC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB83C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 843DD2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314A221743
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918009;
-	bh=MutqT2n7jn8yjfQNslKMhQrXlo4Dl9tXlg8BSGnTsaQ=;
+	s=default; t=1557918012;
+	bh=sWeYgxjONtNO9TyWpgXckBg2wtzesN461NHgPLQ7ZGw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ivAuw6m1CAsOHbmOTgZOeirCyZ6jCLgtJMpHyY5FrUq5TE/DmGaiQ97iVrMWx73BA
-	 iu9xvMhNF7aHNJa875nNkE1vaRSf5z32MChQVRypFL2aRE+FQ2tLjFBomdICBT1gwh
-	 RdFGsg3pvwJl048zXdh4/LtilSIT//s5U1Q9WNMs=
+	b=rXywr4ZXh64NwZYCFA/S80Rd+W/ij3KGWxx2z3K5mYeHCxTFCOPOnfL/M7X0nyN94
+	 wHhQX28u4+sglqDekoOtuT30S617N3lw05nflEPj8Ts06T1n/PLiqlYlcsHsMj5FwJ
+	 JBZUDYQROLIhug46/3z+S+NMPetuVnWR23MY3r1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbfEOLAI (ORCPT
+        id S1727366AbfEOLAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:00:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56852 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:00:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727316AbfEOLAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:00:07 -0400
+        id S1726829AbfEOLAJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:00:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A3312084E;
-        Wed, 15 May 2019 11:00:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EBD120881;
+        Wed, 15 May 2019 11:00:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918006;
-        bh=MutqT2n7jn8yjfQNslKMhQrXlo4Dl9tXlg8BSGnTsaQ=;
+        s=default; t=1557918009;
+        bh=sWeYgxjONtNO9TyWpgXckBg2wtzesN461NHgPLQ7ZGw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IG4H8mPUWYFZt8hSF9W7KZJo2gg0T70JDVWfXWZY+nlL9ykShCDHx/+RZTkNUOkZC
-         B81EERCotTI+ZU5MyHqHMrXZV4xchShJwB3J0+o4X4x7roo66xT35oDE/cVQqQrD9r
-         wJOsysO07vcmvtsGF4CZYQzVKmVwrjICsITHQoRs=
+        b=Nxc3mX7HwFLuCVlWZRXJLViW1hARcSuNnj3XeIDILOQwDoQHWoiWMVOu5eIgjxPe4
+         gJFu4Z/KODflOvdW1rLyUulI7T8gLsiPQTTQv52TldwZ4eUhjlSAM11O+9vBB31lSt
+         eoKAhZlzwkbvG0IGqt2jqkZNDMbK/rpz+iuhFhoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Frank Pavlic <f.pavlic@kunbus.de>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Tristram Ha <Tristram.Ha@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 3.18 19/86] net: ks8851: Delay requesting IRQ until opened
-Date:   Wed, 15 May 2019 12:54:56 +0200
-Message-Id: <20190515090646.415819394@linuxfoundation.org>
+        stable@vger.kernel.org, Annaliese McDermond <nh6z@nh6z.net>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 55/86] ASoC: tlv320aic32x4: Fix Common Pins
+Date:   Wed, 15 May 2019 12:55:32 +0200
+Message-Id: <20190515090653.202466076@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -63,94 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d268f31552794abf5b6aa5af31021643411f25f5 ]
+[ Upstream commit c63adb28f6d913310430f14c69f0a2ea55eed0cc ]
 
-The ks8851 driver currently requests the IRQ before registering the
-net_device.  Because the net_device name is used as IRQ name and is
-still "eth%d" when the IRQ is requested, it's impossibe to tell IRQs
-apart if multiple ks8851 chips are present.  Most other drivers delay
-requesting the IRQ until the net_device is opened.  Do the same.
+The common pins were mistakenly not added to the DAPM graph.
+Adding these pins will allow valid graphs to be created.
 
-The driver doesn't enable interrupts on the chip before opening the
-net_device and disables them when closing it, so there doesn't seem to
-be a need to request the IRQ already on probe.
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Frank Pavlic <f.pavlic@kunbus.de>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Tristram Ha <Tristram.Ha@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+Signed-off-by: Annaliese McDermond <nh6z@nh6z.net>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851.c | 24 +++++++++++-------------
- 1 file changed, 11 insertions(+), 13 deletions(-)
+ sound/soc/codecs/tlv320aic32x4.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
-index e218e45dcf35..f90a1396535a 100644
---- a/drivers/net/ethernet/micrel/ks8851.c
-+++ b/drivers/net/ethernet/micrel/ks8851.c
-@@ -797,6 +797,15 @@ static void ks8851_tx_work(struct work_struct *work)
- static int ks8851_net_open(struct net_device *dev)
- {
- 	struct ks8851_net *ks = netdev_priv(dev);
-+	int ret;
-+
-+	ret = request_threaded_irq(dev->irq, NULL, ks8851_irq,
-+				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-+				   dev->name, ks);
-+	if (ret < 0) {
-+		netdev_err(dev, "failed to get irq\n");
-+		return ret;
-+	}
+diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320aic32x4.c
+index 6ea662db24107..fdce75d5c6753 100644
+--- a/sound/soc/codecs/tlv320aic32x4.c
++++ b/sound/soc/codecs/tlv320aic32x4.c
+@@ -234,6 +234,8 @@ static const struct snd_soc_dapm_widget aic32x4_dapm_widgets[] = {
+ 	SND_SOC_DAPM_INPUT("IN2_R"),
+ 	SND_SOC_DAPM_INPUT("IN3_L"),
+ 	SND_SOC_DAPM_INPUT("IN3_R"),
++	SND_SOC_DAPM_INPUT("CM_L"),
++	SND_SOC_DAPM_INPUT("CM_R"),
+ };
  
- 	/* lock the card, even if we may not actually be doing anything
- 	 * else at the moment */
-@@ -911,6 +920,8 @@ static int ks8851_net_stop(struct net_device *dev)
- 		dev_kfree_skb(txb);
- 	}
- 
-+	free_irq(dev->irq, ks);
-+
- 	return 0;
- }
- 
-@@ -1542,14 +1553,6 @@ static int ks8851_probe(struct spi_device *spi)
- 	ks8851_read_selftest(ks);
- 	ks8851_init_mac(ks);
- 
--	ret = request_threaded_irq(spi->irq, NULL, ks8851_irq,
--				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
--				   ndev->name, ks);
--	if (ret < 0) {
--		dev_err(&spi->dev, "failed to get irq\n");
--		goto err_irq;
--	}
--
- 	ret = register_netdev(ndev);
- 	if (ret) {
- 		dev_err(&spi->dev, "failed to register network device\n");
-@@ -1562,11 +1565,7 @@ static int ks8851_probe(struct spi_device *spi)
- 
- 	return 0;
- 
--
- err_netdev:
--	free_irq(ndev->irq, ks);
--
--err_irq:
- err_id:
- 	if (gpio_is_valid(gpio))
- 		gpio_set_value(gpio, 0);
-@@ -1587,7 +1586,6 @@ static int ks8851_remove(struct spi_device *spi)
- 		dev_info(&spi->dev, "remove\n");
- 
- 	unregister_netdev(priv->netdev);
--	free_irq(spi->irq, priv);
- 	if (gpio_is_valid(priv->gpio))
- 		gpio_set_value(priv->gpio, 0);
- 	regulator_disable(priv->vdd_reg);
+ static const struct snd_soc_dapm_route aic32x4_dapm_routes[] = {
 -- 
-2.19.1
+2.20.1
 
 
 
