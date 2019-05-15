@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A66C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88DDC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5BF20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4D320843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922531;
-	bh=sJY81SqPFx9uVWpwlWxULDpYpvZNuIz5WuqgmFvI8MM=;
+	s=default; t=1557922536;
+	bh=+XedDf6gpjXn+W8nm8hFEnJf5jpvQh8vCiRbxi6DSsI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=14RHzCwZ4Pv1LJU5CbkHwsIxY9Ia/CWprkY5B/t2Geu/fanEOzV2ep+tJUjVA4x1e
-	 m6lPwM8X0u9idqyLhcDM382sPP46lGW+DDfam3amia6wjJqLO8ckpD5YzbywS2YZy7
-	 IXyiiSn5r+OnK0jzWC7MMVUL572XI6Wh1vrwCRlg=
+	b=fQsJNXP3dN9Oe7fEqBxoHvl3edwB9hGk316H8jHH+Uwos6mlI27Gc6LROeEwCC0ql
+	 VAKZNr3QoXFqqXpw19Wzdze7oZrUSzsO/oE2VdX4PPzCXa/pXzcRuw15axJKfPaESb
+	 VUyn7WDOAysxom/64vb0qtNQgbDO3MEIQcFl6hWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbfEOLDb (ORCPT
+        id S1728153AbfEOLDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:03:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32812 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:03:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727264AbfEOLD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:03:28 -0400
+        id S1727486AbfEOLDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:03:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB72C20881;
-        Wed, 15 May 2019 11:03:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C02FE2084F;
+        Wed, 15 May 2019 11:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918208;
-        bh=sJY81SqPFx9uVWpwlWxULDpYpvZNuIz5WuqgmFvI8MM=;
+        s=default; t=1557918195;
+        bh=+XedDf6gpjXn+W8nm8hFEnJf5jpvQh8vCiRbxi6DSsI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G7246WlpTVg+56ciS+Ndi6RnaGLSOJDNW57JTb21zonqD2gcZKtz1wZjNhesagd72
-         uaApk30H6b4Ms9tgBkGLlikH7jdgQVzlgwiN5lo7G3Zb2QXCMkQS2F3tGMul+7mPSH
-         DLbUN777B1waY/zMEPJgjjUSQdB7uJw6s9u7TCCk=
+        b=l0hlL5mwDkjlKOMbiz2oiDOwXy1Kb3Sb4qhqzKXyl99RkXaXc6PJFaR/5lFiwokqA
+         GNh1j0sPVWE3uIMgqBLJPb0iPGYb9eisTjuQ/s2efp1qrHt749Aro2Jim8ldfrJtHU
+         oyXeD78XJlCA82r2mfp07iGWaHm/WTRtVUK86txk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
+        stable@vger.kernel.org, Michal Suchanek <msuchanek@suse.de>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.4 046/266] powerpc/64: Make stf barrier PPC_BOOK3S_64 specific.
-Date:   Wed, 15 May 2019 12:52:33 +0200
-Message-Id: <20190515090724.023961338@linuxfoundation.org>
+Subject: [PATCH 4.4 042/266] powerpc: Use barrier_nospec in copy_from_user()
+Date:   Wed, 15 May 2019 12:52:29 +0200
+Message-Id: <20190515090723.903682880@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -59,34 +59,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Diana Craciun <diana.craciun@nxp.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 6453b532f2c8856a80381e6b9a1f5ea2f12294df upstream.
+commit ddf35cf3764b5a182b178105f57515b42e2634f8 upstream.
 
-NXP Book3E platforms are not vulnerable to speculative store
-bypass, so make the mitigations PPC_BOOK3S_64 specific.
+Based on the x86 commit doing the same.
 
-Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
+See commit 304ec1b05031 ("x86/uaccess: Use __uaccess_begin_nospec()
+and uaccess_try_nospec") and b3bbfb3fb5d2 ("x86: Introduce
+__uaccess_begin_nospec() and uaccess_try_nospec") for more detail.
+
+In all cases we are ordering the load from the potentially
+user-controlled pointer vs a previous branch based on an access_ok()
+check or similar.
+
+Base on a patch from Michal Suchanek.
+
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/kernel/security.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/include/asm/uaccess.h |   18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -177,6 +177,7 @@ ssize_t cpu_show_spectre_v2(struct devic
- 	return s.len;
+--- a/arch/powerpc/include/asm/uaccess.h
++++ b/arch/powerpc/include/asm/uaccess.h
+@@ -269,6 +269,7 @@ do {								\
+ 	__chk_user_ptr(ptr);					\
+ 	if (!is_kernel_addr((unsigned long)__gu_addr))		\
+ 		might_fault();					\
++	barrier_nospec();					\
+ 	__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
+ 	(x) = (__typeof__(*(ptr)))__gu_val;			\
+ 	__gu_err;						\
+@@ -283,6 +284,7 @@ do {								\
+ 	__chk_user_ptr(ptr);					\
+ 	if (!is_kernel_addr((unsigned long)__gu_addr))		\
+ 		might_fault();					\
++	barrier_nospec();					\
+ 	__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
+ 	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
+ 	__gu_err;						\
+@@ -295,8 +297,10 @@ do {								\
+ 	unsigned long  __gu_val = 0;					\
+ 	__typeof__(*(ptr)) __user *__gu_addr = (ptr);		\
+ 	might_fault();							\
+-	if (access_ok(VERIFY_READ, __gu_addr, (size)))			\
++	if (access_ok(VERIFY_READ, __gu_addr, (size))) {		\
++		barrier_nospec();					\
+ 		__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
++	}								\
+ 	(x) = (__force __typeof__(*(ptr)))__gu_val;				\
+ 	__gu_err;							\
+ })
+@@ -307,6 +311,7 @@ do {								\
+ 	unsigned long __gu_val;					\
+ 	__typeof__(*(ptr)) __user *__gu_addr = (ptr);	\
+ 	__chk_user_ptr(ptr);					\
++	barrier_nospec();					\
+ 	__get_user_size(__gu_val, __gu_addr, (size), __gu_err);	\
+ 	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
+ 	__gu_err;						\
+@@ -323,8 +328,10 @@ extern unsigned long __copy_tofrom_user(
+ static inline unsigned long copy_from_user(void *to,
+ 		const void __user *from, unsigned long n)
+ {
+-	if (likely(access_ok(VERIFY_READ, from, n)))
++	if (likely(access_ok(VERIFY_READ, from, n))) {
++		barrier_nospec();
+ 		return __copy_tofrom_user((__force void __user *)to, from, n);
++	}
+ 	memset(to, 0, n);
+ 	return n;
+ }
+@@ -359,21 +366,27 @@ static inline unsigned long __copy_from_
+ 
+ 		switch (n) {
+ 		case 1:
++			barrier_nospec();
+ 			__get_user_size(*(u8 *)to, from, 1, ret);
+ 			break;
+ 		case 2:
++			barrier_nospec();
+ 			__get_user_size(*(u16 *)to, from, 2, ret);
+ 			break;
+ 		case 4:
++			barrier_nospec();
+ 			__get_user_size(*(u32 *)to, from, 4, ret);
+ 			break;
+ 		case 8:
++			barrier_nospec();
+ 			__get_user_size(*(u64 *)to, from, 8, ret);
+ 			break;
+ 		}
+ 		if (ret == 0)
+ 			return 0;
+ 	}
++
++	barrier_nospec();
+ 	return __copy_tofrom_user((__force void __user *)to, from, n);
  }
  
-+#ifdef CONFIG_PPC_BOOK3S_64
- /*
-  * Store-forwarding barrier support.
-  */
-@@ -322,3 +323,4 @@ static __init int stf_barrier_debugfs_in
+@@ -400,6 +413,7 @@ static inline unsigned long __copy_to_us
+ 		if (ret == 0)
+ 			return 0;
+ 	}
++
+ 	return __copy_tofrom_user(to, (__force const void __user *)from, n);
  }
- device_initcall(stf_barrier_debugfs_init);
- #endif /* CONFIG_DEBUG_FS */
-+#endif /* CONFIG_PPC_BOOK3S_64 */
+ 
 
 
