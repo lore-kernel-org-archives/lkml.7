@@ -2,131 +2,257 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17341C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 574A4C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA82220881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:52:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9Zc5r+f"
+	by mail.kernel.org (Postfix) with ESMTP id 1A2AF2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbfEONwD (ORCPT
+        id S1726961AbfEONxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 09:52:03 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45798 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfEONwC (ORCPT
+        Wed, 15 May 2019 09:53:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55596 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725953AbfEONxl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 09:52:02 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b18so2754424wrq.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 06:52:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nytq/On43q8XPsmcb/kSTUQUu6ygGympqGdBDgeJzfY=;
-        b=C9Zc5r+fI+/FO7h8AYtoREtVY8FaEZvGe/awFqM/h2Sjhl2yPheAI5gJllXqLo/9g8
-         EYfqpBRqmVDz62X80O9XaD8idB4VEQAx4zIxi5CbJUJguCTDzSvAUYq+ESEsH0nOerRZ
-         U0mcrPGx7YzHOQIXjyMWkPXtuTZe125hPDKlCLP7vR03oXTXpQl1K8ApJ+vIY2YSnluA
-         njBDBytCi+CK1XjhQX0db0niLdYzN4A7f6gmN5h44c5LuMzbr+UOS8fHbNxW8+EbESEP
-         B9DiP5TNWjH+vWzLQyGUopvXFZ11R94g09DYr6gkU3KEMiHMdhlHgXKOhop3LVLnXHNT
-         KmlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=nytq/On43q8XPsmcb/kSTUQUu6ygGympqGdBDgeJzfY=;
-        b=em8NxyYsgl31c2KBLchD9w4w6M1JhbUwWeIQMWSI+tLPm73G9flqtIdvqZ9R6eliVq
-         //yzy+tiE/tU2VJx5MfrtbNkIP0J3NdGFTCtqkMWeW4AfxQ+aJddpZj45kAABC369PfE
-         +qFsXHaJMafsyOHHbtMYiWXoOTOraef9Ubs60gT0DuMoAI4rrXB8Ax375jETk8AM56wC
-         cFM4j9I89FXyh8olN7KwSORd14wirkcQkcX+XVkchKVdKRFdCT4X7EKojjGK8HOtANVe
-         su4CKD7gCYwkoce1FFGRfxAwXOe2yFU9KskaJxXzrs4TBQt/Nwt5d/zA+30z7csNwLok
-         Yn0w==
-X-Gm-Message-State: APjAAAWFMEPq2HlsFkoL5kpp2QRRAC75tsnCQv10JNGFkVLVtn3wwZiq
-        X1fiPGgkxYsfqkCmeIELHILRSvxB
-X-Google-Smtp-Source: APXvYqxn8yBAWfFqMrTjax6PBoUXe7fjtfc1XiH6muJ6fS3SzOZiH/DzI+lzz7JVSfykkQBkJ5jBHA==
-X-Received: by 2002:adf:e850:: with SMTP id d16mr10513190wrn.269.1557928321334;
-        Wed, 15 May 2019 06:52:01 -0700 (PDT)
-Received: from macbookpro.malat.net ([2a01:e34:ee1e:860:6f23:82e6:aa2d:bbd1])
-        by smtp.gmail.com with ESMTPSA id x187sm2256456wmb.33.2019.05.15.06.51.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 May 2019 06:52:00 -0700 (PDT)
-Received: by macbookpro.malat.net (Postfix, from userid 1000)
-        id 1FBCB1146D7B; Wed, 15 May 2019 15:51:49 +0200 (CEST)
-From:   Mathieu Malaterre <malat@debian.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Mathieu Malaterre <malat@debian.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] powerpc: silence a -Wcast-function-type warning in dawr_write_file_bool
-Date:   Wed, 15 May 2019 15:51:46 +0200
-Message-Id: <20190515135146.5866-1-malat@debian.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190515120942.3812-1-malat@debian.org>
-References: <20190515120942.3812-1-malat@debian.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 15 May 2019 09:53:41 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4FDquH9123682
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 09:53:39 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sgjv0crvr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 09:53:39 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Wed, 15 May 2019 14:53:36 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 15 May 2019 14:53:34 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4FDrXMd59899980
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 May 2019 13:53:33 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D2A452052;
+        Wed, 15 May 2019 13:53:33 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.102.18.182])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 1919552051;
+        Wed, 15 May 2019 13:53:30 +0000 (GMT)
+From:   Parth Shah <parth@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc:     mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
+        dsmythies@telus.net
+Subject: [RFCv2 0/6] TurboSched: A scheduler for sustaining Turbo Frequencies for longer durations
+Date:   Wed, 15 May 2019 19:23:16 +0530
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19051513-0016-0000-0000-0000027C0337
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051513-0017-0000-0000-000032D8D3F5
+Message-Id: <20190515135322.19393-1-parth@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905150087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit c1fe190c0672 ("powerpc: Add force enable of DAWR on P9
-option") the following piece of code was added:
+Abstract
+========
 
-   smp_call_function((smp_call_func_t)set_dawr, &null_brk, 0);
+The modern servers allows multiple cores to run at range of
+frequencies higher than rated range of frequencies. But the power budget
+of the system inhibits sustaining these higher frequencies for
+longer durations.
 
-Since GCC 8 this triggers the following warning about incompatible
-function types:
+However when certain cores are put to idle states, the power can be
+effectively channelled to other busy cores, allowing them to sustain
+the higher frequency.
 
-  arch/powerpc/kernel/hw_breakpoint.c:408:21: error: cast between incompatible function types from 'int (*)(struct arch_hw_breakpoint *)' to 'void (*)(void *)' [-Werror=cast-function-type]
+One way to achieve this is to pack tasks onto fewer cores keeping others idle,
+but it may lead to performance penalty for such tasks and sustaining higher
+frequencies proves to be of no benefit. But if one can identify unimportant low
+utilization tasks which can be packed on the already active cores then waking up
+of new cores can be avoided. Such tasks are short and/or bursty "jitter tasks"
+and waking up new core is expensive for such case.
 
-Since the warning is there for a reason, and should not be hidden behind
-a cast, provide an intermediate callback function to avoid the warning.
+Current CFS algorithm in kernel scheduler is performance oriented and hence
+tries to assign any idle CPU first for the waking up of new tasks. This policy
+is perfect for major categories of the workload, but for jitter tasks, one
+can save energy by packing it onto active cores and allow other cores to run at
+higher frequencies.
 
-Fixes: c1fe190c0672 ("powerpc: Add force enable of DAWR on P9 option")
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Cc: Michael Neuling <mikey@neuling.org>
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
----
-v2: do not hide warning using a hack
+These patch-set tunes the task wake up logic in scheduler to pack exclusively
+classified jitter tasks onto busy cores. The work involves the use of additional
+attributes inside "cpu" cgroup controller to manually classify tasks as jitter. 
 
- arch/powerpc/kernel/hw_breakpoint.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index f70fb89dbf60..969092d84a2f 100644
---- a/arch/powerpc/kernel/hw_breakpoint.c
-+++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -386,6 +386,11 @@ void hw_breakpoint_pmu_read(struct perf_event *bp)
- bool dawr_force_enable;
- EXPORT_SYMBOL_GPL(dawr_force_enable);
- 
-+static void set_dawr_cb(void *info)
-+{
-+	set_dawr(info);
-+}
-+
- static ssize_t dawr_write_file_bool(struct file *file,
- 				    const char __user *user_buf,
- 				    size_t count, loff_t *ppos)
-@@ -405,7 +410,7 @@ static ssize_t dawr_write_file_bool(struct file *file,
- 
- 	/* If we are clearing, make sure all CPUs have the DAWR cleared */
- 	if (!dawr_force_enable)
--		smp_call_function((smp_call_func_t)set_dawr, &null_brk, 0);
-+		smp_call_function(set_dawr_cb, &null_brk, 0);
- 
- 	return rc;
- }
+Implementation
+==============
+
+These patches uses UCLAMP mechanism from "cpu" cgroup controller which
+can be used to classify the jitter tasks. The task wakeup logic uses
+this information to pack such tasks onto cores which are busy running
+other workloads. The task packing is done at `select_task_rq_fair` only
+so that in case of wrong decision load balancer may pull the classified
+jitter tasks to performance giving CPU.
+
+Any tasks added to the "cpu" cgroup tagged with cpu.util.max=1 are
+classified as jitter. We define a core to be non-idle if it is over
+12.5% utilized; the jitters are packed over these cores using First-fit
+approach.
+
+To demonstrate/benchmark, one can use a synthetic workload generator
+`turbo_bench.c` available at
+https://github.com/parthsl/tools/blob/master/benchmarks/turbo_bench.c
+
+Following snippet demonstrates the use of TurboSched feature:
+```
+mkdir -p /sys/fs/cgroup/cpu/jitter
+echo 0 > /proc/sys/kernel/sched_uclamp_util_min;
+echo 0 > /sys/fs/cgroup/cpu/jitter/cpu.util.min;
+echo 0 > /sys/fs/cgroup/cpu/jitter/cpu.util.max;
+i=8;
+./turbo_bench -t 30 -h $i -n $i &
+./turbo_bench -t 30 -h 0 -n $i &
+echo $! > /sys/fs/cgroup/cpu/jitter/cgroup.procs
+```
+
+Current implementation uses only jitter classified tasks to be packed on any
+busy cores, but can be further optimized by getting userspace input of
+important tasks and keeping track of such tasks. This leads to optimized
+searching of non idle cores and also more accurate as userspace hints
+are safer than auto classified busy cores/tasks.
+
+
+Result
+======
+
+The patch-set proves to be useful for the system and the workload where
+frequency boost is found to be useful than packing tasks into cores. IBM POWER 9
+system shows the benefit for a workload can be up to 13%.
+
+                   Performance benefit of TurboSched over CFS                  
+     +-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+   
+     | + + + +  + + + + + + + +  + + + + + + + +  + + + + + + + +  + + + + |   
+  15 +-+                                  Performance benefit in %       +-+   
+     |                    **                                               |   
+     |                    **                                               |   
+  10 +-+                ********                                         +-+   
+     |                  ********                                           |   
+     |              ************   *                                       |   
+   5 +-+            ************   *                                     +-+   
+     |            * ************   * ****                                  |   
+     |       ** * * ************ * * ******                                |   
+     |       ** * * ************ * * ************ *                        |   
+   0 +-******** * * ************ * * ************ * * * ********** * * * **+   
+     |     **                                           ****               |   
+     |     **                                                              |   
+  -5 +-+   **                                                            +-+   
+     | + + + +  + + + + + + + +  + + + + + + + +  + + + + + + + +  + + + + |   
+     +-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+   
+       1 2 3 4  5 6 7 8 9101112 1314151617181920 2122232425262728 29303132     
+                             Workload threads count                            
+
+
+                     Frequency benefit of TurboSched over CFS                   
+  20 +-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+   
+     | + + + +  + + + + + + + +  + + + + + + + +  + + + + + + + +  + + + + |   
+     |                                      Frequency benefit in %         |   
+  15 +-+                  **                                             +-+   
+     |                    **                                               |   
+     |              ********                                               |   
+  10 +-+          * ************                                         +-+   
+     |            * ************                                           |   
+     |            * ************                                           |   
+   5 +-+        * * ************   *                                     +-+   
+     |       ** * * ************ * *                                       |   
+     |     **** * * ************ * * ******                 **             |   
+   0 +-******** * * ************ * * ************ * * * ********** * * * **+   
+     |   **                                                                |   
+     |   **                                                                |   
+  -5 +-+ **                                                              +-+   
+     | + + + +  + + + + + + + +  + + + + + + + +  + + + + + + + +  + + + + |   
+     +-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+-+-+-+--+-+-+-+-+   
+       1 2 3 4  5 6 7 8 9101112 1314151617181920 2122232425262728 29303132     
+                             Workload threads count                            
+
+These numbers are w.r.t. `turbo_bench.c` test benchmark which spawns multiple
+threads of a mix of High Utilization and Low Utilization(jitters). X-axis
+represents the count of both the categories of tasks spawned.
+
+
+Series organization
+==============
+- Patches [01-03]: Cgroup based jitter tasks classification
+- Patches [04]: Defines Core Capacity to limit task packing
+- Patches [05-06]: Tune CFS task wakeup logic to pack tasks onto busy
+  cores
+
+Series can be applied on top of Patrick Bellasi's UCLAMP RFCv8[3]
+patches with branch on tip/sched/core and UCLAMP_TASK_GROUP config
+options enabled.
+
+
+Changelogs
+=========
+This patch set is a respin of TurboSched RFCv1
+https://lwn.net/Articles/783959/
+which includes the following main changes
+
+- No WOF tasks classification, only jitter tasks are classified from
+  the cpu cgroup controller
+- Use of Spinlock rather than mutex to count number of jitters in the
+  system classified from cgroup
+- Architecture specific implementation of Core capacity multiplication
+  factor changes dynamically based on the number of active threads in
+  the core
+- Selection of non idle core in the system is bounded by DIE domain
+- Use of UCLAMP mechanism to classify jitter tasks
+- Removed "highutil_cpu_mask", and rather uses sd for DIE domain to find
+  better fit
+
+
+References
+==========
+
+[1] "TurboSched : A scheduler for sustaining Turbo frequency for longer
+durations" https://lwn.net/Articles/783959/
+
+[2] "Turbo_bench: Synthetic workload generator"
+https://github.com/parthsl/tools/blob/master/benchmarks/turbo_bench.c
+
+[3] "Patrick Bellasi, Add utilization clamping support"
+https://lore.kernel.org/lkml/20190402104153.25404-1-patrick.bellasi@arm.com/
+
+
+Parth Shah (6):
+  sched/core: Add manual jitter classification from cgroup interface
+  sched: Introduce switch to enable TurboSched mode
+  sched/core: Update turbo_sched count only when required
+  sched/fair: Define core capacity to limit task packing
+  sched/fair: Tune task wake-up logic to pack jitter tasks
+  sched/fair: Bound non idle core search by DIE domain
+
+ arch/powerpc/include/asm/topology.h |   7 ++
+ arch/powerpc/kernel/smp.c           |  37 ++++++++
+ kernel/sched/core.c                 |  32 +++++++
+ kernel/sched/fair.c                 | 127 +++++++++++++++++++++++++++-
+ kernel/sched/sched.h                |   8 ++
+ 5 files changed, 210 insertions(+), 1 deletion(-)
+
 -- 
-2.20.1
+2.17.1
 
