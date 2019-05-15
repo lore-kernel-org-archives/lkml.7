@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1697C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6D1C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 741AF20818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CF7B20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919761;
-	bh=/d9PVLH/lgj6KLU9qXfdf0QWirSWnEW5nYPk3uGDmg4=;
+	s=default; t=1557919764;
+	bh=jkLFPE0Btsk4k/1uPATuEs2Vl549eC/EjkT7x9ITssY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jHR3kHBGetpwvBCCExfOKeeDN0r4o3dz2Zg5Pgyt8gWXoEd4LXCspq7vVleegj9Bq
-	 tRKrBha9bX2PgaVnhRz3ycR8UqDCx0N4eZkd7syFTG/+iqaPNnkNmxHLCxLG10+q2t
-	 iKhmoC5SR7RrRUr9jI0qvwuDMBN4llKFbo1SOEf8=
+	b=gFWHiMi39BKBlpSLKFk+tCXeln0ZKzcW2O4o63mYcnfs3Z91pnJO2RmjDnk4hg6wn
+	 drF93KeBmdPjvu27M2x8uXNwvD3NAcZq7IArS+/OtStDpQyfVhZlnKB1nn4GfdzvX6
+	 w/FoC0Hf1W4pKc57lNCTKkrlrCIlwif9nMtxeXnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732542AbfEOL3U (ORCPT
+        id S1732550AbfEOL3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:29:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40534 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:29:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732057AbfEOL3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:29:17 -0400
+        id S1732540AbfEOL3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:29:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D202C2084A;
-        Wed, 15 May 2019 11:29:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94662206BF;
+        Wed, 15 May 2019 11:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919757;
-        bh=/d9PVLH/lgj6KLU9qXfdf0QWirSWnEW5nYPk3uGDmg4=;
+        s=default; t=1557919760;
+        bh=jkLFPE0Btsk4k/1uPATuEs2Vl549eC/EjkT7x9ITssY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LbrnCu+Jlrrl9bdW/fI08OhgUkvX+4CiRCzc/4ENJQcBwofltAud0LQzvJ11U2s0A
-         Gn5W3/7OUOCm54SHl/0a4laboIynyi/Z310i5wg3Iu/yq4UtNFgiiyBfXql9+SUVDd
-         gcxBQx2sGX3Hhj/zkebm9GbqL2cWcPIdKp5cw3Pk=
+        b=isjvbvxMoYKB7k8iRGMI729XDRnT3ckbboLI3dk8iTikfxh5+UN1S+wUJik+iDjKw
+         Jm991KcOAhCKwGfvrE6W3AjgKru4w2T0I0Bi9h86TNRCNXdhI4A/KZYqQ1oesMzWdL
+         8qP5xwPZmrVo0nPnhCqcpSTeZHNp7kPZgaMQQUKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Po-Hsu Lin <po-hsu.lin@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Tigran Tadevosyan <tigran.tadevosyan@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 075/137] selftests/net: correct the return value for run_netsocktests
-Date:   Wed, 15 May 2019 12:55:56 +0200
-Message-Id: <20190515090658.877650303@linuxfoundation.org>
+Subject: [PATCH 5.0 084/137] ARM: 8856/1: NOMMU: Fix CCR register faulty initialization when MPU is disabled
+Date:   Wed, 15 May 2019 12:56:05 +0200
+Message-Id: <20190515090659.632659265@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -60,42 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 30c04d796b693e22405c38e9b78e9a364e4c77e6 ]
+[ Upstream commit c3143967807adb1357c36b68a7563fc0c4e1f615 ]
 
-The run_netsocktests will be marked as passed regardless the actual test
-result from the ./socket:
+When CONFIG_ARM_MPU is not defined, the base address of v7M SCB register
+is not initialized with correct value. This prevents enabling I/D caches
+when the L1 cache poilcy is applied in kernel.
 
-    selftests: net: run_netsocktests
-    ========================================
-    --------------------
-    running socket test
-    --------------------
-    [FAIL]
-    ok 1..6 selftests: net: run_netsocktests [PASS]
-
-This is because the test script itself has been successfully executed.
-Fix this by exit 1 when the test failed.
-
-Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 3c24121039c9da14692eb48f6e39565b28c0f3cf ("ARM: 8756/1: NOMMU: Postpone MPU activation till __after_proc_init")
+Signed-off-by: Tigran Tadevosyan <tigran.tadevosyan@arm.com>
+Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/run_netsocktests | 2 +-
+ arch/arm/kernel/head-nommu.S | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/net/run_netsocktests b/tools/testing/selftests/net/run_netsocktests
-index b093f39c298c3..14e41faf2c574 100755
---- a/tools/testing/selftests/net/run_netsocktests
-+++ b/tools/testing/selftests/net/run_netsocktests
-@@ -7,7 +7,7 @@ echo "--------------------"
- ./socket
- if [ $? -ne 0 ]; then
- 	echo "[FAIL]"
-+	exit 1
- else
- 	echo "[PASS]"
- fi
--
+diff --git a/arch/arm/kernel/head-nommu.S b/arch/arm/kernel/head-nommu.S
+index ec29de2500764..cab89479d15ef 100644
+--- a/arch/arm/kernel/head-nommu.S
++++ b/arch/arm/kernel/head-nommu.S
+@@ -133,9 +133,9 @@ __secondary_data:
+  */
+ 	.text
+ __after_proc_init:
+-#ifdef CONFIG_ARM_MPU
+ M_CLASS(movw	r12, #:lower16:BASEADDR_V7M_SCB)
+ M_CLASS(movt	r12, #:upper16:BASEADDR_V7M_SCB)
++#ifdef CONFIG_ARM_MPU
+ M_CLASS(ldr	r3, [r12, 0x50])
+ AR_CLASS(mrc	p15, 0, r3, c0, c1, 4)          @ Read ID_MMFR0
+ 	and	r3, r3, #(MMFR0_PMSA)           @ PMSA field
 -- 
 2.20.1
 
