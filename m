@@ -2,81 +2,87 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=FAKE_REPLY_C,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F15CCC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F03EC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C17B62082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DF132082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:38:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbfEOIi3 (ORCPT
+        id S1726472AbfEOIi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 15 May 2019 04:38:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35728 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725933AbfEOIi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+Received: from relay.sw.ru ([185.231.240.75]:48082 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725876AbfEOIi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 May 2019 04:38:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B52BAAF95;
-        Wed, 15 May 2019 08:38:27 +0000 (UTC)
-Date:   Wed, 15 May 2019 10:38:26 +0200
-From:   Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>
-To:     khlebnikov@yandex-team.ru
-Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, oleg@redhat.com
-Subject: Re: mm: use down_read_killable for locking mmap_sem in
- access_remote_vm
-Message-ID: <20190515083825.GJ13687@blackbody.suse.cz>
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hQpQZ-0006hD-8M; Wed, 15 May 2019 11:38:19 +0300
+Subject: Re: [PATCH] mm: fix protection of mm_struct fields in get_cmdline()
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-mm@kvack.org, mkoutny@suse.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>
+References: <155790813764.2995.13706842444028749629.stgit@buzz>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <f0978f70-716c-0272-d8f0-87dc163d0784@virtuozzo.com>
+Date:   Wed, 15 May 2019 11:38:18 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="451BZW+OUuJBCAYj"
-Content-Disposition: inline
-In-Reply-To: <155790847881.2798.7160461383704600177.stgit@buzz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <155790813764.2995.13706842444028749629.stgit@buzz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Konstantin,
 
---451BZW+OUuJBCAYj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 15.05.2019 11:15, Konstantin Khlebnikov wrote:
+> Since commit 88aa7cc688d4 ("mm: introduce arg_lock to protect arg_start|
+> end and env_start|end in mm_struct") related mm fields are protected with
+> separate spinlock and mmap_sem held for read is not enough for protection.
+> 
+> Fixes: 88aa7cc688d4 ("mm: introduce arg_lock to protect arg_start|end and env_start|end in mm_struct")
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-Hi,
-making this holder of mmap_sem killable was for the reasons of /proc/...
-diagnostics was an idea I was pondeering too. However, I think the
-approach of pretending we read 0 bytes is not correct. The API would IMO
-need to be extended to allow pass a result such as EINTR to the end
-caller.
-Why do you think it's safe to return just 0?
+is this already fixed in Michal's series: https://lkml.org/lkml/2019/5/2/422 ?
 
-Michal
+Thanks,
+Kirill
 
+> ---
+>  mm/util.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/mm/util.c b/mm/util.c
+> index e2e4f8c3fa12..540e7c157cf2 100644
+> --- a/mm/util.c
+> +++ b/mm/util.c
+> @@ -717,12 +717,12 @@ int get_cmdline(struct task_struct *task, char *buffer, int buflen)
+>  	if (!mm->arg_end)
+>  		goto out_mm;	/* Shh! No looking before we're done */
+>  
+> -	down_read(&mm->mmap_sem);
+> +	spin_lock(&mm->arg_lock);
+>  	arg_start = mm->arg_start;
+>  	arg_end = mm->arg_end;
+>  	env_start = mm->env_start;
+>  	env_end = mm->env_end;
+> -	up_read(&mm->mmap_sem);
+> +	spin_unlock(&mm->arg_lock);
+>  
+>  	len = arg_end - arg_start;
+>  
+> 
 
---451BZW+OUuJBCAYj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+amhwRV4jZeXdUhoK2l36XSZ9y4FAlzbz/sACgkQK2l36XSZ
-9y72Dw//WSCQl+uR7hQKCcZgc6M3EGW5FhKKiFTfagIYPeGFx8co6rAG2XFCBn89
-PiCHJjcjY5BtRaCnLV/AmLbSGSj/j7aX0FIM/nKkP7z78HTrSBjkd30HIXV1Vig8
-wQY4JGC5bK2rUkd/D5Fjjrg93wMvwRfyj3wZ6/dXObPU8tfbrbOTeD+JNFlk1WZf
-WitkTbX3mD/xC3P3ItZ9+mTRXK+0MCMu/Bazf90yDFRB2uXvA788CTGVzsqzyfpG
-vkZmBDTzT/jJJhYKd4gR4ecaQbD3zzZdJiz5AEZFGJFSpK6nwYXz9jarjIWP2T6e
-OSZ4mGj+RjL3YBk9sqNgHPXMMS6IQoIgbpjVxwQlNN+6sSfGVm4qVGLn5N+69LwR
-iQtCQSv2JS5afnWSaahWQsxzvmkE/6OC6Qs1D1EdclP7ph1PgrkV2NJ+0VVBZfRA
-m0VNzZ6APLLoPc7yGaBP36yw6pjgycrVQaDtgZa1hqf1bpLnoqwrSlUQTTN2475Q
-ig/ZEnDjlB/X85OkdEB26SLw5CtH35EL64DhfNU9l1dZ5Ygw5O4nOevkPwL2XC3F
-mtftFgxxtFN2zDqg3s5gz7K5AAef7jn9TySNze2l7OVFwfpd96b8SXfyPxRMOgcy
-aUFG3qyAdXEoPQHQPWtTrKsnhbu+qNCaIbhxZAL9j5iVKnHc/cA=
-=vcUI
------END PGP SIGNATURE-----
-
---451BZW+OUuJBCAYj--
