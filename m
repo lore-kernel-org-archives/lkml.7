@@ -2,53 +2,55 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE31C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEF84C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D473B216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD2FC20862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919191;
-	bh=qWglezqHnqwnAG3+q6dzjt0VM7y2yamRGcUyrHCtAZk=;
+	s=default; t=1557919197;
+	bh=svzfr6ww1SG7IFsfc8tDxKlG+G/RnbdZqTMRIy6WTvw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vyavnuap9z/RQXlZqoeLJYcqRJf7BoYWL95LPaIY67GsDG84OXnqAFqs3JUR4a8im
-	 vbqarDbkxQJQhBax9JrqGWRGJag8bzdvhtBCn9s5c4Q0lg7fGST7WyIozyGj0ffH3v
-	 efFePX0P67QbyA5WJScqd6o78TPFdnJ7qO980bKM=
+	b=yugQxAjcw7NbMR7bY9x62rSI2nYl/lWaZhqMlYeCm9w5Av/3N4H+YiJYc8cdH57QJ
+	 pCQioVTWP644h/UR3lx5bOO21YW2Fh5zX71AaLD/vLBV3QjtdijKjuyHrUawH0gZ+b
+	 vNtRo+9gDdmrQion+w+yv7OyyKRXqRSLGCOVRB3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730359AbfEOLTt (ORCPT
+        id S1731037AbfEOLT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:19:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57510 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:19:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730959AbfEOLTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:19:46 -0400
+        id S1730109AbfEOLTv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:19:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF4BC20862;
-        Wed, 15 May 2019 11:19:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C0A52166E;
+        Wed, 15 May 2019 11:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919185;
-        bh=qWglezqHnqwnAG3+q6dzjt0VM7y2yamRGcUyrHCtAZk=;
+        s=default; t=1557919190;
+        bh=svzfr6ww1SG7IFsfc8tDxKlG+G/RnbdZqTMRIy6WTvw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PIVNkEMUBUIIN6wYmI/AscHWSbez/egNZ4aQZKC4zTOh68oUB7wZBm1cZRB33YtH3
-         p+TjI6fSbkEtklZTfdHwQ4jiBuE5vgaW68kERsb/8jIM80LVGDnKHX3meWRhWMg2Pr
-         M1eygEh0japMbzSBTJef7p7wpX8rYR/Mod5b0/z0=
+        b=Wq7yXbkQ4Vd6Pfc+Mqr7IU/UHMtmGLwkMjgmc3NzIvu7d0I9othUeQRSE4WMy8WhZ
+         iTp9+FB+doRec/ke7hpCEilHYPjI1PeVvKS50jzsM+f5aMQa6ytjefF3jzCF6xiMcH
+         nUD8dso1/uAUjQNJraXyX3HkpOF+5LhSZhHU+iJs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
-        David Jeffery <djeffery@redhat.com>,
-        Nigel Croxon <ncroxon@redhat.com>,
-        Song Liu <songliubraving@fb.com>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.14 097/115] Dont jump to compute_result state from check_result state
-Date:   Wed, 15 May 2019 12:56:17 +0200
-Message-Id: <20190515090706.227940873@linuxfoundation.org>
+        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jarod Wilson <jarod@redhat.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+Subject: [PATCH 4.14 099/115] bonding: fix arp_validate toggling in active-backup mode
+Date:   Wed, 15 May 2019 12:56:19 +0200
+Message-Id: <20190515090706.340590100@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -61,115 +63,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nigel Croxon <ncroxon@redhat.com>
+From: Jarod Wilson <jarod@redhat.com>
 
-commit 4f4fd7c5798bbdd5a03a60f6269cf1177fbd11ef upstream.
+[ Upstream commit a9b8a2b39ce65df45687cf9ef648885c2a99fe75 ]
 
-Changing state from check_state_check_result to
-check_state_compute_result not only is unsafe but also doesn't
-appear to serve a valid purpose.  A raid6 check should only be
-pushing out extra writes if doing repair and a mis-match occurs.
-The stripe dev management will already try and do repair writes
-for failing sectors.
+There's currently a problem with toggling arp_validate on and off with an
+active-backup bond. At the moment, you can start up a bond, like so:
 
-This patch makes the raid6 check_state_check_result handling
-work more like raid5's.  If somehow too many failures for a
-check, just quit the check operation for the stripe.  When any
-checks pass, don't try and use check_state_compute_result for
-a purpose it isn't needed for and is unsafe for.  Just mark the
-stripe as in sync for passing its parity checks and let the
-stripe dev read/write code and the bad blocks list do their
-job handling I/O errors.
+modprobe bonding mode=1 arp_interval=100 arp_validate=0 arp_ip_targets=192.168.1.1
+ip link set bond0 down
+echo "ens4f0" > /sys/class/net/bond0/bonding/slaves
+echo "ens4f1" > /sys/class/net/bond0/bonding/slaves
+ip link set bond0 up
+ip addr add 192.168.1.2/24 dev bond0
 
-Repro steps from Xiao:
+Pings to 192.168.1.1 work just fine. Now turn on arp_validate:
 
-These are the steps to reproduce this problem:
-1. redefined OPT_MEDIUM_ERR_ADDR to 12000 in scsi_debug.c
-2. insmod scsi_debug.ko dev_size_mb=11000  max_luns=1 num_tgts=1
-3. mdadm --create /dev/md127 --level=6 --raid-devices=5 /dev/sde1 /dev/sde2 /dev/sde3 /dev/sde5 /dev/sde6
-sde is the disk created by scsi_debug
-4. echo "2" >/sys/module/scsi_debug/parameters/opts
-5. raid-check
+echo 1 > /sys/class/net/bond0/bonding/arp_validate
 
-It panic:
-[ 4854.730899] md: data-check of RAID array md127
-[ 4854.857455] sd 5:0:0:0: [sdr] tag#80 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
-[ 4854.859246] sd 5:0:0:0: [sdr] tag#80 Sense Key : Medium Error [current]
-[ 4854.860694] sd 5:0:0:0: [sdr] tag#80 Add. Sense: Unrecovered read error
-[ 4854.862207] sd 5:0:0:0: [sdr] tag#80 CDB: Read(10) 28 00 00 00 2d 88 00 04 00 00
-[ 4854.864196] print_req_error: critical medium error, dev sdr, sector 11656 flags 0
-[ 4854.867409] sd 5:0:0:0: [sdr] tag#100 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
-[ 4854.869469] sd 5:0:0:0: [sdr] tag#100 Sense Key : Medium Error [current]
-[ 4854.871206] sd 5:0:0:0: [sdr] tag#100 Add. Sense: Unrecovered read error
-[ 4854.872858] sd 5:0:0:0: [sdr] tag#100 CDB: Read(10) 28 00 00 00 2e e0 00 00 08 00
-[ 4854.874587] print_req_error: critical medium error, dev sdr, sector 12000 flags 4000
-[ 4854.876456] sd 5:0:0:0: [sdr] tag#101 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
-[ 4854.878552] sd 5:0:0:0: [sdr] tag#101 Sense Key : Medium Error [current]
-[ 4854.880278] sd 5:0:0:0: [sdr] tag#101 Add. Sense: Unrecovered read error
-[ 4854.881846] sd 5:0:0:0: [sdr] tag#101 CDB: Read(10) 28 00 00 00 2e e8 00 00 08 00
-[ 4854.883691] print_req_error: critical medium error, dev sdr, sector 12008 flags 4000
-[ 4854.893927] sd 5:0:0:0: [sdr] tag#166 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
-[ 4854.896002] sd 5:0:0:0: [sdr] tag#166 Sense Key : Medium Error [current]
-[ 4854.897561] sd 5:0:0:0: [sdr] tag#166 Add. Sense: Unrecovered read error
-[ 4854.899110] sd 5:0:0:0: [sdr] tag#166 CDB: Read(10) 28 00 00 00 2e e0 00 00 10 00
-[ 4854.900989] print_req_error: critical medium error, dev sdr, sector 12000 flags 0
-[ 4854.902757] md/raid:md127: read error NOT corrected!! (sector 9952 on sdr1).
-[ 4854.904375] md/raid:md127: read error NOT corrected!! (sector 9960 on sdr1).
-[ 4854.906201] ------------[ cut here ]------------
-[ 4854.907341] kernel BUG at drivers/md/raid5.c:4190!
+Pings to 192.168.1.1 continue to work just fine. Now when you go to turn
+arp_validate off again, the link falls flat on it's face:
 
-raid5.c:4190 above is this BUG_ON:
+echo 0 > /sys/class/net/bond0/bonding/arp_validate
+dmesg
+...
+[133191.911987] bond0: Setting arp_validate to none (0)
+[133194.257793] bond0: bond_should_notify_peers: slave ens4f0
+[133194.258031] bond0: link status definitely down for interface ens4f0, disabling it
+[133194.259000] bond0: making interface ens4f1 the new active one
+[133197.330130] bond0: link status definitely down for interface ens4f1, disabling it
+[133197.331191] bond0: now running without any active interface!
 
-    handle_parity_checks6()
-        ...
-        BUG_ON(s->uptodate < disks - 1); /* We don't need Q to recover */
+The problem lies in bond_options.c, where passing in arp_validate=0
+results in bond->recv_probe getting set to NULL. This flies directly in
+the face of commit 3fe68df97c7f, which says we need to set recv_probe =
+bond_arp_recv, even if we're not using arp_validate. Said commit fixed
+this in bond_option_arp_interval_set, but missed that we can get to that
+same state in bond_option_arp_validate_set as well.
 
-Cc: <stable@vger.kernel.org> # v3.16+
-OriginalAuthor: David Jeffery <djeffery@redhat.com>
-Cc: Xiao Ni <xni@redhat.com>
-Tested-by: David Jeffery <djeffery@redhat.com>
-Signed-off-by: David Jeffy <djeffery@redhat.com>
-Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+One solution would be to universally set recv_probe = bond_arp_recv here
+as well, but I don't think bond_option_arp_validate_set has any business
+touching recv_probe at all, and that should be left to the arp_interval
+code, so we can just make things much tidier here.
+
+Fixes: 3fe68df97c7f ("bonding: always set recv_probe to bond_arp_rcv in arp monitor")
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/md/raid5.c |   19 ++++---------------
- 1 file changed, 4 insertions(+), 15 deletions(-)
+ drivers/net/bonding/bond_options.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -4218,26 +4218,15 @@ static void handle_parity_checks6(struct
- 	case check_state_check_result:
- 		sh->check_state = check_state_idle;
+diff --git a/drivers/net/bonding/bond_options.c b/drivers/net/bonding/bond_options.c
+index 4d5d01cb8141..80867bd8f44c 100644
+--- a/drivers/net/bonding/bond_options.c
++++ b/drivers/net/bonding/bond_options.c
+@@ -1098,13 +1098,6 @@ static int bond_option_arp_validate_set(struct bonding *bond,
+ {
+ 	netdev_dbg(bond->dev, "Setting arp_validate to %s (%llu)\n",
+ 		   newval->string, newval->value);
+-
+-	if (bond->dev->flags & IFF_UP) {
+-		if (!newval->value)
+-			bond->recv_probe = NULL;
+-		else if (bond->params.arp_interval)
+-			bond->recv_probe = bond_arp_rcv;
+-	}
+ 	bond->params.arp_validate = newval->value;
  
-+		if (s->failed > 1)
-+			break;
- 		/* handle a successful check operation, if parity is correct
- 		 * we are done.  Otherwise update the mismatch count and repair
- 		 * parity if !MD_RECOVERY_CHECK
- 		 */
- 		if (sh->ops.zero_sum_result == 0) {
--			/* both parities are correct */
--			if (!s->failed)
--				set_bit(STRIPE_INSYNC, &sh->state);
--			else {
--				/* in contrast to the raid5 case we can validate
--				 * parity, but still have a failure to write
--				 * back
--				 */
--				sh->check_state = check_state_compute_result;
--				/* Returning at this point means that we may go
--				 * off and bring p and/or q uptodate again so
--				 * we make sure to check zero_sum_result again
--				 * to verify if p or q need writeback
--				 */
--			}
-+			/* Any parity checked was correct */
-+			set_bit(STRIPE_INSYNC, &sh->state);
- 		} else {
- 			atomic64_add(STRIPE_SECTORS, &conf->mddev->resync_mismatches);
- 			if (test_bit(MD_RECOVERY_CHECK, &conf->mddev->recovery)) {
+ 	return 0;
+-- 
+2.20.1
+
 
 
