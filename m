@@ -2,92 +2,92 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 177B6C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F117C46470
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4DEF2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:15:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 246802089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:16:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557929769;
+	bh=nBsn7/9SkqhQaLs4aJMbNED/PvzJuaH0Nvbb1xhB1ds=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yU9xp43+z/9LARoDiY5a5Jf210fCTa27NNk0H3ez8l4biAwOmArpqcd20NGG5rFmu
+	 bhEmXVVrFLwgN5NLqnbp/PYpONWV3AyxeU5g1iC7XzZSmH7VM/yUN8mo3G4TCBhw7c
+	 iUiVRg1iN88cU4Bg68/LjV88KnTpV2mZ7PIvlwu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbfEOOPp (ORCPT
+        id S1728174AbfEOOQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 10:15:45 -0400
-Received: from mga04.intel.com ([192.55.52.120]:51762 "EHLO mga04.intel.com"
+        Wed, 15 May 2019 10:16:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726766AbfEOOPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 10:15:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 07:15:44 -0700
-X-ExtLoop1: 1
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 15 May 2019 07:15:44 -0700
-Received: from [10.254.95.25] (kliang2-mobl.ccr.corp.intel.com [10.254.95.25])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726766AbfEOOQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 10:16:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 89143580414;
-        Wed, 15 May 2019 07:15:43 -0700 (PDT)
-Subject: Re: [PATCH V2 1/3] perf parse-regs: Split parse_regs
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, acme@kernel.org
-Cc:     jolsa@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com
-References: <1557865174-56264-1-git-send-email-kan.liang@linux.intel.com>
- <02cd8171-3dbf-b835-3fe0-245f6fbea1cb@linux.ibm.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <c628c2a2-4d85-ccae-6de1-79d259209212@linux.intel.com>
-Date:   Wed, 15 May 2019 10:15:42 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by mail.kernel.org (Postfix) with ESMTPSA id BE5462084E;
+        Wed, 15 May 2019 14:16:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557929767;
+        bh=nBsn7/9SkqhQaLs4aJMbNED/PvzJuaH0Nvbb1xhB1ds=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WN0knMRvCCL1HFnQ8nQFtCpu4hbzkZzP0UtfAlnjItM1hQW429xwlxGPIuFUPBrD8
+         BTqh9i+pGG9kqYAVI3zEBcpAZ6FxAxalF2be+eBc2h6MGk1lr00rjglbQAKN+mj19e
+         K8loKcIQ3jwFdqT6d3iCtSycnkYwWlCjgbY21BZI=
+Date:   Wed, 15 May 2019 16:16:04 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, erhard_f@mailbox.org,
+        Michael Neuling <mikey@neuling.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH stable 4.4] powerpc/lib: fix book3s/32 boot failure due
+ to code patching
+Message-ID: <20190515141604.GB8999@kroah.com>
+References: <71dbc8bdad5da9f6cb0446535fb2a29c68fccf80.1557926850.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-In-Reply-To: <02cd8171-3dbf-b835-3fe0-245f6fbea1cb@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <71dbc8bdad5da9f6cb0446535fb2a29c68fccf80.1557926850.git.christophe.leroy@c-s.fr>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 5/15/2019 2:49 AM, Ravi Bangoria wrote:
+On Wed, May 15, 2019 at 01:30:42PM +0000, Christophe Leroy wrote:
+> [Backport of upstream commit b45ba4a51cde29b2939365ef0c07ad34c8321789]
 > 
-> On 5/15/19 1:49 AM, kan.liang@linux.intel.com wrote:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> The available registers for --int-regs and --user-regs may be different,
->> e.g. XMM registers.
->>
->> Split parse_regs into two dedicated functions for --int-regs and
->> --user-regs respectively.
->>
->> Modify the warning message. "--user-regs=?" should be applied to show
->> the available registers for --user-regs.
->>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
+> On powerpc32, patch_instruction() is called by apply_feature_fixups()
+> which is called from early_init()
 > 
-> For patch 1 and 2,
-> Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> There is the following note in front of early_init():
+>  * Note that the kernel may be running at an address which is different
+>  * from the address that it was linked at, so we must use RELOC/PTRRELOC
+>  * to access static data (including strings).  -- paulus
 > 
-> Minor neat. Should we update document as well? May be something like:
+> Therefore init_mem_is_free must be accessed with PTRRELOC()
 > 
->    tools/perf/Documentation/perf-record.txt
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203597
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 > 
->    --user-regs::
->    Similar to -I, but capture user registers at sample time. To list the available
->    user registers use --user-regs=\?.
->
-Hi Ravi,
+> ---
+> Can't apply the upstream commit as such due to several other unrelated stuff
+> like for instance STRICT_KERNEL_RWX which are missing.
+> So instead, using same approach as for commit 252eb55816a6f69ef9464cad303cdb3326cdc61d
+> 
+> Removed the Fixes: tag as I don't know yet the commit Id of the fixed commit on 4.4 branch.
+> ---
+>  arch/powerpc/lib/code-patching.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for test.
+Now added, thanks.
 
-The change of document looks good.
-
-Thanks,
-Kan
-
+greg k-h
