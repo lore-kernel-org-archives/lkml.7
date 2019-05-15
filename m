@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FB7C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B15C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DB952084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 460972084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920054;
-	bh=WP096DrFJd9NTFHr7Uf2Je+GPBnpNThOOq/0K7LtHTU=;
+	s=default; t=1557920056;
+	bh=XEBQsgEMtGwqV0S4Aabkcag4Y+CbX6J+lt0ONluxREA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VNbJ220RMRGMeRIv8pqvettcXRRk2Dqk/WPltLtp7ff2fhTjtHg6nqs16b8vHC3eX
-	 tEky5sInMK3FGaaZI06n3VNaxHGKBn1ebawIwLGNbyl2d7bAKsAMQ0La3ExdD8qzLa
-	 RAqNy6je5bcvDVJh2Hb96pCIRHQLbwrFi8eTZT9I=
+	b=eOd4KK/95rHoJlklT6v2jlQYicNICGeDRF4IpF1d3HDpSRSH7lcqhkQvuIJ5w1PTE
+	 tCj2K15STDe2QF1sUQGFAT36cgg/mWW9g+JCfROS1i//WmO+CFxyPJuHEJKkRrdpaV
+	 EpCTcDiiDCShluKXmFQgEpiu950GxDojkXik7AWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387411AbfEOLeN (ORCPT
+        id S2387429AbfEOLeP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:34:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46184 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:34:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387403AbfEOLeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:34:10 -0400
+        id S2387418AbfEOLeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:34:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BAA62084A;
-        Wed, 15 May 2019 11:34:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EA6D2053B;
+        Wed, 15 May 2019 11:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557920050;
-        bh=WP096DrFJd9NTFHr7Uf2Je+GPBnpNThOOq/0K7LtHTU=;
+        s=default; t=1557920052;
+        bh=XEBQsgEMtGwqV0S4Aabkcag4Y+CbX6J+lt0ONluxREA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eOSF5zw1KGuoFb5enexI+TVaqWbTlkb5lMqo2nY3Lliv0c2i+skuAOnKFIih8bstB
-         ugW89mP9FbbfxVLxiEG+qDOpiAmOJkIF83ohTyrsmUyrFnjihxnNEuAuof1JvAtvIp
-         ve/7RXtT0g2tZ3Sds43pUWjY5JQb0fU6bfntwf74=
+        b=w6+PvVRlRW2B0AzMoBg4yB3TbfvMzDajSilrxAtk3UHSD0RTjysh/G3MYDSBLcDMz
+         ar47TvGrNfHxVOX6ozs6FZRUdbhNNG/DqVUjfdqV/6ZiOO+LtYv731DzY9WOAUrSo1
+         /0R17p9gCLsPSd7yxBiRDE7yl638WnB7o2bl1NPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Subject: [PATCH 5.1 42/46] virtio_ring: Fix potential mem leak in virtqueue_add_indirect_packed
-Date:   Wed, 15 May 2019 12:57:06 +0200
-Message-Id: <20190515090628.890546862@linuxfoundation.org>
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "weiyongjun (A)" <weiyongjun1@huawei.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 33/46] tuntap: synchronize through tfiles array instead of tun->numqueues
+Date:   Wed, 15 May 2019 12:56:57 +0200
+Message-Id: <20190515090626.755482094@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -60,32 +63,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Jason Wang <jasowang@redhat.com>
 
-commit df0bfe7501e9319546ea380d39674a4179e059c3 upstream.
+[ Upstream commit 9871a9e47a2646fe30ae7fd2e67668a8d30912f6 ]
 
-'desc' should be freed before leaving from err handing path.
+When a queue(tfile) is detached through __tun_detach(), we move the
+last enabled tfile to the position where detached one sit but don't
+NULL out last position. We expect to synchronize the datapath through
+tun->numqueues. Unfortunately, this won't work since we're lacking
+sufficient mechanism to order or synchronize the access to
+tun->numqueues.
 
-Fixes: 1ce9e6055fa0 ("virtio_ring: introduce packed ring support")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Acked-by: Jason Wang <jasowang@redhat.com>
-stable@vger.kernel.org
+To fix this, NULL out the last position during detaching and check
+RCU protected tfile against NULL instead of checking tun->numqueues in
+datapath.
+
+Cc: YueHaibing <yuehaibing@huawei.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: weiyongjun (A) <weiyongjun1@huawei.com>
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Fixes: c8d68e6be1c3b ("tuntap: multiqueue support")
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+Reviewed-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/virtio/virtio_ring.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/tun.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -1004,6 +1004,7 @@ static int virtqueue_add_indirect_packed
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -705,6 +705,8 @@ static void __tun_detach(struct tun_file
+ 				   tun->tfiles[tun->numqueues - 1]);
+ 		ntfile = rtnl_dereference(tun->tfiles[index]);
+ 		ntfile->queue_index = index;
++		rcu_assign_pointer(tun->tfiles[tun->numqueues - 1],
++				   NULL);
  
- 	if (unlikely(vq->vq.num_free < 1)) {
- 		pr_debug("Can't add buf len 1 - avail = 0\n");
-+		kfree(desc);
- 		END_USE(vq);
- 		return -ENOSPC;
- 	}
+ 		--tun->numqueues;
+ 		if (clean) {
+@@ -1087,7 +1089,7 @@ static netdev_tx_t tun_net_xmit(struct s
+ 	tfile = rcu_dereference(tun->tfiles[txq]);
+ 
+ 	/* Drop packet if interface is not attached */
+-	if (txq >= tun->numqueues)
++	if (!tfile)
+ 		goto drop;
+ 
+ 	if (!rcu_dereference(tun->steering_prog))
+@@ -1310,6 +1312,7 @@ static int tun_xdp_xmit(struct net_devic
+ 
+ 	rcu_read_lock();
+ 
++resample:
+ 	numqueues = READ_ONCE(tun->numqueues);
+ 	if (!numqueues) {
+ 		rcu_read_unlock();
+@@ -1318,6 +1321,8 @@ static int tun_xdp_xmit(struct net_devic
+ 
+ 	tfile = rcu_dereference(tun->tfiles[smp_processor_id() %
+ 					    numqueues]);
++	if (unlikely(!tfile))
++		goto resample;
+ 
+ 	spin_lock(&tfile->tx_ring.producer_lock);
+ 	for (i = 0; i < n; i++) {
 
 
