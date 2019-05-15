@@ -2,53 +2,51 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C734BC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FE6C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3AC20578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31CA42053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:39:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920336;
-	bh=cCpzihbvXaaWTGpByLsxynU8DRIq2Yq+Ki/HH3TdJGw=;
+	s=default; t=1557920356;
+	bh=UU3Ny3DXCIZiG/CnTQgtWArACPnuP6EUlUSiPWLi2ss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xggHseh0f6wgfMq46DBcw3y0cLl6bGfv8VIZY70pAz344xecMCX+dJ1iEeeb+mjvH
-	 eZOOKkGntgrO84GVEMS+SdPw/5wKAy14lTwU4v+L3kw2cte61tJyiWXDXuxTvnPI1U
-	 6kqm1qLUz0UlD79qF8WiSiwidDOjE3h4WPlLQZUg=
+	b=eZgML700taq1kNuvdBDjQ7hyhDzh90kMuQDY3dXTnqVzmXOOzThBzxhSC2xbivlrK
+	 UHJHUGssdpn8aIldtVZiyWek27QovSXOw2ANwzq9UGPYnw1Sd2nv/xoIk2lyX+q+CR
+	 vnSEVFxhUuLXBf4UOxBxCuso4JuZkzXpSKFj0zd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731982AbfEOLiz (ORCPT
+        id S1732241AbfEOLjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:38:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42362 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:39:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732777AbfEOLao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:30:44 -0400
+        id S1732718AbfEOLaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:30:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFFC920843;
-        Wed, 15 May 2019 11:30:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE8ED206BF;
+        Wed, 15 May 2019 11:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919844;
-        bh=cCpzihbvXaaWTGpByLsxynU8DRIq2Yq+Ki/HH3TdJGw=;
+        s=default; t=1557919823;
+        bh=UU3Ny3DXCIZiG/CnTQgtWArACPnuP6EUlUSiPWLi2ss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=scnzcXYecBbUggojG1lCmaCA9QgI5it1rSfcirOymveqoRcYyoOsZVYGXB/TB19u/
-         3dLHYIideyKAAbngZ5APWA0jBHnCCmB22lqMBQ5tfi7hv/+xj6P12bsvozRBxW16Tb
-         rKqfBDGLNpaOYLvt+gs/rB0lZfcHI1PX5y4/K66Q=
+        b=HO+Y8O4jl+P1pdEys36TTI4JGKBsx+vWnTVzJZSCksKdS7IottOiaPPHjLiwW2W0n
+         3ZA3DIXcZPzblVpNzqjMDVzBlwjQVwhi0bSx2QLTwDrlemupq4osao5sBXXFdyoDjv
+         u84UVBLR4LVZTF8oIOxPJOjzDKtXnOQ6kyLPDheQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Andrei Vagin <avagin@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 078/137] netfilter: fix nf_l4proto_log_invalid to log invalid packets
-Date:   Wed, 15 May 2019 12:55:59 +0200
-Message-Id: <20190515090659.109923422@linuxfoundation.org>
+        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.0 106/137] bridge: Fix error path for kobject_init_and_add()
+Date:   Wed, 15 May 2019 12:56:27 +0200
+Message-Id: <20190515090701.255944297@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -61,37 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d48668052b2603b6262459625c86108c493588dd ]
+From: "Tobin C. Harding" <tobin@kernel.org>
 
-It doesn't log a packet if sysctl_log_invalid isn't equal to protonum
-OR sysctl_log_invalid isn't equal to IPPROTO_RAW. This sentence is
-always true. I believe we need to replace OR to AND.
+[ Upstream commit bdfad5aec1392b93495b77b864d58d7f101dc1c1 ]
 
-Cc: Florian Westphal <fw@strlen.de>
-Fixes: c4f3db1595827 ("netfilter: conntrack: add and use nf_l4proto_log_invalid")
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Currently error return from kobject_init_and_add() is not followed by a
+call to kobject_put().  This means there is a memory leak.  We currently
+set p to NULL so that kfree() may be called on it as a noop, the code is
+arguably clearer if we move the kfree() up closer to where it is
+called (instead of after goto jump).
+
+Remove a goto label 'err1' and jump to call to kobject_put() in error
+return from kobject_init_and_add() fixing the memory leak.  Re-name goto
+label 'put_back' to 'err1' now that we don't use err1, following current
+nomenclature (err1, err2 ...).  Move call to kfree out of the error
+code at bottom of function up to closer to where memory was allocated.
+Add comment to clarify call to kfree().
+
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/netfilter/nf_conntrack_proto.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bridge/br_if.c |   13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_proto.c b/net/netfilter/nf_conntrack_proto.c
-index 859f5d07a9159..78361e462e802 100644
---- a/net/netfilter/nf_conntrack_proto.c
-+++ b/net/netfilter/nf_conntrack_proto.c
-@@ -86,7 +86,7 @@ void nf_l4proto_log_invalid(const struct sk_buff *skb,
- 	struct va_format vaf;
- 	va_list args;
+--- a/net/bridge/br_if.c
++++ b/net/bridge/br_if.c
+@@ -602,13 +602,15 @@ int br_add_if(struct net_bridge *br, str
+ 	call_netdevice_notifiers(NETDEV_JOIN, dev);
  
--	if (net->ct.sysctl_log_invalid != protonum ||
-+	if (net->ct.sysctl_log_invalid != protonum &&
- 	    net->ct.sysctl_log_invalid != IPPROTO_RAW)
- 		return;
+ 	err = dev_set_allmulti(dev, 1);
+-	if (err)
+-		goto put_back;
++	if (err) {
++		kfree(p);	/* kobject not yet init'd, manually free */
++		goto err1;
++	}
  
--- 
-2.20.1
-
+ 	err = kobject_init_and_add(&p->kobj, &brport_ktype, &(dev->dev.kobj),
+ 				   SYSFS_BRIDGE_PORT_ATTR);
+ 	if (err)
+-		goto err1;
++		goto err2;
+ 
+ 	err = br_sysfs_addif(p);
+ 	if (err)
+@@ -700,12 +702,9 @@ err3:
+ 	sysfs_remove_link(br->ifobj, p->dev->name);
+ err2:
+ 	kobject_put(&p->kobj);
+-	p = NULL; /* kobject_put frees */
+-err1:
+ 	dev_set_allmulti(dev, -1);
+-put_back:
++err1:
+ 	dev_put(dev);
+-	kfree(p);
+ 	return err;
+ }
+ 
 
 
