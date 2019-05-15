@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFAEC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:02:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001B3C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58C5D20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:02:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC89420843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921777;
-	bh=zhCTksgoUuUCE9snSFnxvBQeEUtUfyolWGZGsd/UIIw=;
+	s=default; t=1557921784;
+	bh=0ywGC9Yqkg12L/7St2LmkxMzLNi5o8y1OqY36oPd8S0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PVVdaBxkHh6Yzh7Lyl8GbFb66tyvvJnMqt/u7jAkTlYfw1rvlZkkPvRbF8++Rc3Wi
-	 WdW/D2X+KWhlKe/mOo6DFLYHYP7IYa0afheLAqG/jAIkDxzTNUbM+5brHXT9ggCZWJ
-	 cpYjyJUPBoDZyv2MYox8pQwsP0vILDWY5T4nDopc=
+	b=NpvIpwVpiO4wnZHy/PrumIpH8MwwK93c0cThFqLBOZLReaHr8hGyd5cL0YQCp6kvk
+	 wU18DldfAjgBLGclN7+ceFGGiJTl1e7BNdFaMc9hbM8HQqybp8kVCTvN9lC+FmfKFk
+	 /VGE6ygOR4seMfpKi40+QEyiSkhY0hNCHUymgBUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730336AbfEOMC4 (ORCPT
+        id S1729589AbfEOMDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:02:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48468 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:03:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729303AbfEOLMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:12:53 -0400
+        id S1729840AbfEOLMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:12:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FF3220843;
-        Wed, 15 May 2019 11:12:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FD7F216F4;
+        Wed, 15 May 2019 11:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918772;
-        bh=zhCTksgoUuUCE9snSFnxvBQeEUtUfyolWGZGsd/UIIw=;
+        s=default; t=1557918767;
+        bh=0ywGC9Yqkg12L/7St2LmkxMzLNi5o8y1OqY36oPd8S0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xYQ7uy4QItxDbb+gTMBylKRzkgwu5R35dy/Cx8a/busIXFXKpHQAtFDiGvHZ/0ann
-         rP2wqTx7hRqfXpuD9tqzuaMshS6Kysw0eyyqdHxwEF5sBJaFFu+IYL3gZeCsYOHW5M
-         3d0FC84sarXwkc9AqJ3z1rxraqfFeCM9hN2vqMpo=
+        b=jpiGzf9bZCGPWbe6MZcaK6yq76qCoPeiKmiw9y9RI8CM/iauZZcir64Q9OIk9pc0F
+         MlJBVy4IHFsBYJh5JOtIaCWVaadpgXYax7jCvZZ00G9U6pah/KvIT893PkhreQ1S+9
+         wJY4+ps/0bsS3GNxZ1FLUnr+yhDv22kNQ1ghUXBM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Suryaputra <ssuryaextr@gmail.com>,
-        David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 261/266] vrf: sit mtu should not be updated when vrf netdev is the link
-Date:   Wed, 15 May 2019 12:56:08 +0200
-Message-Id: <20190515090731.846459420@linuxfoundation.org>
+Subject: [PATCH 4.4 259/266] packet: Fix error path in packet_init
+Date:   Wed, 15 May 2019 12:56:06 +0200
+Message-Id: <20190515090731.778326344@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,34 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Suryaputra <ssuryaextr@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit ff6ab32bd4e073976e4d8797b4d514a172cfe6cb ]
+[ Upstream commit 36096f2f4fa05f7678bc87397665491700bae757 ]
 
-VRF netdev mtu isn't typically set and have an mtu of 65536. When the
-link of a tunnel is set, the tunnel mtu is changed from 1480 to the link
-mtu minus tunnel header. In the case of VRF netdev is the link, then the
-tunnel mtu becomes 65516. So, fix it by not setting the tunnel mtu in
-this case.
+kernel BUG at lib/list_debug.c:47!
+invalid opcode: 0000 [#1
+CPU: 0 PID: 12914 Comm: rmmod Tainted: G        W         5.1.0+ #47
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:__list_del_entry_valid+0x53/0x90
+Code: 48 8b 32 48 39 fe 75 35 48 8b 50 08 48 39 f2 75 40 b8 01 00 00 00 5d c3 48
+89 fe 48 89 c2 48 c7 c7 18 75 fe 82 e8 cb 34 78 ff <0f> 0b 48 89 fe 48 c7 c7 50 75 fe 82 e8 ba 34 78 ff 0f 0b 48 89 f2
+RSP: 0018:ffffc90001c2fe40 EFLAGS: 00010286
+RAX: 000000000000004e RBX: ffffffffa0184000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffff888237a17788 RDI: 00000000ffffffff
+RBP: ffffc90001c2fe40 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffc90001c2fe10 R11: 0000000000000000 R12: 0000000000000000
+R13: ffffc90001c2fe50 R14: ffffffffa0184000 R15: 0000000000000000
+FS:  00007f3d83634540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555c350ea818 CR3: 0000000231677000 CR4: 00000000000006f0
+Call Trace:
+ unregister_pernet_operations+0x34/0x120
+ unregister_pernet_subsys+0x1c/0x30
+ packet_exit+0x1c/0x369 [af_packet
+ __x64_sys_delete_module+0x156/0x260
+ ? lockdep_hardirqs_on+0x133/0x1b0
+ ? do_syscall_64+0x12/0x1f0
+ do_syscall_64+0x6e/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Signed-off-by: Stephen Suryaputra <ssuryaextr@gmail.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
+When modprobe af_packet, register_pernet_subsys
+fails and does a cleanup, ops->list is set to LIST_POISON1,
+but the module init is considered to success, then while rmmod it,
+BUG() is triggered in __list_del_entry_valid which is called from
+unregister_pernet_subsys. This patch fix error handing path in
+packet_init to avoid possilbe issue if some error occur.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/sit.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/packet/af_packet.c |   25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
---- a/net/ipv6/sit.c
-+++ b/net/ipv6/sit.c
-@@ -1076,7 +1076,7 @@ static void ipip6_tunnel_bind_dev(struct
- 	if (!tdev && tunnel->parms.link)
- 		tdev = __dev_get_by_index(tunnel->net, tunnel->parms.link);
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -4523,14 +4523,29 @@ static void __exit packet_exit(void)
  
--	if (tdev) {
-+	if (tdev && !netif_is_l3_master(tdev)) {
- 		int t_hlen = tunnel->hlen + sizeof(struct iphdr);
+ static int __init packet_init(void)
+ {
+-	int rc = proto_register(&packet_proto, 0);
++	int rc;
  
- 		dev->hard_header_len = tdev->hard_header_len + sizeof(struct iphdr);
+-	if (rc != 0)
++	rc = proto_register(&packet_proto, 0);
++	if (rc)
+ 		goto out;
++	rc = sock_register(&packet_family_ops);
++	if (rc)
++		goto out_proto;
++	rc = register_pernet_subsys(&packet_net_ops);
++	if (rc)
++		goto out_sock;
++	rc = register_netdevice_notifier(&packet_netdev_notifier);
++	if (rc)
++		goto out_pernet;
+ 
+-	sock_register(&packet_family_ops);
+-	register_pernet_subsys(&packet_net_ops);
+-	register_netdevice_notifier(&packet_netdev_notifier);
++	return 0;
++
++out_pernet:
++	unregister_pernet_subsys(&packet_net_ops);
++out_sock:
++	sock_unregister(PF_PACKET);
++out_proto:
++	proto_unregister(&packet_proto);
+ out:
+ 	return rc;
+ }
 
 
