@@ -2,117 +2,78 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E78FFC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C752C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADD2D20881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:18:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5BBB20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:19:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nqADupGE"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="w6+92amr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfEOQSL (ORCPT
+        id S1727128AbfEOQTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 12:18:11 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45117 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfEOQSL (ORCPT
+        Wed, 15 May 2019 12:19:12 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:42489 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbfEOQTM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 12:18:11 -0400
-Received: by mail-qk1-f195.google.com with SMTP id j1so308708qkk.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 09:18:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wKJWA2gYy8hkL7h9RJYBNbZLfdoFycnmyjs/dg+DBhI=;
-        b=nqADupGETekpQGxSasrfeywHHy3SYg0lZm05IeXauZpYwkicj0KwonpEd1x2ET9RhQ
-         50LV0Qm23En3mVyamgg4DrsgqAIARvRC650+m7BvHXoYYg6AS5TI7cw/VUAKJN/17wgw
-         HzrQ4/m4lX2iLB2MmUZPu1aHzEQS7j9t8fkSM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wKJWA2gYy8hkL7h9RJYBNbZLfdoFycnmyjs/dg+DBhI=;
-        b=SF1rezyhOnRbUozhcV0S8R2TORupI5x5mk0+WhTvARkR+9+atYIdviZohbBTQHKWk0
-         f4CR1+w6dJrYc5hUiFAAd2a3usWzH3e7a315h9oZ9mxALrSw9AjDSVh73SLs8r2PRN0l
-         51a4UASJSNS2XaTRVXWjMbIt3gPvaMLJ5wtKYcS2398h7YMaK7eg0EbJYFdQDsmYpypG
-         Jg6UNSIGfuH/dUIpzWU8Iu8I7evGwDt8l8Km9DVUK0JyaGGIvYAryXKm9WVr85zlFX0O
-         3cRQaQM0HoVQW+TY+aifo3KAgV+zZWgfPiEXz2V6TJrVT9SNtv4E1glqP9Z+Lx2zzywl
-         kDig==
-X-Gm-Message-State: APjAAAVf8108I/SfN+drC90tzxnJwV1Um0Y4UDqgU8d/SY/vyB4XzXEw
-        sEOi/yZ52sXoJ/8kT8fm9BnnRaXe/R5SJ+T/x+37IQ==
-X-Google-Smtp-Source: APXvYqzxBO3O/axKZZPrkz1SErSLRjHPViiYzVfRAlQlCkiJUzYIqsT0KwYglti9YjSfrpCPHE4czG8MNoAoAPztlNI=
-X-Received: by 2002:a37:a5c6:: with SMTP id o189mr34016558qke.318.1557937090254;
- Wed, 15 May 2019 09:18:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190513220610.177489-1-ravisadineni@chromium.org> <CAKdAkRQ_J6QWxtWpoRQnNWKcJpXox6xVDZWcWYOXkBhPSn99Rw@mail.gmail.com>
-In-Reply-To: <CAKdAkRQ_J6QWxtWpoRQnNWKcJpXox6xVDZWcWYOXkBhPSn99Rw@mail.gmail.com>
-From:   Ravi Chandra Sadineni <ravisadineni@chromium.org>
-Date:   Wed, 15 May 2019 09:17:59 -0700
-Message-ID: <CAEZbON4Z5GKYvMZJ8ojko_f1xzv2rf4uR6cDz2LMxu+XvzTzog@mail.gmail.com>
-Subject: Re: [PATCH V1] elan_i2c: Increment wakeup count if wake source.
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     =?UTF-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Abhishek Bhardwaj <abhishekbh@google.com>,
-        Todd Broch <tbroch@google.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 15 May 2019 12:19:12 -0400
+Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id x4FGIuEA026256;
+        Thu, 16 May 2019 01:18:57 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com x4FGIuEA026256
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557937137;
+        bh=JwM+VF20VSpn7dLHiTgp+GAap4ILLRnNNwQOT5M64YE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=w6+92amreV8eYZs+R9fP/2VltJfztR1kFu30D+q3uxZ/t14HzfsNf07tT6emXS6pe
+         FTg3yxcQELNSGSwd7VmEXAfSGZcZ2UvKlzKgaBPRPQdOmMou34DdtgdlbZeIPyU4pV
+         S8EohCigNHf3LIgMmZymh2xd1ZpJFc/FZLa7tvaTxsThw6Fy7HGMmApps7aqv5sYbJ
+         yGM8I3L6ByLadhXhYSNg9CuyVFQiPe24kKmY8dIz5st1j6juxVfSWJC1W2xvc5Qfaz
+         LkcmYdsJEMn17S743TkV9FWrYyipp/1plqfqEGaovoqjcRWu14a/ay6JNN4f6thj9V
+         I5xe67ZLXBPvg==
+X-Nifty-SrcIP: [126.125.154.139]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: add LICENSES to KBUILD_ALLDIRS
+Date:   Thu, 16 May 2019 01:18:54 +0900
+Message-Id: <1557937134-9236-1-git-send-email-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+For *-pkg targets, the LICENSES directory should be included in the
+source tarball.
 
-On Mon, May 13, 2019 at 4:29 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Hi Ravi,
->
-> On Mon, May 13, 2019 at 3:06 PM Ravi Chandra Sadineni
-> <ravisadineni@chromium.org> wrote:
-> >
-> > Notify the PM core that this dev is the wake source. This helps
-> > userspace daemon tracking the wake source to identify the origin of the
-> > wake.
->
-> I wonder if we could do that form the i2c core instead of individual drivers?
-I am sorry, I don't see a way how this could be done.
->
-> >
-> > Signed-off-by: Ravi Chandra Sadineni <ravisadineni@chromium.org>
-> > ---
-> >  drivers/input/mouse/elan_i2c_core.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-> > index f9525d6f0bfe..2c0561e20b7f 100644
-> > --- a/drivers/input/mouse/elan_i2c_core.c
-> > +++ b/drivers/input/mouse/elan_i2c_core.c
-> > @@ -981,6 +981,8 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
-> >         if (error)
-> >                 goto out;
-> >
-> > +       pm_wakeup_event(dev, 0);
-> > +
-> >         switch (report[ETP_REPORT_ID_OFFSET]) {
-> >         case ETP_REPORT_ID:
-> >                 elan_report_absolute(data, report);
-> > --
-> > 2.20.1
-> >
->
-> Thanks.
->
-> --
-> Dmitry
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Thanks,
-Ravi
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 9542165..e5414f7 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1016,7 +1016,7 @@ export KBUILD_VMLINUX_LIBS := $(libs-y1)
+ export KBUILD_LDS          := arch/$(SRCARCH)/kernel/vmlinux.lds
+ export LDFLAGS_vmlinux
+ # used by scripts/package/Makefile
+-export KBUILD_ALLDIRS := $(sort $(filter-out arch/%,$(vmlinux-alldirs)) arch include scripts tools)
++export KBUILD_ALLDIRS := $(sort $(filter-out arch/%,$(vmlinux-alldirs)) LICENSES arch include scripts tools)
+ 
+ vmlinux-deps := $(KBUILD_LDS) $(KBUILD_VMLINUX_OBJS) $(KBUILD_VMLINUX_LIBS)
+ 
+-- 
+2.7.4
+
