@@ -2,147 +2,147 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4647C46470
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA08C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F6020873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:11:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WygKCYcn"
+	by mail.kernel.org (Postfix) with ESMTP id 53AA120873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:13:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557962012;
+	bh=oXIRUhaHoitttMrIPB2rv0mrXlZVPITnJpfkP2WGxVA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ETxEweuCUvAyxbOkxxagz7HVaq5q0+j8EmZo6mmgvhTm+VeE2LEWi2c0II+zj45fX
+	 oDFbYJuinxYUtQjEWhX1n9XCv3uw0psDDw5zzOGYxEFheXnqCcswrW8RoC8c42hFbs
+	 9GLc6709UiyODjUoxVdQSTxJcD7/IfOfquvy9m7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfEOXLo (ORCPT
+        id S1726461AbfEOXNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 19:11:44 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:51916 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfEOXLo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 19:11:44 -0400
-Received: by mail-it1-f193.google.com with SMTP id s3so3038397itk.1;
-        Wed, 15 May 2019 16:11:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cN3+Ygjn4FIdAipa5bUqsDEqVVhDGW46hPCnToLIxo4=;
-        b=WygKCYcnp10z8Ruf7KIWgzGuHed1D/DN7EURO6AsVIXU5Gi5ulDpcHEf5dneDB0szJ
-         XQLyWhxBOaoOVQMY1CuvkH5pUV1kL64SZguQ9b9f8KR9d1feJIPm/3hwgutvH4ArY1nD
-         biBIJCE+DRRQ1V4H7DN931zb56/DU+MCDYGhy8iXQ9sgPFdlFgb4us9e1hSspr58dyN7
-         Nf6FAxEIOEiawAK32P8OMVdgPnQ4OhevuQ/ZO+UzYSzvAmiUhBf1Eh69QpOMcTt1CZcU
-         cwQ4Iyy9kh6Zwf+KaWhpgYFa7KsLfzhdv5UNmmuG0mBATqy6+lGf/ESHygMbZ959tvpb
-         v5gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cN3+Ygjn4FIdAipa5bUqsDEqVVhDGW46hPCnToLIxo4=;
-        b=I1V2yrCrALjSszoMG4+v/7VdS1Psf6LszAVuUIP0EFU+OCKN7ZrUECBdjnLfHTWMcy
-         Gva6HhR6MbEPcv9f59hzYPEWkzSOnns6ZNWzGB94itwVKoADgljoeytcH9PQ9w6NVc/b
-         ug2NtNYMerDVnAmmnT+PhBQNqdgg2uUwcGlU6u/eIpAFniRKYtmCb14P+o4scSQu3h9W
-         mzbxbGoaZairKyg5dNhEn8CNMC/2J8mkIaxRqNyVTNnNvnkPOoiFVGdM6Bh3+iq2BsbK
-         2a7WfmBXyc7tdUJkuBN+jKVsvfo1lJ+x7ink65jx2OFRnkLDjyBPjkmbLAanZIKyvPVP
-         U3Bw==
-X-Gm-Message-State: APjAAAXT527z1PCfcQwWDbHqwMq+Oeg1olF8Bd5na+POD0PRuvCZiBKs
-        GNwcfeI/TtsRoG7giC7xBWVFxIOsktul8Yz0fjo=
-X-Google-Smtp-Source: APXvYqycWgySzDHc20+yTvOMmVS6nuQ8hTsHDl682JxKLCfUYs7sznmDxHdhjWmszO0bPpBoXvKmc/qT/9UpNPtG5GE=
-X-Received: by 2002:a05:660c:8c6:: with SMTP id g6mr4171191itl.17.1557961903672;
- Wed, 15 May 2019 16:11:43 -0700 (PDT)
+        Wed, 15 May 2019 19:13:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726389AbfEOXNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 19:13:30 -0400
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F04FE21773
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 23:13:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557962009;
+        bh=oXIRUhaHoitttMrIPB2rv0mrXlZVPITnJpfkP2WGxVA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VbF8Ip5K02eLqRuNtSS6WygUsSTTLfyAYn9NcN3u9GKSyhtm3+BN8zkh35/Dq8Ekl
+         BLooL6ayE6/H0fEyV9VadrhQFqHsDyCMtDszV2imLL0hKb1Cba9BH4ZcIchASyFnVv
+         uYGJFISNfE49xSl0pLPqhJzxWUFndnszyL6u0ULw=
+Received: by mail-wr1-f53.google.com with SMTP id l2so1214346wrb.9
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 16:13:28 -0700 (PDT)
+X-Gm-Message-State: APjAAAWxJbfhZWSjkUYeYgr2VlnBYl/LpgF7g2HlZadDRAt9RkbgELTn
+        ZEvZmr69MNlXRQ558Ai6oZIhIW0oKrw//EHkXwMDhw==
+X-Google-Smtp-Source: APXvYqx8WK5Hi6FoJcSd9VsW2VbRkOOSjlnlo07tWriqsFOxSCmdirUQKhI03vZN1Sh8qXdY8fD30ruPZx0us0bAMz4=
+X-Received: by 2002:adf:fb4a:: with SMTP id c10mr26918322wrs.309.1557962007443;
+ Wed, 15 May 2019 16:13:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <1557954545-17831-1-git-send-email-longli@linuxonhyperv.com> <1557954545-17831-2-git-send-email-longli@linuxonhyperv.com>
-In-Reply-To: <1557954545-17831-2-git-send-email-longli@linuxonhyperv.com>
-From:   ronnie sahlberg <ronniesahlberg@gmail.com>
-Date:   Thu, 16 May 2019 09:11:32 +1000
-Message-ID: <CAN05THR1VL6W2YJSeNdOsWpM1r7PhMESyzJYSgjZD7=bSFvY+Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] cifs: Allocate memory for all iovs in smb2_ioctl
-To:     Long Li <longli@microsoft.com>
-Cc:     Steve French <sfrench@samba.org>,
-        linux-cifs <linux-cifs@vger.kernel.org>,
-        "samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
+ <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com> <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
+ <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com> <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+ <20190513102926.GD8743@linux.intel.com> <20190514104323.GA7591@linux.intel.com>
+ <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+ <20190514204527.GC1977@linux.intel.com> <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
+ <20190515013031.GF1977@linux.intel.com> <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+ <alpine.LRH.2.21.1905160543070.19802@namei.org> <CALCETrX_Q6qwNRNF0TL2tgfm1j6DKLX7NVHHmWbMFtk3WnHDKw@mail.gmail.com>
+ <alpine.LRH.2.21.1905160844130.29250@namei.org>
+In-Reply-To: <alpine.LRH.2.21.1905160844130.29250@namei.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 15 May 2019 16:13:15 -0700
+X-Gmail-Original-Message-ID: <CALCETrX2ovRx3Rre+1_xC-q6CiybyLjQ-gmB4FZF_qCZ-Qd+4A@mail.gmail.com>
+Message-ID: <CALCETrX2ovRx3Rre+1_xC-q6CiybyLjQ-gmB4FZF_qCZ-Qd+4A@mail.gmail.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+To:     James Morris <jmorris@namei.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 7:10 AM <longli@linuxonhyperv.com> wrote:
+On Wed, May 15, 2019 at 3:46 PM James Morris <jmorris@namei.org> wrote:
 >
-> From: Long Li <longli@microsoft.com>
+> On Wed, 15 May 2019, Andy Lutomirski wrote:
 >
-> An IOCTL uses up to 2 iovs. The 1st iov is the command itself, the 2nd iov is
-> optional data for that command. The 1st iov is always allocated on the heap
-> but the 2nd iov may point to a variable on the stack. This will trigger an
-> error when passing the 2nd iov for RDMA I/O.
+> > > Why not just use an xattr, like security.sgx ?
+> >
+> > Wouldn't this make it so that only someone with CAP_MAC_ADMIN could
+> > install an enclave?  I think that this decision should be left up the
+> > administrator, and it should be easy to set up a loose policy where
+> > anyone can load whatever enclave they want.  That's what would happen
+> > in my proposal if there was no LSM loaded or of the LSM policy didn't
+> > restrict what .sigstruct files were acceptable.
+> >
 >
-> Fix this by allocating a buffer for the 2nd iov.
->
-> Signed-off-by: Long Li <longli@microsoft.com>
-> ---
->  fs/cifs/smb2pdu.c | 21 +++++++++++++++++++--
->  1 file changed, 19 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
-> index 29f011d8d8e2..710ceb875161 100644
-> --- a/fs/cifs/smb2pdu.c
-> +++ b/fs/cifs/smb2pdu.c
-> @@ -2538,11 +2538,25 @@ SMB2_ioctl_init(struct cifs_tcon *tcon, struct smb_rqst *rqst,
->         struct kvec *iov = rqst->rq_iov;
->         unsigned int total_len;
->         int rc;
-> +       char *in_data_buf;
->
->         rc = smb2_plain_req_init(SMB2_IOCTL, tcon, (void **) &req, &total_len);
->         if (rc)
->                 return rc;
->
-> +       if (indatalen) {
-> +               /*
-> +                * indatalen is usually small at a couple of bytes max, so
-> +                * just allocate through generic pool
-> +                */
-> +               in_data_buf = kmalloc(indatalen, GFP_NOFS);
-> +               if (!in_data_buf) {
-> +                       cifs_small_buf_release(req);
-> +                       return -ENOMEM;
-> +               }
-> +               memcpy(in_data_buf, in_data, indatalen);
-> +       }
-> +
->         req->CtlCode = cpu_to_le32(opcode);
->         req->PersistentFileId = persistent_fid;
->         req->VolatileFileId = volatile_fid;
-> @@ -2563,7 +2577,7 @@ SMB2_ioctl_init(struct cifs_tcon *tcon, struct smb_rqst *rqst,
->                        cpu_to_le32(offsetof(struct smb2_ioctl_req, Buffer));
->                 rqst->rq_nvec = 2;
->                 iov[0].iov_len = total_len - 1;
-> -               iov[1].iov_base = in_data;
-> +               iov[1].iov_base = in_data_buf;
->                 iov[1].iov_len = indatalen;
->         } else {
->                 rqst->rq_nvec = 1;
-> @@ -2605,8 +2619,11 @@ SMB2_ioctl_init(struct cifs_tcon *tcon, struct smb_rqst *rqst,
->  void
->  SMB2_ioctl_free(struct smb_rqst *rqst)
->  {
-> -       if (rqst && rqst->rq_iov)
-> +       if (rqst && rqst->rq_iov) {
->                 cifs_small_buf_release(rqst->rq_iov[0].iov_base); /* request */
-> +               if (rqst->rq_iov[1].iov_len)
-> +                       kfree(rqst->rq_iov[1].iov_base);
-
-You don't need the conditional. kfree(NULL) is safe,.
-
-> +       }
->  }
->
->
-> --
-> 2.17.1
+> You could try user.sigstruct, which does not require any privs.
 >
 
-Reviewed-by: Ronnie sahlberg <lsahlber@redhat.com>
+I don't think I understand your proposal.  What file would this
+attribute be on?  What would consume it?
+
+I'm imagining that there's some enclave in a file
+crypto_thingy.enclave.  There's also a file crypto_thingy.sigstruct.
+crypto_thingy.enclave has type lib_t or similar so that it's
+executable.  crypto_thingy.sigstruct has type sgx_sigstruct_t.  The
+enclave loader does, in effect:
+
+void *source_data = mmap(crypto_thingy.enclave, PROT_READ | PROT_EXEC, ...);
+int sigstruct_fd = open("crypto_thingy.sigstruct", O_RDONLY);
+int enclave_fd = open("/dev/sgx/enclave", O_RDWR);
+
+ioctl(enclave_fd, SGX_IOC_ADD_SOME_DATA, source_data + source_offset,
+enclave_offset, len, ...);
+ioctl(enclave_fd, SGX_IOC_ADD_SOME_DATA, source_data + source_offset2,
+enclave_offset2, len, ...);
+etc.
+
+/* Here's where LSMs get to check that the sigstruct is acceptable.
+The CPU will check that the sigstruct matches the enclave. */
+ioctl(enclave_fd, SGX_INIT_THE_ENCLAVE, sigstruct_fd);
+
+/* Actually map the thing */
+mmap(enclave_fd RO section, PROT_READ, ...);
+mmap(enclave_fd RW section, PROT_READ | PROT_WRITE, ...);
+mmap(enclave_fd RX section, PROT_READ | PROT_EXEC, ...);
+
+/* This should fail unless EXECMOD is available, I think */
+mmap(enclave_fd RWX section, PROT_READ | PROT_WRITE | PROT_EXEC);
+
+And the idea here is that, if the .enclave file isn't mapped
+PROT_EXEC, then mmapping the RX section will also require EXECMEM or
+EXECMOD.
