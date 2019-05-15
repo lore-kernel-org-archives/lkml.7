@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 325C2C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D091C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED7A520657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E18AE20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921408;
-	bh=zumhebDlMS+1xOtQgAdOJf5PiuJ3GAZZf018nQT37s8=;
+	s=default; t=1557921423;
+	bh=lRWpwBxAKkzSsOcpMD/arrQGly+y9KLqL+kJlimOI38=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xPurD/txazlUFoH5meIeSehPL/bH+0QbkkpzLJu5aPb6wyGsCqft3Pb5m0hWeoT82
-	 6/D4qArFIySHfS9YbCmTVcL80GuSdLBYQRtlCiKfqMjBP/OQUxag96xbem94G+FxXl
-	 Gu5+RDJp1PRaOJMF4ad436tVC6zi0MblvaC4hXJ4=
+	b=WTeZbov8LUytOC1+GCFdOTxlZx4kyPY96GAVow5EqtWP8RPZsOcyDwMYXi7YDSyff
+	 j5ttOD7sAjFSzxNwe5l854WMYeWGeD9v5gJ8eS3Ci/1GyNdC6DY8C2GV1i+z9Lk5yH
+	 DPJeBIfgYBUWe6utTfj1PpQi1i2Jq40lDp69es6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731068AbfEOL4q (ORCPT
+        id S1730876AbfEOL5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:56:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55086 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:57:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728287AbfEOLRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:17:44 -0400
+        id S1728459AbfEOLR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:17:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9414320644;
-        Wed, 15 May 2019 11:17:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA8E8206BF;
+        Wed, 15 May 2019 11:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919064;
-        bh=zumhebDlMS+1xOtQgAdOJf5PiuJ3GAZZf018nQT37s8=;
+        s=default; t=1557919048;
+        bh=lRWpwBxAKkzSsOcpMD/arrQGly+y9KLqL+kJlimOI38=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FssqqGYWu7DipBd8B3M69Tc56riIo8yu6EWtYvt/eulqakU8d5civH1oJ+3n5apyL
-         7ZFUh2TlcjRQkWHGOL26f6qqHDOyIR1P9WAKGqTqnRoWte7a0JnUAISgkTzW6DS6lH
-         rvZRfMAxwuIkinwnZZFqMjeN04WTEIpedY+KzsBo=
+        b=GEKZSknXB0Cf9iDB/YX2LLDRPZWiyFa6lVMwXfKkR9dQzCL3TOw6UzFEG0k0hUc8e
+         6DdE4O+vVbpKCFLoEXdCTV6SjNoAouXHmjLKVVcIt4Lzw2W1vvO1aAUT8i1o5H7zUv
+         AZXz8atjJNXnRv61r5g16VPPDDb9vvHrtsxpiWXY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Seth Howell <seth.howell@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 051/115] media: adv7842: when the EDID is cleared, unconfigure CEC as well
-Date:   Wed, 15 May 2019 12:55:31 +0200
-Message-Id: <20190515090703.304859002@linuxfoundation.org>
+Subject: [PATCH 4.14 045/115] IB/rxe: Revise the ib_wr_opcode enum
+Date:   Wed, 15 May 2019 12:55:25 +0200
+Message-Id: <20190515090702.763611027@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -60,35 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ab83203e181015b099720aff43ffabc1812e0fb3 ]
+[ Upstream commit 9a59739bd01f77db6fbe2955a4fce165f0f43568 ]
 
-When there is no EDID the CEC adapter should be unconfigured as
-well. So call cec_phys_addr_invalidate() when this happens.
+This enum has become part of the uABI, as both RXE and the
+ib_uverbs_post_send() command expect userspace to supply values from this
+enum. So it should be properly placed in include/uapi/rdma.
 
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: <stable@vger.kernel.org>      # for v4.18 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+In userspace this enum is called 'enum ibv_wr_opcode' as part of
+libibverbs.h. That enum defines different values for IB_WR_LOCAL_INV,
+IB_WR_SEND_WITH_INV, and IB_WR_LSO. These were introduced (incorrectly, it
+turns out) into libiberbs in 2015.
+
+The kernel has changed its mind on the numbering for several of the IB_WC
+values over the years, but has remained stable on IB_WR_LOCAL_INV and
+below.
+
+Based on this we can conclude that there is no real user space user of the
+values beyond IB_WR_ATOMIC_FETCH_AND_ADD, as they have never worked via
+rdma-core. This is confirmed by inspection, only rxe uses the kernel enum
+and implements the latter operations. rxe has clearly never worked with
+these attributes from userspace. Other drivers that support these opcodes
+implement the functionality without calling out to the kernel.
+
+To make IB_WR_SEND_WITH_INV and related work for RXE in userspace we
+choose to renumber the IB_WR enum in the kernel to match the uABI that
+userspace has bee using since before Soft RoCE was merged. This is an
+overall simpler configuration for the whole software stack, and obviously
+can't break anything existing.
+
+Reported-by: Seth Howell <seth.howell@intel.com>
+Tested-by: Seth Howell <seth.howell@intel.com>
+Fixes: 8700e3e7c485 ("Soft RoCE driver")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/media/i2c/adv7842.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/rdma/ib_verbs.h           | 34 ++++++++++++++++++-------------
+ include/uapi/rdma/ib_user_verbs.h | 20 +++++++++++++++++-
+ 2 files changed, 39 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/media/i2c/adv7842.c b/drivers/media/i2c/adv7842.c
-index f9c23173c9fa0..dcce8d030e5db 100644
---- a/drivers/media/i2c/adv7842.c
-+++ b/drivers/media/i2c/adv7842.c
-@@ -799,8 +799,10 @@ static int edid_write_hdmi_segment(struct v4l2_subdev *sd, u8 port)
- 	/* Disable I2C access to internal EDID ram from HDMI DDC ports */
- 	rep_write_and_or(sd, 0x77, 0xf3, 0x00);
+diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
+index 5a24b4c700e59..9e76b2410d03f 100644
+--- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@ -1251,21 +1251,27 @@ struct ib_qp_attr {
+ };
  
--	if (!state->hdmi_edid.present)
-+	if (!state->hdmi_edid.present) {
-+		cec_phys_addr_invalidate(state->cec_adap);
- 		return 0;
-+	}
+ enum ib_wr_opcode {
+-	IB_WR_RDMA_WRITE,
+-	IB_WR_RDMA_WRITE_WITH_IMM,
+-	IB_WR_SEND,
+-	IB_WR_SEND_WITH_IMM,
+-	IB_WR_RDMA_READ,
+-	IB_WR_ATOMIC_CMP_AND_SWP,
+-	IB_WR_ATOMIC_FETCH_AND_ADD,
+-	IB_WR_LSO,
+-	IB_WR_SEND_WITH_INV,
+-	IB_WR_RDMA_READ_WITH_INV,
+-	IB_WR_LOCAL_INV,
+-	IB_WR_REG_MR,
+-	IB_WR_MASKED_ATOMIC_CMP_AND_SWP,
+-	IB_WR_MASKED_ATOMIC_FETCH_AND_ADD,
++	/* These are shared with userspace */
++	IB_WR_RDMA_WRITE = IB_UVERBS_WR_RDMA_WRITE,
++	IB_WR_RDMA_WRITE_WITH_IMM = IB_UVERBS_WR_RDMA_WRITE_WITH_IMM,
++	IB_WR_SEND = IB_UVERBS_WR_SEND,
++	IB_WR_SEND_WITH_IMM = IB_UVERBS_WR_SEND_WITH_IMM,
++	IB_WR_RDMA_READ = IB_UVERBS_WR_RDMA_READ,
++	IB_WR_ATOMIC_CMP_AND_SWP = IB_UVERBS_WR_ATOMIC_CMP_AND_SWP,
++	IB_WR_ATOMIC_FETCH_AND_ADD = IB_UVERBS_WR_ATOMIC_FETCH_AND_ADD,
++	IB_WR_LSO = IB_UVERBS_WR_TSO,
++	IB_WR_SEND_WITH_INV = IB_UVERBS_WR_SEND_WITH_INV,
++	IB_WR_RDMA_READ_WITH_INV = IB_UVERBS_WR_RDMA_READ_WITH_INV,
++	IB_WR_LOCAL_INV = IB_UVERBS_WR_LOCAL_INV,
++	IB_WR_MASKED_ATOMIC_CMP_AND_SWP =
++		IB_UVERBS_WR_MASKED_ATOMIC_CMP_AND_SWP,
++	IB_WR_MASKED_ATOMIC_FETCH_AND_ADD =
++		IB_UVERBS_WR_MASKED_ATOMIC_FETCH_AND_ADD,
++
++	/* These are kernel only and can not be issued by userspace */
++	IB_WR_REG_MR = 0x20,
+ 	IB_WR_REG_SIG_MR,
++
+ 	/* reserve values for low level drivers' internal use.
+ 	 * These values will not be used at all in the ib core layer.
+ 	 */
+diff --git a/include/uapi/rdma/ib_user_verbs.h b/include/uapi/rdma/ib_user_verbs.h
+index e0e83a105953a..e11b4def8630f 100644
+--- a/include/uapi/rdma/ib_user_verbs.h
++++ b/include/uapi/rdma/ib_user_verbs.h
+@@ -751,10 +751,28 @@ struct ib_uverbs_sge {
+ 	__u32 lkey;
+ };
  
- 	pa = cec_get_edid_phys_addr(edid, 256, &spa_loc);
- 	err = cec_phys_addr_validate(pa, &pa, NULL);
++enum ib_uverbs_wr_opcode {
++	IB_UVERBS_WR_RDMA_WRITE = 0,
++	IB_UVERBS_WR_RDMA_WRITE_WITH_IMM = 1,
++	IB_UVERBS_WR_SEND = 2,
++	IB_UVERBS_WR_SEND_WITH_IMM = 3,
++	IB_UVERBS_WR_RDMA_READ = 4,
++	IB_UVERBS_WR_ATOMIC_CMP_AND_SWP = 5,
++	IB_UVERBS_WR_ATOMIC_FETCH_AND_ADD = 6,
++	IB_UVERBS_WR_LOCAL_INV = 7,
++	IB_UVERBS_WR_BIND_MW = 8,
++	IB_UVERBS_WR_SEND_WITH_INV = 9,
++	IB_UVERBS_WR_TSO = 10,
++	IB_UVERBS_WR_RDMA_READ_WITH_INV = 11,
++	IB_UVERBS_WR_MASKED_ATOMIC_CMP_AND_SWP = 12,
++	IB_UVERBS_WR_MASKED_ATOMIC_FETCH_AND_ADD = 13,
++	/* Review enum ib_wr_opcode before modifying this */
++};
++
+ struct ib_uverbs_send_wr {
+ 	__u64 wr_id;
+ 	__u32 num_sge;
+-	__u32 opcode;
++	__u32 opcode;		/* see enum ib_uverbs_wr_opcode */
+ 	__u32 send_flags;
+ 	union {
+ 		__u32 imm_data;
 -- 
 2.20.1
 
