@@ -2,228 +2,219 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3491C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 22:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09538C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 22:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 776BA2082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 22:05:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TEC2jSav"
+	by mail.kernel.org (Postfix) with ESMTP id CB0942084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 22:21:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbfEOWF3 (ORCPT
+        id S1726265AbfEOWVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 18:05:29 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:38551 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfEOWF2 (ORCPT
+        Wed, 15 May 2019 18:21:08 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34690 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfEOWVH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 18:05:28 -0400
-Received: by mail-yb1-f195.google.com with SMTP id a13so446627ybm.5;
-        Wed, 15 May 2019 15:05:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=CRLT4dWLqRM/ZZXMmXCwJjTergOTF43/E2BM9syTfec=;
-        b=TEC2jSavzL2UXeNecfQHwh5fEdAYfPrVsB5TUZSIjXTlEy/XMjzap00vwXGrAXJNCu
-         1rZH1zpLlX+fiSILnyzkYKogPili3LUPUqZlBHWgUNWRgGdUWxiahptHUH4op3nfP+Je
-         cslfDPSVPO9iJzXT97wesUC05nqssX6QntLh5Er/na7dCAMgCryIi+tYdiYLR2RBxLbX
-         0mfT0WyZ8IAcKFR95Z1yj+N7D8uv5d6D7yiyqgA7UbJtBUErfeKf3i9Jagu7tkTkbwMq
-         7SDOvVvA3W58q45RihuofjyRCP+0lF8yn3qCA5SLkbuaJ0BMdREozcBo8hQnYSdYNbxk
-         kJqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CRLT4dWLqRM/ZZXMmXCwJjTergOTF43/E2BM9syTfec=;
-        b=XrDTjeybR2xONUn9yvNcEwpuBCOegVAvxFuj2dLuhyFU4/4Hd8tEP73HyBM9xfa336
-         mhBjUVuAbnvoQc7pgfwkUBAjHrnRJvEHbtyIuhbuXSuEo3axcT9vjHJTXYowvkysgnh+
-         fbZW/ErPef315EnN+h7f91GeDf65W7XHYhtL2UpMibnD5zNzGUd51cA4YGxVKLqDGUHH
-         l8doBd6fHDFh+L1gd52pTpeDswEgKFfZjgxsWUzdYVGoaxxY4LaZxQG4gUwUeX3GvnUX
-         2a43ETS7H+r1pfLSs1WcQ9B93/TrZSRYuzGCuKoEpTPju3B8yhyFrR4Cw2OUAUU90f5V
-         V6gQ==
-X-Gm-Message-State: APjAAAXgj+1tRJiu1Eip0Dv8OtWpgRSkzG5sj3BVjee5M13AolVVY6Xj
-        0Gxg7NFngKoJeh90At2cUENrUIYZeZk/LndS5mk=
-X-Google-Smtp-Source: APXvYqxrAbiIbqW0nY/30IRpEN/mBAD3Cr2+703do+Kjwf4nMSeAa8lvtwfBa46a9dMgdGFQfwf/A6iw0Obgy4PWLfg=
-X-Received: by 2002:a25:9b88:: with SMTP id v8mr21245291ybo.153.1557957927657;
- Wed, 15 May 2019 15:05:27 -0700 (PDT)
+        Wed, 15 May 2019 18:21:07 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gportay)
+        with ESMTPSA id 523AA283E7A
+From:   =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        kernel@collabora.com,
+        =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>
+Subject: [PATCH v2] phy: rockchip-inno-usb2: allow to force the B-Device Session Valid bit.
+Date:   Wed, 15 May 2019 18:20:50 -0400
+Message-Id: <20190515222050.15075-1-gael.portay@collabora.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190512174608.10083-1-peron.clem@gmail.com> <20190513151405.GW17751@phenom.ffwll.local>
- <de50a9da-669f-ab25-2ef2-5ffb90f8ee03@baylibre.com> <CAJiuCccuEw0BK6MwROR+XUDvu8AJTmZ5tu=pYwZbGAuvO31pgg@mail.gmail.com>
- <CAJiuCccWa5UTML68JDQq6q8SyNZzVWwQWTOL=+84Bh4EMHGC3A@mail.gmail.com> <3c2c9094-69d4-bace-d5ee-c02b7f56ac82@arm.com>
-In-Reply-To: <3c2c9094-69d4-bace-d5ee-c02b7f56ac82@arm.com>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Thu, 16 May 2019 00:05:16 +0200
-Message-ID: <CAJiuCcd=gCQJ4mxn3wNhHXveOhFLnYSEs+cnOMHcALPvd7bQZw@mail.gmail.com>
-Subject: Re: [PATCH v4 0/8] Allwinner H6 Mali GPU support
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-On Tue, 14 May 2019 at 23:57, Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 2019-05-14 10:22 pm, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi,
-> >
-> > On Tue, 14 May 2019 at 17:17, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail=
-.com> wrote:
-> >>
-> >> Hi,
-> >>
-> >> On Tue, 14 May 2019 at 12:29, Neil Armstrong <narmstrong@baylibre.com>=
- wrote:
-> >>>
-> >>> Hi,
-> >>>
-> >>> On 13/05/2019 17:14, Daniel Vetter wrote:
-> >>>> On Sun, May 12, 2019 at 07:46:00PM +0200, peron.clem@gmail.com wrote=
-:
-> >>>>> From: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> >>>>>
-> >>>>> Hi,
-> >>>>>
-> >>>>> The Allwinner H6 has a Mali-T720 MP2. The drivers are
-> >>>>> out-of-tree so this series only introduce the dt-bindings.
-> >>>>
-> >>>> We do have an in-tree midgard driver now (since 5.2). Does this stuf=
-f work
-> >>>> together with your dt changes here?
-> >>>
-> >>> No, but it should be easy to add.
-> >> I will give it a try and let you know.
-> > Added the bus_clock and a ramp delay to the gpu_vdd but the driver
-> > fail at probe.
-> >
-> > [    3.052919] panfrost 1800000.gpu: clock rate =3D 432000000
-> > [    3.058278] panfrost 1800000.gpu: bus_clock rate =3D 100000000
-> > [    3.179772] panfrost 1800000.gpu: mali-t720 id 0x720 major 0x1
-> > minor 0x1 status 0x0
-> > [    3.187432] panfrost 1800000.gpu: features: 00000000,10309e40,
-> > issues: 00000000,21054400
-> > [    3.195531] panfrost 1800000.gpu: Features: L2:0x07110206
-> > Shader:0x00000000 Tiler:0x00000809 Mem:0x1 MMU:0x00002821 AS:0xf
-> > JS:0x7
-> > [    3.207178] panfrost 1800000.gpu: shader_present=3D0x3 l2_present=3D=
-0x1
-> > [    3.238257] panfrost 1800000.gpu: Fatal error during GPU init
-> > [    3.244165] panfrost: probe of 1800000.gpu failed with error -12
-> >
-> > The ENOMEM is coming from "panfrost_mmu_init"
-> > alloc_io_pgtable_ops(ARM_MALI_LPAE, &pfdev->mmu->pgtbl_cfg,
-> >                                           pfdev);
-> >
-> > Which is due to a check in the pgtable alloc "cfg->ias !=3D 48"
-> > arm-lpae io-pgtable: arm_mali_lpae_alloc_pgtable cfg->ias 33 cfg->oas 4=
-0
-> >
-> > DRI stack is totally new for me, could you give me a little clue about
-> > this issue ?
->
-> Heh, this is probably the one bit which doesn't really count as "DRI stac=
-k".
->
-> That's merely a somewhat-conservative sanity check - I'm pretty sure it
-> *should* be fine to change the test to "cfg->ias > 48" (io-pgtable
-> itself ought to cope). You'll just get to be the first to actually test
-> a non-48-bit configuration here :)
+The OTG disconnection event is generated after the presence/absence of
+an ID connection, but some platforms don't have the ID pin connected, so
+the event is not generated. In such case, for detecting the
+disconnection event, we can get the cable state from an extcon driver.
+We need, though, to force to set the B-Device Session Valid bit on the
+PHY to have the device respond to the setup address. Otherwise, the
+following error is shown:
 
-Thanks a lot, the probe seems fine now :)
+    usb 2-2: Device not responding to setup address.
+    usb 2-2: device not accepting address 14, error -71
+    usb usb2-port2: unable to enumerate USB device
 
-I try to run glmark2 :
-# glmark2-es2-drm
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-    glmark2 2017.07
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-    OpenGL Information
-    GL_VENDOR:     panfrost
-    GL_RENDERER:   panfrost
-    GL_VERSION:    OpenGL ES 2.0 Mesa 19.1.0-rc2
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-[build] use-vbo=3Dfalse:
+The patch tells the PHY to force the B-Device Session Valid bit when the
+OTG role is device and clear that bit if the OTG role is host, when an
+extcon is available.
 
-But it seems that H6 is not so easy to add :(.
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
+---
 
-[  345.204813] panfrost 1800000.gpu: mmu irq status=3D1
-[  345.209617] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-0x0000000002400400
-[  345.209617] Reason: TODO
-[  345.209617] raw fault status: 0x800002C1
-[  345.209617] decoded fault status: SLAVE FAULT
-[  345.209617] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
-[  345.209617] access type 0x2: READ
-[  345.209617] source id 0x8000
-[  345.729957] panfrost 1800000.gpu: gpu sched timeout, js=3D0,
-status=3D0x8, head=3D0x2400400, tail=3D0x2400400, sched_job=3D000000009e204=
-de9
-[  346.055876] panfrost 1800000.gpu: mmu irq status=3D1
-[  346.060680] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-0x0000000002C00A00
-[  346.060680] Reason: TODO
-[  346.060680] raw fault status: 0x810002C1
-[  346.060680] decoded fault status: SLAVE FAULT
-[  346.060680] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
-[  346.060680] access type 0x2: READ
-[  346.060680] source id 0x8100
-[  346.561955] panfrost 1800000.gpu: gpu sched timeout, js=3D1,
-status=3D0x8, head=3D0x2c00a00, tail=3D0x2c00a00, sched_job=3D00000000b55a9=
-a85
-[  346.573913] panfrost 1800000.gpu: mmu irq status=3D1
-[  346.578707] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-0x0000000002C00B80
-[  346.578707] Reason: TODO
-[  346.578707] raw fault status: 0x800002C1
-[  346.578707] decoded fault status: SLAVE FAULT
-[  346.578707] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
-[  346.578707] access type 0x2: READ
-[  346.578707] source id 0x8000
-[  347.073947] panfrost 1800000.gpu: gpu sched timeout, js=3D0,
-status=3D0x8, head=3D0x2c00b80, tail=3D0x2c00b80, sched_job=3D00000000cf6af=
-8e8
-[  347.104125] panfrost 1800000.gpu: mmu irq status=3D1
-[  347.108930] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-0x0000000002800900
-[  347.108930] Reason: TODO
-[  347.108930] raw fault status: 0x810002C1
-[  347.108930] decoded faultn thi status: SLAVE FAULT
-[  347.108930] exception type 0xC1: TRANSLATION_FAULT_LEVEL1
-[  347.108930] access type 0x2: READ
-[  347.108930] source id 0x8100
-[  347.617950] panfrost 1800000.gpu: gpu sched timeout, js=3D1,
-status=3D0x8, head=3D0x2800900, tail=3D0x2800900, sched_job=3D000000009325f=
-db7
-[  347.629902] panfrost 1800000.gpu: mmu irq status=3D1
-[  347.634696] panfrost 1800000.gpu: Unhandled Page fault in AS0 at VA
-0x0000000002800A80
+Hi all,
 
-Regards,
-Clement
+The main purpose of this patch is have the Type-C port on the Samsung
+Chromebook Plus work as a device or in OTG mode.
 
->
-> Robin.
+That patch was originally a part of that patchset[1]; all other patches
+was merged recently in master.
+
+The patch was tested on a Samsung Chromebook Plus by configuring one
+port to work as device, configure a cdc ethernet gadget and communicate
+via ethernet gadget my workstation with the chromebook through a usb-a
+to type-c cable.
+
+Best regards,
+Gaël
+
+[1]: https://lkml.org/lkml/2018/8/15/141
+
+Changes since v1:
+ - [PATCH 3/4] Remove introduction of dt property "rockchip,force-bvalid"
+               and replace cable state using extcon instead (if set).
+
+ drivers/phy/rockchip/phy-rockchip-inno-usb2.c | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+
+diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+index ba07121c3eff..5e9d50b5ae16 100644
+--- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
++++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
+@@ -125,6 +125,7 @@ struct rockchip_chg_det_reg {
+  * @bvalid_det_en: vbus valid rise detection enable register.
+  * @bvalid_det_st: vbus valid rise detection status register.
+  * @bvalid_det_clr: vbus valid rise detection clear register.
++ * @bvalid_session: force B-device session valid register.
+  * @ls_det_en: linestate detection enable register.
+  * @ls_det_st: linestate detection state register.
+  * @ls_det_clr: linestate detection clear register.
+@@ -138,6 +139,7 @@ struct rockchip_usb2phy_port_cfg {
+ 	struct usb2phy_reg	bvalid_det_en;
+ 	struct usb2phy_reg	bvalid_det_st;
+ 	struct usb2phy_reg	bvalid_det_clr;
++	struct usb2phy_reg	bvalid_session;
+ 	struct usb2phy_reg	ls_det_en;
+ 	struct usb2phy_reg	ls_det_st;
+ 	struct usb2phy_reg	ls_det_clr;
+@@ -169,6 +171,7 @@ struct rockchip_usb2phy_cfg {
+  * @port_id: flag for otg port or host port.
+  * @suspended: phy suspended flag.
+  * @vbus_attached: otg device vbus status.
++ * @force_bvalid: force the control of the B-device session valid bit.
+  * @bvalid_irq: IRQ number assigned for vbus valid rise detection.
+  * @ls_irq: IRQ number assigned for linestate detection.
+  * @otg_mux_irq: IRQ number which multiplex otg-id/otg-bvalid/linestate
+@@ -187,6 +190,7 @@ struct rockchip_usb2phy_port {
+ 	unsigned int	port_id;
+ 	bool		suspended;
+ 	bool		vbus_attached;
++	bool		force_bvalid;
+ 	int		bvalid_irq;
+ 	int		ls_irq;
+ 	int		otg_mux_irq;
+@@ -553,6 +557,13 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
+ 	switch (rport->state) {
+ 	case OTG_STATE_UNDEFINED:
+ 		rport->state = OTG_STATE_B_IDLE;
++		if (rport->force_bvalid) {
++			property_enable(rphy->grf,
++					&rport->port_cfg->bvalid_session,
++					true);
++			dev_dbg(&rport->phy->dev,
++				"set the B-Device Session Valid\n");
++		}
+ 		if (!vbus_attach)
+ 			rockchip_usb2phy_power_off(rport->phy);
+ 		/* fall through */
+@@ -560,6 +571,14 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
+ 		if (extcon_get_state(rphy->edev, EXTCON_USB_HOST) > 0) {
+ 			dev_dbg(&rport->phy->dev, "usb otg host connect\n");
+ 			rport->state = OTG_STATE_A_HOST;
++			/* When leaving device mode force end the session */
++			if (rport->force_bvalid) {
++				property_enable(rphy->grf,
++					&rport->port_cfg->bvalid_session,
++					false);
++				dev_dbg(&rport->phy->dev,
++					"clear the B-Device Session Valid\n");
++			}
+ 			rockchip_usb2phy_power_on(rport->phy);
+ 			return;
+ 		} else if (vbus_attach) {
+@@ -634,6 +653,14 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
+ 		if (extcon_get_state(rphy->edev, EXTCON_USB_HOST) == 0) {
+ 			dev_dbg(&rport->phy->dev, "usb otg host disconnect\n");
+ 			rport->state = OTG_STATE_B_IDLE;
++			/* When leaving host mode force start the session */
++			if (rport->force_bvalid) {
++				property_enable(rphy->grf,
++					&rport->port_cfg->bvalid_session,
++					true);
++				dev_dbg(&rport->phy->dev,
++					"set the B-Device Session Valid\n");
++			}
+ 			rockchip_usb2phy_power_off(rport->phy);
+ 		}
+ 		break;
+@@ -1016,6 +1043,28 @@ static int rockchip_usb2phy_otg_port_init(struct rockchip_usb2phy *rphy,
+ 	INIT_DELAYED_WORK(&rport->chg_work, rockchip_chg_detect_work);
+ 	INIT_DELAYED_WORK(&rport->otg_sm_work, rockchip_usb2phy_otg_sm_work);
+ 
++	/*
++	 * Some platforms doesn't have the ID pin connected to the phy, hence
++	 * the OTD ID event is not generated, but in some cases we can get the
++	 * cable state from an extcon driver. In such case we can force to set
++	 * the B-Device Session Valid bit on the PHY to have the device working
++	 * as a OTG.
++	 */
++	if (rphy->edev) {
++		/*
++		 * Check if bvalid_session register is set in the structure
++		 * rockchip_usb2phy_cfg for this SoC.
++		 */
++		if (rport->port_cfg->bvalid_session.offset == 0x0) {
++			rport->force_bvalid = false;
++			dev_err(rphy->dev,
++				"cannot force B-device session, the register is not set for that SoC\n");
++		} else {
++			rport->force_bvalid = true;
++			dev_info(rphy->dev, "force B-device session enabled\n");
++		}
++	}
++
+ 	/*
+ 	 * Some SoCs use one interrupt with otg-id/otg-bvalid/linestate
+ 	 * interrupts muxed together, so probe the otg-mux interrupt first,
+@@ -1338,6 +1387,7 @@ static const struct rockchip_usb2phy_cfg rk3399_phy_cfgs[] = {
+ 				.bvalid_det_en	= { 0xe3c0, 3, 3, 0, 1 },
+ 				.bvalid_det_st	= { 0xe3e0, 3, 3, 0, 1 },
+ 				.bvalid_det_clr	= { 0xe3d0, 3, 3, 0, 1 },
++				.bvalid_session = { 0x4498, 4, 4, 0, 1 },
+ 				.utmi_avalid	= { 0xe2ac, 7, 7, 0, 1 },
+ 				.utmi_bvalid	= { 0xe2ac, 12, 12, 0, 1 },
+ 			},
+@@ -1373,6 +1423,7 @@ static const struct rockchip_usb2phy_cfg rk3399_phy_cfgs[] = {
+ 				.bvalid_det_en  = { 0xe3c0, 8, 8, 0, 1 },
+ 				.bvalid_det_st  = { 0xe3e0, 8, 8, 0, 1 },
+ 				.bvalid_det_clr = { 0xe3d0, 8, 8, 0, 1 },
++				.bvalid_session = { 0x4518, 4, 4, 0, 1 },
+ 				.utmi_avalid	= { 0xe2ac, 10, 10, 0, 1 },
+ 				.utmi_bvalid    = { 0xe2ac, 16, 16, 0, 1 },
+ 			},
+-- 
+2.21.0
+
