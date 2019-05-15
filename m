@@ -2,127 +2,166 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A700CC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BF6C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77AE52084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:43:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BQ9VXLFE"
+	by mail.kernel.org (Postfix) with ESMTP id 3E16820873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbfEOSnu (ORCPT
+        id S1726950AbfEOSq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 14:43:50 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:39101 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727084AbfEOSnu (ORCPT
+        Wed, 15 May 2019 14:46:56 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49686 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726392AbfEOSqz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 14:43:50 -0400
-Received: by mail-vs1-f68.google.com with SMTP id m1so603218vsr.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 11:43:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vNECGk8CnSY+BUMqx/A6sNJnXy1K+tE5/+q6NrpNAeg=;
-        b=BQ9VXLFElWFzf7izK1ym/zFCq1WxsSoI7IZR/etFVJ3c6xH3PwVo3az6lB+MkUP/Gj
-         PxZMwkXe1rl5EjO3Kxfks/TZY3oYrwLodR/8iZJr/9CDD59tWt7jhU4zsZs0BYYwMRNN
-         Iey0Dt7PXFPRad8sX/uvZhi1xQzvN9Br//u9s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vNECGk8CnSY+BUMqx/A6sNJnXy1K+tE5/+q6NrpNAeg=;
-        b=DII7QA+WmkGJqfiSxDmJtwJuoxg1GziA9Crl1+rHICKGaiSFyIFyQPNADRq/aACDSj
-         aVJlAkUjhlsgZqt3G7ViKrDpy4mhsH/ut8LAc1XWhBpj08KFS1jjPOUXHIbzPDXDh899
-         zIF1jm0XTinYC8IcF2UwCj286aUn1JDuY06+NiFG3lFIF/SBKPK9pOOTpvEO2YXCxW3z
-         8OU3yNRBCGludNbkoBkWEPZ/xsudnfQSDpa33vfjgl6o894ztwfxu11H7tZ6sk6sZ/5g
-         8gygPAmc4dsdW6MCtN0uxTgv67yMj6HCkaV4uHkV0n2alcu9oP9fkLVu5c+L1jMeNuaX
-         0KZA==
-X-Gm-Message-State: APjAAAXrusLaIydCi1HzPjxdd0omQtksUfa6ujMZr318c9xfwlYYz2PC
-        pAnlOEjuj5g3Y80i2YzENUNV8R5Q58Q=
-X-Google-Smtp-Source: APXvYqyckGZ/HC/khmRPlka1IPm1juJRRL3yoU+C3vijIcm3iI80vkFqDcOxIpObt+7w0e40WEmynA==
-X-Received: by 2002:a67:8008:: with SMTP id b8mr13756714vsd.33.1557945828925;
-        Wed, 15 May 2019 11:43:48 -0700 (PDT)
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com. [209.85.222.50])
-        by smtp.gmail.com with ESMTPSA id g3sm2295945vkb.9.2019.05.15.11.43.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 11:43:41 -0700 (PDT)
-Received: by mail-ua1-f50.google.com with SMTP id t15so254474uao.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 11:43:41 -0700 (PDT)
-X-Received: by 2002:ab0:2692:: with SMTP id t18mr5386901uao.106.1557945821179;
- Wed, 15 May 2019 11:43:41 -0700 (PDT)
+        Wed, 15 May 2019 14:46:55 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4FIgaWe009139
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 14:46:54 -0400
+Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sgq6skgmy-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 14:46:54 -0400
+Received: from localhost
+        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <eajames@linux.ibm.com>;
+        Wed, 15 May 2019 19:46:53 +0100
+Received: from b03cxnp07029.gho.boulder.ibm.com (9.17.130.16)
+        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 15 May 2019 19:46:49 +0100
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4FIkmGI10092890
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 May 2019 18:46:48 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9BCB4BE053;
+        Wed, 15 May 2019 18:46:48 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A52B6BE058;
+        Wed, 15 May 2019 18:46:47 +0000 (GMT)
+Received: from [9.85.187.56] (unknown [9.85.187.56])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 15 May 2019 18:46:47 +0000 (GMT)
+Subject: Re: [PATCH v2 1/3] iio: Add driver for Infineon DPS310
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@jms.id.au, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de
+References: <1557344128-690-1-git-send-email-eajames@linux.ibm.com>
+ <1557344128-690-2-git-send-email-eajames@linux.ibm.com>
+ <20190511102236.4c5f9585@archlinux>
+From:   Eddie James <eajames@linux.ibm.com>
+Date:   Wed, 15 May 2019 13:46:46 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190424162827.5297-1-mka@chromium.org> <CAD=FV=W+QGLmhEaqGc-=wNFzmaCr_f4rb5e8KQ4ZmeRaNi_xCw@mail.gmail.com>
-In-Reply-To: <CAD=FV=W+QGLmhEaqGc-=wNFzmaCr_f4rb5e8KQ4ZmeRaNi_xCw@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 15 May 2019 11:43:28 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WQ-yAeB_xU5UVHGWgsC=a9t_CtN9bHvZnoxkfuA9=zGw@mail.gmail.com>
-Message-ID: <CAD=FV=WQ-yAeB_xU5UVHGWgsC=a9t_CtN9bHvZnoxkfuA9=zGw@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: rockchip: Add #cooling-cells entry for rk3288 GPU
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190511102236.4c5f9585@archlinux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19051518-0004-0000-0000-0000150F21D2
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011102; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01203786; UDB=6.00631896; IPR=6.00984712;
+ MB=3.00026906; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-15 18:46:51
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051518-0005-0000-0000-00008BACCF8F
+Message-Id: <cf108058-dd50-4651-6c97-a5c7e82ef085@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905150113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On Wed, May 15, 2019 at 10:59 AM Doug Anderson <dianders@chromium.org> wrote:
-
-> Hi,
+On 5/11/19 4:22 AM, Jonathan Cameron wrote:
+> On Wed,  8 May 2019 14:35:26 -0500
+> Eddie James <eajames@linux.ibm.com> wrote:
 >
-> On Wed, Apr 24, 2019 at 9:28 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+>> From: Joel Stanley <joel@jms.id.au>
+>>
+>> The DPS310 is a temperature and pressure sensor. It can be accessed over
+>> i2c and SPI.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> Hi Eddie,
 >
-> > The Mali GPU of the rk3288 can be used as cooling device, add
-> > a #cooling-cells entry for it.
-> >
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> >  arch/arm/boot/dts/rk3288.dtsi | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> > index ca7d52daa8fb..767e62908a6e 100644
-> > --- a/arch/arm/boot/dts/rk3288.dtsi
-> > +++ b/arch/arm/boot/dts/rk3288.dtsi
-> > @@ -1275,6 +1275,7 @@
-> >                 interrupt-names = "job", "mmu", "gpu";
-> >                 clocks = <&cru ACLK_GPU>;
-> >                 operating-points-v2 = <&gpu_opp_table>;
-> > +               #cooling-cells = <2>; /* min followed by max */
-> >                 power-domains = <&power RK3288_PD_GPU>;
-> >                 status = "disabled";
-> >         };
+> Ideally we'll get a sign off form Joel as well on this.
 >
-> Seems like a good idea to me.  Presumably we should also add this to
-> the bindings?
+> A few comments inline.
 >
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> I 'think' this is probably fine without any locking to prevent simultaneous reads
+> and /or writes to the registers because the few functions that do multiple reads
+> and writes look fine.  Please do take another look at that though to confirm there
+> are no corner cases.
+>
+> Otherwise there is a race in the remove path that needs fixing.
+> Various minor bits and bobs inline.
+>
+> thanks,
+>
+> Jonathan
+>
+>
+>
+>> ---
+>>   MAINTAINERS                   |   6 +
+>>   drivers/iio/pressure/Kconfig  |  10 +
+>>   drivers/iio/pressure/Makefile |   1 +
+>>   drivers/iio/pressure/dps310.c | 429 ++++++++++++++++++++++++++++++++++++++++++
+>>   4 files changed, 446 insertions(+)
+>>   create mode 100644 drivers/iio/pressure/dps310.c
+>>
 
-I guess we could now also do a follow-up CL that starts using the GPU
-as a cooling device.  Presumably it's still OK to specify this and it
-will just be ignored if there's no GPU driver?  It's a little funny
-because the upstream device tree uses the CPU to cool things down if
-the GPU temperature sensor trips.  Downstream uses the GPU to cool
-down the GPU.  ...though, of course, it's not really all that simple
-since everything is packed in so tightly.
+>> +};
+>> +MODULE_DEVICE_TABLE(i2c, dps310_id);
+>> +
+>> +static const unsigned short normal_i2c[] = {
+>> +	0x77, 0x76, I2C_CLIENT_END
+>> +};
+>> +
+>> +static struct i2c_driver dps310_driver = {
+>> +	.driver = {
+>> +		.name = "dps310",
+>> +	},
+>> +	.probe = dps310_probe,
+>> +	.remove = dps310_remove,
+>> +	.address_list = normal_i2c,
+> I'm fairly sure the address list is only used along with the detection
+> infrastructure.  As such it doesn't actually provide any value unless
+> you have a detect callback.  Please remove.
+>
+> I would like to see a DT and/or ACPI binding though as that is the
+> means most people will use to find the device.
 
-The other case that sticks as a sore thumb is the upstream
-"rk3288-veyron-mickey" where all the comments still talk about the GPU
-cooling but we have only the CPU cooling actually in the device tree.
-:-)
 
--Doug
+Somehow the device is already present in the witherspoon device tree 
+where it's currently being used, so I don't have anything to add. 
+arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+
+Thanks,
+
+Eddie
+
+
+>
+>> +	.id_table = dps310_id,
+>> +};
+>> +module_i2c_driver(dps310_driver);
+>> +
+>> +MODULE_AUTHOR("Joel Stanley <joel@jms.id.au>");
+>> +MODULE_DESCRIPTION("Infineon DPS310 pressure and temperature sensor");
+>> +MODULE_LICENSE("GPL v2");
+
