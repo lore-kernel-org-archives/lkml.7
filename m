@@ -2,53 +2,56 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CACC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F893C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCE2820657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38F7C20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921533;
-	bh=IrG606G2ac9Y9jrMvCLPLa5ctK/pQzOopwKA7yfSsE8=;
+	s=default; t=1557921539;
+	bh=ItPj+Nbvo0KNZmmn+28rj26rGJqd7jzYZpfB+8lrKk8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cEK0GFyGIoafUtSlXzeOrni38PjTrBMLiWA8HMKKi9QQ7nN5ERFquzSxZpORZXjgo
-	 R/FeRDLuwHt7baph0nNlo6H2IrtNwazvqpGd94odqKOEjr2+kjIgOc5XQXii6z8ihJ
-	 yJ1U1eCHdUWlLoCQpbsg8Th+sAntLgGjDYWeOOXc=
+	b=K++BPCaQ3h3b6S7OhHiJj8aBcEfHQhIJ2vCziCZcXJ7QGapYPgYSnOjQ6t1AhEAT7
+	 2SkwtsH8aRJjuG/pnxYn9L50JSb2xGYB/wpIpiDo78+8gmOWSP2MmQKkNYOL832nKv
+	 ZOX6cf0alge6HSIeYs9C2n0lOA/uWnDeVtFdrbrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730353AbfEOLPu (ORCPT
+        id S1730591AbfEOL65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:15:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52248 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:58:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730334AbfEOLPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:15:41 -0400
+        id S1729938AbfEOLPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:15:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A05BD2084E;
-        Wed, 15 May 2019 11:15:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53EAB20843;
+        Wed, 15 May 2019 11:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918941;
-        bh=IrG606G2ac9Y9jrMvCLPLa5ctK/pQzOopwKA7yfSsE8=;
+        s=default; t=1557918948;
+        bh=ItPj+Nbvo0KNZmmn+28rj26rGJqd7jzYZpfB+8lrKk8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QB5BPnSFumtRJVhuPviNulA77hEZiqQ5r7E3KrhKjvOHTvjKOQ6vq8pj415udPW6z
-         pLlvFxNH4gKgs11UKPMRZoaQPOouXbEDmf3XXdI6UX6wutQEDgEgchVT/RuhxfUzmv
-         yeAOaw+BNA/bfMmsYDtq4pI8P4s785/kG5my8gMc=
+        b=b/YO6AKqmdwRQTr8TjsFQ0qNShEiMefSW1UCS21YonNNKUkT2w2KpthJ4uc1iKcUj
+         iw5JLC0eWGVRfZc5FBlkFySoS1vRC2STq4sYRzUscM+mdzO8VpWiMzppcwY0TPMRTw
+         +840oCcvpUktwjTinLQRpuYXBuneJgc7TefLllHg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 35/51] Revert "x86: vdso: Use $LD instead of $CC to link"
-Date:   Wed, 15 May 2019 12:56:10 +0200
-Message-Id: <20190515090626.919390908@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.14 002/115] platform/x86: sony-laptop: Fix unintentional fall-through
+Date:   Wed, 15 May 2019 12:54:42 +0200
+Message-Id: <20190515090659.332039601@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
-References: <20190515090616.669619870@linuxfoundation.org>
+In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
+References: <20190515090659.123121100@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,75 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 94c0c4f033eee2304a98cf30a141f9dae35d3a62.
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-The commit message in the 4.9 stable tree did not have a reference to
-the upstream commit id.
+commit 1cbd7a64959d33e7a2a1fa2bf36a62b350a9fcbd upstream.
 
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+It seems that the default case should return AE_CTRL_TERMINATE, instead
+of falling through to case ACPI_RESOURCE_TYPE_END_TAG and returning AE_OK;
+otherwise the line of code at the end of the function is unreachable and
+makes no sense:
+
+return AE_CTRL_TERMINATE;
+
+This fix is based on the following thread of discussion:
+
+https://lore.kernel.org/patchwork/patch/959782/
+
+Fixes: 33a04454527e ("sony-laptop: Add SNY6001 device handling (sonypi reimplementation)")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/entry/vdso/Makefile | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ drivers/platform/x86/sony-laptop.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 2ae92c6b1de6d..d5409660f5de6 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -47,8 +47,10 @@ targets += $(vdso_img_sodbg)
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -4422,14 +4422,16 @@ sony_pic_read_possible_resource(struct a
+ 			}
+ 			return AE_OK;
+ 		}
++
++	case ACPI_RESOURCE_TYPE_END_TAG:
++		return AE_OK;
++
+ 	default:
+ 		dprintk("Resource %d isn't an IRQ nor an IO port\n",
+ 			resource->type);
++		return AE_CTRL_TERMINATE;
  
- export CPPFLAGS_vdso.lds += -P -C
+-	case ACPI_RESOURCE_TYPE_END_TAG:
+-		return AE_OK;
+ 	}
+-	return AE_CTRL_TERMINATE;
+ }
  
--VDSO_LDFLAGS_vdso.lds = -m elf_x86_64 -soname linux-vdso.so.1 --no-undefined \
--			-z max-page-size=4096 -z common-page-size=4096
-+VDSO_LDFLAGS_vdso.lds = -m64 -Wl,-soname=linux-vdso.so.1 \
-+			-Wl,--no-undefined \
-+			-Wl,-z,max-page-size=4096 -Wl,-z,common-page-size=4096 \
-+			$(DISABLE_LTO)
- 
- $(obj)/vdso64.so.dbg: $(src)/vdso.lds $(vobjs) FORCE
- 	$(call if_changed,vdso)
-@@ -94,8 +96,10 @@ CFLAGS_REMOVE_vvar.o = -pg
- #
- 
- CPPFLAGS_vdsox32.lds = $(CPPFLAGS_vdso.lds)
--VDSO_LDFLAGS_vdsox32.lds = -m elf32_x86_64 -soname linux-vdso.so.1 \
--			   -z max-page-size=4096 -z common-page-size=4096
-+VDSO_LDFLAGS_vdsox32.lds = -Wl,-m,elf32_x86_64 \
-+			   -Wl,-soname=linux-vdso.so.1 \
-+			   -Wl,-z,max-page-size=4096 \
-+			   -Wl,-z,common-page-size=4096
- 
- # 64-bit objects to re-brand as x32
- vobjs64-for-x32 := $(filter-out $(vobjs-nox32),$(vobjs-y))
-@@ -123,7 +127,7 @@ $(obj)/vdsox32.so.dbg: $(src)/vdsox32.lds $(vobjx32s) FORCE
- 	$(call if_changed,vdso)
- 
- CPPFLAGS_vdso32.lds = $(CPPFLAGS_vdso.lds)
--VDSO_LDFLAGS_vdso32.lds = -m elf_i386 -soname linux-gate.so.1
-+VDSO_LDFLAGS_vdso32.lds = -m32 -Wl,-m,elf_i386 -Wl,-soname=linux-gate.so.1
- 
- # This makes sure the $(obj) subdirectory exists even though vdso32/
- # is not a kbuild sub-make subdirectory.
-@@ -161,13 +165,13 @@ $(obj)/vdso32.so.dbg: FORCE \
- # The DSO images are built using a special linker script.
- #
- quiet_cmd_vdso = VDSO    $@
--      cmd_vdso = $(LD) -nostdlib -o $@ \
-+      cmd_vdso = $(CC) -nostdlib -o $@ \
- 		       $(VDSO_LDFLAGS) $(VDSO_LDFLAGS_$(filter %.lds,$(^F))) \
--		       -T $(filter %.lds,$^) $(filter %.o,$^) && \
-+		       -Wl,-T,$(filter %.lds,$^) $(filter %.o,$^) && \
- 		 sh $(srctree)/$(src)/checkundef.sh '$(NM)' '$@'
- 
--VDSO_LDFLAGS = -shared $(call ld-option, --hash-style=both) \
--	$(call ld-option, --build-id) -Bsymbolic
-+VDSO_LDFLAGS = -fPIC -shared $(call cc-ldoption, -Wl$(comma)--hash-style=both) \
-+	$(call cc-ldoption, -Wl$(comma)--build-id) -Wl,-Bsymbolic $(LTO_CFLAGS)
- GCOV_PROFILE := n
- 
- #
--- 
-2.20.1
-
+ static int sony_pic_possible_resources(struct acpi_device *device)
 
 
