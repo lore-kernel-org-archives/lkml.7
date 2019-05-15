@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA6F9C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D37C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C6702084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB2AD20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:55:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921335;
-	bh=dTmFT7TKTriO5IZguRXx5X7JbuvISHT99RvkbIsNXhs=;
+	s=default; t=1557921342;
+	bh=RUjFcZedm/DHGZEI4mAnk2xx6EnytiQFO8cs0KMFwLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yTmJgVhrRqYhpbA0zRfpKumnhSCN214pZXEeilM7bhFHAAYyrpOB55di0To+06Cis
-	 uHZZ9YaBfSMvjs6AY8KN4xfKOExOq360f6N9r97F26LfpLPQXhBSyyeLPLRr84WO7e
-	 OGWwxx82+Y8zqsBQUlC0tvAwtFv5hHBQD1e7x3l8=
+	b=GGw5flpbstbY6vCdhdq8oEdSdpw/vluxOarrpXL658Ayp3clvXi4zHpuTgt2YQzcd
+	 tFm3sq/xW/jcvYOboSMm3QagT3eg+2bWsXhdoGmrw6APhd7ib1+52NC2lUOAkyQNjb
+	 HvOUTV3dKWOLcgO7bQCg7mcyPiL2Ko/4rcE+2vsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731443AbfEOLzd (ORCPT
+        id S1730380AbfEOLSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:55:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55956 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:18:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730805AbfEOLSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:18:30 -0400
+        id S1726948AbfEOLSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:18:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A287320818;
-        Wed, 15 May 2019 11:18:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 587D020843;
+        Wed, 15 May 2019 11:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919109;
-        bh=dTmFT7TKTriO5IZguRXx5X7JbuvISHT99RvkbIsNXhs=;
+        s=default; t=1557919095;
+        bh=RUjFcZedm/DHGZEI4mAnk2xx6EnytiQFO8cs0KMFwLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BvJX9HCUS7qgP3xRymKYbhD44EHsnZLhd66oJNad7ePhtnIHSRI/zPgRJAZE3Cdr8
-         Q4Omaztq648DNyWNwRcJ9wlN1reTh82TIbONa/+QAQZReM9HQrfEWXzC5VvhaxAyUy
-         1+vfcnR4gfXgzCXZLG46IufdOCaNdzeKTqKMEz/o=
+        b=PTJMCmc/G9kEazcTOHXIp4Rc60lRDIheNoD9uF9pa03YVwHQt0m1XuZavWIpaUBX5
+         fg/XpoVMcoRJg0z+RbSijcE7GE1H7G7/X90UGn2IIoUG23a3fjOZ951fqNZnLZLQXT
+         hr4fLyX8cxm8Y6xHSxCbv9MxDbugCBGk8Z+/LkYo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ruishuang Wang <ruishuangw@vmware.com>,
-        Bryan Tan <bryantan@vmware.com>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        Adit Ranadive <aditr@vmware.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 071/115] RDMA/vmw_pvrdma: Return the correct opcode when creating WR
-Date:   Wed, 15 May 2019 12:55:51 +0200
-Message-Id: <20190515090704.619087084@linuxfoundation.org>
+Subject: [PATCH 4.14 066/115] arm64: KVM: Make VHE Stage-2 TLB invalidation operations non-interruptible
+Date:   Wed, 15 May 2019 12:55:46 +0200
+Message-Id: <20190515090704.311449914@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -63,101 +63,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6325e01b6cdf4636b721cf7259c1616e3cf28ce2 ]
+[ Upstream commit c987876a80e7bcb98a839f10dca9ce7fda4feced ]
 
-Since the IB_WR_REG_MR opcode value changed, let's set the PVRDMA device
-opcodes explicitly.
+Contrary to the non-VHE version of the TLB invalidation helpers, the VHE
+code  has interrupts enabled, meaning that we can take an interrupt in
+the middle of such a sequence, and start running something else with
+HCR_EL2.TGE cleared.
 
-Reported-by: Ruishuang Wang <ruishuangw@vmware.com>
-Fixes: 9a59739bd01f ("IB/rxe: Revise the ib_wr_opcode enum")
+That's really not a good idea.
+
+Take the heavy-handed option and disable interrupts in
+__tlb_switch_to_guest_vhe, restoring them in __tlb_switch_to_host_vhe.
+The latter also gain an ISB in order to make sure that TGE really has
+taken effect.
+
 Cc: stable@vger.kernel.org
-Reviewed-by: Bryan Tan <bryantan@vmware.com>
-Reviewed-by: Ruishuang Wang <ruishuangw@vmware.com>
-Reviewed-by: Vishnu Dasa <vdasa@vmware.com>
-Signed-off-by: Adit Ranadive <aditr@vmware.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Acked-by: Christoffer Dall <christoffer.dall@arm.com>
+Reviewed-by: James Morse <james.morse@arm.com>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/infiniband/hw/vmw_pvrdma/pvrdma.h    | 35 +++++++++++++++++++-
- drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c |  6 ++++
- include/uapi/rdma/vmw_pvrdma-abi.h           |  1 +
- 3 files changed, 41 insertions(+), 1 deletion(-)
+ arch/arm64/kvm/hyp/tlb.c | 35 +++++++++++++++++++++++++----------
+ 1 file changed, 25 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma.h b/drivers/infiniband/hw/vmw_pvrdma/pvrdma.h
-index 984aa3484928d..4463e1c1a764e 100644
---- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma.h
-+++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma.h
-@@ -407,7 +407,40 @@ static inline enum ib_qp_state pvrdma_qp_state_to_ib(enum pvrdma_qp_state state)
+diff --git a/arch/arm64/kvm/hyp/tlb.c b/arch/arm64/kvm/hyp/tlb.c
+index 73464a96c3657..db23c6e5c885c 100644
+--- a/arch/arm64/kvm/hyp/tlb.c
++++ b/arch/arm64/kvm/hyp/tlb.c
+@@ -15,13 +15,18 @@
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
  
- static inline enum pvrdma_wr_opcode ib_wr_opcode_to_pvrdma(enum ib_wr_opcode op)
++#include <linux/irqflags.h>
++
+ #include <asm/kvm_hyp.h>
+ #include <asm/tlbflush.h>
+ 
+-static void __hyp_text __tlb_switch_to_guest_vhe(struct kvm *kvm)
++static void __hyp_text __tlb_switch_to_guest_vhe(struct kvm *kvm,
++						 unsigned long *flags)
  {
--	return (enum pvrdma_wr_opcode)op;
-+	switch (op) {
-+	case IB_WR_RDMA_WRITE:
-+		return PVRDMA_WR_RDMA_WRITE;
-+	case IB_WR_RDMA_WRITE_WITH_IMM:
-+		return PVRDMA_WR_RDMA_WRITE_WITH_IMM;
-+	case IB_WR_SEND:
-+		return PVRDMA_WR_SEND;
-+	case IB_WR_SEND_WITH_IMM:
-+		return PVRDMA_WR_SEND_WITH_IMM;
-+	case IB_WR_RDMA_READ:
-+		return PVRDMA_WR_RDMA_READ;
-+	case IB_WR_ATOMIC_CMP_AND_SWP:
-+		return PVRDMA_WR_ATOMIC_CMP_AND_SWP;
-+	case IB_WR_ATOMIC_FETCH_AND_ADD:
-+		return PVRDMA_WR_ATOMIC_FETCH_AND_ADD;
-+	case IB_WR_LSO:
-+		return PVRDMA_WR_LSO;
-+	case IB_WR_SEND_WITH_INV:
-+		return PVRDMA_WR_SEND_WITH_INV;
-+	case IB_WR_RDMA_READ_WITH_INV:
-+		return PVRDMA_WR_RDMA_READ_WITH_INV;
-+	case IB_WR_LOCAL_INV:
-+		return PVRDMA_WR_LOCAL_INV;
-+	case IB_WR_REG_MR:
-+		return PVRDMA_WR_FAST_REG_MR;
-+	case IB_WR_MASKED_ATOMIC_CMP_AND_SWP:
-+		return PVRDMA_WR_MASKED_ATOMIC_CMP_AND_SWP;
-+	case IB_WR_MASKED_ATOMIC_FETCH_AND_ADD:
-+		return PVRDMA_WR_MASKED_ATOMIC_FETCH_AND_ADD;
-+	case IB_WR_REG_SIG_MR:
-+		return PVRDMA_WR_REG_SIG_MR;
-+	default:
-+		return PVRDMA_WR_ERROR;
-+	}
+ 	u64 val;
+ 
++	local_irq_save(*flags);
++
+ 	/*
+ 	 * With VHE enabled, we have HCR_EL2.{E2H,TGE} = {1,1}, and
+ 	 * most TLB operations target EL2/EL0. In order to affect the
+@@ -36,7 +41,8 @@ static void __hyp_text __tlb_switch_to_guest_vhe(struct kvm *kvm)
+ 	isb();
  }
  
- static inline enum ib_wc_status pvrdma_wc_status_to_ib(
-diff --git a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c
-index d7162f2b7979a..4d9c99dd366b1 100644
---- a/drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c
-+++ b/drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c
-@@ -695,6 +695,12 @@ int pvrdma_post_send(struct ib_qp *ibqp, struct ib_send_wr *wr,
- 		    wr->opcode == IB_WR_RDMA_WRITE_WITH_IMM)
- 			wqe_hdr->ex.imm_data = wr->ex.imm_data;
+-static void __hyp_text __tlb_switch_to_guest_nvhe(struct kvm *kvm)
++static void __hyp_text __tlb_switch_to_guest_nvhe(struct kvm *kvm,
++						  unsigned long *flags)
+ {
+ 	write_sysreg(kvm->arch.vttbr, vttbr_el2);
+ 	isb();
+@@ -47,7 +53,8 @@ static hyp_alternate_select(__tlb_switch_to_guest,
+ 			    __tlb_switch_to_guest_vhe,
+ 			    ARM64_HAS_VIRT_HOST_EXTN);
  
-+		if (unlikely(wqe_hdr->opcode == PVRDMA_WR_ERROR)) {
-+			*bad_wr = wr;
-+			ret = -EINVAL;
-+			goto out;
-+		}
+-static void __hyp_text __tlb_switch_to_host_vhe(struct kvm *kvm)
++static void __hyp_text __tlb_switch_to_host_vhe(struct kvm *kvm,
++						unsigned long flags)
+ {
+ 	/*
+ 	 * We're done with the TLB operation, let's restore the host's
+@@ -55,9 +62,12 @@ static void __hyp_text __tlb_switch_to_host_vhe(struct kvm *kvm)
+ 	 */
+ 	write_sysreg(0, vttbr_el2);
+ 	write_sysreg(HCR_HOST_VHE_FLAGS, hcr_el2);
++	isb();
++	local_irq_restore(flags);
+ }
+ 
+-static void __hyp_text __tlb_switch_to_host_nvhe(struct kvm *kvm)
++static void __hyp_text __tlb_switch_to_host_nvhe(struct kvm *kvm,
++						 unsigned long flags)
+ {
+ 	write_sysreg(0, vttbr_el2);
+ }
+@@ -69,11 +79,13 @@ static hyp_alternate_select(__tlb_switch_to_host,
+ 
+ void __hyp_text __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
+ {
++	unsigned long flags;
 +
- 		switch (qp->ibqp.qp_type) {
- 		case IB_QPT_GSI:
- 		case IB_QPT_UD:
-diff --git a/include/uapi/rdma/vmw_pvrdma-abi.h b/include/uapi/rdma/vmw_pvrdma-abi.h
-index 912ea1556a0b0..fd801c7be1204 100644
---- a/include/uapi/rdma/vmw_pvrdma-abi.h
-+++ b/include/uapi/rdma/vmw_pvrdma-abi.h
-@@ -76,6 +76,7 @@ enum pvrdma_wr_opcode {
- 	PVRDMA_WR_MASKED_ATOMIC_FETCH_AND_ADD,
- 	PVRDMA_WR_BIND_MW,
- 	PVRDMA_WR_REG_SIG_MR,
-+	PVRDMA_WR_ERROR,
- };
+ 	dsb(ishst);
  
- enum pvrdma_wc_status {
+ 	/* Switch to requested VMID */
+ 	kvm = kern_hyp_va(kvm);
+-	__tlb_switch_to_guest()(kvm);
++	__tlb_switch_to_guest()(kvm, &flags);
+ 
+ 	/*
+ 	 * We could do so much better if we had the VA as well.
+@@ -116,36 +128,39 @@ void __hyp_text __kvm_tlb_flush_vmid_ipa(struct kvm *kvm, phys_addr_t ipa)
+ 	if (!has_vhe() && icache_is_vpipt())
+ 		__flush_icache_all();
+ 
+-	__tlb_switch_to_host()(kvm);
++	__tlb_switch_to_host()(kvm, flags);
+ }
+ 
+ void __hyp_text __kvm_tlb_flush_vmid(struct kvm *kvm)
+ {
++	unsigned long flags;
++
+ 	dsb(ishst);
+ 
+ 	/* Switch to requested VMID */
+ 	kvm = kern_hyp_va(kvm);
+-	__tlb_switch_to_guest()(kvm);
++	__tlb_switch_to_guest()(kvm, &flags);
+ 
+ 	__tlbi(vmalls12e1is);
+ 	dsb(ish);
+ 	isb();
+ 
+-	__tlb_switch_to_host()(kvm);
++	__tlb_switch_to_host()(kvm, flags);
+ }
+ 
+ void __hyp_text __kvm_tlb_flush_local_vmid(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm *kvm = kern_hyp_va(kern_hyp_va(vcpu)->kvm);
++	unsigned long flags;
+ 
+ 	/* Switch to requested VMID */
+-	__tlb_switch_to_guest()(kvm);
++	__tlb_switch_to_guest()(kvm, &flags);
+ 
+ 	__tlbi(vmalle1);
+ 	dsb(nsh);
+ 	isb();
+ 
+-	__tlb_switch_to_host()(kvm);
++	__tlb_switch_to_host()(kvm, flags);
+ }
+ 
+ void __hyp_text __kvm_flush_vm_context(void)
 -- 
 2.20.1
 
