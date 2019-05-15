@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFED8C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0F7C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1D6220644
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D19C2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918982;
-	bh=pVBVLh20Pc7GiGl5VXRw7hLGQlU0e4RrX6Aj/99BoY8=;
+	s=default; t=1557918989;
+	bh=8rZzTq7tUuVNcSHC5GQUDhwPoWvuFiAGLYnpctVVhD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tc+heiV6zm4NO3cN9APmRM2a/eNqQYmKZhd58yMnyfjFjZ3eNzZ6J2GZA7UEo891Z
-	 sbA/V4ZvY7GmBqBuorM/H1gxhZ2ffnyZJRAfxlEPoB0u9JBmJRrI9QZgQi2ZbxbnlL
-	 H/Qhg2OorxMz+QMzZ6a9/gTLirjgFHT79KXMMViI=
+	b=tCJzGfpiHIMdl7y0fqDc69YwmvtRJilvVNhIbEQwLI6dHGskNIZa4o6zDuqNW2/im
+	 xZBegeChTwbzyOWmIzfPuWjP+QXB/daM5cAjvRTkiIaQ3aHnovOb+XQ3LUYtkULhLe
+	 sPLRrFPRVmKcVJe9IZVwtEeiqjBQbt43+VSyQhOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730480AbfEOLQV (ORCPT
+        id S1730497AbfEOLQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:16:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53044 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:16:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730463AbfEOLQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:16:17 -0400
+        id S1730483AbfEOLQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:16:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB8A620843;
-        Wed, 15 May 2019 11:16:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79EB920644;
+        Wed, 15 May 2019 11:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918977;
-        bh=pVBVLh20Pc7GiGl5VXRw7hLGQlU0e4RrX6Aj/99BoY8=;
+        s=default; t=1557918985;
+        bh=8rZzTq7tUuVNcSHC5GQUDhwPoWvuFiAGLYnpctVVhD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BLIAcLs9s4Xwm9Ag/39xNDbtc2/BeVNkAtD+LQlRZdqWaHTAcuTn9RONWNEHhK5OQ
-         Lmkf6h8LpEdnYUXxWJTTFLAlO21ujSrB4y0XNkupLmt1w5SCHVk6RWA3G5Q7wyuQhS
-         rjM78Se1INGQsUcCHKUF9L0TbW4UnGtuZBvdEhuo=
+        b=x4C/C12gbF/IyFO45kGVoi8CpTDrmB7uusFfm2Jezr1iuABU5YY/ZtiUgy0DX2KE5
+         IyUp9fH5ujmSUegFMlbsEUjZhSWAELoFb9sfis6gH6KGUvFszCfNAuwvrrfHuShAz9
+         E8yWm6FXViKxsKV9VRcAMYN4uqN4DlO9vAVOMrkI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Christian Rund <Christian.Rund@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 021/115] s390/pkey: add one more argument space for debug feature entry
-Date:   Wed, 15 May 2019 12:55:01 +0200
-Message-Id: <20190515090700.825336863@linuxfoundation.org>
+Subject: [PATCH 4.14 024/115] KVM: x86: avoid misreporting level-triggered irqs as edge-triggered in tracing
+Date:   Wed, 15 May 2019 12:55:04 +0200
+Message-Id: <20190515090701.029640487@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -62,41 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6b1f16ba730d4c0cda1247568c3a1bf4fa3a2f2f ]
+[ Upstream commit 7a223e06b1a411cef6c4cd7a9b9a33c8d225b10e ]
 
-The debug feature entries have been used with up to 5 arguents
-(including the pointer to the format string) but there was only
-space reserved for 4 arguemnts. So now the registration does
-reserve space for 5 times a long value.
+In __apic_accept_irq() interface trig_mode is int and actually on some code
+paths it is set above u8:
 
-This fixes a sometime appearing weired value as the last
-value of an debug feature entry like this:
+kvm_apic_set_irq() extracts it from 'struct kvm_lapic_irq' where trig_mode
+is u16. This is done on purpose as e.g. kvm_set_msi_irq() sets it to
+(1 << 15) & e->msi.data
 
-... pkey_sec2protkey zcrypt_send_cprb (cardnr=10 domain=12)
-   failed with errno -2143346254
+kvm_apic_local_deliver sets it to reg & (1 << 15).
 
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Reported-by: Christian Rund <Christian.Rund@de.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Fix the immediate issue by making 'tm' into u16. We may also want to adjust
+__apic_accept_irq() interface and use proper sizes for vector, level,
+trig_mode but this is not urgent.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/crypto/pkey_api.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kvm/trace.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
-index f61fa47135a6c..bd0376dc7e1e3 100644
---- a/drivers/s390/crypto/pkey_api.c
-+++ b/drivers/s390/crypto/pkey_api.c
-@@ -49,7 +49,8 @@ static debug_info_t *debug_info;
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index 9807c314c4788..3bf41413ab151 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -438,13 +438,13 @@ TRACE_EVENT(kvm_apic_ipi,
+ );
  
- static void __init pkey_debug_init(void)
- {
--	debug_info = debug_register("pkey", 1, 1, 4 * sizeof(long));
-+	/* 5 arguments per dbf entry (including the format string ptr) */
-+	debug_info = debug_register("pkey", 1, 1, 5 * sizeof(long));
- 	debug_register_view(debug_info, &debug_sprintf_view);
- 	debug_set_level(debug_info, 3);
- }
+ TRACE_EVENT(kvm_apic_accept_irq,
+-	    TP_PROTO(__u32 apicid, __u16 dm, __u8 tm, __u8 vec),
++	    TP_PROTO(__u32 apicid, __u16 dm, __u16 tm, __u8 vec),
+ 	    TP_ARGS(apicid, dm, tm, vec),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(	__u32,		apicid		)
+ 		__field(	__u16,		dm		)
+-		__field(	__u8,		tm		)
++		__field(	__u16,		tm		)
+ 		__field(	__u8,		vec		)
+ 	),
+ 
 -- 
 2.20.1
 
