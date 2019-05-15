@@ -2,52 +2,50 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3153C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C24FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F05206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3457A2082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922679;
-	bh=aMmX476O5e2zqLOgv+552QeHV9MB/KW6/VlPHFGbxZU=;
+	s=default; t=1557922691;
+	bh=0TjL81IqbnAkiwaGUHAMMPYNKAiIgC8Ggtg0x3pthj8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zo6nzTqw1xnF4kFC1vbbBv/uATM+Z0H19JX5+9PJq2wRjbeBaSZLHE/OyVhfCiYF/
-	 nOs7waOsmrIt8eNhDhF5dG6evsgzNtmhv8w3MwTynm++uzh0IGP9dNSUOgjHPLv2ug
-	 27+EaJS2BSyxT/CPeA0ijJsLHzuQujkobE4zakpk=
+	b=PBcE4AumEnPJe2U1VmQpvGoribmOONk0XzyhU79kCZrFrLitg2OwvXGuyDf3zlBF7
+	 ir8MdUP+dg56xaayNf+SnNhQsiNSkhou0q5vAlfF4K09gYdcH9w4J2SnVJTvWZQzZf
+	 UfMgkuW102Hr0rRnDgUhGrmlOZT1tCEVBJeoZl5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbfEOMR6 (ORCPT
+        id S1727853AbfEOMSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:17:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58814 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:18:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727217AbfEOLBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:01:43 -0400
+        id S1727722AbfEOLBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:01:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B0992173C;
-        Wed, 15 May 2019 11:01:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFEE620881;
+        Wed, 15 May 2019 11:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918102;
-        bh=aMmX476O5e2zqLOgv+552QeHV9MB/KW6/VlPHFGbxZU=;
+        s=default; t=1557918092;
+        bh=0TjL81IqbnAkiwaGUHAMMPYNKAiIgC8Ggtg0x3pthj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fl0aYsnT8/haLiVSo/4n4LVZGNpO3fcO2FFTSoltFttSHhAh1nmBUuEwc58DMFIfk
-         iix4ENDeLwZ0IqM1+wg4T4RzMuXhC0rbqNnG8xrXjnCEK3WgoeRdEOOk36P4wj5k+p
-         4YdoQQp6HG6GJZi64a5iK6JFKC8joejHQxbp0YZQ=
+        b=0HRCxhtow9y3mttV/hbZW2TGDpn1C64Cz/vlF8gaFLKC/DBcUHl3cwlT9TeimDLsF
+         chS7ufSBm4tQJ8y0N9y7euNR0DhCf2o5ClwxQkNqGjFY/QUxbtfOgMlWSSOOPUwbZp
+         r5/JHefHIELzZhe2kkRDhj2KlmGarihLmtUlOnDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 66/86] HID: input: add mapping for keyboard Brightness Up/Down/Toggle keys
-Date:   Wed, 15 May 2019 12:55:43 +0200
-Message-Id: <20190515090654.704182723@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 3.18 62/86] timer/debug: Change /proc/timer_stats from 0644 to 0600
+Date:   Wed, 15 May 2019 12:55:39 +0200
+Message-Id: <20190515090654.500455106@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -60,34 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7975a1d6a7afeb3eb61c971a153d24dd8fa032f3 ]
+From: Ben Hutchings <ben@decadent.org.uk>
 
-According to HUTRR73 usages 0x79, 0x7a and 0x7c from the consumer page
-correspond to Brightness Up/Down/Toggle keys, so let's add the mappings.
+The timer_stats facility should filter and translate PIDs if opened
+from a non-initial PID namespace, to avoid leaking information about
+the wider system.  It should also not show kernel virtual addresses.
+Unfortunately it has now been removed upstream (as redundant)
+instead of being fixed.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+For stable, fix the leak by restricting access to root only.  A
+similar change was already made for the /proc/timer_list file.
+
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/hid/hid-input.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/time/timer_stats.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index bb870ee75a903..b7d5a88354247 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -745,6 +745,10 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 		case 0x074: map_key_clear(KEY_BRIGHTNESS_MAX);		break;
- 		case 0x075: map_key_clear(KEY_BRIGHTNESS_AUTO);		break;
+--- a/kernel/time/timer_stats.c
++++ b/kernel/time/timer_stats.c
+@@ -417,7 +417,7 @@ static int __init init_tstats_procfs(voi
+ {
+ 	struct proc_dir_entry *pe;
  
-+		case 0x079: map_key_clear(KEY_KBDILLUMUP);	break;
-+		case 0x07a: map_key_clear(KEY_KBDILLUMDOWN);	break;
-+		case 0x07c: map_key_clear(KEY_KBDILLUMTOGGLE);	break;
-+
- 		case 0x082: map_key_clear(KEY_VIDEO_NEXT);	break;
- 		case 0x083: map_key_clear(KEY_LAST);		break;
- 		case 0x084: map_key_clear(KEY_ENTER);		break;
--- 
-2.20.1
-
+-	pe = proc_create("timer_stats", 0644, NULL, &tstats_fops);
++	pe = proc_create("timer_stats", 0600, NULL, &tstats_fops);
+ 	if (!pe)
+ 		return -ENOMEM;
+ 	return 0;
 
 
