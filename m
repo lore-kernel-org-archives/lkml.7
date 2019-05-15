@@ -4,168 +4,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091C0C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE50C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF0E42084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19FC12084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:18:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T6kcFRLd"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="X6Bc/ZIV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfEOKQj (ORCPT
+        id S1726475AbfEOKSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:16:39 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40690 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfEOKQi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:16:38 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h4so2007397wre.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 03:16:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=S/9jRohC0YkB1EkAIcCPuCB+iLIg4aRciSB21aigTqM=;
-        b=T6kcFRLd4JJNo1RNjJ/P2EH1opLK6UrZasP02reNxcgFl+5LtIvmscmKSJaCQ+FwG9
-         kmZ1XbYsEX/rYN64gYks2lLJuOYctJ4S95cKi8Rqpqy4/8RrjUQrlTBtwxxKFK5Bmrzt
-         A9MwKbYaP6TvjLiUSfobpiQlesVjxZUiXkHVbZyHwCaQyC+9ZBB4FG3YDCWfes5PVN4K
-         GFuRak6iKYztyqgi224FbbL6pEdDXYxG7zlJcBAUuKczQ8XoODPnrsbsYEqdtfTpJFao
-         Ycq6nKCtDVRnpFiwZkVsxD90YC5DJiGDj2lT8IAduoXF1qrtCLf0paUL5KOAgnEuwBsX
-         ckpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=S/9jRohC0YkB1EkAIcCPuCB+iLIg4aRciSB21aigTqM=;
-        b=SDk/5RFOPRH354DoL5l/2oY2rD48ExqkydEpXeaZ1vQqybCFWIISDdOSw6h3RvXt5j
-         tYDQsFh7IdPmhZl7BFw3DfYkeTUR0ytDi1/kuJq1DyUBPjK+UEEc8p3T69ZnwmFeGGqB
-         S94vzRGg+4FR+FITV3ny0SaOU4B55VLvyI12dWe2JbFti3MV1RXhdnRB1XgG8fH0OsqB
-         rqu6jXmBaseiMkcSODzt3cDr88DLH+RKdA585NzhrRcRRDkZO7rTGutASn6NBwRHuLs+
-         Bct3FivSqtcFIxOGY0owpAiIOd5EGLKzMjxyLG5e8zHuOWHx4/wC3qHR79k6ww5B1ksp
-         5fSA==
-X-Gm-Message-State: APjAAAX+nhKGD6wiQdkCN7hNYWsou6zJ2USIgJpzbD2o8UHN4Hb67pf9
-        QSOO3OvTWTJRDSvBIxFGO1/0AQ==
-X-Google-Smtp-Source: APXvYqzgasfAM4L2+hLYnGfh5HtrNS+duN6uO0OQG+6hKeYA0zvsxpwlYhwIxxREJrdqVU2YS1A82w==
-X-Received: by 2002:adf:b456:: with SMTP id v22mr23101764wrd.55.1557915396524;
-        Wed, 15 May 2019 03:16:36 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id w185sm2406511wma.39.2019.05.15.03.16.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 03:16:35 -0700 (PDT)
-Subject: Re: [PATCH v4 2/3] PM / EM: Expose perf domain struct
-To:     Quentin Perret <quentin.perret@arm.com>
-Cc:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
-        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
-        will.deacon@arm.com, catalin.marinas@arm.com,
-        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
-        mka@chromium.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190515082318.7993-1-quentin.perret@arm.com>
- <20190515082318.7993-3-quentin.perret@arm.com>
- <0ced18eb-e424-fe6b-b11e-165a3c108170@linaro.org>
- <20190515091658.sbpg6qiovhtblqyr@queper01-lin>
- <698400c0-e0a4-4a86-b9df-cdb9bd683c0f@linaro.org>
- <20190515100748.q3t4kt72h2akdpcs@queper01-lin>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <cf1474cb-7e31-7070-b988-a0c4d3f6f081@linaro.org>
-Date:   Wed, 15 May 2019 12:16:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190515100748.q3t4kt72h2akdpcs@queper01-lin>
-Content-Type: text/plain; charset=utf-8
+        Wed, 15 May 2019 06:18:08 -0400
+Received: from mail-eopbgr30088.outbound.protection.outlook.com ([40.107.3.88]:59526
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725953AbfEOKSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:18:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0386bGqBUlrpKJ7sb4LcZ1cjokOu3IerXdD3TeN5MeI=;
+ b=X6Bc/ZIV5Jo5fWGIXglUNhEM+kpkQnNW0DObrf/DQ4nncu60iVGjoFzT2EJUJzVYw+1BpD0w+dWclJEVR8dmCK0JShoSAa3zUd1jolp5NDQq1If6g+aXrCq13zTV3fWNhGo+Ku1THZ5hzyb8TcRulB+7sm2mGhg625E5QtXqzRw=
+Received: from AM0PR04MB6434.eurprd04.prod.outlook.com (20.179.252.215) by
+ AM0PR04MB4836.eurprd04.prod.outlook.com (20.177.41.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.24; Wed, 15 May 2019 10:18:03 +0000
+Received: from AM0PR04MB6434.eurprd04.prod.outlook.com
+ ([fe80::19be:75a:9fe:7cec]) by AM0PR04MB6434.eurprd04.prod.outlook.com
+ ([fe80::19be:75a:9fe:7cec%7]) with mapi id 15.20.1900.010; Wed, 15 May 2019
+ 10:18:03 +0000
+From:   Leonard Crestez <leonard.crestez@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>, Jacky Bai <ping.bai@nxp.com>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>, Abel Vesa <abel.vesa@nxp.com>
+Subject: Re: [PATCH 1/3] dt-bindings: clock: imx8mm: Add SNVS clock
+Thread-Topic: [PATCH 1/3] dt-bindings: clock: imx8mm: Add SNVS clock
+Thread-Index: AQHVCr2yrHCSJQGcuE+Cdq63vYctyw==
+Date:   Wed, 15 May 2019 10:18:02 +0000
+Message-ID: <AM0PR04MB6434DFD7728BD5B105EF2A31EE090@AM0PR04MB6434.eurprd04.prod.outlook.com>
+References: <1557883490-22360-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonard.crestez@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2dd4d14c-b1e2-446e-88a6-08d6d91e9d46
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4836;
+x-ms-traffictypediagnostic: AM0PR04MB4836:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <AM0PR04MB4836F7AEF1DE8BE70374698FEE090@AM0PR04MB4836.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 0038DE95A2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(376002)(396003)(136003)(39860400002)(189003)(199004)(7736002)(71200400001)(7416002)(71190400001)(66066001)(478600001)(33656002)(229853002)(74316002)(305945005)(44832011)(2906002)(2501003)(6116002)(3846002)(14454004)(6636002)(4744005)(966005)(76176011)(7696005)(86362001)(99286004)(66556008)(8936002)(316002)(52536014)(102836004)(476003)(25786009)(6506007)(53936002)(446003)(186003)(6306002)(9686003)(26005)(55016002)(4326008)(81156014)(256004)(81166006)(8676002)(2201001)(54906003)(68736007)(6436002)(110136005)(5660300002)(91956017)(66946007)(76116006)(73956011)(53546011)(486006)(6246003)(66476007)(64756008)(66446008)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4836;H:AM0PR04MB6434.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gKFT12MI6pAA+LDP2VmDGRsc74tP1v+7HATM6Yck4PZtZWHrEi31mRVw/DI0PqUzYHARdwOi+fZQxXY/vz5+snG6XTfZ8amtQc1nQmP7GuHTtyfVZ6p4e2UsakqkWsjDo+ki5z1fdKQ72K3B2QLDB+mVA2w/uHGSZBZUHN7QHM6ZygrxXJsoatjzg5I7tJffqMxe6Yl0JvJI4SzvVb7neLqYOiho7j1RSz+tFkS5zKa6dF5uSXLRobZqfLwV2DewyLlqclbV34izJHg6ibePugHdVMYBsiyJuHek8KR3G4a9rlKPMWZzLBVbzjvZOzcMNhwYsxln4SkKzLaj4H2PsVjqBpZCAIzm6Ed3QP7m3SXbu+FgEtPISrMDDE9saqMYaRTIQJ8X8291NIEUyDJ3iWSrQz6+77p1kekWac1S9qI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2dd4d14c-b1e2-446e-88a6-08d6d91e9d46
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 10:18:02.9556
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4836
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/05/2019 12:07, Quentin Perret wrote:
-> On Wednesday 15 May 2019 at 11:56:30 (+0200), Daniel Lezcano wrote:
->> On 15/05/2019 11:17, Quentin Perret wrote:
->>> Hi Daniel,
->>>
->>> On Wednesday 15 May 2019 at 11:06:18 (+0200), Daniel Lezcano wrote:
->>>> On 15/05/2019 10:23, Quentin Perret wrote:
->>>>> In the current state, the perf_domain struct is fully defined only when
->>>>> CONFIG_ENERGY_MODEL=y. Since we need to write code that compiles both
->>>>> with or without that option in the thermal framework, make sure to
->>>>> actually define the struct regardless of the config option. That allows
->>>>> to avoid using stubbed accessor functions all the time in code paths
->>>>> that use the EM.
->>>>>
->>>>> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
->>>>> Signed-off-by: Quentin Perret <quentin.perret@arm.com>
->>>>
->>>> This patch implies the cpu cooling device can be set without the energy
->>>> model.
->>>>
->>>> Isn't it possible to make a strong dependency for the cpu cooling device
->>>> on the energy model option, add the energy model as default on arm arch
->>>> and drop this patch?
->>>
->>> Right, that should work too.
->>>
->>>> After all, the cpu cooling is using the em framework.
->>>
->>> The reason I did it that way is simply to keep things flexible. If you
->>> don't compile in THERMAL_GOV_POWER_ALLOCATOR, you will never use the EM
->>> for CPU thermal. So I thought it would be good to not mandate compiling
->>> in ENERGY_MODEL in this case -- that should save a bit of space.
->>>
->>> But TBH I don't have a strong opinion on this one, so if everybody
->>> agrees it's fine to just make CPU_THERMAL depend on ENERGY_MODEL, I'm
->>> happy to drop this patch and fix patch 3/3. That would indeed simplify
->>> things a bit.
->>
->> Ok in this case it will be better to drop the 2/3 and add a small series
->> doing for the cpu_cooling.c
->>
->> #ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
->>
->> /* structure freq */
->>
->> /* power2state */
->>
->> /* state2power*/
->>
->> /* getrequestedpower */
->>
->> /* All functions needed for the above */
->>
->> #endif
->>
->> static struct thermal_cooling_device_ops cpufreq_cooling_ops = {
->>         .get_max_state          = cpufreq_get_max_state,
->>         .get_cur_state          = cpufreq_get_cur_state,
->>         .set_cur_state          = cpufreq_set_cur_state,
->> #ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
->>         .get_requested_power    = cpufreq_get_requested_power,
->>         .state2power            = cpufreq_state2power,
->>         .power2state            = cpufreq_power2state,
->> #endif
->> };
->>
->> So you don't have to care about ENERGY_MODEL to be set as
->> THERMAL_GOV_POWER_ALLOCATOR depends on it.
->>
->> I think the result for cpu_cooling.c will be even more cleaner with the
->> em change.
-> 
-> OK, that works for me. I'll give it a go in v5.
-
-Viresh what do you think ?
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+On 15.05.2019 04:29, Anson Huang wrote:=0A=
+> Add macro for the SNVS clock of the i.MX8MM.=0A=
+> =0A=
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>=0A=
+> ---=0A=
+> This patch is based on patch: https://patchwork.kernel.org/patch/10939997=
+/=0A=
+=0A=
+Numbering also conflicts with one of my patches:=0A=
+=0A=
+https://patchwork.kernel.org/patch/10940303/=0A=
+=0A=
+The conflict is easy to resolve but I don't mind resending if your =0A=
+patches get accepted first. If should probably resend anyway to also add =
+=0A=
+gic clk to 8mq.=0A=
+=0A=
+For series:=0A=
+=0A=
+Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>=0A=
