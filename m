@@ -2,52 +2,58 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC5DC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F60C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 535822084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6432E2166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918595;
-	bh=NB47b0H6Mz6H3ek0C4IXApJ456/tz8433YCfRjB5OyQ=;
+	s=default; t=1557918598;
+	bh=PkryYENoIwkRY8gFUuxRQ7rev2NbfZre0BXHHFrzexU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vZ1BIOuiTwjO7lD4LocpagVMB3maHpeTTJkUHFtpabEKBiX1Z7ndbvu7LCrcxbfXe
-	 mxDtP1pnPTa1+PQCHqjDFmTsOCqWXhNxIFqwiG4v1VR2Tmyz46fG7nQbARPiDLsRKh
-	 hYRbtUHyhIg1TxV0ptXLjOdFcd/nlKUPhVY019kA=
+	b=skT8SV9eWlrurEHHhKZ+FzqElCHm7y8UR5bL2B5QI3032HFpV53JEZsz1pu8XVPAJ
+	 3OmRVhk9vV26zc/8njy3gee8HrGErcA8DwFHBZ2t36VSJ8kmu7cOTwbE+HsWvtarxQ
+	 bxgsGM9fCuGV03BjWS8ZcIuKZbbJdDEvG0rvFzb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729322AbfEOLJx (ORCPT
+        id S1729316AbfEOLJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:09:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43172 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:09:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728865AbfEOLJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:09:50 -0400
+        id S1729104AbfEOLJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:09:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A99020843;
-        Wed, 15 May 2019 11:09:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94A702084E;
+        Wed, 15 May 2019 11:09:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918589;
-        bh=NB47b0H6Mz6H3ek0C4IXApJ456/tz8433YCfRjB5OyQ=;
+        s=default; t=1557918587;
+        bh=PkryYENoIwkRY8gFUuxRQ7rev2NbfZre0BXHHFrzexU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ReF3liy/dZKlxB/RP5UqgYKMF4w6qqei+UUMURVhHeNOMBdwrGTgPLAwFmM6MWj9p
-         OFgLEHzrF7LCvLn7MkIH0Pkhv310JR0UPTX1AKDM+uT0nNeG40Myj6lKu4ycHtDO2S
-         Mbf2ZSw6NUpAXYJLq7ZcTV2dvfZsCUbjovI4Vitw=
+        b=u/tZZfTfzqAL+oZoeyxcdyh+KizIKAgsEIsxRzjpgud8QM8Hp/KCjBSBAM3MA+/Ym
+         r2uftRxI3WhgR+8n2X1/djmV9aIYVEQnmw/WHlmtdl6bVJI8B4SH/8B01YJXZ1BJZF
+         gHz5D511ULuc/LbIY5FPEYX24CdLweCdbUGw6czE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 163/266] HID: input: add mapping for Expose/Overview key
-Date:   Wed, 15 May 2019 12:54:30 +0200
-Message-Id: <20190515090728.433308720@linuxfoundation.org>
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>, kvm@vger.kernel.org,
+        KarimAllah Ahmed <karahmed@amazon.de>,
+        andrew.cooper3@citrix.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Borislav Petkov <bp@suse.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 189/266] x86/bugs: Switch the selection of mitigation from CPU vendor to CPU features
+Date:   Wed, 15 May 2019 12:54:56 +0200
+Message-Id: <20190515090729.335325918@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,34 +66,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 96dd86871e1fffbc39e4fa61c9c75ec54ee9af0f ]
+From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 
-According to HUTRR77 usage 0x29f from the consumer page is reserved for
-the Desktop application to present all running user’s application windows.
-Linux defines KEY_SCALE to request Compiz Scale (Expose) mode, so let's
-add the mapping.
+commit 108fab4b5c8f12064ef86e02cb0459992affb30f upstream.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Both AMD and Intel can have SPEC_CTRL_MSR for SSBD.
+
+However AMD also has two more other ways of doing it - which
+are !SPEC_CTRL MSR ways.
+
+Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: kvm@vger.kernel.org
+Cc: KarimAllah Ahmed <karahmed@amazon.de>
+Cc: andrew.cooper3@citrix.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Link: https://lkml.kernel.org/r/20180601145921.9500-4-konrad.wilk@oracle.com
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/hid/hid-input.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kernel/cpu/bugs.c |   11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index 8d74e691ac90f..01b41ff430564 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -913,6 +913,8 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 		case 0x2cb: map_key_clear(KEY_KBDINPUTASSIST_ACCEPT);	break;
- 		case 0x2cc: map_key_clear(KEY_KBDINPUTASSIST_CANCEL);	break;
- 
-+		case 0x29f: map_key_clear(KEY_SCALE);		break;
-+
- 		default: map_key_clear(KEY_UNKNOWN);
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -526,17 +526,12 @@ static enum ssb_mitigation __init __ssb_
+ 		 * Intel uses the SPEC CTRL MSR Bit(2) for this, while AMD may
+ 		 * use a completely different MSR and bit dependent on family.
+ 		 */
+-		switch (boot_cpu_data.x86_vendor) {
+-		case X86_VENDOR_INTEL:
+-		case X86_VENDOR_AMD:
+-			if (!static_cpu_has(X86_FEATURE_MSR_SPEC_CTRL)) {
+-				x86_amd_ssb_disable();
+-				break;
+-			}
++		if (!static_cpu_has(X86_FEATURE_MSR_SPEC_CTRL))
++			x86_amd_ssb_disable();
++		else {
+ 			x86_spec_ctrl_base |= SPEC_CTRL_SSBD;
+ 			x86_spec_ctrl_mask |= SPEC_CTRL_SSBD;
+ 			wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
+-			break;
  		}
- 		break;
--- 
-2.20.1
-
+ 	}
+ 
 
 
