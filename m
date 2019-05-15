@@ -2,87 +2,119 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04AEAC04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 01:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB2EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 01:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D415920879
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 01:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A9A52084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 01:05:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWFDE4os"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726597AbfEOBDc (ORCPT
+        id S1726589AbfEOBFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 21:03:32 -0400
-Received: from fieldses.org ([173.255.197.46]:60190 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726520AbfEOBDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 21:03:32 -0400
-Received: by fieldses.org (Postfix, from userid 2815)
-        id AB39C1D39; Tue, 14 May 2019 21:03:31 -0400 (EDT)
-Date:   Tue, 14 May 2019 21:03:31 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Wenbin Zeng <wenbin.zeng@gmail.com>
-Cc:     viro@zeniv.linux.org.uk, davem@davemloft.net, jlayton@kernel.org,
-        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        wenbinzeng@tencent.com, dsahern@gmail.com,
-        nicolas.dichtel@6wind.com, willy@infradead.org,
-        edumazet@google.com, jakub.kicinski@netronome.com,
-        tyhicks@canonical.com, chuck.lever@oracle.com, neilb@suse.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] auth_gss: netns refcount leaks when
- use-gss-proxy==1
-Message-ID: <20190515010331.GA3232@fieldses.org>
-References: <1556692945-3996-1-git-send-email-wenbinzeng@tencent.com>
- <1557470163-30071-1-git-send-email-wenbinzeng@tencent.com>
+        Tue, 14 May 2019 21:05:33 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41722 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfEOBFd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 21:05:33 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f12so438025plt.8
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 18:05:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=OigDY7C0dmgiXTDGvrusCma83AIE7G7GBT96nHD0zbM=;
+        b=GWFDE4osS2bEzj1o7ShUnbslcK1xslARZnhZzfRZh7jSVI7phnABFz9jFlBejziQS6
+         o1ObcqmOoNtPB3LuKJuSHwFsxPuab+LpwhgRN7oU/aw+v6NJo9YAIkc7K5OZfF1tA8KF
+         BqcVnYQ8aBHxMSgTTQ0w+v9aGmWe05ZSVmocLTL33t5UfrDnmZulDE8cz6LY3qcldYQ1
+         GuaCxx6A//0qbApOxaeRSTE93tA7qlxxVwEqYUKP0xlwEtecAi2BXe003LwZl2iZZNia
+         rjckM/fvGbwjONwU7S2s3XlGSUzim51CRjyIN/6jdXPZaYJBBluwscH3pxhM1aaYX8+m
+         i2eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OigDY7C0dmgiXTDGvrusCma83AIE7G7GBT96nHD0zbM=;
+        b=N9UkHROmlKVuk/RmGascCifsbsDMpcZ8zYoZKB86P1ELAik932jH22M+Pl9slLL1uN
+         XSaooL+kaGUy7OGbO+23ELEUr7ju0FNUeQXPrUL9rda/12zTsY70gmmq9mnLo/e1nat0
+         lvv8GIHRxyRX+cG+9Qp+vvvpWyAQZDUFepgmc65n7vU9vzP/LO1EInY4sKkzQrLxUhUA
+         jj00nYdDg87WrJifqZ5VktH5t2swkM0sRxoBxH2QTfKEZIR+sz+qUyX8yZKUAWZSp/CX
+         TOj4hk/V6ByGGe7YpeUbRvg2fLtSck4uJVRqKJd/fv1MThFIPmdhN1NBC2dOJHEbgBNu
+         GlFg==
+X-Gm-Message-State: APjAAAUAbt+lAm7jouGM/zYKAttw44rnWB6uMdtmijhSun2q5dKngN3Z
+        pvmPTED9llpRePxJr8MKuhD8UZQo
+X-Google-Smtp-Source: APXvYqzyXdx1JAKc9EQBG8NQoamrnNm65978YnQJMX+DqpSV+jegTFpztDsoZNa4XUv/kmajV5xtmA==
+X-Received: by 2002:a17:902:5e1:: with SMTP id f88mr39973784plf.226.1557882332614;
+        Tue, 14 May 2019 18:05:32 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r64sm450148pfa.25.2019.05.14.18.05.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 18:05:31 -0700 (PDT)
+Subject: Re: [PATCH] drm/pl111: Initialize clock spinlock early
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1557758781-23586-1-git-send-email-linux@roeck-us.net>
+ <CACRpkdb6EEchXBSnO5SckGq7MY0z26Fq-=y+uJR=2_SCMC0q+Q@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <9d4fde45-be92-f2e2-0571-f2316d036853@roeck-us.net>
+Date:   Tue, 14 May 2019 18:05:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1557470163-30071-1-git-send-email-wenbinzeng@tencent.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CACRpkdb6EEchXBSnO5SckGq7MY0z26Fq-=y+uJR=2_SCMC0q+Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Whoops, I was slow to test these.  I'm getting failuring krb5 nfs
-mounts, and the following the server's logs.  Dropping the three patches
-for now.
+On 5/14/19 3:20 PM, Linus Walleij wrote:
+> On Mon, May 13, 2019 at 4:46 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> 
+>> The following warning is seen on systems with broken clock divider.
+>>
+>> INFO: trying to register non-static key.
+>> the code is fine but needs lockdep annotation.
+>> turning off the locking correctness validator.
+>> CPU: 0 PID: 1 Comm: swapper Not tainted 5.1.0-09698-g1fb3b52 #1
+>> Hardware name: ARM Integrator/CP (Device Tree)
+>> [<c0011be8>] (unwind_backtrace) from [<c000ebb8>] (show_stack+0x10/0x18)
+>> [<c000ebb8>] (show_stack) from [<c07d3fd0>] (dump_stack+0x18/0x24)
+>> [<c07d3fd0>] (dump_stack) from [<c0060d48>] (register_lock_class+0x674/0x6f8)
+>> [<c0060d48>] (register_lock_class) from [<c005de2c>]
+>>          (__lock_acquire+0x68/0x2128)
+>> [<c005de2c>] (__lock_acquire) from [<c0060408>] (lock_acquire+0x110/0x21c)
+>> [<c0060408>] (lock_acquire) from [<c07f755c>] (_raw_spin_lock+0x34/0x48)
+>> [<c07f755c>] (_raw_spin_lock) from [<c0536c8c>]
+>>          (pl111_display_enable+0xf8/0x5fc)
+>> [<c0536c8c>] (pl111_display_enable) from [<c0502f54>]
+>>          (drm_atomic_helper_commit_modeset_enables+0x1ec/0x244)
+>>
+>> Since commit eedd6033b4c8 ("drm/pl111: Support variants with broken clock
+>> divider"), the spinlock is not initialized if the clock divider is broken.
+>> Initialize it earlier to fix the problem.
+>>
+>> Fixes: eedd6033b4c8 ("drm/pl111: Support variants with broken clock divider")
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> 
+> Applied to drm-misc-next-fixes and pushed.
+> 
+> Out of curiosity: do you have a "real" Integrator/CP or is this
+> QEMU?
+> 
 
---b.
+This is with qemu.
 
-[   40.894408] remove_proc_entry: removing non-empty directory 'net/rpc', leaking at least 'use-gss-proxy'
-[   40.897352] WARNING: CPU: 2 PID: 31 at fs/proc/generic.c:683 remove_proc_entry+0x17d/0x190
-[   40.899373] Modules linked in: nfsd nfs_acl lockd grace auth_rpcgss sunrpc
-[   40.901335] CPU: 2 PID: 31 Comm: kworker/u8:1 Not tainted 5.1.0-10733-g4f10d1cb695e #2220
-[   40.903759] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29 04/01/2014
-[   40.906972] Workqueue: netns cleanup_net
-[   40.907828] RIP: 0010:remove_proc_entry+0x17d/0x190
-[   40.908904] Code: 52 82 48 85 c0 48 8d 90 48 ff ff ff 48 0f 45 c2 48 8b 93 a8 00 00 00 4c 8b 80 d0 00 00 00 48 8b 92 d0 00 00 00 e8 a7 24 dc ff <0f> 0b e9 52 ff ff ff e8 a7 21 dc ff 0f 1f 80 00 00 00 00 0f 1f 44
-[   40.912689] RSP: 0018:ffffc90000123d80 EFLAGS: 00010282
-[   40.913495] RAX: 0000000000000000 RBX: ffff888079f96e40 RCX: 0000000000000000
-[   40.914747] RDX: ffff88807fd24e80 RSI: ffff88807fd165b8 RDI: 00000000ffffffff
-[   40.916107] RBP: ffff888079f96ef0 R08: 0000000000000000 R09: 0000000000000000
-[   40.917253] R10: 0000000000000000 R11: 0000000000000000 R12: ffff88807cd76d68
-[   40.918508] R13: ffffffffa0057000 R14: ffff8880683db200 R15: ffffffff82970240
-[   40.919642] FS:  0000000000000000(0000) GS:ffff88807fd00000(0000) knlGS:0000000000000000
-[   40.920956] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   40.921867] CR2: 00007f9d70010cb8 CR3: 000000007cc5c006 CR4: 00000000001606e0
-[   40.923044] Call Trace:
-[   40.923364]  sunrpc_exit_net+0xcc/0x190 [sunrpc]
-[   40.924069]  ops_exit_list.isra.0+0x36/0x70
-[   40.924713]  cleanup_net+0x1cb/0x2c0
-[   40.925182]  process_one_work+0x219/0x620
-[   40.925780]  worker_thread+0x3c/0x390
-[   40.926312]  ? process_one_work+0x620/0x620
-[   40.927015]  kthread+0x11d/0x140
-[   40.927430]  ? kthread_park+0x80/0x80
-[   40.927822]  ret_from_fork+0x3a/0x50
-[   40.928281] irq event stamp: 11688
-[   40.928780] hardirqs last  enabled at (11687): [<ffffffff811225fe>] console_unlock+0x41e/0x590
-[   40.930319] hardirqs last disabled at (11688): [<ffffffff81001b2c>] trace_hardirqs_off_thunk+0x1a/0x1c
-[   40.932123] softirqs last  enabled at (11684): [<ffffffff820002c5>] __do_softirq+0x2c5/0x4c5
-[   40.933657] softirqs last disabled at (11673): [<ffffffff810bf970>] irq_exit+0x80/0x90
-
+Guenter
