@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554E5C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFB9C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25EE1206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3A4620881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919233;
-	bh=okYy+GU6/N0t4Tvh74P9xri3NwBQ8lf9DQZpI4Zyqi4=;
+	s=default; t=1557919238;
+	bh=fiDHXySjVpTAbNFg99WlCR3XY3EOyc0ANX0y622B1Ys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j6/BxsYxMsh8XUqxky+9UrF8qWvvGbOug2C5ghyB1rcVTNY4CWW5ovQcx7f3l/6Dw
-	 qQfLBALvwRI5HqB/UVKbgHjyIF5MYW5UMjTQ9cQ0qB8cZlm3gMYhgAvo+3Z7kH5HXb
-	 Kmi3ugI4qcC/KOOVXf9zfX+ryMlUNylin9mla9Ks=
+	b=KvVjwZvNMuy/7NTABd7xjKKih8x7BH1uy993PkOZ9hboYMdOBBYghqT7WShhN4iiy
+	 e+jRbn88MO6vlfLpL/zYyeCMRdvKc8zRW6E0IsNUi6dtFCikWvhPbDl3JwCauhQBWv
+	 bXG+tGdvQWOOdutgKhRrBovFoHHIGJIeF/L4LW+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731117AbfEOLUc (ORCPT
+        id S1731125AbfEOLUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:20:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58268 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:20:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731105AbfEOLU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:20:28 -0400
+        id S1730734AbfEOLUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:20:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DD5120843;
-        Wed, 15 May 2019 11:20:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53FE220881;
+        Wed, 15 May 2019 11:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919227;
-        bh=okYy+GU6/N0t4Tvh74P9xri3NwBQ8lf9DQZpI4Zyqi4=;
+        s=default; t=1557919232;
+        bh=fiDHXySjVpTAbNFg99WlCR3XY3EOyc0ANX0y622B1Ys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L3WrBawMsSjbskiuii0HKkJABjaC1kvgBCnDteMoKpIAisMxvFc2XepQQAm0zR9Oi
-         cOtxy/OrmTIbVm2ZmO0kQyCEYpa/H/zhfo0hzdbojuZMLc2qPZUo137rsUMLkDH6mA
-         5sIq1RnMyCfv9KWAARaLaXb0B0Nci+s+GbiISlMA=
+        b=rFzNuJ8bPbDjGy9nlHdR+2tSKkGLmwCxlWnduex5y0pFW/gQFUv7zj0msEl21uABt
+         psS7x+NAzxFc94kFWPrZeGeHorP9dO5pHXjFf0uXTJ+5nEPUKslS7tsymsvyTE5U2j
+         r27N7cSVD8fbontOCOj/UyxSgujcLs6dlcbhroWE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Timur Tabi <timur@freescale.com>,
-        Mihai Caraman <mihai.caraman@freescale.com>,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 112/115] drivers/virt/fsl_hypervisor.c: dereferencing error pointers in ioctl
-Date:   Wed, 15 May 2019 12:56:32 +0200
-Message-Id: <20190515090707.177030343@linuxfoundation.org>
+        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Akshay Adiga <akshay.adiga@linux.vnet.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.14 114/115] powerpc/powernv/idle: Restore IAMR after idle
+Date:   Wed, 15 May 2019 12:56:34 +0200
+Message-Id: <20190515090707.277746502@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -63,104 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Russell Currey <ruscur@russell.cc>
 
-commit c8ea3663f7a8e6996d44500ee818c9330ac4fd88 upstream.
+commit a3f3072db6cad40895c585dce65e36aab997f042 upstream.
 
-strndup_user() returns error pointers on error, and then in the error
-handling we pass the error pointers to kfree().  It will cause an Oops.
+Without restoring the IAMR after idle, execution prevention on POWER9
+with Radix MMU is overwritten and the kernel can freely execute
+userspace without faulting.
 
-Link: http://lkml.kernel.org/r/20181218082003.GD32567@kadam
-Fixes: 6db7199407ca ("drivers/virt: introduce Freescale hypervisor management driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Timur Tabi <timur@freescale.com>
-Cc: Mihai Caraman <mihai.caraman@freescale.com>
-Cc: Kumar Gala <galak@kernel.crashing.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This is necessary when returning from any stop state that modifies
+user state, as well as hypervisor state.
+
+To test how this fails without this patch, load the lkdtm driver and
+do the following:
+
+  $ echo EXEC_USERSPACE > /sys/kernel/debug/provoke-crash/DIRECT
+
+which won't fault, then boot the kernel with powersave=off, where it
+will fault. Applying this patch will fix this.
+
+Fixes: 3b10d0095a1e ("powerpc/mm/radix: Prevent kernel execution of user space")
+Cc: stable@vger.kernel.org # v4.10+
+Signed-off-by: Russell Currey <ruscur@russell.cc>
+Reviewed-by: Akshay Adiga <akshay.adiga@linux.vnet.ibm.com>
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/virt/fsl_hypervisor.c |   26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ arch/powerpc/kernel/idle_book3s.S |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
---- a/drivers/virt/fsl_hypervisor.c
-+++ b/drivers/virt/fsl_hypervisor.c
-@@ -331,8 +331,8 @@ static long ioctl_dtprop(struct fsl_hv_i
- 	struct fsl_hv_ioctl_prop param;
- 	char __user *upath, *upropname;
- 	void __user *upropval;
--	char *path = NULL, *propname = NULL;
--	void *propval = NULL;
-+	char *path, *propname;
-+	void *propval;
- 	int ret = 0;
+--- a/arch/powerpc/kernel/idle_book3s.S
++++ b/arch/powerpc/kernel/idle_book3s.S
+@@ -163,6 +163,9 @@ core_idle_lock_held:
+ 	bne-	core_idle_lock_held
+ 	blr
  
- 	/* Get the parameters from the user. */
-@@ -344,32 +344,30 @@ static long ioctl_dtprop(struct fsl_hv_i
- 	upropval = (void __user *)(uintptr_t)param.propval;
- 
- 	path = strndup_user(upath, FH_DTPROP_MAX_PATHLEN);
--	if (IS_ERR(path)) {
--		ret = PTR_ERR(path);
--		goto out;
--	}
-+	if (IS_ERR(path))
-+		return PTR_ERR(path);
- 
- 	propname = strndup_user(upropname, FH_DTPROP_MAX_PATHLEN);
- 	if (IS_ERR(propname)) {
- 		ret = PTR_ERR(propname);
--		goto out;
-+		goto err_free_path;
- 	}
- 
- 	if (param.proplen > FH_DTPROP_MAX_PROPLEN) {
- 		ret = -EINVAL;
--		goto out;
-+		goto err_free_propname;
- 	}
- 
- 	propval = kmalloc(param.proplen, GFP_KERNEL);
- 	if (!propval) {
- 		ret = -ENOMEM;
--		goto out;
-+		goto err_free_propname;
- 	}
- 
- 	if (set) {
- 		if (copy_from_user(propval, upropval, param.proplen)) {
- 			ret = -EFAULT;
--			goto out;
-+			goto err_free_propval;
- 		}
- 
- 		param.ret = fh_partition_set_dtprop(param.handle,
-@@ -388,7 +386,7 @@ static long ioctl_dtprop(struct fsl_hv_i
- 			if (copy_to_user(upropval, propval, param.proplen) ||
- 			    put_user(param.proplen, &p->proplen)) {
- 				ret = -EFAULT;
--				goto out;
-+				goto err_free_propval;
- 			}
- 		}
- 	}
-@@ -396,10 +394,12 @@ static long ioctl_dtprop(struct fsl_hv_i
- 	if (put_user(param.ret, &p->ret))
- 		ret = -EFAULT;
- 
--out:
--	kfree(path);
-+err_free_propval:
- 	kfree(propval);
-+err_free_propname:
- 	kfree(propname);
-+err_free_path:
-+	kfree(path);
- 
- 	return ret;
- }
++/* Reuse an unused pt_regs slot for IAMR */
++#define PNV_POWERSAVE_IAMR	_DAR
++
+ /*
+  * Pass requested state in r3:
+  *	r3 - PNV_THREAD_NAP/SLEEP/WINKLE in POWER8
+@@ -193,6 +196,12 @@ pnv_powersave_common:
+ 	/* Continue saving state */
+ 	SAVE_GPR(2, r1)
+ 	SAVE_NVGPRS(r1)
++
++BEGIN_FTR_SECTION
++	mfspr	r5, SPRN_IAMR
++	std	r5, PNV_POWERSAVE_IAMR(r1)
++END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
++
+ 	mfcr	r5
+ 	std	r5,_CCR(r1)
+ 	std	r1,PACAR1(r13)
+@@ -940,6 +949,17 @@ BEGIN_FTR_SECTION
+ END_FTR_SECTION_IFSET(CPU_FTR_HVMODE)
+ 	REST_NVGPRS(r1)
+ 	REST_GPR(2, r1)
++
++BEGIN_FTR_SECTION
++	/* IAMR was saved in pnv_powersave_common() */
++	ld	r5, PNV_POWERSAVE_IAMR(r1)
++	mtspr	SPRN_IAMR, r5
++	/*
++	 * We don't need an isync here because the upcoming mtmsrd is
++	 * execution synchronizing.
++	 */
++END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
++
+ 	ld	r4,PACAKMSR(r13)
+ 	ld	r5,_LINK(r1)
+ 	ld	r6,_CCR(r1)
 
 
