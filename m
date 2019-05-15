@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 081ABC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:32:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8ABC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5BE820818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:32:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF26920881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:32:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919925;
-	bh=iiIYaC/w5QturTMJQoyrPh/5aTn9LhWQ1IssuHWRieg=;
+	s=default; t=1557919929;
+	bh=Pbj+UVCC4TYDkmXlwC5abIs+I5M6h3icEkPBubW8FrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=igeEpfWcL4b639b6Ea8eSh4BJ7wMYVfwG50uHPVb7gvOr/kYbkinJB9MO31QSipYG
-	 AEMOFN1tWOzuZB4ZA7dQgadBgfax64UFZgKd0WYyLyW721j/ToZKlI7pbbZDS3yOJi
-	 vetEpUEqO9Sy7mQPC4VK+BlZK9tz3M2IKpl/6/Kk=
+	b=muh/C606Jig+f5VhpHireHOyuRQFed1uKSn/I71Jj7Muv/j/9fK7coJaKOCaGbjya
+	 5ELIYs+AfPqEQJ9pdQZeH/F1acWipZCyRGbj1TkHPrOLdfSeWrWOivvduIiQYwBYAa
+	 quesGxOgvCV0TUGVZUszMTDON8eRGyQ1JQ5OzH3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732971AbfEOLcE (ORCPT
+        id S1732980AbfEOLcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:32:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43824 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:32:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732586AbfEOLcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:32:01 -0400
+        id S1732968AbfEOLcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:32:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EDD5206BF;
-        Wed, 15 May 2019 11:32:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1723720881;
+        Wed, 15 May 2019 11:32:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919920;
-        bh=iiIYaC/w5QturTMJQoyrPh/5aTn9LhWQ1IssuHWRieg=;
+        s=default; t=1557919923;
+        bh=Pbj+UVCC4TYDkmXlwC5abIs+I5M6h3icEkPBubW8FrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FTZMYykBNKLZzpVxlsvIkAiQoWttloZ9GfpmTTqTvceu0pWJlvkexsX3ZSZzmq+jp
-         4mAsFksVEDoziM3xZRyzuUK+1UsOw7KPxKYdygmviLxGk6C5Dppon+nM/j7WHYn3Bj
-         NRMuEZAw5+55PFN896tRa1Sj4xQrFft6BLynuqUs=
+        b=Mc5KKry8vKnxwi6mmyHR4fgpA0dOhwS+bEv8RUmiPvgpRlMNNyziccKUnfaDI3tZg
+         gmeZ5B9i8OUbwZjuzdAiiTe9eNxP9LCftknnNg9y2p7Qf3gobLjZXbuVBNHp9FUS66
+         7nQh0/tFs1z2VYBbtnYDBzeF7VdiuVxRxn+XpNhc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rick Lindsley <ricklind@vnet.linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.0 130/137] powerpc/book3s/64: check for NULL pointer in pgd_alloc()
-Date:   Wed, 15 May 2019 12:56:51 +0200
-Message-Id: <20190515090703.319734991@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.0 121/137] aqc111: fix writing to the phy on BE
+Date:   Wed, 15 May 2019 12:56:42 +0200
+Message-Id: <20190515090702.485563524@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -60,58 +59,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rick Lindsley <ricklind@linux.vnet.ibm.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit f39356261c265a0689d7ee568132d516e8b6cecc upstream.
+[ Upstream commit 369b46e9fbcfa5136f2cb5f486c90e5f7fa92630 ]
 
-When the memset code was added to pgd_alloc(), it failed to consider
-that kmem_cache_alloc() can return NULL. It's uncommon, but not
-impossible under heavy memory contention. Example oops:
+When writing to the phy on BE architectures an internal data structure
+was directly given, leading to it being byte swapped in the wrong
+way for the CPU in 50% of all cases. A temporary buffer must be used.
 
-  Unable to handle kernel paging request for data at address 0x00000000
-  Faulting instruction address: 0xc0000000000a4000
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  LE SMP NR_CPUS=2048 NUMA pSeries
-  CPU: 70 PID: 48471 Comm: entrypoint.sh Kdump: loaded Not tainted 4.14.0-115.6.1.el7a.ppc64le #1
-  task: c000000334a00000 task.stack: c000000331c00000
-  NIP:  c0000000000a4000 LR: c00000000012f43c CTR: 0000000000000020
-  REGS: c000000331c039c0 TRAP: 0300   Not tainted  (4.14.0-115.6.1.el7a.ppc64le)
-  MSR:  800000010280b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 44022840  XER: 20040000
-  CFAR: c000000000008874 DAR: 0000000000000000 DSISR: 42000000 SOFTE: 1
-  ...
-  NIP [c0000000000a4000] memset+0x68/0x104
-  LR [c00000000012f43c] mm_init+0x27c/0x2f0
-  Call Trace:
-    mm_init+0x260/0x2f0 (unreliable)
-    copy_mm+0x11c/0x638
-    copy_process.isra.28.part.29+0x6fc/0x1080
-    _do_fork+0xdc/0x4c0
-    ppc_clone+0x8/0xc
-  Instruction dump:
-  409e000c b0860000 38c60002 409d000c 90860000 38c60004 78a0d183 78a506a0
-  7c0903a6 41820034 60000000 60420000 <f8860000> f8860008 f8860010 f8860018
-
-Fixes: fc5c2f4a55a2 ("powerpc/mm/hash64: Zero PGD pages on allocation")
-Cc: stable@vger.kernel.org # v4.16+
-Signed-off-by: Rick Lindsley <ricklind@vnet.linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/powerpc/include/asm/book3s/64/pgalloc.h |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/usb/aqc111.c |   23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
---- a/arch/powerpc/include/asm/book3s/64/pgalloc.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgalloc.h
-@@ -81,6 +81,9 @@ static inline pgd_t *pgd_alloc(struct mm
+--- a/drivers/net/usb/aqc111.c
++++ b/drivers/net/usb/aqc111.c
+@@ -320,6 +320,7 @@ static int aqc111_get_link_ksettings(str
+ static void aqc111_set_phy_speed(struct usbnet *dev, u8 autoneg, u16 speed)
+ {
+ 	struct aqc111_data *aqc111_data = dev->driver_priv;
++	u32 phy_on_the_wire;
  
- 	pgd = kmem_cache_alloc(PGT_CACHE(PGD_INDEX_SIZE),
- 			       pgtable_gfp_flags(mm, GFP_KERNEL));
-+	if (unlikely(!pgd))
-+		return pgd;
-+
- 	/*
- 	 * Don't scan the PGD for pointers, it contains references to PUDs but
- 	 * those references are not full pointers and so can't be recognised by
+ 	aqc111_data->phy_cfg &= ~AQ_ADV_MASK;
+ 	aqc111_data->phy_cfg |= AQ_PAUSE;
+@@ -361,7 +362,8 @@ static void aqc111_set_phy_speed(struct
+ 		}
+ 	}
+ 
+-	aqc111_write32_cmd(dev, AQ_PHY_OPS, 0, 0, &aqc111_data->phy_cfg);
++	phy_on_the_wire = aqc111_data->phy_cfg;
++	aqc111_write32_cmd(dev, AQ_PHY_OPS, 0, 0, &phy_on_the_wire);
+ }
+ 
+ static int aqc111_set_link_ksettings(struct net_device *net,
+@@ -755,6 +757,7 @@ static void aqc111_unbind(struct usbnet
+ {
+ 	struct aqc111_data *aqc111_data = dev->driver_priv;
+ 	u16 reg16;
++	u32 phy_on_the_wire;
+ 
+ 	/* Force bz */
+ 	reg16 = SFR_PHYPWR_RSTCTL_BZ;
+@@ -768,8 +771,9 @@ static void aqc111_unbind(struct usbnet
+ 	aqc111_data->phy_cfg &= ~AQ_ADV_MASK;
+ 	aqc111_data->phy_cfg |= AQ_LOW_POWER;
+ 	aqc111_data->phy_cfg &= ~AQ_PHY_POWER_EN;
++	phy_on_the_wire = aqc111_data->phy_cfg;
+ 	aqc111_write32_cmd_nopm(dev, AQ_PHY_OPS, 0, 0,
+-				&aqc111_data->phy_cfg);
++				&phy_on_the_wire);
+ 
+ 	kfree(aqc111_data);
+ }
+@@ -992,6 +996,7 @@ static int aqc111_reset(struct usbnet *d
+ {
+ 	struct aqc111_data *aqc111_data = dev->driver_priv;
+ 	u8 reg8 = 0;
++	u32 phy_on_the_wire;
+ 
+ 	dev->rx_urb_size = URB_SIZE;
+ 
+@@ -1004,8 +1009,9 @@ static int aqc111_reset(struct usbnet *d
+ 
+ 	/* Power up ethernet PHY */
+ 	aqc111_data->phy_cfg = AQ_PHY_POWER_EN;
++	phy_on_the_wire = aqc111_data->phy_cfg;
+ 	aqc111_write32_cmd(dev, AQ_PHY_OPS, 0, 0,
+-			   &aqc111_data->phy_cfg);
++			   &phy_on_the_wire);
+ 
+ 	/* Set the MAC address */
+ 	aqc111_write_cmd(dev, AQ_ACCESS_MAC, SFR_NODE_ID, ETH_ALEN,
+@@ -1036,6 +1042,7 @@ static int aqc111_stop(struct usbnet *de
+ {
+ 	struct aqc111_data *aqc111_data = dev->driver_priv;
+ 	u16 reg16 = 0;
++	u32 phy_on_the_wire;
+ 
+ 	aqc111_read16_cmd(dev, AQ_ACCESS_MAC, SFR_MEDIUM_STATUS_MODE,
+ 			  2, &reg16);
+@@ -1047,8 +1054,9 @@ static int aqc111_stop(struct usbnet *de
+ 
+ 	/* Put PHY to low power*/
+ 	aqc111_data->phy_cfg |= AQ_LOW_POWER;
++	phy_on_the_wire = aqc111_data->phy_cfg;
+ 	aqc111_write32_cmd(dev, AQ_PHY_OPS, 0, 0,
+-			   &aqc111_data->phy_cfg);
++			   &phy_on_the_wire);
+ 
+ 	netif_carrier_off(dev->net);
+ 
+@@ -1324,6 +1332,7 @@ static int aqc111_suspend(struct usb_int
+ 	u16 temp_rx_ctrl = 0x00;
+ 	u16 reg16;
+ 	u8 reg8;
++	u32 phy_on_the_wire;
+ 
+ 	usbnet_suspend(intf, message);
+ 
+@@ -1395,12 +1404,14 @@ static int aqc111_suspend(struct usb_int
+ 
+ 		aqc111_write_cmd(dev, AQ_WOL_CFG, 0, 0,
+ 				 WOL_CFG_SIZE, &wol_cfg);
++		phy_on_the_wire = aqc111_data->phy_cfg;
+ 		aqc111_write32_cmd(dev, AQ_PHY_OPS, 0, 0,
+-				   &aqc111_data->phy_cfg);
++				   &phy_on_the_wire);
+ 	} else {
+ 		aqc111_data->phy_cfg |= AQ_LOW_POWER;
++		phy_on_the_wire = aqc111_data->phy_cfg;
+ 		aqc111_write32_cmd(dev, AQ_PHY_OPS, 0, 0,
+-				   &aqc111_data->phy_cfg);
++				   &phy_on_the_wire);
+ 
+ 		/* Disable RX path */
+ 		aqc111_read16_cmd_nopm(dev, AQ_ACCESS_MAC,
 
 
