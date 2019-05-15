@@ -3,114 +3,110 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267C7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0108C04AB4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB50820879
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557880234;
-	bh=gcFzwZNpmv+GWUYixEsA52cd+lwsfHe+N/EYtEpKFoY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i9rp7gZX8dS5lsYJK6FazqMICm0j8GOkfi8K3r2KWM9B55hNiBys0x3DavbU5DFmy
-	 EjorElXY+QTo7iVFS36qO2la+RHOi2fFsmm10IpSq2BQ69wtXIvc/Om+VeLgvBRCaE
-	 u1518Qj88VYKghpqjNC+KauwGakDEP1TT/IeG5Ok=
+	by mail.kernel.org (Postfix) with ESMTP id A776B20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:30:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Stcpfomi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfEOAad (ORCPT
+        id S1726901AbfEOAae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:30:33 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:56873 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726709AbfEOAab (ORCPT
+        Tue, 14 May 2019 20:30:34 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:38842 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726834AbfEOAac (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:30:31 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id B622F25888;
-        Tue, 14 May 2019 20:30:30 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 14 May 2019 20:30:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=00rAFAWmUlAnpzYom9QoZFSRMRtPL32nxsWL64DrfUU=; b=aohgfCRL
-        NZVn/LCmj3DdmzABy104SejW8LgTYy+PrOpTFDbxUM1tFKWMLlII1FLrWQF+DVlB
-        swwVVs4j1CPV0r2iKKbpF/wjH8hwUZdSKJsMLN/scaiZCYSl4SJvu2OPvy0OQWFo
-        UoKqj438tKjyY31uDMKZ8nA498JuLLVQv38vtRz4YDlEU7mwoWkE2JA+FnHo8zzD
-        bAAKh0n91JDrC/ELDsj3wKNZZzcKBT/zaQS13hXU6m/FmiO/8PmIs4KtvWoMsWTv
-        vOv5nU5x/FRkp9Y9xobWDX9KEQyNSt6Ue2lt14pDvLILp5pH3SoIocCVZmTT48WJ
-        m9uxfs1QDzbAug==
-X-ME-Sender: <xms:pl3bXAOcmNKxii7Mzghy6j2NniuqaP-5ZcopejliKNoyfh2tO3DS8g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrleejgdefiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
-    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
-    epuddvuddrgeegrddvvdefrddvuddunecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
-    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpeeh
-X-ME-Proxy: <xmx:pl3bXPxbqT75ExnY2dXeQ785M6tntKiO451xvJ2ljaffkEjyXdDyCQ>
-    <xmx:pl3bXNnaeb5IohY0Kojk3z7xN3r8N4WfZonIihGShSAOy1eKPvwA5Q>
-    <xmx:pl3bXPWZGXQPAo7vATdoJkpLTlDv2IAa8ST6usdj526xV8sGUshdzw>
-    <xmx:pl3bXBXCMzc8Ui0Mht8LSXhXZxjVLcmCUjHMoV6-Ei5nTOU0E18mDQ>
-Received: from eros.localdomain (ppp121-44-223-211.bras1.syd2.internode.on.net [121.44.223.211])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4239110378;
-        Tue, 14 May 2019 20:30:26 -0400 (EDT)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Neil Brown <neilb@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 7/9] docs: filesystems: vfs: Fix pre-amble indentation
-Date:   Wed, 15 May 2019 10:29:11 +1000
-Message-Id: <20190515002913.12586-8-tobin@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515002913.12586-1-tobin@kernel.org>
-References: <20190515002913.12586-1-tobin@kernel.org>
+        Tue, 14 May 2019 20:30:32 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8BD27C0A63;
+        Wed, 15 May 2019 00:30:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1557880222; bh=uh9UA+kPv4V1KqsVc+h+XFlXPK5I/tzW1yJ39f1zSew=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=StcpfomiPaz311LQ+zHrKvFpn1jpoRgQ4U5VvLR5jyW8aGuPJHCeLon0S8wLmgwRg
+         17UCEsHzUm4FZ5jQf6RTYJWY9IlX5thtxG2FTyNia3olPBk/TajOXBDNaJ94AjDbh9
+         od3kqvN9+mrpMqBha1X3hzO2UjSDdfP2tPBrUrOPIy14kL0hjVJL8iAlJr7u0vaHim
+         YwT9Y4z9wFzbRDrUb7iYwztf/v+t08GpH8G1Zmk1QgSVsbTw8pClgy7hZdrE4n5ivR
+         OER2XW28gq8iJUKjK79wAtEI+SumU+qkEqA0l6QQ8v6UqR0GUTZ5SMOwvG8VvNGCFP
+         W7jphfenBauMA==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 93E18A0068;
+        Wed, 15 May 2019 00:30:31 +0000 (UTC)
+Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
+ us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 14 May 2019 17:30:04 -0700
+Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
+ IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 15 May 2019 06:00:01 +0530
+Received: from vineetg-Latitude-E7450.internal.synopsys.com (10.13.182.230) by
+ IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 15 May 2019 06:00:12 +0530
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     <linux-snps-arc@lists.infradead.org>
+CC:     <paltsev@snyopsys.com>, <linux-kernel@vger.kernel.org>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: [PATCH 3/9] ARC: mm: do_page_fault refactor #2: remove short lived variable
+Date:   Tue, 14 May 2019 17:29:30 -0700
+Message-ID: <1557880176-24964-4-git-send-email-vgupta@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1557880176-24964-1-git-send-email-vgupta@synopsys.com>
+References: <1557880176-24964-1-git-send-email-vgupta@synopsys.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.13.182.230]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently file pre-amble contains custom indentation.  RST is not going
-to like this, lets left-align the text.  Put the copyright notices in a
-list in preparation for converting document to RST.
+Compiler will do this anyways, still..
 
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+No functional change.
+
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 ---
- Documentation/filesystems/vfs.txt | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arc/mm/fault.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/Documentation/filesystems/vfs.txt b/Documentation/filesystems/vfs.txt
-index 5c8358c73e30..43b18bafbc20 100644
---- a/Documentation/filesystems/vfs.txt
-+++ b/Documentation/filesystems/vfs.txt
-@@ -4,12 +4,12 @@
- Overview of the Linux Virtual File System
- =========================================
+diff --git a/arch/arc/mm/fault.c b/arch/arc/mm/fault.c
+index 94d242740ac5..f1175685d914 100644
+--- a/arch/arc/mm/fault.c
++++ b/arch/arc/mm/fault.c
+@@ -67,23 +67,18 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
+ 	struct task_struct *tsk = current;
+ 	struct mm_struct *mm = tsk->mm;
+ 	int si_code = SEGV_MAPERR;
+-	int ret;
+ 	vm_fault_t fault;
+ 	int write = regs->ecr_cause & ECR_C_PROTV_STORE;  /* ST/EX */
+ 	unsigned int flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
  
--	Original author: Richard Gooch <rgooch@atnf.csiro.au>
-+Original author: Richard Gooch <rgooch@atnf.csiro.au>
- 
--		  Last updated on June 24, 2007.
-+Last updated on June 24, 2007.
- 
--  Copyright (C) 1999 Richard Gooch
--  Copyright (C) 2005 Pekka Enberg
-+- Copyright (C) 1999 Richard Gooch
-+- Copyright (C) 2005 Pekka Enberg
- 
- 
- Introduction
+ 	/*
+-	 * We fault-in kernel-space virtual memory on-demand. The
+-	 * 'reference' page table is init_mm.pgd.
+-	 *
+ 	 * NOTE! We MUST NOT take any locks for this case. We may
+ 	 * be in an interrupt or a critical region, and should
+ 	 * only copy the information from the master page table,
+ 	 * nothing more.
+ 	 */
+ 	if (address >= VMALLOC_START && !user_mode(regs)) {
+-		ret = handle_kernel_vaddr_fault(address);
+-		if (unlikely(ret))
++		if (unlikely(handle_kernel_vaddr_fault(address)))
+ 			goto no_context;
+ 		else
+ 			return;
 -- 
-2.21.0
+2.7.4
 
