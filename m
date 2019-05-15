@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F34FC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57644C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 409EA20881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA2720862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918703;
-	bh=o4axuyy1NAMWqo7oV48Zjm+ukK6x6IRbm+fKo0kgn04=;
+	s=default; t=1557918709;
+	bh=MImSsXvWpLoPg86zZhy9nBvmMuJY3uBgGLoSEpjiewo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zYLdH5MXznOxEXi+oGJOsnFfXoqZ4C+XN9upv8je4B3cvZm1tuhhrGnp/JvUI7EwT
-	 J3L78yCzxGQYuls5OPIgYJz2VK8cftiTIBu0DaaB7GBQzTuF+55pUftogXQm6+G1U9
-	 EVdzojuftOzSn7km1wdt0RinDy9sLBn8jVlSCWgU=
+	b=CJmM/BUFfsbfh5BAB6gs6RL8T49mBaS4ygZB3SObJCSQAjV3gaVJqEOxlQQAkKlHn
+	 DpfjSPyQhtTkGiG4Vonmm93CaR15Yo1q/tWX6j0cZxF2reKCbqPnmS596DuwJ+ztv5
+	 65b04GTgfLMrOew0HS4aR2yptpp6VjD5vFIUcjjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbfEOLLm (ORCPT
+        id S1729632AbfEOLLq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:11:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46314 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:11:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729088AbfEOLLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:11:39 -0400
+        id S1729414AbfEOLLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:11:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA04B20843;
-        Wed, 15 May 2019 11:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FB8B2084F;
+        Wed, 15 May 2019 11:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918698;
-        bh=o4axuyy1NAMWqo7oV48Zjm+ukK6x6IRbm+fKo0kgn04=;
+        s=default; t=1557918700;
+        bh=MImSsXvWpLoPg86zZhy9nBvmMuJY3uBgGLoSEpjiewo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VXRiZsfx/kWyB4Z3/eLvHQWBnSUTU1lgSSZVr3yVDuOF+kuUXHCgBZZkCzBMqzi3G
-         ML5FcTiNBylSWJK5rrK3Ff/qm/8V9zVYq6E3981xIsGQOz/Uh2PKyrP/n6B5mf1Uyv
-         0j8JEPHedz17GGhikO5XXusPn+KCn0Wii8o+fnXg=
+        b=nKQbjYPYcVQA/zdt239AkmF2wayhffzSipSeA1gQzrdGBILJVPpeV/P+3NbafrIWj
+         hhtdyO/bn2ab5f6oWoaEfKBcut2aiJeYINZF4Iv20FHwsjBvNK+KhlQoQgOFBkdXgh
+         hmpPq7DtvamFtlOEbaK/dCpuNdd3X8NFenmpH/qw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@suse.de>,
         Frederic Weisbecker <frederic@kernel.org>,
         Jon Masters <jcm@redhat.com>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 231/266] x86/speculation/mds: Add BUG_MSBDS_ONLY
-Date:   Wed, 15 May 2019 12:55:38 +0200
-Message-Id: <20190515090730.817858081@linuxfoundation.org>
+Subject: [PATCH 4.4 232/266] x86/kvm: Expose X86_FEATURE_MD_CLEAR to guests
+Date:   Wed, 15 May 2019 12:55:39 +0200
+Message-Id: <20190515090730.851971386@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -61,91 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Andi Kleen <ak@linux.intel.com>
 
-commit e261f209c3666e842fd645a1e31f001c3a26def9 upstream.
+commit 6c4dbbd14730c43f4ed808a9c42ca41625925c22 upstream.
 
-This bug bit is set on CPUs which are only affected by Microarchitectural
-Store Buffer Data Sampling (MSBDS) and not by any other MDS variant.
+X86_FEATURE_MD_CLEAR is a new CPUID bit which is set when microcode
+provides the mechanism to invoke a flush of various exploitable CPU buffers
+by invoking the VERW instruction.
 
-This is important because the Store Buffers are partitioned between
-Hyper-Threads so cross thread forwarding is not possible. But if a thread
-enters or exits a sleep state the store buffer is repartitioned which can
-expose data from one thread to the other. This transition can be mitigated.
+Hand it through to guests so they can adjust their mitigations.
 
-That means that for CPUs which are only affected by MSBDS SMT can be
-enabled, if the CPU is not affected by other SMT sensitive vulnerabilities,
-e.g. L1TF. The XEON PHI variants fall into that category. Also the
-Silvermont/Airmont ATOMs, but for them it's not really relevant as they do
-not support SMT, but mark them for completeness sake.
+This also requires corresponding qemu changes, which are available
+separately.
 
+[ tglx: Massaged changelog ]
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 Reviewed-by: Jon Masters <jcm@redhat.com>
 Tested-by: Jon Masters <jcm@redhat.com>
-[bwh: Backported to 4.4: adjust context, indentation]
+[bwh: Backported to 4.4: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/include/asm/cpufeatures.h |    1 +
- arch/x86/kernel/cpu/common.c       |   20 ++++++++++++--------
- 2 files changed, 13 insertions(+), 8 deletions(-)
+ arch/x86/kvm/cpuid.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -337,5 +337,6 @@
- #define X86_BUG_SPEC_STORE_BYPASS X86_BUG(17) /* CPU is affected by speculative store bypass attack */
- #define X86_BUG_L1TF		X86_BUG(18) /* CPU is affected by L1 Terminal Fault */
- #define X86_BUG_MDS		X86_BUG(19) /* CPU is affected by Microarchitectural data sampling */
-+#define X86_BUG_MSBDS_ONLY	X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -366,7 +366,7 @@ static inline int __do_cpuid_ent(struct
+ 	/* cpuid 7.0.edx*/
+ 	const u32 kvm_cpuid_7_0_edx_x86_features =
+ 		F(SPEC_CTRL) | F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) |
+-		F(INTEL_STIBP);
++		F(INTEL_STIBP) | F(MD_CLEAR);
  
- #endif /* _ASM_X86_CPUFEATURES_H */
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -852,6 +852,7 @@ static void identify_cpu_without_cpuid(s
- #define NO_SSB		BIT(2)
- #define NO_L1TF		BIT(3)
- #define NO_MDS		BIT(4)
-+#define MSBDS_ONLY	BIT(5)
- 
- #define VULNWL(_vendor, _family, _model, _whitelist)	\
- 	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
-@@ -875,16 +876,16 @@ static const __initconst struct x86_cpu_
- 	VULNWL_INTEL(ATOM_BONNELL,		NO_SPECULATION),
- 	VULNWL_INTEL(ATOM_BONNELL_MID,		NO_SPECULATION),
- 
--	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF),
--	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF),
--	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF),
--	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF),
--	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF),
--	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF),
-+	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY),
-+	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF | MSBDS_ONLY),
-+	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY),
-+	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY),
-+	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY),
-+	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY),
- 
- 	VULNWL_INTEL(CORE_YONAH,		NO_SSB),
- 
--	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF),
-+	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY),
- 
- 	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF),
- 	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_MDS | NO_L1TF),
-@@ -928,8 +929,11 @@ static void __init cpu_set_bug_bits(stru
- 	if (ia32_cap & ARCH_CAP_IBRS_ALL)
- 		setup_force_cpu_cap(X86_FEATURE_IBRS_ENHANCED);
- 
--	if (!cpu_matches(NO_MDS) && !(ia32_cap & ARCH_CAP_MDS_NO))
-+	if (!cpu_matches(NO_MDS) && !(ia32_cap & ARCH_CAP_MDS_NO)) {
- 		setup_force_cpu_bug(X86_BUG_MDS);
-+		if (cpu_matches(MSBDS_ONLY))
-+			setup_force_cpu_bug(X86_BUG_MSBDS_ONLY);
-+	}
- 
- 	if (cpu_matches(NO_MELTDOWN))
- 		return;
+ 	/* all calls to cpuid_count() should be made on the same cpu */
+ 	get_cpu();
 
 
