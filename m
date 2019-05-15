@@ -2,89 +2,93 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B50CDC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 974BAC46460
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FE2320873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682BF2089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:58:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728546AbfEOP6O (ORCPT
+        id S1728574AbfEOP6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 11:58:14 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47634 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbfEOP6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 11:58:13 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A615374;
-        Wed, 15 May 2019 08:58:13 -0700 (PDT)
-Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 16E9D3F703;
-        Wed, 15 May 2019 08:58:09 -0700 (PDT)
-Subject: Re: [PATCH v7 04/23] iommu: Introduce attach/detach_pasid_table API
-To:     Auger Eric <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, will.deacon@arm.com, robin.murphy@arm.com
-Cc:     peter.maydell@linaro.org, kevin.tian@intel.com,
-        vincent.stehle@arm.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        christoffer.dall@arm.com
-References: <20190408121911.24103-1-eric.auger@redhat.com>
- <20190408121911.24103-5-eric.auger@redhat.com>
- <21bfdab4-846c-1dc7-6dff-62a46cc9c829@arm.com>
- <b4c47851-0269-5aa2-682a-77677f756205@redhat.com>
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Message-ID: <9fedefb7-e13c-7ea7-b2ae-50a8f1a7e09b@arm.com>
-Date:   Wed, 15 May 2019 16:57:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 15 May 2019 11:58:19 -0400
+Received: from mga06.intel.com ([134.134.136.31]:26191 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726335AbfEOP6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 11:58:18 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 08:58:17 -0700
+X-ExtLoop1: 1
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orsmga004.jf.intel.com with ESMTP; 15 May 2019 08:58:16 -0700
+Date:   Wed, 15 May 2019 08:56:37 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Subject: Re: [RFC PATCH v3 11/21] x86/watchdog/hardlockup: Add an HPET-based
+ hardlockup detector
+Message-ID: <20190515155637.GC10526@ranerica-svr.sc.intel.com>
+References: <1557842534-4266-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
+ <1557842534-4266-12-git-send-email-ricardo.neri-calderon@linux.intel.com>
+ <62576937-50fc-fded-784b-d691e455dfc1@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <b4c47851-0269-5aa2-682a-77677f756205@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <62576937-50fc-fded-784b-d691e455dfc1@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/05/2019 14:06, Auger Eric wrote:
-> Hi Jean-Philippe,
+On Tue, May 14, 2019 at 07:26:58AM -0700, Randy Dunlap wrote:
+> On 5/14/19 7:02 AM, Ricardo Neri wrote:
+> > diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
+> > index 15d0fbe27872..376a5db81aec 100644
+> > --- a/arch/x86/Kconfig.debug
+> > +++ b/arch/x86/Kconfig.debug
+> > @@ -169,6 +169,17 @@ config IOMMU_LEAK
+> >  config HAVE_MMIOTRACE_SUPPORT
+> >  	def_bool y
+> >  
+> > +config X86_HARDLOCKUP_DETECTOR_HPET
+> > +	bool "Use HPET Timer for Hard Lockup Detection"
+> > +	select SOFTLOCKUP_DETECTOR
+> > +	select HARDLOCKUP_DETECTOR
+> > +	select HARDLOCKUP_DETECTOR_CORE
+> > +	depends on HPET_TIMER && HPET && X86_64
+> > +	help
+> > +	  Say y to enable a hardlockup detector that is driven by an High-
 > 
-> On 5/15/19 2:09 PM, Jean-Philippe Brucker wrote:
->> On 08/04/2019 13:18, Eric Auger wrote:
->>> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
->>> index edcc0dda7993..532a64075f23 100644
->>> --- a/include/uapi/linux/iommu.h
->>> +++ b/include/uapi/linux/iommu.h
->>> @@ -112,4 +112,51 @@ struct iommu_fault {
->>>  		struct iommu_fault_page_request prm;
->>>  	};
->>>  };
->>> +
->>> +/**
->>> + * SMMUv3 Stream Table Entry stage 1 related information
->>> + * The PASID table is referred to as the context descriptor (CD) table.
->>> + *
->>> + * @s1fmt: STE s1fmt (format of the CD table: single CD, linear table
->>> +   or 2-level table)
->>
->> Running "scripts/kernel-doc -v -none" on this header produces some
->> warnings. Not sure if we want to get rid of all of them, but we should
->> at least fix the coding style for this comment (line must start with
->> " * "). I'm fixing it up on my sva/api branch
-> Thanks!
+> 	                                                       by a
 > 
-> Let me know if you want me to do the job for additional fixes.
+I'll correct.
 
-I fixed the others warnings as well, in case we ever want to include
-this into the kernel doc
-
-Thanks,
-Jean
-
+Thanks and BR,
+Ricardo
