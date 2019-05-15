@@ -2,174 +2,433 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7698C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3958DC04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8509B20881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:25:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucidpixels.com header.i=@lucidpixels.com header.b="olPe8E8o"
+	by mail.kernel.org (Postfix) with ESMTP id F1E7120862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:30:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbfEOHZ0 (ORCPT
+        id S1726261AbfEOHah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 03:25:26 -0400
-Received: from mail-qt1-f177.google.com ([209.85.160.177]:38491 "EHLO
-        mail-qt1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfEOHZ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 03:25:26 -0400
-Received: by mail-qt1-f177.google.com with SMTP id d13so2144083qth.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 00:25:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lucidpixels.com; s=google;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=u25M0RcXN5c39KhEp+qIAfvV4PolgDkReJdK1myvgTY=;
-        b=olPe8E8oLHtkmveo+cKaMvDgYyMfQvWEzc1OnO6RlSFKqILek7UkvoHtzEdGCoN50W
-         9e4PKJK2Z14HGGDCXUFS7EnIlbFxozkkXodiyWlrSkKkjjwNsHAlNXpFyOEiHulzI1dZ
-         67DiagFc7aBEGFOdNS+URTPltjevKUk98AUyE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:thread-index
-         :content-language;
-        bh=u25M0RcXN5c39KhEp+qIAfvV4PolgDkReJdK1myvgTY=;
-        b=P+LmSv/1xFD7AKGpn4sEOW6VLtG/ej/cFw109wIX+Gu31n4THMh9spowBzohH4divl
-         QMVGRC3h2gtlGz4333zZXKcJj7/e2pp91t8djj+fk7KqgYPkK38HfW/xFfmAKOiys1Jx
-         zy6JsCKgj8jLJLPxBtn+IXQY8f2ClUkbBSqaicvekm+VW7WqKfBqnMli+rEFMUvp2BFb
-         t063NVBCrySL+dByJxFsTSr/HCZDc7inS0mFYXw+vN3UeZGruFRNLlbR1Ab9iKysutgl
-         KTHvAHR9DaJsLrhTGHaYjN6WWqDrVdWrJltnXesegfhO5o7UMK3AVzdin7u7eQyIXRDA
-         xZDw==
-X-Gm-Message-State: APjAAAVGjoMXlv8uZR3kG2bWO9muobT9K+QJz2sbkMo3DtamJyP/CcYi
-        WIV6iCG9BuFw7tXTiLnc2ohPwt4Ji/4PzA==
-X-Google-Smtp-Source: APXvYqxCnMa0pfwylfSaLy2M3/t0c2fLxeci4LJFgNkIgoIzzlDzghGv4TR7pwF1v1V9RY9J0to5sA==
-X-Received: by 2002:ac8:7506:: with SMTP id u6mr33973867qtq.331.1557905124153;
-        Wed, 15 May 2019 00:25:24 -0700 (PDT)
-Received: from warpc ([2600:4040:4001:1e00::f7aa])
-        by smtp.gmail.com with ESMTPSA id h62sm520796qkd.92.2019.05.15.00.25.22
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 15 May 2019 00:25:22 -0700 (PDT)
-From:   "Justin Piszcz" <jpiszcz@lucidpixels.com>
-To:     "'Kirill A. Shutemov'" <kirill@shutemov.name>
-Cc:     <linux-kernel@vger.kernel.org>
-References: <002901d5064d$42355ea0$c6a01be0$@lucidpixels.com> <20190509111343.rvmy5noqlf4os3zk@box>
-In-Reply-To: <20190509111343.rvmy5noqlf4os3zk@box>
-Subject: RE: 5.1 kernel: khugepaged stuck at 100%
-Date:   Wed, 15 May 2019 03:25:22 -0400
-Message-ID: <000101d50aef$5b8f09e0$12ad1da0$@lucidpixels.com>
+        Wed, 15 May 2019 03:30:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53452 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725871AbfEOHag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 03:30:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 49DC1AEB3;
+        Wed, 15 May 2019 07:30:34 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 9C9291E3CA1; Wed, 15 May 2019 09:30:31 +0200 (CEST)
+Date:   Wed, 15 May 2019 09:30:31 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     snitzer@redhat.com, stable@vger.kernel.org,
+        Jan Kara <jack@suse.cz>, Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        dm-devel@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dax: Arrange for dax_supported check to span multiple
+ devices
+Message-ID: <20190515073031.GA11965@quack2.suse.cz>
+References: <155789172402.748145.11853718580748830476.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQHZkV4erg9Yn3SUQRSCOqzXaVbBEgIPUcihplJA6KA=
-Content-Language: en-us
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155789172402.748145.11853718580748830476.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Kirill A. Shutemov [mailto:kirill@shutemov.name]
-> Sent: Thursday, May 09, 2019 7:14 AM
-> To: Justin Piszcz
-> Cc: linux-kernel@vger.kernel.org
-> Subject: Re: 5.1 kernel: khugepaged stuck at 100%
+On Tue 14-05-19 20:48:49, Dan Williams wrote:
+> Pankaj reports that starting with commit ad428cdb525a "dax: Check the
+> end of the block-device capacity with dax_direct_access()" device-mapper
+> no longer allows dax operation. This results from the stricter checks in
+> __bdev_dax_supported() that validate that the start and end of a
+> block-device map to the same 'pagemap' instance.
 > 
-> On Thu, May 09, 2019 at 05:54:56AM -0400, Justin Piszcz wrote:
-
-[ ... ]
-
-> > Thoughts on debugging / before reboot to clear this up?
+> Teach the dax-core and device-mapper to validate the 'pagemap' on a
+> per-target basis. This is accomplished by refactoring the
+> bdev_dax_supported() internals into generic_fsdax_supported() which
+> takes a sector range to validate. Consequently generic_fsdax_supported()
+> is suitable to be used in a device-mapper ->iterate_devices() callback.
+> A new ->dax_supported() operation is added to allow composite devices to
+> split and route upper-level bdev_dax_supported() requests.
 > 
-> Could you check what khugepaged doing?
+> Fixes: ad428cdb525a ("dax: Check the end of the block-device...")
+> Cc: <stable@vger.kernel.org>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Mike Snitzer <snitzer@redhat.com>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> Reported-by: Pankaj Gupta <pagupta@redhat.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+Thanks for the fix. The patch looks good to me so feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+> Hi Mike,
 > 
-> cat /proc/$(pidof khugepaged)/stack
-
-Hello, the next time I see this (khugepage at 100%) I will provide the
-requested info.
-
-However, this time I'm getting a kernel read fault (below) under 5.1.1,
-under 5.0.x and earlier I've never seen any of these errors before:
-
-[54101.281515] BUG: unable to handle kernel paging request at
-ffffea0002060000
-[54101.281519] #PF error: [normal kernel read fault]
-[54101.281521] PGD 103ffee067 P4D 103ffee067 PUD 103ffed067 PMD 0
-[54101.281524] Oops: 0000 [#1] SMP PTI
-[54101.281527] CPU: 0 PID: 77 Comm: khugepaged Tainted: G                T
-5.1.1 #1
-[54101.281528] Hardware name: Supermicro X9SRL-F/X9SRL-F, BIOS 3.2
-01/16/2015
-[54101.281534] RIP: 0010:isolate_freepages_block+0xb9/0x310
-[54101.281535] Code: 24 28 48 c1 e0 06 40 f6 c5 1f 48 89 44 24 20 49 8d 45
-79 48 89 44 24 18 44 89 f0 4d 89 ee 45 89 fd 41 89 c7 0f 84 ef 00 00 00 <48>
-8b 03 41 83 c4 01 a9 00 00 01 00 75 0c 48 8b 43 08 a8 01 0f 84
-[54101.281537] RSP: 0018:ffffc900003a7860 EFLAGS: 00010246
-[54101.281538] RAX: 0000000000000000 RBX: ffffea0002060000 RCX:
-ffffc900003a7b69
-[54101.281539] RDX: 0000000000000000 RSI: 0000000000000000 RDI:
-ffffffff828c4790
-[54101.281540] RBP: 0000000000081800 R08: 0000000000000001 R09:
-0000000000000000
-[54101.281542] R10: 0000000000000202 R11: ffffffff828c43d0 R12:
-0000000000000000
-[54101.281543] R13: 0000000000000000 R14: ffffc900003a7af0 R15:
-0000000000000000
-[54101.281544] FS:  0000000000000000(0000) GS:ffff88903f800000(0000)
-knlGS:0000000000000000
-[54101.281546] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[54101.281547] CR2: ffffea0002060000 CR3: 000000000280e002 CR4:
-00000000001606f0
-[54101.281548] Call Trace:
-[54101.281552]  compaction_alloc+0x83d/0x8d0
-[54101.281555]  migrate_pages+0x30d/0x750
-[54101.281557]  ? isolate_migratepages_block+0xa10/0xa10
-[54101.281559]  ? __reset_isolation_suitable+0x110/0x110
-[54101.281561]  compact_zone+0x684/0xa70
-[54101.281563]  compact_zone_order+0x109/0x150
-[54101.281566]  ? schedule_timeout+0x1ba/0x290
-[54101.281569]  ? record_times+0x13/0xa0
-[54101.281571]  try_to_compact_pages+0x10d/0x220
-[54101.281574]  __alloc_pages_direct_compact+0x93/0x180
-[54101.281576]  __alloc_pages_nodemask+0x6c7/0xe20
-[54101.281579]  ? __wake_up_common_lock+0xb0/0xb0
-[54101.281581]  khugepaged+0x31f/0x19b0
-[54101.281584]  ? __wake_up_common_lock+0xb0/0xb0
-[54101.281586]  ? collapse_shmem.isra.4+0xc20/0xc20
-[54101.281589]  kthread+0x10a/0x120
-[54101.281592]  ? __kthread_create_on_node+0x1b0/0x1b0
-[54101.281595]  ret_from_fork+0x35/0x40
-[54101.281597] CR2: ffffea0002060000
-[54101.281599] ---[ end trace d9bfd1c296893a64 ]---
-[54101.281601] RIP: 0010:isolate_freepages_block+0xb9/0x310
-[54101.281602] Code: 24 28 48 c1 e0 06 40 f6 c5 1f 48 89 44 24 20 49 8d 45
-79 48 89 44 24 18 44 89 f0 4d 89 ee 45 89 fd 41 89 c7 0f 84 ef 00 00 00 <48>
-8b 03 41 83 c4 01 a9 00 00 01 00 75 0c 48 8b 43 08 a8 01 0f 84
-[54101.281604] RSP: 0018:ffffc900003a7860 EFLAGS: 00010246
-[54101.281605] RAX: 0000000000000000 RBX: ffffea0002060000 RCX:
-ffffc900003a7b69
-[54101.281606] RDX: 0000000000000000 RSI: 0000000000000000 RDI:
-ffffffff828c4790
-[54101.281607] RBP: 0000000000081800 R08: 0000000000000001 R09:
-0000000000000000
-[54101.281608] R10: 0000000000000202 R11: ffffffff828c43d0 R12:
-0000000000000000
-[54101.281609] R13: 0000000000000000 R14: ffffc900003a7af0 R15:
-0000000000000000
-[54101.281610] FS:  0000000000000000(0000) GS:ffff88903f800000(0000)
-knlGS:0000000000000000
-[54101.281611] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[54101.281613] CR2: ffffea0002060000 CR3: 000000000280e002 CR4:
-00000000001606f0
-
-
-
-
+> Another day another new dax operation to allow device-mapper to better
+> scope dax operations.
+> 
+> Let me know if the device-mapper changes look sane. This passes a new
+> unit test that indeed fails on current mainline.
+> 
+> https://github.com/pmem/ndctl/blob/device-mapper-pending/test/dm.sh
+> 
+>  drivers/dax/super.c          |   88 +++++++++++++++++++++++++++---------------
+>  drivers/md/dm-table.c        |   17 +++++---
+>  drivers/md/dm.c              |   20 ++++++++++
+>  drivers/md/dm.h              |    1 
+>  drivers/nvdimm/pmem.c        |    1 
+>  drivers/s390/block/dcssblk.c |    1 
+>  include/linux/dax.h          |   19 +++++++++
+>  7 files changed, 110 insertions(+), 37 deletions(-)
+> 
+> diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+> index 0a339b85133e..ec2f2262e3a9 100644
+> --- a/drivers/dax/super.c
+> +++ b/drivers/dax/super.c
+> @@ -73,22 +73,12 @@ struct dax_device *fs_dax_get_by_bdev(struct block_device *bdev)
+>  EXPORT_SYMBOL_GPL(fs_dax_get_by_bdev);
+>  #endif
+>  
+> -/**
+> - * __bdev_dax_supported() - Check if the device supports dax for filesystem
+> - * @bdev: block device to check
+> - * @blocksize: The block size of the device
+> - *
+> - * This is a library function for filesystems to check if the block device
+> - * can be mounted with dax option.
+> - *
+> - * Return: true if supported, false if unsupported
+> - */
+> -bool __bdev_dax_supported(struct block_device *bdev, int blocksize)
+> +bool generic_fsdax_supported(struct dax_device *dax_dev,
+> +		struct block_device *bdev, int blocksize, sector_t start,
+> +		sector_t sectors)
+>  {
+> -	struct dax_device *dax_dev;
+>  	bool dax_enabled = false;
+>  	pgoff_t pgoff, pgoff_end;
+> -	struct request_queue *q;
+>  	char buf[BDEVNAME_SIZE];
+>  	void *kaddr, *end_kaddr;
+>  	pfn_t pfn, end_pfn;
+> @@ -102,21 +92,14 @@ bool __bdev_dax_supported(struct block_device *bdev, int blocksize)
+>  		return false;
+>  	}
+>  
+> -	q = bdev_get_queue(bdev);
+> -	if (!q || !blk_queue_dax(q)) {
+> -		pr_debug("%s: error: request queue doesn't support dax\n",
+> -				bdevname(bdev, buf));
+> -		return false;
+> -	}
+> -
+> -	err = bdev_dax_pgoff(bdev, 0, PAGE_SIZE, &pgoff);
+> +	err = bdev_dax_pgoff(bdev, start, PAGE_SIZE, &pgoff);
+>  	if (err) {
+>  		pr_debug("%s: error: unaligned partition for dax\n",
+>  				bdevname(bdev, buf));
+>  		return false;
+>  	}
+>  
+> -	last_page = PFN_DOWN(i_size_read(bdev->bd_inode) - 1) * 8;
+> +	last_page = PFN_DOWN((start + sectors - 1) * 512) * PAGE_SIZE / 512;
+>  	err = bdev_dax_pgoff(bdev, last_page, PAGE_SIZE, &pgoff_end);
+>  	if (err) {
+>  		pr_debug("%s: error: unaligned partition for dax\n",
+> @@ -124,20 +107,11 @@ bool __bdev_dax_supported(struct block_device *bdev, int blocksize)
+>  		return false;
+>  	}
+>  
+> -	dax_dev = dax_get_by_host(bdev->bd_disk->disk_name);
+> -	if (!dax_dev) {
+> -		pr_debug("%s: error: device does not support dax\n",
+> -				bdevname(bdev, buf));
+> -		return false;
+> -	}
+> -
+>  	id = dax_read_lock();
+>  	len = dax_direct_access(dax_dev, pgoff, 1, &kaddr, &pfn);
+>  	len2 = dax_direct_access(dax_dev, pgoff_end, 1, &end_kaddr, &end_pfn);
+>  	dax_read_unlock(id);
+>  
+> -	put_dax(dax_dev);
+> -
+>  	if (len < 1 || len2 < 1) {
+>  		pr_debug("%s: error: dax access failed (%ld)\n",
+>  				bdevname(bdev, buf), len < 1 ? len : len2);
+> @@ -178,6 +152,49 @@ bool __bdev_dax_supported(struct block_device *bdev, int blocksize)
+>  	}
+>  	return true;
+>  }
+> +EXPORT_SYMBOL_GPL(generic_fsdax_supported);
+> +
+> +/**
+> + * __bdev_dax_supported() - Check if the device supports dax for filesystem
+> + * @bdev: block device to check
+> + * @blocksize: The block size of the device
+> + *
+> + * This is a library function for filesystems to check if the block device
+> + * can be mounted with dax option.
+> + *
+> + * Return: true if supported, false if unsupported
+> + */
+> +bool __bdev_dax_supported(struct block_device *bdev, int blocksize)
+> +{
+> +	struct dax_device *dax_dev;
+> +	struct request_queue *q;
+> +	char buf[BDEVNAME_SIZE];
+> +	bool ret;
+> +	int id;
+> +
+> +	q = bdev_get_queue(bdev);
+> +	if (!q || !blk_queue_dax(q)) {
+> +		pr_debug("%s: error: request queue doesn't support dax\n",
+> +				bdevname(bdev, buf));
+> +		return false;
+> +	}
+> +
+> +	dax_dev = dax_get_by_host(bdev->bd_disk->disk_name);
+> +	if (!dax_dev) {
+> +		pr_debug("%s: error: device does not support dax\n",
+> +				bdevname(bdev, buf));
+> +		return false;
+> +	}
+> +
+> +	id = dax_read_lock();
+> +	ret = dax_supported(dax_dev, bdev, blocksize, 0,
+> +			i_size_read(bdev->bd_inode) / 512);
+> +	dax_read_unlock(id);
+> +
+> +	put_dax(dax_dev);
+> +
+> +	return ret;
+> +}
+>  EXPORT_SYMBOL_GPL(__bdev_dax_supported);
+>  #endif
+>  
+> @@ -303,6 +320,15 @@ long dax_direct_access(struct dax_device *dax_dev, pgoff_t pgoff, long nr_pages,
+>  }
+>  EXPORT_SYMBOL_GPL(dax_direct_access);
+>  
+> +bool dax_supported(struct dax_device *dax_dev, struct block_device *bdev,
+> +		int blocksize, sector_t start, sector_t len)
+> +{
+> +	if (!dax_alive(dax_dev))
+> +		return false;
+> +
+> +	return dax_dev->ops->dax_supported(dax_dev, bdev, blocksize, start, len);
+> +}
+> +
+>  size_t dax_copy_from_iter(struct dax_device *dax_dev, pgoff_t pgoff, void *addr,
+>  		size_t bytes, struct iov_iter *i)
+>  {
+> diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+> index cde3b49b2a91..350cf0451456 100644
+> --- a/drivers/md/dm-table.c
+> +++ b/drivers/md/dm-table.c
+> @@ -880,13 +880,17 @@ void dm_table_set_type(struct dm_table *t, enum dm_queue_mode type)
+>  }
+>  EXPORT_SYMBOL_GPL(dm_table_set_type);
+>  
+> +/* validate the dax capability of the target device span */
+>  static int device_supports_dax(struct dm_target *ti, struct dm_dev *dev,
+> -			       sector_t start, sector_t len, void *data)
+> +				       sector_t start, sector_t len, void *data)
+>  {
+> -	return bdev_dax_supported(dev->bdev, PAGE_SIZE);
+> +	int blocksize = *(int *) data;
+> +
+> +	return generic_fsdax_supported(dev->dax_dev, dev->bdev, blocksize,
+> +			start, len);
+>  }
+>  
+> -static bool dm_table_supports_dax(struct dm_table *t)
+> +bool dm_table_supports_dax(struct dm_table *t, int blocksize)
+>  {
+>  	struct dm_target *ti;
+>  	unsigned i;
+> @@ -899,7 +903,8 @@ static bool dm_table_supports_dax(struct dm_table *t)
+>  			return false;
+>  
+>  		if (!ti->type->iterate_devices ||
+> -		    !ti->type->iterate_devices(ti, device_supports_dax, NULL))
+> +		    !ti->type->iterate_devices(ti, device_supports_dax,
+> +			    &blocksize))
+>  			return false;
+>  	}
+>  
+> @@ -979,7 +984,7 @@ static int dm_table_determine_type(struct dm_table *t)
+>  verify_bio_based:
+>  		/* We must use this table as bio-based */
+>  		t->type = DM_TYPE_BIO_BASED;
+> -		if (dm_table_supports_dax(t) ||
+> +		if (dm_table_supports_dax(t, PAGE_SIZE) ||
+>  		    (list_empty(devices) && live_md_type == DM_TYPE_DAX_BIO_BASED)) {
+>  			t->type = DM_TYPE_DAX_BIO_BASED;
+>  		} else {
+> @@ -1905,7 +1910,7 @@ void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
+>  	}
+>  	blk_queue_write_cache(q, wc, fua);
+>  
+> -	if (dm_table_supports_dax(t))
+> +	if (dm_table_supports_dax(t, PAGE_SIZE))
+>  		blk_queue_flag_set(QUEUE_FLAG_DAX, q);
+>  	else
+>  		blk_queue_flag_clear(QUEUE_FLAG_DAX, q);
+> diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+> index 043f0761e4a0..c28787f5357b 100644
+> --- a/drivers/md/dm.c
+> +++ b/drivers/md/dm.c
+> @@ -1105,6 +1105,25 @@ static long dm_dax_direct_access(struct dax_device *dax_dev, pgoff_t pgoff,
+>  	return ret;
+>  }
+>  
+> +static bool dm_dax_supported(struct dax_device *dax_dev, struct block_device *bdev,
+> +		int blocksize, sector_t start, sector_t len)
+> +{
+> +	struct mapped_device *md = dax_get_private(dax_dev);
+> +	struct dm_table *map;
+> +	int srcu_idx;
+> +	bool ret;
+> +
+> +	map = dm_get_live_table(md, &srcu_idx);
+> +	if (!map)
+> +		return false;
+> +
+> +	ret = dm_table_supports_dax(map, blocksize);
+> +
+> +	dm_put_live_table(md, srcu_idx);
+> +
+> +	return ret;
+> +}
+> +
+>  static size_t dm_dax_copy_from_iter(struct dax_device *dax_dev, pgoff_t pgoff,
+>  				    void *addr, size_t bytes, struct iov_iter *i)
+>  {
+> @@ -3192,6 +3211,7 @@ static const struct block_device_operations dm_blk_dops = {
+>  
+>  static const struct dax_operations dm_dax_ops = {
+>  	.direct_access = dm_dax_direct_access,
+> +	.dax_supported = dm_dax_supported,
+>  	.copy_from_iter = dm_dax_copy_from_iter,
+>  	.copy_to_iter = dm_dax_copy_to_iter,
+>  };
+> diff --git a/drivers/md/dm.h b/drivers/md/dm.h
+> index 2d539b82ec08..e5e240bfa2d0 100644
+> --- a/drivers/md/dm.h
+> +++ b/drivers/md/dm.h
+> @@ -78,6 +78,7 @@ void dm_unlock_md_type(struct mapped_device *md);
+>  void dm_set_md_type(struct mapped_device *md, enum dm_queue_mode type);
+>  enum dm_queue_mode dm_get_md_type(struct mapped_device *md);
+>  struct target_type *dm_get_immutable_target_type(struct mapped_device *md);
+> +bool dm_table_supports_dax(struct dm_table *t, int blocksize);
+>  
+>  int dm_setup_md_queue(struct mapped_device *md, struct dm_table *t);
+>  
+> diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+> index 0279eb1da3ef..845c5b430cdd 100644
+> --- a/drivers/nvdimm/pmem.c
+> +++ b/drivers/nvdimm/pmem.c
+> @@ -295,6 +295,7 @@ static size_t pmem_copy_to_iter(struct dax_device *dax_dev, pgoff_t pgoff,
+>  
+>  static const struct dax_operations pmem_dax_ops = {
+>  	.direct_access = pmem_dax_direct_access,
+> +	.dax_supported = generic_fsdax_supported,
+>  	.copy_from_iter = pmem_copy_from_iter,
+>  	.copy_to_iter = pmem_copy_to_iter,
+>  };
+> diff --git a/drivers/s390/block/dcssblk.c b/drivers/s390/block/dcssblk.c
+> index 4e8aedd50cb0..d04d4378ca50 100644
+> --- a/drivers/s390/block/dcssblk.c
+> +++ b/drivers/s390/block/dcssblk.c
+> @@ -59,6 +59,7 @@ static size_t dcssblk_dax_copy_to_iter(struct dax_device *dax_dev,
+>  
+>  static const struct dax_operations dcssblk_dax_ops = {
+>  	.direct_access = dcssblk_dax_direct_access,
+> +	.dax_supported = generic_fsdax_supported,
+>  	.copy_from_iter = dcssblk_dax_copy_from_iter,
+>  	.copy_to_iter = dcssblk_dax_copy_to_iter,
+>  };
+> diff --git a/include/linux/dax.h b/include/linux/dax.h
+> index 0dd316a74a29..f5544fc62319 100644
+> --- a/include/linux/dax.h
+> +++ b/include/linux/dax.h
+> @@ -19,6 +19,12 @@ struct dax_operations {
+>  	 */
+>  	long (*direct_access)(struct dax_device *, pgoff_t, long,
+>  			void **, pfn_t *);
+> +	/*
+> +	 * Validate whether this device is usable as an fsdax backing
+> +	 * device.
+> +	 */
+> +	bool (*dax_supported)(struct dax_device *, struct block_device *, int,
+> +			sector_t, sector_t);
+>  	/* copy_from_iter: required operation for fs-dax direct-i/o */
+>  	size_t (*copy_from_iter)(struct dax_device *, pgoff_t, void *, size_t,
+>  			struct iov_iter *);
+> @@ -75,6 +81,10 @@ static inline bool bdev_dax_supported(struct block_device *bdev, int blocksize)
+>  	return __bdev_dax_supported(bdev, blocksize);
+>  }
+>  
+> +bool generic_fsdax_supported(struct dax_device *dax_dev,
+> +		struct block_device *bdev, int blocksize, sector_t start,
+> +		sector_t sectors);
+> +
+>  static inline struct dax_device *fs_dax_get_by_host(const char *host)
+>  {
+>  	return dax_get_by_host(host);
+> @@ -99,6 +109,13 @@ static inline bool bdev_dax_supported(struct block_device *bdev,
+>  	return false;
+>  }
+>  
+> +static inline bool generic_fsdax_supported(struct dax_device *dax_dev,
+> +		struct block_device *bdev, int blocksize, sector_t start,
+> +		sector_t sectors)
+> +{
+> +	return false;
+> +}
+> +
+>  static inline struct dax_device *fs_dax_get_by_host(const char *host)
+>  {
+>  	return NULL;
+> @@ -142,6 +159,8 @@ bool dax_alive(struct dax_device *dax_dev);
+>  void *dax_get_private(struct dax_device *dax_dev);
+>  long dax_direct_access(struct dax_device *dax_dev, pgoff_t pgoff, long nr_pages,
+>  		void **kaddr, pfn_t *pfn);
+> +bool dax_supported(struct dax_device *dax_dev, struct block_device *bdev,
+> +		int blocksize, sector_t start, sector_t len);
+>  size_t dax_copy_from_iter(struct dax_device *dax_dev, pgoff_t pgoff, void *addr,
+>  		size_t bytes, struct iov_iter *i);
+>  size_t dax_copy_to_iter(struct dax_device *dax_dev, pgoff_t pgoff, void *addr,
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
