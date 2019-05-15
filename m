@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03744C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE3AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2BB62053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6072053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920475;
-	bh=akPbtu2m/5AOg/1NNH29ydnBj+HXAz/HUtkMhjTCuc0=;
+	s=default; t=1557920479;
+	bh=8ezDlsKr35RmZhEH5S5vIFwp/wkEY5n5UFVlWdhEcIo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pDmb2Ug2t0rrZs42WR2BttvCCLqndxMTrIyibu9WChM9rUzJ/Bn3Z2+ZzE7VbfrDD
-	 5D/tiyXfXxudWD5QyglLWstvLpRQeM+TZZvqVS9y/yW4vRaQ3vmJtt4aLjt8Q6ynv4
-	 sXOFRZtPUK9vmfrPQ7uMdMk2sdNBXox4n/trBTz0=
+	b=kb2H+gtCuySFCL42rLP6DoyDC22NH4IgjJVyWo6JvrDQp0Kh08wc1l/PkQ7ZtXiSk
+	 HLDB+UmPxvVXxjM1O0G/IonEwRyQyvYfMpH+xtHtxi9i4RtjIe3z0fGSjEGWk9qyzo
+	 EsclICesCvEOUV8/vPagWEmGOyvntju6nzIet+Jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732459AbfEOL24 (ORCPT
+        id S1732406AbfEOLlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:28:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39908 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:41:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732071AbfEOL2q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:28:46 -0400
+        id S1732458AbfEOL24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:28:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26B8820818;
-        Wed, 15 May 2019 11:28:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DA8220843;
+        Wed, 15 May 2019 11:28:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919725;
-        bh=akPbtu2m/5AOg/1NNH29ydnBj+HXAz/HUtkMhjTCuc0=;
+        s=default; t=1557919736;
+        bh=8ezDlsKr35RmZhEH5S5vIFwp/wkEY5n5UFVlWdhEcIo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BDvJ0KAMdT+9AryMmsgD4iuVjlskMPzWur+8r9lIfhYqZTZ6UD19wwATUc/vSsZ4r
-         bvh2rHG90smR9kzUNNLpL2eMtSLHZB44CWhDh54y4PIZypLMMIPL6vnV+BOdPxBGMW
-         gZ/a64W/nHDhP8JzQ3i7HLiBEAo5biaVXVRpM89c=
+        b=GE4dhFCGy/ZkX/YegIWAdDxgMDHDXG2iwrf9YH7+Wuw9SXxdRpDLwEDphMxMuQ7mf
+         KwMzCEXHDTvQGIDJ88kHuPNekwzWOcLagUX+sCuWz+kaskrK7AYb8Rs69zyXY7OyEt
+         urTBDuky3zWeDkPLMo/uDrU5ZE32rFDvmUgQECMw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Auhagen <sven.auhagen@voleatech.de>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 068/137] netfilter: nat: fix icmp id randomization
-Date:   Wed, 15 May 2019 12:55:49 +0200
-Message-Id: <20190515090658.388711972@linuxfoundation.org>
+Subject: [PATCH 5.0 072/137] drm/sun4i: Set device driver data at bind time for use in unbind
+Date:   Wed, 15 May 2019 12:55:53 +0200
+Message-Id: <20190515090658.660331445@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -61,172 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5bdac418f33f60b07a34e01e722889140ee8fac9 ]
+[ Upstream commit 02b92adbe33e6dbd15dc6e32540b22f47c4ff0a2 ]
 
-Sven Auhagen reported that a 2nd ping request will fail if 'fully-random'
-mode is used.
+Our sun4i_drv_unbind gets the drm device using dev_get_drvdata.
+However, that driver data is never set in sun4i_drv_bind.
 
-Reason is that if no proto information is given, min/max are both 0,
-so we set the icmp id to 0 instead of chosing a random value between
-0 and 65535.
+Set it there to avoid getting a NULL pointer at unbind time.
 
-Update test case as well to catch this, without fix this yields:
-[..]
-ERROR: cannot ping ns1 from ns2 with ip masquerade fully-random (attempt 2)
-ERROR: cannot ping ns1 from ns2 with ipv6 masquerade fully-random (attempt 2)
-
-... becaus 2nd ping clashes with existing 'id 0' icmp conntrack and gets
-dropped.
-
-Fixes: 203f2e78200c27e ("netfilter: nat: remove l4proto->unique_tuple")
-Reported-by: Sven Auhagen <sven.auhagen@voleatech.de>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 9026e0d122ac ("drm: Add Allwinner A10 Display Engine support")
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190418132727.5128-3-paul.kocialkowski@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_nat_core.c                  | 11 ++++--
- tools/testing/selftests/netfilter/nft_nat.sh | 36 +++++++++++++++-----
- 2 files changed, 35 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_drv.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/netfilter/nf_nat_core.c b/net/netfilter/nf_nat_core.c
-index d159e9e7835b4..ade527565127b 100644
---- a/net/netfilter/nf_nat_core.c
-+++ b/net/netfilter/nf_nat_core.c
-@@ -358,9 +358,14 @@ static void nf_nat_l4proto_unique_tuple(struct nf_conntrack_tuple *tuple,
- 	case IPPROTO_ICMPV6:
- 		/* id is same for either direction... */
- 		keyptr = &tuple->src.u.icmp.id;
--		min = range->min_proto.icmp.id;
--		range_size = ntohs(range->max_proto.icmp.id) -
--			     ntohs(range->min_proto.icmp.id) + 1;
-+		if (!(range->flags & NF_NAT_RANGE_PROTO_SPECIFIED)) {
-+			min = 0;
-+			range_size = 65536;
-+		} else {
-+			min = ntohs(range->min_proto.icmp.id);
-+			range_size = ntohs(range->max_proto.icmp.id) -
-+				     ntohs(range->min_proto.icmp.id) + 1;
-+		}
- 		goto find_free_id;
- #if IS_ENABLED(CONFIG_NF_CT_PROTO_GRE)
- 	case IPPROTO_GRE:
-diff --git a/tools/testing/selftests/netfilter/nft_nat.sh b/tools/testing/selftests/netfilter/nft_nat.sh
-index 8ec76681605cc..3194007cf8d1b 100755
---- a/tools/testing/selftests/netfilter/nft_nat.sh
-+++ b/tools/testing/selftests/netfilter/nft_nat.sh
-@@ -321,6 +321,7 @@ EOF
- 
- test_masquerade6()
- {
-+	local natflags=$1
- 	local lret=0
- 
- 	ip netns exec ns0 sysctl net.ipv6.conf.all.forwarding=1 > /dev/null
-@@ -354,13 +355,13 @@ ip netns exec ns0 nft -f - <<EOF
- table ip6 nat {
- 	chain postrouting {
- 		type nat hook postrouting priority 0; policy accept;
--		meta oif veth0 masquerade
-+		meta oif veth0 masquerade $natflags
+diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+index 9e4c375ccc96f..c6b65a9699794 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+@@ -85,6 +85,8 @@ static int sun4i_drv_bind(struct device *dev)
+ 		ret = -ENOMEM;
+ 		goto free_drm;
  	}
- }
- EOF
- 	ip netns exec ns2 ping -q -c 1 dead:1::99 > /dev/null # ping ns2->ns1
- 	if [ $? -ne 0 ] ; then
--		echo "ERROR: cannot ping ns1 from ns2 with active ipv6 masquerading"
-+		echo "ERROR: cannot ping ns1 from ns2 with active ipv6 masquerade $natflags"
- 		lret=1
- 	fi
- 
-@@ -397,19 +398,26 @@ EOF
- 		fi
- 	done
- 
-+	ip netns exec ns2 ping -q -c 1 dead:1::99 > /dev/null # ping ns2->ns1
-+	if [ $? -ne 0 ] ; then
-+		echo "ERROR: cannot ping ns1 from ns2 with active ipv6 masquerade $natflags (attempt 2)"
-+		lret=1
-+	fi
 +
- 	ip netns exec ns0 nft flush chain ip6 nat postrouting
- 	if [ $? -ne 0 ]; then
- 		echo "ERROR: Could not flush ip6 nat postrouting" 1>&2
- 		lret=1
- 	fi
- 
--	test $lret -eq 0 && echo "PASS: IPv6 masquerade for ns2"
-+	test $lret -eq 0 && echo "PASS: IPv6 masquerade $natflags for ns2"
- 
- 	return $lret
- }
- 
- test_masquerade()
- {
-+	local natflags=$1
- 	local lret=0
- 
- 	ip netns exec ns0 sysctl net.ipv4.conf.veth0.forwarding=1 > /dev/null
-@@ -417,7 +425,7 @@ test_masquerade()
- 
- 	ip netns exec ns2 ping -q -c 1 10.0.1.99 > /dev/null # ping ns2->ns1
- 	if [ $? -ne 0 ] ; then
--		echo "ERROR: canot ping ns1 from ns2"
-+		echo "ERROR: cannot ping ns1 from ns2 $natflags"
- 		lret=1
- 	fi
- 
-@@ -443,13 +451,13 @@ ip netns exec ns0 nft -f - <<EOF
- table ip nat {
- 	chain postrouting {
- 		type nat hook postrouting priority 0; policy accept;
--		meta oif veth0 masquerade
-+		meta oif veth0 masquerade $natflags
- 	}
- }
- EOF
- 	ip netns exec ns2 ping -q -c 1 10.0.1.99 > /dev/null # ping ns2->ns1
- 	if [ $? -ne 0 ] ; then
--		echo "ERROR: cannot ping ns1 from ns2 with active ip masquerading"
-+		echo "ERROR: cannot ping ns1 from ns2 with active ip masquere $natflags"
- 		lret=1
- 	fi
- 
-@@ -485,13 +493,19 @@ EOF
- 		fi
- 	done
- 
-+	ip netns exec ns2 ping -q -c 1 10.0.1.99 > /dev/null # ping ns2->ns1
-+	if [ $? -ne 0 ] ; then
-+		echo "ERROR: cannot ping ns1 from ns2 with active ip masquerade $natflags (attempt 2)"
-+		lret=1
-+	fi
-+
- 	ip netns exec ns0 nft flush chain ip nat postrouting
- 	if [ $? -ne 0 ]; then
- 		echo "ERROR: Could not flush nat postrouting" 1>&2
- 		lret=1
- 	fi
- 
--	test $lret -eq 0 && echo "PASS: IP masquerade for ns2"
-+	test $lret -eq 0 && echo "PASS: IP masquerade $natflags for ns2"
- 
- 	return $lret
- }
-@@ -750,8 +764,12 @@ test_local_dnat
- test_local_dnat6
- 
- reset_counters
--test_masquerade
--test_masquerade6
-+test_masquerade ""
-+test_masquerade6 ""
-+
-+reset_counters
-+test_masquerade "fully-random"
-+test_masquerade6 "fully-random"
- 
- reset_counters
- test_redirect
++	dev_set_drvdata(dev, drm);
+ 	drm->dev_private = drv;
+ 	INIT_LIST_HEAD(&drv->frontend_list);
+ 	INIT_LIST_HEAD(&drv->engine_list);
 -- 
 2.20.1
 
