@@ -2,153 +2,137 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D2F6C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1020FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29C4720818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02E620818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:30:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="YKOeVSOL";
-	dkim=pass (1024-bit key) header.d=cisco.onmicrosoft.com header.i=@cisco.onmicrosoft.com header.b="k2C5wjpz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r19YdC+4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfEOX3t (ORCPT
+        id S1726642AbfEOXad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 19:29:49 -0400
-Received: from rcdn-iport-4.cisco.com ([173.37.86.75]:28466 "EHLO
-        rcdn-iport-4.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfEOX1s (ORCPT
+        Wed, 15 May 2019 19:30:33 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35343 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbfEOX2c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 19:27:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=2176; q=dns/txt; s=iport;
-  t=1557962867; x=1559172467;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=5c5DQYhG/jJ1bAZEGeIak3Ak/+ZyMLBCUmfVcu3CWhY=;
-  b=YKOeVSOLwxoonrCM+8VZGXEVDoyJOu7MwuW/NuoHyihWyZI7oKkIliwv
-   m7hnIbx8tjFBCmHpDq7UB0Q4iRjiasJ6+2xZjckElufSaZSiWrVY2ixP2
-   ZJYlPmeM6RWSgV01XbPUCyZHQDnWMRixobD8BLwDNFQmO7n4x9WiYVa44
-   c=;
-IronPort-PHdr: =?us-ascii?q?9a23=3AXodavhO+hIBlQdSIalYl6mtXPHoupqn0MwgJ65?=
- =?us-ascii?q?Eul7NJdOG58o//OFDEu6w/l0fHCIPc7f8My/HbtaztQyQh2d6AqzhDFf4ETB?=
- =?us-ascii?q?oZkYMTlg0kDtSCDBjgLPHjaSMzGuxJVURu+DewNk0GUMs=3D?=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0BIAACbn9xc/4kNJK1kHAEBAQQBAQc?=
- =?us-ascii?q?EAQGBUQcBAQsBgT1QA4E+IAQLKIQRg0cDhFKKIYIyJYk/jWaBLoEkA1QJAQE?=
- =?us-ascii?q?BDAEBLQIBAYRAAheCFCM0CQ4BAwEBBAEBAgEEbRwMhUoBAQEDARIREQwBATc?=
- =?us-ascii?q?BBAsCAQgYAgImAgICHxEVEAIEDgUigwCBawMODwECoGwCgTWIX3GBL4J5AQE?=
- =?us-ascii?q?FhQYNC4IPCYELKAGLTheBQD+BOAwTgkw+ghqFNDKCJosBIYI+mUQ5CQKCCY8?=
- =?us-ascii?q?Ig1YblW4tlC6MYwIEAgQFAg4BAQWBTziBV3AVZQGCQYIPg2+KU3KBKY9GAQE?=
-X-IronPort-AV: E=Sophos;i="5.60,474,1549929600"; 
-   d="scan'208";a="559990086"
-Received: from alln-core-4.cisco.com ([173.36.13.137])
-  by rcdn-iport-4.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 15 May 2019 23:27:46 +0000
-Received: from XCH-ALN-020.cisco.com (xch-aln-020.cisco.com [173.36.7.30])
-        by alln-core-4.cisco.com (8.15.2/8.15.2) with ESMTPS id x4FNRkrL006165
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=FAIL);
-        Wed, 15 May 2019 23:27:47 GMT
-Received: from xhs-rcd-003.cisco.com (173.37.227.248) by XCH-ALN-020.cisco.com
- (173.36.7.30) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 May
- 2019 18:27:46 -0500
-Received: from xhs-rcd-003.cisco.com (173.37.227.248) by xhs-rcd-003.cisco.com
- (173.37.227.248) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 May
- 2019 18:27:45 -0500
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (72.163.14.9) by
- xhs-rcd-003.cisco.com (173.37.227.248) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Wed, 15 May 2019 18:27:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cisco.onmicrosoft.com;
- s=selector1-cisco-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5c5DQYhG/jJ1bAZEGeIak3Ak/+ZyMLBCUmfVcu3CWhY=;
- b=k2C5wjpzNm6JebKffy1MDc4+71TcoKwu1yqkdHxm4ggDYUZ2DZEql6GI1sulYpa3SYJOy7w6rbHdKiknbGSgLupmGq9DXFUx69SpCAsHc9DWXHFZBk3InhbcjSaquCs41owgT0HvcjzBQ7JrflLAjk4Nu44zDfbbDppG/GhxPLc=
-Received: from BYAPR11MB3461.namprd11.prod.outlook.com (20.177.187.14) by
- BYAPR11MB2903.namprd11.prod.outlook.com (20.177.225.223) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.25; Wed, 15 May 2019 23:27:44 +0000
-Received: from BYAPR11MB3461.namprd11.prod.outlook.com
- ([fe80::494e:92a0:85c6:a3dd]) by BYAPR11MB3461.namprd11.prod.outlook.com
- ([fe80::494e:92a0:85c6:a3dd%7]) with mapi id 15.20.1900.010; Wed, 15 May 2019
- 23:27:44 +0000
-From:   "Shreya Gangan (shgangan)" <shgangan@cisco.com>
-To:     Richard Weinberger <richard.weinberger@gmail.com>
-CC:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: Removal of dump_stack()s from /fs/ubifs/io.c
-Thread-Topic: Removal of dump_stack()s from /fs/ubifs/io.c
-Thread-Index: AQHVC2FVil2C0hxsCESyeW0kls9eBqZsX3uA
-Date:   Wed, 15 May 2019 23:27:44 +0000
-Message-ID: <5B190BFA-DF2A-4469-85E2-14A7347B7A8E@cisco.com>
-References: <E44E4181-1CFB-493C-8023-147472049D19@cisco.com>
- <CAFLxGvysPg3FO4kT0QrRsYTr219WVttQMeat_StqbifTPrGLmA@mail.gmail.com>
-In-Reply-To: <CAFLxGvysPg3FO4kT0QrRsYTr219WVttQMeat_StqbifTPrGLmA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shgangan@cisco.com; 
-x-originating-ip: [2001:420:30d:1254:f50a:d60e:60dd:2496]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dc127610-8c60-4b15-1220-08d6d98cef09
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR11MB2903;
-x-ms-traffictypediagnostic: BYAPR11MB2903:
-x-microsoft-antispam-prvs: <BYAPR11MB290368AF3D79CBEAE4E55335DB090@BYAPR11MB2903.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(136003)(366004)(396003)(346002)(189003)(199004)(6246003)(316002)(7736002)(4326008)(68736007)(6436002)(102836004)(229853002)(36756003)(14444005)(25786009)(256004)(53936002)(66946007)(66556008)(66446008)(64756008)(76116006)(73956011)(6486002)(66476007)(82746002)(2906002)(33656002)(305945005)(6512007)(8676002)(76176011)(5660300002)(486006)(6116002)(2616005)(11346002)(6506007)(478600001)(54906003)(81156014)(99286004)(53546011)(446003)(8936002)(6916009)(86362001)(186003)(71200400001)(71190400001)(83716004)(46003)(14454004)(476003)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR11MB2903;H:BYAPR11MB3461.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: cisco.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: mXbNM1NZAQebI0Ib5s/qKGOAvPPjIfis/2IjDMklWQiCNndb06TqTHmzreI4Mbfac3lB+M4F7u+wcatOYLaC0TYTy+urtb+4aZt+SRqGSotIoMsyeNVg9TghoYFqpp0kFcnmOPg4s4clitFqMp/g98+CrXa6Rn5f0TEhNot+b7DifHhObOZqa5GLcASfJ5Pdx2o2IHTNLvgpiiqAuhb3HoWO0vdIfgJUOhg4vM8vaIbaELasue93Y7WpSLp4q0iCmVIQ+Ak/ezsJh1EUM2cZGQsz/nxqSbd43PSYXttKlK/Ub8KxufsFA4BVQ/QwnqJMD9qzf4Ns0rsx9namZoNWZZiwiHJv9QWAw+c5PGItQyHivPVdEsikh6SfJMg/vg3wRZXCm0guaMyEa7DQob8xcvbOBhLcRyamgEVYV8/LrfA=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AF2D337ED8479B47B4626A6289C37337@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 15 May 2019 19:28:32 -0400
+Received: by mail-pg1-f193.google.com with SMTP id h1so567295pgs.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 16:28:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VP1NFQHy4JKVhFQCt2SvEPh1FtfBgQTCzFt7PPPiHN0=;
+        b=r19YdC+4jFPF4C6oNXLtZiD/yJ01hydYRuZk1MseAZx+4lHCzKKfKNBqPCMiQNgjjw
+         y+XUOAL2LYXIoPZ2sDD87sMC4hU7uwfIsW+GbDN3Lxx25GfJYmgqSEwk8laVGuzLl4vX
+         0hCVm86fR4TNkcInpQp1gG0DWLrZ0uMAV5XWLtpdvU3qYpnRYRyDd7Fh8z3B5vI8EJtQ
+         pXVbEsVbyX6IMqN9PY5FbeJoBScWxUxMuaKgtBq3XMAr17PSL1OzQgkOyr6KfM4rP8BI
+         RtKHJFbfs0eeqWp+thjyfqgO9ssQPHOhxUH8I9XKAsaxTsqvDudU6xuThvMRoR4HXqP9
+         bu+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VP1NFQHy4JKVhFQCt2SvEPh1FtfBgQTCzFt7PPPiHN0=;
+        b=rYvJJLqGg/VW3P/o+DPjiXZembK+pIoloUui5D7e2BcbQPbw1GKHQXz1ihmCY+4qZf
+         s05NoouF3Qu15gZ9nVl88YoBXYe4FT3cWqnfuReRM9DTB9h9Fv46zB3cCgQKX59KsEbV
+         epbc+RuZDqpt3HdBQj88AjIgkHEPtqVqXWU5hNrYn45UEpS6rxzGhuRqq8q/6IlIlpXT
+         2e5khkM1/uFhuMJo8irpFlOWJYj5BxLpyR2+D3F9/qoIR+FI9OX2zZGYuUUQaNe9mWxN
+         rZVqTH+M7JKCDT0XpYWVfvGT8xOOa97H5BC6ejlZDH77yLrFZYKbcMdkqEPUqXrTgpGX
+         w0Qg==
+X-Gm-Message-State: APjAAAVlbsRcKuYfjQBog047w9s6gODUGKM2WgjSNa61sTi3Wl6Gw0+U
+        d9Wf5DA/INzAvhb9oe5PPWNL3w==
+X-Google-Smtp-Source: APXvYqyfISGJkEneRhKoTrm95W3GwtHgtb8DnEpPiMopvw65z/c6R+ndccT+6r5I+RscVIxx1q1EjQ==
+X-Received: by 2002:a62:f247:: with SMTP id y7mr49632055pfl.18.1557962368601;
+        Wed, 15 May 2019 16:19:28 -0700 (PDT)
+Received: from google.com ([2620:15c:2cd:2:d714:29b4:a56b:b23b])
+        by smtp.gmail.com with ESMTPSA id j19sm4304797pfr.155.2019.05.15.16.19.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 15 May 2019 16:19:27 -0700 (PDT)
+Date:   Wed, 15 May 2019 16:19:23 -0700
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     shuah <shuah@kernel.org>
+Cc:     Dhaval Giani <dhaval.giani@gmail.com>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Tim Bird <tbird20d@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Carpenter,Dan" <dan.carpenter@oracle.com>, willy@infradead.org,
+        gustavo.padovan@collabora.co.uk,
+        Dmitry Vyukov <dvyukov@google.com>, knut.omang@oracle.com
+Subject: Re: Linux Testing Microconference at LPC
+Message-ID: <20190515231923.GA193527@google.com>
+References: <CAPhKKr_uVTFAzne0QkZFUGfb8RxQdVFx41G9kXRY7sFN-=pZ6w@mail.gmail.com>
+ <3c6c9405-7e90-fb03-aa1c-0ada13203980@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc127610-8c60-4b15-1220-08d6d98cef09
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 23:27:44.7232
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5ae1af62-9505-4097-a69a-c1553ef7840e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2903
-X-OriginatorOrg: cisco.com
-X-Outbound-SMTP-Client: 173.36.7.30, xch-aln-020.cisco.com
-X-Outbound-Node: alln-core-4.cisco.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3c6c9405-7e90-fb03-aa1c-0ada13203980@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUmljaGFyZCwNCg0KT24gNS8xNS8xOSwgMjowMSBQTSwgIlJpY2hhcmQgV2VpbmJlcmdlciIg
-PHJpY2hhcmQud2VpbmJlcmdlckBnbWFpbC5jb20+IHdyb3RlOg0KDQo+IE9uIFdlZCwgTWF5IDE1
-LCAyMDE5IGF0IDEwOjQ1IFBNIFNocmV5YSBHYW5nYW4gKHNoZ2FuZ2FuKSA8c2hnYW5nYW5AY2lz
-Y28uY29tPiB3cm90ZToNCj4gPg0KPiA+IEhpLA0KPiA+DQo+ID4gIC9mcy91Ymlmcy9pby5jIGhh
-cyBkdW1wX3N0YWNrKCkgaW4gbXVsdGlwbGUgZnVuY3Rpb25zIHVwb24gZXJyb3JzIGFuZCBzb21l
-dGltZXMgd2FybmluZ3MuDQo+ID4gU2luY2UgdGhlIGVycm9yIGFuZCB3YXJuaW5nIG1lc3NhZ2Vz
-IHNlZW0gdG8gYmUgdW5pcXVlLCB0aGUgZnVuY3Rpb25hbCB2YWx1ZSBvZiB0aGVzZSBkdW1wX3N0
-YWNrcyBpcyBub3QgYXBwYXJlbnQuDQo+ID4gV2h5IGFyZSB0aGVzZSBkdW1wX3N0YWNrcyByZXF1
-aXJlZCBhbmQgd2hhdCBpc3N1ZXMgbWlnaHQgb2NjdXIgdXBvbiB0aGUgcmVtb3ZhbCBvZiB0aGVz
-ZT8NCg0KPiBUaGV5IGFyZSBub3QgcmVxdWlyZWQsIGJ1dCB0aGV5IGFyZSBqdXN0IHVzZWZ1bC4g
-V2hpbGUgeW91IGFyZSByaWdodCB0aGF0IHRoZSBsb2NhdGlvbnMgd2l0aGluIFVCSUZTIGFyZSB1
-bmlxdWUsDQo+IHRoZXkgYXJlIG5vdCBmb3IgdGhlIHdob2xlIGtlcm5lbCBjb250ZXh0Lg0KPiBG
-aWxlc3lzdGVtIGZ1bmN0aW9ucyBjYW4gZ2V0IGNhbGxlZCB2aWEgbWFueSBkaWZmZXJlbnQgcGF0
-aHMgZnJvbSBWRlMuLi4NCg0KSXNuJ3QgdGhhdCB0cnVlIGZvciBhbnkga2VybmVsIGVycm9yIHRo
-b3VnaC4NCldhbnQgdG8gdW5kZXJzdGFuZCB3aHkgaXQgd291bGQgYmUgZXNzZW50aWFsIGZvciB1
-YmlmcyB0byBoYXZlIHRoZXNlIG92ZXIgdGhlIG90aGVyIGtlcm5lbCBtb2R1bGVzPyANCkNhbid0
-IHRoZSBkZXZlbG9wZXIgYWRkIHRoZSBkdW1wX3N0YWNrIGxhdGVyIGZvciBkZWJ1Z2dpbmcgcmVh
-c29ucz8NCg0KPiBXaHkgZG8geW91IHdhbnQgdG8gcmVtb3ZlIHRoZW0sIHdoYXQgaXMgdGhlIGJl
-bmVmaXQ/DQoNClRoZSB3YXkgb3VyIHN5c3RlbSBpcyB1c2luZyB0aGUgdWJpZnMsIGZvciBhIGRl
-dmljZSB3aGljaCBpcyAnbm8gbG9uZ2VyIHRoZXJlJyBjb3VsZCBiZSBmcmVxdWVudCANCidubyBz
-dWNoIGRldmljZScgZXJyb3JzIHdoZW4NCjEuIHRoZXJlIG1pZ2h0IGJlIG11bHRpcGxlIHdyaXRl
-IGFjY2Vzc2VzIHRvIHRoZSBmaWxlc3lzdGVtIGJlZm9yZSB0aGUgcmVzcG9uc2libGUgcHJvY2Vz
-cyBpcyB0ZXJtaW5hdGVkIA0KMi4gdGhlIGZpbGVzeXN0ZW0gaXMgdW5tb3VudGVkIGFmdGVyIHRo
-aXMNClRoZSByZXN1bHQgd291bGQgYmUgZmxvb2Rpbmcgb2YgdGhlIGNvbnNvbGUgb3IgbWVzc2Fn
-ZSBsb2dzIHdpdGggYm90aCB0aGUgZXJyb3IgbWVzc2FnZXMgYW5kIHRoZSBkdW1wX3N0YWNrLA0K
-bWFraW5nIGl0IHJlYWxseSB1Z2x5Lg0KSXMgdGhlcmUgYSBzcGVjaWZpYyB3YXkgYSAnbm8gc3Vj
-aCBkZXZpY2UnIGlzc3VlIGlzIGhhbmRsZWQgdG8gYXZvaWQgdGhlIG1lc3NhZ2VzIGZyb20gZmxv
-b2Rpbmcgd2l0aCB0aGUgZHVtcF9zdGFja3M/DQoNClJlZ2FyZHMsDQpTaHJleWENCg0K
+On Wed, May 15, 2019 at 04:44:19PM -0600, shuah wrote:
+> Hi Sasha and Dhaval,
+> 
+> On 4/11/19 11:37 AM, Dhaval Giani wrote:
+> > Hi Folks,
+> > 
+> > This is a call for participation for the Linux Testing microconference
+> > at LPC this year.
+> > 
+> > For those who were at LPC last year, as the closing panel mentioned,
+> > testing is probably the next big push needed to improve quality. From
+> > getting more selftests in, to regression testing to ensure we don't
+> > break realtime as more of PREEMPT_RT comes in, to more stable distros,
+> > we need more testing around the kernel.
+> > 
+> > We have talked about different efforts around testing, such as fuzzing
+> > (using syzkaller and trinity), automating fuzzing with syzbot, 0day
+> > testing, test frameworks such as ktests, smatch to find bugs in the
+> > past. We want to push this discussion further this year and are
+> > interested in hearing from you what you want to talk about, and where
+> > kernel testing needs to go next.
+> > 
+> > Please let us know what topics you believe should be a part of the
+> > micro conference this year.
+> > 
+> > Thanks!
+> > Sasha and Dhaval
+> > 
+> 
+> A talk on KUnit from Brendan Higgins will be good addition to this
+> Micro-conference. I am cc'ing Brendan on this thread.
+> 
+> Please consider adding it.
+
+Thanks Shuah!
+
+Presumably I should still submit the talk on the website (however, it
+looks like the Testing Microconference isn't available as a track option
+yet...)? Or is it okay if I just post the proposal here?
+
+Also, for the framing of the talk (assuming people are indeed
+interested). I figure people will want an intro along with some
+background context, and a discussion of future work. Nevertheless, would
+people like more of a demo talk or more of an audience driven discussion
+on where we should go and what we should do? Or something else? Really,
+I am open to talk about whatever everyone else wants.
+
+For context on KUnit, you can read the LWN article about it here[1], or
+you can see the current version of the patchset here[2].
+
+Thanks!
+
+[1] https://lwn.net/Articles/780985/
+[2] https://lkml.org/lkml/2019/5/14/834
