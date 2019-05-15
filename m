@@ -7,48 +7,56 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B5EC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAA1C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 542632168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D3822166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918553;
-	bh=3tTToVMbBpi0ISrfmPxLmKYgdeJv4JBFyjYHrx1Luew=;
+	s=default; t=1557918556;
+	bh=fDb8Pd2ekjLHk9Ji1vb+hzOw5NNcIKC2Kac4G6EHDN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nd4IKIxBEtH12m2qW3W2FB+7jffREaT54bHzxk7MAfmV+E48vQnzpkOj0/wFiZbZq
-	 VlwA2eim1Q2SURr/hbuTvIXkZg/0rm5zxg175CrRc1oPaFEMQ5/2VNxcDCIStzPB1/
-	 tnc/KQD7p4Lt7aXEiiTllAxgn1DS9hyvM2QXI7h8=
+	b=GBCtjn5EzY4ih8zEhGK8H3sIcOim2bMFalnHOX4bhUUlEv/Mw9AzCR4rC0o5zp8RA
+	 tbSDFaZxLcf+NUyPc2wqlc7JI8xhtZ0Lmuhi7l58NO4PZBaR4LPBhNRTeekgJ6Sshq
+	 q+HE5mbFx9a1egGM+wAitKyVhJzx433p9x3eKuSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbfEOLJM (ORCPT
+        id S1729022AbfEOLJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:09:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41860 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:09:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726659AbfEOLJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:09:08 -0400
+        id S1729205AbfEOLJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:09:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FFB12084F;
-        Wed, 15 May 2019 11:09:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00F0820644;
+        Wed, 15 May 2019 11:09:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918548;
-        bh=3tTToVMbBpi0ISrfmPxLmKYgdeJv4JBFyjYHrx1Luew=;
+        s=default; t=1557918550;
+        bh=fDb8Pd2ekjLHk9Ji1vb+hzOw5NNcIKC2Kac4G6EHDN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R3O0tyNp7wBaSF46HWAh/vzem4OhJ8x+yzeKMBW789zo3K6zpOgcjYT8LtEQ6aeN0
-         JhPGqaVb6FKWp5S1UM0DvP92CA+DXy0os5BqgIOZuab7N4ChUNP/UUEj5HauHWaRBt
-         bfATrutxmzkC/sR7ZBKpqJ9t72xdUAFo96bvJmm4=
+        b=PO/1Ldm0CrVFTvGUuKOqdwG/IX7F2NKEvKVVP/q5gtMnZLIHaowqcV14YMUfTB1Zi
+         6mr356aeyX/elWJKqy/dcSsBxMSYVLDRFBCzHLjcsjOYxNYx/FSggl+2VrtmsMZdIa
+         HWhS3fofJDi47YrZ3q+jselBziM/fbfOjv4VCrBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
+        Carlos ODonell <carlos@redhat.com>,
+        "H. J. Lu" <hjl.tools@gmail.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Borislav Petkov <bp@suse.de>,
+        Laura Abbott <labbott@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        kernel-team@android.com, Thomas Gleixner <tglx@linutronix.de>,
+        X86 ML <x86@kernel.org>,
         Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH 4.4 175/266] cw1200: fix missing unlock on error in cw1200_hw_scan()
-Date:   Wed, 15 May 2019 12:54:42 +0200
-Message-Id: <20190515090728.842670128@linuxfoundation.org>
+Subject: [PATCH 4.4 176/266] x86/vdso: Pass --eh-frame-hdr to the linker
+Date:   Wed, 15 May 2019 12:54:43 +0200
+Message-Id: <20190515090728.876646676@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -61,40 +69,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Alistair Strachan <astrachan@google.com>
 
-commit 51c8d24101c79ffce3e79137e2cee5dfeb956dd7 upstream.
+commit cd01544a268ad8ee5b1dfe42c4393f1095f86879 upstream.
 
-Add the missing unlock before return from function cw1200_hw_scan()
-in the error handling case.
+Commit
 
-Fixes: 4f68ef64cd7f ("cw1200: Fix concurrency use-after-free bugs in cw1200_hw_scan()")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Acked-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-[iwamatsu: Change the patching file from drivers/net/wireless/st/cw1200/scan.c to
-drivers/net/wireless/cw1200/scan.c]
+  379d98ddf413 ("x86: vdso: Use $LD instead of $CC to link")
+
+accidentally broke unwinding from userspace, because ld would strip the
+.eh_frame sections when linking.
+
+Originally, the compiler would implicitly add --eh-frame-hdr when
+invoking the linker, but when this Makefile was converted from invoking
+ld via the compiler, to invoking it directly (like vmlinux does),
+the flag was missed. (The EH_FRAME section is important for the VDSO
+shared libraries, but not for vmlinux.)
+
+Fix the problem by explicitly specifying --eh-frame-hdr, which restores
+parity with the old method.
+
+See relevant bug reports for additional info:
+
+  https://bugzilla.kernel.org/show_bug.cgi?id=201741
+  https://bugzilla.redhat.com/show_bug.cgi?id=1659295
+
+Fixes: 379d98ddf413 ("x86: vdso: Use $LD instead of $CC to link")
+Reported-by: Florian Weimer <fweimer@redhat.com>
+Reported-by: Carlos O'Donell <carlos@redhat.com>
+Reported-by: "H. J. Lu" <hjl.tools@gmail.com>
+Signed-off-by: Alistair Strachan <astrachan@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Laura Abbott <labbott@redhat.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Carlos O'Donell <carlos@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: kernel-team@android.com
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: stable <stable@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: X86 ML <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20181214223637.35954-1-astrachan@google.com
 Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/cw1200/scan.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/x86/entry/vdso/Makefile |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/cw1200/scan.c
-+++ b/drivers/net/wireless/cw1200/scan.c
-@@ -84,8 +84,11 @@ int cw1200_hw_scan(struct ieee80211_hw *
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -159,7 +159,8 @@ quiet_cmd_vdso = VDSO    $@
+ 		 sh $(srctree)/$(src)/checkundef.sh '$(NM)' '$@'
  
- 	frame.skb = ieee80211_probereq_get(hw, priv->vif->addr, NULL, 0,
- 		req->ie_len);
--	if (!frame.skb)
-+	if (!frame.skb) {
-+		mutex_unlock(&priv->conf_mutex);
-+		up(&priv->scan.lock);
- 		return -ENOMEM;
-+	}
+ VDSO_LDFLAGS = -shared $(call ld-option, --hash-style=both) \
+-	$(call ld-option, --build-id) -Bsymbolic
++	$(call ld-option, --build-id) $(call ld-option, --eh-frame-hdr) \
++	-Bsymbolic
+ GCOV_PROFILE := n
  
- 	if (req->ie_len)
- 		memcpy(skb_put(frame.skb, req->ie_len), req->ie, req->ie_len);
+ #
 
 
