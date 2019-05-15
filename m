@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD600C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3ECBC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22EB20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:15:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E9920675
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:15:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922555;
-	bh=TX/+w/fCmI6K5MJy9g2ncMwELVZrNAqlvCXxLeMYokE=;
+	s=default; t=1557922559;
+	bh=fBRVkqBjHSTyyyVUnqFlJbhJuCXdnpu2AZKuH3hCTl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t1yfsFdfm/BLingJz1TqiHRFGZ4JXm/x+n1z2QvXrAFyK4T3Cqxbs4wkXSWBgpg+M
-	 R97+FcqyZjxY2DLD/nlvMaTsB4y7SE0P1QAB0DRBQY8ZsljaHTsPbX5O1iFq52/pCq
-	 BvzBDdv/8w6EXxNye7s3luGDKRiCpj2wU81uPGQE=
+	b=Mg1/j2fLSKQYXXorzUaqS3RxqAf3CnvptoVZCDj4qNx8q4Pw8fM/rm7JObMN/jlEs
+	 06Xe6B/q+AwVJJ7mWf7ZBhZhTuy5vtztUbs+ZDncI3Qo4GIGNIzTvRHulY5gZJVSRv
+	 gXUMHmrooLbemPBqkQrnp1sp21vvQrCZic+Gzzos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbfEOMPy (ORCPT
+        id S1728048AbfEOLC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:15:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60548 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:02:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727227AbfEOLDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:03:02 -0400
+        id S1727173AbfEOLCv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:02:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B8CB20881;
-        Wed, 15 May 2019 11:03:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C27E220881;
+        Wed, 15 May 2019 11:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918181;
-        bh=TX/+w/fCmI6K5MJy9g2ncMwELVZrNAqlvCXxLeMYokE=;
+        s=default; t=1557918171;
+        bh=fBRVkqBjHSTyyyVUnqFlJbhJuCXdnpu2AZKuH3hCTl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ahaf5cDIm/wZ06xWe8O72VBhTolTarTFCjKcWQHCE38IYGi22WeYL1ABSwIK5oXwp
-         iNCpcjC+maZKi1s/2KdRBcvdimICIz0EBd3Td9zhKJIJkjuNxAHCL7L7N1BEpSHMXW
-         iYLcacGIrcDWP0GWLkk9lcbYDIrjp83j+bB9TTbk=
+        b=R3adg7ZqmboDm1Iv+5wa7QJczHzEKyrRntBF0lqriHFVk5DJiBooE44WGICP/RzRs
+         o2fC/u8QZLRz4r2wUCHLWxxeTWK9I5ntDrBcpyY8Sj3QZVmjPD238XSoWP8jx8ypkp
+         twIvotRCgGd+1cEKNDBREyFBanSn5wo8Ef5HhAbQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Suchanek <msuchanek@suse.de>,
+        stable@vger.kernel.org,
+        Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.4 037/266] powerpc/64s: Add barrier_nospec
-Date:   Wed, 15 May 2019 12:52:24 +0200
-Message-Id: <20190515090723.764238607@linuxfoundation.org>
+Subject: [PATCH 4.4 033/266] powerpc: Move default security feature flags
+Date:   Wed, 15 May 2019 12:52:20 +0200
+Message-Id: <20190515090723.652749951@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -58,50 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Suchanek <msuchanek@suse.de>
+From: Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>
 
-commit a6b3964ad71a61bb7c61d80a60bea7d42187b2eb upstream.
+commit e7347a86830f38dc3e40c8f7e28c04412b12a2e7 upstream.
 
-A no-op form of ori (or immediate of 0 into r31 and the result stored
-in r31) has been re-tasked as a speculation barrier. The instruction
-only acts as a barrier on newer machines with appropriate firmware
-support. On older CPUs it remains a harmless no-op.
+This moves the definition of the default security feature flags
+(i.e., enabled by default) closer to the security feature flags.
 
-Implement barrier_nospec using this instruction.
+This can be used to restore current flags to the default flags.
 
-mpe: The semantics of the instruction are believed to be that it
-prevents execution of subsequent instructions until preceding branches
-have been fully resolved and are no longer executing speculatively.
-There is no further documentation available at this time.
-
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+Signed-off-by: Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/include/asm/barrier.h |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/powerpc/include/asm/security_features.h |    8 ++++++++
+ arch/powerpc/kernel/security.c               |    7 +------
+ 2 files changed, 9 insertions(+), 6 deletions(-)
 
---- a/arch/powerpc/include/asm/barrier.h
-+++ b/arch/powerpc/include/asm/barrier.h
-@@ -92,4 +92,19 @@ do {									\
- #define smp_mb__after_atomic()      smp_mb()
- #define smp_mb__before_spinlock()   smp_mb()
+--- a/arch/powerpc/include/asm/security_features.h
++++ b/arch/powerpc/include/asm/security_features.h
+@@ -63,4 +63,12 @@ static inline bool security_ftr_enabled(
+ // Firmware configuration indicates user favours security over performance
+ #define SEC_FTR_FAVOUR_SECURITY		0x0000000000000200ull
  
-+#ifdef CONFIG_PPC_BOOK3S_64
-+/*
-+ * Prevent execution of subsequent instructions until preceding branches have
-+ * been fully resolved and are no longer executing speculatively.
-+ */
-+#define barrier_nospec_asm ori 31,31,0
 +
-+// This also acts as a compiler barrier due to the memory clobber.
-+#define barrier_nospec() asm (stringify_in_c(barrier_nospec_asm) ::: "memory")
++// Features enabled by default
++#define SEC_FTR_DEFAULT \
++	(SEC_FTR_L1D_FLUSH_HV | \
++	 SEC_FTR_L1D_FLUSH_PR | \
++	 SEC_FTR_BNDS_CHK_SPEC_BAR | \
++	 SEC_FTR_FAVOUR_SECURITY)
 +
-+#else /* !CONFIG_PPC_BOOK3S_64 */
-+#define barrier_nospec_asm
-+#define barrier_nospec()
-+#endif
-+
- #endif /* _ASM_POWERPC_BARRIER_H */
+ #endif /* _ASM_POWERPC_SECURITY_FEATURES_H */
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -11,12 +11,7 @@
+ #include <asm/security_features.h>
+ 
+ 
+-unsigned long powerpc_security_features __read_mostly = \
+-	SEC_FTR_L1D_FLUSH_HV | \
+-	SEC_FTR_L1D_FLUSH_PR | \
+-	SEC_FTR_BNDS_CHK_SPEC_BAR | \
+-	SEC_FTR_FAVOUR_SECURITY;
+-
++unsigned long powerpc_security_features __read_mostly = SEC_FTR_DEFAULT;
+ 
+ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, char *buf)
+ {
 
 
