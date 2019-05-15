@@ -2,127 +2,275 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7FDC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE6AC04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:27:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21EB0205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 529CA205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:27:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfEOT1c (ORCPT
+        id S1727735AbfEOT1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:27:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55550 "EHLO mx1.redhat.com"
+        Wed, 15 May 2019 15:27:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54120 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbfEOT1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 15:27:32 -0400
+        id S1726260AbfEOT1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 15:27:33 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 248B9307CB5E;
+        by mx1.redhat.com (Postfix) with ESMTPS id 37CD030B96FD;
         Wed, 15 May 2019 19:27:32 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CE1B95D721;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C0D185D9CC;
         Wed, 15 May 2019 19:27:29 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 692B4225477; Wed, 15 May 2019 15:27:29 -0400 (EDT)
+        id 556DC220386; Wed, 15 May 2019 15:27:29 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, linux-nvdimm@lists.01.org
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
         dgilbert@redhat.com, swhiteho@redhat.com
-Subject: [PATCH v2 03/30] fuse: Use default_file_splice_read for direct IO
-Date:   Wed, 15 May 2019 15:26:48 -0400
-Message-Id: <20190515192715.18000-4-vgoyal@redhat.com>
-In-Reply-To: <20190515192715.18000-1-vgoyal@redhat.com>
-References: <20190515192715.18000-1-vgoyal@redhat.com>
+Subject: [PATCH v2 00/30] [RFC] virtio-fs: shared file system for virtual machines
+Date:   Wed, 15 May 2019 15:26:45 -0400
+Message-Id: <20190515192715.18000-1-vgoyal@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 15 May 2019 19:27:32 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 15 May 2019 19:27:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+Hi,
 
----
- fs/fuse/file.c     | 15 ++++++++++++++-
- fs/splice.c        |  3 ++-
- include/linux/fs.h |  2 ++
- 3 files changed, 18 insertions(+), 2 deletions(-)
+Here are the RFC patches for V2 of virtio-fs. These patches apply on top
+of 5.1 kernel. These patches are also available here.
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 5baf07fd2876..e9a7aa97c539 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -2167,6 +2167,19 @@ static int fuse_file_mmap(struct file *file, struct vm_area_struct *vma)
- 	return 0;
- }
- 
-+static ssize_t fuse_file_splice_read(struct file *in, loff_t *ppos,
-+				     struct pipe_inode_info *pipe, size_t len,
-+				     unsigned int flags)
-+{
-+	struct fuse_file *ff = in->private_data;
-+
-+	if (ff->open_flags & FOPEN_DIRECT_IO)
-+		return default_file_splice_read(in, ppos, pipe, len, flags);
-+	else
-+		return generic_file_splice_read(in, ppos, pipe, len, flags);
-+
-+}
-+
- static int convert_fuse_file_lock(struct fuse_conn *fc,
- 				  const struct fuse_file_lock *ffl,
- 				  struct file_lock *fl)
-@@ -3174,7 +3187,7 @@ static const struct file_operations fuse_file_operations = {
- 	.fsync		= fuse_fsync,
- 	.lock		= fuse_file_lock,
- 	.flock		= fuse_file_flock,
--	.splice_read	= generic_file_splice_read,
-+	.splice_read	= fuse_file_splice_read,
- 	.splice_write	= iter_file_splice_write,
- 	.unlocked_ioctl	= fuse_file_ioctl,
- 	.compat_ioctl	= fuse_file_compat_ioctl,
-diff --git a/fs/splice.c b/fs/splice.c
-index 25212dcca2df..e2e881e34935 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -361,7 +361,7 @@ static ssize_t kernel_readv(struct file *file, const struct kvec *vec,
- 	return res;
- }
- 
--static ssize_t default_file_splice_read(struct file *in, loff_t *ppos,
-+ssize_t default_file_splice_read(struct file *in, loff_t *ppos,
- 				 struct pipe_inode_info *pipe, size_t len,
- 				 unsigned int flags)
- {
-@@ -425,6 +425,7 @@ static ssize_t default_file_splice_read(struct file *in, loff_t *ppos,
- 	iov_iter_advance(&to, copied);	/* truncates and discards */
- 	return res;
- }
-+EXPORT_SYMBOL(default_file_splice_read);
- 
- /*
-  * Send 'sd->len' bytes to socket from 'sd->file' at position 'sd->pos'
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index dd28e7679089..6804aecf7e30 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -3055,6 +3055,8 @@ extern void block_sync_page(struct page *page);
- /* fs/splice.c */
- extern ssize_t generic_file_splice_read(struct file *, loff_t *,
- 		struct pipe_inode_info *, size_t, unsigned int);
-+extern ssize_t default_file_splice_read(struct file *, loff_t *,
-+		struct pipe_inode_info *, size_t, unsigned int);
- extern ssize_t iter_file_splice_write(struct pipe_inode_info *,
- 		struct file *, loff_t *, size_t, unsigned int);
- extern ssize_t generic_splice_sendpage(struct pipe_inode_info *pipe,
+https://github.com/rhvgoyal/linux/commits/virtio-fs-dev-5.1
+  
+Patches for V1 were posted here.
+  
+https://lwn.net/ml/linux-fsdevel/20181210171318.16998-1-vgoyal@redhat.com/
+
+This is still work in progress. As of now one can passthrough a host
+directory in to guest and it works reasonably well. pjdfstests test
+suite passes and blogbench runs. But this dirctory can't be shared
+between guests and host can't modify files in directory yet.  That's
+still TBD.
+  
+Posting another version to gather feedback and comments on progress so far.
+  
+More information about the project can be found here.
+  
+https://virtio-fs.gitlab.io/
+
+Changes from V1
+===============
+- Various bug fixes
+- virtio-fs dax huge page size working, leading to improved performance.
+- Fixed kernel automated tests warnings.
+- Better handling of shared cache region reporting by virtio device.
+
+Description from V1 posting
+---------------------------
+Problem Description
+===================
+We want to be able to take a directory tree on the host and share it with
+guest[s]. Our goal is to be able to do it in a fast, consistent and secure
+manner. Our primary use case is kata containers, but it should be usable in
+other scenarios as well.
+
+Containers may rely on local file system semantics for shared volumes,
+read-write mounts that multiple containers access simultaneously.  File
+system changes must be visible to other containers with the same consistency
+expected of a local file system, including mmap MAP_SHARED.
+
+Existing Solutions
+==================
+We looked at existing solutions and virtio-9p already provides basic shared
+file system functionality although does not offer local file system semantics,
+causing some workloads and test suites to fail. In addition, virtio-9p
+performance has been an issue for Kata Containers and we believe this cannot
+be alleviated without major changes that do not fit into the 9P protocol.
+
+Design Overview
+===============
+With the goal of designing something with better performance and local file
+system semantics, a bunch of ideas were proposed.
+
+- Use fuse protocol (instead of 9p) for communication between guest
+  and host. Guest kernel will be fuse client and a fuse server will
+  run on host to serve the requests. Benchmark results are encouraging and
+  show this approach performs well (2x to 8x improvement depending on test
+  being run).
+
+- For data access inside guest, mmap portion of file in QEMU address
+  space and guest accesses this memory using dax. That way guest page
+  cache is bypassed and there is only one copy of data (on host). This
+  will also enable mmap(MAP_SHARED) between guests.
+
+- For metadata coherency, there is a shared memory region which contains
+  version number associated with metadata and any guest changing metadata
+  updates version number and other guests refresh metadata on next
+  access. This is yet to be implemented.
+
+How virtio-fs differs from existing approaches
+==============================================
+The unique idea behind virtio-fs is to take advantage of the co-location
+of the virtual machine and hypervisor to avoid communication (vmexits).
+
+DAX allows file contents to be accessed without communication with the
+hypervisor. The shared memory region for metadata avoids communication in
+the common case where metadata is unchanged.
+
+By replacing expensive communication with cheaper shared memory accesses,
+we expect to achieve better performance than approaches based on network
+file system protocols. In addition, this also makes it easier to achieve
+local file system semantics (coherency).
+
+These techniques are not applicable to network file system protocols since
+the communications channel is bypassed by taking advantage of shared memory
+on a local machine. This is why we decided to build virtio-fs rather than
+focus on 9P or NFS.
+
+HOWTO
+======
+We have put instructions on how to use it here.
+
+https://virtio-fs.gitlab.io/
+
+Caching Modes
+=============
+Like virtio-9p, different caching modes are supported which determine the
+coherency level as well. The “cache=FOO” and “writeback” options control the
+level of coherence between the guest and host filesystems. The “shared” option
+only has an effect on coherence between virtio-fs filesystem instances
+running inside different guests.
+
+- cache=none
+  metadata, data and pathname lookup are not cached in guest. They are always
+  fetched from host and any changes are immediately pushed to host.
+
+- cache=always
+  metadata, data and pathname lookup are cached in guest and never expire.
+
+- cache=auto
+  metadata and pathname lookup cache expires after a configured amount of time
+  (default is 1 second). Data is cached while the file is open (close to open
+  consistency).
+
+- writeback/no_writeback
+  These options control the writeback strategy.  If writeback is disabled,
+  then normal writes will immediately be synchronized with the host fs. If
+  writeback is enabled, then writes may be cached in the guest until the file
+  is closed or an fsync(2) performed. This option has no effect on mmap-ed
+  writes or writes going through the DAX mechanism.
+
+- shared/no_shared
+  These options control the  use of the shared version table. If shared mode
+  is enabled then metadata and pathname lookup is cached in guest, but is
+  refreshed due to changes in another virtio-fs instance.
+
+DAX
+===
+- dax can be turned on/off when mounting virtio-fs inside guest.
+
+TODO
+====
+- Implement "cache=shared" option.
+- Improve error handling on host. If page fault on host fails, we need
+  to propagate it into guest.
+- Try to fine tune for performance.
+- Bug fixes
+
+RESULTS
+=======
+- pjdfstests are passing. Have tried cache=none/auto/always and dax on/off).
+
+  https://github.com/pjd/pjdfstest
+
+  (one symlink test fails and that seems to be due xfs on host. Yet to
+   look into it).
+
+- Ran blogbench and that works too.
+
+Thanks
+Vivek  
+
+Miklos Szeredi (2):
+  fuse: delete dentry if timeout is zero
+  fuse: Use default_file_splice_read for direct IO
+
+Sebastien Boeuf (3):
+  virtio: Add get_shm_region method
+  virtio: Implement get_shm_region for PCI transport
+  virtio: Implement get_shm_region for MMIO transport
+
+Stefan Hajnoczi (10):
+  fuse: export fuse_end_request()
+  fuse: export fuse_len_args()
+  fuse: export fuse_get_unique()
+  fuse: extract fuse_fill_super_common()
+  fuse: add fuse_iqueue_ops callbacks
+  virtio_fs: add skeleton virtio_fs.ko module
+  dax: remove block device dependencies
+  fuse, dax: add fuse_conn->dax_dev field
+  virtio_fs, dax: Set up virtio_fs dax_device
+  fuse, dax: add DAX mmap support
+
+Vivek Goyal (15):
+  fuse: Clear setuid bit even in cache=never path
+  fuse: Export fuse_send_init_request()
+  fuse: Separate fuse device allocation and installation in fuse_conn
+  dax: Pass dax_dev to dax_writeback_mapping_range()
+  fuse: Keep a list of free dax memory ranges
+  fuse: Introduce setupmapping/removemapping commands
+  fuse, dax: Implement dax read/write operations
+  fuse: Define dax address space operations
+  fuse, dax: Take ->i_mmap_sem lock during dax page fault
+  fuse: Maintain a list of busy elements
+  fuse: Add logic to free up a memory range
+  fuse: Release file in process context
+  fuse: Reschedule dax free work if too many EAGAIN attempts
+  fuse: Take inode lock for dax inode truncation
+  virtio-fs: Do not provide abort interface in fusectl
+
+ drivers/dax/super.c                |    3 +-
+ drivers/virtio/virtio_mmio.c       |   32 +
+ drivers/virtio/virtio_pci_modern.c |  108 +++
+ fs/dax.c                           |   23 +-
+ fs/ext2/inode.c                    |    2 +-
+ fs/ext4/inode.c                    |    2 +-
+ fs/fuse/Kconfig                    |   11 +
+ fs/fuse/Makefile                   |    1 +
+ fs/fuse/control.c                  |    4 +-
+ fs/fuse/cuse.c                     |    5 +-
+ fs/fuse/dev.c                      |   80 +-
+ fs/fuse/dir.c                      |   28 +-
+ fs/fuse/file.c                     |  953 ++++++++++++++++++++++-
+ fs/fuse/fuse_i.h                   |  206 ++++-
+ fs/fuse/inode.c                    |  307 ++++++--
+ fs/fuse/virtio_fs.c                | 1129 ++++++++++++++++++++++++++++
+ fs/splice.c                        |    3 +-
+ fs/xfs/xfs_aops.c                  |    2 +-
+ include/linux/dax.h                |    6 +-
+ include/linux/fs.h                 |    2 +
+ include/linux/virtio_config.h      |   17 +
+ include/uapi/linux/fuse.h          |   34 +
+ include/uapi/linux/virtio_fs.h     |   44 ++
+ include/uapi/linux/virtio_ids.h    |    1 +
+ include/uapi/linux/virtio_mmio.h   |   11 +
+ include/uapi/linux/virtio_pci.h    |   10 +
+ 26 files changed, 2875 insertions(+), 149 deletions(-)
+ create mode 100644 fs/fuse/virtio_fs.c
+ create mode 100644 include/uapi/linux/virtio_fs.h
+
 -- 
 2.20.1
 
