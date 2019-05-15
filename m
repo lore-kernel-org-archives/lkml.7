@@ -6,68 +6,70 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EBFC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:43:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACECC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5079B2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:43:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 335CE2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:44:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="miSv11/V"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="g8W9uJoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfEOMnf (ORCPT
+        id S1727132AbfEOMoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:43:35 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53728 "EHLO
+        Wed, 15 May 2019 08:44:02 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52672 "EHLO
         mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726594AbfEOMne (ORCPT
+        with ESMTP id S1727103AbfEOMoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 08:43:34 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 198so2511212wme.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 05:43:33 -0700 (PDT)
+        Wed, 15 May 2019 08:44:01 -0400
+Received: by mail-wm1-f65.google.com with SMTP id y3so2524953wmm.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 05:43:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=4+IPfXtr/zyvyJnFlkcNs+aGHAhvx9CNBUaI7wPMn/Y=;
-        b=miSv11/VhHwHpj5KtpDC83uSn/eO4WLTb3ghRqc6ARq0NoClLBdszZkbjukN7SYfNe
-         d0fWys1vXT92ASwZ531lhb3BulFKdM5tV88PJ+D+IXbQBMIpEie2NGD35W+6llDxj9hh
-         sCSrepOh0ApoS0u/KeJtQu8vHwcMQ2/qRjKLJuSrjZcXnAnRUrT2qfbZoDZG+Xp9LxU+
-         Wip+iFbXsmtNnZMaZ42uIBmdwlJmHbDlHRLknkBhAS85J4FbukuzykK+Qxiloqgqj3oC
-         N3ySEkI55v7W+7B6yLIPXNtrSFGJ3kBpTN1HNcA9WGdczgwqpTDp1ykx0z7oa2YHNmrU
-         DDKw==
+        bh=OfM7ijotsCqaMVBFakfOlB9DZSSL0wb+cjLTAAbAZ5w=;
+        b=g8W9uJoJH56yLVkzqL123jcq8h4ias/Ft3h68FPaN+g6J2+JChGlyD7GgC6XN6gnMO
+         6IGX0AR8UsKEpITv9nf58KFxwBdPwq5vmFZrSHMg4aLpw+j1g8zvEdqdaa/s/cK8C45S
+         PGJjWmlSO8BBjcBu0bbgtFWkqv7sIa7WI/ikiCaNlu0+q3jfCwpDhxbufbnx63OyJaqH
+         0uH9HGk7JVRK/LNUeWP0xC3B2d0cABSGbwS9cFoHbK8ZG/w/Voyxst8vSclyrdmCjUZI
+         Pb7/jXpHVqhz+Cz93Cu3Xj10Hl/LNLH6NWyOIX3CQ3EEDoR3vFOeoVKGI7rwvNvNvuP5
+         JRDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=4+IPfXtr/zyvyJnFlkcNs+aGHAhvx9CNBUaI7wPMn/Y=;
-        b=nsGKb9H9I2CmC+OBvjP0jjENolF2VXN517xO3RfklPnc5jhNMnDOFrfnh5+YD8ZhRq
-         TZHNl9KRbHn0mUPSZ9DBVE/QmW9Vgp+4kllDSJ5fUlUWM3sgsAj41SHMdAegOfl4FHd+
-         tdtwlkOBpq+bmUoX2ZdVfC3QFTfNhc6CEqLG0m5pnaJtPEdEaJGffvGvvovsgTR9jK0J
-         Gk5IVtx/TMdYWozozxsZPKj5XYfYGfZ9/VJOKbxtma2tyeYPqLNzqWQm8RWvolP9yU6H
-         6FfBClPqcXKKAZun4D9rXBQkVeVGVR/ivz7pV5p3z9/gKmtymrOnI8IRJI//jGL7ASwD
-         PnAg==
-X-Gm-Message-State: APjAAAXZQMFW9NAus6R0DZJVJYi/vqgnKKpWRwJD5NF73dW92kLdjFuN
-        cvGVENB2ft4u6f1uTmdk6M2N8Q==
-X-Google-Smtp-Source: APXvYqwcAtFQNnpA4Km7/VhuhxKrqL/yR65nCDu9j8fTBkz9a1rKkCHIGFGTjSxCXjAHuNJI2zEcgQ==
-X-Received: by 2002:a1c:a9d4:: with SMTP id s203mr22532861wme.27.1557924213042;
-        Wed, 15 May 2019 05:43:33 -0700 (PDT)
+        bh=OfM7ijotsCqaMVBFakfOlB9DZSSL0wb+cjLTAAbAZ5w=;
+        b=FWLOjA43XSKhQBfTXHySI6Rt2shRF6qJrzPOJyfq68Rq3cm8jh4UFwK+q1hkwMbZmq
+         ijm0Mf5u8dEFvW67EsKQjrOMJqrCyCbf4IAreGNSxYtwljq7/Mu8Src+OP5d87oBoyW2
+         AYICzSeZQINtlqa+b7blI/GCbHiro/7mM0Cd4oAyYW1t2A6lxhAJeiUZ9OdzVyTHko2u
+         VbwWgWp4ykoM6mFz0s6YymNH9h2fp3+EZWUaFv1JSxTD2JSAPiPnCG98z9VwaGA4V29j
+         M7Nz6LewMAkN6KWDXhufec5rWc50zk1HT6A6Sagvykx53wJSS5mDo1wJBeUQuqtE0eFA
+         WSbA==
+X-Gm-Message-State: APjAAAUQEk25v7K2zfIMdG5hThC72z5oJbIxvYOfmbS/1a3y6tGoJlgQ
+        zbUOocboUxE2FoSi8+xL8Hvd/bIgI/6+Dg==
+X-Google-Smtp-Source: APXvYqxD9DLNNA/khUrSelD+Cne01trgO+5EaVkXO7n4DkDrB4sqxzDzEQdFqZEBxcy2gXn+O0rAJA==
+X-Received: by 2002:a05:600c:217:: with SMTP id 23mr9075359wmi.115.1557924238264;
+        Wed, 15 May 2019 05:43:58 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id k67sm2459834wmb.34.2019.05.15.05.43.31
+        by smtp.gmail.com with ESMTPSA id r14sm2075025wrm.21.2019.05.15.05.43.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 05:43:32 -0700 (PDT)
+        Wed, 15 May 2019 05:43:57 -0700 (PDT)
 Subject: Re: [PATCH 1/3] dt-bindings: mmc: meson-gx: add ddr-access-quirk
  property
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     ulf.hansson@linaro.org, khilman@baylibre.com,
-        devicetree@vger.kernel.org, baylibre-upstreaming@groups.io,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        DTML <devicetree@vger.kernel.org>,
+        baylibre-upstreaming@groups.io,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 References: <20190513091548.16674-1-narmstrong@baylibre.com>
  <20190513091548.16674-2-narmstrong@baylibre.com>
- <CAFBinCAhTeywLZRBhcX_myktU9k4_YcjsjgCeTHEkP7SX8JCMQ@mail.gmail.com>
+ <CAPDyKFr9HVLNpqncs6YhGvqPdXCk6mtVSPVcWDvmnrKiNB+ACQ@mail.gmail.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -120,12 +122,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <9615cdb8-0a7e-fd39-45f0-79fdc7c0441c@baylibre.com>
-Date:   Wed, 15 May 2019 14:43:31 +0200
+Message-ID: <9a5d0be0-00de-2ced-de20-000c0b12b3c8@baylibre.com>
+Date:   Wed, 15 May 2019 14:43:56 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCAhTeywLZRBhcX_myktU9k4_YcjsjgCeTHEkP7SX8JCMQ@mail.gmail.com>
+In-Reply-To: <CAPDyKFr9HVLNpqncs6YhGvqPdXCk6mtVSPVcWDvmnrKiNB+ACQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -134,10 +136,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/05/2019 19:50, Martin Blumenstingl wrote:
-> Hi Neil,
-> 
-> On Mon, May 13, 2019 at 11:16 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+On 15/05/2019 13:37, Ulf Hansson wrote:
+> On Mon, 13 May 2019 at 11:16, Neil Armstrong <narmstrong@baylibre.com> wrote:
 >>
 >> On the Amlogic G12A SoC family, (only) the SDIO controller has a bug which
 >> makes any DDR access from the MMC controller fail.
@@ -146,8 +146,6 @@ On 14/05/2019 19:50, Martin Blumenstingl wrote:
 >> controller has this bug and needs a quirk to work properly.
 >>
 >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> 
 >> ---
 >>  Documentation/devicetree/bindings/mmc/amlogic,meson-gx.txt | 4 ++++
 >>  1 file changed, 4 insertions(+)
@@ -163,19 +161,27 @@ On 14/05/2019 19:50, Martin Blumenstingl wrote:
 >> +Optional properties:
 >> +- amlogic,ddr-access-quirk: set when HW cannot access the DDR memory, like on
 >> +  the G12A SDIO controller.
-> (I believe we cannot use a standard property like "dma-ranges" to
-> disable DMA access)
-> personally I prefer "amlogic,no-direct-memory-access" or
-> "amlogic,no-ddr-access", but if Rob is happy with the current naming
-> then I'm happy as well
+> 
+> As stated on the other patch, may I suggest to use DRAM instead of DDR.
 
-I have no preference, I can change it easily,
-
-Neil
+Indeed, may be more accurate.
 
 > 
+> Moreover, please mention that this is about the internal DMA support
+> of the controller.
+
+Ok
+
 > 
-> Regards
-> Martin
+>> +
+>>  Example:
+>>
+>>         sd_emmc_a: mmc@70000 {
+>> --
+>> 2.21.0
+>>
+> 
+> Kind regards
+> Uffe
 > 
 
