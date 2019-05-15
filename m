@@ -2,119 +2,108 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB2EC04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 01:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 821FCC04AB4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 01:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9A52084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 01:05:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GWFDE4os"
+	by mail.kernel.org (Postfix) with ESMTP id 571B220862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 01:09:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726589AbfEOBFd (ORCPT
+        id S1726336AbfEOBJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 21:05:33 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:41722 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfEOBFd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 21:05:33 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f12so438025plt.8
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 18:05:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=OigDY7C0dmgiXTDGvrusCma83AIE7G7GBT96nHD0zbM=;
-        b=GWFDE4osS2bEzj1o7ShUnbslcK1xslARZnhZzfRZh7jSVI7phnABFz9jFlBejziQS6
-         o1ObcqmOoNtPB3LuKJuSHwFsxPuab+LpwhgRN7oU/aw+v6NJo9YAIkc7K5OZfF1tA8KF
-         BqcVnYQ8aBHxMSgTTQ0w+v9aGmWe05ZSVmocLTL33t5UfrDnmZulDE8cz6LY3qcldYQ1
-         GuaCxx6A//0qbApOxaeRSTE93tA7qlxxVwEqYUKP0xlwEtecAi2BXe003LwZl2iZZNia
-         rjckM/fvGbwjONwU7S2s3XlGSUzim51CRjyIN/6jdXPZaYJBBluwscH3pxhM1aaYX8+m
-         i2eQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OigDY7C0dmgiXTDGvrusCma83AIE7G7GBT96nHD0zbM=;
-        b=N9UkHROmlKVuk/RmGascCifsbsDMpcZ8zYoZKB86P1ELAik932jH22M+Pl9slLL1uN
-         XSaooL+kaGUy7OGbO+23ELEUr7ju0FNUeQXPrUL9rda/12zTsY70gmmq9mnLo/e1nat0
-         lvv8GIHRxyRX+cG+9Qp+vvvpWyAQZDUFepgmc65n7vU9vzP/LO1EInY4sKkzQrLxUhUA
-         jj00nYdDg87WrJifqZ5VktH5t2swkM0sRxoBxH2QTfKEZIR+sz+qUyX8yZKUAWZSp/CX
-         TOj4hk/V6ByGGe7YpeUbRvg2fLtSck4uJVRqKJd/fv1MThFIPmdhN1NBC2dOJHEbgBNu
-         GlFg==
-X-Gm-Message-State: APjAAAUAbt+lAm7jouGM/zYKAttw44rnWB6uMdtmijhSun2q5dKngN3Z
-        pvmPTED9llpRePxJr8MKuhD8UZQo
-X-Google-Smtp-Source: APXvYqzyXdx1JAKc9EQBG8NQoamrnNm65978YnQJMX+DqpSV+jegTFpztDsoZNa4XUv/kmajV5xtmA==
-X-Received: by 2002:a17:902:5e1:: with SMTP id f88mr39973784plf.226.1557882332614;
-        Tue, 14 May 2019 18:05:32 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id r64sm450148pfa.25.2019.05.14.18.05.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 18:05:31 -0700 (PDT)
-Subject: Re: [PATCH] drm/pl111: Initialize clock spinlock early
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1557758781-23586-1-git-send-email-linux@roeck-us.net>
- <CACRpkdb6EEchXBSnO5SckGq7MY0z26Fq-=y+uJR=2_SCMC0q+Q@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <9d4fde45-be92-f2e2-0571-f2316d036853@roeck-us.net>
-Date:   Tue, 14 May 2019 18:05:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 14 May 2019 21:09:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51612 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726148AbfEOBJD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 21:09:03 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 59797308FC5E;
+        Wed, 15 May 2019 01:09:03 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-27.pek2.redhat.com [10.72.12.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5442260166;
+        Wed, 15 May 2019 01:08:57 +0000 (UTC)
+Date:   Wed, 15 May 2019 09:08:50 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>, Baoquan He <bhe@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, j-nomura@ce.jp.nec.com,
+        kasong@redhat.com, fanc.fnst@cn.fujitsu.com, x86@kernel.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        hpa@zytor.com, tglx@linutronix.de
+Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
+ and ACPI tables
+Message-ID: <20190515010850.GA9159@dhcp-128-65.nay.redhat.com>
+References: <20190513014248.GA16774@MiWiFi-R3L-srv>
+ <20190513070725.GA20105@zn.tnic>
+ <20190513073254.GB16774@MiWiFi-R3L-srv>
+ <20190513075006.GB20105@zn.tnic>
+ <20190513080653.GD16774@MiWiFi-R3L-srv>
+ <20190514032208.GA25875@dhcp-128-65.nay.redhat.com>
+ <20190514084841.GA27876@dhcp-128-65.nay.redhat.com>
+ <20190514113826.GM2589@hirez.programming.kicks-ass.net>
+ <20190514125835.GA29045@dhcp-128-65.nay.redhat.com>
+ <20190514140916.GA90245@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdb6EEchXBSnO5SckGq7MY0z26Fq-=y+uJR=2_SCMC0q+Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514140916.GA90245@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 15 May 2019 01:09:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/14/19 3:20 PM, Linus Walleij wrote:
-> On Mon, May 13, 2019 at 4:46 PM Guenter Roeck <linux@roeck-us.net> wrote:
+On 05/14/19 at 04:09pm, Ingo Molnar wrote:
 > 
->> The following warning is seen on systems with broken clock divider.
->>
->> INFO: trying to register non-static key.
->> the code is fine but needs lockdep annotation.
->> turning off the locking correctness validator.
->> CPU: 0 PID: 1 Comm: swapper Not tainted 5.1.0-09698-g1fb3b52 #1
->> Hardware name: ARM Integrator/CP (Device Tree)
->> [<c0011be8>] (unwind_backtrace) from [<c000ebb8>] (show_stack+0x10/0x18)
->> [<c000ebb8>] (show_stack) from [<c07d3fd0>] (dump_stack+0x18/0x24)
->> [<c07d3fd0>] (dump_stack) from [<c0060d48>] (register_lock_class+0x674/0x6f8)
->> [<c0060d48>] (register_lock_class) from [<c005de2c>]
->>          (__lock_acquire+0x68/0x2128)
->> [<c005de2c>] (__lock_acquire) from [<c0060408>] (lock_acquire+0x110/0x21c)
->> [<c0060408>] (lock_acquire) from [<c07f755c>] (_raw_spin_lock+0x34/0x48)
->> [<c07f755c>] (_raw_spin_lock) from [<c0536c8c>]
->>          (pl111_display_enable+0xf8/0x5fc)
->> [<c0536c8c>] (pl111_display_enable) from [<c0502f54>]
->>          (drm_atomic_helper_commit_modeset_enables+0x1ec/0x244)
->>
->> Since commit eedd6033b4c8 ("drm/pl111: Support variants with broken clock
->> divider"), the spinlock is not initialized if the clock divider is broken.
->> Initialize it earlier to fix the problem.
->>
->> Fixes: eedd6033b4c8 ("drm/pl111: Support variants with broken clock divider")
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> * Dave Young <dyoung@redhat.com> wrote:
 > 
-> Applied to drm-misc-next-fixes and pushed.
+> > On 05/14/19 at 01:38pm, Peter Zijlstra wrote:
+> > > On Tue, May 14, 2019 at 04:48:41PM +0800, Dave Young wrote:
+> > > 
+> > > > > I did some tests on the laptop,  thing is:
+> > > > > 1. apply the 3 patches (two you posted + Boris's revert commit 52b922c3d49c)
+> > > > >    on latest Linus master branch, everything works fine.
+> > > > > 
+> > > > > 2. build and test the tip/next-merge-window branch, kernel hangs early
+> > > > > without output, (both 1st boot and kexec boot)
+> > > > 
+> > > > Update about 2.  It should be not early rsdp related, I got the boot log
+> > > > Since can not reproduce with Linus master branch it may have been fixed.
+> > > 
+> > > Nothing was changed here since PTI.
+> > > 
+> > > > [    0.685374][    T1] rcu: Hierarchical SRCU implementation.
+> > > > [    0.686414][    T1] general protection fault: 0000 [#1] SMP PTI
+> > > > [    0.687328][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.1.0-rc6+ #877
+> > > > [    0.687328][    T1] Hardware name: LENOVO 4236NUC/4236NUC, BIOS 83ET82WW (1.52 ) 06/04/2018
+> > > > [    0.687328][    T1] RIP: 0010:reserve_ds_buffers+0x34e/0x450
+> > > 
+> > > > [    0.687328][    T1] Call Trace:
+> > > > [    0.687328][    T1]  ? hardlockup_detector_event_create+0x50/0x50
+> > > > [    0.687328][    T1]  x86_reserve_hardware+0x173/0x180
+> > > > [    0.687328][    T1]  x86_pmu_event_init+0x39/0x220
+> > > 
+> > > The DS buffers are special in that they're part of cpu_entrt_area. If
+> > > this comes apart it might mean your pagetables are dodgy.
+> > 
+> > Hmm, it seems caused by some WIP branch patches, I suspect below:
+> > commit 124d6af5a5f559e516ed2c6ea857e889ed293b43
+> > x86/paravirt: Standardize 'insn_buff' variable names
 > 
-> Out of curiosity: do you have a "real" Integrator/CP or is this
-> QEMU?
-> 
+> This commit had a bug which I fixed - could you try the latest -tip?
 
-This is with qemu.
+Will do, but I do not use tip tree often, not sure which branch includes
+the fix.
 
-Guenter
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/
+Is it tip/master or tip/tip?
+
+Thanks
+Dave
