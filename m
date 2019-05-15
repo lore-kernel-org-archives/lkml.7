@@ -7,54 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6238CC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA2AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3425B20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CAF20862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918488;
-	bh=7VliSGnR/dW4Q3WZ7MyplmKOYIsdE4OTnLI9UAW+9Yw=;
+	s=default; t=1557918492;
+	bh=+IRaOdImXqku3mtR+U0O3ccsw4B39A+wBwxX/ebnjzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RqL+n//46+qdiiDS9asJbY1IgdYLQJ4NkSSOBg2JTztz7KJoUsU+7RiMlUscomJYQ
-	 tNzqeF2TCots39v8qS4sguoZenxJiD9mbBu0JO2JSH218IJTsqwRl0kze5mDLcfSpd
-	 knSdKtYkRZpwhyd7kzmMWgGEErYrwefU2sSPCw7o=
+	b=XrWVOJU/6jUPwbD06WVofVdD4IYiTkyR6OmevYH5WHNkpeNXOJt6Glnyr41FVaf7U
+	 6MexqJnBO25UH4dljLkctCTXXYPqR9Mv5/Aoh2n4qNhvq7tjkoyhG/3hP/yMsccrX8
+	 VO4ANVhM3HnoES8An2gpVu2Jzhb6ucGtZzP/CFj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729045AbfEOLIG (ORCPT
+        id S1729052AbfEOLIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:08:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40150 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:08:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728703AbfEOLID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:08:03 -0400
+        id S1727959AbfEOLIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:08:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 495D520862;
-        Wed, 15 May 2019 11:08:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F68420644;
+        Wed, 15 May 2019 11:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918481;
-        bh=7VliSGnR/dW4Q3WZ7MyplmKOYIsdE4OTnLI9UAW+9Yw=;
+        s=default; t=1557918486;
+        bh=+IRaOdImXqku3mtR+U0O3ccsw4B39A+wBwxX/ebnjzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zA+p1VKptm1Zw58tncISZu4QpndmQpvjqCj2aB1qoIi2Bf5NATIt2fxblimD8QK0S
-         FM22QtceH6xubJadNgtKsPz0DISZyFrVE2NuxiaCb2l6OpCmcH/+xcVpAzkXZaSGfz
-         m9L15JZ8lhn1vKOrMfJuIH8BYfIbJUyZsPACTMNA=
+        b=nvJOIK5EK1mkzjgO17kX7SX91kHa9zTbXkKf5H0N23k1NhddnSIUwzlmiIL/6l58K
+         mThHGTxiTq/ucvTlNHKtKziDtcpe+ZQH5IeHmVGYpbYKvRWFUJouGPsDjFTIzx1FnK
+         3x4L430AaUILotrJ2TPgJSRGn1dfpTrG3+XJZfhM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, kan.liang@intel.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 147/266] perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS
-Date:   Wed, 15 May 2019 12:54:14 +0200
-Message-Id: <20190515090727.878360969@linuxfoundation.org>
+        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 149/266] iommu/amd: Set exclusion range correctly
+Date:   Wed, 15 May 2019 12:54:16 +0200
+Message-Id: <20190515090727.954099751@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -67,57 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 583feb08e7f7ac9d533b446882eb3a54737a6dbb ]
+[ Upstream commit 3c677d206210f53a4be972211066c0f1cd47fe12 ]
 
-When an event is programmed with attr.wakeup_events=N (N>0), it means
-the caller is interested in getting a user level notification after
-N samples have been recorded in the kernel sampling buffer.
+The exlcusion range limit register needs to contain the
+base-address of the last page that is part of the range, as
+bits 0-11 of this register are treated as 0xfff by the
+hardware for comparisons.
 
-With precise events on Intel processors, the kernel uses PEBS.
-The kernel tries minimize sampling overhead by verifying
-if the event configuration is compatible with multi-entry PEBS mode.
-If so, the kernel is notified only when the buffer has reached its threshold.
-Other PEBS operates in single-entry mode, the kenrel is notified for each
-PEBS sample.
+So correctly set the exclusion range in the hardware to the
+last page which is _in_ the range.
 
-The problem is that the current implementation look at frequency
-mode and event sample_type but ignores the wakeup_events field. Thus,
-it may not be possible to receive a notification after each precise event.
-
-This patch fixes this problem by disabling multi-entry PEBS if wakeup_events
-is non-zero.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: kan.liang@intel.com
-Link: https://lkml.kernel.org/r/20190306195048.189514-1-eranian@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: b2026aa2dce44 ('x86, AMD IOMMU: add functions for programming IOMMU MMIO space')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/perf_event_intel.c | 2 +-
+ drivers/iommu/amd_iommu_init.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/perf_event_intel.c b/arch/x86/kernel/cpu/perf_event_intel.c
-index 7b79c80ce029a..325ed90511cff 100644
---- a/arch/x86/kernel/cpu/perf_event_intel.c
-+++ b/arch/x86/kernel/cpu/perf_event_intel.c
-@@ -2513,7 +2513,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 		return ret;
+diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+index 94f1bf772ec93..db85cc5791dce 100644
+--- a/drivers/iommu/amd_iommu_init.c
++++ b/drivers/iommu/amd_iommu_init.c
+@@ -295,7 +295,7 @@ static void iommu_write_l2(struct amd_iommu *iommu, u8 address, u32 val)
+ static void iommu_set_exclusion_range(struct amd_iommu *iommu)
+ {
+ 	u64 start = iommu->exclusion_start & PAGE_MASK;
+-	u64 limit = (start + iommu->exclusion_length) & PAGE_MASK;
++	u64 limit = (start + iommu->exclusion_length - 1) & PAGE_MASK;
+ 	u64 entry;
  
- 	if (event->attr.precise_ip) {
--		if (!event->attr.freq) {
-+		if (!(event->attr.freq || event->attr.wakeup_events)) {
- 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
- 			if (!(event->attr.sample_type &
- 			      ~intel_pmu_free_running_flags(event)))
+ 	if (!iommu->exclusion_start)
 -- 
 2.20.1
 
