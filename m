@@ -2,302 +2,152 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 393A1C04AB6
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78857C04AB4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D13204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F236204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:10:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ndpzg0dE"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="E69EF/g9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfEOAKr (ORCPT
+        id S1726773AbfEOAKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:10:47 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:36079 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbfEOAKr (ORCPT
+        Tue, 14 May 2019 20:10:52 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:38508 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726707AbfEOAKv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:10:47 -0400
-Received: by mail-yb1-f194.google.com with SMTP id m10so309723ybk.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 17:10:46 -0700 (PDT)
+        Tue, 14 May 2019 20:10:51 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f97so390559plb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 17:10:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zluGg5sjuOMtZTmyGxNI8yHBaHDgl+Ebuu+Qwfri6HM=;
-        b=Ndpzg0dE7l03zW4C131CKF+aIrpux3suRr9luBsGFoEWNvGZEvjNF20XDLVbdtRf8i
-         p5v/+ywAJZT+/jRdIxabY3/fsgh0ea7zgeqb8NBhAdEkX67lwdpDqlmEVUdlD1voY4UK
-         NmLUZ4XKWLdCBhmVIfu3Xeke6WlVc5IG5Sfc5zECji65SttNMRyc4GB575gAEU/azkLB
-         cOKnJlLy1yNOFt2K8MSVOFqJgI+kCL1bkg2IBdnJuXTmPKNgzi8Ij77xZAwpxFBuyqA1
-         mgOrhgguz8obPjJBlX4X6oJCUZNQTV8SMURUr1xwHFoTeYdjZDLgxOHNC+sD6WK/JekI
-         8A/w==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=4SoXHx5mpTgQd7eRTwT5Sm5OnDgP1mzN+IrEBUFaD40=;
+        b=E69EF/g95+Q9j1KG6Xl2+AVFojp2ZvLQehQtGcHEDQI30LUzCeKkzUELWAP8Lygal5
+         fCY5ft15dY/uMkUWpO16TnfAH0g47mFItMeB/3MbZAlAjsUhnD/Uzl+pzOSvltAjZ95s
+         w1OjSeOjh1RH7vOEoZ/RgyWvki3YPCL1tHYWCT9Zht16sbiPXDR7lUbOZQ8TSQlo8y5d
+         tzgtD3LEZNVbd/ODAmhp9vEvgVy9PKOK4JPIzfdBpjtRNzb04n/SIBGGhniOvI5Azefi
+         N8qc4vkLObwZrdwB9N2Kp823NlOh1okPQfSK02sKK01s7OYwo/MAym27QWcHJ7VDv/AH
+         oW4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zluGg5sjuOMtZTmyGxNI8yHBaHDgl+Ebuu+Qwfri6HM=;
-        b=I6pERQV644c8gTdueFbKajn2q0tb28cAWuwMu9GdtlILRzsxiinaqLhGwisSRGqSk3
-         nT9qwWfnguv0yvrDr0nC3nDXQpvaKi3kgkvuaKe1994egLcgFK7IELzU0WkkvAUmDi9+
-         ZJYTgNFcr5OMvMLfwFoAtrGikKFh0PZiv8uDWUjLIc+Raqf13nPhdFRd8Jv0eQLN1Sce
-         EWDq/SvU2BxNUhudH9y7rzvRX7BX0spE6xj8nP5JzUNhm8xcAbr8kwzGqDs5wB5ZQKrf
-         JI8HcDmSMQS0yvKfE+YYGU80yJ4SHeNSYFitmN4vdUOv4zPUak9yiwoRoLghdF7xLbtt
-         aY7w==
-X-Gm-Message-State: APjAAAVQHN3dYVuJ/61fffr9CZhSrvz3RO2j1vM0YO3emea/VjAWVRjH
-        xRRXfl/94mbuO+lR6lLEjGiOph7n0Qi59vU+yfZ8dw==
-X-Google-Smtp-Source: APXvYqzEdusEfpnz9l5C8hPn5ut+WFR02WVznTKN6Nq4aV4/q18VioOpAKoW7WFWF+VamGbgyLdd0YruwBtkDF1KKYU=
-X-Received: by 2002:a25:4147:: with SMTP id o68mr19108358yba.148.1557879045478;
- Tue, 14 May 2019 17:10:45 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=4SoXHx5mpTgQd7eRTwT5Sm5OnDgP1mzN+IrEBUFaD40=;
+        b=KE2M3TY8yu5FbrCZWBpdeBDlSmBUzl8vVzc9hH+0T794Kg6eas8nfK1OEqJIAelGBI
+         Vwt8o+8WRTjrBxdDwrScjSLiNhbor3tj9SWERrl8SUb8JvLlfUsX1Zlc4IlEmX24w4fE
+         2sM7+LHvrDLd0RVEMbw79/PhE5rdeSpC7xOGG2AlmDcWf/A6aBGOnM/0sJ5DPRw/K6mI
+         qA/an24ukHwycY3nFRFOL/XfROH2iqEYBcI13EwtrUKmAAqnbd1EF+OnVkEZ0w9SANUW
+         CyZarOa07bpRXyBt+vaCJnWXUF+CxxqeQE2CUy8qCZis4CfWSpsK94Bg89XI3HFHB9i9
+         WV2g==
+X-Gm-Message-State: APjAAAUDLmhme2HmWfdEdTDLDhKlkSa6TtGzfpsrlOllyHBK2DTFK9p5
+        cXACx3Z/JqjN5HsvmNy0afc3lshH7ORr2Q==
+X-Google-Smtp-Source: APXvYqykgYRCTCRHHO487dD/RFNDIaE47TVbzBDS/rehZQT2tkG9YHa+22a4vtWuLib/YQQYxsq9rA==
+X-Received: by 2002:a17:902:322:: with SMTP id 31mr28155221pld.204.1557879049023;
+        Tue, 14 May 2019 17:10:49 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:fd66:a9bc:7c2c:636a])
+        by smtp.googlemail.com with ESMTPSA id f17sm262534pgv.16.2019.05.14.17.10.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 May 2019 17:10:48 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] arm64: dts: meson: g12a: add ethernet pinctrl definitions
+In-Reply-To: <7244c6d3e81e7bbb84ac508399ab64e236051673.camel@baylibre.com>
+References: <20190510164940.13496-1-jbrunet@baylibre.com> <20190510164940.13496-3-jbrunet@baylibre.com> <CAFBinCAmGRHDU5QX2VEsV8vLBXD6fJtcRHbjdW8=p9Yti0V4qA@mail.gmail.com> <7244c6d3e81e7bbb84ac508399ab64e236051673.camel@baylibre.com>
+Date:   Tue, 14 May 2019 17:10:47 -0700
+Message-ID: <7hpnokd1bs.fsf@baylibre.com>
 MIME-Version: 1.0
-References: <20190514213940.2405198-1-guro@fb.com> <20190514213940.2405198-7-guro@fb.com>
-In-Reply-To: <20190514213940.2405198-7-guro@fb.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 14 May 2019 17:10:34 -0700
-Message-ID: <CALvZod7FDwnxFLs_0+AfaU+5vCCSSX6wbjOZv+01hrCUoPKsWg@mail.gmail.com>
-Subject: Re: [PATCH v4 6/7] mm: reparent slab memory on cgroup removal
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        Christoph Lameter <cl@linux.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Cgroups <cgroups@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Gushchin <guro@fb.com>
-Date: Tue, May 14, 2019 at 2:54 PM
-To: Andrew Morton, Shakeel Butt
-Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-<kernel-team@fb.com>, Johannes Weiner, Michal Hocko, Rik van Riel,
-Christoph Lameter, Vladimir Davydov, <cgroups@vger.kernel.org>, Roman
-Gushchin
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-> Let's reparent memcg slab memory on memcg offlining. This allows us
-> to release the memory cgroup without waiting for the last outstanding
-> kernel object (e.g. dentry used by another application).
+> On Sat, 2019-05-11 at 19:06 +0200, Martin Blumenstingl wrote:
+>> Hi Jerome,
+>> 
+>> On Fri, May 10, 2019 at 6:49 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>> > Add the ethernet pinctrl settings for RMII, RGMII and internal phy leds
+>> > 
+>> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> > ---
+>> >  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 37 +++++++++++++++++++++
+>> >  1 file changed, 37 insertions(+)
+>> > 
+>> > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+>> > index a32db09809f7..fe0f73730525 100644
+>> > --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+>> > +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+>> > @@ -206,6 +206,43 @@
+>> >                                                 };
+>> >                                         };
+>> > 
+>> > +                                       eth_leds_pins: eth-leds {
+>> > +                                               mux {
+>> > +                                                       groups = "eth_link_led",
+>> > +                                                                "eth_act_led";
+>> > +                                                       function = "eth";
+>> > +                                                       bias-disable;
+>> > +                                               };
+>> > +                                       };
+>> > +
+>> > +                                       eth_rmii_pins: eth-rmii {
+>> > +                                               mux {
+>> > +                                                       groups = "eth_mdio",
+>> > +                                                                "eth_mdc",
+>> > +                                                                "eth_rgmii_rx_clk",
+>> > +                                                                "eth_rx_dv",
+>> > +                                                                "eth_rxd0",
+>> > +                                                                "eth_rxd1",
+>> > +                                                                "eth_txen",
+>> > +                                                                "eth_txd0",
+>> > +                                                                "eth_txd1";
+>> > +                                                       function = "eth";
+>> > +                                                       bias-disable;
+>> > +                                               };
+>> > +                                       };
+>> > +
+>> > +                                       eth_rgmii_pins: eth-rgmii {
+>> > +                                               mux {
+>> > +                                                       groups = "eth_rxd2_rgmii",
+>> > +                                                                "eth_rxd3_rgmii",
+>> > +                                                                "eth_rgmii_tx_clk",
+>> > +                                                                "eth_txd2_rgmii",
+>> > +                                                                "eth_txd3_rgmii";
+>> > +                                                       function = "eth";
+>> > +                                                       bias-disable;
+>> > +                                               };
+>> > +                                       };
+>> it seems that the group definition is incomplete (missing things like
+>> eth_mdc, eth_rx_dv, ...)
+>> 
+>> we could also mix the eth_rmii_pins and eth_rgmii_pins in a board.dts
+>> (maybe that was your idea in the first place?):
 >
-> So instead of reparenting all accounted slab pages, let's do reparent
-> a relatively small amount of kmem_caches. Reparenting is performed as
-> a part of the deactivation process.
+> yes that's the idea
 >
-> Since the parent cgroup is already charged, everything we need to do
-> is to splice the list of kmem_caches to the parent's kmem_caches list,
-> swap the memcg pointer and drop the css refcounter for each kmem_cache
-> and adjust the parent's css refcounter. Quite simple.
+>>   phy-mode = "rgmii";
+>>   pinctrl-0 = <&eth_rmii_pins>, <&eth_rgmii_pins>;
+>>   pinctrl-names = "default";
+>> however, in this case I would prefer if "eth_rmii_pins" was named only
+>> "eth_pins" (following mostly what Amlogic does with the pin group
+>> naming: eth_* for pins that are valid in both, rmii and rgmii mode and
+>> eth*rgmii* for pins that are only valid in rgmii mode)
 >
-> Please, note that kmem_cache->memcg_params.memcg isn't a stable
-> pointer anymore. It's safe to read it under rcu_read_lock() or
-> with slab_mutex held.
+> I can't say I share your preference. I let Kevin decide what he wants.
 >
-> We can race with the slab allocation and deallocation paths. It's not
-> a big problem: parent's charge and slab global stats are always
-> correct, and we don't care anymore about the child usage and global
-> stats. The child cgroup is already offline, so we don't use or show it
-> anywhere.
->
-> Local slab stats (NR_SLAB_RECLAIMABLE and NR_SLAB_UNRECLAIMABLE)
-> aren't used anywhere except count_shadow_nodes(). But even there it
-> won't break anything: after reparenting "nodes" will be 0 on child
-> level (because we're already reparenting shrinker lists), and on
-> parent level page stats always were 0, and this patch won't change
-> anything.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+It seems we've gone the eth_pins route for meson-gxl.dtsi, so I'd prefer
+to be consistent with that.
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-
-> ---
->  include/linux/slab.h |  4 ++--
->  mm/memcontrol.c      | 14 ++++++++------
->  mm/slab.h            | 21 ++++++++++++++++-----
->  mm/slab_common.c     | 21 ++++++++++++++++++---
->  4 files changed, 44 insertions(+), 16 deletions(-)
->
-> diff --git a/include/linux/slab.h b/include/linux/slab.h
-> index 1b54e5f83342..109cab2ad9b4 100644
-> --- a/include/linux/slab.h
-> +++ b/include/linux/slab.h
-> @@ -152,7 +152,7 @@ void kmem_cache_destroy(struct kmem_cache *);
->  int kmem_cache_shrink(struct kmem_cache *);
->
->  void memcg_create_kmem_cache(struct mem_cgroup *, struct kmem_cache *);
-> -void memcg_deactivate_kmem_caches(struct mem_cgroup *);
-> +void memcg_deactivate_kmem_caches(struct mem_cgroup *, struct mem_cgroup *);
->
->  /*
->   * Please use this macro to create slab caches. Simply specify the
-> @@ -638,7 +638,7 @@ struct memcg_cache_params {
->                         bool dying;
->                 };
->                 struct {
-> -                       struct mem_cgroup *memcg;
-> +                       struct mem_cgroup __rcu *memcg;
->                         struct list_head children_node;
->                         struct list_head kmem_caches_node;
->                         struct percpu_ref refcnt;
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 413cef3d8369..0655639433ed 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -3224,15 +3224,15 @@ static void memcg_offline_kmem(struct mem_cgroup *memcg)
->          */
->         memcg->kmem_state = KMEM_ALLOCATED;
->
-> -       memcg_deactivate_kmem_caches(memcg);
-> -
-> -       kmemcg_id = memcg->kmemcg_id;
-> -       BUG_ON(kmemcg_id < 0);
-> -
->         parent = parent_mem_cgroup(memcg);
->         if (!parent)
->                 parent = root_mem_cgroup;
->
-> +       memcg_deactivate_kmem_caches(memcg, parent);
-> +
-> +       kmemcg_id = memcg->kmemcg_id;
-> +       BUG_ON(kmemcg_id < 0);
-> +
->         /*
->          * Change kmemcg_id of this cgroup and all its descendants to the
->          * parent's id, and then move all entries from this cgroup's list_lrus
-> @@ -3265,7 +3265,6 @@ static void memcg_free_kmem(struct mem_cgroup *memcg)
->         if (memcg->kmem_state == KMEM_ALLOCATED) {
->                 WARN_ON(!list_empty(&memcg->kmem_caches));
->                 static_branch_dec(&memcg_kmem_enabled_key);
-> -               WARN_ON(page_counter_read(&memcg->kmem));
->         }
->  }
->  #else
-> @@ -4677,6 +4676,9 @@ mem_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
->
->         /* The following stuff does not apply to the root */
->         if (!parent) {
-> +#ifdef CONFIG_MEMCG_KMEM
-> +               INIT_LIST_HEAD(&memcg->kmem_caches);
-> +#endif
->                 root_mem_cgroup = memcg;
->                 return &memcg->css;
->         }
-> diff --git a/mm/slab.h b/mm/slab.h
-> index b86744c58702..7ba50e526d82 100644
-> --- a/mm/slab.h
-> +++ b/mm/slab.h
-> @@ -268,10 +268,18 @@ static __always_inline int memcg_charge_slab(struct page *page,
->         struct lruvec *lruvec;
->         int ret;
->
-> -       memcg = s->memcg_params.memcg;
-> +       rcu_read_lock();
-> +       memcg = rcu_dereference(s->memcg_params.memcg);
-> +       while (memcg && !css_tryget_online(&memcg->css))
-> +               memcg = parent_mem_cgroup(memcg);
-> +       rcu_read_unlock();
-> +
-> +       if (unlikely(!memcg))
-> +               return true;
-> +
->         ret = memcg_kmem_charge_memcg(page, gfp, order, memcg);
->         if (ret)
-> -               return ret;
-> +               goto out;
->
->         lruvec = mem_cgroup_lruvec(page_pgdat(page), memcg);
->         mod_lruvec_state(lruvec, cache_vmstat_idx(s), 1 << order);
-> @@ -279,8 +287,9 @@ static __always_inline int memcg_charge_slab(struct page *page,
->         /* transer try_charge() page references to kmem_cache */
->         percpu_ref_get_many(&s->memcg_params.refcnt, 1 << order);
->         css_put_many(&memcg->css, 1 << order);
-> -
-> -       return 0;
-> +out:
-> +       css_put(&memcg->css);
-> +       return ret;
->  }
->
->  /*
-> @@ -293,10 +302,12 @@ static __always_inline void memcg_uncharge_slab(struct page *page, int order,
->         struct mem_cgroup *memcg;
->         struct lruvec *lruvec;
->
-> -       memcg = s->memcg_params.memcg;
-> +       rcu_read_lock();
-> +       memcg = rcu_dereference(s->memcg_params.memcg);
->         lruvec = mem_cgroup_lruvec(page_pgdat(page), memcg);
->         mod_lruvec_state(lruvec, cache_vmstat_idx(s), -(1 << order));
->         memcg_kmem_uncharge_memcg(page, order, memcg);
-> +       rcu_read_unlock();
->
->         percpu_ref_put_many(&s->memcg_params.refcnt, 1 << order);
->  }
-> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> index 1ee967b4805e..354762394162 100644
-> --- a/mm/slab_common.c
-> +++ b/mm/slab_common.c
-> @@ -237,7 +237,7 @@ void memcg_link_cache(struct kmem_cache *s, struct mem_cgroup *memcg)
->                 list_add(&s->root_caches_node, &slab_root_caches);
->         } else {
->                 css_get(&memcg->css);
-> -               s->memcg_params.memcg = memcg;
-> +               rcu_assign_pointer(s->memcg_params.memcg, memcg);
->                 list_add(&s->memcg_params.children_node,
->                          &s->memcg_params.root_cache->memcg_params.children);
->                 list_add(&s->memcg_params.kmem_caches_node,
-> @@ -252,7 +252,8 @@ static void memcg_unlink_cache(struct kmem_cache *s)
->         } else {
->                 list_del(&s->memcg_params.children_node);
->                 list_del(&s->memcg_params.kmem_caches_node);
-> -               css_put(&s->memcg_params.memcg->css);
-> +               mem_cgroup_put(rcu_dereference_protected(s->memcg_params.memcg,
-> +                       lockdep_is_held(&slab_mutex)));
->         }
->  }
->  #else
-> @@ -776,11 +777,13 @@ static void kmemcg_cache_deactivate(struct kmem_cache *s)
->         call_rcu(&s->memcg_params.rcu_head, kmemcg_schedule_work_after_rcu);
->  }
->
-> -void memcg_deactivate_kmem_caches(struct mem_cgroup *memcg)
-> +void memcg_deactivate_kmem_caches(struct mem_cgroup *memcg,
-> +                                 struct mem_cgroup *parent)
->  {
->         int idx;
->         struct memcg_cache_array *arr;
->         struct kmem_cache *s, *c;
-> +       unsigned int nr_reparented;
->
->         idx = memcg_cache_id(memcg);
->
-> @@ -798,6 +801,18 @@ void memcg_deactivate_kmem_caches(struct mem_cgroup *memcg)
->                 kmemcg_cache_deactivate(c);
->                 arr->entries[idx] = NULL;
->         }
-> +       nr_reparented = 0;
-> +       list_for_each_entry(s, &memcg->kmem_caches,
-> +                           memcg_params.kmem_caches_node) {
-> +               rcu_assign_pointer(s->memcg_params.memcg, parent);
-> +               css_put(&memcg->css);
-> +               nr_reparented++;
-> +       }
-> +       if (nr_reparented) {
-> +               list_splice_init(&memcg->kmem_caches,
-> +                                &parent->kmem_caches);
-> +               css_get_many(&parent->css, nr_reparented);
-> +       }
->         mutex_unlock(&slab_mutex);
->
->         put_online_mems();
-> --
-> 2.20.1
->
+Kevin
