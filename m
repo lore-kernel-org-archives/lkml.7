@@ -2,84 +2,85 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F8CBC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3227DC04AA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52214216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:53:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557903199;
-	bh=CMD85OI414KOORpCEc6HTIF53RbLy/VLnhlCzxpfBhU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tMt9XVp0WkJyFr7oeDZhoH+wUKUV5iIcjVYLJ5Kj508tXhXHrPgIOQ5juSgiGTcvQ
-	 a9+3/li/15HlPdoOZn/J5gp/VTZoKkR9HrDIu2V+SZlXcvKjRtJ5pAhN4nsWdig75c
-	 7YPBUQJCCJ1j0lCbeLt37zmoB+g+V8usTHMozmOs=
+	by mail.kernel.org (Postfix) with ESMTP id 0E8CF2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfEOGxS (ORCPT
+        id S1726546AbfEOGxW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 02:53:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48310 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725902AbfEOGxR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 02:53:17 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 15111AE5D;
-        Wed, 15 May 2019 06:53:16 +0000 (UTC)
-Date:   Wed, 15 May 2019 08:53:11 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Timofey Titovets <nefelim4ag@gmail.com>,
-        Aaron Tomlin <atomlin@redhat.com>,
-        Grzegorz Halat <ghalat@redhat.com>, linux-mm@kvack.org,
-        linux-api@vger.kernel.org, Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH RFC v2 0/4] mm/ksm: add option to automerge VMAs
-Message-ID: <20190515065311.GB16651@dhcp22.suse.cz>
-References: <20190514131654.25463-1-oleksandr@redhat.com>
- <20190514144105.GF4683@dhcp22.suse.cz>
- <20190514145122.GG4683@dhcp22.suse.cz>
- <20190515062523.5ndf7obzfgugilfs@butterfly.localdomain>
+        Wed, 15 May 2019 02:53:22 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:46310 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725902AbfEOGxT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 02:53:19 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z19so2008286qtz.13;
+        Tue, 14 May 2019 23:53:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=R4MU58D5iAxx8dZmBy7pxRNzyYT0opcEi8NKuCcjlcM=;
+        b=CcS66rG+V4L7kDRz3rPQNpM+SpWY3lsWEDEyXfcxVHVHhCgOPSG3l5ZDYOK2EGsEJA
+         DSSi7Ctxlcc8hO4tlZwPI13K2aEIF8IYxihyqB3DWYwD6s0Q1R/Fyxi02iC/BfFkDt1+
+         D+W84PvonIjuFRQRrwe7q2v0oQmMqAEGByj0c8toQGV5zFhjnVo3UHXZs1Y/O0z6ZEKL
+         LyPTuFfKHiYdmEwafTPE7659L0w1RJOuJONLvl4CfYMw79oNyt3MFTXUlA6P/qDobOrp
+         fRB/NEbiBSKdGAGx4hhfKTO1Bm6sDQmIhaKsWwxXuRS3nuQe4UU0wMRfU59JXlaveprv
+         nCUw==
+X-Gm-Message-State: APjAAAXaMBuxYFqtNd7Nj8ae7wil3Afig/Qt+Cxt7zkOKTnLM4/xN3mG
+        D6WeJKV3NbRl4iyxe4FlI7B0GaJdzaJDPMVh+yHnsXsL9MbLPg==
+X-Google-Smtp-Source: APXvYqy6lq7ldPMqvDA0jFj1FyDcQoLbsSggEPflcVw3ETtRuzRL5VVqc75BtYm29kQBzy5UWOObnG+TCbdkh5zktGA=
+X-Received: by 2002:a05:6214:10c8:: with SMTP id r8mr32745217qvs.161.1557903198321;
+ Tue, 14 May 2019 23:53:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190515062523.5ndf7obzfgugilfs@butterfly.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190412143538.11780-1-hch@lst.de> <CAK8P3a2bg9YkbNpAb9uZkXLFZ3juCmmbF7cRw+Dm9ZiLFno2OQ@mail.gmail.com>
+ <fd59e6e22594f740eaf86abad76ee04d@mailhost.ics.forth.gr> <CACT4Y+aKGKm9Wbc1owBr51adkbesHP_Z81pBAoZ5HmJ+uZdsaw@mail.gmail.com>
+ <CAK8P3a3xRBZrgv16sSigJhY0vGmb=qF9o=6dC_5DqAJtW3qPGQ@mail.gmail.com>
+ <CACT4Y+ad5z6z0Dweh5hGwYcUUebPEtqsznmX9enPvYB20J16aA@mail.gmail.com>
+ <87woiutwq4.fsf@concordia.ellerman.id.au> <CACT4Y+YT52wGuARxe9RqUsMYGNZTwaBowWWUUawyqTBq4G1NDg@mail.gmail.com>
+ <20190513120435.GB22993@lst.de>
+In-Reply-To: <20190513120435.GB22993@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 15 May 2019 08:53:02 +0200
+Message-ID: <CAK8P3a2EF5ujv8S-PzYYBtNLEda+a_Wc6xhMign32QFnW4q1Ew@mail.gmail.com>
+Subject: Re: [PATCH, RFC] byteorder: sanity check toolchain vs kernel endianess
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nick Kossifidis <mick@ics.forth.gr>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 15-05-19 08:25:23, Oleksandr Natalenko wrote:
-[...]
-> > > Please make sure to describe a usecase that warrants adding a new
-> > > interface we have to maintain for ever.
-> 
-> I think of two major consumers of this interface:
-> 
-> 1) hosts, that run containers, especially similar ones and especially in
-> a trusted environment;
-> 
-> 2) heavy applications, that can be run in multiple instances, not
-> limited to opensource ones like Firefox, but also those that cannot be
-> modified.
+On Mon, May 13, 2019 at 2:04 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Mon, May 13, 2019 at 01:50:19PM +0200, Dmitry Vyukov wrote:
+> > > We did have some bugs in the past (~1-2 y/ago) but AFAIK they are all
+> > > fixed now. These days I build most of my kernels with a bi-endian 64-bit
+> > > toolchain, and switching endian without running `make clean` also works.
+> >
+> > For the record, yes, it turn out to be a problem in our code (a latent
+> > bug). We actually used host (x86) gcc to build as-if ppc code that can
+> > run on the host, so it defined neither LE no BE macros. It just
+> > happened to work in the past :)
+>
+> So Nick was right and these checks actually are useful..
 
-This is way too generic. Please provide something more specific. Ideally
-with numbers. Why those usecases cannot use an existing interfaces.
-Remember you are trying to add a new user interface which we will have
-to maintain for ever.
+Yes, definitely. I wonder if we should also bring back the word size check
+from include/asm-generic/bitsperlong.h, which was disabled right
+after I originally added that.
 
-I will try to comment on the interface itself later. But I have to say
-that I am not impressed. Abusing sysfs for per process features is quite
-gross to be honest.
-
--- 
-Michal Hocko
-SUSE Labs
+      Arnd
