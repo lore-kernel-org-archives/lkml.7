@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8911EC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2F9C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5590A2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015932053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920088;
-	bh=iiIYaC/w5QturTMJQoyrPh/5aTn9LhWQ1IssuHWRieg=;
+	s=default; t=1557920095;
+	bh=okYy+GU6/N0t4Tvh74P9xri3NwBQ8lf9DQZpI4Zyqi4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZP0R03qbrRtPwrSzvhhY0imh0agcTt9HDaZuFIFItjLkYZLypA8jGabyJs1Gvl1Zx
-	 C4xVLNm34eSEsDSllRHtXWG/KnBaaTZOnPJuTyJu7OsmlU4RQNYBdxAuUFCsNEVVuv
-	 c/V5lToWH0D7EHu658NyaoJCW45Kg2exJW4qw9QE=
+	b=jDl1R6zMesjc+PdVpB5czHm/JSnn0fy468vQUwepLvjJySiHUP/bivy2JKXnCndNM
+	 Ps1HdxZDMxaVJEbqVFyTcVO/1swnvfGlStCCiTwM+kqPnTzv754Ve0T4ysuVc2sRCE
+	 dqFnXie/d93IRbqd0jZUyu7PUO+6Fax3aBpTp16A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732915AbfEOLer (ORCPT
+        id S1733061AbfEOLey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:34:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46046 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:34:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733299AbfEOLeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:34:02 -0400
+        id S1732773AbfEOLd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:33:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D1242084A;
-        Wed, 15 May 2019 11:34:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 602BA2053B;
+        Wed, 15 May 2019 11:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557920042;
-        bh=iiIYaC/w5QturTMJQoyrPh/5aTn9LhWQ1IssuHWRieg=;
+        s=default; t=1557920036;
+        bh=okYy+GU6/N0t4Tvh74P9xri3NwBQ8lf9DQZpI4Zyqi4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jEGFgmAGR3mKOS06hKEbtUGjgFQiUkQ1bROw07a4nId43vKjsVP+pNSdJcPSeE8OT
-         BiviFQBJTFSc0hIDzO6a08L8OMzzksACtqkOvIKlAn1BYHMDn3ix+lxUIieANdxsa7
-         SNq8OegQgw4MqNTwQaup+sTXCjndjRgoEsiF7rvw=
+        b=Obk+UDVriScmBmqtTQTV2Sb/skIPxEf668Cyzc4SIYowHRbDTJjiHYB/fVMuoZr0y
+         fHQs116BmFOJecewyPb3t28xeqcx5RFxJ5Wzev+tHrIbwrq4CwnpJ3un3o8T6csjVY
+         xuA/POvZ2dJmuMAuG06dqhT8cfMs5Fny5qnoAkW4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rick Lindsley <ricklind@vnet.linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.1 39/46] powerpc/book3s/64: check for NULL pointer in pgd_alloc()
-Date:   Wed, 15 May 2019 12:57:03 +0200
-Message-Id: <20190515090627.958241179@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Timur Tabi <timur@freescale.com>,
+        Mihai Caraman <mihai.caraman@freescale.com>,
+        Kumar Gala <galak@kernel.crashing.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.1 37/46] drivers/virt/fsl_hypervisor.c: dereferencing error pointers in ioctl
+Date:   Wed, 15 May 2019 12:57:01 +0200
+Message-Id: <20190515090627.583258620@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -60,58 +63,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rick Lindsley <ricklind@linux.vnet.ibm.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit f39356261c265a0689d7ee568132d516e8b6cecc upstream.
+commit c8ea3663f7a8e6996d44500ee818c9330ac4fd88 upstream.
 
-When the memset code was added to pgd_alloc(), it failed to consider
-that kmem_cache_alloc() can return NULL. It's uncommon, but not
-impossible under heavy memory contention. Example oops:
+strndup_user() returns error pointers on error, and then in the error
+handling we pass the error pointers to kfree().  It will cause an Oops.
 
-  Unable to handle kernel paging request for data at address 0x00000000
-  Faulting instruction address: 0xc0000000000a4000
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  LE SMP NR_CPUS=2048 NUMA pSeries
-  CPU: 70 PID: 48471 Comm: entrypoint.sh Kdump: loaded Not tainted 4.14.0-115.6.1.el7a.ppc64le #1
-  task: c000000334a00000 task.stack: c000000331c00000
-  NIP:  c0000000000a4000 LR: c00000000012f43c CTR: 0000000000000020
-  REGS: c000000331c039c0 TRAP: 0300   Not tainted  (4.14.0-115.6.1.el7a.ppc64le)
-  MSR:  800000010280b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE,TM[E]>  CR: 44022840  XER: 20040000
-  CFAR: c000000000008874 DAR: 0000000000000000 DSISR: 42000000 SOFTE: 1
-  ...
-  NIP [c0000000000a4000] memset+0x68/0x104
-  LR [c00000000012f43c] mm_init+0x27c/0x2f0
-  Call Trace:
-    mm_init+0x260/0x2f0 (unreliable)
-    copy_mm+0x11c/0x638
-    copy_process.isra.28.part.29+0x6fc/0x1080
-    _do_fork+0xdc/0x4c0
-    ppc_clone+0x8/0xc
-  Instruction dump:
-  409e000c b0860000 38c60002 409d000c 90860000 38c60004 78a0d183 78a506a0
-  7c0903a6 41820034 60000000 60420000 <f8860000> f8860008 f8860010 f8860018
-
-Fixes: fc5c2f4a55a2 ("powerpc/mm/hash64: Zero PGD pages on allocation")
-Cc: stable@vger.kernel.org # v4.16+
-Signed-off-by: Rick Lindsley <ricklind@vnet.linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: http://lkml.kernel.org/r/20181218082003.GD32567@kadam
+Fixes: 6db7199407ca ("drivers/virt: introduce Freescale hypervisor management driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Timur Tabi <timur@freescale.com>
+Cc: Mihai Caraman <mihai.caraman@freescale.com>
+Cc: Kumar Gala <galak@kernel.crashing.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/book3s/64/pgalloc.h |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/virt/fsl_hypervisor.c |   26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
---- a/arch/powerpc/include/asm/book3s/64/pgalloc.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgalloc.h
-@@ -81,6 +81,9 @@ static inline pgd_t *pgd_alloc(struct mm
+--- a/drivers/virt/fsl_hypervisor.c
++++ b/drivers/virt/fsl_hypervisor.c
+@@ -331,8 +331,8 @@ static long ioctl_dtprop(struct fsl_hv_i
+ 	struct fsl_hv_ioctl_prop param;
+ 	char __user *upath, *upropname;
+ 	void __user *upropval;
+-	char *path = NULL, *propname = NULL;
+-	void *propval = NULL;
++	char *path, *propname;
++	void *propval;
+ 	int ret = 0;
  
- 	pgd = kmem_cache_alloc(PGT_CACHE(PGD_INDEX_SIZE),
- 			       pgtable_gfp_flags(mm, GFP_KERNEL));
-+	if (unlikely(!pgd))
-+		return pgd;
-+
- 	/*
- 	 * Don't scan the PGD for pointers, it contains references to PUDs but
- 	 * those references are not full pointers and so can't be recognised by
+ 	/* Get the parameters from the user. */
+@@ -344,32 +344,30 @@ static long ioctl_dtprop(struct fsl_hv_i
+ 	upropval = (void __user *)(uintptr_t)param.propval;
+ 
+ 	path = strndup_user(upath, FH_DTPROP_MAX_PATHLEN);
+-	if (IS_ERR(path)) {
+-		ret = PTR_ERR(path);
+-		goto out;
+-	}
++	if (IS_ERR(path))
++		return PTR_ERR(path);
+ 
+ 	propname = strndup_user(upropname, FH_DTPROP_MAX_PATHLEN);
+ 	if (IS_ERR(propname)) {
+ 		ret = PTR_ERR(propname);
+-		goto out;
++		goto err_free_path;
+ 	}
+ 
+ 	if (param.proplen > FH_DTPROP_MAX_PROPLEN) {
+ 		ret = -EINVAL;
+-		goto out;
++		goto err_free_propname;
+ 	}
+ 
+ 	propval = kmalloc(param.proplen, GFP_KERNEL);
+ 	if (!propval) {
+ 		ret = -ENOMEM;
+-		goto out;
++		goto err_free_propname;
+ 	}
+ 
+ 	if (set) {
+ 		if (copy_from_user(propval, upropval, param.proplen)) {
+ 			ret = -EFAULT;
+-			goto out;
++			goto err_free_propval;
+ 		}
+ 
+ 		param.ret = fh_partition_set_dtprop(param.handle,
+@@ -388,7 +386,7 @@ static long ioctl_dtprop(struct fsl_hv_i
+ 			if (copy_to_user(upropval, propval, param.proplen) ||
+ 			    put_user(param.proplen, &p->proplen)) {
+ 				ret = -EFAULT;
+-				goto out;
++				goto err_free_propval;
+ 			}
+ 		}
+ 	}
+@@ -396,10 +394,12 @@ static long ioctl_dtprop(struct fsl_hv_i
+ 	if (put_user(param.ret, &p->ret))
+ 		ret = -EFAULT;
+ 
+-out:
+-	kfree(path);
++err_free_propval:
+ 	kfree(propval);
++err_free_propname:
+ 	kfree(propname);
++err_free_path:
++	kfree(path);
+ 
+ 	return ret;
+ }
 
 
