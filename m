@@ -2,143 +2,239 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6D5C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AEEC04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C61F8216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cK8aSljN"
+	by mail.kernel.org (Postfix) with ESMTP id BED8820843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557918616;
+	bh=pRLJzIWzLTADxYCATk03yf++GnwfjR4kFX69bskeVMA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bzW8b7e7runVy+GrYvd6Pl0teGE9jqsY5CjrXoZhCfp8YPodtXIvtL5POEhiZ+PQD
+	 aAw5+jbm1/mIYhdWG0cE/fhv6gxxd1XrCzY2K5GwrHsG8zZn3//fUEQWMkYlnZ2kVH
+	 2/yS0ZGy/NDu6YnVyr7oFgHtPwAGfUM6n9WZgdUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbfEOLKL (ORCPT
+        id S1729382AbfEOLKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:10:11 -0400
-Received: from mail-eopbgr80040.outbound.protection.outlook.com ([40.107.8.40]:15311
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729255AbfEOLKJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:10:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iuKaf0YLQKzzPf65tVXQwoD4oJ9AU/hYa0gu93qoVA8=;
- b=cK8aSljNR7iceTUeeXE4r4wwtTxpnocmcudv7RbSlsEscSpcO3L7KqLdQety8Hgxm8REtQZPcLKJegcFUi3gOBtc+9jvPodJF3gcp2om2aHKQCf1/UslsUa2t//I2kEAm1kovWVsFo77JFJrkCC2Ivy492uabuxdH6jbVWLEc7g=
-Received: from VI1PR04MB3310.eurprd04.prod.outlook.com (10.170.231.148) by
- VI1PR04MB5792.eurprd04.prod.outlook.com (20.178.204.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Wed, 15 May 2019 11:09:25 +0000
-Received: from VI1PR04MB3310.eurprd04.prod.outlook.com
- ([fe80::8c6f:6261:7877:9de8]) by VI1PR04MB3310.eurprd04.prod.outlook.com
- ([fe80::8c6f:6261:7877:9de8%4]) with mapi id 15.20.1878.024; Wed, 15 May 2019
- 11:09:25 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCHv2] arm64: dts: ls1028a: add flexspi nodes
-Thread-Topic: [PATCHv2] arm64: dts: ls1028a: add flexspi nodes
-Thread-Index: AQHVCw6ogMFRF8ssNEKztKIHvtwUnw==
-Date:   Wed, 15 May 2019 11:09:25 +0000
-Message-ID: <20190515110924.13726-1-xiaowei.bao@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK2PR03CA0052.apcprd03.prod.outlook.com
- (2603:1096:202:17::22) To VI1PR04MB3310.eurprd04.prod.outlook.com
- (2603:10a6:802:f::20)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1b8a44bf-5f21-4a2d-a1c4-08d6d925ca5d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5792;
-x-ms-traffictypediagnostic: VI1PR04MB5792:
-x-microsoft-antispam-prvs: <VI1PR04MB5792ABDC2F6BAFB7F6268689F5090@VI1PR04MB5792.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:415;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(396003)(366004)(39860400002)(346002)(199004)(189003)(64756008)(66556008)(66066001)(66946007)(25786009)(256004)(66476007)(2906002)(6436002)(73956011)(66446008)(2201001)(305945005)(86362001)(36756003)(6512007)(316002)(2501003)(102836004)(6506007)(386003)(53936002)(8676002)(50226002)(1076003)(486006)(44832011)(3846002)(6116002)(81156014)(186003)(110136005)(26005)(2616005)(476003)(52116002)(99286004)(5660300002)(68736007)(6486002)(71190400001)(71200400001)(478600001)(4326008)(7736002)(81166006)(8936002)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5792;H:VI1PR04MB3310.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: FnUyb50JPdpDGYLBOFG5DRG+eSKys5HlXoINpN9bymTOHULFzkBaX/PinaSgl34OTfH/YP2xcZ5TtGc5Z8lvj4jWGzxjuz4p89n5M0vHSm3zup0yxnQ7YDQFvctMIDeyR8eCCr/FRz039Ahph032gc2P+jEt9HZI6KAHEI7kqkzcRde9rl96gVXcn3TK6QUK2gRGPlvnPBG4+LL1PHbcGYG9bYc6Ad6Fs2VWyOrsRehanjz/RD7jRypZH+jKLu5gGhvuS1CgOuHTYAgRnlyV30PjaXUSmNwuLs5bkTHQ4bFLcpAkMDvwROxo/RdwJinGqO6z/WwD+rP4n7fqDY9Y4LTmfwqsPjfwyWeGZaqJg2JOjBQ3plIHGHrbP2n1ywAQIO/bZq3Cs3DLiq6t8j+0A+yoLpGO2DLFQTvVkheDIDo=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 15 May 2019 07:10:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728928AbfEOLKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:10:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FE0820862;
+        Wed, 15 May 2019 11:10:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557918611;
+        bh=pRLJzIWzLTADxYCATk03yf++GnwfjR4kFX69bskeVMA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HU4l6Y01db39ZsW8eRZHaouj6vQSg9/JGobXFMIv8XaXkkG0SCwRlrCMSJHFj7Mfc
+         yBs0OQ+FMTNy178hKu7Rlgy4OgXH6GZClWXbLrqr29fNDMxKa/pYXi5T1GCAb1cmYf
+         tscQtrq7wnOAwaUuzLsLb8/EbMTArjFeHGR/ZAQo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "WoodhouseDavid" <dwmw@amazon.co.uk>,
+        Andi Kleen <ak@linux.intel.com>,
+        "SchauflerCasey" <casey.schaufler@intel.com>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        Tim Chen <tim.c.chen@linux.intel.com>
+Subject: [PATCH 4.4 198/266] x86/speculation: Apply IBPB more strictly to avoid cross-process data leak
+Date:   Wed, 15 May 2019 12:55:05 +0200
+Message-Id: <20190515090729.644961124@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
+References: <20190515090722.696531131@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b8a44bf-5f21-4a2d-a1c4-08d6d925ca5d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 11:09:25.5067
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5792
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQoNCkFkZCBmc3BpIG5vZGUg
-cHJvcGVydHkgZm9yIExTMTAyOEEgU29DIGZvciBGbGV4U1BJIGRyaXZlci4NClByb3BlcnR5IGFk
-ZGVkIGZvciB0aGUgRmxleFNQSSBjb250cm9sbGVyIGFuZCBmb3IgdGhlIGNvbm5lY3RlZA0Kc2xh
-dmUgZGV2aWNlIGZvciB0aGUgTFMxMDI4QVJEQiBhbmQgTFMxMDI4QVFEUyB0YXJnZXQuDQpUaGlz
-IGlzIGhhdmluZyBvbmUgU1BJLU5PUiBmbGFzaCBkZXZpY2UsIG10MzV4dTAyZyBjb25uZWN0ZWQg
-YXQNCkNTMC4NCg0KU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5j
-b20+DQotLS0NCnYyOg0KIC0gbW9kaWZ5IHRoZSBjb21taXQgbWVzc2FnZSBhbmQgdGhlIGR0cyBm
-b3JtYXQuDQoNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1xZHMu
-ZHRzIHwgICAxNSArKysrKysrKysrKysrKysNCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2Fs
-ZS9mc2wtbHMxMDI4YS1yZGIuZHRzIHwgICAxNSArKysrKysrKysrKysrKysNCiBhcmNoL2FybTY0
-L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpICAgIHwgICAxMiArKysrKysrKysr
-KysNCiAzIGZpbGVzIGNoYW5nZWQsIDQyIGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pDQoN
-CmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1x
-ZHMuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcWRzLmR0
-cw0KaW5kZXggNWJjZDQ5MS4uNmUxMjgwNiAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9k
-dHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXFkcy5kdHMNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9k
-dHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLXFkcy5kdHMNCkBAIC0xNTgsNiArMTU4LDIxIEBADQog
-CX07DQogfTsNCiANCismZnNwaSB7DQorCXN0YXR1cyA9ICJva2F5IjsNCisJbXQzNXh1MDJnOiBm
-bGFzaEAwIHsNCisJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KKwkJI3NpemUtY2VsbHMgPSA8MT47
-DQorCQljb21wYXRpYmxlID0gInNwYW5zaW9uLG0yNXA4MCI7DQorCQltMjVwLGZhc3QtcmVhZDsN
-CisJCXNwaS1tYXgtZnJlcXVlbmN5ID0gPDIwMDAwMDAwPjsNCisJCXJlZyA9IDwwPjsNCisJCS8q
-IFRoZSBmb2xsb3dpbmcgc2V0dGluZyBlbmFibGVzIDEtMS04IChDTUQtQUREUi1EQVRBKSBtb2Rl
-ICovDQorCQlzcGktcngtYnVzLXdpZHRoID0gPDg+OyAvKiA4IFNQSSBSeCBsaW5lcyAqLw0KKwkJ
-c3BpLXR4LWJ1cy13aWR0aCA9IDwxPjsgLyogMSBTUEkgVHggbGluZSAqLw0KKwl9Ow0KK307DQor
-DQogJnNhaTEgew0KIAlzdGF0dXMgPSAib2theSI7DQogfTsNCmRpZmYgLS1naXQgYS9hcmNoL2Fy
-bTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS1yZGIuZHRzIGIvYXJjaC9hcm02NC9i
-b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEtcmRiLmR0cw0KaW5kZXggMjVkMjM3MC4uNWQz
-OTYxNiAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEw
-MjhhLXJkYi5kdHMNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEw
-MjhhLXJkYi5kdHMNCkBAIC0xMzYsNiArMTM2LDIxIEBADQogCX07DQogfTsNCiANCismZnNwaSB7
-DQorCXN0YXR1cyA9ICJva2F5IjsNCisJbXQzNXh1MDJnOiBmbGFzaEAwIHsNCisJCSNhZGRyZXNz
-LWNlbGxzID0gPDE+Ow0KKwkJI3NpemUtY2VsbHMgPSA8MT47DQorCQljb21wYXRpYmxlID0gInNw
-YW5zaW9uLG0yNXA4MCI7DQorCQltMjVwLGZhc3QtcmVhZDsNCisJCXNwaS1tYXgtZnJlcXVlbmN5
-ID0gPDIwMDAwMDAwPjsNCisJCXJlZyA9IDwwPjsNCisJCS8qIFRoZSBmb2xsb3dpbmcgc2V0dGlu
-ZyBlbmFibGVzIDEtMS04IChDTUQtQUREUi1EQVRBKSBtb2RlICovDQorCQlzcGktcngtYnVzLXdp
-ZHRoID0gPDg+OyAvKiA4IFNQSSBSeCBsaW5lcyAqLw0KKwkJc3BpLXR4LWJ1cy13aWR0aCA9IDwx
-PjsgLyogMSBTUEkgVHggbGluZSAqLw0KKwl9Ow0KK307DQorDQogJmR1YXJ0MCB7DQogCXN0YXR1
-cyA9ICJva2F5IjsNCiB9Ow0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNj
-YWxlL2ZzbC1sczEwMjhhLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wt
-bHMxMDI4YS5kdHNpDQppbmRleCBiYTcxYTMzLi5hMjdjZDYwIDEwMDY0NA0KLS0tIGEvYXJjaC9h
-cm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KKysrIGIvYXJjaC9hcm02
-NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KQEAgLTEwOSw2ICsxMDksMTgg
-QEANCiAJCX07DQogCX07DQogDQorCWZzcGk6IHNwaUAyMGMwMDAwIHsNCisJCWNvbXBhdGlibGUg
-PSAibnhwLGx4MjE2MGEtZnNwaSIsICJzaW1wbGUtYnVzIjsNCisJCSNhZGRyZXNzLWNlbGxzID0g
-PDE+Ow0KKwkJI3NpemUtY2VsbHMgPSA8MD47DQorCQlyZWcgPSA8MHgwIDB4MjBjMDAwMCAweDAg
-MHgxMDAwMD4sDQorCQkgICAgPDB4MCAweDIwMDAwMDAwIDB4MCAweDEwMDAwMDAwPjsNCisJCXJl
-Zy1uYW1lcyA9ICJGU1BJIiwgIkZTUEktbWVtb3J5IjsNCisJCWludGVycnVwdHMgPSA8MCAyNSAw
-eDQ+OyAvKiBMZXZlbCBoaWdoIHR5cGUgKi8NCisJCWNsb2NrcyA9IDwmY2xvY2tnZW4gNCAzPiwg
-PCZjbG9ja2dlbiA0IDM+Ow0KKwkJY2xvY2stbmFtZXMgPSAiZnNwaV9lbiIsICJmc3BpIjsNCisJ
-fTsNCisNCiAJc29jOiBzb2Mgew0KIAkJY29tcGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsNCiAJCSNh
-ZGRyZXNzLWNlbGxzID0gPDI+Ow0KLS0gDQoxLjcuMQ0KDQo=
+From: Jiri Kosina <jkosina@suse.cz>
+
+commit dbfe2953f63c640463c630746cd5d9de8b2f63ae upstream.
+
+Currently, IBPB is only issued in cases when switching into a non-dumpable
+process, the rationale being to protect such 'important and security
+sensitive' processess (such as GPG) from data leaking into a different
+userspace process via spectre v2.
+
+This is however completely insufficient to provide proper userspace-to-userpace
+spectrev2 protection, as any process can poison branch buffers before being
+scheduled out, and the newly scheduled process immediately becomes spectrev2
+victim.
+
+In order to minimize the performance impact (for usecases that do require
+spectrev2 protection), issue the barrier only in cases when switching between
+processess where the victim can't be ptraced by the potential attacker (as in
+such cases, the attacker doesn't have to bother with branch buffers at all).
+
+[ tglx: Split up PTRACE_MODE_NOACCESS_CHK into PTRACE_MODE_SCHED and
+  PTRACE_MODE_IBPB to be able to do ptrace() context tracking reasonably
+  fine-grained ]
+
+Fixes: 18bf3c3ea8 ("x86/speculation: Use Indirect Branch Prediction Barrier in context switch")
+Originally-by: Tim Chen <tim.c.chen@linux.intel.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc:  "WoodhouseDavid" <dwmw@amazon.co.uk>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc:  "SchauflerCasey" <casey.schaufler@intel.com>
+Link: https://lkml.kernel.org/r/nycvar.YFH.7.76.1809251437340.15880@cbobk.fhfr.pm
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ arch/x86/mm/tlb.c      |   31 ++++++++++++++++++++-----------
+ include/linux/ptrace.h |   21 +++++++++++++++++++--
+ kernel/ptrace.c        |   10 ++++++++++
+ 3 files changed, 49 insertions(+), 13 deletions(-)
+
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -7,6 +7,7 @@
+ #include <linux/module.h>
+ #include <linux/cpu.h>
+ #include <linux/debugfs.h>
++#include <linux/ptrace.h>
+ 
+ #include <asm/tlbflush.h>
+ #include <asm/mmu_context.h>
+@@ -101,6 +102,19 @@ void switch_mm(struct mm_struct *prev, s
+ 	local_irq_restore(flags);
+ }
+ 
++static bool ibpb_needed(struct task_struct *tsk, u64 last_ctx_id)
++{
++	/*
++	 * Check if the current (previous) task has access to the memory
++	 * of the @tsk (next) task. If access is denied, make sure to
++	 * issue a IBPB to stop user->user Spectre-v2 attacks.
++	 *
++	 * Note: __ptrace_may_access() returns 0 or -ERRNO.
++	 */
++	return (tsk && tsk->mm && tsk->mm->context.ctx_id != last_ctx_id &&
++		ptrace_may_access_sched(tsk, PTRACE_MODE_SPEC_IBPB));
++}
++
+ void switch_mm_irqs_off(struct mm_struct *prev, struct mm_struct *next,
+ 			struct task_struct *tsk)
+ {
+@@ -115,18 +129,13 @@ void switch_mm_irqs_off(struct mm_struct
+ 		 * one process from doing Spectre-v2 attacks on another.
+ 		 *
+ 		 * As an optimization, flush indirect branches only when
+-		 * switching into processes that disable dumping. This
+-		 * protects high value processes like gpg, without having
+-		 * too high performance overhead. IBPB is *expensive*!
+-		 *
+-		 * This will not flush branches when switching into kernel
+-		 * threads. It will also not flush if we switch to idle
+-		 * thread and back to the same process. It will flush if we
+-		 * switch to a different non-dumpable process.
++		 * switching into a processes that can't be ptrace by the
++		 * current one (as in such case, attacker has much more
++		 * convenient way how to tamper with the next process than
++		 * branch buffer poisoning).
+ 		 */
+-		if (tsk && tsk->mm &&
+-		    tsk->mm->context.ctx_id != last_ctx_id &&
+-		    get_dumpable(tsk->mm) != SUID_DUMP_USER)
++		if (static_cpu_has(X86_FEATURE_USE_IBPB) &&
++				ibpb_needed(tsk, last_ctx_id))
+ 			indirect_branch_prediction_barrier();
+ 
+ 		/*
+--- a/include/linux/ptrace.h
++++ b/include/linux/ptrace.h
+@@ -57,14 +57,17 @@ extern void exit_ptrace(struct task_stru
+ #define PTRACE_MODE_READ	0x01
+ #define PTRACE_MODE_ATTACH	0x02
+ #define PTRACE_MODE_NOAUDIT	0x04
+-#define PTRACE_MODE_FSCREDS 0x08
+-#define PTRACE_MODE_REALCREDS 0x10
++#define PTRACE_MODE_FSCREDS	0x08
++#define PTRACE_MODE_REALCREDS	0x10
++#define PTRACE_MODE_SCHED	0x20
++#define PTRACE_MODE_IBPB	0x40
+ 
+ /* shorthands for READ/ATTACH and FSCREDS/REALCREDS combinations */
+ #define PTRACE_MODE_READ_FSCREDS (PTRACE_MODE_READ | PTRACE_MODE_FSCREDS)
+ #define PTRACE_MODE_READ_REALCREDS (PTRACE_MODE_READ | PTRACE_MODE_REALCREDS)
+ #define PTRACE_MODE_ATTACH_FSCREDS (PTRACE_MODE_ATTACH | PTRACE_MODE_FSCREDS)
+ #define PTRACE_MODE_ATTACH_REALCREDS (PTRACE_MODE_ATTACH | PTRACE_MODE_REALCREDS)
++#define PTRACE_MODE_SPEC_IBPB (PTRACE_MODE_ATTACH_REALCREDS | PTRACE_MODE_IBPB)
+ 
+ /**
+  * ptrace_may_access - check whether the caller is permitted to access
+@@ -82,6 +85,20 @@ extern void exit_ptrace(struct task_stru
+  */
+ extern bool ptrace_may_access(struct task_struct *task, unsigned int mode);
+ 
++/**
++ * ptrace_may_access - check whether the caller is permitted to access
++ * a target task.
++ * @task: target task
++ * @mode: selects type of access and caller credentials
++ *
++ * Returns true on success, false on denial.
++ *
++ * Similar to ptrace_may_access(). Only to be called from context switch
++ * code. Does not call into audit and the regular LSM hooks due to locking
++ * constraints.
++ */
++extern bool ptrace_may_access_sched(struct task_struct *task, unsigned int mode);
++
+ static inline int ptrace_reparented(struct task_struct *child)
+ {
+ 	return !same_thread_group(child->real_parent, child->parent);
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -228,6 +228,9 @@ static int ptrace_check_attach(struct ta
+ 
+ static int ptrace_has_cap(struct user_namespace *ns, unsigned int mode)
+ {
++	if (mode & PTRACE_MODE_SCHED)
++		return false;
++
+ 	if (mode & PTRACE_MODE_NOAUDIT)
+ 		return has_ns_capability_noaudit(current, ns, CAP_SYS_PTRACE);
+ 	else
+@@ -295,9 +298,16 @@ ok:
+ 	     !ptrace_has_cap(mm->user_ns, mode)))
+ 	    return -EPERM;
+ 
++	if (mode & PTRACE_MODE_SCHED)
++		return 0;
+ 	return security_ptrace_access_check(task, mode);
+ }
+ 
++bool ptrace_may_access_sched(struct task_struct *task, unsigned int mode)
++{
++	return __ptrace_may_access(task, mode | PTRACE_MODE_SCHED);
++}
++
+ bool ptrace_may_access(struct task_struct *task, unsigned int mode)
+ {
+ 	int err;
+
+
