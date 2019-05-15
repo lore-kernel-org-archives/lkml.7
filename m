@@ -7,48 +7,56 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537D2C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E78C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AE1820657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F4220657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:56:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921356;
-	bh=spzag9FA6PtrQsdcN8fGfgMmi8VIW4MnEbnxTDAdelg=;
+	s=default; t=1557921363;
+	bh=ZdlgUYYrg5Dgeru0jn3XYz+piIt2uQk0pzg45Hi95yc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hyXfsA7iWQwmb86niUWsHMfV/Uj7WDYU6u0lVwV5uBskVtmsA+Q2osJ9PSaltBINu
-	 7Wuv/ECEWkAYZ+cs5+RxHkpoVqJAXiCfWriklpmCjeoy5LsEEswE6SwOOB/qeMcgdz
-	 NFU0SpPygOSl606m/12+iz/bjn1rcflahBq4O7Nw=
+	b=GPRE+ZcMWb23sP0ymaWqxwzqeh9i4WST5z/fHryV+RBAGTAsLxSiimdVjkkDXqH5B
+	 O39ICkEwnDFfEfi2mq0YwfnTvLd2jdPF/w7pAnLAF8MsQhYhuDb+dV+LJWnRm5bhUd
+	 hgX1U43/vkIYc6RM/e2oEVUYh1Amj7LvAsffcRew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730774AbfEOLST (ORCPT
+        id S1731030AbfEOL4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:18:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55676 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:56:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55604 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730766AbfEOLSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:18:13 -0400
+        id S1730581AbfEOLSL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:18:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A63320843;
-        Wed, 15 May 2019 11:18:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFC22206BF;
+        Wed, 15 May 2019 11:18:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919093;
-        bh=spzag9FA6PtrQsdcN8fGfgMmi8VIW4MnEbnxTDAdelg=;
+        s=default; t=1557919090;
+        bh=ZdlgUYYrg5Dgeru0jn3XYz+piIt2uQk0pzg45Hi95yc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MwoIbVhAFPE+K53+aLOyfj6SzY6pCGDVy/C8NUp0h01a4uxf4y9dO1gEqGNKxbyVZ
-         B0354WmdST8dabgCIfVS+rDPWH+A5q+FX7YKfV4Kv+4FJHmws+JIuzAPB0I7RCOEvV
-         Av615Ecnf/94cd97sFQx3VmRQgJ5Nv4hXBILqBIg=
+        b=x+zTDlQDopXdr5btLbspE7MhYiaKPFSR9tFa/5PpNw8kZtVzi09so1YNwQ8kETH1X
+         y0JWwCeEN4JONeTImR2AvFNg7+bJpDplFllp71rVTFeK3IiNujVeeoTiCodoxZTx6d
+         NnzQ9oxjWBku6nCX1s9eTgZjGZNRjazis4eHjxjA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        stable@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
+        Carlos ODonell <carlos@redhat.com>,
+        "H. J. Lu" <hjl.tools@gmail.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Borislav Petkov <bp@suse.de>,
+        Laura Abbott <labbott@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        kernel-team@android.com, Thomas Gleixner <tglx@linutronix.de>,
+        X86 ML <x86@kernel.org>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 065/115] mm: introduce mm_[p4d|pud|pmd]_folded
-Date:   Wed, 15 May 2019 12:55:45 +0200
-Message-Id: <20190515090704.245581808@linuxfoundation.org>
+Subject: [PATCH 4.14 064/115] x86/vdso: Pass --eh-frame-hdr to the linker
+Date:   Wed, 15 May 2019 12:55:44 +0200
+Message-Id: <20190515090704.175034368@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -61,43 +69,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1071fc5779d9846fec56a4ff6089ab08cac1ab72 ]
+[ Upstream commit cd01544a268ad8ee5b1dfe42c4393f1095f86879 ]
 
-Add three architecture overrideable functions to test if the
-p4d, pud, or pmd layer of a page table is folded or not.
+Commit
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+  379d98ddf413 ("x86: vdso: Use $LD instead of $CC to link")
+
+accidentally broke unwinding from userspace, because ld would strip the
+.eh_frame sections when linking.
+
+Originally, the compiler would implicitly add --eh-frame-hdr when
+invoking the linker, but when this Makefile was converted from invoking
+ld via the compiler, to invoking it directly (like vmlinux does),
+the flag was missed. (The EH_FRAME section is important for the VDSO
+shared libraries, but not for vmlinux.)
+
+Fix the problem by explicitly specifying --eh-frame-hdr, which restores
+parity with the old method.
+
+See relevant bug reports for additional info:
+
+  https://bugzilla.kernel.org/show_bug.cgi?id=201741
+  https://bugzilla.redhat.com/show_bug.cgi?id=1659295
+
+Fixes: 379d98ddf413 ("x86: vdso: Use $LD instead of $CC to link")
+Reported-by: Florian Weimer <fweimer@redhat.com>
+Reported-by: Carlos O'Donell <carlos@redhat.com>
+Reported-by: "H. J. Lu" <hjl.tools@gmail.com>
+Signed-off-by: Alistair Strachan <astrachan@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Tested-by: Laura Abbott <labbott@redhat.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Carlos O'Donell <carlos@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Joel Fernandes <joel@joelfernandes.org>
+Cc: kernel-team@android.com
+Cc: Laura Abbott <labbott@redhat.com>
+Cc: stable <stable@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: X86 ML <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20181214223637.35954-1-astrachan@google.com
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- include/asm-generic/pgtable.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/x86/entry/vdso/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-index f00421dfacbd0..0c21014a38f23 100644
---- a/include/asm-generic/pgtable.h
-+++ b/include/asm-generic/pgtable.h
-@@ -1081,4 +1081,20 @@ static inline bool arch_has_pfn_modify_check(void)
- #endif
- #endif
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index 839015f1b0de0..ab7f730cf7f22 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -182,7 +182,8 @@ quiet_cmd_vdso = VDSO    $@
+ 		 sh $(srctree)/$(src)/checkundef.sh '$(NM)' '$@'
  
-+/*
-+ * On some architectures it depends on the mm if the p4d/pud or pmd
-+ * layer of the page table hierarchy is folded or not.
-+ */
-+#ifndef mm_p4d_folded
-+#define mm_p4d_folded(mm)	__is_defined(__PAGETABLE_P4D_FOLDED)
-+#endif
-+
-+#ifndef mm_pud_folded
-+#define mm_pud_folded(mm)	__is_defined(__PAGETABLE_PUD_FOLDED)
-+#endif
-+
-+#ifndef mm_pmd_folded
-+#define mm_pmd_folded(mm)	__is_defined(__PAGETABLE_PMD_FOLDED)
-+#endif
-+
- #endif /* _ASM_GENERIC_PGTABLE_H */
+ VDSO_LDFLAGS = -shared $(call ld-option, --hash-style=both) \
+-	$(call ld-option, --build-id) -Bsymbolic
++	$(call ld-option, --build-id) $(call ld-option, --eh-frame-hdr) \
++	-Bsymbolic
+ GCOV_PROFILE := n
+ 
+ #
 -- 
 2.20.1
 
