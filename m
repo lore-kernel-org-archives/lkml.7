@@ -7,50 +7,65 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7124CC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EC3C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44DBD2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 201EF20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918692;
-	bh=L5efsXyWbGWe11uTyaShAqVCdeuPOgEDJwqmXQ0SoCE=;
+	s=default; t=1557918694;
+	bh=1O5XAIKcgkmvxRMEoezlXrFLzM3tRA3WT9bCo5hJLeY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vcOGfgHjLtZ9vgtU1BJjZpeoLhq8lRpwf3pNZres0gO1+p/VduXJEknbNcix73HtA
-	 DNubE3YZdznX6IL47qnn3kgbh/8FdCFk5MaVQ+zZwMnMZgJisNuw+j5xSLCRH1+HlI
-	 6S0uEqMyC2DLhs4ITML91wUhssPXtARtMKe6QNOM=
+	b=pCikjUOwz4v0iVsXIyES7R1tArTuOfzulnhxlbHw+p9YJaaPTz19rePxlnV3JGgqP
+	 PWjYTyTOAWV3eRwZAi2OpYRdF+BRBuZVjY6yA90qonSF6j/ijiRsW/1uzYVypwobNe
+	 np5z+SePG+4zXiSu0oJ0FJLY+ihhHWSsyxA7EAj4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbfEOLLa (ORCPT
+        id S1729616AbfEOLLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:11:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46070 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:11:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729573AbfEOLL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:11:28 -0400
+        id S1729164AbfEOLL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:11:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5D2A2168B;
-        Wed, 15 May 2019 11:11:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D93221473;
+        Wed, 15 May 2019 11:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918687;
-        bh=L5efsXyWbGWe11uTyaShAqVCdeuPOgEDJwqmXQ0SoCE=;
+        s=default; t=1557918684;
+        bh=1O5XAIKcgkmvxRMEoezlXrFLzM3tRA3WT9bCo5hJLeY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f3B+OJQsxg5N0VHSdoDonZhxKktAx5AzqFZYnT/8uboKJaPZYkKjON2pJ72TNMijK
-         zw1/c/Lido34uIEUjU8NPZr2LQfNkLXQo15RjkX39H92xSrhUH9/lZtuT6fMHNhCYZ
-         Ig5dhRJaxIzUb2TyU/joFGJ5k8YC+RGDnuJ9JQn8=
+        b=dWTO+Z+XK7eGSZ9NNvYFBpfk7by+0bc1tpAaMvnSDcDJmqtxng6ICG7wDMZmLTaC3
+         5s5nbnWtxKCbZpjmhRXxwMqak1xnUlUBhbsa3KPJCoUHQ3SOtk0Jqkz+U3o4tMbt60
+         yK4mX/O7KcqTA4XKY4dDLu53DCmE654JQzulPiOU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eduardo Habkost <ehabkost@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Casey Schaufler <casey.schaufler@intel.com>,
+        Asit Mallick <asit.k.mallick@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Jon Masters <jcm@redhat.com>,
+        Waiman Long <longman9394@gmail.com>,
+        Dave Stewart <david.c.stewart@intel.com>,
+        Kees Cook <keescook@chromium.org>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 227/266] kvm: x86: Report STIBP on GET_SUPPORTED_CPUID
-Date:   Wed, 15 May 2019 12:55:34 +0200
-Message-Id: <20190515090730.680064304@linuxfoundation.org>
+Subject: [PATCH 4.4 226/266] x86/speculation: Provide IBPB always command line options
+Date:   Wed, 15 May 2019 12:55:33 +0200
+Message-Id: <20190515090730.644770059@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -63,52 +78,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eduardo Habkost <ehabkost@redhat.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit d7b09c827a6cf291f66637a36f46928dd1423184 upstream.
+commit 55a974021ec952ee460dc31ca08722158639de72 upstream.
 
-Months ago, we have added code to allow direct access to MSR_IA32_SPEC_CTRL
-to the guest, which makes STIBP available to guests.  This was implemented
-by commits d28b387fb74d ("KVM/VMX: Allow direct access to
-MSR_IA32_SPEC_CTRL") and b2ac58f90540 ("KVM/SVM: Allow direct access to
-MSR_IA32_SPEC_CTRL").
+Provide the possibility to enable IBPB always in combination with 'prctl'
+and 'seccomp'.
 
-However, we never updated GET_SUPPORTED_CPUID to let userspace know that
-STIBP can be enabled in CPUID.  Fix that by updating
-kvm_cpuid_8000_0008_ebx_x86_features and kvm_cpuid_7_0_edx_x86_features.
+Add the extra command line options and rework the IBPB selection to
+evaluate the command instead of the mode selected by the STIPB switch case.
 
-Signed-off-by: Eduardo Habkost <ehabkost@redhat.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-[bwh: Backported to 4.4: adjust context]
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Casey Schaufler <casey.schaufler@intel.com>
+Cc: Asit Mallick <asit.k.mallick@intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Waiman Long <longman9394@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Dave Stewart <david.c.stewart@intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20181125185006.144047038@linutronix.de
+[bwh: Backported to 4.4: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kvm/cpuid.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ Documentation/kernel-parameters.txt |   12 ++++++++++++
+ arch/x86/kernel/cpu/bugs.c          |   34 +++++++++++++++++++++++-----------
+ 2 files changed, 35 insertions(+), 11 deletions(-)
 
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -344,7 +344,7 @@ static inline int __do_cpuid_ent(struct
- 	/* cpuid 0x80000008.ebx */
- 	const u32 kvm_cpuid_8000_0008_ebx_x86_features =
- 		F(AMD_IBPB) | F(AMD_IBRS) | F(AMD_SSBD) | F(VIRT_SSBD) |
--		F(AMD_SSB_NO);
-+		F(AMD_SSB_NO) | F(AMD_STIBP);
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -3651,11 +3651,23 @@ bytes respectively. Such letter suffixes
+ 				  per thread.  The mitigation control state
+ 				  is inherited on fork.
  
- 	/* cpuid 0xC0000001.edx */
- 	const u32 kvm_supported_word5_x86_features =
-@@ -365,7 +365,8 @@ static inline int __do_cpuid_ent(struct
++			prctl,ibpb
++				- Like "prctl" above, but only STIBP is
++				  controlled per thread. IBPB is issued
++				  always when switching between different user
++				  space processes.
++
+ 			seccomp
+ 				- Same as "prctl" above, but all seccomp
+ 				  threads will enable the mitigation unless
+ 				  they explicitly opt out.
  
- 	/* cpuid 7.0.edx*/
- 	const u32 kvm_cpuid_7_0_edx_x86_features =
--		F(SPEC_CTRL) | F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES);
-+		F(SPEC_CTRL) | F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) |
-+		F(INTEL_STIBP);
++			seccomp,ibpb
++				- Like "seccomp" above, but only STIBP is
++				  controlled per thread. IBPB is issued
++				  always when switching between different
++				  user space processes.
++
+ 			auto    - Kernel selects the mitigation depending on
+ 				  the available CPU features and vulnerability.
  
- 	/* all calls to cpuid_count() should be made on the same cpu */
- 	get_cpu();
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -245,7 +245,9 @@ enum spectre_v2_user_cmd {
+ 	SPECTRE_V2_USER_CMD_AUTO,
+ 	SPECTRE_V2_USER_CMD_FORCE,
+ 	SPECTRE_V2_USER_CMD_PRCTL,
++	SPECTRE_V2_USER_CMD_PRCTL_IBPB,
+ 	SPECTRE_V2_USER_CMD_SECCOMP,
++	SPECTRE_V2_USER_CMD_SECCOMP_IBPB,
+ };
+ 
+ static const char * const spectre_v2_user_strings[] = {
+@@ -260,11 +262,13 @@ static const struct {
+ 	enum spectre_v2_user_cmd	cmd;
+ 	bool				secure;
+ } v2_user_options[] __initdata = {
+-	{ "auto",	SPECTRE_V2_USER_CMD_AUTO,	false },
+-	{ "off",	SPECTRE_V2_USER_CMD_NONE,	false },
+-	{ "on",		SPECTRE_V2_USER_CMD_FORCE,	true  },
+-	{ "prctl",	SPECTRE_V2_USER_CMD_PRCTL,	false },
+-	{ "seccomp",	SPECTRE_V2_USER_CMD_SECCOMP,	false },
++	{ "auto",		SPECTRE_V2_USER_CMD_AUTO,		false },
++	{ "off",		SPECTRE_V2_USER_CMD_NONE,		false },
++	{ "on",			SPECTRE_V2_USER_CMD_FORCE,		true  },
++	{ "prctl",		SPECTRE_V2_USER_CMD_PRCTL,		false },
++	{ "prctl,ibpb",		SPECTRE_V2_USER_CMD_PRCTL_IBPB,		false },
++	{ "seccomp",		SPECTRE_V2_USER_CMD_SECCOMP,		false },
++	{ "seccomp,ibpb",	SPECTRE_V2_USER_CMD_SECCOMP_IBPB,	false },
+ };
+ 
+ static void __init spec_v2_user_print_cond(const char *reason, bool secure)
+@@ -310,6 +314,7 @@ spectre_v2_user_select_mitigation(enum s
+ {
+ 	enum spectre_v2_user_mitigation mode = SPECTRE_V2_USER_NONE;
+ 	bool smt_possible = IS_ENABLED(CONFIG_SMP);
++	enum spectre_v2_user_cmd cmd;
+ 
+ 	if (!boot_cpu_has(X86_FEATURE_IBPB) && !boot_cpu_has(X86_FEATURE_STIBP))
+ 		return;
+@@ -317,17 +322,20 @@ spectre_v2_user_select_mitigation(enum s
+ 	if (!IS_ENABLED(CONFIG_SMP))
+ 		smt_possible = false;
+ 
+-	switch (spectre_v2_parse_user_cmdline(v2_cmd)) {
++	cmd = spectre_v2_parse_user_cmdline(v2_cmd);
++	switch (cmd) {
+ 	case SPECTRE_V2_USER_CMD_NONE:
+ 		goto set_mode;
+ 	case SPECTRE_V2_USER_CMD_FORCE:
+ 		mode = SPECTRE_V2_USER_STRICT;
+ 		break;
+ 	case SPECTRE_V2_USER_CMD_PRCTL:
++	case SPECTRE_V2_USER_CMD_PRCTL_IBPB:
+ 		mode = SPECTRE_V2_USER_PRCTL;
+ 		break;
+ 	case SPECTRE_V2_USER_CMD_AUTO:
+ 	case SPECTRE_V2_USER_CMD_SECCOMP:
++	case SPECTRE_V2_USER_CMD_SECCOMP_IBPB:
+ 		if (IS_ENABLED(CONFIG_SECCOMP))
+ 			mode = SPECTRE_V2_USER_SECCOMP;
+ 		else
+@@ -339,12 +347,15 @@ spectre_v2_user_select_mitigation(enum s
+ 	if (boot_cpu_has(X86_FEATURE_IBPB)) {
+ 		setup_force_cpu_cap(X86_FEATURE_USE_IBPB);
+ 
+-		switch (mode) {
+-		case SPECTRE_V2_USER_STRICT:
++		switch (cmd) {
++		case SPECTRE_V2_USER_CMD_FORCE:
++		case SPECTRE_V2_USER_CMD_PRCTL_IBPB:
++		case SPECTRE_V2_USER_CMD_SECCOMP_IBPB:
+ 			static_branch_enable(&switch_mm_always_ibpb);
+ 			break;
+-		case SPECTRE_V2_USER_PRCTL:
+-		case SPECTRE_V2_USER_SECCOMP:
++		case SPECTRE_V2_USER_CMD_PRCTL:
++		case SPECTRE_V2_USER_CMD_AUTO:
++		case SPECTRE_V2_USER_CMD_SECCOMP:
+ 			static_branch_enable(&switch_mm_cond_ibpb);
+ 			break;
+ 		default:
+@@ -352,7 +363,8 @@ spectre_v2_user_select_mitigation(enum s
+ 		}
+ 
+ 		pr_info("mitigation: Enabling %s Indirect Branch Prediction Barrier\n",
+-			mode == SPECTRE_V2_USER_STRICT ? "always-on" : "conditional");
++			static_key_enabled(&switch_mm_always_ibpb) ?
++			"always-on" : "conditional");
+ 	}
+ 
+ 	/* If enhanced IBRS is enabled no STIPB required */
 
 
