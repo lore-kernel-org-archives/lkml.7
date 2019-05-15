@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C467C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AB2C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1EC0217F5
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39A8D217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918139;
-	bh=iy/gfjybwl0WiBxjfH0ct/jFQASn9+9xpd1fqJpSguM=;
+	s=default; t=1557918144;
+	bh=H7jQuRGhdlUc72cXuQ+AixjPhH1t7a9OYtkO8VSmaN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s48J/aBKi9hQ9r6vb9A7isK29Di78VVM7MadiSC4TNlcb4Q1wuTEu6qBQQ+nWONTA
-	 Qz8qB9YvX7ahsKQmxhb4KtjeKM/y5DlwAlo3gOUIaM+aINUxC8M3uFqeqAB/T8IBoz
-	 1N2egjKwo+nIEDM61yopC1XJPShXCFnboHqFpAOU=
+	b=OJ+LsPK++jfbPW4tK3Sf8KQWXhRMiplVZAGtEZFdyclPSlLdo2+XldISUISmB4eeO
+	 deySVpjxFTePcdwZCEd/hsLeTeAjBuNaxo5ysTd933ASl1rzDMU4d+Q+sydSXlkiDy
+	 UyGQo2qNX5VH/n0or9N58PaiRFcYBcsGgWSVe6Lg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbfEOLCR (ORCPT
+        id S1727927AbfEOLCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:02:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59448 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:02:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727879AbfEOLCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:02:15 -0400
+        id S1727908AbfEOLCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:02:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E38BA217D8;
-        Wed, 15 May 2019 11:02:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E9FA2184C;
+        Wed, 15 May 2019 11:02:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918134;
-        bh=iy/gfjybwl0WiBxjfH0ct/jFQASn9+9xpd1fqJpSguM=;
+        s=default; t=1557918139;
+        bh=H7jQuRGhdlUc72cXuQ+AixjPhH1t7a9OYtkO8VSmaN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MVhrImioOMfU0Ko22JWd0L07ICo89Id7TTcXvtSR/xrBJ3FVSQ1qLgdokt+9UdS0R
-         U7A/1R55XlW0Zb8qBFSrS5ZnnRUvooRBHuw/ToSRMMvIQq1a4fOa6bCfVS2nkMKd2Y
-         DdE4p7RGXpRt38w3dAhVuL5d3rb0eH/agDurMnNw=
+        b=kXcCW3ws2qiLqMO7t0RespRO7gmP6SrY3Vn+9Sd0ahbWtx7wN4cTSfSWOhPUfY5kn
+         jNgGk1lavC0E5m6i7lxAHaMgHBNYDTm2dG96I3rOcvCoYELdAb0JHwxH35V+uBmIpJ
+         kAVg1pyMXYIK+E7dZt6YJfU1xbYatwj2/m4uAz2k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
         Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>
-Subject: [PATCH 4.4 019/266] powerpc/rfi-flush: Always enable fallback flush on pseries
-Date:   Wed, 15 May 2019 12:52:06 +0200
-Message-Id: <20190515090723.255417604@linuxfoundation.org>
+Subject: [PATCH 4.4 020/266] powerpc/rfi-flush: Differentiate enabled and patched flush types
+Date:   Wed, 15 May 2019 12:52:07 +0200
+Message-Id: <20190515090723.283267288@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -59,51 +58,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>
 
-commit 84749a58b6e382f109abf1e734bc4dd43c2c25bb upstream.
+commit 0063d61ccfc011f379a31acaeba6de7c926fed2c upstream.
 
-This ensures the fallback flush area is always allocated on pseries,
-so in case a LPAR is migrated from a patched to an unpatched system,
-it is possible to enable the fallback flush in the target system.
+Currently the rfi-flush messages print 'Using <type> flush' for all
+enabled_flush_types, but that is not necessarily true -- as now the
+fallback flush is always enabled on pseries, but the fixup function
+overwrites its nop/branch slot with other flush types, if available.
 
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+So, replace the 'Using <type> flush' messages with '<type> flush is
+available'.
+
+Also, print the patched flush types in the fixup function, so users
+can know what is (not) being used (e.g., the slower, fallback flush,
+or no flush type at all if flush is disabled via the debugfs switch).
+
+Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/platforms/pseries/setup.c |   10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+ arch/powerpc/kernel/setup_64.c    |    6 +++---
+ arch/powerpc/lib/feature-fixups.c |    9 ++++++++-
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -508,26 +508,18 @@ static void pseries_setup_rfi_flush(void
- 
- 	/* Enable by default */
- 	enable = true;
-+	types = L1D_FLUSH_FALLBACK;
- 
- 	rc = plpar_get_cpu_characteristics(&result);
- 	if (rc == H_SUCCESS) {
--		types = L1D_FLUSH_NONE;
--
- 		if (result.character & H_CPU_CHAR_L1D_FLUSH_TRIG2)
- 			types |= L1D_FLUSH_MTTRIG;
- 		if (result.character & H_CPU_CHAR_L1D_FLUSH_ORI30)
- 			types |= L1D_FLUSH_ORI;
- 
--		/* Use fallback if nothing set in hcall */
--		if (types == L1D_FLUSH_NONE)
--			types = L1D_FLUSH_FALLBACK;
--
- 		if ((!(result.behaviour & H_CPU_BEHAV_L1D_FLUSH_PR)) ||
- 		    (!(result.behaviour & H_CPU_BEHAV_FAVOUR_SECURITY)))
- 			enable = false;
--	} else {
--		/* Default to fallback if case hcall is not available */
--		types = L1D_FLUSH_FALLBACK;
+--- a/arch/powerpc/kernel/setup_64.c
++++ b/arch/powerpc/kernel/setup_64.c
+@@ -911,15 +911,15 @@ static void init_fallback_flush(void)
+ void setup_rfi_flush(enum l1d_flush_type types, bool enable)
+ {
+ 	if (types & L1D_FLUSH_FALLBACK) {
+-		pr_info("rfi-flush: Using fallback displacement flush\n");
++		pr_info("rfi-flush: fallback displacement flush available\n");
+ 		init_fallback_flush();
  	}
  
- 	setup_rfi_flush(types, enable);
+ 	if (types & L1D_FLUSH_ORI)
+-		pr_info("rfi-flush: Using ori type flush\n");
++		pr_info("rfi-flush: ori type flush available\n");
+ 
+ 	if (types & L1D_FLUSH_MTTRIG)
+-		pr_info("rfi-flush: Using mttrig type flush\n");
++		pr_info("rfi-flush: mttrig type flush available\n");
+ 
+ 	enabled_flush_types = types;
+ 
+--- a/arch/powerpc/lib/feature-fixups.c
++++ b/arch/powerpc/lib/feature-fixups.c
+@@ -151,7 +151,14 @@ void do_rfi_flush_fixups(enum l1d_flush_
+ 		patch_instruction(dest + 2, instrs[2]);
+ 	}
+ 
+-	printk(KERN_DEBUG "rfi-flush: patched %d locations\n", i);
++	printk(KERN_DEBUG "rfi-flush: patched %d locations (%s flush)\n", i,
++		(types == L1D_FLUSH_NONE)       ? "no" :
++		(types == L1D_FLUSH_FALLBACK)   ? "fallback displacement" :
++		(types &  L1D_FLUSH_ORI)        ? (types & L1D_FLUSH_MTTRIG)
++							? "ori+mttrig type"
++							: "ori type" :
++		(types &  L1D_FLUSH_MTTRIG)     ? "mttrig type"
++						: "unknown");
+ }
+ #endif /* CONFIG_PPC_BOOK3S_64 */
+ 
 
 
