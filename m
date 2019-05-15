@@ -2,106 +2,81 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 279C7C04AA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF40DC04AA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAAF32084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:02:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Yprz12CU"
+	by mail.kernel.org (Postfix) with ESMTP id AAC7C2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:02:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726039AbfEOGCj (ORCPT
+        id S1726272AbfEOGCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 02:02:39 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:56365 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfEOGCi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 02:02:38 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4F62B3i166122
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 14 May 2019 23:02:11 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4F62B3i166122
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1557900132;
-        bh=zHQYZBWI+UdjEXZ9Mz1cMpJ3XVTkUk6izcRaaZYRy5w=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Yprz12CUn60tyChl9iw04WF4jp/LCb9lNbsvLbX945VUHBxSTKdMCGX1F8k1BkeoA
-         txP6iwEvPWyS0TdNfYS+JM3RFysj7Ni8GBNB0lIQOMYulzcGWo77QcI4ngZ2C70pmU
-         CCBFbW5pSNmkOZCMK59KZEtynM7nviO/mwWDQgFpURhQBfAusSiTAX4+HfSGOcq8qH
-         n+9HoswUAVtODcCNkZmxFx+SkPwNNSrzVjN4iAYEsiyxWH3gT4XHUuMwAwhnh4sq0D
-         17pALd5XdyfUFBhy49AK3CtOwbqbNJU+LYh+PwXavjQqo6G4kE0I/AU0mMkoIafXg6
-         zDW0neHweql/w==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4F62B5j166119;
-        Tue, 14 May 2019 23:02:11 -0700
-Date:   Tue, 14 May 2019 23:02:11 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Raphael Gault <tipbot@zytor.com>
-Message-ID: <tip-2decec48b0fd28ffdbf4cc684bd04e735f0839dd@git.kernel.org>
-Cc:     hpa@zytor.com, torvalds@linux-foundation.org, peterz@infradead.org,
-        tglx@linutronix.de, mingo@kernel.org, jpoimboe@redhat.com,
-        raphael.gault@arm.com, linux-kernel@vger.kernel.org
-Reply-To: hpa@zytor.com, tglx@linutronix.de, torvalds@linux-foundation.org,
-          peterz@infradead.org, mingo@kernel.org, jpoimboe@redhat.com,
-          raphael.gault@arm.com, linux-kernel@vger.kernel.org
-In-Reply-To: <522362a1b934ee39d0af0abb231f68e160ecf1a8.1557874043.git.jpoimboe@redhat.com>
-References: <522362a1b934ee39d0af0abb231f68e160ecf1a8.1557874043.git.jpoimboe@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/urgent] objtool: Fix whitelist documentation typo
-Git-Commit-ID: 2decec48b0fd28ffdbf4cc684bd04e735f0839dd
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+        Wed, 15 May 2019 02:02:52 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:51096 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725871AbfEOGCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 02:02:52 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B8162200196;
+        Wed, 15 May 2019 08:02:50 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0463B200012;
+        Wed, 15 May 2019 08:02:47 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 064C24029A;
+        Wed, 15 May 2019 14:02:41 +0800 (SGT)
+From:   Ran Wang <ran.wang_1@nxp.com>
+To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
+Subject: [RESEND][PATCH] arm64: dts: lx2160a: Enable usb3-lpm-capable for usb3 node
+Date:   Wed, 15 May 2019 14:04:34 +0800
+Message-Id: <20190515060434.33581-1-ran.wang_1@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  2decec48b0fd28ffdbf4cc684bd04e735f0839dd
-Gitweb:     https://git.kernel.org/tip/2decec48b0fd28ffdbf4cc684bd04e735f0839dd
-Author:     Raphael Gault <raphael.gault@arm.com>
-AuthorDate: Tue, 14 May 2019 17:47:46 -0500
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 15 May 2019 07:57:50 +0200
+Enable USB3 HW LPM feature for lx2160a and active patch for
+snps erratum A-010131. It will disable U1/U2 temperary when
+initiate U3 request.
 
-objtool: Fix whitelist documentation typo
-
-The directive specified in the documentation to add an exception
-for a single file in a Makefile was inverted.
-
-Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/522362a1b934ee39d0af0abb231f68e160ecf1a8.1557874043.git.jpoimboe@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 ---
- tools/objtool/Documentation/stack-validation.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Depend on: https://lore.kernel.org/patchwork/patch/870134/
 
-diff --git a/tools/objtool/Documentation/stack-validation.txt b/tools/objtool/Documentation/stack-validation.txt
-index 3995735a878f..cd17ee022072 100644
---- a/tools/objtool/Documentation/stack-validation.txt
-+++ b/tools/objtool/Documentation/stack-validation.txt
-@@ -306,7 +306,7 @@ ignore it:
- 
- - To skip validation of a file, add
- 
--    OBJECT_FILES_NON_STANDARD_filename.o := n
-+    OBJECT_FILES_NON_STANDARD_filename.o := y
- 
-   to the Makefile.
- 
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+index 125a8cc..0073df3 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -696,6 +696,8 @@
+ 			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
++			usb3-lpm-capable;
++			snps,dis-u1u2-when-u3-quirk;
+ 			snps,dis_rxdet_inp3_quirk;
+ 			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 			status = "disabled";
+@@ -707,6 +709,8 @@
+ 			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
++			usb3-lpm-capable;
++			snps,dis-u1u2-when-u3-quirk;
+ 			snps,dis_rxdet_inp3_quirk;
+ 			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 			status = "disabled";
+-- 
+1.7.1
+
