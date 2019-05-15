@@ -2,125 +2,145 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C60EC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C1AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28B3420843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2698F20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:47:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3zOusdb"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="U2X6HEGg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732166AbfEOLrf (ORCPT
+        id S1731827AbfEOLYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:47:35 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46054 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732132AbfEOLrb (ORCPT
+        Wed, 15 May 2019 07:24:33 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:19659 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731805AbfEOLY1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:47:31 -0400
-Received: by mail-ed1-f67.google.com with SMTP id g57so3635412edc.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 04:47:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UybbNuVimaoZe/obsoU7tb4m5ZUy6LvzQm9jzE+0RrA=;
-        b=P3zOusdb1eGvSqR4PHA6LNUt17i57cozISGL1Z2ZbAkKaLsynOH1YiRqPEmYHygXes
-         Hoa8kM/IxL3+ytbz2M0n7R9YbChiOVSJCp3VZ6Gf8HDYfa//Mp6Znqahdoc4KmJ2Vyem
-         Bsr0HxWRZKVkRvadCyEoeC9SrEmqJ3WTJdyxvLr07Gf5+OfWZrc4EJ6fti3irFy78AyJ
-         46eUcKL0bU7ZNnHqaZTw9zVlBkYTTlJ41VvvXTuzFQbAIYt30iDeB4wpgkBE2gspCAcA
-         YrAmUx1dZsiJeL4mYNHQGjKmcyOsMb8RlwYN2r9g41m5PLXGQaiAcmK0BPS3UcOGgSVd
-         oheA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UybbNuVimaoZe/obsoU7tb4m5ZUy6LvzQm9jzE+0RrA=;
-        b=gnDFOXz/mvNBbl8OfPdvquJSnB8VIu9PJXeMwf0xiWqMe78P83jpnZRWSeGYSMPM+/
-         3Gu5arif5e1jNTmA8hRKEB9eWAoh0As0ZKfVh2MDyTd9Cswtp/y6w/3KXBxPf7eve+68
-         DsCNmGzp+QTQ0+QHaU5cudv7bHLMZRCNnhSq4B1THbIyRcth11RNqXStjB742PC3i9Td
-         F0AJdvb+Xf2uu+YnAaR50/YnB8ES4yvN0qeH3Pf7M8ysmEkWnBmzv/CsGYV2F/BNuUhW
-         CgRClBykKydc4jXMG/54kjGOZqebjaqVPzzl5vnWMWGT8ADKKVh3EpKTXAeZa7ehs/G5
-         2ypw==
-X-Gm-Message-State: APjAAAVzOIFE98vyVWt82M52shoFrFu0fy0udq4K2q5nNjY1lulvw8Kr
-        UL0nV2z9SZ9TSgz28C8ZY3EgiDbufmf5uwlf+7s=
-X-Google-Smtp-Source: APXvYqz7aau2riG59uJ1ZUCEP38Mjgz0Ag9fasTQcc+poBDGFEgxyAXaYkwAR0bpXuEEJ7AfA9/qKPJ9PDSBAMX5sEs=
-X-Received: by 2002:a50:9441:: with SMTP id q1mr42373727eda.101.1557920849482;
- Wed, 15 May 2019 04:47:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <1557908823-11349-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1557908823-11349-1-git-send-email-Anson.Huang@nxp.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Wed, 15 May 2019 14:47:18 +0300
-Message-ID: <CAEnQRZAL4BuHP8MDDBfOXTcub8LVdZ-CyZxdzt-5dseVjMMDQA@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] soc: imx: Add SCU SoC info driver support
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "agross@kernel.org" <agross@kernel.org>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Wed, 15 May 2019 07:24:27 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cdbf6c20000>; Wed, 15 May 2019 04:23:46 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 15 May 2019 04:24:26 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 15 May 2019 04:24:26 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 15 May
+ 2019 11:24:26 +0000
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.54) by
+ HQMAIL109.nvidia.com (172.20.187.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Wed, 15 May 2019 11:24:26 +0000
+Received: from BYAPR12MB3398.namprd12.prod.outlook.com (20.178.196.24) by
+ BYAPR12MB2888.namprd12.prod.outlook.com (20.179.91.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.21; Wed, 15 May 2019 11:24:22 +0000
+Received: from BYAPR12MB3398.namprd12.prod.outlook.com
+ ([fe80::e843:91f7:56c:73e8]) by BYAPR12MB3398.namprd12.prod.outlook.com
+ ([fe80::e843:91f7:56c:73e8%5]) with mapi id 15.20.1900.010; Wed, 15 May 2019
+ 11:24:22 +0000
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Jonathan Hunter <jonathanh@nvidia.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        "Krishna Yarlagadda" <kyarlagadda@nvidia.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+Subject: Re: [PATCH V5 1/4] spi: tegra114: add support for gpio based CS
+Thread-Topic: [PATCH V5 1/4] spi: tegra114: add support for gpio based CS
+Thread-Index: AQHVChJyTuikRwKAUUyx+CcmS+4wvqZqXBUAgACAP+CAARKPAIAAHQTz
+Date:   Wed, 15 May 2019 11:24:22 +0000
+Message-ID: <BYAPR12MB3398ED52051F5BFA08D7B3A6C2090@BYAPR12MB3398.namprd12.prod.outlook.com>
+References: <1557810235-16401-1-git-send-email-skomatineni@nvidia.com>
+ <1557810235-16401-2-git-send-email-skomatineni@nvidia.com>
+ <cf4bd167-49b8-5649-a2e2-7bf5ddcc6e2d@nvidia.com>
+ <BYAPR12MB33986B88CF3A30036E3F1F04C2080@BYAPR12MB3398.namprd12.prod.outlook.com>,<20190515093522.GC5613@sirena.org.uk>
+In-Reply-To: <20190515093522.GC5613@sirena.org.uk>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=skomatineni@nvidia.com; 
+x-originating-ip: [24.176.232.13]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9a389552-fcc3-42fd-d114-08d6d927e157
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR12MB2888;
+x-ms-traffictypediagnostic: BYAPR12MB2888:
+x-microsoft-antispam-prvs: <BYAPR12MB2888F1D7A3D1AB4DE35F95E1C2090@BYAPR12MB2888.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0038DE95A2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(136003)(376002)(346002)(39860400002)(396003)(199004)(189003)(6916009)(102836004)(66066001)(54906003)(229853002)(256004)(6506007)(478600001)(14454004)(71200400001)(71190400001)(86362001)(6116002)(2906002)(7736002)(66476007)(4326008)(186003)(9686003)(81166006)(8676002)(68736007)(11346002)(81156014)(446003)(486006)(8936002)(3846002)(73956011)(55016002)(52536014)(5660300002)(66446008)(99286004)(64756008)(66556008)(6436002)(66946007)(76116006)(7696005)(76176011)(25786009)(74316002)(53936002)(6246003)(26005)(33656002)(305945005)(476003)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB2888;H:BYAPR12MB3398.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nvidia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: h+6GLRc1A+sEBDIzX0BGHQksHEmu8SyHtqJdQTrYbCy5w9fnmgKKWV9geCxLUqWmCDSN+k/hGfkaowDvFnYejaHWaHOYzBr58WZw8aync2jTaK0M/wS6GbTkpHjvS5J+3rM0qBYDKDctYaOam57ksl2uhp1qQKZ3uAz8k0Ng1eDMMD1c+/dWkdp2vaEOCN/IOsPJ50pYb4/qWO+rB2SOPTSnCQYP+othZjVei6HPgBMHWDvp60jymgNkxd8eMg7Ub/NK1ffkzZ8Z9HWEgwBibRVlU7tYzbVRAnCWSzpANeSSceWPmYuk9UAD+bv/ZLeNIo/l6KQjzBGmvVu6/amDgBlahCRFDPD2nJCwnZrIegozGvuIDjygWWVuuJvESTTI5gbxoVffK2E+5+3BpRDsFaJQbKZgcf7zjwK6sT6+toU=
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a389552-fcc3-42fd-d114-08d6d927e157
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 11:24:22.5275
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2888
+X-OriginatorOrg: Nvidia.com
+Content-Language: en-US
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1557919426; bh=JeH8eqv+lXYcPjDvBywwbC9f2Ip3KnltI9obfH5lE+Q=;
+        h=X-PGP-Universal:From:To:CC:Subject:Thread-Topic:Thread-Index:Date:
+         Message-ID:References:In-Reply-To:Accept-Language:X-MS-Has-Attach:
+         X-MS-TNEF-Correlator:authentication-results:x-originating-ip:
+         x-ms-publictraffictype:x-ms-office365-filtering-correlation-id:
+         x-microsoft-antispam:x-ms-traffictypediagnostic:
+         x-microsoft-antispam-prvs:x-ms-oob-tlc-oobclassifiers:
+         x-forefront-prvs:x-forefront-antispam-report:received-spf:
+         x-ms-exchange-senderadcheck:x-microsoft-antispam-message-info:
+         MIME-Version:X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-originalarrivaltime:
+         X-MS-Exchange-CrossTenant-fromentityheader:
+         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
+         Content-Language:Content-Type:Content-Transfer-Encoding;
+        b=U2X6HEGgqdYQjZYMzAPA48gRYv9szkbYqpuKbWc3M/LQGd6cpKq8K59xTRajIKSKu
+         kwl5g9tS6vZIr4SzneQwhGWa/+XGHAoWDBYuS1rGCGHKW8aqQrUdf0Gae7mWMB3fll
+         Rcd90mnxTxDw9IkJ1DTJ0MOGnQMiuk8bv0K4pKzO2yTywCJuXBBiJUUPuP5eS4VsN2
+         MH7+Ign8JrE/IBBvJM7TNK1nXNwUO0UtIH90MgGrUFtpoF0AZZ3LWnpVuzo9AHnal/
+         0tG8QjRDn0pyBQgMsD6PJu4oqaGtG4rf8wM8yKBF/y4mT3awBp+kK3bmW62x3g/tUW
+         LyLYZllAW7w5A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
+> > Tegra SPI doesn=92t support inter byte delay directly to meet some SPI =
+slave requirements.
+> > So we use GPIO control CS in parallel with a dummy HW CS and use inacti=
+ve cycles delay of SPI controller to mimic inter byte delay.
 
-Since you are going to send a new version for this please consider my
-comment inline.
+> Please fix your mail client to word wrap within paragraphs at something
+substantially less than 80 columns.  Doing this makes your messages much
+easier to read and reply to.
 
-<snip>
+I did changed but looks like it didn't made diff. Will try with different e=
+mail client.
 
-> +static u32 imx8qxp_soc_revision(void)
-> +{
-> +       struct imx_sc_msg_misc_get_soc_id msg;
-> +       struct imx_sc_rpc_msg *hdr = &msg.hdr;
-> +       u32 rev = 0;
+> Please don't ignore review comments, people are generally making them
+for a reason and are likely to have the same concerns if issues remain
+unaddressed.  Having to repeat the same comments can get repetitive and
+make people question the value of time spent reviewing.  If you disagree
+with the review comments that's fine but you need to reply and discuss
+your concerns so that the reviewer can understand your decisions.
 
-No need to initialize this here.
 
-> +       int ret;
-> +
-> +       hdr->ver = IMX_SC_RPC_VERSION;
-> +       hdr->svc = IMX_SC_RPC_SVC_MISC;
-> +       hdr->func = IMX_SC_MISC_FUNC_GET_CONTROL;
-> +       hdr->size = 3;
-> +
-> +       msg.data.send.control = IMX_SC_C_ID;
-> +       msg.data.send.resource = IMX_SC_R_SYSTEM;
-> +
-> +       ret = imx_scu_call_rpc(soc_ipc_handle, &msg, true);
-> +       if (ret) {
-> +               dev_err(&imx_scu_soc_pdev->dev,
-> +                       "get soc info failed, ret %d\n", ret);
-> +               /* return 0 means getting revision failed */
+If you are referring to comment from Jon on updating commit, I didn't ignor=
+ed. I am just waiting if any more comments from you or others before postin=
+g updated patch.=20
 
-Just return 0 here. No need for rev.
-> +               return rev;
-> +       }
-> +
+But I see you applied patch now. So how should I post with updated commit?=
