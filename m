@@ -6,202 +6,113 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F9AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E8AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D282084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DF4121473
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725974AbfEOHVn (ORCPT
+        id S1726218AbfEOHXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 03:21:43 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38434 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfEOHVm (ORCPT
+        Wed, 15 May 2019 03:23:19 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:36417 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfEOHXS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 03:21:42 -0400
-Received: by mail-qk1-f195.google.com with SMTP id a64so877543qkg.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 00:21:41 -0700 (PDT)
+        Wed, 15 May 2019 03:23:18 -0400
+Received: by mail-ua1-f68.google.com with SMTP id 94so87935uam.3;
+        Wed, 15 May 2019 00:23:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9h0PtC8BJg+KYyXGN5vaaGhzmeYsFVJY3Snc/1xB430=;
-        b=ui5EC6wCc7zIzzmIWcEEvSBd7PzP+6YxrtNNeC8Z4WGudNaryd2IVriV85zmewnEkA
-         tr2ejnGj0quzyFg8p+moELhXR/1rroJsd0DFI+1DglcxZaaCevugSqcGVWxei388Gy39
-         LS1iCbsk5C4+TY4HhHAZCqWIOkfIcbUY6D+f9gnC58el9bQsMYwbVimGv8xcVXLeNktx
-         fSEwcAjHRrM5OAOA72F8sEwSqrGtVTTdtkEhQEWwiftb8oH1FaXOzju6xnLWQGygye+u
-         wNqfWg8h+c74x69bunB/V6V8v43ZhDKJcZ7XKrqTDb6bEzMt8jQl7kdc1X5bEoeVMD26
-         8l6w==
-X-Gm-Message-State: APjAAAVQ/pkvKsIQTcnZIzyLvw36ZCfg48u6YW7WW3m4zvkH429qXpqA
-        Gzh9Vr1b7KNgHnICT8+VqmlQWs4JjmTG5YWqvTc=
-X-Google-Smtp-Source: APXvYqyKzQyA5PcXyJzWxhUCN33Q8F8XlJY1ipnoZ63QWNlyNAHTiEVMq3PuAhInu8EIb3l828kVvt9e+SRVNKFTC/s=
-X-Received: by 2002:a05:620a:1368:: with SMTP id d8mr9744289qkl.107.1557904901038;
- Wed, 15 May 2019 00:21:41 -0700 (PDT)
+        bh=D6y3Txro2Y80xJMXPF/WXXyGFbfglpcuRYylKAaykOs=;
+        b=G4d5TbL2zXDn5f9I+chOsiGhFl10gM57db35uOamciP3gknJPcKVAPQ91SGx5xumQ9
+         tvb51SUNSptNd5quVQ29U/dlzr49oSMN2kg61B+NDMqNh118Anjl577d7R4f9IV2G5Rm
+         WWalbCsPJzu6IixyqHD8SxelZOfrxdanwBT9E1K8rJrZfzMPQXiw+QlDQLFFV5HzWztC
+         FinsSG8D1crlV7wGLP63W3JJgBtGI+uAIwWbrYHxSxGKqbBfMRfkIW5OpXpXeEDoekkb
+         YUbKyC3AYzdUDWVwXRtGr2bimNvLIrpD0Y9/bb6Asejx5QcuZ0cDYynoosigb4ODS4nT
+         DJHA==
+X-Gm-Message-State: APjAAAWZsGZ6LjNx1HBrEMY9eAuDJxvGx3efvWJrJaCXgkWAskar6KMB
+        fK+OLxwNDPKg36z491yliv+KRlWAlzinHoI0xyhl+w==
+X-Google-Smtp-Source: APXvYqwXjd7ZJQ8Ru9EPguJi1io4zPagRBwnSJVZX+f303p0r2QyE6ajAOtJrnYR8sRf8L5ySdKBcnfwbQtAINpBUKc=
+X-Received: by 2002:ab0:6419:: with SMTP id x25mr19591138uao.86.1557904997683;
+ Wed, 15 May 2019 00:23:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190512012508.10608-1-elder@linaro.org> <20190512012508.10608-9-elder@linaro.org>
-In-Reply-To: <20190512012508.10608-9-elder@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 15 May 2019 09:21:24 +0200
-Message-ID: <CAK8P3a1gi2pbjh8+Ev1=hMXrnUeQuHxdFubcC50PVVXVpjhSmQ@mail.gmail.com>
-Subject: Re: [PATCH 08/18] soc: qcom: ipa: the generic software interface
-To:     Alex Elder <elder@linaro.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        syadagir@codeaurora.org, mjavid@codeaurora.org,
-        evgreen@chromium.org, benchan@google.com, ejcaruso@google.com,
-        abhishek.esse@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190510081635.GA4533@jagdpanzerIV> <20190510084213.22149-1-pmladek@suse.com>
+ <20190510122401.21a598f6@gandalf.local.home> <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
+ <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com> <20190513091320.GK9224@smile.fi.intel.com>
+ <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz> <20190514020730.GA651@jagdpanzerIV>
+ <45348cf615fe40d383c1a25688d4a88f@AcuMS.aculab.com> <CAMuHMdXaMObq9h2Sb49PW1-HUysPeaWXB7wJmKFz=xLmSoUDZg@mail.gmail.com>
+ <20190514143751.48e81e05@oasis.local.home> <CAMuHMdUhy3uB+G23uXh__F2Y_Jsam5uS1Q5jJC95kWAOEM8WRA@mail.gmail.com>
+ <20190514153503.6b7faaa7@oasis.local.home>
+In-Reply-To: <20190514153503.6b7faaa7@oasis.local.home>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 May 2019 09:23:05 +0200
+Message-ID: <CAMuHMdUFEwxwQUWg0HNUiz75hP6S7TVGSx7fWXnsQ_3qsVfotQ@mail.gmail.com>
+Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        christophe leroy <christophe.leroy@c-s.fr>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Russell Currey <ruscur@russell.cc>,
+        Stephen Rothwell <sfr@ozlabs.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 3:25 AM Alex Elder <elder@linaro.org> wrote:
+Hi Steve,
 
-> +/** gsi_gpi_channel_scratch - GPI protocol scratch register
-> + *
-> + * @max_outstanding_tre:
-> + *     Defines the maximum number of TREs allowed in a single transaction
-> + *     on a channel (in Bytes).  This determines the amount of prefetch
-> + *     performed by the hardware.  We configure this to equal the size of
-> + *     the TLV FIFO for the channel.
-> + * @outstanding_threshold:
-> + *     Defines the threshold (in Bytes) determining when the sequencer
-> + *     should update the channel doorbell.  We configure this to equal
-> + *     the size of two TREs.
-> + */
-> +struct gsi_gpi_channel_scratch {
-> +       u64 rsvd1;
-> +       u16 rsvd2;
-> +       u16 max_outstanding_tre;
-> +       u16 rsvd3;
-> +       u16 outstanding_threshold;
-> +} __packed;
-> +
-> +/** gsi_channel_scratch - channel scratch configuration area
-> + *
-> + * The exact interpretation of this register is protocol-specific.
-> + * We only use GPI channels; see struct gsi_gpi_channel_scratch, above.
-> + */
-> +union gsi_channel_scratch {
-> +       struct gsi_gpi_channel_scratch gpi;
-> +       struct {
-> +               u32 word1;
-> +               u32 word2;
-> +               u32 word3;
-> +               u32 word4;
-> +       } data;
-> +} __packed;
+On Tue, May 14, 2019 at 9:35 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> On Tue, 14 May 2019 21:13:06 +0200
+> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > Do we care about the value? "(-E%u)"?
+> > >
+> > > That too could be confusing. What would (-E22) be considered by a user
+> > > doing an sprintf() on some string. I know that would confuse me, or I
+> > > would think that it was what the %pX displayed, and wonder why it
+> > > displayed it that way. Whereas "(fault)" is quite obvious for any %p
+> > > use case.
+> >
+> > I would immediately understand there's a missing IS_ERR() check in a
+> > function that can return  -EINVAL, without having to add a new printk()
+> > to find out what kind of bogus value has been received, and without
+> > having to reboot, and trying to reproduce...
+>
+> I have to ask. Has there actually been a case that you used a %pX and
+> it faulted, and you had to go back to find what the value of the
+> failure was?
 
-What are the exact alignment requirements on these structures,
-do you ever need to have them on odd addresses? If not, please
-remove the __packed, or add __aligned() with the actual alignment,
-e.g. __aligned(4), to let the compiler create better code and
-avoid bytewise accesses.
+If it faulted, the bad pointer value is obvious from the backtrace.
+If the code avoids the fault by verifying the pointer and returning
+"(efault)" instead, the bad pointer value is lost.
 
-> +/* Init function for GSI.  GSI hardware does not need to be "ready" */
-> +int gsi_init(struct gsi *gsi, struct platform_device *pdev, u32 data_count,
-> +            const struct gsi_ipa_endpoint_data *data)
-> +{
-> +       struct resource *res;
-> +       resource_size_t size;
-> +       unsigned int irq;
-> +       int ret;
-> +
-> +       gsi->dev = &pdev->dev;
-> +       init_dummy_netdev(&gsi->dummy_dev);
+Or am I missing something?
 
-Can you add a comment here to explain what the 'dummy' device is
-needed for?
+Thanks!
 
-> +       /* Get GSI memory range and map it */
-> +       res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "gsi");
-> +       if (!res)
-> +               return -ENXIO;
-> +
-> +       size = resource_size(res);
-> +       if (res->start > U32_MAX || size > U32_MAX - res->start)
-> +               return -EINVAL;
-> +
-> +       gsi->virt = ioremap_nocache(res->start, size);
-> +       if (!gsi->virt)
-> +               return -ENOMEM;
+Gr{oetje,eeting}s,
 
-The _nocache() postfix is not needed here, and I find it a bit
-confusing, just use plain ioremap, or maybe even
-devm_platform_ioremap_resource() to save the
-platform_get_resource_byname().
+                        Geert
 
-> +       ret = request_irq(irq, gsi_isr, 0, "gsi", gsi);
-> +       if (ret)
-> +               goto err_unmap_virt;
-> +       gsi->irq = irq;
-> +
-> +       ret = enable_irq_wake(gsi->irq);
-> +       if (ret)
-> +               dev_err(gsi->dev, "error %d enabling gsi wake irq\n", ret);
-> +       gsi->irq_wake_enabled = ret ? 0 : 1;
-> +
-> +       spin_lock_init(&gsi->spinlock);
-> +       mutex_init(&gsi->mutex);
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-This looks a bit dangerous if you can ever get to the point of
-having a pending interrupt. before the structure is fully initialized.
-This can probably not happen in practice, but it's better to request
-the interrupts last to be on the safe side.
-
-> +/* Wait for all transaction activity on a channel to complete */
-> +void gsi_channel_trans_quiesce(struct gsi *gsi, u32 channel_id)
-> +{
-> +       struct gsi_channel *channel = &gsi->channel[channel_id];
-> +       struct gsi_trans_info *trans_info;
-> +       struct gsi_trans *trans = NULL;
-> +       struct gsi_evt_ring *evt_ring;
-> +       struct list_head *list;
-> +       unsigned long flags;
-> +
-> +       trans_info = &channel->trans_info;
-> +       evt_ring = &channel->gsi->evt_ring[channel->evt_ring_id];
-> +
-> +       spin_lock_irqsave(&evt_ring->ring.spinlock, flags);
-> +
-> +       /* Find the last list to which a transaction was added */
-> +       if (!list_empty(&trans_info->alloc))
-> +               list = &trans_info->alloc;
-> +       else if (!list_empty(&trans_info->pending))
-> +               list = &trans_info->pending;
-> +       else if (!list_empty(&trans_info->complete))
-> +               list = &trans_info->complete;
-> +       else if (!list_empty(&trans_info->polled))
-> +               list = &trans_info->polled;
-> +       else
-> +               list = NULL;
-> +
-> +       if (list) {
-> +               struct gsi_trans *trans;
-> +
-> +               /* The last entry on this list is the last one allocated.
-> +                * Grab a reference so we can wait for it.
-> +                */
-> +               trans = list_last_entry(list, struct gsi_trans, links);
-> +               refcount_inc(&trans->refcount);
-> +       }
-> +
-> +       spin_lock_irqsave(&evt_ring->ring.spinlock, flags);
-> +
-> +       /* If there is one, wait for it to complete */
-> +       if (trans) {
-> +               wait_for_completion(&trans->completion);
-
-Since you are waiting here, you clearly can't be called
-from interrupt context, or with interrupts disabled, so it's
-clearer to use spin_lock_irq() instead of spin_lock_irqsave().
-
-I generally try to avoid the _irqsave versions altogether, unless
-it is really needed for a function that is called both from
-irq-disabled and irq-enabled context.
-
-     Arnd
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
