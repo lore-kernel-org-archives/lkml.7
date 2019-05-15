@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E1AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F415C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65B8520881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 304CD21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918062;
-	bh=SZ0h49qTYTAVRiMKbU4JLmNPY26ZDaX+92rxPpki5Dg=;
+	s=default; t=1557918067;
+	bh=YkaUSEF3X+pQvSn/4Ovd7ULUk+pez2JqR3/Py6kNyGM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sc4nLDjaHy6xzvhcXIyKYIMzJaCykEfU8kj6aiHxUNMr4Tbym921g6QhovLBUpFkh
-	 xQm4rtOrz3oUHvB9fHmZkx3SI7rTly/8gDdv8BH8h2aD+scj4JI9pUt4+xU2jYDV52
-	 ZfDWdpTo8wBFhT+eTc0NiukhObyEWpcsA2P6DbYA=
+	b=SpqK34VIkqmLeq+jGZCeqeSgYrQrGbaWAct1setHZ0sJypqXsA8KiSMmL21h8Z1FF
+	 yJMDvqVsDYjz3fAE/gw7oZemKtnnR2Q2cW3QMuMstWRdbKL7w8c8KW5SJCjEOQcc0Q
+	 iYQ5u2VzDlEIHhdpDe+h1vQEGepNcX/4080AhkEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbfEOLBB (ORCPT
+        id S1727025AbfEOLBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:01:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57908 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:01:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727580AbfEOLA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:00:59 -0400
+        id S1727612AbfEOLBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:01:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D82E72084F;
-        Wed, 15 May 2019 11:00:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B14E20881;
+        Wed, 15 May 2019 11:01:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918058;
-        bh=SZ0h49qTYTAVRiMKbU4JLmNPY26ZDaX+92rxPpki5Dg=;
+        s=default; t=1557918063;
+        bh=YkaUSEF3X+pQvSn/4Ovd7ULUk+pez2JqR3/Py6kNyGM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PksrykwUKAzMETOgkOJsd7PNqg+zzayL+zl5npLJLH+86+p8D8yzg2tLJ6Z29GX6W
-         hCS2ZMiPHIvGZxlCUtFmCNeZ3BlLSGJws/YtTA60nDoYgeJ96mKrCcAZB8nsYrwtx3
-         9pCRvLQL60GxHs+rD2vHvR+rvNIxl8V8B6GFTqQg=
+        b=Ul6+ij6uVedL29qPAF0jWnqW6ANcKe1ttNKHeqzA0Kz62AUOrAOWqgYVdBWCR67Yh
+         HhOV/v8P9749ek3MD7YGc9Jm4uYyyoJZBW9zvk8oCDTTeT7A1M5H+q6mZ09oqrc/mB
+         OjO0iA/+jJzaltukoPtLGJu2dXbWWkMEhrg8OkEE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Vasquez <andrewv@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 3.18 59/86] scsi: qla2xxx: Fix incorrect region-size setting in optrom SYSFS routines
-Date:   Wed, 15 May 2019 12:55:36 +0200
-Message-Id: <20190515090654.120100646@linuxfoundation.org>
+        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 3.18 78/86] bridge: Fix error path for kobject_init_and_add()
+Date:   Wed, 15 May 2019 12:55:55 +0200
+Message-Id: <20190515090655.622147146@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -60,45 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Vasquez <andrewv@marvell.com>
+From: "Tobin C. Harding" <tobin@kernel.org>
 
-commit 5cbdae10bf11f96e30b4d14de7b08c8b490e903c upstream.
+[ Upstream commit bdfad5aec1392b93495b77b864d58d7f101dc1c1 ]
 
-Commit e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs
-code") incorrectly set 'optrom_region_size' to 'start+size', which can
-overflow option-rom boundaries when 'start' is non-zero.  Continue setting
-optrom_region_size to the proper adjusted value of 'size'.
+Currently error return from kobject_init_and_add() is not followed by a
+call to kobject_put().  This means there is a memory leak.  We currently
+set p to NULL so that kfree() may be called on it as a noop, the code is
+arguably clearer if we move the kfree() up closer to where it is
+called (instead of after goto jump).
 
-Fixes: e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs code")
-Cc: stable@vger.kernel.org
-Signed-off-by: Andrew Vasquez <andrewv@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Remove a goto label 'err1' and jump to call to kobject_put() in error
+return from kobject_init_and_add() fixing the memory leak.  Re-name goto
+label 'put_back' to 'err1' now that we don't use err1, following current
+nomenclature (err1, err2 ...).  Move call to kfree out of the error
+code at bottom of function up to closer to where memory was allocated.
+Add comment to clarify call to kfree().
+
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/scsi/qla2xxx/qla_attr.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/bridge/br_if.c |   13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_attr.c
-+++ b/drivers/scsi/qla2xxx/qla_attr.c
-@@ -431,7 +431,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
- 		}
+--- a/net/bridge/br_if.c
++++ b/net/bridge/br_if.c
+@@ -460,13 +460,15 @@ int br_add_if(struct net_bridge *br, str
+ 	call_netdevice_notifiers(NETDEV_JOIN, dev);
  
- 		ha->optrom_region_start = start;
--		ha->optrom_region_size = start + size;
-+		ha->optrom_region_size = size;
+ 	err = dev_set_allmulti(dev, 1);
+-	if (err)
+-		goto put_back;
++	if (err) {
++		kfree(p);	/* kobject not yet init'd, manually free */
++		goto err1;
++	}
  
- 		ha->optrom_state = QLA_SREADING;
- 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
-@@ -504,7 +504,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
- 		}
+ 	err = kobject_init_and_add(&p->kobj, &brport_ktype, &(dev->dev.kobj),
+ 				   SYSFS_BRIDGE_PORT_ATTR);
+ 	if (err)
+-		goto err1;
++		goto err2;
  
- 		ha->optrom_region_start = start;
--		ha->optrom_region_size = start + size;
-+		ha->optrom_region_size = size;
+ 	err = br_sysfs_addif(p);
+ 	if (err)
+@@ -531,12 +533,9 @@ err3:
+ 	sysfs_remove_link(br->ifobj, p->dev->name);
+ err2:
+ 	kobject_put(&p->kobj);
+-	p = NULL; /* kobject_put frees */
+-err1:
+ 	dev_set_allmulti(dev, -1);
+-put_back:
++err1:
+ 	dev_put(dev);
+-	kfree(p);
+ 	return err;
+ }
  
- 		ha->optrom_state = QLA_SWRITING;
- 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
 
 
