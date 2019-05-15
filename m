@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D035C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8385C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC7D2166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A0082084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918648;
-	bh=4zGOH3kUeL7q/pBY1L51HmZM4skf81Nbg+oZY+DgeRY=;
+	s=default; t=1557918653;
+	bh=J+NAxvkDak5mBXRbfG7zbAzO+rFlbb67MBQ+RR8k4wI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wjPo7BPkezpwL+4wGie7JCuge0LQpb+E1mbe76WVzfFUf/lHkNW4EfMfwue8AB+2T
-	 TAS6AkY0Jy7mUFPCOwrMyTsczHuROpbjEOCQnLM3K4ifk9Sp3Egb89+lI1ihuY5Q15
-	 rPa31L11e5ne9CL6p/bmNRZv3NMAY+UP8LJHxMx4=
+	b=yANVE2O1pyjq2x7sdSZ+bGH+q7nipOI+69Qn/pCtr0KHRB8HfboS4p4HYl2bgkOIC
+	 x/x3kOXCnKOupRPlrCtkmwN49knB74pzYWuK5YfHhX8a48EFEp0U4ekOENWUVMj4r7
+	 oNY6lYD5WrICZ8BkEf2Warq102vqgCHcJ1bs3JAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729462AbfEOLKq (ORCPT
+        id S1729478AbfEOLKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:10:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44752 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:10:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728400AbfEOLKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:10:41 -0400
+        id S1729457AbfEOLKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:10:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E4FA20862;
-        Wed, 15 May 2019 11:10:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0DBB20862;
+        Wed, 15 May 2019 11:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918640;
-        bh=4zGOH3kUeL7q/pBY1L51HmZM4skf81Nbg+oZY+DgeRY=;
+        s=default; t=1557918645;
+        bh=J+NAxvkDak5mBXRbfG7zbAzO+rFlbb67MBQ+RR8k4wI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T7pkXU2VBi97GLwic5yV5gXx60FFgr3PjouLxRhVSMKthUJR9OZSYhhd4dwmKS/WW
-         v3cY326QaXXtnITgyFdtjUjYATLiRlNYVnbW5jNib5U+kNBOC9UQXlyH9rk2vz+9Qv
-         WF41V5961PP300zSCs35dHoVfluN4p+IV/2vFxAk=
+        b=i7xCWoTLVrR8w8WC89yc1nqAz+cuxovVBFnzrtGMJ59cEudEc9eJQtaowJ0TAEG/k
+         ETY5EkCLg24d+3SCFU8VovVllqRZycGvSAcWAWPcrlNNB9DRdC/VlqlKFKUQEqtU2V
+         rTgNdJnl0y/2iyNmNe77Oz4jVY6FOe8OsDwDm5nM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 166/266] s390/dasd: Fix capacity calculation for large volumes
-Date:   Wed, 15 May 2019 12:54:33 +0200
-Message-Id: <20190515090728.535604646@linuxfoundation.org>
+Subject: [PATCH 4.4 168/266] KVM: x86: avoid misreporting level-triggered irqs as edge-triggered in tracing
+Date:   Wed, 15 May 2019 12:54:35 +0200
+Message-Id: <20190515090728.603369013@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -62,57 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2cc9637ce825f3a9f51f8f78af7474e9e85bfa5f ]
+[ Upstream commit 7a223e06b1a411cef6c4cd7a9b9a33c8d225b10e ]
 
-The DASD driver incorrectly limits the maximum number of blocks of ECKD
-DASD volumes to 32 bit numbers. Volumes with a capacity greater than
-2^32-1 blocks are incorrectly recognized as smaller volumes.
+In __apic_accept_irq() interface trig_mode is int and actually on some code
+paths it is set above u8:
 
-This results in the following volume capacity limits depending on the
-formatted block size:
+kvm_apic_set_irq() extracts it from 'struct kvm_lapic_irq' where trig_mode
+is u16. This is done on purpose as e.g. kvm_set_msi_irq() sets it to
+(1 << 15) & e->msi.data
 
-  BLKSIZE  MAX_GB   MAX_CYL
-      512    2047   5843492
-     1024    4095   8676701
-     2048    8191  13634816
-     4096   16383  23860929
+kvm_apic_local_deliver sets it to reg & (1 << 15).
 
-The same problem occurs when a volume with more than 17895697 cylinders
-is accessed in raw-track-access mode.
+Fix the immediate issue by making 'tm' into u16. We may also want to adjust
+__apic_accept_irq() interface and use proper sizes for vector, level,
+trig_mode but this is not urgent.
 
-Fix this problem by adding an explicit type cast when calculating the
-maximum number of blocks.
-
-Signed-off-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/block/dasd_eckd.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kvm/trace.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index 80a43074c2f9a..c530610f61ac9 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -2066,14 +2066,14 @@ static int dasd_eckd_end_analysis(struct dasd_block *block)
- 	blk_per_trk = recs_per_track(&private->rdc_data, 0, block->bp_block);
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index ab9ae67a80e44..0ec94c6b47576 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -434,13 +434,13 @@ TRACE_EVENT(kvm_apic_ipi,
+ );
  
- raw:
--	block->blocks = (private->real_cyl *
-+	block->blocks = ((unsigned long) private->real_cyl *
- 			  private->rdc_data.trk_per_cyl *
- 			  blk_per_trk);
+ TRACE_EVENT(kvm_apic_accept_irq,
+-	    TP_PROTO(__u32 apicid, __u16 dm, __u8 tm, __u8 vec),
++	    TP_PROTO(__u32 apicid, __u16 dm, __u16 tm, __u8 vec),
+ 	    TP_ARGS(apicid, dm, tm, vec),
  
- 	dev_info(&device->cdev->dev,
--		 "DASD with %d KB/block, %d KB total size, %d KB/track, "
-+		 "DASD with %u KB/block, %lu KB total size, %u KB/track, "
- 		 "%s\n", (block->bp_block >> 10),
--		 ((private->real_cyl *
-+		 (((unsigned long) private->real_cyl *
- 		   private->rdc_data.trk_per_cyl *
- 		   blk_per_trk * (block->bp_block >> 9)) >> 1),
- 		 ((blk_per_trk * block->bp_block) >> 10),
+ 	TP_STRUCT__entry(
+ 		__field(	__u32,		apicid		)
+ 		__field(	__u16,		dm		)
+-		__field(	__u8,		tm		)
++		__field(	__u16,		tm		)
+ 		__field(	__u8,		vec		)
+ 	),
+ 
 -- 
 2.20.1
 
