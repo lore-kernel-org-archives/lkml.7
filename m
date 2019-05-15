@@ -2,192 +2,88 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 549D4C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 20:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE3BDC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24F102082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 20:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A864720818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:00:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="igEIO6/J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbfEOU7w (ORCPT
+        id S1727184AbfEOVAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 16:59:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60846 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726319AbfEOU7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 16:59:51 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 019FC3E2B7;
-        Wed, 15 May 2019 20:59:51 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E89860928;
-        Wed, 15 May 2019 20:59:49 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 12/12] afs: Fix application of the results of a inline bulk
- status fetch
-From:   David Howells <dhowells@redhat.com>
-To:     linux-afs@lists.infradead.org
-Cc:     dhowells@redhat.com, linux-kernel@vger.kernel.org
-Date:   Wed, 15 May 2019 21:59:49 +0100
-Message-ID: <155795398929.28355.11912045949014606560.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155795389933.28355.4028912870853910492.stgit@warthog.procyon.org.uk>
-References: <155795389933.28355.4028912870853910492.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Wed, 15 May 2019 17:00:44 -0400
+Received: from mail-wm1-f49.google.com ([209.85.128.49]:52918 "EHLO
+        mail-wm1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfEOVAo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 17:00:44 -0400
+Received: by mail-wm1-f49.google.com with SMTP id y3so1418245wmm.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 14:00:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0YwmpvP+rMpFcNcCho3HpAkjJLkgqW1dbm3WkulvRrg=;
+        b=igEIO6/J8K34sgtKNUjPKDPsKN4vkuUys4KMlg8IopQ026OHeRqSWSKdNHpCUUZbqd
+         D1Xrfcqgm06WwwCF5wsT6Vu9S8eZa1YMbxrsTPu0Yq2FSGPWe+uFs6Q/uKEibkc+zJQA
+         PIvIQgHoMgpKbH99CgjKjTXXTLCXC85NDt61lASu5p7w1XcxmQrbgKbXhfCVHkxBmoAF
+         Pv+OAyCev9MUXZL/saXvt+HJpppNBYI2Guhfo6oXnjlgmma1pWOSKgfXRL9AZVMtIYjy
+         TQhJnMLNPTSiaxtWQWY6TP/USDuMoqn2/OwNJxvhrxHWxE3mlzHhMyvXFPpefNVVhBWM
+         kiVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0YwmpvP+rMpFcNcCho3HpAkjJLkgqW1dbm3WkulvRrg=;
+        b=XQumMDl7XqWi/VTEyy3AyAayEipXGQHR3VH6OigcPVNyCvbI7ZAJLpz+YdVopABUXX
+         AOst5zFPZlhl8gPgaCLND5l/RaOrtyFieMqwzta5XQ6jGMQPUweP+TlH++InWqQqZLnW
+         2kUGaFt3u7tz33ZJyJD0It4BOoWSuyOSIH6WnrY0fU1uDlWT24B6MmuCPXywZbvLpnSP
+         iCoBlpd0SGCKRuLQ/Op+t55P//w7kL6AY8Y7CzTZBuh+KFW6N8uD81FHF56158wdKsC6
+         j0hervqrLDvr18LxIDqCxet7GRYl6r3zuxX/Uj6bqtcwMq6Oyc0iAuvmnNfHmxVfgED2
+         UkOQ==
+X-Gm-Message-State: APjAAAU9Ba7yuZoil/uAPO6hAGftv/FObT9R5SRqo8ruofjaRCNHp3XZ
+        R2WPnGmjobg1tt1gov4mSKhhNCD/jDhQMp3Lxn+d7pmOtkI=
+X-Google-Smtp-Source: APXvYqzOhb4qdA6w14C+vrWsULjPKfJUFNLRxCbEb37m0m1lC0od8W87ILCrAJqKG9Nv/1YErUKc1n4rT3NsNXLX2Rw=
+X-Received: by 2002:a1c:2245:: with SMTP id i66mr9223843wmi.19.1557954043034;
+ Wed, 15 May 2019 14:00:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 15 May 2019 20:59:51 +0000 (UTC)
+References: <E44E4181-1CFB-493C-8023-147472049D19@cisco.com>
+In-Reply-To: <E44E4181-1CFB-493C-8023-147472049D19@cisco.com>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Wed, 15 May 2019 23:00:31 +0200
+Message-ID: <CAFLxGvysPg3FO4kT0QrRsYTr219WVttQMeat_StqbifTPrGLmA@mail.gmail.com>
+Subject: Re: Removal of dump_stack()s from /fs/ubifs/io.c
+To:     "Shreya Gangan (shgangan)" <shgangan@cisco.com>
+Cc:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix afs_do_lookup() such that when it does an inline bulk status fetch op,
-it will update inodes that are already extant (something that afs_iget()
-doesn't do) and to cache permits for each inode created (thereby avoiding a
-follow up FS.FetchStatus call to determine this).
+On Wed, May 15, 2019 at 10:45 PM Shreya Gangan (shgangan)
+<shgangan@cisco.com> wrote:
+>
+> Hi,
+>
+>  /fs/ubifs/io.c has dump_stack() in multiple functions upon errors and sometimes warnings.
+> Since the error and warning messages seem to be unique, the functional value of these dump_stacks is not apparent.
+> Why are these dump_stacks required and what issues might occur upon the removal of these?
 
-Extant inodes need looking up in advance so that their cb_break counters
-before and after the operation can be compared.  To this end, the inode
-pointers are cached so that they don't need looking up again after the op.
+They are not required, but they are just useful. While you are right
+that the locations within UBIFS
+are unique, they are not for the whole kernel context.
+Filesystem functions can get called via many different paths from VFS...
 
-Fixes: 5cf9dd55a0ec ("afs: Prospectively look up extra files when doing a single lookup")
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+Why do you want to remove them, what is the benefit?
 
- fs/afs/afs.h |    1 +
- fs/afs/dir.c |   51 ++++++++++++++++++++++++++++++++++++++++++++-------
- 2 files changed, 45 insertions(+), 7 deletions(-)
-
-diff --git a/fs/afs/afs.h b/fs/afs/afs.h
-index 4d41c8966c59..27911a57db4f 100644
---- a/fs/afs/afs.h
-+++ b/fs/afs/afs.h
-@@ -147,6 +147,7 @@ struct afs_file_status {
- struct afs_status_cb {
- 	struct afs_file_status	status;
- 	struct afs_callback	callback;
-+	unsigned int		cb_break;	/* Pre-op callback break counter */
- 	bool			have_status;	/* True if status record was retrieved */
- 	bool			have_cb;	/* True if cb record was retrieved */
- 	bool			have_error;	/* True if status.abort_code indicates an error */
-diff --git a/fs/afs/dir.c b/fs/afs/dir.c
-index 9e42f6c75747..79d93a26759a 100644
---- a/fs/afs/dir.c
-+++ b/fs/afs/dir.c
-@@ -103,6 +103,7 @@ struct afs_lookup_cookie {
- 	bool			found;
- 	bool			one_only;
- 	unsigned short		nr_fids;
-+	struct inode		**inodes;
- 	struct afs_status_cb	*statuses;
- 	struct afs_fid		fids[50];
- };
-@@ -644,8 +645,8 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry,
- 	struct afs_iget_data iget_data;
- 	struct afs_fs_cursor fc;
- 	struct afs_server *server;
--	struct afs_vnode *dvnode = AFS_FS_I(dir);
--	struct inode *inode = NULL;
-+	struct afs_vnode *dvnode = AFS_FS_I(dir), *vnode;
-+	struct inode *inode = NULL, *ti;
- 	int ret, i;
- 
- 	_enter("{%lu},%p{%pd},", dir->i_ino, dentry, dentry);
-@@ -700,6 +701,27 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry,
- 	if (!cookie->statuses)
- 		goto out;
- 
-+	cookie->inodes = kcalloc(cookie->nr_fids, sizeof(struct inode *),
-+				 GFP_KERNEL);
-+	if (!cookie->inodes)
-+		goto out_s;
-+
-+	for (i = 1; i < cookie->nr_fids; i++) {
-+		scb = &cookie->statuses[i];
-+
-+		/* Find any inodes that already exist and get their
-+		 * callback counters.
-+		 */
-+		iget_data.fid = cookie->fids[i];
-+		ti = ilookup5_nowait(dir->i_sb, iget_data.fid.vnode,
-+				     afs_iget5_test, &iget_data);
-+		if (!IS_ERR_OR_NULL(ti)) {
-+			vnode = AFS_FS_I(ti);
-+			scb->cb_break = afs_calc_vnode_cb_break(vnode);
-+			cookie->inodes[i] = ti;
-+		}
-+	}
-+
- 	/* Try FS.InlineBulkStatus first.  Abort codes for the individual
- 	 * lookups contained therein are stored in the reply without aborting
- 	 * the whole operation.
-@@ -742,7 +764,6 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry,
- 	 * any of the lookups fails - so, for the moment, revert to
- 	 * FS.FetchStatus for just the primary fid.
- 	 */
--	cookie->nr_fids = 1;
- 	inode = ERR_PTR(-ERESTARTSYS);
- 	if (afs_begin_vnode_operation(&fc, dvnode, key, true)) {
- 		while (afs_select_fileserver(&fc)) {
-@@ -764,9 +785,6 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry,
- 	if (IS_ERR(inode))
- 		goto out_c;
- 
--	for (i = 0; i < cookie->nr_fids; i++)
--		cookie->statuses[i].status.abort_code = 0;
--
- success:
- 	/* Turn all the files into inodes and save the first one - which is the
- 	 * one we actually want.
-@@ -777,13 +795,26 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry,
- 
- 	for (i = 0; i < cookie->nr_fids; i++) {
- 		struct afs_status_cb *scb = &cookie->statuses[i];
--		struct inode *ti;
-+
-+		if (!scb->have_status && !scb->have_error)
-+			continue;
-+
-+		if (cookie->inodes[i]) {
-+			afs_vnode_commit_status(&fc, AFS_FS_I(cookie->inodes[i]),
-+						scb->cb_break, NULL, scb);
-+			continue;
-+		}
- 
- 		if (scb->status.abort_code != 0)
- 			continue;
- 
- 		iget_data.fid = cookie->fids[i];
- 		ti = afs_iget(dir->i_sb, key, &iget_data, scb, cbi, dvnode);
-+		if (!IS_ERR(ti))
-+			afs_cache_permit(AFS_FS_I(ti), key,
-+					 0 /* Assume vnode->cb_break is 0 */ +
-+					 iget_data.cb_v_break,
-+					 scb);
- 		if (i == 0) {
- 			inode = ti;
- 		} else {
-@@ -794,6 +825,12 @@ static struct inode *afs_do_lookup(struct inode *dir, struct dentry *dentry,
- 
- out_c:
- 	afs_put_cb_interest(afs_v2net(dvnode), cbi);
-+	if (cookie->inodes) {
-+		for (i = 0; i < cookie->nr_fids; i++)
-+			iput(cookie->inodes[i]);
-+		kfree(cookie->inodes);
-+	}
-+out_s:
- 	kvfree(cookie->statuses);
- out:
- 	kfree(cookie);
-
+-- 
+Thanks,
+//richard
