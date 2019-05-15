@@ -2,61 +2,64 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49151C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC094C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D35220657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 814BF20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921636;
-	bh=mIA+ijLf2ja/Iq0cq7ACxz8V/vsqmwrX8eLerHHUmQs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cdwu0OBYmN9DkOvJ0I7pebzenFEPwOV9T0m6W0j7IlKv4iI4rX0Sh9bP+CO2NIKMZ
-	 9HA1WlDVsajsH24I1k9GhnEFL7Abh8KAc3/n54r3IIan6G2a4UD+GMee3SAbAMqmkJ
-	 +M1wInzlVCK3Lq4jUcG1KNZwtGX/137aLtXNF7nU=
+	s=default; t=1557921642;
+	bh=IzKyCwSb9+/zngvWRcofYf2BV7s01HWiDt6qd9CHLu0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qxbJaal13EZ2j2Y0jH9ElTKaF5FvLphNWHroBS2pDaRPeA9E6LpshHFFAD7avgLJ9
+	 RvZtgOKajWbGGNvw+Z80KZHy9TclOTXW3F+nx6qqrl+6GWX5qaSG4txoB7sKvAZ1Jv
+	 DBEGR4ZjA5CVo0830LyYcK6KYUtTVHeJwSbP8+Gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbfEOMAe (ORCPT
+        id S1730719AbfEOMAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:00:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50892 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:00:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726975AbfEOLOm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:14:42 -0400
+        id S1730139AbfEOLOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:14:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 968E520843;
-        Wed, 15 May 2019 11:14:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B08520644;
+        Wed, 15 May 2019 11:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918882;
-        bh=mIA+ijLf2ja/Iq0cq7ACxz8V/vsqmwrX8eLerHHUmQs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jnCHTuuvURrSMhtvaIr3oREV+SEeMOGt9oAqqbOSogp221VE6JCd9QTB6fuBKXQCJ
-         X+n9sNDNB9TE4LXJBM5ogQ77IknBCOFIqyaK6I5+jnGB/BP6T7X1rCZ0gw5gSlPhi3
-         3GLYDije/kz/38WwEVBlQQ80QErMsr59bmr20x5I=
+        s=default; t=1557918877;
+        bh=IzKyCwSb9+/zngvWRcofYf2BV7s01HWiDt6qd9CHLu0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=wsZsDxGwQKs9y39UMdjWK358plc/BcZ1ns+4URiqxjQHCL0ziOAM3bZviNYAuFS5v
+         AMdLfxPqPTjej7NVG5rxH+C+3o7P+l72SpBH4n/4vM4OpAqrewE0n2YGp3M57oSh/l
+         H/PkXdQUbqP+ZjjyMmEN6dzhyEgehbc0JB2zjsus=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alistair Strachan <astrachan@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, kernel-team@android.com,
-        joel@joelfernandes.org, Andi Kleen <andi.kleen@intel.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 36/51] x86: vdso: Use $LD instead of $CC to link
-Date:   Wed, 15 May 2019 12:56:11 +0200
-Message-Id: <20190515090627.121123141@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.9 00/51] 4.9.177-stable review
+Date:   Wed, 15 May 2019 12:55:35 +0200
+Message-Id: <20190515090616.669619870@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
-References: <20190515090616.669619870@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.177-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.177-rc1
+X-KernelTest-Deadline: 2019-05-17T09:06+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,111 +67,243 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 379d98ddf41344273d9718556f761420f4dc80b3 upstream.
+This is the start of the stable review cycle for the 4.9.177 release.
+There are 51 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-The vdso{32,64}.so can fail to link with CC=clang when clang tries to find
-a suitable GCC toolchain to link these libraries with.
+Responses should be made by Fri 17 May 2019 09:04:42 AM UTC.
+Anything received after that time might be too late.
 
-/usr/bin/ld: arch/x86/entry/vdso/vclock_gettime.o:
-  access beyond end of merged section (782)
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.177-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+and the diffstat can be found below.
 
-This happens because the host environment leaked into the cross compiler
-environment due to the way clang searches for suitable GCC toolchains.
+thanks,
 
-Clang is a retargetable compiler, and each invocation of it must provide
---target=<something> --gcc-toolchain=<something> to allow it to find the
-correct binutils for cross compilation. These flags had been added to
-KBUILD_CFLAGS, but the vdso code uses CC and not KBUILD_CFLAGS (for various
-reasons) which breaks clang's ability to find the correct linker when cross
-compiling.
+greg k-h
 
-Most of the time this goes unnoticed because the host linker is new enough
-to work anyway, or is incompatible and skipped, but this cannot be reliably
-assumed.
+-------------
+Pseudo-Shortlog of commits:
 
-This change alters the vdso makefile to just use LD directly, which
-bypasses clang and thus the searching problem. The makefile will just use
-${CROSS_COMPILE}ld instead, which is always what we want. This matches the
-method used to link vmlinux.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.9.177-rc1
 
-This drops references to DISABLE_LTO; this option doesn't seem to be set
-anywhere, and not knowing what its possible values are, it's not clear how
-to convert it from CC to LD flag.
+Laurentiu Tudor <laurentiu.tudor@nxp.com>
+    powerpc/booke64: set RI in default MSR
 
-Signed-off-by: Alistair Strachan <astrachan@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: kernel-team@android.com
-Cc: joel@joelfernandes.org
-Cc: Andi Kleen <andi.kleen@intel.com>
-Link: https://lkml.kernel.org/r/20180803173931.117515-1-astrachan@google.com
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/entry/vdso/Makefile | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+Christophe Leroy <christophe.leroy@c-s.fr>
+    powerpc/lib: fix book3s/32 boot failure due to code patching
 
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index d5409660f5de6..2ae92c6b1de6d 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -47,10 +47,8 @@ targets += $(vdso_img_sodbg)
- 
- export CPPFLAGS_vdso.lds += -P -C
- 
--VDSO_LDFLAGS_vdso.lds = -m64 -Wl,-soname=linux-vdso.so.1 \
--			-Wl,--no-undefined \
--			-Wl,-z,max-page-size=4096 -Wl,-z,common-page-size=4096 \
--			$(DISABLE_LTO)
-+VDSO_LDFLAGS_vdso.lds = -m elf_x86_64 -soname linux-vdso.so.1 --no-undefined \
-+			-z max-page-size=4096 -z common-page-size=4096
- 
- $(obj)/vdso64.so.dbg: $(src)/vdso.lds $(vobjs) FORCE
- 	$(call if_changed,vdso)
-@@ -96,10 +94,8 @@ CFLAGS_REMOVE_vvar.o = -pg
- #
- 
- CPPFLAGS_vdsox32.lds = $(CPPFLAGS_vdso.lds)
--VDSO_LDFLAGS_vdsox32.lds = -Wl,-m,elf32_x86_64 \
--			   -Wl,-soname=linux-vdso.so.1 \
--			   -Wl,-z,max-page-size=4096 \
--			   -Wl,-z,common-page-size=4096
-+VDSO_LDFLAGS_vdsox32.lds = -m elf32_x86_64 -soname linux-vdso.so.1 \
-+			   -z max-page-size=4096 -z common-page-size=4096
- 
- # 64-bit objects to re-brand as x32
- vobjs64-for-x32 := $(filter-out $(vobjs-nox32),$(vobjs-y))
-@@ -127,7 +123,7 @@ $(obj)/vdsox32.so.dbg: $(src)/vdsox32.lds $(vobjx32s) FORCE
- 	$(call if_changed,vdso)
- 
- CPPFLAGS_vdso32.lds = $(CPPFLAGS_vdso.lds)
--VDSO_LDFLAGS_vdso32.lds = -m32 -Wl,-m,elf_i386 -Wl,-soname=linux-gate.so.1
-+VDSO_LDFLAGS_vdso32.lds = -m elf_i386 -soname linux-gate.so.1
- 
- # This makes sure the $(obj) subdirectory exists even though vdso32/
- # is not a kbuild sub-make subdirectory.
-@@ -165,13 +161,13 @@ $(obj)/vdso32.so.dbg: FORCE \
- # The DSO images are built using a special linker script.
- #
- quiet_cmd_vdso = VDSO    $@
--      cmd_vdso = $(CC) -nostdlib -o $@ \
-+      cmd_vdso = $(LD) -nostdlib -o $@ \
- 		       $(VDSO_LDFLAGS) $(VDSO_LDFLAGS_$(filter %.lds,$(^F))) \
--		       -Wl,-T,$(filter %.lds,$^) $(filter %.o,$^) && \
-+		       -T $(filter %.lds,$^) $(filter %.o,$^) && \
- 		 sh $(srctree)/$(src)/checkundef.sh '$(NM)' '$@'
- 
--VDSO_LDFLAGS = -fPIC -shared $(call cc-ldoption, -Wl$(comma)--hash-style=both) \
--	$(call cc-ldoption, -Wl$(comma)--build-id) -Wl,-Bsymbolic $(LTO_CFLAGS)
-+VDSO_LDFLAGS = -shared $(call ld-option, --hash-style=both) \
-+	$(call ld-option, --build-id) -Bsymbolic
- GCOV_PROFILE := n
- 
- #
--- 
-2.20.1
+Dan Carpenter <dan.carpenter@oracle.com>
+    drivers/virt/fsl_hypervisor.c: prevent integer overflow in ioctl
 
+Dan Carpenter <dan.carpenter@oracle.com>
+    drivers/virt/fsl_hypervisor.c: dereferencing error pointers in ioctl
+
+Jarod Wilson <jarod@redhat.com>
+    bonding: fix arp_validate toggling in active-backup mode
+
+David Ahern <dsahern@gmail.com>
+    ipv4: Fix raw socket lookup for local traffic
+
+Stephen Suryaputra <ssuryaextr@gmail.com>
+    vrf: sit mtu should not be updated when vrf netdev is the link
+
+Hangbin Liu <liuhangbin@gmail.com>
+    vlan: disable SIOCSHWTSTAMP in container
+
+YueHaibing <yuehaibing@huawei.com>
+    packet: Fix error path in packet_init
+
+Christophe Leroy <christophe.leroy@c-s.fr>
+    net: ucc_geth - fix Oops when changing number of buffers in the ring
+
+Hangbin Liu <liuhangbin@gmail.com>
+    fib_rules: return 0 directly if an exactly same rule exists when NLM_F_EXCL not supplied
+
+Tobin C. Harding <tobin@kernel.org>
+    bridge: Fix error path for kobject_init_and_add()
+
+Breno Leitao <leitao@debian.org>
+    powerpc/64s: Include cpu header
+
+Alistair Strachan <astrachan@google.com>
+    x86/vdso: Pass --eh-frame-hdr to the linker
+
+Nick Desaulniers <ndesaulniers@google.com>
+    x86/vdso: Drop implicit common-page-size linker flag
+
+Alistair Strachan <astrachan@google.com>
+    x86: vdso: Use $LD instead of $CC to link
+
+Sasha Levin <sashal@kernel.org>
+    Revert "x86: vdso: Use $LD instead of $CC to link"
+
+Sasha Levin <sashal@kernel.org>
+    Revert "x86/vdso: Drop implicit common-page-size linker flag"
+
+Nigel Croxon <ncroxon@redhat.com>
+    Don't jump to compute_result state from check_result state
+
+Gustavo A. R. Silva <gustavo@embeddedor.com>
+    rtlwifi: rtl8723ae: Fix missing break in switch statement
+
+Takashi Sakamoto <o-takashi@sakamocchi.jp>
+    ALSA: pcm: remove SNDRV_PCM_IOCTL1_INFO internal command
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    cw1200: fix missing unlock on error in cw1200_hw_scan()
+
+Pan Bian <bianpan2016@163.com>
+    Input: synaptics-rmi4 - fix possible double free
+
+Daniel Gomez <dagmcr@gmail.com>
+    spi: ST ST95HF NFC: declare missing of table
+
+Daniel Gomez <dagmcr@gmail.com>
+    spi: Micrel eth switch: declare missing of table
+
+Lucas Stach <l.stach@pengutronix.de>
+    gpu: ipu-v3: dp: fix CSC handling
+
+Po-Hsu Lin <po-hsu.lin@canonical.com>
+    selftests/net: correct the return value for run_netsocktests
+
+Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+    drm/sun4i: Set device driver data at bind time for use in unbind
+
+Arnd Bergmann <arnd@arndb.de>
+    s390: ctcm: fix ctcm_new_device error return code
+
+Petr Štetiar <ynezz@true.cz>
+    MIPS: perf: ath79: Fix perfcount IRQ assignment
+
+Julian Anastasov <ja@ssi.bg>
+    ipvs: do not schedule icmp errors from tunnels
+
+Florian Westphal <fw@strlen.de>
+    selftests: netfilter: check icmp pkttoobig errors are set as related
+
+Dan Williams <dan.j.williams@intel.com>
+    init: initialize jump labels before command line option parsing
+
+Rikard Falkeborn <rikard.falkeborn@gmail.com>
+    tools lib traceevent: Fix missing equality check for strcmp
+
+Vitaly Kuznetsov <vkuznets@redhat.com>
+    KVM: x86: avoid misreporting level-triggered irqs as edge-triggered in tracing
+
+Jian-Hong Pan <jian-hong@endlessm.com>
+    x86/reboot, efi: Use EFI reboot for Acer TravelMate X514-51T
+
+Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+    mISDN: Check address length before reading address family
+
+Martin Schwidefsky <schwidefsky@de.ibm.com>
+    s390/3270: fix lockdep false positive on view->lock
+
+Felix Fietkau <nbd@nbd.name>
+    mac80211: fix unaligned access in mesh table hash function
+
+Peter Oberparleiter <oberpar@linux.ibm.com>
+    s390/dasd: Fix capacity calculation for large volumes
+
+Aditya Pakki <pakki001@umn.edu>
+    libnvdimm/btt: Fix a kmemdup failure check
+
+Dmitry Torokhov <dmitry.torokhov@gmail.com>
+    HID: input: add mapping for "Toggle Display" key
+
+Dmitry Torokhov <dmitry.torokhov@gmail.com>
+    HID: input: add mapping for keyboard Brightness Up/Down/Toggle keys
+
+Dmitry Torokhov <dmitry.torokhov@gmail.com>
+    HID: input: add mapping for Expose/Overview key
+
+Kangjie Lu <kjlu@umn.edu>
+    libnvdimm/namespace: Fix a potential NULL pointer dereference
+
+Sven Van Asbroeck <thesven73@gmail.com>
+    iio: adc: xilinx: fix potential use-after-free on remove
+
+Johan Hovold <johan@kernel.org>
+    USB: serial: fix unthrottle races
+
+Gustavo A. R. Silva <gustavo@embeddedor.com>
+    platform/x86: sony-laptop: Fix unintentional fall-through
+
+Alexei Starovoitov <ast@fb.com>
+    bpf: convert htab map to hlist_nulls
+
+Alexei Starovoitov <ast@fb.com>
+    bpf: fix struct htab_elem layout
+
+Francesco Ruggeri <fruggeri@arista.com>
+    netfilter: compat: initialize all fields in xt_init
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |   4 +-
+ arch/mips/ath79/setup.c                            |   6 -
+ arch/powerpc/include/asm/reg_booke.h               |   2 +-
+ arch/powerpc/kernel/security.c                     |   1 +
+ arch/powerpc/lib/code-patching.c                   |   2 +-
+ arch/x86/entry/vdso/Makefile                       |   3 +-
+ arch/x86/kernel/reboot.c                           |  21 ++
+ arch/x86/kvm/trace.h                               |   4 +-
+ drivers/gpu/drm/sun4i/sun4i_drv.c                  |   2 +
+ drivers/gpu/ipu-v3/ipu-dp.c                        |  12 +-
+ drivers/hid/hid-input.c                            |  14 +
+ drivers/iio/adc/xilinx-xadc-core.c                 |   2 +-
+ drivers/input/rmi4/rmi_driver.c                    |   6 +-
+ drivers/irqchip/irq-ath79-misc.c                   |  11 +
+ drivers/isdn/mISDN/socket.c                        |   4 +-
+ drivers/md/raid5.c                                 |  19 +-
+ drivers/net/bonding/bond_options.c                 |   7 -
+ drivers/net/ethernet/freescale/ucc_geth_ethtool.c  |   8 +-
+ drivers/net/phy/spi_ks8995.c                       |   9 +
+ .../net/wireless/realtek/rtlwifi/rtl8723ae/hw.c    |   1 +
+ drivers/net/wireless/st/cw1200/scan.c              |   5 +-
+ drivers/nfc/st95hf/core.c                          |   7 +
+ drivers/nvdimm/btt_devs.c                          |  18 +-
+ drivers/nvdimm/namespace_devs.c                    |   5 +-
+ drivers/platform/x86/sony-laptop.c                 |   8 +-
+ drivers/s390/block/dasd_eckd.c                     |   6 +-
+ drivers/s390/char/con3270.c                        |   2 +-
+ drivers/s390/char/fs3270.c                         |   3 +-
+ drivers/s390/char/raw3270.c                        |   3 +-
+ drivers/s390/char/raw3270.h                        |   4 +-
+ drivers/s390/char/tty3270.c                        |   3 +-
+ drivers/s390/net/ctcm_main.c                       |   1 +
+ drivers/usb/serial/generic.c                       |  39 ++-
+ drivers/virt/fsl_hypervisor.c                      |  29 ++-
+ include/linux/efi.h                                |   7 +-
+ include/linux/list_nulls.h                         |   5 +
+ include/linux/rculist_nulls.h                      |  14 +
+ include/sound/pcm.h                                |   2 +-
+ init/main.c                                        |   4 +-
+ kernel/bpf/hashtab.c                               |  99 ++++---
+ net/8021q/vlan_dev.c                               |   4 +-
+ net/bridge/br_if.c                                 |  13 +-
+ net/core/fib_rules.c                               |   6 +-
+ net/ipv4/raw.c                                     |   4 +-
+ net/ipv6/sit.c                                     |   2 +-
+ net/mac80211/mesh_pathtbl.c                        |   2 +-
+ net/netfilter/ipvs/ip_vs_core.c                    |   2 +-
+ net/netfilter/x_tables.c                           |   2 +-
+ net/packet/af_packet.c                             |  25 +-
+ sound/core/pcm_lib.c                               |   2 -
+ sound/core/pcm_native.c                            |   6 +-
+ tools/lib/traceevent/event-parse.c                 |   2 +-
+ tools/testing/selftests/net/run_netsocktests       |   2 +-
+ tools/testing/selftests/netfilter/Makefile         |   2 +-
+ .../selftests/netfilter/conntrack_icmp_related.sh  | 283 +++++++++++++++++++++
+ 55 files changed, 605 insertions(+), 154 deletions(-)
 
 
