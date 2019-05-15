@@ -2,128 +2,156 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8C2C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C532CC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07C0E20644
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:57:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="hOyUz0Nd"
+	by mail.kernel.org (Postfix) with ESMTP id 9B93A205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:57:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfEOP5c (ORCPT
+        id S1728515AbfEOP5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 11:57:32 -0400
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:20132 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726335AbfEOP5b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 11:57:31 -0400
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id x4FFvOU9020916;
-        Thu, 16 May 2019 00:57:25 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x4FFvOU9020916
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557935845;
-        bh=CVB3einOzSmQkAArZSEfGiIV/vsSTw25G7oWKEkq1vI=;
-        h=From:Date:Subject:To:Cc:From;
-        b=hOyUz0NdF61A4cywMn5qZ57MWTCccptp3aOTVVbNd5yW2kgbIRAGRXby+5sfST71r
-         aMsLOY4ryK7OY8YV/XdllwNRPADnJHT8PnI4SORLj30Q+vpHL6VKL1C6V1/PNTXRWY
-         aiOYZf+nJxUnQbwuoGQYV9sVzkaEXmpimLVIHAA4h1C2Ba+vENUEqyVlPfqkP1xB+A
-         7rn8yUPOgUQfqIuPnzGgofz/YpCP3oOdQzEh/lrEVlVD3wJarbz9UhgeUo+u1FtyF4
-         GUl06x0zj8kZOR9qJTi+OvuSvcJWDo1YM+6oQT/UVNcnE3tjMOMZLqSn7UaJ/TTVRX
-         Og+GP1Tu+rxXA==
-X-Nifty-SrcIP: [209.85.222.53]
-Received: by mail-ua1-f53.google.com with SMTP id 49so61309uas.0;
-        Wed, 15 May 2019 08:57:24 -0700 (PDT)
-X-Gm-Message-State: APjAAAXFFbt4CGpa+wZPsRYLSuXTuAk/Xp5Q0c3DZRSLH5RJrhz7CdCg
-        bOIXVi2LoYh9+gEubZF42cs+msxdWzkF6K+qnow=
-X-Google-Smtp-Source: APXvYqx3aK73SbT9SWJfHOr39Jpll5rf8qsj5YOMwfZDhWxmjsyNsTEEfby+AdNsTOEvUyTBn01zsc9pw028RG02Dp4=
-X-Received: by 2002:ab0:20c1:: with SMTP id z1mr18626427ual.109.1557935843938;
- Wed, 15 May 2019 08:57:23 -0700 (PDT)
+        Wed, 15 May 2019 11:57:45 -0400
+Received: from mga14.intel.com ([192.55.52.115]:24524 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726335AbfEOP5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 11:57:45 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 08:57:44 -0700
+X-ExtLoop1: 1
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orsmga004.jf.intel.com with ESMTP; 15 May 2019 08:57:43 -0700
+Date:   Wed, 15 May 2019 08:56:04 -0700
+From:   Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Subject: Re: [RFC PATCH v3 04/21] x86/hpet: Add hpet_set_comparator() for
+ periodic and one-shot modes
+Message-ID: <20190515155604.GB10526@ranerica-svr.sc.intel.com>
+References: <1557842534-4266-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
+ <1557842534-4266-5-git-send-email-ricardo.neri-calderon@linux.intel.com>
+ <3c82f3e0-999c-b389-aa9b-f06919800bb4@infradead.org>
 MIME-Version: 1.0
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 16 May 2019 00:56:47 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQoi24VYEVdwvmjD3CP=Q7_91KQ1o47ocL+MFPKnVBOKA@mail.gmail.com>
-Message-ID: <CAK7LNAQoi24VYEVdwvmjD3CP=Q7_91KQ1o47ocL+MFPKnVBOKA@mail.gmail.com>
-Subject: [GIT PULL] Kconfig updates for v5.2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     masahiroy@kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3c82f3e0-999c-b389-aa9b-f06919800bb4@infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Tue, May 14, 2019 at 07:24:38AM -0700, Randy Dunlap wrote:
+> On 5/14/19 7:01 AM, Ricardo Neri wrote:
+> > Instead of setting the timer period directly in hpet_set_periodic(), add a
+> > new helper function hpet_set_comparator() that only sets the accumulator
+> > and comparator. hpet_set_periodic() will only prepare the timer for
+> > periodic mode and leave the expiration programming to
+> > hpet_set_comparator().
+> > 
+> > This new function can also be used by other components (e.g., the HPET-
+> > based hardlockup detector) which also need to configure HPET timers. Thus,
+> > add its declaration into the hpet header file.
+> > 
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Ashok Raj <ashok.raj@intel.com>
+> > Cc: Andi Kleen <andi.kleen@intel.com>
+> > Cc: Tony Luck <tony.luck@intel.com>
+> > Cc: Philippe Ombredanne <pombredanne@nexb.com>
+> > Cc: Kate Stewart <kstewart@linuxfoundation.org>
+> > Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> > Cc: Stephane Eranian <eranian@google.com>
+> > Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+> > Cc: "Ravi V. Shankar" <ravi.v.shankar@intel.com>
+> > Cc: x86@kernel.org
+> > Originally-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+> > Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+> > ---
+> >  arch/x86/include/asm/hpet.h |  1 +
+> >  arch/x86/kernel/hpet.c      | 57 ++++++++++++++++++++++++++++---------
+> >  2 files changed, 45 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/arch/x86/include/asm/hpet.h b/arch/x86/include/asm/hpet.h
+> > index f132fbf984d4..e7098740f5ee 100644
+> > --- a/arch/x86/include/asm/hpet.h
+> > +++ b/arch/x86/include/asm/hpet.h
+> > @@ -102,6 +102,7 @@ extern int hpet_rtc_timer_init(void);
+> >  extern irqreturn_t hpet_rtc_interrupt(int irq, void *dev_id);
+> >  extern int hpet_register_irq_handler(rtc_irq_handler handler);
+> >  extern void hpet_unregister_irq_handler(rtc_irq_handler handler);
+> > +extern void hpet_set_comparator(int num, unsigned int cmp, unsigned int period);
+> >  
+> >  #endif /* CONFIG_HPET_EMULATE_RTC */
+> >  
+> > diff --git a/arch/x86/kernel/hpet.c b/arch/x86/kernel/hpet.c
+> > index 560fc28e1d13..c5c5fc150193 100644
+> > --- a/arch/x86/kernel/hpet.c
+> > +++ b/arch/x86/kernel/hpet.c
+> > @@ -289,6 +289,46 @@ static void hpet_legacy_clockevent_register(void)
+> >  	printk(KERN_DEBUG "hpet clockevent registered\n");
+> >  }
+> >  
+> > +/**
+> > + * hpet_set_comparator() - Helper function for setting comparator register
+> > + * @num:	The timer ID
+> > + * @cmp:	The value to be written to the comparator/accumulator
+> > + * @period:	The value to be written to the period (0 = oneshot mode)
+> > + *
+> > + * Helper function for updating comparator, accumulator and period values.
+> > + *
+> > + * In periodic mode, HPET needs HPET_TN_SETVAL to be set before writing
+> > + * to the Tn_CMP to update the accumulator. Then, HPET needs a second
+> > + * write (with HPET_TN_SETVAL cleared) to Tn_CMP to set the period.
+> > + * The HPET_TN_SETVAL bit is automatically cleared after the first write.
+> > + *
+> > + * For one-shot mode, HPET_TN_SETVAL does not need to be set.
+> > + *
+> > + * See the following documents:
+> > + *   - Intel IA-PC HPET (High Precision Event Timers) Specification
+> > + *   - AMD-8111 HyperTransport I/O Hub Data Sheet, Publication # 24674
+> > + */
+> > +void hpet_set_comparator(int num, unsigned int cmp, unsigned int period)
+> > +{
+> > +	if (period) {
+> > +		unsigned int v = hpet_readl(HPET_Tn_CFG(num));
+> > +
+> > +		hpet_writel(v | HPET_TN_SETVAL, HPET_Tn_CFG(num));
+> > +	}
+> > +
+> > +	hpet_writel(cmp, HPET_Tn_CMP(num));
+> > +
+> > +	if (!period)
+> > +		return;
+> > +
+> > +	/* This delay is seldom used: never in one-shot mode and in periodic
+> > +	 * only when reprogramming the timer.
+> > +	 */
+> 
+> comment style warning ;)
+>
 
-Please pull Kconfig updates for v5.2
+Uh! I'll correct this. Strangely, I reran checkpatch and it didn't catch
+it.
 
-Thanks.
-
-
-
-The following changes since commit 79a3aaa7b82e3106be97842dedfd8429248896e6:
-
-  Linux 5.1-rc3 (2019-03-31 14:39:29 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
-tags/kconfig-v5.2
-
-for you to fetch changes up to 9b9f5948afcdf583cb1b58e0c4cc327aa1820f5a:
-
-  kconfig: make conf_get_autoconfig_name() static (2019-05-14 23:23:25 +0900)
-
-----------------------------------------------------------------
-Kconfig updates for v5.2
-
- - error out if a user specifies a directory instead of a file from
-   "Save" menu of GUI interfaces
-
- - do not overwrite .config if there is no change in the configuration
-
- - create parent directories as needed when a user specifies a new file
-   path from "Save" menu of menuconfig/nconfig
-
- - fix potential buffer overflow
-
- - some trivial cleanups
-
-----------------------------------------------------------------
-Jacob Garber (1):
-      kconfig: use snprintf for formatting pathnames
-
-Masahiro Yamada (6):
-      kconfig: remove trailing whitespaces
-      kconfig: do not accept a directory for configuration output
-      kconfig: do not write .config if the content is the same
-      kconfig: make parent directories for the saved .config as needed
-      kconfig: remove useless NULL pointer check in conf_write_dep()
-      kconfig: make conf_get_autoconfig_name() static
-
-Petr Vorel (1):
-      kconfig: Make nconf-cfg.sh executable
-
- scripts/kconfig/confdata.c               | 121 ++++++++++++++-------
- scripts/kconfig/gconf.c                  |   2 +-
- scripts/kconfig/lexer.l                  |   3 +-
- scripts/kconfig/lkc.h                    |   1 -
- scripts/kconfig/lxdialog/BIG.FAT.WARNING |   2 +-
- scripts/kconfig/mconf.c                  |   2 +-
- scripts/kconfig/nconf-cfg.sh             |   0
- scripts/kconfig/nconf.c                  |   3 +-
- 8 files changed, 89 insertions(+), 45 deletions(-)
- mode change 100644 => 100755 scripts/kconfig/nconf-cfg.sh
-
-
--- 
-Best Regards
-Masahiro Yamada
+Thanks and BR,
+Ricardo
