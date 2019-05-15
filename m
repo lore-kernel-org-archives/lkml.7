@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFED7C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FAD8C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93784216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1398321734
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557917991;
-	bh=MkJAxibFcQEvGbfg4UeaKGxJxd+hEz/ZojEKY43Dfq0=;
+	s=default; t=1557917996;
+	bh=y1m3BZBT5j0xD2ZtXIItUoqNCZhpJTQQhzHyJ1ZirYk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WC9AN2E8vkcx58Tb6FMgpy3cWauOVNSk4tyyQ/U86GQill3f6UMytis9LEKUtOuSi
-	 m5P+nJv0qMQbKB0ESSH2TCqImMk+yoa7WLJYMKJHjpN2wrw5/01ZAZ7MI8VQszIZhc
-	 3nlPqAexmFXjigydlrzu6sf83ADLlV/KQi4b5jks=
+	b=2bI/I7B+nRFBQ3S8aGjAx9u2CarMelb3uAYn+rRzlXIMLUy/C1ye1peYv+LS0GKzf
+	 +sDqZa1Zoa+lG9ylPPffViMNDliWmzlRQ1ph7vsAre2KMAPQHDVoU/44rYwLAJKr1Z
+	 2n03iZnoMQPE1FGCgecpZovC44n1WYh+HJXrgTM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfEOK7u (ORCPT
+        id S1727283AbfEOK7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:59:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56422 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 06:59:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727242AbfEOK7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:59:46 -0400
+        id S1726715AbfEOK7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:59:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82EDE2084F;
-        Wed, 15 May 2019 10:59:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C10262084E;
+        Wed, 15 May 2019 10:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557917986;
-        bh=MkJAxibFcQEvGbfg4UeaKGxJxd+hEz/ZojEKY43Dfq0=;
+        s=default; t=1557917991;
+        bh=y1m3BZBT5j0xD2ZtXIItUoqNCZhpJTQQhzHyJ1ZirYk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ARJNEqpCY09w9VAZYQz8uWhI7yQ6OnpkBAGhHdPj44/PzoBu3mKJT53SkDijzHsYQ
-         9gpe01AG4AxSzI2Fz6JnrVgi5V1unmM3Lxj/C20kDL6eiel17S1wsPUrFvKbzCD7Gz
-         phYVq7JnKePwq4U0SL7oG9XDufZm/b1BIDbBhEmA=
+        b=j/TJrxDHdU9BgRhRShY8IKvX/OEkOzW7kJic/HMlwxZYzLHLeS1RbVjRqXmIR3yUf
+         YU/JZ9CqvjAzTzsPQbaXmisPviPoDTpwGf04puyythW/YVmPHlcT/OO9TWdgSx3/qB
+         FNjrpg4m5iDz2v5iX1ppCF5N+V+dRQOUW3v+Ai5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeremy Fertic <jeremyfertic@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 3.18 49/86] staging: iio: adt7316: fix the dac read calculation
-Date:   Wed, 15 May 2019 12:55:26 +0200
-Message-Id: <20190515090652.214503157@linuxfoundation.org>
+        stable@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 3.18 51/86] media: v4l2: i2c: ov7670: Fix PLL bypass register values
+Date:   Wed, 15 May 2019 12:55:28 +0200
+Message-Id: <20190515090652.463756699@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -59,57 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Fertic <jeremyfertic@gmail.com>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
 
-commit 45130fb030aec26ac28b4bb23344901df3ec3b7f upstream.
+commit 61da76beef1e4f0b6ba7be4f8d0cf0dac7ce1f55 upstream.
 
-The calculation of the current dac value is using the wrong bits of the
-dac lsb register. Create two macros to shift the lsb register value into
-lsb position, depending on whether the dac is 10 or 12 bit. Initialize
-data to 0 so, with an 8 bit dac, the msb register value can be bitwise
-ORed with data.
+The following commits:
+commit f6dd927f34d6 ("[media] media: ov7670: calculate framerate properly for ov7675")
+commit 04ee6d92047e ("[media] media: ov7670: add possibility to bypass pll for ov7675")
+introduced the ability to bypass PLL multiplier and use input clock (xvclk)
+as pixel clock output frequency for ov7675 sensor.
 
-Fixes: 35f6b6b86ede ("staging: iio: new ADT7316/7/8 and ADT7516/7/9 driver")
-Signed-off-by: Jeremy Fertic <jeremyfertic@gmail.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+PLL is bypassed using register DBLV[7:6], according to ov7670 and ov7675
+sensor manuals. Macros used to set DBLV register seem wrong in the
+driver, as their values do not match what reported in the datasheet.
+
+Fix by changing DBLV_* macros to use bits [7:6] and set bits [3:0] to
+default 0x0a reserved value (according to datasheets).
+
+While at there, remove a write to DBLV register in
+"ov7675_set_framerate()" that over-writes the previous one to the same
+register that takes "info->pll_bypass" flag into account instead of setting PLL
+multiplier to 4x unconditionally.
+
+And, while at there, since "info->pll_bypass" is only used in
+set/get_framerate() functions used by ov7675 only, it is not necessary
+to check for the device id at probe time to make sure that when using
+ov7670 "info->pll_bypass" is set to false.
+
+Fixes: f6dd927f34d6 ("[media] media: ov7670: calculate framerate properly for ov7675")
+
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/iio/addac/adt7316.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/media/i2c/ov7670.c |   16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
 
---- a/drivers/staging/iio/addac/adt7316.c
-+++ b/drivers/staging/iio/addac/adt7316.c
-@@ -47,6 +47,8 @@
- #define ADT7516_MSB_AIN3		0xA
- #define ADT7516_MSB_AIN4		0xB
- #define ADT7316_DA_DATA_BASE		0x10
-+#define ADT7316_DA_10_BIT_LSB_SHIFT	6
-+#define ADT7316_DA_12_BIT_LSB_SHIFT	4
- #define ADT7316_DA_MSB_DATA_REGS	4
- #define ADT7316_LSB_DAC_A		0x10
- #define ADT7316_MSB_DAC_A		0x11
-@@ -1414,7 +1416,7 @@ static IIO_DEVICE_ATTR(ex_analog_temp_of
- static ssize_t adt7316_show_DAC(struct adt7316_chip_info *chip,
- 		int channel, char *buf)
- {
--	u16 data;
-+	u16 data = 0;
- 	u8 msb, lsb, offset;
- 	int ret;
+--- a/drivers/media/i2c/ov7670.c
++++ b/drivers/media/i2c/ov7670.c
+@@ -155,10 +155,10 @@ MODULE_PARM_DESC(debug, "Debug level (0-
+ #define REG_GFIX	0x69	/* Fix gain control */
  
-@@ -1439,7 +1441,11 @@ static ssize_t adt7316_show_DAC(struct a
- 	if (ret)
- 		return -EIO;
+ #define REG_DBLV	0x6b	/* PLL control an debugging */
+-#define   DBLV_BYPASS	  0x00	  /* Bypass PLL */
+-#define   DBLV_X4	  0x01	  /* clock x4 */
+-#define   DBLV_X6	  0x10	  /* clock x6 */
+-#define   DBLV_X8	  0x11	  /* clock x8 */
++#define   DBLV_BYPASS	  0x0a	  /* Bypass PLL */
++#define   DBLV_X4	  0x4a	  /* clock x4 */
++#define   DBLV_X6	  0x8a	  /* clock x6 */
++#define   DBLV_X8	  0xca	  /* clock x8 */
  
--	data = (msb << offset) + (lsb & ((1 << offset) - 1));
-+	if (chip->dac_bits == 12)
-+		data = lsb >> ADT7316_DA_12_BIT_LSB_SHIFT;
-+	else if (chip->dac_bits == 10)
-+		data = lsb >> ADT7316_DA_10_BIT_LSB_SHIFT;
-+	data |= msb << offset;
+ #define REG_REG76	0x76	/* OV's name */
+ #define   R76_BLKPCOR	  0x80	  /* Black pixel correction enable */
+@@ -833,7 +833,7 @@ static int ov7675_set_framerate(struct v
+ 	if (ret < 0)
+ 		return ret;
  
- 	return sprintf(buf, "%d\n", data);
+-	return ov7670_write(sd, REG_DBLV, DBLV_X4);
++	return 0;
  }
+ 
+ static void ov7670_get_framerate_legacy(struct v4l2_subdev *sd,
+@@ -1540,11 +1540,7 @@ static int ov7670_probe(struct i2c_clien
+ 		if (config->clock_speed)
+ 			info->clock_speed = config->clock_speed;
+ 
+-		/*
+-		 * It should be allowed for ov7670 too when it is migrated to
+-		 * the new frame rate formula.
+-		 */
+-		if (config->pll_bypass && id->driver_data != MODEL_OV7670)
++		if (config->pll_bypass)
+ 			info->pll_bypass = true;
+ 
+ 		if (config->pclk_hb_disable)
 
 
