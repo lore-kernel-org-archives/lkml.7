@@ -2,95 +2,80 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A5BC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A22C1C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8113020644
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919067;
-	bh=AgWPtJhCmV9gDH7+N7t6urqs1UeMX2JOWmXIAWuPI8E=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1JfD6zOeYfnzSPY9mf5WflYYA04u78e9KmqNyC1hLzumvf6lRwDyB7TvJVHSgS2z/
-	 0uTUY7RTYO429iBoWp8RLFfnyRYGX3TPDdpcnngf9aep6Gwyertb0IqCaMWfgKXOfR
-	 t8msDFgzrqeBLR4ESoW87sbLmy/wb0lsHmlwCZP4=
+	by mail.kernel.org (Postfix) with ESMTP id 43BFB20862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730704AbfEOLRq (ORCPT
+        id S1730046AbfEOLRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:17:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55024 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:17:51 -0400
+Received: from mga02.intel.com ([134.134.136.20]:65294 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730680AbfEOLRm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:17:42 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6EC120644;
-        Wed, 15 May 2019 11:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919061;
-        bh=AgWPtJhCmV9gDH7+N7t6urqs1UeMX2JOWmXIAWuPI8E=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RJvXWSlLbgD8zKZLi8ferpDHlgwiHO+pRch0goH87apJy3tAkEzLynnjayGb6rFBf
-         j979b4NpqUvTYVDATqFin28XhaDhurRAXbx7C8YMA3MOkwekKiTUjBjvgIWk1AROw1
-         1UxzHUHq77MQGwe7JL93gfxEI0HMddZD+6x7Fo0s=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 050/115] media: adv7604: when the EDID is cleared, unconfigure CEC as well
-Date:   Wed, 15 May 2019 12:55:30 +0200
-Message-Id: <20190515090703.223751213@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
-References: <20190515090659.123121100@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1727141AbfEOLRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:17:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 04:17:46 -0700
+X-ExtLoop1: 1
+Received: from um.fi.intel.com (HELO localhost) ([10.237.72.63])
+  by fmsmga004.fm.intel.com with ESMTP; 15 May 2019 04:17:42 -0700
+From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>, mingo@kernel.org
+Cc:     linux-kernel@vger.kernel.org, acme@kernel.org, jolsa@redhat.com,
+        songliubraving@fb.com, eranian@google.com, tglx@linutronix.de,
+        alexey.budankov@linux.intel.com, mark.rutland@arm.com,
+        megha.dey@intel.com, frederic@kernel.org,
+        alexander.shishkin@linux.intel.com
+Subject: Re: [RFC][PATCH] perf: Rewrite core context handling
+In-Reply-To: <20181010104559.GO5728@hirez.programming.kicks-ass.net>
+References: <20181010104559.GO5728@hirez.programming.kicks-ass.net>
+Date:   Wed, 15 May 2019 14:17:42 +0300
+Message-ID: <875zqcx8yx.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e7da89926f6dc6cf855f5ffdf79ef99a1b115ca7 ]
+Peter Zijlstra <peterz@infradead.org> writes:
 
-When there is no EDID the CEC adapter should be unconfigured as
-well. So call cec_phys_addr_invalidate() when this happens.
+> +	// XXX think about exclusive
+> +	if ((pmu->capabilities & PERF_PMU_CAP_EXCLUSIVE) && group_leader) {
+> +		err = -EBUSY;
+> +		goto err_context;
+>  	}
 
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: <stable@vger.kernel.org>      # for v4.18 and up
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
----
- drivers/media/i2c/adv7604.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+This used to be a problem, because group_leader could have caused
+move_group, which could then potentially violate the
+exclusive_event_installable() half way through installing siblings onto
+the new context (gctx -> ctx). But, with the proposed new order, it's
+the same context (ctx), but different epc, which is not a problem; any
+potential violations would be caught by
 
-diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
-index d2108aad3c658..26c3ec573a565 100644
---- a/drivers/media/i2c/adv7604.c
-+++ b/drivers/media/i2c/adv7604.c
-@@ -2295,8 +2295,10 @@ static int adv76xx_set_edid(struct v4l2_subdev *sd, struct v4l2_edid *edid)
- 		state->aspect_ratio.numerator = 16;
- 		state->aspect_ratio.denominator = 9;
- 
--		if (!state->edid.present)
-+		if (!state->edid.present) {
- 			state->edid.blocks = 0;
-+			cec_phys_addr_invalidate(state->cec_adap);
-+		}
- 
- 		v4l2_dbg(2, debug, sd, "%s: clear EDID pad %d, edid.present = 0x%x\n",
- 				__func__, edid->pad, state->edid.present);
--- 
-2.20.1
+  if (!exclusive_event_installable(event, ctx))
 
+that preceeds the move_group block.
 
+It also makes sense that exclusive_event_installable() looks on
+ctx->event_list and not epc lists for this exact reason.
 
+In retrospect, we can probably also fix this better in the current code
+like:
+
+  if (!exclusive_event_installable(event, ctx) ||
+      !exclusive_event_installable(event, gctx)) /* do -EBUSY */
+
+and get rid of the above restriction to allow grouping "exclusive"
+events.
+
+Regards,
+--
+Alex
