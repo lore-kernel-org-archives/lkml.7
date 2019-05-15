@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02520C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DE9C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8E9C2084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 902F8206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919746;
-	bh=Vs33h3HMAQVmJ+SIVLTPU0qa4/O/E42YM7/d53qafYg=;
+	s=default; t=1557919751;
+	bh=pT8pxS8klidPn33smoRvZdqbifKG/O564mOdrnLgpaY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fDBUTzimCEWjKnod9cxQUPX6JMVGtR0c/9FOeSbU5yPtVNIhQ7EYXTc5LXURxUWbF
-	 RZ4NOlD4dQbI7hetiFm5NIHv3ZVJ9zYn616N93D8vIROaImpnItvflpnIccVIJYtxe
-	 hvyg4syH6BxCwAc4VOdhSSUIZGuIJlWTj6jOxlVQ=
+	b=zTe6NyU0XV/b0LMheSs6MrZlLxZOD4H7mr1qppzfZFTxpFImhIniFB98Ac1TpIpQ2
+	 jn1GBGVfjJVNoBpgNw48114AW7EHEduy1gK3BdxTQL+mkBfheYF8KF31HqqcEwRpZI
+	 SvFG9/w/Cch3aWKOqbqdaQVtVkTgvSMn5TZlMfy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732488AbfEOL3F (ORCPT
+        id S1732499AbfEOL3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:29:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40220 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:29:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731806AbfEOL3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:29:01 -0400
+        id S1731818AbfEOL3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:29:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E696F206BF;
-        Wed, 15 May 2019 11:29:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 358CF206BF;
+        Wed, 15 May 2019 11:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919741;
-        bh=Vs33h3HMAQVmJ+SIVLTPU0qa4/O/E42YM7/d53qafYg=;
+        s=default; t=1557919746;
+        bh=pT8pxS8klidPn33smoRvZdqbifKG/O564mOdrnLgpaY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AuAxY9m3TRoPcSFQxvzl9eg7Bsy9cROU3Z6nnsX+EMwcxGbq2zp+moxdWQZhVJTU9
-         Pad1yW+/6vrH8hqVDBZMo/KHG4LZ70d/BCPTf5P1Cjz0MVO+ngX14n25IyK2JXI9wO
-         /Qdko3VgiWnKLCpEkTzqnqUIf/ntBvaLsd0aSpb0=
+        b=lxFDV+DIfFrFFj3Smg8Y25++mK+05hn8eGqn5Lwxu6+Dj9QCazN1XSX2bl/QhUE8U
+         LOC+HDUw9keFdJfcJ3KiziQ9x0XlqQ8KNnF9EY5IsabGh1hZA3mtmrKGKRT2bA8Z5x
+         5QEoR6BfUOHp0ukplYvdLPNpUmQK+mZbzqaef7Yk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 032/137] clocksource/drivers/npcm: select TIMER_OF
-Date:   Wed, 15 May 2019 12:55:13 +0200
-Message-Id: <20190515090655.659546612@linuxfoundation.org>
+Subject: [PATCH 5.0 034/137] selftests: fib_tests: Fix Command line is not complete errors
+Date:   Wed, 15 May 2019 12:55:15 +0200
+Message-Id: <20190515090655.830958831@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -60,33 +60,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 99834eead2a04e93a120abb112542b87c42ff5e1 ]
+[ Upstream commit a5f622984a623df9a84cf43f6b098d8dd76fbe05 ]
 
-When this is disabled, we get a link failure:
+A couple of tests are verifying a route has been removed. The helper
+expects the prefix as the first part of the expected output. When
+checking that a route has been deleted the prefix is empty leading
+to an invalid ip command:
 
-drivers/clocksource/timer-npcm7xx.o: In function `npcm7xx_timer_init':
-timer-npcm7xx.c:(.init.text+0xf): undefined reference to `timer_of_init'
+  $ ip ro ls match
+  Command line is not complete. Try option "help"
 
-Fixes: 1c00289ecd12 ("clocksource/drivers/npcm: Add NPCM7xx timer driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Fix by moving the comparison of expected output and output to a new
+function that is used by both check_route and check_route6. Use the
+new helper for the 2 checks on route removal.
+
+Also, remove the reset of 'set -x' in route_setup which overrides the
+user managed setting.
+
+Fixes: d69faad76584c ("selftests: fib_tests: Add prefix route tests with metric")
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/net/fib_tests.sh | 94 ++++++++++--------------
+ 1 file changed, 40 insertions(+), 54 deletions(-)
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 8dfd3bc448d04..9df90daa9c030 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -144,6 +144,7 @@ config VT8500_TIMER
- config NPCM7XX_TIMER
- 	bool "NPCM7xx timer driver" if COMPILE_TEST
- 	depends on HAS_IOMEM
-+	select TIMER_OF
- 	select CLKSRC_MMIO
- 	help
- 	  Enable 24-bit TIMER0 and TIMER1 counters in the NPCM7xx architecture,
+diff --git a/tools/testing/selftests/net/fib_tests.sh b/tools/testing/selftests/net/fib_tests.sh
+index 1080ff55a788f..0d2a5f4f1e638 100755
+--- a/tools/testing/selftests/net/fib_tests.sh
++++ b/tools/testing/selftests/net/fib_tests.sh
+@@ -605,6 +605,39 @@ run_cmd()
+ 	return $rc
+ }
+ 
++check_expected()
++{
++	local out="$1"
++	local expected="$2"
++	local rc=0
++
++	[ "${out}" = "${expected}" ] && return 0
++
++	if [ -z "${out}" ]; then
++		if [ "$VERBOSE" = "1" ]; then
++			printf "\nNo route entry found\n"
++			printf "Expected:\n"
++			printf "    ${expected}\n"
++		fi
++		return 1
++	fi
++
++	# tricky way to convert output to 1-line without ip's
++	# messy '\'; this drops all extra white space
++	out=$(echo ${out})
++	if [ "${out}" != "${expected}" ]; then
++		rc=1
++		if [ "${VERBOSE}" = "1" ]; then
++			printf "    Unexpected route entry. Have:\n"
++			printf "        ${out}\n"
++			printf "    Expected:\n"
++			printf "        ${expected}\n\n"
++		fi
++	fi
++
++	return $rc
++}
++
+ # add route for a prefix, flushing any existing routes first
+ # expected to be the first step of a test
+ add_route6()
+@@ -652,31 +685,7 @@ check_route6()
+ 	pfx=$1
+ 
+ 	out=$($IP -6 ro ls match ${pfx} | sed -e 's/ pref medium//')
+-	[ "${out}" = "${expected}" ] && return 0
+-
+-	if [ -z "${out}" ]; then
+-		if [ "$VERBOSE" = "1" ]; then
+-			printf "\nNo route entry found\n"
+-			printf "Expected:\n"
+-			printf "    ${expected}\n"
+-		fi
+-		return 1
+-	fi
+-
+-	# tricky way to convert output to 1-line without ip's
+-	# messy '\'; this drops all extra white space
+-	out=$(echo ${out})
+-	if [ "${out}" != "${expected}" ]; then
+-		rc=1
+-		if [ "${VERBOSE}" = "1" ]; then
+-			printf "    Unexpected route entry. Have:\n"
+-			printf "        ${out}\n"
+-			printf "    Expected:\n"
+-			printf "        ${expected}\n\n"
+-		fi
+-	fi
+-
+-	return $rc
++	check_expected "${out}" "${expected}"
+ }
+ 
+ route_cleanup()
+@@ -725,7 +734,7 @@ route_setup()
+ 	ip -netns ns2 addr add 172.16.103.2/24 dev veth4
+ 	ip -netns ns2 addr add 172.16.104.1/24 dev dummy1
+ 
+-	set +ex
++	set +e
+ }
+ 
+ # assumption is that basic add of a single path route works
+@@ -960,7 +969,8 @@ ipv6_addr_metric_test()
+ 	run_cmd "$IP li set dev dummy2 down"
+ 	rc=$?
+ 	if [ $rc -eq 0 ]; then
+-		check_route6 ""
++		out=$($IP -6 ro ls match 2001:db8:104::/64)
++		check_expected "${out}" ""
+ 		rc=$?
+ 	fi
+ 	log_test $rc 0 "Prefix route removed on link down"
+@@ -1091,38 +1101,13 @@ check_route()
+ 	local pfx
+ 	local expected="$1"
+ 	local out
+-	local rc=0
+ 
+ 	set -- $expected
+ 	pfx=$1
+ 	[ "${pfx}" = "unreachable" ] && pfx=$2
+ 
+ 	out=$($IP ro ls match ${pfx})
+-	[ "${out}" = "${expected}" ] && return 0
+-
+-	if [ -z "${out}" ]; then
+-		if [ "$VERBOSE" = "1" ]; then
+-			printf "\nNo route entry found\n"
+-			printf "Expected:\n"
+-			printf "    ${expected}\n"
+-		fi
+-		return 1
+-	fi
+-
+-	# tricky way to convert output to 1-line without ip's
+-	# messy '\'; this drops all extra white space
+-	out=$(echo ${out})
+-	if [ "${out}" != "${expected}" ]; then
+-		rc=1
+-		if [ "${VERBOSE}" = "1" ]; then
+-			printf "    Unexpected route entry. Have:\n"
+-			printf "        ${out}\n"
+-			printf "    Expected:\n"
+-			printf "        ${expected}\n\n"
+-		fi
+-	fi
+-
+-	return $rc
++	check_expected "${out}" "${expected}"
+ }
+ 
+ # assumption is that basic add of a single path route works
+@@ -1387,7 +1372,8 @@ ipv4_addr_metric_test()
+ 	run_cmd "$IP li set dev dummy2 down"
+ 	rc=$?
+ 	if [ $rc -eq 0 ]; then
+-		check_route ""
++		out=$($IP ro ls match 172.16.104.0/24)
++		check_expected "${out}" ""
+ 		rc=$?
+ 	fi
+ 	log_test $rc 0 "Prefix route removed on link down"
 -- 
 2.20.1
 
