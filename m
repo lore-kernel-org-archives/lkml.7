@@ -2,52 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C06C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:01:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E1AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD3CA21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65B8520881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:01:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918060;
-	bh=TRquG3RLKPEL7QWXdp2ChQjNqiQnwglD5+M20SN+v34=;
+	s=default; t=1557918062;
+	bh=SZ0h49qTYTAVRiMKbU4JLmNPY26ZDaX+92rxPpki5Dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=exsagP9upAzMjthqeIKn3VE0m9xUYR0cgsc0IZlCAF0sxjTeHof6AuoVgXRC1aJCE
-	 q945zNsWf1Su4dGZcdb4FycpdUFtuh+3hDGmicpkE7rc/kIfktZF8vRRHuLiR4YxL4
-	 oKh+t7CesYN+VzPip5GbTzxvwkqhVWhKb2Hmfiqs=
+	b=Sc4nLDjaHy6xzvhcXIyKYIMzJaCykEfU8kj6aiHxUNMr4Tbym921g6QhovLBUpFkh
+	 xQm4rtOrz3oUHvB9fHmZkx3SI7rTly/8gDdv8BH8h2aD+scj4JI9pUt4+xU2jYDV52
+	 ZfDWdpTo8wBFhT+eTc0NiukhObyEWpcsA2P6DbYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfEOLA7 (ORCPT
+        id S1727609AbfEOLBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:00:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57838 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:01:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727564AbfEOLA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:00:56 -0400
+        id S1727580AbfEOLA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:00:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 357AB21743;
-        Wed, 15 May 2019 11:00:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D82E72084F;
+        Wed, 15 May 2019 11:00:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918055;
-        bh=TRquG3RLKPEL7QWXdp2ChQjNqiQnwglD5+M20SN+v34=;
+        s=default; t=1557918058;
+        bh=SZ0h49qTYTAVRiMKbU4JLmNPY26ZDaX+92rxPpki5Dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W/9Fsh76XqQR6B1zENLV1e5geZDl1HaUzurF8KSaBcq740ZLWQsw0tJ+KgfUNT+xa
-         Uf4hyxYZK/27Qk1qrS50Iyk7zGGig76sxNcukBsjJr4v464m6eWy5ri6C90CeWFDSV
-         utvXX/eNp2E7qzoEFWDLhLw27ipbb87jLMk7Zgko=
+        b=PksrykwUKAzMETOgkOJsd7PNqg+zzayL+zl5npLJLH+86+p8D8yzg2tLJ6Z29GX6W
+         hCS2ZMiPHIvGZxlCUtFmCNeZ3BlLSGJws/YtTA60nDoYgeJ96mKrCcAZB8nsYrwtx3
+         9pCRvLQL60GxHs+rD2vHvR+rvNIxl8V8B6GFTqQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        Johan Hovold <johan@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 76/86] USB: serial: use variable for status
-Date:   Wed, 15 May 2019 12:55:53 +0200
-Message-Id: <20190515090655.472717758@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Vasquez <andrewv@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 3.18 59/86] scsi: qla2xxx: Fix incorrect region-size setting in optrom SYSFS routines
+Date:   Wed, 15 May 2019 12:55:36 +0200
+Message-Id: <20190515090654.120100646@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -60,95 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3161da970d38cd6ed2ba8cadec93874d1d06e11e ]
+From: Andrew Vasquez <andrewv@marvell.com>
 
-This patch turns status in a variable read once from the URB.
-The long term plan is to deliver status to the callback.
-In addition it makes the code a bit more elegant.
+commit 5cbdae10bf11f96e30b4d14de7b08c8b490e903c upstream.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Commit e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs
+code") incorrectly set 'optrom_region_size' to 'start+size', which can
+overflow option-rom boundaries when 'start' is non-zero.  Continue setting
+optrom_region_size to the proper adjusted value of 'size'.
+
+Fixes: e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs code")
+Cc: stable@vger.kernel.org
+Signed-off-by: Andrew Vasquez <andrewv@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/usb/serial/generic.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/scsi/qla2xxx/qla_attr.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/serial/generic.c b/drivers/usb/serial/generic.c
-index c44b911937e8d..a648fdca938a2 100644
---- a/drivers/usb/serial/generic.c
-+++ b/drivers/usb/serial/generic.c
-@@ -350,6 +350,7 @@ void usb_serial_generic_read_bulk_callback(struct urb *urb)
- 	struct usb_serial_port *port = urb->context;
- 	unsigned char *data = urb->transfer_buffer;
- 	unsigned long flags;
-+	int status = urb->status;
- 	int i;
+--- a/drivers/scsi/qla2xxx/qla_attr.c
++++ b/drivers/scsi/qla2xxx/qla_attr.c
+@@ -431,7 +431,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
+ 		}
  
- 	for (i = 0; i < ARRAY_SIZE(port->read_urbs); ++i) {
-@@ -360,22 +361,22 @@ void usb_serial_generic_read_bulk_callback(struct urb *urb)
+ 		ha->optrom_region_start = start;
+-		ha->optrom_region_size = start + size;
++		ha->optrom_region_size = size;
  
- 	dev_dbg(&port->dev, "%s - urb %d, len %d\n", __func__, i,
- 							urb->actual_length);
--	switch (urb->status) {
-+	switch (status) {
- 	case 0:
- 		break;
- 	case -ENOENT:
- 	case -ECONNRESET:
- 	case -ESHUTDOWN:
- 		dev_dbg(&port->dev, "%s - urb stopped: %d\n",
--							__func__, urb->status);
-+							__func__, status);
- 		return;
- 	case -EPIPE:
- 		dev_err(&port->dev, "%s - urb stopped: %d\n",
--							__func__, urb->status);
-+							__func__, status);
- 		return;
- 	default:
- 		dev_dbg(&port->dev, "%s - nonzero urb status: %d\n",
--							__func__, urb->status);
-+							__func__, status);
- 		goto resubmit;
- 	}
+ 		ha->optrom_state = QLA_SREADING;
+ 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
+@@ -504,7 +504,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
+ 		}
  
-@@ -399,6 +400,7 @@ void usb_serial_generic_write_bulk_callback(struct urb *urb)
- {
- 	unsigned long flags;
- 	struct usb_serial_port *port = urb->context;
-+	int status = urb->status;
- 	int i;
+ 		ha->optrom_region_start = start;
+-		ha->optrom_region_size = start + size;
++		ha->optrom_region_size = size;
  
- 	for (i = 0; i < ARRAY_SIZE(port->write_urbs); ++i) {
-@@ -410,22 +412,22 @@ void usb_serial_generic_write_bulk_callback(struct urb *urb)
- 	set_bit(i, &port->write_urbs_free);
- 	spin_unlock_irqrestore(&port->lock, flags);
- 
--	switch (urb->status) {
-+	switch (status) {
- 	case 0:
- 		break;
- 	case -ENOENT:
- 	case -ECONNRESET:
- 	case -ESHUTDOWN:
- 		dev_dbg(&port->dev, "%s - urb stopped: %d\n",
--							__func__, urb->status);
-+							__func__, status);
- 		return;
- 	case -EPIPE:
- 		dev_err_console(port, "%s - urb stopped: %d\n",
--							__func__, urb->status);
-+							__func__, status);
- 		return;
- 	default:
- 		dev_err_console(port, "%s - nonzero urb status: %d\n",
--							__func__, urb->status);
-+							__func__, status);
- 		goto resubmit;
- 	}
- 
--- 
-2.20.1
-
+ 		ha->optrom_state = QLA_SWRITING;
+ 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
 
 
