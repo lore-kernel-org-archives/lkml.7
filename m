@@ -6,105 +6,131 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5249AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33569C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 170832084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01D8E2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbfEOTa3 (ORCPT
+        id S1728036AbfEOTal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:30:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58872 "EHLO mx1.redhat.com"
+        Wed, 15 May 2019 15:30:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35000 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727550AbfEOT1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 15:27:34 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1727297AbfEOT1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 15:27:33 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B327E3001A77;
+        by mx1.redhat.com (Postfix) with ESMTPS id 80E0BC09AD11;
         Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F3DF19C71;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C0D15D9CC;
         Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id E5707225488; Wed, 15 May 2019 15:27:29 -0400 (EDT)
+        id CBD3F225484; Wed, 15 May 2019 15:27:29 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, linux-nvdimm@lists.01.org
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
         dgilbert@redhat.com, swhiteho@redhat.com
-Subject: [PATCH v2 20/30] fuse: Introduce setupmapping/removemapping commands
-Date:   Wed, 15 May 2019 15:27:05 -0400
-Message-Id: <20190515192715.18000-21-vgoyal@redhat.com>
+Subject: [PATCH v2 16/30] virtio: Implement get_shm_region for MMIO transport
+Date:   Wed, 15 May 2019 15:27:01 -0400
+Message-Id: <20190515192715.18000-17-vgoyal@redhat.com>
 In-Reply-To: <20190515192715.18000-1-vgoyal@redhat.com>
 References: <20190515192715.18000-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 15 May 2019 19:27:33 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce two new fuse commands to setup/remove memory mappings. This
-will be used to setup/tear down file mapping in dax window.
+From: Sebastien Boeuf <sebastien.boeuf@intel.com>
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+On MMIO a new set of registers is defined for finding SHM
+regions.  Add their definitions and use them to find the region.
+
+Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
 ---
- include/uapi/linux/fuse.h | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ drivers/virtio/virtio_mmio.c     | 32 ++++++++++++++++++++++++++++++++
+ include/uapi/linux/virtio_mmio.h | 11 +++++++++++
+ 2 files changed, 43 insertions(+)
 
-diff --git a/include/uapi/linux/fuse.h b/include/uapi/linux/fuse.h
-index 2ac598614a8f..9eb313220549 100644
---- a/include/uapi/linux/fuse.h
-+++ b/include/uapi/linux/fuse.h
-@@ -399,6 +399,8 @@ enum fuse_opcode {
- 	FUSE_RENAME2		= 45,
- 	FUSE_LSEEK		= 46,
- 	FUSE_COPY_FILE_RANGE	= 47,
-+	FUSE_SETUPMAPPING       = 48,
-+	FUSE_REMOVEMAPPING      = 49,
+diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
+index d9dd0f789279..ac42520abd86 100644
+--- a/drivers/virtio/virtio_mmio.c
++++ b/drivers/virtio/virtio_mmio.c
+@@ -499,6 +499,37 @@ static const char *vm_bus_name(struct virtio_device *vdev)
+ 	return vm_dev->pdev->name;
+ }
  
- 	/* CUSE specific operations */
- 	CUSE_INIT		= 4096,
-@@ -822,4 +824,35 @@ struct fuse_copy_file_range_in {
- 	uint64_t	flags;
++static bool vm_get_shm_region(struct virtio_device *vdev,
++			      struct virtio_shm_region *region, u8 id)
++{
++	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vdev);
++	u64 len, addr;
++
++	/* Select the region we're interested in */
++	writel(id, vm_dev->base + VIRTIO_MMIO_SHM_SEL);
++
++	/* Read the region size */
++	len = (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_LEN_LOW);
++	len |= (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_LEN_HIGH) << 32;
++
++	region->len = len;
++
++	/* Check if region length is -1. If that's the case, the shared memory
++	 * region does not exist and there is no need to proceed further.
++	 */
++	if (len == ~(u64)0) {
++		return false;
++	}
++
++	/* Read the region base address */
++	addr = (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_BASE_LOW);
++	addr |= (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_BASE_HIGH) << 32;
++
++	region->addr = addr;
++
++	return true;
++}
++
+ static const struct virtio_config_ops virtio_mmio_config_ops = {
+ 	.get		= vm_get,
+ 	.set		= vm_set,
+@@ -511,6 +542,7 @@ static const struct virtio_config_ops virtio_mmio_config_ops = {
+ 	.get_features	= vm_get_features,
+ 	.finalize_features = vm_finalize_features,
+ 	.bus_name	= vm_bus_name,
++	.get_shm_region = vm_get_shm_region,
  };
  
-+#define FUSE_SETUPMAPPING_ENTRIES 8
-+#define FUSE_SETUPMAPPING_FLAG_WRITE (1ull << 0)
-+struct fuse_setupmapping_in {
-+	/* An already open handle */
-+	uint64_t	fh;
-+	/* Offset into the file to start the mapping */
-+	uint64_t	foffset;
-+	/* Length of mapping required */
-+	uint64_t	len;
-+	/* Flags, FUSE_SETUPMAPPING_FLAG_* */
-+	uint64_t	flags;
-+	/* Offset in Memory Window */
-+	uint64_t	moffset;
-+};
+ 
+diff --git a/include/uapi/linux/virtio_mmio.h b/include/uapi/linux/virtio_mmio.h
+index c4b09689ab64..0650f91bea6c 100644
+--- a/include/uapi/linux/virtio_mmio.h
++++ b/include/uapi/linux/virtio_mmio.h
+@@ -122,6 +122,17 @@
+ #define VIRTIO_MMIO_QUEUE_USED_LOW	0x0a0
+ #define VIRTIO_MMIO_QUEUE_USED_HIGH	0x0a4
+ 
++/* Shared memory region id */
++#define VIRTIO_MMIO_SHM_SEL             0x0ac
 +
-+struct fuse_setupmapping_out {
-+	/* Offsets into the cache of mappings */
-+	uint64_t	coffset[FUSE_SETUPMAPPING_ENTRIES];
-+        /* Lengths of each mapping */
-+        uint64_t	len[FUSE_SETUPMAPPING_ENTRIES];
-+};
++/* Shared memory region length, 64 bits in two halves */
++#define VIRTIO_MMIO_SHM_LEN_LOW         0x0b0
++#define VIRTIO_MMIO_SHM_LEN_HIGH        0x0b4
 +
-+struct fuse_removemapping_in {
-+        /* An already open handle */
-+        uint64_t	fh;
-+	/* Offset into the dax window start the unmapping */
-+	uint64_t        moffset;
-+        /* Length of mapping required */
-+        uint64_t	len;
-+};
++/* Shared memory region base address, 64 bits in two halves */
++#define VIRTIO_MMIO_SHM_BASE_LOW        0x0b8
++#define VIRTIO_MMIO_SHM_BASE_HIGH       0x0bc
 +
- #endif /* _LINUX_FUSE_H */
+ /* Configuration atomicity value */
+ #define VIRTIO_MMIO_CONFIG_GENERATION	0x0fc
+ 
 -- 
 2.20.1
 
