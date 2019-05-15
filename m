@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089D7C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4E0C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFDE720862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52B6920818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919402;
-	bh=OauWDb99dndtmVwXevW2sEDRQJz0FaVlZ55NtZqBDZw=;
+	s=default; t=1557919398;
+	bh=K2IkrEi/tD2IaYZmqAfSJbHk+BOVouzFnQkxLuBR1/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aSOlzyaw96uN7PvhdpZ72kDhg0Ee+E0lHOc4+fUcwpOmPB/h6/Dsg8AjDq0TaNh03
-	 uzD59+x9RmL8YicvZgdC8dWdqESvd5jlBjtZvUAjtHppSlDLUC0oiUX+zwweEI6W0+
-	 ia/k3lNI6YfX0MtIjXH1o97xVH0QFNhAyuEun3lY=
+	b=lW47t4w3lgiEP6mH/1ByTWkOJbAoizOXiczuUU1eRBPQkpAlQDBaQlY1RgE56HlwF
+	 qnPS/hVF58IuJO4XMKei+tfah0eBx17zagjDjFrGG+KeERUMkTnf4uHllTtv0uloRR
+	 73Y2iTFyGQrFerwdlabtB3nPC6nNGr4wRkqC73v0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731629AbfEOLXV (ORCPT
+        id S1731609AbfEOLXR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:23:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33606 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:23:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731335AbfEOLXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:23:16 -0400
+        id S1731600AbfEOLXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:23:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0C2E206BF;
-        Wed, 15 May 2019 11:23:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E9D22173C;
+        Wed, 15 May 2019 11:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919396;
-        bh=OauWDb99dndtmVwXevW2sEDRQJz0FaVlZ55NtZqBDZw=;
+        s=default; t=1557919393;
+        bh=K2IkrEi/tD2IaYZmqAfSJbHk+BOVouzFnQkxLuBR1/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nYAiWGj5FdJCl08IoZDwGtrKp3i3l1DT4+8TriOD2vKg8RPE8GR7L4I1jD1ZRpNVM
-         KlmD9UijkUlOmCGs1kQjLLD6lTP3ONMKQjMtZ2RitYxwSdTgyQfdY/o9ai/kUjkiBv
-         eoZTrEDr5TkQqtmXk13J2AB1V9yf5VTr8/srohl4=
+        b=R/AmU3Uuxzh0loV85j20P4HVXXHNddoLr/zBG1vPR06iv+4zsqGH9s3+p/5EbjZpH
+         iY4tIA5VVJL5Qh1n5ptddY6lb2RndwCdtV8u95+XWrtsnUhkQZyzEXyhJ4REH/5MCt
+         +Ypk9ZqJeJU4beZ9OUBTV6KCp4VD/XVLlsNQpLnA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Javier Martinez Canillas <javier@dowhile0.org>,
-        Daniel Gomez <dagmcr@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Tony Camuso <tcamuso@redhat.com>,
+        Corey Minyard <cminyard@mvista.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 059/113] spi: Micrel eth switch: declare missing of table
-Date:   Wed, 15 May 2019 12:55:50 +0200
-Message-Id: <20190515090658.075732313@linuxfoundation.org>
+Subject: [PATCH 4.19 041/113] ipmi: ipmi_si_hardcode.c: init si_type array to fix a crash
+Date:   Wed, 15 May 2019 12:55:32 +0200
+Message-Id: <20190515090656.736553667@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -62,64 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2f23a2a768bee7ad2ff1e9527c3f7e279e794a46 ]
+[ Upstream commit a885bcfd152f97b25005298ab2d6b741aed9b49c ]
 
-Add missing <of_device_id> table for SPI driver relying on SPI
-device match since compatible is in a DT binding or in a DTS.
+The intended behavior of function ipmi_hardcode_init_one() is to default
+to kcs interface when no type argument is presented when initializing
+ipmi with hard coded addresses.
 
-Before this patch:
-modinfo drivers/net/phy/spi_ks8995.ko | grep alias
-alias:          spi:ksz8795
-alias:          spi:ksz8864
-alias:          spi:ks8995
+However, the array of char pointers allocated on the stack by function
+ipmi_hardcode_init() was not inited to zeroes, so it contained stack
+debris.
 
-After this patch:
-modinfo drivers/net/phy/spi_ks8995.ko | grep alias
-alias:          spi:ksz8795
-alias:          spi:ksz8864
-alias:          spi:ks8995
-alias:          of:N*T*Cmicrel,ksz8795C*
-alias:          of:N*T*Cmicrel,ksz8795
-alias:          of:N*T*Cmicrel,ksz8864C*
-alias:          of:N*T*Cmicrel,ksz8864
-alias:          of:N*T*Cmicrel,ks8995C*
-alias:          of:N*T*Cmicrel,ks8995
+Consequently, passing the cruft stored in this array to function
+ipmi_hardcode_init_one() caused a crash when it was unable to detect
+that the char * being passed was nonsense and tried to access the
+address specified by the bogus pointer.
 
-Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
-Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The fix is simply to initialize the si_type array to zeroes, so if
+there were no type argument given to at the command line, function
+ipmi_hardcode_init_one() could properly default to the kcs interface.
+
+Signed-off-by: Tony Camuso <tcamuso@redhat.com>
+Message-Id: <1554837603-40299-1-git-send-email-tcamuso@redhat.com>
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/spi_ks8995.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/char/ipmi/ipmi_si_hardcode.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/phy/spi_ks8995.c b/drivers/net/phy/spi_ks8995.c
-index f17b3441779bf..d8ea4147dfe78 100644
---- a/drivers/net/phy/spi_ks8995.c
-+++ b/drivers/net/phy/spi_ks8995.c
-@@ -162,6 +162,14 @@ static const struct spi_device_id ks8995_id[] = {
- };
- MODULE_DEVICE_TABLE(spi, ks8995_id);
+diff --git a/drivers/char/ipmi/ipmi_si_hardcode.c b/drivers/char/ipmi/ipmi_si_hardcode.c
+index 9ae2405c28bbd..0c28e872ad3ae 100644
+--- a/drivers/char/ipmi/ipmi_si_hardcode.c
++++ b/drivers/char/ipmi/ipmi_si_hardcode.c
+@@ -200,6 +200,8 @@ void __init ipmi_hardcode_init(void)
+ 	char *str;
+ 	char *si_type[SI_MAX_PARMS];
  
-+static const struct of_device_id ks8895_spi_of_match[] = {
-+        { .compatible = "micrel,ks8995" },
-+        { .compatible = "micrel,ksz8864" },
-+        { .compatible = "micrel,ksz8795" },
-+        { },
-+ };
-+MODULE_DEVICE_TABLE(of, ks8895_spi_of_match);
++	memset(si_type, 0, sizeof(si_type));
 +
- static inline u8 get_chip_id(u8 val)
- {
- 	return (val >> ID1_CHIPID_S) & ID1_CHIPID_M;
-@@ -529,6 +537,7 @@ static int ks8995_remove(struct spi_device *spi)
- static struct spi_driver ks8995_driver = {
- 	.driver = {
- 		.name	    = "spi-ks8995",
-+		.of_match_table = of_match_ptr(ks8895_spi_of_match),
- 	},
- 	.probe	  = ks8995_probe,
- 	.remove	  = ks8995_remove,
+ 	/* Parse out the si_type string into its components. */
+ 	str = si_type_str;
+ 	if (*str != '\0') {
 -- 
 2.20.1
 
