@@ -2,114 +2,95 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2644C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8447DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0FFF2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:31:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C892084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:32:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QtF+5tgN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728410AbfEOTbi (ORCPT
+        id S1727859AbfEOTcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:31:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34970 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbfEOT1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 15:27:32 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8022EC0703C6;
-        Wed, 15 May 2019 19:27:32 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C6AF419C71;
-        Wed, 15 May 2019 19:27:29 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 5C4D322063D; Wed, 15 May 2019 15:27:29 -0400 (EDT)
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-nvdimm@lists.01.org
-Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, swhiteho@redhat.com
-Subject: [PATCH v2 01/30] fuse: delete dentry if timeout is zero
-Date:   Wed, 15 May 2019 15:26:46 -0400
-Message-Id: <20190515192715.18000-2-vgoyal@redhat.com>
-In-Reply-To: <20190515192715.18000-1-vgoyal@redhat.com>
-References: <20190515192715.18000-1-vgoyal@redhat.com>
+        Wed, 15 May 2019 15:32:22 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37650 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbfEOTcV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 15:32:21 -0400
+Received: by mail-qt1-f193.google.com with SMTP id o7so1105994qtp.4;
+        Wed, 15 May 2019 12:32:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gzpcBe/FuCRcBmmlscvWqZ1cuF+a9s/93eQ2vkoMdBg=;
+        b=QtF+5tgNf9v/pOLbGmN/KkniYbjrTT3+zG+tsS6Kms+1PFJMvcfqBzH1n9jCpYjLPN
+         rUJJ+CE6pK+4Csxpxh5JKbYHnYbwj2zKrcq8mt6Y+2O5wJ9y7cJ6X913mLznQu1+hmrA
+         729oInNbB9ALcMRxLQigEACcaOaj0PEs9PTANqHWLj7reIDQJLX5BCeEvzKhegDNLTsd
+         IjZkBfMCh9iyDLwT7Cw/hZbaIVRS61r9Hr5qf8c/gaLztb2dbtKL+YD+VxvtHaMhKSau
+         IdtAJTdE3xKXUoXSUDusffpw6c8MSFgE9qgqzrMZacApD//bevsHU8IoOKtApxEzyOSb
+         NXRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gzpcBe/FuCRcBmmlscvWqZ1cuF+a9s/93eQ2vkoMdBg=;
+        b=aNLCPIsLZXDzhdTxYCS6yPUAiB7ALABkYzif2Y9Bhw69axGVXN5ALzbrT+IFiMg6ex
+         HRLIXN2XHfsZfhXsCoHf7y3XpSjM/6536rde7YPxK20xZjHXJwFMFQdYxKUxhyscKDPb
+         Fo91HieR9FofiH+J7FjPM2T4IJqiCEc0vDHkD5uXI2sMCmLPA2ju2fbiWckezl9/tO43
+         yg+Ie+zyCt+TM65bqDWGrIMBqQEUejfRj5rIX6RfcWP9Xd0kD5K6EWXxiFwFq1zPuRpe
+         fsM7pr516JNItxN5UIPAZy7w7WYBeQuQFH5NyrTSg+1uk6QmI5fCr6CTUVoOR0Mxaw8M
+         gMEw==
+X-Gm-Message-State: APjAAAVsjInLD+nmAMfMAtRkbbUanB2N6usuPtuuLgj8PkTFqfPxPT97
+        RpP+Rtesn/qJI/lVFxgTdX4=
+X-Google-Smtp-Source: APXvYqzIAHhWJNUUfCmZY70fFSGLSaJ/WlMHpaIUQbVegDmEP+0LWpkvXn1BZFJ52H/pXcLteY5cbg==
+X-Received: by 2002:ac8:610e:: with SMTP id a14mr35361096qtm.51.1557948740959;
+        Wed, 15 May 2019 12:32:20 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id t2sm1426001qkm.11.2019.05.15.12.32.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 May 2019 12:32:19 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 739F9404A1; Wed, 15 May 2019 16:32:17 -0300 (-03)
+Date:   Wed, 15 May 2019 16:32:17 -0300
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH] perf docu: Add description for stderr
+Message-ID: <20190515193217.GG23162@kernel.org>
+References: <20190513080220.91966-1-tmricht@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 15 May 2019 19:27:32 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513080220.91966-1-tmricht@linux.ibm.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+Em Mon, May 13, 2019 at 10:02:20AM +0200, Thomas Richter escreveu:
+> Perf report displays recorded data on the screen and emits
+> warnings and debug messages in the status line (last one on screen).
+> Perf also supports the possibility to write all debug messages
+> to stderr (instead of writing them to the status line).
+> This is achieved with the following command:
+> 
+>  # ./perf --debug stderr=1 report -vvvvv -i ~/fast.data 2>/tmp/2
+>  # ll /tmp/2
+>  -rw-rw-r-- 1 tmricht tmricht 5420835 May  7 13:46 /tmp/2
+>  #
 
-Don't hold onto dentry in lru list if need to re-lookup it anyway at next
-access.
+Thanks, applied.
 
-More advanced version of this patch would periodically flush out dentries
-from the lru which have gone stale.
-
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
----
- fs/fuse/dir.c | 26 +++++++++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
-
-diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-index dd0f64f7bc06..fd8636e67ae9 100644
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -29,12 +29,26 @@ union fuse_dentry {
- 	struct rcu_head rcu;
- };
- 
--static inline void fuse_dentry_settime(struct dentry *entry, u64 time)
-+static void fuse_dentry_settime(struct dentry *dentry, u64 time)
- {
--	((union fuse_dentry *) entry->d_fsdata)->time = time;
-+	/*
-+	 * Mess with DCACHE_OP_DELETE because dput() will be faster without it.
-+	 *  Don't care about races, either way it's just an optimization
-+	 */
-+	if ((time && (dentry->d_flags & DCACHE_OP_DELETE)) ||
-+	    (!time && !(dentry->d_flags & DCACHE_OP_DELETE))) {
-+		spin_lock(&dentry->d_lock);
-+		if (time)
-+			dentry->d_flags &= ~DCACHE_OP_DELETE;
-+		else
-+			dentry->d_flags |= DCACHE_OP_DELETE;
-+		spin_unlock(&dentry->d_lock);
-+	}
-+
-+	((union fuse_dentry *) dentry->d_fsdata)->time = time;
- }
- 
--static inline u64 fuse_dentry_time(struct dentry *entry)
-+static inline u64 fuse_dentry_time(const struct dentry *entry)
- {
- 	return ((union fuse_dentry *) entry->d_fsdata)->time;
- }
-@@ -255,8 +269,14 @@ static void fuse_dentry_release(struct dentry *dentry)
- 	kfree_rcu(fd, rcu);
- }
- 
-+static int fuse_dentry_delete(const struct dentry *dentry)
-+{
-+	return time_before64(fuse_dentry_time(dentry), get_jiffies_64());
-+}
-+
- const struct dentry_operations fuse_dentry_operations = {
- 	.d_revalidate	= fuse_dentry_revalidate,
-+	.d_delete	= fuse_dentry_delete,
- 	.d_init		= fuse_dentry_init,
- 	.d_release	= fuse_dentry_release,
- };
--- 
-2.20.1
-
+- Arnaldo
