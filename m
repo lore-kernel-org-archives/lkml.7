@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B5AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8001C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0E221773
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AD0C21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918422;
-	bh=bwHylVj0ErEJHQPF8euYO/g3Rci2yeuJf2Agq0D/d+Y=;
+	s=default; t=1557918427;
+	bh=VDxDGFJixae4M3MK2GPddJJKLRn0YtZJJZEIYK3ak2A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wKW9nz5n+ew6wCV19v5r21V0DDcFBMAo7wgJ/ZzByNiaSJn44iWvMXI20PipAfqLp
-	 7M6MSnsOQF0yJYvNGK6ytheGjY+bxbUhWs4htF40R2MZjHXO5SZjlQ96V1t7J5vFlL
-	 O9gkvu4k63Ux08Xcrt7JaVhdE375Dv6NsaNftkzA=
+	b=oZFtZjaKkNe7FjQLeqvdLiZja6gI5zeoD/mFIbj4mxjNb5WCUaZS3XYVpMpdG4/lY
+	 acWd5Wm5Uu1EbwnDnm7VZgrQQCh0eoCy+srA07uqFMnCS2YqabZrLiWzQ3Y5h5W4f3
+	 Xe/sQuOtcNQsT8OH9KpD2jQj+efSmbKNyX8TancY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbfEOLHB (ORCPT
+        id S1727528AbfEOLHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:07:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38088 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:07:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728831AbfEOLG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:06:58 -0400
+        id S1726898AbfEOLHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:07:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD0E821743;
-        Wed, 15 May 2019 11:06:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 161D620644;
+        Wed, 15 May 2019 11:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918417;
-        bh=bwHylVj0ErEJHQPF8euYO/g3Rci2yeuJf2Agq0D/d+Y=;
+        s=default; t=1557918422;
+        bh=VDxDGFJixae4M3MK2GPddJJKLRn0YtZJJZEIYK3ak2A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rFK0jHEgK0zNNG2hXEXPUHyHcsmMphG2HpgIK2lAhDFI8OrNLuc0TT2vEF2t8FAFL
-         O1Ddhq317js7FUPv2uSdr9PXD1YdEpPohEvSDPBxyssvhCzBp69y5rRoBeCcNt77hR
-         FexGzEqGTjyyiDrXvJBnynpMJ6jA11WUXPl4zcRY=
+        b=xXKrf2zHBX7LiBplZ22EGsFpxWUlDCcQc+Pww7m0dtqZ+fDK8+HhfgOW0eOp0i0ix
+         LBSwnmCEwrZtyEK0LbEe8BoCK1QZii5E106yyfWJoTWWvKPbfL5g6kNMC3jdYFlIUb
+         QvuYNoidUagpu8HwDoDikpFClsxJy9HjXBOIJ8nc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        stable@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 124/266] jffs2: fix use-after-free on symlink traversal
-Date:   Wed, 15 May 2019 12:53:51 +0200
-Message-Id: <20190515090726.906825560@linuxfoundation.org>
+Subject: [PATCH 4.4 126/266] rtc: da9063: set uie_unsupported when relevant
+Date:   Wed, 15 May 2019 12:53:53 +0200
+Message-Id: <20190515090727.220295292@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -59,51 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4fdcfab5b5537c21891e22e65996d4d0dd8ab4ca ]
+[ Upstream commit 882c5e552ffd06856de42261460f46e18319d259 ]
 
-free the symlink body after the same RCU delay we have for freeing the
-struct inode itself, so that traversal during RCU pathwalk wouldn't step
-into freed memory.
+The DA9063AD doesn't support alarms on any seconds and its granularity is
+the minute. Set uie_unsupported in that case.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Reported-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Acked-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jffs2/readinode.c | 5 -----
- fs/jffs2/super.c     | 5 ++++-
- 2 files changed, 4 insertions(+), 6 deletions(-)
+ drivers/rtc/rtc-da9063.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/jffs2/readinode.c b/fs/jffs2/readinode.c
-index bfebbf13698c..5b52ea41b84f 100644
---- a/fs/jffs2/readinode.c
-+++ b/fs/jffs2/readinode.c
-@@ -1414,11 +1414,6 @@ void jffs2_do_clear_inode(struct jffs2_sb_info *c, struct jffs2_inode_info *f)
+diff --git a/drivers/rtc/rtc-da9063.c b/drivers/rtc/rtc-da9063.c
+index d6c853bbfa9f..e93beecd5010 100644
+--- a/drivers/rtc/rtc-da9063.c
++++ b/drivers/rtc/rtc-da9063.c
+@@ -491,6 +491,13 @@ static int da9063_rtc_probe(struct platform_device *pdev)
+ 	da9063_data_to_tm(data, &rtc->alarm_time, rtc);
+ 	rtc->rtc_sync = false;
  
- 	jffs2_kill_fragtree(&f->fragtree, deleted?c:NULL);
- 
--	if (f->target) {
--		kfree(f->target);
--		f->target = NULL;
--	}
--
- 	fds = f->dents;
- 	while(fds) {
- 		fd = fds;
-diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
-index 023e7f32ee1b..9fc297df8c75 100644
---- a/fs/jffs2/super.c
-+++ b/fs/jffs2/super.c
-@@ -47,7 +47,10 @@ static struct inode *jffs2_alloc_inode(struct super_block *sb)
- static void jffs2_i_callback(struct rcu_head *head)
- {
- 	struct inode *inode = container_of(head, struct inode, i_rcu);
--	kmem_cache_free(jffs2_inode_cachep, JFFS2_INODE_INFO(inode));
-+	struct jffs2_inode_info *f = JFFS2_INODE_INFO(inode);
++	/*
++	 * TODO: some models have alarms on a minute boundary but still support
++	 * real hardware interrupts. Add this once the core supports it.
++	 */
++	if (config->rtc_data_start != RTC_SEC)
++		rtc->rtc_dev->uie_unsupported = 1;
 +
-+	kfree(f->target);
-+	kmem_cache_free(jffs2_inode_cachep, f);
- }
- 
- static void jffs2_destroy_inode(struct inode *inode)
+ 	irq_alarm = platform_get_irq_byname(pdev, "ALARM");
+ 	ret = devm_request_threaded_irq(&pdev->dev, irq_alarm, NULL,
+ 					da9063_alarm_event,
 -- 
 2.20.1
 
