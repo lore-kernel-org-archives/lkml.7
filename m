@@ -2,71 +2,150 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC04C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A62A5C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1583020815
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7762D20815
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:19:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AO7+pprh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfEOSRy (ORCPT
+        id S1726635AbfEOSTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 14:17:54 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:53904 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726159AbfEOSRx (ORCPT
+        Wed, 15 May 2019 14:19:14 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44472 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfEOSTN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 14:17:53 -0400
-Received: from [10.200.157.26] (unknown [131.107.147.154])
-        by linux.microsoft.com (Postfix) with ESMTPSA id BFCF120110B7;
-        Wed, 15 May 2019 11:17:52 -0700 (PDT)
-Subject: Re: [PATCH 0/2] public key: IMA signer logging: Log public key of IMA
- Signature signer in IMA log
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Linux Integrity <linux-integrity@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Cc:     Balaji Balasubramanyan <balajib@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva@linux.microsoft.com>
-References: <6b69f115-96cf-890a-c92b-0b2b05798357@linux.microsoft.com>
- <1557854992.4139.69.camel@linux.ibm.com>
-From:   Lakshmi <nramas@linux.microsoft.com>
-Message-ID: <715a9b39-0cde-1ce0-2d01-68d4fc0f5333@linux.microsoft.com>
-Date:   Wed, 15 May 2019 11:17:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 15 May 2019 14:19:13 -0400
+Received: by mail-ed1-f67.google.com with SMTP id b8so1095417edm.11;
+        Wed, 15 May 2019 11:19:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=9TWMti7NJpoLAEiRwBpvcDer84lXGy6dP+2DegkgGow=;
+        b=AO7+pprhouIpEekDN5tMTpywAEPc2JKYzV5/PN2BJIA/AE3dc8gHaAySYb+sFvYbjP
+         baPICz2y6MfsqtunleCeoED20nclGyOG6Qh3Csod2VDk2M0uVDZy2ClStZL5vmfGQmzE
+         mskOFCBz0WyKRIjgacYNNQSff/76/M+nZbFZSN7ZqCmA/mwvOXaR0/x4gmrKiqKpT2y8
+         YI7zphf3QZHgyE5eKqFH++5iioOvDJEvwhjh+oPxgBUQmR+8q7Xm/bGCCyJoJiCPyRY8
+         2zNqT0k5xTRbf+IkDHqFd3b3gDcAM7yeqUPKyNLBavLDx12kwldXLz1ceTdyfgBZlkiD
+         Kkgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9TWMti7NJpoLAEiRwBpvcDer84lXGy6dP+2DegkgGow=;
+        b=lYrvjY+a4S/9Cvv5IVI/Deg3CvWc4jXdZjv2eOl27e7V5+Dk8mzdvCylWrLImfOfeU
+         1+npXHbDR/3+Y0JHik/g39femGXmyxhLC3sfH2N+vcq6IkZhwWFvUCy0gUuvLaXDMSo/
+         L1Plp7k1QSRetyb3AEY/ANFK7PRWLRpVxWtDD45hSRv9c/b/OqR60InJCO2+jqbFFZ8r
+         84mh0h2WGPaKyAlvzb5eXP4YDGB8vDLeqN1CwxOSyRQ+y7E4mvvp9TylpsfjbnTB8ehZ
+         crE/0c6csECOkaRvR6+cnr9jQrLwF+ouuhrDJglO5a/9ubdS9SuFiBgjZGjAo5FdTr/K
+         2tTg==
+X-Gm-Message-State: APjAAAUoxLw3fizsQpVvTHZa2AXleW3C+ym2k49sLlyXCdlYpb01qOb6
+        T/F+zwduIrbsVXopXSDjcHk=
+X-Google-Smtp-Source: APXvYqwoO3d/5w5yxfxsUqNvRKItY7BFH8mZNqjnKMOv59W2BJl6/dTJAoXSgcNv8DgMMIS52CDRnw==
+X-Received: by 2002:a17:906:d1da:: with SMTP id bs26mr34803987ejb.149.1557944351776;
+        Wed, 15 May 2019 11:19:11 -0700 (PDT)
+Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
+        by smtp.gmail.com with ESMTPSA id w54sm1048961edw.40.2019.05.15.11.19.10
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 15 May 2019 11:19:11 -0700 (PDT)
+Date:   Wed, 15 May 2019 11:19:09 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     gregkh@linuxfoundation.org, clang-built-linux@googlegroups.com,
+        stable@vger.kernel.org, Nathan Chancellor <nathanchance@gmail.com>,
+        Alan Modra <amodra@gmail.com>,
+        Jordan Rupprect <rupprecht@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] lkdtm: support llvm-objcopy
+Message-ID: <20190515181909.GA11401@archlinux-i9>
+References: <CAKwvOdk_KmyT4yZOz8iczxeP7mYq-h5LmjzkE5yhsodupRLxEQ@mail.gmail.com>
+ <20190515181204.20859-1-ndesaulniers@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1557854992.4139.69.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190515181204.20859-1-ndesaulniers@google.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mimi,
-
-I would like to make sure I understood your feedback.
-
+On Wed, May 15, 2019 at 11:12:04AM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
+> With CONFIG_LKDTM=y and make OBJCOPY=llvm-objcopy, llvm-objcopy errors:
+> llvm-objcopy: error: --set-section-flags=.text conflicts with
+> --rename-section=.text=.rodata
 > 
-> Why duplicate the certificate info on each record in the measurement
-> list?  Why not add the certificate info once, as the key is loaded
-> onto the .ima and .platform keyrings?
+> Rather than support setting flags then renaming sections vs renaming
+> then setting flags, it's simpler to just change both at the same time
+> via --rename-section. Adding the load flag is required for GNU objcopy
+> to mark .rodata Type as PROGBITS after the rename.
 > 
-> Mimi
+> This can be verified with:
+> $ readelf -S drivers/misc/lkdtm/rodata_objcopy.o
+> ...
+> Section Headers:
+>   [Nr] Name              Type             Address           Offset
+>        Size              EntSize          Flags  Link  Info  Align
+> ...
+>   [ 1] .rodata           PROGBITS         0000000000000000  00000040
+>        0000000000000004  0000000000000000   A       0     0     4
+> ...
 > 
+> Which shows that .text is now renamed .rodata, the alloc flag A is set,
+> the type is PROGBITS, and the section is not flagged as writeable W.
+> 
+> Cc: stable@vger.kernel.org
+> Link: https://sourceware.org/bugzilla/show_bug.cgi?id=24554
+> Link: https://github.com/ClangBuiltLinux/linux/issues/448
+> Reported-by: Nathan Chancellor <nathanchance@gmail.com>
 
-key_create_or_update function in security/keys/key.c is called to 
-add\update a key to a keyring. Are you suggesting that an IMA function 
-be called from here to add the certificate info to the IMA log?
+Doesn't look like this got updated. I don't want to make you send a v3
+just for that though since it's purely cosmetic and adding my tag below
+will ensure I get copied on any backports and such.
 
-Our requirement is that the key information is available in the IMA log 
-which is TPM backed.
+> Suggested-by: Alan Modra <amodra@gmail.com>
+> Suggested-by: Jordan Rupprect <rupprecht@google.com>
+> Suggested-by: Kees Cook <keescook@chromium.org>
+> Acked-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Thanks,
-  -lakshmi
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+
+> ---
+> Changes from v1 -> v2:
+> * add load flag, as per Kees and Alan.
+> * update commit message to mention reason for load flag.
+> * add Kees' and Alan's suggested by.
+> * carry Kees' Ack.
+> * cc stable.
+> 
+>  drivers/misc/lkdtm/Makefile | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/misc/lkdtm/Makefile b/drivers/misc/lkdtm/Makefile
+> index 951c984de61a..fb10eafe9bde 100644
+> --- a/drivers/misc/lkdtm/Makefile
+> +++ b/drivers/misc/lkdtm/Makefile
+> @@ -15,8 +15,7 @@ KCOV_INSTRUMENT_rodata.o	:= n
+>  
+>  OBJCOPYFLAGS :=
+>  OBJCOPYFLAGS_rodata_objcopy.o	:= \
+> -			--set-section-flags .text=alloc,readonly \
+> -			--rename-section .text=.rodata
+> +			--rename-section .text=.rodata,alloc,readonly,load
+>  targets += rodata.o rodata_objcopy.o
+>  $(obj)/rodata_objcopy.o: $(obj)/rodata.o FORCE
+>  	$(call if_changed,objcopy)
+> -- 
+> 2.21.0.1020.gf2820cf01a-goog
+> 
