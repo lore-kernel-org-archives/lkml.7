@@ -2,99 +2,112 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8746CC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFE5C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4735920657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:08:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D78B20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922088;
-	bh=2MxWDzNlNdCDBvXBg6LBRyYuiVnvhAqSwsTvAScCRDw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n3Ld5VWPGKlm7nDsdSNcUU3lzSromRjCpSuBz0MKAhGDf9EAdc1/6jaQx+w8sQcEW
-	 yIia5sX1PQqTjstJDCNZ7wNkcKVFHD/C0yNuNpzM9PrsVbLIOQ5GQr/QEJkaX9UO2m
-	 LCmGkVAAZYjK58Zo2hxxGedpvsE4xl3oK+6Xxs9g=
+	s=default; t=1557922095;
+	bh=Re0HA3ln7k11xpNxtCQEBg9xjJjfXQ40diY9RwfKKQo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=H9PhiG/feD0QARa6JeXobks3mWwUWSPcO5FsX3XsDlwXrwymZk0Hwl+7jtIvrBRxj
+	 zo3hP915eWPL+SixZScbbHbxu2+bM9zDcztQHvVGz6aHPhtzHZ7Vx5jg8YWA2bvdj0
+	 CuUVtdDfIoPlVI+nxUFu94q2PMxODhI1hpXl2NDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729453AbfEOMIG (ORCPT
+        id S1729469AbfEOMIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:08:06 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38396 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729172AbfEOLI5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:08:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ToVh8Upo0GLQhDEVaV9MC0FbfEVVYTO7nwOGlhyfbKM=; b=FKKAFpRcA4vfKWW+aLFvmH42Q
-        UC5vKw4w7g5FDQP75Xxz2BoSkqC++3N5akLiOMlKsVDSd5ChPubvwsv9OrOIi2ksD5rOtN3FXWcR1
-        2+JsIq+JpZtLIc6uv7B7IzqB8Uorrvze2xNwCE4fbtCXY10Jzyg1uZFFX0aYHB9uU3hq4=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hQrmF-0003av-Qk; Wed, 15 May 2019 11:08:51 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 320B91126D6A; Wed, 15 May 2019 12:08:51 +0100 (BST)
-Date:   Wed, 15 May 2019 12:08:51 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Keerthy <j-keerthy@ti.com>
-Cc:     lee.jones@linaro.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, t-kristo@ti.com
-Subject: Re: [PATCH 3/3] regulator: lp87565: Add 4-phase lp87561 regulator
- support
-Message-ID: <20190515110851.GD5613@sirena.org.uk>
-References: <20190515100848.19560-1-j-keerthy@ti.com>
- <20190515100848.19560-4-j-keerthy@ti.com>
+        Wed, 15 May 2019 08:08:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41446 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729161AbfEOLIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:08:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D87720644;
+        Wed, 15 May 2019 11:08:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557918532;
+        bh=Re0HA3ln7k11xpNxtCQEBg9xjJjfXQ40diY9RwfKKQo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=O7L3pomEUVHy5CJfnR/2GuB7EDsrKOuR3Aqm29NwrzjvhrUDOQJX9DdOYQqF84D0l
+         WX/OiHQbA4p+t7eOY2oq/VPcMcm5WKz3YT+utmbGVHtTJFzBTQ0VAQQd/WbXbCsNyo
+         SnYVmc9jml7DS8q4XGv54jcNawpOeVeHzMDcCys0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.4 161/266] platform/x86: sony-laptop: Fix unintentional fall-through
+Date:   Wed, 15 May 2019 12:54:28 +0200
+Message-Id: <20190515090728.363267446@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
+References: <20190515090722.696531131@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="q9KOos5vDmpwPx9o"
-Content-Disposition: inline
-In-Reply-To: <20190515100848.19560-4-j-keerthy@ti.com>
-X-Cookie: You will lose an important tape file.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
---q9KOos5vDmpwPx9o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+commit 1cbd7a64959d33e7a2a1fa2bf36a62b350a9fcbd upstream.
 
-On Wed, May 15, 2019 at 03:38:48PM +0530, Keerthy wrote:
+It seems that the default case should return AE_CTRL_TERMINATE, instead
+of falling through to case ACPI_RESOURCE_TYPE_END_TAG and returning AE_OK;
+otherwise the line of code at the end of the function is unreachable and
+makes no sense:
 
-> @@ -172,6 +178,9 @@ static int lp87565_regulator_probe(struct platform_device *pdev)
->  	if (lp87565->dev_type == LP87565_DEVICE_TYPE_LP87565_Q1) {
->  		min_idx = LP87565_BUCK_10;
->  		max_idx = LP87565_BUCK_23;
-> +	} else if (lp87565->dev_type == LP87565_DEVICE_TYPE_LP87561_Q1) {
-> +		min_idx = LP87565_BUCK_3210;
-> +		max_idx = LP87565_BUCK_3210;
+return AE_CTRL_TERMINATE;
 
-This if/else chain should be a switch statement.
+This fix is based on the following thread of discussion:
 
---q9KOos5vDmpwPx9o
-Content-Type: application/pgp-signature; name="signature.asc"
+https://lore.kernel.org/patchwork/patch/959782/
 
------BEGIN PGP SIGNATURE-----
+Fixes: 33a04454527e ("sony-laptop: Add SNY6001 device handling (sonypi reimplementation)")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzb80IACgkQJNaLcl1U
-h9A6lAf/e30hsZKGBDMeaM6cCqdg269DLgcFARjKCZ3zp0sp3UYHDCU7I7eBAscT
-wMqHKpBrhHVyS6swCG7Lbsy2xywm6b77fSxxvZiWPnsdgpDHjLrzbqu2nZvA8UpD
-8eXgfB8yOY1Pqw0Z9zJ55C26c+sjROltuBsJ1fGLo2HcAlSAPZtFu+zehJYKRUVq
-lrDGdgNGnXlxnZMVNnnAWNFCFZONW+rwZOVI9tdV8VqDX8g096T4/ZhFxVdTW3jU
-yMTcqq/1o12IRB26NToSf262mMa0g5ppI0k/Gq9SOFwhsi4ssXsHik2yceV0jOcA
-KadxC1Bmn6nfUWoNpZx2mjgylXOV8g==
-=dLEO
------END PGP SIGNATURE-----
+---
+ drivers/platform/x86/sony-laptop.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---q9KOos5vDmpwPx9o--
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -4394,14 +4394,16 @@ sony_pic_read_possible_resource(struct a
+ 			}
+ 			return AE_OK;
+ 		}
++
++	case ACPI_RESOURCE_TYPE_END_TAG:
++		return AE_OK;
++
+ 	default:
+ 		dprintk("Resource %d isn't an IRQ nor an IO port\n",
+ 			resource->type);
++		return AE_CTRL_TERMINATE;
+ 
+-	case ACPI_RESOURCE_TYPE_END_TAG:
+-		return AE_OK;
+ 	}
+-	return AE_CTRL_TERMINATE;
+ }
+ 
+ static int sony_pic_possible_resources(struct acpi_device *device)
+
+
