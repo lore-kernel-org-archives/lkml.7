@@ -2,130 +2,211 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5CAC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D38C5C46460
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB132084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A922089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:46:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fcMi6gcS"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Xql7xL76"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbfEOMqK (ORCPT
+        id S1727110AbfEOMq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:46:10 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:50809 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbfEOMqK (ORCPT
+        Wed, 15 May 2019 08:46:56 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41922 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfEOMqz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 08:46:10 -0400
-Received: by mail-it1-f195.google.com with SMTP id i10so4595884ite.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 05:46:09 -0700 (PDT)
+        Wed, 15 May 2019 08:46:55 -0400
+Received: by mail-pl1-f195.google.com with SMTP id f12so1291095plt.8
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 05:46:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZM2dVmtpB91ztK5q6w+vsDsuNLBXq6DC4P72JFFSO4U=;
-        b=fcMi6gcShhNjgXodtqpD244sqMhT3zyNSii7fD2oy4R54ZYhB6X4l3jlWMJIRyvvnY
-         Twmu4FSXXaJp4hNRy5klMSYXLe6f0oOfZ9z2BiWZCjB/wSMClaOiv+hzPpaZfasIn2Q+
-         GjTM34okiHNQsT9WORSXqQUfdnFiNNfAXPLIsPfYnfsyUtDKpXmbjnJOlx7tvDqGU1qw
-         SQNH76JPwYlWn9pcOA+OXhBgRthvtR1aheGSTL7BjcK9ZABaXw6OUNRltpBM0rky7sHZ
-         RkKkHRMi8Q3G5Quys9DRRMrG66pTN1ogI77RKIZmdqR04HSSie/v4rU/ZQAjufXEcSOl
-         YKZg==
+        d=arista.com; s=googlenew;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b3HyjACi/MsUUs/bdvxi48Ab6BnFJ6ZhEKEib98a4qc=;
+        b=Xql7xL76UlYG2HgQrNw2rS48dkmsc4mtYUzCNuPcx9exYI1ZmEu7lZqz2wZCRpSq5N
+         P/62eA1WGojofeojjMEVVfykGFGMoC0h24yl2IGMP+MMD6n/+9xLNayyFAwmk67CqnR1
+         m8FLpulEhu3q1K43A5KpMSgYNY/9ZQFxlv1sLLC+Y4jO+Ip0fUJakXQ0r3SGBP8eKC6y
+         8c8qARg+kB1bO3KBeiRnMVlAPDwWif2wtpKXbjbo5qVDDAOu6rngr7KYzRQuR7hO5Gmh
+         lcl5CLLB06Ib9xN7L7Nu/HtKO3R428g2WTFCp36Qq7GME8YG4fu4z4pF+aWoLIZ6h2KQ
+         NZMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZM2dVmtpB91ztK5q6w+vsDsuNLBXq6DC4P72JFFSO4U=;
-        b=L/SPvrZMwdfen4K1bh2zW46HzE60+Gqp0UqLWyG8xTjxWJbwsLQzF0AH0d3d/zjY98
-         jbIvuyLbIlxTrODCqLFSRdDSD0+AbrqI92ISRE7t3I4YUUfiEzuWMwwsqs8pRRFAoN3l
-         RS20NyY1i40rlNoKrjg/w0i1RmRwqeymz/PV6uvgYE6xDuoMXsMsQt2Y2p37dzBKEMSB
-         lgvzMi8Y1TVXmDNY+rpHUAJw/6kGJgAUZO6BRa5Iu9AoNYzvjE2RoVWusKPbSf8N83pK
-         ZaPxSP8oMKC3/k1O0mmvp7MLsuVqucYNqGgULG6vYx4i5gbT1ZJ/+QgYiCXiQIYWoufG
-         fAig==
-X-Gm-Message-State: APjAAAUaxwapbSykXe26WWpVNNf3OdCls4+RVnRehDqMVy1TToOODiJB
-        JREAhDXzWgbryuMMcLSyx421IDf5nOc=
-X-Google-Smtp-Source: APXvYqyUzYu964DbKtbK8zpmoa4E8Nir5mjDm5+bqvtm+pssi2adtiS9AeMPogBVO+BwUIwEZkqzHQ==
-X-Received: by 2002:a24:1d8f:: with SMTP id 137mr7626938itj.66.1557924369314;
-        Wed, 15 May 2019 05:46:09 -0700 (PDT)
-Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.googlemail.com with ESMTPSA id s8sm583508iot.55.2019.05.15.05.46.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 05:46:08 -0700 (PDT)
-Subject: Re: [PATCH 13/18] soc: qcom: ipa: IPA network device and
- microcontroller
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        syadagir@codeaurora.org, mjavid@codeaurora.org,
-        evgreen@chromium.org, Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190512012508.10608-1-elder@linaro.org>
- <20190512012508.10608-14-elder@linaro.org>
- <CAK8P3a0WW6B3fASNB9th_ncPine7X0OfhJD139yUC31UQiGQdQ@mail.gmail.com>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <1271594e-cd60-8415-bd50-c297b15e7bf6@linaro.org>
-Date:   Wed, 15 May 2019 07:46:07 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b3HyjACi/MsUUs/bdvxi48Ab6BnFJ6ZhEKEib98a4qc=;
+        b=YWc8Lq6sn6J1SqFiracWvodWwnjPIBpwBlVpZqM9n4mQOP2iKFTXY72up+CakRalWi
+         5TnIR7I+2gguTEfbWiNEAUMziLPejb0+pHq6urDRw0TAz93MMjkP8Ux58+tkDIm7l8ua
+         sRE7+3aPa5irbCCzpHWhxHZEQl8RRp0BHm/Le81pVAszEGqh9ezPRBoUyNhTjQ2qwaXp
+         IU6uef0QZu10XF2L473+VUXylCr+EvO+1jI23hPaE9c9juNSEs4LUvSsJsupukE12zFr
+         BDK0ES6j/JHBAwuUbaBUqDH7LCdAEQz7div09Xi4pqbiueCVloNOlr20Jp6lDhzqHTAY
+         QPcg==
+X-Gm-Message-State: APjAAAWpVbi/nm4+hwvk9pYdbNulTJssByZ9LSL3MtT8qenr2VJBPVex
+        N4i3vpwYlf3pREnvpUyILtnD3diQolTQqxnJbFwjZw==
+X-Google-Smtp-Source: APXvYqwTSlq+glzh8dvBA9RnhTgkzA0FJBG+kmyFPUzc3vgEhgrnY6HSdtm+CvmJk20OFdPWunOILeeGu3jijFHRxb0=
+X-Received: by 2002:a17:902:4181:: with SMTP id f1mr22625568pld.22.1557924414679;
+ Wed, 15 May 2019 05:46:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a0WW6B3fASNB9th_ncPine7X0OfhJD139yUC31UQiGQdQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190506185207.31069-1-tmurphy@arista.com> <20190506185207.31069-3-tmurphy@arista.com>
+ <20190507064000.GB5173@infradead.org>
+In-Reply-To: <20190507064000.GB5173@infradead.org>
+From:   Tom Murphy <tmurphy@arista.com>
+Date:   Wed, 15 May 2019 13:46:43 +0100
+Message-ID: <CAPL0++5AUyVHexpsE86PfXxmQgDHfxjSSoAAGXM5c7Mdix=OZQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] iommu/dma-iommu: Handle deferred devices
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     iommu@lists.linux-foundation.org, Tom Murphy <murphyt7@tcd.ie>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/15/19 3:21 AM, Arnd Bergmann wrote:
-> On Sun, May 12, 2019 at 3:25 AM Alex Elder <elder@linaro.org> wrote:
->>
->> This patch includes the code that implements a Linux network device,
->> using one TX and one RX IPA endpoint.  It is used to implement the
->> network device representing the modem and its connection to wireless
->> networks.  There are only a few things that are really modem-specific
->> though, and they aren't clearly called out here.  Such distinctions
->> will be made clearer if we wish to support a network device for
->> anything other than the modem.
-> 
-> This does not seem to do much at all, as far as I can see it's a fairly
-> small abstraction between the linux netdev layer and the actual
-> implementation. Could you just merge this file into whichever file
-> it interacts with most closely, and open-code the wrappers there?
+like this?
 
-This used to be a bigger file, containing IOCTLs for configuring
-the endpoints used.
+In that case we need to add a call to iommu_dma_alloc_remap.
 
-It is logically separate from endpoints, because not all endpoints
-are attached to network devices.  The IPA command TX endpoint isn't
-associated with a network device, and the default route RX endpoint
-isn't either.
+From 862aeebb601008cf863e3aff4ff8ed7cefebeefa Mon Sep 17 00:00:00 2001
+From: Tom Murphy <tmurphy@tmurphy-419tom-0.sjc.aristanetworks.com>
+Date: Wed, 15 May 2019 05:43:25 -0700
+Subject: [PATCH] iommu/dma-iommu: Handle deferred devices
 
-In addition, the modem can crash and be restarted independent of
-all other endpoints.  I haven't added proper handling for that yet,
-though (just the ipa_ssr_*() stubs), and I thought maybe in
-finishing that I might find  keeping it separated in this way
-would better fit how that would work out.  The presence of the
-"rmnet_ipa0" network device essentially represents the presence
-of a functioning modem.
+Handle devices which defer their attach to the iommu in the dma-iommu api
 
-That being said, in the process of trying to streamline the data
-path, I *did* add a netdev pointer to the ipa_endpoint structure,
-so I've already blurred the line between these layers.
+Signed-off-by: Tom Murphy <tmurphy@arista.com>
+---
+ drivers/iommu/dma-iommu.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-So I will try to do as you suggest, and this code will most likely
-end up in "ipa_endpoint.c".
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 7f313cfa9..a48ae906d 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -22,6 +22,7 @@
+ #include <linux/pci.h>
+ #include <linux/scatterlist.h>
+ #include <linux/vmalloc.h>
++#include <linux/crash_dump.h>
 
-					-Alex
+ struct iommu_dma_msi_page {
+     struct list_head    list;
+@@ -323,6 +324,21 @@ static int iommu_dma_init_domain(struct
+iommu_domain *domain, dma_addr_t base,
+     return iova_reserve_iommu_regions(dev, domain);
+ }
 
++static int handle_deferred_device(struct device *dev,
++        struct iommu_domain *domain)
++{
++    const struct iommu_ops *ops = domain->ops;
++
++    if (!is_kdump_kernel())
++        return 0;
++
++    if (unlikely(ops->is_attach_deferred &&
++            ops->is_attach_deferred(domain, dev)))
++        return iommu_attach_device(domain, dev);
++
++    return 0;
++}
++
+ /**
+  * dma_info_to_prot - Translate DMA API directions and attributes to IOMMU API
+  *                    page flags.
+@@ -432,6 +448,9 @@ static dma_addr_t __iommu_dma_map(struct device
+*dev, phys_addr_t phys,
+     size_t iova_off = 0;
+     dma_addr_t iova;
 
->       Arnd
-> 
++    if (unlikely(handle_deferred_device(dev, domain)))
++        return DMA_MAPPING_ERROR;
++
+     if (cookie->type == IOMMU_DMA_IOVA_COOKIE) {
+         iova_off = iova_offset(&cookie->iovad, phys);
+         size = iova_align(&cookie->iovad, size + iova_off);
+@@ -609,6 +628,9 @@ static void *iommu_dma_alloc_remap(struct device
+*dev, size_t size,
+     dma_addr_t iova;
+     void *vaddr;
 
++    if (unlikely(handle_deferred_device(dev, domain)))
++        return DMA_MAPPING_ERROR;
++
+     *dma_handle = DMA_MAPPING_ERROR;
+
+     min_size = alloc_sizes & -alloc_sizes;
+@@ -836,7 +858,7 @@ static dma_addr_t iommu_dma_map_page(struct device
+*dev, struct page *page,
+     bool coherent = dev_is_dma_coherent(dev);
+     dma_addr_t dma_handle;
+
+-    dma_handle =__iommu_dma_map(dev, phys, size,
++    dma_handle = __iommu_dma_map(dev, phys, size,
+             dma_info_to_prot(dir, coherent, attrs),
+             iommu_get_dma_domain(dev));
+     if (!coherent && !(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
+@@ -954,6 +976,9 @@ static int iommu_dma_map_sg(struct device *dev,
+struct scatterlist *sg,
+     unsigned long mask = dma_get_seg_boundary(dev);
+     int i;
+
++    if (unlikely(handle_deferred_device(dev, domain)))
++        return 0;
++
+     if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
+         iommu_dma_sync_sg_for_device(dev, sg, nents, dir);
+
+-- 
+2.20.0
+
+On Tue, May 7, 2019 at 7:40 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Mon, May 06, 2019 at 07:52:04PM +0100, Tom Murphy wrote:
+> > +static int handle_deferred_device(struct device *dev)
+> > +{
+> > +     struct iommu_domain *domain;
+> > +     const struct iommu_ops *ops;
+> > +
+> > +     if (!is_kdump_kernel())
+> > +             return 0;
+> > +
+> > +     domain = iommu_get_domain_for_dev(dev);
+>
+> > -     dma_handle =__iommu_dma_map(dev, phys, size,
+> > +     if (unlikely(handle_deferred_device(dev)))
+> > +             return DMA_MAPPING_ERROR;
+> > +
+> > +     dma_handle = __iommu_dma_map(dev, phys, size,
+>
+> __iommu_dma_map already looks up the domain, and as far as I can
+> tell all callers need the handle_deferred_device call.  Should we
+> just move it to there and pass the domain from the caller?
+>
+> Also shouldn't the iommu_attach_device call inside
+> handle_deferred_device also get an unlikely marker?
