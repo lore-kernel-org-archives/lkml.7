@@ -2,146 +2,139 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D867CC04AA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4C2C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B35382084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B3B2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:46:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GMSayusQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726521AbfEOGqQ (ORCPT
+        id S1726465AbfEOGqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 02:46:16 -0400
-Received: from twhmllg3.macronix.com ([211.75.127.131]:47213 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfEOGqQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 02:46:16 -0400
-Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
-        by TWHMLLG3.macronix.com with ESMTP id x4F6k794019550;
-        Wed, 15 May 2019 14:46:07 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id 8F91689F5AB5F1D369B3;
-        Wed, 15 May 2019 14:46:07 +0800 (CST)
-In-Reply-To: <20190512142835.4caddc8e@xps13>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw> <1555320234-15802-2-git-send-email-masonccyang@mxic.com.tw> <20190512142835.4caddc8e@xps13>
-To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
-Cc:     bbrezillon@kernel.org, broonie@kernel.org,
-        christophe.kerello@st.com, computersforpeace@gmail.com,
-        devicetree@vger.kernel.org, dwmw2@infradead.org,
-        geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org,
-        liang.yang@amlogic.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        marcel.ziswiler@toradex.com, marek.vasut@gmail.com,
-        mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at,
-        robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
-Subject: Re: [PATCH v3 1/4]  mfd: Add Macronix MX25F0A MFD controller driver
+        Wed, 15 May 2019 02:46:53 -0400
+Received: from mail-eopbgr80080.outbound.protection.outlook.com ([40.107.8.80]:9737
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725902AbfEOGqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 02:46:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=btTHRitrwesrTb0WgFFCXCFfFT0QQciVa1ooaDatsKI=;
+ b=GMSayusQiudWvxXKcUjUkNsRkxp4Tnan32Nphqk7eCilrR5UOdhu/I3HjNqXbbvBMi/1bVp1TqgwOatnrPn6cSr5O+3Aw0IW6NpXz9AxxwdC94rYPZE3e6ykskionzFbDsJA3GZ4QCTt+Pfse+0XAJOUNzMqEBAYKsgbcvm7yq0=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3549.eurprd04.prod.outlook.com (52.134.4.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.22; Wed, 15 May 2019 06:46:48 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::dd3c:969d:89b9:f422]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::dd3c:969d:89b9:f422%4]) with mapi id 15.20.1878.024; Wed, 15 May 2019
+ 06:46:48 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 1/2] crypto: caam - fix pkcs1pad(rsa-caam, sha256) failure
+ because of invalid input
+Thread-Topic: [PATCH 1/2] crypto: caam - fix pkcs1pad(rsa-caam, sha256)
+ failure because of invalid input
+Thread-Index: AQHVCnRqYSdT4/1YZ0yCFxU3GNf2og==
+Date:   Wed, 15 May 2019 06:46:48 +0000
+Message-ID: <VI1PR0402MB34853587C20B018A8F53C2BF98090@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <1557852263-26896-1-git-send-email-iuliana.prodan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4b1150cd-3f2a-461e-5468-08d6d9011ab2
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3549;
+x-ms-traffictypediagnostic: VI1PR0402MB3549:
+x-microsoft-antispam-prvs: <VI1PR0402MB3549610F9EFB54BF799BBEE898090@VI1PR0402MB3549.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3383;
+x-forefront-prvs: 0038DE95A2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(396003)(136003)(366004)(376002)(43544003)(189003)(199004)(6246003)(44832011)(476003)(55016002)(74316002)(76116006)(316002)(14444005)(66946007)(6506007)(53546011)(25786009)(64756008)(66446008)(66476007)(446003)(66556008)(26005)(53936002)(14454004)(486006)(4326008)(5660300002)(256004)(9686003)(6436002)(33656002)(305945005)(6636002)(99286004)(68736007)(54906003)(7736002)(229853002)(71190400001)(71200400001)(81166006)(81156014)(8676002)(186003)(86362001)(8936002)(73956011)(66066001)(102836004)(6116002)(3846002)(2906002)(76176011)(110136005)(52536014)(478600001)(7696005)(32563001)(309714004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3549;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Og/9WwFjYmr4i36xki/femT7WxQ2+NwP4m/sVEkSRvAIxjXIsXapRp3mgJ9d8MR2xsPBK/uGzvnqlRRrDc1MJrg0BtL0mSBx6kZ+MqZV4eEFjzh5IfYHLsAf8Szt3nsDf26A2BbAsWKDf5P7kFPM7qGZ9k9nb2/0ZWMbJ+bwrl+2ntARjf0ZHOz15KbzJdV50eZOUcBFiJ6oSkb2K5I3ExIX5v/cSdIO91GYYzetRB+w1R/FLZUT1A/HRAKbG8wJttUHTdQDRFZQyK4xLdo6rQ4pQXMtdlhzGSNqwG+DW0Rs+0Yl17+YVpwV35zvZ1o0Kv68hxBt1aEE3zJpHcxEpgiA0FIew78zuiQD4SRCbtW+wuQnCmcJYlVvJ7dgO09Ntz61bTA7UnTufaYjoUIXZvg3XY20jOLnoMT+bx7lX/8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-KeepSent: 4F52243F:0954FF8C-482583FB:0023B249;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF4F52243F.0954FF8C-ON482583FB.0023B249-482583FB.00252E6F@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Wed, 15 May 2019 14:46:07 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/05/15 PM 02:46:07,
-        Serialize complete at 2019/05/15 PM 02:46:07
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG3.macronix.com x4F6k794019550
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b1150cd-3f2a-461e-5468-08d6d9011ab2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 06:46:48.4692
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3549
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Miquel,
-
- 
-> > Add a driver for Macronix MX25F0A multifunction device controller.
-> > 
-> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> > ---
-> >  drivers/mfd/Kconfig              |   9 ++
-> >  drivers/mfd/Makefile             |   1 +
-> >  drivers/mfd/mxic-mx25f0a.c       |  84 +++++++++++++++++++
-> >  include/linux/mfd/mxic-mx25f0a.h | 175 
-+++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 269 insertions(+)
-> >  create mode 100644 drivers/mfd/mxic-mx25f0a.c
-> >  create mode 100644 include/linux/mfd/mxic-mx25f0a.h
-> > 
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index 26ad646..7e99e93 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -823,6 +823,15 @@ config MFD_MAX8998
-> >       additional drivers must be enabled in order to use the 
-functionality
-> >       of the device.
-> > 
-> > +config MFD_MXIC_MX25F0A
-> > +   tristate "Macronix mx25f0a multifunction device support"
-> > +   select MFD_CORE
-> > +   help
-> > +     This supports for Macronix mx25f0a multifunction device 
-controller
-> > +     for raw nand or spi. You have to select individual components 
-like
-> 
-> Please use upper case for acronyms in plain English: NAND, SPI
-
-okay, will fix.
-
-And I also would like to remove "mx25f0a" char.
-
-patch to:
-------------------------------------------------------------------------
-config MFD_MXIC_FMC
-   tristate "Macronix Flash Memory Controller support"
-   select MFD_CORE
-   help
-     This supports Macronix Flash Memory Controller for raw NAND and SPI.
-     You have to select individual components like raw NAND controller
-     or SPI host controller under the corresponding  menus.
--------------------------------------------------------------------------
-
-thanks for your review.
-
-best regards,
-Mason
-
-
-
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+On 5/14/2019 7:45 PM, Iuliana Prodan wrote:=0A=
+[...]=0A=
+> diff --git a/drivers/crypto/caam/caampkc.c b/drivers/crypto/caam/caampkc.=
+c=0A=
+[...]=0A=
+> @@ -218,27 +230,45 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akc=
+ipher_request *req,=0A=
+>  	struct caam_rsa_ctx *ctx =3D akcipher_tfm_ctx(tfm);=0A=
+>  	struct device *dev =3D ctx->dev;=0A=
+>  	struct caam_rsa_req_ctx *req_ctx =3D akcipher_request_ctx(req);=0A=
+> +	struct caam_rsa_key *key =3D &ctx->key;=0A=
+>  	struct rsa_edesc *edesc;=0A=
+>  	gfp_t flags =3D (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?=0A=
+>  		       GFP_KERNEL : GFP_ATOMIC;=0A=
+>  	int sg_flags =3D (flags =3D=3D GFP_ATOMIC) ? SG_MITER_ATOMIC : 0;=0A=
+>  	int sgc;=0A=
+> -	int sec4_sg_index, sec4_sg_len =3D 0, sec4_sg_bytes;=0A=
+> +	int sec4_sg_index =3D 0, sec4_sg_len =3D 0, sec4_sg_bytes;=0A=
+Initialization of sec4_sg_index not needed, it's unconditionally set furthe=
+r below.=0A=
+=0A=
+[...]=0A=
+> -	if (src_nents > 1)=0A=
+> -		sec4_sg_len =3D src_nents;=0A=
+> +	if (!diff_size && src_nents =3D=3D 1)=0A=
+> +		sec4_sg_len =3D 0; /* no need for an input hw s/g table */=0A=
+> +	else=0A=
+> +		sec4_sg_len =3D src_nents + !!diff_size;=0A=
+> +	sec4_sg_index =3D sec4_sg_len;=0A=
+>  	if (dst_nents > 1)=0A=
+>  		sec4_sg_len +=3D dst_nents;=0A=
+>  =0A=
+=0A=
+[...]=0A=
+> @@ -1060,6 +1107,12 @@ static int __init caam_pkc_init(void)=0A=
+>  		goto out_put_dev;=0A=
+>  	}=0A=
+>  =0A=
+> +	/* allocate zero buffer, used for padding input */=0A=
+> +	zero_buffer =3D kzalloc(CAAM_RSA_MAX_INPUT_SIZE - 1, GFP_DMA |=0A=
+> +			      GFP_KERNEL);=0A=
+> +	if (!zero_buffer)=0A=
+> +		return -ENOMEM;=0A=
+Need to take care of freeing resources on error path.=0A=
+=0A=
+> +=0A=
+>  	err =3D crypto_register_akcipher(&caam_rsa);=0A=
+>  	if (err)=0A=
+>  		dev_warn(ctrldev, "%s alg registration failed\n",=0A=
+=0A=
+Thanks,=0A=
+Horia=0A=
