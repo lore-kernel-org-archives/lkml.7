@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFAAC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4D9C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AE772084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D22932084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:25:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="TqUjzDnC"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="EjKmmzK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfEOSZq (ORCPT
+        id S1727124AbfEOSZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 14:25:46 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44981 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726360AbfEOSZq (ORCPT
+        Wed, 15 May 2019 14:25:55 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:34023 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726360AbfEOSZz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 14:25:46 -0400
-Received: by mail-qt1-f195.google.com with SMTP id f24so785754qtk.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 11:25:45 -0700 (PDT)
+        Wed, 15 May 2019 14:25:55 -0400
+Received: by mail-qk1-f195.google.com with SMTP id j20so637278qke.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 11:25:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=poorly.run; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=uevvlYfgOpXcBdOPgi1PLyx6eXxlSuyhw6lRRCuesfo=;
-        b=TqUjzDnCZmv6DWpuf0cnlhe53qd6a/4tumMZ0fZw9U0qgMuucJ5FWPcQ5yJxnopnKT
-         geiPTrEINDWv1Mg13o5dluWxczAZ0EqqzbBXIm7bdy7586rxyBgwBz+B86+nBt9p1Rac
-         wzURb9WAoKStN4ih/1eDy3TDPBr4lJp5mnGxzs491XF91MShcz1ODdMXi/viD0CJUTH0
-         bLLBPYk/lr/wwmP6ubJmA6AoFVkQi6fxI3T9MYR4kt8ZTPR8gyLAzInU8OJUtyssAsVZ
-         jDU21ExK/qtRKXpFZxpNsvRowe+xQeZgmWY8sN9sYBYUfvoTWwX2n7mqIGQxnDgr6FTK
-         DmBA==
+        bh=ze14/ZyXsEJTAjqaTo2lTRx3s0ItRZ2g8TsWrPqezoA=;
+        b=EjKmmzK4gaGig9/kRlPUp7k1dxcQOfTfpH60q/LrsE/SgieDpD1q0gvpNH6TQ4tFjk
+         1kkS929EIWvcDVI/Iw2ykhlxaxBqrx+s4/GGEcQPd6Pya0uZy2IWKniwpSiCizKSh/fg
+         DDIA6lUED4xtnPQ+hRekTJ9bcuKmvx2fk1G14CEkPfkHD7NUN1iuolK8YmibOenB3JUS
+         KR+DDqXevo4MqhdGQEA1/W3oG/449EBa36KxghqJ46EwDP7jT0znVN/+ULNUP0E6dGQe
+         sRTgAwnXUmFRig1ct0llZ8ztKQC6ZDzpk4DGUt49WVfGNEPdwD+c9RPfVFMatHflLcp1
+         py/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uevvlYfgOpXcBdOPgi1PLyx6eXxlSuyhw6lRRCuesfo=;
-        b=tBUayqK8mRxDevtka4a2KTu6XnIgEehxLZxGUu4wpvJp1mnmwHVfER85Ife/qTSSrp
-         Dk+mVibCZre0/MlXpwyeGr6cF/8sd61r9GISKy/qKGw10pU2OVI6yFu9aQGY2qgtJmKz
-         CF0w1o6ARwYDS5qeQXuTg3dunWota2YFvvwRcHN8GIOzUvLtyg7P78NYCxYq6qEqOkBD
-         MwJkxyS/IpUWl64LvtWJRtDclEx+WxP4d1xZLPKgoErl+yCw2IoEbooos8e9KKL1ql9J
-         ir32hR+Ho8JOaRbzhvNfV1wnKIfTI8S13Lx/kjyyGIXr/k6nT5Dbl+eNj5PgP9bSn3fT
-         9cOQ==
-X-Gm-Message-State: APjAAAXQNLhXvL/W06MlnqIDYIXLXAn7fytbiRzNdLfDiZfpP0cgTpIY
-        EZ3zaqDOLGkpWsH5SMfNudTWzw==
-X-Google-Smtp-Source: APXvYqyjVVjWkzvrQizl0QTykiPZBiDOEfoq0Ogb2zru/TMF45dYDtbCR70ikjwUT1A+sxFVf0ucJw==
-X-Received: by 2002:ac8:4a84:: with SMTP id l4mr37683309qtq.374.1557944745132;
-        Wed, 15 May 2019 11:25:45 -0700 (PDT)
+        bh=ze14/ZyXsEJTAjqaTo2lTRx3s0ItRZ2g8TsWrPqezoA=;
+        b=nmBLcJq8elDn+k1OGup0A6TeR6HfIk77DjZxwYb5aT6zgfAQvYGTlet2BRBCeEGnrd
+         IvWoMYVqOX4KVq3e2JboFrQwFUZXNTnNdVl8oLy/WPREx4AwJMqaQGV4UOZPJWnAwOAt
+         Xp/4zS3kWNgNs2ga4fysVfjMTQ+Sz0m8Lv+in6uuXGcvRFnXZqhNuWhzzzznal8Qylmd
+         n8ovk360yuV+8IbE20+NY3dHniryE1KznJOhZTiGVUABI3fponzBMME6VlZq9Fnw+JRH
+         KrIvxYOdNwL0LEQxisjNt1z9s2VjwHSQdlakLTRQZmU5wQgUE8tgNW5bMUoSaUZPkOfB
+         gpCg==
+X-Gm-Message-State: APjAAAV50FPbHDBQlzE4bctF936K8Q3xVasLjBlCD/Ce86rZIfj+umat
+        dc7ypil8wPRfbRlyZhXJ8AHFhQ==
+X-Google-Smtp-Source: APXvYqzE4tU3wB1W/soxDI0IVT0K319tP4nNUGqGgn0iQCnc2JttjgI+YgxYaWAdWbpys/mgpEEGHA==
+X-Received: by 2002:ae9:f218:: with SMTP id m24mr25687228qkg.261.1557944754518;
+        Wed, 15 May 2019 11:25:54 -0700 (PDT)
 Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id n2sm1272422qkk.43.2019.05.15.11.25.44
+        by smtp.gmail.com with ESMTPSA id n19sm1253535qkg.58.2019.05.15.11.25.53
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 May 2019 11:25:44 -0700 (PDT)
-Date:   Wed, 15 May 2019 14:25:44 -0400
+        Wed, 15 May 2019 11:25:54 -0700 (PDT)
+Date:   Wed, 15 May 2019 14:25:53 -0400
 From:   Sean Paul <sean@poorly.run>
 To:     Douglas Anderson <dianders@chromium.org>
 Cc:     Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>,
@@ -68,28 +68,32 @@ Cc:     Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>,
         Mark Rutland <mark.rutland@arm.com>, mka@chromium.org,
         Sean Paul <seanpaul@chromium.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/5] ARM: dts: rockchip: Switch to builtin HDMI DDC bus
- on rk3288-veyron
-Message-ID: <20190515182544.GW17077@art_vandelay>
+Subject: Re: [PATCH 4/5] ARM: dts: rockchip: Add unwedge pinctrl entries for
+ dw_hdmi on rk3288
+Message-ID: <20190515182553.GX17077@art_vandelay>
 References: <20190502225336.206885-1-dianders@chromium.org>
- <20190502225336.206885-3-dianders@chromium.org>
+ <20190502225336.206885-4-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190502225336.206885-3-dianders@chromium.org>
+In-Reply-To: <20190502225336.206885-4-dianders@chromium.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 03:53:34PM -0700, Douglas Anderson wrote:
-> Downstream Chrome OS kernels use the builtin DDC bus from dw_hdmi on
-> veyron.  This is the only way to get them to negotiate HDCP.
+On Thu, May 02, 2019 at 03:53:35PM -0700, Douglas Anderson wrote:
+> This adds the "unwedge" pinctrl entries introduced by a recent dw_hdmi
+> change that can unwedge the dw_hdmi i2c bus in some cases.  It's
+> expected that any boards using this would add:
 > 
-> Although HDCP isn't currently all supported upstream, it still seems
-> like it makes sense to use dw_hdmi's builtin I2C.  Maybe eventually we
-> can get HDCP negotiation working.
+>   pinctrl-names = "default", "unwedge";
+>   pinctrl-0 = <&hdmi_ddc>;
+>   pinctrl-1 = <&hdmi_ddc_unwedge>;
+> 
+> Note that this isn't added by default because some boards may choose
+> to mux i2c5 for their DDC bus (if that is more tested for them).
 > 
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
@@ -97,38 +101,29 @@ Reviewed-by: Sean Paul <sean@poorly.run>
 
 > ---
 > 
->  arch/arm/boot/dts/rk3288-veyron.dtsi | 11 ++---------
->  1 file changed, 2 insertions(+), 9 deletions(-)
+>  arch/arm/boot/dts/rk3288.dtsi | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> index 1252522392c7..e1bee663d2c5 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> @@ -163,7 +163,8 @@
->  };
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index 74c9517c4f92..eebc04fa1e4d 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -1545,6 +1545,15 @@
+>  				rockchip,pins = <7 RK_PC3 2 &pcfg_pull_none>,
+>  						<7 RK_PC4 2 &pcfg_pull_none>;
+>  			};
+> +
+> +			hdmi_ddc_unwedge: hdmi-ddc-unwedge {
+> +				rockchip,pins = <7 RK_PC3 RK_FUNC_GPIO &pcfg_output_low>,
+> +						<7 RK_PC4 2 &pcfg_pull_none>;
+> +			};
+> +		};
+> +
+> +		pcfg_output_low: pcfg-output-low {
+> +			output-low;
+>  		};
 >  
->  &hdmi {
-> -	ddc-i2c-bus = <&i2c5>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&hdmi_ddc>;
->  	status = "okay";
->  };
->  
-> @@ -334,14 +335,6 @@
->  	i2c-scl-rising-time-ns = <300>;		/* 225ns measured */
->  };
->  
-> -&i2c5 {
-> -	status = "okay";
-> -
-> -	clock-frequency = <100000>;
-> -	i2c-scl-falling-time-ns = <300>;
-> -	i2c-scl-rising-time-ns = <1000>;
-> -};
-> -
->  &io_domains {
->  	status = "okay";
->  
+>  		pcfg_pull_up: pcfg-pull-up {
 > -- 
 > 2.21.0.1020.gf2820cf01a-goog
 > 
