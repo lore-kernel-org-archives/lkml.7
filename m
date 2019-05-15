@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A83EC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 643E1C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F9372084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35E9D20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918260;
-	bh=7LtjtEm+6npGd7blV5Zih9bJoLdFSeN4DjT2mASQb8Q=;
+	s=default; t=1557918265;
+	bh=dvCDnZeiJu6gG4l8p6ZHwSqeri0h0jPKwc5tIqUHTAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q+14Ydw3kcwvu3QmkZ0XPPP3YhwCNQdiwZnZegidMtBy7QXg9mNKdHrVRALE95GfQ
-	 8BKohQ4Qpf4nzddsk8uO3np75z+Ea68Qguz6eBD8G3BuHUX6jDFTcg6QxEBcw6STUH
-	 tB0P06jc7rz1523MbMn6IANayVynHasTQ+N7heQ4=
+	b=TJwnBYwY44zcyhNCSqtJo/IylMi6nHtc7gCu4jZZp3WbQHVaJ5R9CSAd5KiALAeR/
+	 rSozPFBu+ZXTA9EnOgfOSpZv5iZfHvvaW9XyL1Wvjpjn428WBtPcpgYEfOe5GVm1ky
+	 pHO/2w3kHyGS6l7/u5nU03ihmZRIQ5SpzrqR8DvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbfEOLET (ORCPT
+        id S1728437AbfEOLEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:04:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33784 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:04:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727806AbfEOLEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:04:16 -0400
+        id S1728414AbfEOLEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:04:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CFA021734;
-        Wed, 15 May 2019 11:04:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6844820881;
+        Wed, 15 May 2019 11:04:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918255;
-        bh=7LtjtEm+6npGd7blV5Zih9bJoLdFSeN4DjT2mASQb8Q=;
+        s=default; t=1557918260;
+        bh=dvCDnZeiJu6gG4l8p6ZHwSqeri0h0jPKwc5tIqUHTAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dg7bl4YOrsnrx+iA9hwF57K3yHXRfmJwHeoUqqfFY1dxtQhgkoU9VerG50FBsii/A
-         iMF1TO7HMWMp5amovg+8wH4vEzE/PfNdB7YU8tUXKOYXz0X6p3qkECRUB6m0tvI3tB
-         m8IOgcRxmXLl9+jebPKneoGYfvwz06JQ87Xoiock=
+        b=kC3gq2Mh0gR33z44ZrnsKGKta1vZxqVNQI4jjct+FKoywwqUfs6YEsONw5m8JfljS
+         rEcUIafTmV3MHY4Rapc6Q9DUaubbPbU3ALnNoAgIxS1bduhcIZSEnVMR7BsIUDiDKX
+         W+JJ5R9uBR64q77WpJTxOGjj4Tm167NX57z4d1A0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.4 027/266] powerpc/64s: Enhance the information in cpu_show_meltdown()
-Date:   Wed, 15 May 2019 12:52:14 +0200
-Message-Id: <20190515090723.486260500@linuxfoundation.org>
+        stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Daniel Axtens <dja@axtens.net>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.4 064/266] powerpc/fsl: Fix the flush of branch predictor.
+Date:   Wed, 15 May 2019 12:52:51 +0200
+Message-Id: <20190515090724.605371541@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -58,75 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit ff348355e9c72493947be337bb4fae4fc1a41eba upstream.
+commit 27da80719ef132cf8c80eb406d5aeb37dddf78cc upstream.
 
-Now that we have the security feature flags we can make the
-information displayed in the "meltdown" file more informative.
+The commit identified below adds MC_BTB_FLUSH macro only when
+CONFIG_PPC_FSL_BOOK3E is defined. This results in the following error
+on some configs (seen several times with kisskb randconfig_defconfig)
 
+arch/powerpc/kernel/exceptions-64e.S:576: Error: Unrecognized opcode: `mc_btb_flush'
+make[3]: *** [scripts/Makefile.build:367: arch/powerpc/kernel/exceptions-64e.o] Error 1
+make[2]: *** [scripts/Makefile.build:492: arch/powerpc/kernel] Error 2
+make[1]: *** [Makefile:1043: arch/powerpc] Error 2
+make: *** [Makefile:152: sub-make] Error 2
+
+This patch adds a blank definition of MC_BTB_FLUSH for other cases.
+
+Fixes: 10c5e83afd4a ("powerpc/fsl: Flush the branch predictor at each kernel entry (64bit)")
+Cc: Diana Craciun <diana.craciun@nxp.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Reviewed-by: Daniel Axtens <dja@axtens.net>
+Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/include/asm/security_features.h |    1 
- arch/powerpc/kernel/security.c               |   30 +++++++++++++++++++++++++--
- 2 files changed, 29 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/exceptions-64e.S |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/powerpc/include/asm/security_features.h
-+++ b/arch/powerpc/include/asm/security_features.h
-@@ -10,6 +10,7 @@
+--- a/arch/powerpc/kernel/exceptions-64e.S
++++ b/arch/powerpc/kernel/exceptions-64e.S
+@@ -348,6 +348,7 @@ ret_from_mc_except:
+ #define GEN_BTB_FLUSH
+ #define CRIT_BTB_FLUSH
+ #define DBG_BTB_FLUSH
++#define MC_BTB_FLUSH
+ #define GDBELL_BTB_FLUSH
+ #endif
  
- 
- extern unsigned long powerpc_security_features;
-+extern bool rfi_flush;
- 
- static inline void security_ftr_set(unsigned long feature)
- {
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -6,6 +6,7 @@
- 
- #include <linux/kernel.h>
- #include <linux/device.h>
-+#include <linux/seq_buf.h>
- 
- #include <asm/security_features.h>
- 
-@@ -19,8 +20,33 @@ unsigned long powerpc_security_features
- 
- ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, char *buf)
- {
--	if (rfi_flush)
--		return sprintf(buf, "Mitigation: RFI Flush\n");
-+	bool thread_priv;
-+
-+	thread_priv = security_ftr_enabled(SEC_FTR_L1D_THREAD_PRIV);
-+
-+	if (rfi_flush || thread_priv) {
-+		struct seq_buf s;
-+		seq_buf_init(&s, buf, PAGE_SIZE - 1);
-+
-+		seq_buf_printf(&s, "Mitigation: ");
-+
-+		if (rfi_flush)
-+			seq_buf_printf(&s, "RFI Flush");
-+
-+		if (rfi_flush && thread_priv)
-+			seq_buf_printf(&s, ", ");
-+
-+		if (thread_priv)
-+			seq_buf_printf(&s, "L1D private per thread");
-+
-+		seq_buf_printf(&s, "\n");
-+
-+		return s.len;
-+	}
-+
-+	if (!security_ftr_enabled(SEC_FTR_L1D_FLUSH_HV) &&
-+	    !security_ftr_enabled(SEC_FTR_L1D_FLUSH_PR))
-+		return sprintf(buf, "Not affected\n");
- 
- 	return sprintf(buf, "Vulnerable\n");
- }
 
 
