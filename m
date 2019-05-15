@@ -2,101 +2,78 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21F7C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2ADC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F612084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:19:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4B062084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:20:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hwwkkVyu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbfEOPTX (ORCPT
+        id S1728154AbfEOPUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 11:19:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:26961 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbfEOPTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 11:19:22 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1942D301A3E1;
-        Wed, 15 May 2019 15:19:22 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id AC9925D9C0;
-        Wed, 15 May 2019 15:19:16 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 15 May 2019 17:19:19 +0200 (CEST)
-Date:   Wed, 15 May 2019 17:19:13 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     jannh@google.com, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de, dhowells@redhat.com, akpm@linux-foundation.org,
-        cyphar@cyphar.com, ebiederm@xmission.com,
-        elena.reshetova@intel.com, keescook@chromium.org,
-        luto@amacapital.net, luto@kernel.org, tglx@linutronix.de,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/2] pid: add pidfd_open()
-Message-ID: <20190515151912.GE18892@redhat.com>
-References: <20190515100400.3450-1-christian@brauner.io>
- <20190515143857.GB18892@redhat.com>
- <20190515144927.f2yxyi6w6lhn3xx7@brauner.io>
+        Wed, 15 May 2019 11:20:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:58380 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726969AbfEOPUj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 11:20:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2jOakzpA8HKNq+MMsYE/nSV1Gu2XO1Vws64soAe0Eko=; b=hwwkkVyuaLcdnbwQd2fZShmvB
+        IvrVb7LY6X+R+frjUuT7TpC4b1FzEjCxx0QoqzwleoMNaGqbqJpGJK2BdtaqJFqqcNIS1m0W3oTmB
+        pVM9ErECGTK4io52yDjGq/aXBr+xeiQAatOgNO1bf6JnAHvopKYSr29gfew6ibjVXDELWatWjGoyj
+        H0S3BWvLQKDvzsusmplujOJX9mzeuAIYavwj4W7A+z/xRj84uLXxtzEGTasqLQgUKHriszFqSRZFS
+        f5L5njCt5zdARgmv6dggXtZQhuyFcxSLR4NAzXcQ+bUJPAMPePX6SQ9pn/HfSWLXTOjSS2/Cec2f9
+        pz2eECTLw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQvhr-0003gl-Rb; Wed, 15 May 2019 15:20:35 +0000
+Date:   Wed, 15 May 2019 08:20:35 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Lech Perczak <l.perczak@camlintechnologies.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Eric Dumazet <edumazet@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Piotr Figiel <p.figiel@camlintechnologies.com>,
+        Krzysztof =?utf-8?Q?Drobi=C5=84ski?= 
+        <k.drobinski@camlintechnologies.com>,
+        Pawel Lenkow <p.lenkow@camlintechnologies.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: Recurring warning in page_copy_sane (inside copy_page_to_iter)
+ when running stress tests involving drop_caches
+Message-ID: <20190515152035.GE31704@bombadil.infradead.org>
+References: <d68c83ba-bf5a-f6e8-44dd-be98f45fc97a@camlintechnologies.com>
+ <14c9e6f4-3fb8-ca22-91cc-6970f1d52265@camlintechnologies.com>
+ <011a16e4-6aff-104c-a19b-d2bd11caba99@camlintechnologies.com>
+ <20190515144352.GC31704@bombadil.infradead.org>
+ <20190515150406.GA22540@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190515144927.f2yxyi6w6lhn3xx7@brauner.io>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 15 May 2019 15:19:22 +0000 (UTC)
+In-Reply-To: <20190515150406.GA22540@kroah.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/15, Christian Brauner wrote:
->
-> On Wed, May 15, 2019 at 04:38:58PM +0200, Oleg Nesterov wrote:
-> >
-> > it seems that you can do a single check
-> >
-> > 	tsk = pid_task(p, PIDTYPE_TGID);
-> > 	if (!tsk)
-> > 		ret = -ESRCH;
-> >
-> > this even looks more correct if we race with exec changing the leader.
->
-> The logic here being that you can only reach the thread_group leader
-> from struct pid if PIDTYPE_PID == PIDTYPE_TGID for this struct pid?
+On Wed, May 15, 2019 at 05:04:06PM +0200, Greg Kroah-Hartman wrote:
+> > Greg, can you consider 6daef95b8c914866a46247232a048447fff97279 for
+> > backporting to stable?  Nobody realised it was a bugfix at the time it
+> > went in.  I suspect there aren't too many of us running HIGHMEM kernels
+> > any more.
+> > 
+> 
+> Sure, what kernel version(s) should this go to?  4.19 and newer?
 
-Not exactly... it is not that PIDTYPE_PID == PIDTYPE_TGID for this pid,
-struct pid has no "type" or something like this.
-
-The logic is that pid->tasks[PIDTYPE_XXX] is the list of task which use
-this pid as "XXX" type.
-
-For example, clone(CLONE_THREAD) creates a pid which has a single non-
-empty list, pid->tasks[PIDTYPE_PID]. This pid can't be used as TGID or
-SID.
-
-So if pid_task(PIDTYPE_TGID) returns non-NULL we know that this pid was
-used for a group-leader, see copy_process() which does
-
-	if (thread_group_leader(p))
-		attach_pid(p, PIDTYPE_TGID);
-
-
-If we race with exec which changes the leader pid_task(TGID) can return
-the old leader. We do not care, but this means that we should not check
-thread_group_leader().
-
-Oleg.
-
+Looks like the problem was introduced with commit
+a90bcb86ae700c12432446c4aa1819e7b8e172ec so 4.14 and newer, I think.
