@@ -2,95 +2,85 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D6BC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7381C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD9D2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918002;
-	bh=1FA4MIz3CQzJCCADgU/KVoD/cf8oj05WHxeaSFbTaBA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mCPcjyMvpi4QA3agX2YoX/2npVKMV561JrjlJkjR3dPJ7crI6kqQQBfzz9oj4B3hW
-	 y+1Sccm+cAr/6rXeG6x46VwLZogRJiWJQmJZ9zlVZtGhn6c3Olh9lNRwpkkD4VXyWZ
-	 7NKkPlCiWMmrbb09us/WCc/0ZN81XjBHVU7aHwk0=
+	by mail.kernel.org (Postfix) with ESMTP id AFDCC20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfEOLAB (ORCPT
+        id S1727341AbfEOLAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:00:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56652 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:00:04 -0400
+Received: from mga11.intel.com ([192.55.52.93]:37157 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727316AbfEOK77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:59:59 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65AE32084E;
-        Wed, 15 May 2019 10:59:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557917998;
-        bh=1FA4MIz3CQzJCCADgU/KVoD/cf8oj05WHxeaSFbTaBA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GKjHXcjFYwrd64efV+1PLrwH+P77ys95dNdTP6YXeN86wCDsC6yOLDZHpGn4FBEwR
-         dCGj4+OPD3AFG8hmXekMEjeMU2JepacCtNTGWrv5U0Oyy6pj/si8h6z4pT+V5WqGdG
-         xfhhBVwI5SdpU8+LJWbvJIf+u0HE2EOoT+jlH2mo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Mack <daniel@zonque.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 54/86] ASoC: cs4270: Set auto-increment bit for register writes
-Date:   Wed, 15 May 2019 12:55:31 +0200
-Message-Id: <20190515090653.006917756@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
-References: <20190515090642.339346723@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1727316AbfEOLAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:00:02 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 04:00:02 -0700
+X-ExtLoop1: 1
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
+  by fmsmga006.fm.intel.com with ESMTP; 15 May 2019 03:59:56 -0700
+Date:   Wed, 15 May 2019 14:00:05 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+Message-ID: <20190515110005.GA14718@linux.intel.com>
+References: <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
+ <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
+ <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
+ <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+ <20190513102926.GD8743@linux.intel.com>
+ <20190514104323.GA7591@linux.intel.com>
+ <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+ <20190514204527.GC1977@linux.intel.com>
+ <20190515103531.GB10917@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190515103531.GB10917@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f0f2338a9cfaf71db895fa989ea7234e8a9b471d ]
+On Wed, May 15, 2019 at 01:35:31PM +0300, Jarkko Sakkinen wrote:
+> This brings me to an open question in Andy's model: lets say that we
+> change the source for SIGSTRUCT from memory address to fd. How can the
+> policy prevent the use not creating a file containing a SIGSTRUCT and
+> passing fd of that to the EINIT ioctl?
 
-The CS4270 does not by default increment the register address on
-consecutive writes. During normal operation it doesn't matter as all
-register accesses are done individually. At resume time after suspend,
-however, the regcache code gathers the biggest possible block of
-registers to sync and sends them one on one go.
+Also wondering if a path would be better than plain fd for defining a
+reasonable policy i.e. have sigstruct_path as part of the ioctl
+parameters and not sigstruct_fd.
 
-To fix this, set the INCR bit in all cases.
-
-Signed-off-by: Daniel Mack <daniel@zonque.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/codecs/cs4270.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/sound/soc/codecs/cs4270.c b/sound/soc/codecs/cs4270.c
-index 736c1ea8e31e2..756796c064136 100644
---- a/sound/soc/codecs/cs4270.c
-+++ b/sound/soc/codecs/cs4270.c
-@@ -641,6 +641,7 @@ static const struct regmap_config cs4270_regmap = {
- 	.reg_defaults =		cs4270_reg_defaults,
- 	.num_reg_defaults =	ARRAY_SIZE(cs4270_reg_defaults),
- 	.cache_type =		REGCACHE_RBTREE,
-+	.write_flag_mask =	CS4270_I2C_INCR,
- 
- 	.readable_reg =		cs4270_reg_is_readable,
- 	.volatile_reg =		cs4270_reg_is_volatile,
--- 
-2.20.1
-
-
-
+/Jarkko
