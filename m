@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D805C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C26C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D33FF206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:21:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 845CD206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919276;
-	bh=aQ7Ivrvdt+7G0Ib3INo2gzvB2O0EmJ9WgB66ULk7SXs=;
+	s=default; t=1557919281;
+	bh=je8p31gH2UTFUNYAyL0F90Tk0r4btja7y6rAk0kldCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RmqIw2XXPJ9JcUzNiZFCWWWNd/bQhY9DI2eL3bYkBPBqNhfSEX4IrsLPSGvmwIHqR
-	 b0jgbVrCIh7vWLnnWMF/ynssi3DZi9GtfnfO2e7AP2FPG3sN6rRygXXruGy+dH5brs
-	 N1axJgSYsqWpQKAe11v/2nBfs2bJ2/X/KH5DrOnk=
+	b=YssRj8OeRhBuCEGQIzTn024pjKqKdvIoyAK3EU8SXKNK1hj4aWNEi2/nwiQmUfETY
+	 2k/edPTjlm5MdCTEq8Jo2/0CE7ObczpPCIH8cJmVOLBJaU9QiNEnJjYXIIbLnW76vG
+	 86GiesU7I1tg5Ckc4LJ1F8IbkQde08PZMcGhAgsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731247AbfEOLVP (ORCPT
+        id S1731265AbfEOLVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:21:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59136 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:21:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731010AbfEOLVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:21:13 -0400
+        id S1731253AbfEOLVS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:21:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB1EB20881;
-        Wed, 15 May 2019 11:21:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D1A4206BF;
+        Wed, 15 May 2019 11:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919272;
-        bh=aQ7Ivrvdt+7G0Ib3INo2gzvB2O0EmJ9WgB66ULk7SXs=;
+        s=default; t=1557919277;
+        bh=je8p31gH2UTFUNYAyL0F90Tk0r4btja7y6rAk0kldCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PJNOy9t0LYftwZ9nNmhLEBj+avTDOCG45+B+utn2e5OA91/eG5o2dcdjbUrF4MZRe
-         EbdYhy7Ltb83/GksKjCKPAZ5V7g25OmN9QSiMcvDsmTq9pWODPUQ7h4FJZUIEzpqcR
-         BK4ggPEg50M3+A31jN/DqOQulDFJbPWGTrxQvG4o=
+        b=N6iVsUMBPxF/Fc1kh0ZFlWGeoGmcVsee7rrQb2Abu6qasBOCZWVCcySH0F8R3QCOu
+         oZjGEA0TUN74at796j1OCRPCZvVEufXT5gX8wfTAcNA9zev8rGdJjl76UXMp5H5rWG
+         KxufBVgA416qMiQay1JgfRfD9kE1gUDI9yreOp9Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 013/113] libnvdimm/namespace: Fix a potential NULL pointer dereference
-Date:   Wed, 15 May 2019 12:55:04 +0200
-Message-Id: <20190515090654.545193363@linuxfoundation.org>
+Subject: [PATCH 4.19 015/113] HID: input: add mapping for keyboard Brightness Up/Down/Toggle keys
+Date:   Wed, 15 May 2019 12:55:06 +0200
+Message-Id: <20190515090654.663691680@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -60,36 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 55c1fc0af29a6c1b92f217b7eb7581a882e0c07c ]
+[ Upstream commit 7975a1d6a7afeb3eb61c971a153d24dd8fa032f3 ]
 
-In case kmemdup fails, the fix goes to blk_err to avoid NULL
-pointer dereference.
+According to HUTRR73 usages 0x79, 0x7a and 0x7c from the consumer page
+correspond to Brightness Up/Down/Toggle keys, so let's add the mappings.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/namespace_devs.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/hid/hid-input.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-index 54d79837f7c6b..73a444c41cde9 100644
---- a/drivers/nvdimm/namespace_devs.c
-+++ b/drivers/nvdimm/namespace_devs.c
-@@ -2251,9 +2251,12 @@ static struct device *create_namespace_blk(struct nd_region *nd_region,
- 	if (!nsblk->uuid)
- 		goto blk_err;
- 	memcpy(name, nd_label->name, NSLABEL_NAME_LEN);
--	if (name[0])
-+	if (name[0]) {
- 		nsblk->alt_name = kmemdup(name, NSLABEL_NAME_LEN,
- 				GFP_KERNEL);
-+		if (!nsblk->alt_name)
-+			goto blk_err;
-+	}
- 	res = nsblk_add_resource(nd_region, ndd, nsblk,
- 			__le64_to_cpu(nd_label->dpa));
- 	if (!res)
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index a9892cabe7cd8..55e6f18ff627d 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -895,6 +895,10 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 		case 0x074: map_key_clear(KEY_BRIGHTNESS_MAX);		break;
+ 		case 0x075: map_key_clear(KEY_BRIGHTNESS_AUTO);		break;
+ 
++		case 0x079: map_key_clear(KEY_KBDILLUMUP);	break;
++		case 0x07a: map_key_clear(KEY_KBDILLUMDOWN);	break;
++		case 0x07c: map_key_clear(KEY_KBDILLUMTOGGLE);	break;
++
+ 		case 0x082: map_key_clear(KEY_VIDEO_NEXT);	break;
+ 		case 0x083: map_key_clear(KEY_LAST);		break;
+ 		case 0x084: map_key_clear(KEY_ENTER);		break;
 -- 
 2.20.1
 
