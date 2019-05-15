@@ -2,149 +2,160 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D921FC04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B68AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9CB520862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557910814;
-	bh=tSH/SNkqFDsOd/9r+vHhCsEA1xWapzNBIYn3LDQTcU4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=OM0GUOqzfhoAFD/1t3loIQ35fgh67uksX9EXuyWUlXIKTFL9bYzaDSXxlr0pm1qAe
-	 paJ/OyTQDfBWL7OvBVlosW/B+hnQANcma/uSGEQs7ibJ5uhgwprQZf0dAuI3QGPJhl
-	 l0VrAnK4Hi8BMbmIOzUu4zerwueAUf5R66hqz0nI=
+	by mail.kernel.org (Postfix) with ESMTP id 685C920862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726325AbfEOJAN (ORCPT
+        id S1726412AbfEOJA2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 05:00:13 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40586 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfEOJAN (ORCPT
+        Wed, 15 May 2019 05:00:28 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:36524 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725871AbfEOJA1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 05:00:13 -0400
-Received: by mail-oi1-f193.google.com with SMTP id r136so1255768oie.7;
-        Wed, 15 May 2019 02:00:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lrqj6jKrkXcRwqIiYwyrhsIxd6bZvvZrh2+SSoZ20J0=;
-        b=tLbNnFqCG9b+NM2rIAUZ3p401DLBMhEowpQVywyUJuqe1NuU7hLXgyOfLcuIEGNEIY
-         haRT3DT1ooSlHyJ3S43fgJAJbNOBMY7tmmobwebz/n9GHyV8fDqi6vZr9sWHFgssBueJ
-         Xq1H2T2vGslplMg3CDjxYVo3mJK1zZ7ZZ9FdI9JMY7OeJfiIjOlychV4DiW82shbblQM
-         vRCD4uYg8mdgyEzIcvJpkyyRwqidgYmBhGkwP5+OMGFEeYvj1us69HXMO9UuS67eW8AB
-         DkIvqWEf7iBkhllkR9Z8yK9rOtQNMpGDSngFbE1K00nvUqzQMYnvGOYmRbLyOSzWoj8J
-         9N3w==
-X-Gm-Message-State: APjAAAWk4IHf4+IRvt2UFihEeI8lr06/xN5nsRqW+PV0Ygx2M0bmRv+Q
-        DnousFCZiId3rYhK5KskGoCW86g7JDevlPNcDR8RcQ==
-X-Google-Smtp-Source: APXvYqwHaBsNdrxgMt9H08QfD06eGXj4HaMnSdWMvb9W72y+vEGR3kUnlh0NIou/5pP1CEOGRrXrlsI/Ydn/lftSsq8=
-X-Received: by 2002:aca:f4c3:: with SMTP id s186mr5432131oih.68.1557910812335;
- Wed, 15 May 2019 02:00:12 -0700 (PDT)
+        Wed, 15 May 2019 05:00:27 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-151-LzCPBcH1MgOVKjpg1pcjcg-1; Wed, 15 May 2019 10:00:24 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 15 May 2019 10:00:23 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 15 May 2019 10:00:23 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Petr Mladek' <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        christophe leroy <christophe.leroy@c-s.fr>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "Russell Currey" <ruscur@russell.cc>,
+        Stephen Rothwell <sfr@ozlabs.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: RE: [PATCH] vsprintf: Do not break early boot with probing addresses
+Thread-Topic: [PATCH] vsprintf: Do not break early boot with probing addresses
+Thread-Index: AQHVB1bC/iTC8Q7sI0elwkZY5/gFJaZowlxwgAEika2AAGmPsIABhHoSgAAVWGA=
+Date:   Wed, 15 May 2019 09:00:23 +0000
+Message-ID: <0a816ea272a0405f89d8ca7178604531@AcuMS.aculab.com>
+References: <20190510084213.22149-1-pmladek@suse.com>
+ <20190510122401.21a598f6@gandalf.local.home>
+ <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
+ <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
+ <20190513091320.GK9224@smile.fi.intel.com>
+ <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
+ <20190514020730.GA651@jagdpanzerIV>
+ <45348cf615fe40d383c1a25688d4a88f@AcuMS.aculab.com>
+ <CAMuHMdXaMObq9h2Sb49PW1-HUysPeaWXB7wJmKFz=xLmSoUDZg@mail.gmail.com>
+ <20190514143751.48e81e05@oasis.local.home>
+ <20190515073542.y6ru2nfagtcrpdl7@pathway.suse.cz>
+In-Reply-To: <20190515073542.y6ru2nfagtcrpdl7@pathway.suse.cz>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <20190510212937.11661-1-keith.busch@intel.com> <0080aaff18e5445dabca509d4113eca8@AUSX13MPC105.AMER.DELL.COM>
- <955722d8fc16425dbba0698c4806f8fd@AUSX13MPC105.AMER.DELL.COM>
- <20190513143741.GA25500@lst.de> <b12ff66f8c224e4199ff1b90ed6bc393@AUSX13MPC105.AMER.DELL.COM>
- <20190513145522.GA15421@localhost.localdomain> <d69ff7154191492eaa8f55535a7effa5@AUSX13MPC105.AMER.DELL.COM>
- <20190513150458.GA15437@localhost.localdomain> <CAJZ5v0g3cCYK3rAQn09pCr7LMrRr=zQy_ceaEB5AKhVx604YgA@mail.gmail.com>
- <20190514221609.GC19977@localhost.localdomain>
-In-Reply-To: <20190514221609.GC19977@localhost.localdomain>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 15 May 2019 11:00:01 +0200
-Message-ID: <CAJZ5v0hrzV+cz+112sfgJ1eNznuf5oLH+kpFwhQb5VA05EAS2g@mail.gmail.com>
-Subject: Re: [PATCH] nvme/pci: Use host managed power state for suspend
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MC-Unique: LzCPBcH1MgOVKjpg1pcjcg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 12:21 AM Keith Busch <kbusch@kernel.org> wrote:
->
-> On Tue, May 14, 2019 at 10:04:22AM +0200, Rafael J. Wysocki wrote:
-> > On Mon, May 13, 2019 at 5:10 PM Keith Busch <kbusch@kernel.org> wrote:
+From: Petr Mladek
+> Sent: 15 May 2019 08:36
+> On Tue 2019-05-14 14:37:51, Steven Rostedt wrote:
+> >
+> > [ Purple is a nice shade on the bike shed. ;-) ]
+> >
+> > On Tue, 14 May 2019 11:02:17 +0200
+> > Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> >
+> > > On Tue, May 14, 2019 at 10:29 AM David Laight <David.Laight@aculab.com> wrote:
+> > > > > And I like Steven's "(fault)" idea.
+> > > > > How about this:
+> > > > >
+> > > > >       if ptr < PAGE_SIZE              -> "(null)"
+> > > > >       if IS_ERR_VALUE(ptr)            -> "(fault)"
+> > > > >
+> > > > >       -ss
+> > > >
+> > > > Or:
+> > > >         if (ptr < PAGE_SIZE)
+> > > >                 return ptr ? "(null+)" : "(null)";
+> >
+> > Hmm, that is useful.
+> >
+> > > >         if IS_ERR_VALUE(ptr)
+> > > >                 return "(errno)"
+> >
+> > I still prefer "(fault)" as is pretty much all I would expect from a
+> > pointer dereference, even if it is just bad parsing of, say, a parsing
+> > an MAC address. "fault" is generic enough. "errno" will be confusing,
+> > because that's normally a variable not a output.
+> >
 > > >
-> > > On Mon, May 13, 2019 at 03:05:42PM +0000, Mario.Limonciello@dell.com wrote:
-> > > > This system power state - suspend to idle is going to freeze threads.
-> > > > But we're talking a multi threaded kernel.  Can't there be a timing problem going
-> > > > on then too?  With a disk flush being active in one task and the other task trying
-> > > > to put the disk into the deepest power state.  If you don't freeze the queues how
-> > > > can you guarantee that didn't happen?
-> > >
-> > > But if an active data flush task is running, then we're not idle and
-> > > shouldn't go to low power.
+> > > Do we care about the value? "(-E%u)"?
 > >
-> > To be entirely precise, system suspend prevents user space from
-> > running while it is in progress.  It doesn't do that to kernel
-> > threads, at least not by default, though, so if there is a kernel
-> > thread flushing the data, it needs to be stopped or suspended somehow
-> > directly in the system suspend path.  [And yes, system suspend (or
-> > hibernation) may take place at any time so long as all user space can
-> > be prevented from running then (by means of the tasks freezer).]
-> >
-> > However, freezing the queues from a driver ->suspend callback doesn't
-> > help in general and the reason why is hibernation.  Roughly speaking,
-> > hibernation works in two steps, the first of which creates a snapshot
-> > image of system memory and the second one writes that image to
-> > persistent storage.  Devices are resumed between the two steps in
-> > order to make it possible to do the write, but that would unfreeze the
-> > queues and let the data flusher run.  If it runs, it may cause the
-> > memory snapshot image that has just been created to become outdated
-> > and restoring the system memory contents from that image going forward
-> > may cause corruption to occur.
-> >
-> > Thus freezing the queues from a driver ->suspend callback should not
-> > be relied on for correctness if the same callback is used for system
-> > suspend and hibernation, which is the case here.  If doing that
-> > prevents the system from crashing, it is critical to find out why IMO,
-> > as that may very well indicate a broader issue, not necessarily in the
-> > driver itself.
-> >
-> > But note that even if the device turns out to behave oddly, it still
-> > needs to be handled, unless it may be prevented from shipping to users
-> > in that shape.  If it ships, users will face the odd behavior anyway.
->
-> Thanks for all the information. I'll take another shot at this, should
-> have it posted tomorrow.
->
-> It's mostly not a problem to ensure enqueued and dispatched requests are
-> completed before returning from our suspend callback. I originally had
-> that behavior and backed it out when I thought it wasn't necessary. So
-> I'll reintroduce that. I'm not sure yet how we may handle kernel tasks
-> that are about to read/write pages, but haven't yet enqueued their
-> requests.
+> > That too could be confusing. What would (-E22) be considered by a user
+> > doing an sprintf() on some string. I know that would confuse me, or I
+> > would think that it was what the %pX displayed, and wonder why it
+> > displayed it that way. Whereas "(fault)" is quite obvious for any %p
+> > use case.
+> 
+> This discussion clearly shows that it is hard to make anyone happy.
+> 
+> I considered switching to "(fault)" because there seems to be more
+> people in favor of this.
+> 
+> But there is used also "(einval)" when an unsupported pointer
+> modifier is passed. The idea is to show error codes that people
+> are familiar with.
+> 
+> It might have been better to use the uppercase "(EFAULT)" and
+> "(EINVAL)" to make it more obvious. But I wanted to follow
+> the existing style with the lowercase "(null)".
 
-That is a hard problem in general.
+Printing 'fault' when the code was (trying to) validate the
+address was ok.
+When the only check is for an -errno value it seems wrong as
+most invalid addresses will actually fault (and panic).
 
-Currently, there are two ways to prevent a kernel thread from running
-across hibernation.  One of them is to freeze it with the help of the
-tasks freezer, but that isn't nice.  The second one would be to
-register a PM notifier with register_pm_notifier() and then stop the
-thread on the PM_HIBERNATION_PREPARE events (and restart it on the
-PM_POST_HIBERNATION and PM_POST_RESTORE events).  The drawback here
-is, though, that PM_HIBERNATION_PREPARE is signaled before freezing
-user space which may produce some deadlock scenarios in principle if
-anything in user space may be blocked waiting for the stopped kernel
-thread.
+The reason modern printf generate "(null)" is that it is far too
+easy for a diagnostic print to fail to test a pointer.
+It also makes it easier when 'throwing in' printf while debugging
+to add a single trace that will work regardless of whether a
+call had succeeded or not.
 
-It may be necessary to add PM_HIBERNATION/SUSPEND_POSTFREEZE and
-_PRETHAW events to the PM notifier for that, which will be signaled
-after running the tasks freezer and before unfreezing tasks,
-respectively.  Or something else to that effect.
+With the Linux kernel putting errno values into pointers it
+seems likely that most invalid pointers in printf will actaully
+be error values.
+Printing the value will be helpful during debugging - as a
+trace can be put after a call and show the parameters and result.
 
-If you need something like that, please let me know and I will prepare
-a core patch to add it.
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
