@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDDFC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EACCC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9942F20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BCCF20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920185;
-	bh=tNIhxY8N0aSxd42ZQzJBvBfueaEFS+wqtYU5w+0ZFnE=;
+	s=default; t=1557920193;
+	bh=EwnuNN/iKp732s9E1fnCIgPnDf11zkRNldXEtvvaLrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oxb71WmPe992teUzWUX4mIzNewMsrXgVIVCweuYTnj6KUcWp5woid4ExFfbF0n/Tw
-	 4bHGy5Nr5rKQ8johKEXfUoloVNFMuxTybRv3jdBXEHW1cce+4mXJN3O9gj3K/AW/7f
-	 RPxGZ95fa5c0/fmlRhCuPoPp6lqv1X4v2LxTuLn4=
+	b=dj53FD0g2SDX0ajjVthxci3o+SxuOc4oH7jLMqDcY4tJLn2cNgr75z6L8uRE6f00Q
+	 raUzaigtFZhyS0L777tJKwoEduzfXgxIdqTpIPgIUfIgPWNK9XmnPaTG2JTef4fIxL
+	 P+LnyKruxP/0w/QEK0f5BgZYrST0b0lbQKV/SPCk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731792AbfEOLgY (ORCPT
+        id S1731918AbfEOLgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:36:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44484 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:36:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730842AbfEOLci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:32:38 -0400
+        id S1730797AbfEOLcg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:32:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D2812053B;
-        Wed, 15 May 2019 11:32:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0516206BF;
+        Wed, 15 May 2019 11:32:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919957;
-        bh=tNIhxY8N0aSxd42ZQzJBvBfueaEFS+wqtYU5w+0ZFnE=;
+        s=default; t=1557919955;
+        bh=EwnuNN/iKp732s9E1fnCIgPnDf11zkRNldXEtvvaLrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WMzkXaTKUUjmqpFsOMW8noY3oSmXK1FfuBP8Mnn0tsKpJDfDpUuHjgk83CyYRQoXx
-         TaU8lnpiOjmRJ26YRUr8rh4KmP/9ULGO1fmCz4QTkB/NBcfIsJW1I8RFIcbEnSqa8Y
-         +UULtyQOo7Dpe7lIHy8fXbiwJmar8Dhe7UVgXnKQ=
+        b=QTlX1Ctbm9rGQqgRfEyb9hW5SBMKggwnrY9IiFN+TSYTNRsiCpzSV9VesyBjcrtVh
+         AIyO5IWzs0RtkFQiUhNpexSACX3pfH448RFCc+z/gW2x8wopqkgbvGaY9+APIvkP+R
+         ztBhUD2yHJpWcI1AUzzuawrwVwol0egQiFAMFXz0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 20/46] net: ethernet: stmmac: dwmac-sun8i: enable support of unicast filtering
-Date:   Wed, 15 May 2019 12:56:44 +0200
-Message-Id: <20190515090623.902014753@linuxfoundation.org>
+        stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.1 02/46] platform/x86: thinkpad_acpi: Disable Bluetooth for some machines
+Date:   Wed, 15 May 2019 12:56:26 +0200
+Message-Id: <20190515090618.166336036@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -59,34 +59,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corentin Labbe <clabbe@baylibre.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
 
-[ Upstream commit d4c26eb6e721683a0f93e346ce55bc8dc3cbb175 ]
+commit f7db839fccf087664e5587966220821289b6a9cb upstream.
 
-When adding more MAC addresses to a dwmac-sun8i interface, the device goes
-directly in promiscuous mode.
-This is due to IFF_UNICAST_FLT missing flag.
+Some AMD based ThinkPads have a firmware bug that calling
+"GBDC" will cause Bluetooth on Intel wireless cards blocked.
 
-So since the hardware support unicast filtering, let's add IFF_UNICAST_FLT.
+Probe these models by DMI match and disable Bluetooth subdriver
+if specified Intel wireless card exist.
 
-Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: stable <stable@vger.kernel.org> # 4.14+
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c |    2 ++
- 1 file changed, 2 insertions(+)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -1015,6 +1015,8 @@ static struct mac_device_info *sun8i_dwm
- 	mac->mac = &sun8i_dwmac_ops;
- 	mac->dma = &sun8i_dwmac_dma_ops;
+---
+ drivers/platform/x86/thinkpad_acpi.c |   72 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 70 insertions(+), 2 deletions(-)
+
+--- a/drivers/platform/x86/thinkpad_acpi.c
++++ b/drivers/platform/x86/thinkpad_acpi.c
+@@ -79,7 +79,7 @@
+ #include <linux/jiffies.h>
+ #include <linux/workqueue.h>
+ #include <linux/acpi.h>
+-#include <linux/pci_ids.h>
++#include <linux/pci.h>
+ #include <linux/power_supply.h>
+ #include <sound/core.h>
+ #include <sound/control.h>
+@@ -4501,6 +4501,74 @@ static void bluetooth_exit(void)
+ 	bluetooth_shutdown();
+ }
  
-+	priv->dev->priv_flags |= IFF_UNICAST_FLT;
++static const struct dmi_system_id bt_fwbug_list[] __initconst = {
++	{
++		.ident = "ThinkPad E485",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_BOARD_NAME, "20KU"),
++		},
++	},
++	{
++		.ident = "ThinkPad E585",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_BOARD_NAME, "20KV"),
++		},
++	},
++	{
++		.ident = "ThinkPad A285 - 20MW",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_BOARD_NAME, "20MW"),
++		},
++	},
++	{
++		.ident = "ThinkPad A285 - 20MX",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_BOARD_NAME, "20MX"),
++		},
++	},
++	{
++		.ident = "ThinkPad A485 - 20MU",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_BOARD_NAME, "20MU"),
++		},
++	},
++	{
++		.ident = "ThinkPad A485 - 20MV",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++			DMI_MATCH(DMI_BOARD_NAME, "20MV"),
++		},
++	},
++	{}
++};
 +
- 	/* The loopback bit seems to be re-set when link change
- 	 * Simply mask it each time
- 	 * Speed 10/100/1000 are set in BIT(2)/BIT(3)
++static const struct pci_device_id fwbug_cards_ids[] __initconst = {
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24F3) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24FD) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2526) },
++	{}
++};
++
++
++static int __init have_bt_fwbug(void)
++{
++	/*
++	 * Some AMD based ThinkPads have a firmware bug that calling
++	 * "GBDC" will cause bluetooth on Intel wireless cards blocked
++	 */
++	if (dmi_check_system(bt_fwbug_list) && pci_dev_present(fwbug_cards_ids)) {
++		vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_RFKILL,
++			FW_BUG "disable bluetooth subdriver for Intel cards\n");
++		return 1;
++	} else
++		return 0;
++}
++
+ static int __init bluetooth_init(struct ibm_init_struct *iibm)
+ {
+ 	int res;
+@@ -4513,7 +4581,7 @@ static int __init bluetooth_init(struct
+ 
+ 	/* bluetooth not supported on 570, 600e/x, 770e, 770x, A21e, A2xm/p,
+ 	   G4x, R30, R31, R40e, R50e, T20-22, X20-21 */
+-	tp_features.bluetooth = hkey_handle &&
++	tp_features.bluetooth = !have_bt_fwbug() && hkey_handle &&
+ 	    acpi_evalf(hkey_handle, &status, "GBDC", "qd");
+ 
+ 	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_RFKILL,
 
 
