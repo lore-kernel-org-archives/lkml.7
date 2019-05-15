@@ -2,124 +2,78 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210FAC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 708F6C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49D020578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:40:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920438;
-	bh=3CBpc1fLJnHIj2l4Fa+AUaaNaeYCNUuCUI7rrM7kUBs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qT1EtBpb22p36mhZGG2ydniOuc+f2uxV9kZcoNOePn/aMF6x+6OUOFCRK4TCzRqQh
-	 jKboXLhfTWKi8H3QwTgx6dXJpdpfuhqgozPuRiTlc+RLumFtCxOERWCDEbROAnD/Z9
-	 iZIgNiGbMySZhSFYe79JljQY3v6Avuvobes5OR2Y=
+	by mail.kernel.org (Postfix) with ESMTP id 497DB2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:40:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732531AbfEOL3T (ORCPT
+        id S1732515AbfEOLkm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:29:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726542AbfEOL3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:29:15 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F2F6206BF;
-        Wed, 15 May 2019 11:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919754;
-        bh=3CBpc1fLJnHIj2l4Fa+AUaaNaeYCNUuCUI7rrM7kUBs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mHtbIE/XMTIL8vHX3oH3bos/k21d3Nn758Rx1qQK0UAoap0Cx5y3NBLlSKLi2OlgZ
-         QCCjUgOYxz/zHrXOJZLokZyOmZp4nbJ1oLlxROgrs4aHwQqmOKTRcZV9D4Ts5/lBuC
-         ZJrRXoX1hlEh0T8ps6ansGHnSh3Qfpb1RogACo/g=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liang ZhiCheng <liangzhicheng@baidu.com>,
-        Li RongQing <lirongqing@baidu.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 027/137] libnvdimm/pmem: fix a possible OOB access when read and write pmem
-Date:   Wed, 15 May 2019 12:55:08 +0200
-Message-Id: <20190515090655.255284245@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
-References: <20190515090651.633556783@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 15 May 2019 07:40:42 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41954 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727580AbfEOLkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:40:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 54D7680D;
+        Wed, 15 May 2019 04:40:39 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F169B3F71E;
+        Wed, 15 May 2019 04:40:37 -0700 (PDT)
+Date:   Wed, 15 May 2019 12:40:35 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Sami Tolvanen <samitolvanen@google.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 3/3] arm64: use the correct function type for
+ __arm64_sys_ni_syscall
+Message-ID: <20190515114035.GG24357@fuggles.cambridge.arm.com>
+References: <20190503191225.6684-1-samitolvanen@google.com>
+ <20190503191225.6684-4-samitolvanen@google.com>
+ <20190507172512.GA35803@lakrids.cambridge.arm.com>
+ <20190507183227.GA10191@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507183227.GA10191@google.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9dc6488e84b0f64df17672271664752488cd6a25 ]
+On Tue, May 07, 2019 at 11:32:27AM -0700, Sami Tolvanen wrote:
+> On Tue, May 07, 2019 at 06:25:12PM +0100, Mark Rutland wrote:
+> > I strongly think that we cant to fix up the common definition in
+> > kernel/sys_ni.c rather than having a point-hack in arm64. Other
+> > architectures (e.g. x86, s390) will want the same for CFI, and I'd like
+> > to ensure that our approached don't diverge.
+> 
+> s390 already has the following in arch/s390/kernel/sys_s390.c:
+> 
+>   SYSCALL_DEFINE0(ni_syscall)
+>   {
+>         return -ENOSYS;
+>   }
+> 
+> Which, I suppose, is cleaner than calling sys_ni_syscall.
+> 
+> > I took a quick look, and it looks like it's messy but possible to fix
+> > up the core.
+> 
+> OK. How would you propose fixing this?
 
-If offset is not zero and length is bigger than PAGE_SIZE,
-this will cause to out of boundary access to a page memory
+In the absence of a patch from Mark, I'd suggest just adding a SYS_NI macro
+to our asm/syscall_wrapper.h file which avoids the error injection stuff. It
+doesn't preclude moving this to the core later on, but it unblocks the CFI
+work.
 
-Fixes: 98cc093cba1e ("block, THP: make block_device_operations.rw_page support THP")
-Co-developed-by: Liang ZhiCheng <liangzhicheng@baidu.com>
-Signed-off-by: Liang ZhiCheng <liangzhicheng@baidu.com>
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/nvdimm/pmem.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index bc2f700feef8a..0279eb1da3ef5 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -113,13 +113,13 @@ static void write_pmem(void *pmem_addr, struct page *page,
- 
- 	while (len) {
- 		mem = kmap_atomic(page);
--		chunk = min_t(unsigned int, len, PAGE_SIZE);
-+		chunk = min_t(unsigned int, len, PAGE_SIZE - off);
- 		memcpy_flushcache(pmem_addr, mem + off, chunk);
- 		kunmap_atomic(mem);
- 		len -= chunk;
- 		off = 0;
- 		page++;
--		pmem_addr += PAGE_SIZE;
-+		pmem_addr += chunk;
- 	}
- }
- 
-@@ -132,7 +132,7 @@ static blk_status_t read_pmem(struct page *page, unsigned int off,
- 
- 	while (len) {
- 		mem = kmap_atomic(page);
--		chunk = min_t(unsigned int, len, PAGE_SIZE);
-+		chunk = min_t(unsigned int, len, PAGE_SIZE - off);
- 		rem = memcpy_mcsafe(mem + off, pmem_addr, chunk);
- 		kunmap_atomic(mem);
- 		if (rem)
-@@ -140,7 +140,7 @@ static blk_status_t read_pmem(struct page *page, unsigned int off,
- 		len -= chunk;
- 		off = 0;
- 		page++;
--		pmem_addr += PAGE_SIZE;
-+		pmem_addr += chunk;
- 	}
- 	return BLK_STS_OK;
- }
--- 
-2.20.1
-
-
-
+Will
