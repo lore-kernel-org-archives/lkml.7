@@ -2,119 +2,89 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8991CC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C540DC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 621B920862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 978F420862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:15:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="yiIhTfm8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfEOIOv (ORCPT
+        id S1726546AbfEOIPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 04:14:51 -0400
-Received: from mga17.intel.com ([192.55.52.151]:42327 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbfEOIOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 04:14:51 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 01:14:50 -0700
-X-ExtLoop1: 1
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
-  by orsmga002.jf.intel.com with ESMTP; 15 May 2019 01:14:46 -0700
-Date:   Wed, 15 May 2019 11:14:55 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, corbet@lwn.net,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
-        thiruan@microsoft.com, bryankel@microsoft.com
-Subject: Re: [PATCH v3 2/2] ftpm: add documentation for ftpm driver
-Message-ID: <20190515081455.GB7708@linux.intel.com>
-References: <20190415155636.32748-1-sashal@kernel.org>
- <20190415155636.32748-3-sashal@kernel.org>
+        Wed, 15 May 2019 04:15:42 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:37772 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725876AbfEOIPm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 04:15:42 -0400
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id A73FB2E0987;
+        Wed, 15 May 2019 11:15:38 +0300 (MSK)
+Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
+        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id RoCJEKO4OP-Fc0KCJcQ;
+        Wed, 15 May 2019 11:15:38 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1557908138; bh=jHxTX7+w5XRXWiyeoOBtShSglDK2yw1HqwPBfT2YxAA=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=yiIhTfm8Y8WhZ27MzSCHygSHiu5oBt8MnnCw4imtDEH6qA2novSoggL0Mk1CNqZ9T
+         7xF4+sJ+Uco+w51uWRsqF5JueXBt2YYU1CZvrsjb3//DVbmxezl4Kkc7S2+eC/xLEJ
+         XdmVbHG1DwYMOOkK8yT+YETJRQD++p45vkpsltKw=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:ed19:3833:7ce1:2324])
+        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id TMPGL1lslS-Fbl0Xd6Q;
+        Wed, 15 May 2019 11:15:37 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH] mm: fix protection of mm_struct fields in get_cmdline()
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>
+Date:   Wed, 15 May 2019 11:15:37 +0300
+Message-ID: <155790813764.2995.13706842444028749629.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190415155636.32748-3-sashal@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 11:56:36AM -0400, Sasha Levin wrote:
-> This patch adds basic documentation to describe the new fTPM driver.
-> 
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
-> ---
->  Documentation/security/tpm/index.rst        |  1 +
->  Documentation/security/tpm/tpm_ftpm_tee.rst | 31 +++++++++++++++++++++
->  2 files changed, 32 insertions(+)
->  create mode 100644 Documentation/security/tpm/tpm_ftpm_tee.rst
-> 
-> diff --git a/Documentation/security/tpm/index.rst b/Documentation/security/tpm/index.rst
-> index af77a7bbb070..15783668644f 100644
-> --- a/Documentation/security/tpm/index.rst
-> +++ b/Documentation/security/tpm/index.rst
-> @@ -4,4 +4,5 @@ Trusted Platform Module documentation
->  
->  .. toctree::
->  
-> +   tpm_ftpm_tee
->     tpm_vtpm_proxy
-> diff --git a/Documentation/security/tpm/tpm_ftpm_tee.rst b/Documentation/security/tpm/tpm_ftpm_tee.rst
-> new file mode 100644
-> index 000000000000..29c2f8b5ed10
-> --- /dev/null
-> +++ b/Documentation/security/tpm/tpm_ftpm_tee.rst
-> @@ -0,0 +1,31 @@
-> +=============================================
-> +Firmware TPM Driver
-> +=============================================
-> +
-> +| Authors:
-> +| Thirupathaiah Annapureddy <thiruan@microsoft.com>
-> +| Sasha Levin <sashal@kernel.org>
-> +
-> +This document describes the firmware Trusted Platform Module (fTPM)
-> +device driver.
-> +
-> +Introduction
-> +============
-> +
-> +This driver is a shim for a firmware implemented in ARM's TrustZone
-> +environment. The driver allows programs to interact with the TPM in the same
-> +way the would interact with a hardware TPM.
-> +
-> +Design
-> +======
-> +
-> +The driver acts as a thin layer that passes commands to and from a TPM
-> +implemented in firmware. The driver itself doesn't contain much logic and is
-> +used more like a dumb pipe between firmware and kernel/userspace.
-> +
-> +The firmware itself is based on the following paper:
-> +https://www.microsoft.com/en-us/research/wp-content/uploads/2017/06/ftpm1.pdf
-> +
-> +When the driver is loaded it will expose ``/dev/tpmX`` character devices to
-> +userspace which will enable userspace to communicate with the firmware tpm
-> +through this device.
-> -- 
-> 2.19.1
-> 
+Since commit 88aa7cc688d4 ("mm: introduce arg_lock to protect arg_start|
+end and env_start|end in mm_struct") related mm fields are protected with
+separate spinlock and mmap_sem held for read is not enough for protection.
 
-Actually this would a better place at least with some words to describe
-what is TEE. I'm, for example, confused whether there is only single TEE
-in existence always used with TZ or is this some MS specific TEE.
+Fixes: 88aa7cc688d4 ("mm: introduce arg_lock to protect arg_start|end and env_start|end in mm_struct")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+---
+ mm/util.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Otherwise, looks legit.
+diff --git a/mm/util.c b/mm/util.c
+index e2e4f8c3fa12..540e7c157cf2 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -717,12 +717,12 @@ int get_cmdline(struct task_struct *task, char *buffer, int buflen)
+ 	if (!mm->arg_end)
+ 		goto out_mm;	/* Shh! No looking before we're done */
+ 
+-	down_read(&mm->mmap_sem);
++	spin_lock(&mm->arg_lock);
+ 	arg_start = mm->arg_start;
+ 	arg_end = mm->arg_end;
+ 	env_start = mm->env_start;
+ 	env_end = mm->env_end;
+-	up_read(&mm->mmap_sem);
++	spin_unlock(&mm->arg_lock);
+ 
+ 	len = arg_end - arg_start;
+ 
 
-/Jarkko
