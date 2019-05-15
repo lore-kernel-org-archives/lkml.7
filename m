@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B32F6C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69511C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B57720881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B0702084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919033;
-	bh=r4a5bV6SPMceTF8ixrhRxquOzuOpxbkt6dBCXM0sWak=;
+	s=default; t=1557919037;
+	bh=6e0KJ9qdVyxIwIx3iB73d1TJGGtIu0OJ8kF/k9AbIrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jolx8S0mFr4N8q1rKJhwLgZ7pZYkXNcDKXxlT2yrlVKDrRReOMjdpb/GrKCADcKtm
-	 wC7vHKQIwgfkEwDvtW2aD+3RZHTZd4EIR4AtK6IICllj+/kovfXu3fLUGkoVol0YJn
-	 FSOAiDsAYdx+u5p6WdzFuUH6h32/9hHlZiPmRziA=
+	b=P4mkIPK/kWdS0YFKLLE+54nYKkCWAnYvzI4uBchidN7iwYOgOEYoulLTSr64Vg2vE
+	 Y8tUtyvv8QVOB0yNwlsSVltWaA5bMI4wBfcWCCHYrRxc0gLMGksPDU9qTzz20FDNVa
+	 +dv+jwrJjh0iCo/Zi1VfdmwAFF9Zrs1xCmitSiVQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730635AbfEOLRM (ORCPT
+        id S1730645AbfEOLRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:17:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54276 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:17:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728261AbfEOLRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:17:10 -0400
+        id S1730631AbfEOLRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:17:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 361ED20644;
-        Wed, 15 May 2019 11:17:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E6B602084E;
+        Wed, 15 May 2019 11:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919029;
-        bh=r4a5bV6SPMceTF8ixrhRxquOzuOpxbkt6dBCXM0sWak=;
+        s=default; t=1557919032;
+        bh=6e0KJ9qdVyxIwIx3iB73d1TJGGtIu0OJ8kF/k9AbIrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TJb+jiiECchYl/cIzWsCMIOjN8edZRUS0mgGeOmbXlBXkdNsULPn1/Bfv8kScYlNv
-         xiFNNGBTykmPsyIfJ4RkyTGyFhYDQtl036M0S8tC9fL5SvXjbulwrnJTTNXANcwnvX
-         sEXdoOexMf9ksF6FO+5yuZmQnpdeuWshSZfe2NsU=
+        b=eQaOtBuMEkAw6uCuupHC67pWyM95naJ0+YHHByZ8Xeqk3tbDDLb72AhAJ54KGaucE
+         Ty194/2NOrB/u0SP07j2VWG44HFmLPmxg/Qe6SXdRcMyjC3PtZDGRsSVHjcR6XTgp2
+         ZpSdv79KF9PDpZrNycQiOIJWucfBfcFqiCu/rHOM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 039/115] Input: synaptics-rmi4 - fix possible double free
-Date:   Wed, 15 May 2019 12:55:19 +0200
-Message-Id: <20190515090702.304126803@linuxfoundation.org>
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: [PATCH 4.14 040/115] sparc64: Export __node_distance.
+Date:   Wed, 15 May 2019 12:55:20 +0200
+Message-Id: <20190515090702.397924596@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -60,43 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bce1a78423961fce676ac65540a31b6ffd179e6d ]
+[ Upstream commit 2b4792eaa9f553764047d157365ed8b7787751a3 ]
 
-The RMI4 function structure has been released in rmi_register_function
-if error occurs. However, it will be released again in the function
-rmi_create_function, which may result in a double-free bug.
+Some drivers reference it via node_distance(), for example the
+NVME host driver core.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+ERROR: "__node_distance" [drivers/nvme/host/nvme-core.ko] undefined!
+make[1]: *** [scripts/Makefile.modpost:92: __modpost] Error 1
+
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/input/rmi4/rmi_driver.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ arch/sparc/mm/init_64.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
-index f5954981e9ee5..997ccae7ee055 100644
---- a/drivers/input/rmi4/rmi_driver.c
-+++ b/drivers/input/rmi4/rmi_driver.c
-@@ -883,7 +883,7 @@ static int rmi_create_function(struct rmi_device *rmi_dev,
- 
- 	error = rmi_register_function(fn);
- 	if (error)
--		goto err_put_fn;
-+		return error;
- 
- 	if (pdt->function_number == 0x01)
- 		data->f01_container = fn;
-@@ -893,10 +893,6 @@ static int rmi_create_function(struct rmi_device *rmi_dev,
- 	list_add_tail(&fn->node, &data->function_list);
- 
- 	return RMI_SCAN_CONTINUE;
--
--err_put_fn:
--	put_device(&fn->dev);
--	return error;
+diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
+index 984e9d65ea0d1..76977296dc9c6 100644
+--- a/arch/sparc/mm/init_64.c
++++ b/arch/sparc/mm/init_64.c
+@@ -1383,6 +1383,7 @@ int __node_distance(int from, int to)
+ 	}
+ 	return numa_latency[from][to];
  }
++EXPORT_SYMBOL(__node_distance);
  
- void rmi_enable_irq(struct rmi_device *rmi_dev, bool clear_wake)
+ static int __init find_best_numa_node_for_mlgroup(struct mdesc_mlgroup *grp)
+ {
 -- 
 2.20.1
 
