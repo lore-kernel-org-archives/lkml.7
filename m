@@ -2,146 +2,128 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D42C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E17C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F184420881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F562082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:08:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fQHkwImB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfEORG4 (ORCPT
+        id S1727390AbfEORIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 13:06:56 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32943 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726586AbfEORGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 13:06:54 -0400
-Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 9408C8E5CBF113525311;
-        Wed, 15 May 2019 18:06:51 +0100 (IST)
-Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
- (10.201.108.37) with Microsoft SMTP Server (TLS) id 14.3.408.0; Wed, 15 May
- 2019 18:06:45 +0100
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-CC:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Rob Landley <rob@landley.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arvind Sankar <niveditas98@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        <initramfs@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-References: <20190512194322.GA71658@rani.riverdale.lan>
- <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
- <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
- <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
- <CALCETrV3b205L38xqPr6QqwGn6-vxQdPoJGUygJJpgM-JqqXfQ@mail.gmail.com>
- <1557861511.3378.19.camel@HansenPartnership.com>
- <4da3dbda-bb76-5d71-d5c5-c03d98350ab0@landley.net>
- <1557878052.2873.6.camel@HansenPartnership.com>
- <20190515005221.GB88615@rani.riverdale.lan>
- <a138af12-d983-453e-f0b2-661a80b7e837@huawei.com>
- <20190515160834.GA81614@rani.riverdale.lan>
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-Message-ID: <ce65240a-4df6-8ebc-8360-c01451e724f0@huawei.com>
-Date:   Wed, 15 May 2019 19:06:52 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.3.0
+        Wed, 15 May 2019 13:08:53 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43877 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726621AbfEORIx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 13:08:53 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c6so277317pfa.10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 10:08:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=23X9deLcPS7M5i4nGyMMmygstk5SEYNCAX+o3AHyfeo=;
+        b=fQHkwImB8r0QyXlb9e5+h5oXBt5trSiYfkbVVbzlKuBB8URoYIrdk/yKGOurdOlV30
+         WkTkhKT0kuQ1GqPmF3oHJqhvKpzyLwZA9y8aVmfoYiHE2s73HSvblddBcoGoBNREOfsH
+         P7BNaxeYuIpqHuKWQ3MmfPQZQun2ob/2Gb2ANMHlkL8lIPI0X1Bh/uVurNBdJcBgvB2p
+         vhV2/zq0h+FKEHLWvkllwmR7L/RhBi/oCrI02pdDjf9bU0Vt5Ak7vGIissSbfcxuJKue
+         7Kq/tGsRGBTIjrBpuGfpGUtlcR8qfJ4iKFDPsJdcue5xVpkX8534WJ1mtki15x6muNVd
+         F5yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=23X9deLcPS7M5i4nGyMMmygstk5SEYNCAX+o3AHyfeo=;
+        b=lvNLbU959KL5Z0ss0QsTgCfLFTu+XOFYC8FuEwxhiZBQJrzDI9SOz+oUODqytkofgr
+         ViNuf+YoE38/sHi/n2+0+2WNIaZhuqPODCUyhySgkv0p4eQ+VFbnKOOpnWghMDJ1hbF5
+         LZZOn9x6RpH0ur2fWdMFSuJ30qlP1PyD1sQ6p8d7UeyIDMJyWLqNs7+0sfcZwOwakcDS
+         vBX3ESprghd2k+Nn5X7kd+Io3h5aKQdokR/X01EZbX3fgbMRQqFW/CKrzMzlJtJNnku2
+         24aQwpsUKULb8fZcWiaKtoaitRDU+9xpSPaJNCiq536NBI9Tc1d+1Ad9i/NFSn/ZXMBG
+         2N5w==
+X-Gm-Message-State: APjAAAXaTEJBc+ME+YJ2Agc4/zJp8ix6tlbeBI7twzhiO4QAqSwA38l+
+        gqqPon9R5k7SQu0BD7Vz1h8=
+X-Google-Smtp-Source: APXvYqxvgAGdtqxgTRA3wWjOH/8MQHIh3AOafeFV72Gicxkd3YlsMvnulx4BkFOxuCfcNNlQ9ad67g==
+X-Received: by 2002:a62:cdc6:: with SMTP id o189mr22255368pfg.74.1557940132528;
+        Wed, 15 May 2019 10:08:52 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.73])
+        by smtp.gmail.com with ESMTPSA id b77sm5398936pfj.99.2019.05.15.10.08.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 10:08:51 -0700 (PDT)
+Date:   Wed, 15 May 2019 22:38:46 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8723bs: core: rtw_recv: fix warning Unneeded
+ variable ret
+Message-ID: <20190515170846.GA3817@hari-Inspiron-1545>
 MIME-Version: 1.0
-In-Reply-To: <20190515160834.GA81614@rani.riverdale.lan>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.220.96.108]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/15/2019 6:08 PM, Arvind Sankar wrote:
-> On Wed, May 15, 2019 at 01:19:04PM +0200, Roberto Sassu wrote:
->> On 5/15/2019 2:52 AM, Arvind Sankar wrote:
->>> You can specify multiple initrd's to the boot loader, and they get
->>> loaded in sequence into memory and parsed by the kernel before /init is
->>> launched. Currently I believe later ones will overwrite the earlier
->>> ones, which is why we've been talking about adding an option to prevent
->>> that. You don't have to mess with manually finding/parsing initramfs's
->>> which wouldn't even be feasible since you may not have the drivers
->>> loaded yet to access the device/filesystem on which they live.
->>>
->>> Once that's done, the embedded /init is just going to do in userspace
->>> wht the current patch does in the kernel. So all the files in the
->>> external initramfs(es) would need to have IMA signatures via the special
->>> xattr file.
->>
->> So, the scheme you are proposing is not equivalent: using the distro key
->> to verify signatures, compared to adding a new user key to verify the
->> initramfs he builds. Why would it be necessary for the user to share
->> responsibility with the distro, if the only files he uses come from the
->> distro?
->>
-> I don't understand what you mean? The IMA hashes are signed by some key,
-> but I don't see how what that key is needs to be different between the
-> two proposals. If the only files used are from the distro, in my scheme
-> as well you can use the signatures and key provided by the distro. If
-> they're not, then in your scheme as well you would have to allow for a
-> local signing key to be used. Both schemes are using the same
-> .xattr-list file, no?
+fix below warning reported by coccicheck
 
-I was referring to James's proposal to load an external initramfs from
-the embedded initramfs. If the embedded initramfs opens the external
-initramfs when IMA is enabled, the external initramfs needs to be
-signed with a local signing key. But I read your answer that this
-wouldn't be feasible. You have to specify all initramfs in the boot
-loader configuration.
+drivers/staging/rtl8723bs/core/rtw_recv.c:1903:5-8: Unneeded variable:
+"ret". Return "_SUCCESS" on line 1972
+drivers/staging/rtl8723bs/core/rtw_recv.c:1618:6-9: Unneeded variable:
+"ret". Return "_SUCCESS" on line 1705
 
-I think deferring IMA initialization is not the safest approach, as it
-cannot be guaranteed for all possible scenarios that there won't be any
-file read before /init is executed.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8723bs/core/rtw_recv.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-But if IMA is enabled, there is the problem of who signs .xattr-list.
-There should be a local signing key that it is not necessary if the user
-only accesses distro files.
-
-
-> If the external initramfs is to be signed, and it is built locally, in
-> both schemes there will have to be a provision for a local signing key,
-> but this key in any case is verified by the bootloader so there can't
-> be a difference between the two schemes since they're the same there.
-> 
-> What is the difference you're seeing here?
->>
->>> Note that if you want the flexibility to be able to load one or both of
->>> two external initramfs's, the current in-kernel proposal wouldn't be
->>> enough -- the xattr specification would have to be more flexible (eg
->>> reading .xattr-list* to allow each initramfs to specifiy its own
->>> xattrs. This sort of enhancement would be much easier to handle with the
->>> userspace variant.
->>
->> Yes, the alternative solution is to parse .xattr-list at the time it is
->> extracted. The .xattr-list of each initramfs will be processed. Also,
->> the CPIO parser doesn't have to reopen the file after all other files
->> have been extracted.
->>
->> Roberto
-> Right, I guess this would be sort of the minimal "modification" to the
-> CPIO format to allow it to support xattrs.
-
-I would try to do it without modification of the CPIO format. However,
-at the time .xattr-list is parsed (in do_copy() before .xattr-list is
-closed), it is not guaranteed that all files are extracted. These must
-be created before xattrs are added, but the file type must be correct,
-otherwise clean_path() removes the existing file with xattrs.
-
-Roberto
-
+diff --git a/drivers/staging/rtl8723bs/core/rtw_recv.c b/drivers/staging/rtl8723bs/core/rtw_recv.c
+index b543e97..b9f758e 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_recv.c
++++ b/drivers/staging/rtl8723bs/core/rtw_recv.c
+@@ -1615,7 +1615,6 @@ sint wlanhdr_to_ethhdr(union recv_frame *precvframe)
+ 	u8 *psnap_type;
+ 	struct ieee80211_snap_hdr	*psnap;
+ 	__be16 be_tmp;
+-	sint ret = _SUCCESS;
+ 	struct adapter			*adapter = precvframe->u.hdr.adapter;
+ 	struct mlme_priv *pmlmepriv = &adapter->mlmepriv;
+ 	u8 *ptr = get_recvframe_data(precvframe) ; /*  point to frame_ctrl field */
+@@ -1702,7 +1701,7 @@ sint wlanhdr_to_ethhdr(union recv_frame *precvframe)
+ 		memcpy(ptr+12, &be_tmp, 2);
+ 	}
+ 
+-	return ret;
++	return _SUCCESS;
+ }
+ 
+ /* perform defrag */
+@@ -1900,7 +1899,6 @@ static int amsdu_to_msdu(struct adapter *padapter, union recv_frame *prframe)
+ 	_pkt *sub_pkt, *subframes[MAX_SUBFRAME_COUNT];
+ 	struct recv_priv *precvpriv = &padapter->recvpriv;
+ 	struct __queue *pfree_recv_queue = &(precvpriv->free_recv_queue);
+-	int	ret = _SUCCESS;
+ 
+ 	nr_subframes = 0;
+ 
+@@ -1969,7 +1967,7 @@ static int amsdu_to_msdu(struct adapter *padapter, union recv_frame *prframe)
+ 	prframe->u.hdr.len = 0;
+ 	rtw_free_recvframe(prframe, pfree_recv_queue);/* free this recv_frame */
+ 
+-	return ret;
++	return  _SUCCESS;
+ }
+ 
+ int check_indicate_seq(struct recv_reorder_ctrl *preorder_ctrl, u16 seq_num);
 -- 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Bo PENG, Jian LI, Yanli SHI
+2.7.4
+
