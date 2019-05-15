@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AABFC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2CFC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22319206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0395020578
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921086;
-	bh=aMXqOInozZ644Gqg7arfG9d601anbcRvdiTfGF7h3IU=;
+	s=default; t=1557921094;
+	bh=FZ3t0OnChxZV9ueVH16QdGppkw7o2a88aTU3+IzD3GI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZQHq0WoqR9UugYTVZGi6ghhp2zyA4gpGRKuF6gOCzsb/AZU7q7wdH6+lISWHahL3Y
-	 uTrYffjrcrMz0SXT/RKjCBFNimkIphST4AWoIR8MvUOpzK0S5N8uSpJrIrFLG95KkN
-	 /XtcR8/7xyLpN23hrEBlvQKZ7NP+UbHl/Z2nsuks=
+	b=nqQ9pMBX4fxI0SSYoOVyLVUE1NZ8RT0XgyLzd79fVd/9AAZJFakiSvmDA7+lmWLPC
+	 vs4YTb93bZPaAHeq8dHFeXbSlN4fIiQo3qAWuPEU4VG4hJI4DbZOemdJIdV3s8/fe0
+	 ++HqlUvOI69lkmMQMn87FgG9l7fiwM37sffS53KI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731281AbfEOLV0 (ORCPT
+        id S1729990AbfEOLVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:21:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59334 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:21:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727046AbfEOLVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:21:23 -0400
+        id S1731248AbfEOLVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:21:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 724CA206BF;
-        Wed, 15 May 2019 11:21:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9947D206BF;
+        Wed, 15 May 2019 11:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919282;
-        bh=aMXqOInozZ644Gqg7arfG9d601anbcRvdiTfGF7h3IU=;
+        s=default; t=1557919275;
+        bh=FZ3t0OnChxZV9ueVH16QdGppkw7o2a88aTU3+IzD3GI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OVxfrLF5Ad0D7qeltd+m15svQ4z/uG1vbv/as2X0ohwbpxAPXkht9zgBS/qPD6Rj0
-         NHVlsYsqoFSCh5jsajboNkS4a56iIBkdJyw0HpJoR7SL1yM/sB8Rsgd+W23g2tdQ0V
-         YoyarZ3a+icmCi0ZFE8rZj5mGbLoWfO97xQ3tdlU=
+        b=EvEbEu7RttCAX1UZz6ZFy3u/e+gTwf1oU/JZP//QdH/c3vKTl9pZGGQK8jtBfVhph
+         U3TBMGbdIsbbaf8I1QOaV9+RdgVmod8JkBdlwXDM5XSPq1GBe5Iwzyu7AE/dqGdJpG
+         HesQaxtvm3CHuiVd1c+r5Pt+b4xtJsOJ8I+z4SK4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 017/113] libnvdimm/btt: Fix a kmemdup failure check
-Date:   Wed, 15 May 2019 12:55:08 +0200
-Message-Id: <20190515090654.789677303@linuxfoundation.org>
+Subject: [PATCH 4.19 014/113] HID: input: add mapping for Expose/Overview key
+Date:   Wed, 15 May 2019 12:55:05 +0200
+Message-Id: <20190515090654.596677937@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -60,57 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 486fa92df4707b5df58d6508728bdb9321a59766 ]
+[ Upstream commit 96dd86871e1fffbc39e4fa61c9c75ec54ee9af0f ]
 
-In case kmemdup fails, the fix releases resources and returns to
-avoid the NULL pointer dereference.
+According to HUTRR77 usage 0x29f from the consumer page is reserved for
+the Desktop application to present all running user’s application windows.
+Linux defines KEY_SCALE to request Compiz Scale (Expose) mode, so let's
+add the mapping.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/btt_devs.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ drivers/hid/hid-input.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/nvdimm/btt_devs.c b/drivers/nvdimm/btt_devs.c
-index 795ad4ff35caf..e341498876cad 100644
---- a/drivers/nvdimm/btt_devs.c
-+++ b/drivers/nvdimm/btt_devs.c
-@@ -190,14 +190,15 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
- 		return NULL;
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index e649940e065da..a9892cabe7cd8 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -1026,6 +1026,8 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 		case 0x2cb: map_key_clear(KEY_KBDINPUTASSIST_ACCEPT);	break;
+ 		case 0x2cc: map_key_clear(KEY_KBDINPUTASSIST_CANCEL);	break;
  
- 	nd_btt->id = ida_simple_get(&nd_region->btt_ida, 0, 0, GFP_KERNEL);
--	if (nd_btt->id < 0) {
--		kfree(nd_btt);
--		return NULL;
--	}
-+	if (nd_btt->id < 0)
-+		goto out_nd_btt;
- 
- 	nd_btt->lbasize = lbasize;
--	if (uuid)
-+	if (uuid) {
- 		uuid = kmemdup(uuid, 16, GFP_KERNEL);
-+		if (!uuid)
-+			goto out_put_id;
-+	}
- 	nd_btt->uuid = uuid;
- 	dev = &nd_btt->dev;
- 	dev_set_name(dev, "btt%d.%d", nd_region->id, nd_btt->id);
-@@ -212,6 +213,13 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
- 		return NULL;
- 	}
- 	return dev;
++		case 0x29f: map_key_clear(KEY_SCALE);		break;
 +
-+out_put_id:
-+	ida_simple_remove(&nd_region->btt_ida, nd_btt->id);
-+
-+out_nd_btt:
-+	kfree(nd_btt);
-+	return NULL;
- }
- 
- struct device *nd_btt_create(struct nd_region *nd_region)
+ 		default: map_key_clear(KEY_UNKNOWN);
+ 		}
+ 		break;
 -- 
 2.20.1
 
