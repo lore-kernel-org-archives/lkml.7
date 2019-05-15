@@ -4,73 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C01DEC04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023D1C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86F3921743
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3DE21743
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918755;
-	bh=WgsScHMpisY5aHLwlPFjumJ7HZxUMIqhdz3l32X74DU=;
+	s=default; t=1557918757;
+	bh=P3DJtJNfMXjKvj52yuwynEvezQgo/FOuNiaUjd2XLKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JjhHWjuAG7FJri140mtsWv0t9eFkvCd/BlPp8t6Z2EQzcPCWmhXY6PujzcGJtmsZR
-	 hxN0+IFEP5X8ho9Q5uOTxw+MbJUj482ATgi4g3/I4OJdO0inuNHMINpRJ8Cfhbgel7
-	 SB0BGLhTrMBUASxY3jOGhi+KxPE3kPTQ9tOVD3OE=
+	b=ijSt8hreoHiTtHqh1uaszmPCdS6P4Jfds0pBfzoTu3VzZfpAiPDpJTpbRaymqedKm
+	 uareR3pyURQAdzdqBi7JWwc/PLWMosBnkhpamEXwYh1ZZzC5lVnOd73gziX3snB5K5
+	 kuaSfseVaW2QgZ4/HQt3Hohf3gO+h7BG6HlLsjtA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbfEOLMe (ORCPT
+        id S1729824AbfEOLMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:12:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47592 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:12:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729323AbfEOLM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:12:29 -0400
+        id S1729805AbfEOLMd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:12:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47EEF2166E;
-        Wed, 15 May 2019 11:12:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70D6F20881;
+        Wed, 15 May 2019 11:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918747;
-        bh=WgsScHMpisY5aHLwlPFjumJ7HZxUMIqhdz3l32X74DU=;
+        s=default; t=1557918752;
+        bh=P3DJtJNfMXjKvj52yuwynEvezQgo/FOuNiaUjd2XLKs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AwrhmcDe3APCyYte4AZ0L4fpoPstC1d34sSe/R31bqXm6BqRudYPblij35EobdXMM
-         u6pozZf9zpJ5FFIw2kl8MGs3kX9sN2eo2Zjo9yJ0Rs3yd3burXA58Y3EcVSjAn2CGU
-         1Uj4yamOfHqLGIMZO5rfBnVn97dgCHhpvK8ZAhxU=
+        b=IIEpVs/g1PIEAVZKnc3mjrWkIWxAuot8h5LJuTyrhGO/RbWQXOr4DvqOsCXRe+GmA
+         GdyKedANx3Jg961hj92WFiET6og2ZDFis0WdCr0gGU/Qy0z6gMwvQpHdEYlj1uR1jx
+         qav9AGGZ8ROA0n4onK5W+kCe7sh0H+m4bmBlwzZ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Kosina <jkosina@suse.cz>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jon Masters <jcm@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        Tyler Hicks <tyhicks@canonical.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Price <steven.price@arm.com>,
-        Phil Auld <pauld@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Casey Schaufler <casey.schaufler@intel.com>,
+        Asit Mallick <asit.k.mallick@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Jon Masters <jcm@redhat.com>,
+        Waiman Long <longman9394@gmail.com>,
+        Dave Stewart <david.c.stewart@intel.com>,
+        Kees Cook <keescook@chromium.org>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 248/266] x86/speculation: Support mitigations= cmdline option
-Date:   Wed, 15 May 2019 12:55:55 +0200
-Message-Id: <20190515090731.402525457@linuxfoundation.org>
+Subject: [PATCH 4.4 211/266] x86/speculation: Reorder the spec_v2 code
+Date:   Wed, 15 May 2019 12:55:18 +0200
+Message-Id: <20190515090730.107426523@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -83,134 +78,264 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit d68be4c4d31295ff6ae34a8ddfaa4c1a8ff42812 upstream.
+commit 15d6b7aab0793b2de8a05d8a828777dd24db424e upstream.
 
-Configure x86 runtime CPU speculation bug mitigations in accordance with
-the 'mitigations=' cmdline option.  This affects Meltdown, Spectre v2,
-Speculative Store Bypass, and L1TF.
+Reorder the code so it is better grouped. No functional change.
 
-The default behavior is unchanged.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Jiri Kosina <jkosina@suse.cz> (on x86)
-Reviewed-by: Jiri Kosina <jkosina@suse.cz>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Jon Masters <jcm@redhat.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: linux-s390@vger.kernel.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-arch@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Tyler Hicks <tyhicks@canonical.com>
+Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Steven Price <steven.price@arm.com>
-Cc: Phil Auld <pauld@redhat.com>
-Link: https://lkml.kernel.org/r/6616d0ae169308516cfdf5216bedd169f8a8291b.1555085500.git.jpoimboe@redhat.com
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Casey Schaufler <casey.schaufler@intel.com>
+Cc: Asit Mallick <asit.k.mallick@intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Waiman Long <longman9394@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Dave Stewart <david.c.stewart@intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20181125185004.707122879@linutronix.de
 [bwh: Backported to 4.4:
- - Drop the auto,nosmt option and the l1tf mitigation selection, which we can't
-   support
- - Adjust filenames, context]
+ - We still have the minimal mitigation modes
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Documentation/kernel-parameters.txt |   14 +++++++++-----
- arch/x86/kernel/cpu/bugs.c          |    6 ++++--
- arch/x86/mm/kaiser.c                |    4 +++-
- 3 files changed, 16 insertions(+), 8 deletions(-)
+ arch/x86/kernel/cpu/bugs.c |  174 ++++++++++++++++++++++-----------------------
+ 1 file changed, 87 insertions(+), 87 deletions(-)
 
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -2174,15 +2174,19 @@ bytes respectively. Such letter suffixes
- 			http://repo.or.cz/w/linux-2.6/mini2440.git
- 
- 	mitigations=
--			Control optional mitigations for CPU vulnerabilities.
--			This is a set of curated, arch-independent options, each
--			of which is an aggregation of existing arch-specific
--			options.
-+			[X86] Control optional mitigations for CPU
-+			vulnerabilities.  This is a set of curated,
-+			arch-independent options, each of which is an
-+			aggregation of existing arch-specific options.
- 
- 			off
- 				Disable all optional CPU mitigations.  This
- 				improves system performance, but it may also
- 				expose users to several CPU vulnerabilities.
-+				Equivalent to: nopti [X86]
-+					       nospectre_v2 [X86]
-+					       spectre_v2_user=off [X86]
-+					       spec_store_bypass_disable=off [X86]
- 
- 			auto (default)
- 				Mitigate all CPU vulnerabilities, but leave SMT
-@@ -2190,7 +2194,7 @@ bytes respectively. Such letter suffixes
- 				users who don't want to be surprised by SMT
- 				getting disabled across kernel upgrades, or who
- 				have other ways of avoiding SMT-based attacks.
--				This is the default behavior.
-+				Equivalent to: (default behavior)
- 
- 	mminit_loglevel=
- 			[KNL] When CONFIG_DEBUG_MEMORY_INIT is set, this
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -479,7 +479,8 @@ static enum spectre_v2_mitigation_cmd __
+@@ -115,30 +115,6 @@ void __init check_bugs(void)
+ #endif
+ }
+ 
+-/* The kernel command line selection */
+-enum spectre_v2_mitigation_cmd {
+-	SPECTRE_V2_CMD_NONE,
+-	SPECTRE_V2_CMD_AUTO,
+-	SPECTRE_V2_CMD_FORCE,
+-	SPECTRE_V2_CMD_RETPOLINE,
+-	SPECTRE_V2_CMD_RETPOLINE_GENERIC,
+-	SPECTRE_V2_CMD_RETPOLINE_AMD,
+-};
+-
+-static const char *spectre_v2_strings[] = {
+-	[SPECTRE_V2_NONE]			= "Vulnerable",
+-	[SPECTRE_V2_RETPOLINE_MINIMAL]		= "Vulnerable: Minimal generic ASM retpoline",
+-	[SPECTRE_V2_RETPOLINE_MINIMAL_AMD]	= "Vulnerable: Minimal AMD ASM retpoline",
+-	[SPECTRE_V2_RETPOLINE_GENERIC]		= "Mitigation: Full generic retpoline",
+-	[SPECTRE_V2_RETPOLINE_AMD]		= "Mitigation: Full AMD retpoline",
+-	[SPECTRE_V2_IBRS_ENHANCED]		= "Mitigation: Enhanced IBRS",
+-};
+-
+-#undef pr_fmt
+-#define pr_fmt(fmt)     "Spectre V2 : " fmt
+-
+-static enum spectre_v2_mitigation spectre_v2_enabled = SPECTRE_V2_NONE;
+-
+ void
+ x86_virt_spec_ctrl(u64 guest_spec_ctrl, u64 guest_virt_spec_ctrl, bool setguest)
+ {
+@@ -208,6 +184,11 @@ static void x86_amd_ssb_disable(void)
+ 		wrmsrl(MSR_AMD64_LS_CFG, msrval);
+ }
+ 
++#undef pr_fmt
++#define pr_fmt(fmt)     "Spectre V2 : " fmt
++
++static enum spectre_v2_mitigation spectre_v2_enabled = SPECTRE_V2_NONE;
++
+ #ifdef RETPOLINE
+ static bool spectre_v2_bad_module;
+ 
+@@ -229,6 +210,45 @@ static inline const char *spectre_v2_mod
+ static inline const char *spectre_v2_module_string(void) { return ""; }
+ #endif
+ 
++static inline bool match_option(const char *arg, int arglen, const char *opt)
++{
++	int len = strlen(opt);
++
++	return len == arglen && !strncmp(arg, opt, len);
++}
++
++/* The kernel command line selection for spectre v2 */
++enum spectre_v2_mitigation_cmd {
++	SPECTRE_V2_CMD_NONE,
++	SPECTRE_V2_CMD_AUTO,
++	SPECTRE_V2_CMD_FORCE,
++	SPECTRE_V2_CMD_RETPOLINE,
++	SPECTRE_V2_CMD_RETPOLINE_GENERIC,
++	SPECTRE_V2_CMD_RETPOLINE_AMD,
++};
++
++static const char *spectre_v2_strings[] = {
++	[SPECTRE_V2_NONE]			= "Vulnerable",
++	[SPECTRE_V2_RETPOLINE_MINIMAL]		= "Vulnerable: Minimal generic ASM retpoline",
++	[SPECTRE_V2_RETPOLINE_MINIMAL_AMD]	= "Vulnerable: Minimal AMD ASM retpoline",
++	[SPECTRE_V2_RETPOLINE_GENERIC]		= "Mitigation: Full generic retpoline",
++	[SPECTRE_V2_RETPOLINE_AMD]		= "Mitigation: Full AMD retpoline",
++	[SPECTRE_V2_IBRS_ENHANCED]		= "Mitigation: Enhanced IBRS",
++};
++
++static const struct {
++	const char *option;
++	enum spectre_v2_mitigation_cmd cmd;
++	bool secure;
++} mitigation_options[] = {
++	{ "off",		SPECTRE_V2_CMD_NONE,		  false },
++	{ "on",			SPECTRE_V2_CMD_FORCE,		  true  },
++	{ "retpoline",		SPECTRE_V2_CMD_RETPOLINE,	  false },
++	{ "retpoline,amd",	SPECTRE_V2_CMD_RETPOLINE_AMD,	  false },
++	{ "retpoline,generic",	SPECTRE_V2_CMD_RETPOLINE_GENERIC, false },
++	{ "auto",		SPECTRE_V2_CMD_AUTO,		  false },
++};
++
+ static void __init spec2_print_if_insecure(const char *reason)
+ {
+ 	if (boot_cpu_has_bug(X86_BUG_SPECTRE_V2))
+@@ -246,31 +266,11 @@ static inline bool retp_compiler(void)
+ 	return __is_defined(RETPOLINE);
+ }
+ 
+-static inline bool match_option(const char *arg, int arglen, const char *opt)
+-{
+-	int len = strlen(opt);
+-
+-	return len == arglen && !strncmp(arg, opt, len);
+-}
+-
+-static const struct {
+-	const char *option;
+-	enum spectre_v2_mitigation_cmd cmd;
+-	bool secure;
+-} mitigation_options[] = {
+-	{ "off",               SPECTRE_V2_CMD_NONE,              false },
+-	{ "on",                SPECTRE_V2_CMD_FORCE,             true },
+-	{ "retpoline",         SPECTRE_V2_CMD_RETPOLINE,         false },
+-	{ "retpoline,amd",     SPECTRE_V2_CMD_RETPOLINE_AMD,     false },
+-	{ "retpoline,generic", SPECTRE_V2_CMD_RETPOLINE_GENERIC, false },
+-	{ "auto",              SPECTRE_V2_CMD_AUTO,              false },
+-};
+-
+ static enum spectre_v2_mitigation_cmd __init spectre_v2_parse_cmdline(void)
+ {
++	enum spectre_v2_mitigation_cmd cmd = SPECTRE_V2_CMD_AUTO;
  	char arg[20];
  	int ret, i;
+-	enum spectre_v2_mitigation_cmd cmd = SPECTRE_V2_CMD_AUTO;
  
--	if (cmdline_find_option_bool(boot_command_line, "nospectre_v2"))
-+	if (cmdline_find_option_bool(boot_command_line, "nospectre_v2") ||
-+	    cpu_mitigations_off())
+ 	if (cmdline_find_option_bool(boot_command_line, "nospectre_v2"))
  		return SPECTRE_V2_CMD_NONE;
+@@ -313,48 +313,6 @@ static enum spectre_v2_mitigation_cmd __
+ 	return cmd;
+ }
  
- 	ret = cmdline_find_option(boot_command_line, "spectre_v2", arg, sizeof(arg));
-@@ -743,7 +744,8 @@ static enum ssb_mitigation_cmd __init ss
- 	char arg[20];
- 	int ret, i;
+-static bool stibp_needed(void)
+-{
+-	if (spectre_v2_enabled == SPECTRE_V2_NONE)
+-		return false;
+-
+-	/* Enhanced IBRS makes using STIBP unnecessary. */
+-	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
+-		return false;
+-
+-	if (!boot_cpu_has(X86_FEATURE_STIBP))
+-		return false;
+-
+-	return true;
+-}
+-
+-static void update_stibp_msr(void *info)
+-{
+-	wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
+-}
+-
+-void arch_smt_update(void)
+-{
+-	u64 mask;
+-
+-	if (!stibp_needed())
+-		return;
+-
+-	mutex_lock(&spec_ctrl_mutex);
+-
+-	mask = x86_spec_ctrl_base & ~SPEC_CTRL_STIBP;
+-	if (sched_smt_active())
+-		mask |= SPEC_CTRL_STIBP;
+-
+-	if (mask != x86_spec_ctrl_base) {
+-		pr_info("Spectre v2 cross-process SMT mitigation: %s STIBP\n",
+-			mask & SPEC_CTRL_STIBP ? "Enabling" : "Disabling");
+-		x86_spec_ctrl_base = mask;
+-		on_each_cpu(update_stibp_msr, NULL, 1);
+-	}
+-	mutex_unlock(&spec_ctrl_mutex);
+-}
+-
+ static void __init spectre_v2_select_mitigation(void)
+ {
+ 	enum spectre_v2_mitigation_cmd cmd = spectre_v2_parse_cmdline();
+@@ -459,6 +417,48 @@ specv2_set_mode:
+ 	arch_smt_update();
+ }
  
--	if (cmdline_find_option_bool(boot_command_line, "nospec_store_bypass_disable")) {
-+	if (cmdline_find_option_bool(boot_command_line, "nospec_store_bypass_disable") ||
-+	    cpu_mitigations_off()) {
- 		return SPEC_STORE_BYPASS_CMD_NONE;
- 	} else {
- 		ret = cmdline_find_option(boot_command_line, "spec_store_bypass_disable",
---- a/arch/x86/mm/kaiser.c
-+++ b/arch/x86/mm/kaiser.c
-@@ -10,6 +10,7 @@
- #include <linux/mm.h>
- #include <linux/uaccess.h>
- #include <linux/ftrace.h>
-+#include <linux/cpu.h>
- 
++static bool stibp_needed(void)
++{
++	if (spectre_v2_enabled == SPECTRE_V2_NONE)
++		return false;
++
++	/* Enhanced IBRS makes using STIBP unnecessary. */
++	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
++		return false;
++
++	if (!boot_cpu_has(X86_FEATURE_STIBP))
++		return false;
++
++	return true;
++}
++
++static void update_stibp_msr(void *info)
++{
++	wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
++}
++
++void arch_smt_update(void)
++{
++	u64 mask;
++
++	if (!stibp_needed())
++		return;
++
++	mutex_lock(&spec_ctrl_mutex);
++
++	mask = x86_spec_ctrl_base & ~SPEC_CTRL_STIBP;
++	if (sched_smt_active())
++		mask |= SPEC_CTRL_STIBP;
++
++	if (mask != x86_spec_ctrl_base) {
++		pr_info("Spectre v2 cross-process SMT mitigation: %s STIBP\n",
++			mask & SPEC_CTRL_STIBP ? "Enabling" : "Disabling");
++		x86_spec_ctrl_base = mask;
++		on_each_cpu(update_stibp_msr, NULL, 1);
++	}
++	mutex_unlock(&spec_ctrl_mutex);
++}
++
  #undef pr_fmt
- #define pr_fmt(fmt)     "Kernel/User page tables isolation: " fmt
-@@ -297,7 +298,8 @@ void __init kaiser_check_boottime_disabl
- 			goto skip;
- 	}
+ #define pr_fmt(fmt)	"Speculative Store Bypass: " fmt
  
--	if (cmdline_find_option_bool(boot_command_line, "nopti"))
-+	if (cmdline_find_option_bool(boot_command_line, "nopti") ||
-+	    cpu_mitigations_off())
- 		goto disable;
- 
- skip:
 
 
