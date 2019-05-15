@@ -2,197 +2,65 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD12C46460
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9605FC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF1D2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:07:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="JldDYW+L"
+	by mail.kernel.org (Postfix) with ESMTP id 680D32070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:09:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbfEOVHh (ORCPT
+        id S1727135AbfEOVJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 17:07:37 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33594 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726830AbfEOVHh (ORCPT
+        Wed, 15 May 2019 17:09:17 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:58088 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726651AbfEOVJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 17:07:37 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 66so1438096otq.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 14:07:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zEAiaEFTDEo5AHTXNi1igG//m3yl73MYATUt/TyQM/s=;
-        b=JldDYW+LTAR5BoMmvzt3GhFBKSNFCQljO95A7CQF8h7lezT59wkCmoZR8HlZNeo3ZX
-         ACz18is11PqZLJkpbZTbPrVApVsXuwCwQzpumDKhMYUGYyeEKSs4shc89Funjj7rmnrR
-         zPCblVOMVW4B/FdfDdDBm0eQtlDpcEoDreFJYHB2TrhXh9porw+VCF0gkgtOPIdPF4AY
-         hPK/m0cAXNVhKubNUJt+B+Ge41ks183CJ7yggGXayFgFqQhy+nfr59BSRoNiAIUor77P
-         UmqXqpMAHdjAUWsPGhNLbi9iUpZ9FsKZwds3Nd3zmasJxQ+15Rm38l4yGAgNrmpf7grH
-         OFBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zEAiaEFTDEo5AHTXNi1igG//m3yl73MYATUt/TyQM/s=;
-        b=UWi1VEWlqRiQ5UVHe3/soj8APW4pGGXGNR4UdQw0XutAdd5Z3TA9RTJS8rxvC8d4xM
-         Bu54QLpi5kUUYtHSFffn8emjPFVAJBt0w5KEvE5dzHGRzQFTXt4cjqKyC6GgBX9iQST8
-         xcWDd88WwYgC6SAPSxDqi7srsH8Xk+R8G5xPGCmzyOqV/graA8laveoEHlOC3zCXOf9d
-         aR7AfVmBbhvvV8DqiPEs+y3kM1jFowFrn2uoSA6/TcICHHIA8HMdQGuC7WN0h79RZMma
-         zHDwJmZb0/XoSzCTkoX7oQKA89KuBCfCG/nKNayefeLOFr9wCWrKNYw/mpi9Bh47H/BK
-         FA3A==
-X-Gm-Message-State: APjAAAVfWlU5wD8lWA0C3VSEtce/425QDWctDh4iZumiM2UnprDDhpRl
-        Ql8qD6KZ3MrtbCIRp6ERSy3i3EeAEuM0gaNWncJbaA==
-X-Google-Smtp-Source: APXvYqyDA/EWUSXzmLh3QyRTwliJkHZQ726n1NRYV2Be3duzD6pV8jVLvRmpMo63mBrfvCQmmCONZIUwdUcOhHdo8aI=
-X-Received: by 2002:a05:6830:14d3:: with SMTP id t19mr27993804otq.57.1557954454945;
- Wed, 15 May 2019 14:07:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190514145422.16923-1-pagupta@redhat.com> <20190514145422.16923-2-pagupta@redhat.com>
-In-Reply-To: <20190514145422.16923-2-pagupta@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 15 May 2019 14:07:23 -0700
-Message-ID: <CAPcyv4gEr_zPJEQp3k89v2UXfHp9PQwnJXY+W99HwXfxpvua_w@mail.gmail.com>
-Subject: Re: [PATCH v9 1/7] libnvdimm: nd_region flush callback support
-To:     Pankaj Gupta <pagupta@redhat.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        KVM list <kvm@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Qemu Developers <qemu-devel@nongnu.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Christoph Hellwig <hch@infradead.org>,
-        Len Brown <lenb@kernel.org>, Jan Kara <jack@suse.cz>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        jmoyer <jmoyer@redhat.com>,
-        Nitesh Narayan Lal <nilal@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        david <david@fromorbit.com>, cohuck@redhat.com,
-        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        yuval shaia <yuval.shaia@oracle.com>, jstaron@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 15 May 2019 17:09:17 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1004)
+        id BCBB520110AD; Wed, 15 May 2019 14:09:16 -0700 (PDT)
+From:   longli@linuxonhyperv.com
+To:     Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-kernel@vger.kernel.org
+Cc:     Long Li <longli@microsoft.com>
+Subject: [PATCH 1/2] cifs: Don't match port on SMBDirect transport
+Date:   Wed, 15 May 2019 14:09:04 -0700
+Message-Id: <1557954545-17831-1-git-send-email-longli@linuxonhyperv.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: longli@microsoft.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 7:55 AM Pankaj Gupta <pagupta@redhat.com> wrote:
->
-> This patch adds functionality to perform flush from guest
-> to host over VIRTIO. We are registering a callback based
-> on 'nd_region' type. virtio_pmem driver requires this special
-> flush function. For rest of the region types we are registering
-> existing flush function. Report error returned by host fsync
-> failure to userspace.
->
-> Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> ---
->  drivers/acpi/nfit/core.c     |  4 ++--
->  drivers/nvdimm/claim.c       |  6 ++++--
->  drivers/nvdimm/nd.h          |  1 +
->  drivers/nvdimm/pmem.c        | 13 ++++++++-----
->  drivers/nvdimm/region_devs.c | 26 ++++++++++++++++++++++++--
->  include/linux/libnvdimm.h    |  8 +++++++-
->  6 files changed, 46 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-> index 5a389a4f4f65..08dde76cf459 100644
-> --- a/drivers/acpi/nfit/core.c
-> +++ b/drivers/acpi/nfit/core.c
-> @@ -2434,7 +2434,7 @@ static void write_blk_ctl(struct nfit_blk *nfit_blk=
-, unsigned int bw,
->                 offset =3D to_interleave_offset(offset, mmio);
->
->         writeq(cmd, mmio->addr.base + offset);
-> -       nvdimm_flush(nfit_blk->nd_region);
-> +       nvdimm_flush(nfit_blk->nd_region, NULL);
->
->         if (nfit_blk->dimm_flags & NFIT_BLK_DCR_LATCH)
->                 readq(mmio->addr.base + offset);
-> @@ -2483,7 +2483,7 @@ static int acpi_nfit_blk_single_io(struct nfit_blk =
-*nfit_blk,
->         }
->
->         if (rw)
-> -               nvdimm_flush(nfit_blk->nd_region);
-> +               nvdimm_flush(nfit_blk->nd_region, NULL);
->
->         rc =3D read_blk_stat(nfit_blk, lane) ? -EIO : 0;
->         return rc;
-> diff --git a/drivers/nvdimm/claim.c b/drivers/nvdimm/claim.c
-> index fb667bf469c7..13510bae1e6f 100644
-> --- a/drivers/nvdimm/claim.c
-> +++ b/drivers/nvdimm/claim.c
-> @@ -263,7 +263,7 @@ static int nsio_rw_bytes(struct nd_namespace_common *=
-ndns,
->         struct nd_namespace_io *nsio =3D to_nd_namespace_io(&ndns->dev);
->         unsigned int sz_align =3D ALIGN(size + (offset & (512 - 1)), 512)=
-;
->         sector_t sector =3D offset >> 9;
-> -       int rc =3D 0;
-> +       int rc =3D 0, ret =3D 0;
->
->         if (unlikely(!size))
->                 return 0;
-> @@ -301,7 +301,9 @@ static int nsio_rw_bytes(struct nd_namespace_common *=
-ndns,
->         }
->
->         memcpy_flushcache(nsio->addr + offset, buf, size);
-> -       nvdimm_flush(to_nd_region(ndns->dev.parent));
-> +       ret =3D nvdimm_flush(to_nd_region(ndns->dev.parent), NULL);
-> +       if (ret)
-> +               rc =3D ret;
->
->         return rc;
->  }
-> diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-> index a5ac3b240293..0c74d2428bd7 100644
-> --- a/drivers/nvdimm/nd.h
-> +++ b/drivers/nvdimm/nd.h
-> @@ -159,6 +159,7 @@ struct nd_region {
->         struct badblocks bb;
->         struct nd_interleave_set *nd_set;
->         struct nd_percpu_lane __percpu *lane;
-> +       int (*flush)(struct nd_region *nd_region, struct bio *bio);
+From: Long Li <longli@microsoft.com>
 
-So this triggers:
+SMBDirect manages its own ports in the transport layer, there is no need to
+check the port to find a connection.
 
-In file included from drivers/nvdimm/e820.c:7:
-./include/linux/libnvdimm.h:140:51: warning: =E2=80=98struct bio=E2=80=99 d=
-eclared
-inside parameter list will not be visible outside of this definition
-or declaration
-  int (*flush)(struct nd_region *nd_region, struct bio *bio);
-                                                   ^~~
-I was already feeling uneasy about trying to squeeze this into v5.2,
-but this warning and the continued drip of comments leads me to
-conclude that this driver would do well to wait one more development
-cycle. Lets close out the final fixups and let this driver soak in
--next. Then for the v5.3 cycle I'll redouble my efforts towards the
-goal of closing patch acceptance at the -rc6 / -rc7 development
-milestone.
+Signed-off-by: Long Li <longli@microsoft.com>
+---
+ fs/cifs/connect.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+index 0b3ac8b76d18..8c4121da624e 100644
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -2446,6 +2446,10 @@ match_port(struct TCP_Server_Info *server, struct sockaddr *addr)
+ {
+ 	__be16 port, *sport;
+ 
++	/* SMBDirect manages its own ports, don't match it here */
++	if (server->rdma)
++		return true;
++
+ 	switch (addr->sa_family) {
+ 	case AF_INET:
+ 		sport = &((struct sockaddr_in *) &server->dstaddr)->sin_port;
+-- 
+2.17.1
+
