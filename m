@@ -2,291 +2,307 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DD3C04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86ADC04AB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E09352082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:56:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5E592082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:57:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="IYo5F4rb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m7RCFrds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726557AbfEOA4J (ORCPT
+        id S1726491AbfEOA5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:56:09 -0400
-Received: from mail-eopbgr680101.outbound.protection.outlook.com ([40.107.68.101]:2023
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726044AbfEOA4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:56:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=oigbJS5dK74b905sNEydOXIN6tydKwbQDM2tyvsjzANd+SqC+RRy/ZoyaI2kNVu5EQFFBvUQyVzqlHeX49kGS74Kw+jVRSRkMqBALsLmKiOMzm3EZVGaG8L/fYHNQHLjSry46Ve9Hp21U4R+NmtAIL0o4sRJ8HZ4kpK3NDuYAJ0=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bkdc3/5BuBGXEIH/Fh/sVpiIPNxeNgPy74/riz32xzc=;
- b=OV/7lCVUBV0SuEfW0NVWuZD/hvltmWhihk7QfuF9p6fLKqmedxcMvw3wZluPoiT1s59BxqatF+Yh+9YiLzgUocohLJJAozWZsb9qV1xIi6FZpb7GQnzmcMSF/32ZwSX60Jlg6h+INuaYeC9YD8ZG4AF2SXapJiFxhFcThOH9pkI=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bkdc3/5BuBGXEIH/Fh/sVpiIPNxeNgPy74/riz32xzc=;
- b=IYo5F4rbvs6NtIrkoFMLQswIoCtx1TXOeOaGQ9Fn3AlzPYdudFvxGC8A9c8KiblXz4VLo1WXkU454gqy8p9UInAmL5sqXe6clnx/ZrtWltUeZfvAghJzoGMICsweXTm04uolyNtZUKavdBwosA48JFwE7xcreW49jYlMDAcxj2Q=
-Received: from BN6PR21MB0465.namprd21.prod.outlook.com (2603:10b6:404:b2::15)
- by BN6PR21MB0179.namprd21.prod.outlook.com (2603:10b6:404:94::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1922.4; Wed, 15 May
- 2019 00:56:05 +0000
-Received: from BN6PR21MB0465.namprd21.prod.outlook.com
- ([fe80::6cf3:89fb:af21:b168]) by BN6PR21MB0465.namprd21.prod.outlook.com
- ([fe80::6cf3:89fb:af21:b168%12]) with mapi id 15.20.1922.002; Wed, 15 May
- 2019 00:56:05 +0000
-From:   Sunil Muthuswamy <sunilmut@microsoft.com>
-To:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] hv_sock: Add support for delayed close
-Thread-Topic: [PATCH v2] hv_sock: Add support for delayed close
-Thread-Index: AdUKtaBXG33lHE0AQU2ynJ9GbZ74Uw==
-Date:   Wed, 15 May 2019 00:56:05 +0000
-Message-ID: <BN6PR21MB0465043C08E519774EE73E99C0090@BN6PR21MB0465.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sunilmut@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:7:f8d4:c8e7:5ebf:2c16]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 96ff9b84-c6ac-46dd-4022-08d6d8d01c3f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BN6PR21MB0179;
-x-ms-traffictypediagnostic: BN6PR21MB0179:
-x-microsoft-antispam-prvs: <BN6PR21MB01793379E5425F94C748387FC0090@BN6PR21MB0179.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(366004)(376002)(396003)(39860400002)(199004)(189003)(476003)(76116006)(86612001)(99286004)(86362001)(73956011)(46003)(55016002)(7696005)(9686003)(8936002)(2906002)(8676002)(81166006)(6436002)(186003)(66446008)(81156014)(14444005)(1511001)(66946007)(66476007)(66556008)(64756008)(256004)(52396003)(102836004)(316002)(6506007)(486006)(6116002)(7736002)(54906003)(25786009)(478600001)(4326008)(68736007)(53936002)(10090500001)(71200400001)(71190400001)(22452003)(110136005)(52536014)(33656002)(14454004)(305945005)(6636002)(74316002)(10290500003)(5660300002)(8990500004);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR21MB0179;H:BN6PR21MB0465.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: iMQye8ecMFwkXmGJoaKXfahKuEUVQgAeu4N0GVn5XeC23Q2zOiCFv1wP4DkrCDyYF3YE0QySQpvh4s6eJJA3twrvxwwWXCEb+ePlSOnXX+QLAJIyUGmo3ks53cqIHR6rgNWAWrioxsSdHaR/RaMY3ql/yRnvXDvwEI7Vvsmau6BNs4FBRW/7mAQjJW32tutVt64+dBcuoQVUcZ+5eAxjWfWCYfi1SY70JK59kFTZN8IrM7uwCoQwosHRxt37SE+eO8uKRfRfe5E0FN2NKtqxMzstta4Ov4fv9COnsXgLFkxABde+EMEdMtAKZxRQaMkuKL+cd3x+HVwQYw67lIyUmN/hydrIWQhAvLXNiIqvBTz6WY9gjoWP3nEo3znzl/zIz8G8oDtlfA5mtCBqoM5gIVwskVPnFyAdmBhNdLh/YPU=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96ff9b84-c6ac-46dd-4022-08d6d8d01c3f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 00:56:05.5466
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sunilmut@ntdev.microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0179
+        Tue, 14 May 2019 20:57:40 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46708 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfEOA5k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 20:57:40 -0400
+Received: by mail-pf1-f193.google.com with SMTP id y11so383823pfm.13;
+        Tue, 14 May 2019 17:57:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=827ciu3T2iZYONCrSFCiqW6GJEVdj8Q9eDG+GtWLJNE=;
+        b=m7RCFrdsQIKSxSps+bSxy8t2r1fRIrVJsVaQgcwF7zU6uLYKr767N9oeGgyaXConLw
+         nKoLwdA8v2z87muCGWYxu8Iqwp49l+Ucm4pSIvU0L/FWEfPjfTryVXTM4maVl3Mzg7Ue
+         4CnwUGk33ljD4CPqtfLuTvD3BVpbyuX//BfxTLzrpba+L/gheLXJiL75CfsiYXOhMyL9
+         9i8tcRY0Ya2t27Owr+OdZpp760shDVjpUGHayp/tmHnhyA3pwczTQMXUamWzKe+aE/Zc
+         eOvERtJc7ypnLOGlvVzstbfiMAreCJeeyrUp60rOYeQPMQmGFOnjbroBr/hHAihRE5TO
+         fpeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=827ciu3T2iZYONCrSFCiqW6GJEVdj8Q9eDG+GtWLJNE=;
+        b=kN47peqbeZ9iplSPxwRr/5ZdOa85HqwDUKakHV1C6Lupuo5cA6tnHgvQBC8YC5JKTP
+         4ujSLExA4+vpQ9umkV8Qf7c3VoiuSHFu4I22Y5Cen6WtBoyg/OxkHK5HbBD8QTnL2IEb
+         ygCjEG3Q8mXU3c27UNy5Y/vHOF1JsngEtCkqHwwdeIaCPVrFah/BXMq6DATcOiSFy+Tv
+         ALD3OTp9M/RXKdiv0BSLjks2pTjmgc8+JWE2X2CW/u5CsPIL1cMgsm2hzch/z6wtMEnF
+         uGX5ODBeAeYTEFL1PODe37pJoDqsZy1NEFt+siYvd5rtplwFDwbXPldwYobgfVwbanrv
+         q6XQ==
+X-Gm-Message-State: APjAAAUzyIAuC6u50z2IBCFfTDqNv8WllCuhjHRbnrLcjDd1+8ojKjqq
+        BMeW77wJ9u0oqiwRuOWIyEA=
+X-Google-Smtp-Source: APXvYqx8fp2ri/vGzHAUhFXH4NHUxtuC8zlmj1Cp+aDLvMW9U7GQlJkckcP2D/wDckY+5K9WhtKAFQ==
+X-Received: by 2002:a62:ac0a:: with SMTP id v10mr44572897pfe.57.1557881859232;
+        Tue, 14 May 2019 17:57:39 -0700 (PDT)
+Received: from ubuntu.localdomain ([104.238.150.158])
+        by smtp.gmail.com with ESMTPSA id s137sm409319pfc.119.2019.05.14.17.57.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 17:57:38 -0700 (PDT)
+From:   Muchun Song <smuchun@gmail.com>
+To:     gregkh@linuxfoundation.org, rafael@kernel.org,
+        benh@kernel.crashing.org, prsood@codeaurora.org,
+        mojha@codeaurora.org, gkohli@codeaurora.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        zhaowuyun@wingtech.com
+Subject: [PATCH v3] driver core: Fix use-after-free and double free on glue directory
+Date:   Wed, 15 May 2019 08:57:16 +0800
+Message-Id: <20190515005716.4019-1-smuchun@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, hvsock does not implement any delayed or background close
-logic. Whenever the hvsock socket is closed, a FIN is sent to the peer, and
-the last reference to the socket is dropped, which leads to a call to
-.destruct where the socket can hang indefinitely waiting for the peer to
-close it's side. The can cause the user application to hang in the close()
-call.
+There is a race condition between removing glue directory and adding a new
+device under the glue directory. It can be reproduced in following test:
 
-This change implements proper STREAM(TCP) closing handshake mechanism by
-sending the FIN to the peer and the waiting for the peer's FIN to arrive
-for a given timeout. On timeout, it will try to terminate the connection
-(i.e. a RST). This is in-line with other socket providers such as virtio.
+path 1: Add the child device under glue dir
+device_add()
+    get_device_parent()
+        mutex_lock(&gdp_mutex);
+        ....
+        /*find parent from glue_dirs.list*/
+        list_for_each_entry(k, &dev->class->p->glue_dirs.list, entry)
+            if (k->parent == parent_kobj) {
+                kobj = kobject_get(k);
+                break;
+            }
+        ....
+        mutex_unlock(&gdp_mutex);
+        ....
+    ....
+    kobject_add()
+        kobject_add_internal()
+            create_dir()
+                sysfs_create_dir_ns()
+                    if (kobj->parent)
+                        parent = kobj->parent->sd;
+                    ....
+                    kernfs_create_dir_ns(parent)
+                        kernfs_new_node()
+                            kernfs_get(parent)
+                        ....
+                        /* link in */
+                        rc = kernfs_add_one(kn);
+                        if (!rc)
+                            return kn;
 
-This change does not address the hang in the vmbus_hvsock_device_unregister
-where it waits indefinitely for the host to rescind the channel. That
-should be taken up as a separate fix.
+                        kernfs_put(kn)
+                            ....
+                            repeat:
+                            kmem_cache_free(kn)
+                            kn = parent;
 
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
+                            if (kn) {
+                                if (atomic_dec_and_test(&kn->count))
+                                    goto repeat;
+                            }
+                        ....
+
+path2: Remove last child device under glue dir
+device_del()
+    cleanup_device_parent()
+        cleanup_glue_dir()
+            mutex_lock(&gdp_mutex);
+            if (!kobject_has_children(glue_dir))
+                kobject_del(glue_dir);
+            kobject_put(glue_dir);
+            mutex_unlock(&gdp_mutex);
+
+Before path2 remove last child device under glue dir, If path1 add a new
+device under glue dir, the glue_dir kobject reference count will be
+increase to 2 via kobject_get(k) in get_device_parent(). And path1 has
+been called kernfs_new_node(), but not call kernfs_get(parent).
+Meanwhile, path2 call kobject_del(glue_dir) beacause 0 is returned by
+kobject_has_children(). This result in glue_dir->sd is freed and it's
+reference count will be 0. Then path1 call kernfs_get(parent) will trigger
+a warning in kernfs_get()(WARN_ON(!atomic_read(&kn->count))) and increase
+it's reference count to 1. Because glue_dir->sd is freed by path2, the next
+call kernfs_add_one() by path1 will fail(This is also use-after-free)
+and call atomic_dec_and_test() to decrease reference count. Because the
+reference count is decremented to 0, it will also call kmem_cache_free()
+to free glue_dir->sd again. This will result in double free.
+
+In order to avoid this happening, we we should not call kobject_del() on
+path2 when the reference count of glue_dir is greater than 1. So we add a
+conditional statement to fix it.
+
+The following calltrace is captured in kernel 4.14 with the following patch
+applied:
+
+commit 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
+
+--------------------------------------------------------------------------
+[    3.633703] WARNING: CPU: 4 PID: 513 at .../fs/kernfs/dir.c:494
+                Here is WARN_ON(!atomic_read(&kn->count) in kernfs_get().
+....
+[    3.633986] Call trace:
+[    3.633991]  kernfs_create_dir_ns+0xa8/0xb0
+[    3.633994]  sysfs_create_dir_ns+0x54/0xe8
+[    3.634001]  kobject_add_internal+0x22c/0x3f0
+[    3.634005]  kobject_add+0xe4/0x118
+[    3.634011]  device_add+0x200/0x870
+[    3.634017]  _request_firmware+0x958/0xc38
+[    3.634020]  request_firmware_into_buf+0x4c/0x70
+....
+[    3.634064] kernel BUG at .../mm/slub.c:294!
+                Here is BUG_ON(object == fp) in set_freepointer().
+....
+[    3.634346] Call trace:
+[    3.634351]  kmem_cache_free+0x504/0x6b8
+[    3.634355]  kernfs_put+0x14c/0x1d8
+[    3.634359]  kernfs_create_dir_ns+0x88/0xb0
+[    3.634362]  sysfs_create_dir_ns+0x54/0xe8
+[    3.634366]  kobject_add_internal+0x22c/0x3f0
+[    3.634370]  kobject_add+0xe4/0x118
+[    3.634374]  device_add+0x200/0x870
+[    3.634378]  _request_firmware+0x958/0xc38
+[    3.634381]  request_firmware_into_buf+0x4c/0x70
+--------------------------------------------------------------------------
+
+Fixes: 726e41097920 ("drivers: core: Remove glue dirs from sysfs earlier")
+
+Signed-off-by: Muchun Song <smuchun@gmail.com>
 ---
-Changes since v1:
-- Updated the title and description to better reflect the change. The title
-was previously called 'hv_sock: Fix data loss upon socket close'
-- Removed the sk_state_change call to keep the fix focused.
-- Removed 'inline' keyword from the .c file and letting compiler do it.
 
- net/vmw_vsock/hyperv_transport.c | 108 ++++++++++++++++++++++++++++-------=
-----
- 1 file changed, 77 insertions(+), 31 deletions(-)
+Change in v3:
+       add change log.
+Change in v2:
+       Fix device_move() also.
 
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transp=
-ort.c
-index a827547..982a8dc 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -35,6 +35,9 @@
- /* The MTU is 16KB per the host side's design */
- #define HVS_MTU_SIZE		(1024 * 16)
-=20
-+/* How long to wait for graceful shutdown of a connection */
-+#define HVS_CLOSE_TIMEOUT (8 * HZ)
-+
- struct vmpipe_proto_header {
- 	u32 pkt_type;
- 	u32 data_size;
-@@ -305,19 +308,32 @@ static void hvs_channel_cb(void *ctx)
- 		sk->sk_write_space(sk);
- }
-=20
--static void hvs_close_connection(struct vmbus_channel *chan)
-+static void hvs_do_close_lock_held(struct vsock_sock *vsk,
-+				   bool cancel_timeout)
+ drivers/base/core.c | 47 ++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 38 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 4aeaa0c92bda..e7810329223a 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -1739,8 +1739,9 @@ class_dir_create_and_add(struct class *class, struct kobject *parent_kobj)
+ 
+ static DEFINE_MUTEX(gdp_mutex);
+ 
+-static struct kobject *get_device_parent(struct device *dev,
+-					 struct device *parent)
++static struct kobject *__get_device_parent(struct device *dev,
++					   struct device *parent,
++					   bool lock)
  {
--	struct sock *sk =3D get_per_channel_state(chan);
--	struct vsock_sock *vsk =3D vsock_sk(sk);
--
--	lock_sock(sk);
-+	struct sock *sk =3D sk_vsock(vsk);
-=20
--	sk->sk_state =3D TCP_CLOSE;
- 	sock_set_flag(sk, SOCK_DONE);
--	vsk->peer_shutdown |=3D SEND_SHUTDOWN | RCV_SHUTDOWN;
--
-+	vsk->peer_shutdown =3D SHUTDOWN_MASK;
-+	if (vsock_stream_has_data(vsk) <=3D 0)
-+		sk->sk_state =3D TCP_CLOSING;
- 	sk->sk_state_change(sk);
-+	if (vsk->close_work_scheduled &&
-+	    (!cancel_timeout || cancel_delayed_work(&vsk->close_work))) {
-+		vsk->close_work_scheduled =3D false;
-+		vsock_remove_sock(vsk);
-=20
-+		/* Release the reference taken while scheduling the timeout */
-+		sock_put(sk);
-+	}
+ 	if (dev->class) {
+ 		struct kobject *kobj = NULL;
+@@ -1779,14 +1780,16 @@ static struct kobject *get_device_parent(struct device *dev,
+ 			}
+ 		spin_unlock(&dev->class->p->glue_dirs.list_lock);
+ 		if (kobj) {
+-			mutex_unlock(&gdp_mutex);
++			if (!lock)
++				mutex_unlock(&gdp_mutex);
+ 			return kobj;
+ 		}
+ 
+ 		/* or create a new class-directory at the parent device */
+ 		k = class_dir_create_and_add(dev->class, parent_kobj);
+ 		/* do not emit an uevent for this simple "glue" directory */
+-		mutex_unlock(&gdp_mutex);
++		if (!lock || IS_ERR(k))
++			mutex_unlock(&gdp_mutex);
+ 		return k;
+ 	}
+ 
+@@ -1799,6 +1802,19 @@ static struct kobject *get_device_parent(struct device *dev,
+ 	return NULL;
+ }
+ 
++static inline struct kobject *get_device_parent(struct device *dev,
++						struct device *parent)
++{
++	return __get_device_parent(dev, parent, false);
 +}
 +
-+static void hvs_close_connection(struct vmbus_channel *chan)
++static inline struct kobject *
++get_device_parent_locked_if_glue_dir(struct device *dev,
++				     struct device *parent)
 +{
-+	struct sock *sk =3D get_per_channel_state(chan);
++	return __get_device_parent(dev, parent, true);
++}
 +
-+	lock_sock(sk);
-+	hvs_do_close_lock_held(vsock_sk(sk), true);
- 	release_sock(sk);
+ static inline bool live_in_glue_dir(struct kobject *kobj,
+ 				    struct device *dev)
+ {
+@@ -1831,6 +1847,16 @@ static void cleanup_glue_dir(struct device *dev, struct kobject *glue_dir)
+ 	mutex_unlock(&gdp_mutex);
  }
-=20
-@@ -452,50 +468,80 @@ static int hvs_connect(struct vsock_sock *vsk)
- 	return vmbus_send_tl_connect_request(&h->vm_srv_id, &h->host_srv_id);
- }
-=20
-+static void hvs_shutdown_lock_held(struct hvsock *hvs, int mode)
+ 
++static inline void unlock_if_glue_dir(struct device *dev,
++				      struct kobject *glue_dir)
 +{
-+	struct vmpipe_proto_header hdr;
-+
-+	if (hvs->fin_sent || !hvs->chan)
++	/* see if we live in a "glue" directory */
++	if (!live_in_glue_dir(glue_dir, dev))
 +		return;
 +
-+	/* It can't fail: see hvs_channel_writable_bytes(). */
-+	(void)hvs_send_data(hvs->chan, (struct hvs_send_buf *)&hdr, 0);
-+	hvs->fin_sent =3D true;
++	mutex_unlock(&gdp_mutex);
 +}
 +
- static int hvs_shutdown(struct vsock_sock *vsk, int mode)
+ static int device_add_class_symlinks(struct device *dev)
  {
- 	struct sock *sk =3D sk_vsock(vsk);
--	struct vmpipe_proto_header hdr;
--	struct hvs_send_buf *send_buf;
--	struct hvsock *hvs;
-=20
- 	if (!(mode & SEND_SHUTDOWN))
- 		return 0;
-=20
- 	lock_sock(sk);
-+	hvs_shutdown_lock_held(vsk->trans, mode);
-+	release_sock(sk);
-+	return 0;
-+}
-=20
--	hvs =3D vsk->trans;
--	if (hvs->fin_sent)
--		goto out;
--
--	send_buf =3D (struct hvs_send_buf *)&hdr;
-+static void hvs_close_timeout(struct work_struct *work)
-+{
-+	struct vsock_sock *vsk =3D
-+		container_of(work, struct vsock_sock, close_work.work);
-+	struct sock *sk =3D sk_vsock(vsk);
-=20
--	/* It can't fail: see hvs_channel_writable_bytes(). */
--	(void)hvs_send_data(hvs->chan, send_buf, 0);
-+	sock_hold(sk);
-+	lock_sock(sk);
-+	if (!sock_flag(sk, SOCK_DONE))
-+		hvs_do_close_lock_held(vsk, false);
-=20
--	hvs->fin_sent =3D true;
--out:
-+	vsk->close_work_scheduled =3D false;
- 	release_sock(sk);
--	return 0;
-+	sock_put(sk);
- }
-=20
--static void hvs_release(struct vsock_sock *vsk)
-+/* Returns true, if it is safe to remove socket; false otherwise */
-+static bool hvs_close_lock_held(struct vsock_sock *vsk)
- {
- 	struct sock *sk =3D sk_vsock(vsk);
--	struct hvsock *hvs =3D vsk->trans;
--	struct vmbus_channel *chan;
-=20
--	lock_sock(sk);
-+	if (!(sk->sk_state =3D=3D TCP_ESTABLISHED ||
-+	      sk->sk_state =3D=3D TCP_CLOSING))
-+		return true;
-=20
--	sk->sk_state =3D TCP_CLOSING;
--	vsock_remove_sock(vsk);
-+	if ((sk->sk_shutdown & SHUTDOWN_MASK) !=3D SHUTDOWN_MASK)
-+		hvs_shutdown_lock_held(vsk->trans, SHUTDOWN_MASK);
-=20
--	release_sock(sk);
-+	if (sock_flag(sk, SOCK_DONE))
-+		return true;
-=20
--	chan =3D hvs->chan;
--	if (chan)
--		hvs_shutdown(vsk, RCV_SHUTDOWN | SEND_SHUTDOWN);
-+	/* This reference will be dropped by the delayed close routine */
-+	sock_hold(sk);
-+	INIT_DELAYED_WORK(&vsk->close_work, hvs_close_timeout);
-+	vsk->close_work_scheduled =3D true;
-+	schedule_delayed_work(&vsk->close_work, HVS_CLOSE_TIMEOUT);
-+	return false;
-+}
-=20
-+static void hvs_release(struct vsock_sock *vsk)
-+{
-+	struct sock *sk =3D sk_vsock(vsk);
-+	bool remove_sock;
+ 	struct device_node *of_node = dev_of_node(dev);
+@@ -2040,7 +2066,7 @@ int device_add(struct device *dev)
+ 	pr_debug("device: '%s': %s\n", dev_name(dev), __func__);
+ 
+ 	parent = get_device(dev->parent);
+-	kobj = get_device_parent(dev, parent);
++	kobj = get_device_parent_locked_if_glue_dir(dev, parent);
+ 	if (IS_ERR(kobj)) {
+ 		error = PTR_ERR(kobj);
+ 		goto parent_error;
+@@ -2055,10 +2081,12 @@ int device_add(struct device *dev)
+ 	/* first, register with generic layer. */
+ 	/* we require the name to be set before, and pass NULL */
+ 	error = kobject_add(&dev->kobj, dev->kobj.parent, NULL);
+-	if (error) {
+-		glue_dir = get_glue_dir(dev);
 +
-+	lock_sock(sk);
-+	remove_sock =3D hvs_close_lock_held(vsk);
-+	release_sock(sk);
-+	if (remove_sock)
-+		vsock_remove_sock(vsk);
- }
-=20
- static void hvs_destruct(struct vsock_sock *vsk)
---=20
-2.7.4
++	glue_dir = get_glue_dir(dev);
++	unlock_if_glue_dir(dev, glue_dir);
++
++	if (error)
+ 		goto Error;
+-	}
+ 
+ 	/* notify platform of device entry */
+ 	error = device_platform_notify(dev, KOBJ_ADD);
+@@ -2972,7 +3000,7 @@ int device_move(struct device *dev, struct device *new_parent,
+ 
+ 	device_pm_lock();
+ 	new_parent = get_device(new_parent);
+-	new_parent_kobj = get_device_parent(dev, new_parent);
++	new_parent_kobj = get_device_parent_locked_if_glue_dir(dev, new_parent);
+ 	if (IS_ERR(new_parent_kobj)) {
+ 		error = PTR_ERR(new_parent_kobj);
+ 		put_device(new_parent);
+@@ -2982,6 +3010,7 @@ int device_move(struct device *dev, struct device *new_parent,
+ 	pr_debug("device: '%s': %s: moving to '%s'\n", dev_name(dev),
+ 		 __func__, new_parent ? dev_name(new_parent) : "<NULL>");
+ 	error = kobject_move(&dev->kobj, new_parent_kobj);
++	unlock_if_glue_dir(dev, new_parent_kobj);
+ 	if (error) {
+ 		cleanup_glue_dir(dev, new_parent_kobj);
+ 		put_device(new_parent);
+-- 
+2.17.1
 
