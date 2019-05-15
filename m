@@ -7,45 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA08DC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 082C1C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2735206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1AE520657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922035;
-	bh=cf7yNtQYY2P7CkktRSIz5I8LQTIlsj7/HHIWF8pulDg=;
+	s=default; t=1557922057;
+	bh=KjgevnIayluyYbD7E71m24a0YTAYDPL763Wo13fyqIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v9j1jXVV/onU7K7rep4IqTp5iZ1av2luxkews64D8lb56uMy5wSQpREIz+6gPUtaE
-	 62SFs44FW29K9QriYn2Q+0gEbHTbAhcfM5d935+tNzw9uu58C3nRPKwxbkZieeqSJK
-	 zpI9M7IUiaEmRUQ7qSzxd+L2bWcdJ4auFNCaiGzA=
+	b=0oaTUafBPw8mmdZ+Snf/SPN8QqJdWH/7q3ng1gAyIli1ZMg8CW/zxHO0KIi4xkuqC
+	 rnzQgObsNYK/gK2PNMjxCL0qJb4s/X4tAdRRdUYWAr6gz/UGPLsX5fpuRrtAN1/b4N
+	 E89faolvASqP+/1KkvSAAdG/FrEMv9zXlsyhG3PM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729779AbfEOMHO (ORCPT
+        id S1729713AbfEOMHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:07:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42650 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:07:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728652AbfEOLJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:09:35 -0400
+        id S1727932AbfEOLJQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:09:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEDF420862;
-        Wed, 15 May 2019 11:09:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38FB92084F;
+        Wed, 15 May 2019 11:09:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918574;
-        bh=cf7yNtQYY2P7CkktRSIz5I8LQTIlsj7/HHIWF8pulDg=;
+        s=default; t=1557918555;
+        bh=KjgevnIayluyYbD7E71m24a0YTAYDPL763Wo13fyqIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eb8Bwso7FrARgbY2LQVEOVx7pMA1XAEW8v+13TA4knmfqQym0uzxQo0tXxTYdq2VH
-         Jg6ikwjZZlmVwyMr1CxSRHdC5oPj9NipQrTIDKWsP1Q22ZRr4fwCQrn0maXik9BDAX
-         nIuPyobiwXt35NFDBuwlRq4jHaJPRGWDdQm9XrEs=
+        b=2XKnBpkqKH3H9sTIIY0sM2MTxWxwnZi+PxnLk45EBg++5zXsM6TCjnryj/Ln/6H+Y
+         8TrDiK3m3GYyFYUq5zFsk87PmvOB17lQ1Rz7lHnXOhS1c64AVreNaDEa1vD83ElJa2
+         GK94xYEwVBL2Bp17bSJ0eSDKGl1bvFDxiPhzGMR0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 184/266] x86/cpufeatures: Hide AMD-specific speculation flags
-Date:   Wed, 15 May 2019 12:54:51 +0200
-Message-Id: <20190515090729.154695368@linuxfoundation.org>
+        stable@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 178/266] locking/static_keys: Provide DECLARE and well as DEFINE macros
+Date:   Wed, 15 May 2019 12:54:45 +0200
+Message-Id: <20190515090728.946363692@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -58,33 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Tony Luck <tony.luck@intel.com>
 
-Hide the AMD_{IBRS,IBPB,STIBP} flag from /proc/cpuinfo.  This was done
-upstream as part of commit e7c587da1252 "x86/speculation: Use
-synthetic bits for IBRS/IBPB/STIBP".  That commit has already been
-backported but this part was omitted.
+commit b8fb03785d4de097507d0cf45873525e0ac4d2b2 upstream.
 
+We will need to provide declarations of static keys in header
+files. Provide DECLARE_STATIC_KEY_{TRUE,FALSE} macros.
+
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Acked-by: Borislav Petkov <bp@suse.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: http://lkml.kernel.org/r/816881cf85bd3cf13385d212882618f38a3b5d33.1472754711.git.tony.luck@intel.com
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/include/asm/cpufeatures.h |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/jump_label.h |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -265,9 +265,9 @@
+--- a/include/linux/jump_label.h
++++ b/include/linux/jump_label.h
+@@ -267,9 +267,15 @@ struct static_key_false {
+ #define DEFINE_STATIC_KEY_TRUE(name)	\
+ 	struct static_key_true name = STATIC_KEY_TRUE_INIT
  
- /* AMD-defined CPU features, CPUID level 0x80000008 (ebx), word 13 */
- #define X86_FEATURE_CLZERO	(13*32+0) /* CLZERO instruction */
--#define X86_FEATURE_AMD_IBPB	(13*32+12) /* Indirect Branch Prediction Barrier */
--#define X86_FEATURE_AMD_IBRS	(13*32+14) /* Indirect Branch Restricted Speculation */
--#define X86_FEATURE_AMD_STIBP	(13*32+15) /* Single Thread Indirect Branch Predictors */
-+#define X86_FEATURE_AMD_IBPB	(13*32+12) /* "" Indirect Branch Prediction Barrier */
-+#define X86_FEATURE_AMD_IBRS	(13*32+14) /* "" Indirect Branch Restricted Speculation */
-+#define X86_FEATURE_AMD_STIBP	(13*32+15) /* "" Single Thread Indirect Branch Predictors */
- #define X86_FEATURE_VIRT_SSBD	(13*32+25) /* Virtualized Speculative Store Bypass Disable */
++#define DECLARE_STATIC_KEY_TRUE(name)	\
++	extern struct static_key_true name
++
+ #define DEFINE_STATIC_KEY_FALSE(name)	\
+ 	struct static_key_false name = STATIC_KEY_FALSE_INIT
  
- /* Thermal and Power Management Leaf, CPUID level 0x00000006 (eax), word 14 */
++#define DECLARE_STATIC_KEY_FALSE(name)	\
++	extern struct static_key_false name
++
+ extern bool ____wrong_branch_error(void);
+ 
+ #define static_key_enabled(x)							\
 
 
