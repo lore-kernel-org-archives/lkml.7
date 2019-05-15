@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F9DC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1410EC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:38:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B571C20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D36AA2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920279;
-	bh=vUQzSnELn00Y8vO8upYf8r+N3HxY9LCoXUePa8jzX6E=;
+	s=default; t=1557920281;
+	bh=f+/E2dM8tseZgOi6tp1gOUPwluA21xqL5ItupbIbfPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UU5qGf/1PFac9xti7j6mxGBZVEjckN41pktj08Uz/LUZWkR5QyP3Ln36G82/fL79H
-	 A+PueZMX8Rn8RdWw3uQdXPJyt3u76Hq/JasENaRiIuYB4joJxyHwv0DaR8v/ibR+Xz
-	 lYUXjwcCAfzSnzbEl3VhLlkwtv2MrVY3oA3s3NLs=
+	b=kY2QUhU4foAzsQavp4ce9kOjdyNCAJvuKzuk3dzxXnwZbig1fVjeIAuNzm2rtt4Mr
+	 pjhQ5FB9m9D/Eo/0dmRmCxCMC5yGJwylb3qDV2RYpxRqgJEVfNn4mGDkvGgoN15kUh
+	 PtUvoDiJGqXKvs044sw605ZSSiQKfxVSt+DxblOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731426AbfEOLb3 (ORCPT
+        id S1732900AbfEOLb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:31:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43178 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:31:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732894AbfEOLbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:31:24 -0400
+        id S1732379AbfEOLbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:31:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A7C120818;
-        Wed, 15 May 2019 11:31:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D701F2084F;
+        Wed, 15 May 2019 11:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919884;
-        bh=vUQzSnELn00Y8vO8upYf8r+N3HxY9LCoXUePa8jzX6E=;
+        s=default; t=1557919881;
+        bh=f+/E2dM8tseZgOi6tp1gOUPwluA21xqL5ItupbIbfPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h/gAaghPym6cTm621NQr/0YwQPgoQUwZHJIWMJzOXztGS/ZWTi4vOViAiuKCiyKcW
-         7/4LeDGib8pn9YWdyZZArT/fEcsAQb+HeAmfA0ekFDvE0HqiWB+XGzw3lVWm9TUJsY
-         QJ1ft7KFeNZ+ftTL1r2TpFAgaetUH1FDGunUZmnU=
+        b=qvuve4d970pqV9AeelC/vHeRiihj8Hxl7KIDQCgOuReK9XXIaXmJ4DgaF90a/RnR9
+         CKUobI38OzkTaGRJCasR5YoloAKdi5KW2SYAVPR+ZtfjlPI1aOuyLlvm/RcCSLhYni
+         x19ksNck+KbbwRWjIU6wnQ09El2TjZVoXEHKpRM8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
-        Akshay Adiga <akshay.adiga@linux.vnet.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.0 131/137] powerpc/powernv/idle: Restore IAMR after idle
-Date:   Wed, 15 May 2019 12:56:52 +0200
-Message-Id: <20190515090703.387592033@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.0 122/137] aqc111: fix double endianness swap on BE
+Date:   Wed, 15 May 2019 12:56:43 +0200
+Message-Id: <20190515090702.572049973@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -61,79 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell Currey <ruscur@russell.cc>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit a3f3072db6cad40895c585dce65e36aab997f042 upstream.
+[ Upstream commit 2cf672709beb005f6e90cb4edbed6f2218ba953e ]
 
-Without restoring the IAMR after idle, execution prevention on POWER9
-with Radix MMU is overwritten and the kernel can freely execute
-userspace without faulting.
+If you are using a function that does a swap in place,
+you cannot just reuse the buffer on the assumption that it has
+not been changed.
 
-This is necessary when returning from any stop state that modifies
-user state, as well as hypervisor state.
-
-To test how this fails without this patch, load the lkdtm driver and
-do the following:
-
-  $ echo EXEC_USERSPACE > /sys/kernel/debug/provoke-crash/DIRECT
-
-which won't fault, then boot the kernel with powersave=off, where it
-will fault. Applying this patch will fix this.
-
-Fixes: 3b10d0095a1e ("powerpc/mm/radix: Prevent kernel execution of user space")
-Cc: stable@vger.kernel.org # v4.10+
-Signed-off-by: Russell Currey <ruscur@russell.cc>
-Reviewed-by: Akshay Adiga <akshay.adiga@linux.vnet.ibm.com>
-Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/powerpc/kernel/idle_book3s.S |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/net/usb/aqc111.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/kernel/idle_book3s.S
-+++ b/arch/powerpc/kernel/idle_book3s.S
-@@ -170,6 +170,9 @@ core_idle_lock_held:
- 	bne-	core_idle_lock_held
- 	blr
+--- a/drivers/net/usb/aqc111.c
++++ b/drivers/net/usb/aqc111.c
+@@ -1428,7 +1428,7 @@ static int aqc111_resume(struct usb_inte
+ {
+ 	struct usbnet *dev = usb_get_intfdata(intf);
+ 	struct aqc111_data *aqc111_data = dev->driver_priv;
+-	u16 reg16;
++	u16 reg16, oldreg16;
+ 	u8 reg8;
  
-+/* Reuse an unused pt_regs slot for IAMR */
-+#define PNV_POWERSAVE_IAMR	_DAR
-+
- /*
-  * Pass requested state in r3:
-  *	r3 - PNV_THREAD_NAP/SLEEP/WINKLE in POWER8
-@@ -200,6 +203,12 @@ pnv_powersave_common:
- 	/* Continue saving state */
- 	SAVE_GPR(2, r1)
- 	SAVE_NVGPRS(r1)
-+
-+BEGIN_FTR_SECTION
-+	mfspr	r5, SPRN_IAMR
-+	std	r5, PNV_POWERSAVE_IAMR(r1)
-+END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
-+
- 	mfcr	r5
- 	std	r5,_CCR(r1)
- 	std	r1,PACAR1(r13)
-@@ -924,6 +933,17 @@ BEGIN_FTR_SECTION
- END_FTR_SECTION_IFSET(CPU_FTR_HVMODE)
- 	REST_NVGPRS(r1)
- 	REST_GPR(2, r1)
-+
-+BEGIN_FTR_SECTION
-+	/* IAMR was saved in pnv_powersave_common() */
-+	ld	r5, PNV_POWERSAVE_IAMR(r1)
-+	mtspr	SPRN_IAMR, r5
-+	/*
-+	 * We don't need an isync here because the upcoming mtmsrd is
-+	 * execution synchronizing.
-+	 */
-+END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
-+
- 	ld	r4,PACAKMSR(r13)
- 	ld	r5,_LINK(r1)
- 	ld	r6,_CCR(r1)
+ 	netif_carrier_off(dev->net);
+@@ -1444,9 +1444,11 @@ static int aqc111_resume(struct usb_inte
+ 	/* Configure RX control register => start operation */
+ 	reg16 = aqc111_data->rxctl;
+ 	reg16 &= ~SFR_RX_CTL_START;
++	/* needs to be saved in case endianness is swapped */
++	oldreg16 = reg16;
+ 	aqc111_write16_cmd_nopm(dev, AQ_ACCESS_MAC, SFR_RX_CTL, 2, &reg16);
+ 
+-	reg16 |= SFR_RX_CTL_START;
++	reg16 = oldreg16 | SFR_RX_CTL_START;
+ 	aqc111_write16_cmd_nopm(dev, AQ_ACCESS_MAC, SFR_RX_CTL, 2, &reg16);
+ 
+ 	aqc111_set_phy_speed(dev, aqc111_data->autoneg,
 
 
