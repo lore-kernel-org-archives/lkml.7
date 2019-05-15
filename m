@@ -2,131 +2,128 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10346C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:48:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD504C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8EB62082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:48:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB0F2087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:50:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A0HkQWrQ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C2exFM09"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbfEOVsB (ORCPT
+        id S1726961AbfEOVu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 17:48:01 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36277 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfEOVsB (ORCPT
+        Wed, 15 May 2019 17:50:26 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:40852 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726381AbfEOVuZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 17:48:01 -0400
-Received: by mail-io1-f65.google.com with SMTP id e19so879041iob.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 14:48:00 -0700 (PDT)
+        Wed, 15 May 2019 17:50:25 -0400
+Received: by mail-vk1-f193.google.com with SMTP id v140so446126vkd.7
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 14:50:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=sWbpZHBe6YpRVe1pQMe2dJ3Y9vgwQ34ZV5GLEWuVB0U=;
-        b=A0HkQWrQJKaLnNmrfgjL/E9/qPkQ5KNszllhY23b3Pf7LUv30duqOeqydt2saWLPj2
-         5cmD3znaPpqshHiIWvtIn+5m9v5HZsPoVO5T0FXibljEZ1/7Us+Pd+VZQF1Rzjzdu4iu
-         uUBiTlXqo+RQIYOCi+GZNkubLOExpLqSVQ5hA=
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AYNYXgU+/PVoj2y5Yn+qCV5g/0Te3hA7zTkDB0qlSMY=;
+        b=C2exFM09NZ8pxiHyFzuOnfdw580VmYx8l289M3cy8cfVo3obMrlMZsJt86jH9W5PIl
+         WH6tqH/v3LJRZF/a66EsiHG3nOAj84sMOIFcvk6+HrRsWToX1SBV1UyCKehx4R/b6jsK
+         UNSSYJ0rLIbL1cM/H9l41ucAvn2nFJR1EjlSY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=sWbpZHBe6YpRVe1pQMe2dJ3Y9vgwQ34ZV5GLEWuVB0U=;
-        b=tj2uWsLIO62TJk9K5dyYpXNCMeEZeCSJuR1O3Sqi1YePnzQSxZ/v7PPBiVuy6qTSTs
-         y3jAR9e43yVZnhtzV1p4Q72RRnYGqXc4F/8h5mJTcuM+7JuRKAib5VJXLEKgwwJsRXOI
-         bwFcupGl68wY17sTqO693CiypHPSrEudW5tgpPxTv7+w8Tu+RsdjUOTz4PMC4RW37Bsg
-         6nV8/gAxuwEbunACc1w0iqIK+Qt0Qy5Bto9jtq5zb7RVjpPH+Lbp8VpLijzjEEWnsEY8
-         ujVsoUZs62zCF/XRYJCQAfY8WXbc5jsNnuGOzmBazvqr85/fJ4GeXOkpApVBQCP0GBhW
-         4eWA==
-X-Gm-Message-State: APjAAAVRjKYsRT2Qzuazjy5M+cY9aQ+xldNXfGHwopjpkX/49BEfut9K
-        69TEvBF4EwW/HocUEGPN0UxvNMkbLZE=
-X-Google-Smtp-Source: APXvYqy6zgaN1FSUR13WOZV+36r1jayIO6EfLBjhuM3DJf4NRj+SG1E4CLAkVBleShYTPo7hLzcRmQ==
-X-Received: by 2002:a6b:e20d:: with SMTP id z13mr24726706ioc.92.1557956880412;
-        Wed, 15 May 2019 14:48:00 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id 1sm702105ity.9.2019.05.15.14.47.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 May 2019 14:47:59 -0700 (PDT)
-Date:   Wed, 15 May 2019 14:47:59 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] ARM: dts: raise GPU trip point temperature for
- speedy to 80 degC
-Message-ID: <20190515214759.GF40515@google.com>
-References: <20190515153127.24626-1-mka@chromium.org>
- <20190515153127.24626-2-mka@chromium.org>
- <CAD=FV=XgoG5hiT=vAhNtUF4iVj1-Lmj7S5tvk86ehxB1uUZyxw@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AYNYXgU+/PVoj2y5Yn+qCV5g/0Te3hA7zTkDB0qlSMY=;
+        b=LWpusDF5d1dH/rN15UtzZ9h/plM9FJLtW9VbQ0H8qgeLhmrIB9UclHur0VYpvG3no+
+         2Cuu6MEjzJzpzQuofISzxZ31cwLX1wM1QoHIdH3UJW6d8JR2R+ObBBtTV6azsK249gBI
+         ntByEoH8aCFAXDtlhMMizoKi3RYm33PugzDWYSmnyNXRiKEGLAbhSxWAq3Q/81374M9K
+         HPt/RmD1zAor3Q1bCcVgtO/Ho0mDtdXUseQ6q/0b+V4lJiTMrZ/egl4xHbtFMGQXJNqc
+         eMz8XDua24sbr6NTJ/9tl2Y3B+t1sTdCEDU/AEyYB1fj3b4boEog92wImi4XGiTp03S9
+         /IQA==
+X-Gm-Message-State: APjAAAW7p1rXZFQVVbwSnZnG8Z4H2m3RdOOhLju+kpumKZAEvhVyvJ4D
+        WG3lpiB9oN4MfcvdSHokieFE4J5hSts=
+X-Google-Smtp-Source: APXvYqzWPF42MZWOQNQJU/zqyjMG9slFrheBU7+4H6gebaVz0h1WwMsNJKbfxjKTJyUj27tGiuADxg==
+X-Received: by 2002:a1f:9501:: with SMTP id x1mr20648093vkd.12.1557957024173;
+        Wed, 15 May 2019 14:50:24 -0700 (PDT)
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com. [209.85.217.47])
+        by smtp.gmail.com with ESMTPSA id t124sm828082vkf.49.2019.05.15.14.50.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 14:50:22 -0700 (PDT)
+Received: by mail-vs1-f47.google.com with SMTP id l20so970751vsp.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 14:50:22 -0700 (PDT)
+X-Received: by 2002:a67:ebd6:: with SMTP id y22mr6664210vso.87.1557957022174;
+ Wed, 15 May 2019 14:50:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=XgoG5hiT=vAhNtUF4iVj1-Lmj7S5tvk86ehxB1uUZyxw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190509184415.11592-1-robdclark@gmail.com> <20190509184415.11592-3-robdclark@gmail.com>
+ <CAD=FV=WXW3aApS=c7baxhtfr1Nf-UnBN2s=rEBBkjj4=TCdT+g@mail.gmail.com> <CAJs_Fx5PDj+T+DVixzHjun_wCG5fhZsxH8xUqRwmkfwN87UP_A@mail.gmail.com>
+In-Reply-To: <CAJs_Fx5PDj+T+DVixzHjun_wCG5fhZsxH8xUqRwmkfwN87UP_A@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 15 May 2019 14:50:09 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Vgiej=+hCZ_Eekoa4FJfpKxhOge8Wy29EEmtjB8JeF9g@mail.gmail.com>
+Message-ID: <CAD=FV=Vgiej=+hCZ_Eekoa4FJfpKxhOge8Wy29EEmtjB8JeF9g@mail.gmail.com>
+Subject: Re: [RFC 2/3] arm64: dts: qcom: sdm845-cheza: Re-add reserved memory
+To:     Rob Clark <robdclark@chromium.org>
+Cc:     Rob Clark <robdclark@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 11:30:12AM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Wed, May 15, 2019 at 8:31 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> 
-> > Raise the temperature of the GPU thermal trip point for speedy
-> > to 80°C. This is the value used by the downstream Chrome OS 3.14
-> > kernel, the 'official' kernel for speedy.
+Hi,
+
+On Tue, May 14, 2019 at 9:10 PM Rob Clark <robdclark@chromium.org> wrote:
+
+> On Mon, May 13, 2019 at 3:48 PM Doug Anderson <dianders@chromium.org> wrote:
 > >
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > ---
-> >  arch/arm/boot/dts/rk3288-veyron-speedy.dts | 4 ++++
-> >  1 file changed, 4 insertions(+)
+> > Hi,
 > >
-> > diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-> > index 2ac8748a3a0c..394a9648faee 100644
-> > --- a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-> > +++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-> > @@ -64,6 +64,10 @@
-> >         temperature = <70000>;
-> >  };
+> > On Thu, May 9, 2019 at 11:44 AM Rob Clark <robdclark@gmail.com> wrote:
 > >
-> > +&gpu_alert0 {
-> > +       temperature = <80000>;
-> > +};
-> > +
-> >  &edp {
-> 
-> Similar comments to patch set #1 about sort ordering.
+> > > From: Douglas Anderson <dianders@chromium.org>
+> > >
+> > > Let's fixup the reserved memory to re-add the things we deleted in
+> > > ("CHROMIUM: arm64: dts: qcom: sdm845-cheza: Temporarily delete
+> > > reserved-mem changes") in a way that plays nicely with the new
+> > > upstream definitions.
+> >
+> > The message above makes no sense since that commit you reference isn't
+> > in upstream.
+> >
+> > ...but in any case, why not squash this in with the previous commit?
+>
+> Yeah, I should have mentioned this was my intention, I just left it
+> unsquashed since (at the time) it was something I had cherry-picked on
+> top of current 4.19 cros kernel..
+>
+> anyways, I pushed an (unsquashed, converted to fixup!'s) update to:
+>
+> https://github.com/freedreno/kernel-msm/commits/wip/cheza-dtb-upstreaming
+>
+> which has updates based on you're review comments (at least assuming I
+> understood them correctly).. plus some unrelated to cheza-dt patches
+> on top to get things actually working (ie. ignore everything on top of
+> the fixup!'s)
 
-ack
+Looks OK to me.  Are you going to post this?  Bjorn / Andy: do you
+guys have opinions here?
 
-> ...I'll also notice that if we do end up setting the "critical" to 100
-> C for most of veyron then I guess we'll have to switch it back to 90 C
-> here for speedy to match downstream?
 
-yes
+> I didn't see any comments on the 'delete zap-shader' patch, so
+> hopefully that means what I did there was a sane (or at least not
+> insane) way to handle android/linux tz vs what we have on cheza?
 
-> Maybe that's an argument for doing it in this patchset so we don't
-> forget?
-
-sounds good to me
-
-> I'm somewhat amazed that downstream has only 10 C between "alert"
-> and 'critical" for GPU for speedy, but I guess it's OK?
-
-In tests on other veyron devices I observed gradual temperature
-in response to CPU or GPU load, so unless there's a sudden spike in
-the ambient temperature I think the 10°C delta should be fine with the
-current polling interval of 100ms.
+I wasn't CCed, so I assumed you were looking for feedback from others
+on that one.  ;-)  Oh, but I guess Jordan and Bjorn also weren't
+CCed...  In any case, I replied now.
