@@ -2,104 +2,167 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106FFC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA500C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D555D20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:53:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L44WaYKF"
+	by mail.kernel.org (Postfix) with ESMTP id 8D41820657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:54:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557921250;
+	bh=CD+3kVeGxnZBiQsOmKpXFQTDnw/usWuj2LsIib3Ubzg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UDn73u44HoShgNGx3DSWPuWrxvLiW2QIEVgcwgGdrpuTF4n3xq64j4vVRDH23K4NN
+	 rnewJtKnCNg+tuEk16+6p109YlZg3dUufVMQlMk1TDy+DkBjzuf//CIFsEgH+bhCN+
+	 ikp0norZTcuV1eSakj+EhZjtGrQ+haDawjc1hIus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731521AbfEOLx4 (ORCPT
+        id S1731323AbfEOLyJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:53:56 -0400
-Received: from mail-vk1-f195.google.com ([209.85.221.195]:37617 "EHLO
-        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731120AbfEOLxx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:53:53 -0400
-Received: by mail-vk1-f195.google.com with SMTP id o187so674594vkg.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 04:53:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XqTiQWMIUKTMvV3HGe2FXr2QXLkNPTKOj2lPv0DODS0=;
-        b=L44WaYKFencKFL0aLRS4NaNaiepcTeSneyqE/eagATEjv28G/XY8rdrsINJYIQTZ92
-         +PAtHPEVh8jR6qiTWKFFfSP1YkX7lU1GpVic60govDCk0GD9r4cJ91O5J6R1ASoGkJiU
-         pwD0pXq8TRFRlQS5+wFTsIeGJMUFygr0Z/efTjq8sjfpv/HlMMDxuYSkqsFMm5CRpwm1
-         HLqUJbTGo7MXb67aLZ0NYqUVwWM/iGnfiWnM954ZKFJk9wjWdFEtfhfXNzRPB2YT4cX3
-         77AwPyaxeHAs+IgiexzVRguxuEPOP+ojlb2p4XdTHLUFutHRjAJsb04tpSMsrNmvvuQP
-         EpxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XqTiQWMIUKTMvV3HGe2FXr2QXLkNPTKOj2lPv0DODS0=;
-        b=QVe4XGQfiv/yidd/Ndx/QOC6ePbY5vlpgSYtsn5L5+ghmYk6i83IwS/tlBjqdmmpqC
-         MkqHrQKrEYzLGOWWAfcjSN0/cwy3KRcTcRiIx7XAXbz0FSRFyKGZK+I6RnmylpqbErfq
-         rwug7JAIAdFw6VfBQ6iVZNKHAt1C+FpXTxCOTnfJwYtKj/393iW2uQa5txuqIfb1vaID
-         tV0jr+9Y+bOKcQk6qfquXWYozRWxHnoZ1E0vrSS3K0vicwE7nwYyh1CAwIi6R9zHpFTR
-         rAB4ra0R+/qPi8Y4lImchxW3MZ8TS2WjC7Xf44LcA8iINJ4UGceNvEEfGCywbDoVTYYm
-         RBMA==
-X-Gm-Message-State: APjAAAX9ra9pR4PiSBPLguoKNH1/g8j/YhCoYKotLQ6kQF7fvn+PI/Jp
-        gFhfDLhJqCsIvWU09Z8FfFmRG/W724578g6wqGUPtg==
-X-Google-Smtp-Source: APXvYqxLLXp4CbKZ5K2cHxrvSLCedDsciD24l4vc3t7NCOi6h5PckPFbTpLuj6YsLGx3RyREW/4BoB33n9It563S1oQ=
-X-Received: by 2002:a1f:6e4d:: with SMTP id j74mr888394vkc.36.1557921232169;
- Wed, 15 May 2019 04:53:52 -0700 (PDT)
+        Wed, 15 May 2019 07:54:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56878 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730521AbfEOLTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:19:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F8DA2084F;
+        Wed, 15 May 2019 11:19:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557919153;
+        bh=CD+3kVeGxnZBiQsOmKpXFQTDnw/usWuj2LsIib3Ubzg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FoZbPcQAamxROJ+qQHwQv+yMCKUPXjMMFLFH6/Hn5PR78pOcBCu9g3WLSH0EkCC3C
+         crrLy1Xwifw9P1DuTIKMD+cK8DFjdLsjaxYyeTGqyqI4ftMubBV7bsvEo8+dgpzXnE
+         9R8ylL3lAEuhGj4jlpMbU3cda9TiRqhOllqvjpP8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Fugang Duan <fugang.duan@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: [PATCH 4.14 086/115] net: fec: manage ahb clock in runtime pm
+Date:   Wed, 15 May 2019 12:56:06 +0200
+Message-Id: <20190515090705.580979329@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
+References: <20190515090659.123121100@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190509172427.17835-1-scott.branden@broadcom.com>
-In-Reply-To: <20190509172427.17835-1-scott.branden@broadcom.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 15 May 2019 13:53:16 +0200
-Message-ID: <CAPDyKFrmTEkknnmU22xuKaoG1=SbU2MfQANPmtV0wcF1xKaguA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] mmc: sdhci-iproc: fixes for HS50 data hold time
-To:     Scott Branden <scott.branden@broadcom.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 May 2019 at 19:24, Scott Branden <scott.branden@broadcom.com> wrote:
->
-> This patch series fixes data hold timing issues for various sdhci-iproc
-> ip blocks that do not meet the HS50 data hold time.  NO_HISPD bit is set
-> in quirks.
->
-> Changes from v2:
->  - Added info to commit message as to stable tag selection decision
->    as per Adrian Hunter
->
-> Changes from v1:
->  - Change fixes tag to Cc: stable@vger.kernel.org to specify version
->    to backport to
->
-> Trac Hoang (2):
->   mmc: sdhci-iproc: cygnus: Set NO_HISPD bit to fix HS50 data hold time
->     problem
->   mmc: sdhci-iproc: Set NO_HISPD bit to fix HS50 data hold time problem
->
->  drivers/mmc/host/sdhci-iproc.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> --
-> 2.17.1
->
+[ Upstream commit d7c3a206e6338e4ccdf030719dec028e26a521d5 ]
 
-Applied for fixes, thanks!
+Some SOC like i.MX6SX clock have some limits:
+- ahb clock should be disabled before ipg.
+- ahb and ipg clocks are required for MAC MII bus.
+So, move the ahb clock to runtime management together with
+ipg clock.
 
-Kind regards
-Uffe
+Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+---
+ drivers/net/ethernet/freescale/fec_main.c | 30 ++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index ce55c8f7f33a4..ad3aabc39cc24 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -1851,13 +1851,9 @@ static int fec_enet_clk_enable(struct net_device *ndev, bool enable)
+ 	int ret;
+ 
+ 	if (enable) {
+-		ret = clk_prepare_enable(fep->clk_ahb);
+-		if (ret)
+-			return ret;
+-
+ 		ret = clk_prepare_enable(fep->clk_enet_out);
+ 		if (ret)
+-			goto failed_clk_enet_out;
++			return ret;
+ 
+ 		if (fep->clk_ptp) {
+ 			mutex_lock(&fep->ptp_clk_mutex);
+@@ -1875,7 +1871,6 @@ static int fec_enet_clk_enable(struct net_device *ndev, bool enable)
+ 		if (ret)
+ 			goto failed_clk_ref;
+ 	} else {
+-		clk_disable_unprepare(fep->clk_ahb);
+ 		clk_disable_unprepare(fep->clk_enet_out);
+ 		if (fep->clk_ptp) {
+ 			mutex_lock(&fep->ptp_clk_mutex);
+@@ -1894,8 +1889,6 @@ static int fec_enet_clk_enable(struct net_device *ndev, bool enable)
+ failed_clk_ptp:
+ 	if (fep->clk_enet_out)
+ 		clk_disable_unprepare(fep->clk_enet_out);
+-failed_clk_enet_out:
+-		clk_disable_unprepare(fep->clk_ahb);
+ 
+ 	return ret;
+ }
+@@ -3455,6 +3448,9 @@ fec_probe(struct platform_device *pdev)
+ 	ret = clk_prepare_enable(fep->clk_ipg);
+ 	if (ret)
+ 		goto failed_clk_ipg;
++	ret = clk_prepare_enable(fep->clk_ahb);
++	if (ret)
++		goto failed_clk_ahb;
+ 
+ 	fep->reg_phy = devm_regulator_get(&pdev->dev, "phy");
+ 	if (!IS_ERR(fep->reg_phy)) {
+@@ -3546,6 +3542,9 @@ fec_probe(struct platform_device *pdev)
+ 	pm_runtime_put(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ failed_regulator:
++	clk_disable_unprepare(fep->clk_ahb);
++failed_clk_ahb:
++	clk_disable_unprepare(fep->clk_ipg);
+ failed_clk_ipg:
+ 	fec_enet_clk_enable(ndev, false);
+ failed_clk:
+@@ -3669,6 +3668,7 @@ static int __maybe_unused fec_runtime_suspend(struct device *dev)
+ 	struct net_device *ndev = dev_get_drvdata(dev);
+ 	struct fec_enet_private *fep = netdev_priv(ndev);
+ 
++	clk_disable_unprepare(fep->clk_ahb);
+ 	clk_disable_unprepare(fep->clk_ipg);
+ 
+ 	return 0;
+@@ -3678,8 +3678,20 @@ static int __maybe_unused fec_runtime_resume(struct device *dev)
+ {
+ 	struct net_device *ndev = dev_get_drvdata(dev);
+ 	struct fec_enet_private *fep = netdev_priv(ndev);
++	int ret;
+ 
+-	return clk_prepare_enable(fep->clk_ipg);
++	ret = clk_prepare_enable(fep->clk_ahb);
++	if (ret)
++		return ret;
++	ret = clk_prepare_enable(fep->clk_ipg);
++	if (ret)
++		goto failed_clk_ipg;
++
++	return 0;
++
++failed_clk_ipg:
++	clk_disable_unprepare(fep->clk_ahb);
++	return ret;
+ }
+ 
+ static const struct dev_pm_ops fec_pm_ops = {
+-- 
+2.20.1
+
+
+
