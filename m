@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8CFC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F43C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B3220818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48F9E2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919779;
-	bh=v8BRTtexhoVzCszqy58/ROLv4LafHU1CamMNCenkLbk=;
+	s=default; t=1557919784;
+	bh=2uV+ZTq8AYn4p8wD8+jiKUpcpJBue73+IgwNqmd6hDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S6SKkOzcQS0L6YpRy1L279Qyj2rz7SG6uA6Vn6JYBKkjzI8gtY7wLEuL5MEbHlYhn
-	 Cu/MoqaK+J/M0G6OYizQNnMoewLFkFHi7HGowrJTgqPxcw9svfoXa+NFsy8NBXlmkb
-	 7eW/UJ2apQG+xdPsuClSGNw8wtl9fX55YMj/0WfQ=
+	b=l8gh8gvzF4bZOdB3bqHrheHSa3olxmjS6bWqpYejBAggthbMoQ0NM5WkOqV4Mm2wo
+	 zfGpSOWAdQ6lztlGJ3bO1Nlwx7BmUydssx/m+LVgh53RJ8CxomVFSn+dZbeehugTZa
+	 KNQMifml93lB0LPgB0fOGltRTlWN88ZVDarPhfdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732599AbfEOL3i (ORCPT
+        id S1732615AbfEOL3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:29:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40854 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:29:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732589AbfEOL3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:29:34 -0400
+        id S1729916AbfEOL3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:29:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB8532084F;
-        Wed, 15 May 2019 11:29:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE0682089E;
+        Wed, 15 May 2019 11:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919773;
-        bh=v8BRTtexhoVzCszqy58/ROLv4LafHU1CamMNCenkLbk=;
+        s=default; t=1557919781;
+        bh=2uV+ZTq8AYn4p8wD8+jiKUpcpJBue73+IgwNqmd6hDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QC3RyL28RPpMMFwl8gdt4jaDNyIezOlP15BXWBXSKP5O3X+H1nqz3CddggpIXyJcn
-         QcFKu6NVrZIAE6S+erqnycwIEFv+tWJUhk/w84himixw1VGCQv6QbFk/PDlWi3bdR0
-         jbYkAbZraqebvj82wnHObi/50KCT56C3n8Y6GE7U=
+        b=07ZMUC7jZ0ftvvJDXKj6S5HO/UbcAhsFvLiTXlT2kNrYt01FctPIKErSynuChNyzi
+         Qajyg6FcY4okg2JRqVGhO+/dEylrqSIVvYfF3memaSlH3kSRZdfsHhuSyMlTuKSuqi
+         QcO/mro6ZEA87D/MrE2Z42g6SWgP0L61+NB4Oh+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 089/137] drm/sun4i: Unbind components before releasing DRM and memory
-Date:   Wed, 15 May 2019 12:56:10 +0200
-Message-Id: <20190515090659.985825905@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <wanghui104@huawei.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 092/137] net: vrf: Fix operation not supported when set vrf mac
+Date:   Wed, 15 May 2019 12:56:13 +0200
+Message-Id: <20190515090700.221301019@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -60,42 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e02bc29b2cfa7806830d6da8b2322cddd67e8dfe ]
+[ Upstream commit 6819e3f6d83a24777813b0d031ebe0861694db5a ]
 
-Our components may still be using the DRM device driver (if only to
-access our driver's private data), so make sure to unbind them before
-the final drm_dev_put.
+Vrf device is not able to change mac address now because lack of
+ndo_set_mac_address. Complete this in case some apps need to do
+this.
 
-Also release our reserved memory after component unbind instead of
-before to match reverse creation order.
-
-Fixes: f5a9ed867c83 ("drm/sun4i: Fix component unbinding and component master deletion")
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190424090413.6918-1-paul.kocialkowski@bootlin.com
+Reported-by: Hui Wang <wanghui104@huawei.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_drv.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/vrf.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-index 9a5713fa03b25..f8bf5bbec2df3 100644
---- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-@@ -146,10 +146,11 @@ static void sun4i_drv_unbind(struct device *dev)
- 	drm_dev_unregister(drm);
- 	drm_kms_helper_poll_fini(drm);
- 	drm_mode_config_cleanup(drm);
--	of_reserved_mem_device_release(dev);
--	drm_dev_put(drm);
+diff --git a/drivers/net/vrf.c b/drivers/net/vrf.c
+index cd15c32b2e436..9ee4d7402ca23 100644
+--- a/drivers/net/vrf.c
++++ b/drivers/net/vrf.c
+@@ -875,6 +875,7 @@ static const struct net_device_ops vrf_netdev_ops = {
+ 	.ndo_init		= vrf_dev_init,
+ 	.ndo_uninit		= vrf_dev_uninit,
+ 	.ndo_start_xmit		= vrf_xmit,
++	.ndo_set_mac_address	= eth_mac_addr,
+ 	.ndo_get_stats64	= vrf_get_stats64,
+ 	.ndo_add_slave		= vrf_add_slave,
+ 	.ndo_del_slave		= vrf_del_slave,
+@@ -1274,6 +1275,7 @@ static void vrf_setup(struct net_device *dev)
+ 	/* default to no qdisc; user can add if desired */
+ 	dev->priv_flags |= IFF_NO_QUEUE;
+ 	dev->priv_flags |= IFF_NO_RX_HANDLER;
++	dev->priv_flags |= IFF_LIVE_ADDR_CHANGE;
  
- 	component_unbind_all(dev, NULL);
-+	of_reserved_mem_device_release(dev);
-+
-+	drm_dev_put(drm);
- }
- 
- static const struct component_master_ops sun4i_drv_master_ops = {
+ 	/* VRF devices do not care about MTU, but if the MTU is set
+ 	 * too low then the ipv4 and ipv6 protocols are disabled
 -- 
 2.20.1
 
