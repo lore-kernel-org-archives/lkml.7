@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0D8C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49507C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 040CC20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 185E020657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921275;
-	bh=HmAkxD5WGmy/RoY864NLyadG6VXokwA+13jgf0iy0Co=;
+	s=default; t=1557921281;
+	bh=dWAXFARmKsgxAQAbufWKnF+IQDUr5TvvHujqLwkQ2a8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U1SbP9idab7Zc9rM74OkWQHq4B4aL4FjRzRW6aMAcQJJE+tPNAKNiIrAqyzV35w3B
-	 t3yuNfumhEDm15ho2eFLmV24WB83tUT8KfcrEgqAtLLRi6WwCvmWtAZwEg/TUcxTFp
-	 rrzN1oOu9IRD5OFB5tciZLicYWBcvRLWN5IW/68k=
+	b=Hgcy4cZduYYlSXwqEYlV4I3+MycNVjRrhN5I26Van6Qsfh+O2eD7mbOOdh+LqixhK
+	 /Xii5JVZ3lAMGuo6rMShCTA/0qyOwwexCCz/Efa4djrXzCLejoAPPAKl8K8I6HHowg
+	 r1qb45m1+zWvaw0kL0cBcbAhyOiwCRYNJ654APYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730875AbfEOLTA (ORCPT
+        id S1730858AbfEOLyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:19:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56430 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:54:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729422AbfEOLSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:18:53 -0400
+        id S1730450AbfEOLSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:18:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CE2420818;
-        Wed, 15 May 2019 11:18:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF08020843;
+        Wed, 15 May 2019 11:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919132;
-        bh=HmAkxD5WGmy/RoY864NLyadG6VXokwA+13jgf0iy0Co=;
+        s=default; t=1557919135;
+        bh=dWAXFARmKsgxAQAbufWKnF+IQDUr5TvvHujqLwkQ2a8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DHAIw/BW7dd0f+zrYViEALHN/Q0aypX1hdquGm/aaz3+qY4SxhAkJmqm+pf/Ha/st
-         YZzr1RQRM3KhN/vvKDLh0XetJEyj5uQoMYQ1aQ4GFJYuxlhvzoaxFMoj7wG/W/AID3
-         /xDcyjRW+J1k71nuC+uWsl+EWiDc0rfP+T58qIyA=
+        b=YATBZM9P0CuTQCirIcQZJuWRE49vij7Mxwna5aT1Apj2sfo+9e62aQLhjFK/jB9u5
+         xUDvaQK8U1dOpHhNfvbNcjWczoctMh96YKyKpBSz3saZWnwKQ0j6+tK2dYkqniDpvw
+         K+BdmXqPbM4D9ho0wvSbK0EjItiRffqfKae2E8kA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, KT Liao <kt.liao@emc.com.tw>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 079/115] Input: elan_i2c - add hardware ID for multiple Lenovo laptops
-Date:   Wed, 15 May 2019 12:55:59 +0200
-Message-Id: <20190515090705.130414779@linuxfoundation.org>
+Subject: [PATCH 4.14 080/115] netfilter: nf_tables: warn when expr implements only one of activate/deactivate
+Date:   Wed, 15 May 2019 12:56:00 +0200
+Message-Id: <20190515090705.180918073@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -60,71 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 738c06d0e4562e0acf9f2c7438a22b2d5afc67aa ]
+[ Upstream commit 0ef235c71755c5f36c50282fcf2d7d08709be344 ]
 
-There are many Lenovo laptops which need elan_i2c support, this patch adds
-relevant IDs to the Elan driver so that touchpads are recognized.
+->destroy is only allowed to free data, or do other cleanups that do not
+have side effects on other state, such as visibility to other netlink
+requests.
 
-Signed-off-by: KT Liao <kt.liao@emc.com.tw>
-Cc: stable@vger.kernel.org
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Such things need to be done in ->deactivate.
+As a transaction can fail, we need to make sure we can undo such
+operations, therefore ->activate() has to be provided too.
+
+So print a warning and refuse registration if expr->ops provides
+only one of the two operations.
+
+v2: fix nft_expr_check_ops to not repeat same check twice (Jones Desougi)
+
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/input/mouse/elan_i2c_core.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ net/netfilter/nf_tables_api.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-index 2ce805d31ed13..ad89ba143a0e3 100644
---- a/drivers/input/mouse/elan_i2c_core.c
-+++ b/drivers/input/mouse/elan_i2c_core.c
-@@ -1254,22 +1254,47 @@ static const struct acpi_device_id elan_acpi_id[] = {
- 	{ "ELAN0600", 0 },
- 	{ "ELAN0601", 0 },
- 	{ "ELAN0602", 0 },
-+	{ "ELAN0603", 0 },
-+	{ "ELAN0604", 0 },
- 	{ "ELAN0605", 0 },
-+	{ "ELAN0606", 0 },
-+	{ "ELAN0607", 0 },
- 	{ "ELAN0608", 0 },
- 	{ "ELAN0605", 0 },
- 	{ "ELAN0609", 0 },
- 	{ "ELAN060B", 0 },
- 	{ "ELAN060C", 0 },
-+	{ "ELAN060F", 0 },
-+	{ "ELAN0610", 0 },
- 	{ "ELAN0611", 0 },
- 	{ "ELAN0612", 0 },
-+	{ "ELAN0615", 0 },
-+	{ "ELAN0616", 0 },
- 	{ "ELAN0617", 0 },
- 	{ "ELAN0618", 0 },
-+	{ "ELAN0619", 0 },
-+	{ "ELAN061A", 0 },
-+	{ "ELAN061B", 0 },
- 	{ "ELAN061C", 0 },
- 	{ "ELAN061D", 0 },
- 	{ "ELAN061E", 0 },
-+	{ "ELAN061F", 0 },
- 	{ "ELAN0620", 0 },
- 	{ "ELAN0621", 0 },
- 	{ "ELAN0622", 0 },
-+	{ "ELAN0623", 0 },
-+	{ "ELAN0624", 0 },
-+	{ "ELAN0625", 0 },
-+	{ "ELAN0626", 0 },
-+	{ "ELAN0627", 0 },
-+	{ "ELAN0628", 0 },
-+	{ "ELAN0629", 0 },
-+	{ "ELAN062A", 0 },
-+	{ "ELAN062B", 0 },
-+	{ "ELAN062C", 0 },
-+	{ "ELAN062D", 0 },
-+	{ "ELAN0631", 0 },
-+	{ "ELAN0632", 0 },
- 	{ "ELAN1000", 0 },
- 	{ }
- };
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index c445d57e3a5bc..b149a72190846 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -220,6 +220,18 @@ static int nft_delchain(struct nft_ctx *ctx)
+ 	return err;
+ }
+ 
++/* either expr ops provide both activate/deactivate, or neither */
++static bool nft_expr_check_ops(const struct nft_expr_ops *ops)
++{
++	if (!ops)
++		return true;
++
++	if (WARN_ON_ONCE((!ops->activate ^ !ops->deactivate)))
++		return false;
++
++	return true;
++}
++
+ static void nft_rule_expr_activate(const struct nft_ctx *ctx,
+ 				   struct nft_rule *rule)
+ {
+@@ -1724,6 +1736,9 @@ static int nf_tables_delchain(struct net *net, struct sock *nlsk,
+  */
+ int nft_register_expr(struct nft_expr_type *type)
+ {
++	if (!nft_expr_check_ops(type->ops))
++		return -EINVAL;
++
+ 	nfnl_lock(NFNL_SUBSYS_NFTABLES);
+ 	if (type->family == NFPROTO_UNSPEC)
+ 		list_add_tail_rcu(&type->list, &nf_tables_expressions);
+@@ -1873,6 +1888,10 @@ static int nf_tables_expr_parse(const struct nft_ctx *ctx,
+ 			err = PTR_ERR(ops);
+ 			goto err1;
+ 		}
++		if (!nft_expr_check_ops(ops)) {
++			err = -EINVAL;
++			goto err1;
++		}
+ 	} else
+ 		ops = type->ops;
+ 
 -- 
 2.20.1
 
