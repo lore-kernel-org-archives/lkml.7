@@ -2,103 +2,103 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3948BC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3035BC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:41:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 054172082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:40:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A1C2089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:41:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c4eMVd1c"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="bJzcjZX6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbfEOIk5 (ORCPT
+        id S1726338AbfEOIlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 04:40:57 -0400
-Received: from mail-lf1-f41.google.com ([209.85.167.41]:38785 "EHLO
-        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfEOIk4 (ORCPT
+        Wed, 15 May 2019 04:41:17 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:56816 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725871AbfEOIlQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 04:40:56 -0400
-Received: by mail-lf1-f41.google.com with SMTP id y19so1334391lfy.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 01:40:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=PqVaSFiBytC8hxBsEh/HgINdW7HiuF2nkdZ+Xr3sRJM=;
-        b=c4eMVd1cLxlB6SJBmNhemOrHGlx22bRWlhjGFOgNaLhbLW2OsPnJ6q7IN/0qHO2SJT
-         44NH8SW7Cz7C3NbkZ6LUVyuc+HzNnulv1amtnBP+4BzX65YCeVqIiFPthbsIvGNRastI
-         FbjiJSRIsNnOy55OzOM24lwDTwQ8e3guvD/twvzX8/U23YRpw/0O0FdUM5g8ol8rvtGT
-         3HQfxeXNsLpmFjaOI0s2beybpvYsZWr56AL1iTqZnKWFCOtzAIRlXYsgw/i9aL/6NEPD
-         g7GWfCO0vCdWKEMkUAxLxifdzh0t3jxTgaNvygX4vDQBbW/QJM0RreiOZzIYruK6B9fL
-         hGdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=PqVaSFiBytC8hxBsEh/HgINdW7HiuF2nkdZ+Xr3sRJM=;
-        b=PkKjxky2OoT0OMedOoCH/OCgwpM6b3zSjThO3d+2NeFmRNHcPXduacl4GSz12gNkWg
-         eYHeY4TMOD9KhAHJ9VLx7FU7SYGxZhCyhWzWrYYglXurRHAAT0o7X4Ngf8OpsQGNH/Tt
-         LjNO4i/8fbUHsrsDvLNou5OKkN1vO9eo1507v1DMsrROD5JEXiQKoY++Z93WzWe0GS5/
-         /rUOZ1feMkZQcnoeDKGJUIhLGTBSec+/z4cL42WonXcGOdjcpp/Gm5nOeu4L4X4EHhA8
-         ovjIGngBCYEPy71ZpYoXqtTu4wTiUPN7gbFldVXPAx1d/xkcR98Z0YIVHw9yuFwmxIc4
-         N+KQ==
-X-Gm-Message-State: APjAAAVM5XBtPPOzvLcL3isMP0oslSEiWv8lb8tWZ2OIuJQNeiBVut78
-        w6Q9WlNSgKnYgtoN6P9z4S0hJzr49cGmpg7BuMLWpg==
-X-Google-Smtp-Source: APXvYqz27fihyYyeqJzcm9uZcyrM35iaJPBOLqtP38PCvZvb3HdahvBJTwe31L0dHMb3DcwxQ1okZ20YuVymiVG6A6k=
-X-Received: by 2002:a19:6b0e:: with SMTP id d14mr16922584lfa.137.1557909654616;
- Wed, 15 May 2019 01:40:54 -0700 (PDT)
+        Wed, 15 May 2019 04:41:16 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 917962E14C0;
+        Wed, 15 May 2019 11:41:13 +0300 (MSK)
+Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
+        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 7l8bZ6vz9S-fD0GwFgT;
+        Wed, 15 May 2019 11:41:13 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1557909673; bh=on37xMtDHf4i5spIW0sgEiVZh+kGUSg0VAm5Sv46Das=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=bJzcjZX6IIAUCNZqdyJas7Z7fGK9P92gcfgKNFGVYrbxnXDJ17C82J8LRWdyyAtHl
+         EqAUj/W8BAy4Hpaw7JwRetWb/oFU2VFVtGgph3dPKN16Nxj069xSvJi4qjWeh07zl9
+         r+h/pSCIwWSvsMqVdHCAPlw4g0drkv+mbzc+HnWY=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:ed19:3833:7ce1:2324])
+        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id dM2CepgjQa-fC8SnGfC;
+        Wed, 15 May 2019 11:41:12 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH 1/5] proc: use down_read_killable for /proc/pid/maps
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Date:   Wed, 15 May 2019 11:41:12 +0300
+Message-ID: <155790967258.1319.11531787078240675602.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 15 May 2019 14:10:43 +0530
-Message-ID: <CA+G9fYu254sYc77jOVifOmxrd_jNmr4wNHTrqnW54a8F=EQZ6Q@mail.gmail.com>
-Subject: LTP: mm: overcommit_memory01, 03...06 failed
-To:     ltp@lists.linux.it, linux-mm@kvack.org
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Jan Stancek <jstancek@redhat.com>,
-        lkft-triage@lists.linaro.org, dengke.du@windriver.com,
-        petr.vorel@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ltp-mm-tests failed on Linux mainline kernel  5.1.0,
-  * overcommit_memory01 overcommit_memory
-  * overcommit_memory03 overcommit_memory -R 30
-  * overcommit_memory04 overcommit_memory -R 80
-  * overcommit_memory05 overcommit_memory -R 100
-  * overcommit_memory06 overcommit_memory -R 200
+Do not stuck forever if something wrong.
+This function also used for /proc/pid/smaps.
 
-mem.c:814: INFO: set overcommit_memory to 0
-overcommit_memory.c:185: INFO: malloc 8094844 kB successfully
-overcommit_memory.c:204: PASS: alloc passed as expected
-overcommit_memory.c:189: INFO: malloc 32379376 kB failed
-overcommit_memory.c:210: PASS: alloc failed as expected
-overcommit_memory.c:185: INFO: malloc 16360216 kB successfully
-overcommit_memory.c:212: FAIL: alloc passed, expected to fail
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+---
+ fs/proc/task_mmu.c   |    6 +++++-
+ fs/proc/task_nommu.c |    6 +++++-
+ 2 files changed, 10 insertions(+), 2 deletions(-)
 
-Failed test log,
-https://lkft.validation.linaro.org/scheduler/job/726417#L22852
+diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+index 01d4eb0e6bd1..2bf210229daf 100644
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -166,7 +166,11 @@ static void *m_start(struct seq_file *m, loff_t *ppos)
+ 	if (!mm || !mmget_not_zero(mm))
+ 		return NULL;
+ 
+-	down_read(&mm->mmap_sem);
++	if (down_read_killable(&mm->mmap_sem)) {
++		mmput(mm);
++		return ERR_PTR(-EINTR);
++	}
++
+ 	hold_task_mempolicy(priv);
+ 	priv->tail_vma = get_gate_vma(mm);
+ 
+diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
+index 36bf0f2e102e..7907e6419e57 100644
+--- a/fs/proc/task_nommu.c
++++ b/fs/proc/task_nommu.c
+@@ -211,7 +211,11 @@ static void *m_start(struct seq_file *m, loff_t *pos)
+ 	if (!mm || !mmget_not_zero(mm))
+ 		return NULL;
+ 
+-	down_read(&mm->mmap_sem);
++	if (down_read_killable(&mm->mmap_sem)) {
++		mmput(mm);
++		return ERR_PTR(-EINTR);
++	}
++
+ 	/* start from the Nth VMA */
+ 	for (p = rb_first(&mm->mm_rb); p; p = rb_next(p))
+ 		if (n-- == 0)
 
-LTP version 20190115
-
-Test case link,
-https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/mem/tunable/overcommit_memory.c#L212
-
-First bad commit:
-git branch master
-git commit e0654264c4806dc436b291294a0fbf9be7571ab6
-git describe v5.1-10706-ge0654264c480
-git repo https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-
-Last good commit:
-git branch master
-git commit 7e9890a3500d95c01511a4c45b7e7192dfa47ae2
-git describe v5.1-10326-g7e9890a3500d
-git repo https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-
-Best regards
-Naresh Kamboju
