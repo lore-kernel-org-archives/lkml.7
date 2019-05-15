@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F415C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FB5DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:01:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 304CD21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52DF720881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:01:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918067;
-	bh=YkaUSEF3X+pQvSn/4Ovd7ULUk+pez2JqR3/Py6kNyGM=;
+	s=default; t=1557918072;
+	bh=gbCkoTEBHA6MbO7WehFZVyISSrHFC5+UEhtGtK43TR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SpqK34VIkqmLeq+jGZCeqeSgYrQrGbaWAct1setHZ0sJypqXsA8KiSMmL21h8Z1FF
-	 yJMDvqVsDYjz3fAE/gw7oZemKtnnR2Q2cW3QMuMstWRdbKL7w8c8KW5SJCjEOQcc0Q
-	 iYQ5u2VzDlEIHhdpDe+h1vQEGepNcX/4080AhkEI=
+	b=1YR4W5DMGdrpwhfZntVWsXJY8ZICTL9R+SGTPH4v+I0Z6A605kDa1XclVv+/nbY33
+	 Za1WFYjNzNlsTvt+MdxXikT9Cf3UXhiss/siK4uT+x68JRat7+mjrUDtf9EKK7w/la
+	 DEfME7AnBoG7AjgGf4jxLhl/ifr557K3Ya+RiLXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfEOLBG (ORCPT
+        id S1727619AbfEOLBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:01:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727612AbfEOLBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 May 2019 07:01:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57972 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727606AbfEOLBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:01:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B14E20881;
-        Wed, 15 May 2019 11:01:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 783AF20881;
+        Wed, 15 May 2019 11:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918063;
-        bh=YkaUSEF3X+pQvSn/4Ovd7ULUk+pez2JqR3/Py6kNyGM=;
+        s=default; t=1557918061;
+        bh=gbCkoTEBHA6MbO7WehFZVyISSrHFC5+UEhtGtK43TR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ul6+ij6uVedL29qPAF0jWnqW6ANcKe1ttNKHeqzA0Kz62AUOrAOWqgYVdBWCR67Yh
-         HhOV/v8P9749ek3MD7YGc9Jm4uYyyoJZBW9zvk8oCDTTeT7A1M5H+q6mZ09oqrc/mB
-         OjO0iA/+jJzaltukoPtLGJu2dXbWWkMEhrg8OkEE=
+        b=XJ1Gnw6Zq+2SwVwZXbBzUqUzfYhbxiGJgHMAMlS7dC/6eclkgQbMJcEERRHa+H+eS
+         OlWug9c2XZ+G2i8o0/ZcReCdTi5ny0haIJ0HFEQbabyIg4DgQTgdZsJZw4rO4zD4gD
+         2gLpD+LVi87mEIlAQfOR3atoXAbaCyiXHbka/gNI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 78/86] bridge: Fix error path for kobject_init_and_add()
-Date:   Wed, 15 May 2019 12:55:55 +0200
-Message-Id: <20190515090655.622147146@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 77/86] USB: serial: fix unthrottle races
+Date:   Wed, 15 May 2019 12:55:54 +0200
+Message-Id: <20190515090655.537266138@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -59,64 +58,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Tobin C. Harding" <tobin@kernel.org>
+[ Upstream commit 3f5edd58d040bfa4b74fb89bc02f0bc6b9cd06ab ]
 
-[ Upstream commit bdfad5aec1392b93495b77b864d58d7f101dc1c1 ]
+Fix two long-standing bugs which could potentially lead to memory
+corruption or leave the port throttled until it is reopened (on weakly
+ordered systems), respectively, when read-URB completion races with
+unthrottle().
 
-Currently error return from kobject_init_and_add() is not followed by a
-call to kobject_put().  This means there is a memory leak.  We currently
-set p to NULL so that kfree() may be called on it as a noop, the code is
-arguably clearer if we move the kfree() up closer to where it is
-called (instead of after goto jump).
+First, the URB must not be marked as free before processing is complete
+to prevent it from being submitted by unthrottle() on another CPU.
 
-Remove a goto label 'err1' and jump to call to kobject_put() in error
-return from kobject_init_and_add() fixing the memory leak.  Re-name goto
-label 'put_back' to 'err1' now that we don't use err1, following current
-nomenclature (err1, err2 ...).  Move call to kfree out of the error
-code at bottom of function up to closer to where memory was allocated.
-Add comment to clarify call to kfree().
+	CPU 1				CPU 2
+	================		================
+	complete()			unthrottle()
+	  process_urb();
+	  smp_mb__before_atomic();
+	  set_bit(i, free);		  if (test_and_clear_bit(i, free))
+	  					  submit_urb();
 
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Second, the URB must be marked as free before checking the throttled
+flag to prevent unthrottle() on another CPU from failing to observe that
+the URB needs to be submitted if complete() sees that the throttled flag
+is set.
+
+	CPU 1				CPU 2
+	================		================
+	complete()			unthrottle()
+	  set_bit(i, free);		  throttled = 0;
+	  smp_mb__after_atomic();	  smp_mb();
+	  if (throttled)		  if (test_and_clear_bit(i, free))
+	  	  return;			  submit_urb();
+
+Note that test_and_clear_bit() only implies barriers when the test is
+successful. To handle the case where the URB is still in use an explicit
+barrier needs to be added to unthrottle() for the second race condition.
+
+Fixes: d83b405383c9 ("USB: serial: add support for multiple read urbs")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/bridge/br_if.c |   13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/usb/serial/generic.c |   39 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 32 insertions(+), 7 deletions(-)
 
---- a/net/bridge/br_if.c
-+++ b/net/bridge/br_if.c
-@@ -460,13 +460,15 @@ int br_add_if(struct net_bridge *br, str
- 	call_netdevice_notifiers(NETDEV_JOIN, dev);
+--- a/drivers/usb/serial/generic.c
++++ b/drivers/usb/serial/generic.c
+@@ -350,6 +350,7 @@ void usb_serial_generic_read_bulk_callba
+ 	struct usb_serial_port *port = urb->context;
+ 	unsigned char *data = urb->transfer_buffer;
+ 	unsigned long flags;
++	bool stopped = false;
+ 	int status = urb->status;
+ 	int i;
  
- 	err = dev_set_allmulti(dev, 1);
--	if (err)
--		goto put_back;
-+	if (err) {
-+		kfree(p);	/* kobject not yet init'd, manually free */
-+		goto err1;
-+	}
+@@ -357,33 +358,51 @@ void usb_serial_generic_read_bulk_callba
+ 		if (urb == port->read_urbs[i])
+ 			break;
+ 	}
+-	set_bit(i, &port->read_urbs_free);
  
- 	err = kobject_init_and_add(&p->kobj, &brport_ktype, &(dev->dev.kobj),
- 				   SYSFS_BRIDGE_PORT_ATTR);
- 	if (err)
--		goto err1;
-+		goto err2;
+ 	dev_dbg(&port->dev, "%s - urb %d, len %d\n", __func__, i,
+ 							urb->actual_length);
+ 	switch (status) {
+ 	case 0:
++		usb_serial_debug_data(&port->dev, __func__, urb->actual_length,
++							data);
++		port->serial->type->process_read_urb(urb);
+ 		break;
+ 	case -ENOENT:
+ 	case -ECONNRESET:
+ 	case -ESHUTDOWN:
+ 		dev_dbg(&port->dev, "%s - urb stopped: %d\n",
+ 							__func__, status);
+-		return;
++		stopped = true;
++		break;
+ 	case -EPIPE:
+ 		dev_err(&port->dev, "%s - urb stopped: %d\n",
+ 							__func__, status);
+-		return;
++		stopped = true;
++		break;
+ 	default:
+ 		dev_dbg(&port->dev, "%s - nonzero urb status: %d\n",
+ 							__func__, status);
+-		goto resubmit;
++		break;
+ 	}
  
- 	err = br_sysfs_addif(p);
- 	if (err)
-@@ -531,12 +533,9 @@ err3:
- 	sysfs_remove_link(br->ifobj, p->dev->name);
- err2:
- 	kobject_put(&p->kobj);
--	p = NULL; /* kobject_put frees */
--err1:
- 	dev_set_allmulti(dev, -1);
--put_back:
-+err1:
- 	dev_put(dev);
--	kfree(p);
- 	return err;
+-	usb_serial_debug_data(&port->dev, __func__, urb->actual_length, data);
+-	port->serial->type->process_read_urb(urb);
++	/*
++	 * Make sure URB processing is done before marking as free to avoid
++	 * racing with unthrottle() on another CPU. Matches the barriers
++	 * implied by the test_and_clear_bit() in
++	 * usb_serial_generic_submit_read_urb().
++	 */
++	smp_mb__before_atomic();
++	set_bit(i, &port->read_urbs_free);
++	/*
++	 * Make sure URB is marked as free before checking the throttled flag
++	 * to avoid racing with unthrottle() on another CPU. Matches the
++	 * smp_mb() in unthrottle().
++	 */
++	smp_mb__after_atomic();
++
++	if (stopped)
++		return;
+ 
+-resubmit:
+ 	/* Throttle the device if requested by tty */
+ 	spin_lock_irqsave(&port->lock, flags);
+ 	port->throttled = port->throttle_req;
+@@ -458,6 +477,12 @@ void usb_serial_generic_unthrottle(struc
+ 	port->throttled = port->throttle_req = 0;
+ 	spin_unlock_irq(&port->lock);
+ 
++	/*
++	 * Matches the smp_mb__after_atomic() in
++	 * usb_serial_generic_read_bulk_callback().
++	 */
++	smp_mb();
++
+ 	if (was_throttled)
+ 		usb_serial_generic_submit_read_urbs(port, GFP_KERNEL);
  }
- 
 
 
