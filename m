@@ -2,95 +2,87 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE88CC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5CDC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FED320862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:35:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90E2820873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:37:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557934662;
+	bh=lIwfUgZLsOETAqKmdIH6ivluhJ74dnvjF64W3zo7G3U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G5T358YWyn8WoIJpnicH0UF6bbhQ/u5jM0Lq8Iq0pwFVnu622cii/JeM6dqydOuhU
+	 x4F1cqKerwHlSzO8MekS7C1Uc22Q1fW+DAtIvB+PXSYEkm7+9dEno00niiNQvHG0Za
+	 NmCVTg8ynI3znD1aNLIsfD5ryajprjskGpVf5Dlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbfEOPfZ (ORCPT
+        id S1727971AbfEOPhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 11:35:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60786 "EHLO mx1.redhat.com"
+        Wed, 15 May 2019 11:37:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbfEOPfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 11:35:24 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726335AbfEOPhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 11:37:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8E07930842A2;
-        Wed, 15 May 2019 15:35:23 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 884EC60BE5;
-        Wed, 15 May 2019 15:35:18 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 15 May 2019 17:35:20 +0200 (CEST)
-Date:   Wed, 15 May 2019 17:35:15 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     jannh@google.com, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de, dhowells@redhat.com, akpm@linux-foundation.org,
-        cyphar@cyphar.com, ebiederm@xmission.com,
-        elena.reshetova@intel.com, keescook@chromium.org,
-        luto@amacapital.net, luto@kernel.org, tglx@linutronix.de,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/2] pid: add pidfd_open()
-Message-ID: <20190515153515.GA20783@redhat.com>
-References: <20190515100400.3450-1-christian@brauner.io>
- <20190515143857.GB18892@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F41A20818;
+        Wed, 15 May 2019 15:37:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557934660;
+        bh=lIwfUgZLsOETAqKmdIH6ivluhJ74dnvjF64W3zo7G3U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=esXearoJXyErGlUIXkOrnIwNQRHkRzCAqnhw7vp9RJR39xntePk7hOYLZEhbxtgA4
+         AaJRauP72JOUeasJHE7Wimfzcs5d/cquM0J5pC1xnS4aRGQ0Bcs/uw8xgNuQvJXYTk
+         Ip/EGnYVhJ/lQ34norEhZKVj9l199Bg7B6z4b690=
+Date:   Wed, 15 May 2019 17:37:38 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Lech Perczak <l.perczak@camlintechnologies.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Eric Dumazet <edumazet@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Piotr Figiel <p.figiel@camlintechnologies.com>,
+        Krzysztof =?utf-8?Q?Drobi=C5=84ski?= 
+        <k.drobinski@camlintechnologies.com>,
+        Pawel Lenkow <p.lenkow@camlintechnologies.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: Recurring warning in page_copy_sane (inside copy_page_to_iter)
+ when running stress tests involving drop_caches
+Message-ID: <20190515153738.GA27219@kroah.com>
+References: <d68c83ba-bf5a-f6e8-44dd-be98f45fc97a@camlintechnologies.com>
+ <14c9e6f4-3fb8-ca22-91cc-6970f1d52265@camlintechnologies.com>
+ <011a16e4-6aff-104c-a19b-d2bd11caba99@camlintechnologies.com>
+ <20190515144352.GC31704@bombadil.infradead.org>
+ <20190515150406.GA22540@kroah.com>
+ <20190515152035.GE31704@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190515143857.GB18892@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 15 May 2019 15:35:24 +0000 (UTC)
+In-Reply-To: <20190515152035.GE31704@bombadil.infradead.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/15, Oleg Nesterov wrote:
->
-> On 05/15, Christian Brauner wrote:
-> >
-> > +SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
-> > +{
-> > +	int fd, ret;
-> > +	struct pid *p;
-> > +	struct task_struct *tsk;
-> > +
-> > +	if (flags)
-> > +		return -EINVAL;
-> > +
-> > +	if (pid <= 0)
-> > +		return -EINVAL;
-> > +
-> > +	p = find_get_pid(pid);
-> > +	if (!p)
-> > +		return -ESRCH;
-> > +
-> > +	rcu_read_lock();
-> > +	tsk = pid_task(p, PIDTYPE_PID);
->
-> You do not need find_get_pid() before rcu_lock and put_pid() at the end.
-> You can just do find_vpid() under rcu_read_lock().
+On Wed, May 15, 2019 at 08:20:35AM -0700, Matthew Wilcox wrote:
+> On Wed, May 15, 2019 at 05:04:06PM +0200, Greg Kroah-Hartman wrote:
+> > > Greg, can you consider 6daef95b8c914866a46247232a048447fff97279 for
+> > > backporting to stable?  Nobody realised it was a bugfix at the time it
+> > > went in.  I suspect there aren't too many of us running HIGHMEM kernels
+> > > any more.
+> > > 
+> > 
+> > Sure, what kernel version(s) should this go to?  4.19 and newer?
+> 
+> Looks like the problem was introduced with commit
+> a90bcb86ae700c12432446c4aa1819e7b8e172ec so 4.14 and newer, I think.
 
-Ah, sorry. Somehow I forgot you need to call pidfd_create(pid), you can't
-do this under rcu_read_lock().
+Ok, I'll look into it after this round of stable kernels are released,
+thanks.
 
-So I was wrong, you can't avoid get/put_pid.
-
-Oleg.
-
+greg k-h
