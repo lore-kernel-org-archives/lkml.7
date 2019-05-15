@@ -2,138 +2,116 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8FBC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3B6C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8FD820675
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC712082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:17:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557922644;
+	bh=J2mkD67Lx8vV4ZreU/vwMWvsFmukwVU2kJoI6FxqH/4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=F6ltxMV+ghbktw3ZEVIRlvsYhHmiPpx6cwORJEVnIqU+LSELdggdKHAbliFQyCdYa
+	 CWfa/sNfR0ydxVm4dJOWAQbJgUsJ7/exTgxVcZeHTkIM8OhVDNxHHGxLa7gncoiSyO
+	 Kk25SdXrL3XnaXGuX3DTT5o7ZsqFLO8JF7yeFHqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbfEOLCK (ORCPT
+        id S1728172AbfEOMRW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:02:10 -0400
-Received: from foss.arm.com ([217.140.101.70]:40818 "EHLO foss.arm.com"
+        Wed, 15 May 2019 08:17:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727836AbfEOLCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:02:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF55080D;
-        Wed, 15 May 2019 04:02:02 -0700 (PDT)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 60A463F703;
-        Wed, 15 May 2019 04:02:00 -0700 (PDT)
-Date:   Wed, 15 May 2019 12:01:58 +0100
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, edubezval@gmail.com,
-        rui.zhang@intel.com, javi.merino@kernel.org,
-        amit.kachhap@gmail.com, rjw@rjwysocki.net, will.deacon@arm.com,
-        catalin.marinas@arm.com, dietmar.eggemann@arm.com,
-        ionela.voinescu@arm.com, mka@chromium.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 2/3] PM / EM: Expose perf domain struct
-Message-ID: <20190515110156.ru2wxqvwffqgq3t3@queper01-lin>
-References: <20190515082318.7993-3-quentin.perret@arm.com>
- <0ced18eb-e424-fe6b-b11e-165a3c108170@linaro.org>
- <20190515091658.sbpg6qiovhtblqyr@queper01-lin>
- <698400c0-e0a4-4a86-b9df-cdb9bd683c0f@linaro.org>
- <20190515100748.q3t4kt72h2akdpcs@queper01-lin>
- <cf1474cb-7e31-7070-b988-a0c4d3f6f081@linaro.org>
- <20190515102200.s6uq63qnwea6xtpl@vireshk-i7>
- <20190515104043.vogspxgkapp6qsny@queper01-lin>
- <20190515104651.tv5odug7ce4zlupc@queper01-lin>
- <5b55e432-f8b0-91ae-a7de-fe02e0cad322@linaro.org>
+        id S1727042AbfEOLCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:02:09 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9465120881;
+        Wed, 15 May 2019 11:02:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557918129;
+        bh=J2mkD67Lx8vV4ZreU/vwMWvsFmukwVU2kJoI6FxqH/4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gxDENtXt1m3mXm7Xcac5V6slU5Te/N2XKbP0lp/LuqgE9UcTHwXhTytq6cTxTwf/U
+         BC8wX7Ym0EVVBiOodIreUHpI+Bw73hmRvN7Lpl9d5qn0Bzo6kZDBr8EEn9te8zTQYK
+         D9Dptyt8PHukdRps0+66m3+zeTbYcEORAEv/923M=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>
+Subject: [PATCH 4.4 017/266] powerpc/rfi-flush: Move the logic to avoid a redo into the debugfs code
+Date:   Wed, 15 May 2019 12:52:04 +0200
+Message-Id: <20190515090723.199639524@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
+References: <20190515090722.696531131@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5b55e432-f8b0-91ae-a7de-fe02e0cad322@linaro.org>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 15 May 2019 at 12:51:57 (+0200), Daniel Lezcano wrote:
-> On 15/05/2019 12:46, Quentin Perret wrote:
-> > On Wednesday 15 May 2019 at 11:40:44 (+0100), Quentin Perret wrote:
-> 
-> [ ... ]
-> 
-> >> +#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
-> >>         if (capacitance) {
-> >>                 ret = update_freq_table(cpufreq_cdev, capacitance);
-> >>                 if (ret) {
-> >>                         cdev = ERR_PTR(ret);
-> >>                         goto remove_ida;
-> >>                 }
-> >> -
-> >> -               cooling_ops = &cpufreq_power_cooling_ops;
-> >> -       } else {
-> >> -               cooling_ops = &cpufreq_cooling_ops;
-> >>         }
-> >> +#endif
-> >> +       cooling_ops = &cpufreq_cooling_ops;
-> > 
-> > Argh, that is actually broken with !capacitance and
-> > THERMAL_GOV_POWER_ALLOCATOR=y ... Perhaps it's best to keep the two
-> > thermal_cooling_device_ops struct separated in the end.
-> 
-> Or alternatively you can keep one structure but instead of filling the
-> state2power,power2state and getrequestedpower fields in the declaration,
-> you fill them in the if (capacitance) block, no?
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-Something like the below ? Yes, that works too. I'll write a proper
-patch and send that next week or so.
+commit 1e2a9fc7496955faacbbed49461d611b704a7505 upstream.
 
-Thanks,
-Quentin
+rfi_flush_enable() includes a check to see if we're already
+enabled (or disabled), and in that case does nothing.
 
---->8---
+But that means calling setup_rfi_flush() a 2nd time doesn't actually
+work, which is a bit confusing.
 
- /* Bind cpufreq callbacks to thermal cooling device ops */
+Move that check into the debugfs code, where it really belongs.
 
- static struct thermal_cooling_device_ops cpufreq_cooling_ops = {
--       .get_max_state = cpufreq_get_max_state,
--       .get_cur_state = cpufreq_get_cur_state,
--       .set_cur_state = cpufreq_set_cur_state,
--};
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ arch/powerpc/kernel/setup_64.c |   13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+--- a/arch/powerpc/kernel/setup_64.c
++++ b/arch/powerpc/kernel/setup_64.c
+@@ -873,9 +873,6 @@ static void do_nothing(void *unused)
+ 
+ void rfi_flush_enable(bool enable)
+ {
+-	if (rfi_flush == enable)
+-		return;
 -
--static struct thermal_cooling_device_ops cpufreq_power_cooling_ops = {
-        .get_max_state          = cpufreq_get_max_state,
-        .get_cur_state          = cpufreq_get_cur_state,
-        .set_cur_state          = cpufreq_set_cur_state,
--       .get_requested_power    = cpufreq_get_requested_power,
--       .state2power            = cpufreq_state2power,
--       .power2state            = cpufreq_power2state,
- };
+ 	if (enable) {
+ 		do_rfi_flush_fixups(enabled_flush_types);
+ 		on_each_cpu(do_nothing, NULL, 1);
+@@ -929,13 +926,19 @@ void __init setup_rfi_flush(enum l1d_flu
+ #ifdef CONFIG_DEBUG_FS
+ static int rfi_flush_set(void *data, u64 val)
+ {
++	bool enable;
++
+ 	if (val == 1)
+-		rfi_flush_enable(true);
++		enable = true;
+ 	else if (val == 0)
+-		rfi_flush_enable(false);
++		enable = false;
+ 	else
+ 		return -EINVAL;
+ 
++	/* Only do anything if we're changing state */
++	if (enable != rfi_flush)
++		rfi_flush_enable(enable);
++
+ 	return 0;
+ }
+ 
 
- /* Notifier for cpufreq policy change */
-@@ -674,18 +667,19 @@ __cpufreq_cooling_register(struct device_node *np,
-                        pr_debug("%s: freq:%u KHz\n", __func__, freq);
-        }
 
-+       cooling_ops = &cpufreq_cooling_ops;
-+#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
-        if (capacitance) {
-                ret = update_freq_table(cpufreq_cdev, capacitance);
-                if (ret) {
-                        cdev = ERR_PTR(ret);
-                        goto remove_ida;
-                }
--
--               cooling_ops = &cpufreq_power_cooling_ops;
--       } else {
--               cooling_ops = &cpufreq_cooling_ops;
-+               cooling_ops->get_requested_power = cpufreq_get_requested_power;
-+               cooling_ops->state2power = cpufreq_state2power;
-+               cooling_ops->power2state = cpufreq_power2state;
-        }
--
-+#endif
-        cdev = thermal_of_cooling_device_register(np, dev_name, cpufreq_cdev,
-                                                  cooling_ops);
-        if (IS_ERR(cdev))
