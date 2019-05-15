@@ -2,54 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_SBL,URIBL_SBL_A,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E566AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BC8C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4B6F20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B443C20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919138;
-	bh=1daR3BF2dO/1u7K6IxBHv9ObefRc1KdNfMU6URtTw6o=;
+	s=default; t=1557919143;
+	bh=ah6AMl77D0EdyOvo7M9en5lXQ8/Gv5ZKaJWTJ8pWRlE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pNvMC0vgsTZufrkb+yNCR7KdG5FZFHi/38f4XXp+6M+WlKuCXW1CeFDEhap9eSdHy
-	 9Uy1JmGhu4E7wiW3ZeXXLQoCJSGPOqLQSQCOc+5wCIOtuk4PJLAvK9OZIZAojpJWCu
-	 vxsJGSbtqa550RQqWbUAzKO1KPL1PIesTGZgx+9c=
+	b=t26WeU43MTaZo778261b2bq64IkPcFmyA3C/IQ0Y81m6ijhgL3c+e7RWdaosrZkFb
+	 2jU5s2XkjV+PYxkk/hrTmamsC1ahrVfGDO2GQFuuXiEJ9rWiXTGWDCT+vFLE8rUWsA
+	 z/k9tYeLF4ajzCnZNOsw832mPmVKxQz7rB+hjM9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730863AbfEOLS5 (ORCPT
+        id S1730501AbfEOLTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:18:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56370 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:19:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730400AbfEOLSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:18:51 -0400
+        id S1730866AbfEOLS6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:18:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 846CE206BF;
-        Wed, 15 May 2019 11:18:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7327E20818;
+        Wed, 15 May 2019 11:18:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919130;
-        bh=1daR3BF2dO/1u7K6IxBHv9ObefRc1KdNfMU6URtTw6o=;
+        s=default; t=1557919137;
+        bh=ah6AMl77D0EdyOvo7M9en5lXQ8/Gv5ZKaJWTJ8pWRlE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fz1RoWPZDIOreZjpe/yhy22jjacdq7ptP+9tDl6rbwNdJpuAKnNbgejBAdN0DbZFM
-         9bP3d0Ud3LEpnBclyBgEwAIvxbMituPgnv9dLgyEe21Cnb3kY6KWCYaB/nSEl+UZfE
-         /jCl3ycGh+TRYO/oFfaYQPDKa9FjbwovJnV3uQJY=
+        b=QZjn/Wu1c+XBXEwVQWppE4V64Y1EaW3JzVybCvrHve4unR+9BFiVWFKXxOA5F7G7/
+         FHFq52J2LRqm3E5UuXCNcw+EMl7uRl0nSvzpTzrC5lL/h6NRcqn6lYjqMKreS5l/gY
+         hyKnvaWpvsvReqzmYaxyJ+I90Up429GUTptk35ds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael J Gruber <mjg@fedoraproject.org>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Bob Moore <robert.moore@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org, Damian Kos <dkos@cadence.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 078/115] ACPICA: Namespace: remove address node from global list after method termination
-Date:   Wed, 15 May 2019 12:55:58 +0200
-Message-Id: <20190515090705.057141163@linuxfoundation.org>
+Subject: [PATCH 4.14 081/115] drm/rockchip: fix for mailbox read validation.
+Date:   Wed, 15 May 2019 12:56:01 +0200
+Message-Id: <20190515090705.242537348@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -62,62 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c5781ffbbd4f742a58263458145fe7f0ac01d9e0 ]
+[ Upstream commit e4056bbb6719fe713bfc4030ac78e8e97ddf7574 ]
 
-ACPICA commit b233720031a480abd438f2e9c643080929d144c3
+This is basically the same fix as in
+commit fa68d4f8476b ("drm/rockchip: fix for mailbox read size")
+but for cdn_dp_mailbox_validate_receive function.
 
-ASL operation_regions declare a range of addresses that it uses. In a
-perfect world, the range of addresses should be used exclusively by
-the AML interpreter. The OS can use this information to decide which
-drivers to load so that the AML interpreter and device drivers use
-different regions of memory.
+See patchwork.kernel.org/patch/10671981/ for details.
 
-During table load, the address information is added to a global
-address range list. Each node in this list contains an address range
-as well as a namespace node of the operation_region. This list is
-deleted at ACPI shutdown.
-
-Unfortunately, ASL operation_regions can be declared inside of control
-methods. Although this is not recommended, modern firmware contains
-such code. New module level code changes unintentionally removed the
-functionality of adding and removing nodes to the global address
-range list.
-
-A few months ago, support for adding addresses has been re-
-implemented. However, the removal of the address range list was
-missed and resulted in some systems to crash due to the address list
-containing bogus namespace nodes from operation_regions declared in
-control methods. In order to fix the crash, this change removes
-dynamic operation_regions after control method termination.
-
-Link: https://github.com/acpica/acpica/commit/b2337200
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=202475
-Fixes: 4abb951b73ff ("ACPICA: AML interpreter: add region addresses in global list during initialization")
-Reported-by: Michael J Gruber <mjg@fedoraproject.org>
-Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
-Signed-off-by: Bob Moore <robert.moore@intel.com>
-Cc: 4.20+ <stable@vger.kernel.org> # 4.20+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Damian Kos <dkos@cadence.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://patchwork.freedesktop.org/patch/msgid/1542640463-18332-1-git-send-email-dkos@cadence.com
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/acpi/acpica/nsobject.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/rockchip/cdn-dp-reg.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/acpica/nsobject.c b/drivers/acpi/acpica/nsobject.c
-index 707b2aa501e1b..099be64242556 100644
---- a/drivers/acpi/acpica/nsobject.c
-+++ b/drivers/acpi/acpica/nsobject.c
-@@ -222,6 +222,10 @@ void acpi_ns_detach_object(struct acpi_namespace_node *node)
- 		}
- 	}
+diff --git a/drivers/gpu/drm/rockchip/cdn-dp-reg.c b/drivers/gpu/drm/rockchip/cdn-dp-reg.c
+index 0ed7e91471f6e..4df201d21f271 100644
+--- a/drivers/gpu/drm/rockchip/cdn-dp-reg.c
++++ b/drivers/gpu/drm/rockchip/cdn-dp-reg.c
+@@ -113,7 +113,7 @@ static int cdp_dp_mailbox_write(struct cdn_dp_device *dp, u8 val)
  
-+	if (obj_desc->common.type == ACPI_TYPE_REGION) {
-+		acpi_ut_remove_address_range(obj_desc->region.space_id, node);
-+	}
-+
- 	/* Clear the Node entry in all cases */
- 
- 	node->object = NULL;
+ static int cdn_dp_mailbox_validate_receive(struct cdn_dp_device *dp,
+ 					   u8 module_id, u8 opcode,
+-					   u8 req_size)
++					   u16 req_size)
+ {
+ 	u32 mbox_size, i;
+ 	u8 header[4];
 -- 
 2.20.1
 
