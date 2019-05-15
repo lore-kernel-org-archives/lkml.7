@@ -2,99 +2,128 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9930C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B56F9C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD562089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:37:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="U8qBrTd5"
+	by mail.kernel.org (Postfix) with ESMTP id 921A820881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:37:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfEOHhX (ORCPT
+        id S1726590AbfEOHh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 03:37:23 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:41424 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725902AbfEOHhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 03:37:23 -0400
-Received: from zn.tnic (p200300EC2F0A7C00C5AEE5FDCF635866.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:7c00:c5ae:e5fd:cf63:5866])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0FDCD1EC050B;
-        Wed, 15 May 2019 09:37:21 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1557905841;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Q+jQ7LRBrR4DiRw8jrw+SJJLRHdv1HmQmbSvhXSEgFw=;
-        b=U8qBrTd50D3YFy21SDLZfmsKPERosfB595SMymT6ph8MRstvguZBURaoNnlRYk4bOFWN2E
-        j4qWLFpP/vrUNb2toRQBXifQII5XsK+EZAPx57vY29tQbFGSvORHHr7jS7WXxen8lOsW+L
-        lrWsK0eaUpknXHTe3SPijzeOF7zncrU=
-Date:   Wed, 15 May 2019 09:37:15 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Zhao Yakui <yakui.zhao@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
-        Jason Chen CJ <jason.cj.chen@intel.com>
-Subject: Re: [PATCH v6 4/4] x86/acrn: Add hypercall for ACRN guest
-Message-ID: <20190515073715.GC24212@zn.tnic>
-References: <1556595926-17910-1-git-send-email-yakui.zhao@intel.com>
- <1556595926-17910-5-git-send-email-yakui.zhao@intel.com>
+        Wed, 15 May 2019 03:37:28 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39816 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725902AbfEOHh1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 03:37:27 -0400
+Received: by mail-wm1-f66.google.com with SMTP id n25so1377568wmk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 00:37:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Yj9XZyJEigbRqa/osUD7R/GjHPQqzoncrjwPfcCT3g0=;
+        b=UTwxU87aVxw+hx4LoaTGbzHSWQXcUtRxhsSQnoqkiqYjq5mrS37dQ7VRMtctHbXj5d
+         u1QcAZjFWJuNMFv91PCdF69OzSNq2cCXE4BpPCxRZ8JJy/U3+miLqM5DPQcokHCZNgM7
+         yN88rFqYXf4q6cTgz2VPZOrox2tCXlqWMvEKUlMnO7GUBocdbRuen70B/sdk90Zh7biH
+         MPqEieCp4Zf2XZSQpEqRcUUHa9owfkDF7FosX9lFBGdvdfG+NVpErDzLGhQ8aVGvBLRx
+         oCdZFYUKRRoudSMmadO9k8SmhEA9cWhpncSEUaCvNmAkyvNAKTj/u03gBNXdPFu34RsL
+         y1xg==
+X-Gm-Message-State: APjAAAUk77qxZko7R8idCw3V6uqQSXGgYT4Vj2/7SLzLJIjCpJsEdTss
+        77KMMoNi7562pBD2jtw8dPQhBw==
+X-Google-Smtp-Source: APXvYqy5zHWEswH5rTU3ScYtOdXyuOYlmXMo5vxxHaeTCW2lRo0/VMy/6pvvXOi9nmKf0bD4sOWD2A==
+X-Received: by 2002:a05:600c:21d7:: with SMTP id x23mr10334074wmj.87.1557905845417;
+        Wed, 15 May 2019 00:37:25 -0700 (PDT)
+Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id n15sm1056219wmi.42.2019.05.15.00.37.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 May 2019 00:37:24 -0700 (PDT)
+Date:   Wed, 15 May 2019 09:37:23 +0200
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Timofey Titovets <nefelim4ag@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Grzegorz Halat <ghalat@redhat.com>, linux-mm@kvack.org,
+        linux-api@vger.kernel.org, Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH RFC v2 0/4] mm/ksm: add option to automerge VMAs
+Message-ID: <20190515073723.wbr522cpyjfelfav@butterfly.localdomain>
+References: <20190514131654.25463-1-oleksandr@redhat.com>
+ <20190514144105.GF4683@dhcp22.suse.cz>
+ <20190514145122.GG4683@dhcp22.suse.cz>
+ <20190515062523.5ndf7obzfgugilfs@butterfly.localdomain>
+ <20190515065311.GB16651@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1556595926-17910-5-git-send-email-yakui.zhao@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190515065311.GB16651@dhcp22.suse.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 11:45:26AM +0800, Zhao Yakui wrote:
-> When the ACRN hypervisor is detected, the hypercall is needed so that the
-> ACRN guest can query/config some settings. For example: it can be used
-> to query the resources in hypervisor and manage the CPU/memory/device/
-> interrupt for guest operating system.
-> 
-> Add the hypercall so that the ACRN guest can communicate with the
-> low-level ACRN hypervisor. On x86 it is implemented with the VMCALL
-> instruction.
-> 
-> Co-developed-by: Jason Chen CJ <jason.cj.chen@intel.com>
-> Signed-off-by: Jason Chen CJ <jason.cj.chen@intel.com>
-> Signed-off-by: Zhao Yakui <yakui.zhao@intel.com>
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
-> V1->V2: Refine the comments for the function of acrn_hypercall0/1/2
-> v2->v3: Use the "vmcall" mnemonic to replace hard-code byte definition
-> v4->v5: Use _ASM_X86_ACRN_HYPERCALL_H instead of _ASM_X86_ACRNHYPERCALL_H.
->         Use the "VMCALL" mnemonic in comment/commit log.
->         Uppercase r8/rdi/rsi/rax for hypercall parameter register in comment.
-> v5->v6: Remove explicit local register variable for inline assembly
-> ---
->  arch/x86/include/asm/acrn_hypercall.h | 84 +++++++++++++++++++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100644 arch/x86/include/asm/acrn_hypercall.h
-> 
-> diff --git a/arch/x86/include/asm/acrn_hypercall.h b/arch/x86/include/asm/acrn_hypercall.h
-> new file mode 100644
-> index 0000000..5cb438e
-> --- /dev/null
-> +++ b/arch/x86/include/asm/acrn_hypercall.h
+Hi.
 
-Questions:
+On Wed, May 15, 2019 at 08:53:11AM +0200, Michal Hocko wrote:
+> On Wed 15-05-19 08:25:23, Oleksandr Natalenko wrote:
+> [...]
+> > > > Please make sure to describe a usecase that warrants adding a new
+> > > > interface we have to maintain for ever.
+> > 
+> > I think of two major consumers of this interface:
+> > 
+> > 1) hosts, that run containers, especially similar ones and especially in
+> > a trusted environment;
+> > 
+> > 2) heavy applications, that can be run in multiple instances, not
+> > limited to opensource ones like Firefox, but also those that cannot be
+> > modified.
+> 
+> This is way too generic. Please provide something more specific. Ideally
+> with numbers. Why those usecases cannot use an existing interfaces.
+> Remember you are trying to add a new user interface which we will have
+> to maintain for ever.
 
-* why isn't this in acrn.h and needs to be a separate header?
+For my current setup with 2 Firefox instances I get 100 to 200 MiB saved
+for the second instance depending on the amount of tabs.
 
-* why aren't those functions used anywhere?
+1 FF instance with 15 tabs:
+
+$ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
+410
+
+2 FF instances, second one has 12 tabs (all the tabs are different):
+
+$ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
+592
+
+At the very moment I do not have specific numbers for containerised
+workload, but those should be similar in case the containers share
+similar/same runtime (like multiple Node.js containers etc).
+
+Answering your question regarding using existing interfaces, since
+there's only one, madvise(2), this requires modifying all the
+applications one wants to de-duplicate. In case of containers with
+arbitrary content or in case of binary-only apps this is pretty hard if
+not impossible to do properly.
+
+> I will try to comment on the interface itself later. But I have to say
+> that I am not impressed. Abusing sysfs for per process features is quite
+> gross to be honest.
+
+Sure, please do.
+
+Thanks for your time and inputs.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+  Best regards,
+    Oleksandr Natalenko (post-factum)
+    Senior Software Maintenance Engineer
