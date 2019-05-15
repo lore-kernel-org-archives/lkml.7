@@ -2,52 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2F9C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB46DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 420B221473
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF1C20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557917928;
-	bh=30/E6hDFTaHgLerSE2VfNkj3U2FU1ZaUdigz3ni8JBs=;
+	s=default; t=1557917931;
+	bh=Ih05TbITOBRLzrs6ddr9NMm5nj9No0Ggxr+8IMzbrhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ojzNpGZCotoPjOtlcJ3cQG+gZ2Srd2PgDZkMJy8H+RnNMryPX8QEWW1EV7ziB+M2k
-	 fNKuMkyYKc2ZjkDGpajZNfFT1Js21gVkCssI70ATUEmxoD7qwV3S/TvD2oAq71OcmF
-	 g8oWTs/tcGl9r1vh8lVlj1XYUkBXMGw/V41Iu6ds=
+	b=scAa0G1+SAQ2/gjSJty5NnjNUGbWerxjlzWGLSxMTjjeTa5MKE7ZX3x5Xgs9PoZaP
+	 nTvHnpL4IeBgBXljYpCP30QtE5YdG/9bCPmWv+oJwOStdjmOxUH7/5UXhkXjmdQO8v
+	 UFSw8GwgxKCDMyySJJd1oAsG32onJ5ZGxWPhtp+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726964AbfEOK6r (ORCPT
+        id S1726980AbfEOK6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:58:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55068 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 06:58:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726942AbfEOK6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:58:44 -0400
+        id S1726961AbfEOK6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:58:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 506A620843;
-        Wed, 15 May 2019 10:58:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 136A620843;
+        Wed, 15 May 2019 10:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557917923;
-        bh=30/E6hDFTaHgLerSE2VfNkj3U2FU1ZaUdigz3ni8JBs=;
+        s=default; t=1557917926;
+        bh=Ih05TbITOBRLzrs6ddr9NMm5nj9No0Ggxr+8IMzbrhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ATofsv6HZNsQ3o2XFhELfy0fYzf59kVFlfCufVNlTSocL0pgcLyZ5Q6nAuS/b0rNG
-         VpOj3PQS/EBYM59XqIqoFlKEnTNWbscjMSBKWMCojnxXxR7fwf55zWEvkTZGhWW9fZ
-         f8S3kr71ZPFESoCt/XV5mQyDb1sHy91k+gVXDPdc=
+        b=UYN+Yx+ODoxucpEMjKVNa/KRz2l0CxwEgdB9C3syWegjRbpLMsfXE/eRF7wzgknkF
+         3AeRNRWhP1ZxJV6M08SkpmsnwYQCKY1o/Ox1YCJSRllDFmgeQwWcopSaT67lUhnUqA
+         4hmp3WNNZA0ExFCH0Z0Jlv2nh70PZ+0B+hIAHG/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Changbin Du <changbin.du@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 3.18 27/86] kconfig/[mn]conf: handle backspace (^H) key
-Date:   Wed, 15 May 2019 12:55:04 +0200
-Message-Id: <20190515090648.365025026@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Shmulik Ladkani <shmulik.ladkani@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 3.18 28/86] ipv4: ip_do_fragment: Preserve skb_iif during fragmentation
+Date:   Wed, 15 May 2019 12:55:05 +0200
+Message-Id: <20190515090648.418986290@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -60,65 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9c38f1f044080392603c497ecca4d7d09876ff99 ]
+From: Shmulik Ladkani <shmulik@metanetworks.com>
 
-Backspace is not working on some terminal emulators which do not send the
-key code defined by terminfo. Terminals either send '^H' (8) or '^?' (127).
-But currently only '^?' is handled. Let's also handle '^H' for those
-terminals.
+[ Upstream commit d2f0c961148f65bc73eda72b9fa3a4e80973cb49 ]
 
-Signed-off-by: Changbin Du <changbin.du@gmail.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+Previously, during fragmentation after forwarding, skb->skb_iif isn't
+preserved, i.e. 'ip_copy_metadata' does not copy skb_iif from given
+'from' skb.
+
+As a result, ip_do_fragment's creates fragments with zero skb_iif,
+leading to inconsistent behavior.
+
+Assume for example an eBPF program attached at tc egress (post
+forwarding) that examines __sk_buff->ingress_ifindex:
+ - the correct iif is observed if forwarding path does not involve
+   fragmentation/refragmentation
+ - a bogus iif is observed if forwarding path involves
+   fragmentation/refragmentatiom
+
+Fix, by preserving skb_iif during 'ip_copy_metadata'.
+
+Signed-off-by: Shmulik Ladkani <shmulik.ladkani@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- scripts/kconfig/lxdialog/inputbox.c | 3 ++-
- scripts/kconfig/nconf.c             | 2 +-
- scripts/kconfig/nconf.gui.c         | 3 ++-
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ net/ipv4/ip_output.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/scripts/kconfig/lxdialog/inputbox.c b/scripts/kconfig/lxdialog/inputbox.c
-index d58de1dc5360..510049a7bd1d 100644
---- a/scripts/kconfig/lxdialog/inputbox.c
-+++ b/scripts/kconfig/lxdialog/inputbox.c
-@@ -126,7 +126,8 @@ int dialog_inputbox(const char *title, const char *prompt, int height, int width
- 			case KEY_DOWN:
- 				break;
- 			case KEY_BACKSPACE:
--			case 127:
-+			case 8:   /* ^H */
-+			case 127: /* ^? */
- 				if (pos) {
- 					wattrset(dialog, dlg.inputbox.atr);
- 					if (input_x == 0) {
-diff --git a/scripts/kconfig/nconf.c b/scripts/kconfig/nconf.c
-index 984489ef2b46..e570f6c9b3ad 100644
---- a/scripts/kconfig/nconf.c
-+++ b/scripts/kconfig/nconf.c
-@@ -1046,7 +1046,7 @@ static int do_match(int key, struct match_state *state, int *ans)
- 		state->match_direction = FIND_NEXT_MATCH_UP;
- 		*ans = get_mext_match(state->pattern,
- 				state->match_direction);
--	} else if (key == KEY_BACKSPACE || key == 127) {
-+	} else if (key == KEY_BACKSPACE || key == 8 || key == 127) {
- 		state->pattern[strlen(state->pattern)-1] = '\0';
- 		adj_match_dir(&state->match_direction);
- 	} else
-diff --git a/scripts/kconfig/nconf.gui.c b/scripts/kconfig/nconf.gui.c
-index 4b2f44c20caf..9a65035cf787 100644
---- a/scripts/kconfig/nconf.gui.c
-+++ b/scripts/kconfig/nconf.gui.c
-@@ -439,7 +439,8 @@ int dialog_inputbox(WINDOW *main_window,
- 		case KEY_F(F_EXIT):
- 		case KEY_F(F_BACK):
- 			break;
--		case 127:
-+		case 8:   /* ^H */
-+		case 127: /* ^? */
- 		case KEY_BACKSPACE:
- 			if (cursor_position > 0) {
- 				memmove(&result[cursor_position-1],
--- 
-2.19.1
-
+--- a/net/ipv4/ip_output.c
++++ b/net/ipv4/ip_output.c
+@@ -454,6 +454,7 @@ static void ip_copy_metadata(struct sk_b
+ 	to->pkt_type = from->pkt_type;
+ 	to->priority = from->priority;
+ 	to->protocol = from->protocol;
++	to->skb_iif = from->skb_iif;
+ 	skb_dst_drop(to);
+ 	skb_dst_copy(to, from);
+ 	to->dev = from->dev;
 
 
