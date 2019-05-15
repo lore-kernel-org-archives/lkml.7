@@ -2,118 +2,165 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06281C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554E5C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C745220862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Mvv9nKYr";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GEYhs9TR"
+	by mail.kernel.org (Postfix) with ESMTP id 25EE1206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557919233;
+	bh=okYy+GU6/N0t4Tvh74P9xri3NwBQ8lf9DQZpI4Zyqi4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=j6/BxsYxMsh8XUqxky+9UrF8qWvvGbOug2C5ghyB1rcVTNY4CWW5ovQcx7f3l/6Dw
+	 qQfLBALvwRI5HqB/UVKbgHjyIF5MYW5UMjTQ9cQ0qB8cZlm3gMYhgAvo+3Z7kH5HXb
+	 Kmi3ugI4qcC/KOOVXf9zfX+ryMlUNylin9mla9Ks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731106AbfEOLU2 (ORCPT
+        id S1731117AbfEOLUc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 May 2019 07:20:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731105AbfEOLU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 May 2019 07:20:28 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:36882 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730723AbfEOLUY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:20:24 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 92DA761215; Wed, 15 May 2019 11:20:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557919223;
-        bh=gT9Zsd4mm/mksa2ZcTTNqgNLgRWHQcjN3/GXq1JPhV4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mvv9nKYr8MjayA4vtg5xhNrl25S81Y5LaNNmr9f/7DcDQCYR+1cJxufh9spenDnxa
-         OnmG17wjkhtOszue3T3ccBy93/jUrs7eJrog63VxAUh5nalbJNLUP+Js8xFZTiUHWy
-         CXpSGA1gFpCF4xP+R1ppD+cagq+72SFQs4yH1DAU=
-Received: from rocky-HP-EliteBook-8460p.wlan.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: rjliao@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7E9CD60A24;
-        Wed, 15 May 2019 11:20:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557919220;
-        bh=gT9Zsd4mm/mksa2ZcTTNqgNLgRWHQcjN3/GXq1JPhV4=;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DD5120843;
+        Wed, 15 May 2019 11:20:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557919227;
+        bh=okYy+GU6/N0t4Tvh74P9xri3NwBQ8lf9DQZpI4Zyqi4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GEYhs9TRg3yB8UwwjmZdn7YqF7dQRRj48V0Ji1aNTIRSbVkkYWV1/QEfjc/XZwMnG
-         La4vtAoQOK5F863CrLBKdi3D+18PcEILyx5MLlM3OMdftWW21MVVva8CaibF1Msvmf
-         QT6taReYVpmTRGmZQEtYJRKysUtjm3+1MGaqBDK4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7E9CD60A24
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rjliao@codeaurora.org
-From:   Rocky Liao <rjliao@codeaurora.org>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org,
-        johan.hedberg@gmail.com, thierry.escande@linaro.org
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, Rocky Liao <rjliao@codeaurora.org>
-Subject: [PATCH v5 2/2] dt-bindings: net: bluetooth: Add device property firmware-name for QCA6174
-Date:   Wed, 15 May 2019 19:20:03 +0800
-Message-Id: <1557919203-11055-1-git-send-email-rjliao@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1557631185-5167-1-git-send-email-rjliao@codeaurora.org>
-References: <1557631185-5167-1-git-send-email-rjliao@codeaurora.org>
+        b=L3WrBawMsSjbskiuii0HKkJABjaC1kvgBCnDteMoKpIAisMxvFc2XepQQAm0zR9Oi
+         cOtxy/OrmTIbVm2ZmO0kQyCEYpa/H/zhfo0hzdbojuZMLc2qPZUo137rsUMLkDH6mA
+         5sIq1RnMyCfv9KWAARaLaXb0B0Nci+s+GbiISlMA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Timur Tabi <timur@freescale.com>,
+        Mihai Caraman <mihai.caraman@freescale.com>,
+        Kumar Gala <galak@kernel.crashing.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 112/115] drivers/virt/fsl_hypervisor.c: dereferencing error pointers in ioctl
+Date:   Wed, 15 May 2019 12:56:32 +0200
+Message-Id: <20190515090707.177030343@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
+References: <20190515090659.123121100@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds an optional device property "firmware-name" to allow the
-driver to load customized nvm firmware file based on this property.
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes in v5:
-  * Made the change applicable to the wcn399x series chip sets
----
- Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+commit c8ea3663f7a8e6996d44500ee818c9330ac4fd88 upstream.
 
-diff --git a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-index 7ef6118..68b67d9 100644
---- a/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/qualcomm-bluetooth.txt
-@@ -17,6 +17,7 @@ Optional properties for compatible string qcom,qca6174-bt:
+strndup_user() returns error pointers on error, and then in the error
+handling we pass the error pointers to kfree().  It will cause an Oops.
+
+Link: http://lkml.kernel.org/r/20181218082003.GD32567@kadam
+Fixes: 6db7199407ca ("drivers/virt: introduce Freescale hypervisor management driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Timur Tabi <timur@freescale.com>
+Cc: Mihai Caraman <mihai.caraman@freescale.com>
+Cc: Kumar Gala <galak@kernel.crashing.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/virt/fsl_hypervisor.c |   26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
+
+--- a/drivers/virt/fsl_hypervisor.c
++++ b/drivers/virt/fsl_hypervisor.c
+@@ -331,8 +331,8 @@ static long ioctl_dtprop(struct fsl_hv_i
+ 	struct fsl_hv_ioctl_prop param;
+ 	char __user *upath, *upropname;
+ 	void __user *upropval;
+-	char *path = NULL, *propname = NULL;
+-	void *propval = NULL;
++	char *path, *propname;
++	void *propval;
+ 	int ret = 0;
  
-  - enable-gpios: gpio specifier used to enable chip
-  - clocks: clock provided to the controller (SUSCLK_32KHZ)
-+ - firmware-name: specify the name of nvm firmware to load
+ 	/* Get the parameters from the user. */
+@@ -344,32 +344,30 @@ static long ioctl_dtprop(struct fsl_hv_i
+ 	upropval = (void __user *)(uintptr_t)param.propval;
  
- Required properties for compatible string qcom,wcn399x-bt:
+ 	path = strndup_user(upath, FH_DTPROP_MAX_PATHLEN);
+-	if (IS_ERR(path)) {
+-		ret = PTR_ERR(path);
+-		goto out;
+-	}
++	if (IS_ERR(path))
++		return PTR_ERR(path);
  
-@@ -28,6 +29,7 @@ Required properties for compatible string qcom,wcn399x-bt:
- Optional properties for compatible string qcom,wcn399x-bt:
+ 	propname = strndup_user(upropname, FH_DTPROP_MAX_PATHLEN);
+ 	if (IS_ERR(propname)) {
+ 		ret = PTR_ERR(propname);
+-		goto out;
++		goto err_free_path;
+ 	}
  
-  - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
-+ - firmware-name: specify the name of nvm firmware to load
+ 	if (param.proplen > FH_DTPROP_MAX_PROPLEN) {
+ 		ret = -EINVAL;
+-		goto out;
++		goto err_free_propname;
+ 	}
  
- Examples:
+ 	propval = kmalloc(param.proplen, GFP_KERNEL);
+ 	if (!propval) {
+ 		ret = -ENOMEM;
+-		goto out;
++		goto err_free_propname;
+ 	}
  
-@@ -40,6 +42,7 @@ serial@7570000 {
+ 	if (set) {
+ 		if (copy_from_user(propval, upropval, param.proplen)) {
+ 			ret = -EFAULT;
+-			goto out;
++			goto err_free_propval;
+ 		}
  
- 		enable-gpios = <&pm8994_gpios 19 GPIO_ACTIVE_HIGH>;
- 		clocks = <&divclk4>;
-+		firmware-name = "nvm_00440302.bin";
- 	};
- };
+ 		param.ret = fh_partition_set_dtprop(param.handle,
+@@ -388,7 +386,7 @@ static long ioctl_dtprop(struct fsl_hv_i
+ 			if (copy_to_user(upropval, propval, param.proplen) ||
+ 			    put_user(param.proplen, &p->proplen)) {
+ 				ret = -EFAULT;
+-				goto out;
++				goto err_free_propval;
+ 			}
+ 		}
+ 	}
+@@ -396,10 +394,12 @@ static long ioctl_dtprop(struct fsl_hv_i
+ 	if (put_user(param.ret, &p->ret))
+ 		ret = -EFAULT;
  
-@@ -52,5 +55,6 @@ serial@898000 {
- 		vddrf-supply = <&vreg_l17a_1p3>;
- 		vddch0-supply = <&vreg_l25a_3p3>;
- 		max-speed = <3200000>;
-+		firmware-name = "crnv21.bin";
- 	};
- };
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+-out:
+-	kfree(path);
++err_free_propval:
+ 	kfree(propval);
++err_free_propname:
+ 	kfree(propname);
++err_free_path:
++	kfree(path);
+ 
+ 	return ret;
+ }
+
 
