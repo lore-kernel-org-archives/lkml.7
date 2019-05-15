@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67C1C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAA38C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 793B021848
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:02:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE68421773
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:02:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918155;
-	bh=/GiRHCDd7UvnSNp2ErYbr0bu740Lmd9tFFpzKHOnqnQ=;
+	s=default; t=1557918159;
+	bh=6M2JRP+eHTPnmyJd1z9v3NsQTP+a4K2nljxjwdCzxXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y9sXtEztvOytP4Zy9pSROyUR6kOVGZQpBs1R5GK8PAuCarREwQlqMhaqdmV2oJFsc
-	 pvgo9/mRKNuMeZ1kMuBtjBFgMLwfNnmcVugArEHX1u6WKvYzYOm0vuUATzuZ2tjA6q
-	 80r+j45CJUl3AY7T8JaQXLZVHxcjwY1xYEg5sybA=
+	b=yfpArTVhw6HrxoHhTFWMOE5mhlVKnNn7KeZDmgN0AQfVC2+TA6n92JPPqzImgGqRE
+	 2sEPN76YG4RO4IDXjo3HJxo3R3AC+KVx0ar+kpCfVPOiyjKuyARFrBMooy43K/dMgL
+	 dC+4MyEV0k85vlQgJQFwLc8yTks0kMFWpz9965dE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbfEOLCe (ORCPT
+        id S1727974AbfEOLCi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:02:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59786 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:02:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727945AbfEOLCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:02:31 -0400
+        id S1727945AbfEOLCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:02:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEEFB2173C;
-        Wed, 15 May 2019 11:02:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1B9621743;
+        Wed, 15 May 2019 11:02:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918150;
-        bh=/GiRHCDd7UvnSNp2ErYbr0bu740Lmd9tFFpzKHOnqnQ=;
+        s=default; t=1557918155;
+        bh=6M2JRP+eHTPnmyJd1z9v3NsQTP+a4K2nljxjwdCzxXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aK/IRKLO8bGaZC0Onju0ZjluUTn0O13fYBIHuZ8hahNK4nPL7HXo3tLT9bX8sKt2d
-         GN4vtb66LZ8v3odnCWZtHkwCbp9QEI62GFBRyHdia2Sa0w1MYQfKBcxsBMHZLPZRjJ
-         blCnEcj/oXsO2s4z2ElJo1xaV8zgMM2X41euNUas=
+        b=g1T0jXN4ldkrOmU++Yk2v4Ew+03rGa2zglnzYjuVcGyDlN2cSANZY+RNzUAcBmSv0
+         lezgGsP3RKF1+YGfaP5qHKXcjZgUFarx+Qb8HSaNsMetchFQfLPkyyFmZCy66L4YgY
+         ExgHoHzz3H5pAP+fjrCcIPU/CljZFqUf6ihDYEIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aurelien Jarno <aurelien@aurel32.net>,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH 4.4 004/266] MIPS: scall64-o32: Fix indirect syscall number load
-Date:   Wed, 15 May 2019 12:51:51 +0200
-Message-Id: <20190515090722.830915313@linuxfoundation.org>
+        stable@vger.kernel.org, Xie XiuQi <xiexiuqi@huawei.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, cj.chengjian@huawei.com,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.4 006/266] sched/numa: Fix a possible divide-by-zero
+Date:   Wed, 15 May 2019 12:51:53 +0200
+Message-Id: <20190515090722.891132643@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -62,50 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aurelien Jarno <aurelien@aurel32.net>
+From: Xie XiuQi <xiexiuqi@huawei.com>
 
-commit 79b4a9cf0e2ea8203ce777c8d5cfa86c71eae86e upstream.
+commit a860fa7b96e1a1c974556327aa1aee852d434c21 upstream.
 
-Commit 4c21b8fd8f14 (MIPS: seccomp: Handle indirect system calls (o32))
-added indirect syscall detection for O32 processes running on MIPS64,
-but it did not work correctly for big endian kernel/processes. The
-reason is that the syscall number is loaded from ARG1 using the lw
-instruction while this is a 64-bit value, so zero is loaded instead of
-the syscall number.
+sched_clock_cpu() may not be consistent between CPUs. If a task
+migrates to another CPU, then se.exec_start is set to that CPU's
+rq_clock_task() by update_stats_curr_start(). Specifically, the new
+value might be before the old value due to clock skew.
 
-Fix the code by using the ld instruction instead. When running a 32-bit
-processes on a 64 bit CPU, the values are properly sign-extended, so it
-ensures the value passed to syscall_trace_enter is correct.
+So then if in numa_get_avg_runtime() the expression:
 
-Recent systemd versions with seccomp enabled whitelist the getpid
-syscall for their internal  processes (e.g. systemd-journald), but call
-it through syscall(SYS_getpid). This fix therefore allows O32 big endian
-systems with a 64-bit kernel to run recent systemd versions.
+  'now - p->last_task_numa_placement'
 
-Signed-off-by: Aurelien Jarno <aurelien@aurel32.net>
-Cc: <stable@vger.kernel.org> # v3.15+
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+ends up as -1, then the divider '*period + 1' in task_numa_placement()
+is 0 and things go bang. Similar to update_curr(), check if time goes
+backwards to avoid this.
+
+[ peterz: Wrote new changelog. ]
+[ mingo: Tweaked the code comment. ]
+
+Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: cj.chengjian@huawei.com
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20190425080016.GX11158@hirez.programming.kicks-ass.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/kernel/scall64-o32.S |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sched/fair.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/mips/kernel/scall64-o32.S
-+++ b/arch/mips/kernel/scall64-o32.S
-@@ -126,7 +126,7 @@ trace_a_syscall:
- 	subu	t1, v0,  __NR_O32_Linux
- 	move	a1, v0
- 	bnez	t1, 1f /* __NR_syscall at offset 0 */
--	lw	a1, PT_R4(sp) /* Arg1 for __NR_syscall case */
-+	ld	a1, PT_R4(sp) /* Arg1 for __NR_syscall case */
- 	.set	pop
- 
- 1:	jal	syscall_trace_enter
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1722,6 +1722,10 @@ static u64 numa_get_avg_runtime(struct t
+ 	if (p->last_task_numa_placement) {
+ 		delta = runtime - p->last_sum_exec_runtime;
+ 		*period = now - p->last_task_numa_placement;
++
++		/* Avoid time going backwards, prevent potential divide error: */
++		if (unlikely((s64)*period < 0))
++			*period = 0;
+ 	} else {
+ 		delta = p->se.avg.load_sum / p->se.load.weight;
+ 		*period = LOAD_AVG_MAX;
 
 
