@@ -4,55 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADCAC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B466C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3DF20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EF4320818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919125;
-	bh=p3ZG5RJaKfArlN53APF3EKv1lFnczoNnYj2IOkU0MpU=;
+	s=default; t=1557919130;
+	bh=9is9nqZeD4WUizEnt4ssE7XJ5OiO1YvZpHT12Dv/2nw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BdA6qYehM0p5sMssIaeSavQokWueRrT/CWxWNPfNEGKun1nzM1nsIygSbayvXLM72
-	 LodcNeMv0EGlw1Qct53RTrzL5XD08Nytv+T4iiwjFwdUXPwvRsxzdCZeyQkNDiN5Pr
-	 hcwpQzDGe/s2UqOEq7PVbpBkOjRaZ4qy0WnGIVzg=
+	b=OoqQtekY8wb60MfVAZwZXEFIYQxw4wSII5ipDRwA92oyFS9rYZEsAId0c2PHLwnnX
+	 IT+yzNGyDfTySGYZyFuPJoPgNRHP+KqHYb2eRg+Y/gmC7vU/l/r+13fZSPyKeHQkGp
+	 ASycO5qI/VKz5/gYp4IOxMmemf2Nd7a/AYQyNrR8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfEOLSn (ORCPT
+        id S1730833AbfEOLSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:18:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56142 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:18:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730833AbfEOLSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:18:39 -0400
+        id S1730194AbfEOLSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:18:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B76E4206BF;
-        Wed, 15 May 2019 11:18:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A45620818;
+        Wed, 15 May 2019 11:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919119;
-        bh=p3ZG5RJaKfArlN53APF3EKv1lFnczoNnYj2IOkU0MpU=;
+        s=default; t=1557919121;
+        bh=9is9nqZeD4WUizEnt4ssE7XJ5OiO1YvZpHT12Dv/2nw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tmDTfT1YNkGp72xaeKC+0iFI4cyu4ka7uquwGwhRlt3GN4TgzlAMxxfqYFI0QIJei
-         b0CMcbxVE9wlSdzMsqq5YOlKO+n3bYQJnuFKdr5pJ2gnWQtRjou2iC4NrYvzzc83F7
-         8XEQIp1xslHbXfICFXIJh/EvIFEzTD62Q8dT1hlE=
+        b=bFu79zzM8O0YiY865RawDF7XQyWnagdvfsa5ETvThP0najnuoxeKDyzgtv/Mt2/wq
+         R3iWDu8azPmLN+yFZB1Ndq3sGDPWa7H2xMXjO5t7RktICGJTzLDOmzREPevOwizae2
+         Wo2t6SL4wOntb8pNhEN0Hf63k85OW5iNnHOyVASo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Brodkin <abrodkin@synopsys.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Will Deacon <will.deacon@arm.com>, Greg KH <greg@kroah.com>,
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 074/115] devres: Align data[] to ARCH_KMALLOC_MINALIGN
-Date:   Wed, 15 May 2019 12:55:54 +0200
-Message-Id: <20190515090704.786241438@linuxfoundation.org>
+Subject: [PATCH 4.14 075/115] xtensa: xtfpga.dtsi: fix dtc warnings about SPI
+Date:   Wed, 15 May 2019 12:55:55 +0200
+Message-Id: <20190515090704.861398517@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -65,58 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a66d972465d15b1d89281258805eb8b47d66bd36 ]
+[ Upstream commit f37598be4e3896359e87c824be57ddddc280cc3f ]
 
-Initially we bumped into problem with 32-bit aligned atomic64_t
-on ARC, see [1]. And then during quite lengthly discussion Peter Z.
-mentioned ARCH_KMALLOC_MINALIGN which IMHO makes perfect sense.
-If allocation is done by plain kmalloc() obtained buffer will be
-ARCH_KMALLOC_MINALIGN aligned and then why buffer obtained via
-devm_kmalloc() should have any other alignment?
+Rename SPI controller node in the XTFPGA DTS to spi@...
+This fixes the following build warnings:
 
-This way we at least get the same behavior for both types of
-allocation.
+arch/xtensa/boot/dts/kc705_nommu.dtb: Warning (spi_bus_bridge):
+ /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
+arch/xtensa/boot/dts/kc705_nommu.dtb: Warning (spi_bus_reg):
+ Failed prerequisite 'spi_bus_bridge'
+arch/xtensa/boot/dts/lx200mx.dtb: Warning (spi_bus_bridge):
+ /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
+arch/xtensa/boot/dts/lx200mx.dtb: Warning (spi_bus_reg):
+ Failed prerequisite 'spi_bus_bridge'
+arch/xtensa/boot/dts/kc705.dtb: Warning (spi_bus_bridge):
+ /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
+arch/xtensa/boot/dts/kc705.dtb: Warning (spi_bus_reg):
+ Failed prerequisite 'spi_bus_bridge'
+arch/xtensa/boot/dts/ml605.dtb: Warning (spi_bus_bridge):
+ /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
+arch/xtensa/boot/dts/ml605.dtb: Warning (spi_bus_reg):
+ Failed prerequisite 'spi_bus_bridge'
+arch/xtensa/boot/dts/lx60.dtb: Warning (spi_bus_bridge):
+ /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
+arch/xtensa/boot/dts/lx60.dtb: Warning (spi_bus_reg):
+ Failed prerequisite 'spi_bus_bridge'
 
-[1] http://lists.infradead.org/pipermail/linux-snps-arc/2018-July/004009.html
-[2] http://lists.infradead.org/pipermail/linux-snps-arc/2018-July/004036.html
-
-Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: David Laight <David.Laight@ACULAB.COM>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vineet Gupta <vgupta@synopsys.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Greg KH <greg@kroah.com>
-Cc: <stable@vger.kernel.org> # 4.8+
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/base/devres.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/xtensa/boot/dts/xtfpga.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/base/devres.c b/drivers/base/devres.c
-index 71d577025285b..e43a04a495a31 100644
---- a/drivers/base/devres.c
-+++ b/drivers/base/devres.c
-@@ -25,8 +25,14 @@ struct devres_node {
+diff --git a/arch/xtensa/boot/dts/xtfpga.dtsi b/arch/xtensa/boot/dts/xtfpga.dtsi
+index 1090528825ec6..e46ae07bab059 100644
+--- a/arch/xtensa/boot/dts/xtfpga.dtsi
++++ b/arch/xtensa/boot/dts/xtfpga.dtsi
+@@ -103,7 +103,7 @@
+ 			};
+ 		};
  
- struct devres {
- 	struct devres_node		node;
--	/* -- 3 pointers */
--	unsigned long long		data[];	/* guarantee ull alignment */
-+	/*
-+	 * Some archs want to perform DMA into kmalloc caches
-+	 * and need a guaranteed alignment larger than
-+	 * the alignment of a 64-bit integer.
-+	 * Thus we use ARCH_KMALLOC_MINALIGN here and get exactly the same
-+	 * buffer alignment as if it was allocated by plain kmalloc().
-+	 */
-+	u8 __aligned(ARCH_KMALLOC_MINALIGN) data[];
- };
- 
- struct devres_group {
+-		spi0: spi-master@0d0a0000 {
++		spi0: spi@0d0a0000 {
+ 			compatible = "cdns,xtfpga-spi";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 -- 
 2.20.1
 
