@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B466C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AA6C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF4320818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C338320843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919130;
-	bh=9is9nqZeD4WUizEnt4ssE7XJ5OiO1YvZpHT12Dv/2nw=;
+	s=default; t=1557919133;
+	bh=oe99d7vc85xmRQGK6bO7FO1KcDpjQDJBJgR0TSKQnkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OoqQtekY8wb60MfVAZwZXEFIYQxw4wSII5ipDRwA92oyFS9rYZEsAId0c2PHLwnnX
-	 IT+yzNGyDfTySGYZyFuPJoPgNRHP+KqHYb2eRg+Y/gmC7vU/l/r+13fZSPyKeHQkGp
-	 ASycO5qI/VKz5/gYp4IOxMmemf2Nd7a/AYQyNrR8=
+	b=Wf8e5/Q7lELQxXypbzlxPYKc7WvXJUoztu4/kWu0cp3NeVXoVOqFjXpc/C7AVzE4s
+	 jADuo5cOCD/yG2qZzdfat5zJ5G/gU/hZbkjjeDxKkoTa7gsqksRnDRTNrTmoQupwmg
+	 55+226aK9yglq1o+FcR0faPvySjGJArX8CK4c07E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730833AbfEOLSs (ORCPT
+        id S1730844AbfEOLSw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:18:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56226 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:18:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730194AbfEOLSm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:18:42 -0400
+        id S1729422AbfEOLSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:18:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A45620818;
-        Wed, 15 May 2019 11:18:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13EB020818;
+        Wed, 15 May 2019 11:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919121;
-        bh=9is9nqZeD4WUizEnt4ssE7XJ5OiO1YvZpHT12Dv/2nw=;
+        s=default; t=1557919124;
+        bh=oe99d7vc85xmRQGK6bO7FO1KcDpjQDJBJgR0TSKQnkg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bFu79zzM8O0YiY865RawDF7XQyWnagdvfsa5ETvThP0najnuoxeKDyzgtv/Mt2/wq
-         R3iWDu8azPmLN+yFZB1Ndq3sGDPWa7H2xMXjO5t7RktICGJTzLDOmzREPevOwizae2
-         Wo2t6SL4wOntb8pNhEN0Hf63k85OW5iNnHOyVASo=
+        b=NXBZaqfE296ii74nLUQHVRpF+Ijw7/FWaCpN4lB0s/OO2wJq9y5xA0BExDoKqrXLC
+         F8PcZU9zw2epRdHaecFEk4h70uGFhfXYDCslBXgUHMFFYI1Oayw/i6Ivlup+17cJ+S
+         hcJkNhVGUZpUKsi5+VrhSHQIa1QDyg11MxpqLEj0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+        stable@vger.kernel.org, Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 075/115] xtensa: xtfpga.dtsi: fix dtc warnings about SPI
-Date:   Wed, 15 May 2019 12:55:55 +0200
-Message-Id: <20190515090704.861398517@linuxfoundation.org>
+Subject: [PATCH 4.14 076/115] net_sched: fix two more memory leaks in cls_tcindex
+Date:   Wed, 15 May 2019 12:55:56 +0200
+Message-Id: <20190515090704.931641411@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -59,51 +62,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f37598be4e3896359e87c824be57ddddc280cc3f ]
+[ Upstream commit 1db817e75f5b9387b8db11e37d5f0624eb9223e0 ]
 
-Rename SPI controller node in the XTFPGA DTS to spi@...
-This fixes the following build warnings:
+struct tcindex_filter_result contains two parts:
+struct tcf_exts and struct tcf_result.
 
-arch/xtensa/boot/dts/kc705_nommu.dtb: Warning (spi_bus_bridge):
- /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
-arch/xtensa/boot/dts/kc705_nommu.dtb: Warning (spi_bus_reg):
- Failed prerequisite 'spi_bus_bridge'
-arch/xtensa/boot/dts/lx200mx.dtb: Warning (spi_bus_bridge):
- /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
-arch/xtensa/boot/dts/lx200mx.dtb: Warning (spi_bus_reg):
- Failed prerequisite 'spi_bus_bridge'
-arch/xtensa/boot/dts/kc705.dtb: Warning (spi_bus_bridge):
- /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
-arch/xtensa/boot/dts/kc705.dtb: Warning (spi_bus_reg):
- Failed prerequisite 'spi_bus_bridge'
-arch/xtensa/boot/dts/ml605.dtb: Warning (spi_bus_bridge):
- /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
-arch/xtensa/boot/dts/ml605.dtb: Warning (spi_bus_reg):
- Failed prerequisite 'spi_bus_bridge'
-arch/xtensa/boot/dts/lx60.dtb: Warning (spi_bus_bridge):
- /soc/spi-master@0d0a0000: node name for SPI buses should be 'spi'
-arch/xtensa/boot/dts/lx60.dtb: Warning (spi_bus_reg):
- Failed prerequisite 'spi_bus_bridge'
+For the local variable 'cr', its exts part is never used but
+initialized without being released properly on success path. So
+just completely remove the exts part to fix this leak.
 
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+For the local variable 'new_filter_result', it is never properly
+released if not used by 'r' on success path.
+
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- arch/xtensa/boot/dts/xtfpga.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sched/cls_tcindex.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/arch/xtensa/boot/dts/xtfpga.dtsi b/arch/xtensa/boot/dts/xtfpga.dtsi
-index 1090528825ec6..e46ae07bab059 100644
---- a/arch/xtensa/boot/dts/xtfpga.dtsi
-+++ b/arch/xtensa/boot/dts/xtfpga.dtsi
-@@ -103,7 +103,7 @@
- 			};
- 		};
+diff --git a/net/sched/cls_tcindex.c b/net/sched/cls_tcindex.c
+index 52829fdc280b3..75c7c7cc74999 100644
+--- a/net/sched/cls_tcindex.c
++++ b/net/sched/cls_tcindex.c
+@@ -322,9 +322,9 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
+ 		  struct nlattr *est, bool ovr)
+ {
+ 	struct tcindex_filter_result new_filter_result, *old_r = r;
+-	struct tcindex_filter_result cr;
+ 	struct tcindex_data *cp = NULL, *oldp;
+ 	struct tcindex_filter *f = NULL; /* make gcc behave */
++	struct tcf_result cr = {};
+ 	int err, balloc = 0;
+ 	struct tcf_exts e;
  
--		spi0: spi-master@0d0a0000 {
-+		spi0: spi@0d0a0000 {
- 			compatible = "cdns,xtfpga-spi";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+@@ -363,13 +363,10 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
+ 	cp->h = p->h;
+ 
+ 	err = tcindex_filter_result_init(&new_filter_result);
+-	if (err < 0)
+-		goto errout1;
+-	err = tcindex_filter_result_init(&cr);
+ 	if (err < 0)
+ 		goto errout1;
+ 	if (old_r)
+-		cr.res = r->res;
++		cr = r->res;
+ 
+ 	if (tb[TCA_TCINDEX_HASH])
+ 		cp->hash = nla_get_u32(tb[TCA_TCINDEX_HASH]);
+@@ -460,8 +457,8 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
+ 	}
+ 
+ 	if (tb[TCA_TCINDEX_CLASSID]) {
+-		cr.res.classid = nla_get_u32(tb[TCA_TCINDEX_CLASSID]);
+-		tcf_bind_filter(tp, &cr.res, base);
++		cr.classid = nla_get_u32(tb[TCA_TCINDEX_CLASSID]);
++		tcf_bind_filter(tp, &cr, base);
+ 	}
+ 
+ 	if (old_r && old_r != r) {
+@@ -473,7 +470,7 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
+ 	}
+ 
+ 	oldp = p;
+-	r->res = cr.res;
++	r->res = cr;
+ 	tcf_exts_change(&r->exts, &e);
+ 
+ 	rcu_assign_pointer(tp->root, cp);
+@@ -492,6 +489,8 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
+ 				; /* nothing */
+ 
+ 		rcu_assign_pointer(*fp, f);
++	} else {
++		tcf_exts_destroy(&new_filter_result.exts);
+ 	}
+ 
+ 	if (oldp)
+@@ -504,7 +503,6 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
+ 	else if (balloc == 2)
+ 		kfree(cp->h);
+ errout1:
+-	tcf_exts_destroy(&cr.exts);
+ 	tcf_exts_destroy(&new_filter_result.exts);
+ errout:
+ 	kfree(cp);
 -- 
 2.20.1
 
