@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F164C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8933C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67D3C20818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB79A20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919385;
-	bh=/d9PVLH/lgj6KLU9qXfdf0QWirSWnEW5nYPk3uGDmg4=;
+	s=default; t=1557919388;
+	bh=tv5sSD4QG+b2/BgGkiVVFz8fwcDGrsiYsFuS41YjUJs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rJ4Z9pbjxTMaTHPtLXJtKAcSN3PJLVOEr6uPhbksbFr1s2pUQlQ0eKCuSFs+ElbYn
-	 Ft1lS12axtDOGdICHPqkeFFC9eS8O+DkCT++yTUAIHoruct4BMBPBgaOslbJZGcShJ
-	 XaB70VsCevips5pm+p4Rd7UjIx7VtB/n+Qo2IUSk=
+	b=A4xeIXf9f2sWVFvoHc3wcJcqKRUgcZMLh/xMJql4Y/AxFoNrBqaTWhssB5R0YzuV/
+	 h7yAz5xDg4Z5JGiYwT8M95mjUMp7bCbHJiSTC1gFTc2Ku7O+r+CdezY+S4Px7JWrY7
+	 qmfFnqcuT/WeDRLc6Ll1jVW8NKYJVUeyRkXIWIeY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731568AbfEOLXE (ORCPT
+        id S1731578AbfEOLXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:23:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33284 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:23:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731285AbfEOLXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:23:01 -0400
+        id S1731557AbfEOLW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:22:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F06ED20818;
-        Wed, 15 May 2019 11:22:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A4C120818;
+        Wed, 15 May 2019 11:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919380;
-        bh=/d9PVLH/lgj6KLU9qXfdf0QWirSWnEW5nYPk3uGDmg4=;
+        s=default; t=1557919377;
+        bh=tv5sSD4QG+b2/BgGkiVVFz8fwcDGrsiYsFuS41YjUJs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GPQUNDgm6s5fVX+QAA5X3e90XJB38OrPQUbtBMs1z1udo7t8aUm0oEKiqYVzg/mR9
-         dVs5tOFsNExe687RP0zxl0bqXzreXVaVMxjVlWuEL1yg4iEAq9OV9oVMaQIisCM26E
-         phSo+w1Yja/XvLHXh4jXtOXS2QErCgy5vyyajGyY=
+        b=OtajeGnQSk7ZofYvkNTGvcyZpSc4PeF1CV2Zg7dgfjebjezc59O8Iphzy17AW5+aK
+         xzTuu1UO5vlZ3Yg+IwpaJg35KL1+/j28p4dlsg8RczAUOoaGVXWeMUm9ja1VACKEzE
+         xRaO26XFGtTaG2jFcaaAG1m0xfq0q2iktvPFw4do=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Po-Hsu Lin <po-hsu.lin@canonical.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 054/113] selftests/net: correct the return value for run_netsocktests
-Date:   Wed, 15 May 2019 12:55:45 +0200
-Message-Id: <20190515090657.731000591@linuxfoundation.org>
+Subject: [PATCH 4.19 053/113] drm/sun4i: Fix component unbinding and component master deletion
+Date:   Wed, 15 May 2019 12:55:44 +0200
+Message-Id: <20190515090657.671008019@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -60,42 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 30c04d796b693e22405c38e9b78e9a364e4c77e6 ]
+[ Upstream commit f5a9ed867c83875546c9aadd4ed8e785e9adcc3c ]
 
-The run_netsocktests will be marked as passed regardless the actual test
-result from the ./socket:
+For our component-backed driver to be properly removed, we need to
+delete the component master in sun4i_drv_remove and make sure to call
+component_unbind_all in the master's unbind so that all components are
+unbound when the master is.
 
-    selftests: net: run_netsocktests
-    ========================================
-    --------------------
-    running socket test
-    --------------------
-    [FAIL]
-    ok 1..6 selftests: net: run_netsocktests [PASS]
-
-This is because the test script itself has been successfully executed.
-Fix this by exit 1 when the test failed.
-
-Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 9026e0d122ac ("drm: Add Allwinner A10 Display Engine support")
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190418132727.5128-4-paul.kocialkowski@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/run_netsocktests | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun4i_drv.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/testing/selftests/net/run_netsocktests b/tools/testing/selftests/net/run_netsocktests
-index b093f39c298c3..14e41faf2c574 100755
---- a/tools/testing/selftests/net/run_netsocktests
-+++ b/tools/testing/selftests/net/run_netsocktests
-@@ -7,7 +7,7 @@ echo "--------------------"
- ./socket
- if [ $? -ne 0 ]; then
- 	echo "[FAIL]"
-+	exit 1
- else
- 	echo "[PASS]"
- fi
--
+diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+index 7cac01c72c027..62703630090aa 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+@@ -160,6 +160,8 @@ static void sun4i_drv_unbind(struct device *dev)
+ 	drm_mode_config_cleanup(drm);
+ 	of_reserved_mem_device_release(dev);
+ 	drm_dev_put(drm);
++
++	component_unbind_all(dev, NULL);
+ }
+ 
+ static const struct component_master_ops sun4i_drv_master_ops = {
+@@ -407,6 +409,8 @@ static int sun4i_drv_probe(struct platform_device *pdev)
+ 
+ static int sun4i_drv_remove(struct platform_device *pdev)
+ {
++	component_master_del(&pdev->dev, &sun4i_drv_master_ops);
++
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
