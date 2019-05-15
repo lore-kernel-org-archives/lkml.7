@@ -2,52 +2,70 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8385C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 882C1C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0082084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5861C20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918653;
-	bh=J+NAxvkDak5mBXRbfG7zbAzO+rFlbb67MBQ+RR8k4wI=;
+	s=default; t=1557918659;
+	bh=xqudcWSb995m6RwyxRbs+GSoDAko/e7aSCkNgs9Qjeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yANVE2O1pyjq2x7sdSZ+bGH+q7nipOI+69Qn/pCtr0KHRB8HfboS4p4HYl2bgkOIC
-	 x/x3kOXCnKOupRPlrCtkmwN49knB74pzYWuK5YfHhX8a48EFEp0U4ekOENWUVMj4r7
-	 oNY6lYD5WrICZ8BkEf2Warq102vqgCHcJ1bs3JAM=
+	b=j6nZphHgoIs3AzNlftOafOOq+vU//7FEXt4UruusHAQ/Z29FCGbnxSHNa+HXsCmOC
+	 rVWIXNzo14Ao0axbdbI17Ma5dVQ8DH5YODlP5WjVvM6VmTfheyPfR05ODETpIN5MDS
+	 g3K7J6G+43lqOzxd2/RUDPwkkRiIHS010u5H5U/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729478AbfEOLKw (ORCPT
+        id S1729488AbfEOLK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:10:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44862 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:10:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729457AbfEOLKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:10:46 -0400
+        id S1728667AbfEOLKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:10:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0DBB20862;
-        Wed, 15 May 2019 11:10:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F11121473;
+        Wed, 15 May 2019 11:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918645;
-        bh=J+NAxvkDak5mBXRbfG7zbAzO+rFlbb67MBQ+RR8k4wI=;
+        s=default; t=1557918653;
+        bh=xqudcWSb995m6RwyxRbs+GSoDAko/e7aSCkNgs9Qjeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i7xCWoTLVrR8w8WC89yc1nqAz+cuxovVBFnzrtGMJ59cEudEc9eJQtaowJ0TAEG/k
-         ETY5EkCLg24d+3SCFU8VovVllqRZycGvSAcWAWPcrlNNB9DRdC/VlqlKFKUQEqtU2V
-         rTgNdJnl0y/2iyNmNe77Oz4jVY6FOe8OsDwDm5nM=
+        b=tLB7sFRDVeQtN61rMcvtNVYaxSf8Rm+K4D5x2exUFDl5WLKo4jrKGhdyk0B/FG2yA
+         ca/zm/SjQsi64z1r06vn9490i7724lliph7kku+Ib9rtwTj3Uvw1etzZ7LipvuUw8C
+         Y/Y4D0foGrBuEKswMk1NvEp2HIgFmh5RyAREi9Hk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 168/266] KVM: x86: avoid misreporting level-triggered irqs as edge-triggered in tracing
-Date:   Wed, 15 May 2019 12:54:35 +0200
-Message-Id: <20190515090728.603369013@linuxfoundation.org>
+        stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Casey Schaufler <casey.schaufler@intel.com>,
+        Asit Mallick <asit.k.mallick@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Jon Masters <jcm@redhat.com>,
+        Waiman Long <longman9394@gmail.com>,
+        Dave Stewart <david.c.stewart@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 206/266] x86/speculation: Rename SSBD update functions
+Date:   Wed, 15 May 2019 12:55:13 +0200
+Message-Id: <20190515090729.927816259@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,50 +78,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7a223e06b1a411cef6c4cd7a9b9a33c8d225b10e ]
+From: Thomas Gleixner <tglx@linutronix.de>
 
-In __apic_accept_irq() interface trig_mode is int and actually on some code
-paths it is set above u8:
+commit 26c4d75b234040c11728a8acb796b3a85ba7507c upstream.
 
-kvm_apic_set_irq() extracts it from 'struct kvm_lapic_irq' where trig_mode
-is u16. This is done on purpose as e.g. kvm_set_msi_irq() sets it to
-(1 << 15) & e->msi.data
+During context switch, the SSBD bit in SPEC_CTRL MSR is updated according
+to changes of the TIF_SSBD flag in the current and next running task.
 
-kvm_apic_local_deliver sets it to reg & (1 << 15).
+Currently, only the bit controlling speculative store bypass disable in
+SPEC_CTRL MSR is updated and the related update functions all have
+"speculative_store" or "ssb" in their names.
 
-Fix the immediate issue by making 'tm' into u16. We may also want to adjust
-__apic_accept_irq() interface and use proper sizes for vector, level,
-trig_mode but this is not urgent.
+For enhanced mitigation control other bits in SPEC_CTRL MSR need to be
+updated as well, which makes the SSB names inadequate.
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Rename the "speculative_store*" functions to a more generic name. No
+functional change.
+
+Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Casey Schaufler <casey.schaufler@intel.com>
+Cc: Asit Mallick <asit.k.mallick@intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Waiman Long <longman9394@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Dave Stewart <david.c.stewart@intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20181125185004.058866968@linutronix.de
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kvm/trace.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/spec-ctrl.h |    6 +++---
+ arch/x86/kernel/cpu/bugs.c       |    4 ++--
+ arch/x86/kernel/process.c        |   12 ++++++------
+ 3 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-index ab9ae67a80e44..0ec94c6b47576 100644
---- a/arch/x86/kvm/trace.h
-+++ b/arch/x86/kvm/trace.h
-@@ -434,13 +434,13 @@ TRACE_EVENT(kvm_apic_ipi,
- );
+--- a/arch/x86/include/asm/spec-ctrl.h
++++ b/arch/x86/include/asm/spec-ctrl.h
+@@ -70,11 +70,11 @@ extern void speculative_store_bypass_ht_
+ static inline void speculative_store_bypass_ht_init(void) { }
+ #endif
  
- TRACE_EVENT(kvm_apic_accept_irq,
--	    TP_PROTO(__u32 apicid, __u16 dm, __u8 tm, __u8 vec),
-+	    TP_PROTO(__u32 apicid, __u16 dm, __u16 tm, __u8 vec),
- 	    TP_ARGS(apicid, dm, tm, vec),
+-extern void speculative_store_bypass_update(unsigned long tif);
++extern void speculation_ctrl_update(unsigned long tif);
  
- 	TP_STRUCT__entry(
- 		__field(	__u32,		apicid		)
- 		__field(	__u16,		dm		)
--		__field(	__u8,		tm		)
-+		__field(	__u16,		tm		)
- 		__field(	__u8,		vec		)
- 	),
+-static inline void speculative_store_bypass_update_current(void)
++static inline void speculation_ctrl_update_current(void)
+ {
+-	speculative_store_bypass_update(current_thread_info()->flags);
++	speculation_ctrl_update(current_thread_info()->flags);
+ }
  
--- 
-2.20.1
-
+ #endif
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -192,7 +192,7 @@ x86_virt_spec_ctrl(u64 guest_spec_ctrl,
+ 		tif = setguest ? ssbd_spec_ctrl_to_tif(guestval) :
+ 				 ssbd_spec_ctrl_to_tif(hostval);
+ 
+-		speculative_store_bypass_update(tif);
++		speculation_ctrl_update(tif);
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(x86_virt_spec_ctrl);
+@@ -629,7 +629,7 @@ static int ssb_prctl_set(struct task_str
+ 	 * mitigation until it is next scheduled.
+ 	 */
+ 	if (task == current && update)
+-		speculative_store_bypass_update_current();
++		speculation_ctrl_update_current();
+ 
+ 	return 0;
+ }
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -317,27 +317,27 @@ static __always_inline void amd_set_ssb_
+ 	wrmsrl(MSR_AMD64_VIRT_SPEC_CTRL, ssbd_tif_to_spec_ctrl(tifn));
+ }
+ 
+-static __always_inline void intel_set_ssb_state(unsigned long tifn)
++static __always_inline void spec_ctrl_update_msr(unsigned long tifn)
+ {
+ 	u64 msr = x86_spec_ctrl_base | ssbd_tif_to_spec_ctrl(tifn);
+ 
+ 	wrmsrl(MSR_IA32_SPEC_CTRL, msr);
+ }
+ 
+-static __always_inline void __speculative_store_bypass_update(unsigned long tifn)
++static __always_inline void __speculation_ctrl_update(unsigned long tifn)
+ {
+ 	if (static_cpu_has(X86_FEATURE_VIRT_SSBD))
+ 		amd_set_ssb_virt_state(tifn);
+ 	else if (static_cpu_has(X86_FEATURE_LS_CFG_SSBD))
+ 		amd_set_core_ssb_state(tifn);
+ 	else
+-		intel_set_ssb_state(tifn);
++		spec_ctrl_update_msr(tifn);
+ }
+ 
+-void speculative_store_bypass_update(unsigned long tif)
++void speculation_ctrl_update(unsigned long tif)
+ {
+ 	preempt_disable();
+-	__speculative_store_bypass_update(tif);
++	__speculation_ctrl_update(tif);
+ 	preempt_enable();
+ }
+ 
+@@ -371,7 +371,7 @@ void __switch_to_xtra(struct task_struct
+ 		cr4_toggle_bits(X86_CR4_TSD);
+ 
+ 	if ((tifp ^ tifn) & _TIF_SSBD)
+-		__speculative_store_bypass_update(tifn);
++		__speculation_ctrl_update(tifn);
+ }
+ 
+ /*
 
 
