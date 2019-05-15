@@ -2,185 +2,160 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CECC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6FFC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D8E206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:40:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="AFNVX2Av"
+	by mail.kernel.org (Postfix) with ESMTP id E11CB206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:41:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbfEOHkZ (ORCPT
+        id S1726360AbfEOHlm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 03:40:25 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:57545 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725902AbfEOHkZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 03:40:25 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x4F7cPhj006122;
-        Wed, 15 May 2019 16:38:25 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x4F7cPhj006122
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557905906;
-        bh=RLKnrKzGrRB49svSrfY0cT9mgY0RbRrACb/5P+nxe8M=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AFNVX2AvlJlAcegLAGSPBR5Feh2MQuXfziB1wTqwDhHqFwG8oFpg+FcnY5MdUrmoq
-         AfZj/Wpuok8UJXgKJKHunV+5JevVnmKRFGttazUUfqtCgG2kwZk8eK6BZboj+USmB8
-         f5Hqn2BbHgCIge34oOLLClfNyr/ptj7FJ2g++VnI1hcfYDNESbUDooE0VQCTLxQ2fg
-         S9RI596ONnx2ut2tH7+7SYNOSjZTY9plbRHiNnhBNzMgBq5eOpDIsm0V1zmqPV+ZF7
-         S5NoGaRn/IvFJ9klTZ6CLvgOP5REzmEOjGlMMotzJmKxGCHnbKYdJMwwmUHBEQmku8
-         WCuNW2UNimnrw==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] kbuild: check uniqueness of basename of modules
-Date:   Wed, 15 May 2019 16:38:18 +0900
-Message-Id: <20190515073818.22486-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 15 May 2019 03:41:42 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37564 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725871AbfEOHlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 03:41:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 941F1374;
+        Wed, 15 May 2019 00:41:41 -0700 (PDT)
+Received: from [10.163.1.137] (unknown [10.163.1.137])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B9F93F71E;
+        Wed, 15 May 2019 00:41:36 -0700 (PDT)
+Subject: Re: [PATCH] mm: refactor __vunmap() to avoid duplicated call to
+ find_vm_area()
+To:     Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Vlastimil Babka <vbabka@suse.cz>
+References: <20190514235111.2817276-1-guro@fb.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <7ad2b16d-c1a3-b826-df4d-6d9ed1d9fc9f@arm.com>
+Date:   Wed, 15 May 2019 13:11:46 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190514235111.2817276-1-guro@fb.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the recent build test of linux-next, Stephen saw a build error
-caused by a broken .tmp_versions/*.mod file:
-
-  https://lkml.org/lkml/2019/5/13/991
-
-drivers/net/phy/asix.ko and drivers/net/usb/asix.ko have the same
-basename, and there is a race in generating .tmp_versions/asix.mod
-
-Kbuild has not checked this before, and it occasionally shows up with
-obscure error message when this kind of race occurs.
-
-It is not trivial to catch this potential issue by eyes.
-
-Hence, this script.
-
-I compile-tested allmodconfig for the latest kernel as of writing,
-it detected the following:
-
-warning: same basename '88pm800.ko' if the following are built as modules:
-  drivers/regulator/88pm800.ko
-  drivers/mfd/88pm800.ko
-warning: same basename 'adv7511.ko' if the following are built as modules:
-  drivers/gpu/drm/bridge/adv7511/adv7511.ko
-  drivers/media/i2c/adv7511.ko
-warning: same basename 'asix.ko' if the following are built as modules:
-  drivers/net/phy/asix.ko
-  drivers/net/usb/asix.ko
-warning: same basename 'coda.ko' if the following are built as modules:
-  fs/coda/coda.ko
-  drivers/media/platform/coda/coda.ko
-warning: same basename 'realtek.ko' if the following are built as modules:
-  drivers/net/phy/realtek.ko
-  drivers/net/dsa/realtek.ko
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- [Alternative fix ? ]
-
-I do not know about the user experience of modprobe etc.
-when two different modules have the same name.
-It does not matter if this is correctly handled by modules.order?
-
-If this is just a problem of the build system, it is pretty easy to fix.
-For example, if we prepend the directory path, parallel build will
-never write to the same file simultanously.
-
-  asix.mod -> drivers/net/phy/asix.mod
-  asix.mod -> drivers/net/usb/asix.mod
-
- [Futher discussion]
-
-Linus Torvalds pointed out that it is silly to add the same prefix to
-each file since the sub-system is already represented by the directory
-path.
-
-See this:
-https://lkml.org/lkml/2017/7/12/430
-
-We can keep the basename short enough to distinguish in the subsytem
-in theory.
-
-So, I am not surprised to see the same file name in different
-directory locations.
-
-On the other hand, a module is named after the file name when
-it consists of a single C source file.
-
-Of course, you can always give a different module name.
-
-For example, see
- drivers/nvmem/Makefile
-
-I am not a big fan of it since it looks ugly.
-
-I think we can play it by ear, but I just wanted to point out this
-related to the module name uniqueness.
 
 
- Makefile                 |  1 +
- scripts/modules-check.sh | 18 ++++++++++++++++++
- 2 files changed, 19 insertions(+)
- create mode 100755 scripts/modules-check.sh
+On 05/15/2019 05:21 AM, Roman Gushchin wrote:
+> __vunmap() calls find_vm_area() twice without an obvious reason:
+> first directly to get the area pointer, second indirectly by calling
+> vm_remove_mappings()->remove_vm_area(), which is again searching
+> for the area.
+> 
+> To remove this redundancy, let's split remove_vm_area() into
+> __remove_vm_area(struct vmap_area *), which performs the actual area
+> removal, and remove_vm_area(const void *addr) wrapper, which can
+> be used everywhere, where it has been used before. Let's pass
+> a pointer to the vm_area instead of vm_struct to vm_remove_mappings(),
+> so it can pass it to __remove_vm_area() and avoid the redundant area
+> lookup.
+> 
+> On my test setup, I've got 5-10% speed up on vfree()'ing 1000000
+> of 4-pages vmalloc blocks.
+> 
+> Perf report before:
+>   29.44%  cat      [kernel.kallsyms]  [k] free_unref_page
+>   11.88%  cat      [kernel.kallsyms]  [k] find_vmap_area
+>    9.28%  cat      [kernel.kallsyms]  [k] __free_pages
+>    7.44%  cat      [kernel.kallsyms]  [k] __slab_free
+>    7.28%  cat      [kernel.kallsyms]  [k] vunmap_page_range
+>    4.56%  cat      [kernel.kallsyms]  [k] __vunmap
+>    3.64%  cat      [kernel.kallsyms]  [k] __purge_vmap_area_lazy
+>    3.04%  cat      [kernel.kallsyms]  [k] __free_vmap_area
+> 
+> Perf report after:
+>   32.41%  cat      [kernel.kallsyms]  [k] free_unref_page
+>    7.79%  cat      [kernel.kallsyms]  [k] find_vmap_area
+>    7.40%  cat      [kernel.kallsyms]  [k] __slab_free
+>    7.31%  cat      [kernel.kallsyms]  [k] vunmap_page_range
+>    6.84%  cat      [kernel.kallsyms]  [k] __free_pages
+>    6.01%  cat      [kernel.kallsyms]  [k] __vunmap
+>    3.98%  cat      [kernel.kallsyms]  [k] smp_call_function_single
+>    3.81%  cat      [kernel.kallsyms]  [k] __purge_vmap_area_lazy
+>    2.77%  cat      [kernel.kallsyms]  [k] __free_vmap_area
+> 
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  mm/vmalloc.c | 52 +++++++++++++++++++++++++++++-----------------------
+>  1 file changed, 29 insertions(+), 23 deletions(-)
+> 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index c42872ed82ac..8d4907865614 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -2075,6 +2075,22 @@ struct vm_struct *find_vm_area(const void *addr)
+>  	return NULL;
+>  }
+>  
+> +static struct vm_struct *__remove_vm_area(struct vmap_area *va)
+> +{
+> +	struct vm_struct *vm = va->vm;
+> +
+> +	spin_lock(&vmap_area_lock);
+> +	va->vm = NULL;
+> +	va->flags &= ~VM_VM_AREA;
+> +	va->flags |= VM_LAZY_FREE;
+> +	spin_unlock(&vmap_area_lock);
+> +
+> +	kasan_free_shadow(vm);
+> +	free_unmap_vmap_area(va);
+> +
+> +	return vm;
+> +}
+> +
+>  /**
+>   * remove_vm_area - find and remove a continuous kernel virtual area
+>   * @addr:	    base address
+> @@ -2087,26 +2103,14 @@ struct vm_struct *find_vm_area(const void *addr)
+>   */
+>  struct vm_struct *remove_vm_area(const void *addr)
+>  {
+> +	struct vm_struct *vm = NULL;
+>  	struct vmap_area *va;
+>  
+> -	might_sleep();
 
-diff --git a/Makefile b/Makefile
-index a61a95b6b38f..30792fec7a12 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1290,6 +1290,7 @@ modules: $(vmlinux-dirs) $(if $(KBUILD_BUILTIN),vmlinux) modules.builtin
- 	$(Q)$(AWK) '!x[$$0]++' $(vmlinux-dirs:%=$(objtree)/%/modules.order) > $(objtree)/modules.order
- 	@$(kecho) '  Building modules, stage 2.';
- 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
-+	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/modules-check.sh
- 
- modules.builtin: $(vmlinux-dirs:%=%/modules.builtin)
- 	$(Q)$(AWK) '!x[$$0]++' $^ > $(objtree)/modules.builtin
-diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
-new file mode 100755
-index 000000000000..944e68bd22b0
---- /dev/null
-+++ b/scripts/modules-check.sh
-@@ -0,0 +1,18 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+
-+# Warn if two or more modules have the same basename
-+check_same_name_modules()
-+{
-+	same_name_modules=$(cat modules.order modules.builtin | \
-+				xargs basename -a | sort | uniq -d)
-+
-+	for m in $same_name_modules
-+	do
-+		echo "warning: same basename '$m' if the following are built as modules:"
-+		grep --no-filename -e /$m modules.order modules.builtin | \
-+							sed 's:^kernel/:  :'
-+	done
-+}
-+
-+check_same_name_modules
--- 
-2.17.1
+Is not this necessary any more ?
 
+> -
+>  	va = find_vmap_area((unsigned long)addr);
+> -	if (va && va->flags & VM_VM_AREA) {
+> -		struct vm_struct *vm = va->vm;
+> -
+> -		spin_lock(&vmap_area_lock);
+> -		va->vm = NULL;
+> -		va->flags &= ~VM_VM_AREA;
+> -		va->flags |= VM_LAZY_FREE;
+> -		spin_unlock(&vmap_area_lock);
+> -
+> -		kasan_free_shadow(vm);
+> -		free_unmap_vmap_area(va);
+> +	if (va && va->flags & VM_VM_AREA)
+> +		vm = __remove_vm_area(va);
+>  
+> -		return vm;
+> -	}
+> -	return NULL;
+> +	return vm;
+>  }
+
+Other callers of remove_vm_area() cannot use __remove_vm_area() directly as well
+to save a look up ?
