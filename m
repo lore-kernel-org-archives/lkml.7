@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E52E0C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18167C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB73D20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE3CA20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:02:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921726;
-	bh=mDS7U+WjhmJkdMvliJsBtFb47LJZkRupeS47ii3XgW0=;
+	s=default; t=1557921729;
+	bh=cL5268vptadB2RdyHUUKibQtVUrEzLU0AwJACEzkAvE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gwpD9PA4IIWGuW/77UiirCRJZ+Quf8jKhp0kVTtxtEd/1CQOViTlTg5rkmb3IF3Dn
-	 pb1XPp8tGA6ZBaUwEqoHtbyTGJvcHL2N0k1bMriisq3L4ztlqCewD7VDyRfHjRzweD
-	 L+f+xpDbdoWYsKjjOaU6Hhppz8256S4L7wYVUygs=
+	b=1pGXb2V+YP5q1i/5Zrg8m/RQbwIQw5LJ8IN4iOnVWWfXFMZWQiJeyxvcSP0Qvipl0
+	 y0qDa8hBjXoWa860w1xTwDq9LJwD9W35rF9jlRXD5SMyFbPoPWvhFBWPk96eB7v8DX
+	 4rPuPua/RFk+jS8r7j4LlGK132WA7YpJJ1qJwhm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729973AbfEOLNa (ORCPT
+        id S1730388AbfEOMCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:13:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49118 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:02:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729957AbfEOLNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:13:24 -0400
+        id S1729967AbfEOLN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:13:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DED42168B;
-        Wed, 15 May 2019 11:13:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BE2521473;
+        Wed, 15 May 2019 11:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918803;
-        bh=mDS7U+WjhmJkdMvliJsBtFb47LJZkRupeS47ii3XgW0=;
+        s=default; t=1557918809;
+        bh=cL5268vptadB2RdyHUUKibQtVUrEzLU0AwJACEzkAvE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xVL5NlFcXx0FfAxd8DRPgzaIQpm5B0511raafjmmY5mL54Ybf+CWCdfgqt4KBPq1Z
-         56r/wkVD4cKg4GrInr5nZc3TSp0slB+MnWuOOVAQANs6i/Pg244bQ1bEaEX+J7Y/3f
-         FqkozswByDW1rO5LPA5CzpfPMqHce06ed2Ro9W7g=
+        b=F4zmQ29kuagr3EzUuuOU6NXvu5dZX1w63gJFZNhFPaYNNqmyV0J3cyfAZMYKScOXZ
+         7OXRO83M3wGXIzLeY1MTDto+LWLIlyXpOjdY8iUH2Wqw5VFAugrVJbFP75DPrUoHie
+         tZiNdNZxK1QcglwA4pvmV9ZOz06GGooaa0V50qKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 257/266] bridge: Fix error path for kobject_init_and_add()
-Date:   Wed, 15 May 2019 12:56:04 +0200
-Message-Id: <20190515090731.710145644@linuxfoundation.org>
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 249/266] x86/speculation/mds: Add mitigations= support for MDS
+Date:   Wed, 15 May 2019 12:55:56 +0200
+Message-Id: <20190515090731.438392012@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -59,64 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Tobin C. Harding" <tobin@kernel.org>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-[ Upstream commit bdfad5aec1392b93495b77b864d58d7f101dc1c1 ]
+commit 5c14068f87d04adc73ba3f41c2a303d3c3d1fa12 upstream.
 
-Currently error return from kobject_init_and_add() is not followed by a
-call to kobject_put().  This means there is a memory leak.  We currently
-set p to NULL so that kfree() may be called on it as a noop, the code is
-arguably clearer if we move the kfree() up closer to where it is
-called (instead of after goto jump).
+Add MDS to the new 'mitigations=' cmdline option.
 
-Remove a goto label 'err1' and jump to call to kobject_put() in error
-return from kobject_init_and_add() fixing the memory leak.  Re-name goto
-label 'put_back' to 'err1' now that we don't use err1, following current
-nomenclature (err1, err2 ...).  Move call to kfree out of the error
-code at bottom of function up to closer to where memory was allocated.
-Add comment to clarify call to kfree().
-
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+[bwh: Backported to 4.4:
+ - Drop the auto,nosmt option, which we can't support
+ - Adjust filenames, context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_if.c |   13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ Documentation/kernel-parameters.txt |    1 +
+ arch/x86/kernel/cpu/bugs.c          |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/bridge/br_if.c
-+++ b/net/bridge/br_if.c
-@@ -471,13 +471,15 @@ int br_add_if(struct net_bridge *br, str
- 	call_netdevice_notifiers(NETDEV_JOIN, dev);
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -2187,6 +2187,7 @@ bytes respectively. Such letter suffixes
+ 					       nospectre_v2 [X86]
+ 					       spectre_v2_user=off [X86]
+ 					       spec_store_bypass_disable=off [X86]
++					       mds=off [X86]
  
- 	err = dev_set_allmulti(dev, 1);
--	if (err)
--		goto put_back;
-+	if (err) {
-+		kfree(p);	/* kobject not yet init'd, manually free */
-+		goto err1;
-+	}
+ 			auto (default)
+ 				Mitigate all CPU vulnerabilities, but leave SMT
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -221,7 +221,7 @@ static const char * const mds_strings[]
  
- 	err = kobject_init_and_add(&p->kobj, &brport_ktype, &(dev->dev.kobj),
- 				   SYSFS_BRIDGE_PORT_ATTR);
- 	if (err)
--		goto err1;
-+		goto err2;
- 
- 	err = br_sysfs_addif(p);
- 	if (err)
-@@ -551,12 +553,9 @@ err3:
- 	sysfs_remove_link(br->ifobj, p->dev->name);
- err2:
- 	kobject_put(&p->kobj);
--	p = NULL; /* kobject_put frees */
--err1:
- 	dev_set_allmulti(dev, -1);
--put_back:
-+err1:
- 	dev_put(dev);
--	kfree(p);
- 	return err;
- }
- 
+ static void __init mds_select_mitigation(void)
+ {
+-	if (!boot_cpu_has_bug(X86_BUG_MDS)) {
++	if (!boot_cpu_has_bug(X86_BUG_MDS) || cpu_mitigations_off()) {
+ 		mds_mitigation = MDS_MITIGATION_OFF;
+ 		return;
+ 	}
 
 
