@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DE2C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 005E4C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7AED20818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF4D62082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbfEOVCI (ORCPT
+        id S1727856AbfEOVCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 17:02:08 -0400
+        Wed, 15 May 2019 17:02:11 -0400
 Received: from mga11.intel.com ([192.55.52.93]:15270 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726319AbfEOVCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 17:02:05 -0400
+        id S1726319AbfEOVCJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 17:02:09 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 14:02:05 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 14:02:08 -0700
 X-ExtLoop1: 1
 Received: from otc-lr-04.jf.intel.com ([10.54.39.157])
-  by fmsmga001.fm.intel.com with ESMTP; 15 May 2019 14:02:05 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 15 May 2019 14:02:08 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     eranian@google.com, tj@kernel.org, mark.rutland@arm.com,
         irogers@google.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 1/4] perf: Fix system-wide events miscounting during cgroup monitoring
-Date:   Wed, 15 May 2019 14:01:29 -0700
-Message-Id: <1557954092-67275-2-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH V2 3/4] perf cgroup: Add new RB tree keys for cgroup
+Date:   Wed, 15 May 2019 14:01:31 -0700
+Message-Id: <1557954092-67275-4-git-send-email-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1557954092-67275-1-git-send-email-kan.liang@linux.intel.com>
 References: <1557954092-67275-1-git-send-email-kan.liang@linux.intel.com>
@@ -45,328 +45,384 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-When counting system-wide events and cgroup events simultaneously, the
-value of system-wide events are miscounting. For example,
+Current RB tree for pinned/flexible groups doesn't take cgroup into
+account. All events on a given CPU will be fed to
+pinned/flexible_sched_in(), which relies on perf_cgroup_match() to
+filter the events for a specific cgroup. The method has high overhead,
+especially in frequent context switch with several events and cgroups
+involved.
 
-    perf stat -e cycles,instructions -e cycles,instructions -G
-cgroup1,cgroup1,cgroup2,cgroup2 -a -e cycles,instructions -I 1000
+Add new RB tree keys, cgrp_id and cgrp_group_index, for cgroup.
+The unique cgrp_id (the same as css subsys-unique ID) is used to
+indicate a cgroup. Events in the same cgroup has the same cgrp_id.
+The cgrp_id is always zero for non-cgroup case. There is no functional
+change for non-cgroup case.
+The cgrp_group_index is used for multiplexing. The rotated events of a
+cgroup has the same cgrp_group_index, which equals to the (group_index
+-1) of the first rotated events.
+The non-cgroup events, e.g. system-wide events, are treated as special
+cgroups. The cgrp_group_index is also updated in multiplexing.
 
-     1.096265502     12,375,398,872      cycles              cgroup1
-     1.096265502      8,396,184,503      instructions        cgroup1
- #    0.10  insn per cycle
-     1.096265502    109,609,027,112      cycles              cgroup2
-     1.096265502     11,533,690,148      instructions        cgroup2
- #    0.14  insn per cycle
-     1.096265502    121,672,937,058      cycles
-     1.096265502     19,331,496,727      instructions               #
-0.24  insn per cycle
+Add percpu pinned/flexible_event in perf_cgroup to track the left most
+event for a cgroup, which will be used later to fast access the event of
+a given cgroup.
+Add percpu rotated_event to track the rotated events of a cgroup.
 
-The events are identical events for system-wide and cgroup. The
-value of system-wide events is less than the sum of cgroup events,
-which is wrong.
+Add perf_event_groups_first_cgroup() to find the left most event for a
+given cgroup ID and cgrp_group_index on a given CPU.
 
-Both system-wide and cgroup are per-cpu. They share the same cpuctx
-groups, cpuctx->flexible_groups/pinned_groups.
-In context switch, cgroup switch tries to schedule all the events from
-the cpuctx groups. The unmatched cgroup events can be filtered by its
-event->cgrp. However, system-wide events, which event->cgrp is NULL, are
-unconditionally switched. So the small period between the prev cgroup
-sched_out and the new cgroup sched_in will be missed for system-wide
-events.
-
-Add new event type EVENT_CGROUP_FLEXIBLE_ONLY, EVENT_CGROUP_PINNED_ONLY,
-and EVENT_CGROUP_ALL_ONLY.
-- EVENT_FLEXIBLE | EVENT_CGROUP_FLEXIBLE_ONLY: Only switch cgroup
-  events from EVENT_FLEXIBLE groups.
-- EVENT_PINNED | EVENT_CGROUP_PINNED_ONLY: Only switch cgroup events
-  from EVENT_PINNED groups.
-- EVENT_ALL | EVENT_CGROUP_ALL_ONLY: Only switch cgroup events from both
-  EVENT_FLEXIBLE and EVENT_PINNED groups.
-For cgroup schedule out, only cgroup events are scheduled out now.
-For cgroup schedule in, to keep the priority order (cpu pinned, cpu
-flexible), the event type of the new cgroup has to be checked.
-If the new cgroup has pinned events, the flexible system-wide events
-have to be scheduled out before all events schedule in, which give the
-pinned events the best chance to be scheduled.
-Otherwise, only cgroup events are scheduled in.
-
-To track the event type in a cgroup, add cgrp_event_type for cgroup.
-The event type of the cgroup and its ancestor is stored.
-
-Fixes: e5d1367f17ba ("perf: Add cgroup support")
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- include/linux/perf_event.h |   1 +
- kernel/events/core.c       | 119 ++++++++++++++++++++++++++++++++++++++++-----
- 2 files changed, 108 insertions(+), 12 deletions(-)
+ include/linux/perf_event.h |   5 ++
+ kernel/events/core.c       | 217 ++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 210 insertions(+), 12 deletions(-)
 
 diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index e47ef76..3f12937 100644
+index 3f12937..800bf62 100644
 --- a/include/linux/perf_event.h
 +++ b/include/linux/perf_event.h
-@@ -836,6 +836,7 @@ struct perf_cgroup_info {
- struct perf_cgroup {
+@@ -703,6 +703,8 @@ struct perf_event {
+ 
+ #ifdef CONFIG_CGROUP_PERF
+ 	struct perf_cgroup		*cgrp; /* cgroup event is attach to */
++	u64				cgrp_id; /* perf cgroup ID */
++	u64				cgrp_group_index;
+ #endif
+ 
+ 	struct list_head		sb_list;
+@@ -837,6 +839,9 @@ struct perf_cgroup {
  	struct cgroup_subsys_state	css;
  	struct perf_cgroup_info	__percpu *info;
-+	int				cgrp_event_type;
+ 	int				cgrp_event_type;
++	struct perf_event * __percpu	*pinned_event;
++	struct perf_event * __percpu	*flexible_event;
++	struct perf_event * __percpu	*rotated_event;
  };
  
  /*
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index dc7dead..e7ca0474 100644
+index a3885e68..6891c74 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -361,8 +361,18 @@ enum event_type_t {
- 	/* see ctx_resched() for details */
- 	EVENT_CPU = 0x8,
- 	EVENT_ALL = EVENT_FLEXIBLE | EVENT_PINNED,
-+
-+	/* see perf_cgroup_switch() for details */
-+	EVENT_CGROUP_FLEXIBLE_ONLY = 0x10,
-+	EVENT_CGROUP_PINNED_ONLY = 0x20,
-+	EVENT_CGROUP_ALL_ONLY = EVENT_CGROUP_FLEXIBLE_ONLY |
-+				EVENT_CGROUP_PINNED_ONLY,
-+
- };
- 
-+#define CGROUP_PINNED(type)	(type & EVENT_CGROUP_PINNED_ONLY)
-+#define CGROUP_FLEXIBLE(type)	(type & EVENT_CGROUP_FLEXIBLE_ONLY)
-+
- /*
-  * perf_sched_events : >0 events exist
-  * perf_cgroup_events: >0 per-cpu cgroup events exist on this cpu
-@@ -667,6 +677,18 @@ perf_event_set_state(struct perf_event *event, enum perf_event_state state)
- 
- #ifdef CONFIG_CGROUP_PERF
- 
-+/* Skip the system-wide event if only cgroup events are required. */
-+static inline bool
-+perf_cgroup_skip_switch(enum event_type_t event_type,
-+			struct perf_event *event,
-+			bool pinned)
-+{
-+	if (pinned)
-+		return !!CGROUP_PINNED(event_type) && !event->cgrp;
-+	else
-+		return !!CGROUP_FLEXIBLE(event_type) && !event->cgrp;
-+}
-+
- static inline bool
- perf_cgroup_match(struct perf_event *event)
+@@ -717,6 +717,7 @@ static inline void perf_detach_cgroup(struct perf_event *event)
  {
-@@ -811,7 +833,22 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
- 		perf_pmu_disable(cpuctx->ctx.pmu);
+ 	css_put(&event->cgrp->css);
+ 	event->cgrp = NULL;
++	event->cgrp_id = 0;
+ }
  
- 		if (mode & PERF_CGROUP_SWOUT) {
--			cpu_ctx_sched_out(cpuctx, EVENT_ALL);
-+			/*
-+			 * The system-wide events and cgroup events share
-+			 * the same cpuctx groups.
-+			 * Decide which events to be switched based on
-+			 * the types of events:
-+			 * - EVENT_FLEXIBLE | EVENT_CGROUP_FLEXIBLE_ONLY:
-+			 *   Only switch cgroup events from EVENT_FLEXIBLE
-+			 *   groups.
-+			 * - EVENT_PINNED | EVENT_CGROUP_PINNED_ONLY:
-+			 *   Only switch cgroup events from EVENT_PINNED
-+			 *   groups.
-+			 * - EVENT_ALL | EVENT_CGROUP_ALL_ONLY:
-+			 *   Only switch cgroup events from both EVENT_FLEXIBLE
-+			 *   and EVENT_PINNED groups.
-+			 */
-+			cpu_ctx_sched_out(cpuctx, EVENT_ALL | EVENT_CGROUP_ALL_ONLY);
- 			/*
- 			 * must not be done before ctxswout due
- 			 * to event_filter_match() in event_sched_out()
-@@ -830,7 +867,19 @@ static void perf_cgroup_switch(struct task_struct *task, int mode)
- 			 */
- 			cpuctx->cgrp = perf_cgroup_from_task(task,
- 							     &cpuctx->ctx);
--			cpu_ctx_sched_in(cpuctx, EVENT_ALL, task);
-+
-+			/*
-+			 * To keep the following priority order:
-+			 * cpu pinned, cpu flexible,
-+			 * if the new cgroup has pinned events,
-+			 * sched out all system-wide events from EVENT_FLEXIBLE
-+			 * groups before sched in all events.
-+			 */
-+			if (cpuctx->cgrp->cgrp_event_type & EVENT_CGROUP_PINNED_ONLY) {
-+				cpu_ctx_sched_out(cpuctx, EVENT_FLEXIBLE);
-+				cpu_ctx_sched_in(cpuctx, EVENT_ALL | EVENT_CGROUP_PINNED_ONLY, task);
-+			} else
-+				cpu_ctx_sched_in(cpuctx, EVENT_ALL | EVENT_CGROUP_ALL_ONLY, task);
- 		}
- 		perf_pmu_enable(cpuctx->ctx.pmu);
- 		perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
-@@ -895,7 +944,7 @@ static inline int perf_cgroup_connect(int fd, struct perf_event *event,
- 				      struct perf_event_attr *attr,
- 				      struct perf_event *group_leader)
- {
--	struct perf_cgroup *cgrp;
-+	struct perf_cgroup *cgrp, *tmp_cgrp;
- 	struct cgroup_subsys_state *css;
- 	struct fd f = fdget(fd);
- 	int ret = 0;
-@@ -913,6 +962,18 @@ static inline int perf_cgroup_connect(int fd, struct perf_event *event,
+ static inline int is_cgroup_event(struct perf_event *event)
+@@ -961,6 +962,7 @@ static inline int perf_cgroup_connect(int fd, struct perf_event *event,
+ 
  	cgrp = container_of(css, struct perf_cgroup, css);
  	event->cgrp = cgrp;
++	event->cgrp_id = css->id;
  
-+	if (event->attr.pinned)
-+		cgrp->cgrp_event_type |= EVENT_CGROUP_PINNED_ONLY;
-+	else
-+		cgrp->cgrp_event_type |= EVENT_CGROUP_FLEXIBLE_ONLY;
-+
-+	/* Inherit cgrp_event_type from its ancestor */
-+	for (css = css->parent; css; css = css->parent) {
-+		tmp_cgrp = container_of(css, struct perf_cgroup, css);
-+		if (tmp_cgrp->cgrp_event_type)
-+			cgrp->cgrp_event_type |= tmp_cgrp->cgrp_event_type;
-+	}
-+
- 	/*
- 	 * all events in a group must monitor
- 	 * the same cgroup because a task belongs
-@@ -987,6 +1048,14 @@ list_update_cgroup_event(struct perf_event *event,
- #else /* !CONFIG_CGROUP_PERF */
+ 	if (event->attr.pinned)
+ 		cgrp->cgrp_event_type |= EVENT_CGROUP_PINNED_ONLY;
+@@ -1561,6 +1563,9 @@ static void init_event_group(struct perf_event *event)
+ {
+ 	RB_CLEAR_NODE(&event->group_node);
+ 	event->group_index = 0;
++#ifdef CONFIG_CGROUP_PERF
++	event->cgrp_group_index = 0;
++#endif
+ }
  
- static inline bool
-+perf_cgroup_skip_switch(enum event_type_t event_type,
-+			struct perf_event *event,
-+			bool pinned)
+ /*
+@@ -1588,8 +1593,8 @@ static void perf_event_groups_init(struct perf_event_groups *groups)
+ /*
+  * Compare function for event groups;
+  *
+- * Implements complex key that first sorts by CPU and then by virtual index
+- * which provides ordering when rotating groups for the same CPU.
++ * Implements complex key that sorts by CPU, cgroup index, cgroup ID, and
++ * virtual index which provides ordering when rotating groups for the same CPU.
+  */
+ static bool
+ perf_event_groups_less(struct perf_event *left, struct perf_event *right)
+@@ -1599,6 +1604,18 @@ perf_event_groups_less(struct perf_event *left, struct perf_event *right)
+ 	if (left->cpu > right->cpu)
+ 		return false;
+ 
++#ifdef CONFIG_CGROUP_PERF
++	if (left->cgrp_group_index < right->cgrp_group_index)
++		return true;
++	if (left->cgrp_group_index > right->cgrp_group_index)
++		return false;
++
++	if (left->cgrp_id < right->cgrp_id)
++		return true;
++	if (left->cgrp_id > right->cgrp_id)
++		return false;
++#endif
++
+ 	if (left->group_index < right->group_index)
+ 		return true;
+ 	if (left->group_index > right->group_index)
+@@ -1608,13 +1625,14 @@ perf_event_groups_less(struct perf_event *left, struct perf_event *right)
+ }
+ 
+ /*
+- * Insert @event into @groups' tree; using {@event->cpu, ++@groups->index} for
+- * key (see perf_event_groups_less). This places it last inside the CPU
++ * Insert @event into @groups' tree; Using
++ * {@event->cpu, @event->cgrp_group_index, @event->cgrp_id, ++@groups->index}
++ * for key (see perf_event_groups_less). This places it last inside the CPU
+  * subtree.
+  */
+ static void
+-perf_event_groups_insert(struct perf_event_groups *groups,
+-			 struct perf_event *event)
++__perf_event_groups_insert(struct perf_event_groups *groups,
++			   struct perf_event *event)
+ {
+ 	struct perf_event *node_event;
+ 	struct rb_node *parent;
+@@ -1639,6 +1657,10 @@ perf_event_groups_insert(struct perf_event_groups *groups,
+ 	rb_insert_color(&event->group_node, &groups->tree);
+ }
+ 
++static void
++perf_event_groups_insert(struct perf_event_groups *groups,
++			 struct perf_event *event);
++
+ /*
+  * Helper function to insert event into the pinned or flexible groups.
+  */
+@@ -1655,8 +1677,8 @@ add_event_to_groups(struct perf_event *event, struct perf_event_context *ctx)
+  * Delete a group from a tree.
+  */
+ static void
+-perf_event_groups_delete(struct perf_event_groups *groups,
+-			 struct perf_event *event)
++__perf_event_groups_delete(struct perf_event_groups *groups,
++			   struct perf_event *event)
+ {
+ 	WARN_ON_ONCE(RB_EMPTY_NODE(&event->group_node) ||
+ 		     RB_EMPTY_ROOT(&groups->tree));
+@@ -1665,6 +1687,10 @@ perf_event_groups_delete(struct perf_event_groups *groups,
+ 	init_event_group(event);
+ }
+ 
++static void
++perf_event_groups_delete(struct perf_event_groups *groups,
++			 struct perf_event *event);
++
+ /*
+  * Helper function to delete event from its groups.
+  */
+@@ -1717,6 +1743,129 @@ perf_event_groups_next(struct perf_event *event)
+ 	return NULL;
+ }
+ 
++#ifdef CONFIG_CGROUP_PERF
++
++static struct perf_event *
++perf_event_groups_first_cgroup(struct perf_event_groups *groups,
++			       int cpu, u64 cgrp_group_index, u64 cgrp_id)
 +{
-+	return false;
++	struct perf_event *node_event = NULL, *match = NULL;
++	struct rb_node *node = groups->tree.rb_node;
++
++	while (node) {
++		node_event = container_of(node, struct perf_event, group_node);
++
++		if (cpu < node_event->cpu) {
++			node = node->rb_left;
++		} else if (cpu > node_event->cpu) {
++			node = node->rb_right;
++		} else {
++			if (cgrp_group_index < node_event->cgrp_group_index)
++				node = node->rb_left;
++			else if (cgrp_group_index > node_event->cgrp_group_index)
++				node = node->rb_right;
++			else {
++
++				if (cgrp_id < node_event->cgrp_id)
++					node = node->rb_left;
++				else if (cgrp_id > node_event->cgrp_id)
++					node = node->rb_right;
++				else {
++					match = node_event;
++					node = node->rb_left;
++				}
++			}
++		}
++	}
++	return match;
 +}
 +
-+static inline bool
- perf_cgroup_match(struct perf_event *event)
- {
- 	return true;
-@@ -2944,13 +3013,23 @@ static void ctx_sched_out(struct perf_event_context *ctx,
- 
- 	perf_pmu_disable(ctx->pmu);
- 	if (is_active & EVENT_PINNED) {
--		list_for_each_entry_safe(event, tmp, &ctx->pinned_active, active_list)
-+		list_for_each_entry_safe(event, tmp, &ctx->pinned_active, active_list) {
-+			if (perf_cgroup_skip_switch(event_type, event, true)) {
-+				ctx->is_active |= EVENT_PINNED;
-+				continue;
-+			}
- 			group_sched_out(event, cpuctx, ctx);
-+		}
- 	}
- 
- 	if (is_active & EVENT_FLEXIBLE) {
--		list_for_each_entry_safe(event, tmp, &ctx->flexible_active, active_list)
-+		list_for_each_entry_safe(event, tmp, &ctx->flexible_active, active_list) {
-+			if (perf_cgroup_skip_switch(event_type, event, false)) {
-+				ctx->is_active |= EVENT_FLEXIBLE;
-+				continue;
-+			}
- 			group_sched_out(event, cpuctx, ctx);
-+		}
- 	}
- 	perf_pmu_enable(ctx->pmu);
- }
-@@ -3271,6 +3350,7 @@ struct sched_in_data {
- 	struct perf_event_context *ctx;
- 	struct perf_cpu_context *cpuctx;
- 	int can_add_hw;
-+	enum event_type_t event_type;
- };
- 
- static int pinned_sched_in(struct perf_event *event, void *data)
-@@ -3280,6 +3360,9 @@ static int pinned_sched_in(struct perf_event *event, void *data)
- 	if (event->state <= PERF_EVENT_STATE_OFF)
- 		return 0;
- 
-+	if (perf_cgroup_skip_switch(sid->event_type, event, true))
-+		return 0;
++static void
++perf_event_groups_insert(struct perf_event_groups *groups,
++			 struct perf_event *event)
++{
++	struct perf_event **cgrp_event, **rotated_event;
 +
- 	if (!event_filter_match(event))
- 		return 0;
- 
-@@ -3305,6 +3388,9 @@ static int flexible_sched_in(struct perf_event *event, void *data)
- 	if (event->state <= PERF_EVENT_STATE_OFF)
- 		return 0;
- 
-+	if (perf_cgroup_skip_switch(sid->event_type, event, false))
-+		return 0;
++	__perf_event_groups_insert(groups, event);
 +
- 	if (!event_filter_match(event))
- 		return 0;
- 
-@@ -3320,12 +3406,14 @@ static int flexible_sched_in(struct perf_event *event, void *data)
- 
- static void
- ctx_pinned_sched_in(struct perf_event_context *ctx,
--		    struct perf_cpu_context *cpuctx)
-+		    struct perf_cpu_context *cpuctx,
-+		    enum event_type_t event_type)
++	if (is_cgroup_event(event)) {
++		if (event->attr.pinned)
++			cgrp_event = per_cpu_ptr(event->cgrp->pinned_event, event->cpu);
++		else {
++			cgrp_event = per_cpu_ptr(event->cgrp->flexible_event, event->cpu);
++			rotated_event = per_cpu_ptr(event->cgrp->rotated_event, event->cpu);
++
++			/* Add the first rotated event into *rotated_event */
++			if (*cgrp_event && !*rotated_event &&
++			    (event->cgrp_group_index > (*cgrp_event)->cgrp_group_index))
++				*rotated_event = event;
++
++			/*
++			 * *cgrp_event always point to the unrotated events.
++			 * All events have been rotated.
++			 * Update *cgrp_event and *rotated_event for next round.
++			 */
++			if (!*cgrp_event && *rotated_event) {
++				*cgrp_event = *rotated_event;
++				*rotated_event = NULL;
++			}
++		}
++		/*
++		 * Cgroup events for the same cgroup on the same CPU will
++		 * always be inserted at the right because of bigger
++		 * @groups->index.
++		 */
++		if (!*cgrp_event)
++			*cgrp_event = event;
++	}
++}
++
++static void
++perf_event_groups_delete(struct perf_event_groups *groups,
++			 struct perf_event *event)
++{
++	struct perf_event **cgrp_event, **rotated_event;
++
++	__perf_event_groups_delete(groups, event);
++
++	if (is_cgroup_event(event)) {
++		if (event->attr.pinned)
++			cgrp_event = per_cpu_ptr(event->cgrp->pinned_event, event->cpu);
++		else {
++			cgrp_event = per_cpu_ptr(event->cgrp->flexible_event, event->cpu);
++			rotated_event = per_cpu_ptr(event->cgrp->rotated_event, event->cpu);
++			if (*rotated_event == event) {
++				*rotated_event = perf_event_groups_first_cgroup(groups, event->cpu,
++										event->cgrp_group_index,
++										event->cgrp_id);
++			}
++		}
++		if (*cgrp_event == event) {
++			*cgrp_event = perf_event_groups_first_cgroup(groups, event->cpu,
++								     event->cgrp_group_index,
++								     event->cgrp_id);
++		}
++	}
++}
++
++#else /* !CONFIG_CGROUP_PERF */
++
++static void
++perf_event_groups_insert(struct perf_event_groups *groups,
++			 struct perf_event *event)
++{
++	__perf_event_groups_insert(groups, event);
++}
++
++static void
++perf_event_groups_delete(struct perf_event_groups *groups,
++			 struct perf_event *event)
++{
++	__perf_event_groups_delete(groups, event);
++}
++
++#endif
++
+ /*
+  * Iterate through the whole groups tree.
+  */
+@@ -3757,6 +3906,10 @@ static void perf_adjust_freq_unthr_context(struct perf_event_context *ctx,
+  */
+ static void rotate_ctx(struct perf_event_context *ctx, struct perf_event *event)
  {
- 	struct sched_in_data sid = {
- 		.ctx = ctx,
- 		.cpuctx = cpuctx,
- 		.can_add_hw = 1,
-+		.event_type = event_type,
- 	};
- 
- 	visit_groups_merge(&ctx->pinned_groups,
-@@ -3335,12 +3423,14 @@ ctx_pinned_sched_in(struct perf_event_context *ctx,
- 
- static void
- ctx_flexible_sched_in(struct perf_event_context *ctx,
--		      struct perf_cpu_context *cpuctx)
-+		      struct perf_cpu_context *cpuctx,
-+		      enum event_type_t event_type)
- {
- 	struct sched_in_data sid = {
- 		.ctx = ctx,
- 		.cpuctx = cpuctx,
- 		.can_add_hw = 1,
-+		.event_type = event_type,
- 	};
- 
- 	visit_groups_merge(&ctx->flexible_groups,
-@@ -3354,6 +3444,7 @@ ctx_sched_in(struct perf_event_context *ctx,
- 	     enum event_type_t event_type,
- 	     struct task_struct *task)
- {
-+	enum event_type_t ctx_event_type = event_type & EVENT_ALL;
- 	int is_active = ctx->is_active;
- 	u64 now;
- 
-@@ -3362,7 +3453,7 @@ ctx_sched_in(struct perf_event_context *ctx,
- 	if (likely(!ctx->nr_events))
++#ifdef CONFIG_CGROUP_PERF
++	struct perf_cpu_context *cpuctx = __get_cpu_context(ctx);
++	struct perf_event **rotated_event;
++#endif
+ 	/*
+ 	 * Rotate the first entry last of non-pinned groups. Rotation might be
+ 	 * disabled by the inheritance code.
+@@ -3765,6 +3918,22 @@ static void rotate_ctx(struct perf_event_context *ctx, struct perf_event *event)
  		return;
  
--	ctx->is_active |= (event_type | EVENT_TIME);
-+	ctx->is_active |= (ctx_event_type | EVENT_TIME);
- 	if (ctx->task) {
- 		if (!is_active)
- 			cpuctx->task_ctx = ctx;
-@@ -3382,13 +3473,17 @@ ctx_sched_in(struct perf_event_context *ctx,
- 	/*
- 	 * First go through the list and put on any pinned groups
- 	 * in order to give them the best chance of going on.
-+	 *
-+	 * System-wide events may not be sched out in cgroup switch.
-+	 * Unconditionally call sched_in() for cgroup events only switch.
-+	 * The sched_in() will filter the events.
- 	 */
--	if (is_active & EVENT_PINNED)
--		ctx_pinned_sched_in(ctx, cpuctx);
-+	if ((is_active & EVENT_PINNED) || CGROUP_PINNED(event_type))
-+		ctx_pinned_sched_in(ctx, cpuctx, CGROUP_PINNED(event_type));
- 
- 	/* Then walk through the lower prio flexible groups */
--	if (is_active & EVENT_FLEXIBLE)
--		ctx_flexible_sched_in(ctx, cpuctx);
-+	if ((is_active & EVENT_FLEXIBLE) || CGROUP_FLEXIBLE(event_type))
-+		ctx_flexible_sched_in(ctx, cpuctx, CGROUP_FLEXIBLE(event_type));
+ 	perf_event_groups_delete(&ctx->flexible_groups, event);
++
++#ifdef CONFIG_CGROUP_PERF
++
++	/* Rotate cgroups */
++	if (&cpuctx->ctx == ctx) {
++		if (event->cgrp) {
++			rotated_event = per_cpu_ptr(event->cgrp->rotated_event, event->cpu);
++			if (!*rotated_event)
++				event->cgrp_group_index = ctx->flexible_groups.index;
++			else
++				event->cgrp_group_index = (*rotated_event)->cgrp_group_index;
++		} else
++			event->cgrp_group_index = ctx->flexible_groups.index;
++	}
++#endif
++
+ 	perf_event_groups_insert(&ctx->flexible_groups, event);
  }
  
- static void cpu_ctx_sched_in(struct perf_cpu_context *cpuctx,
+@@ -12196,18 +12365,42 @@ perf_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	jc->info = alloc_percpu(struct perf_cgroup_info);
+-	if (!jc->info) {
+-		kfree(jc);
+-		return ERR_PTR(-ENOMEM);
+-	}
++	if (!jc->info)
++		goto free_jc;
++
++	jc->pinned_event = alloc_percpu(struct perf_event *);
++	if (!jc->pinned_event)
++		goto free_jc_info;
++
++	jc->flexible_event = alloc_percpu(struct perf_event *);
++	if (!jc->flexible_event)
++		goto free_jc_pinned;
++
++	jc->rotated_event = alloc_percpu(struct perf_event *);
++	if (!jc->rotated_event)
++		goto free_jc_flexible;
+ 
+ 	return &jc->css;
++
++free_jc_flexible:
++	free_percpu(jc->flexible_event);
++free_jc_pinned:
++	free_percpu(jc->pinned_event);
++free_jc_info:
++	free_percpu(jc->info);
++free_jc:
++	kfree(jc);
++
++	return ERR_PTR(-ENOMEM);
+ }
+ 
+ static void perf_cgroup_css_free(struct cgroup_subsys_state *css)
+ {
+ 	struct perf_cgroup *jc = container_of(css, struct perf_cgroup, css);
+ 
++	free_percpu(jc->pinned_event);
++	free_percpu(jc->flexible_event);
++	free_percpu(jc->rotated_event);
+ 	free_percpu(jc->info);
+ 	kfree(jc);
+ }
 -- 
 2.7.4
 
