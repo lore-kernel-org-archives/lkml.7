@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38EDC04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E977C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6FB720843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E03C92084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918470;
-	bh=TuVGRc68xIZZTSO2/CHG8WH11dqToIKgEEmX1gid7eo=;
+	s=default; t=1557918475;
+	bh=UaSRcyMnz8YwZQ5JXfK4M9gajoohZJeJ7Jei2hd85AU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UlSWxMXL0MFYK3ayYFORiT+WHnGcRCKDDM4yH2ZleBwEQHo62yt0IB3aRlHM2oiRI
-	 5KzVRmF6VbLHPueygJmm2gFeBhLAfIVGqfs/z4csoJM+8byExdDda2+Mx0cJivnm4o
-	 KkLhq14RqKg4pqsnhtmTYw3HS1P+s0WqyFZ+ubts=
+	b=rDU4ZROuI72R0DnTc3gy03fqO+Vy7HrJOd0bRRcqKdkrfl2OcZF2tIjRiLn2IKSGA
+	 YzyE3uUGBgdzsx/ol5vYChpCnAUepJuhHnnNu7p0ZwzVV+iYfMdHZPlTTlYAVytxTl
+	 XKUKXb0v0uLpxjXQ14QcHrKFO1OlcBJdeKXdTrH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbfEOLHt (ORCPT
+        id S1728175AbfEOLHx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:07:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39716 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:07:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728983AbfEOLHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:07:47 -0400
+        id S1728435AbfEOLHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:07:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D670120843;
-        Wed, 15 May 2019 11:07:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80AB62084F;
+        Wed, 15 May 2019 11:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918466;
-        bh=TuVGRc68xIZZTSO2/CHG8WH11dqToIKgEEmX1gid7eo=;
+        s=default; t=1557918469;
+        bh=UaSRcyMnz8YwZQ5JXfK4M9gajoohZJeJ7Jei2hd85AU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pq7jdSSE5Dw6FuW/IL0U94K3c2XKClO/xi18tFtLfw74HD+3BmAb7uTk9D+1XIC3X
-         JQuJ5QSgGxyMAiQ7ciqE0jmO0j005fwotXewPkKztGAMuvVSfANyLRdyVZa8b5GaoU
-         2YvDHRQVlzslvMtPNo3+GOZ7VOpb+JMiuZxLuXNs=
+        b=A+lbarvJDwTVloqW0/AC3xVi0a1ZxKfuhsxIt/nmnXKJZl+LdFpj/AYtBQcNRm7oE
+         6mZf2o9KvRqDp30yez1z2fOFD65XYRTl1EfNLH6gW8T6sXDQNBsDFUm11puqmffd0Q
+         s3k7QofGB1qPo6AidQocfohyV7knIfLTdAUiOxvk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.4 142/266] media: v4l2: i2c: ov7670: Fix PLL bypass register values
-Date:   Wed, 15 May 2019 12:54:09 +0200
-Message-Id: <20190515090727.712900627@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 116/266] USB: yurex: Fix protection fault after device removal
+Date:   Wed, 15 May 2019 12:53:43 +0200
+Message-Id: <20190515090726.382811751@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,82 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 61da76beef1e4f0b6ba7be4f8d0cf0dac7ce1f55 upstream.
+commit ef61eb43ada6c1d6b94668f0f514e4c268093ff3 upstream.
 
-The following commits:
-commit f6dd927f34d6 ("[media] media: ov7670: calculate framerate properly for ov7675")
-commit 04ee6d92047e ("[media] media: ov7670: add possibility to bypass pll for ov7675")
-introduced the ability to bypass PLL multiplier and use input clock (xvclk)
-as pixel clock output frequency for ov7675 sensor.
+The syzkaller USB fuzzer found a general-protection-fault bug in the
+yurex driver.  The fault occurs when a device has been unplugged; the
+driver's interrupt-URB handler logs an error message referring to the
+device by name, after the device has been unregistered and its name
+deallocated.
 
-PLL is bypassed using register DBLV[7:6], according to ov7670 and ov7675
-sensor manuals. Macros used to set DBLV register seem wrong in the
-driver, as their values do not match what reported in the datasheet.
+This problem is caused by the fact that the interrupt URB isn't
+cancelled until the driver's private data structure is released, which
+can happen long after the device is gone.  The cure is to make sure
+that the interrupt URB is killed before yurex_disconnect() returns;
+this is exactly the sort of thing that usb_poison_urb() was meant for.
 
-Fix by changing DBLV_* macros to use bits [7:6] and set bits [3:0] to
-default 0x0a reserved value (according to datasheets).
-
-While at there, remove a write to DBLV register in
-"ov7675_set_framerate()" that over-writes the previous one to the same
-register that takes "info->pll_bypass" flag into account instead of setting PLL
-multiplier to 4x unconditionally.
-
-And, while at there, since "info->pll_bypass" is only used in
-set/get_framerate() functions used by ov7675 only, it is not necessary
-to check for the device id at probe time to make sure that when using
-ov7670 "info->pll_bypass" is set to false.
-
-Fixes: f6dd927f34d6 ("[media] media: ov7670: calculate framerate properly for ov7675")
-
-Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: syzbot+2eb9121678bdb36e6d57@syzkaller.appspotmail.com
+CC: <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/i2c/ov7670.c |   16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+ drivers/usb/misc/yurex.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/media/i2c/ov7670.c
-+++ b/drivers/media/i2c/ov7670.c
-@@ -155,10 +155,10 @@ MODULE_PARM_DESC(debug, "Debug level (0-
- #define REG_GFIX	0x69	/* Fix gain control */
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -332,6 +332,7 @@ static void yurex_disconnect(struct usb_
+ 	usb_deregister_dev(interface, &yurex_class);
  
- #define REG_DBLV	0x6b	/* PLL control an debugging */
--#define   DBLV_BYPASS	  0x00	  /* Bypass PLL */
--#define   DBLV_X4	  0x01	  /* clock x4 */
--#define   DBLV_X6	  0x10	  /* clock x6 */
--#define   DBLV_X8	  0x11	  /* clock x8 */
-+#define   DBLV_BYPASS	  0x0a	  /* Bypass PLL */
-+#define   DBLV_X4	  0x4a	  /* clock x4 */
-+#define   DBLV_X6	  0x8a	  /* clock x6 */
-+#define   DBLV_X8	  0xca	  /* clock x8 */
- 
- #define REG_REG76	0x76	/* OV's name */
- #define   R76_BLKPCOR	  0x80	  /* Black pixel correction enable */
-@@ -833,7 +833,7 @@ static int ov7675_set_framerate(struct v
- 	if (ret < 0)
- 		return ret;
- 
--	return ov7670_write(sd, REG_DBLV, DBLV_X4);
-+	return 0;
- }
- 
- static void ov7670_get_framerate_legacy(struct v4l2_subdev *sd,
-@@ -1578,11 +1578,7 @@ static int ov7670_probe(struct i2c_clien
- 		if (config->clock_speed)
- 			info->clock_speed = config->clock_speed;
- 
--		/*
--		 * It should be allowed for ov7670 too when it is migrated to
--		 * the new frame rate formula.
--		 */
--		if (config->pll_bypass && id->driver_data != MODEL_OV7670)
-+		if (config->pll_bypass)
- 			info->pll_bypass = true;
- 
- 		if (config->pclk_hb_disable)
+ 	/* prevent more I/O from starting */
++	usb_poison_urb(dev->urb);
+ 	mutex_lock(&dev->io_mutex);
+ 	dev->interface = NULL;
+ 	mutex_unlock(&dev->io_mutex);
 
 
