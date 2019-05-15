@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C06C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A98C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 495B220657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6068020843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921578;
-	bh=xSihnVmtY+9iC4up/Mcox0MkU/6kFtZPpELlpQf8rew=;
+	s=default; t=1557921581;
+	bh=2G32cP8HtH00Rjv2anrTKi7M+acenD3LjABGwolUVdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QP2cuFEWd0H6NpnByX3d2IUFF8NSgRZHcp/AjYkU5oJrEpFIgeEhDinERXwYrn/GV
-	 tVwyhHDaeqUkNUTSxw4T5jdduo7PCctXGEEFANnv3qYr6GmIXNrWf8EM0oiQG9KkwD
-	 n+blAgKye5tSiANrgk8VO8DkoEmZbwSkQori7egM=
+	b=Nb07bZWEUPlR65/r9ZK4i3sHhIlIqtKIQBBLUCpuYwRteQ9Q7SSmXPcFWme7C3mju
+	 fhhmI4ZxYG5BtEubBPCFSXg92/qS9OpU5D0b354kKHorDskrswuY4cGcrLyfSR0tiB
+	 gnG53BInPw1j4HS+6YOdGfqWEdDozF4Kzk+aptYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730280AbfEOLPV (ORCPT
+        id S1730712AbfEOL7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:15:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51740 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:59:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51820 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730049AbfEOLPS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:15:18 -0400
+        id S1729400AbfEOLPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:15:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7207E20862;
-        Wed, 15 May 2019 11:15:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 157E52084F;
+        Wed, 15 May 2019 11:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918917;
-        bh=xSihnVmtY+9iC4up/Mcox0MkU/6kFtZPpELlpQf8rew=;
+        s=default; t=1557918920;
+        bh=2G32cP8HtH00Rjv2anrTKi7M+acenD3LjABGwolUVdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xmQU6QGfjN8OdzZy6ZZVpVdSUZrj3FLMhqlWmsD2MIETzfth8fjNn/2Js4/zdMo11
-         dnttbJHiVk1qO32OpVGp9rT/9baw0GXB6lSo9LPi5PM0cxWlbmDCgN80x10XUn2sJ9
-         hlgiokQ7ua2W9qGs4Y6oi6BWnc/0ALBXPrNKyW7o=
+        b=DJg/7NVhYHVVKAysf0wlGGh5476+XU5zUWFiqMw23omKjWQt/CQnAD8HFs1j2MYg/
+         sFQUWnCeQlUPusrxBzhKm5ppKRIHBhK5ITWMfsQ6nr6wrOhrcJtGz4JOdHLMuGDJqD
+         LnR6iCG1zUUHzv9GYQMTQRCo/iskY3/zS9/swuWY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Timur Tabi <timur@freescale.com>,
-        Mihai Caraman <mihai.caraman@freescale.com>,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 49/51] drivers/virt/fsl_hypervisor.c: prevent integer overflow in ioctl
-Date:   Wed, 15 May 2019 12:56:24 +0200
-Message-Id: <20190515090629.728136722@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.9 50/51] powerpc/lib: fix book3s/32 boot failure due to code patching
+Date:   Wed, 15 May 2019 12:56:25 +0200
+Message-Id: <20190515090629.871639485@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
 References: <20190515090616.669619870@linuxfoundation.org>
@@ -63,46 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 6a024330650e24556b8a18cc654ad00cfecf6c6c upstream.
+commit b45ba4a51cde29b2939365ef0c07ad34c8321789 upstream.
 
-The "param.count" value is a u64 thatcomes from the user.  The code
-later in the function assumes that param.count is at least one and if
-it's not then it leads to an Oops when we dereference the ZERO_SIZE_PTR.
+Commit 51c3c62b58b3 ("powerpc: Avoid code patching freed init
+sections") accesses 'init_mem_is_free' flag too early, before the
+kernel is relocated. This provokes early boot failure (before the
+console is active).
 
-Also the addition can have an integer overflow which would lead us to
-allocate a smaller "pages" array than required.  I can't immediately
-tell what the possible run times implications are, but it's safest to
-prevent the overflow.
+As it is not necessary to do this verification that early, this
+patch moves the test into patch_instruction() instead of
+__patch_instruction().
 
-Link: http://lkml.kernel.org/r/20181218082129.GE32567@kadam
-Fixes: 6db7199407ca ("drivers/virt: introduce Freescale hypervisor management driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Timur Tabi <timur@freescale.com>
-Cc: Mihai Caraman <mihai.caraman@freescale.com>
-Cc: Kumar Gala <galak@kernel.crashing.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+This modification also has the advantage of avoiding unnecessary
+remappings.
+
+Fixes: 51c3c62b58b3 ("powerpc: Avoid code patching freed init sections")
+Cc: stable@vger.kernel.org # 4.13+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/virt/fsl_hypervisor.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/powerpc/lib/code-patching.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/virt/fsl_hypervisor.c
-+++ b/drivers/virt/fsl_hypervisor.c
-@@ -215,6 +215,9 @@ static long ioctl_memcpy(struct fsl_hv_i
- 	 * hypervisor.
- 	 */
- 	lb_offset = param.local_vaddr & (PAGE_SIZE - 1);
-+	if (param.count == 0 ||
-+	    param.count > U64_MAX - lb_offset - PAGE_SIZE + 1)
-+		return -EINVAL;
- 	num_pages = (param.count + lb_offset + PAGE_SIZE - 1) >> PAGE_SHIFT;
+--- a/arch/powerpc/lib/code-patching.c
++++ b/arch/powerpc/lib/code-patching.c
+@@ -23,7 +23,7 @@ int patch_instruction(unsigned int *addr
+ 	int err;
  
- 	/* Allocate the buffers we need */
+ 	/* Make sure we aren't patching a freed init section */
+-	if (init_mem_is_free && init_section_contains(addr, 4)) {
++	if (*PTRRELOC(&init_mem_is_free) && init_section_contains(addr, 4)) {
+ 		pr_debug("Skipping init section patching addr: 0x%px\n", addr);
+ 		return 0;
+ 	}
 
 
