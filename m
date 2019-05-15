@@ -2,113 +2,68 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24098C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:59:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C65AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:00:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3C6F20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCF1A20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:00:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="GPh6v1G7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbfEON7i (ORCPT
+        id S1727943AbfEOOAK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 09:59:38 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45026 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725953AbfEON7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 09:59:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7000D374;
-        Wed, 15 May 2019 06:59:37 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C2E33F5AF;
-        Wed, 15 May 2019 06:59:36 -0700 (PDT)
-Date:   Wed, 15 May 2019 14:59:33 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Ley Foon Tan <lftan.linux@gmail.com>
-Cc:     Ley Foon Tan <ley.foon.tan@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org,
-        linux-pci <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH] PCI: altera-msi: Allow building as module
-Message-ID: <20190515135933.GB30985@e121166-lin.cambridge.arm.com>
-References: <1556081835-12921-1-git-send-email-ley.foon.tan@intel.com>
- <1556081835-12921-2-git-send-email-ley.foon.tan@intel.com>
- <CAFiDJ59Pi6fxyE=0ifNJRoGc4QBX3XKJ=L7FXjJ_a6Vyh8otMg@mail.gmail.com>
+        Wed, 15 May 2019 10:00:10 -0400
+Received: from a9-54.smtp-out.amazonses.com ([54.240.9.54]:43512 "EHLO
+        a9-54.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725953AbfEOOAK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 10:00:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
+        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1557928809;
+        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
+        bh=4ieRb2nYTufrIwfIxuW2F44/d/JKF6r4h/5BZmbEcuI=;
+        b=GPh6v1G7tBjvpfFjo9hMZCwciiN03v/sot2b6JO2p5YHO8lXYBnhnIAa773fVXRu
+        NGiplz1lNIFeTYhBR7fj8DXMn08uMJgxeOHgROgOZJOZJdlyx8cjerUOr72NjVKKNYE
+        reEPlVqpmXBv9O4oVqSDSIIrIfo8rpP9+X97ikkw=
+Date:   Wed, 15 May 2019 14:00:09 +0000
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@nuc-kabylake
+To:     Roman Gushchin <guro@fb.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Shakeel Butt <shakeelb@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH v4 5/7] mm: rework non-root kmem_cache lifecycle
+ management
+In-Reply-To: <20190514213940.2405198-6-guro@fb.com>
+Message-ID: <0100016abbcb13b1-a1f70846-1d8c-4212-8e74-2b9be8c32ce7-000000@email.amazonses.com>
+References: <20190514213940.2405198-1-guro@fb.com> <20190514213940.2405198-6-guro@fb.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAFiDJ59Pi6fxyE=0ifNJRoGc4QBX3XKJ=L7FXjJ_a6Vyh8otMg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+X-SES-Outgoing: 2019.05.15-54.240.9.54
+Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 01:35:20PM +0800, Ley Foon Tan wrote:
-> On Wed, Apr 24, 2019 at 12:57 PM Ley Foon Tan <ley.foon.tan@intel.com> wrote:
-> >
-> > Altera MSI IP is a soft IP and is only available after
-> > FPGA image is programmed.
-> >
-> > Make driver modulable to support use case FPGA image is programmed
-> > after kernel is booted. User proram FPGA image in kernel then only load
-> > MSI driver module.
-> >
-> > Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
-> > ---
-> >  drivers/pci/controller/Kconfig           |  2 +-
-> >  drivers/pci/controller/pcie-altera-msi.c | 10 ++++++++++
-> >  2 files changed, 11 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> > index 4b550f9cdd56..920546cb84e2 100644
-> > --- a/drivers/pci/controller/Kconfig
-> > +++ b/drivers/pci/controller/Kconfig
-> > @@ -181,7 +181,7 @@ config PCIE_ALTERA
-> >           FPGA.
-> >
-> >  config PCIE_ALTERA_MSI
-> > -       bool "Altera PCIe MSI feature"
-> > +       tristate "Altera PCIe MSI feature"
-> >         depends on PCIE_ALTERA
-> >         depends on PCI_MSI_IRQ_DOMAIN
-> >         help
-> > diff --git a/drivers/pci/controller/pcie-altera-msi.c b/drivers/pci/controller/pcie-altera-msi.c
-> > index 025ef7d9a046..16d938920ca5 100644
-> > --- a/drivers/pci/controller/pcie-altera-msi.c
-> > +++ b/drivers/pci/controller/pcie-altera-msi.c
-> > @@ -10,6 +10,7 @@
-> >  #include <linux/interrupt.h>
-> >  #include <linux/irqchip/chained_irq.h>
-> >  #include <linux/init.h>
-> > +#include <linux/module.h>
-> >  #include <linux/msi.h>
-> >  #include <linux/of_address.h>
-> >  #include <linux/of_irq.h>
-> > @@ -288,4 +289,13 @@ static int __init altera_msi_init(void)
-> >  {
-> >         return platform_driver_register(&altera_msi_driver);
-> >  }
-> > +
-> > +static void __exit altera_msi_exit(void)
-> > +{
-> > +       platform_driver_unregister(&altera_msi_driver);
-> > +}
-> > +
-> >  subsys_initcall(altera_msi_init);
-> > +MODULE_DEVICE_TABLE(of, altera_msi_of_match);
-> > +module_exit(altera_msi_exit);
-> > +MODULE_LICENSE("GPL v2");
-> > --
-> > 2.19.0
-> >
-> Hi
-> 
-> Any comment for this patch?
+On Tue, 14 May 2019, Roman Gushchin wrote:
 
-I will get to these patches for the next merge window, thanks.
+> To make this possible we need to introduce a new percpu refcounter
+> for non-root kmem_caches. The counter is initialized to the percpu
+> mode, and is switched to atomic mode after deactivation, so we never
+> shutdown an active cache. The counter is bumped for every charged page
+> and also for every running allocation. So the kmem_cache can't
+> be released unless all allocations complete.
 
-Lorenzo
+Increase refcounts during each allocation? Looks to be quite heavy
+processing.
