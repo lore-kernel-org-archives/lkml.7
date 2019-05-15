@@ -2,118 +2,168 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0EDC04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47228C04AB4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5BC20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 091BB20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:47:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Ww/4BnvC"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Qz4Qh3If"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726449AbfEOAoe (ORCPT
+        id S1726487AbfEOArC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:44:34 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60295 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbfEOAoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:44:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 453bRN1qrfz9sB8;
-        Wed, 15 May 2019 10:44:32 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1557881072;
-        bh=ALoQgvrnB/cJU5NKPqYhvCpW2wWu4vyxyzyUd2h9JJg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ww/4BnvCEJl+7cRw5Kzz5zpYt7BhJFpBO87+3exat+/nEuzqbzah5utQWanRCNv7X
-         QUow9naC3wKJhwAxUEoisRZuZbIZMgE1wojPIVrwIe8Vh12gY2NT+1ShDhcgYCl8/A
-         psZQulkXBV1zoTa+uerodkHjA6c/m5ldxjvemdf0FCOQavai35TAvATj5pGGCeBEZx
-         08AbNHmwa4T7/cbNeMptBgH3k6OMbFKM808q4fCRFR4nLM4ychws/UKy9UDLHl6Itv
-         3YxHuRg/DlzY4PpwPmiVGsipBaUpEGrGI61b3NOyqiLWpyWPzR63nWXR7U7dn0Y3uG
-         djaoZ29ioXSjw==
-Date:   Wed, 15 May 2019 10:44:31 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Eduardo Valentin <edubezval@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gal Pressman <galpress@amazon.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Talel Shenhar <talel@amazon.com>
-Subject: Re: linux-next: manual merge of the thermal-soc tree with Linus'
- tree
-Message-ID: <20190515104431.5e353729@canb.auug.org.au>
-In-Reply-To: <20190514141531.GA16968@localhost.localdomain>
-References: <20190513104928.0265b40f@canb.auug.org.au>
-        <20190514034409.GA5691@localhost.localdomain>
-        <20190514144006.60df13bb@canb.auug.org.au>
-        <20190514141531.GA16968@localhost.localdomain>
+        Tue, 14 May 2019 20:47:02 -0400
+Received: from mail-eopbgr20082.outbound.protection.outlook.com ([40.107.2.82]:14464
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726044AbfEOArC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 20:47:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7KmoUhlgxQ//AIr6HMkjLMvpDIlChpZngSkB0f87Xh8=;
+ b=Qz4Qh3IfI/wOJDgFHeG/mJPYWfVbWd66xUNOe1ylEijkByoM2OGtdrVhiRTS/OfgATF9NJ/wQGTzMbtUXG+IpmdVxu27LIjSYFXaQvcYKFEy1oxtFbUmFfAfko9ob9N5NjYbZCK4d9mVVibhsErThcSM4Rl6W/ptCsc7dnElY3I=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB5760.eurprd05.prod.outlook.com (20.178.122.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.24; Wed, 15 May 2019 00:46:58 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1900.010; Wed, 15 May 2019
+ 00:46:58 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Doug Ledford <dledford@redhat.com>
+CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Please pull RDMA subsystem changes
+Thread-Topic: [GIT PULL] Please pull RDMA subsystem changes
+Thread-Index: AQHVCrezaWb+XpDsLE6G1142j/hRCg==
+Date:   Wed, 15 May 2019 00:46:58 +0000
+Message-ID: <20190515004652.GA17171@ziepe.ca>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YQXPR01CA0094.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:c00:41::23) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.49.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0ab173d9-079d-4703-4fc2-08d6d8ced5b6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(49563074)(7193020);SRVR:VI1PR05MB5760;
+x-ms-traffictypediagnostic: VI1PR05MB5760:
+x-microsoft-antispam-prvs: <VI1PR05MB57607E5ABA14A6185E23268DCF090@VI1PR05MB5760.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2201;
+x-forefront-prvs: 0038DE95A2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(346002)(396003)(136003)(39860400002)(189003)(199004)(478600001)(305945005)(33656002)(66066001)(7736002)(71190400001)(71200400001)(2906002)(14454004)(6116002)(3846002)(52116002)(86362001)(6486002)(316002)(110136005)(102836004)(6506007)(26005)(25786009)(476003)(53936002)(386003)(6512007)(9686003)(4326008)(186003)(1076003)(81156014)(14444005)(256004)(81166006)(8676002)(66556008)(54906003)(68736007)(6436002)(5660300002)(73956011)(66946007)(36756003)(8936002)(99936001)(486006)(66616009)(99286004)(64756008)(66446008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5760;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 8rqojCJAT+AbXVUyOOw7xJk5lg+CbQJyjYugSOtfXIrAW6Md0Rn5amxN20F4KBqv2aGORHvxF+oTpFuJejekXe7Y7+HIykSseqVTnpSAqSc6lzBNMtYw/3Ha8O2v1gPqufvp3J15LshDthpt2GPKQfQ4S5iOWbTkURpXWHhLGIYbGhUoBfEskfcqhqBLEgRhI7GOp7SuSWOP+cmemqTTgTMY3pwc290n6R0NLyB/OSH61rAyn3EHhx0DvhRUeAdhfYppRoOp7nRZJGoFyrxy7856aXsIgosiTui1vbX+HdL3nr3yZKUENj9VPLozaESx7My0BNUYq/ATVelGEt3KSlyze8eIyD+90s7EKsPCTIGOb9MMfxFAtktGTPGDgHqaSvLf3/dSGnqPtdAzkWUIpVHAdy5sF1UkSZS36S0R+TM=
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/uTS4l0NsRToI.fEYJBxFZ_1"; protocol="application/pgp-signature"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ab173d9-079d-4703-4fc2-08d6d8ced5b6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 00:46:58.2170
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5760
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/uTS4l0NsRToI.fEYJBxFZ_1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+--2fHTh5uZTiUOsy+g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Eduardo,
+Hi Linus,
 
-On Tue, 14 May 2019 07:15:33 -0700 Eduardo Valentin <edubezval@gmail.com> w=
-rote:
->
-> On Tue, May 14, 2019 at 02:40:06PM +1000, Stephen Rothwell wrote:
-> > Hi Eduardo,
-> >=20
-> > On Mon, 13 May 2019 20:44:11 -0700 Eduardo Valentin <edubezval@gmail.co=
-m> wrote: =20
-> > >
-> > > Thanks for spotting this. I am re-doing the branch based off v5.1-rc7,
-> > > where the last conflict went in with my current queue. =20
-> >=20
-> > Its really not worth the rebase.  Just fix the build problem and send it
-> > all to Linus. =20
->=20
-> Yeah, I think I was not super clear in my first email. I am about to
-> send the content of my branch to Linus.  This specific conflict was
-> because a change in MAINTAINERS went in before the change I have in it,
-> causing a conflict there. The rebase is simply to make it easier for him
-> to pull when I send the git pull.
+These are the 2nd proposed RDMA patches for 5.2.
 
-Linus has repeated told people not to do that.  He wants to see the
-conflicts.  You should mention any conflicts you know about in your pull
-request - just as a heads up to him.
+As requested the main reason to send this is to fix the gcc 9.1
+warnings that many people may hit now that FC30 is out.
 
-However, if a conflict is particularly tricky, it may be worth while to
-a test merge in another branch and tell him about that other branch in
-your pull request.
+Thanks,
+Jason
 
---=20
-Cheers,
-Stephen Rothwell
+The following changes since commit b79656ed44c6865e17bcd93472ec39488bcc4984:
 
---Sig_/uTS4l0NsRToI.fEYJBxFZ_1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+  RDMA/ipoib: Allow user space differentiate between valid dev_port (2019-05-07 16:13:23 -0300)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+
+for you to fetch changes up to c191f93454bcc92810b9c8cdb895a452a57948c2:
+
+  net/mlx5: Set completion EQs as shared resources (2019-05-14 10:22:09 -0300)
+
+----------------------------------------------------------------
+5.2 Merge Window second pull request
+
+This is being sent to get a fix for the gcc 9.1 build warnings, and I've
+also pulled in some bug fix patches that were posted in the last two
+weeks.
+
+- Avoid the gcc 9.1 warning about overflowing a union member
+
+- Fix the wrong callback type for a single response netlink to doit
+
+- Bug fixes from more usage of the mlx5 devx interface
+
+----------------------------------------------------------------
+Jason Gunthorpe (1):
+      RDMA: Directly cast the sockaddr union to sockaddr
+
+Parav Pandit (1):
+      RDMA/core: Change system parameters callback from dumpit to doit
+
+Yishai Hadas (2):
+      IB/mlx5: Verify DEVX general object type correctly
+      net/mlx5: Set completion EQs as shared resources
+
+ drivers/infiniband/core/addr.c               | 16 ++++++++--------
+ drivers/infiniband/core/nldev.c              | 27 +++++++++++++++------------
+ drivers/infiniband/hw/mlx5/devx.c            | 13 ++++++++++---
+ drivers/infiniband/hw/ocrdma/ocrdma_ah.c     |  5 ++---
+ drivers/infiniband/hw/ocrdma/ocrdma_hw.c     |  5 ++---
+ drivers/net/ethernet/mellanox/mlx5/core/eq.c |  3 +++
+ include/linux/mlx5/mlx5_ifc.h                |  2 +-
+ include/uapi/rdma/rdma_netlink.h             |  2 +-
+ 8 files changed, 42 insertions(+), 31 deletions(-)
+
+--2fHTh5uZTiUOsy+g
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzbYO8ACgkQAVBC80lX
-0GxFZggAkigHuDUvAYNu/uw54AEl7CZreJllX9bepthDOydVa+XIVsMgUEMbpcXl
-r+CB+XIpZpvW7s5gTH7znt0qSEszkjdOM/+gaOpF0BN37lpx0+nitJaZPk8kUg98
-OvpHr0P2S/87M/PUbCXSn43pEZlKIC7q94OB5jFkkBgYWtZ+K99Ux2t2zLYKGD7D
-ztdu3yhP4orVqHulmHUca9TcJBQxiVqzGBQtoiUyHpU/A7sXw5POnZQ7Tq2XDLZT
-XX6vYJ+msIREeDukfNLejL8O3xhzYZP8jnFgcAC1t2gX9rM+7mDcphiVQVLb0Eee
-RqRbAUuKQlM0bN1P2u12nNgF++a8Kg==
-=Hyzb
+iQIzBAABCgAdFiEEfB7FMLh+8QxL+6i3OG33FX4gmxoFAlzbYXkACgkQOG33FX4g
+mxqzBhAAmocSn2V083QOUUOPoRRjoJWVZZmVulrCp7jpNqI5i+3Cn+JriYC+82SA
+87nAzbKOGqvSBg0lldSQRrrl1HjOGrAmGA2r10Iae24xqwAJ9NLErmJghpTW+QhY
+owTBX/2TJuadLtwADvhCqQMmTLSm1KeRpgPeDz73XDPveRQuzjGdSSWVXQ7z1nGH
+tLwCPZrOIAXK4ErUg/TfrVSmmsFDE0kkFpHlIzvP5t7rYyDhKt/Mgx1WghjdK8nE
+3qQ40F2iEYoCW5sx15r3SwXEUfo7yO5B+c2LnkBjhEE0OY25syoDOnM8Q1MV6jcR
+pblf0XAstS41DjYPB/7CObiSY6K37l6YybGflJwIaEU5zWc78DaIh1UD3WZddAvJ
+OHszh/OO+nxWUya1KdJrwsstSlcKaZR/wwPnmE8OEO1cpj2k/vYRDgW8DuFcKQdV
+qE7xfHcmP466KIZygLv8YGBCn1BLij3lz4EsDLa4dksA81/L7K5KQqpToVKjW9Lo
+G7m8zny0ZQITN8JPckf1J0JF6MiHAD42youRcJB2il/PyrKOmQYJQ6BZvhzmndYb
+8zvVC+Y4kwk615VmGuXq16Qwx72QEHuSfQb5dPbv2GfR26ntJJQT+VhceGMhtw53
+chjalaGI+M4CtqBoLYNb/w08V7mERMlh3CklugHJXm/8QEE9AM8=
+=F5G/
 -----END PGP SIGNATURE-----
 
---Sig_/uTS4l0NsRToI.fEYJBxFZ_1--
+--2fHTh5uZTiUOsy+g--
