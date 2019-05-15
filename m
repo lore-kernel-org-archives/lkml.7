@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B92DC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79455C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2762089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C49C2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919526;
-	bh=okYy+GU6/N0t4Tvh74P9xri3NwBQ8lf9DQZpI4Zyqi4=;
+	s=default; t=1557919529;
+	bh=xSihnVmtY+9iC4up/Mcox0MkU/6kFtZPpELlpQf8rew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k7ApEChA23oY4FtqaLkHCBg+VXqz8Zg/WQv7EJarvZy5PKgK9DZ4mFjRt8bp0K5kS
-	 zfmG7H0OYKW8tZ3zsiU6l2n9K69wHLfSILeqaVxu1cOTBDxajEd9/g9OmGRQm/s991
-	 fPGF0E1Nr8ClhLIMzkN0v4hvjgzOm9YmVHO6MXiw=
+	b=SfA9GyJZWBYEIb4N2FvUdVDVACA8bwI52vpFGGqNr366DHMaeARbqeFRrzN3nPCrI
+	 BE+PmAiOCRyAP1kFSVUbZUJDAa5WLBD5VY4rK3WDsME9U+S7sUgI60u9Il717AN1ge
+	 l+p1sKrvinOl/sQDuqEEBkFQiQvTE/PVV+UWIJ9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731994AbfEOLZY (ORCPT
+        id S1731559AbfEOLZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:25:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36078 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:25:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731975AbfEOLZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:25:20 -0400
+        id S1731550AbfEOLZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:25:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FAAA206BF;
-        Wed, 15 May 2019 11:25:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CD342089E;
+        Wed, 15 May 2019 11:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919520;
-        bh=okYy+GU6/N0t4Tvh74P9xri3NwBQ8lf9DQZpI4Zyqi4=;
+        s=default; t=1557919522;
+        bh=xSihnVmtY+9iC4up/Mcox0MkU/6kFtZPpELlpQf8rew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EcVJnB/C/ukTtsxW0knsSOzlP/Yb46HdQcSh6HXj/te07cJ7HucObW+tlZg/Afkf9
-         6HzTJnjqQhEsrwuAQHrxhljEzRzjAblGfGOwtm7DVQFLQ/yXyQUAg5vFiRMBq4W1l2
-         F5Z36vweycWE31Knl3c5N1fICgJTdJylibr6vTBM=
+        b=HXQ0r2Rigkfkequ6pZ4ZrOszAa3eqgNZjxVQeTtuHQ4b+KHdO22TopNV89ENlGxY1
+         ATKplYjWJOyqXXHXSrhttxMLJbMueF1PqGiTE3IrHn6Xx8Z9yWbC+VmAtViDjxPdjn
+         j2DKDjcmjdebZWKmWFhwjstGdL7kGChO7PeN4/sk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -48,9 +48,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mihai Caraman <mihai.caraman@freescale.com>,
         Kumar Gala <galak@kernel.crashing.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 106/113] drivers/virt/fsl_hypervisor.c: dereferencing error pointers in ioctl
-Date:   Wed, 15 May 2019 12:56:37 +0200
-Message-Id: <20190515090701.705917614@linuxfoundation.org>
+Subject: [PATCH 4.19 107/113] drivers/virt/fsl_hypervisor.c: prevent integer overflow in ioctl
+Date:   Wed, 15 May 2019 12:56:38 +0200
+Message-Id: <20190515090701.787093558@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -65,12 +65,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit c8ea3663f7a8e6996d44500ee818c9330ac4fd88 upstream.
+commit 6a024330650e24556b8a18cc654ad00cfecf6c6c upstream.
 
-strndup_user() returns error pointers on error, and then in the error
-handling we pass the error pointers to kfree().  It will cause an Oops.
+The "param.count" value is a u64 thatcomes from the user.  The code
+later in the function assumes that param.count is at least one and if
+it's not then it leads to an Oops when we dereference the ZERO_SIZE_PTR.
 
-Link: http://lkml.kernel.org/r/20181218082003.GD32567@kadam
+Also the addition can have an integer overflow which would lead us to
+allocate a smaller "pages" array than required.  I can't immediately
+tell what the possible run times implications are, but it's safest to
+prevent the overflow.
+
+Link: http://lkml.kernel.org/r/20181218082129.GE32567@kadam
 Fixes: 6db7199407ca ("drivers/virt: introduce Freescale hypervisor management driver")
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
@@ -83,84 +89,20 @@ Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/virt/fsl_hypervisor.c |   26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ drivers/virt/fsl_hypervisor.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
 --- a/drivers/virt/fsl_hypervisor.c
 +++ b/drivers/virt/fsl_hypervisor.c
-@@ -331,8 +331,8 @@ static long ioctl_dtprop(struct fsl_hv_i
- 	struct fsl_hv_ioctl_prop param;
- 	char __user *upath, *upropname;
- 	void __user *upropval;
--	char *path = NULL, *propname = NULL;
--	void *propval = NULL;
-+	char *path, *propname;
-+	void *propval;
- 	int ret = 0;
+@@ -215,6 +215,9 @@ static long ioctl_memcpy(struct fsl_hv_i
+ 	 * hypervisor.
+ 	 */
+ 	lb_offset = param.local_vaddr & (PAGE_SIZE - 1);
++	if (param.count == 0 ||
++	    param.count > U64_MAX - lb_offset - PAGE_SIZE + 1)
++		return -EINVAL;
+ 	num_pages = (param.count + lb_offset + PAGE_SIZE - 1) >> PAGE_SHIFT;
  
- 	/* Get the parameters from the user. */
-@@ -344,32 +344,30 @@ static long ioctl_dtprop(struct fsl_hv_i
- 	upropval = (void __user *)(uintptr_t)param.propval;
- 
- 	path = strndup_user(upath, FH_DTPROP_MAX_PATHLEN);
--	if (IS_ERR(path)) {
--		ret = PTR_ERR(path);
--		goto out;
--	}
-+	if (IS_ERR(path))
-+		return PTR_ERR(path);
- 
- 	propname = strndup_user(upropname, FH_DTPROP_MAX_PATHLEN);
- 	if (IS_ERR(propname)) {
- 		ret = PTR_ERR(propname);
--		goto out;
-+		goto err_free_path;
- 	}
- 
- 	if (param.proplen > FH_DTPROP_MAX_PROPLEN) {
- 		ret = -EINVAL;
--		goto out;
-+		goto err_free_propname;
- 	}
- 
- 	propval = kmalloc(param.proplen, GFP_KERNEL);
- 	if (!propval) {
- 		ret = -ENOMEM;
--		goto out;
-+		goto err_free_propname;
- 	}
- 
- 	if (set) {
- 		if (copy_from_user(propval, upropval, param.proplen)) {
- 			ret = -EFAULT;
--			goto out;
-+			goto err_free_propval;
- 		}
- 
- 		param.ret = fh_partition_set_dtprop(param.handle,
-@@ -388,7 +386,7 @@ static long ioctl_dtprop(struct fsl_hv_i
- 			if (copy_to_user(upropval, propval, param.proplen) ||
- 			    put_user(param.proplen, &p->proplen)) {
- 				ret = -EFAULT;
--				goto out;
-+				goto err_free_propval;
- 			}
- 		}
- 	}
-@@ -396,10 +394,12 @@ static long ioctl_dtprop(struct fsl_hv_i
- 	if (put_user(param.ret, &p->ret))
- 		ret = -EFAULT;
- 
--out:
--	kfree(path);
-+err_free_propval:
- 	kfree(propval);
-+err_free_propname:
- 	kfree(propname);
-+err_free_path:
-+	kfree(path);
- 
- 	return ret;
- }
+ 	/* Allocate the buffers we need */
 
 
