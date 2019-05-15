@@ -2,106 +2,95 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84857C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02648C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:39:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C1762166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C578120873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:39:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbfEOTiS (ORCPT
+        id S1727825AbfEOTj2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:38:18 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44736 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726807AbfEOTiR (ORCPT
+        Wed, 15 May 2019 15:39:28 -0400
+Received: from tartarus.angband.pl ([54.37.238.230]:48672 "EHLO
+        tartarus.angband.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727785AbfEOTj0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 15:38:17 -0400
-Received: by mail-qt1-f196.google.com with SMTP id f24so1063615qtk.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 12:38:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lyWzyI2UXZXBor7mB3ol4MqEYJD1vGyEwW2168pojnA=;
-        b=tHzNRfOBQ54qbbT/dL+JbqVJtaqmHgbBjn3uGwAYvsGvtdQfwos4Q+oD4RMf5U/wLQ
-         f8DTl5BXDXi+h3b8/Hyv9qqiZPqtIRO61WCfSOy9hBfd8Bs89QmrZ2n0eDliZekHQDi3
-         8yP39XNuRo3wEyP/yHL31s3jSuMrODQun22aE9sPKluc8M4N3VeHhrnsQcTYbzy0LXTz
-         oLSkL1lpSbahfO7I/5MyqUXwbxYKhK8Eq3shwgGtCsCnfOAeWzUuKAj/oethb+xu0a7B
-         RNatvmordXvtGpZNzE3ttplrLn2L7gKRqxq7YHVzWxdhbzzFzwZCfEqyzM8v5TlPpo/q
-         ez9Q==
-X-Gm-Message-State: APjAAAXF04Ur8p9hzbMalI7f2GXVXzPeOMbi/ed66i7tBmVJ5hc21QcP
-        4wSh56KsUJ7PDgmzQSePoK7dvFiJV7OZj+JARP4=
-X-Google-Smtp-Source: APXvYqyXfEWrkoVlkor6gduR93XqdVIZZomQkQEF8yId7Hd2cBQHS2Q/QxxMEAgT5gNl9idHYeSfw2ZA7A9JEVXuXhU=
-X-Received: by 2002:ac8:2924:: with SMTP id y33mr37005088qty.212.1557949096837;
- Wed, 15 May 2019 12:38:16 -0700 (PDT)
+        Wed, 15 May 2019 15:39:26 -0400
+Received: from kilobyte by tartarus.angband.pl with local (Exim 4.92)
+        (envelope-from <kilobyte@angband.pl>)
+        id 1hQzjd-0008AI-LV; Wed, 15 May 2019 21:38:41 +0200
+Date:   Wed, 15 May 2019 21:38:41 +0200
+From:   Adam Borowski <kilobyte@angband.pl>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
+        mhocko@suse.com, keith.busch@intel.com,
+        kirill.shutemov@linux.intel.com, pasha.tatashin@oracle.com,
+        alexander.h.duyck@linux.intel.com, ira.weiny@intel.com,
+        andreyknvl@google.com, arunks@codeaurora.org, vbabka@suse.cz,
+        cl@linux.com, riel@surriel.com, keescook@chromium.org,
+        hannes@cmpxchg.org, npiggin@gmail.com,
+        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
+        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
+        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH RFC 0/5] mm: process_vm_mmap() -- syscall for duplication
+ a process mapping
+Message-ID: <20190515193841.GA29728@angband.pl>
+References: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
 MIME-Version: 1.0
-References: <20190512012508.10608-1-elder@linaro.org> <20190512012508.10608-9-elder@linaro.org>
-In-Reply-To: <20190512012508.10608-9-elder@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 15 May 2019 21:37:59 +0200
-Message-ID: <CAK8P3a2QZ3-VEQ21AHGAz4JPEDSKAUZtqtVarQ9Uk7Bg32PpNQ@mail.gmail.com>
-Subject: Re: [PATCH 08/18] soc: qcom: ipa: the generic software interface
-To:     Alex Elder <elder@linaro.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        syadagir@codeaurora.org, mjavid@codeaurora.org,
-        evgreen@chromium.org, Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
+X-Junkbait: aaron@angband.pl, zzyx@angband.pl
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: kilobyte@angband.pl
+X-SA-Exim-Scanned: No (on tartarus.angband.pl); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 3:25 AM Alex Elder <elder@linaro.org> wrote:
+On Wed, May 15, 2019 at 06:11:15PM +0300, Kirill Tkhai wrote:
+> This patchset adds a new syscall, which makes possible
+> to clone a mapping from a process to another process.
+> The syscall supplements the functionality provided
+> by process_vm_writev() and process_vm_readv() syscalls,
+> and it may be useful in many situation.
+> 
+> For example, it allows to make a zero copy of data,
+> when process_vm_writev() was previously used:
 
-> +static int gsi_ring_alloc(struct gsi *gsi, struct gsi_ring *ring, u32 count)
-> +{
-> +       size_t size = roundup_pow_of_two(count * sizeof(struct gsi_tre));
-> +       dma_addr_t addr;
-> +
-> +       /* Hardware requires a power-of-2 ring size (and alignment) */
-> +       ring->virt = dma_alloc_coherent(gsi->dev, size, &addr, GFP_KERNEL);
-> +       if (!ring->virt)
-> +               return -ENOMEM;
-> +       ring->addr = addr;
-> +       ring->base = addr & GENMASK(31, 0);
-> +       ring->size = size;
-> +       ring->end = ring->base + size;
-> +       spin_lock_init(&ring->spinlock);
-> +
-> +       return 0;
-> +}
+I wonder, why not optimize the existing interfaces to do zero copy if
+properly aligned?  No need for a new syscall, and old code would immediately
+benefit.
 
-Another comment for this patch: dma_alloc_coherent() does not guarantee
-alignment of the requested buffer as implied by the comment. In many
-configurations, it /is/ naturally aligned because the buffer comes from
-alloc_pages(), but you can't really be sure.
+> There are several problems with process_vm_writev() in this example:
+> 
+> 1)it causes pagefault on remote process memory, and it forces
+>   allocation of a new page (if was not preallocated);
+> 
+> 2)amount of memory for this example is doubled in a moment --
+>   n pages in current and n pages in remote tasks are occupied
+>   at the same time;
+> 
+> 3)received data has no a chance to be properly swapped for
+>   a long time.
 
-I suspect it's actually only broken when the buffer spans a 4GB boundary
-(and updating the lower 32 bit in the register gives a wrong pointer), which
-is unlikely but will happen at some point according to Murphy's law.
-If you just need the dma_addr_t to not cross a 4GB boundary, the
-easiest solution would be to use GFP_DMA32, which gives you a
-buffer that is mapped to the first 4GB bus address space (not necessarily
-the first 4GB of RAM if you have an iommu).
+That'll handle all of your above problems, except for making pages
+subject to CoW if written to.  But if making pages writeably shared is
+desired, the old functions have a "flags" argument that doesn't yet have a
+single bit defined.
 
-If you manually align the ring buffer, it should be fine too, though I have
-to say that the way the driver does pointer arithmetic on 32-bit integers
-seems rather fragile as well.
 
-A nicer way to deal with ring buffers in general is to only ever use a
-32-bit index number stored in an atomic_t, use atomic_inc_return()
-to advance the index and then mask the number when turning it into
-an index. With that, you should also be able to avoid the shared
-spinlock. Moving the rp and wp into separate cache lines further
-reduces the coherency traffic by avoiding concurrent writes on the
-same line.
-
-      Arnd
+Meow!
+-- 
+⢀⣴⠾⠻⢶⣦⠀ Latin:   meow 4 characters, 4 columns,  4 bytes
+⣾⠁⢠⠒⠀⣿⡁ Greek:   μεου 4 characters, 4 columns,  8 bytes
+⢿⡄⠘⠷⠚⠋  Runes:   ᛗᛖᛟᚹ 4 characters, 4 columns, 12 bytes
+⠈⠳⣄⠀⠀⠀⠀ Chinese: 喵   1 character,  2 columns,  3 bytes <-- best!
