@@ -2,152 +2,224 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78857C04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 790EDC04AB4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F236204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A2552082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:14:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="E69EF/g9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DtjFqYj3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfEOAKw (ORCPT
+        id S1726742AbfEOAOg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:10:52 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38508 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbfEOAKv (ORCPT
+        Tue, 14 May 2019 20:14:36 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40209 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726265AbfEOAOf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:10:51 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f97so390559plb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 17:10:50 -0700 (PDT)
+        Tue, 14 May 2019 20:14:35 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u17so350787pfn.7;
+        Tue, 14 May 2019 17:14:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=4SoXHx5mpTgQd7eRTwT5Sm5OnDgP1mzN+IrEBUFaD40=;
-        b=E69EF/g95+Q9j1KG6Xl2+AVFojp2ZvLQehQtGcHEDQI30LUzCeKkzUELWAP8Lygal5
-         fCY5ft15dY/uMkUWpO16TnfAH0g47mFItMeB/3MbZAlAjsUhnD/Uzl+pzOSvltAjZ95s
-         w1OjSeOjh1RH7vOEoZ/RgyWvki3YPCL1tHYWCT9Zht16sbiPXDR7lUbOZQ8TSQlo8y5d
-         tzgtD3LEZNVbd/ODAmhp9vEvgVy9PKOK4JPIzfdBpjtRNzb04n/SIBGGhniOvI5Azefi
-         N8qc4vkLObwZrdwB9N2Kp823NlOh1okPQfSK02sKK01s7OYwo/MAym27QWcHJ7VDv/AH
-         oW4g==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=aAQdPwK8UhHmXdxJzm6jQLoLZaXI/Q5xb4j3/5myTwU=;
+        b=DtjFqYj39Dm0Rv+bcjGdBjQ6EN0VVznNIsEvch4bISyaQ/e0Png3fqdAoPlSGFyybQ
+         9RdNTatJQF70rYkneWxA0HwEKweBx5SaUxs2qBiWZDr2CTLQmWuFJ9nH5nKDx0Dww2GW
+         Z8rok8HxjbdcQqXcj08v6osdgn+0zsqQwd3jqGM6V3OG1lyeNu7zeDJOjnPSzz2eaTXl
+         jxqU2PXw8XetaV5HqNXVfIpEJuQGiWY6E99WNHu/hGpkNajhdTPWmMM+DcAwvntY2jlA
+         MKDGZsE67wbYfTS3WmTNpzqmm/7pYEDSBFFQRWFMC7Etq/VfKLXr71eehd6T4tb/NW+Q
+         rbkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=4SoXHx5mpTgQd7eRTwT5Sm5OnDgP1mzN+IrEBUFaD40=;
-        b=KE2M3TY8yu5FbrCZWBpdeBDlSmBUzl8vVzc9hH+0T794Kg6eas8nfK1OEqJIAelGBI
-         Vwt8o+8WRTjrBxdDwrScjSLiNhbor3tj9SWERrl8SUb8JvLlfUsX1Zlc4IlEmX24w4fE
-         2sM7+LHvrDLd0RVEMbw79/PhE5rdeSpC7xOGG2AlmDcWf/A6aBGOnM/0sJ5DPRw/K6mI
-         qA/an24ukHwycY3nFRFOL/XfROH2iqEYBcI13EwtrUKmAAqnbd1EF+OnVkEZ0w9SANUW
-         CyZarOa07bpRXyBt+vaCJnWXUF+CxxqeQE2CUy8qCZis4CfWSpsK94Bg89XI3HFHB9i9
-         WV2g==
-X-Gm-Message-State: APjAAAUDLmhme2HmWfdEdTDLDhKlkSa6TtGzfpsrlOllyHBK2DTFK9p5
-        cXACx3Z/JqjN5HsvmNy0afc3lshH7ORr2Q==
-X-Google-Smtp-Source: APXvYqykgYRCTCRHHO487dD/RFNDIaE47TVbzBDS/rehZQT2tkG9YHa+22a4vtWuLib/YQQYxsq9rA==
-X-Received: by 2002:a17:902:322:: with SMTP id 31mr28155221pld.204.1557879049023;
-        Tue, 14 May 2019 17:10:49 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:fd66:a9bc:7c2c:636a])
-        by smtp.googlemail.com with ESMTPSA id f17sm262534pgv.16.2019.05.14.17.10.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 17:10:48 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] arm64: dts: meson: g12a: add ethernet pinctrl definitions
-In-Reply-To: <7244c6d3e81e7bbb84ac508399ab64e236051673.camel@baylibre.com>
-References: <20190510164940.13496-1-jbrunet@baylibre.com> <20190510164940.13496-3-jbrunet@baylibre.com> <CAFBinCAmGRHDU5QX2VEsV8vLBXD6fJtcRHbjdW8=p9Yti0V4qA@mail.gmail.com> <7244c6d3e81e7bbb84ac508399ab64e236051673.camel@baylibre.com>
-Date:   Tue, 14 May 2019 17:10:47 -0700
-Message-ID: <7hpnokd1bs.fsf@baylibre.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aAQdPwK8UhHmXdxJzm6jQLoLZaXI/Q5xb4j3/5myTwU=;
+        b=p0PxiK9JT6yDylKkFj7pEo61s2+4o7GjmdE91030oYKFG1H+80kG69yW1v7f62QjqN
+         1v1byjVvJ/tQn3StBnxx2IemaYTyKqYcpm0bGPUhlMMPQ8PnmkdZCDDwA4248OwGc/wE
+         jBFc8VjAFSeIXkJpD78jhPFDd8IlvIGji8uPwxQyt1DqSPGg+QkzTc6SOCUs0gBoIv+K
+         St4rdsej44N6MVlIwD0D2v6h2+Dist0Vj/3S7Cd7FDLzuNSxNrcvXI28350t2APX7I6K
+         AU4itUtrOnZtfpevHG6Wy6TAca37/8556Mja5sm/uJPmk4CNv/pEoKmhkxYd3suzIia8
+         38Cw==
+X-Gm-Message-State: APjAAAW2FBjlSkuSsGQx/jUKXwMEgpL/j2A4Lq6bNr5r4ZGqdGUzgW8i
+        JajfQ/plgoON7xm7AZN07Rk=
+X-Google-Smtp-Source: APXvYqy79bd1G+CGXC0fbDQHPyQsJJqd7yTY4vTthhujhOHeBpcxwWbjzotGY9gkl1u9fw5B3eNBzQ==
+X-Received: by 2002:a63:d04b:: with SMTP id s11mr41453267pgi.187.1557879274578;
+        Tue, 14 May 2019 17:14:34 -0700 (PDT)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id u6sm334194pfm.10.2019.05.14.17.14.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 17:14:33 -0700 (PDT)
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Theodore Ts'o <tytso@mit.edu>, Tim.Bird@sony.com,
+        knut.omang@oracle.com, gregkh@linuxfoundation.org,
+        keescook@google.com, kieran.bingham@ideasonboard.com,
+        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, devicetree@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com,
+        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
+        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
+        mpe@ellerman.id.au, pmladek@suse.com, richard@nod.at,
+        rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com
+References: <20190509133551.GD29703@mit.edu>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+ <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
+ <20190509214233.GA20877@mit.edu>
+ <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com>
+ <20190509233043.GC20877@mit.edu>
+ <8914afef-1e66-e6e3-f891-5855768d3018@deltatee.com>
+ <6d6e91ec-33d3-830b-4895-4d7a20ba7d45@gmail.com>
+ <3faa022b-0b70-0375-aa6d-12ea83a2671f@deltatee.com>
+ <d148a554-2a71-a5a4-4bb2-d84d2c483277@gmail.com>
+ <20190514083819.GC230665@google.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <5ff098a9-9424-901c-9017-d4492e306528@gmail.com>
+Date:   Tue, 14 May 2019 17:14:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190514083819.GC230665@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+On 5/14/19 1:38 AM, Brendan Higgins wrote:
+> On Fri, May 10, 2019 at 03:13:40PM -0700, Frank Rowand wrote:
+>> On 5/10/19 9:17 AM, Logan Gunthorpe wrote:
+>>>
+>>>
+>>> On 2019-05-09 11:18 p.m., Frank Rowand wrote:
+>>>
+>>>> YES, kselftest has in-kernel tests.  (Excuse the shouting...)
+>>>
+>>> Cool. From my cursory look, in my opinion, these would be greatly
+>>> improved by converting them to the framework Brendan is proposing for Kunit.
+>>>
+>>>>> If they do exists, it seems like it would make sense to
+>>>>> convert those to kunit and have Kunit tests run-able in a VM or
+>>>>> baremetal instance.
+>>>>
+>>>> They already run in a VM.
+>>>>
+>>>> They already run on bare metal.
+>>>>
+>>>> They already run in UML.
+>>>
+>>> Simply being able to run in UML is not the only thing here. Kunit
+>>> provides the infrastructure to quickly build, run and report results for
+>>> all the tests from userspace without needing to worry about the details
+>>> of building and running a UML kernel, then parsing dmesg to figure out
+>>> what tests were run or not.
+>>
+>> Yes.  But that is not the only environment that KUnit must support to be
+>> of use to me for devicetree unittests (this is not new, Brendan is quite
+>> aware of my needs and is not ignoring them).
+>>
+>>
+>>>> This is not to say that KUnit does not make sense.  But I'm still trying
+>>>> to get a better description of the KUnit features (and there are
+>>>> some).
+>>>
+>>> So read the patches, or the documentation[1] or the LWN article[2]. It's
+>>> pretty well described in a lot of places -- that's one of the big
+>>> advantages of it. In contrast, few people seems to have any concept of
+>>> what kselftests are or where they are or how to run them (I was
+>>> surprised to find the in-kernel tests in the lib tree).
+>>>
+>>> Logan
+>>>
+>>> [1] https://google.github.io/kunit-docs/third_party/kernel/docs/
+>>> [2] https://lwn.net/Articles/780985/
+>>
+>> I have been following the RFC versions.  I have installed the RFC patches
+>> and run them to the extent that they worked (devicetree unittests were
+>> a guinea pig for test conversion in the RFC series, but the converted
+>> tests did not work).  I read portions of the code while trying to
+>> understand the unittests conversion.  I made review comments based on
+>> the portion of the code that I did read.  I have read the documentation
+>> (very nice btw, as I have said before, but should be expanded).
+>>
+>> My comment is that the description to submit the patch series should
+>> be fuller -- KUnit potentially has a lot of nice attributes, and I
+>> still think I have only scratched the surface.  The average reviewer
+>> may have even less in-depth knowledge than I do.  And as I have
+>> commented before, I keep diving into areas that I had no previous
+>> experience with (such as kselftest) to be able to properly judge this
+>> patch series.
+> 
+> Thanks for the praise! That means a lot coming from you!
+> 
+> I really cannot disagree that I could use more documentation. You can
+> pretty much always use more documentation. Nevertheless, is there a
+> particular part of the documentation that you think it lacking?
 
-> On Sat, 2019-05-11 at 19:06 +0200, Martin Blumenstingl wrote:
->> Hi Jerome,
->> 
->> On Fri, May 10, 2019 at 6:49 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
->> > Add the ethernet pinctrl settings for RMII, RGMII and internal phy leds
->> > 
->> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
->> > ---
->> >  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 37 +++++++++++++++++++++
->> >  1 file changed, 37 insertions(+)
->> > 
->> > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
->> > index a32db09809f7..fe0f73730525 100644
->> > --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
->> > +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
->> > @@ -206,6 +206,43 @@
->> >                                                 };
->> >                                         };
->> > 
->> > +                                       eth_leds_pins: eth-leds {
->> > +                                               mux {
->> > +                                                       groups = "eth_link_led",
->> > +                                                                "eth_act_led";
->> > +                                                       function = "eth";
->> > +                                                       bias-disable;
->> > +                                               };
->> > +                                       };
->> > +
->> > +                                       eth_rmii_pins: eth-rmii {
->> > +                                               mux {
->> > +                                                       groups = "eth_mdio",
->> > +                                                                "eth_mdc",
->> > +                                                                "eth_rgmii_rx_clk",
->> > +                                                                "eth_rx_dv",
->> > +                                                                "eth_rxd0",
->> > +                                                                "eth_rxd1",
->> > +                                                                "eth_txen",
->> > +                                                                "eth_txd0",
->> > +                                                                "eth_txd1";
->> > +                                                       function = "eth";
->> > +                                                       bias-disable;
->> > +                                               };
->> > +                                       };
->> > +
->> > +                                       eth_rgmii_pins: eth-rgmii {
->> > +                                               mux {
->> > +                                                       groups = "eth_rxd2_rgmii",
->> > +                                                                "eth_rxd3_rgmii",
->> > +                                                                "eth_rgmii_tx_clk",
->> > +                                                                "eth_txd2_rgmii",
->> > +                                                                "eth_txd3_rgmii";
->> > +                                                       function = "eth";
->> > +                                                       bias-disable;
->> > +                                               };
->> > +                                       };
->> it seems that the group definition is incomplete (missing things like
->> eth_mdc, eth_rx_dv, ...)
->> 
->> we could also mix the eth_rmii_pins and eth_rgmii_pins in a board.dts
->> (maybe that was your idea in the first place?):
->
-> yes that's the idea
->
->>   phy-mode = "rgmii";
->>   pinctrl-0 = <&eth_rmii_pins>, <&eth_rgmii_pins>;
->>   pinctrl-names = "default";
->> however, in this case I would prefer if "eth_rmii_pins" was named only
->> "eth_pins" (following mostly what Amlogic does with the pin group
->> naming: eth_* for pins that are valid in both, rmii and rgmii mode and
->> eth*rgmii* for pins that are only valid in rgmii mode)
->
-> I can't say I share your preference. I let Kevin decide what he wants.
->
-It seems we've gone the eth_pins route for meson-gxl.dtsi, so I'd prefer
-to be consistent with that.
+I wasn't talking about the documentation that is part of KUnit.  I was
+targeting patch 0.
 
-Kevin
+
+> It sounds like there was a pretty long discussion here about, a number
+> of different things.
+> 
+> Do you want a better description of what unit testing is and how KUnit
+> helps make it possible?
+> 
+> Do you want more of an explanation distinguishing KUnit from kselftest?
+> How so?
+
+The high level issue is to provide reviewers with enough context to be
+able to evaluate the patch series.  That is probably not very obvious
+at this point in the thread.  At this point I was responding to Logan's
+response to me that I should be reading Documentation to get a better
+description of KUnit features.  I _think_ that Logan thought that I
+did not understand KUnit features and was trying to be helpful by
+pointing out where I could get more information.  If so, he was missing
+my intended point had been that patch 0 should provide more information
+to justify adding this feature.
+
+One thing that has become very apparent in the discussion of this patch
+series is that some people do not understand that kselftest includes
+in-kernel tests, not just userspace tests.  As such, KUnit is an
+additional implementation of "the same feature".  (One can debate
+exactly which in-kernel test features kselftest and KUnit provide,
+and how much overlap exists or does not exist.  So don't take "the
+same feature" as my final opinion of how much overlap exists.)  So
+that is a key element to be noted and explained.
+
+I don't have a goal of finding all the things to include in patch 0,
+that is really your job as the patch submitter.  But as a reviewer,
+it is easy for me to point out an obvious hole, even if I don't find
+all of the holes.  kselftest vs KUnit overlap was an obvious hole to
+me.
+
+So, yes, more of an explanation about the in-kernel testing available
+via kselftest vs the in-kernel testing available via KUnit, and how
+they provide the same or different functionality.  Should both exist?
+Should one replace the other?  If one provides additional features,
+should the additional features be merged into a common base?
+
+> Do you just want better documentation on how to test the kernel? What
+> tools we have at our disposal and when to use what tools?
+> 
+> Thanks!
+> .
+> 
+
