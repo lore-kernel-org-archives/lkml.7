@@ -2,101 +2,101 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BB7C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514C9C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB4B320873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:50:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557939021;
-	bh=7dYD8EWc+6lYAgEl6bVHxWTQKwYRKTC7OokjvBWBMW8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=beLzsUety14aN8ttMe6AZ6IT5/uZjIufTRVtQ+oeQLtJYjpCSdlbuvbKPoZ3MmAn8
-	 4IReaiiC3E3pzSRMYG4yQ9jIqy3qaAZBKO0QNe9idXHoFsFA6qO4gIe+yBE9v0gz51
-	 d2JgIYIOXAN3vIrEoJnGuzjJJhzmBsWYGrKi/EyI=
+	by mail.kernel.org (Postfix) with ESMTP id 14A6720873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:51:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfEOQuU (ORCPT
+        id S1727467AbfEOQvV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 12:50:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35710 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726325AbfEOQuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 12:50:20 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        Wed, 15 May 2019 12:51:21 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33020 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbfEOQvV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 12:51:21 -0400
+Received: from localhost.localdomain (unknown [IPv6:2804:431:9719:d573:a076:d1fd:3417:b195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B562920881
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 16:50:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557939019;
-        bh=7dYD8EWc+6lYAgEl6bVHxWTQKwYRKTC7OokjvBWBMW8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=JBdrSqnOaS2pHUR9XAffw6PyEf1N/MTlCP3T9gaXwbsqCxjG4G73SbbsoucB88HXr
-         GHwrP4QtJUB8zmWVkR9hkgahbsqB8SkW1E/sS+niM09oZc5tXtKU//SLslpvOo4Y2i
-         qMj6CdDaNP7Gn31Qt5L+51BWuvBmxCPAwKkes5Pw=
-Received: by mail-qt1-f169.google.com with SMTP id y42so443526qtk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 09:50:19 -0700 (PDT)
-X-Gm-Message-State: APjAAAWxAVRypgMgU70knx328k6u0F2JrrCBPiWvmlXUnYQBfmF8quVa
-        WEJtoMH11qyeVZXJjNJQyJKgdP6XC9Rz6HDx0Q==
-X-Google-Smtp-Source: APXvYqz5rWpeCdEqfqN13e8iw24ki/RNn8YX3lZWk59nC3g2TOG8biR7Rus/sOG+5AUpoQxrvuEhgJL80nb9tvnLdMk=
-X-Received: by 2002:a0c:b0c7:: with SMTP id p7mr1843852qvc.246.1557939019006;
- Wed, 15 May 2019 09:50:19 -0700 (PDT)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id EDED326D7C1;
+        Wed, 15 May 2019 17:51:16 +0100 (BST)
+From:   Helen Koike <helen.koike@collabora.com>
+To:     dm-devel@redhat.com
+Cc:     kernel@collabora.com, Helen Koike <helen.koike@collabora.com>,
+        stable@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>,
+        linux-kernel@vger.kernel.org, Alasdair Kergon <agk@redhat.com>
+Subject: [PATCH v2] dm ioctl: fix hang in early create error condition
+Date:   Wed, 15 May 2019 13:50:54 -0300
+Message-Id: <20190515165054.12680-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190512012508.10608-1-elder@linaro.org> <20190512012508.10608-4-elder@linaro.org>
- <CAK8P3a3KLj5x-5VS5eUQfNVhPL101Dg_rezEzra4GFY5Dva2Cg@mail.gmail.com> <fa75eb5e-90bc-b164-740f-4dbba8bccc46@linaro.org>
-In-Reply-To: <fa75eb5e-90bc-b164-740f-4dbba8bccc46@linaro.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 15 May 2019 11:50:07 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLz_ALmzhV9ezjPCvbuBmZmzMCeowYJkHo7WfNvqruubA@mail.gmail.com>
-Message-ID: <CAL_JsqLz_ALmzhV9ezjPCvbuBmZmzMCeowYJkHo7WfNvqruubA@mail.gmail.com>
-Subject: Re: [PATCH 03/18] dt-bindings: soc: qcom: add IPA bindings
-To:     Alex Elder <elder@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>, syadagir@codeaurora.org,
-        mjavid@codeaurora.org, Evan Green <evgreen@chromium.org>,
-        Ben Chan <benchan@google.com>, ejcaruso@google.com,
-        abhishek.esse@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 7:04 AM Alex Elder <elder@linaro.org> wrote:
->
-> On 5/15/19 2:03 AM, Arnd Bergmann wrote:
-> > On Sun, May 12, 2019 at 3:25 AM Alex Elder <elder@linaro.org> wrote:
-> >>
-> >> Add the binding definitions for the "qcom,ipa" device tree node.
-> >>
-> >> Signed-off-by: Alex Elder <elder@linaro.org>
-> >> ---
-> >>  .../devicetree/bindings/net/qcom,ipa.txt      | 164 ++++++++++++++++++
-> >>  1 file changed, 164 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipa.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.txt b/Documentation/devicetree/bindings/net/qcom,ipa.txt
-> >> new file mode 100644
-> >> index 000000000000..2705e198f12e
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/net/qcom,ipa.txt
-> >
-> > For new bindings, we should use the yaml format so we can verify the
-> > device tree files against the binding.
->
-> OK.  I didn't realize that was upstream yet.  I will convert.
+The dm_early_create() function (which deals with "dm-mod.create=" kernel
+command line option) calls dm_hash_insert() who gets an extra reference
+to the md object.
 
-Not required yet, but it puts the maintainer in a good mood. :)
+In case of failure, this reference wasn't being released, causing
+dm_destroy() to hang, thus hanging the whole boot process.
 
-As does CCing the DT list.
+Fix this by calling __hash_remove() in the error path.
 
-Rob
+Fixes: 6bbc923dfcf57d ("dm: add support to directly boot to a mapped device")
+Cc: stable@vger.kernel.org
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+
+---
+Hi,
+
+I also tested this patch version with the new test case in the following test
+script:
+
+https://gitlab.collabora.com/koike/dm-cmdline-test/commit/d2d7a0ee4a49931cdb59f08a837b516c2d5d743d
+
+Thanks
+Helen
+
+Changes in v2:
+- instead of modifying dm_hash_insert() to return the hash cell, use
+__get_name_cell(dmi->name) instead.
+
+ drivers/md/dm-ioctl.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/md/dm-ioctl.c b/drivers/md/dm-ioctl.c
+index c740153b4e52..1e03bc89e20f 100644
+--- a/drivers/md/dm-ioctl.c
++++ b/drivers/md/dm-ioctl.c
+@@ -2069,7 +2069,7 @@ int __init dm_early_create(struct dm_ioctl *dmi,
+ 	/* alloc table */
+ 	r = dm_table_create(&t, get_mode(dmi), dmi->target_count, md);
+ 	if (r)
+-		goto err_destroy_dm;
++		goto err_hash_remove;
+ 
+ 	/* add targets */
+ 	for (i = 0; i < dmi->target_count; i++) {
+@@ -2116,6 +2116,10 @@ int __init dm_early_create(struct dm_ioctl *dmi,
+ 
+ err_destroy_table:
+ 	dm_table_destroy(t);
++err_hash_remove:
++	(void) __hash_remove(__get_name_cell(dmi->name));
++	/* release reference from __get_name_cell */
++	dm_put(md);
+ err_destroy_dm:
+ 	dm_put(md);
+ 	dm_destroy(md);
+-- 
+2.20.1
+
