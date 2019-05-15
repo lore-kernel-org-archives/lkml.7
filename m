@@ -2,53 +2,53 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CEAC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C3CC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89F002053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29F9F2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921077;
-	bh=UjCmd7J2iUazaY7PNJkpgdb79FJriDZ/S84sBfScR5g=;
+	s=default; t=1557921081;
+	bh=pL0hkTf2rl78dlcSOKzwSlb/2Hh1mO15LS8IoPCp9ww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ISSR/fF27Ru5cvtE4kop39sznskFJ3hJ7mXLQdTBnBwsNhphHxyu62TZBp7F2YdAX
-	 uVhbq0F9fXfLalcZIAXsINtwfRQIzhVMIvPnuVW9EpUPJJxJu7D2UzV2P/6D5R6Qb8
-	 dnvPzF8ubJ6CeQQPMHM2ITbl54CtQsJUsXCVsxZU=
+	b=GNxQsCVjt6OYF7TxDB7ksE6ummEYoxjm826yLbF8ay6a6U5lMrfibV4lxuFlzAK8+
+	 jp9Ct1Nb+poibCyaOexzPTRmkifdDkWdPvA+CbFXq/rrCl92tnBcZ3dOC1zCuMvqCF
+	 vV2OMUNIOT6fjSMIEZjhTIYasC4/fD0qLgrymDVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731580AbfEOLvQ (ORCPT
+        id S1731313AbfEOLVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:51:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59626 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:21:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729194AbfEOLVj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:21:39 -0400
+        id S1731295AbfEOLVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:21:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54DBB20818;
-        Wed, 15 May 2019 11:21:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F404206BF;
+        Wed, 15 May 2019 11:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919298;
-        bh=UjCmd7J2iUazaY7PNJkpgdb79FJriDZ/S84sBfScR5g=;
+        s=default; t=1557919290;
+        bh=pL0hkTf2rl78dlcSOKzwSlb/2Hh1mO15LS8IoPCp9ww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ht/nBkAQmJazDAph1gAFhJe497MVrXnHiDkrZtb1OWqrOIvmia/pxS3cKs1ZHlTg7
-         nZpAXv6JKnU1GAD/l0k5bmSmAW13Shk802fZKy2tpraTiYlKyBlsXU/xem0giUslBl
-         DvJjhTprQC1ARrQuL7Dqg6cgeqgqFL9ePoyifPOw=
+        b=w66YnCRVKToR7yR5oWEohRJA3hZAhZwjpzU73v6lm3JanzqraO57nTxkMf8ON/fH8
+         9x7/bSt+4XRRcN11WIG5v3Jv7QdG1Zhv+9pXGxpXKMRpa7ZCCCsiP9kiO0rXbr9acq
+         TUZHG/fe350AWIVxy7ec7xy7DthQmWNV13L6uLl8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 022/113] mac80211: fix memory accounting with A-MSDU aggregation
-Date:   Wed, 15 May 2019 12:55:13 +0200
-Message-Id: <20190515090655.165980920@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.19 002/113] platform/x86: sony-laptop: Fix unintentional fall-through
+Date:   Wed, 15 May 2019 12:54:53 +0200
+Message-Id: <20190515090652.993636012@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -61,49 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eb9b64e3a9f8483e6e54f4e03b2ae14ae5db2690 ]
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-skb->truesize can change due to memory reallocation or when adding extra
-fragments. Adjust fq->memory_usage accordingly
+commit 1cbd7a64959d33e7a2a1fa2bf36a62b350a9fcbd upstream.
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+It seems that the default case should return AE_CTRL_TERMINATE, instead
+of falling through to case ACPI_RESOURCE_TYPE_END_TAG and returning AE_OK;
+otherwise the line of code at the end of the function is unreachable and
+makes no sense:
+
+return AE_CTRL_TERMINATE;
+
+This fix is based on the following thread of discussion:
+
+https://lore.kernel.org/patchwork/patch/959782/
+
+Fixes: 33a04454527e ("sony-laptop: Add SNY6001 device handling (sonypi reimplementation)")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/mac80211/tx.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/platform/x86/sony-laptop.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
-index 743cde66aaf62..2f726cde9998b 100644
---- a/net/mac80211/tx.c
-+++ b/net/mac80211/tx.c
-@@ -3185,6 +3185,7 @@ static bool ieee80211_amsdu_aggregate(struct ieee80211_sub_if_data *sdata,
- 	u8 max_subframes = sta->sta.max_amsdu_subframes;
- 	int max_frags = local->hw.max_tx_fragments;
- 	int max_amsdu_len = sta->sta.max_amsdu_len;
-+	int orig_truesize;
- 	__be16 len;
- 	void *data;
- 	bool ret = false;
-@@ -3218,6 +3219,7 @@ static bool ieee80211_amsdu_aggregate(struct ieee80211_sub_if_data *sdata,
- 	if (!head)
- 		goto out;
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -4424,14 +4424,16 @@ sony_pic_read_possible_resource(struct a
+ 			}
+ 			return AE_OK;
+ 		}
++
++	case ACPI_RESOURCE_TYPE_END_TAG:
++		return AE_OK;
++
+ 	default:
+ 		dprintk("Resource %d isn't an IRQ nor an IO port\n",
+ 			resource->type);
++		return AE_CTRL_TERMINATE;
  
-+	orig_truesize = head->truesize;
- 	orig_len = head->len;
+-	case ACPI_RESOURCE_TYPE_END_TAG:
+-		return AE_OK;
+ 	}
+-	return AE_CTRL_TERMINATE;
+ }
  
- 	if (skb->len + head->len > max_amsdu_len)
-@@ -3272,6 +3274,7 @@ static bool ieee80211_amsdu_aggregate(struct ieee80211_sub_if_data *sdata,
- 	*frag_tail = skb;
- 
- out_recalc:
-+	fq->memory_usage += head->truesize - orig_truesize;
- 	if (head->len != orig_len) {
- 		flow->backlog += head->len - orig_len;
- 		tin->backlog_bytes += head->len - orig_len;
--- 
-2.20.1
-
+ static int sony_pic_possible_resources(struct acpi_device *device)
 
 
