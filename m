@@ -4,67 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E268C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E3BC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB7120862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C882084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918713;
-	bh=ZE/wyIpieYWpS3jmasNG/txzYJIV0+xGGC7dW8gk/1Q=;
+	s=default; t=1557918716;
+	bh=ZX9NEV59F5PkBseRNrlUQ9+nRUkhfdE89pgMCav3VNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZpA0Aq5fL1TjwFUqgs8cni22bnOOlpyXdyiUYf75Iy5kKXI3yPPUm8P1jMI00CId6
-	 ot5x91amrsBrHv2srlaIDdDY5NYG/AQPsfM+Gb7oMXrvhdqH4ij9U1fNsh1IlIWPuZ
-	 eiY9MO30sSWbkGI9V6mkf2aZhQGKAaTKSEGBUH6k=
+	b=eEvkr2UrYlRpyvcmqHWzZmtlbTZgGi5vbufCIAlWnLeVsoRXWSIBjnND1C0LCxcef
+	 6v3IHgbYeM1/DLrx27M2WjG4wxlUaGVTQY/hnBQx2JMDbJqiYQsMbVxZrOilYftZS2
+	 /KVaA58G82dA0XiD54GJ6J36TOAm6ew1Ah0mv2jM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbfEOLLw (ORCPT
+        id S1729663AbfEOLLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:11:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46560 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:11:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729637AbfEOLLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:11:49 -0400
+        id S1727364AbfEOLLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:11:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 191DC2184C;
-        Wed, 15 May 2019 11:11:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAF422084E;
+        Wed, 15 May 2019 11:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918708;
-        bh=ZE/wyIpieYWpS3jmasNG/txzYJIV0+xGGC7dW8gk/1Q=;
+        s=default; t=1557918711;
+        bh=ZX9NEV59F5PkBseRNrlUQ9+nRUkhfdE89pgMCav3VNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p0irSYnWxrE5ntedmw8IbGsotfd2wxh/QfP2uiIShFJF93Z7V9wQg1JaYiD5JzSpu
-         QUy4fPzTLoFxallxuBBUnqAdgRygp656f3h4SA8sixhQ4I1pGQVKfk5GsHNKIgaciZ
-         EPkQmvnqk+4oTB3TUAyedeGNLyvap1+UBuzBj3EI=
+        b=H5ImNQM62eXgrCJFfh5xsyRBjq7Z7mAsijJYMin3RsJttT46NTw2WI/H4aLxMKJR0
+         n2G16smFAssLANTuK2E10Ha+xbUkDQK4vhrUqKxHxa9KI55z8ZpsFgCsMe9hBP39OZ
+         PmbSEdyam+oCx+i9NgHyC0/MTYXc9beJwC+ZSzXg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Casey Schaufler <casey.schaufler@intel.com>,
-        Asit Mallick <asit.k.mallick@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
         Jon Masters <jcm@redhat.com>,
-        Waiman Long <longman9394@gmail.com>,
-        Dave Stewart <david.c.stewart@intel.com>,
-        Kees Cook <keescook@chromium.org>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 208/266] x86/Kconfig: Select SCHED_SMT if SMP enabled
-Date:   Wed, 15 May 2019 12:55:15 +0200
-Message-Id: <20190515090729.996216353@linuxfoundation.org>
+Subject: [PATCH 4.4 235/266] x86/speculation/mds: Conditionally clear CPU buffers on idle entry
+Date:   Wed, 15 May 2019 12:55:42 +0200
+Message-Id: <20190515090730.951474215@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -79,62 +63,216 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-commit dbe733642e01dd108f71436aaea7b328cb28fd87 upstream.
+commit 07f07f55a29cb705e221eda7894dd67ab81ef343 upstream.
 
-CONFIG_SCHED_SMT is enabled by all distros, so there is not a real point to
-have it configurable. The runtime overhead in the core scheduler code is
-minimal because the actual SMT scheduling parts are conditional on a static
-key.
+Add a static key which controls the invocation of the CPU buffer clear
+mechanism on idle entry. This is independent of other MDS mitigations
+because the idle entry invocation to mitigate the potential leakage due to
+store buffer repartitioning is only necessary on SMT systems.
 
-This allows to expose the scheduler's SMT state static key to the
-speculation control code. Alternatively the scheduler's static key could be
-made always available when CONFIG_SMP is enabled, but that's just adding an
-unused static key to every other architecture for nothing.
+Add the actual invocations to the different halt/mwait variants which
+covers all usage sites. mwaitx is not patched as it's not available on
+Intel CPUs.
+
+The buffer clear is only invoked before entering the C-State to prevent
+that stale data from the idling CPU is spilled to the Hyper-Thread sibling
+after the Store buffer got repartitioned and all entries are available to
+the non idle sibling.
+
+When coming out of idle the store buffer is partitioned again so each
+sibling has half of it available. Now CPU which returned from idle could be
+speculatively exposed to contents of the sibling, but the buffers are
+flushed either on exit to user space or on VMENTER.
+
+When later on conditional buffer clearing is implemented on top of this,
+then there is no action required either because before returning to user
+space the context switch will set the condition flag which causes a flush
+on the return to user path.
+
+Note, that the buffer clearing on idle is only sensible on CPUs which are
+solely affected by MSBDS and not any other variant of MDS because the other
+MDS variants cannot be mitigated when SMT is enabled, so the buffer
+clearing on idle would be a window dressing exercise.
+
+This intentionally does not handle the case in the acpi/processor_idle
+driver which uses the legacy IO port interface for C-State transitions for
+two reasons:
+
+ - The acpi/processor_idle driver was replaced by the intel_idle driver
+   almost a decade ago. Anything Nehalem upwards supports it and defaults
+   to that new driver.
+
+ - The legacy IO port interface is likely to be used on older and therefore
+   unaffected CPUs or on systems which do not receive microcode updates
+   anymore, so there is no point in adding that.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Casey Schaufler <casey.schaufler@intel.com>
-Cc: Asit Mallick <asit.k.mallick@intel.com>
-Cc: Arjan van de Ven <arjan@linux.intel.com>
-Cc: Jon Masters <jcm@redhat.com>
-Cc: Waiman Long <longman9394@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Dave Stewart <david.c.stewart@intel.com>
-Cc: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20181125185004.337452245@linutronix.de
+Reviewed-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Reviewed-by: Jon Masters <jcm@redhat.com>
+Tested-by: Jon Masters <jcm@redhat.com>
+[bwh: Backported to 4.4: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/Kconfig |    8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ Documentation/x86/mds.rst            |   42 +++++++++++++++++++++++++++++++++++
+ arch/x86/include/asm/irqflags.h      |    5 ++++
+ arch/x86/include/asm/mwait.h         |    7 +++++
+ arch/x86/include/asm/nospec-branch.h |   12 ++++++++++
+ arch/x86/kernel/cpu/bugs.c           |    3 ++
+ 5 files changed, 69 insertions(+)
 
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -893,13 +893,7 @@ config NR_CPUS
- 	  approximately eight kilobytes to the kernel image.
+--- a/Documentation/x86/mds.rst
++++ b/Documentation/x86/mds.rst
+@@ -149,3 +149,45 @@ Mitigation points
+      This takes the paranoid exit path only when the INT1 breakpoint is in
+      kernel space. #DB on a user space address takes the regular exit path,
+      so no extra mitigation required.
++
++
++2. C-State transition
++^^^^^^^^^^^^^^^^^^^^^
++
++   When a CPU goes idle and enters a C-State the CPU buffers need to be
++   cleared on affected CPUs when SMT is active. This addresses the
++   repartitioning of the store buffer when one of the Hyper-Threads enters
++   a C-State.
++
++   When SMT is inactive, i.e. either the CPU does not support it or all
++   sibling threads are offline CPU buffer clearing is not required.
++
++   The idle clearing is enabled on CPUs which are only affected by MSBDS
++   and not by any other MDS variant. The other MDS variants cannot be
++   protected against cross Hyper-Thread attacks because the Fill Buffer and
++   the Load Ports are shared. So on CPUs affected by other variants, the
++   idle clearing would be a window dressing exercise and is therefore not
++   activated.
++
++   The invocation is controlled by the static key mds_idle_clear which is
++   switched depending on the chosen mitigation mode and the SMT state of
++   the system.
++
++   The buffer clear is only invoked before entering the C-State to prevent
++   that stale data from the idling CPU from spilling to the Hyper-Thread
++   sibling after the store buffer got repartitioned and all entries are
++   available to the non idle sibling.
++
++   When coming out of idle the store buffer is partitioned again so each
++   sibling has half of it available. The back from idle CPU could be then
++   speculatively exposed to contents of the sibling. The buffers are
++   flushed either on exit to user space or on VMENTER so malicious code
++   in user space or the guest cannot speculatively access them.
++
++   The mitigation is hooked into all variants of halt()/mwait(), but does
++   not cover the legacy ACPI IO-Port mechanism because the ACPI idle driver
++   has been superseded by the intel_idle driver around 2010 and is
++   preferred on all affected CPUs which are expected to gain the MD_CLEAR
++   functionality in microcode. Aside of that the IO-Port mechanism is a
++   legacy interface which is only used on older systems which are either
++   not affected or do not receive microcode updates anymore.
+--- a/arch/x86/include/asm/irqflags.h
++++ b/arch/x86/include/asm/irqflags.h
+@@ -4,6 +4,9 @@
+ #include <asm/processor-flags.h>
  
- config SCHED_SMT
--	bool "SMT (Hyperthreading) scheduler support"
--	depends on SMP
--	---help---
--	  SMT scheduler support improves the CPU scheduler's decision making
--	  when dealing with Intel Pentium 4 chips with HyperThreading at a
--	  cost of slightly increased overhead in some places. If unsure say
--	  N here.
-+	def_bool y if SMP
+ #ifndef __ASSEMBLY__
++
++#include <asm/nospec-branch.h>
++
+ /*
+  * Interrupt control:
+  */
+@@ -49,11 +52,13 @@ static inline void native_irq_enable(voi
  
- config SCHED_MC
- 	def_bool y
+ static inline void native_safe_halt(void)
+ {
++	mds_idle_clear_cpu_buffers();
+ 	asm volatile("sti; hlt": : :"memory");
+ }
+ 
+ static inline void native_halt(void)
+ {
++	mds_idle_clear_cpu_buffers();
+ 	asm volatile("hlt": : :"memory");
+ }
+ 
+--- a/arch/x86/include/asm/mwait.h
++++ b/arch/x86/include/asm/mwait.h
+@@ -4,6 +4,7 @@
+ #include <linux/sched.h>
+ 
+ #include <asm/cpufeature.h>
++#include <asm/nospec-branch.h>
+ 
+ #define MWAIT_SUBSTATE_MASK		0xf
+ #define MWAIT_CSTATE_MASK		0xf
+@@ -38,6 +39,8 @@ static inline void __monitorx(const void
+ 
+ static inline void __mwait(unsigned long eax, unsigned long ecx)
+ {
++	mds_idle_clear_cpu_buffers();
++
+ 	/* "mwait %eax, %ecx;" */
+ 	asm volatile(".byte 0x0f, 0x01, 0xc9;"
+ 		     :: "a" (eax), "c" (ecx));
+@@ -72,6 +75,8 @@ static inline void __mwait(unsigned long
+ static inline void __mwaitx(unsigned long eax, unsigned long ebx,
+ 			    unsigned long ecx)
+ {
++	/* No MDS buffer clear as this is AMD/HYGON only */
++
+ 	/* "mwaitx %eax, %ebx, %ecx;" */
+ 	asm volatile(".byte 0x0f, 0x01, 0xfb;"
+ 		     :: "a" (eax), "b" (ebx), "c" (ecx));
+@@ -79,6 +84,8 @@ static inline void __mwaitx(unsigned lon
+ 
+ static inline void __sti_mwait(unsigned long eax, unsigned long ecx)
+ {
++	mds_idle_clear_cpu_buffers();
++
+ 	trace_hardirqs_on();
+ 	/* "mwait %eax, %ecx;" */
+ 	asm volatile("sti; .byte 0x0f, 0x01, 0xc9;"
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -263,6 +263,7 @@ DECLARE_STATIC_KEY_FALSE(switch_mm_cond_
+ DECLARE_STATIC_KEY_FALSE(switch_mm_always_ibpb);
+ 
+ DECLARE_STATIC_KEY_FALSE(mds_user_clear);
++DECLARE_STATIC_KEY_FALSE(mds_idle_clear);
+ 
+ #include <asm/segment.h>
+ 
+@@ -300,6 +301,17 @@ static inline void mds_user_clear_cpu_bu
+ 		mds_clear_cpu_buffers();
+ }
+ 
++/**
++ * mds_idle_clear_cpu_buffers - Mitigation for MDS vulnerability
++ *
++ * Clear CPU buffers if the corresponding static key is enabled
++ */
++static inline void mds_idle_clear_cpu_buffers(void)
++{
++	if (static_branch_likely(&mds_idle_clear))
++		mds_clear_cpu_buffers();
++}
++
+ #endif /* __ASSEMBLY__ */
+ 
+ /*
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -60,6 +60,9 @@ DEFINE_STATIC_KEY_FALSE(switch_mm_always
+ 
+ /* Control MDS CPU buffer clear before returning to user space */
+ DEFINE_STATIC_KEY_FALSE(mds_user_clear);
++/* Control MDS CPU buffer clear before idling (halt, mwait) */
++DEFINE_STATIC_KEY_FALSE(mds_idle_clear);
++EXPORT_SYMBOL_GPL(mds_idle_clear);
+ 
+ void __init check_bugs(void)
+ {
 
 
