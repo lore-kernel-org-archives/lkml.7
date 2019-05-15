@@ -2,99 +2,106 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3CBC04E53
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E183C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0E520873
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:50:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557971424;
-	bh=4+6HxItRfftLa22wPHvsvq5qAhdPlSRzanjH1VTJ53A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hTd0xZFCzFEsyemIk716KoMM67ZCPB1dzMyd1YKQU6qvZCnALKumZQFg7z2WFmvfU
-	 PB9RploFPSxvyypMaoZVFSLoOwXjYN4O1o/qMp4rptbAg9UPjT1a2j80zTCJiPyWBk
-	 pR5XGJqnDlpMAihkAaMr5enS3OgFu969pXJYI/Po=
+	by mail.kernel.org (Postfix) with ESMTP id 500E320843
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:50:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nv9GeemU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbfEPBuX (ORCPT
+        id S1727051AbfEPBqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 21:50:23 -0400
-Received: from mail-lj1-f178.google.com ([209.85.208.178]:46709 "EHLO
-        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbfEPBuQ (ORCPT
+        Wed, 15 May 2019 21:46:21 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40366 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726578AbfEOXdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 21:50:16 -0400
-Received: by mail-lj1-f178.google.com with SMTP id h21so1502323ljk.13
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 18:50:15 -0700 (PDT)
+        Wed, 15 May 2019 19:33:19 -0400
+Received: by mail-pf1-f193.google.com with SMTP id u17so775085pfn.7
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 16:33:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1eJ7zq+bbWUBl6uTT/Oi/zTtKOAXvl0vTCu6S+eKKjg=;
-        b=Pf0mWhiZ+sUUrUff614uWxE95Su9GTskTCzTGgmd97yGl7tdorXVdA608ETMTsE7c3
-         iBNGIH0NJh5+rka4Hc+AwsdujnfIVuE43zsq/IOFAGPARTBtQhHQORhBIfx/5qQL23zC
-         9nOh30bk37wglCI+MPC+x9M9E1z+6wmtbpzJg=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=djKpp0+BHbp5KVBEx90JiFN57Gm/WbDeClRhCLK6F4g=;
+        b=nv9GeemUHg9Ck9WHEPtTACJZ7OgdsjblkCFtaEkdeQJfA22VhPDEoCDvM7q/C1mfoO
+         0FNXng6oezdyuzS4O8ioDjNLNczUR2HoiEDBNCsYkNnpIH9ZoBYuVcbENfTYTcsFVGQK
+         3enQzMf3jsqOxl9jrQauCcF2v/gwXuUSZ8NK6vafEPg41DzqIw/pEsksTULJ+/A/8dEx
+         iedXGCKhDl2a4KbUUdciQ7BWneL9SMhIrrN09ZDlQ9Oh+uRm1LPueXSiVGS8mEw9T7sd
+         0jhsbzFrlq21+bp3Zhv0603B48bIcM69XJRKRWZo1cjNCYJQRaVB1m3hsVlR7Iz1bZOe
+         kysw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1eJ7zq+bbWUBl6uTT/Oi/zTtKOAXvl0vTCu6S+eKKjg=;
-        b=PKFB7HLyUYtcOxNvCjaTWHqKBLnjDTpPwt9+ZvkkCi4UuXPWatiXODRiMb0gDbhKNw
-         +AfN5xOkWIZ7skMv5m5YKEmDV68DVcXOSGhCXy2VpHlsNjHPNaeBFREWqtT0xymOj83E
-         EZ2xiJQfm7je4vU/Kgs3n0a42XIKasqGRlJ5Aa5bjE5falO8hHs6+VHGlB6hyej/fATC
-         Vfed7Rkj4bEgNkjbg3U7CwllPRNUaD88ZNdDBAMUE8vL9v7MVD+71O81PRAsDNM82WfV
-         F5/4Fj/Eqd6HhXkYpbtzGThkwD++NLOMD9S0XEORMg5WJHrTMpLyY+YYr2GZfAr1/16F
-         XI8A==
-X-Gm-Message-State: APjAAAXoa/oJ8n0klzgkrWXDBZ02Vnr/VfQi4YDGki3a4K1D6XoEXToy
-        rQnjwWLQGcaa+cT4t+mmZKg5mquIASU=
-X-Google-Smtp-Source: APXvYqxPRIp9prHj/Y1Dx0HBY0e2WievSrsHr69rw6LQIoBe//CRQXCuhtnx47x7M1qQjBoPHDaRSg==
-X-Received: by 2002:a2e:d1a:: with SMTP id 26mr22257753ljn.147.1557971413793;
-        Wed, 15 May 2019 18:50:13 -0700 (PDT)
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
-        by smtp.gmail.com with ESMTPSA id c23sm669219lfg.43.2019.05.15.18.50.12
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=djKpp0+BHbp5KVBEx90JiFN57Gm/WbDeClRhCLK6F4g=;
+        b=iyhEMkgKzrro607J0V3+gYij2zWM24INRGJsO3Nfw8ubT7MYjozSD3X4yhSwdXZbjB
+         X6T8aw6AQx9Q6EKZTqiQAO60DhoMAr7hkNTgaAf6TieLnPTayVySy27QbO3eaWhPmhhV
+         569bDMIW7+1F4BiRluJyqDUUWE51fO5PGrtHJ9PWF4R4IjPRv09KxQlI9wIGWFyUR3En
+         94fUCEgSIJN2EdSvCBJIiOl+8TW9IK/musrUQcYlsH5liws/PmPFb40cJa79JkVpluS4
+         I8BkTz3PpY8bAgOc5AZFDq279YDYPMgkCCvKFI0qTn5grkGB4bIej65R6u+9wkHnqkjp
+         EIqA==
+X-Gm-Message-State: APjAAAXmB4uN008cGsj1xMjWguaHLvnko8tYc+80ihAQnzi0Q396jvki
+        J0hOQWDlSRk8cOxckLRibldAoT1fN6s=
+X-Google-Smtp-Source: APXvYqyrXnVeiR2IKdFoQs+/KyHKdfWtdip/KqmSq2+qQIWEc62Pl0Ip2kKHk13I4sqWwYIihDM5Lg==
+X-Received: by 2002:aa7:9ac4:: with SMTP id x4mr50439288pfp.43.1557963198628;
+        Wed, 15 May 2019 16:33:18 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id e6sm7215087pfl.115.2019.05.15.16.32.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 18:50:13 -0700 (PDT)
-Received: by mail-lj1-f180.google.com with SMTP id 14so1547925ljj.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 18:50:12 -0700 (PDT)
-X-Received: by 2002:a2e:978f:: with SMTP id y15mr4350081lji.125.1557971412623;
- Wed, 15 May 2019 18:50:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <21598eb7-8ff0-2b6b-4cab-c0d1295fd46e@wdc.com> <mhng-54fad465-30c1-426c-84c1-99fd4ac827b0@palmer-si-x1e>
-In-Reply-To: <mhng-54fad465-30c1-426c-84c1-99fd4ac827b0@palmer-si-x1e>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 15 May 2019 18:49:57 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjBRKqBHe5Au=TpDq3B5p=AFKvpaf_7XSU3Mv0MgfGj+A@mail.gmail.com>
-Message-ID: <CAHk-=wjBRKqBHe5Au=TpDq3B5p=AFKvpaf_7XSU3Mv0MgfGj+A@mail.gmail.com>
-Subject: Re: [GIT PULL] RISC-V Patches for the 5.2 Merge Window, Part 1
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     atish.patra@wdc.com, linux-riscv@lists.infradead.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 15 May 2019 16:32:41 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Vivek Gautam <vgautam@qti.qualcomm.com>
+Subject: [PATCH] iommu: io-pgtable: Support non-coherent page tables
+Date:   Wed, 15 May 2019 16:32:34 -0700
+Message-Id: <20190515233234.22990-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 6:43 PM Palmer Dabbelt <palmer@sifive.com> wrote:
->
-> Linus: I'm not sure how to tag this PR as a mistake, so I'm going to just send
-> another one.  If this gets merged then I'll handle the follow-on.
+Describe the memory related to page table walks as non-cachable for iommu
+instances that are not DMA coherent.
 
-Just emailing in the same thread ends up with me hopefully seeing the
-"oops, cancel pull request" before I actually pull, so you did the
-right thing.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ drivers/iommu/io-pgtable-arm.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-To make sure, you _could_ obviously also just force-remove the tag you
-asked me to pull, so that if I miss an email any pull attempt of mine
-would just fail.
+diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+index 4e21efbc4459..68ff22ffd2cb 100644
+--- a/drivers/iommu/io-pgtable-arm.c
++++ b/drivers/iommu/io-pgtable-arm.c
+@@ -803,9 +803,15 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg *cfg, void *cookie)
+ 		return NULL;
+ 
+ 	/* TCR */
+-	reg = (ARM_LPAE_TCR_SH_IS << ARM_LPAE_TCR_SH0_SHIFT) |
+-	      (ARM_LPAE_TCR_RGN_WBWA << ARM_LPAE_TCR_IRGN0_SHIFT) |
+-	      (ARM_LPAE_TCR_RGN_WBWA << ARM_LPAE_TCR_ORGN0_SHIFT);
++	if (cfg->quirks & IO_PGTABLE_QUIRK_NO_DMA) {
++		reg = (ARM_LPAE_TCR_SH_IS << ARM_LPAE_TCR_SH0_SHIFT) |
++		      (ARM_LPAE_TCR_RGN_WBWA << ARM_LPAE_TCR_IRGN0_SHIFT) |
++		      (ARM_LPAE_TCR_RGN_WBWA << ARM_LPAE_TCR_ORGN0_SHIFT);
++	} else {
++		reg = (ARM_LPAE_TCR_SH_IS << ARM_LPAE_TCR_SH0_SHIFT) |
++		      (ARM_LPAE_TCR_RGN_NC << ARM_LPAE_TCR_IRGN0_SHIFT) |
++		      (ARM_LPAE_TCR_RGN_NC << ARM_LPAE_TCR_ORGN0_SHIFT);
++	}
+ 
+ 	switch (ARM_LPAE_GRANULE(data)) {
+ 	case SZ_4K:
+-- 
+2.18.0
 
-.., and if were to have ended up pulling before you sent the cancel
-email and/or removed the tag, it's obviously all too late, and then
-we'd have to fix things up after the fact, but at least this time it
-got caught in time.
-
-            Linus
