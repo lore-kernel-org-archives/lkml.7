@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3A4C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DCDC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8A4206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81EAB20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919405;
-	bh=/6v4q7HorDwUbu/gg1s9GVvcdOTHYUySSEJ4nqN5lH0=;
+	s=default; t=1557919408;
+	bh=oy2kEOxIb6zKFnVnzlNUiUlY5ldvM1xcaN4RpTUfQFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mmW6A17MO8Nl5oUEr+PRyYeggpeC0dPVIOilDexufn7afEDanJ7CpopCKeX0QpGyW
-	 OeMMgrE6kqCVeIh+3aDq1c3HoQCW6oBa3/aTgIyd6qFvL1bXd/PSV2dyIv8WAWzSGZ
-	 4oKNs020aqGEMUKGg05WSp8TDL52JthvIHWSu6gQ=
+	b=x8Tpj3JaOeRSsg2Rw0uTuUlgSaUeupYTyepsn8OHZJemstJ9+2UWqMaIQk29O9NZu
+	 gB9RqyINv5MqXS9e9k1KhqG9Cuwg+mCsMOR5dYcJMfKCBmEo0lpF0yhhTVINAlyXta
+	 d3xJdh0GfH+h+7jLcNFkuCeqoCMzTChp6kApZ8gA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731642AbfEOLXY (ORCPT
+        id S1731649AbfEOLX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:23:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33704 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:23:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731630AbfEOLXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:23:22 -0400
+        id S1731641AbfEOLXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:23:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06D41206BF;
-        Wed, 15 May 2019 11:23:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A163020843;
+        Wed, 15 May 2019 11:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919401;
-        bh=/6v4q7HorDwUbu/gg1s9GVvcdOTHYUySSEJ4nqN5lH0=;
+        s=default; t=1557919404;
+        bh=oy2kEOxIb6zKFnVnzlNUiUlY5ldvM1xcaN4RpTUfQFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WZMm8QtjGwyj27XjgsjHaxc76FWoW7nCg1fLhNAGQpnr1EthcTvXV5qdREFKMhiCJ
-         4tCbMZBILBMKSDr8AEv9KlAvxcZKKLIHY8h79qwD2jFugSSy/C2E1KZNkJgKWAWbZR
-         qC0QzMb3xJORjqVd1Qoqm80XVo3Us1FOIAyO0ASo=
+        b=unUp4PSGxQJR9JiGhpurvKNeS+fLJkgU6sZSt99l9FQVQclNySPhPFztAHTUmiEPz
+         IsBgQNlk9fZj7NNJ0ewVWWoDeo17frMH1uMUADlU+Bq5kQxEb3um4RQlRNbOW/My5i
+         OrQ0LsU4K+4rHK1XbchsL6+cDP0Zg/RLKAVRyA0Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 061/113] drm/sun4i: Unbind components before releasing DRM and memory
-Date:   Wed, 15 May 2019 12:55:52 +0200
-Message-Id: <20190515090658.200297776@linuxfoundation.org>
+        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 062/113] Input: synaptics-rmi4 - fix possible double free
+Date:   Wed, 15 May 2019 12:55:53 +0200
+Message-Id: <20190515090658.270679295@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -60,42 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e02bc29b2cfa7806830d6da8b2322cddd67e8dfe ]
+[ Upstream commit bce1a78423961fce676ac65540a31b6ffd179e6d ]
 
-Our components may still be using the DRM device driver (if only to
-access our driver's private data), so make sure to unbind them before
-the final drm_dev_put.
+The RMI4 function structure has been released in rmi_register_function
+if error occurs. However, it will be released again in the function
+rmi_create_function, which may result in a double-free bug.
 
-Also release our reserved memory after component unbind instead of
-before to match reverse creation order.
-
-Fixes: f5a9ed867c83 ("drm/sun4i: Fix component unbinding and component master deletion")
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190424090413.6918-1-paul.kocialkowski@bootlin.com
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_drv.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/input/rmi4/rmi_driver.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-index 62703630090aa..57f61ec4bc6be 100644
---- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-@@ -158,10 +158,11 @@ static void sun4i_drv_unbind(struct device *dev)
- 	drm_kms_helper_poll_fini(drm);
- 	sun4i_framebuffer_free(drm);
- 	drm_mode_config_cleanup(drm);
--	of_reserved_mem_device_release(dev);
--	drm_dev_put(drm);
+diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
+index fc3ab93b7aea4..7fb358f961957 100644
+--- a/drivers/input/rmi4/rmi_driver.c
++++ b/drivers/input/rmi4/rmi_driver.c
+@@ -860,7 +860,7 @@ static int rmi_create_function(struct rmi_device *rmi_dev,
  
- 	component_unbind_all(dev, NULL);
-+	of_reserved_mem_device_release(dev);
-+
-+	drm_dev_put(drm);
+ 	error = rmi_register_function(fn);
+ 	if (error)
+-		goto err_put_fn;
++		return error;
+ 
+ 	if (pdt->function_number == 0x01)
+ 		data->f01_container = fn;
+@@ -870,10 +870,6 @@ static int rmi_create_function(struct rmi_device *rmi_dev,
+ 	list_add_tail(&fn->node, &data->function_list);
+ 
+ 	return RMI_SCAN_CONTINUE;
+-
+-err_put_fn:
+-	put_device(&fn->dev);
+-	return error;
  }
  
- static const struct component_master_ops sun4i_drv_master_ops = {
+ void rmi_enable_irq(struct rmi_device *rmi_dev, bool clear_wake)
 -- 
 2.20.1
 
