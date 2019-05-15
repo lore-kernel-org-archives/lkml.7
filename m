@@ -2,166 +2,111 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BF6C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 720F7C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E16820873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4385F20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:47:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BB0dY/8F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfEOSq4 (ORCPT
+        id S1727247AbfEOSrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 14:46:56 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49686 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726392AbfEOSqz (ORCPT
+        Wed, 15 May 2019 14:47:03 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:36051 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726392AbfEOSrC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 14:46:55 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4FIgaWe009139
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 14:46:54 -0400
-Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sgq6skgmy-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 14:46:54 -0400
-Received: from localhost
-        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <eajames@linux.ibm.com>;
-        Wed, 15 May 2019 19:46:53 +0100
-Received: from b03cxnp07029.gho.boulder.ibm.com (9.17.130.16)
-        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 15 May 2019 19:46:49 +0100
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4FIkmGI10092890
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 May 2019 18:46:48 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9BCB4BE053;
-        Wed, 15 May 2019 18:46:48 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A52B6BE058;
-        Wed, 15 May 2019 18:46:47 +0000 (GMT)
-Received: from [9.85.187.56] (unknown [9.85.187.56])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 15 May 2019 18:46:47 +0000 (GMT)
-Subject: Re: [PATCH v2 1/3] iio: Add driver for Infineon DPS310
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@jms.id.au, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de
-References: <1557344128-690-1-git-send-email-eajames@linux.ibm.com>
- <1557344128-690-2-git-send-email-eajames@linux.ibm.com>
- <20190511102236.4c5f9585@archlinux>
-From:   Eddie James <eajames@linux.ibm.com>
-Date:   Wed, 15 May 2019 13:46:46 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 15 May 2019 14:47:02 -0400
+Received: by mail-ot1-f68.google.com with SMTP id c3so1019922otr.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 11:47:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eOydKc/WsPS/4UYaw0lrBxS07NNolXo/TbnO9qPBOqA=;
+        b=BB0dY/8FNByRR2LvoUO/dEX3U9iTwiAuD6aHdfRN6ftwVYsE1IArfACRpd3ZCZsY6K
+         iY3gRSmuhRSwx1CCfGKDmeD+9JrqnQ2zFP92vPEOcQ5dHRWplBxKaMngMkcjtvxNhwfT
+         wL6ijfW2WUojZfxbnR6DoqNlpDaHF5luAmcZLddGp/55FRptVwDp2UodImztRLRvOzPs
+         e5IB+BeCcv9nlxmyfXT8di+B21J2cX9v6Gd5YYKTdpx0iAi8XF81A8RwPD7taUw9keMH
+         LkGSy82DcXdG4vNpjS9JmmDLH853rSylPUd3weZDpNk+E1kXpdMxe0+rTLTqf9jCo9H0
+         cZ1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eOydKc/WsPS/4UYaw0lrBxS07NNolXo/TbnO9qPBOqA=;
+        b=O5tlK8PBZfbksDlemMZFu9KDR4JOmo/qaE03PhUu99Y2naf4SB968AOfylVUhSCT7A
+         ooBWINDacZNz6r51T5UMJw4vt+bwpoMdGmFQXap3mr/PWccPxieRYAslXoNBsEIlvM05
+         paNqpjbaCgKQgO/euCwxQ+jIrUgaMCybhJpofIFyGjUESzUNGAfVKvjhW+5i+8BgERjQ
+         9MeUXn4ayp24bevWxZ1KS5DVvFXdEMG18cQntbN9DWs49o8qCGKY0wWd60VfPEQuNU9i
+         nCHfn+WVN3lmrB9jbHqFiOlUzyfNMnyuwVJEklSsAr0eYggQ5EsoExXynn4AtyGnxWe9
+         fxDA==
+X-Gm-Message-State: APjAAAXzSdaEY5/oq9ijf7lTxhwja3Q2lUOGpoq4qYaChdN1wTZlcQSX
+        ENv3CKuPzjszMfkdoo925LNUfCn87b2836MFkDVrNg==
+X-Google-Smtp-Source: APXvYqyal1aN8n2OsssxIrvSlvaLMFF5ulsVEFJWHTDanNfWzlN/kwAPewVzo8zGug4MCn40y4+zwPV0F7AvsRqjAxs=
+X-Received: by 2002:a9d:5f06:: with SMTP id f6mr26196019oti.18.1557946021528;
+ Wed, 15 May 2019 11:47:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190511102236.4c5f9585@archlinux>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19051518-0004-0000-0000-0000150F21D2
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011102; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01203786; UDB=6.00631896; IPR=6.00984712;
- MB=3.00026906; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-15 18:46:51
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051518-0005-0000-0000-00008BACCF8F
-Message-Id: <cf108058-dd50-4651-6c97-a5c7e82ef085@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905150113
+References: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
+In-Reply-To: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
+From:   Jann Horn <jannh@google.com>
+Date:   Wed, 15 May 2019 20:46:35 +0200
+Message-ID: <CAG48ez20Nu76Q8Tye9Hd3HGCmvfUYH+Ubp2EWbnhLp+J6wqRvw@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/5] mm: process_vm_mmap() -- syscall for duplication
+ a process mapping
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@suse.com>, keith.busch@intel.com,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        pasha.tatashin@oracle.com,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        ira.weiny@intel.com, Andrey Konovalov <andreyknvl@google.com>,
+        arunks@codeaurora.org, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Rik van Riel <riel@surriel.com>,
+        Kees Cook <keescook@chromium.org>, hannes@cmpxchg.org,
+        npiggin@gmail.com,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        shakeelb@google.com, Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        daniel.m.jordan@oracle.com,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 15, 2019 at 5:11 PM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> This patchset adds a new syscall, which makes possible
+> to clone a mapping from a process to another process.
+> The syscall supplements the functionality provided
+> by process_vm_writev() and process_vm_readv() syscalls,
+> and it may be useful in many situation.
+>
+> For example, it allows to make a zero copy of data,
+> when process_vm_writev() was previously used:
+[...]
+> This syscall may be used for page servers like in example
+> above, for migration (I assume, even virtual machines may
+> want something like this), for zero-copy desiring users
+> of process_vm_writev() and process_vm_readv(), for debug
+> purposes, etc. It requires the same permittions like
+> existing proc_vm_xxx() syscalls have.
 
-On 5/11/19 4:22 AM, Jonathan Cameron wrote:
-> On Wed,  8 May 2019 14:35:26 -0500
-> Eddie James <eajames@linux.ibm.com> wrote:
->
->> From: Joel Stanley <joel@jms.id.au>
->>
->> The DPS310 is a temperature and pressure sensor. It can be accessed over
->> i2c and SPI.
->>
->> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> Hi Eddie,
->
-> Ideally we'll get a sign off form Joel as well on this.
->
-> A few comments inline.
->
-> I 'think' this is probably fine without any locking to prevent simultaneous reads
-> and /or writes to the registers because the few functions that do multiple reads
-> and writes look fine.  Please do take another look at that though to confirm there
-> are no corner cases.
->
-> Otherwise there is a race in the remove path that needs fixing.
-> Various minor bits and bobs inline.
->
-> thanks,
->
-> Jonathan
->
->
->
->> ---
->>   MAINTAINERS                   |   6 +
->>   drivers/iio/pressure/Kconfig  |  10 +
->>   drivers/iio/pressure/Makefile |   1 +
->>   drivers/iio/pressure/dps310.c | 429 ++++++++++++++++++++++++++++++++++++++++++
->>   4 files changed, 446 insertions(+)
->>   create mode 100644 drivers/iio/pressure/dps310.c
->>
-
->> +};
->> +MODULE_DEVICE_TABLE(i2c, dps310_id);
->> +
->> +static const unsigned short normal_i2c[] = {
->> +	0x77, 0x76, I2C_CLIENT_END
->> +};
->> +
->> +static struct i2c_driver dps310_driver = {
->> +	.driver = {
->> +		.name = "dps310",
->> +	},
->> +	.probe = dps310_probe,
->> +	.remove = dps310_remove,
->> +	.address_list = normal_i2c,
-> I'm fairly sure the address list is only used along with the detection
-> infrastructure.  As such it doesn't actually provide any value unless
-> you have a detect callback.  Please remove.
->
-> I would like to see a DT and/or ACPI binding though as that is the
-> means most people will use to find the device.
-
-
-Somehow the device is already present in the witherspoon device tree 
-where it's currently being used, so I don't have anything to add. 
-arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
-
-Thanks,
-
-Eddie
-
-
->
->> +	.id_table = dps310_id,
->> +};
->> +module_i2c_driver(dps310_driver);
->> +
->> +MODULE_AUTHOR("Joel Stanley <joel@jms.id.au>");
->> +MODULE_DESCRIPTION("Infineon DPS310 pressure and temperature sensor");
->> +MODULE_LICENSE("GPL v2");
-
+Have you considered using userfaultfd instead? userfaultfd has
+interfaces (UFFDIO_COPY and UFFDIO_ZERO) for directly shoving pages
+into the VMAs of other processes. This works without the churn of
+creating and merging VMAs all the time. userfaultfd is the interface
+that was written to support virtual machine migration (and it supports
+live migration, too).
