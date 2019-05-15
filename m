@@ -6,50 +6,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C06FC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26757C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FAAC2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E98F82053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920045;
-	bh=xSihnVmtY+9iC4up/Mcox0MkU/6kFtZPpELlpQf8rew=;
+	s=default; t=1557920050;
+	bh=vUQzSnELn00Y8vO8upYf8r+N3HxY9LCoXUePa8jzX6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QxPK0eWC8I9pViJpQOh6Z89Gwt2Zkd9HLE2Gbm9Mvklqw+LRvyUEgS+lazvdJu2YF
-	 iUe69Sj0COYlOfWgryS9TFpbSHokAIJIRvVHuO/16+sw1eIyFZheajx8i5gRKm1459
-	 MHsCcZhGOyolQigpR6yJ+4rSkD1wBvONne7Be7hw=
+	b=ihktlwj9JoDJa8pg9d90+lZKm3kC3wqvEYG8TUMuZp5MD1GxPyZaoOmgFAWGgeOE3
+	 4xBO4tTN/6JZFoEwAH5kNN9gp5uHUqqjPyNPmOf710p7siVm6jEp/AIwojaEqWU3Up
+	 bQpUOHgUEFUwc22n/BC0NJPhRUiHoRoNqpZJaKBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733305AbfEOLeE (ORCPT
+        id S2387395AbfEOLeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:34:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45986 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:34:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733280AbfEOLeA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:34:00 -0400
+        id S1732979AbfEOLeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:34:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02EE620881;
-        Wed, 15 May 2019 11:33:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A35E20881;
+        Wed, 15 May 2019 11:34:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557920039;
-        bh=xSihnVmtY+9iC4up/Mcox0MkU/6kFtZPpELlpQf8rew=;
+        s=default; t=1557920044;
+        bh=vUQzSnELn00Y8vO8upYf8r+N3HxY9LCoXUePa8jzX6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G3H2vSP8D382FFdbro3JJgki2EYWQDXZWtvdMc3iz6GhiyxU/Qn1C4zwKSsrbKSMs
-         SV9wpcf6yILGpM1wnlb+j/4PFvFVjJ7F5vS0HRRXiQCg9OxoVGcCS7O7NGMPs1Yr59
-         1J706GlJQVjWMn48Dc6uXNeRa7nMdBOXi2sy2X1U=
+        b=w16YqFKvC/89IKhfDeFwtNFiQLPfjeMzFzOlK6Fc1oD0kHZo/POyFtVQFtGz9DP9p
+         sgQkXwiECa3jchRDPOFi3zJbKnc2HL3mNvWqv2WjgjVK+Gv3lkgYS4Az56MIS+jm0t
+         Jze3R2LtG5p2Z81qFNEk2w74R6rOE5RXi5JM/mr8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Timur Tabi <timur@freescale.com>,
-        Mihai Caraman <mihai.caraman@freescale.com>,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 38/46] drivers/virt/fsl_hypervisor.c: prevent integer overflow in ioctl
-Date:   Wed, 15 May 2019 12:57:02 +0200
-Message-Id: <20190515090627.858739406@linuxfoundation.org>
+        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Akshay Adiga <akshay.adiga@linux.vnet.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.1 40/46] powerpc/powernv/idle: Restore IAMR after idle
+Date:   Wed, 15 May 2019 12:57:04 +0200
+Message-Id: <20190515090628.191797790@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -62,46 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Russell Currey <ruscur@russell.cc>
 
-commit 6a024330650e24556b8a18cc654ad00cfecf6c6c upstream.
+commit a3f3072db6cad40895c585dce65e36aab997f042 upstream.
 
-The "param.count" value is a u64 thatcomes from the user.  The code
-later in the function assumes that param.count is at least one and if
-it's not then it leads to an Oops when we dereference the ZERO_SIZE_PTR.
+Without restoring the IAMR after idle, execution prevention on POWER9
+with Radix MMU is overwritten and the kernel can freely execute
+userspace without faulting.
 
-Also the addition can have an integer overflow which would lead us to
-allocate a smaller "pages" array than required.  I can't immediately
-tell what the possible run times implications are, but it's safest to
-prevent the overflow.
+This is necessary when returning from any stop state that modifies
+user state, as well as hypervisor state.
 
-Link: http://lkml.kernel.org/r/20181218082129.GE32567@kadam
-Fixes: 6db7199407ca ("drivers/virt: introduce Freescale hypervisor management driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Timur Tabi <timur@freescale.com>
-Cc: Mihai Caraman <mihai.caraman@freescale.com>
-Cc: Kumar Gala <galak@kernel.crashing.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+To test how this fails without this patch, load the lkdtm driver and
+do the following:
+
+  $ echo EXEC_USERSPACE > /sys/kernel/debug/provoke-crash/DIRECT
+
+which won't fault, then boot the kernel with powersave=off, where it
+will fault. Applying this patch will fix this.
+
+Fixes: 3b10d0095a1e ("powerpc/mm/radix: Prevent kernel execution of user space")
+Cc: stable@vger.kernel.org # v4.10+
+Signed-off-by: Russell Currey <ruscur@russell.cc>
+Reviewed-by: Akshay Adiga <akshay.adiga@linux.vnet.ibm.com>
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/virt/fsl_hypervisor.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/powerpc/kernel/idle_book3s.S |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
---- a/drivers/virt/fsl_hypervisor.c
-+++ b/drivers/virt/fsl_hypervisor.c
-@@ -215,6 +215,9 @@ static long ioctl_memcpy(struct fsl_hv_i
- 	 * hypervisor.
- 	 */
- 	lb_offset = param.local_vaddr & (PAGE_SIZE - 1);
-+	if (param.count == 0 ||
-+	    param.count > U64_MAX - lb_offset - PAGE_SIZE + 1)
-+		return -EINVAL;
- 	num_pages = (param.count + lb_offset + PAGE_SIZE - 1) >> PAGE_SHIFT;
+--- a/arch/powerpc/kernel/idle_book3s.S
++++ b/arch/powerpc/kernel/idle_book3s.S
+@@ -170,6 +170,9 @@ core_idle_lock_held:
+ 	bne-	core_idle_lock_held
+ 	blr
  
- 	/* Allocate the buffers we need */
++/* Reuse an unused pt_regs slot for IAMR */
++#define PNV_POWERSAVE_IAMR	_DAR
++
+ /*
+  * Pass requested state in r3:
+  *	r3 - PNV_THREAD_NAP/SLEEP/WINKLE in POWER8
+@@ -200,6 +203,12 @@ pnv_powersave_common:
+ 	/* Continue saving state */
+ 	SAVE_GPR(2, r1)
+ 	SAVE_NVGPRS(r1)
++
++BEGIN_FTR_SECTION
++	mfspr	r5, SPRN_IAMR
++	std	r5, PNV_POWERSAVE_IAMR(r1)
++END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
++
+ 	mfcr	r5
+ 	std	r5,_CCR(r1)
+ 	std	r1,PACAR1(r13)
+@@ -924,6 +933,17 @@ BEGIN_FTR_SECTION
+ END_FTR_SECTION_IFSET(CPU_FTR_HVMODE)
+ 	REST_NVGPRS(r1)
+ 	REST_GPR(2, r1)
++
++BEGIN_FTR_SECTION
++	/* IAMR was saved in pnv_powersave_common() */
++	ld	r5, PNV_POWERSAVE_IAMR(r1)
++	mtspr	SPRN_IAMR, r5
++	/*
++	 * We don't need an isync here because the upcoming mtmsrd is
++	 * execution synchronizing.
++	 */
++END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
++
+ 	ld	r4,PACAKMSR(r13)
+ 	ld	r5,_LINK(r1)
+ 	ld	r6,_CCR(r1)
 
 
