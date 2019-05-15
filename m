@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC70C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69E6C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEAFD2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E44720843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918819;
-	bh=/AiU08ka8+dVsEJGtAMl6vYttxKX5SWO+2AiJuBBxEs=;
+	s=default; t=1557918823;
+	bh=HQ+lJteZp8Yv+EUVj4S5b2W0pIBl6pcps4eBLWe9F1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yWHCWmHBhBoPmt8LL11L62skXuLBL4gOGn+MBnt+Q9EduWe5VNOoLkBvgGM/73RMu
-	 fLTNJSJvFwG9GjhmjtXVr0HRsn2U3qGPkauFmWXRprkQk3gNK6HUJ7eV85wqyLczuz
-	 vQoRuUkq5CHsNEfhSt5mxjMbbVn3ZyurgrArRPrU=
+	b=i3hL3Hft0cASBBbgZqdw+DIdVTjBiORTCZqbRi4P/JC7NXXJSRrj0Z+vkrmu/Z+5/
+	 qQ2bbT0VaH5gEoFPegAV8adzINcYRY4oPTpNsc+9iVFMBhhLqS4vssldge6LHV2fe3
+	 IpN2PB5bffR+zsFoLePEMqOBLZ1tORlIvjvun1dQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729748AbfEOLNi (ORCPT
+        id S1730015AbfEOLNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:13:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49272 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:13:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729988AbfEOLNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:13:34 -0400
+        id S1730000AbfEOLNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:13:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 930F72084E;
-        Wed, 15 May 2019 11:13:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2423B20644;
+        Wed, 15 May 2019 11:13:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918814;
-        bh=/AiU08ka8+dVsEJGtAMl6vYttxKX5SWO+2AiJuBBxEs=;
+        s=default; t=1557918816;
+        bh=HQ+lJteZp8Yv+EUVj4S5b2W0pIBl6pcps4eBLWe9F1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mpDAQLsU2BcDNjHrjVb5RFAPvCBD5GwanKY5ijj5vQ+0fWl+cRDehlra5Kgre29M9
-         kqjuG3nZj/GJQouB15MJy1HGUYUb+GCFRhy2Pyo0XOepUv4gdlIB/9QL5eSgUHBydj
-         X2/oj4QYSoPdLyF/mx2MwMEuCUxFxAogMwmxxbTA=
+        b=ANn2FzshAEAtqwLiU+izkwsU1C6ahd4RphwEVzLRoGD7A1g8wfuu8GsMdZuPexKhW
+         vH5sDVMx/g2pY0OEi0GjSvWBJgQU9+5dIGSl1WA74l0A/NppxRYoNpIZV92/itX+W2
+         ItPs3N//MhcQflOa2FkAf3e1hDUFjbYA9mvmNtjg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 10/51] HID: input: add mapping for "Toggle Display" key
-Date:   Wed, 15 May 2019 12:55:45 +0200
-Message-Id: <20190515090620.495149719@linuxfoundation.org>
+Subject: [PATCH 4.9 11/51] libnvdimm/btt: Fix a kmemdup failure check
+Date:   Wed, 15 May 2019 12:55:46 +0200
+Message-Id: <20190515090620.710701999@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
 References: <20190515090616.669619870@linuxfoundation.org>
@@ -60,37 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c01908a14bf735b871170092807c618bb9dae654 ]
+[ Upstream commit 486fa92df4707b5df58d6508728bdb9321a59766 ]
 
-According to HUT 1.12 usage 0xb5 from the generic desktop page is reserved
-for switching between external and internal display, so let's add the
-mapping.
+In case kmemdup fails, the fix releases resources and returns to
+avoid the NULL pointer dereference.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-input.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/nvdimm/btt_devs.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index 302a24931147b..9f7b1cf726a8d 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -607,6 +607,14 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 			break;
- 		}
+diff --git a/drivers/nvdimm/btt_devs.c b/drivers/nvdimm/btt_devs.c
+index 97dd2925ed6e9..5d2c766828488 100644
+--- a/drivers/nvdimm/btt_devs.c
++++ b/drivers/nvdimm/btt_devs.c
+@@ -190,14 +190,15 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
+ 		return NULL;
  
-+		if ((usage->hid & 0xf0) == 0xb0) {	/* SC - Display */
-+			switch (usage->hid & 0xf) {
-+			case 0x05: map_key_clear(KEY_SWITCHVIDEOMODE); break;
-+			default: goto ignore;
-+			}
-+			break;
-+		}
+ 	nd_btt->id = ida_simple_get(&nd_region->btt_ida, 0, 0, GFP_KERNEL);
+-	if (nd_btt->id < 0) {
+-		kfree(nd_btt);
+-		return NULL;
+-	}
++	if (nd_btt->id < 0)
++		goto out_nd_btt;
+ 
+ 	nd_btt->lbasize = lbasize;
+-	if (uuid)
++	if (uuid) {
+ 		uuid = kmemdup(uuid, 16, GFP_KERNEL);
++		if (!uuid)
++			goto out_put_id;
++	}
+ 	nd_btt->uuid = uuid;
+ 	dev = &nd_btt->dev;
+ 	dev_set_name(dev, "btt%d.%d", nd_region->id, nd_btt->id);
+@@ -212,6 +213,13 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
+ 		return NULL;
+ 	}
+ 	return dev;
 +
- 		/*
- 		 * Some lazy vendors declare 255 usages for System Control,
- 		 * leading to the creation of ABS_X|Y axis and too many others.
++out_put_id:
++	ida_simple_remove(&nd_region->btt_ida, nd_btt->id);
++
++out_nd_btt:
++	kfree(nd_btt);
++	return NULL;
+ }
+ 
+ struct device *nd_btt_create(struct nd_region *nd_region)
 -- 
 2.20.1
 
