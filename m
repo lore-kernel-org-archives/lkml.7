@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BF6C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E70C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE4262053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1894C2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920135;
-	bh=NRbNBoPW3/QqclhFag8UYEURPu8yLcWYbCVXYfPbVo8=;
+	s=default; t=1557920143;
+	bh=f+/E2dM8tseZgOi6tp1gOUPwluA21xqL5ItupbIbfPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PDCCf82QOCupryzghb72sKXsYz79jTOyg72qcI4+Us7KHef4q7bwW6DS8/7ZTX4SX
-	 6JHLgjX8SYLkiTuowu9PhhBXAK6NkcOJF7t0Z+bfKqNAix2AG9NtzAX0icgXdGqYB3
-	 bOf7g7DB2yx9wm/AdJs/BkYfu2Uc1r4voNzFd8tE=
+	b=mccHy8krVLnBVEFh50wIGRoFXJPsgy8aNf+uVoVUve3Czk1xRiXJsz15BDfuc9ddI
+	 APjp0hZivO/N5NHQWi9c21BCkfR/kl3G8wR5IMd9B3JQsLTkIJU05jaIFmTx2/bpOQ
+	 /z1DcTp2GhwxSj8kk4r9JGBbmxCZMaoi+Bm/JohQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732696AbfEOLfc (ORCPT
+        id S1732891AbfEOLdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:35:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45336 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:33:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733190AbfEOLd0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:33:26 -0400
+        id S1733156AbfEOLdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:33:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C6162084F;
-        Wed, 15 May 2019 11:33:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D319E2084A;
+        Wed, 15 May 2019 11:33:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557920005;
-        bh=NRbNBoPW3/QqclhFag8UYEURPu8yLcWYbCVXYfPbVo8=;
+        s=default; t=1557919989;
+        bh=f+/E2dM8tseZgOi6tp1gOUPwluA21xqL5ItupbIbfPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vwgBMgbHbiywTs5YA6TGlMUOfcfsEbZ8jIcKPXvxJE/JNkzSmcmkY4AUAbI+2+WBn
-         WQPby8D6QvG/+7wnL1HFsC/VM72LCQPEDTJkX1SLLSkF4F+tqWgGpZVBKEbxG9XpaO
-         AZExTio1zKZbEFZ80pwqsCLEiVVIPG7rf9sPV4PQ=
+        b=b3fCV9URAHaZBRgG6uXo6MTSPmJBbF53xAqgpBp+Ak1OmukRmW7hEhl2C4xJQSr6G
+         utwxQ9a1T8i1Wq0+YOZiRvij1SU7jfSuBjKdR/0aZJ/J8RYbkzWax2k99Mgo2hlmdA
+         d3trL2ZSjDTN7RnDUClNDaBXsgcNo/uWHS5ztFzo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH 5.1 06/46] selftests/seccomp: Handle namespace failures gracefully
-Date:   Wed, 15 May 2019 12:56:30 +0200
-Message-Id: <20190515090620.086518201@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 31/46] aqc111: fix double endianness swap on BE
+Date:   Wed, 15 May 2019 12:56:55 +0200
+Message-Id: <20190515090626.291728022@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -61,189 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 9dd3fcb0ab73cb1e00b8562ef027a38521aaff87 upstream.
+[ Upstream commit 2cf672709beb005f6e90cb4edbed6f2218ba953e ]
 
-When running without USERNS or PIDNS the seccomp test would hang since
-it was waiting forever for the child to trigger the user notification
-since it seems the glibc() abort handler makes a call to getpid(),
-which would trap again. This changes the getpid filter to getppid, and
-makes sure ASSERTs execute to stop from spawning the listener.
+If you are using a function that does a swap in place,
+you cannot just reuse the buffer on the assumption that it has
+not been changed.
 
-Reported-by: Shuah Khan <shuah@kernel.org>
-Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
-Cc: stable@vger.kernel.org # > 5.0
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Tycho Andersen <tycho@tycho.ws>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- tools/testing/selftests/seccomp/seccomp_bpf.c |   43 +++++++++++++-------------
- 1 file changed, 23 insertions(+), 20 deletions(-)
+ drivers/net/usb/aqc111.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -3095,9 +3095,9 @@ TEST(user_notification_basic)
+--- a/drivers/net/usb/aqc111.c
++++ b/drivers/net/usb/aqc111.c
+@@ -1428,7 +1428,7 @@ static int aqc111_resume(struct usb_inte
+ {
+ 	struct usbnet *dev = usb_get_intfdata(intf);
+ 	struct aqc111_data *aqc111_data = dev->driver_priv;
+-	u16 reg16;
++	u16 reg16, oldreg16;
+ 	u8 reg8;
  
- 	/* Check that we get -ENOSYS with no listener attached */
- 	if (pid == 0) {
--		if (user_trap_syscall(__NR_getpid, 0) < 0)
-+		if (user_trap_syscall(__NR_getppid, 0) < 0)
- 			exit(1);
--		ret = syscall(__NR_getpid);
-+		ret = syscall(__NR_getppid);
- 		exit(ret >= 0 || errno != ENOSYS);
- 	}
+ 	netif_carrier_off(dev->net);
+@@ -1444,9 +1444,11 @@ static int aqc111_resume(struct usb_inte
+ 	/* Configure RX control register => start operation */
+ 	reg16 = aqc111_data->rxctl;
+ 	reg16 &= ~SFR_RX_CTL_START;
++	/* needs to be saved in case endianness is swapped */
++	oldreg16 = reg16;
+ 	aqc111_write16_cmd_nopm(dev, AQ_ACCESS_MAC, SFR_RX_CTL, 2, &reg16);
  
-@@ -3112,12 +3112,12 @@ TEST(user_notification_basic)
- 	EXPECT_EQ(seccomp(SECCOMP_SET_MODE_FILTER, 0, &prog), 0);
+-	reg16 |= SFR_RX_CTL_START;
++	reg16 = oldreg16 | SFR_RX_CTL_START;
+ 	aqc111_write16_cmd_nopm(dev, AQ_ACCESS_MAC, SFR_RX_CTL, 2, &reg16);
  
- 	/* Check that the basic notification machinery works */
--	listener = user_trap_syscall(__NR_getpid,
-+	listener = user_trap_syscall(__NR_getppid,
- 				     SECCOMP_FILTER_FLAG_NEW_LISTENER);
- 	ASSERT_GE(listener, 0);
- 
- 	/* Installing a second listener in the chain should EBUSY */
--	EXPECT_EQ(user_trap_syscall(__NR_getpid,
-+	EXPECT_EQ(user_trap_syscall(__NR_getppid,
- 				    SECCOMP_FILTER_FLAG_NEW_LISTENER),
- 		  -1);
- 	EXPECT_EQ(errno, EBUSY);
-@@ -3126,7 +3126,7 @@ TEST(user_notification_basic)
- 	ASSERT_GE(pid, 0);
- 
- 	if (pid == 0) {
--		ret = syscall(__NR_getpid);
-+		ret = syscall(__NR_getppid);
- 		exit(ret != USER_NOTIF_MAGIC);
- 	}
- 
-@@ -3144,7 +3144,7 @@ TEST(user_notification_basic)
- 	EXPECT_GT(poll(&pollfd, 1, -1), 0);
- 	EXPECT_EQ(pollfd.revents, POLLOUT);
- 
--	EXPECT_EQ(req.data.nr,  __NR_getpid);
-+	EXPECT_EQ(req.data.nr,  __NR_getppid);
- 
- 	resp.id = req.id;
- 	resp.error = 0;
-@@ -3176,7 +3176,7 @@ TEST(user_notification_kill_in_middle)
- 		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
- 	}
- 
--	listener = user_trap_syscall(__NR_getpid,
-+	listener = user_trap_syscall(__NR_getppid,
- 				     SECCOMP_FILTER_FLAG_NEW_LISTENER);
- 	ASSERT_GE(listener, 0);
- 
-@@ -3188,7 +3188,7 @@ TEST(user_notification_kill_in_middle)
- 	ASSERT_GE(pid, 0);
- 
- 	if (pid == 0) {
--		ret = syscall(__NR_getpid);
-+		ret = syscall(__NR_getppid);
- 		exit(ret != USER_NOTIF_MAGIC);
- 	}
- 
-@@ -3298,7 +3298,7 @@ TEST(user_notification_closed_listener)
- 		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
- 	}
- 
--	listener = user_trap_syscall(__NR_getpid,
-+	listener = user_trap_syscall(__NR_getppid,
- 				     SECCOMP_FILTER_FLAG_NEW_LISTENER);
- 	ASSERT_GE(listener, 0);
- 
-@@ -3309,7 +3309,7 @@ TEST(user_notification_closed_listener)
- 	ASSERT_GE(pid, 0);
- 	if (pid == 0) {
- 		close(listener);
--		ret = syscall(__NR_getpid);
-+		ret = syscall(__NR_getppid);
- 		exit(ret != -1 && errno != ENOSYS);
- 	}
- 
-@@ -3332,14 +3332,15 @@ TEST(user_notification_child_pid_ns)
- 
- 	ASSERT_EQ(unshare(CLONE_NEWUSER | CLONE_NEWPID), 0);
- 
--	listener = user_trap_syscall(__NR_getpid, SECCOMP_FILTER_FLAG_NEW_LISTENER);
-+	listener = user_trap_syscall(__NR_getppid,
-+				     SECCOMP_FILTER_FLAG_NEW_LISTENER);
- 	ASSERT_GE(listener, 0);
- 
- 	pid = fork();
- 	ASSERT_GE(pid, 0);
- 
- 	if (pid == 0)
--		exit(syscall(__NR_getpid) != USER_NOTIF_MAGIC);
-+		exit(syscall(__NR_getppid) != USER_NOTIF_MAGIC);
- 
- 	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, &req), 0);
- 	EXPECT_EQ(req.pid, pid);
-@@ -3371,7 +3372,8 @@ TEST(user_notification_sibling_pid_ns)
- 		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
- 	}
- 
--	listener = user_trap_syscall(__NR_getpid, SECCOMP_FILTER_FLAG_NEW_LISTENER);
-+	listener = user_trap_syscall(__NR_getppid,
-+				     SECCOMP_FILTER_FLAG_NEW_LISTENER);
- 	ASSERT_GE(listener, 0);
- 
- 	pid = fork();
-@@ -3384,7 +3386,7 @@ TEST(user_notification_sibling_pid_ns)
- 		ASSERT_GE(pid2, 0);
- 
- 		if (pid2 == 0)
--			exit(syscall(__NR_getpid) != USER_NOTIF_MAGIC);
-+			exit(syscall(__NR_getppid) != USER_NOTIF_MAGIC);
- 
- 		EXPECT_EQ(waitpid(pid2, &status, 0), pid2);
- 		EXPECT_EQ(true, WIFEXITED(status));
-@@ -3393,11 +3395,11 @@ TEST(user_notification_sibling_pid_ns)
- 	}
- 
- 	/* Create the sibling ns, and sibling in it. */
--	EXPECT_EQ(unshare(CLONE_NEWPID), 0);
--	EXPECT_EQ(errno, 0);
-+	ASSERT_EQ(unshare(CLONE_NEWPID), 0);
-+	ASSERT_EQ(errno, 0);
- 
- 	pid2 = fork();
--	EXPECT_GE(pid2, 0);
-+	ASSERT_GE(pid2, 0);
- 
- 	if (pid2 == 0) {
- 		ASSERT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, &req), 0);
-@@ -3405,7 +3407,7 @@ TEST(user_notification_sibling_pid_ns)
- 		 * The pid should be 0, i.e. the task is in some namespace that
- 		 * we can't "see".
- 		 */
--		ASSERT_EQ(req.pid, 0);
-+		EXPECT_EQ(req.pid, 0);
- 
- 		resp.id = req.id;
- 		resp.error = 0;
-@@ -3435,14 +3437,15 @@ TEST(user_notification_fault_recv)
- 
- 	ASSERT_EQ(unshare(CLONE_NEWUSER), 0);
- 
--	listener = user_trap_syscall(__NR_getpid, SECCOMP_FILTER_FLAG_NEW_LISTENER);
-+	listener = user_trap_syscall(__NR_getppid,
-+				     SECCOMP_FILTER_FLAG_NEW_LISTENER);
- 	ASSERT_GE(listener, 0);
- 
- 	pid = fork();
- 	ASSERT_GE(pid, 0);
- 
- 	if (pid == 0)
--		exit(syscall(__NR_getpid) != USER_NOTIF_MAGIC);
-+		exit(syscall(__NR_getppid) != USER_NOTIF_MAGIC);
- 
- 	/* Do a bad recv() */
- 	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, NULL), -1);
+ 	aqc111_set_phy_speed(dev, aqc111_data->autoneg,
 
 
