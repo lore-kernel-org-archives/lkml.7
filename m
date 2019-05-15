@@ -2,68 +2,73 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4969BC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F719C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE6520862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E018C216FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:16:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbfEOHOM (ORCPT
+        id S1726295AbfEOHQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 03:14:12 -0400
-Received: from foss.arm.com ([217.140.101.70]:37204 "EHLO foss.arm.com"
+        Wed, 15 May 2019 03:16:07 -0400
+Received: from mga17.intel.com ([192.55.52.151]:38503 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbfEOHOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 03:14:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 161C9374;
-        Wed, 15 May 2019 00:14:11 -0700 (PDT)
-Received: from [10.163.1.137] (unknown [10.163.1.137])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C13ED3F71E;
-        Wed, 15 May 2019 00:14:07 -0700 (PDT)
-Subject: Re: [PATCH RESEND] mm: show number of vmalloc pages in /proc/meminfo
-To:     Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Johannes Weiner <hannes@cmpxchg.org>
-References: <20190514235111.2817276-1-guro@fb.com>
- <20190514235111.2817276-2-guro@fb.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <f0e640c9-2eff-ffc5-8558-4bc1b374eb2a@arm.com>
-Date:   Wed, 15 May 2019 12:44:16 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1726039AbfEOHQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 03:16:06 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 00:16:06 -0700
+X-ExtLoop1: 1
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga008.fm.intel.com with ESMTP; 15 May 2019 00:16:02 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 223C720417; Wed, 15 May 2019 10:16:02 +0300 (EEST)
+Date:   Wed, 15 May 2019 10:16:02 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 1/3] media: v4l2-subdev: Verify arguments in
+ v4l2_subdev_call()
+Message-ID: <20190515071601.knfdhwofz6ukjmxt@paasikivi.fi.intel.com>
+References: <20190514224823.11564-1-jmkrzyszt@gmail.com>
+ <20190514224823.11564-2-jmkrzyszt@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190514235111.2817276-2-guro@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514224823.11564-2-jmkrzyszt@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Janusz,
 
+On Wed, May 15, 2019 at 12:48:21AM +0200, Janusz Krzysztofik wrote:
+> -static int check_crop(struct v4l2_subdev *sd, struct v4l2_subdev_crop *crop)
+> +static inline int check_pad(struct v4l2_subdev *sd, __u32 pad)
+>  {
+> -	if (crop->which != V4L2_SUBDEV_FORMAT_TRY &&
+> -	    crop->which != V4L2_SUBDEV_FORMAT_ACTIVE)
+> +#if defined(CONFIG_MEDIA_CONTROLLER)
+> +	if (sd->entity.num_pads && pad >= sd->entity.num_pads)
 
-On 05/15/2019 05:21 AM, Roman Gushchin wrote:
-> Vmalloc() is getting more and more used these days (kernel stacks,
-> bpf and percpu allocator are new top users), and the total %
-> of memory consumed by vmalloc() can be pretty significant
-> and changes dynamically.
-> 
-> /proc/meminfo is the best place to display this information:
-> its top goal is to show top consumers of the memory.
-> 
-> Since the VmallocUsed field in /proc/meminfo is not in use
-> for quite a long time (it has been defined to 0 by the
-> commit a5ad88ce8c7f ("mm: get rid of 'vmalloc_info' from
-> /proc/meminfo")), let's reuse it for showing the actual
-> physical memory consumption of vmalloc().
-The primary concern which got addressed with a5ad88ce8c7f was that computing
-get_vmalloc_info() was taking long time. But here its reads an already updated
-value which gets added or subtracted during __vmalloc_area_node/__vunmap cycle.
-Hence this should not cost much (like get_vmalloc_info). But is not this similar
-to the caching solution Linus mentioned.
+One more comment.
+
+The num_pads doesn't really tell whether a given op is valid for a device.
+Well, in this case it would have to be a bug in the driver, but those do
+happen. How about checking for sd->entity.graph_obj.mdev instead? It's
+non-NULL if the entity is registered with a media device, i.e. when these
+callback functions are supposed to be called.
+
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
