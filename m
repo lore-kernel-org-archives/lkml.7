@@ -2,86 +2,112 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617FDC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405BFC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CFD52084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C6752084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:41:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfEOSiy (ORCPT
+        id S1727342AbfEOSl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 14:38:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58032 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726422AbfEOSix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 14:38:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 794F3AD72;
-        Wed, 15 May 2019 18:38:52 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        boris.ostrovsky@oracle.com
-Subject: [GIT PULL] xen: fixes and features for 5.2-rc1
-Date:   Wed, 15 May 2019 20:38:50 +0200
-Message-Id: <20190515183850.26413-1-jgross@suse.com>
-X-Mailer: git-send-email 2.16.4
+        Wed, 15 May 2019 14:41:27 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59866 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726667AbfEOSl0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 14:41:26 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4FIX1xd012545
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 14:41:25 -0400
+Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sgr4v89n9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 14:41:24 -0400
+Received: from localhost
+        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <eajames@linux.ibm.com>;
+        Wed, 15 May 2019 19:41:24 +0100
+Received: from b03cxnp07029.gho.boulder.ibm.com (9.17.130.16)
+        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 15 May 2019 19:41:20 +0100
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4FIfJ6516056340
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 May 2019 18:41:19 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D4C42C6057;
+        Wed, 15 May 2019 18:41:19 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 611F8C6055;
+        Wed, 15 May 2019 18:41:19 +0000 (GMT)
+Received: from talon7.ibm.com (unknown [9.41.179.222])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 15 May 2019 18:41:19 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-iio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, joel@jms.id.au, lars@metafoo.de,
+        knaack.h@gmx.de, jic23@kernel.org,
+        Eddie James <eajames@linux.ibm.com>
+Subject: [PATCH v3 0/3] iio: Add driver for Infineon DPS310
+Date:   Wed, 15 May 2019 13:41:14 -0500
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19051518-0036-0000-0000-00000ABB1E9A
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011102; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01203784; UDB=6.00631895; IPR=6.00984711;
+ MB=3.00026906; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-15 18:41:22
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051518-0037-0000-0000-00004BCDBA63
+Message-Id: <1557945677-12838-1-git-send-email-eajames@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=838 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905150112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+The DPS310 is a temperature and pressure sensor. It can be accessed over i2c
+and SPI.
 
-Please git pull the following tag:
+The driver supports polled measurement of temperature and pressure over i2c
+only.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip.git for-linus-5.2b-rc1-tag
+Changes since v2:
+ - Switch to processed rather than raw for both pressure and temperature
+ - Add locking around writing frequency/sampling rates and sensor reads
+ - Further cleanup
 
-xen: fixes and features for 5.2-rc1
+Changes since v1:
+ - Switch to wait for temperature/pressure sensor ready
+ - Various cleanup
 
-It contains:
-- some minor cleanups
-- 2 small corrections for Xen on ARM
-- 2 fixes for Xen PVH guest support
-- a patch for a new command line option to tune virtual timer handling
+Christopher Bostic (1):
+  iio: dps310: Temperature measurement errata
 
-Thanks.
+Eddie James (1):
+  iio: dps310: Add pressure sensing capability
 
-Juergen
+Joel Stanley (1):
+  iio: Add driver for Infineon DPS310
 
- Documentation/admin-guide/kernel-parameters.txt |  7 +++++++
- arch/arm/xen/p2m.c                              |  4 +++-
- arch/x86/platform/pvh/enlighten.c               |  8 ++++----
- arch/x86/xen/efi.c                              | 12 ++++++------
- arch/x86/xen/enlighten_pv.c                     |  2 +-
- arch/x86/xen/enlighten_pvh.c                    |  7 ++++++-
- arch/x86/xen/time.c                             | 20 +++++++++++++++++---
- arch/x86/xen/xen-ops.h                          |  4 ++--
- drivers/xen/xen-pciback/xenbus.c                |  2 +-
- drivers/xen/xenbus/xenbus_dev_frontend.c        |  2 --
- 10 files changed, 47 insertions(+), 21 deletions(-)
+ MAINTAINERS                   |   6 +
+ drivers/iio/pressure/Kconfig  |  10 +
+ drivers/iio/pressure/Makefile |   1 +
+ drivers/iio/pressure/dps310.c | 824 ++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 841 insertions(+)
+ create mode 100644 drivers/iio/pressure/dps310.c
 
-Gustavo A. R. Silva (1):
-      xen-netfront: mark expected switch fall-through
+-- 
+1.8.3.1
 
-Hariprasad Kelam (1):
-      xen: xen-pciback: fix warning Using plain integer as NULL pointer
-
-Hillf Danton (2):
-      xen/arm: Free p2m entry if fail to add it to RB tree
-      xen/arm: Use p2m entry with lock protection
-
-Mao Wenan (1):
-      xenbus: drop useless LIST_HEAD in xenbus_write_watch() and xenbus_file_write()
-
-Roger Pau Monne (2):
-      xen/pvh: set xen_domain_type to HVM in xen_pvh_init
-      xen/pvh: correctly setup the PV EFI interface for dom0
-
-Ryan Thibodeaux (1):
-      x86/xen: Add "xen_timer_slop" command line option
