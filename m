@@ -2,130 +2,62 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC649C04AA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC06C04AA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A05E32084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D9292084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:42:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AUDccNie"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="M1eMAwls"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726410AbfEOGm1 (ORCPT
+        id S1726540AbfEOGmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 02:42:27 -0400
-Received: from mail-eopbgr10045.outbound.protection.outlook.com ([40.107.1.45]:3889
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725781AbfEOGm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 02:42:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LMg9ZVIa8dXUpzoLDfUYE/YUksUyBF9oPpsSHNOjgLY=;
- b=AUDccNie6mJmLwJRHAgZirc0jThhBEET7od09nz4NJy1Q5hRrvDExIoVm1hk6eUJF2CCjuHdnIA8dS9yfLyxoXR2tk0Bqpo2SE7kUA7/zrJC6gHRBJNt8VI/YlHTD3xRMA8n29hoOCvyPFSv40ZnHvD1H5Iis1auJhsnpNytm9A=
-Received: from AM0PR04MB6468.eurprd04.prod.outlook.com (20.179.253.81) by
- AM0PR04MB4513.eurprd04.prod.outlook.com (52.135.149.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.24; Wed, 15 May 2019 06:42:18 +0000
-Received: from AM0PR04MB6468.eurprd04.prod.outlook.com
- ([fe80::659b:59f5:6a7e:1862]) by AM0PR04MB6468.eurprd04.prod.outlook.com
- ([fe80::659b:59f5:6a7e:1862%5]) with mapi id 15.20.1878.024; Wed, 15 May 2019
- 06:42:18 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     "timur@kernel.org" <timur@kernel.org>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH RESEND V6 1/3] ASoC: fsl_asrc: Fix the issue about unsupported
- rate
-Thread-Topic: [PATCH RESEND V6 1/3] ASoC: fsl_asrc: Fix the issue about
- unsupported rate
-Thread-Index: AQHVCulX/msqLPxGqkq8Gi2IHVVNxw==
-Date:   Wed, 15 May 2019 06:42:18 +0000
-Message-ID: <e0c519d616b48a1481c9f239646517b453e7ce50.1557901312.git.shengjiu.wang@nxp.com>
-References: <cover.1557901312.git.shengjiu.wang@nxp.com>
-In-Reply-To: <cover.1557901312.git.shengjiu.wang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.21.0
-x-clientproxiedby: HK2PR03CA0054.apcprd03.prod.outlook.com
- (2603:1096:202:17::24) To AM0PR04MB6468.eurprd04.prod.outlook.com
- (2603:10a6:208:16e::17)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cbf31ce8-e3fe-473f-ed66-08d6d90078d0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4513;
-x-ms-traffictypediagnostic: AM0PR04MB4513:
-x-microsoft-antispam-prvs: <AM0PR04MB4513BCFA7E5BC854130DA98DE3090@AM0PR04MB4513.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(136003)(396003)(346002)(376002)(199004)(189003)(14454004)(26005)(71200400001)(71190400001)(110136005)(52116002)(54906003)(14444005)(256004)(5660300002)(316002)(3846002)(102836004)(68736007)(66946007)(73956011)(2906002)(64756008)(66556008)(66476007)(66446008)(476003)(186003)(76176011)(486006)(8936002)(81166006)(6512007)(8676002)(6486002)(2616005)(81156014)(50226002)(66066001)(4326008)(7736002)(11346002)(305945005)(6436002)(6116002)(36756003)(446003)(25786009)(6506007)(386003)(99286004)(2501003)(53936002)(86362001)(2201001)(118296001)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4513;H:AM0PR04MB6468.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: u7Ww0c/plYua5RAnsQSirtXxk9qf4D7fXbkKSdPOfDJk8QFTNr2ZkC6vT7/FQBUPdrZQ6juGpbbWZRf+OCEPECzRNmc/Gk6LbES8aM3RNGiXxxFm2YEQwMWDDIKLinaL6TU2V0eanxRRvPfxXuQKLvxzNFV+rxoyU4re/bGNzzOTGLP8K0M8yfkX38ex2tfIcxGPaZxAt82yDX7IZNlFTyft8FDHOPud+6oNMsmwWZiHr/NcsES0YxofId0ymPnWF2i/2EPTx3TTTYl3DM+Pd1k+Gr8W7XPi3RvcG6zPpayi/ZscaB7XSXdLgJElxHIvIbL5xBCCLsQgvrzPEBwjuyWivpkLDEZBWHo8JoLGCthlVJhs2fi6ITtzzy5qxT/pxP/zgGJnAzTI+w8shlApeLJzlfFi1LyMadqZSEWTNKg=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <C3D24C1B9165C043B8EE814B59C43C14@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 15 May 2019 02:42:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52250 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfEOGmc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 02:42:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=C4NCv7pgiloZDQGj85J1ppwbhpG4JKjnfaneGv0KUtI=; b=M1eMAwlsHu7Scbxr64RFRMLWC
+        4uusHPvXk51cNyaOUKvRqmmovsF4QhvdlgRZlDfxt3G/T5IyN0tQApaALuoa8ZCeUz/iWk/3yQXGA
+        fvjDA8rCsSpy9j9hTYR/QBUyVEMd7yUEj8JNegUcU8q35r/eTthPIYOxK+siM1YTdpI2rnqlqWeN0
+        /tLPwKeDfqWT+PuVgWICSFns1dDRG+y9fogkIYo/8xAnsdMB9ltrX7cVFScuKVqf9IiOC2utRtkIN
+        I+eChmi+2KtR0gOe+yA1KHISC+Q9IGDJ3eEzpqRafdgFDMTXdjzmV0c7cO4OZrZ386BEVkMjVr7wt
+        uIuBWqzQQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQnc5-0005NN-E2; Wed, 15 May 2019 06:42:05 +0000
+Date:   Tue, 14 May 2019 23:42:05 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Russell Currey <ruscur@russell.cc>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] powerpc/mm: Implement STRICT_MODULE_RWX
+Message-ID: <20190515064205.GB15778@infradead.org>
+References: <df502ffe07caa38c46b0144fc824fff447f4105b.1557901092.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cbf31ce8-e3fe-473f-ed66-08d6d90078d0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 06:42:18.5070
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4513
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <df502ffe07caa38c46b0144fc824fff447f4105b.1557901092.git.christophe.leroy@c-s.fr>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the output sample rate is [8kHz, 30kHz], the limitation
-of the supported ratio range is [1/24, 8]. In the driver
-we use (8kHz, 30kHz) instead of [8kHz, 30kHz].
-So this patch is to fix this issue and the potential rounding
-issue with divider.
+> +static int change_page_ro(pte_t *ptep, pgtable_t token, unsigned long addr, void *data)
 
-Fixes: fff6e03c7b65 ("ASoC: fsl_asrc: add support for 8-30kHz
-output sample rate")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
- sound/soc/fsl/fsl_asrc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-index 0b937924d2e4..ea035c12a325 100644
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -282,8 +282,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *p=
-air)
- 		return -EINVAL;
- 	}
-=20
--	if ((outrate > 8000 && outrate < 30000) &&
--	    (outrate/inrate > 24 || inrate/outrate > 8)) {
-+	if ((outrate >=3D 8000 && outrate <=3D 30000) &&
-+	    (outrate > 24 * inrate || inrate > 8 * outrate)) {
- 		pair_err("exceed supported ratio range [1/24, 8] for \
- 				inrate/outrate: %d/%d\n", inrate, outrate);
- 		return -EINVAL;
---=20
-2.21.0
-
+There are a couple way too long lines like this in the patch.
