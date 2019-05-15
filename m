@@ -2,145 +2,75 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3930C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4497C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A65D120578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921110;
-	bh=e9SlbsSwwGqGYGbtJo8NT4Zf+Ol+2sOs+dlgoDuvKFw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xp8ZF/vQKKgNHlBYpxeWEk1G0x7l57qikglSpLwGMeaclT/xCPdwFZBlOAxghTvhm
-	 ZFjgFshwmGWDdJBcynCc98RU5d6V+CCsfVBSWn5QXo8+HCDUshnenjUpA+BbiWJ9Ue
-	 YITgK29UZ8R8A2yxSm7rozZEAk2MfM79H9/2hC0A=
+	by mail.kernel.org (Postfix) with ESMTP id 9D9592053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730825AbfEOLU5 (ORCPT
+        id S1731450AbfEOLvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:20:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730354AbfEOLUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:51:54 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8199 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727413AbfEOLUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 May 2019 07:20:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73F09206BF;
-        Wed, 15 May 2019 11:20:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919253;
-        bh=e9SlbsSwwGqGYGbtJo8NT4Zf+Ol+2sOs+dlgoDuvKFw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DZWwMpAvBRgTqANX9CvCtF8WqeEH0aUzaMS7PLi0KIImlN4Nc0MGVmnxdfXl2kXpA
-         j2XmfG6J/gm6c0k9CgkegumTacjxJ7t6laYL991b0CV7wnU84h8E7z5lLpLABO+b1J
-         DRymqKzNwSgWGvt2+9CSPF4AWeK2hBxrbjaoWoQs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 108/115] packet: Fix error path in packet_init
-Date:   Wed, 15 May 2019 12:56:28 +0200
-Message-Id: <20190515090706.952441016@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
-References: <20190515090659.123121100@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C0A139ED21B7C3B3FD36;
+        Wed, 15 May 2019 19:20:53 +0800 (CST)
+Received: from HGHY2Y004646261.china.huawei.com (10.184.12.158) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 15 May 2019 19:20:45 +0800
+From:   Zenghui Yu <yuzenghui@huawei.com>
+To:     <acme@kernel.org>, <acme@redhat.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>
+CC:     <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <john.garry@huawei.com>,
+        <wanghaibin.wang@huawei.com>, <linux-kernel@vger.kernel.org>,
+        Zenghui Yu <yuzenghui@huawei.com>
+Subject: [PATCH] perf jevents: Remove unused variables
+Date:   Wed, 15 May 2019 11:19:29 +0000
+Message-ID: <1557919169-23972-1-git-send-email-yuzenghui@huawei.com>
+X-Mailer: git-send-email 2.6.4.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.184.12.158]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+Fix gcc warning:
 
-[ Upstream commit 36096f2f4fa05f7678bc87397665491700bae757 ]
+pmu-events/jevents.c: In function ‘save_arch_std_events’:
+pmu-events/jevents.c:417:15: warning: unused variable ‘sb’ [-Wunused-variable]
+  struct stat *sb = data;
+               ^~
 
-kernel BUG at lib/list_debug.c:47!
-invalid opcode: 0000 [#1
-CPU: 0 PID: 12914 Comm: rmmod Tainted: G        W         5.1.0+ #47
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:__list_del_entry_valid+0x53/0x90
-Code: 48 8b 32 48 39 fe 75 35 48 8b 50 08 48 39 f2 75 40 b8 01 00 00 00 5d c3 48
-89 fe 48 89 c2 48 c7 c7 18 75 fe 82 e8 cb 34 78 ff <0f> 0b 48 89 fe 48 c7 c7 50 75 fe 82 e8 ba 34 78 ff 0f 0b 48 89 f2
-RSP: 0018:ffffc90001c2fe40 EFLAGS: 00010286
-RAX: 000000000000004e RBX: ffffffffa0184000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffff888237a17788 RDI: 00000000ffffffff
-RBP: ffffc90001c2fe40 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffc90001c2fe10 R11: 0000000000000000 R12: 0000000000000000
-R13: ffffc90001c2fe50 R14: ffffffffa0184000 R15: 0000000000000000
-FS:  00007f3d83634540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000555c350ea818 CR3: 0000000231677000 CR4: 00000000000006f0
-Call Trace:
- unregister_pernet_operations+0x34/0x120
- unregister_pernet_subsys+0x1c/0x30
- packet_exit+0x1c/0x369 [af_packet
- __x64_sys_delete_module+0x156/0x260
- ? lockdep_hardirqs_on+0x133/0x1b0
- ? do_syscall_64+0x12/0x1f0
- do_syscall_64+0x6e/0x1f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-When modprobe af_packet, register_pernet_subsys
-fails and does a cleanup, ops->list is set to LIST_POISON1,
-but the module init is considered to success, then while rmmod it,
-BUG() is triggered in __list_del_entry_valid which is called from
-unregister_pernet_subsys. This patch fix error handing path in
-packet_init to avoid possilbe issue if some error occur.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
 ---
- net/packet/af_packet.c |   25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ tools/perf/pmu-events/jevents.c | 1 -
+ 1 file changed, 1 deletion(-)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -4629,14 +4629,29 @@ static void __exit packet_exit(void)
- 
- static int __init packet_init(void)
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 68c92bb..92e60fd 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -414,7 +414,6 @@ static int save_arch_std_events(void *data, char *name, char *event,
+ 				char *metric_name, char *metric_group)
  {
--	int rc = proto_register(&packet_proto, 0);
-+	int rc;
+ 	struct event_struct *es;
+-	struct stat *sb = data;
  
--	if (rc != 0)
-+	rc = proto_register(&packet_proto, 0);
-+	if (rc)
- 		goto out;
-+	rc = sock_register(&packet_family_ops);
-+	if (rc)
-+		goto out_proto;
-+	rc = register_pernet_subsys(&packet_net_ops);
-+	if (rc)
-+		goto out_sock;
-+	rc = register_netdevice_notifier(&packet_netdev_notifier);
-+	if (rc)
-+		goto out_pernet;
- 
--	sock_register(&packet_family_ops);
--	register_pernet_subsys(&packet_net_ops);
--	register_netdevice_notifier(&packet_netdev_notifier);
-+	return 0;
-+
-+out_pernet:
-+	unregister_pernet_subsys(&packet_net_ops);
-+out_sock:
-+	sock_unregister(PF_PACKET);
-+out_proto:
-+	proto_unregister(&packet_proto);
- out:
- 	return rc;
- }
+ 	es = malloc(sizeof(*es));
+ 	if (!es)
+-- 
+1.8.3.1
 
 
