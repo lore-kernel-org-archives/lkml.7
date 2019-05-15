@@ -2,224 +2,116 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BDA2C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6970CC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D76B20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C8420873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:48:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bTKvpeHf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F2kO3Zsz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbfEOQo6 (ORCPT
+        id S1727250AbfEOQsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 12:44:58 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:45981 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbfEOQo5 (ORCPT
+        Wed, 15 May 2019 12:48:42 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39983 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726553AbfEOQsl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 12:44:57 -0400
-Received: by mail-lf1-f66.google.com with SMTP id n22so311648lfe.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 09:44:55 -0700 (PDT)
+        Wed, 15 May 2019 12:48:41 -0400
+Received: by mail-pl1-f194.google.com with SMTP id g69so144524plb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 09:48:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pJOvi18L7fqK+4eFB/vQ8Hw8akTbJRCqM8gnrvSMvQs=;
-        b=bTKvpeHfA/y9f0nD0G2wvBnlydD3DkqNv+iHtpU6rlFbyz3nk4VDc96vqzrFsQsUPn
-         U3Xsj7BeVtcuZrsHNiVYeIROCBzb7CeBAkzgXAZ2wdW8Q5Vav0YS+fIshjbvuwl5RiPs
-         do9JEhNsm34DhRg/afRZu/4CveGjJhU4khSc/Fo72nQDHNL7bheI1kXthh2bbkJXwR8w
-         0ZdLlDMcPV3YJ+VjD4quA3f/EAqYWUzHpMd51tEmB3k2buj2kAtpYXzIh+NGmaBdTs7i
-         z2zIro74b+kDFSOGlg6ACYvX8afsQfbMVoXdbigrfKkKk0rmXKKbLBZcc7TJUkOkT33i
-         BxxA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=21QkJe/2Ia3CukPow+HU/kJ5AbEkblcvaIotDZqjXzA=;
+        b=F2kO3ZszvamvWVf9qDt95LSKsm3+VbzShvOGjnxWuGUkK6Qq/rXjTzV2gAovo5j8Cu
+         wBzQDkqh9BhxdTamZIxGc0gf4BKHPvsWy8nOxB8mRGj0b8LZaHm2+45EW9QR4JP/lkg0
+         uzT4J1rwxTOuzk/z8DnlmUj77asFnfyN42hKc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pJOvi18L7fqK+4eFB/vQ8Hw8akTbJRCqM8gnrvSMvQs=;
-        b=IhMDr7j83XTxnEm7m8l+qoHIdzRu0qcD6//+X8UQX2lM2oJ48WdESKChl2FGXEIoHZ
-         D/5DsMY0iWhBzv2UT6JV3l9ltOzd9esNSut3CK9/xyHslrmtcE8ynExcL/Wxbl4Ht6PA
-         EcI6bznxqwHsB4ZPs/ThnvEVIsCS6eIR84xgV2qlPFrCbPD3MaysX2/u+qoAgrvGYk0Z
-         SIUQqkzXWG1JgTXs79jYqnwoIgixJkLFTcUvCZzmWA+DM+ExGIo/T5FX60djBMY6z0FK
-         ylfGfFMf9SKOjOYXCPNAcS465d4aK+ZGg6cYtEcvOVGnLI4EeRsJb/GSkDfyUOGmibCn
-         uotQ==
-X-Gm-Message-State: APjAAAXUsj64RGUt5rwuWz7lusMwny09sGL7JM/Oyvt8e0oKq6Yws3SU
-        1bF6J1GXNnbIZTdsT3LKqGbCQE5osnvMZazHok82Xw==
-X-Google-Smtp-Source: APXvYqwXj4idJmJE1DtEImIBJtns+QbL27f5YRYiCBVu3dzN4Bnicdpw+haJRw7uLfsMmZP8j0DFdTZreKxntaSbx+8=
-X-Received: by 2002:a19:f817:: with SMTP id a23mr12334507lff.123.1557938694539;
- Wed, 15 May 2019 09:44:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=21QkJe/2Ia3CukPow+HU/kJ5AbEkblcvaIotDZqjXzA=;
+        b=fiTro3FfYi8E/s/E6qpIWDTXp2R7beTo5bTddepSjwvcZvIav6qCrQZVeNOJaE0qz7
+         y2TZ7JfPp+HbrlGoWl4Mmta+BoV/0ZGFfGtQEIRtAw2oITwmnFTcBi6c9lwsarwAr0dx
+         jtkW+ErGAB+rM2jDj/h6PsGGa2KIge37g4HOBCQ4FyKpqgWzWYNIfyNI4n5hD4+eZ3hv
+         8aSgWoDFN0yIIC985WCXqPk5KWAn1aK3cG5wX2eMiLeayXlmIj3fZmAFcxS+cX47pgst
+         d1DjvGY3v7gbRu1jTTBiFbZHQBqUxvzzu6+jVe64lNKldmoofP1Y7DzneTSMxOggMhaS
+         LBEA==
+X-Gm-Message-State: APjAAAVB1OYzIultu60Keqq1XU/EvP1qPo0kfWZ+azYIPOkv0syqJPpS
+        MxWfFTiJh4UqaPbi/FTKn7yDYw==
+X-Google-Smtp-Source: APXvYqys5Q93YZ8pN7HdCJeSsFEq2sN4lDTJwQVRf0ernGwmzM6CRgYvXoFmn1BXw1O1PGqD1bXs9Q==
+X-Received: by 2002:a17:902:29e6:: with SMTP id h93mr19940884plb.111.1557938921011;
+        Wed, 15 May 2019 09:48:41 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id h16sm6914595pfj.114.2019.05.15.09.48.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 09:48:40 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Mark Brown <broonie@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-rockchip@lists.infradead.org, drinkcat@chromium.org,
+        Guenter Roeck <groeck@chromium.org>, briannorris@chromium.org,
+        mka@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: [PATCH v4 0/3] spi: A better solution for cros_ec_spi reliability
+Date:   Wed, 15 May 2019 09:48:10 -0700
+Message-Id: <20190515164814.258898-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
-References: <1557317799-39866-1-git-send-email-pbonzini@redhat.com>
- <20190508142023.GA13834@linux.intel.com> <CAAAPnDE0ujH4eTX=4umTTEmUMyaZ7M0B3qxWa7oUUD-Ls7Ta+A@mail.gmail.com>
- <20190508181339.GD19656@linux.intel.com> <CAAAPnDF=T8FHqLrHUDB9g9QzWJcct2mddqUW0O7zja7Ae0uy-Q@mail.gmail.com>
-In-Reply-To: <CAAAPnDF=T8FHqLrHUDB9g9QzWJcct2mddqUW0O7zja7Ae0uy-Q@mail.gmail.com>
-From:   Aaron Lewis <aaronlewis@google.com>
-Date:   Wed, 15 May 2019 09:44:43 -0700
-Message-ID: <CAAAPnDHLxRe9htqT9P_G1HufWuxq-+xE+Kff+fhXB6xPRcHNbw@mail.gmail.com>
-Subject: Re: [PATCH v2] kvm: nVMX: Set nested_run_pending in
- vmx_set_nested_state after checks complete
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Peter Shier <pshier@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 8, 2019 at 2:13 PM Aaron Lewis <aaronlewis@google.com> wrote:
->
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
-> Date: Wed, May 8, 2019 at 11:13 AM
-> To: Aaron Lewis
-> Cc: Paolo Bonzini, <linux-kernel@vger.kernel.org>,
-> <kvm@vger.kernel.org>, Peter Shier
->
-> > On Wed, May 08, 2019 at 10:53:12AM -0700, Aaron Lewis wrote:
-> > > nested_run_pending is also checked in
-> > > nested_vmx_check_vmentry_postreqs
-> > > (https://elixir.bootlin.com/linux/v5.1/source/arch/x86/kvm/vmx/nested.c#L2709)
-> > > so I think the setting needs to be moved to just prior to that call
-> > > with Paolo's rollback along with another for if the prereqs and
-> > > postreqs fail.  I put a patch together below:
-> >
-> > Gah, I missed that usage (also, it's now nested_vmx_check_guest_state()).
-> >
-> > Side topic, I think the VM_ENTRY_LOAD_BNDCFGS check should be gated by
-> > nested_run_pending, a la the EFER check.'
-> >
-> > > ------------------------------------
-> > >
-> > > nested_run_pending=1 implies we have successfully entered guest mode.
-> > > Move setting from external state in vmx_set_nested_state() until after
-> > > all other checks are complete.
-> > >
-> > > Signed-off-by: Aaron Lewis <aaronlewis@google.com>
-> > > Reviewed-by: Peter Shier <pshier@google.com>
-> > > ---
-> > >  arch/x86/kvm/vmx/nested.c | 14 +++++++++-----
-> > >  1 file changed, 9 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> > > index 6401eb7ef19c..cf1f810223d2 100644
-> > > --- a/arch/x86/kvm/vmx/nested.c
-> > > +++ b/arch/x86/kvm/vmx/nested.c
-> > > @@ -5460,9 +5460,6 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
-> > >   if (!(kvm_state->flags & KVM_STATE_NESTED_GUEST_MODE))
-> > >   return 0;
-> > >
-> > > - vmx->nested.nested_run_pending =
-> > > - !!(kvm_state->flags & KVM_STATE_NESTED_RUN_PENDING);
-> >
-> > Alternatively, it might be better to leave nested_run_pending where it
-> > is and instead add a label to handle clearing the flag on error.  IIUC,
-> > the real issue is that nested_run_pending is left set after a failed
-> > vmx_set_nested_state(), not that its shouldn't be set in the shadow
-> > VMCS handling.
-> >
-> > Patch attached, though it's completely untested.  The KVM selftests are
-> > broken for me right now, grrr.
-> >
-> > > -
-> > >   if (nested_cpu_has_shadow_vmcs(vmcs12) &&
-> > >       vmcs12->vmcs_link_pointer != -1ull) {
-> > >   struct vmcs12 *shadow_vmcs12 = get_shadow_vmcs12(vcpu);
-> > > @@ -5480,14 +5477,21 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
-> > >   return -EINVAL;
-> > >   }
-> > >
-> > > + vmx->nested.nested_run_pending =
-> > > + !!(kvm_state->flags & KVM_STATE_NESTED_RUN_PENDING);
-> > > +
-> > >   if (nested_vmx_check_vmentry_prereqs(vcpu, vmcs12) ||
-> > > -     nested_vmx_check_vmentry_postreqs(vcpu, vmcs12, &exit_qual))
-> > > +     nested_vmx_check_vmentry_postreqs(vcpu, vmcs12, &exit_qual)) {
-> > > +     vmx->nested.nested_run_pending = 0;
-> > >   return -EINVAL;
-> > > + }
-> > >
-> > >   vmx->nested.dirty_vmcs12 = true;
-> > >   ret = nested_vmx_enter_non_root_mode(vcpu, false);
-> > > - if (ret)
-> > > + if (ret) {
-> > > + vmx->nested.nested_run_pending = 0;
-> > >   return -EINVAL;
-> > > + }
-> > >
-> > >   return 0;
-> > >  }
->
-> Here is an update based on your patch.  I ran these changes against
-> the test vmx_set_nested_state_test, and it run successfully.
->
-> That's correct that we are only concerned about restoring the state of
-> nested_run_pending, so it's fine to set it where we do as long as we
-> back the state change out before returning if we get an error.
->
-> ---------------------------------------------
->
-> nested_run_pending=1 implies we have successfully entered guest mode.
-> Move setting from external state in vmx_set_nested_state() until after
-> all other checks are complete.
->
-> Signed-off-by: Aaron Lewis <aaronlewis@google.com>
-> Tested-by: Aaron Lewis <aaronlewis@google.com>
-> Reviewed-by: Peter Shier <pshier@google.com>
-> ---
->  arch/x86/kvm/vmx/nested.c | 20 ++++++++++++++------
->  1 file changed, 14 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index 6401eb7ef19c..fe5814df5149 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -5468,28 +5468,36 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
->   struct vmcs12 *shadow_vmcs12 = get_shadow_vmcs12(vcpu);
->
->   if (kvm_state->size < sizeof(kvm_state) + 2 * sizeof(*vmcs12))
-> - return -EINVAL;
-> + goto error_guest_mode_einval;
->
->   if (copy_from_user(shadow_vmcs12,
->      user_kvm_nested_state->data + VMCS12_SIZE,
-> -    sizeof(*vmcs12)))
-> - return -EFAULT;
-> +    sizeof(*vmcs12))) {
-> + ret = -EFAULT;
-> + goto error_guest_mode;
-> + }
->
->   if (shadow_vmcs12->hdr.revision_id != VMCS12_REVISION ||
->       !shadow_vmcs12->hdr.shadow_vmcs)
-> - return -EINVAL;
-> + goto error_guest_mode_einval;
->   }
->
->   if (nested_vmx_check_vmentry_prereqs(vcpu, vmcs12) ||
->       nested_vmx_check_vmentry_postreqs(vcpu, vmcs12, &exit_qual))
-> - return -EINVAL;
-> + goto error_guest_mode_einval;
->
->   vmx->nested.dirty_vmcs12 = true;
->   ret = nested_vmx_enter_non_root_mode(vcpu, false);
->   if (ret)
-> - return -EINVAL;
-> + goto error_guest_mode_einval;
->
->   return 0;
-> +
-> +error_guest_mode_einval:
-> + ret = -EINVAL;
-> +error_guest_mode:
-> + vmx->nested.nested_run_pending = 0;
-> + return ret;
->  }
->
->  void nested_vmx_vcpu_setup(void)
+This series is a much better solution for getting the Chrome OS EC to
+talk reliably.
 
-Sean, I updated this patch based on the one you sent out.  Does it
-look good now?
+Patch #1 in this series is the most important.  It can land any time.
+
+Patch #2 in this series (a SPI framework patch) needs to land before
+patch #3.  Note that patches #2 and #3 really just fix a corner case
+and just having patch #1 is the most important.  We don't end up on
+the pumping thread very often.
+
+Note:
+- If you want some history on investigation done here, feel free to
+  peruse the Chrome OS bug: <https://crbug.com/948742>.
+
+Changes in v4:
+- No needless init of err in cros_ec_spi_devm_high_pri_alloc (Guenter).
+- Removed blank lines near #includes (Guenter).
+- Switch to kthread_create_worker() and fix error handling (Guenter).
+- Cleaner devm code (Guenter).
+
+Changes in v3:
+- cros_ec realtime patch replaces revert; now patch #1
+- SPI core change now like patch v1 patch #2 (with name "rt").
+- Updated description and variable name since we no longer force.
+
+Changes in v2:
+- Now only force transfers to the thread for devices that want it.
+- Squashed patch #1 and #2 together.
+- Renamed variable to "force_rt_transfers".
+- Renamed variable to "force_rt_transfers".
+
+Douglas Anderson (3):
+  platform/chrome: cros_ec_spi: Move to real time priority for transfers
+  spi: Allow SPI devices to request the pumping thread be realtime
+  platform/chrome: cros_ec_spi: Request the SPI thread be realtime
+
+ drivers/platform/chrome/cros_ec_spi.c | 66 ++++++++++++++++++++++-----
+ drivers/spi/spi.c                     | 36 ++++++++++++---
+ include/linux/spi/spi.h               |  2 +
+ 3 files changed, 86 insertions(+), 18 deletions(-)
+
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
