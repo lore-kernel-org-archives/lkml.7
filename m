@@ -6,24 +6,24 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85984C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDDCC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 627982084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:12:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 234AD20862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:12:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728168AbfEOPMA (ORCPT
+        id S1728303AbfEOPME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 11:12:00 -0400
-Received: from relay.sw.ru ([185.231.240.75]:36718 "EHLO relay.sw.ru"
+        Wed, 15 May 2019 11:12:04 -0400
+Received: from relay.sw.ru ([185.231.240.75]:36794 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726754AbfEOPLw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 11:11:52 -0400
+        id S1726754AbfEOPMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 11:12:02 -0400
 Received: from [172.16.25.169] (helo=localhost.localdomain)
         by relay.sw.ru with esmtp (Exim 4.91)
         (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hQvYw-0001X8-JJ; Wed, 15 May 2019 18:11:22 +0300
-Subject: [PATCH RFC 1/5] mm: Add process_vm_mmap() syscall declaration
+        id 1hQvZI-0001YA-DL; Wed, 15 May 2019 18:11:44 +0300
+Subject: [PATCH RFC 5/5] mm: Add process_vm_mmap()
 From:   Kirill Tkhai <ktkhai@virtuozzo.com>
 To:     akpm@linux-foundation.org, dan.j.williams@intel.com,
         ktkhai@virtuozzo.com, mhocko@suse.com, keith.busch@intel.com,
@@ -36,8 +36,8 @@ To:     akpm@linux-foundation.org, dan.j.williams@intel.com,
         aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
         mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Date:   Wed, 15 May 2019 18:11:22 +0300
-Message-ID: <155793308232.13922.18307403112092259417.stgit@localhost.localdomain>
+Date:   Wed, 15 May 2019 18:11:44 +0300
+Message-ID: <155793310413.13922.4749810361688380807.stgit@localhost.localdomain>
 In-Reply-To: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
 References: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
 User-Agent: StGit/0.18
@@ -49,114 +49,293 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to process_vm_readv() and process_vm_writev(),
-add declarations of a new syscall, which will allow
-to map memory from or to another process.
+This adds a new syscall to map from or to another
+process vma. Flag PVMMAP_FIXED may be specified,
+its meaning is similar to mmap()'s MAP_FIXED.
+
+@pid > 0 means to map from process of @pid to current,
+@pid < 0 means to map from current to @pid process.
+
+VMA are merged on destination, i.e. if source task
+has VMA with address [start; end], and we map it sequentially
+twice:
+
+process_vm_mmap(@pid, start, start + (end - start)/2, ...);
+process_vm_mmap(@pid, start + (end - start)/2, end,   ...);
+
+the destination task will have single vma [start, end].
 
 Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 ---
- arch/x86/entry/syscalls/syscall_32.tbl |    1 +
- arch/x86/entry/syscalls/syscall_64.tbl |    2 ++
- include/linux/syscalls.h               |    5 +++++
- include/uapi/asm-generic/unistd.h      |    5 ++++-
- init/Kconfig                           |    9 +++++----
- kernel/sys_ni.c                        |    2 ++
- 6 files changed, 19 insertions(+), 5 deletions(-)
+ include/linux/mm.h                     |    4 +
+ include/linux/mm_types.h               |    2 +
+ include/uapi/asm-generic/mman-common.h |    5 +
+ mm/mmap.c                              |  108 ++++++++++++++++++++++++++++++++
+ mm/process_vm_access.c                 |   71 +++++++++++++++++++++
+ 5 files changed, 190 insertions(+)
 
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 4cd5f982b1e5..bf8cc5de918f 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -438,3 +438,4 @@
- 425	i386	io_uring_setup		sys_io_uring_setup		__ia32_sys_io_uring_setup
- 426	i386	io_uring_enter		sys_io_uring_enter		__ia32_sys_io_uring_enter
- 427	i386	io_uring_register	sys_io_uring_register		__ia32_sys_io_uring_register
-+428	i386	process_vm_mmap		sys_process_vm_mmap		__ia32_compat_sys_process_vm_mmap
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index 64ca0d06259a..5af619c2d512 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -355,6 +355,7 @@
- 425	common	io_uring_setup		__x64_sys_io_uring_setup
- 426	common	io_uring_enter		__x64_sys_io_uring_enter
- 427	common	io_uring_register	__x64_sys_io_uring_register
-+428	common	process_vm_mmap		__x64_sys_process_vm_mmap
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 54328d08dbdd..c49bcfac593c 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2382,6 +2382,10 @@ extern int __do_munmap(struct mm_struct *, unsigned long, size_t,
+ 		       struct list_head *uf, bool downgrade);
+ extern int do_munmap(struct mm_struct *, unsigned long, size_t,
+ 		     struct list_head *uf);
++extern unsigned long mmap_process_vm(struct mm_struct *, unsigned long,
++				     struct mm_struct *, unsigned long,
++				     unsigned long, unsigned long,
++				     struct list_head *);
  
- #
- # x32-specific system call numbers start at 512 to avoid cache impact
-@@ -398,3 +399,4 @@
- 545	x32	execveat		__x32_compat_sys_execveat/ptregs
- 546	x32	preadv2			__x32_compat_sys_preadv64v2
- 547	x32	pwritev2		__x32_compat_sys_pwritev64v2
-+548	x32	process_vm_mmap		__x32_compat_sys_process_vm_mmap
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index e2870fe1be5b..7d8ae36589cf 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -997,6 +997,11 @@ asmlinkage long sys_fspick(int dfd, const char __user *path, unsigned int flags)
- asmlinkage long sys_pidfd_send_signal(int pidfd, int sig,
- 				       siginfo_t __user *info,
- 				       unsigned int flags);
-+asmlinkage long sys_process_vm_mmap(pid_t pid,
-+				    unsigned long src_addr,
-+				    unsigned long len,
-+				    unsigned long dst_addr,
-+				    unsigned long flags);
+ static inline unsigned long
+ do_mmap_pgoff(struct file *file, unsigned long addr,
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 1815fbc40926..885f256f2fb7 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -261,11 +261,13 @@ struct vm_region {
  
+ #ifdef CONFIG_USERFAULTFD
+ #define NULL_VM_UFFD_CTX ((struct vm_userfaultfd_ctx) { NULL, })
++#define IS_NULL_VM_UFFD_CTX(uctx) ((uctx)->ctx == NULL)
+ struct vm_userfaultfd_ctx {
+ 	struct userfaultfd_ctx *ctx;
+ };
+ #else /* CONFIG_USERFAULTFD */
+ #define NULL_VM_UFFD_CTX ((struct vm_userfaultfd_ctx) {})
++#define IS_NULL_VM_UFFD_CTX(uctx) (true)
+ struct vm_userfaultfd_ctx {};
+ #endif /* CONFIG_USERFAULTFD */
+ 
+diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
+index abd238d0f7a4..44cb6cf77e93 100644
+--- a/include/uapi/asm-generic/mman-common.h
++++ b/include/uapi/asm-generic/mman-common.h
+@@ -28,6 +28,11 @@
+ /* 0x0100 - 0x80000 flags are defined in asm-generic/mman.h */
+ #define MAP_FIXED_NOREPLACE	0x100000	/* MAP_FIXED which doesn't unmap underlying mapping */
+ 
++/*
++ * Flags for process_vm_mmap
++ */
++#define PVMMAP_FIXED	0x01
++
  /*
-  * Architecture-specific system calls
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index dee7292e1df6..1273d86bf546 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -832,9 +832,12 @@ __SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
- __SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
- #define __NR_io_uring_register 427
- __SYSCALL(__NR_io_uring_register, sys_io_uring_register)
-+#define __NR_process_vm_mmap 428
-+__SC_COMP(__NR_process_vm_mmap, sys_process_vm_mmap, \
-+          compat_sys_process_vm_mmap)
+  * Flags for mlock
+  */
+diff --git a/mm/mmap.c b/mm/mmap.c
+index b2a1f77643cd..3dbf280e9f8e 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -3274,6 +3274,114 @@ struct vm_area_struct *copy_vma(struct vm_area_struct **vmap,
+ 	return NULL;
+ }
  
- #undef __NR_syscalls
--#define __NR_syscalls 428
-+#define __NR_syscalls 429
- 
++static int do_mmap_process_vm(struct vm_area_struct *src_vma,
++			      unsigned long src_addr,
++			      struct mm_struct *dst_mm,
++			      unsigned long dst_addr,
++			      unsigned long len,
++			      struct list_head *uf)
++{
++	struct vm_area_struct *dst_vma;
++	unsigned long pgoff, ret;
++	bool unused;
++
++	if (do_munmap(dst_mm, dst_addr, len, uf))
++		return -ENOMEM;
++
++	if (src_vma->vm_flags & VM_ACCOUNT) {
++		if (security_vm_enough_memory_mm(dst_mm, len >> PAGE_SHIFT))
++			return -ENOMEM;
++	}
++
++	pgoff = src_vma->vm_pgoff +
++			((src_addr - src_vma->vm_start) >> PAGE_SHIFT);
++	dst_vma = copy_vma(&src_vma, dst_mm, dst_addr,
++			   len, pgoff, &unused, false);
++	if (!dst_vma) {
++		ret = -ENOMEM;
++		goto unacct;
++	}
++
++	ret = copy_page_range(dst_mm, src_vma->vm_mm, src_vma,
++			      dst_addr, src_addr, src_addr + len);
++	if (ret) {
++		do_munmap(dst_mm, dst_addr, len, uf);
++		return -ENOMEM;
++	}
++
++	if (dst_vma->vm_file)
++		uprobe_mmap(dst_vma);
++	perf_event_mmap(dst_vma);
++
++	dst_vma->vm_flags |= VM_SOFTDIRTY;
++	vma_set_page_prot(dst_vma);
++
++	vm_stat_account(dst_mm, dst_vma->vm_flags, len >> PAGE_SHIFT);
++	return 0;
++
++unacct:
++	vm_unacct_memory(len >> PAGE_SHIFT);
++	return ret;
++}
++
++unsigned long mmap_process_vm(struct mm_struct *src_mm,
++			      unsigned long src_addr,
++			      struct mm_struct *dst_mm,
++			      unsigned long dst_addr,
++			      unsigned long len,
++			      unsigned long flags,
++			      struct list_head *uf)
++{
++	struct vm_area_struct *src_vma = find_vma(src_mm, src_addr);
++	unsigned long gua_flags = 0;
++	unsigned long ret;
++
++	if (!src_vma || src_vma->vm_start > src_addr)
++		return -EFAULT;
++	if (len > src_vma->vm_end - src_addr)
++		return -EFAULT;
++	if (src_vma->vm_flags & (VM_DONTEXPAND | VM_PFNMAP))
++		return -EFAULT;
++	if (is_vm_hugetlb_page(src_vma) || (src_vma->vm_flags & VM_IO))
++		return -EINVAL;
++        if (dst_mm->map_count + 2 > sysctl_max_map_count)
++                return -ENOMEM;
++	if (!IS_NULL_VM_UFFD_CTX(&src_vma->vm_userfaultfd_ctx))
++		return -ENOTSUPP;
++
++	if (src_vma->vm_flags & VM_SHARED)
++		gua_flags |= MAP_SHARED;
++	else
++		gua_flags |= MAP_PRIVATE;
++	if (vma_is_anonymous(src_vma) || vma_is_shmem(src_vma))
++		gua_flags |= MAP_ANONYMOUS;
++	if (flags & PVMMAP_FIXED)
++		gua_flags |= MAP_FIXED;
++	ret = get_unmapped_area(src_vma->vm_file, dst_addr, len,
++				src_vma->vm_pgoff +
++				((src_addr - src_vma->vm_start) >> PAGE_SHIFT),
++				gua_flags);
++	if (offset_in_page(ret))
++                return ret;
++	dst_addr = ret;
++
++	/* Check against address space limit. */
++	if (!may_expand_vm(dst_mm, src_vma->vm_flags, len >> PAGE_SHIFT)) {
++		unsigned long nr_pages;
++
++		nr_pages = count_vma_pages_range(dst_mm, dst_addr, dst_addr + len);
++		if (!may_expand_vm(dst_mm, src_vma->vm_flags,
++					(len >> PAGE_SHIFT) - nr_pages))
++			return -ENOMEM;
++	}
++
++	ret = do_mmap_process_vm(src_vma, src_addr, dst_mm, dst_addr, len, uf);
++	if (ret)
++                return ret;
++
++	return dst_addr;
++}
++
  /*
-  * 32 bit systems traditionally used different
-diff --git a/init/Kconfig b/init/Kconfig
-index 8b9ffe236e4f..604db5f14718 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -320,13 +320,14 @@ config POSIX_MQUEUE_SYSCTL
- 	default y
+  * Return true if the calling process may expand its vm space by the passed
+  * number of pages
+diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
+index a447092d4635..7fca2c5c7edd 100644
+--- a/mm/process_vm_access.c
++++ b/mm/process_vm_access.c
+@@ -17,6 +17,8 @@
+ #include <linux/ptrace.h>
+ #include <linux/slab.h>
+ #include <linux/syscalls.h>
++#include <linux/mman.h>
++#include <linux/userfaultfd_k.h>
  
- config CROSS_MEMORY_ATTACH
--	bool "Enable process_vm_readv/writev syscalls"
-+	bool "Enable process_vm_readv/writev/mmap syscalls"
- 	depends on MMU
- 	default y
- 	help
--	  Enabling this option adds the system calls process_vm_readv and
--	  process_vm_writev which allow a process with the correct privileges
--	  to directly read from or write to another process' address space.
-+	  Enabling this option adds the system calls process_vm_readv,
-+	  process_vm_writev and process_vm_mmap, which allow a process
-+	  with the correct privileges to directly read from or write to
-+	  or mmap another process' address space.
- 	  See the man page for more details.
+ #ifdef CONFIG_COMPAT
+ #include <linux/compat.h>
+@@ -295,6 +297,68 @@ static ssize_t process_vm_rw(pid_t pid,
+ 	return rc;
+ }
  
- config USELIB
-diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-index 4d9ae5ea6caf..6f51634f4f7e 100644
---- a/kernel/sys_ni.c
-+++ b/kernel/sys_ni.c
-@@ -316,6 +316,8 @@ COND_SYSCALL(process_vm_readv);
- COND_SYSCALL_COMPAT(process_vm_readv);
- COND_SYSCALL(process_vm_writev);
- COND_SYSCALL_COMPAT(process_vm_writev);
-+COND_SYSCALL(process_vm_mmap);
-+COND_SYSCALL_COMPAT(process_vm_mmap);
++static unsigned long process_vm_mmap(pid_t pid, unsigned long src_addr,
++				     unsigned long len, unsigned long dst_addr,
++				     unsigned long flags)
++{
++	struct mm_struct *src_mm, *dst_mm;
++	struct task_struct *task;
++	unsigned long ret;
++	int depth = 0;
++	LIST_HEAD(uf);
++
++	len = PAGE_ALIGN(len);
++	src_addr = round_down(src_addr, PAGE_SIZE);
++	if (flags & PVMMAP_FIXED)
++		dst_addr = round_down(dst_addr, PAGE_SIZE);
++	else
++		dst_addr = round_hint_to_min(dst_addr);
++
++	if ((flags & ~PVMMAP_FIXED) || len == 0 || len > TASK_SIZE ||
++	    src_addr == 0 || dst_addr > TASK_SIZE - len)
++		return -EINVAL;
++	task = find_get_task_by_vpid(pid > 0 ? pid : -pid);
++	if (!task)
++		return -ESRCH;
++	if (unlikely(task->flags & PF_KTHREAD)) {
++		ret = -EINVAL;
++		goto out_put_task;
++	}
++
++	src_mm = mm_access(task, PTRACE_MODE_ATTACH_REALCREDS);
++	if (!src_mm || IS_ERR(src_mm)) {
++		ret = IS_ERR(src_mm) ? PTR_ERR(src_mm) : -ESRCH;
++		goto out_put_task;
++	}
++	dst_mm = current->mm;
++	mmget(dst_mm);
++
++	if (pid < 0)
++		swap(src_mm, dst_mm);
++
++	/* Double lock mm in address order: smallest is the first */
++	if (src_mm < dst_mm) {
++		down_write(&src_mm->mmap_sem);
++		depth = SINGLE_DEPTH_NESTING;
++	}
++	down_write_nested(&dst_mm->mmap_sem, depth);
++	if (src_mm > dst_mm)
++		down_write_nested(&src_mm->mmap_sem, SINGLE_DEPTH_NESTING);
++
++	ret = mmap_process_vm(src_mm, src_addr, dst_mm, dst_addr, len, flags, &uf);
++
++	up_write(&dst_mm->mmap_sem);
++	if (dst_mm != src_mm)
++		up_write(&src_mm->mmap_sem);
++
++	userfaultfd_unmap_complete(dst_mm, &uf);
++	mmput(src_mm);
++	mmput(dst_mm);
++out_put_task:
++	put_task_struct(task);
++	return ret;
++}
++
+ SYSCALL_DEFINE6(process_vm_readv, pid_t, pid, const struct iovec __user *, lvec,
+ 		unsigned long, liovcnt, const struct iovec __user *, rvec,
+ 		unsigned long, riovcnt,	unsigned long, flags)
+@@ -310,6 +374,13 @@ SYSCALL_DEFINE6(process_vm_writev, pid_t, pid,
+ 	return process_vm_rw(pid, lvec, liovcnt, rvec, riovcnt, flags, 1);
+ }
  
- /* compare kernel pointers */
- COND_SYSCALL(kcmp);
++SYSCALL_DEFINE5(process_vm_mmap, pid_t, pid,
++		unsigned long, src_addr, unsigned long, len,
++		unsigned long, dst_addr, unsigned long, flags)
++{
++	return process_vm_mmap(pid, src_addr, len, dst_addr, flags);
++}
++
+ #ifdef CONFIG_COMPAT
+ 
+ static ssize_t
 
