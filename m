@@ -2,149 +2,77 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873BCC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B490BC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6291120881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:47:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85FD320881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:48:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="xS6pYk6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726286AbfEOIrp (ORCPT
+        id S1726394AbfEOIsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 04:47:45 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:39150 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbfEOIrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 04:47:45 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4C0961A0171;
-        Wed, 15 May 2019 10:47:43 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 9A30A1A006B;
-        Wed, 15 May 2019 10:47:37 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C17CA4029A;
-        Wed, 15 May 2019 16:47:30 +0800 (SGT)
-From:   Yinbo Zhu <yinbo.zhu@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     yinbo.zhu@nxp.com, xiaobo.xie@nxp.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        yangbo.lu@nxp.com, jiafei.pan@nxp.com,
-        Ashish Kumar <Ashish.Kumar@nxp.com>
-Subject: [PATCH v3] arm64: dts: ls1028a: Add esdhc node in dts
-Date:   Wed, 15 May 2019 16:49:25 +0800
-Message-Id: <20190515084925.30155-1-yinbo.zhu@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 15 May 2019 04:48:36 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:58292 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725912AbfEOIsg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 04:48:36 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id E97EF2E146D;
+        Wed, 15 May 2019 11:48:33 +0300 (MSK)
+Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
+        by mxbackcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id Q7pQ1sTs55-mXwKadUT;
+        Wed, 15 May 2019 11:48:33 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1557910113; bh=RBKOGGXjvQMTQzfr1KxZ/9oyUSl618uUSUuLqd4U4J4=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=xS6pYk6lclpU7VNMA86o90Cjw5stbFWI+4tB+0YsgkUrheiouBQ8AFz8MpyH3KX6B
+         cYl8QrQFZIGVKhNgLsQ5GI7hC5vZalPybRoqEZphXJ6kxTMy+pJlDcuospumbfhH/6
+         AX9OFu7taypLf891OGXJ8oBpDBEjmuIz6A49Iw8Q=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:ed19:3833:7ce1:2324])
+        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id F0Vfe9DM2Y-mXlCWMAt;
+        Wed, 15 May 2019 11:48:33 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: mm: use down_read_killable for locking mmap_sem in
+ access_remote_vm
+To:     =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, oleg@redhat.com
+References: <20190515083825.GJ13687@blackbody.suse.cz>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <11ee83c8-5f0f-0950-a588-037bdcf9084e@yandex-team.ru>
+Date:   Wed, 15 May 2019 11:48:32 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190515083825.GJ13687@blackbody.suse.cz>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ashish Kumar <Ashish.Kumar@nxp.com>
+On 15.05.2019 11:38, Michal Koutný wrote:
+> Hi,
+> making this holder of mmap_sem killable was for the reasons of /proc/...
+> diagnostics was an idea I was pondeering too. However, I think the
+> approach of pretending we read 0 bytes is not correct. The API would IMO
+> need to be extended to allow pass a result such as EINTR to the end
+> caller.
+> Why do you think it's safe to return just 0?
 
-This patch is to add esdhc node and enable SD UHS-I,
-eMMC HS200 for ls1028ardb/ls1028aqds board.
+This function ignores any error like reading from unmapped area and
+returns only size of successful transfer. It never returned any error codes.
 
-Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
----
-Change in v3:
-		replace "esdhc@" with "mmc@"
-
- arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |    8 ++++++
- arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |   13 ++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    |   27 +++++++++++++++++++++
- 3 files changed, 48 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-index 14c79f4..180e5d2 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-@@ -42,6 +42,14 @@
- 	status = "okay";
- };
- 
-+&esdhc {
-+	status = "okay";
-+};
-+
-+&esdhc1 {
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-index f86b054..1bfaf42 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-@@ -30,6 +30,19 @@
- 	};
- };
- 
-+&esdhc {
-+	status = "okay";
-+	sd-uhs-sdr104;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr12;
-+	};
-+
-+&esdhc1 {
-+	status = "okay";
-+	mmc-hs200-1_8v;
-+	};
-+
- &i2c0 {
- 	status = "okay";
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 2896bbc..462833c 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -274,6 +274,33 @@
- 			status = "disabled";
- 		};
- 
-+		esdhc: mmc@2140000 {
-+			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
-+			reg = <0x0 0x2140000 0x0 0x10000>;
-+			interrupts = <0 28 0x4>; /* Level high type */
-+			clock-frequency = <0>; /* fixed up by bootloader */
-+			clocks = <&clockgen 2 1>;
-+			voltage-ranges = <1800 1800 3300 3300>;
-+			sdhci,auto-cmd12;
-+			little-endian;
-+			bus-width = <4>;
-+			status = "disabled";
-+		};
-+
-+		esdhc1: mmc@2150000 {
-+			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
-+			reg = <0x0 0x2150000 0x0 0x10000>;
-+			interrupts = <0 63 0x4>; /* Level high type */
-+			clock-frequency = <0>; /* fixed up by bootloader */
-+			clocks = <&clockgen 2 1>;
-+			voltage-ranges = <1800 1800 3300 3300>;
-+			sdhci,auto-cmd12;
-+			broken-cd;
-+			little-endian;
-+			bus-width = <4>;
-+			status = "disabled";
-+		};
-+
- 		sata: sata@3200000 {
- 			compatible = "fsl,ls1028a-ahci";
- 			reg = <0x0 0x3200000 0x0 0x10000>,
--- 
-1.7.1
-
+> 
+> Michal
+> 
