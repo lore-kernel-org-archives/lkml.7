@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3172CC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74931C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F21D42084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 487602084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919939;
-	bh=dVQBo5mtvrTupR7EEWhapQ5svi0kusxcNoYyTDZh03o=;
+	s=default; t=1557919948;
+	bh=LxcjEKip1v8N/ANBHPxLhn8/Pw2YaorBIk4I7k7IVPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nXFFCcG2VdwtxQAcJMxFFwwuuQPoeRmkKzRZD+BEHte328/gP+0DsNYLMesDl/HIQ
-	 0g1g/HWQNQvRO26WgEwpAwoJC8V2gFMA8WSyuM51X/1T7zrM0kHS+NbiqXI8Sdewhn
-	 EmECAmEds9BdIYMGSm7MsTQ2h7PSFFaLy+b6IdlI=
+	b=fyd0EPYPQPnYd0LxQp+tKtTbWqXK533FU0jHa8xNabvQo/MZG9fHy2szb7MfXJmE3
+	 EBJz5CIBX2REk+1BlhkgnRZ4NrJx97TYqxbPV26NGz3K287P9B7fk8Ub7BzIKefgdB
+	 HdDFZV+QROy0Kk5PyI6ELIzdBinh4SJop4EBbhl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732565AbfEOLcR (ORCPT
+        id S1733027AbfEOLc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:32:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44044 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:32:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732514AbfEOLcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:32:12 -0400
+        id S1733005AbfEOLcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:32:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1672320881;
-        Wed, 15 May 2019 11:32:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD220206BF;
+        Wed, 15 May 2019 11:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919931;
-        bh=dVQBo5mtvrTupR7EEWhapQ5svi0kusxcNoYyTDZh03o=;
+        s=default; t=1557919939;
+        bh=LxcjEKip1v8N/ANBHPxLhn8/Pw2YaorBIk4I7k7IVPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J92v7wfr1/tgFluT3UnbIPTy3pQ6huuFyBrM27zjC3zpS03Pk1NohfL7/M70CeqzU
-         UKvl0Bm8MRTSZlL0l98NHldd3uBy8p5O9mq95ykdhnq85zju7TCwTelQX9GZcZanKp
-         tb05DWr4f1lihpBmyHAn1ApYs4lna53koYag7VLg=
+        b=ZWQwTQhpkd6R1rW05m+xxQsEXfCpGoGfDyNf1ZNuaFSW39iyIk3/GLtG7CO8WEz4r
+         zQ+vVgtesRWLvUWsYGHaCegIsn2jQvNhmBzjo6EF6FCotOwDuQoMSGHjs5kXUWqrqk
+         Fw5JUYXkjrJ4dbigMCyy4u0GGyWCRkCWTr3ykJOY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eubert Bao <bunnier@gmail.com>,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.1 11/46] mwl8k: Fix rate_idx underflow
-Date:   Wed, 15 May 2019 12:56:35 +0200
-Message-Id: <20190515090621.817267128@linuxfoundation.org>
+        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jarod Wilson <jarod@redhat.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+Subject: [PATCH 5.1 14/46] bonding: fix arp_validate toggling in active-backup mode
+Date:   Wed, 15 May 2019 12:56:38 +0200
+Message-Id: <20190515090622.798553525@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -60,79 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Štetiar <ynezz@true.cz>
+From: Jarod Wilson <jarod@redhat.com>
 
-commit 6b583201fa219b7b1b6aebd8966c8fd9357ef9f4 upstream.
+[ Upstream commit a9b8a2b39ce65df45687cf9ef648885c2a99fe75 ]
 
-It was reported on OpenWrt bug tracking system[1], that several users
-are affected by the endless reboot of their routers if they configure
-5GHz interface with channel 44 or 48.
+There's currently a problem with toggling arp_validate on and off with an
+active-backup bond. At the moment, you can start up a bond, like so:
 
-The reboot loop is caused by the following excessive number of WARN_ON
-messages:
+modprobe bonding mode=1 arp_interval=100 arp_validate=0 arp_ip_targets=192.168.1.1
+ip link set bond0 down
+echo "ens4f0" > /sys/class/net/bond0/bonding/slaves
+echo "ens4f1" > /sys/class/net/bond0/bonding/slaves
+ip link set bond0 up
+ip addr add 192.168.1.2/24 dev bond0
 
- WARNING: CPU: 0 PID: 0 at backports-4.19.23-1/net/mac80211/rx.c:4516
-                             ieee80211_rx_napi+0x1fc/0xa54 [mac80211]
+Pings to 192.168.1.1 work just fine. Now turn on arp_validate:
 
-as the messages are being correctly emitted by the following guard:
+echo 1 > /sys/class/net/bond0/bonding/arp_validate
 
- case RX_ENC_LEGACY:
-      if (WARN_ON(status->rate_idx >= sband->n_bitrates))
+Pings to 192.168.1.1 continue to work just fine. Now when you go to turn
+arp_validate off again, the link falls flat on it's face:
 
-as the rate_idx is in this case erroneously set to 251 (0xfb). This fix
-simply converts previously used magic number to proper constant and
-guards against substraction which is leading to the currently observed
-underflow.
+echo 0 > /sys/class/net/bond0/bonding/arp_validate
+dmesg
+...
+[133191.911987] bond0: Setting arp_validate to none (0)
+[133194.257793] bond0: bond_should_notify_peers: slave ens4f0
+[133194.258031] bond0: link status definitely down for interface ens4f0, disabling it
+[133194.259000] bond0: making interface ens4f1 the new active one
+[133197.330130] bond0: link status definitely down for interface ens4f1, disabling it
+[133197.331191] bond0: now running without any active interface!
 
-1. https://bugs.openwrt.org/index.php?do=details&task_id=2218
+The problem lies in bond_options.c, where passing in arp_validate=0
+results in bond->recv_probe getting set to NULL. This flies directly in
+the face of commit 3fe68df97c7f, which says we need to set recv_probe =
+bond_arp_recv, even if we're not using arp_validate. Said commit fixed
+this in bond_option_arp_interval_set, but missed that we can get to that
+same state in bond_option_arp_validate_set as well.
 
-Fixes: 854783444bab ("mwl8k: properly set receive status rate index on 5 GHz receive")
-Cc: <stable@vger.kernel.org>
-Tested-by: Eubert Bao <bunnier@gmail.com>
-Reported-by: Eubert Bao <bunnier@gmail.com>
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+One solution would be to universally set recv_probe = bond_arp_recv here
+as well, but I don't think bond_option_arp_validate_set has any business
+touching recv_probe at all, and that should be left to the arp_interval
+code, so we can just make things much tidier here.
+
+Fixes: 3fe68df97c7f ("bonding: always set recv_probe to bond_arp_rcv in arp monitor")
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/wireless/marvell/mwl8k.c |   13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/net/bonding/bond_options.c |    7 -------
+ 1 file changed, 7 deletions(-)
 
---- a/drivers/net/wireless/marvell/mwl8k.c
-+++ b/drivers/net/wireless/marvell/mwl8k.c
-@@ -441,6 +441,9 @@ static const struct ieee80211_rate mwl8k
- #define MWL8K_CMD_UPDATE_STADB		0x1123
- #define MWL8K_CMD_BASTREAM		0x1125
- 
-+#define MWL8K_LEGACY_5G_RATE_OFFSET \
-+	(ARRAY_SIZE(mwl8k_rates_24) - ARRAY_SIZE(mwl8k_rates_50))
-+
- static const char *mwl8k_cmd_name(__le16 cmd, char *buf, int bufsize)
+--- a/drivers/net/bonding/bond_options.c
++++ b/drivers/net/bonding/bond_options.c
+@@ -1098,13 +1098,6 @@ static int bond_option_arp_validate_set(
  {
- 	u16 command = le16_to_cpu(cmd);
-@@ -1016,8 +1019,9 @@ mwl8k_rxd_ap_process(void *_rxd, struct
+ 	netdev_dbg(bond->dev, "Setting arp_validate to %s (%llu)\n",
+ 		   newval->string, newval->value);
+-
+-	if (bond->dev->flags & IFF_UP) {
+-		if (!newval->value)
+-			bond->recv_probe = NULL;
+-		else if (bond->params.arp_interval)
+-			bond->recv_probe = bond_arp_rcv;
+-	}
+ 	bond->params.arp_validate = newval->value;
  
- 	if (rxd->channel > 14) {
- 		status->band = NL80211_BAND_5GHZ;
--		if (!(status->encoding == RX_ENC_HT))
--			status->rate_idx -= 5;
-+		if (!(status->encoding == RX_ENC_HT) &&
-+		    status->rate_idx >= MWL8K_LEGACY_5G_RATE_OFFSET)
-+			status->rate_idx -= MWL8K_LEGACY_5G_RATE_OFFSET;
- 	} else {
- 		status->band = NL80211_BAND_2GHZ;
- 	}
-@@ -1124,8 +1128,9 @@ mwl8k_rxd_sta_process(void *_rxd, struct
- 
- 	if (rxd->channel > 14) {
- 		status->band = NL80211_BAND_5GHZ;
--		if (!(status->encoding == RX_ENC_HT))
--			status->rate_idx -= 5;
-+		if (!(status->encoding == RX_ENC_HT) &&
-+		    status->rate_idx >= MWL8K_LEGACY_5G_RATE_OFFSET)
-+			status->rate_idx -= MWL8K_LEGACY_5G_RATE_OFFSET;
- 	} else {
- 		status->band = NL80211_BAND_2GHZ;
- 	}
+ 	return 0;
 
 
