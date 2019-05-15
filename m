@@ -2,177 +2,143 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6376BC46460
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 387D8C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36A022084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06BC720873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:07:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SlvgNIgQ"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="wXrr8sCc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbfEOSGf (ORCPT
+        id S1727553AbfEOSHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 14:06:35 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:41541 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbfEOSGf (ORCPT
+        Wed, 15 May 2019 14:07:49 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33431 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726542AbfEOSHt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 14:06:35 -0400
-Received: by mail-lf1-f67.google.com with SMTP id d8so525303lfb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 11:06:34 -0700 (PDT)
+        Wed, 15 May 2019 14:07:49 -0400
+Received: by mail-wr1-f65.google.com with SMTP id d9so559894wrx.0
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 11:07:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Sjmiq1cCH63qmG8pGXuSooVJ5F0u+qb0wj0/CssAcp4=;
-        b=SlvgNIgQqK5M9gCVm3yAs+0hobGk05eWLldR5Fsl6Q1n3/k8h0E8dRirHMgte8T0Gs
-         ABGmEhUfERBQkJvO1HYDZvx/HNhkOT4zeUIfFguFpIt5Omak0dFeo09dyPB8qhO4XBYF
-         +ecMN/vuucJEXLT3613aUoz4kgZglpKXDqPY1pgFqZiGdnJw/QvyZuzmLhSYVmF8gZid
-         WkQAmpAY+IidAoVceJWcPN9/7URBwtGVCIbFHqGebO5qPB3nqd9PymhgXhrVFY1EAgcK
-         v8/S98bQOkrrxT6ySChm6BU0bVopFSW4lICbF1HXh/C61OjKO42uoSwjBrOKEokUiObR
-         pEYw==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=8a0Ne4dNSZVwjHUcXcSPoak6AY4jKew3Xjufj621ND0=;
+        b=wXrr8sCcejr0Sn5P42P7EREL6isxTX27F1XE5Ee8AJaQxQNI5CgunlVJb57CoD2rXl
+         IBT7eqq4OtTkutBPtV2HM7UEnraymUDCXGEnfknCLekAj0Wz+0Jv7VpD0azbH4KR2vVj
+         P+F7mdwtoYqJjQVJg6Dqgz+q4AvQQdGdtIJQH2XSp6odv2SJ/6q5vRLKMjQ+qfdbZbAC
+         jT+QK91WiZo0a1dZsZ2GqUrfZrTpg7CkDiXcFuMtC1LQtPs8PjubgRAvh+Y7+yoMq+xo
+         bujFGr/Bk0lcqtFXtg7eTNqaR6HsLhb8CPSGzSkYoD0q9WD7sNsG/3wjS3P19Atgzw+W
+         q+LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Sjmiq1cCH63qmG8pGXuSooVJ5F0u+qb0wj0/CssAcp4=;
-        b=cWixKd+YZ8oBhuI7FniamLsi3c8a/Ajc4VZZF2VUteyzy4XbkzyZK1FmCG7Z9k4z/E
-         b7QCXTvzpF9I/wbLpK16alcrLtK/VEZSVUFemUmTZRxVLGi6LC0NJJ2ZkARIQcoeWmOA
-         F4f9EK5W5CEOPfCdRI9Qbloki9a7QZ0Opj+2b8xdMeoApF4N0N+rOtM7ShloUGErrdJY
-         QbNjW9mtOzLUXUOi/Vd/wzso/LCEJjLlVGep/FN3ELcaS6I4G9/RFp0t2/bsCsBptgBa
-         2qiSriiLtYNK8zbwRdWl5Nng9RoYa55jfEumSetTuvOy4+nTt6csDeni+XkE7OItlelp
-         8hag==
-X-Gm-Message-State: APjAAAU6on5y3j1scR2OKLrfV4pi5eDFKIHAcHv+8RCrcxoJZQ2ak36L
-        D8GeTz/3Kocax8et6WlenaGrCJ41dCylsHsP25qgOQ==
-X-Google-Smtp-Source: APXvYqw7+yY7rcMpUyzxSf/n8K0DZ3ig6cmT0emvJBhlDW/eZOy+5izYGPwJ2+mf+jNzPk5qIMy1dmCbW8r77gZbbjk=
-X-Received: by 2002:a05:6512:507:: with SMTP id o7mr202686lfb.137.1557943593111;
- Wed, 15 May 2019 11:06:33 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=8a0Ne4dNSZVwjHUcXcSPoak6AY4jKew3Xjufj621ND0=;
+        b=ijtyugON1VTM3ZwQNXEs7KJDwG5Gj+V41NnJETqBbKDjdIyZSW14aBWLUD0BTUh5Wr
+         QgUzhA1RVKZ1M1OC00L2AV9DbDIw8Ct7zBB0EHoPfX9u4NWQgFtjO5OVievXNnm6nPsO
+         uE/3kJpJ/UOsDXLRgJCvNl0IaP0jscqRlZjjqmD6kqEjHMdAE3kot8Wfy1RO37yB5ixj
+         YMn2z8p11i61Y8CJLnvb4UnXy9WvhXLbE6OY0hRRJCpRXzlCPy9A9AsDoBfed5EBVSWp
+         SnvGB/Y6SVvszZKs7dBriJQMov8bM3gQeC7f84sUWUUg2fVDhEBPcE3DTCr4MghRKHoX
+         PQ2g==
+X-Gm-Message-State: APjAAAUW0sBT8+vs3QB3MyA0Bh2DcOVlZJCrxj835CmwApO7b3OEsOcj
+        7WxGpWv/ftgDxVymnMJhq3glBw==
+X-Google-Smtp-Source: APXvYqwd+fZ372FY962ClZLlouA2RJtuhiS2tWYmp0FxdAbIVFhEtHVlJZJTNskXwPFnO8h/ICF98w==
+X-Received: by 2002:adf:b3d4:: with SMTP id x20mr29130196wrd.284.1557943667392;
+        Wed, 15 May 2019 11:07:47 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id d9sm3560590wro.26.2019.05.15.11.07.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 11:07:46 -0700 (PDT)
+Message-ID: <5cdc5572.1c69fb81.b2944.5072@mx.google.com>
+Date:   Wed, 15 May 2019 11:07:46 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190515090651.633556783@linuxfoundation.org>
-In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 15 May 2019 23:36:21 +0530
-Message-ID: <CA+G9fYuXv8KPEsXieSVZLY6uk=2Pfwh3B+xFa1FDRRrT=MYT9Q@mail.gmail.com>
-Subject: Re: [PATCH 5.0 000/137] 5.0.17-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Branch: linux-4.14.y
+X-Kernelci-Kernel: v4.14.119-116-g7b9ae876e241
+In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
+References: <20190515090659.123121100@linuxfoundation.org>
+Subject: Re: [PATCH 4.14 000/115] 4.14.120-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 May 2019 at 16:57, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.0.17 release.
-> There are 137 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri 17 May 2019 09:04:31 AM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.0.17-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.0.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+stable-rc/linux-4.14.y boot: 128 boots: 1 failed, 122 passed with 3 offline=
+, 2 conflicts (v4.14.119-116-g7b9ae876e241)
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.14.y/kernel/v4.14.119-116-g7b9ae876e241/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
+y/kernel/v4.14.119-116-g7b9ae876e241/
 
-Summary
-------------------------------------------------------------------------
+Tree: stable-rc
+Branch: linux-4.14.y
+Git Describe: v4.14.119-116-g7b9ae876e241
+Git Commit: 7b9ae876e2410f72fbc14db54f141d516adeabca
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 65 unique boards, 23 SoC families, 14 builds out of 201
 
-kernel: 5.0.17-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.0.y
-git commit: 174f1e44d0165ce68f4e520718847304556717e3
-git describe: v5.0.16-138-g174f1e44d016
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.0-oe/bui=
-ld/v5.0.16-138-g174f1e44d016
+Boot Regressions Detected:
 
+arm:
 
-No regressions (compared to build v5.0.16)
+    multi_v7_defconfig:
+        gcc-8:
+          omap4-panda:
+              lab-baylibre: new failure (last pass: v4.14.119-98-g8d3df192f=
+d69)
 
-No fixes (compared to build v5.0.16)
+Boot Failure Detected:
 
-Ran 24960 total tests in the following environments and test suites.
+arm64:
+    defconfig:
+        gcc-8:
+            rk3399-firefly: 1 failed lab
 
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
+Offline Platforms:
 
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* ssuite
+arm:
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+    tegra_defconfig:
+        gcc-8
+            tegra20-iris-512: 1 offline lab
+
+    multi_v7_defconfig:
+        gcc-8
+            stih410-b2120: 1 offline lab
+            tegra20-iris-512: 1 offline lab
+
+Conflicting Boot Failures Detected: (These likely are not failures as other=
+ labs are reporting PASS. Needs review.)
+
+arm:
+    multi_v7_defconfig:
+        omap4-panda:
+            lab-baylibre: FAIL (gcc-8)
+            lab-baylibre-seattle: PASS (gcc-8)
+
+    davinci_all_defconfig:
+        da850-lcdk:
+            lab-baylibre: PASS (gcc-8)
+            lab-baylibre-seattle: FAIL (gcc-8)
+
+---
+For more info write to <info@kernelci.org>
