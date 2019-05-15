@@ -2,130 +2,262 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E666C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:04:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3205FC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B75A20881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:04:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Mn4zWIIo"
+	by mail.kernel.org (Postfix) with ESMTP id F06AB2084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbfEOKEw (ORCPT
+        id S1726663AbfEOKFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:04:52 -0400
-Received: from mail-eopbgr80059.outbound.protection.outlook.com ([40.107.8.59]:39651
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726586AbfEOKEv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:04:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sm2X//WPXOIgD5UW/K/WAjv2L76gLqUFtG3NSJhdqLY=;
- b=Mn4zWIIoM4a2at+hWHmy9qriRlUKed+NYgG5SedLvMisPKBjxgCHILC/VPr3tLTLpj2zQnHozv8/uDfVru754RgLLRTR/FMtg7N4X0hSQTrSZiUGdIvdicbMYoeg4PwcSlWSH7vOoaZU0T7HKyS2iSYLMGTswTl7lYPF0WR2CNw=
-Received: from AM0PR04MB6434.eurprd04.prod.outlook.com (20.179.252.215) by
- AM0PR04MB4801.eurprd04.prod.outlook.com (20.177.41.155) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.25; Wed, 15 May 2019 10:04:46 +0000
-Received: from AM0PR04MB6434.eurprd04.prod.outlook.com
- ([fe80::19be:75a:9fe:7cec]) by AM0PR04MB6434.eurprd04.prod.outlook.com
- ([fe80::19be:75a:9fe:7cec%7]) with mapi id 15.20.1900.010; Wed, 15 May 2019
- 10:04:46 +0000
-From:   Leonard Crestez <leonard.crestez@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>
-CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "agross@kernel.org" <agross@kernel.org>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>
-Subject: Re: [PATCH V2 1/2] soc: imx: Add SCU SoC info driver support
-Thread-Topic: [PATCH V2 1/2] soc: imx: Add SCU SoC info driver support
-Thread-Index: AQHVCvixb1MFrIDHlECOalYM+lyDeQ==
-Date:   Wed, 15 May 2019 10:04:46 +0000
-Message-ID: <AM0PR04MB6434C2BCE2116836CFC0FEBFEE090@AM0PR04MB6434.eurprd04.prod.outlook.com>
-References: <1557908823-11349-1-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonard.crestez@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e9c69b43-db63-4003-37d1-08d6d91cc2ba
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4801;
-x-ms-traffictypediagnostic: AM0PR04MB4801:
-x-microsoft-antispam-prvs: <AM0PR04MB480156536BF4DAA6805F45BAEE090@AM0PR04MB4801.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(396003)(136003)(376002)(366004)(189003)(199004)(44832011)(486006)(66476007)(66556008)(53936002)(66066001)(5660300002)(6862004)(229853002)(73956011)(66446008)(64756008)(91956017)(76116006)(52536014)(99286004)(476003)(66946007)(478600001)(7696005)(14454004)(316002)(86362001)(76176011)(4744005)(446003)(102836004)(6116002)(8676002)(2906002)(71190400001)(186003)(14444005)(6506007)(53546011)(26005)(256004)(55016002)(9686003)(54906003)(3846002)(6636002)(4326008)(33656002)(6246003)(6436002)(305945005)(71200400001)(7736002)(81156014)(74316002)(81166006)(25786009)(8936002)(68736007)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4801;H:AM0PR04MB6434.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: y/ThbNd0wWXL7H2R4+RjpW0YsbGv8HGlcSfPA1sydRKGglH2TBBVqXpoeTvbrNw85ApwzaQu3KgLSlvsZIgCjH8k3SJNciRvyKCuFijM8wN316RjllItPd1wgnuRuZ9HaUZRjS0hqWydR+xQVP3guhdMaSseLfuFSTXCwdUP7eOzYJu/JKJqEOT2oQasUWkz0NQ6qIvhLc/E5Yy49cGihE51W01XQt6pm36DiXu6XSQCgi6iiDFJvTn1S6cYWMsBaq234YaXDLz9ddbKa7s0f1agfrQVkldkhoCJPf/rH8f/S33njOqLiDbh6vwjw7d6fucwZtFuwfrmeeWSK+lbTMAtiLaEOCajkbK29ORMN0BHCV+U8xasMzUoMB7IEmC8FHGkuLO8q0zTxf/HO7gOZXRudTWpj7lcXdonIYTBaWE=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 15 May 2019 06:05:11 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42494 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726136AbfEOKFK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:05:10 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4F9vcQJ035430
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 06:05:09 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sgfcs474a-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 06:05:09 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <groug@kaod.org>;
+        Wed, 15 May 2019 11:05:07 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 15 May 2019 11:05:03 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4FA52XK48234672
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 May 2019 10:05:02 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 73DE0A405D;
+        Wed, 15 May 2019 10:05:02 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 27EF1A4040;
+        Wed, 15 May 2019 10:05:02 +0000 (GMT)
+Received: from bahia.lan (unknown [9.145.156.103])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 15 May 2019 10:05:02 +0000 (GMT)
+Subject: [PATCH] powerpc/pseries: Fix xive=off command line
+From:   Greg Kurz <groug@kaod.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        stable@vger.kernel.org,
+        =?utf-8?q?C=C3=A9dric?= Le Goater <clg@kaod.org>,
+        pavrampu@in.ibm.com
+Date:   Wed, 15 May 2019 12:05:01 +0200
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9c69b43-db63-4003-37d1-08d6d91cc2ba
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 10:04:46.7000
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4801
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19051510-4275-0000-0000-00000334FAC1
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051510-4276-0000-0000-000038447E0B
+Message-Id: <155791470178.432724.8008395673479905061.stgit@bahia.lan>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905150065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.05.2019 11:32, Anson Huang wrote:=0A=
-> Add i.MX SCU SoC info driver to support i.MX8QXP SoC, introduce=0A=
-> driver dependency into Kconfig as CONFIG_IMX_SCU must be=0A=
-> selected to support i.MX SCU SoC driver, also need to use=0A=
-> platform driver model to make sure IMX_SCU driver is probed=0A=
-> before i.MX SCU SoC driver.=0A=
-> =0A=
-> With this patch, SoC info can be read from sysfs:=0A=
-=0A=
-> +	id =3D of_match_node(imx_scu_soc_match, root);=0A=
-> +	if (!id) {=0A=
-> +		of_node_put(root);=0A=
-> +		return -ENODEV;=0A=
-> +	}=0A=
-=0A=
-Perhaps this check should be moved from imx_scu_soc_probe to =0A=
-imx_scu_soc_init? As far as I can tell this "probe" function will be =0A=
-attempted on all SOCs (even non-imx). Better to check if we're on a =0A=
-SCU-based soc early and avoid temporary allocations.=0A=
-=0A=
-> +module_init(imx_scu_soc_init);=0A=
-> +module_exit(imx_scu_soc_exit);=0A=
-=0A=
-Please don't make this a module=0A=
-=0A=
---=0A=
-Regards,=0A=
-Leonard=0A=
+On POWER9, if the hypervisor supports XIVE exploitation mode, the guest OS
+will unconditionally requests for the XIVE interrupt mode even if XIVE was
+deactivated with the kernel command line xive=off. Later on, when the spapr
+XIVE init code handles xive=off, it disables XIVE and tries to fall back on
+the legacy mode XICS.
+
+This discrepency causes a kernel panic because the hypervisor is configured
+to provide the XIVE interrupt mode to the guest :
+
+[    0.008837] kernel BUG at arch/powerpc/sysdev/xics/xics-common.c:135!
+[    0.008877] Oops: Exception in kernel mode, sig: 5 [#1]
+[    0.008908] LE SMP NR_CPUS=1024 NUMA pSeries
+[    0.008939] Modules linked in:
+[    0.008964] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G        W         5.0.13-200.fc29.ppc64le #1
+[    0.009018] NIP:  c000000001029ab8 LR: c000000001029aac CTR: c0000000018e0000
+[    0.009065] REGS: c0000007f96d7900 TRAP: 0700   Tainted: G        W          (5.0.13-200.fc29.ppc64le)
+[    0.009119] MSR:  8000000002029033 <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 28000222  XER: 20040000
+[    0.009168] CFAR: c0000000001b1e28 IRQMASK: 0
+[    0.009168] GPR00: c000000001029aac c0000007f96d7b90 c0000000015e8600 0000000000000000
+[    0.009168] GPR04: 0000000000000001 0000000000000000 0000000000000061 646f6d61696e0d0a
+[    0.009168] GPR08: 00000007fd8f0000 0000000000000001 c0000000014c44c0 c0000007f96d76cf
+[    0.009168] GPR12: 0000000000000000 c0000000018e0000 0000000000000001 0000000000000000
+[    0.009168] GPR16: 0000000000000000 0000000000000001 c0000007f96d7c08 c0000000016903d0
+[    0.009168] GPR20: c0000007fffe04e8 ffffffffffffffea c000000001620164 c00000000161fe58
+[    0.009168] GPR24: c000000000ea6c88 c0000000011151a8 00000000006000c0 c0000007f96d7c34
+[    0.009168] GPR28: 0000000000000000 c0000000014b286c c000000001115180 c00000000161dc70
+[    0.009558] NIP [c000000001029ab8] xics_smp_probe+0x38/0x98
+[    0.009590] LR [c000000001029aac] xics_smp_probe+0x2c/0x98
+[    0.009622] Call Trace:
+[    0.009639] [c0000007f96d7b90] [c000000001029aac] xics_smp_probe+0x2c/0x98 (unreliable)
+[    0.009687] [c0000007f96d7bb0] [c000000001033404] pSeries_smp_probe+0x40/0xa0
+[    0.009734] [c0000007f96d7bd0] [c0000000010212a4] smp_prepare_cpus+0x62c/0x6ec
+[    0.009782] [c0000007f96d7cf0] [c0000000010141b8] kernel_init_freeable+0x148/0x448
+[    0.009829] [c0000007f96d7db0] [c000000000010ba4] kernel_init+0x2c/0x148
+[    0.009870] [c0000007f96d7e20] [c00000000000bdd4] ret_from_kernel_thread+0x5c/0x68
+[    0.009916] Instruction dump:
+[    0.009940] 7c0802a6 60000000 7c0802a6 38800002 f8010010 f821ffe1 3c62001c e863b9a0
+[    0.009988] 4b1882d1 60000000 7c690034 5529d97e <0b090000> 3d22001c e929b998 3ce2ff8f
+
+Look for xive=off during prom_init and don't ask for XIVE in this case. One
+exception though: if the host only supports XIVE, we still want to boot so
+we ignore xive=off.
+
+Similarly, have the spapr XIVE init code to looking at the interrupt mode
+negociated during CAS, and ignore xive=off if the hypervisor only supports
+XIVE.
+
+Fixes: eac1e731b59e ("powerpc/xive: guest exploitation of the XIVE interrupt controller")
+Cc: stable@vger.kernel.org # v4.20
+Reported-by: Pavithra R. Prakash <pavrampu@in.ibm.com>
+Signed-off-by: Greg Kurz <groug@kaod.org>
+---
+eac1e731b59e is a v4.16 commit actually but this patch only applies
+cleanly to v4.20 and newer. If needed I can send a backport for
+older versions.
+---
+ arch/powerpc/kernel/prom_init.c  |   16 +++++++++++-
+ arch/powerpc/sysdev/xive/spapr.c |   52 +++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 66 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
+index 523bb99d7676..c8f7eb845927 100644
+--- a/arch/powerpc/kernel/prom_init.c
++++ b/arch/powerpc/kernel/prom_init.c
+@@ -172,6 +172,7 @@ static unsigned long __prombss prom_tce_alloc_end;
+ 
+ #ifdef CONFIG_PPC_PSERIES
+ static bool __prombss prom_radix_disable;
++static bool __prombss prom_xive_disable;
+ #endif
+ 
+ struct platform_support {
+@@ -808,6 +809,12 @@ static void __init early_cmdline_parse(void)
+ 	}
+ 	if (prom_radix_disable)
+ 		prom_debug("Radix disabled from cmdline\n");
++
++	opt = prom_strstr(prom_cmd_line, "xive=off");
++	if (opt) {
++		prom_xive_disable = true;
++		prom_debug("XIVE disabled from cmdline\n");
++	}
+ #endif /* CONFIG_PPC_PSERIES */
+ }
+ 
+@@ -1216,10 +1223,17 @@ static void __init prom_parse_xive_model(u8 val,
+ 	switch (val) {
+ 	case OV5_FEAT(OV5_XIVE_EITHER): /* Either Available */
+ 		prom_debug("XIVE - either mode supported\n");
+-		support->xive = true;
++		support->xive = !prom_xive_disable;
+ 		break;
+ 	case OV5_FEAT(OV5_XIVE_EXPLOIT): /* Only Exploitation mode */
+ 		prom_debug("XIVE - exploitation mode supported\n");
++		if (prom_xive_disable) {
++			/*
++			 * If we __have__ to do XIVE, we're better off ignoring
++			 * the command line rather than not booting.
++			 */
++			prom_printf("WARNING: Ignoring cmdline option xive=off\n");
++		}
+ 		support->xive = true;
+ 		break;
+ 	case OV5_FEAT(OV5_XIVE_LEGACY): /* Only Legacy mode */
+diff --git a/arch/powerpc/sysdev/xive/spapr.c b/arch/powerpc/sysdev/xive/spapr.c
+index 575db3b06a6b..2e2d1b8f810f 100644
+--- a/arch/powerpc/sysdev/xive/spapr.c
++++ b/arch/powerpc/sysdev/xive/spapr.c
+@@ -20,6 +20,7 @@
+ #include <linux/cpumask.h>
+ #include <linux/mm.h>
+ #include <linux/delay.h>
++#include <linux/libfdt.h>
+ 
+ #include <asm/prom.h>
+ #include <asm/io.h>
+@@ -663,6 +664,55 @@ static bool xive_get_max_prio(u8 *max_prio)
+ 	return true;
+ }
+ 
++static const u8 *get_vec5_feature(unsigned int index)
++{
++	unsigned long root, chosen;
++	int size;
++	const u8 *vec5;
++
++	root = of_get_flat_dt_root();
++	chosen = of_get_flat_dt_subnode_by_name(root, "chosen");
++	if (chosen == -FDT_ERR_NOTFOUND)
++		return NULL;
++
++	vec5 = of_get_flat_dt_prop(chosen, "ibm,architecture-vec-5", &size);
++	if (!vec5)
++		return NULL;
++
++	if (size <= index)
++		return NULL;
++
++	return vec5 + index;
++}
++
++static bool xive_spapr_disabled(void)
++{
++	const u8 *vec5_xive;
++
++	vec5_xive = get_vec5_feature(OV5_INDX(OV5_XIVE_SUPPORT));
++	if (vec5_xive) {
++		u8 val;
++
++		val = *vec5_xive & OV5_FEAT(OV5_XIVE_SUPPORT);
++		switch (val) {
++		case OV5_FEAT(OV5_XIVE_EITHER):
++		case OV5_FEAT(OV5_XIVE_LEGACY):
++			break;
++		case OV5_FEAT(OV5_XIVE_EXPLOIT):
++			/* Hypervisor only supports XIVE */
++			if (xive_cmdline_disabled)
++				pr_warn("WARNING: Ignoring cmdline option xive=off\n");
++			return false;
++		default:
++			pr_warn("%s: Unknown xive support option: 0x%x\n",
++				__func__, val);
++			break;
++		}
++	}
++
++	return xive_cmdline_disabled;
++}
++
+ bool __init xive_spapr_init(void)
+ {
+ 	struct device_node *np;
+@@ -675,7 +725,7 @@ bool __init xive_spapr_init(void)
+ 	const __be32 *reg;
+ 	int i;
+ 
+-	if (xive_cmdline_disabled)
++	if (xive_spapr_disabled())
+ 		return false;
+ 
+ 	pr_devel("%s()\n", __func__);
+
