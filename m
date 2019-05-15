@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9FAC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67507C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 637472084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CDBC20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557917958;
-	bh=/aWhPZJ6uNNDo2118noQh/BUYWHFCadlSsiybRkSSSk=;
+	s=default; t=1557917964;
+	bh=w3BV+k1uizd45hFPlEb6uBJvBBqknqvC89YUx9rsraw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aAaMEmH8dO+vsU/GE5QWNYRNjT9xAZmFmt5emqICasMiaUTESyIXjsFs9pQ5+qhXQ
-	 KhDEYpRKt9nz48QrMzsQR2zjA1xRl9IajYiKP5ZMiQtwLpP8g9sHrT4uu5ZtxH/IyK
-	 cB/l1SuGn0Qq2M6udcmlmjuqcN//cV4DBinvmDPQ=
+	b=Uw+9n48VX4YEr1k2GYDvuaxzblnHOWc2U8VFTY4QX35WL+gwdU7WYjhxkfa76Mcd3
+	 sL3bGoxpHq32gMs74SG2C0fk262g794tLX4ue+3nvSNfVoEjZ6Qi4wUI0CcVIf7oCX
+	 p6uzzJFhK8p/diXjZHbDIlXGVP7+sUF9lJySXeTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfEOK7R (ORCPT
+        id S1727144AbfEOK7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:59:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55744 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 06:59:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbfEOK7P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:59:15 -0400
+        id S1727127AbfEOK7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:59:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5AE4321881;
-        Wed, 15 May 2019 10:59:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87BD82084F;
+        Wed, 15 May 2019 10:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557917954;
-        bh=/aWhPZJ6uNNDo2118noQh/BUYWHFCadlSsiybRkSSSk=;
+        s=default; t=1557917960;
+        bh=w3BV+k1uizd45hFPlEb6uBJvBBqknqvC89YUx9rsraw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YhZiPUFun8clagBeewfbIMFXHr4id2494LPDUYdSYJcKRSVfE1TaeI84WKXTshmS+
-         VtgPoqytaxHE0ZJ3DzJ1nY68RczPHFMiP9dlNEGUEgvYNtTZ3Jj6PPg0FDkGtsRP4p
-         BkEDcfc3HpDUcO3aA0NuWDUieHjPBRBvPp+37o8I=
+        b=VWfDMAAK3YoB5cCpPyhN9cYK6NK+IZ6lzg5ywCxXdAO93uZHz/uG5Ei/oLR0s9Yyt
+         amVily6Nl8h2HiU3k1queZpEEkwWhu6Cr1CukRzvNhy+4D+tIyMseL3P2vmhrLMgsZ
+         KF5QSlHvy4E6hRw08/ovbZYqeb7VdZv19ONnb5tA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Konstantin Khorenko <khorenko@virtuozzo.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 38/86] rtc: sh: Fix invalid alarm warning for non-enabled alarm
-Date:   Wed, 15 May 2019 12:55:15 +0200
-Message-Id: <20190515090650.236950353@linuxfoundation.org>
+Subject: [PATCH 3.18 40/86] bonding: show full hw address in sysfs for slave entries
+Date:   Wed, 15 May 2019 12:55:17 +0200
+Message-Id: <20190515090650.541157042@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -61,44 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 15d82d22498784966df8e4696174a16b02cc1052 ]
+[ Upstream commit 18bebc6dd3281955240062655a4df35eef2c46b3 ]
 
-When no alarm has been programmed on RSK-RZA1, an error message is
-printed during boot:
+Bond expects ethernet hwaddr for its slave, but it can be longer than 6
+bytes - infiniband interface for example.
 
-    rtc rtc0: invalid alarm value: 2019-03-14T255:255:255
+ # cat /sys/devices/<skipped>/net/ib0/address
+ 80:00:02:08:fe:80:00:00:00:00:00:00:7c:fe:90:03:00:be:5d:e1
 
-sh_rtc_read_alarm_value() returns 0xff when querying a hardware alarm
-field that is not enabled.  __rtc_read_alarm() validates the received
-alarm values, and fills in missing fields when needed.
-While 0xff is handled fine for the year, month, and day fields, and
-corrected as considered being out-of-range, this is not the case for the
-hour, minute, and second fields, where -1 is expected for missing
-fields.
+ # cat /sys/devices/<skipped>/net/ib0/bonding_slave/perm_hwaddr
+ 80:00:02:08:fe:80
 
-Fix this by returning -1 instead, as this value is handled fine for all
-fields.
+So print full hwaddr in sysfs "bonding_slave/perm_hwaddr" as well.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-sh.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/bonding/bond_sysfs_slave.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-sh.c b/drivers/rtc/rtc-sh.c
-index d0d2b047658b..dcd5dcae7b3c 100644
---- a/drivers/rtc/rtc-sh.c
-+++ b/drivers/rtc/rtc-sh.c
-@@ -455,7 +455,7 @@ static int sh_rtc_set_time(struct device *dev, struct rtc_time *tm)
- static inline int sh_rtc_read_alarm_value(struct sh_rtc *rtc, int reg_off)
- {
- 	unsigned int byte;
--	int value = 0xff;	/* return 0xff for ignored values */
-+	int value = -1;			/* return -1 for ignored values */
+diff --git a/drivers/net/bonding/bond_sysfs_slave.c b/drivers/net/bonding/bond_sysfs_slave.c
+index b01b0ce4d1be..cf9e9a3d4a48 100644
+--- a/drivers/net/bonding/bond_sysfs_slave.c
++++ b/drivers/net/bonding/bond_sysfs_slave.c
+@@ -55,7 +55,9 @@ static SLAVE_ATTR_RO(link_failure_count);
  
- 	byte = readb(rtc->regbase + reg_off);
- 	if (byte & AR_ENB) {
+ static ssize_t perm_hwaddr_show(struct slave *slave, char *buf)
+ {
+-	return sprintf(buf, "%pM\n", slave->perm_hwaddr);
++	return sprintf(buf, "%*phC\n",
++		       slave->dev->addr_len,
++		       slave->perm_hwaddr);
+ }
+ static SLAVE_ATTR_RO(perm_hwaddr);
+ 
 -- 
 2.20.1
 
