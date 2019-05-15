@@ -2,70 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D960C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE5AC04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5331620657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C60F20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:05:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921934;
-	bh=Wh+NCUUCTPVK3xKsK9h0iwtyQlDTDVvQBMtTiM+ZGxA=;
+	s=default; t=1557921942;
+	bh=zmdvpFZNq1eHgVs5iROu0cb0hZUEmwkISLqgs+kG+3I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WwhA6VK2680VT7hDLcdNSA1ouW3T6oK7nATFOR5eQDBV7InQgbDQ/0xWZxbI4GXsE
-	 Wtug7dcu8CWmPR/5w8pYjoftrqJ874Uzf7FMG2EbFq1A/MdpGuLPe8Nj4Z1xc07XfM
-	 i79jHe3ORfYeB1kEhsD0Rr8rQ8+EHWALxKjbUj+I=
+	b=I8ijMehCrdn1rL5it3MYrnCP2EO/UNdsbFCtY/PBN3NrOrUpeaVibS2Y8ohOsxq/m
+	 RjDZUNHP4Y5cu1pm7dTFuGBRJAJBUu3wp0VkUFIxSBKaq4mAiw+hEXt6I10mPHnZhb
+	 2zpb3SLl5wMk9egmI7ogDclPzz0PEfsDvekh7Kjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbfEOMFd (ORCPT
+        id S1729473AbfEOLKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:05:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45148 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729491AbfEOLK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:10:59 -0400
+        id S1729446AbfEOLKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:10:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8F2B2084E;
-        Wed, 15 May 2019 11:10:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 425EA20862;
+        Wed, 15 May 2019 11:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918658;
-        bh=Wh+NCUUCTPVK3xKsK9h0iwtyQlDTDVvQBMtTiM+ZGxA=;
+        s=default; t=1557918642;
+        bh=zmdvpFZNq1eHgVs5iROu0cb0hZUEmwkISLqgs+kG+3I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RbI908Hi9bxWk+mZP5sHqS7j6IJ7Mn0u9pnRtf8ypElKZPkdgT9SgRRjNzU7nYbm+
-         LLmGAPrDWPgA5BKMJ+o18rF0o2RnTF4+M0PWiF7Ab4/pGx40p5x7B9zjW6kf6xsUdd
-         fipebRJSGWPtyKx7ZnqwaRnexpN5iucm0A8L3O2o=
+        b=G2gDzrIKofOcE6VLVKoXpQFyph7IoablPkGV8tbUQ7U27NRoWmrxzN1Q89U+gEny7
+         3mXEMxiRgHiZ/rokb4SRMgtxXT9KrvSvz1oBYH1aftqm/xCSR0tASANdstWrmssFcs
+         dDhhaXeONLL5k+w2oU2vnwNg9HjlzAww6uTslm/c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Andi Kleen <ak@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Casey Schaufler <casey.schaufler@intel.com>,
-        Asit Mallick <asit.k.mallick@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Jon Masters <jcm@redhat.com>,
-        Waiman Long <longman9394@gmail.com>,
-        Dave Stewart <david.c.stewart@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 216/266] x86/speculation: Prepare for per task indirect branch speculation control
-Date:   Wed, 15 May 2019 12:55:23 +0200
-Message-Id: <20190515090730.287666489@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 167/266] s390/3270: fix lockdep false positive on view->lock
+Date:   Wed, 15 May 2019 12:54:34 +0200
+Message-Id: <20190515090728.569820199@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -78,181 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Chen <tim.c.chen@linux.intel.com>
+[ Upstream commit 5712f3301a12c0c3de9cc423484496b0464f2faf ]
 
-commit 5bfbe3ad5840d941b89bcac54b821ba14f50a0ba upstream.
+The spinlock in the raw3270_view structure is used by con3270, tty3270
+and fs3270 in different ways. For con3270 the lock can be acquired in
+irq context, for tty3270 and fs3270 the highest context is bh.
 
-To avoid the overhead of STIBP always on, it's necessary to allow per task
-control of STIBP.
+Lockdep sees the view->lock as a single class and if the 3270 driver
+is used for the console the following message is generated:
 
-Add a new task flag TIF_SPEC_IB and evaluate it during context switch if
-SMT is active and flag evaluation is enabled by the speculation control
-code. Add the conditional evaluation to x86_virt_spec_ctrl() as well so the
-guest/host switch works properly.
+WARNING: inconsistent lock state
+5.1.0-rc3-05157-g5c168033979d #12 Not tainted
+--------------------------------
+inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
+swapper/0/1 [HC0[0]:SC1[1]:HE1:SE0] takes:
+(____ptrval____) (&(&view->lock)->rlock){?.-.}, at: tty3270_update+0x7c/0x330
 
-This has no effect because TIF_SPEC_IB cannot be set yet and the static key
-which controls evaluation is off. Preparatory patch for adding the control
-code.
+Introduce a lockdep subclass for the view lock to distinguish bh from
+irq locks.
 
-[ tglx: Simplify the context switch logic and make the TIF evaluation
-  	depend on SMP=y and on the static key controlling the conditional
-  	update. Rename it to TIF_SPEC_IB because it controls both STIBP and
-  	IBPB ]
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 
-Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Casey Schaufler <casey.schaufler@intel.com>
-Cc: Asit Mallick <asit.k.mallick@intel.com>
-Cc: Arjan van de Ven <arjan@linux.intel.com>
-Cc: Jon Masters <jcm@redhat.com>
-Cc: Waiman Long <longman9394@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Dave Stewart <david.c.stewart@intel.com>
-Cc: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20181125185005.176917199@linutronix.de
-[bwh: Backported to 4.4: adjust context]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/msr-index.h   |    5 +++--
- arch/x86/include/asm/spec-ctrl.h   |   12 ++++++++++++
- arch/x86/include/asm/thread_info.h |    5 ++++-
- arch/x86/kernel/cpu/bugs.c         |    4 ++++
- arch/x86/kernel/process.c          |   20 ++++++++++++++++++--
- 5 files changed, 41 insertions(+), 5 deletions(-)
+ drivers/s390/char/con3270.c | 2 +-
+ drivers/s390/char/fs3270.c  | 3 ++-
+ drivers/s390/char/raw3270.c | 3 ++-
+ drivers/s390/char/raw3270.h | 4 +++-
+ drivers/s390/char/tty3270.c | 3 ++-
+ 5 files changed, 10 insertions(+), 5 deletions(-)
 
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -34,9 +34,10 @@
- /* Intel MSRs. Some also available on other CPUs */
- #define MSR_IA32_SPEC_CTRL		0x00000048 /* Speculation Control */
- #define SPEC_CTRL_IBRS			(1 << 0)   /* Indirect Branch Restricted Speculation */
--#define SPEC_CTRL_STIBP			(1 << 1)   /* Single Thread Indirect Branch Predictors */
-+#define SPEC_CTRL_STIBP_SHIFT		1	   /* Single Thread Indirect Branch Predictor (STIBP) bit */
-+#define SPEC_CTRL_STIBP			(1 << SPEC_CTRL_STIBP_SHIFT)	/* STIBP mask */
- #define SPEC_CTRL_SSBD_SHIFT		2	   /* Speculative Store Bypass Disable bit */
--#define SPEC_CTRL_SSBD			(1 << SPEC_CTRL_SSBD_SHIFT)   /* Speculative Store Bypass Disable */
-+#define SPEC_CTRL_SSBD			(1 << SPEC_CTRL_SSBD_SHIFT)	/* Speculative Store Bypass Disable */
+diff --git a/drivers/s390/char/con3270.c b/drivers/s390/char/con3270.c
+index bae98521c808c..3e5a7912044fa 100644
+--- a/drivers/s390/char/con3270.c
++++ b/drivers/s390/char/con3270.c
+@@ -627,7 +627,7 @@ con3270_init(void)
+ 		     (void (*)(unsigned long)) con3270_read_tasklet,
+ 		     (unsigned long) condev->read);
  
- #define MSR_IA32_PRED_CMD		0x00000049 /* Prediction Command */
- #define PRED_CMD_IBPB			(1 << 0)   /* Indirect Branch Prediction Barrier */
---- a/arch/x86/include/asm/spec-ctrl.h
-+++ b/arch/x86/include/asm/spec-ctrl.h
-@@ -53,12 +53,24 @@ static inline u64 ssbd_tif_to_spec_ctrl(
- 	return (tifn & _TIF_SSBD) >> (TIF_SSBD - SPEC_CTRL_SSBD_SHIFT);
- }
+-	raw3270_add_view(&condev->view, &con3270_fn, 1);
++	raw3270_add_view(&condev->view, &con3270_fn, 1, RAW3270_VIEW_LOCK_IRQ);
  
-+static inline u64 stibp_tif_to_spec_ctrl(u64 tifn)
-+{
-+	BUILD_BUG_ON(TIF_SPEC_IB < SPEC_CTRL_STIBP_SHIFT);
-+	return (tifn & _TIF_SPEC_IB) >> (TIF_SPEC_IB - SPEC_CTRL_STIBP_SHIFT);
-+}
-+
- static inline unsigned long ssbd_spec_ctrl_to_tif(u64 spec_ctrl)
+ 	INIT_LIST_HEAD(&condev->freemem);
+ 	for (i = 0; i < CON3270_STRING_PAGES; i++) {
+diff --git a/drivers/s390/char/fs3270.c b/drivers/s390/char/fs3270.c
+index 71e9747380149..f0c86bcbe3161 100644
+--- a/drivers/s390/char/fs3270.c
++++ b/drivers/s390/char/fs3270.c
+@@ -463,7 +463,8 @@ fs3270_open(struct inode *inode, struct file *filp)
+ 
+ 	init_waitqueue_head(&fp->wait);
+ 	fp->fs_pid = get_pid(task_pid(current));
+-	rc = raw3270_add_view(&fp->view, &fs3270_fn, minor);
++	rc = raw3270_add_view(&fp->view, &fs3270_fn, minor,
++			      RAW3270_VIEW_LOCK_BH);
+ 	if (rc) {
+ 		fs3270_free_view(&fp->view);
+ 		goto out;
+diff --git a/drivers/s390/char/raw3270.c b/drivers/s390/char/raw3270.c
+index 220acb4cbee52..9c350e6d75bf7 100644
+--- a/drivers/s390/char/raw3270.c
++++ b/drivers/s390/char/raw3270.c
+@@ -956,7 +956,7 @@ raw3270_deactivate_view(struct raw3270_view *view)
+  * Add view to device with minor "minor".
+  */
+ int
+-raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor)
++raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor, int subclass)
  {
- 	BUILD_BUG_ON(TIF_SSBD < SPEC_CTRL_SSBD_SHIFT);
- 	return (spec_ctrl & SPEC_CTRL_SSBD) << (TIF_SSBD - SPEC_CTRL_SSBD_SHIFT);
- }
+ 	unsigned long flags;
+ 	struct raw3270 *rp;
+@@ -978,6 +978,7 @@ raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor)
+ 		view->cols = rp->cols;
+ 		view->ascebc = rp->ascebc;
+ 		spin_lock_init(&view->lock);
++		lockdep_set_subclass(&view->lock, subclass);
+ 		list_add(&view->list, &rp->view_list);
+ 		rc = 0;
+ 		spin_unlock_irqrestore(get_ccwdev_lock(rp->cdev), flags);
+diff --git a/drivers/s390/char/raw3270.h b/drivers/s390/char/raw3270.h
+index e1e41c2861fbb..5ae54317857a0 100644
+--- a/drivers/s390/char/raw3270.h
++++ b/drivers/s390/char/raw3270.h
+@@ -155,6 +155,8 @@ struct raw3270_fn {
+ struct raw3270_view {
+ 	struct list_head list;
+ 	spinlock_t lock;
++#define RAW3270_VIEW_LOCK_IRQ	0
++#define RAW3270_VIEW_LOCK_BH	1
+ 	atomic_t ref_count;
+ 	struct raw3270 *dev;
+ 	struct raw3270_fn *fn;
+@@ -163,7 +165,7 @@ struct raw3270_view {
+ 	unsigned char *ascebc;		/* ascii -> ebcdic table */
+ };
  
-+static inline unsigned long stibp_spec_ctrl_to_tif(u64 spec_ctrl)
-+{
-+	BUILD_BUG_ON(TIF_SPEC_IB < SPEC_CTRL_STIBP_SHIFT);
-+	return (spec_ctrl & SPEC_CTRL_STIBP) << (TIF_SPEC_IB - SPEC_CTRL_STIBP_SHIFT);
-+}
-+
- static inline u64 ssbd_tif_to_amd_ls_cfg(u64 tifn)
- {
- 	return (tifn & _TIF_SSBD) ? x86_amd_ls_cfg_ssbd_mask : 0ULL;
---- a/arch/x86/include/asm/thread_info.h
-+++ b/arch/x86/include/asm/thread_info.h
-@@ -96,6 +96,7 @@ struct thread_info {
- #define TIF_SYSCALL_EMU		6	/* syscall emulation active */
- #define TIF_SYSCALL_AUDIT	7	/* syscall auditing active */
- #define TIF_SECCOMP		8	/* secure computing */
-+#define TIF_SPEC_IB		9	/* Indirect branch speculation mitigation */
- #define TIF_USER_RETURN_NOTIFY	11	/* notify kernel of userspace return */
- #define TIF_UPROBE		12	/* breakpointed or singlestepping */
- #define TIF_NOTSC		16	/* TSC is not accessible in userland */
-@@ -121,6 +122,7 @@ struct thread_info {
- #define _TIF_SYSCALL_EMU	(1 << TIF_SYSCALL_EMU)
- #define _TIF_SYSCALL_AUDIT	(1 << TIF_SYSCALL_AUDIT)
- #define _TIF_SECCOMP		(1 << TIF_SECCOMP)
-+#define _TIF_SPEC_IB		(1 << TIF_SPEC_IB)
- #define _TIF_USER_RETURN_NOTIFY	(1 << TIF_USER_RETURN_NOTIFY)
- #define _TIF_UPROBE		(1 << TIF_UPROBE)
- #define _TIF_NOTSC		(1 << TIF_NOTSC)
-@@ -149,7 +151,8 @@ struct thread_info {
+-int raw3270_add_view(struct raw3270_view *, struct raw3270_fn *, int);
++int raw3270_add_view(struct raw3270_view *, struct raw3270_fn *, int, int);
+ int raw3270_activate_view(struct raw3270_view *);
+ void raw3270_del_view(struct raw3270_view *);
+ void raw3270_deactivate_view(struct raw3270_view *);
+diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
+index e96fc7fd94984..ab95d24b991b4 100644
+--- a/drivers/s390/char/tty3270.c
++++ b/drivers/s390/char/tty3270.c
+@@ -937,7 +937,8 @@ static int tty3270_install(struct tty_driver *driver, struct tty_struct *tty)
+ 		return PTR_ERR(tp);
  
- /* flags to check in __switch_to() */
- #define _TIF_WORK_CTXSW							\
--	(_TIF_IO_BITMAP|_TIF_NOTSC|_TIF_BLOCKSTEP|_TIF_SSBD)
-+	(_TIF_IO_BITMAP|_TIF_NOTSC|_TIF_BLOCKSTEP|			\
-+	 _TIF_SSBD|_TIF_SPEC_IB)
- 
- #define _TIF_WORK_CTXSW_PREV (_TIF_WORK_CTXSW|_TIF_USER_RETURN_NOTIFY)
- #define _TIF_WORK_CTXSW_NEXT (_TIF_WORK_CTXSW)
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -139,6 +139,10 @@ x86_virt_spec_ctrl(u64 guest_spec_ctrl,
- 		    static_cpu_has(X86_FEATURE_AMD_SSBD))
- 			hostval |= ssbd_tif_to_spec_ctrl(ti->flags);
- 
-+		/* Conditional STIBP enabled? */
-+		if (static_branch_unlikely(&switch_to_cond_stibp))
-+			hostval |= stibp_tif_to_spec_ctrl(ti->flags);
-+
- 		if (hostval != guestval) {
- 			msrval = setguest ? guestval : hostval;
- 			wrmsrl(MSR_IA32_SPEC_CTRL, msrval);
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -326,11 +326,17 @@ static __always_inline void amd_set_ssb_
- static __always_inline void __speculation_ctrl_update(unsigned long tifp,
- 						      unsigned long tifn)
- {
-+	unsigned long tif_diff = tifp ^ tifn;
- 	u64 msr = x86_spec_ctrl_base;
- 	bool updmsr = false;
- 
--	/* If TIF_SSBD is different, select the proper mitigation method */
--	if ((tifp ^ tifn) & _TIF_SSBD) {
-+	/*
-+	 * If TIF_SSBD is different, select the proper mitigation
-+	 * method. Note that if SSBD mitigation is disabled or permanentely
-+	 * enabled this branch can't be taken because nothing can set
-+	 * TIF_SSBD.
-+	 */
-+	if (tif_diff & _TIF_SSBD) {
- 		if (static_cpu_has(X86_FEATURE_VIRT_SSBD)) {
- 			amd_set_ssb_virt_state(tifn);
- 		} else if (static_cpu_has(X86_FEATURE_LS_CFG_SSBD)) {
-@@ -342,6 +348,16 @@ static __always_inline void __speculatio
- 		}
- 	}
- 
-+	/*
-+	 * Only evaluate TIF_SPEC_IB if conditional STIBP is enabled,
-+	 * otherwise avoid the MSR write.
-+	 */
-+	if (IS_ENABLED(CONFIG_SMP) &&
-+	    static_branch_unlikely(&switch_to_cond_stibp)) {
-+		updmsr |= !!(tif_diff & _TIF_SPEC_IB);
-+		msr |= stibp_tif_to_spec_ctrl(tifn);
-+	}
-+
- 	if (updmsr)
- 		wrmsrl(MSR_IA32_SPEC_CTRL, msr);
- }
+ 	rc = raw3270_add_view(&tp->view, &tty3270_fn,
+-			      tty->index + RAW3270_FIRSTMINOR);
++			      tty->index + RAW3270_FIRSTMINOR,
++			      RAW3270_VIEW_LOCK_BH);
+ 	if (rc) {
+ 		tty3270_free_view(tp);
+ 		return rc;
+-- 
+2.20.1
+
 
 
