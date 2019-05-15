@@ -2,51 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B075C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA6DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ECB020578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:44:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE8E20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920647;
-	bh=EwnuNN/iKp732s9E1fnCIgPnDf11zkRNldXEtvvaLrQ=;
+	s=default; t=1557920653;
+	bh=M1A+x2isSaTGTVAoH+Dy0WZMUUpWQu43cxkqdxAixws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ztjLiFXj2T0VLqm7pljUrBPg2PUaBX3ubUbIzBSba4Bhf+AJiqMOeRdW4xAEyTNeN
-	 tgsbPR3e/X4BrAEdNTBnB2iyE7F6Q1p3FIHS1fjBNN5xw31TnAc8EOPBGeO9If5z/+
-	 Gaf3ITOM8i9L9ijIHduJtcRbQjmxEzvYja4sC/i0=
+	b=OkYSrI8TbRSf/aWRbnU3PoX5zkjDAAQNlbELulQw77mQZlJpSpJZldZ/8HECgFLSO
+	 xlJ/hFHwGWvFa8NCxZB/u15MmhI2R6LyMuhuIRkFawjBemsppQwgTm3t1KguacakL3
+	 lCd8sE3JSAJzegMGHY3zQaEJKoj8xUefPMAxKHv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731103AbfEOL05 (ORCPT
+        id S1732099AbfEOLoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:26:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37750 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:44:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730941AbfEOL0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:26:53 -0400
+        id S1730025AbfEOL0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:26:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECB7D206BF;
-        Wed, 15 May 2019 11:26:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E9CB206BF;
+        Wed, 15 May 2019 11:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919612;
-        bh=EwnuNN/iKp732s9E1fnCIgPnDf11zkRNldXEtvvaLrQ=;
+        s=default; t=1557919609;
+        bh=M1A+x2isSaTGTVAoH+Dy0WZMUUpWQu43cxkqdxAixws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZOCoe1Khelo4UzhWuyneHHtlMj8GaA/hMMlYYpV4Wv/RUW+HAZm/uu3MrOeiRxUrI
-         W5vZakgLyOzaUOPIRARjppRBwF0Ef5jZATG+oqJIKNZbDlXPf7Dfz7zOL0lpAVToxE
-         xnqVix+cJ/mQTP0dLnLitNo4E+ruFUG6oJhcR16o=
+        b=lIHYYSHhR3HAOhEiIEynNFMKyS98eVIzCfnuM3AIOu5VWriTJkDPkcys7yFhrVrOE
+         GoCI32IhbXNKeUDTf46eFEIkJ4L3CmHt4+MXHPzDucc5GtBNRCcv//1naD/rL1cF19
+         fUrFQXw0MP8cTbp+58n83kAMwbuEpdCKIGHZnrsc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.0 003/137] platform/x86: thinkpad_acpi: Disable Bluetooth for some machines
-Date:   Wed, 15 May 2019 12:54:44 +0200
-Message-Id: <20190515090652.193487048@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 026/137] libnvdimm/security: provide fix for secure-erase to use zero-key
+Date:   Wed, 15 May 2019 12:55:07 +0200
+Message-Id: <20190515090655.178173486@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -59,119 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+[ Upstream commit 037c8489ade669e0f09ad40d5b91e5e1159a14b1 ]
 
-commit f7db839fccf087664e5587966220821289b6a9cb upstream.
+Add a zero key in order to standardize hardware that want a key of 0's to
+be passed. Some platforms defaults to a zero-key with security enabled
+rather than allow the OS to enable the security. The zero key would allow
+us to manage those platform as well. This also adds a fix to secure erase
+so it can use the zero key to do crypto erase. Some other security commands
+already use zero keys. This introduces a standard zero-key to allow
+unification of semantics cross nvdimm security commands.
 
-Some AMD based ThinkPads have a firmware bug that calling
-"GBDC" will cause Bluetooth on Intel wireless cards blocked.
-
-Probe these models by DMI match and disable Bluetooth subdriver
-if specified Intel wireless card exist.
-
-Cc: stable <stable@vger.kernel.org> # 4.14+
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/thinkpad_acpi.c |   72 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 70 insertions(+), 2 deletions(-)
+ drivers/nvdimm/security.c        | 17 ++++++++++++-----
+ tools/testing/nvdimm/test/nfit.c | 11 +++++++++--
+ 2 files changed, 21 insertions(+), 7 deletions(-)
 
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -79,7 +79,7 @@
- #include <linux/jiffies.h>
- #include <linux/workqueue.h>
- #include <linux/acpi.h>
--#include <linux/pci_ids.h>
-+#include <linux/pci.h>
- #include <linux/power_supply.h>
- #include <sound/core.h>
- #include <sound/control.h>
-@@ -4501,6 +4501,74 @@ static void bluetooth_exit(void)
- 	bluetooth_shutdown();
- }
+diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
+index f8bb746a549f7..6bea6852bf278 100644
+--- a/drivers/nvdimm/security.c
++++ b/drivers/nvdimm/security.c
+@@ -22,6 +22,8 @@ static bool key_revalidate = true;
+ module_param(key_revalidate, bool, 0444);
+ MODULE_PARM_DESC(key_revalidate, "Require key validation at init.");
  
-+static const struct dmi_system_id bt_fwbug_list[] __initconst = {
-+	{
-+		.ident = "ThinkPad E485",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_BOARD_NAME, "20KU"),
-+		},
-+	},
-+	{
-+		.ident = "ThinkPad E585",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_BOARD_NAME, "20KV"),
-+		},
-+	},
-+	{
-+		.ident = "ThinkPad A285 - 20MW",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_BOARD_NAME, "20MW"),
-+		},
-+	},
-+	{
-+		.ident = "ThinkPad A285 - 20MX",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_BOARD_NAME, "20MX"),
-+		},
-+	},
-+	{
-+		.ident = "ThinkPad A485 - 20MU",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_BOARD_NAME, "20MU"),
-+		},
-+	},
-+	{
-+		.ident = "ThinkPad A485 - 20MV",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_BOARD_NAME, "20MV"),
-+		},
-+	},
-+	{}
-+};
++static const char zero_key[NVDIMM_PASSPHRASE_LEN];
 +
-+static const struct pci_device_id fwbug_cards_ids[] __initconst = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24F3) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24FD) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2526) },
-+	{}
-+};
-+
-+
-+static int __init have_bt_fwbug(void)
-+{
-+	/*
-+	 * Some AMD based ThinkPads have a firmware bug that calling
-+	 * "GBDC" will cause bluetooth on Intel wireless cards blocked
-+	 */
-+	if (dmi_check_system(bt_fwbug_list) && pci_dev_present(fwbug_cards_ids)) {
-+		vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_RFKILL,
-+			FW_BUG "disable bluetooth subdriver for Intel cards\n");
-+		return 1;
-+	} else
-+		return 0;
-+}
-+
- static int __init bluetooth_init(struct ibm_init_struct *iibm)
+ static void *key_data(struct key *key)
  {
- 	int res;
-@@ -4513,7 +4581,7 @@ static int __init bluetooth_init(struct
+ 	struct encrypted_key_payload *epayload = dereference_key_locked(key);
+@@ -286,8 +288,9 @@ int nvdimm_security_erase(struct nvdimm *nvdimm, unsigned int keyid,
+ {
+ 	struct device *dev = &nvdimm->dev;
+ 	struct nvdimm_bus *nvdimm_bus = walk_to_nvdimm_bus(dev);
+-	struct key *key;
++	struct key *key = NULL;
+ 	int rc;
++	const void *data;
  
- 	/* bluetooth not supported on 570, 600e/x, 770e, 770x, A21e, A2xm/p,
- 	   G4x, R30, R31, R40e, R50e, T20-22, X20-21 */
--	tp_features.bluetooth = hkey_handle &&
-+	tp_features.bluetooth = !have_bt_fwbug() && hkey_handle &&
- 	    acpi_evalf(hkey_handle, &status, "GBDC", "qd");
+ 	/* The bus lock should be held at the top level of the call stack */
+ 	lockdep_assert_held(&nvdimm_bus->reconfig_mutex);
+@@ -319,11 +322,15 @@ int nvdimm_security_erase(struct nvdimm *nvdimm, unsigned int keyid,
+ 		return -EOPNOTSUPP;
+ 	}
  
- 	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_RFKILL,
+-	key = nvdimm_lookup_user_key(nvdimm, keyid, NVDIMM_BASE_KEY);
+-	if (!key)
+-		return -ENOKEY;
++	if (keyid != 0) {
++		key = nvdimm_lookup_user_key(nvdimm, keyid, NVDIMM_BASE_KEY);
++		if (!key)
++			return -ENOKEY;
++		data = key_data(key);
++	} else
++		data = zero_key;
+ 
+-	rc = nvdimm->sec.ops->erase(nvdimm, key_data(key), pass_type);
++	rc = nvdimm->sec.ops->erase(nvdimm, data, pass_type);
+ 	dev_dbg(dev, "key: %d erase%s: %s\n", key_serial(key),
+ 			pass_type == NVDIMM_MASTER ? "(master)" : "(user)",
+ 			rc == 0 ? "success" : "fail");
+diff --git a/tools/testing/nvdimm/test/nfit.c b/tools/testing/nvdimm/test/nfit.c
+index b579f962451d6..cad719876ef45 100644
+--- a/tools/testing/nvdimm/test/nfit.c
++++ b/tools/testing/nvdimm/test/nfit.c
+@@ -225,6 +225,8 @@ static struct workqueue_struct *nfit_wq;
+ 
+ static struct gen_pool *nfit_pool;
+ 
++static const char zero_key[NVDIMM_PASSPHRASE_LEN];
++
+ static struct nfit_test *to_nfit_test(struct device *dev)
+ {
+ 	struct platform_device *pdev = to_platform_device(dev);
+@@ -1059,8 +1061,7 @@ static int nd_intel_test_cmd_secure_erase(struct nfit_test *t,
+ 	struct device *dev = &t->pdev.dev;
+ 	struct nfit_test_sec *sec = &dimm_sec_info[dimm];
+ 
+-	if (!(sec->state & ND_INTEL_SEC_STATE_ENABLED) ||
+-			(sec->state & ND_INTEL_SEC_STATE_FROZEN)) {
++	if (sec->state & ND_INTEL_SEC_STATE_FROZEN) {
+ 		nd_cmd->status = ND_INTEL_STATUS_INVALID_STATE;
+ 		dev_dbg(dev, "secure erase: wrong security state\n");
+ 	} else if (memcmp(nd_cmd->passphrase, sec->passphrase,
+@@ -1068,6 +1069,12 @@ static int nd_intel_test_cmd_secure_erase(struct nfit_test *t,
+ 		nd_cmd->status = ND_INTEL_STATUS_INVALID_PASS;
+ 		dev_dbg(dev, "secure erase: wrong passphrase\n");
+ 	} else {
++		if (!(sec->state & ND_INTEL_SEC_STATE_ENABLED)
++				&& (memcmp(nd_cmd->passphrase, zero_key,
++					ND_INTEL_PASSPHRASE_SIZE) != 0)) {
++			dev_dbg(dev, "invalid zero key\n");
++			return 0;
++		}
+ 		memset(sec->passphrase, 0, ND_INTEL_PASSPHRASE_SIZE);
+ 		memset(sec->master_passphrase, 0, ND_INTEL_PASSPHRASE_SIZE);
+ 		sec->state = 0;
+-- 
+2.20.1
+
 
 
