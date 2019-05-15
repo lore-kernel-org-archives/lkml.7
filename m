@@ -2,87 +2,93 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D784FC04AA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B703FC04AA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95F9C2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:44:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8066021473
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:45:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="U7/Xnsfn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KW5wjEpp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfEOGo4 (ORCPT
+        id S1726464AbfEOGpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 02:44:56 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:11497 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbfEOGo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 02:44:56 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 453lR94ksXz9vDbb;
-        Wed, 15 May 2019 08:44:53 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=U7/Xnsfn; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id cDrn7JUJAzaL; Wed, 15 May 2019 08:44:53 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 453lR93ZqGz9vDbZ;
-        Wed, 15 May 2019 08:44:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1557902693; bh=grBuY5owxUGP4FNaEiDCJS+hfjwHv093FTB3bCsWADA=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=U7/XnsfnUZL6wj//NWeenDQU2xzlndXW5H9rNSjYYIlXy4xUVi7uDGaoyxZRyZcMn
-         +KoFChEUzjIWoGmWw5ggZglbMqsQEF5EAzKcslHXCNyYldZMvQIJJTxl6YFQdT3Cer
-         buEuD0lVwX57p8FD0I5gyOIKH3hDAEwSBq9VMUjo=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6A42F8B7DF;
-        Wed, 15 May 2019 08:44:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id qxYpZ6wfXh55; Wed, 15 May 2019 08:44:54 +0200 (CEST)
-Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.231.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3B4DE8B7DD;
-        Wed, 15 May 2019 08:44:54 +0200 (CEST)
-Subject: Re: [RFC PATCH] powerpc/mm: Implement STRICT_MODULE_RWX
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Russell Currey <ruscur@russell.cc>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <df502ffe07caa38c46b0144fc824fff447f4105b.1557901092.git.christophe.leroy@c-s.fr>
- <20190515064205.GB15778@infradead.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <04044ae8-1cd8-108b-f436-76c606cb3aea@c-s.fr>
-Date:   Wed, 15 May 2019 08:44:50 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 15 May 2019 02:45:12 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40417 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfEOGpL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 02:45:11 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u17so835707pfn.7
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 23:45:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=awWr7CqE/VI7koIkZm/vLnS/8LIohJ8DzEhbOAp8yVw=;
+        b=KW5wjEppeN2Y8sAfrlgDf5wT5zp95JTjyJZv4Ti5fRz7+AKXFFuvLvkkxAonwZ5IE1
+         aPgDoMEgXfMN6MrC8UdZnpZkchtLnD6PMFYfXDPskBEv9kAqj4VmoAoHXd4FRSwGmkEy
+         BADG/NCWU75fvwFdNtTKlKMKvUmvF/NodtMOzlf59yOonbUgGmP07xNRp30pK68KumuE
+         MgGzDYpD67mLxy7RYFiSlCzRZetbS9G2iyXg5C4bIK1Vz11cgj5SwtqXPq2Zry6eOdnB
+         6zO1o6LCuz9mb6sWc46rMrN8y/dvWrDYFEgmTAMOPp6Yw84X4sCRsvyIMd4iFht++7f0
+         muEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=awWr7CqE/VI7koIkZm/vLnS/8LIohJ8DzEhbOAp8yVw=;
+        b=rt2tIwhlN8CbdN7Owks0dLtXp4AwZU2pBoQI9bopqejClo7k2JoRYAp0j+isuj/7lC
+         8T3vttm5FH4ul+KIyrFf6NGrhcWARgFybFrLgQHopsEbZbLOyDgjRq/VIsoCUgWEuq/+
+         DKk06FbjSH9chJfTrDma+1Ghov8A8b68KchkbPqqFu7Qu/EGm9IdLEOXj+U970lz0R4i
+         DIa7j9qTrmDA0uUBCCxlveCcyoeDcTdpU/gJO7OYQJMxp7c781wFZu+QHY6/MLTwLy5R
+         Nj4GFnFZF8nJxACw7FcmbhTMEm+x2PqXnfkMpytGOVLqQn+wEJumUSss10TubTS4LhNy
+         CxnQ==
+X-Gm-Message-State: APjAAAV6+g392NciXvqoQxumBLiDePpQmvywxbZuUnl7xQeeiaN8mDI3
+        0dqyLxMhb1oY8vCjhec/zR0zxUpSFFM=
+X-Google-Smtp-Source: APXvYqyR+dxNyaEUgow2q49fbaA/GfcdLr+mZH80X+llvwEJ2Tk77sIbLS1pPPX7y6mAFRvDNFv7Xw==
+X-Received: by 2002:aa7:8683:: with SMTP id d3mr629082pfo.145.1557902711325;
+        Tue, 14 May 2019 23:45:11 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id u8sm2002289pgl.91.2019.05.14.23.45.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 23:45:10 -0700 (PDT)
+Date:   Wed, 15 May 2019 14:44:57 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     rientjes@google.com, iamjoonsoo.kim@lge.com
+Cc:     linux-kernel@vger.kernel.org
+Subject: [Patch] slub: Fix a missing-check bug in mm/slub.c file of Linux
+ 5.1.1
+Message-ID: <20190515064457.GA29939@zhanggen-UX430UQ>
 MIME-Version: 1.0
-In-Reply-To: <20190515064205.GB15778@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Pointer s is allocated with kmem_cache_zalloc(). And s is used in the 
+follwoing codes. However, when kmem_cache_zalloc fails, using s will
+cause null pointer dereference and the kernel will go wrong. Thus we 
+check whether the kmem_cache_zalloc fails.
 
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
 
-Le 15/05/2019 à 08:42, Christoph Hellwig a écrit :
->> +static int change_page_ro(pte_t *ptep, pgtable_t token, unsigned long addr, void *data)
-> 
-> There are a couple way too long lines like this in the patch.
-> 
-
-powerpc arch accepts 90 chars per line, see arch/powerpc/tools/checkpatch.pl
-
-Christophe
+---
+--- mm/slub.c
++++ mm/slub.c
+@@ -4201,6 +4201,8 @@ static struct kmem_cache * __init bootst
+ {
+ 	int node;
+ 	struct kmem_cache *s = kmem_cache_zalloc(kmem_cache, GFP_NOWAIT);
++	if (!s)
++		return ERR_PTR(-ENOMEM);
+ 	struct kmem_cache_node *n;
+ 
+ 	memcpy(s, static_cache, kmem_cache->object_size);
+---
