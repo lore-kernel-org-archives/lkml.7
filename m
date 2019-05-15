@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA28AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04255C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B974E216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C89342173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557917944;
-	bh=42zUaAaH9kR/pOsbplX2AEbGuInHv/eCmvgX5punsP0=;
+	s=default; t=1557917948;
+	bh=LOD1V+6gL9WXMN4zviTvrNZvb9jMmiuHBYDaYzfhRek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AiL/MFIVrbJo3QId+LbTo+qzWbqroQGAmdhT6H6NEML5MbyMcHKTNVAcpVlWzlBHi
-	 HOWwO4BahDCPxZaQizO2VNixANI4iw2qlF1apaZPIUwzBCgML2vzVgty+kVC/TJEId
-	 qyVYQoFqDhfywx8Qfvh4NLKVjx7K7xqbSnQhWw14=
+	b=Hk9uPtBKpOtB/54HbrJVq1a0CBrgZc8h9Uq7HdT39IcYsmgwh8FwbeJ+/TK+TGqd/
+	 ttjwzOrHISVJhB74NC9IeKd+uh1GZ4EPWpEMZFLmVqBqh/2h9ADcrnkj9TgNF+/XGO
+	 oA+NINBaIL9H16S+LAwZLtqo1F62F0DR0ggAB6Lk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfEOK7D (ORCPT
+        id S1727066AbfEOK7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:59:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55408 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 06:59:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727035AbfEOK7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:59:00 -0400
+        id S1726594AbfEOK7D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:59:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A0F021473;
-        Wed, 15 May 2019 10:58:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD4A3216F4;
+        Wed, 15 May 2019 10:59:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557917939;
-        bh=42zUaAaH9kR/pOsbplX2AEbGuInHv/eCmvgX5punsP0=;
+        s=default; t=1557917942;
+        bh=LOD1V+6gL9WXMN4zviTvrNZvb9jMmiuHBYDaYzfhRek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QZUjIxJRU6uSWiiAUENWdeOT/DnDervK+PmcKEVZ7KrGOaWfwvFqvbxUf7BUbzsdU
-         6iYP9CR+wO/vV78Wla4TOfjtnI8q+TOjwqsG4k/OdzrsvHkJWRkN+qB2u6VOjxSl9R
-         oK/R8LAWS0cADWgHPocd3vp7R8aXscqVhFmUPSro=
+        b=ylD7FiX5X+skZEkYUAwdsmIrjF5dGlFbuG4rtkdVkZx79gIYXPBmDlf0E18U6R/6I
+         MdgyBmORIUG3iVtKVXZCISmwdyoabCXXK2NH+Ap7Sp7mZqZVE4EvIyX0XWfTZ/VpTU
+         bJHChZbndAJ5tYOb3xKVzsaMyTqzmwlu3GGf1Kl0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+d65f673b847a1a96cdba@syzkaller.appspotmail.com
-Subject: [PATCH 3.18 33/86] USB: w1 ds2490: Fix bug caused by improper use of altsetting array
-Date:   Wed, 15 May 2019 12:55:10 +0200
-Message-Id: <20190515090649.435966500@linuxfoundation.org>
+        syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com
+Subject: [PATCH 3.18 34/86] USB: core: Fix unterminated string returned by usb_string()
+Date:   Wed, 15 May 2019 12:55:11 +0200
+Message-Id: <20190515090649.590467216@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -60,48 +60,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alan Stern <stern@rowland.harvard.edu>
 
-commit c114944d7d67f24e71562fcfc18d550ab787e4d4 upstream.
+commit c01c348ecdc66085e44912c97368809612231520 upstream.
 
-The syzkaller USB fuzzer spotted a slab-out-of-bounds bug in the
-ds2490 driver.  This bug is caused by improper use of the altsetting
-array in the usb_interface structure (the array's entries are not
-always stored in numerical order), combined with a naive assumption
-that all interfaces probed by the driver will have the expected number
-of altsettings.
+Some drivers (such as the vub300 MMC driver) expect usb_string() to
+return a properly NUL-terminated string, even when an error occurs.
+(In fact, vub300's probe routine doesn't bother to check the return
+code from usb_string().)  When the driver goes on to use an
+unterminated string, it leads to kernel errors such as
+stack-out-of-bounds, as found by the syzkaller USB fuzzer.
 
-The bug can be fixed by replacing references to the possibly
-non-existent intf->altsetting[alt] entry with the guaranteed-to-exist
-intf->cur_altsetting entry.
+An out-of-range string index argument is not at all unlikely, given
+that some devices don't provide string descriptors and therefore list
+0 as the value for their string indexes.  This patch makes
+usb_string() return a properly terminated empty string along with the
+-EINVAL error code when an out-of-range index is encountered.
+
+And since a USB string index is a single-byte value, indexes >= 256
+are just as invalid as values of 0 or below.
 
 Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+d65f673b847a1a96cdba@syzkaller.appspotmail.com
+Reported-by: syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com
 CC: <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/w1/masters/ds2490.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/core/message.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/w1/masters/ds2490.c
-+++ b/drivers/w1/masters/ds2490.c
-@@ -1013,15 +1013,15 @@ static int ds_probe(struct usb_interface
- 	/* alternative 3, 1ms interrupt (greatly speeds search), 64 byte bulk */
- 	alt = 3;
- 	err = usb_set_interface(dev->udev,
--		intf->altsetting[alt].desc.bInterfaceNumber, alt);
-+		intf->cur_altsetting->desc.bInterfaceNumber, alt);
- 	if (err) {
- 		dev_err(&dev->udev->dev, "Failed to set alternative setting %d "
- 			"for %d interface: err=%d.\n", alt,
--			intf->altsetting[alt].desc.bInterfaceNumber, err);
-+			intf->cur_altsetting->desc.bInterfaceNumber, err);
- 		goto err_out_clear;
- 	}
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -820,9 +820,11 @@ int usb_string(struct usb_device *dev, i
  
--	iface_desc = &intf->altsetting[alt];
-+	iface_desc = intf->cur_altsetting;
- 	if (iface_desc->desc.bNumEndpoints != NUM_EP-1) {
- 		pr_info("Num endpoints=%d. It is not DS9490R.\n",
- 			iface_desc->desc.bNumEndpoints);
+ 	if (dev->state == USB_STATE_SUSPENDED)
+ 		return -EHOSTUNREACH;
+-	if (size <= 0 || !buf || !index)
++	if (size <= 0 || !buf)
+ 		return -EINVAL;
+ 	buf[0] = 0;
++	if (index <= 0 || index >= 256)
++		return -EINVAL;
+ 	tbuf = kmalloc(256, GFP_NOIO);
+ 	if (!tbuf)
+ 		return -ENOMEM;
 
 
