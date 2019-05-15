@@ -2,50 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 728ACC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 993BAC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E9220818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AAFB20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919361;
-	bh=U+cZlY8muUchaepQ07mFSd7U+l0+CHSxVPLR5nRyDus=;
+	s=default; t=1557919364;
+	bh=yFUPSDZ95GbfUlJh8l0YvnrDeDlNtW1xQQ7ma0Nb+8Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U22LHXMsI5skyTgjPrDl3RLeqgvcrtRpiV/vdHmeIJnmj3MGrX9NuN5Yg55kA6oi9
-	 9v+zysLy8C13KuqVkVsSfkzRvifCpXiB7MFSpBiJn6hP+FzEkgyYgYLYpxlj7Dah48
-	 7eQAgV9lBkceuBrwg6i15L+rYh0NDykN6D4FAiUg=
+	b=MGcxcSAM9/4B975mdG76shEsgHPPmwFfSmDt2xKqy433x392zSefolUkmHvlXeOHM
+	 p6KAo5SpnXekWY/mKH69CEUT4PiN7sr2mRkoTX1J0ViQgYaYhWmdO5H9w1aYS057F7
+	 2DXwJvRU48+XArXCrQICHAmgatwaqh0WHMhA33+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730453AbfEOLWk (ORCPT
+        id S1731513AbfEOLWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:22:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32792 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:22:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731489AbfEOLWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:22:37 -0400
+        id S1731498AbfEOLWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:22:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32C1D206BF;
-        Wed, 15 May 2019 11:22:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D67E5206BF;
+        Wed, 15 May 2019 11:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919356;
-        bh=U+cZlY8muUchaepQ07mFSd7U+l0+CHSxVPLR5nRyDus=;
+        s=default; t=1557919359;
+        bh=yFUPSDZ95GbfUlJh8l0YvnrDeDlNtW1xQQ7ma0Nb+8Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KvpnudDFlTOq5iXIZDLUS0ZrYMttEeBRwdAt4s1JvFHQGS3CvIsWEDpOLRWLyTiYt
-         I6T7PscKV4MyIYeBM1Y5I7NkOvoH68xEw3T8Z+5vheMJjKM63oWe8SUQd06qvXXpN2
-         v9CxmSEi/VihX9u1Pir7sfohI1SKwS0d8Oyd13g8=
+        b=BGRe/lqJdWkoBA++lbpwDYEPcxZ71kOZtnHN6MqXA2iPVT7cPEgM33oHNgQhcZMdL
+         QgRvjtPmLVyZe9xj4kd6gRWeG11l+yAFJqU7MwbhKQMpJR8iUts2x4l7ZQ6WEl/Ufn
+         B7Xj/3N6VvGovZyxle0a7GSemJv/nIeeo5O+GIDc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 008/113] USB: serial: fix unthrottle races
-Date:   Wed, 15 May 2019 12:54:59 +0200
-Message-Id: <20190515090654.083402466@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 009/113] iio: adc: xilinx: fix potential use-after-free on remove
+Date:   Wed, 15 May 2019 12:55:00 +0200
+Message-Id: <20190515090654.166330986@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -58,132 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+[ Upstream commit 62039b6aef63380ba7a37c113bbaeee8a55c5342 ]
 
-commit 3f5edd58d040bfa4b74fb89bc02f0bc6b9cd06ab upstream.
+When cancel_delayed_work() returns, the delayed work may still
+be running. This means that the core could potentially free
+the private structure (struct xadc) while the delayed work
+is still using it. This is a potential use-after-free.
 
-Fix two long-standing bugs which could potentially lead to memory
-corruption or leave the port throttled until it is reopened (on weakly
-ordered systems), respectively, when read-URB completion races with
-unthrottle().
+Fix by calling cancel_delayed_work_sync(), which waits for
+any residual work to finish before returning.
 
-First, the URB must not be marked as free before processing is complete
-to prevent it from being submitted by unthrottle() on another CPU.
-
-	CPU 1				CPU 2
-	================		================
-	complete()			unthrottle()
-	  process_urb();
-	  smp_mb__before_atomic();
-	  set_bit(i, free);		  if (test_and_clear_bit(i, free))
-	  					  submit_urb();
-
-Second, the URB must be marked as free before checking the throttled
-flag to prevent unthrottle() on another CPU from failing to observe that
-the URB needs to be submitted if complete() sees that the throttled flag
-is set.
-
-	CPU 1				CPU 2
-	================		================
-	complete()			unthrottle()
-	  set_bit(i, free);		  throttled = 0;
-	  smp_mb__after_atomic();	  smp_mb();
-	  if (throttled)		  if (test_and_clear_bit(i, free))
-	  	  return;			  submit_urb();
-
-Note that test_and_clear_bit() only implies barriers when the test is
-successful. To handle the case where the URB is still in use an explicit
-barrier needs to be added to unthrottle() for the second race condition.
-
-Fixes: d83b405383c9 ("USB: serial: add support for multiple read urbs")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/generic.c |   39 ++++++++++++++++++++++++++++++++-------
- 1 file changed, 32 insertions(+), 7 deletions(-)
+ drivers/iio/adc/xilinx-xadc-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/serial/generic.c
-+++ b/drivers/usb/serial/generic.c
-@@ -376,6 +376,7 @@ void usb_serial_generic_read_bulk_callba
- 	struct usb_serial_port *port = urb->context;
- 	unsigned char *data = urb->transfer_buffer;
- 	unsigned long flags;
-+	bool stopped = false;
- 	int status = urb->status;
- 	int i;
- 
-@@ -383,33 +384,51 @@ void usb_serial_generic_read_bulk_callba
- 		if (urb == port->read_urbs[i])
- 			break;
+diff --git a/drivers/iio/adc/xilinx-xadc-core.c b/drivers/iio/adc/xilinx-xadc-core.c
+index 3f6be5ac049a8..1960694e80076 100644
+--- a/drivers/iio/adc/xilinx-xadc-core.c
++++ b/drivers/iio/adc/xilinx-xadc-core.c
+@@ -1320,7 +1320,7 @@ static int xadc_remove(struct platform_device *pdev)
  	}
--	set_bit(i, &port->read_urbs_free);
+ 	free_irq(xadc->irq, indio_dev);
+ 	clk_disable_unprepare(xadc->clk);
+-	cancel_delayed_work(&xadc->zynq_unmask_work);
++	cancel_delayed_work_sync(&xadc->zynq_unmask_work);
+ 	kfree(xadc->data);
+ 	kfree(indio_dev->channels);
  
- 	dev_dbg(&port->dev, "%s - urb %d, len %d\n", __func__, i,
- 							urb->actual_length);
- 	switch (status) {
- 	case 0:
-+		usb_serial_debug_data(&port->dev, __func__, urb->actual_length,
-+							data);
-+		port->serial->type->process_read_urb(urb);
- 		break;
- 	case -ENOENT:
- 	case -ECONNRESET:
- 	case -ESHUTDOWN:
- 		dev_dbg(&port->dev, "%s - urb stopped: %d\n",
- 							__func__, status);
--		return;
-+		stopped = true;
-+		break;
- 	case -EPIPE:
- 		dev_err(&port->dev, "%s - urb stopped: %d\n",
- 							__func__, status);
--		return;
-+		stopped = true;
-+		break;
- 	default:
- 		dev_dbg(&port->dev, "%s - nonzero urb status: %d\n",
- 							__func__, status);
--		goto resubmit;
-+		break;
- 	}
- 
--	usb_serial_debug_data(&port->dev, __func__, urb->actual_length, data);
--	port->serial->type->process_read_urb(urb);
-+	/*
-+	 * Make sure URB processing is done before marking as free to avoid
-+	 * racing with unthrottle() on another CPU. Matches the barriers
-+	 * implied by the test_and_clear_bit() in
-+	 * usb_serial_generic_submit_read_urb().
-+	 */
-+	smp_mb__before_atomic();
-+	set_bit(i, &port->read_urbs_free);
-+	/*
-+	 * Make sure URB is marked as free before checking the throttled flag
-+	 * to avoid racing with unthrottle() on another CPU. Matches the
-+	 * smp_mb() in unthrottle().
-+	 */
-+	smp_mb__after_atomic();
-+
-+	if (stopped)
-+		return;
- 
--resubmit:
- 	/* Throttle the device if requested by tty */
- 	spin_lock_irqsave(&port->lock, flags);
- 	port->throttled = port->throttle_req;
-@@ -484,6 +503,12 @@ void usb_serial_generic_unthrottle(struc
- 	port->throttled = port->throttle_req = 0;
- 	spin_unlock_irq(&port->lock);
- 
-+	/*
-+	 * Matches the smp_mb__after_atomic() in
-+	 * usb_serial_generic_read_bulk_callback().
-+	 */
-+	smp_mb();
-+
- 	if (was_throttled)
- 		usb_serial_generic_submit_read_urbs(port, GFP_KERNEL);
- }
+-- 
+2.20.1
+
 
 
