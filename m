@@ -1,95 +1,71 @@
-Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 792BFC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E27B4C04E53
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47AF020862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:33:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B417220843
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:46:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557963236;
-	bh=vy+VFByWZpBcZJS+x+zDXWWK4vc1948YkZDdImJfXt4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RG7Njbwxh+LrctTtGUy21NNOetWciTv0493n5R3dvGOA6i7P+EOCWI4hlEtzg35ZR
-	 5zHBrNOjp9yqu+XyruuWCv4+53cso25KUsP4CjnzGZZJWODee8dpohz7XxfvHfSe+i
-	 VC4efn2G2rgkOGRnkynID6en9AAxccFlhG/9j7G0=
+	s=default; t=1557971186;
+	bh=mQ3Fo55wJJGFQVP/8FsvP0aIRrhv6YJl4QIFLfcwRk4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=BV69UYGZjZR1YIbOSp6ZbFj9tYyxxwaTtCwKLbh6aPl7Dz8Jdlg1WQYoenMUUvNQl
+	 YyLcIw33PnplTO1IMvfu1VCQovpIYAX/efBizL2XUBGMan9zKQZ67D9MVi3VaWJ51f
+	 /wsrMIYxjENtqr17jJF1Nrl61KYqmHV6AcoLZNPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfEOXdy (ORCPT
+        id S1727236AbfEPBqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 19:33:54 -0400
-Received: from mail-lj1-f173.google.com ([209.85.208.173]:36503 "EHLO
-        mail-lj1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbfEOXby (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 19:31:54 -0400
-Received: by mail-lj1-f173.google.com with SMTP id z1so1361277ljb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 16:31:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O821PFVQcmUzDw+ClN21Dk/2JbyQeuDOYDUBLRj/u2k=;
-        b=A78Teddfh1YhL1soJd7LNhYcXrvlyqK4Kc3vdaOAMu5c8k1jOFXAvEr7XGLgepjug1
-         0d2fNXS4jnwj6r8hxFpjY//Wmfhsq8p0GDy9LNbArvdhKCoefmCn5Ui4ybYNXCg5HYhz
-         nSH4sgiTc0szmPt1XaFA9Zc1ScZUgfvMlc37I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O821PFVQcmUzDw+ClN21Dk/2JbyQeuDOYDUBLRj/u2k=;
-        b=iM3O718ABOVFO+TAv/cIEMaM2M7ViLboC0iO9B3c6VGVbQi2OYJpM1LBinzmYh3OX+
-         wXlZtdpYcoWPPnJ3MOfQVQBhcMlfZp1OPtVxfsKr1jDpMFXIDODYbdOBlrIxV43RFTN7
-         nJKC1ZDrl/Rn+EhOjGBz+lRsnp1e9DINrwUnnd2GPVwLrcdgE/9S+n9f637Q//u/wpEW
-         3JHGbqif4TimsYFGzZPWkIj4KTOt4cq84o5yF8TQZVz9qGOeZ0fKoD/+yjLNggAgHipt
-         zN+G2dAtCMOMFTQ+nVXl1Nq+zy512Gj/vD6D0Mzro506tNg2V0jKPlt5cqoW5LIovgoG
-         p1zg==
-X-Gm-Message-State: APjAAAUe0AmhX3ZV5PLaWTiu1VcUuvVEj45lJVD78ApmeQ2l755toFru
-        aT8ddPQUeRTHPTJU3JUJk++YPgV7rKk=
-X-Google-Smtp-Source: APXvYqzEu5o2fIOiUNMgccellRbCOwxqd91tS/z/xE/sYYjAR4QvwmJuFJZX0A0eZhwA8523U2c6Mw==
-X-Received: by 2002:a2e:98c1:: with SMTP id s1mr13756835ljj.68.1557963111124;
-        Wed, 15 May 2019 16:31:51 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id i12sm432695lfo.67.2019.05.15.16.31.50
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 16:31:50 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id m20so1372611lji.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 16:31:50 -0700 (PDT)
-X-Received: by 2002:a2e:9a94:: with SMTP id p20mr11957491lji.2.1557963109896;
- Wed, 15 May 2019 16:31:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190515133614.31dcbbe0@oasis.local.home> <CAHk-=wihYB8w__YQjgYjYZsVniu5CtkTcFycmCGdqVg8GUje7g@mail.gmail.com>
-In-Reply-To: <CAHk-=wihYB8w__YQjgYjYZsVniu5CtkTcFycmCGdqVg8GUje7g@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 15 May 2019 16:31:34 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjbVZcZXkq5xOnBk3ibXorEYKdmRG5YFzzV-Rw3Q-VUEA@mail.gmail.com>
-Message-ID: <CAHk-=wjbVZcZXkq5xOnBk3ibXorEYKdmRG5YFzzV-Rw3Q-VUEA@mail.gmail.com>
+        Wed, 15 May 2019 21:46:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726732AbfEOXyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 19:54:21 -0400
 Subject: Re: [GIT PULL] tracing: Updates for 5.2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557964215;
+        bh=mQ3Fo55wJJGFQVP/8FsvP0aIRrhv6YJl4QIFLfcwRk4=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=Ih5oQr+UaMnhjEm0wZWNSQ6Sw3aiztWtAQZp525PKysB/A+UZucnEkxGHNnp0fu0g
+         koVQU8XWQTOS+LJxH5dB4HJxeSzlXXKn3IsNOZgHm/vK43japUgCzX14IfqCMY6HwT
+         BWeYZbl2zO2szwOAKNe580v8DMZNGlHddc1KkdLI=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190515133614.31dcbbe0@oasis.local.home>
+References: <20190515133614.31dcbbe0@oasis.local.home>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190515133614.31dcbbe0@oasis.local.home>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+ trace-v5.2
+X-PR-Tracked-Commit-Id: 693713cbdb3a4bda5a8a678c31f06560bbb14657
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d2d8b146043ae7e250aef1fb312971f6f479d487
+Message-Id: <155796421516.28278.8898095131927032779.pr-tracker-bot@kernel.org>
+Date:   Wed, 15 May 2019 23:50:15 +0000
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 4:29 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> One option is to just rewrite it something like
->
->         const unsigned int offset = offsetof(struct trace_iterator, seq);
->         memset(offset+(void *)&iter, 0, sizeof(iter) - offset);
+The pull request you sent on Wed, 15 May 2019 13:36:14 -0400:
 
-Side note: make it a well-named helper function, since
-"ftrace_dump_buf()" does this too in kernel/trace/trace_kdb.c, and
-gets the exact same warning.
+> git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git trace-v5.2
 
-              Linus
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d2d8b146043ae7e250aef1fb312971f6f479d487
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
