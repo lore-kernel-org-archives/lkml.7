@@ -2,168 +2,211 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47228C04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32890C04AB4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 091BB20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0052E2084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:49:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Qz4Qh3If"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RFv0sQvm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfEOArC (ORCPT
+        id S1726475AbfEOAt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:47:02 -0400
-Received: from mail-eopbgr20082.outbound.protection.outlook.com ([40.107.2.82]:14464
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726044AbfEOArC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:47:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7KmoUhlgxQ//AIr6HMkjLMvpDIlChpZngSkB0f87Xh8=;
- b=Qz4Qh3IfI/wOJDgFHeG/mJPYWfVbWd66xUNOe1ylEijkByoM2OGtdrVhiRTS/OfgATF9NJ/wQGTzMbtUXG+IpmdVxu27LIjSYFXaQvcYKFEy1oxtFbUmFfAfko9ob9N5NjYbZCK4d9mVVibhsErThcSM4Rl6W/ptCsc7dnElY3I=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB5760.eurprd05.prod.outlook.com (20.178.122.22) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.24; Wed, 15 May 2019 00:46:58 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1900.010; Wed, 15 May 2019
- 00:46:58 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Doug Ledford <dledford@redhat.com>
-CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull RDMA subsystem changes
-Thread-Topic: [GIT PULL] Please pull RDMA subsystem changes
-Thread-Index: AQHVCrezaWb+XpDsLE6G1142j/hRCg==
-Date:   Wed, 15 May 2019 00:46:58 +0000
-Message-ID: <20190515004652.GA17171@ziepe.ca>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YQXPR01CA0094.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c00:41::23) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.49.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0ab173d9-079d-4703-4fc2-08d6d8ced5b6
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(49563074)(7193020);SRVR:VI1PR05MB5760;
-x-ms-traffictypediagnostic: VI1PR05MB5760:
-x-microsoft-antispam-prvs: <VI1PR05MB57607E5ABA14A6185E23268DCF090@VI1PR05MB5760.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2201;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(346002)(396003)(136003)(39860400002)(189003)(199004)(478600001)(305945005)(33656002)(66066001)(7736002)(71190400001)(71200400001)(2906002)(14454004)(6116002)(3846002)(52116002)(86362001)(6486002)(316002)(110136005)(102836004)(6506007)(26005)(25786009)(476003)(53936002)(386003)(6512007)(9686003)(4326008)(186003)(1076003)(81156014)(14444005)(256004)(81166006)(8676002)(66556008)(54906003)(68736007)(6436002)(5660300002)(73956011)(66946007)(36756003)(8936002)(99936001)(486006)(66616009)(99286004)(64756008)(66446008)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5760;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 8rqojCJAT+AbXVUyOOw7xJk5lg+CbQJyjYugSOtfXIrAW6Md0Rn5amxN20F4KBqv2aGORHvxF+oTpFuJejekXe7Y7+HIykSseqVTnpSAqSc6lzBNMtYw/3Ha8O2v1gPqufvp3J15LshDthpt2GPKQfQ4S5iOWbTkURpXWHhLGIYbGhUoBfEskfcqhqBLEgRhI7GOp7SuSWOP+cmemqTTgTMY3pwc290n6R0NLyB/OSH61rAyn3EHhx0DvhRUeAdhfYppRoOp7nRZJGoFyrxy7856aXsIgosiTui1vbX+HdL3nr3yZKUENj9VPLozaESx7My0BNUYq/ATVelGEt3KSlyze8eIyD+90s7EKsPCTIGOb9MMfxFAtktGTPGDgHqaSvLf3/dSGnqPtdAzkWUIpVHAdy5sF1UkSZS36S0R+TM=
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2fHTh5uZTiUOsy+g"
+        Tue, 14 May 2019 20:49:27 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37113 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfEOAt1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 20:49:27 -0400
+Received: by mail-ot1-f68.google.com with SMTP id r10so674978otd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 17:49:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/1dfnZvzmXyrAvmLqG8QuEKEEuBLjYOpAGmByOmcw20=;
+        b=RFv0sQvmISAFd9Ve2FjMlX11/QOSAOV+YV9EFixhjjqagkW5Rl16XKucfQ8FEimzrw
+         zWNCH83bLqJ/pEKJDdQLEIygK45lIH4oR1RpCJOyQKYEocfjkblbEkcjFckiHU43oBFo
+         EMRq00C5bYAGzoV7CuJKL2kwribUEJikiHcaiO7oGamTgweIULopvfimyI6ECAj9+jij
+         E/M5KYjQYi1BcFCnTNsyUTNkGFoll8OdhkkLklO0c2FANIBK+XfMozRecxy6mime+RrI
+         B3ssMGSNcSWJXxJmuC+kJ18q40m3lqe24nIAuygz1JeFtXv60+dZPI1NOpbPLViGRhDA
+         7/mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/1dfnZvzmXyrAvmLqG8QuEKEEuBLjYOpAGmByOmcw20=;
+        b=i+oANJ5hXGk3BJeus4LJwmvzn56mWTo14+FveIG9izEdyvGqV2WPiASXM2yC1DsGqM
+         kD4W5TESld4ba6a+XW9xTAyfpiox3nYO8DYJ9jhHq65PREwv0plbWvt+sRnnvO9GwuAi
+         AdzyTY0PUBa5tzmegvv0RuYIAD7Rvn/hb8EovChqXPLugLG8YUR5y+0ru0TDa6hvvFzk
+         JZdBohJHFiCQ1s0y37RZXhhZ5VCaJLtuXfwIySSmrcdGKq6nROj6JSl9Zxxa6EymLM0M
+         TOZYxygOwe/LEWNMU2nZsiFfHVl25TU49pJSh6vc0IWz3wff2YtcH95iiurtVNnjtKUi
+         pzrQ==
+X-Gm-Message-State: APjAAAXH4SbnUSZ+RFCWx3bibN+qJX9GAs0OvwbgdGe5JWdvc8eA5xv0
+        UK+eyOT5aAtcoE2mjt85CCmql2CfLeFjv8t5FXs=
+X-Google-Smtp-Source: APXvYqzk7v2yFXq2EBQuAvscQ5ewNjVlUAKstnHwHAVlx48z8B9NF1ZYHulrWQGeJcLpHj6vQIs3i5xIW3NdLJvc4I4=
+X-Received: by 2002:a9d:458c:: with SMTP id x12mr3117938ote.211.1557881365991;
+ Tue, 14 May 2019 17:49:25 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ab173d9-079d-4703-4fc2-08d6d8ced5b6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 00:46:58.2170
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5760
+References: <20190514131654.25463-1-oleksandr@redhat.com> <20190514131654.25463-4-oleksandr@redhat.com>
+ <20190514132249.h233crdsz3b7akys@atomlin.usersys.com>
+In-Reply-To: <20190514132249.h233crdsz3b7akys@atomlin.usersys.com>
+From:   Timofey Titovets <nefelim4ag@gmail.com>
+Date:   Wed, 15 May 2019 03:48:50 +0300
+Message-ID: <CAGqmi77dtid9M8fZuWimeiWMw8r9Awu579mo8UsaVGTECwxRwA@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 3/4] mm/ksm: introduce force_madvise knob
+To:     Aaron Tomlin <atomlin@redhat.com>
+Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Grzegorz Halat <ghalat@redhat.com>, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---2fHTh5uZTiUOsy+g
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+LGTM
 
-Hi Linus,
+Reviewed-by: Timofey Titovets <nefelim4ag@gmail.com>
 
-These are the 2nd proposed RDMA patches for 5.2.
+=D0=B2=D1=82, 14 =D0=BC=D0=B0=D1=8F 2019 =D0=B3. =D0=B2 16:22, Aaron Tomlin=
+ <atomlin@redhat.com>:
+>
+> On Tue 2019-05-14 15:16 +0200, Oleksandr Natalenko wrote:
+> > Present a new sysfs knob to mark task's anonymous memory as mergeable.
+> >
+> > To force merging task's VMAs, its PID is echoed in a write-only file:
+> >
+> >    # echo PID > /sys/kernel/mm/ksm/force_madvise
+> >
+> > Force unmerging is done similarly, but with "minus" sign:
+> >
+> >    # echo -PID > /sys/kernel/mm/ksm/force_madvise
+> >
+> > "0" or "-0" can be used to control the current task.
+> >
+> > To achieve this, previously introduced ksm_enter()/ksm_leave() helpers
+> > are used in the "store" handler.
+> >
+> > Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
+> > ---
+> >  mm/ksm.c | 68 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 68 insertions(+)
+> >
+> > diff --git a/mm/ksm.c b/mm/ksm.c
+> > index e9f3901168bb..22c59fb03d3a 100644
+> > --- a/mm/ksm.c
+> > +++ b/mm/ksm.c
+> > @@ -2879,10 +2879,77 @@ static void wait_while_offlining(void)
+> >
+> >  #define KSM_ATTR_RO(_name) \
+> >       static struct kobj_attribute _name##_attr =3D __ATTR_RO(_name)
+> > +#define KSM_ATTR_WO(_name) \
+> > +     static struct kobj_attribute _name##_attr =3D __ATTR_WO(_name)
+> >  #define KSM_ATTR(_name) \
+> >       static struct kobj_attribute _name##_attr =3D \
+> >               __ATTR(_name, 0644, _name##_show, _name##_store)
+> >
+> > +static ssize_t force_madvise_store(struct kobject *kobj,
+> > +                                  struct kobj_attribute *attr,
+> > +                                  const char *buf, size_t count)
+> > +{
+> > +     int err;
+> > +     pid_t pid;
+> > +     bool merge =3D true;
+> > +     struct task_struct *tsk;
+> > +     struct mm_struct *mm;
+> > +     struct vm_area_struct *vma;
+> > +
+> > +     err =3D kstrtoint(buf, 10, &pid);
+> > +     if (err)
+> > +             return -EINVAL;
+> > +
+> > +     if (pid < 0) {
+> > +             pid =3D abs(pid);
+> > +             merge =3D false;
+> > +     }
+> > +
+> > +     if (!pid && *buf =3D=3D '-')
+> > +             merge =3D false;
+> > +
+> > +     rcu_read_lock();
+> > +     if (pid) {
+> > +             tsk =3D find_task_by_vpid(pid);
+> > +             if (!tsk) {
+> > +                     err =3D -ESRCH;
+> > +                     rcu_read_unlock();
+> > +                     goto out;
+> > +             }
+> > +     } else {
+> > +             tsk =3D current;
+> > +     }
+> > +
+> > +     tsk =3D tsk->group_leader;
+> > +
+> > +     get_task_struct(tsk);
+> > +     rcu_read_unlock();
+> > +
+> > +     mm =3D get_task_mm(tsk);
+> > +     if (!mm) {
+> > +             err =3D -EINVAL;
+> > +             goto out_put_task_struct;
+> > +     }
+> > +     down_write(&mm->mmap_sem);
+> > +     vma =3D mm->mmap;
+> > +     while (vma) {
+> > +             if (merge)
+> > +                     ksm_enter(vma->vm_mm, vma, &vma->vm_flags);
+> > +             else
+> > +                     ksm_leave(vma, vma->vm_start, vma->vm_end, &vma->=
+vm_flags);
+> > +             vma =3D vma->vm_next;
+> > +     }
+> > +     up_write(&mm->mmap_sem);
+> > +     mmput(mm);
+> > +
+> > +out_put_task_struct:
+> > +     put_task_struct(tsk);
+> > +
+> > +out:
+> > +     return err ? err : count;
+> > +}
+> > +KSM_ATTR_WO(force_madvise);
+> > +
+> >  static ssize_t sleep_millisecs_show(struct kobject *kobj,
+> >                                   struct kobj_attribute *attr, char *bu=
+f)
+> >  {
+> > @@ -3185,6 +3252,7 @@ static ssize_t full_scans_show(struct kobject *ko=
+bj,
+> >  KSM_ATTR_RO(full_scans);
+> >
+> >  static struct attribute *ksm_attrs[] =3D {
+> > +     &force_madvise_attr.attr,
+> >       &sleep_millisecs_attr.attr,
+> >       &pages_to_scan_attr.attr,
+> >       &run_attr.attr,
+>
+> Looks fine to me.
+>
+> Reviewed-by: Aaron Tomlin <atomlin@redhat.com>
+>
+> --
+> Aaron Tomlin
 
-As requested the main reason to send this is to fix the gcc 9.1
-warnings that many people may hit now that FC30 is out.
 
-Thanks,
-Jason
 
-The following changes since commit b79656ed44c6865e17bcd93472ec39488bcc4984:
-
-  RDMA/ipoib: Allow user space differentiate between valid dev_port (2019-05-07 16:13:23 -0300)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
-
-for you to fetch changes up to c191f93454bcc92810b9c8cdb895a452a57948c2:
-
-  net/mlx5: Set completion EQs as shared resources (2019-05-14 10:22:09 -0300)
-
-----------------------------------------------------------------
-5.2 Merge Window second pull request
-
-This is being sent to get a fix for the gcc 9.1 build warnings, and I've
-also pulled in some bug fix patches that were posted in the last two
-weeks.
-
-- Avoid the gcc 9.1 warning about overflowing a union member
-
-- Fix the wrong callback type for a single response netlink to doit
-
-- Bug fixes from more usage of the mlx5 devx interface
-
-----------------------------------------------------------------
-Jason Gunthorpe (1):
-      RDMA: Directly cast the sockaddr union to sockaddr
-
-Parav Pandit (1):
-      RDMA/core: Change system parameters callback from dumpit to doit
-
-Yishai Hadas (2):
-      IB/mlx5: Verify DEVX general object type correctly
-      net/mlx5: Set completion EQs as shared resources
-
- drivers/infiniband/core/addr.c               | 16 ++++++++--------
- drivers/infiniband/core/nldev.c              | 27 +++++++++++++++------------
- drivers/infiniband/hw/mlx5/devx.c            | 13 ++++++++++---
- drivers/infiniband/hw/ocrdma/ocrdma_ah.c     |  5 ++---
- drivers/infiniband/hw/ocrdma/ocrdma_hw.c     |  5 ++---
- drivers/net/ethernet/mellanox/mlx5/core/eq.c |  3 +++
- include/linux/mlx5/mlx5_ifc.h                |  2 +-
- include/uapi/rdma/rdma_netlink.h             |  2 +-
- 8 files changed, 42 insertions(+), 31 deletions(-)
-
---2fHTh5uZTiUOsy+g
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEfB7FMLh+8QxL+6i3OG33FX4gmxoFAlzbYXkACgkQOG33FX4g
-mxqzBhAAmocSn2V083QOUUOPoRRjoJWVZZmVulrCp7jpNqI5i+3Cn+JriYC+82SA
-87nAzbKOGqvSBg0lldSQRrrl1HjOGrAmGA2r10Iae24xqwAJ9NLErmJghpTW+QhY
-owTBX/2TJuadLtwADvhCqQMmTLSm1KeRpgPeDz73XDPveRQuzjGdSSWVXQ7z1nGH
-tLwCPZrOIAXK4ErUg/TfrVSmmsFDE0kkFpHlIzvP5t7rYyDhKt/Mgx1WghjdK8nE
-3qQ40F2iEYoCW5sx15r3SwXEUfo7yO5B+c2LnkBjhEE0OY25syoDOnM8Q1MV6jcR
-pblf0XAstS41DjYPB/7CObiSY6K37l6YybGflJwIaEU5zWc78DaIh1UD3WZddAvJ
-OHszh/OO+nxWUya1KdJrwsstSlcKaZR/wwPnmE8OEO1cpj2k/vYRDgW8DuFcKQdV
-qE7xfHcmP466KIZygLv8YGBCn1BLij3lz4EsDLa4dksA81/L7K5KQqpToVKjW9Lo
-G7m8zny0ZQITN8JPckf1J0JF6MiHAD42youRcJB2il/PyrKOmQYJQ6BZvhzmndYb
-8zvVC+Y4kwk615VmGuXq16Qwx72QEHuSfQb5dPbv2GfR26ntJJQT+VhceGMhtw53
-chjalaGI+M4CtqBoLYNb/w08V7mERMlh3CklugHJXm/8QEE9AM8=
-=F5G/
------END PGP SIGNATURE-----
-
---2fHTh5uZTiUOsy+g--
+--=20
+Have a nice day,
+Timofey.
