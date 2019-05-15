@@ -4,47 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70792C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE80C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42CF020881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E3920881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918280;
-	bh=BDhAKQZ84otnksMOOOey3iqSRkUVLUm3sPvTkPVCm/A=;
+	s=default; t=1557918283;
+	bh=ZHNIu92D+duYIu+4ZKulnTwetCt46wMcwo4U9uxghu8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LRVqytAHhgpVeBdxB48vlnbPq9jom2AcxCIX1kRCaUOa4Ja+BZKY6BLIvqWmuyeQp
-	 efVWH6+D0xjFAvv8e1JQsiAXkXBrrbVQmh//PLo1Tt+P89ViPtNJdG3raTeR8GATK2
-	 yXWUKVTpHiTiU7JCJBIR0THjIW/Pg3DUEkjWTk2k=
+	b=M3nCgYRHj1jh2VLspgqFlPKrjb6OkieamytU+E43VFp0a+XPPhkHkDXnTaIdXcHY9
+	 newsZdeUkOQpoZQvg3oLgWhBpPa5U6nP/DQx/SGdomM4WqkrkNJmLmBlc0sVA4ZlwT
+	 EBkidJC/dHm1+Dzl8PWkBNWNhgZPpCFj7Q+L0UGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728492AbfEOLEj (ORCPT
+        id S1727059AbfEOLEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:04:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34206 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:04:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728465AbfEOLEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:04:34 -0400
+        id S1728465AbfEOLEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:04:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B78620644;
-        Wed, 15 May 2019 11:04:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB62620644;
+        Wed, 15 May 2019 11:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918274;
-        bh=BDhAKQZ84otnksMOOOey3iqSRkUVLUm3sPvTkPVCm/A=;
+        s=default; t=1557918279;
+        bh=ZHNIu92D+duYIu+4ZKulnTwetCt46wMcwo4U9uxghu8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Gnyo6MuKze2hu+tZo9ATbx9mkdMX9XnI3d9jLjHOdUjWjA3jq0k3BxKWbKj5agl8
-         xaWPo/tpd4Zei490O07zKzqeraww5Ono8kkoIWP3OJoC1+YXNTXgcxtl2izca0Ndob
-         A7w9b4p6r8ODRazXm4VeO4txszZtnvANg+R+sml8=
+        b=ktRMxApBAYJ9cdeUFWi2XReWU8j67cVxZ3eMxBdzdW7swYHMCgB4XLHUo/0/ww/Aj
+         9D18QPHkZwoYW6hK7xNC7/zZWvSgj4O2K5PQLZ5krC6NpIiykfwptv+Sdz20+Go3XJ
+         cirHwRYaHJIwMURa75jDZjXQpy/EqccIGO2H1nDA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.4 030/266] powerpc/64s: Wire up cpu_show_spectre_v1()
-Date:   Wed, 15 May 2019 12:52:17 +0200
-Message-Id: <20190515090723.568655356@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.4 032/266] powerpc/pseries: Fix clearing of security feature flags
+Date:   Wed, 15 May 2019 12:52:19 +0200
+Message-Id: <20190515090723.625034881@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -57,37 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>
 
-commit 56986016cb8cd9050e601831fe89f332b4e3c46e upstream.
+commit 0f9bdfe3c77091e8704d2e510eb7c2c2c6cde524 upstream.
 
-Add a definition for cpu_show_spectre_v1() to override the generic
-version. Currently this just prints "Not affected" or "Vulnerable"
-based on the firmware flag.
+The H_CPU_BEHAV_* flags should be checked for in the 'behaviour' field
+of 'struct h_cpu_char_result' -- 'character' is for H_CPU_CHAR_*
+flags.
 
-Although the kernel does have array_index_nospec() in a few places, we
-haven't yet audited all the powerpc code to see where it's necessary,
-so for now we don't list that as a mitigation.
+Found by playing around with QEMU's implementation of the hypercall:
 
+  H_CPU_CHAR=0xf000000000000000
+  H_CPU_BEHAV=0x0000000000000000
+
+  This clears H_CPU_BEHAV_FAVOUR_SECURITY and H_CPU_BEHAV_L1D_FLUSH_PR
+  so pseries_setup_rfi_flush() disables 'rfi_flush'; and it also
+  clears H_CPU_CHAR_L1D_THREAD_PRIV flag. So there is no RFI flush
+  mitigation at all for cpu_show_meltdown() to report; but currently
+  it does:
+
+  Original kernel:
+
+    # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+    Mitigation: RFI Flush
+
+  Patched kernel:
+
+    # cat /sys/devices/system/cpu/vulnerabilities/meltdown
+    Not affected
+
+  H_CPU_CHAR=0x0000000000000000
+  H_CPU_BEHAV=0xf000000000000000
+
+  This sets H_CPU_BEHAV_BNDS_CHK_SPEC_BAR so cpu_show_spectre_v1() should
+  report vulnerable; but currently it doesn't:
+
+  Original kernel:
+
+    # cat /sys/devices/system/cpu/vulnerabilities/spectre_v1
+    Not affected
+
+  Patched kernel:
+
+    # cat /sys/devices/system/cpu/vulnerabilities/spectre_v1
+    Vulnerable
+
+Brown-paper-bag-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: f636c14790ea ("powerpc/pseries: Set or clear security feature flags")
+Signed-off-by: Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/kernel/security.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/powerpc/platforms/pseries/setup.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -50,3 +50,11 @@ ssize_t cpu_show_meltdown(struct device
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -524,13 +524,13 @@ static void init_cpu_char_feature_flags(
+ 	 * The features below are enabled by default, so we instead look to see
+ 	 * if firmware has *disabled* them, and clear them if so.
+ 	 */
+-	if (!(result->character & H_CPU_BEHAV_FAVOUR_SECURITY))
++	if (!(result->behaviour & H_CPU_BEHAV_FAVOUR_SECURITY))
+ 		security_ftr_clear(SEC_FTR_FAVOUR_SECURITY);
  
- 	return sprintf(buf, "Vulnerable\n");
+-	if (!(result->character & H_CPU_BEHAV_L1D_FLUSH_PR))
++	if (!(result->behaviour & H_CPU_BEHAV_L1D_FLUSH_PR))
+ 		security_ftr_clear(SEC_FTR_L1D_FLUSH_PR);
+ 
+-	if (!(result->character & H_CPU_BEHAV_BNDS_CHK_SPEC_BAR))
++	if (!(result->behaviour & H_CPU_BEHAV_BNDS_CHK_SPEC_BAR))
+ 		security_ftr_clear(SEC_FTR_BNDS_CHK_SPEC_BAR);
  }
-+
-+ssize_t cpu_show_spectre_v1(struct device *dev, struct device_attribute *attr, char *buf)
-+{
-+	if (!security_ftr_enabled(SEC_FTR_BNDS_CHK_SPEC_BAR))
-+		return sprintf(buf, "Not affected\n");
-+
-+	return sprintf(buf, "Vulnerable\n");
-+}
+ 
 
 
