@@ -3,162 +3,165 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22CCC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DBDC04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:56:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90D5F2084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C2A2084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:56:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="O6Tk1F0y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UPfTU82i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbfEOJ4B (ORCPT
+        id S1726501AbfEOJ41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 05:56:01 -0400
-Received: from mout.web.de ([212.227.17.11]:41291 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbfEOJ4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 05:56:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1557914130;
-        bh=wiOwEve7My4tHH++4uxUcctldc8mMAV7k9UajMFXLwA=;
-        h=X-UI-Sender-Class:Subject:To:References:From:Cc:Date:In-Reply-To;
-        b=O6Tk1F0yDDlNtjKRq2x0YP+h5tVpSGLxNx9GfBKy+tSeuQe8syh/xRC6HZN0gpVBj
-         VdPHfQpiXHX/QjuTF2r90wzetwADHXPDKDlZxQ8JZAfULB2cUopugTy+UFfhVePCdK
-         yBKgggsEHWIO6SzFuWRMdL6aVFoL8PKZXIdIJo70=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([2.244.73.153]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MA5v3-1hX9Eh1XZp-00BHvi; Wed, 15
- May 2019 11:55:30 +0200
-Subject: Re: Coccinelle: Handling of SmPL disjunctions
-To:     Julia Lawall <julia.lawall@lip6.fr>
-References: <e30b9777-6440-b041-9df9-f1a27ce06c6c@web.de>
- <112fa697-3073-1a95-eb5b-fa62ad9607fb@web.de>
- <alpine.DEB.2.21.1905142146560.2612@hadrien>
- <20b242a6-23a8-9b48-5cfe-c99df809dd24@web.de>
- <alpine.DEB.2.21.1905150811310.2591@hadrien>
- <1794c3af-cec4-8b28-a299-400b857f0644@web.de>
- <alpine.DEB.2.21.1905150908550.2591@hadrien>
- <020c9629-fa44-170b-b2b0-baf3ba636a71@web.de>
- <alpine.DEB.2.20.1905151120370.3231@hadrien>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     Coccinelle <cocci@systeme.lip6.fr>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Ma Jiang <ma.jiang@zte.com.cn>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Wen Yang <wen.yang99@zte.com.cn>,
-        Yi Wang <wang.yi59@zte.com.cn>
-Message-ID: <e59c77a0-f1d7-2f4e-fba1-c8ed11f93669@web.de>
-Date:   Wed, 15 May 2019 11:55:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 15 May 2019 05:56:27 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:46357 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfEOJ41 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 05:56:27 -0400
+Received: by mail-vs1-f68.google.com with SMTP id e2so1261084vsc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 02:56:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z/PxU7IOgFaM/vpcRB7+25UT92kn0Avb7GExq6eQckE=;
+        b=UPfTU82iv2+QSBeDe9ByO5SIbVG/hJicOeB1sIQMcwRi5hIGPhnXJ9ts5oKGVhx3PS
+         TvcreLnXy/bJb/VDf+ZKo4/DuZZPww1U0jRY0Le3X64RE6EQLLQDDj0OMFzQZzF1bO3i
+         tOovIGbRlH8KsDvUDGs4gpxPe9mxXG4PRclFLGJ6Fcm6kQktQhq62SGSbnSX1FmJB8cl
+         Lo/H2d9FvINiDP9SIsf6MeqBTOcoI/GAy7X9MtOfgx+d2QhvrEg+loPRWRmwWMma/0rT
+         2myYIQ+Xp/lly3LJGwGmXIV7qGo2U62kKXoiAq0duOF/HV9toAqd5g0AW1PoyT41l2DQ
+         w8Ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z/PxU7IOgFaM/vpcRB7+25UT92kn0Avb7GExq6eQckE=;
+        b=jAAYKH5F9hKSkSpBfkdMBeYTTI4tD+HE59iE1uqjKLNA2EaiFPlf3ooIKLpS6ot8tk
+         iG0dgbhrwiJrjIWqKNpF9jg5eeg4G6B3Ip03PAu2Tr66N0XxydgK47Bs7STdAYBjAHHm
+         acj8xFtYVm4pwYBQ1PvcXvUEgq1Ynw6JWPJUJo3h3LYEbHNc2W0HCb6txolqTJt4qehS
+         YUSUoA8aVvZRo9KnW6zEZl4D+m8gc8fWbQeeBAO9t+gqZ/6oNj0zyhFImswot3h95KpV
+         WPRXnCYr7klng+WCJFkayQyxylRWeHkTLLCloGDtIpm3+sdwl7/2dcy1fjqkLmxNwJyr
+         8uBw==
+X-Gm-Message-State: APjAAAUnmnzLJkgIpNR56B4aERrDi8UDxc45T06u0FjAbb5M0pd0oECH
+        KAvlZG/HnbXqbvRzq55YUDVtZbucTVLAiaZfujJjaQ==
+X-Google-Smtp-Source: APXvYqyVbCc0ntyYjzrbfP4AYQ+9vS8vTevheiFO9USB5K9LCBZ8JwXS+KAyPYy4rMuQKw31NRfsWqnbpqLv6NuTd68=
+X-Received: by 2002:a67:dc98:: with SMTP id g24mr8902213vsk.27.1557914186011;
+ Wed, 15 May 2019 02:56:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.20.1905151120370.3231@hadrien>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:eyNCQxRg0X/ivVkQ+NNUbeFJhxD5hbn1WJJgIUv1/I9JpAGRVRx
- vIkMuE2y2BcYPsnu7BuL5imn6xpzuYDD4gAnRp7h3SaoC9DZwPAhtGznJSxXA9JsM/buAXb
- iLmkPmHGuIBxmptdJtuej8w7x0VBclkfp9w1A8Meu/dpuHmqraP3sR0sM+oZZXVLfCMvK2b
- a+AHrcs7MU2BRwoHK5Hfw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:WZMiCF4LA6c=:SQteLxtZ1sHJXWPx/MTTxT
- +UXGg8K+AqEZ9kZtuEi2NU0xW6yHb6RNIjsnsojl8KJChZ1ToxqHS3P6ifhEsfNZrhFzgbJco
- OMmHZCD9VsUddt1u4yzAuX1rmlB4bVmuOZvmh/XcyOa9Q+kbQcgfjoHtYAuaTQ5yoHyrSd3X3
- ojYrfsWr7Dke8VUSNvISN3Zhbs6ZSz9NL5DmAh7eByf3dYUm68tw05gx9EUhoO4p31h0IP4yv
- mmO3VJn8wKHLbOBCIjQQZbrBgWc38DuxyrMD6bt1p3JJffOirxU652MoxTEI7UGqxmi9gzauB
- zB08U7RbVZCULVsYRvoBl79/lh5/k42hV06dH/5J3Nz7wOXgPSx7Nal9xuhCWzscw6rpnEBPX
- uZCTvEce+aDtE+83g8q50WTQ+xbY1lZf1gNYAFBBcQQ142oSqcuzoZzMgAkGMxtdFFQE1GTKI
- oXR4DWKAq/VbCBppKOTBm7oLSAyPSMljRDRBuxOV6Sx9PoFTgH9RyLfnhytO4AcguE7XOWlpf
- zHoPrcyBrIr6vd6QgLgTMG6DTDGiRb4brA10gFAE/dns4NL/fHaZHJId0Z5udW7FVP8DiEJpr
- HwNqdH0bcZ9GHDUaC2DECswBWmJAokecAPwUjn27B+qIba2ALLnRT1zGPTrJQFtZJkTTtrtkt
- IWe/ch0gawlFGSe0b7zVm3ZYkJEhh2PdBY0fxKhmCsCRk7d6DwSukVI75myLVjRjNv6tGMspK
- x85MZshh4S1pBayTzKov4C33cppjE4EV+iaqFiTyj25UcVZ/zffJXuZAsyJOI1Vy2QPBga3ni
- 10J7PvbxnC6XDVhxL5dHanuNVBOX8MWILI7tNgI/F3NufVCTvW0K0P1jgaC3Ch+13Xomh+e4e
- StSepROnd9z6vu60UP4MmxmnLC5AF1DIm5v5f14lbv4kFpBcE/RX6Kym89G43rci5mG5LbJlR
- IHK96EWw/6g==
+References: <20190508145600.GA26843@centauri> <CAHLCerN8L4np0WAY4hTjTnPXFtTK6EH0BXWLXzB-NiRaAnvcDA@mail.gmail.com>
+ <20190510091158.GA10284@e107155-lin> <CAHLCerM83weBBvwurU45d9_M0Wg49WjDFTRJ6KL8vj7cavz03g@mail.gmail.com>
+ <20190513094935.GA4885@e107155-lin>
+In-Reply-To: <20190513094935.GA4885@e107155-lin>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Wed, 15 May 2019 15:26:14 +0530
+Message-ID: <CAHLCerM6SVCx5vdrodh+O5nQ0uDwr7zpvOMxVYtreT9EFk22eg@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: qcs404: Add PSCI cpuidle support
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Niklas Cassel <niklas.cassel@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Lina Iyer <lina.iyer@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Thanks for such additional information. Is it represented in the softwa=
-re
->> documentation (besides the source code format)?
+On Mon, May 13, 2019 at 3:19 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
 >
-> It is not a concern of the user.
-
-I got interested in corresponding aspects.
-
-
-> The documentation is not going to contain a description of every line
-> in the implementation.
-
-Some extensions can become nice and more helpful there.
-
-
->> How do you think about to increase the matching granularity
->> for this functionality?
+> On Fri, May 10, 2019 at 11:58:40PM +0530, Amit Kucheria wrote:
+> > On Fri, May 10, 2019 at 2:54 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > >
 >
-> No idea what this means.  Disjunctions are expanded up to the level of t=
-he
-> nodes in the control-flow graph.
+> [...]
+>
+> > >
+> > > Yes entry-method="psci" is required as per DT binding but not checked
+> > > in code on arm64. We have CPU ops with idle enabled only for "psci", so
+> > > there's not need to check.
+> >
+> > I don't see it being checked on arm32 either.
+> >
+>
+> arm_cpuidle_get_ops in arch/arm/kernel/cpuidle.c checks the method, has
+> to match "psci" for drivers/firmware/psci.c to work on arm32
 
-We have got different expectations for working with such nodes
-for possible (data flow) analysis.
+That is a check for the enable-method, not entry-method.
 
-Does the term =E2=80=9Cdisjunction lifting=E2=80=9D (from the SmPL manual)=
- fit to this feedback?
+We don't check for entry-method anywhere, AFAICT.
+
+> [...]
+>
+> > >
+> > > Why do you want to deprecated just because Linux kernel doesn't want to
+> > > use it. That's not a valid reason IMO.
+> >
+> > Fair enough. Just want to make sure that it isn't some vestigial
+> > property that was never used. Do you know if another OS is actually
+> > using it?
+> >
+>
+> Not that I am aware of. But Linux uses it on arm32, so it's not entirely
+> unused.
+
+entry-method is not read in Linux code (see above).
+
+> > > > Do we expect to support PSCI platforms that might have a different
+> > > > entry-method for idle states?
+> > >
+> > > Not on ARM64, but same DT bindings can be used for idle-states on
+> > > say RISC-V and have some value other than "psci".
+> >
+> > Both enable-method and entry-method properties are currently only used
+> > (and documented) for ARM platforms. Hence this discussion about
+> > deprecation of one of them.
+> >
+>
+> Yes, it's used on arm32 as mentioned above.
+
+Only enable-method is checked.
+
+> > > > Should I whip up a patch removing entry-method? Since we don't check
+> > > > for it today, it won't break the old DTs either.
+> > > >
+> > >
+> > > Nope, I don't think so. But if it's causing issues, we can look into it.
+> > > I don't want to restrict the use of the bindings for ARM/ARM64 or psci only.
+> >
+> > Only a couple of minor issues:
+> > 1. There is a trickle of DTs that need fixing up every now and then
+> > because they don't use entry-method in their idle-states node. Schema
+> > validation ought to fix that.
+>
+> I understand, scheme should fix it. This is not just restricted to this,
+> it's generic DT problem. So let's hope we get schema based validation soon.
+>
+> > 2. A property that isn't ready by any code is a bit confusing. Perhaps
+> > we can mention something to the effect in the documentation?
+> >
+>
+> Not entirely true. We have quite a lot of bindings that are added just
+> because downstream drivers use e.g. GPU and even standard ePAPR or DT
+> specification has lots of bindings which OS like Linux may choose
+> not to use at all. Same applies to ACPI, so I am not for removing bindings
+> just because there are no users in Linux.
+
+That is a fair point. But in those cases, the binding is probably used
+by another OS. entry-method seems to an example of one that isn't used
+by Linux or other OSes.
 
 Regards,
-Markus
+Amit
