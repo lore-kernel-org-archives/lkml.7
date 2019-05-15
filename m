@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70B2C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B5EC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6A212166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 542632168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918550;
-	bh=1kexB2qvD/yjk4SFQMSZthPfg2WJUPfKz/FX0UumkwE=;
+	s=default; t=1557918553;
+	bh=3tTToVMbBpi0ISrfmPxLmKYgdeJv4JBFyjYHrx1Luew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nn4fn+bQHpQC39Hpzb8LCRn1eWDESuQjfYc2XNqPKuqZ7ZlM2Ukcp2CT6suFRoo/z
-	 f07mLgKOQ1YcPcNiS1MqEGGrXK081H5ZkI3sr5/Lsel1oHvg0MmV4FTWmWjA4k+eI9
-	 c8ceiLR6aP2YT71BU9rLoPNWW9c7rfHYApnXLL9E=
+	b=Nd4IKIxBEtH12m2qW3W2FB+7jffREaT54bHzxk7MAfmV+E48vQnzpkOj0/wFiZbZq
+	 VlwA2eim1Q2SURr/hbuTvIXkZg/0rm5zxg175CrRc1oPaFEMQ5/2VNxcDCIStzPB1/
+	 tnc/KQD7p4Lt7aXEiiTllAxgn1DS9hyvM2QXI7h8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729201AbfEOLJJ (ORCPT
+        id S1729215AbfEOLJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:09:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41798 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:09:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729195AbfEOLJG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:09:06 -0400
+        id S1726659AbfEOLJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:09:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDA7020644;
-        Wed, 15 May 2019 11:09:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7FFB12084F;
+        Wed, 15 May 2019 11:09:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918545;
-        bh=1kexB2qvD/yjk4SFQMSZthPfg2WJUPfKz/FX0UumkwE=;
+        s=default; t=1557918548;
+        bh=3tTToVMbBpi0ISrfmPxLmKYgdeJv4JBFyjYHrx1Luew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w4DOR6+qV6m5OTBhB6ywnC6LWLT/EV4GUVBZytnOfb+2nWMccfae9KsrmJYq3UTxo
-         zLv+MvYJ+fQAZoQ1pTndZ7pvQhCK4F+ZkxJqnn6SMplk/kHKoF4SYC5oGeZkq1/OmQ
-         YyIS7f/hKJtfrk/QYV3/1zJ4briepLJ+GjD/X+ds=
+        b=R3O0tyNp7wBaSF46HWAh/vzem4OhJ8x+yzeKMBW789zo3K6zpOgcjYT8LtEQ6aeN0
+         JhPGqaVb6FKWp5S1UM0DvP92CA+DXy0os5BqgIOZuab7N4ChUNP/UUEj5HauHWaRBt
+         bfATrutxmzkC/sR7ZBKpqJ9t72xdUAFo96bvJmm4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>
-Subject: [PATCH 4.4 174/266] gpu: ipu-v3: dp: fix CSC handling
-Date:   Wed, 15 May 2019 12:54:41 +0200
-Message-Id: <20190515090728.808735282@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH 4.4 175/266] cw1200: fix missing unlock on error in cw1200_hw_scan()
+Date:   Wed, 15 May 2019 12:54:42 +0200
+Message-Id: <20190515090728.842670128@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,64 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d4fad0a426c6e26f48c9a7cdd21a7fe9c198d645 ]
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-Initialize the flow input colorspaces to unknown and reset to that value
-when the channel gets disabled. This avoids the state getting mixed up
-with a previous mode.
+commit 51c8d24101c79ffce3e79137e2cee5dfeb956dd7 upstream.
 
-Also keep the CSC settings for the background flow intact when disabling
-the foreground flow.
+Add the missing unlock before return from function cw1200_hw_scan()
+in the error handling case.
 
-Root-caused-by: Jonathan Marek <jonathan@marek.ca>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 4f68ef64cd7f ("cw1200: Fix concurrency use-after-free bugs in cw1200_hw_scan()")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Acked-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+[iwamatsu: Change the patching file from drivers/net/wireless/st/cw1200/scan.c to
+drivers/net/wireless/cw1200/scan.c]
+Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/ipu-v3/ipu-dp.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/net/wireless/cw1200/scan.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/gpu/ipu-v3/ipu-dp.c
-+++ b/drivers/gpu/ipu-v3/ipu-dp.c
-@@ -195,7 +195,8 @@ int ipu_dp_setup_channel(struct ipu_dp *
- 		ipu_dp_csc_init(flow, flow->foreground.in_cs, flow->out_cs,
- 				DP_COM_CONF_CSC_DEF_BOTH);
- 	} else {
--		if (flow->foreground.in_cs == flow->out_cs)
-+		if (flow->foreground.in_cs == IPUV3_COLORSPACE_UNKNOWN ||
-+		    flow->foreground.in_cs == flow->out_cs)
- 			/*
- 			 * foreground identical to output, apply color
- 			 * conversion on background
-@@ -261,6 +262,8 @@ void ipu_dp_disable_channel(struct ipu_d
- 	struct ipu_dp_priv *priv = flow->priv;
- 	u32 reg, csc;
+--- a/drivers/net/wireless/cw1200/scan.c
++++ b/drivers/net/wireless/cw1200/scan.c
+@@ -84,8 +84,11 @@ int cw1200_hw_scan(struct ieee80211_hw *
  
-+	dp->in_cs = IPUV3_COLORSPACE_UNKNOWN;
-+
- 	if (!dp->foreground)
- 		return;
+ 	frame.skb = ieee80211_probereq_get(hw, priv->vif->addr, NULL, 0,
+ 		req->ie_len);
+-	if (!frame.skb)
++	if (!frame.skb) {
++		mutex_unlock(&priv->conf_mutex);
++		up(&priv->scan.lock);
+ 		return -ENOMEM;
++	}
  
-@@ -268,8 +271,9 @@ void ipu_dp_disable_channel(struct ipu_d
- 
- 	reg = readl(flow->base + DP_COM_CONF);
- 	csc = reg & DP_COM_CONF_CSC_DEF_MASK;
--	if (csc == DP_COM_CONF_CSC_DEF_FG)
--		reg &= ~DP_COM_CONF_CSC_DEF_MASK;
-+	reg &= ~DP_COM_CONF_CSC_DEF_MASK;
-+	if (csc == DP_COM_CONF_CSC_DEF_BOTH || csc == DP_COM_CONF_CSC_DEF_BG)
-+		reg |= DP_COM_CONF_CSC_DEF_BG;
- 
- 	reg &= ~DP_COM_CONF_FG_EN;
- 	writel(reg, flow->base + DP_COM_CONF);
-@@ -350,6 +354,8 @@ int ipu_dp_init(struct ipu_soc *ipu, str
- 	mutex_init(&priv->mutex);
- 
- 	for (i = 0; i < IPUV3_NUM_FLOWS; i++) {
-+		priv->flow[i].background.in_cs = IPUV3_COLORSPACE_UNKNOWN;
-+		priv->flow[i].foreground.in_cs = IPUV3_COLORSPACE_UNKNOWN;
- 		priv->flow[i].foreground.foreground = true;
- 		priv->flow[i].base = priv->base + ipu_dp_flow_base[i];
- 		priv->flow[i].priv = priv;
+ 	if (req->ie_len)
+ 		memcpy(skb_put(frame.skb, req->ie_len), req->ie, req->ie_len);
 
 
