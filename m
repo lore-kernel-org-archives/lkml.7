@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837AEC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48D6BC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D80A2166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD9D2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918000;
-	bh=U6Bp83rZEA3A0LWqKlMu1ABFw8HuaGPcepcGWNLBXRo=;
+	s=default; t=1557918002;
+	bh=1FA4MIz3CQzJCCADgU/KVoD/cf8oj05WHxeaSFbTaBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JaYNYOKvZEpV/VY1EcpeuopipQQASnBcOkbfHBvw4De+eOi3ZkNw8tgocH5u5YMKl
-	 GupR8R6Krd8FXIRWURQlgGpnvD2PdMHB71MS1EqPKhS991GXXSV2TJzf0vdlJ+9ZXp
-	 LRkzVb2GzzZltFVOYhbo0bmibqkarHJu/CRe3HFs=
+	b=mCPcjyMvpi4QA3agX2YoX/2npVKMV561JrjlJkjR3dPJ7crI6kqQQBfzz9oj4B3hW
+	 y+1Sccm+cAr/6rXeG6x46VwLZogRJiWJQmJZ9zlVZtGhn6c3Olh9lNRwpkkD4VXyWZ
+	 7NKkPlCiWMmrbb09us/WCc/0ZN81XjBHVU7aHwk0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfEOK76 (ORCPT
+        id S1727329AbfEOLAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:59:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56624 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:00:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727294AbfEOK74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:59:56 -0400
+        id S1727316AbfEOK77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:59:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C15AF2084E;
-        Wed, 15 May 2019 10:59:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65AE32084E;
+        Wed, 15 May 2019 10:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557917996;
-        bh=U6Bp83rZEA3A0LWqKlMu1ABFw8HuaGPcepcGWNLBXRo=;
+        s=default; t=1557917998;
+        bh=1FA4MIz3CQzJCCADgU/KVoD/cf8oj05WHxeaSFbTaBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mAV2nCsYM+FIPoPiH90QlOQdAveT1jfcSSpMFTbJghwj8CPZ6XNR2AZGvYt4KAEyi
-         VsCAAoNdNyZ8S1CfO1WDyVTb+BcKYqwL6q0xN2RFBv1kZtdQhURUSImBpBwsfrb4ki
-         LUOJv4TZsptOJ2I5ET4iz+JKBQmZW8gzTLeQL/Fc=
+        b=GKjHXcjFYwrd64efV+1PLrwH+P77ys95dNdTP6YXeN86wCDsC6yOLDZHpGn4FBEwR
+         dCGj4+OPD3AFG8hmXekMEjeMU2JepacCtNTGWrv5U0Oyy6pj/si8h6z4pT+V5WqGdG
+         xfhhBVwI5SdpU8+LJWbvJIf+u0HE2EOoT+jlH2mo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rander Wang <rander.wang@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        stable@vger.kernel.org, Daniel Mack <daniel@zonque.org>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 53/86] ASoC:soc-pcm:fix a codec fixup issue in TDM case
-Date:   Wed, 15 May 2019 12:55:30 +0200
-Message-Id: <20190515090652.846957745@linuxfoundation.org>
+Subject: [PATCH 3.18 54/86] ASoC: cs4270: Set auto-increment bit for register writes
+Date:   Wed, 15 May 2019 12:55:31 +0200
+Message-Id: <20190515090653.006917756@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -61,60 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 570f18b6a8d1f0e60e8caf30e66161b6438dcc91 ]
+[ Upstream commit f0f2338a9cfaf71db895fa989ea7234e8a9b471d ]
 
-On HDaudio platforms, if playback is started when capture is working,
-there is no audible output.
+The CS4270 does not by default increment the register address on
+consecutive writes. During normal operation it doesn't matter as all
+register accesses are done individually. At resume time after suspend,
+however, the regcache code gathers the biggest possible block of
+registers to sync and sends them one on one go.
 
-This can be root-caused to the use of the rx|tx_mask to store an HDaudio
-stream tag.
+To fix this, set the INCR bit in all cases.
 
-If capture is stared before playback, rx_mask would be non-zero on HDaudio
-platform, then the channel number of playback, which is in the same codec
-dai with the capture, would be changed by soc_pcm_codec_params_fixup based
-on the tx_mask at first, then overwritten by this function based on rx_mask
-at last.
-
-According to the author of tx|rx_mask, tx_mask is for playback and rx_mask
-is for capture. And stream direction is checked at all other references of
-tx|rx_mask in ASoC, so here should be an error. This patch checks stream
-direction for tx|rx_mask for fixup function.
-
-This issue would affect not only HDaudio+ASoC, but also I2S codecs if the
-channel number based on rx_mask is not equal to the one for tx_mask. It could
-be rarely reproduecd because most drivers in kernel set the same channel number
-to tx|rx_mask or rx_mask is zero.
-
-Tested on all platforms using stream_tag & HDaudio and intel I2S platforms.
-
-Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Daniel Mack <daniel@zonque.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-pcm.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ sound/soc/codecs/cs4270.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index e2fb859fbbaa1..4323002c67db2 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -847,10 +847,13 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
- 		codec_params = *params;
+diff --git a/sound/soc/codecs/cs4270.c b/sound/soc/codecs/cs4270.c
+index 736c1ea8e31e2..756796c064136 100644
+--- a/sound/soc/codecs/cs4270.c
++++ b/sound/soc/codecs/cs4270.c
+@@ -641,6 +641,7 @@ static const struct regmap_config cs4270_regmap = {
+ 	.reg_defaults =		cs4270_reg_defaults,
+ 	.num_reg_defaults =	ARRAY_SIZE(cs4270_reg_defaults),
+ 	.cache_type =		REGCACHE_RBTREE,
++	.write_flag_mask =	CS4270_I2C_INCR,
  
- 		/* fixup params based on TDM slot masks */
--		if (codec_dai->tx_mask)
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK &&
-+		    codec_dai->tx_mask)
- 			soc_pcm_codec_params_fixup(&codec_params,
- 						   codec_dai->tx_mask);
--		if (codec_dai->rx_mask)
-+
-+		if (substream->stream == SNDRV_PCM_STREAM_CAPTURE &&
-+		    codec_dai->rx_mask)
- 			soc_pcm_codec_params_fixup(&codec_params,
- 						   codec_dai->rx_mask);
- 
+ 	.readable_reg =		cs4270_reg_is_readable,
+ 	.volatile_reg =		cs4270_reg_is_volatile,
 -- 
 2.20.1
 
