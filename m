@@ -2,142 +2,255 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720B7C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC22C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 421042084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919557;
-	bh=l7/n2XgY1ZmonL/M/UKNWFycU9KwoYb8lUrCnxslxY0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dbh5YQDqJBQayHZvWRLQggN2KgidIsCUJtlqK2hVwQJRbRyuhOrtP630/4RuiGyp3
-	 3uzGTklo3o1vIZMJnIIin3ydkfqwt0LDozN8/M+1AcWQVja0+w9tcYDMAlT6rM/rqg
-	 1iPli/I2tytvE+p1VFQ/PlDKezFNmzeSV7w+ESfM=
+	by mail.kernel.org (Postfix) with ESMTP id 698AC2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732077AbfEOLZ4 (ORCPT
+        id S1732097AbfEOL0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:25:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36678 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:26:00 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:51932 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732060AbfEOLZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:25:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 327832084F;
-        Wed, 15 May 2019 11:25:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919551;
-        bh=l7/n2XgY1ZmonL/M/UKNWFycU9KwoYb8lUrCnxslxY0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jOs1bejGnlhVr9M1/BU+LcmgGt9QeyYZNHEMYEjPvzrRttApj3CmPTxTYjo2XYoim
-         AtuHmf2BrGGG4JPUS9clzyz3DDjW2BWSAcXky9OKeCoNjJz2W3wkP+SGiy84JhUp2l
-         rJ5G2Z6t2t556Wq5QPMben9SVqB1zUSjore8i4fk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 093/113] net: dsa: Fix error cleanup path in dsa_init_module
-Date:   Wed, 15 May 2019 12:56:24 +0200
-Message-Id: <20190515090700.674787925@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
-References: <20190515090652.640988966@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1732065AbfEOLZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:25:55 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 07262200114;
+        Wed, 15 May 2019 13:25:53 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ED6B62000D3;
+        Wed, 15 May 2019 13:25:52 +0200 (CEST)
+Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id A26FD205F4;
+        Wed, 15 May 2019 13:25:52 +0200 (CEST)
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx <linux-imx@nxp.com>
+Subject: [PATCH v2 1/2] crypto: caam - fix pkcs1pad(rsa-caam, sha256) failure because of invalid input
+Date:   Wed, 15 May 2019 14:25:45 +0300
+Message-Id: <1557919546-360-1-git-send-email-iuliana.prodan@nxp.com>
+X-Mailer: git-send-email 2.1.0
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+The problem is with the input data size sent to CAAM for encrypt/decrypt.
+Pkcs1pad is failing due to pkcs1 padding done in SW starting with0x01
+instead of 0x00 0x01.
+CAAM expects an input of modulus size. For this we strip the leading
+zeros in case the size is more than modulus or pad the input with zeros
+until the modulus size is reached.
 
-[ Upstream commit 68be930249d051fd54d3d99156b3dcadcb2a1f9b ]
-
-BUG: unable to handle kernel paging request at ffffffffa01c5430
-PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bc5067 PTE 0
-Oops: 0000 [#1
-CPU: 0 PID: 6159 Comm: modprobe Not tainted 5.1.0+ #33
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:raw_notifier_chain_register+0x16/0x40
-Code: 63 f8 66 90 e9 5d ff ff ff 90 90 90 90 90 90 90 90 90 90 90 55 48 8b 07 48 89 e5 48 85 c0 74 1c 8b 56 10 3b 50 10 7e 07 eb 12 <39> 50 10 7c 0d 48 8d 78 08 48 8b 40 08 48 85 c0 75 ee 48 89 46 08
-RSP: 0018:ffffc90001c33c08 EFLAGS: 00010282
-RAX: ffffffffa01c5420 RBX: ffffffffa01db420 RCX: 4fcef45928070a8b
-RDX: 0000000000000000 RSI: ffffffffa01db420 RDI: ffffffffa01b0068
-RBP: ffffc90001c33c08 R08: 000000003e0a33d0 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000094443661 R12: ffff88822c320700
-R13: ffff88823109be80 R14: 0000000000000000 R15: ffffc90001c33e78
-FS:  00007fab8bd08540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffa01c5430 CR3: 00000002297ea000 CR4: 00000000000006f0
-Call Trace:
- register_netdevice_notifier+0x43/0x250
- ? 0xffffffffa01e0000
- dsa_slave_register_notifier+0x13/0x70 [dsa_core
- ? 0xffffffffa01e0000
- dsa_init_module+0x2e/0x1000 [dsa_core
- do_one_initcall+0x6c/0x3cc
- ? do_init_module+0x22/0x1f1
- ? rcu_read_lock_sched_held+0x97/0xb0
- ? kmem_cache_alloc_trace+0x325/0x3b0
- do_init_module+0x5b/0x1f1
- load_module+0x1db1/0x2690
- ? m_show+0x1d0/0x1d0
- __do_sys_finit_module+0xc5/0xd0
- __x64_sys_finit_module+0x15/0x20
- do_syscall_64+0x6b/0x1d0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Cleanup allocated resourses if there are errors,
-otherwise it will trgger memleak.
-
-Fixes: c9eb3e0f8701 ("net: dsa: Add support for learning FDB through notification")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
 ---
- net/dsa/dsa.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+Changes since V1:
+	- remove not needed initialization of a variable;
+	- free resources on error path.
+---
+ drivers/crypto/caam/caampkc.c | 84 +++++++++++++++++++++++++++++++++++--------
+ drivers/crypto/caam/caampkc.h |  2 ++
+ 2 files changed, 72 insertions(+), 14 deletions(-)
 
---- a/net/dsa/dsa.c
-+++ b/net/dsa/dsa.c
-@@ -293,15 +293,22 @@ static int __init dsa_init_module(void)
- 
- 	rc = dsa_slave_register_notifier();
- 	if (rc)
--		return rc;
-+		goto register_notifier_fail;
- 
- 	rc = dsa_legacy_register();
- 	if (rc)
--		return rc;
-+		goto legacy_register_fail;
- 
- 	dev_add_pack(&dsa_pack_type);
- 
- 	return 0;
+diff --git a/drivers/crypto/caam/caampkc.c b/drivers/crypto/caam/caampkc.c
+index fe24485..e356413 100644
+--- a/drivers/crypto/caam/caampkc.c
++++ b/drivers/crypto/caam/caampkc.c
+@@ -24,6 +24,10 @@
+ 				 sizeof(struct rsa_priv_f2_pdb))
+ #define DESC_RSA_PRIV_F3_LEN	(2 * CAAM_CMD_SZ + \
+ 				 sizeof(struct rsa_priv_f3_pdb))
++#define CAAM_RSA_MAX_INPUT_SIZE	512 /* for a 4096-bit modulus */
 +
-+legacy_register_fail:
-+	dsa_slave_unregister_notifier();
-+register_notifier_fail:
-+	destroy_workqueue(dsa_owq);
-+
-+	return rc;
++/* buffer filled with zeros, used for padding */
++static u8 *zero_buffer;
+ 
+ static void rsa_io_unmap(struct device *dev, struct rsa_edesc *edesc,
+ 			 struct akcipher_request *req)
+@@ -168,6 +172,13 @@ static void rsa_priv_f3_done(struct device *dev, u32 *desc, u32 err,
+ 	akcipher_request_complete(req, err);
  }
- module_init(dsa_init_module);
  
-
++/**
++ * Count leading zeros, need it to strip, from a given scatterlist
++ *
++ * @sgl   : scatterlist to count zeros from
++ * @nbytes: number of zeros, in bytes, to strip
++ * @flags : operation flags
++ */
+ static int caam_rsa_count_leading_zeros(struct scatterlist *sgl,
+ 					unsigned int nbytes,
+ 					unsigned int flags)
+@@ -187,7 +198,8 @@ static int caam_rsa_count_leading_zeros(struct scatterlist *sgl,
+ 	lzeros = 0;
+ 	len = 0;
+ 	while (nbytes > 0) {
+-		while (len && !*buff) {
++		/* do not strip more than given bytes */
++		while (len && !*buff && lzeros < nbytes) {
+ 			lzeros++;
+ 			len--;
+ 			buff++;
+@@ -218,6 +230,7 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
+ 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+ 	struct device *dev = ctx->dev;
+ 	struct caam_rsa_req_ctx *req_ctx = akcipher_request_ctx(req);
++	struct caam_rsa_key *key = &ctx->key;
+ 	struct rsa_edesc *edesc;
+ 	gfp_t flags = (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
+ 		       GFP_KERNEL : GFP_ATOMIC;
+@@ -225,20 +238,37 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
+ 	int sgc;
+ 	int sec4_sg_index, sec4_sg_len = 0, sec4_sg_bytes;
+ 	int src_nents, dst_nents;
++	unsigned int diff_size = 0;
+ 	int lzeros;
+ 
+-	lzeros = caam_rsa_count_leading_zeros(req->src, req->src_len, sg_flags);
+-	if (lzeros < 0)
+-		return ERR_PTR(lzeros);
+-
+-	req->src_len -= lzeros;
+-	req->src = scatterwalk_ffwd(req_ctx->src, req->src, lzeros);
++	if (req->src_len > key->n_sz) {
++		/*
++		 * strip leading zeros and
++		 * return the number of zeros to skip
++		 */
++		lzeros = caam_rsa_count_leading_zeros(req->src, req->src_len -
++						      key->n_sz, sg_flags);
++		if (lzeros < 0)
++			return ERR_PTR(lzeros);
++
++		req->src_len -= lzeros;
++		req->src = scatterwalk_ffwd(req_ctx->src, req->src, lzeros);
++	} else {
++		/*
++		 * input src is less then n key modulus,
++		 * so there will be zero padding
++		 */
++		diff_size = key->n_sz - req->src_len;
++	}
+ 
+ 	src_nents = sg_nents_for_len(req->src, req->src_len);
+ 	dst_nents = sg_nents_for_len(req->dst, req->dst_len);
+ 
+-	if (src_nents > 1)
+-		sec4_sg_len = src_nents;
++	if (!diff_size && src_nents == 1)
++		sec4_sg_len = 0; /* no need for an input hw s/g table */
++	else
++		sec4_sg_len = src_nents + !!diff_size;
++	sec4_sg_index = sec4_sg_len;
+ 	if (dst_nents > 1)
+ 		sec4_sg_len += dst_nents;
+ 
+@@ -263,12 +293,14 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
+ 	}
+ 
+ 	edesc->sec4_sg = (void *)edesc + sizeof(*edesc) + desclen;
++	if (diff_size)
++		dma_to_sec4_sg_one(edesc->sec4_sg, ctx->padding_dma, diff_size,
++				   0);
++
++	if (sec4_sg_index)
++		sg_to_sec4_sg_last(req->src, src_nents, edesc->sec4_sg +
++				   !!diff_size, 0);
+ 
+-	sec4_sg_index = 0;
+-	if (src_nents > 1) {
+-		sg_to_sec4_sg_last(req->src, src_nents, edesc->sec4_sg, 0);
+-		sec4_sg_index += src_nents;
+-	}
+ 	if (dst_nents > 1)
+ 		sg_to_sec4_sg_last(req->dst, dst_nents,
+ 				   edesc->sec4_sg + sec4_sg_index, 0);
+@@ -289,6 +321,10 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
+ 
+ 	edesc->sec4_sg_bytes = sec4_sg_bytes;
+ 
++	print_hex_dump_debug("caampkc sec4_sg@" __stringify(__LINE__) ": ",
++			     DUMP_PREFIX_ADDRESS, 16, 4, edesc->sec4_sg,
++			     edesc->sec4_sg_bytes, 1);
++
+ 	return edesc;
+ 
+ sec4_sg_fail:
+@@ -978,6 +1014,15 @@ static int caam_rsa_init_tfm(struct crypto_akcipher *tfm)
+ 		return PTR_ERR(ctx->dev);
+ 	}
+ 
++	ctx->padding_dma = dma_map_single(ctx->dev, zero_buffer,
++					  CAAM_RSA_MAX_INPUT_SIZE - 1,
++					  DMA_TO_DEVICE);
++	if (dma_mapping_error(ctx->dev, ctx->padding_dma)) {
++		dev_err(ctx->dev, "unable to map padding\n");
++		caam_jr_free(ctx->dev);
++		return -ENOMEM;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -987,6 +1032,8 @@ static void caam_rsa_exit_tfm(struct crypto_akcipher *tfm)
+ 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
+ 	struct caam_rsa_key *key = &ctx->key;
+ 
++	dma_unmap_single(ctx->dev, ctx->padding_dma, CAAM_RSA_MAX_INPUT_SIZE -
++			 1, DMA_TO_DEVICE);
+ 	caam_rsa_free_key(key);
+ 	caam_jr_free(ctx->dev);
+ }
+@@ -1058,6 +1105,14 @@ static int __init caam_pkc_init(void)
+ 		goto out_put_dev;
+ 	}
+ 
++	/* allocate zero buffer, used for padding input */
++	zero_buffer = kzalloc(CAAM_RSA_MAX_INPUT_SIZE - 1, GFP_DMA |
++			      GFP_KERNEL);
++	if (!zero_buffer) {
++		err = -ENOMEM;
++		goto out_put_dev;
++	}
++
+ 	err = crypto_register_akcipher(&caam_rsa);
+ 	if (err)
+ 		dev_warn(ctrldev, "%s alg registration failed\n",
+@@ -1072,6 +1127,7 @@ static int __init caam_pkc_init(void)
+ 
+ static void __exit caam_pkc_exit(void)
+ {
++	kfree(zero_buffer);
+ 	crypto_unregister_akcipher(&caam_rsa);
+ }
+ 
+diff --git a/drivers/crypto/caam/caampkc.h b/drivers/crypto/caam/caampkc.h
+index 82645bc..5ac7201 100644
+--- a/drivers/crypto/caam/caampkc.h
++++ b/drivers/crypto/caam/caampkc.h
+@@ -89,10 +89,12 @@ struct caam_rsa_key {
+  * caam_rsa_ctx - per session context.
+  * @key         : RSA key in DMA zone
+  * @dev         : device structure
++ * @padding_dma : dma address of padding, for adding it to the input
+  */
+ struct caam_rsa_ctx {
+ 	struct caam_rsa_key key;
+ 	struct device *dev;
++	dma_addr_t padding_dma;
+ };
+ 
+ /**
+-- 
+2.1.0
 
