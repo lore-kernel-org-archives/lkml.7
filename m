@@ -2,168 +2,443 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 898E8C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 20:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49967C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 20:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C82C2070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 20:35:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557952530;
-	bh=lonIHOL7Ap+kfl9T5uZ3da9vJ8adxkY6vHSVJzCp+ZQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zCn/EmqXElLjpZbuowhq4pqhPbrSSEDhYhF8xinQwFU57Ffw8K1tzfPxCCDW9WsqW
-	 01jWBIhz9cVl6U1kUS3ij6u6f6Y4LRWCVQlFrn1XC3Y/Vx0AD7hsSzIsBxyJKDy6bF
-	 9KyOcXVNFJMHnyzl23ZG20M6mCvIzd6I89cPm1Bs=
+	by mail.kernel.org (Postfix) with ESMTP id E74EC20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 20:42:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="K1pnP90o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfEOUf3 (ORCPT
+        id S1727658AbfEOUmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 16:35:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726465AbfEOUf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 16:35:28 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9921320881
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 20:35:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557952527;
-        bh=lonIHOL7Ap+kfl9T5uZ3da9vJ8adxkY6vHSVJzCp+ZQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rhEbFWklK8KJ4407LJXZUaExo8eNRQRVUMQHO/r11MhK37vDC9cxpqYZdL7tugr9d
-         0PKfHGeZGnMSwnFej4wSGmrgcl1xL2U9xpVQFsRZsFy/uwghLUeMTGBpOR1UMat2zm
-         tw9SS3E9F5zNAOrF8Bxw4l7Yv6tlxNlmDZo1jD5U=
-Received: by mail-wr1-f50.google.com with SMTP id g12so629778wro.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 13:35:27 -0700 (PDT)
-X-Gm-Message-State: APjAAAXqwjv8+TYQjOXfGw9dvvyUjhUBy2/oWEDPkTEf7huXuvvvE/E8
-        YOnhXhR9aTd0jD6tsb8xqWvQ3UY5VK91pRyw+Qoj2w==
-X-Google-Smtp-Source: APXvYqy8ElLQiZWZBdNYQb+QMBcNXMeyfSb7qt7WK7UozAoZUQdnF5nB0ZLitp/BruUmurMT7qwYd0XN/O4CcJ+S/Rc=
-X-Received: by 2002:a5d:4907:: with SMTP id x7mr15080115wrq.199.1557952526190;
- Wed, 15 May 2019 13:35:26 -0700 (PDT)
+        Wed, 15 May 2019 16:42:14 -0400
+Received: from mail-eopbgr70087.outbound.protection.outlook.com ([40.107.7.87]:28964
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726170AbfEOUmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 16:42:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HAy24jPk9YR4V6Gp1/rNVn6EEKK1Ds+JTzcgx12BvCM=;
+ b=K1pnP90om1vKG7SljoXyVtoZRKqAwrD7AdCN6QC9Xt1d7rzpxWrGvHeiRC5WoBHk+IPtv4dTrI30AAY3cHxu3jj31m5bAe8IYlvjzSw05ge7jNweCMa61BWVMAZqYdoV31hPxjr8uJ5wNgpy+k8giNVLLjzKxWpbFPM/tPkfPns=
+Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com (10.169.134.149) by
+ VI1SPR00MB2490.eurprd05.prod.outlook.com (10.175.186.150) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.25; Wed, 15 May 2019 20:42:03 +0000
+Received: from VI1PR0501MB2271.eurprd05.prod.outlook.com
+ ([fe80::8810:9799:ab77:9494]) by VI1PR0501MB2271.eurprd05.prod.outlook.com
+ ([fe80::8810:9799:ab77:9494%2]) with mapi id 15.20.1900.010; Wed, 15 May 2019
+ 20:42:03 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+CC:     Cornelia Huck <cohuck@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Subject: RE: [PATCHv2 08/10] vfio/mdev: Improve the create/remove sequence
+Thread-Topic: [PATCHv2 08/10] vfio/mdev: Improve the create/remove sequence
+Thread-Index: AQHU/6cMznXkHMKRl0CFAIkpWMX/sqZhgmuAgABOd4CAALynAIAAkxbwgAgGLjCAACBbgIABdm1A
+Date:   Wed, 15 May 2019 20:42:03 +0000
+Message-ID: <VI1PR0501MB2271D762C8AC10BBC09AE857D1090@VI1PR0501MB2271.eurprd05.prod.outlook.com>
+References: <20190430224937.57156-1-parav@mellanox.com>
+        <20190430224937.57156-9-parav@mellanox.com>
+        <20190508190957.673dd948.cohuck@redhat.com>
+        <VI1PR0501MB2271CFAFF2ACF145FDFD8E2ED1320@VI1PR0501MB2271.eurprd05.prod.outlook.com>
+        <20190509110600.5354463c.cohuck@redhat.com>
+        <VI1PR0501MB2271DD5EE143784B9F94D446D1330@VI1PR0501MB2271.eurprd05.prod.outlook.com>
+        <VI1PR0501MB227132A392D9CA41792AC44BD1080@VI1PR0501MB2271.eurprd05.prod.outlook.com>
+ <20190514162027.55710507@x1.home>
+In-Reply-To: <20190514162027.55710507@x1.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [208.176.44.194]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0593eec7-7727-4a40-3715-08d6d975c9b4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1SPR00MB2490;
+x-ms-traffictypediagnostic: VI1SPR00MB2490:
+x-microsoft-antispam-prvs: <VI1SPR00MB2490AFFB40FACD6B893905A1D1090@VI1SPR00MB2490.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:163;
+x-forefront-prvs: 0038DE95A2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(376002)(136003)(39860400002)(396003)(51444003)(199004)(189003)(13464003)(14444005)(14454004)(53936002)(256004)(66066001)(8936002)(476003)(316002)(68736007)(486006)(86362001)(25786009)(6916009)(11346002)(81166006)(2906002)(5660300002)(71190400001)(71200400001)(6436002)(26005)(229853002)(81156014)(66946007)(4326008)(6116002)(3846002)(55016002)(6506007)(64756008)(53546011)(73956011)(102836004)(66446008)(66476007)(305945005)(7736002)(30864003)(52536014)(54906003)(9686003)(186003)(8676002)(508600001)(74316002)(66556008)(99286004)(76116006)(7696005)(33656002)(6246003)(446003)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1SPR00MB2490;H:VI1PR0501MB2271.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: negbg/ZLu4aYkr1dATwg9oLXk4fETOouZKHyDPmmQVcPcc8h9uPQlTGmZKZvGhuC0iVnK5rjxcdauViYxY2eiuMhpapgGU1Fg+zvt8BJbhDwX3/Tqo+kd/h5JlWTXRUNTnk7m1JPGWfpa4dHK7IGi6uUY0i8W29ratqAX5oDr55M93xpBSY9OLJbk9Yp1MBkILAryB6Trpxo1rH+GZ9XzxAlQ3WcMsNUbTpucufJ6xloed8ccfX8YcrwaKBoDOy1wJqWtQqCi4rmIx3QPN3P1dkW17fCde//ctfSRtLKt/w/sQfzcB2ttyqM1Jp5dk7yduk0/SYEKRNcPno/1kfJq/2P4J2GiTiXpwL4LchQZo1uqhNCCVCPnwv7/TFw9/fd6/EgJhQA/y/SrqEPrufHHIG6005IrY3QuLyd976jWyI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
- <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com> <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
- <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com> <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com> <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190514204527.GC1977@linux.intel.com> <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
- <20190515013031.GF1977@linux.intel.com> <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
- <alpine.LRH.2.21.1905160543070.19802@namei.org>
-In-Reply-To: <alpine.LRH.2.21.1905160543070.19802@namei.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 15 May 2019 13:35:14 -0700
-X-Gmail-Original-Message-ID: <CALCETrX_Q6qwNRNF0TL2tgfm1j6DKLX7NVHHmWbMFtk3WnHDKw@mail.gmail.com>
-Message-ID: <CALCETrX_Q6qwNRNF0TL2tgfm1j6DKLX7NVHHmWbMFtk3WnHDKw@mail.gmail.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-To:     James Morris <jmorris@namei.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0593eec7-7727-4a40-3715-08d6d975c9b4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 20:42:03.6054
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1SPR00MB2490
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 12:58 PM James Morris <jmorris@namei.org> wrote:
->
-> On Wed, 15 May 2019, Andy Lutomirski wrote:
->
-> > There are two issues with how this interacts with LSMs:
+
+
+> -----Original Message-----
+> From: Alex Williamson <alex.williamson@redhat.com>
+> Sent: Tuesday, May 14, 2019 5:20 PM
+> To: Parav Pandit <parav@mellanox.com>
+> Cc: Cornelia Huck <cohuck@redhat.com>; kvm@vger.kernel.org; linux-
+> kernel@vger.kernel.org; kwankhede@nvidia.com; cjia@nvidia.com; Tony
+> Krowiak <akrowiak@linux.ibm.com>; Pierre Morel <pmorel@linux.ibm.com>;
+> Halil Pasic <pasic@linux.ibm.com>
+> Subject: Re: [PATCHv2 08/10] vfio/mdev: Improve the create/remove
+> sequence
+>=20
+> On Tue, 14 May 2019 20:34:12 +0000
+> Parav Pandit <parav@mellanox.com> wrote:
+>=20
+> > Hi Alex, Cornelia,
 > >
-> > 1) LSMs might want to be able to whitelist, blacklist, or otherwise
-> > restrict what enclaves can run at all.  The current proposal that
-> > everyone seems to dislike the least is to have a .sigstruct file on
-> > disk that contains a hash and signature of the enclave in a
-> > CPU-defined format.  To initialize an enclave, a program will pass an
-> > fd to this file, and a new LSM hook can be called to allow or disallow
-> > the operation.  In a SELinux context, the idea is that policy could
-> > require the .sigstruct file to be labeled with a type like
-> > sgx_sigstruct_t, and only enclaves that have a matching .sigstruct
-> > with such a label could run.
->
->
-> The .sigstruct file is for the CPU to consume, not the kernel correct?
-
-Yes, unless an LSM wants to examine it to make a decision.
-
->
-> How is it bound to the enclave file?
-
-It's not bound to the enclave *file* at all, but it contains a hash
-that covers the enclave, so two different files in two different
-formats representing exactly the same enclave would get the same hash,
-but any change to the enclave would get a different hash.
-
->
-> Why not just use an xattr, like security.sgx ?
-
-Wouldn't this make it so that only someone with CAP_MAC_ADMIN could
-install an enclave?  I think that this decision should be left up the
-administrator, and it should be easy to set up a loose policy where
-anyone can load whatever enclave they want.  That's what would happen
-in my proposal if there was no LSM loaded or of the LSM policy didn't
-restrict what .sigstruct files were acceptable.
-
->
 > >
-> > 2) Just like any other DSO, there are potential issues with how
-> > enclaves deal with writable vs executable memory.  This takes two
-> > forms.  First, a task should probably require EXECMEM, EXECMOD, or
-> > similar permission to run an enclave that can modify its own text.
-> > Second, it would be nice if a task that did *not* have EXECMEM,
-> > EXECMOD, or similar could still run the enclave if it had EXECUTE
-> > permission on the file containing the enclave.
+> > > -----Original Message-----
+> > > From: linux-kernel-owner@vger.kernel.org <linux-kernel-
+> > > owner@vger.kernel.org> On Behalf Of Parav Pandit
+> > > Sent: Thursday, May 9, 2019 2:20 PM
+> > > To: Cornelia Huck <cohuck@redhat.com>
+> > > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > kwankhede@nvidia.com; alex.williamson@redhat.com; cjia@nvidia.com;
+> > > Tony Krowiak <akrowiak@linux.ibm.com>; Pierre Morel
+> > > <pmorel@linux.ibm.com>; Halil Pasic <pasic@linux.ibm.com>
+> > > Subject: RE: [PATCHv2 08/10] vfio/mdev: Improve the create/remove
+> > > sequence
+> > >
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Cornelia Huck <cohuck@redhat.com>
+> > > > Sent: Thursday, May 9, 2019 4:06 AM
+> > > > To: Parav Pandit <parav@mellanox.com>
+> > > > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > > kwankhede@nvidia.com; alex.williamson@redhat.com;
+> cjia@nvidia.com;
+> > > > Tony Krowiak <akrowiak@linux.ibm.com>; Pierre Morel
+> > > > <pmorel@linux.ibm.com>; Halil Pasic <pasic@linux.ibm.com>
+> > > > Subject: Re: [PATCHv2 08/10] vfio/mdev: Improve the create/remove
+> > > > sequence
+> > > >
+> > > > [vfio-ap folks: find a question regarding removal further down]
+> > > >
+> > > > On Wed, 8 May 2019 22:06:48 +0000
+> > > > Parav Pandit <parav@mellanox.com> wrote:
+> > > >
+> > > > > > -----Original Message-----
+> > > > > > From: Cornelia Huck <cohuck@redhat.com>
+> > > > > > Sent: Wednesday, May 8, 2019 12:10 PM
+> > > > > > To: Parav Pandit <parav@mellanox.com>
+> > > > > > Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > > > > > kwankhede@nvidia.com; alex.williamson@redhat.com;
+> > > cjia@nvidia.com
+> > > > > > Subject: Re: [PATCHv2 08/10] vfio/mdev: Improve the
+> > > > > > create/remove sequence
+> > > > > >
+> > > > > > On Tue, 30 Apr 2019 17:49:35 -0500 Parav Pandit
+> > > > > > <parav@mellanox.com> wrote:
+> > > > > >
+> > > > > > > This patch addresses below two issues and prepares the code
+> > > > > > > to address 3rd issue listed below.
+> > > > > > >
+> > > > > > > 1. mdev device is placed on the mdev bus before it is
+> > > > > > > created in the vendor driver. Once a device is placed on the
+> > > > > > > mdev bus without creating its supporting underlying vendor
+> > > > > > > device, mdev driver's
+> > > > > > > probe()
+> > > > > > gets triggered.
+> > > > > > > However there isn't a stable mdev available to work on.
+> > > > > > >
+> > > > > > >    create_store()
+> > > > > > >      mdev_create_device()
+> > > > > > >        device_register()
+> > > > > > >           ...
+> > > > > > >          vfio_mdev_probe()
+> > > > > > >         [...]
+> > > > > > >         parent->ops->create()
+> > > > > > >           vfio_ap_mdev_create()
+> > > > > > >             mdev_set_drvdata(mdev, matrix_mdev);
+> > > > > > >             /* Valid pointer set above */
+> > > > > > >
+> > > > > > > Due to this way of initialization, mdev driver who want to
+> > > > > > > use the
+> > > >
+> > > > s/want/wants/
+> > > >
+> > > > > > > mdev, doesn't have a valid mdev to work on.
+> > > > > > >
+> > > > > > > 2. Current creation sequence is,
+> > > > > > >    parent->ops_create()
+> > > > > > >    groups_register()
+> > > > > > >
+> > > > > > > Remove sequence is,
+> > > > > > >    parent->ops->remove()
+> > > > > > >    groups_unregister()
+> > > > > > >
+> > > > > > > However, remove sequence should be exact mirror of creation
+> > > > sequence.
+> > > > > > > Once this is achieved, all users of the mdev will be
+> > > > > > > terminated first before removing underlying vendor device.
+> > > > > > > (Follow standard linux driver model).
+> > > > > > > At that point vendor's remove() ops shouldn't failed because
+> > > > > > > device is
+> > > >
+> > > > s/failed/fail/
+> > > >
+> > > > > > > taken off the bus that should terminate the users.
+> > > >
+> > > > "because taking the device off the bus should terminate any usage" =
+?
+> > > >
+> > > > > > >
+> > > > > > > 3. When remove operation fails, mdev sysfs removal attempts
+> > > > > > > to add the file back on already removed device. Following
+> > > > > > > call trace [1] is
+> > > > observed.
+> > > > > > >
+> > > > > > > [1] call trace:
+> > > > > > > kernel: WARNING: CPU: 2 PID: 9348 at fs/sysfs/file.c:327
+> > > > > > > sysfs_create_file_ns+0x7f/0x90
+> > > > > > > kernel: CPU: 2 PID: 9348 Comm: bash Kdump: loaded Not
+> > > > > > > tainted 5.1.0-rc6-vdevbus+ #6
+> > > > > > > kernel: Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+,
+> > > > > > > BIOS 2.0b
+> > > > > > > 08/09/2016
+> > > > > > > kernel: RIP: 0010:sysfs_create_file_ns+0x7f/0x90
+> > > > > > > kernel: Call Trace:
+> > > > > > > kernel: remove_store+0xdc/0x100 [mdev]
+> > > > > > > kernel: kernfs_fop_write+0x113/0x1a0
+> > > > > > > kernel: vfs_write+0xad/0x1b0
+> > > > > > > kernel: ksys_write+0x5a/0xe0
+> > > > > > > kernel: do_syscall_64+0x5a/0x210
+> > > > > > > kernel: entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > > > > > >
+> > > > > > > Therefore, mdev core is improved in following ways.
+> > > > > > >
+> > > > > > > 1. Before placing mdev devices on the bus, perform vendor
+> > > > > > > drivers creation which supports the mdev creation.
+> > > >
+> > > > "invoke the vendor driver ->create callback" ?
+> > > >
+> > > > > > > This ensures that mdev specific all necessary fields are
+> > > > > > > initialized
+> > > >
+> > > > "that all necessary mdev specific fields are initialized" ?
+> > > >
+> > > > > > > before a given mdev can be accessed by bus driver.
+> > > > > > > This follows standard Linux kernel bus and device model
+> > > > > > > similar to other widely used PCI bus.
+> > > >
+> > > > "This follows standard practice on other Linux device model buses."=
+ ?
+> > > >
+> > > > > > >
+> > > > > > > 2. During remove flow, first remove the device from the bus.
+> > > > > > > This ensures that any bus specific devices and data is cleare=
+d.
+> > > > > > > Once device is taken of the mdev bus, perform remove() of
+> > > > > > > mdev from
+> > > >
+> > > > s/of/off/
+> > > >
+> > > > > > > the vendor driver.
+> > > > > > >
+> > > > > > > 3. Linux core device model provides way to register and auto
+> > > > > > > unregister the device sysfs attribute groups at dev->groups.
+> > > >
+> > > > "The driver core provides a way to automatically register and
+> > > > unregister sysfs attributes via dev->groups." ?
+> > > >
+> > > > > > > Make use of this groups to let core create the groups and
+> > > > > > > simplify code to avoid explicit groups creation and removal.
+> > > > > > >
+> > > > > > > A below stack dump of a mdev device remove process also
+> > > > > > > ensures that vfio driver guards against device removal alread=
+y in
+> use.
+> > > > > > >
+> > > > > > >  cat /proc/21962/stack
+> > > > > > > [<0>] vfio_del_group_dev+0x216/0x3c0 [vfio] [<0>]
+> > > > > > > mdev_remove+0x21/0x40 [mdev] [<0>]
+> > > > > > > device_release_driver_internal+0xe8/0x1b0
+> > > > > > > [<0>] bus_remove_device+0xf9/0x170 [<0>]
+> > > > > > > device_del+0x168/0x350 [<0>]
+> > > > > > > mdev_device_remove_common+0x1d/0x50 [mdev] [<0>]
+> > > > > > > mdev_device_remove+0x8c/0xd0 [mdev] [<0>]
+> > > > remove_store+0x71/0x90
+> > > > > > > [mdev] [<0>] kernfs_fop_write+0x113/0x1a0 [<0>]
+> > > > > > > vfs_write+0xad/0x1b0 [<0>] ksys_write+0x5a/0xe0 [<0>]
+> > > > > > > do_syscall_64+0x5a/0x210 [<0>]
+> > > > > > > entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > > > > > > [<0>] 0xffffffffffffffff
+> > > > > > >
+> > > > > > > This prepares the code to eliminate calling
+> > > > > > > device_create_file() in subsquent patch.
+> > > >
+> > > > I find this stack dump and explanation more confusing than
+> enlightening.
+> > > > Maybe just drop it?
+> > > >
+> > > > > >
+> > > > > > I'm afraid I have a bit of a problem following this
+> > > > > > explanation, so let me try to summarize what the patch does to
+> > > > > > make sure that I understand it
+> > > > > > correctly:
+> > > > > >
+> > > > > > - Add the sysfs groups to device->groups so that the driver cor=
+e
+> deals
+> > > > > >   with proper registration/deregistration.
+> > > > > > - Split the device registration/deregistration sequence so that=
+ some
+> > > > > >   things can be done between initialization of the device and
+> hooking
+> > > > > >   it up to the infrastructure respectively after deregistering =
+it from
+> > > > > >   the infrastructure but before giving up our final reference. =
+In
+> > > > > >   particular, this means invoking the ->create and ->remove cal=
+lback
+> in
+> > > > > >   those new windows. This gives the vendor driver an initialize=
+d
+> mdev
+> > > > > >   device to work with during creation.
+> > > > > > - Don't allow ->remove to fail, as the device is already remove=
+d
+> from
+> > > > > >   the infrastructure at that point in time.
+> > > > > >
+> > > > > You got all the points pretty accurate.
+> > > >
+> > > > Ok, good.
+> > > >
+> > > > >
+> > > > > > >
+> > > > > > > Signed-off-by: Parav Pandit <parav@mellanox.com>
+> > > > > > > ---
+> > > > > > >  drivers/vfio/mdev/mdev_core.c    | 94 +++++++++-------------=
+----------
+> > > > > > >  drivers/vfio/mdev/mdev_private.h |  2 +-
+> > > > > > >  drivers/vfio/mdev/mdev_sysfs.c   |  2 +-
+> > > > > > >  3 files changed, 27 insertions(+), 71 deletions(-)
+> > > > > >
+> > > > > > (...)
+> > > >
+> > > > > > > @@ -373,16 +330,15 @@ int mdev_device_remove(struct device
+> > > *dev,
+> > > > > > bool force_remove)
+> > > > > > >  	mutex_unlock(&mdev_list_lock);
+> > > > > > >
+> > > > > > >  	type =3D to_mdev_type(mdev->type_kobj);
+> > > > > > > +	mdev_remove_sysfs_files(dev, type);
+> > > > > > > +	device_del(&mdev->dev);
+> > > > > > >  	parent =3D mdev->parent;
+> > > > > > > +	ret =3D parent->ops->remove(mdev);
+> > > > > > > +	if (ret)
+> > > > > > > +		dev_err(&mdev->dev, "Remove failed: err=3D%d\n",
+> > > ret);
+> > > > > >
+> > > > > > I think carrying on with removal regardless of the return code
+> > > > > > of the
+> > > > > > ->remove callback makes sense, as it simply matches usual pract=
+ice.
+> > > > > > However, are we sure that every vendor driver works well with
+> that?
+> > > > > > I think it should, as removal from bus unregistration (vs.
+> > > > > > from the sysfs
+> > > > > > file) was always something it could not veto, but have you
+> > > > > > looked at the individual drivers?
+> > > > > >
+> > > > > I looked at following drivers a little while back.
+> > > > > Looked again now.
+> > > > >
+> > > > > drivers/gpu/drm/i915/gvt/kvmgt.c which clears the handle valid
+> > > > > in
+> > > > intel_vgpu_release(), which should finish first before remove() is
+> invoked.
+> > > > >
+> > > > > s390 vfio_ccw_mdev_remove() driver
+> > > > > drivers/s390/cio/vfio_ccw_ops.c
+> > > > remove() always returns 0.
+> > > > > s39 crypo fails the remove() once vfio_ap_mdev_release marks kvm
+> > > > > null,
+> > > > which should finish before remove() is invoked.
+> > > >
+> > > > That one is giving me a bit of a headache (the ->kvm reference is
+> > > > supposed to keep us from detaching while a vm is running), so let's=
+ cc:
+> > > > the vfio-ap maintainers to see whether they have any concerns.
+> > > >
+> > > I probably wrote wrongly.
+> > > vfio_ap_mdev_remove() fails if the VM is already running (i.e.
+> > > vfio_ap_mdev_release() is not yet called).
+> > >
+> > > And if VM is running it guarded by the vfio_mdev driver which is the
+> > > one who binds to the device mdev device.
+> > > That is why I shown the above stack trace in the commit log,
+> > > indicating that vfio driver is guarding it.
+> > >
+> > > > > samples/vfio-mdev/mbochs.c mbochs_remove() always returns 0.
+> > > > >
+> > > > > > >
+> > > > > > > -	ret =3D mdev_device_remove_ops(mdev, force_remove);
+> > > > > > > -	if (ret) {
+> > > > > > > -		mdev->active =3D true;
+> > > > > > > -		return ret;
+> > > > > > > -	}
+> > > > > > > -
+> > > > > > > -	mdev_remove_sysfs_files(dev, type);
+> > > > > > > -	device_unregister(dev);
+> > > > > > > +	/* Balances with device_initialize() */
+> > > > > > > +	put_device(&mdev->dev);
+> > > > > > >  	mdev_put_parent(parent);
+> > > > > > >
+> > > > > > >  	return 0;
+> > > > > >
+> > > > > > I think that looks sane in general, but the commit message
+> > > > > > might benefit from tweaking.
+> > > > > Part of your description is more crisp than my commit message, I
+> > > > > can
+> > > > probably take snippet from it to improve?
+> > > > > Or any specific entries in commit message that I should address?
+> > > >
+> > > > I have added some comments inline (mostly some wording tweaks).
+> > > >
+> > > > Feel free to take anything from my summary as well.
 > >
-> > Currently, this all works because DSOs are run by mmapping the file to
-> > create multiple VMAs, some of which are executable, non-writable, and
-> > non-CoWed, and some of which are writable but not executable.  With
-> > SGX, there's only really one inode per enclave (the anon_inode that
-> > comes form /dev/sgx/enclave), and it can only be sensibly mapped
-> > MAP_SHARED.
-> >
-> > With the current version of the SGX driver, to run an enclave, I think
-> > you'll need either EXECUTE rights to /dev/sgx/enclave or EXECMOD or
-> > similar, all of which more or less mean that you can run any modified
-> > code you want, and none of which is useful to prevent enclaves from
-> > contain RWX segments.
-> >
-> > So my question is: what, if anything, should change to make this work better?
->
-> Would it be possible to provide multiple fds (perhaps via a pseudo fs
-> interface) which can be mapped to different types of VMAs?
+> > I want to send v3 addressing commit log comment and take updated
+> description from Cornelia, if this 3 patches looks reasonable enough.
+> > What do you think?
+>=20
+> The kref removal in the last patch still makes me uncomfortable, but I ca=
+n't
+> really find a reason to keep it or see any problems with the way you're u=
+sing
+> refcount either.  It's probably good to see a new version of the series
+> regardless.  Thanks,
+>=20
+Ok. thanks. Right. I will send these 3 patches with updated cover letter an=
+d commit log enhancements from Cornelia.
 
-Maybe.  The tricky bit is that, even if there was a separate inode for
-the writable and the executable parts of the enclave, I think that
-both would have to be mapped MAP_SHARED since MAP_ANONYMOUS is
-nonsensical for SGX.  This would certainly push more complexity into
-the user code.  Jarkko?
+> Alex
