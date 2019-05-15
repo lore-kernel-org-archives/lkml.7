@@ -4,68 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E892EC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9BEC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7CF620843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 305ED20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921966;
-	bh=MgVXG+k1LpdZbb6fZwHxZMdGrI8cIham04J2qJfV5bw=;
+	s=default; t=1557921975;
+	bh=thvOr7Hp/0reyBoea1gsug2/SCALyYgn8KZc0DpQ55A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nnCpdXTrkh3we5O5I5X45kOVVmavUDQOP0hGuifjX2R7uqyXFxjh3njTfCZjctsK0
-	 l2LYgR3+AOMFS8YLPdtPnzZQQ+3B2iywtHa6FoNAHTSebM9Qh6f0f0Zgo8qC5kUFjK
-	 lRuUjHsCX4tZ2lCV7N4ry2hklOtG3ofP8tBMAOYU=
+	b=plPAEGr5xvdUMCcxlRWmY01A4Xbhvu4oEny4wmjw6V7JmrLo6qEu1Id+F50gfYbAU
+	 ZQIrAHbwZ7eABmpINUEom32Svb9hQm8wTvXPdMu1AOMBpREVz7s47rnUzB+HYtshUe
+	 TrtcGDArtEIDxBUtkaaIP6Y/OKXBuNgSZBLbrYfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729902AbfEOMF7 (ORCPT
+        id S1729396AbfEOLKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:05:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44456 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:10:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729221AbfEOLKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:10:33 -0400
+        id S1729167AbfEOLKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:10:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 182F12084E;
-        Wed, 15 May 2019 11:10:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAED821726;
+        Wed, 15 May 2019 11:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918632;
-        bh=MgVXG+k1LpdZbb6fZwHxZMdGrI8cIham04J2qJfV5bw=;
+        s=default; t=1557918614;
+        bh=thvOr7Hp/0reyBoea1gsug2/SCALyYgn8KZc0DpQ55A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IuMqGT586SC+qlqwKb2OwoOd+ee/fdtoMBCsFkz/Lk42S8UQOGXucC55Znq+RkAK6
-         fmux848WD0NR1NfupA5lR71r7hubtXE+VPi3PTKZKR/arhrheMutthJLFp3EStvq4O
-         ZuDD2mbgSl7GYOEmusfNdKU35AvODlg/ifs4lQaE=
+        b=MFU9tlqn4EV0td+jg8yIqVW6uGLUm4ipmFFIAvnfKC6RPNouvLtQQrGjIhKYENU8Z
+         EO8ntHhDaT9CT9pCwDXs9xTu6H/kobUsDUWbgx/3mQUDsIZm7m3JdhbMOZoZEHf2IV
+         pmbIHrs1aTEhVH+WvBgM1WM9y21qkW0CJhCsG3t4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
+        stable@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
         Andrea Arcangeli <aarcange@redhat.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
+        "WoodhouseDavid" <dwmw@amazon.co.uk>,
         Andi Kleen <ak@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Casey Schaufler <casey.schaufler@intel.com>,
-        Asit Mallick <asit.k.mallick@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Jon Masters <jcm@redhat.com>,
-        Waiman Long <longman9394@gmail.com>,
-        Dave Stewart <david.c.stewart@intel.com>,
-        Kees Cook <keescook@chromium.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        "SchauflerCasey" <casey.schaufler@intel.com>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 203/266] x86/speculation: Remove unnecessary ret variable in cpu_show_common()
-Date:   Wed, 15 May 2019 12:55:10 +0200
-Message-Id: <20190515090729.823464451@linuxfoundation.org>
+Subject: [PATCH 4.4 199/266] x86/speculation: Enable cross-hyperthread spectre v2 STIBP mitigation
+Date:   Wed, 15 May 2019 12:55:06 +0200
+Message-Id: <20190515090729.686124279@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -78,61 +67,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Chen <tim.c.chen@linux.intel.com>
+From: Jiri Kosina <jkosina@suse.cz>
 
-commit b86bda0426853bfe8a3506c7d2a5b332760ae46b upstream.
+commit 53c613fe6349994f023245519265999eed75957f upstream.
 
-Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
+STIBP is a feature provided by certain Intel ucodes / CPUs. This feature
+(once enabled) prevents cross-hyperthread control of decisions made by
+indirect branch predictors.
+
+Enable this feature if
+
+- the CPU is vulnerable to spectre v2
+- the CPU supports SMT and has SMT siblings online
+- spectre_v2 mitigation autoselection is enabled (default)
+
+After some previous discussion, this leaves STIBP on all the time, as wrmsr
+on crossing kernel boundary is a no-no. This could perhaps later be a bit
+more optimized (like disabling it in NOHZ, experiment with disabling it in
+idle, etc) if needed.
+
+Note that the synchronization of the mask manipulation via newly added
+spec_ctrl_mutex is currently not strictly needed, as the only updater is
+already being serialized by cpu_add_remove_lock, but let's make this a
+little bit more future-proof.
+
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
 Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc:  "WoodhouseDavid" <dwmw@amazon.co.uk>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Casey Schaufler <casey.schaufler@intel.com>
-Cc: Asit Mallick <asit.k.mallick@intel.com>
-Cc: Arjan van de Ven <arjan@linux.intel.com>
-Cc: Jon Masters <jcm@redhat.com>
-Cc: Waiman Long <longman9394@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Dave Stewart <david.c.stewart@intel.com>
-Cc: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20181125185003.783903657@linutronix.de
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc:  "SchauflerCasey" <casey.schaufler@intel.com>
+Link: https://lkml.kernel.org/r/nycvar.YFH.7.76.1809251438240.15880@cbobk.fhfr.pm
+[bwh: Backported to 4.4:
+ - Don't add any calls to arch_smt_update() yet. They will be introduced by
+   "x86/speculation: Rework SMT state change".
+ - Use IS_ENABLED(CONFIG_SMP) instead of cpu_smt_control for now. This
+   will be fixed by "x86/speculation: Rework SMT state change".]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/cpu/bugs.c |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/x86/kernel/cpu/bugs.c |   55 ++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 50 insertions(+), 5 deletions(-)
 
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -762,8 +762,6 @@ static void __init l1tf_select_mitigatio
+@@ -32,12 +32,10 @@ static void __init spectre_v2_select_mit
+ static void __init ssb_select_mitigation(void);
+ static void __init l1tf_select_mitigation(void);
+ 
+-/*
+- * Our boot-time value of the SPEC_CTRL MSR. We read it once so that any
+- * writes to SPEC_CTRL contain whatever reserved bits have been set.
+- */
++/* The base value of the SPEC_CTRL MSR that always has to be preserved. */
+ u64 x86_spec_ctrl_base;
+ EXPORT_SYMBOL_GPL(x86_spec_ctrl_base);
++static DEFINE_MUTEX(spec_ctrl_mutex);
+ 
+ /*
+  * The vendor and possibly platform specific bits which can be modified in
+@@ -315,6 +313,46 @@ static enum spectre_v2_mitigation_cmd __
+ 	return cmd;
+ }
+ 
++static bool stibp_needed(void)
++{
++	if (spectre_v2_enabled == SPECTRE_V2_NONE)
++		return false;
++
++	if (!boot_cpu_has(X86_FEATURE_STIBP))
++		return false;
++
++	return true;
++}
++
++static void update_stibp_msr(void *info)
++{
++	wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
++}
++
++void arch_smt_update(void)
++{
++	u64 mask;
++
++	if (!stibp_needed())
++		return;
++
++	mutex_lock(&spec_ctrl_mutex);
++	mask = x86_spec_ctrl_base;
++	if (IS_ENABLED(CONFIG_SMP))
++		mask |= SPEC_CTRL_STIBP;
++	else
++		mask &= ~SPEC_CTRL_STIBP;
++
++	if (mask != x86_spec_ctrl_base) {
++		pr_info("Spectre v2 cross-process SMT mitigation: %s STIBP\n",
++				IS_ENABLED(CONFIG_SMP) ?
++				"Enabling" : "Disabling");
++		x86_spec_ctrl_base = mask;
++		on_each_cpu(update_stibp_msr, NULL, 1);
++	}
++	mutex_unlock(&spec_ctrl_mutex);
++}
++
+ static void __init spectre_v2_select_mitigation(void)
+ {
+ 	enum spectre_v2_mitigation_cmd cmd = spectre_v2_parse_cmdline();
+@@ -414,6 +452,9 @@ specv2_set_mode:
+ 		setup_force_cpu_cap(X86_FEATURE_USE_IBRS_FW);
+ 		pr_info("Enabling Restricted Speculation for firmware calls\n");
+ 	}
++
++	/* Enable STIBP if appropriate */
++	arch_smt_update();
+ }
+ 
+ #undef pr_fmt
+@@ -722,6 +763,8 @@ static void __init l1tf_select_mitigatio
  static ssize_t cpu_show_common(struct device *dev, struct device_attribute *attr,
  			       char *buf, unsigned int bug)
  {
--	int ret;
--
++	int ret;
++
  	if (!boot_cpu_has_bug(bug))
  		return sprintf(buf, "Not affected\n");
  
-@@ -778,13 +776,12 @@ static ssize_t cpu_show_common(struct de
+@@ -736,10 +779,12 @@ static ssize_t cpu_show_common(struct de
  		return sprintf(buf, "Mitigation: __user pointer sanitization\n");
  
  	case X86_BUG_SPECTRE_V2:
--		ret = sprintf(buf, "%s%s%s%s%s%s\n", spectre_v2_strings[spectre_v2_enabled],
-+		return sprintf(buf, "%s%s%s%s%s%s\n", spectre_v2_strings[spectre_v2_enabled],
+-		return sprintf(buf, "%s%s%s%s\n", spectre_v2_strings[spectre_v2_enabled],
++		ret = sprintf(buf, "%s%s%s%s%s\n", spectre_v2_strings[spectre_v2_enabled],
  			       boot_cpu_has(X86_FEATURE_USE_IBPB) ? ", IBPB" : "",
  			       boot_cpu_has(X86_FEATURE_USE_IBRS_FW) ? ", IBRS_FW" : "",
- 			       (x86_spec_ctrl_base & SPEC_CTRL_STIBP) ? ", STIBP" : "",
- 			       boot_cpu_has(X86_FEATURE_RSB_CTXSW) ? ", RSB filling" : "",
++			       (x86_spec_ctrl_base & SPEC_CTRL_STIBP) ? ", STIBP" : "",
  			       spectre_v2_module_string());
--		return ret;
++		return ret;
  
  	case X86_BUG_SPEC_STORE_BYPASS:
  		return sprintf(buf, "%s\n", ssb_strings[ssb_mode]);
