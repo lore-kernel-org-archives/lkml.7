@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83674C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A20C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55697206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6DA520818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919175;
-	bh=rM3Wb2qCqHGGq8V5wW4paFWyDqiCvYc1efac+ZgWVqg=;
+	s=default; t=1557919176;
+	bh=7V09QRjt60ZoGduRDcBVlYnjKvUofVsyA/iKeUO4JdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=17cUg3WcXbSpCzGejGojt9oVrLl1nf37wObDm5q0DgvGxDiCjRj98/whXi9DRj6gj
-	 E8QGAvkvumRr0A8+L3U/hzZbbH+scRZy13d+DcseZIhxVXCgr3OILVdLrC4b9Th0OI
-	 SjfHToC6sdXcxPypKW8l40cvpbOVBVSBlxgS2qKk=
+	b=bMJ+3ozwbZqIHsIgr4KsNrAFhdxs/rAwUGUn4aq9Ovz3sL6+qqCifIE88oAM4pP+K
+	 YKDiMT+tmQV5LRXjxBnlRlnFZb9g1er20sinjdmmm8WH3qTgv/2xoTgcGivbWyE93U
+	 l2zBLFu9gb7gFfOIbtfQ5nff2/Rs78O3HoYr///A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbfEOLTd (ORCPT
+        id S1730985AbfEOLTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:19:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57194 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:19:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730572AbfEOLTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:19:30 -0400
+        id S1730959AbfEOLTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:19:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28EB0206BF;
-        Wed, 15 May 2019 11:19:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6E6F20862;
+        Wed, 15 May 2019 11:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919169;
-        bh=rM3Wb2qCqHGGq8V5wW4paFWyDqiCvYc1efac+ZgWVqg=;
+        s=default; t=1557919172;
+        bh=7V09QRjt60ZoGduRDcBVlYnjKvUofVsyA/iKeUO4JdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tMnfXsQFjGdoir38Ku4KLQhGQ1tqzLljIUC+AOhAe7FeTlShUvMXuq66qY0NJZnTQ
-         0U+HFpt4C3AcFL0gyKC4/CTjw94DPHzn6D5ExFMQdid70BLxNSyPzZKxrH1ee4cCH0
-         R/ehY+dNmhLqHNAK7ViCTK/MXsvHYFQZQJJx0n2c=
+        b=BQIF0Vs+9BRDxFFTnLvnaiooGE9umLyDHfKgledFUTQLB2nbi9icpkT1V8CcesEOf
+         9RevlfTErlloQupWksiInPzj9/fQj8wpJmJ3Si0/CReOpqpiuK5qHl279DTkUaUOuk
+         rA7VrNv04g98QZ3/72Mla1XYMrdtCvYjX/Oymybw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hugues Fruchet <hugues.fruchet@st.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 056/115] media: ov5640: fix auto controls values when switching to manual mode
-Date:   Wed, 15 May 2019 12:55:36 +0200
-Message-Id: <20190515090703.664617652@linuxfoundation.org>
+Subject: [PATCH 4.14 092/115] nfc: nci: Potential off by one in ->pipes[] array
+Date:   Wed, 15 May 2019 12:56:12 +0200
+Message-Id: <20190515090705.919773981@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -62,42 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a8f438c684eaa4cbe6c98828eb996d5ec53e24fb ]
+[ Upstream commit 6491d698396fd5da4941980a35ca7c162a672016 ]
 
-When switching from auto to manual mode, V4L2 core is calling
-g_volatile_ctrl() in manual mode in order to get the manual initial value.
-Remove the manual mode check/return to not break this behaviour.
+This is similar to commit e285d5bfb7e9 ("NFC: Fix the number of pipes")
+where we changed NFC_HCI_MAX_PIPES from 127 to 128.
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
-Tested-by: Jacopo Mondi <jacopo@jmondi.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+As the comment next to the define explains, the pipe identifier is 7
+bits long.  The highest possible pipe is 127, but the number of possible
+pipes is 128.  As the code is now, then there is potential for an
+out of bounds array access:
+
+    net/nfc/nci/hci.c:297 nci_hci_cmd_received() warn: array off by one?
+    'ndev->hci_dev->pipes[pipe]' '0-127 == 127'
+
+Fixes: 11f54f228643 ("NFC: nci: Add HCI over NCI protocol support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/media/i2c/ov5640.c | 4 ----
- 1 file changed, 4 deletions(-)
+ include/net/nfc/nci_core.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index 0366c8dc6ecf7..acf5c8a55bbd2 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -1900,16 +1900,12 @@ static int ov5640_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
+diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
+index 87499b6b35d6d..df5c69db68afc 100644
+--- a/include/net/nfc/nci_core.h
++++ b/include/net/nfc/nci_core.h
+@@ -166,7 +166,7 @@ struct nci_conn_info {
+  * According to specification 102 622 chapter 4.4 Pipes,
+  * the pipe identifier is 7 bits long.
+  */
+-#define NCI_HCI_MAX_PIPES          127
++#define NCI_HCI_MAX_PIPES          128
  
- 	switch (ctrl->id) {
- 	case V4L2_CID_AUTOGAIN:
--		if (!ctrl->val)
--			return 0;
- 		val = ov5640_get_gain(sensor);
- 		if (val < 0)
- 			return val;
- 		sensor->ctrls.gain->val = val;
- 		break;
- 	case V4L2_CID_EXPOSURE_AUTO:
--		if (ctrl->val == V4L2_EXPOSURE_MANUAL)
--			return 0;
- 		val = ov5640_get_exposure(sensor);
- 		if (val < 0)
- 			return val;
+ struct nci_hci_gate {
+ 	u8 gate;
 -- 
 2.20.1
 
