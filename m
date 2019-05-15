@@ -2,52 +2,51 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D091C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF96FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E18AE20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A627320657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:57:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921423;
-	bh=lRWpwBxAKkzSsOcpMD/arrQGly+y9KLqL+kJlimOI38=;
+	s=default; t=1557921428;
+	bh=xFiCKmtsOvgoT4wK1Uqxsoxvd2pdKj+Zjdqq4SnKHgk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WTeZbov8LUytOC1+GCFdOTxlZx4kyPY96GAVow5EqtWP8RPZsOcyDwMYXi7YDSyff
-	 j5ttOD7sAjFSzxNwe5l854WMYeWGeD9v5gJ8eS3Ci/1GyNdC6DY8C2GV1i+z9Lk5yH
-	 DPJeBIfgYBUWe6utTfj1PpQi1i2Jq40lDp69es6k=
+	b=w8QOcf+uiAbHKyLpi5kZ1JCoarhrNq01qN3adOGZJZ2baGJbYVBfqLDiGfCLzxIU7
+	 odTjqQ9qJc/gHwm/zEULlIMs0xn97zEt9IvDwSf7oSB1Jtehc4fUKzlThm5lWXFW45
+	 gS7fzEh4ScA2CtolIFQ0G1A6eb391nTLDQQaMKZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730876AbfEOL5C (ORCPT
+        id S1730652AbfEOLRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:57:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54688 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:17:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728459AbfEOLR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:17:29 -0400
+        id S1730641AbfEOLRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:17:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA8E8206BF;
-        Wed, 15 May 2019 11:17:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7445920644;
+        Wed, 15 May 2019 11:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919048;
-        bh=lRWpwBxAKkzSsOcpMD/arrQGly+y9KLqL+kJlimOI38=;
+        s=default; t=1557919034;
+        bh=xFiCKmtsOvgoT4wK1Uqxsoxvd2pdKj+Zjdqq4SnKHgk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GEKZSknXB0Cf9iDB/YX2LLDRPZWiyFa6lVMwXfKkR9dQzCL3TOw6UzFEG0k0hUc8e
-         6DdE4O+vVbpKCFLoEXdCTV6SjNoAouXHmjLKVVcIt4Lzw2W1vvO1aAUT8i1o5H7zUv
-         AZXz8atjJNXnRv61r5g16VPPDDb9vvHrtsxpiWXY=
+        b=LO/beIkktyGom5i/y9W4mkJMx+PgeSCqk9+r3VeE5bIjqhWHr0cOPSSi1tRFmLwac
+         KoEPW9okYpvYP6xjotdSRcfuUq2rNhXe1y7eFh5y8LClwdFYYMiPezf4XUCr4VLPwz
+         vT7vdrp7VijHkGEaIOG6ibBNMgvZ79EUWQGShd8k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Seth Howell <seth.howell@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 045/115] IB/rxe: Revise the ib_wr_opcode enum
-Date:   Wed, 15 May 2019 12:55:25 +0200
-Message-Id: <20190515090702.763611027@linuxfoundation.org>
+Subject: [PATCH 4.14 041/115] sparc64: Make corrupted user stacks more debuggable.
+Date:   Wed, 15 May 2019 12:55:21 +0200
+Message-Id: <20190515090702.483620383@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -60,125 +59,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9a59739bd01f77db6fbe2955a4fce165f0f43568 ]
+[ Upstream commit 5b4fc3882a649c9411dd0dcad2ddb78e911d340e ]
 
-This enum has become part of the uABI, as both RXE and the
-ib_uverbs_post_send() command expect userspace to supply values from this
-enum. So it should be properly placed in include/uapi/rdma.
+Right now if we get a corrupted user stack frame we do a
+do_exit(SIGILL) which is not helpful.
 
-In userspace this enum is called 'enum ibv_wr_opcode' as part of
-libibverbs.h. That enum defines different values for IB_WR_LOCAL_INV,
-IB_WR_SEND_WITH_INV, and IB_WR_LSO. These were introduced (incorrectly, it
-turns out) into libiberbs in 2015.
+If under a debugger, this behavior causes the inferior process to
+exit.  So the register and other state cannot be examined at the time
+of the event.
 
-The kernel has changed its mind on the numbering for several of the IB_WC
-values over the years, but has remained stable on IB_WR_LOCAL_INV and
-below.
+Instead, conditionally log a rate limited kernel log message and then
+force a SIGSEGV.
 
-Based on this we can conclude that there is no real user space user of the
-values beyond IB_WR_ATOMIC_FETCH_AND_ADD, as they have never worked via
-rdma-core. This is confirmed by inspection, only rxe uses the kernel enum
-and implements the latter operations. rxe has clearly never worked with
-these attributes from userspace. Other drivers that support these opcodes
-implement the functionality without calling out to the kernel.
+With bits and ideas borrowed (as usual) from powerpc.
 
-To make IB_WR_SEND_WITH_INV and related work for RXE in userspace we
-choose to renumber the IB_WR enum in the kernel to match the uABI that
-userspace has bee using since before Soft RoCE was merged. This is an
-overall simpler configuration for the whole software stack, and obviously
-can't break anything existing.
-
-Reported-by: Seth Howell <seth.howell@intel.com>
-Tested-by: Seth Howell <seth.howell@intel.com>
-Fixes: 8700e3e7c485 ("Soft RoCE driver")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- include/rdma/ib_verbs.h           | 34 ++++++++++++++++++-------------
- include/uapi/rdma/ib_user_verbs.h | 20 +++++++++++++++++-
- 2 files changed, 39 insertions(+), 15 deletions(-)
+ arch/sparc/include/asm/switch_to_64.h |  3 ++-
+ arch/sparc/kernel/process_64.c        | 25 +++++++++++++++++++------
+ arch/sparc/kernel/rtrap_64.S          |  1 +
+ arch/sparc/kernel/signal32.c          | 12 ++++++++++--
+ arch/sparc/kernel/signal_64.c         |  6 +++++-
+ 5 files changed, 37 insertions(+), 10 deletions(-)
 
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index 5a24b4c700e59..9e76b2410d03f 100644
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -1251,21 +1251,27 @@ struct ib_qp_attr {
- };
+diff --git a/arch/sparc/include/asm/switch_to_64.h b/arch/sparc/include/asm/switch_to_64.h
+index 4ff29b1406a9b..b1d4e2e3210fb 100644
+--- a/arch/sparc/include/asm/switch_to_64.h
++++ b/arch/sparc/include/asm/switch_to_64.h
+@@ -67,6 +67,7 @@ do {	save_and_clear_fpu();						\
+ } while(0)
  
- enum ib_wr_opcode {
--	IB_WR_RDMA_WRITE,
--	IB_WR_RDMA_WRITE_WITH_IMM,
--	IB_WR_SEND,
--	IB_WR_SEND_WITH_IMM,
--	IB_WR_RDMA_READ,
--	IB_WR_ATOMIC_CMP_AND_SWP,
--	IB_WR_ATOMIC_FETCH_AND_ADD,
--	IB_WR_LSO,
--	IB_WR_SEND_WITH_INV,
--	IB_WR_RDMA_READ_WITH_INV,
--	IB_WR_LOCAL_INV,
--	IB_WR_REG_MR,
--	IB_WR_MASKED_ATOMIC_CMP_AND_SWP,
--	IB_WR_MASKED_ATOMIC_FETCH_AND_ADD,
-+	/* These are shared with userspace */
-+	IB_WR_RDMA_WRITE = IB_UVERBS_WR_RDMA_WRITE,
-+	IB_WR_RDMA_WRITE_WITH_IMM = IB_UVERBS_WR_RDMA_WRITE_WITH_IMM,
-+	IB_WR_SEND = IB_UVERBS_WR_SEND,
-+	IB_WR_SEND_WITH_IMM = IB_UVERBS_WR_SEND_WITH_IMM,
-+	IB_WR_RDMA_READ = IB_UVERBS_WR_RDMA_READ,
-+	IB_WR_ATOMIC_CMP_AND_SWP = IB_UVERBS_WR_ATOMIC_CMP_AND_SWP,
-+	IB_WR_ATOMIC_FETCH_AND_ADD = IB_UVERBS_WR_ATOMIC_FETCH_AND_ADD,
-+	IB_WR_LSO = IB_UVERBS_WR_TSO,
-+	IB_WR_SEND_WITH_INV = IB_UVERBS_WR_SEND_WITH_INV,
-+	IB_WR_RDMA_READ_WITH_INV = IB_UVERBS_WR_RDMA_READ_WITH_INV,
-+	IB_WR_LOCAL_INV = IB_UVERBS_WR_LOCAL_INV,
-+	IB_WR_MASKED_ATOMIC_CMP_AND_SWP =
-+		IB_UVERBS_WR_MASKED_ATOMIC_CMP_AND_SWP,
-+	IB_WR_MASKED_ATOMIC_FETCH_AND_ADD =
-+		IB_UVERBS_WR_MASKED_ATOMIC_FETCH_AND_ADD,
-+
-+	/* These are kernel only and can not be issued by userspace */
-+	IB_WR_REG_MR = 0x20,
- 	IB_WR_REG_SIG_MR,
-+
- 	/* reserve values for low level drivers' internal use.
- 	 * These values will not be used at all in the ib core layer.
- 	 */
-diff --git a/include/uapi/rdma/ib_user_verbs.h b/include/uapi/rdma/ib_user_verbs.h
-index e0e83a105953a..e11b4def8630f 100644
---- a/include/uapi/rdma/ib_user_verbs.h
-+++ b/include/uapi/rdma/ib_user_verbs.h
-@@ -751,10 +751,28 @@ struct ib_uverbs_sge {
- 	__u32 lkey;
- };
+ void synchronize_user_stack(void);
+-void fault_in_user_windows(void);
++struct pt_regs;
++void fault_in_user_windows(struct pt_regs *);
  
-+enum ib_uverbs_wr_opcode {
-+	IB_UVERBS_WR_RDMA_WRITE = 0,
-+	IB_UVERBS_WR_RDMA_WRITE_WITH_IMM = 1,
-+	IB_UVERBS_WR_SEND = 2,
-+	IB_UVERBS_WR_SEND_WITH_IMM = 3,
-+	IB_UVERBS_WR_RDMA_READ = 4,
-+	IB_UVERBS_WR_ATOMIC_CMP_AND_SWP = 5,
-+	IB_UVERBS_WR_ATOMIC_FETCH_AND_ADD = 6,
-+	IB_UVERBS_WR_LOCAL_INV = 7,
-+	IB_UVERBS_WR_BIND_MW = 8,
-+	IB_UVERBS_WR_SEND_WITH_INV = 9,
-+	IB_UVERBS_WR_TSO = 10,
-+	IB_UVERBS_WR_RDMA_READ_WITH_INV = 11,
-+	IB_UVERBS_WR_MASKED_ATOMIC_CMP_AND_SWP = 12,
-+	IB_UVERBS_WR_MASKED_ATOMIC_FETCH_AND_ADD = 13,
-+	/* Review enum ib_wr_opcode before modifying this */
-+};
+ #endif /* __SPARC64_SWITCH_TO_64_H */
+diff --git a/arch/sparc/kernel/process_64.c b/arch/sparc/kernel/process_64.c
+index 318efd784a0b3..5640131e2abf3 100644
+--- a/arch/sparc/kernel/process_64.c
++++ b/arch/sparc/kernel/process_64.c
+@@ -36,6 +36,7 @@
+ #include <linux/sysrq.h>
+ #include <linux/nmi.h>
+ #include <linux/context_tracking.h>
++#include <linux/signal.h>
+ 
+ #include <linux/uaccess.h>
+ #include <asm/page.h>
+@@ -528,7 +529,12 @@ static void stack_unaligned(unsigned long sp)
+ 	force_sig_info(SIGBUS, &info, current);
+ }
+ 
+-void fault_in_user_windows(void)
++static const char uwfault32[] = KERN_INFO \
++	"%s[%d]: bad register window fault: SP %08lx (orig_sp %08lx) TPC %08lx O7 %08lx\n";
++static const char uwfault64[] = KERN_INFO \
++	"%s[%d]: bad register window fault: SP %016lx (orig_sp %016lx) TPC %08lx O7 %016lx\n";
 +
- struct ib_uverbs_send_wr {
- 	__u64 wr_id;
- 	__u32 num_sge;
--	__u32 opcode;
-+	__u32 opcode;		/* see enum ib_uverbs_wr_opcode */
- 	__u32 send_flags;
- 	union {
- 		__u32 imm_data;
++void fault_in_user_windows(struct pt_regs *regs)
+ {
+ 	struct thread_info *t = current_thread_info();
+ 	unsigned long window;
+@@ -541,9 +547,9 @@ void fault_in_user_windows(void)
+ 		do {
+ 			struct reg_window *rwin = &t->reg_window[window];
+ 			int winsize = sizeof(struct reg_window);
+-			unsigned long sp;
++			unsigned long sp, orig_sp;
+ 
+-			sp = t->rwbuf_stkptrs[window];
++			orig_sp = sp = t->rwbuf_stkptrs[window];
+ 
+ 			if (test_thread_64bit_stack(sp))
+ 				sp += STACK_BIAS;
+@@ -554,8 +560,16 @@ void fault_in_user_windows(void)
+ 				stack_unaligned(sp);
+ 
+ 			if (unlikely(copy_to_user((char __user *)sp,
+-						  rwin, winsize)))
++						  rwin, winsize))) {
++				if (show_unhandled_signals)
++					printk_ratelimited(is_compat_task() ?
++							   uwfault32 : uwfault64,
++							   current->comm, current->pid,
++							   sp, orig_sp,
++							   regs->tpc,
++							   regs->u_regs[UREG_I7]);
+ 				goto barf;
++			}
+ 		} while (window--);
+ 	}
+ 	set_thread_wsaved(0);
+@@ -563,8 +577,7 @@ void fault_in_user_windows(void)
+ 
+ barf:
+ 	set_thread_wsaved(window + 1);
+-	user_exit();
+-	do_exit(SIGILL);
++	force_sig(SIGSEGV, current);
+ }
+ 
+ asmlinkage long sparc_do_fork(unsigned long clone_flags,
+diff --git a/arch/sparc/kernel/rtrap_64.S b/arch/sparc/kernel/rtrap_64.S
+index 0b21042ab181b..ad88d60bb740c 100644
+--- a/arch/sparc/kernel/rtrap_64.S
++++ b/arch/sparc/kernel/rtrap_64.S
+@@ -30,6 +30,7 @@ __handle_preemption:
+ 		 wrpr			%g0, RTRAP_PSTATE_IRQOFF, %pstate
+ 
+ __handle_user_windows:
++		add			%sp, PTREGS_OFF, %o0
+ 		call			fault_in_user_windows
+ 		 wrpr			%g0, RTRAP_PSTATE, %pstate
+ 		ba,pt			%xcc, __handle_preemption_continue
+diff --git a/arch/sparc/kernel/signal32.c b/arch/sparc/kernel/signal32.c
+index 5c572de64c748..879f8d86bc21c 100644
+--- a/arch/sparc/kernel/signal32.c
++++ b/arch/sparc/kernel/signal32.c
+@@ -442,7 +442,11 @@ static int setup_frame32(struct ksignal *ksig, struct pt_regs *regs,
+ 		get_sigframe(ksig, regs, sigframe_size);
+ 	
+ 	if (invalid_frame_pointer(sf, sigframe_size)) {
+-		do_exit(SIGILL);
++		if (show_unhandled_signals)
++			pr_info("%s[%d] bad frame in setup_frame32: %08lx TPC %08lx O7 %08lx\n",
++				current->comm, current->pid, (unsigned long)sf,
++				regs->tpc, regs->u_regs[UREG_I7]);
++		force_sigsegv(ksig->sig, current);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -573,7 +577,11 @@ static int setup_rt_frame32(struct ksignal *ksig, struct pt_regs *regs,
+ 		get_sigframe(ksig, regs, sigframe_size);
+ 	
+ 	if (invalid_frame_pointer(sf, sigframe_size)) {
+-		do_exit(SIGILL);
++		if (show_unhandled_signals)
++			pr_info("%s[%d] bad frame in setup_rt_frame32: %08lx TPC %08lx O7 %08lx\n",
++				current->comm, current->pid, (unsigned long)sf,
++				regs->tpc, regs->u_regs[UREG_I7]);
++		force_sigsegv(ksig->sig, current);
+ 		return -EINVAL;
+ 	}
+ 
+diff --git a/arch/sparc/kernel/signal_64.c b/arch/sparc/kernel/signal_64.c
+index 20426a1c28f29..2d0a50bde3f96 100644
+--- a/arch/sparc/kernel/signal_64.c
++++ b/arch/sparc/kernel/signal_64.c
+@@ -373,7 +373,11 @@ setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs)
+ 		get_sigframe(ksig, regs, sf_size);
+ 
+ 	if (invalid_frame_pointer (sf)) {
+-		do_exit(SIGILL);	/* won't return, actually */
++		if (show_unhandled_signals)
++			pr_info("%s[%d] bad frame in setup_rt_frame: %016lx TPC %016lx O7 %016lx\n",
++				current->comm, current->pid, (unsigned long)sf,
++				regs->tpc, regs->u_regs[UREG_I7]);
++		force_sigsegv(ksig->sig, current);
+ 		return -EINVAL;
+ 	}
+ 
 -- 
 2.20.1
 
