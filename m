@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D88C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 897FEC04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B67220675
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CCAC206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922414;
-	bh=KEF/opwpp5P6zojoRUh/d1gcRt1Rcv+1TnFfQsLWYfE=;
+	s=default; t=1557922425;
+	bh=bqd2UTfZDqHEAn4E2azFb9BzEh78NhSGRxbkZcxUiYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bojKA0wG6sJdVxTNhxL6Kmq4vYseiM7uVHg9us69VjRoVou8jxcU9CWxse4vpqSnj
-	 s8hIdAfxTAYg0IKj1EvEhcqvNoBD7JppgEHzzHlkGvQpiqIPqJIg+imwBLUONRx/lp
-	 qRkpmn/PpcFdmq4TYnG1p8Bmz70yVtER3Wqb+3jo=
+	b=jVipflKZQaCSXSPW0x4FG1QHquM1V5HF8g4nZ5PJzK9gkAVwHWiaVjQLJpFl0s2JL
+	 Lf9/wJ33VLO+5/RggJaisZv15z74KCFW0iQ5TdEQpJZhS9f9RVb/FMJn4eWZ2oY6hb
+	 w9Fh0poBlAbh8bfhuXFOdtojSI8199NYPFPjW038=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbfEOMNd (ORCPT
+        id S1728876AbfEOMNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:13:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34976 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:13:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbfEOLFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:05:03 -0400
+        id S1727384AbfEOLEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:04:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9468D2173C;
-        Wed, 15 May 2019 11:05:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F32C62173C;
+        Wed, 15 May 2019 11:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918303;
-        bh=KEF/opwpp5P6zojoRUh/d1gcRt1Rcv+1TnFfQsLWYfE=;
+        s=default; t=1557918292;
+        bh=bqd2UTfZDqHEAn4E2azFb9BzEh78NhSGRxbkZcxUiYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jhy8g/ZI4ZJPfaLI7Sy03optvQCILS115VE006PsbwvJ+f90VPY5pXp+lGGyON4fI
-         nZfpaMrIUKnw15eOMftiHxHtOnosDFTnzEU5p6wdg111DTl3DpFEgHrjcnmqSc8UuJ
-         FNA/ZzhJ+kiXav9NRFXlyAxpqdmMdCk5bqMvLTTY=
+        b=P8wxVAw053NKLvj3Go4ppo9aozHlEFT18CaB9ydHNvxf2OwsVTA/Vg7VGLk6Auvc4
+         DMcy1/G007W8tFP60KK2jNq1l1nZahzEWdyzwUuI0N5z4UBaODZ7cAl0OXvFcJkW/w
+         CCkBIguFUhJNCh8zA+5CQ17tFJh5k1Utm+pvBoCA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "linuxppc-dev@ozlabs.org, mpe@ellerman.id.au, Diana Craciun" 
         <diana.craciun@nxp.com>, Michael Ellerman <mpe@ellerman.id.au>,
         Diana Craciun <diana.craciun@nxp.com>
-Subject: [PATCH 4.4 083/266] powerpc/fsl: Sanitize the syscall table for NXP PowerPC 32 bit platforms
-Date:   Wed, 15 May 2019 12:53:10 +0200
-Message-Id: <20190515090725.251133456@linuxfoundation.org>
+Subject: [PATCH 4.4 079/266] powerpc/fsl: Enable runtime patching if nospectre_v2 boot arg is used
+Date:   Wed, 15 May 2019 12:53:06 +0200
+Message-Id: <20190515090725.113850383@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -63,42 +63,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Diana Craciun <diana.craciun@nxp.com>
 
-commit c28218d4abbf4f2035495334d8bfcba64bda4787 upstream.
+commit 3bc8ea8603ae4c1e09aca8de229ad38b8091fcb3 upstream.
 
-Used barrier_nospec to sanitize the syscall table.
+If the user choses not to use the mitigations, replace
+the code sequence with nops.
 
 Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/kernel/entry_32.S |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/powerpc/kernel/setup_32.c |    1 +
+ arch/powerpc/kernel/setup_64.c |    1 +
+ 2 files changed, 2 insertions(+)
 
---- a/arch/powerpc/kernel/entry_32.S
-+++ b/arch/powerpc/kernel/entry_32.S
-@@ -33,6 +33,7 @@
- #include <asm/unistd.h>
- #include <asm/ftrace.h>
- #include <asm/ptrace.h>
-+#include <asm/barrier.h>
+--- a/arch/powerpc/kernel/setup_32.c
++++ b/arch/powerpc/kernel/setup_32.c
+@@ -323,6 +323,7 @@ void __init setup_arch(char **cmdline_p)
+ 	if ( ppc_md.progress ) ppc_md.progress("arch: exit", 0x3eab);
  
- /*
-  * MSR_KERNEL is > 0x10000 on 4xx/Book-E since it include MSR_CE.
-@@ -340,6 +341,15 @@ syscall_dotrace_cont:
- 	ori	r10,r10,sys_call_table@l
- 	slwi	r0,r0,2
- 	bge-	66f
-+
-+	barrier_nospec_asm
-+	/*
-+	 * Prevent the load of the handler below (based on the user-passed
-+	 * system call number) being speculatively executed until the test
-+	 * against NR_syscalls and branch to .66f above has
-+	 * committed.
-+	 */
-+
- 	lwzx	r10,r10,r0	/* Fetch system call handler [ptr] */
- 	mtlr	r10
- 	addi	r9,r1,STACK_FRAME_OVERHEAD
+ 	setup_barrier_nospec();
++	setup_spectre_v2();
+ 
+ 	paging_init();
+ 
+--- a/arch/powerpc/kernel/setup_64.c
++++ b/arch/powerpc/kernel/setup_64.c
+@@ -737,6 +737,7 @@ void __init setup_arch(char **cmdline_p)
+ 		ppc_md.setup_arch();
+ 
+ 	setup_barrier_nospec();
++	setup_spectre_v2();
+ 
+ 	paging_init();
+ 
 
 
