@@ -2,55 +2,53 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA2AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F34FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C72DC20881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 409EA20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918699;
-	bh=LnkZbPbNRWSWIPTAD+qz0Ztz586ln251+5OhDu+Xg64=;
+	s=default; t=1557918703;
+	bh=o4axuyy1NAMWqo7oV48Zjm+ukK6x6IRbm+fKo0kgn04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TOv+Dg7ig8PORQyJCuLL0rPQwBgfOgMuBhzgLJR35chWZ1JEywE7QkvxB4s1fS2Td
-	 vtAS9317QYrmqCRBGgywIA+ZDq4wpYMjqCkGi+5IjrJVWqxYa+d75m1hHi2pOlPKCH
-	 ysMn3o0I9CMw8b9Ap03JD3gibyecZ0s1fMuqZGNE=
+	b=zYLdH5MXznOxEXi+oGJOsnFfXoqZ4C+XN9upv8je4B3cvZm1tuhhrGnp/JvUI7EwT
+	 J3L78yCzxGQYuls5OPIgYJz2VK8cftiTIBu0DaaB7GBQzTuF+55pUftogXQm6+G1U9
+	 EVdzojuftOzSn7km1wdt0RinDy9sLBn8jVlSCWgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbfEOLLi (ORCPT
+        id S1729203AbfEOLLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:11:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46198 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729088AbfEOLLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:11:34 -0400
+        id S1729088AbfEOLLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:11:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52DC321726;
-        Wed, 15 May 2019 11:11:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA04B20843;
+        Wed, 15 May 2019 11:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918692;
-        bh=LnkZbPbNRWSWIPTAD+qz0Ztz586ln251+5OhDu+Xg64=;
+        s=default; t=1557918698;
+        bh=o4axuyy1NAMWqo7oV48Zjm+ukK6x6IRbm+fKo0kgn04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y+YDjOrWmG+KcrjEpuSIdrC0Zoms9QYro7BlJ0hvWsQDz+07Wlr6pvCw4quwhu4Vm
-         nfkAHSeW7LOxWoiDtr9htSERdfwXoCW18TLNQspZW0rWeasU4jY3dojKbcPEhPBG9v
-         4m8RDH3E97+lXcUNwdJYJCiXGUsFv5e05s40sMTE=
+        b=VXRiZsfx/kWyB4Z3/eLvHQWBnSUTU1lgSSZVr3yVDuOF+kuUXHCgBZZkCzBMqzi3G
+         ML5FcTiNBylSWJK5rrK3Ff/qm/8V9zVYq6E3981xIsGQOz/Uh2PKyrP/n6B5mf1Uyv
+         0j8JEPHedz17GGhikO5XXusPn+KCn0Wii8o+fnXg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
         Frederic Weisbecker <frederic@kernel.org>,
-        Borislav Petkov <bp@suse.de>, Jon Masters <jcm@redhat.com>,
+        Jon Masters <jcm@redhat.com>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 229/266] x86/speculation: Consolidate CPU whitelists
-Date:   Wed, 15 May 2019 12:55:36 +0200
-Message-Id: <20190515090730.749271442@linuxfoundation.org>
+Subject: [PATCH 4.4 231/266] x86/speculation/mds: Add BUG_MSBDS_ONLY
+Date:   Wed, 15 May 2019 12:55:38 +0200
+Message-Id: <20190515090730.817858081@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -65,168 +63,89 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 36ad35131adacc29b328b9c8b6277a8bf0d6fd5d upstream.
+commit e261f209c3666e842fd645a1e31f001c3a26def9 upstream.
 
-The CPU vulnerability whitelists have some overlap and there are more
-whitelists coming along.
+This bug bit is set on CPUs which are only affected by Microarchitectural
+Store Buffer Data Sampling (MSBDS) and not by any other MDS variant.
 
-Use the driver_data field in the x86_cpu_id struct to denote the
-whitelisted vulnerabilities and combine all whitelists into one.
+This is important because the Store Buffers are partitioned between
+Hyper-Threads so cross thread forwarding is not possible. But if a thread
+enters or exits a sleep state the store buffer is repartitioned which can
+expose data from one thread to the other. This transition can be mitigated.
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+That means that for CPUs which are only affected by MSBDS SMT can be
+enabled, if the CPU is not affected by other SMT sensitive vulnerabilities,
+e.g. L1TF. The XEON PHI variants fall into that category. Also the
+Silvermont/Airmont ATOMs, but for them it's not really relevant as they do
+not support SMT, but mark them for completeness sake.
+
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Borislav Petkov <bp@suse.de>
 Reviewed-by: Jon Masters <jcm@redhat.com>
 Tested-by: Jon Masters <jcm@redhat.com>
+[bwh: Backported to 4.4: adjust context, indentation]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/cpu/common.c |  103 ++++++++++++++++++++++---------------------
- 1 file changed, 55 insertions(+), 48 deletions(-)
+ arch/x86/include/asm/cpufeatures.h |    1 +
+ arch/x86/kernel/cpu/common.c       |   20 ++++++++++++--------
+ 2 files changed, 13 insertions(+), 8 deletions(-)
 
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -337,5 +337,6 @@
+ #define X86_BUG_SPEC_STORE_BYPASS X86_BUG(17) /* CPU is affected by speculative store bypass attack */
+ #define X86_BUG_L1TF		X86_BUG(18) /* CPU is affected by L1 Terminal Fault */
+ #define X86_BUG_MDS		X86_BUG(19) /* CPU is affected by Microarchitectural data sampling */
++#define X86_BUG_MSBDS_ONLY	X86_BUG(20) /* CPU is only affected by the  MSDBS variant of BUG_MDS */
+ 
+ #endif /* _ASM_X86_CPUFEATURES_H */
 --- a/arch/x86/kernel/cpu/common.c
 +++ b/arch/x86/kernel/cpu/common.c
-@@ -847,60 +847,68 @@ static void identify_cpu_without_cpuid(s
- #endif
- }
+@@ -852,6 +852,7 @@ static void identify_cpu_without_cpuid(s
+ #define NO_SSB		BIT(2)
+ #define NO_L1TF		BIT(3)
+ #define NO_MDS		BIT(4)
++#define MSBDS_ONLY	BIT(5)
  
--static const __initconst struct x86_cpu_id cpu_no_speculation[] = {
--	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_SALTWELL,	X86_FEATURE_ANY },
--	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_SALTWELL_TABLET,	X86_FEATURE_ANY },
--	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_BONNELL_MID,	X86_FEATURE_ANY },
--	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_SALTWELL_MID,	X86_FEATURE_ANY },
--	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_BONNELL,	X86_FEATURE_ANY },
--	{ X86_VENDOR_CENTAUR,	5 },
--	{ X86_VENDOR_INTEL,	5 },
--	{ X86_VENDOR_NSC,	5 },
--	{ X86_VENDOR_ANY,	4 },
--	{}
--};
-+#define NO_SPECULATION	BIT(0)
-+#define NO_MELTDOWN	BIT(1)
-+#define NO_SSB		BIT(2)
-+#define NO_L1TF		BIT(3)
-+
-+#define VULNWL(_vendor, _family, _model, _whitelist)	\
-+	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
-+
-+#define VULNWL_INTEL(model, whitelist)		\
-+	VULNWL(INTEL, 6, INTEL_FAM6_##model, whitelist)
-+
-+#define VULNWL_AMD(family, whitelist)		\
-+	VULNWL(AMD, family, X86_MODEL_ANY, whitelist)
-+
-+static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
-+	VULNWL(ANY,	4, X86_MODEL_ANY,	NO_SPECULATION),
-+	VULNWL(CENTAUR,	5, X86_MODEL_ANY,	NO_SPECULATION),
-+	VULNWL(INTEL,	5, X86_MODEL_ANY,	NO_SPECULATION),
-+	VULNWL(NSC,	5, X86_MODEL_ANY,	NO_SPECULATION),
-+
-+	VULNWL_INTEL(ATOM_SALTWELL,		NO_SPECULATION),
-+	VULNWL_INTEL(ATOM_SALTWELL_TABLET,	NO_SPECULATION),
-+	VULNWL_INTEL(ATOM_SALTWELL_MID,		NO_SPECULATION),
-+	VULNWL_INTEL(ATOM_BONNELL,		NO_SPECULATION),
-+	VULNWL_INTEL(ATOM_BONNELL_MID,		NO_SPECULATION),
-+
-+	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF),
-+	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF),
-+	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF),
-+	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF),
-+	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF),
-+	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF),
-+
-+	VULNWL_INTEL(CORE_YONAH,		NO_SSB),
-+
-+	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF),
-+	VULNWL_INTEL(ATOM_GOLDMONT,		NO_L1TF),
-+	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_L1TF),
-+	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_L1TF),
-+
-+	VULNWL_AMD(0x0f,		NO_MELTDOWN | NO_SSB | NO_L1TF),
-+	VULNWL_AMD(0x10,		NO_MELTDOWN | NO_SSB | NO_L1TF),
-+	VULNWL_AMD(0x11,		NO_MELTDOWN | NO_SSB | NO_L1TF),
-+	VULNWL_AMD(0x12,		NO_MELTDOWN | NO_SSB | NO_L1TF),
+ #define VULNWL(_vendor, _family, _model, _whitelist)	\
+ 	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
+@@ -875,16 +876,16 @@ static const __initconst struct x86_cpu_
+ 	VULNWL_INTEL(ATOM_BONNELL,		NO_SPECULATION),
+ 	VULNWL_INTEL(ATOM_BONNELL_MID,		NO_SPECULATION),
  
--static const __initconst struct x86_cpu_id cpu_no_meltdown[] = {
--	{ X86_VENDOR_AMD },
-+	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
-+	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF),
- 	{}
- };
+-	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF),
+-	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF),
+-	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF),
+-	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF),
+-	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF),
+-	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF),
++	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY),
++	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF | MSBDS_ONLY),
++	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF | MSBDS_ONLY),
++	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF | MSBDS_ONLY),
++	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF | MSBDS_ONLY),
++	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF | MSBDS_ONLY),
  
--/* Only list CPUs which speculate but are non susceptible to SSB */
--static const __initconst struct x86_cpu_id cpu_no_spec_store_bypass[] = {
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_AIRMONT		},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT_X	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT_MID	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_CORE_YONAH		},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNL		},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNM		},
--	{ X86_VENDOR_AMD,	0x12,					},
--	{ X86_VENDOR_AMD,	0x11,					},
--	{ X86_VENDOR_AMD,	0x10,					},
--	{ X86_VENDOR_AMD,	0xf,					},
--	{}
--};
-+static bool __init cpu_matches(unsigned long which)
-+{
-+	const struct x86_cpu_id *m = x86_match_cpu(cpu_vuln_whitelist);
+ 	VULNWL_INTEL(CORE_YONAH,		NO_SSB),
  
--static const __initconst struct x86_cpu_id cpu_no_l1tf[] = {
--	/* in addition to cpu_no_speculation */
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT_X	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_AIRMONT		},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT_MID	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_AIRMONT_MID	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_GOLDMONT	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_GOLDMONT_X	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_GOLDMONT_PLUS	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNL		},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNM		},
--	{}
--};
-+	return m && !!(m->driver_data & which);
-+}
+-	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF),
++	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF | MSBDS_ONLY),
  
- static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
- {
- 	u64 ia32_cap = 0;
- 
--	if (x86_match_cpu(cpu_no_speculation))
-+	if (cpu_matches(NO_SPECULATION))
- 		return;
- 
- 	setup_force_cpu_bug(X86_BUG_SPECTRE_V1);
-@@ -909,15 +917,14 @@ static void __init cpu_set_bug_bits(stru
- 	if (cpu_has(c, X86_FEATURE_ARCH_CAPABILITIES))
- 		rdmsrl(MSR_IA32_ARCH_CAPABILITIES, ia32_cap);
- 
--	if (!x86_match_cpu(cpu_no_spec_store_bypass) &&
--	   !(ia32_cap & ARCH_CAP_SSB_NO) &&
-+	if (!cpu_matches(NO_SSB) && !(ia32_cap & ARCH_CAP_SSB_NO) &&
- 	   !cpu_has(c, X86_FEATURE_AMD_SSB_NO))
- 		setup_force_cpu_bug(X86_BUG_SPEC_STORE_BYPASS);
- 
+ 	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF),
+ 	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_MDS | NO_L1TF),
+@@ -928,8 +929,11 @@ static void __init cpu_set_bug_bits(stru
  	if (ia32_cap & ARCH_CAP_IBRS_ALL)
  		setup_force_cpu_cap(X86_FEATURE_IBRS_ENHANCED);
  
--	if (x86_match_cpu(cpu_no_meltdown))
-+	if (cpu_matches(NO_MELTDOWN))
+-	if (!cpu_matches(NO_MDS) && !(ia32_cap & ARCH_CAP_MDS_NO))
++	if (!cpu_matches(NO_MDS) && !(ia32_cap & ARCH_CAP_MDS_NO)) {
+ 		setup_force_cpu_bug(X86_BUG_MDS);
++		if (cpu_matches(MSBDS_ONLY))
++			setup_force_cpu_bug(X86_BUG_MSBDS_ONLY);
++	}
+ 
+ 	if (cpu_matches(NO_MELTDOWN))
  		return;
- 
- 	/* Rogue Data Cache Load? No! */
-@@ -926,7 +933,7 @@ static void __init cpu_set_bug_bits(stru
- 
- 	setup_force_cpu_bug(X86_BUG_CPU_MELTDOWN);
- 
--	if (x86_match_cpu(cpu_no_l1tf))
-+	if (cpu_matches(NO_L1TF))
- 		return;
- 
- 	setup_force_cpu_bug(X86_BUG_L1TF);
 
 
