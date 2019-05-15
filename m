@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE5AC04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:05:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CFEC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C60F20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:05:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17E0B20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:05:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921942;
-	bh=zmdvpFZNq1eHgVs5iROu0cb0hZUEmwkISLqgs+kG+3I=;
+	s=default; t=1557921951;
+	bh=hpaiWLlMOAiF0XSqvhQachl/QobSqB58Tht0r9bzpHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I8ijMehCrdn1rL5it3MYrnCP2EO/UNdsbFCtY/PBN3NrOrUpeaVibS2Y8ohOsxq/m
-	 RjDZUNHP4Y5cu1pm7dTFuGBRJAJBUu3wp0VkUFIxSBKaq4mAiw+hEXt6I10mPHnZhb
-	 2zpb3SLl5wMk9egmI7ogDclPzz0PEfsDvekh7Kjc=
+	b=LSls6aVNKdtQnSXiKX5ohlkR9NfDDqBk6TUrQj/RrCujUkefIT8rFreCoTHBhtZz8
+	 FQvkqeIHY4xnND4DQJrfzZvJ+HHCOAIGtcNC2BDrgTIKokzptohWiy1DgqSoC+WVO+
+	 PRfYZ5mb8fNRP5xTftJG6WDEbCAKX8W1DC5qZoXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729473AbfEOLKu (ORCPT
+        id S1729814AbfEOMFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:10:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44806 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:05:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729446AbfEOLKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:10:44 -0400
+        id S1729464AbfEOLKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:10:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 425EA20862;
-        Wed, 15 May 2019 11:10:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C43520862;
+        Wed, 15 May 2019 11:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918642;
-        bh=zmdvpFZNq1eHgVs5iROu0cb0hZUEmwkISLqgs+kG+3I=;
+        s=default; t=1557918648;
+        bh=hpaiWLlMOAiF0XSqvhQachl/QobSqB58Tht0r9bzpHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G2gDzrIKofOcE6VLVKoXpQFyph7IoablPkGV8tbUQ7U27NRoWmrxzN1Q89U+gEny7
-         3mXEMxiRgHiZ/rokb4SRMgtxXT9KrvSvz1oBYH1aftqm/xCSR0tASANdstWrmssFcs
-         dDhhaXeONLL5k+w2oU2vnwNg9HjlzAww6uTslm/c=
+        b=v0jIKJLofOnoA/WRXwZQQ3e2RQWxIgs+OPQeRuhwqOiE0xhO8o/k+OUtCQ+LkN2yA
+         kw/YxDtTej4PHCaL6rs6pf2WephyfickjfRiaKmD2Ty8uuMlBqULNjpNkUkV2KeHW+
+         IMiHXYJ6IZOKkY7YdDWHSEd6kXp3Q5XXIHAqL678=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 167/266] s390/3270: fix lockdep false positive on view->lock
-Date:   Wed, 15 May 2019 12:54:34 +0200
-Message-Id: <20190515090728.569820199@linuxfoundation.org>
+Subject: [PATCH 4.4 169/266] tools lib traceevent: Fix missing equality check for strcmp
+Date:   Wed, 15 May 2019 12:54:36 +0200
+Message-Id: <20190515090728.637382553@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,120 +63,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5712f3301a12c0c3de9cc423484496b0464f2faf ]
+[ Upstream commit f32c2877bcb068a718bb70094cd59ccc29d4d082 ]
 
-The spinlock in the raw3270_view structure is used by con3270, tty3270
-and fs3270 in different ways. For con3270 the lock can be acquired in
-irq context, for tty3270 and fs3270 the highest context is bh.
+There was a missing comparison with 0 when checking if type is "s64" or
+"u64". Therefore, the body of the if-statement was entered if "type" was
+"u64" or not "s64", which made the first strcmp() redundant since if
+type is "u64", it's not "s64".
 
-Lockdep sees the view->lock as a single class and if the 3270 driver
-is used for the console the following message is generated:
+If type is "s64", the body of the if-statement is not entered but since
+the remainder of the function consists of if-statements which will not
+be entered if type is "s64", we will just return "val", which is
+correct, albeit at the cost of a few more calls to strcmp(), i.e., it
+will behave just as if the if-statement was entered.
 
-WARNING: inconsistent lock state
-5.1.0-rc3-05157-g5c168033979d #12 Not tainted
---------------------------------
-inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
-swapper/0/1 [HC0[0]:SC1[1]:HE1:SE0] takes:
-(____ptrval____) (&(&view->lock)->rlock){?.-.}, at: tty3270_update+0x7c/0x330
+If type is neither "s64" or "u64", the body of the if-statement will be
+entered incorrectly and "val" returned. This means that any type that is
+checked after "s64" and "u64" is handled the same way as "s64" and
+"u64", i.e., the limiting of "val" to fit in for example "s8" is never
+reached.
 
-Introduce a lockdep subclass for the view lock to distinguish bh from
-irq locks.
+This was introduced in the kernel tree when the sources were copied from
+trace-cmd in commit f7d82350e597 ("tools/events: Add files to create
+libtraceevent.a"), and in the trace-cmd repo in 1cdbae6035cei
+("Implement typecasting in parser") when the function was introduced,
+i.e., it has always behaved the wrong way.
 
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Detected by cppcheck.
 
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
+Link: http://lkml.kernel.org/r/20190409091529.2686-1-rikard.falkeborn@gmail.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/char/con3270.c | 2 +-
- drivers/s390/char/fs3270.c  | 3 ++-
- drivers/s390/char/raw3270.c | 3 ++-
- drivers/s390/char/raw3270.h | 4 +++-
- drivers/s390/char/tty3270.c | 3 ++-
- 5 files changed, 10 insertions(+), 5 deletions(-)
+ tools/lib/traceevent/event-parse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/s390/char/con3270.c b/drivers/s390/char/con3270.c
-index bae98521c808c..3e5a7912044fa 100644
---- a/drivers/s390/char/con3270.c
-+++ b/drivers/s390/char/con3270.c
-@@ -627,7 +627,7 @@ con3270_init(void)
- 		     (void (*)(unsigned long)) con3270_read_tasklet,
- 		     (unsigned long) condev->read);
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index 743746a3c50d7..df3c73e9dea49 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -2201,7 +2201,7 @@ eval_type_str(unsigned long long val, const char *type, int pointer)
+ 		return val & 0xffffffff;
  
--	raw3270_add_view(&condev->view, &con3270_fn, 1);
-+	raw3270_add_view(&condev->view, &con3270_fn, 1, RAW3270_VIEW_LOCK_IRQ);
+ 	if (strcmp(type, "u64") == 0 ||
+-	    strcmp(type, "s64"))
++	    strcmp(type, "s64") == 0)
+ 		return val;
  
- 	INIT_LIST_HEAD(&condev->freemem);
- 	for (i = 0; i < CON3270_STRING_PAGES; i++) {
-diff --git a/drivers/s390/char/fs3270.c b/drivers/s390/char/fs3270.c
-index 71e9747380149..f0c86bcbe3161 100644
---- a/drivers/s390/char/fs3270.c
-+++ b/drivers/s390/char/fs3270.c
-@@ -463,7 +463,8 @@ fs3270_open(struct inode *inode, struct file *filp)
- 
- 	init_waitqueue_head(&fp->wait);
- 	fp->fs_pid = get_pid(task_pid(current));
--	rc = raw3270_add_view(&fp->view, &fs3270_fn, minor);
-+	rc = raw3270_add_view(&fp->view, &fs3270_fn, minor,
-+			      RAW3270_VIEW_LOCK_BH);
- 	if (rc) {
- 		fs3270_free_view(&fp->view);
- 		goto out;
-diff --git a/drivers/s390/char/raw3270.c b/drivers/s390/char/raw3270.c
-index 220acb4cbee52..9c350e6d75bf7 100644
---- a/drivers/s390/char/raw3270.c
-+++ b/drivers/s390/char/raw3270.c
-@@ -956,7 +956,7 @@ raw3270_deactivate_view(struct raw3270_view *view)
-  * Add view to device with minor "minor".
-  */
- int
--raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor)
-+raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor, int subclass)
- {
- 	unsigned long flags;
- 	struct raw3270 *rp;
-@@ -978,6 +978,7 @@ raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor)
- 		view->cols = rp->cols;
- 		view->ascebc = rp->ascebc;
- 		spin_lock_init(&view->lock);
-+		lockdep_set_subclass(&view->lock, subclass);
- 		list_add(&view->list, &rp->view_list);
- 		rc = 0;
- 		spin_unlock_irqrestore(get_ccwdev_lock(rp->cdev), flags);
-diff --git a/drivers/s390/char/raw3270.h b/drivers/s390/char/raw3270.h
-index e1e41c2861fbb..5ae54317857a0 100644
---- a/drivers/s390/char/raw3270.h
-+++ b/drivers/s390/char/raw3270.h
-@@ -155,6 +155,8 @@ struct raw3270_fn {
- struct raw3270_view {
- 	struct list_head list;
- 	spinlock_t lock;
-+#define RAW3270_VIEW_LOCK_IRQ	0
-+#define RAW3270_VIEW_LOCK_BH	1
- 	atomic_t ref_count;
- 	struct raw3270 *dev;
- 	struct raw3270_fn *fn;
-@@ -163,7 +165,7 @@ struct raw3270_view {
- 	unsigned char *ascebc;		/* ascii -> ebcdic table */
- };
- 
--int raw3270_add_view(struct raw3270_view *, struct raw3270_fn *, int);
-+int raw3270_add_view(struct raw3270_view *, struct raw3270_fn *, int, int);
- int raw3270_activate_view(struct raw3270_view *);
- void raw3270_del_view(struct raw3270_view *);
- void raw3270_deactivate_view(struct raw3270_view *);
-diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
-index e96fc7fd94984..ab95d24b991b4 100644
---- a/drivers/s390/char/tty3270.c
-+++ b/drivers/s390/char/tty3270.c
-@@ -937,7 +937,8 @@ static int tty3270_install(struct tty_driver *driver, struct tty_struct *tty)
- 		return PTR_ERR(tp);
- 
- 	rc = raw3270_add_view(&tp->view, &tty3270_fn,
--			      tty->index + RAW3270_FIRSTMINOR);
-+			      tty->index + RAW3270_FIRSTMINOR,
-+			      RAW3270_VIEW_LOCK_BH);
- 	if (rc) {
- 		tty3270_free_view(tp);
- 		return rc;
+ 	if (strcmp(type, "s8") == 0)
 -- 
 2.20.1
 
