@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFAEC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1697C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB37720818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 741AF20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919756;
-	bh=Yx3WQak/aTWgcbpjeR3qw4nu2BfrfB+OfSk2eJbZTyk=;
+	s=default; t=1557919761;
+	bh=/d9PVLH/lgj6KLU9qXfdf0QWirSWnEW5nYPk3uGDmg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MUxi7MAJtcDNBB5NknXIC9fqhTCkalkcvA8Nx9okdFjfP4I7HO8hAanF2YA7WQEz0
-	 mO5+SnFDjlyh5gFFoVgOLV04DWPh4gFXkFmNQzswPB4qS96hpCIL1334fGliSrD4w1
-	 JAPsMvi8tm4eCl6fTxsk8F+Zjqt6BAaXmHTMXuBU=
+	b=jHR3kHBGetpwvBCCExfOKeeDN0r4o3dz2Zg5Pgyt8gWXoEd4LXCspq7vVleegj9Bq
+	 tRKrBha9bX2PgaVnhRz3ycR8UqDCx0N4eZkd7syFTG/+iqaPNnkNmxHLCxLG10+q2t
+	 iKhmoC5SR7RrRUr9jI0qvwuDMBN4llKFbo1SOEf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732519AbfEOL3P (ORCPT
+        id S1732542AbfEOL3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:29:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40422 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:29:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731818AbfEOL3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:29:12 -0400
+        id S1732057AbfEOL3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:29:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94FBF20843;
-        Wed, 15 May 2019 11:29:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D202C2084A;
+        Wed, 15 May 2019 11:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919752;
-        bh=Yx3WQak/aTWgcbpjeR3qw4nu2BfrfB+OfSk2eJbZTyk=;
+        s=default; t=1557919757;
+        bh=/d9PVLH/lgj6KLU9qXfdf0QWirSWnEW5nYPk3uGDmg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fIvCw+uOWc6xo9+naTPoOo0vpw/FWLoWsDbMb66BCK+fDVAM8cg/4oCEo9QesCmjX
-         vX6Tyxr0iHLMgsPAJ9wBMthOt3RupA5298sx9Qc894y1WkJyKQWfYZ3Bc6UzhDu9NS
-         ymQNbTga5GydX8mHGTo3sUc3lL4k5uJTnSw2WDts=
+        b=LbrnCu+Jlrrl9bdW/fI08OhgUkvX+4CiRCzc/4ENJQcBwofltAud0LQzvJ11U2s0A
+         Gn5W3/7OUOCm54SHl/0a4laboIynyi/Z310i5wg3Iu/yq4UtNFgiiyBfXql9+SUVDd
+         gcxBQx2sGX3Hhj/zkebm9GbqL2cWcPIdKp5cw3Pk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        stable@vger.kernel.org, Po-Hsu Lin <po-hsu.lin@canonical.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 036/137] mISDN: Check address length before reading address family
-Date:   Wed, 15 May 2019 12:55:17 +0200
-Message-Id: <20190515090655.987485141@linuxfoundation.org>
+Subject: [PATCH 5.0 075/137] selftests/net: correct the return value for run_netsocktests
+Date:   Wed, 15 May 2019 12:55:56 +0200
+Message-Id: <20190515090658.877650303@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -61,35 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 238ffdc49ef98b15819cfd5e3fb23194e3ea3d39 ]
+[ Upstream commit 30c04d796b693e22405c38e9b78e9a364e4c77e6 ]
 
-KMSAN will complain if valid address length passed to bind() is shorter
-than sizeof("struct sockaddr_mISDN"->family) bytes.
+The run_netsocktests will be marked as passed regardless the actual test
+result from the ./socket:
 
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+    selftests: net: run_netsocktests
+    ========================================
+    --------------------
+    running socket test
+    --------------------
+    [FAIL]
+    ok 1..6 selftests: net: run_netsocktests [PASS]
+
+This is because the test script itself has been successfully executed.
+Fix this by exit 1 when the test failed.
+
+Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/mISDN/socket.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/run_netsocktests | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/isdn/mISDN/socket.c b/drivers/isdn/mISDN/socket.c
-index 15d3ca37669a4..04da3a17cd950 100644
---- a/drivers/isdn/mISDN/socket.c
-+++ b/drivers/isdn/mISDN/socket.c
-@@ -710,10 +710,10 @@ base_sock_bind(struct socket *sock, struct sockaddr *addr, int addr_len)
- 	struct sock *sk = sock->sk;
- 	int err = 0;
- 
--	if (!maddr || maddr->family != AF_ISDN)
-+	if (addr_len < sizeof(struct sockaddr_mISDN))
- 		return -EINVAL;
- 
--	if (addr_len < sizeof(struct sockaddr_mISDN))
-+	if (!maddr || maddr->family != AF_ISDN)
- 		return -EINVAL;
- 
- 	lock_sock(sk);
+diff --git a/tools/testing/selftests/net/run_netsocktests b/tools/testing/selftests/net/run_netsocktests
+index b093f39c298c3..14e41faf2c574 100755
+--- a/tools/testing/selftests/net/run_netsocktests
++++ b/tools/testing/selftests/net/run_netsocktests
+@@ -7,7 +7,7 @@ echo "--------------------"
+ ./socket
+ if [ $? -ne 0 ]; then
+ 	echo "[FAIL]"
++	exit 1
+ else
+ 	echo "[PASS]"
+ fi
+-
 -- 
 2.20.1
 
