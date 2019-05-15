@@ -2,212 +2,99 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC97C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9930C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C05042089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD562089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:37:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="U8qBrTd5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbfEOHgg (ORCPT
+        id S1726448AbfEOHhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 03:36:36 -0400
-Received: from twhmllg3.macronix.com ([211.75.127.131]:54393 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfEOHgg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 03:36:36 -0400
-Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
-        by TWHMLLG3.macronix.com with ESMTP id x4F7aS9F078422;
-        Wed, 15 May 2019 15:36:28 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
-        by Forcepoint Email with ESMTP id EE36B97764010B1F89B8;
-        Wed, 15 May 2019 15:36:28 +0800 (CST)
-In-Reply-To: <20190512152328.49576a0f@xps13>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw> <1555320234-15802-5-git-send-email-masonccyang@mxic.com.tw> <20190512152328.49576a0f@xps13>
-To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
-Cc:     bbrezillon@kernel.org, broonie@kernel.org,
-        christophe.kerello@st.com, computersforpeace@gmail.com,
-        devicetree@vger.kernel.org, dwmw2@infradead.org,
-        geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org,
-        liang.yang@amlogic.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        marcel.ziswiler@toradex.com, marek.vasut@gmail.com,
-        mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at,
-        robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
-Subject: Re: [PATCH v3 4/4] dt-bindings: mfd: Document Macronix MX25F0A controller
- bindings
+        Wed, 15 May 2019 03:37:23 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:41424 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725902AbfEOHhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 03:37:23 -0400
+Received: from zn.tnic (p200300EC2F0A7C00C5AEE5FDCF635866.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:7c00:c5ae:e5fd:cf63:5866])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0FDCD1EC050B;
+        Wed, 15 May 2019 09:37:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1557905841;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Q+jQ7LRBrR4DiRw8jrw+SJJLRHdv1HmQmbSvhXSEgFw=;
+        b=U8qBrTd50D3YFy21SDLZfmsKPERosfB595SMymT6ph8MRstvguZBURaoNnlRYk4bOFWN2E
+        j4qWLFpP/vrUNb2toRQBXifQII5XsK+EZAPx57vY29tQbFGSvORHHr7jS7WXxen8lOsW+L
+        lrWsK0eaUpknXHTe3SPijzeOF7zncrU=
+Date:   Wed, 15 May 2019 09:37:15 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Zhao Yakui <yakui.zhao@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+        Jason Chen CJ <jason.cj.chen@intel.com>
+Subject: Re: [PATCH v6 4/4] x86/acrn: Add hypercall for ACRN guest
+Message-ID: <20190515073715.GC24212@zn.tnic>
+References: <1556595926-17910-1-git-send-email-yakui.zhao@intel.com>
+ <1556595926-17910-5-git-send-email-yakui.zhao@intel.com>
 MIME-Version: 1.0
-X-KeepSent: 0FD6EB50:C92AD6D4-482583FB:00285AB8;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF0FD6EB50.C92AD6D4-ON482583FB.00285AB8-482583FB.0029CAB7@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Wed, 15 May 2019 15:36:29 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/05/15 PM 03:36:28,
-        Serialize complete at 2019/05/15 PM 03:36:28
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG3.macronix.com x4F7aS9F078422
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1556595926-17910-5-git-send-email-yakui.zhao@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Miquel,
-
-
-> > +Macronix MX25F0A MultiFunction Device Tree Bindings
-> > +----------------------------------------------------
-> > +
-> > +MX25F0A is a MultiFunction Device with SPI and raw NAND, which
-> > +supports either spi host controller or raw nand controller.
+On Tue, Apr 30, 2019 at 11:45:26AM +0800, Zhao Yakui wrote:
+> When the ACRN hypervisor is detected, the hypercall is needed so that the
+> ACRN guest can query/config some settings. For example: it can be used
+> to query the resources in hypervisor and manage the CPU/memory/device/
+> interrupt for guest operating system.
 > 
-> Acronyms in plain English should be in upper case.
-
-okay, will fix.
-
-> > +Example:
-> > +
-> > +   mxic: mx25f0a@43c30000 {
-> > +      compatible = "mxic,mx25f0a";
-> > +      reg = <0x43c30000 0x10000>, <0xa0000000 0x4000000>;
-> > +      reg-names = "regs", "dirmap";
-> > +
-> > +      /* spi */
-> > +      clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
-> > +      clock-names = "send_clk", "send_dly_clk", "ps_clk";
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      flash@0 {
-> > +         compatible = "jedec,spi-nor";
-> > +         reg = <0>;
-> > +         spi-max-frequency = <25000000>;
-> > +         spi-tx-bus-width = <4>;
-> > +         spi-rx-bus-width = <4>;
-> > +      };
-> > +
-> > +      /* nand */
-> > +      nand-ecc-mode = "soft";
-> > +      nand-ecc-algo = "bch";
-> > +      nand-ecc-step-size = <512>;
-> > +      nand-ecc-strength = <8>;
+> Add the hypercall so that the ACRN guest can communicate with the
+> low-level ACRN hypervisor. On x86 it is implemented with the VMCALL
+> instruction.
 > 
-> Any reason to enforce 512B/8b correction? Why not letting the core
-> choose for you depending on the NAND chip's requirements?
+> Co-developed-by: Jason Chen CJ <jason.cj.chen@intel.com>
+> Signed-off-by: Jason Chen CJ <jason.cj.chen@intel.com>
+> Signed-off-by: Zhao Yakui <yakui.zhao@intel.com>
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+> V1->V2: Refine the comments for the function of acrn_hypercall0/1/2
+> v2->v3: Use the "vmcall" mnemonic to replace hard-code byte definition
+> v4->v5: Use _ASM_X86_ACRN_HYPERCALL_H instead of _ASM_X86_ACRNHYPERCALL_H.
+>         Use the "VMCALL" mnemonic in comment/commit log.
+>         Uppercase r8/rdi/rsi/rax for hypercall parameter register in comment.
+> v5->v6: Remove explicit local register variable for inline assembly
+> ---
+>  arch/x86/include/asm/acrn_hypercall.h | 84 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 84 insertions(+)
+>  create mode 100644 arch/x86/include/asm/acrn_hypercall.h
 > 
+> diff --git a/arch/x86/include/asm/acrn_hypercall.h b/arch/x86/include/asm/acrn_hypercall.h
+> new file mode 100644
+> index 0000000..5cb438e
+> --- /dev/null
+> +++ b/arch/x86/include/asm/acrn_hypercall.h
 
-I thought here is just a raw NAND DTS example. 
-Will remove it.
+Questions:
 
-> 
-> Anyway, I think you can have only one or the other (NAND or SPI), not
-> both, and you probably should have a compatible or a property to tell
-> the kernel which one you are using, right?
-> 
+* why isn't this in acrn.h and needs to be a separate header?
 
-yes, you are right.
+* why aren't those functions used anywhere?
 
-New DTS is bellow.
--------------------------------------------------------------------------->
+-- 
+Regards/Gruss,
+    Boris.
 
-Macronix Flash Memory Controller Device Tree Bindings
------------------------------------------------------
-
-Macronix Flash Memory Controller supports serial and raw Flash, including
-NOR and NAND Flash for high throughput and low pin count applications.
-It's a MultiFunction Device which supports either SPI host controller or
-raw NAND controller.
-
-Required properties:
-- compatible: should be "mxic,mfd"
-- reg: should contain 2 entries, one for the registers and one for the 
-direct
-       mapping area in SPI mode.
-- reg-names: should contain "regs" and "dirmap"
-- interrupts: interrupt line connected to this controller
-- SPI:
-        - #address-cells: should be 1
-        - #size-cells: should be 0
-        - clock-names: should contain "ps_clk", "send_clk" and
-                       "send_dly_clk"
-        - clocks: should contain 3 entries for the "ps_clk", "send_clk"
-                  and "send_dly_clk" clocks
-- Raw NAND:
-        - nand-ecc-mode = "soft";
-        - nand-ecc-algo = "bch";
-
-Example:
-- SPI mode:
-
-        mxic: mxic-mfd@43c30000 {
-                compatible = "mxic,mfd";
-                reg = <0x43c30000 0x10000>, <0xa0000000 0x4000000>;
-                reg-names = "regs", "dirmap";
-                clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
-                clock-names = "send_clk", "send_dly_clk", "ps_clk";
-                #address-cells = <1>;
-                #size-cells = <0>;
-
-                flash@0 {
-                        compatible = "jedec,spi-nor";
-                        reg = <0>;
-                        spi-max-frequency = <25000000>;
-                        spi-tx-bus-width = <4>;
-                        spi-rx-bus-width = <4>;
-                };
-        };
- 
-- Raw NAND mode:
-
-        mxic: mxic-mfd@43c30000 {
-                compatible = "mxic,mfd";
-                reg = <0x43c30000 0x10000>, <0xa0000000 0x4000000>;
-                reg-names = "regs", "dirmap";
-
-                nand-ecc-mode = "soft";
-                nand-ecc-algo = "bch";
-        };  
-
----------------------------------------------------------------------< 
-
-thanks for your review.
-
-best regards,
-Mason
-
-
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+Good mailing practices for 400: avoid top-posting and trim the reply.
