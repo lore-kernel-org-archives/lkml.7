@@ -2,75 +2,88 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4497C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE8FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9592053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F30D2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:52:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557921120;
+	bh=c73fBmBoUFbpJi5x/+IpwqKCWz6Hyese2gMWQna4xCI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dBLHb+f2U0c+ZBj4jO3CrWGV8g96fW5R9MCO9Zgzjg57eEw975ssztZLC4O+JxBgS
+	 faQokIfmhwvUqcLchqdNNi1Q4od/QItBPHN+QZnFgHWGJW5xdzFbw84EAbJOlEl8GJ
+	 hAAmQHp7WAOYi2LLK51GGF6hK+E0WqQK1QhpEQWw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731450AbfEOLvy (ORCPT
+        id S1730337AbfEOLUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:51:54 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8199 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727413AbfEOLUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:20:55 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C0A139ED21B7C3B3FD36;
-        Wed, 15 May 2019 19:20:53 +0800 (CST)
-Received: from HGHY2Y004646261.china.huawei.com (10.184.12.158) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 15 May 2019 19:20:45 +0800
-From:   Zenghui Yu <yuzenghui@huawei.com>
-To:     <acme@kernel.org>, <acme@redhat.com>, <peterz@infradead.org>,
-        <mingo@redhat.com>
-CC:     <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <john.garry@huawei.com>,
-        <wanghaibin.wang@huawei.com>, <linux-kernel@vger.kernel.org>,
-        Zenghui Yu <yuzenghui@huawei.com>
-Subject: [PATCH] perf jevents: Remove unused variables
-Date:   Wed, 15 May 2019 11:19:29 +0000
-Message-ID: <1557919169-23972-1-git-send-email-yuzenghui@huawei.com>
-X-Mailer: git-send-email 2.6.4.windows.1
+        Wed, 15 May 2019 07:20:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730800AbfEOLUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:20:49 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40748206BF;
+        Wed, 15 May 2019 11:20:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557919248;
+        bh=c73fBmBoUFbpJi5x/+IpwqKCWz6Hyese2gMWQna4xCI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HvYQdqSTDt2W0cxU1rhKHzHbYs2JIawSr5DdAo3puR0LjOsTJOjmOcCUMG3LQNdCL
+         9VgHGtTfdZHo3+UXWLJOp9rzuvlEG/KYp2bZxolJ3Vw62mW681hlryiroIKzLcUKvz
+         MnQ93CJ60xHb4jgrc6JlTbV9RCvXKsqTAB3iYQd0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 106/115] net: seeq: fix crash caused by not set dev.parent
+Date:   Wed, 15 May 2019 12:56:26 +0200
+Message-Id: <20190515090706.834096793@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
+References: <20190515090659.123121100@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.184.12.158]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix gcc warning:
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-pmu-events/jevents.c: In function ‘save_arch_std_events’:
-pmu-events/jevents.c:417:15: warning: unused variable ‘sb’ [-Wunused-variable]
-  struct stat *sb = data;
-               ^~
+[ Upstream commit 5afcd14cfc7fed1bcc8abcee2cef82732772bfc2 ]
 
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+The old MIPS implementation of dma_cache_sync() didn't use the dev argument,
+but commit c9eb6172c328 ("dma-mapping: turn dma_cache_sync into a
+dma_map_ops method") changed that, so we now need to set dev.parent.
+
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/perf/pmu-events/jevents.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/net/ethernet/seeq/sgiseeq.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 68c92bb..92e60fd 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -414,7 +414,6 @@ static int save_arch_std_events(void *data, char *name, char *event,
- 				char *metric_name, char *metric_group)
- {
- 	struct event_struct *es;
--	struct stat *sb = data;
+--- a/drivers/net/ethernet/seeq/sgiseeq.c
++++ b/drivers/net/ethernet/seeq/sgiseeq.c
+@@ -734,6 +734,7 @@ static int sgiseeq_probe(struct platform
+ 	}
  
- 	es = malloc(sizeof(*es));
- 	if (!es)
--- 
-1.8.3.1
+ 	platform_set_drvdata(pdev, dev);
++	SET_NETDEV_DEV(dev, &pdev->dev);
+ 	sp = netdev_priv(dev);
+ 
+ 	/* Make private data page aligned */
 
 
