@@ -2,160 +2,278 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6FFC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3543AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E11CB206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2159206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:41:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="JZJQkfh5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726360AbfEOHlm (ORCPT
+        id S1726482AbfEOHlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 03:41:42 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37564 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725871AbfEOHlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 03:41:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 941F1374;
-        Wed, 15 May 2019 00:41:41 -0700 (PDT)
-Received: from [10.163.1.137] (unknown [10.163.1.137])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5B9F93F71E;
-        Wed, 15 May 2019 00:41:36 -0700 (PDT)
-Subject: Re: [PATCH] mm: refactor __vunmap() to avoid duplicated call to
- find_vm_area()
-To:     Roman Gushchin <guro@fb.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-References: <20190514235111.2817276-1-guro@fb.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <7ad2b16d-c1a3-b826-df4d-6d9ed1d9fc9f@arm.com>
-Date:   Wed, 15 May 2019 13:11:46 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 15 May 2019 03:41:49 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38336 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfEOHls (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 03:41:48 -0400
+Received: by mail-ed1-f65.google.com with SMTP id w11so2763773edl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 00:41:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2zskjbN09R5wendyqZQRHX/H4SiND0VyVsc8hHlWH90=;
+        b=JZJQkfh5WJgpd9RQilQ/pHLDXquURzd9PP7da/2TJy+L6MibswSPsSTQCbNlnr0bG1
+         H1IOgDxbiga6cG2caK4SV6oMYSjkhxEj+JDTxsL4iMvHGMPynSqbwQ1+W1ZidZdyDUfp
+         A4O6d8SaTe4aarn+lAeSUMg2L9dS5IRK1y5uA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=2zskjbN09R5wendyqZQRHX/H4SiND0VyVsc8hHlWH90=;
+        b=dJrQbD9S7kZYpOH14AMfdoDq5o6P2rxz15s/ydugyYipqbP91CHOaRHav7ANA+JRgG
+         gl7mM1Ap4XvAQh83wyTaSsTtoExOWNhpQoKoyz7UkVuVD+xpml7KOPJH0/iC1PrIN74c
+         Z4iozdTmMehSfH62KP1N2JCD4/YpDlp8PJ7s+ziQQsp37sQ74qakGYdweYq4qJKO3eBv
+         Mwa9BfYIdUtddP7isM29MFvtWrLDR9x6yePDlhYe/SKKtkahLxBn3PmnN8ADZ2G3uu5a
+         LBTLCiqVMSleKqS84Vk4dej6nRZQiKPTSOvaO3/U7ZQLqdNhxV+EOy6VwnhqNd0Wh/Ic
+         uL7Q==
+X-Gm-Message-State: APjAAAV4N197IsQRlhmC/mBpnAB9Hph423wZ9WW4neLu2Sw5SyVmeOSQ
+        GOFM8NKgwJIzYCiLogV1SwVKAA==
+X-Google-Smtp-Source: APXvYqxlVorrQMT/bjOZ2bxd9Tq8NFaUM6+xiZePbw/NWhiH17BnzbbypQzqxmDX8X/b0giy2e7tHQ==
+X-Received: by 2002:a50:8dcd:: with SMTP id s13mr40466209edh.247.1557906106265;
+        Wed, 15 May 2019 00:41:46 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id b48sm515288edb.28.2019.05.15.00.41.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 May 2019 00:41:45 -0700 (PDT)
+Date:   Wed, 15 May 2019 09:41:41 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Theodore Ts'o <tytso@mit.edu>,
+        Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
+        Knut Omang <knut.omang@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, sboyd@kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, linux-nvdimm@lists.01.org,
+        linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>, jdike@addtoit.com,
+        Joel Stanley <joel@jms.id.au>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+Message-ID: <20190515074141.GY17751@phenom.ffwll.local>
+Mail-Followup-To: Brendan Higgins <brendanhiggins@google.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
+        Knut Omang <knut.omang@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@google.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        "Luis R. Rodriguez" <mcgrof@kernel.org>,
+        Rob Herring <robh@kernel.org>, sboyd@kernel.org,
+        Shuah Khan <shuah@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kunit-dev@googlegroups.com,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>, jdike@addtoit.com,
+        Joel Stanley <joel@jms.id.au>, Julia Lawall <julia.lawall@lip6.fr>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Petr Mladek <pmladek@suse.com>, Richard Weinberger <richard@nod.at>,
+        David Rientjes <rientjes@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, wfg@linux.intel.com
+References: <20190509133551.GD29703@mit.edu>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+ <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
+ <20190509214233.GA20877@mit.edu>
+ <80c72e64-2665-bd51-f78c-97f50f9a53ba@gmail.com>
+ <20190511173344.GA8507@mit.edu>
+ <20190513144451.GQ17751@phenom.ffwll.local>
+ <20190514060433.GA181462@google.com>
+ <CAKMK7uHqtSF_sazJTbFL+xmQJRk4iwukCKZHoDHhsKkLXk=ECQ@mail.gmail.com>
+ <20190514183618.GC109557@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20190514235111.2817276-1-guro@fb.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514183618.GC109557@google.com>
+X-Operating-System: Linux phenom 4.14.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 14, 2019 at 11:36:18AM -0700, Brendan Higgins wrote:
+> On Tue, May 14, 2019 at 02:05:05PM +0200, Daniel Vetter wrote:
+> > On Tue, May 14, 2019 at 8:04 AM Brendan Higgins
+> > <brendanhiggins@google.com> wrote:
+> > >
+> > > On Mon, May 13, 2019 at 04:44:51PM +0200, Daniel Vetter wrote:
+> > > > On Sat, May 11, 2019 at 01:33:44PM -0400, Theodore Ts'o wrote:
+> > > > > On Fri, May 10, 2019 at 02:12:40PM -0700, Frank Rowand wrote:
+> > > > > > However, the reply is incorrect.  Kselftest in-kernel tests (which
+> > > > > > is the context here) can be configured as built in instead of as
+> > > > > > a module, and built in a UML kernel.  The UML kernel can boot,
+> > > > > > running the in-kernel tests before UML attempts to invoke the
+> > > > > > init process.
+> > > > >
+> > > > > Um, Citation needed?
+> > > > >
+> > > > > I don't see any evidence for this in the kselftest documentation, nor
+> > > > > do I see any evidence of this in the kselftest Makefiles.
+> > > > >
+> > > > > There exists test modules in the kernel that run before the init
+> > > > > scripts run --- but that's not strictly speaking part of kselftests,
+> > > > > and do not have any kind of infrastructure.  As noted, the
+> > > > > kselftests_harness header file fundamentally assumes that you are
+> > > > > running test code in userspace.
+> > > >
+> > > > Yeah I really like the "no userspace required at all" design of kunit,
+> > > > while still collecting results in a well-defined way (unless the current
+> > > > self-test that just run when you load the module, with maybe some
+> > > > kselftest ad-hoc wrapper around to collect the results).
+> > > >
+> > > > What I want to do long-term is to run these kernel unit tests as part of
+> > > > the build-testing, most likely in gitlab (sooner or later, for drm.git
+> > >
+> > > Totally! This is part of the reason I have been insisting on a minimum
+> > > of UML compatibility for all unit tests. If you can suffiently constrain
+> > > the environment that is required for tests to run in, it makes it much
+> > > easier not only for a human to run your tests, but it also makes it a
+> > > lot easier for an automated service to be able to run your tests.
+> > >
+> > > I actually have a prototype presubmit already working on my
+> > > "stable/non-upstream" branch. You can checkout what presubmit results
+> > > look like here[1][2].
+> > 
+> > ug gerrit :-)
+> 
+> Yeah, yeah, I know, but it is a lot easier for me to get a project set
+> up here using Gerrit, when we already use that for a lot of other
+> projects.
+> 
+> Also, Gerrit has gotten a lot better over the last two years or so. Two
+> years ago, I wouldn't touch it with a ten foot pole. It's not so bad
+> anymore, at least if you are used to using a web UI to review code.
 
+I was somewhat joking, I'm just not used to gerrit ... And seems to indeed
+be a lot more polished than last time I looked at it seriously.
 
-On 05/15/2019 05:21 AM, Roman Gushchin wrote:
-> __vunmap() calls find_vm_area() twice without an obvious reason:
-> first directly to get the area pointer, second indirectly by calling
-> vm_remove_mappings()->remove_vm_area(), which is again searching
-> for the area.
+> > > > only ofc). So that people get their pull requests (and patch series, we
+> > > > have some ideas to tie this into patchwork) automatically tested for this
+> > >
+> > > Might that be Snowpatch[3]? I talked to Russell, the creator of Snowpatch,
+> > > and he seemed pretty open to collaboration.
+> > >
+> > > Before I heard about Snowpatch, I had an intern write a translation
+> > > layer that made Prow (the presubmit service that I used in the prototype
+> > > above) work with LKML[4].
+> > 
+> > There's about 3-4 forks/clones of patchwork. snowpatch is one, we have
+> > a different one on freedesktop.org. It's a bit a mess :-/
 > 
-> To remove this redundancy, let's split remove_vm_area() into
-> __remove_vm_area(struct vmap_area *), which performs the actual area
-> removal, and remove_vm_area(const void *addr) wrapper, which can
-> be used everywhere, where it has been used before. Let's pass
-> a pointer to the vm_area instead of vm_struct to vm_remove_mappings(),
-> so it can pass it to __remove_vm_area() and avoid the redundant area
-> lookup.
-> 
-> On my test setup, I've got 5-10% speed up on vfree()'ing 1000000
-> of 4-pages vmalloc blocks.
-> 
-> Perf report before:
->   29.44%  cat      [kernel.kallsyms]  [k] free_unref_page
->   11.88%  cat      [kernel.kallsyms]  [k] find_vmap_area
->    9.28%  cat      [kernel.kallsyms]  [k] __free_pages
->    7.44%  cat      [kernel.kallsyms]  [k] __slab_free
->    7.28%  cat      [kernel.kallsyms]  [k] vunmap_page_range
->    4.56%  cat      [kernel.kallsyms]  [k] __vunmap
->    3.64%  cat      [kernel.kallsyms]  [k] __purge_vmap_area_lazy
->    3.04%  cat      [kernel.kallsyms]  [k] __free_vmap_area
-> 
-> Perf report after:
->   32.41%  cat      [kernel.kallsyms]  [k] free_unref_page
->    7.79%  cat      [kernel.kallsyms]  [k] find_vmap_area
->    7.40%  cat      [kernel.kallsyms]  [k] __slab_free
->    7.31%  cat      [kernel.kallsyms]  [k] vunmap_page_range
->    6.84%  cat      [kernel.kallsyms]  [k] __free_pages
->    6.01%  cat      [kernel.kallsyms]  [k] __vunmap
->    3.98%  cat      [kernel.kallsyms]  [k] smp_call_function_single
->    3.81%  cat      [kernel.kallsyms]  [k] __purge_vmap_area_lazy
->    2.77%  cat      [kernel.kallsyms]  [k] __free_vmap_area
-> 
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> ---
->  mm/vmalloc.c | 52 +++++++++++++++++++++++++++++-----------------------
->  1 file changed, 29 insertions(+), 23 deletions(-)
-> 
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index c42872ed82ac..8d4907865614 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -2075,6 +2075,22 @@ struct vm_struct *find_vm_area(const void *addr)
->  	return NULL;
->  }
->  
-> +static struct vm_struct *__remove_vm_area(struct vmap_area *va)
-> +{
-> +	struct vm_struct *vm = va->vm;
-> +
-> +	spin_lock(&vmap_area_lock);
-> +	va->vm = NULL;
-> +	va->flags &= ~VM_VM_AREA;
-> +	va->flags |= VM_LAZY_FREE;
-> +	spin_unlock(&vmap_area_lock);
-> +
-> +	kasan_free_shadow(vm);
-> +	free_unmap_vmap_area(va);
-> +
-> +	return vm;
-> +}
-> +
->  /**
->   * remove_vm_area - find and remove a continuous kernel virtual area
->   * @addr:	    base address
-> @@ -2087,26 +2103,14 @@ struct vm_struct *find_vm_area(const void *addr)
->   */
->  struct vm_struct *remove_vm_area(const void *addr)
->  {
-> +	struct vm_struct *vm = NULL;
->  	struct vmap_area *va;
->  
-> -	might_sleep();
+> Oh, I didn't realize that. I found your patchwork instance here[5], but
+> do you have a place where I can see the changes you have added to
+> support presubmit?
 
-Is not this necessary any more ?
+Ok here's a few links. Aside from the usual patch view we've also added a
+series view:
 
-> -
->  	va = find_vmap_area((unsigned long)addr);
-> -	if (va && va->flags & VM_VM_AREA) {
-> -		struct vm_struct *vm = va->vm;
-> -
-> -		spin_lock(&vmap_area_lock);
-> -		va->vm = NULL;
-> -		va->flags &= ~VM_VM_AREA;
-> -		va->flags |= VM_LAZY_FREE;
-> -		spin_unlock(&vmap_area_lock);
-> -
-> -		kasan_free_shadow(vm);
-> -		free_unmap_vmap_area(va);
-> +	if (va && va->flags & VM_VM_AREA)
-> +		vm = __remove_vm_area(va);
->  
-> -		return vm;
-> -	}
-> -	return NULL;
-> +	return vm;
->  }
+https://patchwork.freedesktop.org/project/intel-gfx/series/?ordering=-last_updated
 
-Other callers of remove_vm_area() cannot use __remove_vm_area() directly as well
-to save a look up ?
+This ties the patches + cover letter together, and it even (tries to at
+least) track revisions. Here's an example which is currently at revision
+9:
+
+https://patchwork.freedesktop.org/series/57232/
+
+Below the patch list for each revision we also have the test result list.
+If you click on the grey bar it'll expand with the summary from CI, the
+"See full logs" is link to the full results from our CI. This is driven
+with some REST api from our jenkins.
+
+Patchwork also sends out mails for these results.
+
+Source is on gitlab: https://gitlab.freedesktop.org/patchwork-fdo
+ 
+> > > I am not married to either approach, but I think between the two of
+> > > them, most of the initial legwork has been done to make presubmit on
+> > > LKML a reality.
+> > 
+> > We do have presubmit CI working already with our freedesktop.org
+> > patchwork. The missing glue is just tying that into gitlab CI somehow
+> > (since we want to unify build testing more and make it easier for
+> > contributors to adjust things).
+> 
+> I checked out a couple of your projects on your patchwork instance: AMD
+> X.Org drivers, DRI devel, and Wayland. I saw the tab you added for
+> tests, but none of them actually had any test results. Can you point me
+> at one that does?
+
+Atm we use the CI stuff only on intel-gfx, with the our gpu CI farm, see
+links above.
+
+Cheers, Daniel
+
+> 
+> Cheers!
+> 
+> [5] https://patchwork.freedesktop.org/
+> 
+> > > > super basic stuff.
+> > >
+> > > I am really excited to hear back on what you think!
+> > >
+> > > Cheers!
+> > >
+> > > [1] https://kunit-review.googlesource.com/c/linux/+/1509/10#message-7bfa40efb132e15c8388755c273837559911425c
+> > > [2] https://kunit-review.googlesource.com/c/linux/+/1509/10#message-a6784496eafff442ac98fb068bf1a0f36ee73509
+> > > [3] https://developer.ibm.com/open/projects/snowpatch/
+> > > [4] https://kunit.googlesource.com/prow-lkml/
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
