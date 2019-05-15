@@ -2,162 +2,127 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED0DC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7FDC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 424E72084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:24:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iOG/8mNj";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OV7VyfmB"
+	by mail.kernel.org (Postfix) with ESMTP id 21EB0205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:27:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfEOTYO (ORCPT
+        id S1726888AbfEOT1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:24:14 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41148 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfEOTYN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 15:24:13 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3B3926087A; Wed, 15 May 2019 19:24:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557948252;
-        bh=IhMSDG5a5N0dL5eqitoSAgF0GjbDpoPuc54UFkEWmSM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iOG/8mNjRXLkM0rBqsyyQIiRTecWHPhZPWxeULXedlF5fejT5FWLj1ph2vkHUa9kA
-         ORmhjFsSttyn0Kq1dWGsCyjCxBKx2GCP2odvEa1v4DKrtcLYy6yJPZ7JWaMd9JFNrp
-         5V05iR/GFnIKU6NI+24EzTXwSTl0hiJuQMSiCYPQ=
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Wed, 15 May 2019 15:27:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55550 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726124AbfEOT1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 15:27:32 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6709360592;
-        Wed, 15 May 2019 19:24:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557948251;
-        bh=IhMSDG5a5N0dL5eqitoSAgF0GjbDpoPuc54UFkEWmSM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OV7VyfmBMxvleNQtJng1Lv6XGtvld6L5TIzlbWqdtSjf5WUElLykidfhqPPR1xL/0
-         qjlFI0l1CyL6I1xubXnaaQ76ORsDEPNc1bu6ny8fRd63UFyWl+b0kbgqxGv0aYslUn
-         oENiYl4/sMEIww6gtOGGE52lqUjJ89ijC4sWcFV8=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6709360592
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Wed, 15 May 2019 13:24:08 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Rob Clark <robdclark@chromium.org>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 2/3] arm64: dts: qcom: sdm845-cheza: Re-add reserved memory
-Message-ID: <20190515192408.GD24137@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Rob Clark <robdclark@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190509184415.11592-1-robdclark@gmail.com>
- <20190509184415.11592-3-robdclark@gmail.com>
- <CAD=FV=WXW3aApS=c7baxhtfr1Nf-UnBN2s=rEBBkjj4=TCdT+g@mail.gmail.com>
- <CAJs_Fx5PDj+T+DVixzHjun_wCG5fhZsxH8xUqRwmkfwN87UP_A@mail.gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 248B9307CB5E;
+        Wed, 15 May 2019 19:27:32 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CE1B95D721;
+        Wed, 15 May 2019 19:27:29 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 692B4225477; Wed, 15 May 2019 15:27:29 -0400 (EDT)
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-nvdimm@lists.01.org
+Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
+        dgilbert@redhat.com, swhiteho@redhat.com
+Subject: [PATCH v2 03/30] fuse: Use default_file_splice_read for direct IO
+Date:   Wed, 15 May 2019 15:26:48 -0400
+Message-Id: <20190515192715.18000-4-vgoyal@redhat.com>
+In-Reply-To: <20190515192715.18000-1-vgoyal@redhat.com>
+References: <20190515192715.18000-1-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJs_Fx5PDj+T+DVixzHjun_wCG5fhZsxH8xUqRwmkfwN87UP_A@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 15 May 2019 19:27:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 09:09:55PM -0700, Rob Clark wrote:
-> On Mon, May 13, 2019 at 3:48 PM Doug Anderson <dianders@chromium.org> wrote:
-> >
-> > Hi,
-> >
-> > On Thu, May 9, 2019 at 11:44 AM Rob Clark <robdclark@gmail.com> wrote:
-> >
-> > > From: Douglas Anderson <dianders@chromium.org>
-> > >
-> > > Let's fixup the reserved memory to re-add the things we deleted in
-> > > ("CHROMIUM: arm64: dts: qcom: sdm845-cheza: Temporarily delete
-> > > reserved-mem changes") in a way that plays nicely with the new
-> > > upstream definitions.
-> >
-> > The message above makes no sense since that commit you reference isn't
-> > in upstream.
-> >
-> > ...but in any case, why not squash this in with the previous commit?
-> 
-> Yeah, I should have mentioned this was my intention, I just left it
-> unsquashed since (at the time) it was something I had cherry-picked on
-> top of current 4.19 cros kernel..
-> 
-> anyways, I pushed an (unsquashed, converted to fixup!'s) update to:
-> 
-> https://github.com/freedreno/kernel-msm/commits/wip/cheza-dtb-upstreaming
-> 
-> which has updates based on you're review comments (at least assuming I
-> understood them correctly).. plus some unrelated to cheza-dt patches
-> on top to get things actually working (ie. ignore everything on top of
-> the fixup!'s)
-> 
-> I didn't see any comments on the 'delete zap-shader' patch, so
-> hopefully that means what I did there was a sane (or at least not
-> insane) way to handle android/linux tz vs what we have on cheza?
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-Yeah. In a world where all the 845 firmware is in linux-firmware the best
-differentiating factor would be the absence of the reserved memory or the
-zap-shader node in the device tree. Otherwise we would have to try and fail to
-execute the scm call and then make some sort of educated guess as to if it
-failed for the "right" reasons.
+---
+ fs/fuse/file.c     | 15 ++++++++++++++-
+ fs/splice.c        |  3 ++-
+ include/linux/fs.h |  2 ++
+ 3 files changed, 18 insertions(+), 2 deletions(-)
 
-Jordan
-
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> >
-> > Remove Stephen's Reviewed-by.  In general reviews that happen in the
-> > Chrome OS gerrit shouldn't be carried over when things are posted
-> > upstream.
-> >
-> >
-> > > +/* Increase the size from 2MB to 8MB */
-> > > +&rmtfs_mem {
-> > > +       reg = <0 0x88f00000 0 0x800000>;
-> > > +};
-> > > +
-> > > +/ {
-> > > +       reserved-memory {
-> > > +               venus_mem: memory@96000000 {
-> > > +                       reg = <0 0x96000000 0 0x500000>;
-> > > +                       no-map;
-> > > +               };
-> > > +       };
-> > > +};
-> >
-> > nit: blank line?
-> >
-> > -Doug
-
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index 5baf07fd2876..e9a7aa97c539 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -2167,6 +2167,19 @@ static int fuse_file_mmap(struct file *file, struct vm_area_struct *vma)
+ 	return 0;
+ }
+ 
++static ssize_t fuse_file_splice_read(struct file *in, loff_t *ppos,
++				     struct pipe_inode_info *pipe, size_t len,
++				     unsigned int flags)
++{
++	struct fuse_file *ff = in->private_data;
++
++	if (ff->open_flags & FOPEN_DIRECT_IO)
++		return default_file_splice_read(in, ppos, pipe, len, flags);
++	else
++		return generic_file_splice_read(in, ppos, pipe, len, flags);
++
++}
++
+ static int convert_fuse_file_lock(struct fuse_conn *fc,
+ 				  const struct fuse_file_lock *ffl,
+ 				  struct file_lock *fl)
+@@ -3174,7 +3187,7 @@ static const struct file_operations fuse_file_operations = {
+ 	.fsync		= fuse_fsync,
+ 	.lock		= fuse_file_lock,
+ 	.flock		= fuse_file_flock,
+-	.splice_read	= generic_file_splice_read,
++	.splice_read	= fuse_file_splice_read,
+ 	.splice_write	= iter_file_splice_write,
+ 	.unlocked_ioctl	= fuse_file_ioctl,
+ 	.compat_ioctl	= fuse_file_compat_ioctl,
+diff --git a/fs/splice.c b/fs/splice.c
+index 25212dcca2df..e2e881e34935 100644
+--- a/fs/splice.c
++++ b/fs/splice.c
+@@ -361,7 +361,7 @@ static ssize_t kernel_readv(struct file *file, const struct kvec *vec,
+ 	return res;
+ }
+ 
+-static ssize_t default_file_splice_read(struct file *in, loff_t *ppos,
++ssize_t default_file_splice_read(struct file *in, loff_t *ppos,
+ 				 struct pipe_inode_info *pipe, size_t len,
+ 				 unsigned int flags)
+ {
+@@ -425,6 +425,7 @@ static ssize_t default_file_splice_read(struct file *in, loff_t *ppos,
+ 	iov_iter_advance(&to, copied);	/* truncates and discards */
+ 	return res;
+ }
++EXPORT_SYMBOL(default_file_splice_read);
+ 
+ /*
+  * Send 'sd->len' bytes to socket from 'sd->file' at position 'sd->pos'
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index dd28e7679089..6804aecf7e30 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3055,6 +3055,8 @@ extern void block_sync_page(struct page *page);
+ /* fs/splice.c */
+ extern ssize_t generic_file_splice_read(struct file *, loff_t *,
+ 		struct pipe_inode_info *, size_t, unsigned int);
++extern ssize_t default_file_splice_read(struct file *, loff_t *,
++		struct pipe_inode_info *, size_t, unsigned int);
+ extern ssize_t iter_file_splice_write(struct pipe_inode_info *,
+ 		struct file *, loff_t *, size_t, unsigned int);
+ extern ssize_t generic_splice_sendpage(struct pipe_inode_info *pipe,
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.20.1
+
