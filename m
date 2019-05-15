@@ -2,112 +2,78 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FE0C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5937AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5E9E2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:51:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oG7eN65w"
+	by mail.kernel.org (Postfix) with ESMTP id 2E8052084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:53:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfEOJvt (ORCPT
+        id S1726410AbfEOJxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 05:51:49 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:56828 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfEOJvt (ORCPT
+        Wed, 15 May 2019 05:53:07 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:57319 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfEOJxG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 05:51:49 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4F9iIYM108706;
-        Wed, 15 May 2019 09:51:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
- bh=hTSKDL8zkeZ4HUn7umTph6LN7jixr5+DzfTaKalFJUg=;
- b=oG7eN65wu9iqD+5CbxfZghtCGh+tzsvaQy7ytoPvzLlmC2lA+bx75unguEMMJd+OghgY
- QkH20/NOAnRsuzhYUNAXOwAl+YlrwpzS6topKKvaDHmJ+Guwd6FoR+WHI8yHzhfhj5Tq
- jHjbYpRxG+vBMGVhteYO2Y1vayR2wxyNvoFvz9fKa8x9+s3XHhNCMOSNPNn9Kq7fUrWX
- UhToDeHcaqhPTsv5CvSulGupHL/BG6FDE1GQKNwJEQGz8FeM8GT2x53cDIjwBRWJjAkS
- HUFFyyUc0Pl8RDxa/bMblLY0GG5qI0WjAVfY7jqsUUP33f5jJMEIPV6BXjXwQEBEPgcS bQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2sdnttuph6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 May 2019 09:51:43 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4F9pMKt020222;
-        Wed, 15 May 2019 09:51:42 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2sggdur2nm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 May 2019 09:51:42 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4F9pdcq005716;
-        Wed, 15 May 2019 09:51:39 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 May 2019 02:51:39 -0700
-Date:   Wed, 15 May 2019 12:51:30 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        Kevin Wang <kevin1.wang@amd.com>
-Cc:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Huang Rui <ray.huang@amd.com>,
-        Likun Gao <Likun.Gao@amd.com>,
-        Chengming Gui <Jack.Gui@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] drm/amd/powerplay: fix locking in smu_feature_set_supported()
-Message-ID: <20190515095130.GF3409@mwanda>
+        Wed, 15 May 2019 05:53:06 -0400
+Received: from [192.168.178.167] ([109.104.37.15]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MpDa5-1gtz4V2OlD-00qm1F; Wed, 15 May 2019 11:52:44 +0200
+Subject: Re: [PATCH v3 1/4] staging: vchiq_2835_arm: revert "quit using custom
+ down_interruptible()"
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-kernel@vger.kernel.org
+Cc:     dan.carpenter@oracle.com, Eric Anholt <eric@anholt.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org
+References: <20190509143137.31254-1-nsaenzjulienne@suse.de>
+ <20190509143137.31254-2-nsaenzjulienne@suse.de>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Message-ID: <32aa420a-abff-4c47-5f3c-2d4bdf36781c@i2se.com>
+Date:   Wed, 15 May 2019 11:52:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9257 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905150063
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9257 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905150063
+In-Reply-To: <20190509143137.31254-2-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:+2mE9d+u8gqtHxlIg9i/VWYK0DwNnPyY/oJuxZ3r/F7A3KhK9W5
+ cCp7pwbA9bAjNpdxlK6/Iep9THU4dI6RvjpdTDtzvJY+58aqLLldc5xNr7PRhB9I86LmFKN
+ LHCh1pkG91gS0EVAN2BnJ5cvewcs0PU/OIpW0n1Eae5noiidxp3qdh90d/vDYFuHLjNHC2p
+ 5n6T2maOg8eOxqC5nOgqw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:bG040yyGSrk=:IY/R0MsMaeOXHWlVqHUCLc
+ Ab49FrqKWtQHzDyX1FqJXOxL8lqsOL0kN/Y7NCGyy8+UDEn/Am61+iCMA0wT25byRrvMZxD2p
+ Vdv/l8YCNQDMTY3cR1Vx+Y34raHgM1CDYeX0+1f098O7ylSHTobIWa1TKpEr6LL3ahmbnWUq8
+ gwEGuFTHCizj4BS3/LLXXoE8ytB/8sUiClJ1kvU2XzoTt1dBWz4EJjbNGe2AnHdzFm/EUaB5T
+ zTnG4gedNErS7PNnwC6UeWBBzWoE0f1sV/gxR2ZvC//QkS1yBCCYO7xVe7NHMvWlSs0NG/Lpv
+ VT230YoyV8WIPQ+XzCwa9CTFxZ4wv9T/zwWQMUXQ5WJBiiYzLnpJ2exZqNjoVg39Idhurb4nt
+ 4QPzCQRzXzk05ChMqk8eS3UBtQAAkXfsYqZjbtkDF8uRuZmTPxhysvyu3f3CE7C57TM91KaUh
+ Ev/B9krLUayURXbRJo8Bb50/jZthCLjM9Yxh4VHdArHeLEamadd032nzfYRggpArjkgcunPWU
+ kYxLOG0Ti7QvDTP5J+GXzOF1V2L7CNwLbaPmQFF7VkgoK6onYMdyAGxy4+QzNoBAwQcRks1Mi
+ /v3xLzwun1zn6WmY5yJRkrN+N7lWDNMVewFUh1lBdzBoSesiu6JnkcDPhwZwwPyRo7ecJArOZ
+ ErYlDk3nTR7aqj517fCWQc3kgy7rHVH7Biqw8C8BcnlvSLapFGn1BXacH39mT+nvq/tZ/D0Vb
+ yPNUa4PHCrXh5aVABT/y2Zan8pMr8fOHC7NXYqcY4lGd7EYk3stnmXIQ+5A=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a typo so the code unlocks twice instead of taking the lock and
-then releasing it.
+On 09.05.19 16:31, Nicolas Saenz Julienne wrote:
+> The killable version of down() is meant to be used on situations where
+> it should not fail at all costs, but still have the convenience of being
+> able to kill it if really necessary. VCHIQ doesn't fit this criteria, as
+> it's mainly used as an interface to V4L2 and ALSA devices.
+>
+> Fixes: ff5979ad8636 ("staging: vchiq_2835_arm: quit using custom down_interruptible()")
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-Fixes: f14a323db5b0 ("drm/amd/powerplay: implement update enabled feature state to smc for smu11")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/gpu/drm/amd/powerplay/amdgpu_smu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This whole series is:
 
-diff --git a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
-index 52d919a8b70a..85ac29af5363 100644
---- a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
-+++ b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
-@@ -310,7 +310,7 @@ int smu_feature_set_supported(struct smu_context *smu, int feature_id,
- 
- 	WARN_ON(feature_id > feature->feature_num);
- 
--	mutex_unlock(&feature->mutex);
-+	mutex_lock(&feature->mutex);
- 	if (enable)
- 		test_and_set_bit(feature_id, feature->supported);
- 	else
--- 
-2.20.1
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
 
