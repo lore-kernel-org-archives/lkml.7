@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFD1C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5706FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED072082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A9802082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922704;
-	bh=Ae834Yg6qZ5u8T4XF6JHp9pzGVNBWpmWOlqXab3Qssk=;
+	s=default; t=1557922707;
+	bh=xSihnVmtY+9iC4up/Mcox0MkU/6kFtZPpELlpQf8rew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TrEGoTuwqUzhtN8SJL3JtCLMWgPPEx2ej/4GeFdXXkMWSh4HhiuanRvz3QPVioGlr
-	 SB5s27SvdmNCf4fHbqzDD6FxWJHBMvr9ACB0s7XnbJjDkmW1gxBvNfJWR5Ru5RBOye
-	 zoMbgNPmGc8/RVty3KZd/FucjB7O+cuI1Be/3+9s=
+	b=hbnpg0oURZVWUuuynItdAfggimGr+5kD+fOFh0B+2WJq+uh8CApm2XW2JjGmdchcm
+	 ZpjyqLMzH3r1lKFRvSV3yPFohodXpQeFwvaulsZmg7sBDtV9x5eUgU4/heSdoUeubU
+	 NwlbadxbXIuZ9GNYuq/0/QyLVeNMMHN2Jq5/OgIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727694AbfEOLBW (ORCPT
+        id S1728090AbfEOMSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:01:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58314 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:18:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727092AbfEOLBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:01:17 -0400
+        id S1727689AbfEOLBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:01:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C4632173C;
-        Wed, 15 May 2019 11:01:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5811C20881;
+        Wed, 15 May 2019 11:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918076;
-        bh=Ae834Yg6qZ5u8T4XF6JHp9pzGVNBWpmWOlqXab3Qssk=;
+        s=default; t=1557918081;
+        bh=xSihnVmtY+9iC4up/Mcox0MkU/6kFtZPpELlpQf8rew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zN9ohaIHmKvlYsvzKGfky4pvE1FGYZv14RlTnMGKn8WDX+N+03ZIx62AauWQRDNRX
-         6jpfDWToY4MKgCLnuPDk5GEC1q9IE2vFTFm6/h42SYo1s88gQsugjzI+QdSWi3F4zk
-         83cw4J6YF9/+AvyYNWSif8K+qJUcqP2eX3STgApU=
+        b=rTsy5WE3uf9Z2xyj0/3V62Bnos0tUjFhWAw0yCK8WlHHtHsk+Ur1EEYKUoAUaVSAu
+         2wnfplIpAbk09b4WBTa7N82IzEk5wdBekPUFU8sGZOXpVuLMgcJt13Pvc9DNYWegfC
+         3SHQLHYiDUYVD9m02Z3KsY0xDMCYUinS2zG9Xr1k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jarod Wilson <jarod@redhat.com>,
-        Jay Vosburgh <jay.vosburgh@canonical.com>
-Subject: [PATCH 3.18 83/86] bonding: fix arp_validate toggling in active-backup mode
-Date:   Wed, 15 May 2019 12:56:00 +0200
-Message-Id: <20190515090656.025421215@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Timur Tabi <timur@freescale.com>,
+        Mihai Caraman <mihai.caraman@freescale.com>,
+        Kumar Gala <galak@kernel.crashing.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 3.18 85/86] drivers/virt/fsl_hypervisor.c: prevent integer overflow in ioctl
+Date:   Wed, 15 May 2019 12:56:02 +0200
+Message-Id: <20190515090656.194382694@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -63,78 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarod Wilson <jarod@redhat.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit a9b8a2b39ce65df45687cf9ef648885c2a99fe75 ]
+commit 6a024330650e24556b8a18cc654ad00cfecf6c6c upstream.
 
-There's currently a problem with toggling arp_validate on and off with an
-active-backup bond. At the moment, you can start up a bond, like so:
+The "param.count" value is a u64 thatcomes from the user.  The code
+later in the function assumes that param.count is at least one and if
+it's not then it leads to an Oops when we dereference the ZERO_SIZE_PTR.
 
-modprobe bonding mode=1 arp_interval=100 arp_validate=0 arp_ip_targets=192.168.1.1
-ip link set bond0 down
-echo "ens4f0" > /sys/class/net/bond0/bonding/slaves
-echo "ens4f1" > /sys/class/net/bond0/bonding/slaves
-ip link set bond0 up
-ip addr add 192.168.1.2/24 dev bond0
+Also the addition can have an integer overflow which would lead us to
+allocate a smaller "pages" array than required.  I can't immediately
+tell what the possible run times implications are, but it's safest to
+prevent the overflow.
 
-Pings to 192.168.1.1 work just fine. Now turn on arp_validate:
-
-echo 1 > /sys/class/net/bond0/bonding/arp_validate
-
-Pings to 192.168.1.1 continue to work just fine. Now when you go to turn
-arp_validate off again, the link falls flat on it's face:
-
-echo 0 > /sys/class/net/bond0/bonding/arp_validate
-dmesg
-...
-[133191.911987] bond0: Setting arp_validate to none (0)
-[133194.257793] bond0: bond_should_notify_peers: slave ens4f0
-[133194.258031] bond0: link status definitely down for interface ens4f0, disabling it
-[133194.259000] bond0: making interface ens4f1 the new active one
-[133197.330130] bond0: link status definitely down for interface ens4f1, disabling it
-[133197.331191] bond0: now running without any active interface!
-
-The problem lies in bond_options.c, where passing in arp_validate=0
-results in bond->recv_probe getting set to NULL. This flies directly in
-the face of commit 3fe68df97c7f, which says we need to set recv_probe =
-bond_arp_recv, even if we're not using arp_validate. Said commit fixed
-this in bond_option_arp_interval_set, but missed that we can get to that
-same state in bond_option_arp_validate_set as well.
-
-One solution would be to universally set recv_probe = bond_arp_recv here
-as well, but I don't think bond_option_arp_validate_set has any business
-touching recv_probe at all, and that should be left to the arp_interval
-code, so we can just make things much tidier here.
-
-Fixes: 3fe68df97c7f ("bonding: always set recv_probe to bond_arp_rcv in arp monitor")
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: netdev@vger.kernel.org
-Signed-off-by: Jarod Wilson <jarod@redhat.com>
-Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/20181218082129.GE32567@kadam
+Fixes: 6db7199407ca ("drivers/virt: introduce Freescale hypervisor management driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Timur Tabi <timur@freescale.com>
+Cc: Mihai Caraman <mihai.caraman@freescale.com>
+Cc: Kumar Gala <galak@kernel.crashing.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/bonding/bond_options.c |    7 -------
- 1 file changed, 7 deletions(-)
 
---- a/drivers/net/bonding/bond_options.c
-+++ b/drivers/net/bonding/bond_options.c
-@@ -1032,13 +1032,6 @@ static int bond_option_arp_validate_set(
- {
- 	netdev_info(bond->dev, "Setting arp_validate to %s (%llu)\n",
- 		    newval->string, newval->value);
--
--	if (bond->dev->flags & IFF_UP) {
--		if (!newval->value)
--			bond->recv_probe = NULL;
--		else if (bond->params.arp_interval)
--			bond->recv_probe = bond_arp_rcv;
--	}
- 	bond->params.arp_validate = newval->value;
+---
+ drivers/virt/fsl_hypervisor.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+--- a/drivers/virt/fsl_hypervisor.c
++++ b/drivers/virt/fsl_hypervisor.c
+@@ -215,6 +215,9 @@ static long ioctl_memcpy(struct fsl_hv_i
+ 	 * hypervisor.
+ 	 */
+ 	lb_offset = param.local_vaddr & (PAGE_SIZE - 1);
++	if (param.count == 0 ||
++	    param.count > U64_MAX - lb_offset - PAGE_SIZE + 1)
++		return -EINVAL;
+ 	num_pages = (param.count + lb_offset + PAGE_SIZE - 1) >> PAGE_SHIFT;
  
- 	return 0;
+ 	/* Allocate the buffers we need */
 
 
