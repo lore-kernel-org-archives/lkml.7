@@ -2,134 +2,92 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1FDC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A5FC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C13E20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:06:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BCsDd0gw"
+	by mail.kernel.org (Postfix) with ESMTP id E133821473
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:06:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557940015;
+	bh=3s5MNfbYRU4f9wPUfwL54/Imb2QZD3B5Kfsa0bUBVSM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aX+870W15iNOMiQ/kdltF+OKmLLSsBxgk/i0Y8kZe6WDbHYiy6Ffsdsddn/+3+1Nn
+	 Whj3fVl46E/d9OUGM8Qa3jbWk0X8ODvlIWG3DP1bbaPubLxRPSjmFuLvC9Y8Wo25Ma
+	 EC9VwRiWj4m4u0oFmL5x5QKNQQ2OgvSH4PIjurTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbfEORGM (ORCPT
+        id S1727709AbfEORGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 13:06:12 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34025 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727605AbfEORGL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 13:06:11 -0400
-Received: by mail-pg1-f195.google.com with SMTP id c13so103736pgt.1
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 10:06:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=/OpXwq79Evc4sZPZsH7EP6mB6R7H40Pg4ObnVmwED1Y=;
-        b=BCsDd0gwJ2R9zgCKXphnkmwcLOc+F3oC/qlyy0hPLKDQ+nZc9dxJDlV5jCN/mxQUTY
-         TiS2qP0nJT2+gEZzgxYlSGRaz13AgCIsHXO+Fm3tuPk2rwUwzd6gFceGSWUq6omsIQoF
-         v0Hni5yqDtfUX/f8E1GBHGynxj728J11Yz6io=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=/OpXwq79Evc4sZPZsH7EP6mB6R7H40Pg4ObnVmwED1Y=;
-        b=hWZjOFKRorTgUYePDE5Z3Aw9upVOOCL6ZgQzusrmCLYFANkM01c4SdAf3FaYVk3khQ
-         EXtYu3ZTzt3qAkga3I8kgqzrA/JpVoaSfENo54cfV0UEYMSy5K2kytlblEX4qoyUUGKb
-         eFBJMr7x87+zRRUrxavzT6jWHRqp3wf1Vy1Gezy4NQBwbbq/7h+yQDGiyEZdXpO9tO/6
-         fpsRT3H1KvHaIpDH5Kt2ooJjUhmqizWsPlUqfuQtxtT6zKO5zZTqfuUl7G35OJiYShMO
-         1bJTrArwKCcz7xesUX0k5BsN/2XR8oabMiVI6yFJwH5ENuhboBT+eC9vQToIgNHOwRuK
-         91Cw==
-X-Gm-Message-State: APjAAAV8ShAKUC4PHS31UoWnCc1+lhoNVcQ7X3AnVMkujiJGcjLg6EpG
-        3UxhjqlbbERNiTtxndYhe/9MCA==
-X-Google-Smtp-Source: APXvYqwXXWl1fEnyKxxNDYyXc7XBFaa07x9vjWp5eNzPe4i6FNK5Iga6srIqWZfEA3QJR+FitDiYaQ==
-X-Received: by 2002:a63:4342:: with SMTP id q63mr44719536pga.435.1557939971271;
-        Wed, 15 May 2019 10:06:11 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b63sm5310681pfj.54.2019.05.15.10.06.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 May 2019 10:06:10 -0700 (PDT)
-Date:   Wed, 15 May 2019 10:06:09 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Cc:     mcgrof@kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, ebiederm@xmission.com,
-        pbonzini@redhat.com, viro@zeniv.linux.org.uk, adobriyan@gmail.com,
-        mingfangsen@huawei.com, wangxiaogang3@huawei.com,
-        "Zhoukang (A)" <zhoukang7@huawei.com>, netdev@vger.kernel.org,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH next] sysctl: add proc_dointvec_jiffies_minmax to limit
- the min/max write value
-Message-ID: <201905150945.C9D1F811F@keescook>
-References: <032e024f-2b1b-a980-1b53-d903bc8db297@huawei.com>
- <3e421384-a9cb-e534-3370-953c56883516@huawei.com>
- <d5138655-41a8-0177-ae0d-c4674112bf56@huawei.com>
+        Wed, 15 May 2019 13:06:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbfEORGx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 13:06:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FEBD20862;
+        Wed, 15 May 2019 17:06:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557940013;
+        bh=3s5MNfbYRU4f9wPUfwL54/Imb2QZD3B5Kfsa0bUBVSM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Yy3dVj+46/pmIfOhI3PHO1hsnf2ffIIbOLOfM8IbF0GmZiSS6FgcpjMUjfCTjhN57
+         DF5cDQgrxjVVLXOS9HGqGATkL3zEbI4fxe00WhGiNXaSesVzMXc9WN7XE3s8jMMSBj
+         mTSnsZGpHm8Hburqd1sKswjDvE4EjpFCgeu9VmFg=
+Date:   Wed, 15 May 2019 19:06:50 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: Re: [PATCH 4.14 053/115] i2c: omap: Enable for ARCH_K3
+Message-ID: <20190515170650.GA9493@kroah.com>
+References: <20190515090659.123121100@linuxfoundation.org>
+ <20190515090703.440094029@linuxfoundation.org>
+ <b97de7c6-fb95-33a9-3ac6-4df45eec82c5@ti.com>
+ <a6eecb36-a0ae-753a-6582-0afdac04c4b5@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d5138655-41a8-0177-ae0d-c4674112bf56@huawei.com>
+In-Reply-To: <a6eecb36-a0ae-753a-6582-0afdac04c4b5@ti.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 10:53:55PM +0800, Zhiqiang Liu wrote:
-> Friendly ping...
+On Wed, May 15, 2019 at 11:53:08AM -0500, Vignesh Raghavendra wrote:
 > 
-> 在 2019/4/24 12:04, Zhiqiang Liu 写道:
+> 
+> On 15/05/19 6:28 AM, Grygorii Strashko wrote:
+> > Hi Greg,
 > > 
-> > Friendly ping...
-
-Hi!
-
-(Please include akpm on CC for next versions of this, as he's likely
-the person to take this patch.)
-
+> > On 15.05.19 13:55, Greg Kroah-Hartman wrote:
+> >> [ Upstream commit 5b277402deac0691226a947df71c581686bd4020 ]
+> >>
+> >> Allow I2C_OMAP to be built for K3 platforms.
+> >>
+> >> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> >> Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> >> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+> >> Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 > > 
-> >> From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-> >>
-> >> In proc_dointvec_jiffies func, the write value is only checked
-> >> whether it is larger than INT_MAX. If the write value is less
-> >> than zero, it can also be successfully writen in the data.
+> > This is not v4.14 material as there no support for ARCH_K3.
+> > Could you drop it pls.
+> > 
+> 
+> Yes, I had informed not to backport this patch before during other
+> stable reviews as well:
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1811579.html
+> 
+> Please drop the patch.
 
-This appears to be "be design", but I see many "unsigned int" users
-that might be tricked into giant values... (for example, see
-net/netfilter/nf_conntrack_standalone.c)
+Now dropped, thanks.
 
-Should proc_dointvec_jiffies() just be fixed to disallow negative values
-entirely? Looking at the implementation, it seems to be very intentional
-about accepting negative values.
-
-However, when I looked through a handful of proc_dointvec_jiffies()
-users, it looks like they're all expecting a positive value. Many in the
-networking subsystem are, in fact, writing to unsigned long variables,
-as I mentioned.
-
-Are there real-world cases of wanting to set a negative jiffie value
-via proc_dointvec_jiffies()?
-
-> >>
-> >> However, in some scenarios, users would adopt the data to
-> >> set timers or check whether time is expired. Generally, the data
-> >> will be cast to an unsigned type variable, then the negative data
-> >> becomes a very large unsigned value, which leads to long waits
-> >> or other unpredictable problems.
-> >>
-> >> Here, we add a new func, proc_dointvec_jiffies_minmax, to limit the
-> >> min/max write value, which is similar to the proc_dointvec_minmax func.
-> >>
-> >> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-> >> Reported-by: Qiang Ning <ningqiang1@huawei.com>
-> >> Reviewed-by: Jie Liu <liujie165@huawei.com>
-
-If proc_dointvec_jiffies() can't just be fixed, where will the new
-function get used? It seems all the "unsigned int" users could benefit.
-
--- 
-Kees Cook
+greg k-h
