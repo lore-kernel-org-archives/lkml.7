@@ -2,52 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F4B3C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3114C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB05320843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6E7420881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919465;
-	bh=7V09QRjt60ZoGduRDcBVlYnjKvUofVsyA/iKeUO4JdE=;
+	s=default; t=1557919469;
+	bh=dVQBo5mtvrTupR7EEWhapQ5svi0kusxcNoYyTDZh03o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Us57Rfw7O1MCdl5z6PmIfoR/pHUxxx4Y5rUp2PBY46rlGz7AQnaMaOYehR55bp63e
-	 s2qWkjEEkdG5RXCgx3BHQeUQwiJereV9qtHJkjCSPG0nOCLAJmYAjUgKXROMdSshh0
-	 GuDjNwPxMKdMaC9Usw0vHaKuQ15dpp6Xb/zn90m0=
+	b=s/uGCBsUxGXKOnbQxv4voZ2TVqwBYVX3tdFRZGB2x8ca+N8ALbNKl/ce87P8n6Txi
+	 8Yv4nW7XgITAwo6626mgNo2YjjDw4O1feS6ipcu9JIEicxIjWX4/hnXu1iyknRMGXL
+	 6LfQ2RyMD3Cdjlp2H5XLAbpkqvG7Co7QajdvaJ7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731804AbfEOLYZ (ORCPT
+        id S1731816AbfEOLY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:24:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34862 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:24:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731783AbfEOLYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:24:17 -0400
+        id S1731783AbfEOLY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:24:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F589217D8;
-        Wed, 15 May 2019 11:24:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E20F2084F;
+        Wed, 15 May 2019 11:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919456;
-        bh=7V09QRjt60ZoGduRDcBVlYnjKvUofVsyA/iKeUO4JdE=;
+        s=default; t=1557919464;
+        bh=dVQBo5mtvrTupR7EEWhapQ5svi0kusxcNoYyTDZh03o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KLX96XknAXzCKbJ2achNFKEjTafwNRVI9sQGXWYNL/BcG9/DV58gWagttUAOlmSu8
-         aaNnHnPopsQtrQQK6XIVZRq8NTV9+s7h/aPT5qw2EFmR2IJQ0lBgBCQOTLRR0xx6f/
-         gewJxhxSqjJXUSXQu7XST3e68fQfkgJmowxTB0/s=
+        b=xCgx9aktsvgjKFwQ+D9uw4FGkMy5OykDJRfQRSJVFJpyHT71JDHZvIlaS0OWkmVOd
+         yUhXBetLxo/17PDbiEoWVYl25enATvcj9ItTZzNlQaxBBdS46kVge8y+aldXjTHf0k
+         zB3TYEex9mT8o/r1h2RGuONLj5Wc/sg0ov7H9xH4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.19 080/113] nfc: nci: Potential off by one in ->pipes[] array
-Date:   Wed, 15 May 2019 12:56:11 +0200
-Message-Id: <20190515090659.690377978@linuxfoundation.org>
+        stable@vger.kernel.org, Eubert Bao <bunnier@gmail.com>,
+        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.19 083/113] mwl8k: Fix rate_idx underflow
+Date:   Wed, 15 May 2019 12:56:14 +0200
+Message-Id: <20190515090659.931745665@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -60,42 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6491d698396fd5da4941980a35ca7c162a672016 ]
+From: Petr Štetiar <ynezz@true.cz>
 
-This is similar to commit e285d5bfb7e9 ("NFC: Fix the number of pipes")
-where we changed NFC_HCI_MAX_PIPES from 127 to 128.
+commit 6b583201fa219b7b1b6aebd8966c8fd9357ef9f4 upstream.
 
-As the comment next to the define explains, the pipe identifier is 7
-bits long.  The highest possible pipe is 127, but the number of possible
-pipes is 128.  As the code is now, then there is potential for an
-out of bounds array access:
+It was reported on OpenWrt bug tracking system[1], that several users
+are affected by the endless reboot of their routers if they configure
+5GHz interface with channel 44 or 48.
 
-    net/nfc/nci/hci.c:297 nci_hci_cmd_received() warn: array off by one?
-    'ndev->hci_dev->pipes[pipe]' '0-127 == 127'
+The reboot loop is caused by the following excessive number of WARN_ON
+messages:
 
-Fixes: 11f54f228643 ("NFC: nci: Add HCI over NCI protocol support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+ WARNING: CPU: 0 PID: 0 at backports-4.19.23-1/net/mac80211/rx.c:4516
+                             ieee80211_rx_napi+0x1fc/0xa54 [mac80211]
+
+as the messages are being correctly emitted by the following guard:
+
+ case RX_ENC_LEGACY:
+      if (WARN_ON(status->rate_idx >= sband->n_bitrates))
+
+as the rate_idx is in this case erroneously set to 251 (0xfb). This fix
+simply converts previously used magic number to proper constant and
+guards against substraction which is leading to the currently observed
+underflow.
+
+1. https://bugs.openwrt.org/index.php?do=details&task_id=2218
+
+Fixes: 854783444bab ("mwl8k: properly set receive status rate index on 5 GHz receive")
+Cc: <stable@vger.kernel.org>
+Tested-by: Eubert Bao <bunnier@gmail.com>
+Reported-by: Eubert Bao <bunnier@gmail.com>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/net/nfc/nci_core.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/marvell/mwl8k.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/include/net/nfc/nci_core.h b/include/net/nfc/nci_core.h
-index 87499b6b35d6d..df5c69db68afc 100644
---- a/include/net/nfc/nci_core.h
-+++ b/include/net/nfc/nci_core.h
-@@ -166,7 +166,7 @@ struct nci_conn_info {
-  * According to specification 102 622 chapter 4.4 Pipes,
-  * the pipe identifier is 7 bits long.
-  */
--#define NCI_HCI_MAX_PIPES          127
-+#define NCI_HCI_MAX_PIPES          128
+--- a/drivers/net/wireless/marvell/mwl8k.c
++++ b/drivers/net/wireless/marvell/mwl8k.c
+@@ -441,6 +441,9 @@ static const struct ieee80211_rate mwl8k
+ #define MWL8K_CMD_UPDATE_STADB		0x1123
+ #define MWL8K_CMD_BASTREAM		0x1125
  
- struct nci_hci_gate {
- 	u8 gate;
--- 
-2.20.1
-
++#define MWL8K_LEGACY_5G_RATE_OFFSET \
++	(ARRAY_SIZE(mwl8k_rates_24) - ARRAY_SIZE(mwl8k_rates_50))
++
+ static const char *mwl8k_cmd_name(__le16 cmd, char *buf, int bufsize)
+ {
+ 	u16 command = le16_to_cpu(cmd);
+@@ -1016,8 +1019,9 @@ mwl8k_rxd_ap_process(void *_rxd, struct
+ 
+ 	if (rxd->channel > 14) {
+ 		status->band = NL80211_BAND_5GHZ;
+-		if (!(status->encoding == RX_ENC_HT))
+-			status->rate_idx -= 5;
++		if (!(status->encoding == RX_ENC_HT) &&
++		    status->rate_idx >= MWL8K_LEGACY_5G_RATE_OFFSET)
++			status->rate_idx -= MWL8K_LEGACY_5G_RATE_OFFSET;
+ 	} else {
+ 		status->band = NL80211_BAND_2GHZ;
+ 	}
+@@ -1124,8 +1128,9 @@ mwl8k_rxd_sta_process(void *_rxd, struct
+ 
+ 	if (rxd->channel > 14) {
+ 		status->band = NL80211_BAND_5GHZ;
+-		if (!(status->encoding == RX_ENC_HT))
+-			status->rate_idx -= 5;
++		if (!(status->encoding == RX_ENC_HT) &&
++		    status->rate_idx >= MWL8K_LEGACY_5G_RATE_OFFSET)
++			status->rate_idx -= MWL8K_LEGACY_5G_RATE_OFFSET;
+ 	} else {
+ 		status->band = NL80211_BAND_2GHZ;
+ 	}
 
 
