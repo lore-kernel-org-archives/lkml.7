@@ -2,251 +2,148 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6217FC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B754DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 060C22070D
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C7720843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:48:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="jWaINFI6"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="iwGFUo6e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726387AbfEOHrm (ORCPT
+        id S1726447AbfEOHsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 03:47:42 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:35986 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725902AbfEOHrl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 03:47:41 -0400
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id F420B2E0466;
-        Wed, 15 May 2019 10:47:36 +0300 (MSK)
-Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
-        by mxbackcorp1g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id e21YSaajE5-las4rTNf;
-        Wed, 15 May 2019 10:47:36 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1557906456; bh=wfD836RhXs9aZUqj40Lp1zo1zWWJzQk7JmF5lRUq/VE=;
-        h=Message-ID:Date:To:From:Subject;
-        b=jWaINFI6IaR1HD1ZhI199BsxdlQtUzY7ce5HhkPCKM0m3CQ3ltobNT1V0j/3jVN9W
-         O+9lNCISmyciRYr1ezdgAESy9LGKP1JJ+hmAiV9nxa/Kw48IP+f8xoLMiu6M/0avj5
-         cxQV7so2Hq7VhDK/aj1450WMkA8jfLJowdSKVmnI=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:ed19:3833:7ce1:2324])
-        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id 8hOMEmcvTx-la8Si03j;
-        Wed, 15 May 2019 10:47:36 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH RFC] time: validate watchdog clocksource using second best
- candidate
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 15 May 2019 10:47:36 +0300
-Message-ID: <155790645605.1933.906798561802423361.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Wed, 15 May 2019 03:48:42 -0400
+Received: from mout.web.de ([212.227.17.11]:57915 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726218AbfEOHsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 03:48:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1557906487;
+        bh=qy8GvydzCG/60aeNk4J1LvKw8jHPAMkwKNvxx/LRvhU=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
+        b=iwGFUo6eSuE9df/cohrcCKM+IgVAEQIDOtIjn4hYuz2TvgckbEl99/qVcEui73LY+
+         x/LgAi+caisQe09o7AkoC5tmObOjg81yjM3maMrnMrDHdNRedIVwV0V0ApzKoPhZtO
+         CwoBQQyrALxLheYzj4trSc05a95Cy4/KqOa+HMdY=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([2.244.73.153]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Maayz-1h6gQg2lJ3-00KBsh; Wed, 15
+ May 2019 09:48:07 +0200
+Subject: Re: [3/3] Coccinelle: pci_free_consistent: Extend when constraints
+ for two SmPL ellipses
+From:   Markus Elfring <Markus.Elfring@web.de>
+To:     Wen Yang <wen.yang99@zte.com.cn>,
+        Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
+        Ma Jiang <ma.jiang@zte.com.cn>,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <201905151043340243098@zte.com.cn>
+ <39c4150c-b238-a0b4-19b4-6215012bb497@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <647104b8-3ee6-6317-0560-f02443192e65@web.de>
+Date:   Wed, 15 May 2019 09:48:05 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <39c4150c-b238-a0b4-19b4-6215012bb497@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:uC5BTOnF1n7WcM3wjtVK8GvakpjuefXpeNNSXrJNdm62kr/nF5J
+ 2rKtwoFp7j/J8/610zNurfw6TdizVZpQN8vc8UGN1Y12/9AlJfUFgM4O3kvxuVLUnDBI4NP
+ NZVCNc9Xl4iJ8uuMB4/JM2F/KnpHqd1Yf0cUhcq9MSnkhqAXeg8+WDx81VXsBi0kZyYe48q
+ DyTxjqqPSWuIrdn1+V+zQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tSosc488IMU=:3cWzIKUJRfyDV4VV9yqT9P
+ VMPTpW49ulzp7goT8x5mypluLJybBxF5vX5luYLGkv16q0mQtpJWrlzErPhw1Tx7kE4+D6wL/
+ iSF23N4gkQSDQD9oXNVMYFjjDpPL87og4CvK3K5/qjdpL7pq7d9fwTReTcP7LyQkwfiqe+U+8
+ NTWzZxnhG1LcXTHBIqQCTajxs2W7GTvut0cUrCiYxSaWynI5hBG2UUogq5WWhTPzO5nw0l+t1
+ Pw1VhfC9+a/8csk8wiMf3HF2LiWSaar5lV75by7IjmwKvzbMwmp+nhcGT4ZVWf9Ry3PGl1qjt
+ tC5j/ZLdwjOo6Ik/HwYl85GiHDGH073ISz3jbcSm2YTf1zVlswAMOGhumcgkP9JdXqYc0us72
+ xpy9WtdwHLlMDoszAhNuNY5S9iuu2SCOa6sxD7FayFqznADkZNwWj6hCqkIy8anjaxeBu9H4/
+ Yc/2sbBcXMVIuB6hiTfDhPIXy1ujWF5nXx3QRAyzl2QXt5rbf7TnY9YC4VHdRGt8+9ikXTTKG
+ d300vP+vW9a8YR1z99c3s61FWhfFC79j6oPKJ0JJrSgC02SpDMhJ6MNmTbKeW5R7uHuUiK17j
+ fnsqbiU6F4aqP1KZjjwVq7hgy4Bb5R54U6SzeO1Pq61H9Gde/i5KhExqYlM7EGkYr4FaEL1gH
+ 3B8mXTkJJEyGeW4t1LGmWfljTnF56uBoCd56Rps0+5kHG9iVuqQehuUXKxBxUzBG6Ne1tQcPq
+ 0jtvD+r3dtWFuoO+GzKnVm4olBUVvMwaLyUCQ0LI9iZ2Ijk6Yf3ypBkzRmCsYuZZZWRubAKdc
+ jihemGv6nVVM3IACTkgjxpaVKJeCL4aKT3GIvm5QDNwKiKGut9rA1DZTsw9r/pAiR1xhVdphB
+ hU3pXR56mR2F6zDjXKRGVeyEZ/wpM5vCb9IF5znRLeq06Ce6oUI+EM41MaYGPOTm95XfcKJ6l
+ W3+kv6qd8Ug==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Timekeeping watchdog verifies doubtful clocksources using more reliable
-candidates. For x86 it likely verifies 'tsc' using 'hpet'. But 'hpet'
-is far from perfect too. It's better to have second opinion if possible.
+>> But with your modified SmPL, we can't find the bug.
+>
+> I do not see a difference here.
 
-We're seeing sudden jumps of hpet counter to 0xffffffff:
+I have accidentally overlooked to pass the parameter =E2=80=9C-D report=E2=
+=80=9D
+to the spatch program.
+Now I notice also an unexpected and undesirable difference for your test e=
+xample
+after the suggested addition of exclusion specifications.
 
-timekeeping watchdog on CPU56: Marking clocksource 'tsc' as unstable because the skew is too large:
-'hpet' wd_now: ffffffff wd_last: 19ec5720 mask: ffffffff
-'tsc' cs_now: 69b8a15f0aed cs_last: 69b862c9947d mask: ffffffffffffffff
 
-Shaohua Li reported the same case three years ago.
-His patch backlisted this exact value and re-read hpet counter.
+> - I wonder also about this situation then.
 
-This patch uses second reliable clocksource as backup for validation.
-For x86 this is usually 'acpi_pm'. If watchdog and backup are not consent
-then other clocksources will not be marked as unstable at this iteration.
+How should the software behaviour be improved finally?
 
-In this case watchdog will print something like:
-timekeeping watchdog on CPUxx: Ignoring watchdog 'hpet' hiccup because backup watchdog 'acpi_pm' is not consent:
-and dump states of both clocksources.
+Will we need to work with any SmPL script versions in parallel
+for selected source code analysis configurations?
 
-Also this patch prints 'wd_nsec' and 'cs_nsec' for easier debug.
-
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Link: https://lore.kernel.org/patchwork/patch/667413/
----
- kernel/time/clocksource.c |   67 ++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 51 insertions(+), 16 deletions(-)
-
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index 3bcc19ceb073..c7209c833e97 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -99,6 +99,7 @@ static void clocksource_select(void);
- 
- static LIST_HEAD(watchdog_list);
- static struct clocksource *watchdog;
-+static struct clocksource *watchdog_backup;
- static struct timer_list watchdog_timer;
- static DECLARE_WORK(watchdog_work, clocksource_watchdog_work);
- static DEFINE_SPINLOCK(watchdog_lock);
-@@ -190,6 +191,7 @@ static void clocksource_watchdog(struct timer_list *unused)
- 	u64 csnow, wdnow, cslast, wdlast, delta;
- 	int64_t wd_nsec, cs_nsec;
- 	int next_cpu, reset_pending;
-+	bool backup_consent = true;
- 
- 	spin_lock(&watchdog_lock);
- 	if (!watchdog_running)
-@@ -236,16 +238,33 @@ static void clocksource_watchdog(struct timer_list *unused)
- 
- 		/* Check the deviation from the watchdog clocksource. */
- 		if (abs(cs_nsec - wd_nsec) > WATCHDOG_THRESHOLD) {
--			pr_warn("timekeeping watchdog on CPU%d: Marking clocksource '%s' as unstable because the skew is too large:\n",
--				smp_processor_id(), cs->name);
--			pr_warn("                      '%s' wd_now: %llx wd_last: %llx mask: %llx\n",
--				watchdog->name, wdnow, wdlast, watchdog->mask);
--			pr_warn("                      '%s' cs_now: %llx cs_last: %llx mask: %llx\n",
--				cs->name, csnow, cslast, cs->mask);
--			__clocksource_unstable(cs);
-+
-+			/* Backup watchdog clocksource is first in the list */
-+			if (cs == watchdog_backup)
-+				backup_consent = false;
-+
-+			if (backup_consent)
-+				pr_warn("timekeeping watchdog on CPU%d: Marking clocksource '%s' as unstable because the skew is too large:\n",
-+					smp_processor_id(), cs->name);
-+			else
-+				pr_warn("timekeeping watchdog on CPU%d: Ignoring watchdog '%s' hiccup because backup watchdog '%s' is not consent:\n",
-+					smp_processor_id(), watchdog->name,
-+					watchdog_backup->name);
-+
-+			pr_warn("                      '%s' wd_now: %llx wd_last: %llx mask: %llx wd_nsec: %lld\n",
-+				watchdog->name, wdnow, wdlast, watchdog->mask,
-+				wd_nsec);
-+			pr_warn("                      '%s' cs_now: %llx cs_last: %llx mask: %llx cs_nsec: %lld\n",
-+				cs->name, csnow, cslast, cs->mask, cs_nsec);
-+
-+			if (backup_consent)
-+				__clocksource_unstable(cs);
- 			continue;
- 		}
- 
-+		if (cs == watchdog_backup)
-+			continue;
-+
- 		if (cs == curr_clocksource && cs->tick_stable)
- 			cs->tick_stable(cs);
- 
-@@ -345,7 +364,7 @@ static void clocksource_enqueue_watchdog(struct clocksource *cs)
- 	}
- }
- 
--static void clocksource_select_watchdog(bool fallback)
-+static void clocksource_select_watchdog(struct clocksource *except)
- {
- 	struct clocksource *cs, *old_wd;
- 	unsigned long flags;
-@@ -353,26 +372,42 @@ static void clocksource_select_watchdog(bool fallback)
- 	spin_lock_irqsave(&watchdog_lock, flags);
- 	/* save current watchdog */
- 	old_wd = watchdog;
--	if (fallback)
-+	if (watchdog == except)
- 		watchdog = NULL;
- 
-+	if (watchdog_backup) {
-+		list_del_init(&watchdog_backup->wd_list);
-+		watchdog_backup = NULL;
-+	}
-+
- 	list_for_each_entry(cs, &clocksource_list, list) {
- 		/* cs is a clocksource to be watched. */
- 		if (cs->flags & CLOCK_SOURCE_MUST_VERIFY)
- 			continue;
- 
- 		/* Skip current if we were requested for a fallback. */
--		if (fallback && cs == old_wd)
-+		if (cs == except)
- 			continue;
- 
- 		/* Pick the best watchdog. */
--		if (!watchdog || cs->rating > watchdog->rating)
-+		if (!watchdog || cs->rating > watchdog->rating) {
-+			watchdog_backup = watchdog;
- 			watchdog = cs;
-+		}
-+
-+		/* Pick the second best for cross-validation. */
-+		if (cs != watchdog &&
-+		    (!watchdog_backup || cs->rating > watchdog_backup->rating))
-+			watchdog_backup = cs;
- 	}
- 	/* If we failed to find a fallback restore the old one. */
- 	if (!watchdog)
- 		watchdog = old_wd;
- 
-+	/* Backup watchdog must be first in the list. */
-+	if (watchdog_backup)
-+		list_add(&watchdog_backup->wd_list, &watchdog_list);
-+
- 	/* If we changed the watchdog we need to reset cycles. */
- 	if (watchdog != old_wd)
- 		clocksource_reset_watchdog();
-@@ -430,7 +465,7 @@ static int clocksource_watchdog_kthread(void *data)
- 
- static bool clocksource_is_watchdog(struct clocksource *cs)
- {
--	return cs == watchdog;
-+	return cs == watchdog || cs == watchdog_backup;
- }
- 
- #else /* CONFIG_CLOCKSOURCE_WATCHDOG */
-@@ -441,7 +476,7 @@ static void clocksource_enqueue_watchdog(struct clocksource *cs)
- 		cs->flags |= CLOCK_SOURCE_VALID_FOR_HRES;
- }
- 
--static void clocksource_select_watchdog(bool fallback) { }
-+static void clocksource_select_watchdog(struct clocksource *except) { }
- static inline void clocksource_dequeue_watchdog(struct clocksource *cs) { }
- static inline void clocksource_resume_watchdog(void) { }
- static inline int __clocksource_watchdog_kthread(void) { return 0; }
-@@ -933,7 +968,7 @@ int __clocksource_register_scale(struct clocksource *cs, u32 scale, u32 freq)
- 	clocksource_watchdog_unlock(&flags);
- 
- 	clocksource_select();
--	clocksource_select_watchdog(false);
-+	clocksource_select_watchdog(NULL);
- 	__clocksource_suspend_select(cs);
- 	mutex_unlock(&clocksource_mutex);
- 	return 0;
-@@ -962,7 +997,7 @@ void clocksource_change_rating(struct clocksource *cs, int rating)
- 	clocksource_watchdog_unlock(&flags);
- 
- 	clocksource_select();
--	clocksource_select_watchdog(false);
-+	clocksource_select_watchdog(NULL);
- 	clocksource_suspend_select(false);
- 	mutex_unlock(&clocksource_mutex);
- }
-@@ -977,7 +1012,7 @@ static int clocksource_unbind(struct clocksource *cs)
- 
- 	if (clocksource_is_watchdog(cs)) {
- 		/* Select and try to install a replacement watchdog. */
--		clocksource_select_watchdog(true);
-+		clocksource_select_watchdog(cs);
- 		if (clocksource_is_watchdog(cs))
- 			return -EBUSY;
- 	}
-
+Regards,
+Markus
