@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86CBC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B1EC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BEC9206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DBC2206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919355;
-	bh=vVfQY6gZu/OlDcM6tuuouwA74XHWGJMpGlcOZoThUis=;
+	s=default; t=1557919358;
+	bh=DbwY/2dsRSUHdWbmCl2Fd6AwkrDpeN9dQi8yPvzeVZ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hr3vK5ab1C953k9ECxxzphMzboj+TNBvgzE8r/qRzNY2/xrJZbM7aQvWWizcCtynv
-	 +qbPpc1H80N1uM2Z4YFsBlg92Af18Gs4icnHWaB+BCe9Xn3Iz4FiSjuy55PcwmTQR5
-	 iWX4x6ThoAFA49D/l2/X7r4Sj+lZTgM0UKsocLcM=
+	b=WZIwxGbdbaRunNQa3QhfalntUsQHWRkPS0oVFRJvK6XIPwxlhETAmmRnsyR0X6kO0
+	 wALaFu42Zfx3Fa9Xczkt2I/b6sP+rZuXHK5HwHgSWml2qdoGo8erubQJPGuJmgKBQw
+	 skV0ofy/10SbOoIBf+KypOP482ihWPQXMGyF+b10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731486AbfEOLWe (ORCPT
+        id S1731496AbfEOLWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:22:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60894 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:22:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730212AbfEOLWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:22:31 -0400
+        id S1731487AbfEOLWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:22:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D606120843;
-        Wed, 15 May 2019 11:22:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97F3F206BF;
+        Wed, 15 May 2019 11:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919351;
-        bh=vVfQY6gZu/OlDcM6tuuouwA74XHWGJMpGlcOZoThUis=;
+        s=default; t=1557919354;
+        bh=DbwY/2dsRSUHdWbmCl2Fd6AwkrDpeN9dQi8yPvzeVZ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RUd3jlIX9sMybvGlQhTq7gpWF77r2hUPHtxLPbt1KLupHPX6k4L0zq33vmNDjN2EQ
-         Xr3p+EwztI8MrPmpKzm49g1evnVFatJ2aJC7GytxXzl0J+uCDFBZ2ue5cl6VEtotO9
-         i1zu3Jm0/5CRPg9Vled1QJArZDhCJ66sSArUV3nA=
+        b=yltHimiL+uHsdkDTBQ5AbU/g8Quh7rsEQiNvfPk/nkpMtKK47ikfOQDyGYCXAMsY7
+         6L6muCZC/VY/m8eXL2M6RJn5RvFBmAeA4VLm8f9oQ9fNdYjXEbmReOqLnGJrm0VvDY
+         ocgB64jkEfB93F+SjfWlbWD0XoTAV8tgoZLqmtlY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Tejun Heo <tj@kernel.org>
-Subject: [PATCH 4.19 006/113] kernfs: fix barrier usage in __kernfs_new_node()
-Date:   Wed, 15 May 2019 12:54:57 +0200
-Message-Id: <20190515090653.700227815@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 4.19 007/113] virt: vbox: Sanity-check parameter types for hgcm-calls coming from userspace
+Date:   Wed, 15 May 2019 12:54:58 +0200
+Message-Id: <20190515090653.827655565@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -60,38 +58,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <andrea.parri@amarulasolutions.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 998267900cee901c5d1dfa029a6304d00acbc29f upstream.
+commit cf4f2ad6b87dda2dbe0573b1ebeb0273f8d4aac6 upstream.
 
-smp_mb__before_atomic() can not be applied to atomic_set().  Remove the
-barrier and rely on RELEASE synchronization.
+Userspace can make host function calls, called hgcm-calls through the
+/dev/vboxguest device.
 
-Fixes: ba16b2846a8c6 ("kernfs: add an API to get kernfs node from inode number")
+In this case we should not accept all hgcm-function-parameter-types, some
+are only valid for in kernel calls.
+
+This commit adds proper hgcm-function-parameter-type validation to the
+ioctl for doing a hgcm-call from userspace.
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/kernfs/dir.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/virt/vboxguest/vboxguest_core.c |   31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
---- a/fs/kernfs/dir.c
-+++ b/fs/kernfs/dir.c
-@@ -650,11 +650,10 @@ static struct kernfs_node *__kernfs_new_
- 	kn->id.generation = gen;
+--- a/drivers/virt/vboxguest/vboxguest_core.c
++++ b/drivers/virt/vboxguest/vboxguest_core.c
+@@ -1263,6 +1263,20 @@ static int vbg_ioctl_hgcm_disconnect(str
+ 	return ret;
+ }
  
++static bool vbg_param_valid(enum vmmdev_hgcm_function_parameter_type type)
++{
++	switch (type) {
++	case VMMDEV_HGCM_PARM_TYPE_32BIT:
++	case VMMDEV_HGCM_PARM_TYPE_64BIT:
++	case VMMDEV_HGCM_PARM_TYPE_LINADDR:
++	case VMMDEV_HGCM_PARM_TYPE_LINADDR_IN:
++	case VMMDEV_HGCM_PARM_TYPE_LINADDR_OUT:
++		return true;
++	default:
++		return false;
++	}
++}
++
+ static int vbg_ioctl_hgcm_call(struct vbg_dev *gdev,
+ 			       struct vbg_session *session, bool f32bit,
+ 			       struct vbg_ioctl_hgcm_call *call)
+@@ -1298,6 +1312,23 @@ static int vbg_ioctl_hgcm_call(struct vb
+ 	}
+ 	call->hdr.size_out = actual_size;
+ 
++	/* Validate parameter types */
++	if (f32bit) {
++		struct vmmdev_hgcm_function_parameter32 *parm =
++			VBG_IOCTL_HGCM_CALL_PARMS32(call);
++
++		for (i = 0; i < call->parm_count; i++)
++			if (!vbg_param_valid(parm[i].type))
++				return -EINVAL;
++	} else {
++		struct vmmdev_hgcm_function_parameter *parm =
++			VBG_IOCTL_HGCM_CALL_PARMS(call);
++
++		for (i = 0; i < call->parm_count; i++)
++			if (!vbg_param_valid(parm[i].type))
++				return -EINVAL;
++	}
++
  	/*
--	 * set ino first. This barrier is paired with atomic_inc_not_zero in
-+	 * set ino first. This RELEASE is paired with atomic_inc_not_zero in
- 	 * kernfs_find_and_get_node_by_ino
+ 	 * Validate the client id.
  	 */
--	smp_mb__before_atomic();
--	atomic_set(&kn->count, 1);
-+	atomic_set_release(&kn->count, 1);
- 	atomic_set(&kn->active, KN_DEACTIVATED_BIAS);
- 	RB_CLEAR_NODE(&kn->rb);
- 
 
 
