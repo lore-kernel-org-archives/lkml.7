@@ -2,181 +2,148 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8322C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDC0C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD45120818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B043020881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:29:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dZVfIJ0O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfEOQ3D (ORCPT
+        id S1727176AbfEOQ3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 12:29:03 -0400
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:59389 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbfEOQ3D (ORCPT
+        Wed, 15 May 2019 12:29:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59528 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbfEOQ3a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 12:29:03 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id E5A0C3F9CD;
-        Wed, 15 May 2019 18:28:59 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id LKUIXh2AJKhb; Wed, 15 May 2019 18:28:59 +0200 (CEST)
-Received: from localhost (h-41-252.A163.priv.bahnhof.se [46.59.41.252])
-        (Authenticated sender: mb547485)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 181213F50A;
-        Wed, 15 May 2019 18:28:58 +0200 (CEST)
-Date:   Wed, 15 May 2019 18:28:58 +0200
-From:   Fredrik Noring <noring@nocrew.org>
-To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, "hch@lst.de" <hch@lst.de>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "marex@denx.de" <marex@denx.de>,
-        "JuergenUrban@gmx.de" <JuergenUrban@gmx.de>,
-        Leo Li <leoyang.li@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 0/3] prerequisites for device reserved local mem
- rework
-Message-ID: <20190515162858.GB17162@sx9>
-References: <20190514143807.7745-1-laurentiu.tudor@nxp.com>
- <9d34015d-c219-179b-3141-4b0de3530ac3@arm.com>
- <20190514182931.GA2559@sx9>
- <0e5f3b86-7a80-eec7-691b-34a123194208@nxp.com>
+        Wed, 15 May 2019 12:29:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yl9Y/zoi19BRHXS+ywGrgM0dKPjn9u9fcXYB1avLYko=; b=dZVfIJ0OEjo78QscT/PjJSi8j
+        ylXXPJ4ZeLOLvq90UH/GFLZEp9qW2Ap03bFyFPjMdNn5tYfPyXLSHS3Ro9+o93g27s4x52dE9SB9X
+        pUA619BmF39xkt1JMBeH5hWNzmzRWSDkdDLeGO6+zu05OYoHYuhK7h3p6Dr+LH5Cs9yXHHKy73bxm
+        oIIbnhWhU1ZLSgPKt7vWlM/u4L6EBl2d7752/Fg4wecLtckgUQUQNlaDNN3xMsZ0ln8yqoFiXTJBJ
+        IB0yonS+SmDvKxmVDnzXb6E9V997UD0nBNfy91oJTJM0DttaAnts2MJVPhU+rZcjKMlZEDPOgQecV
+        cNfLoH2Vw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQwmT-0002JO-LH; Wed, 15 May 2019 16:29:25 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 27EEF2029906B; Wed, 15 May 2019 18:29:24 +0200 (CEST)
+Date:   Wed, 15 May 2019 18:29:24 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Parth Shah <parth@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        mingo@redhat.com, dietmar.eggemann@arm.com, dsmythies@telus.net
+Subject: Re: [RFCv2 1/6] sched/core: Add manual jitter classification from
+ cgroup interface
+Message-ID: <20190515162924.GT2589@hirez.programming.kicks-ass.net>
+References: <20190515135322.19393-1-parth@linux.ibm.com>
+ <20190515135322.19393-2-parth@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0e5f3b86-7a80-eec7-691b-34a123194208@nxp.com>
+In-Reply-To: <20190515135322.19393-2-parth@linux.ibm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lauretniu,
+On Wed, May 15, 2019 at 07:23:17PM +0530, Parth Shah wrote:
 
-> I think that any recent kernel will do, so I'd say your current branch 
-> should be fine.
+> Subject: [RFCv2 1/6] sched/core: Add manual jitter classification from cgroup interface
 
-The kernel oopses with "unable to handle kernel paging request at virtual
-address 000aba0b" in hcd_alloc_coherent via usb_hcd_map_urb_for_dma. This
-relates to patch 2/3 that I didn't quite understand, where
+How can this be v2 ?! I've never seen v1.
 
--	retval = dma_declare_coherent_memory(dev, mem->start,
--					 mem->start - mem->parent->start,
--					 resource_size(mem));
+> Jitter tasks are usually of less important in terms of performance
+> and are short/bursty in characteristics. TurboSched uses this jitter
+> classification to pack jitters into the already running busy cores to
+> keep the total idle core count high.
+> 
+> The patch describes the use of UCLAMP mechanism to classify tasks. Patrick
+> Bellasi came up with a mechanism to classify tasks from the userspace
+> https://lore.kernel.org/lkml/20190402104153.25404-1-patrick.bellasi@arm.com/
 
-becomes
+The canonical form is:
 
-+	retval = gen_pool_add_virt(hcd->localmem_pool,
-+				   (unsigned long)mem->start -
-+					mem->parent->start,
-+				   mem->start, resource_size(mem),
+	https://lkml.kernel.org/r/$MSGID
 
-so that arguments two and three switch places. Given
+> This UCLAMP mechanism can be useful in classifying tasks as jitter. Jitters
+> can be classified for the cgroup by keeping util.max of the tasks as the
+> least(=0). This also provides benefit of giving the least frequency to
+> those jitter tasks, which is useful if all jitters are packed onto a
+> separate core.
+> 
+> Use Case with UCLAMP
+> ===================
+> To create a cgroup with all the tasks classified as jitters;
+> 
+> ```
+> mkdir -p /sys/fs/cgroup/cpu/jitter
+> echo 0 > /proc/sys/kernel/sched_uclamp_util_min;
+> echo 0 > /sys/fs/cgroup/cpu/jitter/cpu.util.min;
+> echo 0 > /sys/fs/cgroup/cpu/jitter/cpu.util.max;
+> i=8;
+> ./turbo_bench -t 30 -h $i -n $i &
+> ./turbo_bench -t 30 -h 0 -n $i &
+> echo $! > /sys/fs/cgroup/cpu/jitter/cgroup.procs;
+> ```
+> 
+> Signed-off-by: Parth Shah <parth@linux.ibm.com>
+> ---
+>  kernel/sched/core.c  | 9 +++++++++
+>  kernel/sched/sched.h | 1 +
+>  2 files changed, 10 insertions(+)
+> 
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index d42c0f5eefa9..77aa4aee4478 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -7192,6 +7192,15 @@ static int cpu_util_max_write_u64(struct cgroup_subsys_state *css,
+>  	tg->uclamp_req[UCLAMP_MAX].value = max_value;
+>  	tg->uclamp_req[UCLAMP_MAX].bucket_id = uclamp_bucket_id(max_value);
+>  
+> +	/*
+> +	 * Classify the tasks belonging to the last bucket of MAX UCLAMP as
+> +	 * jitters
+> +	 */
+> +	if (uclamp_bucket_id(max_value) == 0)
+> +		tg->turbo_sched_enabled = 1;
+> +	else if (tg->turbo_sched_enabled)
+> +		tg->turbo_sched_enabled = 0;
+> +
+>  	/* Update effective clamps to track the most restrictive value */
+>  	cpu_util_update_eff(css, UCLAMP_MAX);
+>  
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index b4019012d84b..e75ffaf3ff34 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -407,6 +407,7 @@ struct task_group {
+>  	struct uclamp_se	uclamp[UCLAMP_CNT];
+>  #endif
+>  
+> +	bool			turbo_sched_enabled;
+>  };
 
-int dma_declare_coherent_memory(struct device *dev, phys_addr_t phys_addr,
-				dma_addr_t device_addr, size_t size);
+Your simple patch has 3 problems:
 
-and
+ - it limits itself; for no apparent reason; to the cgroup interface.
 
-int gen_pool_add_virt(struct gen_pool *pool, unsigned long virt, phys_addr_t phys
-		 size_t size, int nid)
+ - it is inconsistent in the terminology; pick either jitter or
+   turbo-sched, and I think the latter is a horrid name, it wants to be
+   'pack' or something similar. Also, jitter really doesn't make sense
+   given the classification.
 
-it seems that the device address (dma_addr_t device_addr) now becomes a
-virtual address (unsigned long virt). Is that intended?
+ - you use '_Bool' in a composite type.
 
-My corresponding patch is below for reference. I applied your 1/3 patch
-to test it.
-
-Fredrik
-
-diff --git a/drivers/usb/host/ohci-ps2.c b/drivers/usb/host/ohci-ps2.c
---- a/drivers/usb/host/ohci-ps2.c
-+++ b/drivers/usb/host/ohci-ps2.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <linux/dma-mapping.h>
-+#include <linux/genalloc.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/usb.h>
-@@ -92,12 +93,12 @@ static irqreturn_t ohci_ps2_irq(struct usb_hcd *hcd)
- 	return ohci_irq(hcd); /* Call normal IRQ handler. */
- }
- 
--static int iopheap_alloc_coherent(struct platform_device *pdev,
--	size_t size, int flags)
-+static int iopheap_alloc_coherent(struct platform_device *pdev, size_t size)
- {
- 	struct device *dev = &pdev->dev;
- 	struct usb_hcd *hcd = platform_get_drvdata(pdev);
- 	struct ps2_hcd *ps2priv = hcd_to_priv(hcd);
-+	int err;
- 
- 	if (ps2priv->iop_dma_addr != 0)
- 		return 0;
-@@ -112,28 +113,37 @@ static int iopheap_alloc_coherent(struct platform_device *pdev,
- 		return -ENOMEM;
- 	}
- 
--	if (dma_declare_coherent_memory(dev,
--			iop_bus_to_phys(ps2priv->iop_dma_addr),
--			ps2priv->iop_dma_addr, size, flags)) {
--		dev_err(dev, "dma_declare_coherent_memory failed\n");
--		iop_free(ps2priv->iop_dma_addr);
--		ps2priv->iop_dma_addr = 0;
--		return -ENOMEM;
-+	hcd->localmem_pool = devm_gen_pool_create(dev,
-+		PAGE_SHIFT, dev_to_node(dev), DRV_NAME);
-+	if (IS_ERR(hcd->localmem_pool)) {
-+		err = PTR_ERR(hcd->localmem_pool);
-+		goto out_err;
-+	}
-+
-+	err = gen_pool_add_virt(hcd->localmem_pool, ps2priv->iop_dma_addr,
-+		iop_bus_to_phys(ps2priv->iop_dma_addr), size, dev_to_node(dev));
-+	if (err < 0) {
-+		dev_err(dev, "gen_pool_add_virt failed with %d\n", err);
-+		goto out_err;
- 	}
- 
- 	return 0;
-+
-+out_err:
-+	iop_free(ps2priv->iop_dma_addr);
-+	ps2priv->iop_dma_addr = 0;
-+
-+	return err;
- }
- 
- static void iopheap_free_coherent(struct platform_device *pdev)
- {
--	struct device *dev = &pdev->dev;
- 	struct usb_hcd *hcd = platform_get_drvdata(pdev);
- 	struct ps2_hcd *ps2priv = hcd_to_priv(hcd);
- 
- 	if (ps2priv->iop_dma_addr == 0)
- 		return;
- 
--	dma_release_declared_memory(dev);
- 	iop_free(ps2priv->iop_dma_addr);
- 	ps2priv->iop_dma_addr = 0;
- }
-@@ -177,8 +187,7 @@ static int ohci_hcd_ps2_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
--	ret = iopheap_alloc_coherent(pdev,
--		DMA_BUFFER_SIZE, DMA_MEMORY_EXCLUSIVE);
-+	ret = iopheap_alloc_coherent(pdev, DMA_BUFFER_SIZE);
- 	if (ret != 0)
- 		goto err_alloc_coherent;
- 
