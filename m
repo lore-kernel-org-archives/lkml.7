@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7153AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBB1C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42A632084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE9120881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:06:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918398;
-	bh=TbtfVt5BJUBf/HcNkVKL3fzlo44vjaGOWci/mWz9tWo=;
+	s=default; t=1557918404;
+	bh=OhOw0vL38yXmaU2eKj8DUsYjAkBuuhupC6ayetxH300=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OtGWZoULPaRk+dT/lZcmB89hVUGM86zhENbfOhQuJgAnkJGh0ftubIYED/8owNZtn
-	 01d9UJHgCiXoLJXy89ZxPa0fiDuu85CKp/INkxhfuHaXlsDGxtytRanw2pB/nBh6O9
-	 GjA3l7ucOQAxcG+BiPehFWyFRuXNkeVQXp1MocMA=
+	b=qknq6dacltBEn0IKibDysN11pAmURNRjoiOE4vZ7ccW0C4PGNdX5IOdsji92PHAgE
+	 tHHUe5ls66u502TibRhfwktrk7p6bA+OIiW0ExBGWVm5HRvRlEHIBQtc0hIbrI4z+u
+	 vCmBuq1xFmRniTQvp1NEUOPcdr4NCE6dfPrm+NEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbfEOLGh (ORCPT
+        id S1728774AbfEOLGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:06:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37342 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:06:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728379AbfEOLGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:06:32 -0400
+        id S1728008AbfEOLGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:06:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2416C21734;
-        Wed, 15 May 2019 11:06:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D37FB2173C;
+        Wed, 15 May 2019 11:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918391;
-        bh=TbtfVt5BJUBf/HcNkVKL3fzlo44vjaGOWci/mWz9tWo=;
+        s=default; t=1557918399;
+        bh=OhOw0vL38yXmaU2eKj8DUsYjAkBuuhupC6ayetxH300=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=INr3cJCoJYL0tusxrRw5nBsZanOemBlo4U7SO9Nrr8twuXCh8wPupDyrcYDjAwsTA
-         SjPU1tXSWy92U5RtPPKdjwuLd5v5s/mNtd96GfAak1P7y+DT5cj3UNIO+Pp/QcPCko
-         WAtsqdF1B8V8F20bUUJv02SQT+2978xhNYqc58F0=
+        b=q/HcehkXA9xXxLGj1YdA3tK+Npxk8Q0sAKfWeDLvERf+T8NkOn+1oNduLVSGWPREX
+         CQbmWCAS0A4Dczz3Y+u6WwpilmUUWCOOPBHHvTjHd1/CtBdAPP1unM8+4yg3zXkj0O
+         pMHyAFTFzrJ3eWVW6a1ztDztVy18qGZap6Hqsc5w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shmulik Ladkani <shmulik.ladkani@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 111/266] ipv4: ip_do_fragment: Preserve skb_iif during fragmentation
-Date:   Wed, 15 May 2019 12:53:38 +0200
-Message-Id: <20190515090726.212559741@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Zubin Mithra <zsm@chromium.org>
+Subject: [PATCH 4.4 073/266] bpf: reject wrong sized filters earlier
+Date:   Wed, 15 May 2019 12:53:00 +0200
+Message-Id: <20190515090724.904798248@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,42 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shmulik Ladkani <shmulik@metanetworks.com>
+From: Daniel Borkmann <daniel@iogearbox.net>
 
-[ Upstream commit d2f0c961148f65bc73eda72b9fa3a4e80973cb49 ]
+commit f7bd9e36ee4a4ce38e1cddd7effe6c0d9943285b upstream.
 
-Previously, during fragmentation after forwarding, skb->skb_iif isn't
-preserved, i.e. 'ip_copy_metadata' does not copy skb_iif from given
-'from' skb.
+Add a bpf_check_basics_ok() and reject filters that are of invalid
+size much earlier, so we don't do any useless work such as invoking
+bpf_prog_alloc(). Currently, rejection happens in bpf_check_classic()
+only, but it's really unnecessarily late and they should be rejected
+at earliest point. While at it, also clean up one bpf_prog_size() to
+make it consistent with the remaining invocations.
 
-As a result, ip_do_fragment's creates fragments with zero skb_iif,
-leading to inconsistent behavior.
-
-Assume for example an eBPF program attached at tc egress (post
-forwarding) that examines __sk_buff->ingress_ifindex:
- - the correct iif is observed if forwarding path does not involve
-   fragmentation/refragmentation
- - a bogus iif is observed if forwarding path involves
-   fragmentation/refragmentatiom
-
-Fix, by preserving skb_iif during 'ip_copy_metadata'.
-
-Signed-off-by: Shmulik Ladkani <shmulik.ladkani@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Zubin Mithra <zsm@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/ip_output.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/core/filter.c |   23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
---- a/net/ipv4/ip_output.c
-+++ b/net/ipv4/ip_output.c
-@@ -475,6 +475,7 @@ static void ip_copy_metadata(struct sk_b
- 	to->pkt_type = from->pkt_type;
- 	to->priority = from->priority;
- 	to->protocol = from->protocol;
-+	to->skb_iif = from->skb_iif;
- 	skb_dst_drop(to);
- 	skb_dst_copy(to, from);
- 	to->dev = from->dev;
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -742,6 +742,17 @@ static bool chk_code_allowed(u16 code_to
+ 	return codes[code_to_probe];
+ }
+ 
++static bool bpf_check_basics_ok(const struct sock_filter *filter,
++				unsigned int flen)
++{
++	if (filter == NULL)
++		return false;
++	if (flen == 0 || flen > BPF_MAXINSNS)
++		return false;
++
++	return true;
++}
++
+ /**
+  *	bpf_check_classic - verify socket filter code
+  *	@filter: filter to verify
+@@ -762,9 +773,6 @@ static int bpf_check_classic(const struc
+ 	bool anc_found;
+ 	int pc;
+ 
+-	if (flen == 0 || flen > BPF_MAXINSNS)
+-		return -EINVAL;
+-
+ 	/* Check the filter code now */
+ 	for (pc = 0; pc < flen; pc++) {
+ 		const struct sock_filter *ftest = &filter[pc];
+@@ -1057,7 +1065,7 @@ int bpf_prog_create(struct bpf_prog **pf
+ 	struct bpf_prog *fp;
+ 
+ 	/* Make sure new filter is there and in the right amounts. */
+-	if (fprog->filter == NULL)
++	if (!bpf_check_basics_ok(fprog->filter, fprog->len))
+ 		return -EINVAL;
+ 
+ 	fp = bpf_prog_alloc(bpf_prog_size(fprog->len), 0);
+@@ -1104,7 +1112,7 @@ int bpf_prog_create_from_user(struct bpf
+ 	int err;
+ 
+ 	/* Make sure new filter is there and in the right amounts. */
+-	if (fprog->filter == NULL)
++	if (!bpf_check_basics_ok(fprog->filter, fprog->len))
+ 		return -EINVAL;
+ 
+ 	fp = bpf_prog_alloc(bpf_prog_size(fprog->len), 0);
+@@ -1184,7 +1192,6 @@ int __sk_attach_filter(struct sock_fprog
+ 		       bool locked)
+ {
+ 	unsigned int fsize = bpf_classic_proglen(fprog);
+-	unsigned int bpf_fsize = bpf_prog_size(fprog->len);
+ 	struct bpf_prog *prog;
+ 	int err;
+ 
+@@ -1192,10 +1199,10 @@ int __sk_attach_filter(struct sock_fprog
+ 		return -EPERM;
+ 
+ 	/* Make sure new filter is there and in the right amounts. */
+-	if (fprog->filter == NULL)
++	if (!bpf_check_basics_ok(fprog->filter, fprog->len))
+ 		return -EINVAL;
+ 
+-	prog = bpf_prog_alloc(bpf_fsize, 0);
++	prog = bpf_prog_alloc(bpf_prog_size(fprog->len), 0);
+ 	if (!prog)
+ 		return -ENOMEM;
+ 
 
 
