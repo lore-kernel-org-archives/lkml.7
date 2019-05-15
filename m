@@ -2,150 +2,112 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA5FC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37E4C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B92722084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:18:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85D2C2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:20:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="M+r7TUT7";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="gBmRNMh/"
+	dkim=pass (1024-bit key) header.d=impinj.com header.i=@impinj.com header.b="Yw7uQRqt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727058AbfEORS0 (ORCPT
+        id S1726927AbfEORUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 13:18:26 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:57904 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725974AbfEORS0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 13:18:26 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4FHHqFe013433;
-        Wed, 15 May 2019 10:18:11 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=M+HeQUN9gzaGB+aAqkdYsyx1NRhGEPa8nOV7GMToD1w=;
- b=M+r7TUT7f6CMSSlhHCLXLIYiF6S5zql9i9h1fA/wYXXKzi2qYmFJvokLjslyIpFWRiQ8
- DNvpN689BXiCTKvgQB94axyfJWzoiQtO56FdD3v0Dg6DPQZsFiLiu+wcuG5WaLF621yG
- KhpBj8M/Ix+Wx+2KUDKcwoQLrr1baNV0rL8= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2sgggysgak-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 15 May 2019 10:18:11 -0700
-Received: from prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) by
- prn-hub04.TheFacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Wed, 15 May 2019 10:18:08 -0700
-Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
- prn-mbx07.TheFacebook.com (2620:10d:c081:6::21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Wed, 15 May 2019 10:18:08 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Wed, 15 May 2019 10:18:08 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
+        Wed, 15 May 2019 13:20:50 -0400
+Received: from mail-eopbgr700126.outbound.protection.outlook.com ([40.107.70.126]:39776
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726261AbfEORUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 13:20:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=impinj.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M+HeQUN9gzaGB+aAqkdYsyx1NRhGEPa8nOV7GMToD1w=;
- b=gBmRNMh/WSRLwfG0wSN98xYDBNTXLTC7avyveg5dCFD4nBdASpvdZJegmBViBXlk4NTCEmgi8xTE0YKlAYC3dl5K6ZrqwDdRPWIMuvAZlYh/KidUcC200KmUmawNzx9oCCgZhCSjGREmPVsx5ZwpKPSJpfG/hE4cTBl3BovSiuQ=
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com (20.179.156.24) by
- BYAPR15MB3272.namprd15.prod.outlook.com (20.179.57.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Wed, 15 May 2019 17:18:06 +0000
-Received: from BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::d4f6:b485:69ee:fd9a]) by BYAPR15MB2631.namprd15.prod.outlook.com
- ([fe80::d4f6:b485:69ee:fd9a%7]) with mapi id 15.20.1878.024; Wed, 15 May 2019
- 17:18:06 +0000
-From:   Roman Gushchin <guro@fb.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "Johannes Weiner" <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] mm: refactor __vunmap() to avoid duplicated call to
- find_vm_area()
-Thread-Topic: [PATCH] mm: refactor __vunmap() to avoid duplicated call to
- find_vm_area()
-Thread-Index: AQHVCq//khAEDBlALkSFD6zmmU+RfaZrl42AgADXXoA=
-Date:   Wed, 15 May 2019 17:18:05 +0000
-Message-ID: <20190515171800.GD9307@castle>
-References: <20190514235111.2817276-1-guro@fb.com>
- <78d9b650-4b47-60c5-4212-601c1719dba5@arm.com>
-In-Reply-To: <78d9b650-4b47-60c5-4212-601c1719dba5@arm.com>
+ bh=rrbxQCssYb0AoOrQwYexbbQS/u6Oj266/mwqmDClGJw=;
+ b=Yw7uQRqtzXbNwF/8phr0STRTPw2XiW8hB3CvzxR7wpobXEGUdgzZERJXcyUaOypkiYAjwALzhsPzEEhmn9j0GcUw/XUuf7ID+Se2AfXf0DF4RWJ0FZfzE8Ws65ICCTcymGR5FSSGjJB1XKijulZIHpvXGrMTZMzuy/MZlP6dAg4=
+Received: from MWHPR0601MB3708.namprd06.prod.outlook.com (10.167.236.38) by
+ MWHPR0601MB3770.namprd06.prod.outlook.com (10.167.236.151) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Wed, 15 May 2019 17:20:44 +0000
+Received: from MWHPR0601MB3708.namprd06.prod.outlook.com
+ ([fe80::b496:85ab:4cb0:5876]) by MWHPR0601MB3708.namprd06.prod.outlook.com
+ ([fe80::b496:85ab:4cb0:5876%2]) with mapi id 15.20.1878.024; Wed, 15 May 2019
+ 17:20:44 +0000
+From:   Trent Piepho <tpiepho@impinj.com>
+To:     "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [PATCH] ARC: [plat-hsdk] Get rid of inappropriate PHY settings
+Thread-Topic: [PATCH] ARC: [plat-hsdk] Get rid of inappropriate PHY settings
+Thread-Index: AQHVCzOlreV9zN2ODkC/aXsLy4DzSqZsbqWA
+Date:   Wed, 15 May 2019 17:20:43 +0000
+Message-ID: <1557940843.4229.120.camel@impinj.com>
+References: <20190515153340.40074-1-abrodkin@synopsys.com>
+In-Reply-To: <20190515153340.40074-1-abrodkin@synopsys.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR2201CA0072.namprd22.prod.outlook.com
- (2603:10b6:301:5e::25) To BYAPR15MB2631.namprd15.prod.outlook.com
- (2603:10b6:a03:152::24)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:180::779]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=tpiepho@impinj.com; 
+x-originating-ip: [216.207.205.253]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dd2df18a-eaa7-4aa6-3f2f-08d6d9594b39
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:BYAPR15MB3272;
-x-ms-traffictypediagnostic: BYAPR15MB3272:
-x-microsoft-antispam-prvs: <BYAPR15MB327240EA0D25885C4DA7AFFABE090@BYAPR15MB3272.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-ms-office365-filtering-correlation-id: 045d265a-f4b6-4a2b-5662-08d6d959a9ab
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR0601MB3770;
+x-ms-traffictypediagnostic: MWHPR0601MB3770:
+x-microsoft-antispam-prvs: <MWHPR0601MB3770339FCDA0E79609CCDB4ED3090@MWHPR0601MB3770.namprd06.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(396003)(136003)(39860400002)(366004)(376002)(346002)(189003)(199004)(71190400001)(71200400001)(6116002)(86362001)(1076003)(2906002)(33716001)(256004)(14444005)(5660300002)(6916009)(53936002)(305945005)(7736002)(4326008)(25786009)(66476007)(64756008)(52116002)(102836004)(386003)(6246003)(68736007)(316002)(8936002)(81156014)(81166006)(486006)(54906003)(46003)(11346002)(446003)(476003)(14454004)(478600001)(99286004)(186003)(6506007)(76176011)(53546011)(229853002)(6436002)(8676002)(6486002)(66556008)(73956011)(66446008)(66946007)(6512007)(9686003)(33656002)(37363001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3272;H:BYAPR15MB2631.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(396003)(39840400004)(376002)(346002)(189003)(199004)(3846002)(6116002)(6512007)(25786009)(103116003)(4326008)(6486002)(6436002)(256004)(14444005)(5024004)(2501003)(26005)(186003)(8936002)(316002)(81156014)(81166006)(8676002)(66066001)(486006)(476003)(2616005)(11346002)(446003)(91956017)(66446008)(64756008)(66556008)(66476007)(68736007)(73956011)(66946007)(99286004)(76176011)(478600001)(76116006)(6246003)(305945005)(14454004)(7736002)(229853002)(71190400001)(71200400001)(36756003)(86362001)(5660300002)(6506007)(2906002)(54906003)(110136005)(102836004)(53936002)(26583001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR0601MB3770;H:MWHPR0601MB3708.namprd06.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: impinj.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ODA2eCa21J2+8xgnqORW5yH5C00xk9pJf18gs+NkAgx+UXTqGJMPlhhpvBK9CFxMZTVRCaPywhcve1AQ3/7infdBDeFYeBP/AUL+KlPX5LE0LuMNGeywb8744SrYo5Dk9CSLMvxyIwMT/ofFpn02Jt0JYvGJI0fW0qyTH6Z07Ulb18rfwAmJJT97S71K3PY8iensnp7VehoWnO3OZlPYoCChcvRibaUecrUW9l5/XGltax+2n3+tMt9bOJrYSKPd0KUqfVA2r9KmT9OxKwXR67YFJC4jcIfD9d4VcTQO5GeFRFECW7atNsmCbuWyMxFFBpCkgvZYwFUZFgX36RbeFbSNuzZtWzRTT9h3I6xQfFA0bQQQszSupYZb76u8J0U0eF9m2TWcW2jgaJAQt+OfHmCUGqbyq9KVNVrXzCr7b70=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <DF268288B0655949A369470EAFAF1E27@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: +AF1fAGOuXXAwK+aWhJwFyjGPne87ahnuSyBfux+lLZh8NdH7xeiHEr+NKBvK4j+8l3p8G/kEh+/0I9PHa17MXHmMfcSqc5qlRlaKlWeLlJR1FQefl+KGl6cqXOOkqoIsjA7z5fE8QJVeNMD9aauEVJjfj4eGQ6ad6IcKyrZ5bWabplapRYdy2Q2Lw3PjyGB9wFTJ21oCr2YeMjadhFkKFIPHBUB05TpmN2T0x9jp2GLKRzk1jPfks1kcNBBQzIdDDmiFA/fFE4ND3rQiN21NtxMlsB161r4XD08USpWkbSVapSfelxgFLpIcOGMlU0uKs6BrMMJ7HzX9LPaju43Ak/eIGb51RCHKSYVJ3hR4aVwOBXmm7Co8KG6JXzK6wIvrWvkeouOQJcJBnh6PjhVM36Y3U+dmjy1GY8pmUNIers=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CCEC152D4F9FFB45B24A2BCD5A3C5E73@namprd06.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: dd2df18a-eaa7-4aa6-3f2f-08d6d9594b39
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 17:18:05.9592
+X-OriginatorOrg: impinj.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 045d265a-f4b6-4a2b-5662-08d6d959a9ab
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 17:20:43.9767
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-id: 6de70f0f-7357-4529-a415-d8cbb7e93e5e
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3272
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_11:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR0601MB3770
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 09:57:11AM +0530, Anshuman Khandual wrote:
->=20
->=20
-> On 05/15/2019 05:21 AM, Roman Gushchin wrote:
-> > __vunmap() calls find_vm_area() twice without an obvious reason:
-> > first directly to get the area pointer, second indirectly by calling
-> > vm_remove_mappings()->remove_vm_area(), which is again searching
-> > for the area.
-> >=20
-> > To remove this redundancy, let's split remove_vm_area() into
-> > __remove_vm_area(struct vmap_area *), which performs the actual area
-> > removal, and remove_vm_area(const void *addr) wrapper, which can
-> > be used everywhere, where it has been used before. Let's pass
-> > a pointer to the vm_area instead of vm_struct to vm_remove_mappings(),
-> > so it can pass it to __remove_vm_area() and avoid the redundant area
-> > lookup.
-> >=20
-> > On my test setup, I've got 5-10% speed up on vfree()'ing 1000000
-> > of 4-pages vmalloc blocks.
->=20
-> Though results from  1000000 single page vmalloc blocks remain inconclusi=
-ve,
-> 4-page based vmalloc block's result shows improvement in the range of 5-1=
-0%.
-
-So you can confirm my numbers? Great, thank you!
+T24gV2VkLCAyMDE5LTA1LTE1IGF0IDE4OjMzICswMzAwLCBBbGV4ZXkgQnJvZGtpbiB3cm90ZToN
+Cj4gSW5pdGlhbCBicmluZy11cCBvZiB0aGUgcGxhdGZvcm0gd2FzIGRvbmUgb24gRlBHQSBwcm90
+b3R5cGUNCj4gd2hlcmUgVEkncyBEUDgzODY3IFBIWSB3YXMgdXNlZC4gQW5kIHNvIHNvbWUgc3Bl
+Y2lmaWMgUEhZDQo+IG9wdGlvbnMgd2VyZSBhZGRlZC4NCj4gDQo+IEp1c3QgdG8gY29uZmlybSB0
+aGlzIGlzIHdoYXQgd2UgZ2V0IG9uIEZQR0EgcHJvdG90eXBlIGluIHRoZSBib290bG9nOg0KPiA+
+IFRJIERQODM4Njcgc3RtbWFjLTA6MDA6IGF0dGFjaGVkIFBIWSBkcml2ZXIgW1RJIERQODM4Njdd
+IC4uLg0KPiANCj4gT24gcmVhbCBib2FyZCB0aG91Z2ggd2UgaGF2ZSBNaWNyZWwgS1pTOTAzMSBQ
+SFkgYW5kIHdlIGV2ZW4gaGF2ZQ0KPiBDT05GSUdfTUlDUkVMX1BIWT15IHNldCBpbiBoc2RrX2Rl
+ZmNvbmZpZy4gVGhhdCdzIHdoYXQgd2Ugc2VlIGluIHRoZSBib290bG9nOg0KPiA+IE1pY3JlbCBL
+U1o5MDMxIEdpZ2FiaXQgUEhZIHN0bW1hYy0wOjAwOiAuLi4NCj4gDQo+IFNvIGVzc2VudGlhbGx5
+IGFsbCBUSS1yZWxhdGVkIGJpdHMgaGF2ZSB0byBnbyBhd2F5Lg0KPiANCj4gU2lnbmVkLW9mZi1i
+eTogQWxleGV5IEJyb2RraW4gPGFicm9ka2luQHN5bm9wc3lzLmNvbT4NCj4gQ2M6IFRyZW50IFBp
+ZXBobyA8dHBpZXBob0BpbXBpbmouY29tPg0KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2Vy
+bmVsLm9yZz4NCg0KQWNrZWQtYnk6IDx0cGllcGhvQGltcGluai5jb20+DQoNCj4gLS0tDQo+ICBh
+cmNoL2FyYy9ib290L2R0cy9oc2RrLmR0cyB8IDQgLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDQg
+ZGVsZXRpb25zKC0pDQo+IA0KPiBAQCAtMjAxLDkgKzIwMCw2IEBADQoNCkkgdGhpbmsgaXQgd291
+bGQgYmUgcGVkYW50aWNhbGx5IGNvcnJlY3QgdG8gY2hhbmdlIHRoZSBwaHktbW9kZSB0bw0KInJn
+bWlpLWlkIiwgdGhvdWdoIEkgc2VlIG5vdGhpbmcgaW4gdGhlIG1pY3JlbCBwaHkgZHJpdmVyIHRo
+YXQgdXNlcw0KdGhpcywgYW5kIHNvIGRvdWJ0IGl0IHdpbGwgZG8gYW55dGhpbmcgYXQgYWxsIGF0
+IHRoaXMgcG9pbnQuDQoNClRoZSBNaWNyZWwgcGh5IGFwcGVhcnMgdG8gZGVmYXVsdCB0byBwdXR0
+aW5nIGEgY2xvY2sgc2tldyBvbiB0aGUgUkdNSUkNCmxpbmVzIGFuZCB0aGUgZHJpdmVyIHdpbGwg
+dXNlIHRoZSBkZWZhdWx0IGlmIG5vIHByb3BlcnRpZXMgYXJlIHByZXNlbnQuDQpTbyBJIGJlbGll
+dmUgd2hhdCB5b3VyIGJvYXJkIGlzIGVmZmVjdGl2ZWx5IHVzaW5nIG5vdyBpcyAicmdtaWktaWQi
+DQp3aXRoIGRlZmF1bHQgc2tld3MsIHVubGVzcyB0aGUgcGh5IGFuZCB5b3VyIGJvYXJkIGRlc2ln
+biBoYXMgc29tZQ0KcmVzaXN0b3IgcGluIHN0cmFwcGluZyB0aGF0IGhhcyBjaGFuZ2VkIHRoaXMu
+DQo=
