@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30708C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21D2C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01FB220818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3EB020881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919456;
-	bh=yLEgRUYyBy3vBCr4yyHkVca5+99CS7Ush3sHyV20CyY=;
+	s=default; t=1557919460;
+	bh=h3xdNg/q9zhRaJaNp3VWSoaqbdpc4FxgzygEbgsDw2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GuB2Oc5+yh1TCWubJORVzaPzBscgyxzfGrjFjtzEBaIiPMXshlsdQw929CKd3tfQK
-	 ayAUz8rPyxQSJtCNpLUkA9Sifbj4ymMwbYiEAGbIJB3OeNmhDeBrvTASbrdOv13Jgv
-	 sC2kQa0bCSSoL6MXvBmPbSlLBVdg316O4CHXqN5U=
+	b=eAF0z3VCrsxvsiaSEZHQaM7NbiiS+AOt2I8IBmC0zlhuk+AEcrbtNThz1/sARUHfU
+	 5fcBySYQCKw1oPTbPU5Uns9GqIEDTMVOb6Kv9if6UwF4MiwzGoAVlJRP9k77WxmxWr
+	 xBJMLJoWh2zWlP2mZ3YKWl0CICy7gzL1yksxLgjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731555AbfEOLYP (ORCPT
+        id S1731794AbfEOLYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:24:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34738 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:24:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731286AbfEOLYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:24:12 -0400
+        id S1731781AbfEOLYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:24:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1225220818;
-        Wed, 15 May 2019 11:24:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1D57206BF;
+        Wed, 15 May 2019 11:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919451;
-        bh=yLEgRUYyBy3vBCr4yyHkVca5+99CS7Ush3sHyV20CyY=;
+        s=default; t=1557919454;
+        bh=h3xdNg/q9zhRaJaNp3VWSoaqbdpc4FxgzygEbgsDw2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tsT61Fny+RoLH+J0KVt249SBC5c2zav7cQXFHOJyU+Wypce5W+/7NUQ8f3G2cGCI4
-         EihzCoCQ9Yf/eSXGSX3VKo7GZgdJEHMcpRzTMuV9EfmsY0pkOcEl5Zbm1+zrAcbrEm
-         KLFIueoB0/MOu0N+MYOqNcv7aYT396PhLvHkPcAk=
+        b=DkHWy/TgBRh+H0tzqWMcafDeZqfsMe10+TWzAvT7P0jqKBwL/GlRDJmFLtOrvCrZV
+         aEhgTcG3TKHSrgc5kOlolm/hPBjGeTJ1euuzKoNsQqZBiuzlPB5YuZ8iaZrdPY9Mtl
+         GSZW+jzph8ws3OMzVZaYkGAuDN6/aIBaI6ih0tjI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthew Whitehead <tedheadster@gmail.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 043/113] scsi: aic7xxx: fix EISA support
-Date:   Wed, 15 May 2019 12:55:34 +0200
-Message-Id: <20190515090656.890415424@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: [PATCH 4.19 079/113] NFC: nci: Add some bounds checking in nci_hci_cmd_received()
+Date:   Wed, 15 May 2019 12:56:10 +0200
+Message-Id: <20190515090659.611321443@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -61,96 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 144ec97493af34efdb77c5aba146e9c7de8d0a06 ]
+[ Upstream commit d7ee81ad09f072eab1681877fc71ec05f9c1ae92 ]
 
-Instead of relying on the now removed NULL argument to
-pci_alloc_consistent, switch to the generic DMA API, and store the struct
-device so that we can pass it.
+This is similar to commit 674d9de02aa7 ("NFC: Fix possible memory
+corruption when handling SHDLC I-Frame commands").
 
-Fixes: 4167b2ad5182 ("PCI: Remove NULL device handling from PCI DMA API")
-Reported-by: Matthew Whitehead <tedheadster@gmail.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Tested-by: Matthew Whitehead <tedheadster@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+I'm not totally sure, but I think that commit description may have
+overstated the danger.  I was under the impression that this data came
+from the firmware?  If you can't trust your networking firmware, then
+you're already in trouble.
+
+Anyway, these days we add bounds checking where ever we can and we call
+it kernel hardening.  Better safe than sorry.
+
+Fixes: 11f54f228643 ("NFC: nci: Add HCI over NCI protocol support")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/scsi/aic7xxx/aic7770_osm.c     |  1 +
- drivers/scsi/aic7xxx/aic7xxx.h         |  1 +
- drivers/scsi/aic7xxx/aic7xxx_osm.c     | 10 ++++------
- drivers/scsi/aic7xxx/aic7xxx_osm_pci.c |  1 +
- 4 files changed, 7 insertions(+), 6 deletions(-)
+ net/nfc/nci/hci.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/scsi/aic7xxx/aic7770_osm.c b/drivers/scsi/aic7xxx/aic7770_osm.c
-index 3d401d02c0195..bdd177e3d7622 100644
---- a/drivers/scsi/aic7xxx/aic7770_osm.c
-+++ b/drivers/scsi/aic7xxx/aic7770_osm.c
-@@ -91,6 +91,7 @@ aic7770_probe(struct device *dev)
- 	ahc = ahc_alloc(&aic7xxx_driver_template, name);
- 	if (ahc == NULL)
- 		return (ENOMEM);
-+	ahc->dev = dev;
- 	error = aic7770_config(ahc, aic7770_ident_table + edev->id.driver_data,
- 			       eisaBase);
- 	if (error != 0) {
-diff --git a/drivers/scsi/aic7xxx/aic7xxx.h b/drivers/scsi/aic7xxx/aic7xxx.h
-index 4ce4e903a759e..7f6e83296dfa4 100644
---- a/drivers/scsi/aic7xxx/aic7xxx.h
-+++ b/drivers/scsi/aic7xxx/aic7xxx.h
-@@ -949,6 +949,7 @@ struct ahc_softc {
- 	 * Platform specific device information.
- 	 */
- 	ahc_dev_softc_t		  dev_softc;
-+	struct device		  *dev;
+diff --git a/net/nfc/nci/hci.c b/net/nfc/nci/hci.c
+index ddfc52ac1f9b4..c0d323b58e732 100644
+--- a/net/nfc/nci/hci.c
++++ b/net/nfc/nci/hci.c
+@@ -312,6 +312,10 @@ static void nci_hci_cmd_received(struct nci_dev *ndev, u8 pipe,
+ 		create_info = (struct nci_hci_create_pipe_resp *)skb->data;
+ 		dest_gate = create_info->dest_gate;
+ 		new_pipe = create_info->pipe;
++		if (new_pipe >= NCI_HCI_MAX_PIPES) {
++			status = NCI_HCI_ANY_E_NOK;
++			goto exit;
++		}
  
- 	/*
- 	 * Bus specific device information.
-diff --git a/drivers/scsi/aic7xxx/aic7xxx_osm.c b/drivers/scsi/aic7xxx/aic7xxx_osm.c
-index c6be3aeb302b5..306d0bf33478c 100644
---- a/drivers/scsi/aic7xxx/aic7xxx_osm.c
-+++ b/drivers/scsi/aic7xxx/aic7xxx_osm.c
-@@ -861,8 +861,8 @@ int
- ahc_dmamem_alloc(struct ahc_softc *ahc, bus_dma_tag_t dmat, void** vaddr,
- 		 int flags, bus_dmamap_t *mapp)
- {
--	*vaddr = pci_alloc_consistent(ahc->dev_softc,
--				      dmat->maxsize, mapp);
-+	/* XXX: check if we really need the GFP_ATOMIC and unwind this mess! */
-+	*vaddr = dma_alloc_coherent(ahc->dev, dmat->maxsize, mapp, GFP_ATOMIC);
- 	if (*vaddr == NULL)
- 		return ENOMEM;
- 	return 0;
-@@ -872,8 +872,7 @@ void
- ahc_dmamem_free(struct ahc_softc *ahc, bus_dma_tag_t dmat,
- 		void* vaddr, bus_dmamap_t map)
- {
--	pci_free_consistent(ahc->dev_softc, dmat->maxsize,
--			    vaddr, map);
-+	dma_free_coherent(ahc->dev, dmat->maxsize, vaddr, map);
- }
- 
- int
-@@ -1124,8 +1123,7 @@ ahc_linux_register_host(struct ahc_softc *ahc, struct scsi_host_template *templa
- 
- 	host->transportt = ahc_linux_transport_template;
- 
--	retval = scsi_add_host(host,
--			(ahc->dev_softc ? &ahc->dev_softc->dev : NULL));
-+	retval = scsi_add_host(host, ahc->dev);
- 	if (retval) {
- 		printk(KERN_WARNING "aic7xxx: scsi_add_host failed\n");
- 		scsi_host_put(host);
-diff --git a/drivers/scsi/aic7xxx/aic7xxx_osm_pci.c b/drivers/scsi/aic7xxx/aic7xxx_osm_pci.c
-index 0fc14dac7070c..717d8d1082ce1 100644
---- a/drivers/scsi/aic7xxx/aic7xxx_osm_pci.c
-+++ b/drivers/scsi/aic7xxx/aic7xxx_osm_pci.c
-@@ -250,6 +250,7 @@ ahc_linux_pci_dev_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		/* Save the new created pipe and bind with local gate,
+ 		 * the description for skb->data[3] is destination gate id
+@@ -336,6 +340,10 @@ static void nci_hci_cmd_received(struct nci_dev *ndev, u8 pipe,
+ 			goto exit;
  		}
- 	}
- 	ahc->dev_softc = pci;
-+	ahc->dev = &pci->dev;
- 	error = ahc_pci_config(ahc, entry);
- 	if (error != 0) {
- 		ahc_free(ahc);
+ 		delete_info = (struct nci_hci_delete_pipe_noti *)skb->data;
++		if (delete_info->pipe >= NCI_HCI_MAX_PIPES) {
++			status = NCI_HCI_ANY_E_NOK;
++			goto exit;
++		}
+ 
+ 		ndev->hci_dev->pipes[delete_info->pipe].gate =
+ 						NCI_HCI_INVALID_GATE;
 -- 
 2.20.1
 
