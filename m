@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE2BC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7F93C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31FF220657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 723C420657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921191;
-	bh=Z1+mqXLAirFvbmvmCUIXTQaG/lgWQ7ZQ8Dub1uR1z1Y=;
+	s=default; t=1557921193;
+	bh=+T5xg37uSXqMNZuyaugYLjNfIcdAlcmygRI2cWC8uKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C0TaMV2rxIhyg+qUhxvO1ZYn5eNpLEZ+aAuXDq+WyfJ8klQ9a2FhhxznFFXwDVMuZ
-	 GSLMC/jWdKNxazGZEW2JtMrZC1s4rUT0aPaHoilxzt7DuUF4KLpsUp6TLM866y9/ys
-	 dNL2exAYBc/oJNfVL+qy2l4gmgk5wn7SCLKDlB90=
+	b=NNAfYCKUWitS5e38hHIny3Wxl1S6b1ZTetjxiJsGDgiflAkBa7ALlfiTy7ei46dOJ
+	 TvRQLqvLKvHt68GtDVa5mwej+HRqcwquW5GVl3UWiAOFKsd7YSqOHs7FAsXCTrLW4N
+	 p3a/lEbe4fZikjXtGKSmZXmDoWgNevnfZoELk5nk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731324AbfEOLxJ (ORCPT
+        id S1731453AbfEOLxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:53:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57492 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:53:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730996AbfEOLTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:19:43 -0400
+        id S1730994AbfEOLTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:19:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A43420881;
-        Wed, 15 May 2019 11:19:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAEB120862;
+        Wed, 15 May 2019 11:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919182;
-        bh=Z1+mqXLAirFvbmvmCUIXTQaG/lgWQ7ZQ8Dub1uR1z1Y=;
+        s=default; t=1557919180;
+        bh=+T5xg37uSXqMNZuyaugYLjNfIcdAlcmygRI2cWC8uKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gp6jUYh8AMCcjRQJwWlUJ+pHz4u2fSNjtUje+rC5nFP/UXaK4qHuqatm8/eEHnfsT
-         9gZ0YGN6heWu5/zmILXdnb0NhL3sGIh20Rv/Hece+H/VhbfxzSxLrDJX+chRLbU2oq
-         ov5M4rGak1zH+inEMgUxrSTuEeHx5OnLtfauvfEY=
+        b=lOfQN1LJJGYXQ+BQ+x8m8k8fEpqDY+B6o1nNvut+0O8R+psclSSYha5pL1XMbwD8a
+         6yaRkuG2UJramepn3+mVGe7OisGm9mRi/xjrx1hMsIhMz+ivx46/waPl/OXcQjgKnu
+         nIa9QyfLADypfEy3To3wkYBha0u4mzlzBEjaH8QU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        stable@vger.kernel.org, Eubert Bao <bunnier@gmail.com>,
+        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
         Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.14 096/115] rtlwifi: rtl8723ae: Fix missing break in switch statement
-Date:   Wed, 15 May 2019 12:56:16 +0200
-Message-Id: <20190515090706.170356229@linuxfoundation.org>
+Subject: [PATCH 4.14 095/115] mwl8k: Fix rate_idx underflow
+Date:   Wed, 15 May 2019 12:56:15 +0200
+Message-Id: <20190515090706.104985951@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -60,37 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Petr Štetiar <ynezz@true.cz>
 
-commit 84242b82d81c54e009a2aaa74d3d9eff70babf56 upstream.
+commit 6b583201fa219b7b1b6aebd8966c8fd9357ef9f4 upstream.
 
-Add missing break statement in order to prevent the code from falling
-through to case 0x1025, and erroneously setting rtlhal->oem_id to
-RT_CID_819X_ACER when rtlefuse->eeprom_svid is equal to 0x10EC and
-none of the cases in switch (rtlefuse->eeprom_smid) match.
+It was reported on OpenWrt bug tracking system[1], that several users
+are affected by the endless reboot of their routers if they configure
+5GHz interface with channel 44 or 48.
 
-This bug was found thanks to the ongoing efforts to enable
--Wimplicit-fallthrough.
+The reboot loop is caused by the following excessive number of WARN_ON
+messages:
 
-Fixes: 238ad2ddf34b ("rtlwifi: rtl8723ae: Clean up the hardware info routine")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+ WARNING: CPU: 0 PID: 0 at backports-4.19.23-1/net/mac80211/rx.c:4516
+                             ieee80211_rx_napi+0x1fc/0xa54 [mac80211]
+
+as the messages are being correctly emitted by the following guard:
+
+ case RX_ENC_LEGACY:
+      if (WARN_ON(status->rate_idx >= sband->n_bitrates))
+
+as the rate_idx is in this case erroneously set to 251 (0xfb). This fix
+simply converts previously used magic number to proper constant and
+guards against substraction which is leading to the currently observed
+underflow.
+
+1. https://bugs.openwrt.org/index.php?do=details&task_id=2218
+
+Fixes: 854783444bab ("mwl8k: properly set receive status rate index on 5 GHz receive")
+Cc: <stable@vger.kernel.org>
+Tested-by: Eubert Bao <bunnier@gmail.com>
+Reported-by: Eubert Bao <bunnier@gmail.com>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
 Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/wireless/marvell/mwl8k.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
-@@ -1699,6 +1699,7 @@ static void _rtl8723e_read_adapter_info(
- 					rtlhal->oem_id = RT_CID_819X_LENOVO;
- 					break;
- 				}
-+				break;
- 			case 0x1025:
- 				rtlhal->oem_id = RT_CID_819X_ACER;
- 				break;
+--- a/drivers/net/wireless/marvell/mwl8k.c
++++ b/drivers/net/wireless/marvell/mwl8k.c
+@@ -436,6 +436,9 @@ static const struct ieee80211_rate mwl8k
+ #define MWL8K_CMD_UPDATE_STADB		0x1123
+ #define MWL8K_CMD_BASTREAM		0x1125
+ 
++#define MWL8K_LEGACY_5G_RATE_OFFSET \
++	(ARRAY_SIZE(mwl8k_rates_24) - ARRAY_SIZE(mwl8k_rates_50))
++
+ static const char *mwl8k_cmd_name(__le16 cmd, char *buf, int bufsize)
+ {
+ 	u16 command = le16_to_cpu(cmd);
+@@ -1011,8 +1014,9 @@ mwl8k_rxd_ap_process(void *_rxd, struct
+ 
+ 	if (rxd->channel > 14) {
+ 		status->band = NL80211_BAND_5GHZ;
+-		if (!(status->encoding == RX_ENC_HT))
+-			status->rate_idx -= 5;
++		if (!(status->encoding == RX_ENC_HT) &&
++		    status->rate_idx >= MWL8K_LEGACY_5G_RATE_OFFSET)
++			status->rate_idx -= MWL8K_LEGACY_5G_RATE_OFFSET;
+ 	} else {
+ 		status->band = NL80211_BAND_2GHZ;
+ 	}
+@@ -1119,8 +1123,9 @@ mwl8k_rxd_sta_process(void *_rxd, struct
+ 
+ 	if (rxd->channel > 14) {
+ 		status->band = NL80211_BAND_5GHZ;
+-		if (!(status->encoding == RX_ENC_HT))
+-			status->rate_idx -= 5;
++		if (!(status->encoding == RX_ENC_HT) &&
++		    status->rate_idx >= MWL8K_LEGACY_5G_RATE_OFFSET)
++			status->rate_idx -= MWL8K_LEGACY_5G_RATE_OFFSET;
+ 	} else {
+ 		status->band = NL80211_BAND_2GHZ;
+ 	}
 
 
