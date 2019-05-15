@@ -7,53 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 365ECC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70975C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012FE20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 428742168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918601;
-	bh=Jz9Qd95EASPYMKe7kvk/pqXF6X102gSFsEGbQLd1EkI=;
+	s=default; t=1557918605;
+	bh=l4JtLHfLDj9majz6351VQqqQ6ALmlPCCirmKccmeIso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=unT0C6/lcnETuhDyTt8O3BcT4Y0xA2ymcr0XeIOoSEovjkm16DR4VdUE96A49tBSt
-	 4onBdNkEzg7PPm9WxU3CzAL35bJORw4AXKQiKnXgJsF1lpO7uwqoI6CbIzXz2l8dQY
-	 O2FkcyAQN74TPQGXmRI30R91rGMTPsnTAc0Qv4SM=
+	b=jMSXB5Q048ttuzxWX2pJ/drEtZx8c7yGVvFyTOMOt7a2YdOB23dn6KqN0GttrWuO1
+	 Ti1WDoNG8FfN8mZsIlsE/yW4dzilwg6mChRThGMbsB9XdNQU8C9Ah6eKsKd+GKflWK
+	 HutE3S1jmWKbY8XBPLdQlHvP98BfWLBd81+VrXDk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbfEOLKA (ORCPT
+        id S1729344AbfEOLKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:10:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43284 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:10:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728865AbfEOLJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:09:55 -0400
+        id S1726571AbfEOLJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:09:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E08E20862;
-        Wed, 15 May 2019 11:09:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A23BD21473;
+        Wed, 15 May 2019 11:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918594;
-        bh=Jz9Qd95EASPYMKe7kvk/pqXF6X102gSFsEGbQLd1EkI=;
+        s=default; t=1557918597;
+        bh=l4JtLHfLDj9majz6351VQqqQ6ALmlPCCirmKccmeIso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eciQlGLNbqxH8juHyIP3qZa1M3fTHtlBBk0Bh1Y4+EZbnrGyyBWiP/W3OvU14j2iz
-         E4Xdy7hcYbw8P7R5Xche9KZnuZGt2WXrNHKq8+El8MQzWOhvW1kl4zfz84mjeW+WqD
-         uymjxtia7N0W7vc87M8Y+RQXeJ/4gLzf4eMATmB8=
+        b=gnYCzIrttodkOwkdwktDBXYtz+cmhMH/bPJrqHGH9vWD526ZRvxqmBGXfTfeoRcGH
+         YeRuFm5qSH/Kuorlyff1uQwxHX7B1snhyhFYXo6P7hR/VJtLjWwqzepP4b7QnQa3n/
+         1rgyCve0E99CJ3gOIFnFAIeI6nMkBtK+yl9jATlk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
-        Borislav Petkov <bpetkov@suse.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 191/266] x86/bugs: Fix the AMD SSBD usage of the SPEC_CTRL MSR
-Date:   Wed, 15 May 2019 12:54:58 +0200
-Message-Id: <20190515090729.403842435@linuxfoundation.org>
+        stable@vger.kernel.org, Jiang Biao <jiang.biao2@zte.com.cn>,
+        Thomas Gleixner <tglx@linutronix.de>, hpa@zytor.com,
+        dwmw2@amazon.co.uk, konrad.wilk@oracle.com, bp@suse.de,
+        zhong.weidong@zte.com.cn, Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 192/266] x86/speculation: Remove SPECTRE_V2_IBRS in enum spectre_v2_mitigation
+Date:   Wed, 15 May 2019 12:54:59 +0200
+Message-Id: <20190515090729.438146456@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -66,58 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+From: Jiang Biao <jiang.biao2@zte.com.cn>
 
-commit 612bc3b3d4be749f73a513a17d9b3ee1330d3487 upstream.
+commit d9f4426c73002957be5dd39936f44a09498f7560 upstream.
 
-On AMD, the presence of the MSR_SPEC_CTRL feature does not imply that the
-SSBD mitigation support should use the SPEC_CTRL MSR. Other features could
-have caused the MSR_SPEC_CTRL feature to be set, while a different SSBD
-mitigation option is in place.
+SPECTRE_V2_IBRS in enum spectre_v2_mitigation is never used. Remove it.
 
-Update the SSBD support to check for the actual SSBD features that will
-use the SPEC_CTRL MSR.
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Borislav Petkov <bpetkov@suse.de>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 6ac2f49edb1e ("x86/bugs: Add AMD's SPEC_CTRL MSR usage")
-Link: http://lkml.kernel.org/r/20180702213602.29202.33151.stgit@tlendack-t1.amdoffice.net
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Jiang Biao <jiang.biao2@zte.com.cn>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: hpa@zytor.com
+Cc: dwmw2@amazon.co.uk
+Cc: konrad.wilk@oracle.com
+Cc: bp@suse.de
+Cc: zhong.weidong@zte.com.cn
+Link: https://lkml.kernel.org/r/1531872194-39207-1-git-send-email-jiang.biao2@zte.com.cn
+[bwh: Backported to 4.4: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/cpu/bugs.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/nospec-branch.h |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -157,7 +157,8 @@ x86_virt_spec_ctrl(u64 guest_spec_ctrl,
- 		guestval |= guest_spec_ctrl & x86_spec_ctrl_mask;
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -169,7 +169,6 @@ enum spectre_v2_mitigation {
+ 	SPECTRE_V2_RETPOLINE_MINIMAL_AMD,
+ 	SPECTRE_V2_RETPOLINE_GENERIC,
+ 	SPECTRE_V2_RETPOLINE_AMD,
+-	SPECTRE_V2_IBRS,
+ 	SPECTRE_V2_IBRS_ENHANCED,
+ };
  
- 		/* SSBD controlled in MSR_SPEC_CTRL */
--		if (static_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD))
-+		if (static_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
-+		    static_cpu_has(X86_FEATURE_AMD_SSBD))
- 			hostval |= ssbd_tif_to_spec_ctrl(ti->flags);
- 
- 		if (hostval != guestval) {
-@@ -526,9 +527,10 @@ static enum ssb_mitigation __init __ssb_
- 		 * Intel uses the SPEC CTRL MSR Bit(2) for this, while AMD may
- 		 * use a completely different MSR and bit dependent on family.
- 		 */
--		if (!static_cpu_has(X86_FEATURE_MSR_SPEC_CTRL))
-+		if (!static_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) &&
-+		    !static_cpu_has(X86_FEATURE_AMD_SSBD)) {
- 			x86_amd_ssb_disable();
--		else {
-+		} else {
- 			x86_spec_ctrl_base |= SPEC_CTRL_SSBD;
- 			x86_spec_ctrl_mask |= SPEC_CTRL_SSBD;
- 			wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
 
 
