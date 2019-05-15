@@ -2,87 +2,298 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0921C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A657C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF0A2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K8t4CDah"
+	by mail.kernel.org (Postfix) with ESMTP id 07A052168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557918682;
+	bh=nLP5alnns8TN9xP24VV+pZjoydCx2K0Thsww2XBVqMU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=skqJslnZ0l5eChVvBzHn8Hg5Ct2s0pH7Qr60mKMtBR7vSN8xaf9R5Uw94qmfH8hqc
+	 BKwNoVGRX8j9GSae/1XeJ8w1JRr6qi2l+8vasu0O/IJmyNHaMDCz3yB9w2dbMv92Gm
+	 Q4U+FEIp7SY6U4uL6mnmlTh3ivrywZfVG1o56J4g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbfEOLLS (ORCPT
+        id S1727894AbfEOLLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:11:18 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42930 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729102AbfEOLLL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:11:11 -0400
-Received: by mail-wr1-f66.google.com with SMTP id l2so2184300wrb.9;
-        Wed, 15 May 2019 04:11:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RfpyiRccRRz5dbumgmGOhQSt6RCKbWXqfWgcImNA2S8=;
-        b=K8t4CDah4BvgpilXqXw5zfSnz0BO2nlRqhLz2gBt2pODiwL4kv8u3l6llr5cwm1NMz
-         cgjs8gfhoBuBlaXma2hIzzXKOHnJIY55Z/RQyQEz9GQRx0FTCMyRfQQ0kZoQLqZ8toG2
-         URD0M9gTxxP3ivyMbkmXAVXh0xlkLqK7wON2A/Md2d7bN+7V1FSBsJFbiLEfdAPl11HY
-         q2QgOryr7QcwIHGew7YmpsJY2YsmBnZh4byZbIyNgyt2awx0qzkJlOcGGENIf8hH0k41
-         E2/+zrNVGv5uXVDKvKDWd8knOGnk3aafQyO7ChMWO5weTw5myZirdUM1jeu643nFh8mW
-         qWlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RfpyiRccRRz5dbumgmGOhQSt6RCKbWXqfWgcImNA2S8=;
-        b=F8PeZ7ZZN9eBEaEvWcJIFwXcUz79YIhgpoZ7jNxQXYzFWHuilcIRl86zFam2ihalUW
-         gmYw81Zo1U45ogI4h5F3ppaBAtUyYZn7quUND+5X4Du+k9GN7xU6PdQH8G+u7Yiij7G9
-         j5aNvdFEPkheTOmoe2AvyrcDlgLMzMxGYLPGeI+P9vwY2vMmUouHdXc+CZGQ6DJ0vjEO
-         3HxOKZAxXYZNXUQbwf1KBVvOmasuoQ5TZ9t4up5/GQ6GQDhtlyNIXREgLATRMid33Fi6
-         54bLAjYYx9fvBkGvqmsmR5+tA886O0vj4x8/2IxHT4JUEDgtYI1MBJEPo2B+fRmaI3RK
-         eedA==
-X-Gm-Message-State: APjAAAWWAGWS8TF8NWT/yNzrZBQ91zB3pOPb1YGDGSzOUf5k1RgLk+2b
-        27tYawGyK1pqYJrG7nW8Ty1M3ZcsoCEV/GxODMs=
-X-Google-Smtp-Source: APXvYqwy9wBDuoVo1pQ2ozYfDPbfcbqcr1FX+HUxx/FMBvDgFydGuewMLp2+gLO8zuWIDfWHm/LYc3Kw0RoFoklukJQ=
-X-Received: by 2002:a5d:440a:: with SMTP id z10mr10309482wrq.157.1557918668653;
- Wed, 15 May 2019 04:11:08 -0700 (PDT)
+        Wed, 15 May 2019 07:11:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729538AbfEOLLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:11:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23A962084F;
+        Wed, 15 May 2019 11:11:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557918672;
+        bh=nLP5alnns8TN9xP24VV+pZjoydCx2K0Thsww2XBVqMU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oXO0nhLgVSGryQOjGECfjggwt6VR/xiyJW/J6lGQw74K9pQuu5bgqA4WDaHRMp874
+         Op75g9jKIVNAIschH7YCn+aDXEUa1mnvGqfm1sJDHKIjDh9i9bvDwJbR13z4Vefgo6
+         tt8dydDnFSUhloVfbfoF9u393/vF5LxJBVd2o6U4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Casey Schaufler <casey.schaufler@intel.com>,
+        Asit Mallick <asit.k.mallick@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Jon Masters <jcm@redhat.com>,
+        Waiman Long <longman9394@gmail.com>,
+        Dave Stewart <david.c.stewart@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 222/266] x86/speculation: Prevent stale SPEC_CTRL msr content
+Date:   Wed, 15 May 2019 12:55:29 +0200
+Message-Id: <20190515090730.504905487@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
+References: <20190515090722.696531131@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190509173849.11825-1-hch@lst.de> <20190509173849.11825-3-hch@lst.de>
-In-Reply-To: <20190509173849.11825-3-hch@lst.de>
-From:   Manuel Lauss <manuel.lauss@gmail.com>
-Date:   Wed, 15 May 2019 13:10:32 +0200
-Message-ID: <CAOLZvyG14NvbgX4PA5aafk=reLcHbqDswqS-8j4+7QJMx02d7A@mail.gmail.com>
-Subject: Re: [PATCH 2/3] au1200fb: fix DMA API abuse
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linux-MIPS <linux-mips@vger.kernel.org>,
-        linux-fbdev <linux-fbdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Servus Christoph,
+From: Thomas Gleixner <tglx@linutronix.de>
 
-On Thu, May 9, 2019 at 7:39 PM Christoph Hellwig <hch@lst.de> wrote:
-> Virtual addresses return from dma(m)_alloc_attrs are opaque in what
-> backs then, and drivers must not poke into them.  Similarly caching
-> modes are not supposed to be directly set by the driver.  Switch the
-> driver to use the generic DMA API mmap helper to avoid these problems.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/video/fbdev/au1200fb.c | 19 ++++---------------
->  1 file changed, 4 insertions(+), 15 deletions(-)
+commit 6d991ba509ebcfcc908e009d1db51972a4f7a064 upstream.
 
-Runs fine on my test system.
+The seccomp speculation control operates on all tasks of a process, but
+only the current task of a process can update the MSR immediately. For the
+other threads the update is deferred to the next context switch.
 
-Tested-by: Manuel Lauss <manuel.lauss@gmail.com>
+This creates the following situation with Process A and B:
+
+Process A task 2 and Process B task 1 are pinned on CPU1. Process A task 2
+does not have the speculation control TIF bit set. Process B task 1 has the
+speculation control TIF bit set.
+
+CPU0					CPU1
+					MSR bit is set
+					ProcB.T1 schedules out
+					ProcA.T2 schedules in
+					MSR bit is cleared
+ProcA.T1
+  seccomp_update()
+  set TIF bit on ProcA.T2
+					ProcB.T1 schedules in
+					MSR is not updated  <-- FAIL
+
+This happens because the context switch code tries to avoid the MSR update
+if the speculation control TIF bits of the incoming and the outgoing task
+are the same. In the worst case ProcB.T1 and ProcA.T2 are the only tasks
+scheduling back and forth on CPU1, which keeps the MSR stale forever.
+
+In theory this could be remedied by IPIs, but chasing the remote task which
+could be migrated is complex and full of races.
+
+The straight forward solution is to avoid the asychronous update of the TIF
+bit and defer it to the next context switch. The speculation control state
+is stored in task_struct::atomic_flags by the prctl and seccomp updates
+already.
+
+Add a new TIF_SPEC_FORCE_UPDATE bit and set this after updating the
+atomic_flags. Check the bit on context switch and force a synchronous
+update of the speculation control if set. Use the same mechanism for
+updating the current task.
+
+Reported-by: Tim Chen <tim.c.chen@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Casey Schaufler <casey.schaufler@intel.com>
+Cc: Asit Mallick <asit.k.mallick@intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Waiman Long <longman9394@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Dave Stewart <david.c.stewart@intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1811272247140.1875@nanos.tec.linutronix.de
+[bwh: Backported to 4.4: adjust context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ arch/x86/include/asm/spec-ctrl.h   |    6 +-----
+ arch/x86/include/asm/thread_info.h |    4 +++-
+ arch/x86/kernel/cpu/bugs.c         |   18 +++++++-----------
+ arch/x86/kernel/process.c          |   30 +++++++++++++++++++++++++++++-
+ 4 files changed, 40 insertions(+), 18 deletions(-)
+
+--- a/arch/x86/include/asm/spec-ctrl.h
++++ b/arch/x86/include/asm/spec-ctrl.h
+@@ -83,10 +83,6 @@ static inline void speculative_store_byp
+ #endif
+ 
+ extern void speculation_ctrl_update(unsigned long tif);
+-
+-static inline void speculation_ctrl_update_current(void)
+-{
+-	speculation_ctrl_update(current_thread_info()->flags);
+-}
++extern void speculation_ctrl_update_current(void);
+ 
+ #endif
+--- a/arch/x86/include/asm/thread_info.h
++++ b/arch/x86/include/asm/thread_info.h
+@@ -97,6 +97,7 @@ struct thread_info {
+ #define TIF_SYSCALL_AUDIT	7	/* syscall auditing active */
+ #define TIF_SECCOMP		8	/* secure computing */
+ #define TIF_SPEC_IB		9	/* Indirect branch speculation mitigation */
++#define TIF_SPEC_FORCE_UPDATE	10	/* Force speculation MSR update in context switch */
+ #define TIF_USER_RETURN_NOTIFY	11	/* notify kernel of userspace return */
+ #define TIF_UPROBE		12	/* breakpointed or singlestepping */
+ #define TIF_NOTSC		16	/* TSC is not accessible in userland */
+@@ -123,6 +124,7 @@ struct thread_info {
+ #define _TIF_SYSCALL_AUDIT	(1 << TIF_SYSCALL_AUDIT)
+ #define _TIF_SECCOMP		(1 << TIF_SECCOMP)
+ #define _TIF_SPEC_IB		(1 << TIF_SPEC_IB)
++#define _TIF_SPEC_FORCE_UPDATE	(1 << TIF_SPEC_FORCE_UPDATE)
+ #define _TIF_USER_RETURN_NOTIFY	(1 << TIF_USER_RETURN_NOTIFY)
+ #define _TIF_UPROBE		(1 << TIF_UPROBE)
+ #define _TIF_NOTSC		(1 << TIF_NOTSC)
+@@ -152,7 +154,7 @@ struct thread_info {
+ /* flags to check in __switch_to() */
+ #define _TIF_WORK_CTXSW_BASE						\
+ 	(_TIF_IO_BITMAP|_TIF_NOTSC|_TIF_BLOCKSTEP|			\
+-	 _TIF_SSBD)
++	 _TIF_SSBD | _TIF_SPEC_FORCE_UPDATE)
+ 
+ /*
+  * Avoid calls to __switch_to_xtra() on UP as STIBP is not evaluated.
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -701,14 +701,10 @@ static void ssb_select_mitigation(void)
+ #undef pr_fmt
+ #define pr_fmt(fmt)     "Speculation prctl: " fmt
+ 
+-static void task_update_spec_tif(struct task_struct *tsk, int tifbit, bool on)
++static void task_update_spec_tif(struct task_struct *tsk)
+ {
+-	bool update;
+-
+-	if (on)
+-		update = !test_and_set_tsk_thread_flag(tsk, tifbit);
+-	else
+-		update = test_and_clear_tsk_thread_flag(tsk, tifbit);
++	/* Force the update of the real TIF bits */
++	set_tsk_thread_flag(tsk, TIF_SPEC_FORCE_UPDATE);
+ 
+ 	/*
+ 	 * Immediately update the speculation control MSRs for the current
+@@ -718,7 +714,7 @@ static void task_update_spec_tif(struct
+ 	 * This can only happen for SECCOMP mitigation. For PRCTL it's
+ 	 * always the current task.
+ 	 */
+-	if (tsk == current && update)
++	if (tsk == current)
+ 		speculation_ctrl_update_current();
+ }
+ 
+@@ -734,16 +730,16 @@ static int ssb_prctl_set(struct task_str
+ 		if (task_spec_ssb_force_disable(task))
+ 			return -EPERM;
+ 		task_clear_spec_ssb_disable(task);
+-		task_update_spec_tif(task, TIF_SSBD, false);
++		task_update_spec_tif(task);
+ 		break;
+ 	case PR_SPEC_DISABLE:
+ 		task_set_spec_ssb_disable(task);
+-		task_update_spec_tif(task, TIF_SSBD, true);
++		task_update_spec_tif(task);
+ 		break;
+ 	case PR_SPEC_FORCE_DISABLE:
+ 		task_set_spec_ssb_disable(task);
+ 		task_set_spec_ssb_force_disable(task);
+-		task_update_spec_tif(task, TIF_SSBD, true);
++		task_update_spec_tif(task);
+ 		break;
+ 	default:
+ 		return -ERANGE;
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -365,6 +365,18 @@ static __always_inline void __speculatio
+ 		wrmsrl(MSR_IA32_SPEC_CTRL, msr);
+ }
+ 
++static unsigned long speculation_ctrl_update_tif(struct task_struct *tsk)
++{
++	if (test_and_clear_tsk_thread_flag(tsk, TIF_SPEC_FORCE_UPDATE)) {
++		if (task_spec_ssb_disable(tsk))
++			set_tsk_thread_flag(tsk, TIF_SSBD);
++		else
++			clear_tsk_thread_flag(tsk, TIF_SSBD);
++	}
++	/* Return the updated threadinfo flags*/
++	return task_thread_info(tsk)->flags;
++}
++
+ void speculation_ctrl_update(unsigned long tif)
+ {
+ 	/* Forced update. Make sure all relevant TIF flags are different */
+@@ -373,6 +385,14 @@ void speculation_ctrl_update(unsigned lo
+ 	preempt_enable();
+ }
+ 
++/* Called from seccomp/prctl update */
++void speculation_ctrl_update_current(void)
++{
++	preempt_disable();
++	speculation_ctrl_update(speculation_ctrl_update_tif(current));
++	preempt_enable();
++}
++
+ void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p)
+ {
+ 	struct thread_struct *prev, *next;
+@@ -401,7 +421,15 @@ void __switch_to_xtra(struct task_struct
+ 	if ((tifp ^ tifn) & _TIF_NOTSC)
+ 		cr4_toggle_bits(X86_CR4_TSD);
+ 
+-	__speculation_ctrl_update(tifp, tifn);
++	if (likely(!((tifp | tifn) & _TIF_SPEC_FORCE_UPDATE))) {
++		__speculation_ctrl_update(tifp, tifn);
++	} else {
++		speculation_ctrl_update_tif(prev_p);
++		tifn = speculation_ctrl_update_tif(next_p);
++
++		/* Enforce MSR update to ensure consistent state */
++		__speculation_ctrl_update(~tifn, tifn);
++	}
+ }
+ 
+ /*
+
+
