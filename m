@@ -2,103 +2,794 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD8DC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F732C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:11:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A626120862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:08:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557925709;
-	bh=P/T1WxbT7QsT7n7T6kKsFUprJ4xg3X1OufDN3pOJn6s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=E9wekC2YwjlDs9MYh/TYUdUMIGG0gIyw8oudrs4NGseaLzSqcRKvBsR7Sx0XPXklw
-	 A/pyC9Rpjw7Ys/HINp0yRV9VFPSuCuzjqECAalYJEBZvZuMybGxM32lW2e4YbLncR8
-	 W4WWhs2H6LG8jH8rwPQTSSSGwvNIUKzuQ1iKdIQ0=
+	by mail.kernel.org (Postfix) with ESMTP id 5C57F20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:11:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbfEONI3 (ORCPT
+        id S1727331AbfEONLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 09:08:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbfEONI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 09:08:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8CED420843;
-        Wed, 15 May 2019 13:08:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557925708;
-        bh=P/T1WxbT7QsT7n7T6kKsFUprJ4xg3X1OufDN3pOJn6s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NaTpMBcwvLyk0lxuChYO5NCNr6wrhTgRpvZ3Te9tvINP1yrMpr8UTn0dGzFkqQbPh
-         dyIQga3BTA4d9o+md+t0r51V1Pj+KITYxqtB4BAnmeSHiUy0pFJqe13Iv2rRP47qHt
-         wrrz+EgagCu310C8uIhsaCn2RElw6r2qgoVZDYmU=
-Date:   Wed, 15 May 2019 15:08:25 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, erhard_f@mailbox.org,
-        Michael Neuling <mikey@neuling.org>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH stable 4.9] powerpc/lib: fix book3s/32 boot failure due
- to code patching
-Message-ID: <20190515130825.GA3794@kroah.com>
-References: <629c2acb1fcd09c2d2e3352370c3d9853372cf39.1557902321.git.christophe.leroy@c-s.fr>
- <20190515082931.GA28349@kroah.com>
- <9e58348f-da2d-34bc-d016-7817b3566e01@c-s.fr>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9e58348f-da2d-34bc-d016-7817b3566e01@c-s.fr>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Wed, 15 May 2019 09:11:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34750 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725977AbfEONLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 09:11:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A1CCDABC1;
+        Wed, 15 May 2019 13:10:57 +0000 (UTC)
+Date:   Wed, 15 May 2019 15:10:55 +0200
+Message-ID: <s5hlfz7j21s.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Ayman Bagabas" <ayman.bagabas@gmail.com>
+Cc:     <alsa-devel@alsa-project.org>, "Hui Wang" <hui.wang@canonical.com>,
+        "Chris Chiu" <chiu@endlessm.com>,
+        "Daniel Drake" <drake@endlessm.com>,
+        "Jian-Hong Pan" <jian-hong@endlessm.com>,
+        "Andy Shevchenko" <andy@infradead.org>,
+        "Darren Hart" <dvhart@infradead.org>,
+        "Jaroslav Kysela" <perex@perex.cz>,
+        "Kailang Yang" <kailang@realtek.com>,
+        <linux-kernel@vger.kernel.org>,
+        <platform-driver-x86@vger.kernel.org>
+Subject: Re: [PATCH v1 1/2] platform/x86: Huawei WMI laptop extras driver update
+In-Reply-To: <20190513203009.28686-2-ayman.bagabas@gmail.com>
+References: <20190513203009.28686-1-ayman.bagabas@gmail.com>
+        <20190513203009.28686-2-ayman.bagabas@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 02:35:36PM +0200, Christophe Leroy wrote:
+On Mon, 13 May 2019 22:30:05 +0200,
+Ayman Bagabas wrote:
 > 
+> This update brings on the use of WMI BIOS management interface found on
+> Huawei laptops. This interface can control the micmute LED found on most
+> of these laptops, control charging thresholds values, and control
+> fn-lock feature.
 > 
-> Le 15/05/2019 à 10:29, Greg KH a écrit :
-> > On Wed, May 15, 2019 at 06:40:47AM +0000, Christophe Leroy wrote:
-> > > [Backport of upstream commit b45ba4a51cde29b2939365ef0c07ad34c8321789]
-> > > 
-> > > On powerpc32, patch_instruction() is called by apply_feature_fixups()
-> > > which is called from early_init()
-> > > 
-> > > There is the following note in front of early_init():
-> > >   * Note that the kernel may be running at an address which is different
-> > >   * from the address that it was linked at, so we must use RELOC/PTRRELOC
-> > >   * to access static data (including strings).  -- paulus
-> > > 
-> > > Therefore init_mem_is_free must be accessed with PTRRELOC()
-> > > 
-> > > Fixes: 1c38a84d4586 ("powerpc: Avoid code patching freed init sections")
-> > > Link: https://bugzilla.kernel.org/show_bug.cgi?id=203597
-> > > Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> > > 
-> > > ---
-> > > Can't apply the upstream commit as such due to several other unrelated stuff
-> > > like for instance STRICT_KERNEL_RWX which are missing.
-> > > So instead, using same approach as for commit 252eb55816a6f69ef9464cad303cdb3326cdc61d
-> > 
-> > Now queued up, thanks.
-> > 
-> 
-> Should go to 4.4 as well since the commit it fixes is now queued for 4.4
-> ([PATCH 4.4 056/266] powerpc: Avoid code patching freed init sections)
+> Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 
-Ok, can someone send me a backport that actually applies there?
+You need to put the actual change (e.g. moving to the platform driver)
+here as well, not only in the cover letter.
+
+But I wonder what the actual motivation to move to the platform
+driver...
+
 
 thanks,
 
-greg k-h
+Takashi
+
+> ---
+>  drivers/platform/x86/Kconfig      |   8 +-
+>  drivers/platform/x86/huawei-wmi.c | 578 +++++++++++++++++++++++++-----
+>  2 files changed, 500 insertions(+), 86 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
+> index a1ed13183559..e46261b6def5 100644
+> --- a/drivers/platform/x86/Kconfig
+> +++ b/drivers/platform/x86/Kconfig
+> @@ -1287,7 +1287,7 @@ config INTEL_ATOMISP2_PM
+>  	  will be called intel_atomisp2_pm.
+>  
+>  config HUAWEI_WMI
+> -	tristate "Huawei WMI hotkeys driver"
+> +	tristate "Huawei WMI laptop extras driver"
+>  	depends on ACPI_WMI
+>  	depends on INPUT
+>  	select INPUT_SPARSEKMAP
+> @@ -1296,9 +1296,9 @@ config HUAWEI_WMI
+>  	select LEDS_TRIGGER_AUDIO
+>  	select NEW_LEDS
+>  	help
+> -	  This driver provides support for Huawei WMI hotkeys.
+> -	  It enables the missing keys and adds support to the micmute
+> -	  LED found on some of these laptops.
+> +	  This driver provides support for some extra features found on Huawei
+> +	  laptops that are controlled through WMI. These features are keyboard
+> +	  hotkeys, micmute LED, charging thresholds, and fn-lock state.
+>  
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called huawei-wmi.
+> diff --git a/drivers/platform/x86/huawei-wmi.c b/drivers/platform/x86/huawei-wmi.c
+> index 52fcac5b393a..4ec04196f386 100644
+> --- a/drivers/platform/x86/huawei-wmi.c
+> +++ b/drivers/platform/x86/huawei-wmi.c
+> @@ -1,32 +1,63 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+> - *  Huawei WMI hotkeys
+> + *  Huawei WMI laptop extras driver
+>   *
+>   *  Copyright (C) 2018	      Ayman Bagabas <ayman.bagabas@gmail.com>
+>   */
+>  
+>  #include <linux/acpi.h>
+> +#include <linux/delay.h>
+> +#include <linux/dmi.h>
+>  #include <linux/input.h>
+>  #include <linux/input/sparse-keymap.h>
+>  #include <linux/leds.h>
+>  #include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/sysfs.h>
+>  #include <linux/wmi.h>
+>  
+>  /*
+>   * Huawei WMI GUIDs
+>   */
+> -#define WMI0_EVENT_GUID "59142400-C6A3-40fa-BADB-8A2652834100"
+> +#define AMW0_METHOD_GUID "ABBC0F5B-8EA1-11D1-A000-C90629100000"
+>  #define AMW0_EVENT_GUID "ABBC0F5C-8EA1-11D1-A000-C90629100000"
+>  
+> +/* Legacy GUIDs */
+>  #define WMI0_EXPENSIVE_GUID "39142400-C6A3-40fa-BADB-8A2652834100"
+> +#define WMI0_EVENT_GUID "59142400-C6A3-40fa-BADB-8A2652834100"
+>  
+> -struct huawei_wmi_priv {
+> -	struct input_dev *idev;
+> +/* AMW0_commands */
+> +
+> +enum wmaa_cmd {
+> +	BATTERY_GET, /* \GBTT 0x00001103 */
+> +	BATTERY_SET, /* \SBTT 0xXXYY1003 */
+> +	FN_LOCK_GET, /* \GFRS 0x00000604 */
+> +	FN_LOCK_SET, /* \SFRS 0x000X0704 */
+> +	MICMUTE_LED, /* \SMLS 0x000X0b04 */
+> +};
+> +
+> +enum fn_state {
+> +	FN_LOCK_OFF = 0x01,
+> +	FN_LOCK_ON = 0x02,
+> +};
+> +
+> +struct quirk_entry {
+> +	bool battery_reset;
+> +	bool ec_micmute;
+> +};
+> +
+> +static struct quirk_entry *quirks;
+> +
+> +struct huawei_wmi {
+>  	struct led_classdev cdev;
+> -	acpi_handle handle;
+> -	char *acpi_method;
+> +	struct mutex wmi_lock;
+> +	struct mutex battery_lock;
+> +	struct platform_device *pdev;
+>  };
+>  
+> +struct platform_device *huawei_wmi_pdev;
+> +
+>  static const struct key_entry huawei_wmi_keymap[] = {
+>  	{ KE_KEY,    0x281, { KEY_BRIGHTNESSDOWN } },
+>  	{ KE_KEY,    0x282, { KEY_BRIGHTNESSUP } },
+> @@ -37,73 +68,169 @@ static const struct key_entry huawei_wmi_keymap[] = {
+>  	{ KE_KEY,    0x289, { KEY_WLAN } },
+>  	// Huawei |M| key
+>  	{ KE_KEY,    0x28a, { KEY_CONFIG } },
+> -	// Keyboard backlight
+> +	// Keyboard backlit
+>  	{ KE_IGNORE, 0x293, { KEY_KBDILLUMTOGGLE } },
+>  	{ KE_IGNORE, 0x294, { KEY_KBDILLUMUP } },
+>  	{ KE_IGNORE, 0x295, { KEY_KBDILLUMUP } },
+>  	{ KE_END,	 0 }
+>  };
+>  
+> -static int huawei_wmi_micmute_led_set(struct led_classdev *led_cdev,
+> -		enum led_brightness brightness)
+> +/* Quirks */
+> +
+> +static int __init dmi_matched(const struct dmi_system_id *dmi)
+>  {
+> -	struct huawei_wmi_priv *priv = dev_get_drvdata(led_cdev->dev->parent);
+> +	quirks = dmi->driver_data;
+> +	return 1;
+> +}
+> +
+> +static struct quirk_entry quirk_battery_reset = {
+> +	.battery_reset = true,
+> +};
+> +
+> +static struct quirk_entry quirk_ec_micmute = {
+> +	.ec_micmute = true,
+> +};
+> +
+> +static const struct dmi_system_id huawei_quirks[] = {
+> +	{
+> +		.callback = dmi_matched,
+> +		.ident = "Huawei MACH-WX9",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "HUAWEI"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "MACH-WX9"),
+> +		},
+> +		.driver_data = &quirk_battery_reset
+> +	},
+> +	{
+> +		.callback = dmi_matched,
+> +		.ident = "Huawei MateBook X",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "HUAWEI"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "HUAWEI MateBook X")
+> +		},
+> +		.driver_data = &quirk_ec_micmute
+> +	}
+> +};
+> +
+> +/* Utils */
+> +
+> +static int huawei_wmi_eval(struct device *dev, char *arg,
+> +		char *buf, size_t buflen)
+> +{
+> +	struct huawei_wmi *huawei = dev_get_drvdata(dev);
+> +	struct acpi_buffer out = { ACPI_ALLOCATE_BUFFER, NULL };
+> +	struct acpi_buffer in;
+> +	union acpi_object *obj;
+>  	acpi_status status;
+> -	union acpi_object args[3];
+> -	struct acpi_object_list arg_list = {
+> -		.pointer = args,
+> -		.count = ARRAY_SIZE(args),
+> -	};
+> -
+> -	args[0].type = args[1].type = args[2].type = ACPI_TYPE_INTEGER;
+> -	args[1].integer.value = 0x04;
+> -
+> -	if (strcmp(priv->acpi_method, "SPIN") == 0) {
+> -		args[0].integer.value = 0;
+> -		args[2].integer.value = brightness ? 1 : 0;
+> -	} else if (strcmp(priv->acpi_method, "WPIN") == 0) {
+> -		args[0].integer.value = 1;
+> -		args[2].integer.value = brightness ? 0 : 1;
+> -	} else {
+> -		return -EINVAL;
+> +	size_t len;
+> +	int err = -ENODEV;
+> +
+> +	in.length = sizeof(char) * 4;
+> +	in.pointer = (u32 *)arg;
+> +	mutex_lock(&huawei->wmi_lock);
+> +	status = wmi_evaluate_method(AMW0_METHOD_GUID, 0, 1, &in, &out);
+> +	if (ACPI_FAILURE(status)) {
+> +		dev_err(dev, "Failed to evaluate wmi method\n");
+> +		goto wmi_eval_fail;
+>  	}
+>  
+> -	status = acpi_evaluate_object(priv->handle, priv->acpi_method, &arg_list, NULL);
+> -	if (ACPI_FAILURE(status))
+> -		return -ENXIO;
+> +	/* WMAA takes a 4 bytes buffer as an input. It returns a package
+> +	 * with two buffer elements. The first buffer is 4 bytes long and
+> +	 * the second is 0x100 (256) bytes long. The first buffer is always
+> +	 * zeros. The second stores the output from every call. The first
+> +	 * byte of the second buffer always have the return status of the
+> +	 * called command.
+> +	 */
+> +	obj = out.pointer;
+> +	if (!obj)
+> +		goto wmi_eval_fail;
+> +	if (obj->type != ACPI_TYPE_PACKAGE ||
+> +			obj->package.count != 2) {
+> +		dev_err(dev, "Unknown response type %d\n", obj->type);
+> +		goto wmi_eval_fail;
+> +	}
+>  
+> -	return 0;
+> +	obj = &(obj->package.elements[1]);
+> +	if (!obj || obj->type != ACPI_TYPE_BUFFER)
+> +		goto wmi_eval_fail;
+> +
+> +	if (buf) {
+> +		len = min(buflen, obj->buffer.length);
+> +		memcpy(buf, obj->buffer.pointer, len);
+> +	}
+> +	err = 0;
+> +
+> +wmi_eval_fail:
+> +	mutex_unlock(&huawei->wmi_lock);
+> +	kfree(out.pointer);
+> +	return err;
+>  }
+>  
+> -static int huawei_wmi_leds_setup(struct wmi_device *wdev)
+> +static int huawei_wmi_cmd(struct device *dev, enum wmaa_cmd cmd, char *arg,
+> +		char *out, size_t outlen)
+>  {
+> -	struct huawei_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+> -
+> -	priv->handle = ec_get_handle();
+> -	if (!priv->handle)
+> -		return 0;
+> +	char parm[4] = { 0 };
+> +	char buf[0x100] = { 0xff };
+> +	int err;
+>  
+> -	if (acpi_has_method(priv->handle, "SPIN"))
+> -		priv->acpi_method = "SPIN";
+> -	else if (acpi_has_method(priv->handle, "WPIN"))
+> -		priv->acpi_method = "WPIN";
+> -	else
+> -		return 0;
+> +	if (!arg)
+> +		arg = parm;
+> +
+> +	switch (cmd) {
+> +	case BATTERY_SET:
+> +		arg[0] = 0x03;
+> +		arg[1] = 0x10;
+> +		break;
+> +	case BATTERY_GET:
+> +		arg[0] = 0x03;
+> +		arg[1] = 0x11;
+> +		break;
+> +	case FN_LOCK_GET:
+> +		arg[0] = 0x04;
+> +		arg[1] = 0x06;
+> +		break;
+> +	case FN_LOCK_SET:
+> +		arg[0] = 0x04;
+> +		arg[1] = 0x07;
+> +		break;
+> +	case MICMUTE_LED:
+> +		arg[0] = 0x04;
+> +		arg[1] = 0x0b;
+> +		break;
+> +	default:
+> +		dev_err(dev, "Command not supported\n");
+> +		return -EINVAL;
+> +	}
+>  
+> -	priv->cdev.name = "platform::micmute";
+> -	priv->cdev.max_brightness = 1;
+> -	priv->cdev.brightness_set_blocking = huawei_wmi_micmute_led_set;
+> -	priv->cdev.default_trigger = "audio-micmute";
+> -	priv->cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+> -	priv->cdev.dev = &wdev->dev;
+> -	priv->cdev.flags = LED_CORE_SUSPENDRESUME;
+> +	/* Some models require calling WMAA twice to execute
+> +	 * a command. We call WMAA and if we get a non-zero return
+> +	 * status we evaluate WMAA again. If we get another non-zero
+> +	 * return, we return -ENXIO. This way we don't need to
+> +	 * check for return status anywhere we call huawei_wmi_cmd.
+> +	 */
+> +	err = huawei_wmi_eval(dev, arg, buf, 0x100);
+> +	if (err)
+> +		return err;
+> +	if (buf[0]) {
+> +		err = huawei_wmi_eval(dev, arg, buf, 0x100);
+> +		if (err)
+> +			return err;
+> +		if (buf[0]) {
+> +			dev_err(dev, "Invalid command, got: %d\n", buf[0]);
+> +			return -ENXIO;
+> +		}
+> +	}
+> +	if (out)
+> +		memcpy(out, buf, outlen);
+>  
+> -	return devm_led_classdev_register(&wdev->dev, &priv->cdev);
+> +	return 0;
+>  }
+>  
+> +/* Input */
+> +
+>  static void huawei_wmi_process_key(struct wmi_device *wdev, int code)
+>  {
+> -	struct huawei_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+> +	struct input_dev *idev = dev_get_drvdata(&wdev->dev);
+>  	const struct key_entry *key;
+>  
+>  	/*
+> @@ -127,16 +254,16 @@ static void huawei_wmi_process_key(struct wmi_device *wdev, int code)
+>  		kfree(response.pointer);
+>  	}
+>  
+> -	key = sparse_keymap_entry_from_scancode(priv->idev, code);
+> +	key = sparse_keymap_entry_from_scancode(idev, code);
+>  	if (!key) {
+>  		dev_info(&wdev->dev, "Unknown key pressed, code: 0x%04x\n", code);
+>  		return;
+>  	}
+>  
+> -	sparse_keymap_report_entry(priv->idev, key, 1, true);
+> +	sparse_keymap_report_entry(idev, key, 1, true);
+>  }
+>  
+> -static void huawei_wmi_notify(struct wmi_device *wdev,
+> +static void huawei_wmi_input_notify(struct wmi_device *wdev,
+>  		union acpi_object *obj)
+>  {
+>  	if (obj->type == ACPI_TYPE_INTEGER)
+> @@ -147,61 +274,348 @@ static void huawei_wmi_notify(struct wmi_device *wdev,
+>  
+>  static int huawei_wmi_input_setup(struct wmi_device *wdev)
+>  {
+> -	struct huawei_wmi_priv *priv = dev_get_drvdata(&wdev->dev);
+> +	struct input_dev *idev;
+>  	int err;
+>  
+> -	priv->idev = devm_input_allocate_device(&wdev->dev);
+> -	if (!priv->idev)
+> +	idev = devm_input_allocate_device(&wdev->dev);
+> +	if (!idev)
+>  		return -ENOMEM;
+>  
+> -	priv->idev->name = "Huawei WMI hotkeys";
+> -	priv->idev->phys = "wmi/input0";
+> -	priv->idev->id.bustype = BUS_HOST;
+> -	priv->idev->dev.parent = &wdev->dev;
+> +	dev_set_drvdata(&wdev->dev, idev);
+>  
+> -	err = sparse_keymap_setup(priv->idev, huawei_wmi_keymap, NULL);
+> +	idev->name = "Huawei WMI hotkeys";
+> +	idev->phys = "wmi/input0";
+> +	idev->id.bustype = BUS_HOST;
+> +	idev->dev.parent = &wdev->dev;
+> +
+> +	err = sparse_keymap_setup(idev, huawei_wmi_keymap, NULL);
+>  	if (err)
+>  		return err;
+>  
+> -	return input_register_device(priv->idev);
+> +	return input_register_device(idev);
+>  }
+>  
+> -static int huawei_wmi_probe(struct wmi_device *wdev)
+> +static int huawei_wmi_input_destroy(struct wmi_device *wdev)
+> +{
+> +	struct input_dev *idev = dev_get_drvdata(&wdev->dev);
+> +
+> +	input_unregister_device(idev);
+> +	return 0;
+> +}
+> +
+> +static const struct wmi_device_id huawei_wmi_input_id_table[] = {
+> +	{ .guid_string = WMI0_EVENT_GUID },
+> +	{ .guid_string = AMW0_EVENT_GUID },
+> +	{  }
+> +};
+> +
+> +static struct wmi_driver huawei_wmi_input_driver = {
+> +	.driver = {
+> +		.name = "huawei-wmi",
+> +	},
+> +	.id_table = huawei_wmi_input_id_table,
+> +	.probe = huawei_wmi_input_setup,
+> +	.remove = huawei_wmi_input_destroy,
+> +	.notify = huawei_wmi_input_notify,
+> +};
+> +
+> +/* LEDs */
+> +
+> +static void huawei_wmi_micmute_led_set(struct led_classdev *led_cdev,
+> +		enum led_brightness brightness)
+>  {
+> -	struct huawei_wmi_priv *priv;
+> +	if (quirks && quirks->ec_micmute) {
+> +		char *acpi_method;
+> +		acpi_handle handle;
+> +		union acpi_object args[3];
+> +		struct acpi_object_list arg_list = {
+> +			.pointer = args,
+> +			.count = ARRAY_SIZE(args),
+> +		};
+> +
+> +		handle = ec_get_handle();
+> +		if (!handle) {
+> +			dev_err(led_cdev->dev->parent, "Failed to get EC handle\n");
+> +			return;
+> +		}
+> +
+> +		args[0].type = args[1].type = args[2].type = ACPI_TYPE_INTEGER;
+> +		args[1].integer.value = 0x04;
+> +
+> +		if (acpi_has_method(handle, "SPIN")) {
+> +			acpi_method = "SPIN";
+> +			args[0].integer.value = 0;
+> +			args[2].integer.value = brightness ? 1 : 0;
+> +		} else if (acpi_has_method(handle, "WPIN")) {
+> +			acpi_method = "WPIN";
+> +			args[0].integer.value = 1;
+> +			args[2].integer.value = brightness ? 0 : 1;
+> +		} else {
+> +			return;
+> +		}
+> +
+> +		acpi_evaluate_object(handle, acpi_method, &arg_list, NULL);
+> +	} else {
+> +		char arg[] = { 0, 0, brightness, 0 };
+> +
+> +		huawei_wmi_cmd(led_cdev->dev->parent, MICMUTE_LED, arg, NULL, NULL);
+> +	}
+> +}
+> +
+> +static int huawei_wmi_leds_setup(struct device *dev)
+> +{
+> +	struct huawei_wmi *huawei = dev_get_drvdata(dev);
+> +
+> +	huawei->cdev.name = "platform::micmute";
+> +	huawei->cdev.max_brightness = 1;
+> +	huawei->cdev.brightness_set = huawei_wmi_micmute_led_set;
+> +	huawei->cdev.default_trigger = "audio-micmute";
+> +	huawei->cdev.brightness = ledtrig_audio_get(LED_AUDIO_MICMUTE);
+> +	huawei->cdev.dev = dev->parent;
+> +	huawei->cdev.flags = LED_CORE_SUSPENDRESUME;
+> +
+> +	return devm_led_classdev_register(dev, &huawei->cdev);
+> +}
+> +
+> +/* Battery protection */
+> +
+> +static int huawei_wmi_battery_get(struct device *dev, int *low, int *high)
+> +{
+> +	struct huawei_wmi *huawei = dev_get_drvdata(dev);
+> +	char ret[0x100] = { 0 };
+> +	int err, i;
+> +
+> +	mutex_lock(&huawei->battery_lock);
+> +	err = huawei_wmi_cmd(dev, BATTERY_GET, NULL, ret, 0x100);
+> +	mutex_unlock(&huawei->battery_lock);
+> +	if (err)
+> +		return -EINVAL;
+> +
+> +	/* Returned buffer positions battery thresholds either in index
+> +	 * 3 and 2 or in 2 and 1. 0 reserved for return status.
+> +	 */
+> +	for (i = 0x100 - 1; i > 0; i--) {
+> +		if (ret[i]) {
+> +			*high = ret[i];
+> +			*low = ret[i-1];
+> +			break;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int huawei_wmi_battery_set(struct device *dev, int low, int high)
+> +{
+> +	struct huawei_wmi *huawei = dev_get_drvdata(dev);
+> +	char arg[] = { 0, 0, low, high };
+>  	int err;
+>  
+> -	priv = devm_kzalloc(&wdev->dev, sizeof(struct huawei_wmi_priv), GFP_KERNEL);
+> -	if (!priv)
+> +	/* This is an edge case were some models turn battery protection
+> +	 * off without changing their thresholds values. We clear the
+> +	 * values before turning off protection. We need wait blocking to
+> +	 * make sure these values make its way to EC.
+> +	 */
+> +	if (low == 0 && high == 100)
+> +		huawei_wmi_battery_set(dev, 0, 0);
+> +
+> +	mutex_lock(&huawei->battery_lock);
+> +	err = huawei_wmi_cmd(dev, BATTERY_SET, arg, NULL, NULL);
+> +	if (quirks && quirks->battery_reset)
+> +		msleep(jiffies_to_msecs(0.5 * HZ));
+> +	mutex_unlock(&huawei->battery_lock);
+> +	if (err)
+> +		return err;
+> +
+> +	return 0;
+> +}
+> +
+> +/* Fn lock */
+> +
+> +static int huawei_wmi_fn_lock_get(struct device *dev, int *on)
+> +{
+> +	char ret[0x100] = { 0 };
+> +	int err, i;
+> +
+> +	err = huawei_wmi_cmd(dev, FN_LOCK_GET, NULL, ret, 0x100);
+> +	if (err)
+> +		return -EINVAL;
+> +
+> +	for (i = 0x100 - 1; i > 0; i--) {
+> +		if (ret[i]) {
+> +			*on = (ret[i] == FN_LOCK_OFF) ? 0 : 1;
+> +			break;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int huawei_wmi_fn_lock_set(struct device *dev, int on)
+> +{
+> +	char arg[] = { 0, 0, (on) ? FN_LOCK_ON : FN_LOCK_OFF, 0 };
+> +
+> +	return huawei_wmi_cmd(dev, FN_LOCK_SET, arg, NULL, NULL);
+> +}
+> +
+> +/* sysfs */
+> +
+> +static ssize_t charge_thresholds_store(struct device *dev,
+> +		struct device_attribute *attr,
+> +		const char *buf, size_t size)
+> +{
+> +	int low, high;
+> +
+> +	if (sscanf(buf, "%d %d", &low, &high) != 2 ||
+> +			low < 0 || high > 100 ||
+> +			low > high ||
+> +			huawei_wmi_battery_set(dev, low, high))
+> +		return -EINVAL;
+> +
+> +	return size;
+> +}
+> +
+> +static ssize_t fn_lock_state_store(struct device *dev,
+> +		struct device_attribute *attr,
+> +		const char *buf, size_t size)
+> +{
+> +	int on;
+> +
+> +	if (kstrtoint(buf, 10, &on) ||
+> +			on < 0 || on > 1 ||
+> +			huawei_wmi_fn_lock_set(dev, on))
+> +		return -EINVAL;
+> +
+> +	return size;
+> +}
+> +
+> +static ssize_t charge_thresholds_show(struct device *dev,
+> +		struct device_attribute *attr,
+> +		char *buf)
+> +{
+> +	int err, low, high;
+> +
+> +	low = high = 0;
+> +	err = huawei_wmi_battery_get(dev, &low, &high);
+> +	if (err)
+> +		return -EINVAL;
+> +
+> +	return sprintf(buf, "%d %d\n", low, high);
+> +}
+> +
+> +static ssize_t fn_lock_state_show(struct device *dev,
+> +		struct device_attribute *attr,
+> +		char *buf)
+> +{
+> +	int err, on;
+> +
+> +	on = 0;
+> +	err = huawei_wmi_fn_lock_get(dev, &on);
+> +	if (err)
+> +		return -EINVAL;
+> +
+> +	return sprintf(buf, "%d\n", on);
+> +}
+> +
+> +static DEVICE_ATTR_RW(charge_thresholds);
+> +static DEVICE_ATTR_RW(fn_lock_state);
+> +
+> +static struct attribute *huawei_wmi_attrs[] = {
+> +	&dev_attr_charge_thresholds.attr,
+> +	&dev_attr_fn_lock_state.attr,
+> +	NULL
+> +};
+> +
+> +static const struct attribute_group huawei_wmi_group = {
+> +	.attrs = huawei_wmi_attrs
+> +};
+> +
+> +static int huawei_wmi_probe(struct platform_device *pdev)
+> +{
+> +	struct huawei_wmi *huawei;
+> +	int err;
+> +
+> +	huawei = devm_kzalloc(&pdev->dev, sizeof(struct huawei_wmi), GFP_KERNEL);
+> +	if (!huawei)
+>  		return -ENOMEM;
+>  
+> -	dev_set_drvdata(&wdev->dev, priv);
+> +	huawei->pdev = pdev;
+> +	dev_set_drvdata(&pdev->dev, huawei);
+> +	mutex_init(&huawei->wmi_lock);
+> +	mutex_init(&huawei->battery_lock);
+>  
+> -	err = huawei_wmi_input_setup(wdev);
+> +	err = sysfs_create_group(&pdev->dev.kobj, &huawei_wmi_group);
+>  	if (err)
+>  		return err;
+>  
+> -	return huawei_wmi_leds_setup(wdev);
+> +	return huawei_wmi_leds_setup(&pdev->dev);
+>  }
+>  
+> -static const struct wmi_device_id huawei_wmi_id_table[] = {
+> -	{ .guid_string = WMI0_EVENT_GUID },
+> -	{ .guid_string = AMW0_EVENT_GUID },
+> -	{  }
+> -};
+> +static int huawei_wmi_remove(struct platform_device *pdev)
+> +{
+> +	sysfs_remove_group(&pdev->dev.kobj, &huawei_wmi_group);
+> +	return 0;
+> +}
+> +
+> +/* Huawei driver */
+>  
+> -static struct wmi_driver huawei_wmi_driver = {
+> +static struct platform_driver huawei_wmi_driver = {
+>  	.driver = {
+>  		.name = "huawei-wmi",
+>  	},
+> -	.id_table = huawei_wmi_id_table,
+>  	.probe = huawei_wmi_probe,
+> -	.notify = huawei_wmi_notify,
+> +	.remove = huawei_wmi_remove,
+>  };
+>  
+> -module_wmi_driver(huawei_wmi_driver);
+> +static __init int huawei_wmi_init(void)
+> +{
+> +	int event_capable = wmi_has_guid(WMI0_EVENT_GUID) ||
+> +		wmi_has_guid(AMW0_EVENT_GUID);
+> +	int bios_capable = wmi_has_guid(AMW0_METHOD_GUID);
+> +	int err;
+> +
+> +	if (!event_capable && !bios_capable)
+> +		return -ENODEV;
+> +
+> +	dmi_check_system(huawei_quirks);
+> +
+> +	if (event_capable && wmi_driver_register(&huawei_wmi_input_driver))
+> +		pr_err("Failed to register wmi input driver\n");
+> +
+> +	if (bios_capable) {
+> +		huawei_wmi_pdev =
+> +			platform_device_register_simple("huawei-wmi", -1, NULL, 0);
+> +		if (IS_ERR(huawei_wmi_pdev)) {
+> +			pr_err("Failed to register platform device\n");
+> +			return PTR_ERR(huawei_wmi_pdev);
+> +		}
+> +
+> +		err = platform_driver_register(&huawei_wmi_driver);
+> +		if (err) {
+> +			pr_err("Failed to register platform driver\n");
+> +			platform_device_unregister(huawei_wmi_pdev);
+> +			return err;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static __exit void huawei_wmi_exit(void)
+> +{
+> +	wmi_driver_unregister(&huawei_wmi_input_driver);
+> +	if (wmi_has_guid(AMW0_METHOD_GUID)) {
+> +		platform_device_unregister(huawei_wmi_pdev);
+> +		platform_driver_unregister(&huawei_wmi_driver);
+> +	}
+> +}
+> +
+> +module_init(huawei_wmi_init);
+> +module_exit(huawei_wmi_exit);
+>  
+> -MODULE_DEVICE_TABLE(wmi, huawei_wmi_id_table);
+> +MODULE_ALIAS("wmi:"AMW0_METHOD_GUID);
+> +MODULE_ALIAS("wmi:"AMW0_EVENT_GUID);
+> +MODULE_ALIAS("wmi:"WMI0_EVENT_GUID);
+>  MODULE_AUTHOR("Ayman Bagabas <ayman.bagabas@gmail.com>");
+> -MODULE_DESCRIPTION("Huawei WMI hotkeys");
+> +MODULE_DESCRIPTION("Huawei WMI laptop driver");
+>  MODULE_LICENSE("GPL v2");
+> -- 
+> 2.20.1
+> 
+> 
