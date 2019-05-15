@@ -6,155 +6,80 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E79C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6401C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3E3E2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E64F2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728286AbfEOT3m (ORCPT
+        id S1728248AbfEOT3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:29:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35010 "EHLO mx1.redhat.com"
+        Wed, 15 May 2019 15:29:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53908 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727591AbfEOT1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727634AbfEOT1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 May 2019 15:27:34 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E1BDAC09AD12;
-        Wed, 15 May 2019 19:27:33 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 20248308ED54;
+        Wed, 15 May 2019 19:27:34 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BCF9760C2A;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EE3501972A;
         Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 0694C22548C; Wed, 15 May 2019 15:27:30 -0400 (EDT)
+        id 2B3EB225491; Wed, 15 May 2019 15:27:30 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, linux-nvdimm@lists.01.org
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
         dgilbert@redhat.com, swhiteho@redhat.com
-Subject: [PATCH v2 24/30] fuse, dax: Take ->i_mmap_sem lock during dax page fault
-Date:   Wed, 15 May 2019 15:27:09 -0400
-Message-Id: <20190515192715.18000-25-vgoyal@redhat.com>
+Subject: [PATCH v2 29/30] fuse: Take inode lock for dax inode truncation
+Date:   Wed, 15 May 2019 15:27:14 -0400
+Message-Id: <20190515192715.18000-30-vgoyal@redhat.com>
 In-Reply-To: <20190515192715.18000-1-vgoyal@redhat.com>
 References: <20190515192715.18000-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 15 May 2019 19:27:33 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 15 May 2019 19:27:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We need some kind of locking mechanism here. Normal file systems like
-ext4 and xfs seems to take their own semaphore to protect agains
-truncate while fault is going on.
+When a file is opened with O_TRUNC, we need to make sure that any other
+DAX operation is not in progress. DAX expects i_size to be stable.
 
-We have additional requirement to protect against fuse dax memory range
-reclaim. When a range has been selected for reclaim, we need to make sure
-no other read/write/fault can try to access that memory range while
-reclaim is in progress. Once reclaim is complete, lock will be released
-and read/write/fault will trigger allocation of fresh dax range.
+In fuse_iomap_begin() we check for i_size at multiple places and we expect
+i_size to not change.
 
-Taking inode_lock() is not an option in fault path as lockdep complains
-about circular dependencies. So define a new fuse_inode->i_mmap_sem.
+Another problem is, if we setup a mapping in fuse_iomap_begin(), and
+file gets truncated and dax read/write happens, KVM currently hangs.
+It tries to fault in a page which does not exist on host (file got
+truncated). It probably requries fixing in KVM.
+
+So for now, take inode lock. Once KVM is fixed, we might have to
+have a look at it again.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- fs/fuse/dir.c    |  2 ++
- fs/fuse/file.c   | 17 +++++++++++++----
- fs/fuse/fuse_i.h |  7 +++++++
- fs/fuse/inode.c  |  1 +
- 4 files changed, 23 insertions(+), 4 deletions(-)
+ fs/fuse/file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-index fd8636e67ae9..84c0b638affb 100644
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -1559,8 +1559,10 @@ int fuse_do_setattr(struct dentry *dentry, struct iattr *attr,
- 	 */
- 	if ((is_truncate || !is_wb) &&
- 	    S_ISREG(inode->i_mode) && oldsize != outarg.attr.size) {
-+		down_write(&fi->i_mmap_sem);
- 		truncate_pagecache(inode, outarg.attr.size);
- 		invalidate_inode_pages2(inode->i_mapping);
-+		up_write(&fi->i_mmap_sem);
- 	}
- 
- 	clear_bit(FUSE_I_SIZE_UNSTABLE, &fi->state);
 diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 2777355bc245..e536a04aaa06 100644
+index 9b82d9b4ebc3..d0979dc32f08 100644
 --- a/fs/fuse/file.c
 +++ b/fs/fuse/file.c
-@@ -2638,13 +2638,20 @@ static int __fuse_dax_fault(struct vm_fault *vmf, enum page_entry_size pe_size,
- 	if (write)
- 		sb_start_pagefault(sb);
+@@ -420,7 +420,7 @@ int fuse_open_common(struct inode *inode, struct file *file, bool isdir)
+ 	int err;
+ 	bool lock_inode = (file->f_flags & O_TRUNC) &&
+ 			  fc->atomic_o_trunc &&
+-			  fc->writeback_cache;
++			  (fc->writeback_cache || IS_DAX(inode));
  
--	/* TODO inode semaphore to protect faults vs truncate */
--
-+	/*
-+	 * We need to serialize against not only truncate but also against
-+	 * fuse dax memory range reclaim. While a range is being reclaimed,
-+	 * we do not want any read/write/mmap to make progress and try
-+	 * to populate page cache or access memory we are trying to free.
-+	 */
-+	down_read(&get_fuse_inode(inode)->i_mmap_sem);
- 	ret = dax_iomap_fault(vmf, pe_size, &pfn, NULL, &fuse_iomap_ops);
- 
- 	if (ret & VM_FAULT_NEEDDSYNC)
- 		ret = dax_finish_sync_fault(vmf, pe_size, pfn);
- 
-+	up_read(&get_fuse_inode(inode)->i_mmap_sem);
-+
- 	if (write)
- 		sb_end_pagefault(sb);
- 
-@@ -3593,9 +3600,11 @@ static long fuse_file_fallocate(struct file *file, int mode, loff_t offset,
- 			file_update_time(file);
- 	}
- 
--	if (mode & FALLOC_FL_PUNCH_HOLE)
-+	if (mode & FALLOC_FL_PUNCH_HOLE) {
-+		down_write(&fi->i_mmap_sem);
- 		truncate_pagecache_range(inode, offset, offset + length - 1);
--
-+		up_write(&fi->i_mmap_sem);
-+	}
- 	fuse_invalidate_attr(inode);
- 
- out:
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index f1ae549eff98..a234cf30538d 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -212,6 +212,13 @@ struct fuse_inode {
- 	 */
- 	struct rw_semaphore i_dmap_sem;
- 
-+	/**
-+	 * Can't take inode lock in fault path (leads to circular dependency).
-+	 * So take this in fuse dax fault path to make sure truncate and
-+	 * punch hole etc. can't make progress in parallel.
-+	 */
-+	struct rw_semaphore i_mmap_sem;
-+
- 	/** Sorted rb tree of struct fuse_dax_mapping elements */
- 	struct rb_root_cached dmap_tree;
- 	unsigned long nr_dmaps;
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index ad66a353554b..713c5f32ab35 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -85,6 +85,7 @@ static struct inode *fuse_alloc_inode(struct super_block *sb)
- 	fi->state = 0;
- 	fi->nr_dmaps = 0;
- 	mutex_init(&fi->mutex);
-+	init_rwsem(&fi->i_mmap_sem);
- 	init_rwsem(&fi->i_dmap_sem);
- 	spin_lock_init(&fi->lock);
- 	fi->forget = fuse_alloc_forget();
+ 	err = generic_file_open(inode, file);
+ 	if (err)
 -- 
 2.20.1
 
