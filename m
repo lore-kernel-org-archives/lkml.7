@@ -2,95 +2,86 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C46C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 016FBC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE9B2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA10E2089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:08:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557900525;
+	bh=fowhqUALRBQJMtB9RP4MkFlNPWDsccQyjzeGhlKuCvo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=J3XZSgJf/xu6vyS28f6aUO5TQsqh1p8+vYgosrtcxN1wSn+XmM9PIfvEt7jD6cnZg
+	 5vJovQABmn8ZjOm36WQrW3MUrPSHN9yPFeJjDsf69cy+fXkQj5m/OJ2JAI8koClSGv
+	 i/b8aZ2p1H9Vy4Je0KkZ2JY+VecPzfkqhfZ0S808=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbfEOGGC (ORCPT
+        id S1726157AbfEOGIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 02:06:02 -0400
-Received: from orcrist.hmeau.com ([5.180.42.13]:34972 "EHLO deadmen.hmeau.com"
+        Wed, 15 May 2019 02:08:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbfEOGGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 02:06:01 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hQn37-0001Sz-Tb; Wed, 15 May 2019 14:05:57 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hQn32-0004ja-LG; Wed, 15 May 2019 14:05:52 +0800
-Date:   Wed, 15 May 2019 14:05:52 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [GIT] Crypto Fixes for 5.2
-Message-ID: <20190515060552.ecfwhazt2fnthepg@gondor.apana.org.au>
-References: <20180212031702.GA26153@gondor.apana.org.au>
- <20180428080517.haxgpvqrwgotakyo@gondor.apana.org.au>
- <20180622145403.6ltjip7che227fuo@gondor.apana.org.au>
- <20180829033353.agnzxra3jk2r2mzg@gondor.apana.org.au>
- <20181116063146.e7a3mep3ghnfltxe@gondor.apana.org.au>
- <20181207061409.xflg423nknleuddw@gondor.apana.org.au>
- <20190118104006.ye5amhxkgd4xrbmc@gondor.apana.org.au>
- <20190201054204.ehl7u7aaqmkdh5b6@gondor.apana.org.au>
- <20190215024738.fynl64d5u5htcy2l@gondor.apana.org.au>
- <20190312045818.bgpiuxogmaxyscdv@gondor.apana.org.au>
+        id S1725857AbfEOGIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 02:08:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89A7520862;
+        Wed, 15 May 2019 06:08:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557900524;
+        bh=fowhqUALRBQJMtB9RP4MkFlNPWDsccQyjzeGhlKuCvo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S3JEB/k6ehXBDa0Ge4cnoCfn+lfnmWYGeTJyP9wx80uZH2VZ1MbNbNxPhPZYGK7t0
+         qSlhFGkN2bmRauu23kyife8LNk4tv/y4LbHF2eRzQn+KscuO9adU+zIsyPd2fQLPvb
+         r3xi81urldOMBcutENz6dJ2Q2FTfMjNtdXh/mT/U=
+Date:   Wed, 15 May 2019 08:08:41 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc/security: Fix build break
+Message-ID: <20190515060841.GB18988@kroah.com>
+References: <20190515045206.10610-1-joel@jms.id.au>
+ <20190515051830.GA18166@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190312045818.bgpiuxogmaxyscdv@gondor.apana.org.au>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190515051830.GA18166@kroah.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus: 
+On Wed, May 15, 2019 at 07:18:30AM +0200, Greg Kroah-Hartman wrote:
+> On Wed, May 15, 2019 at 02:22:06PM +0930, Joel Stanley wrote:
+> > This fixes a build break introduced in with the recent round of CPU
+> > bug patches.
+> > 
+> >   arch/powerpc/kernel/security.c: In function ‘setup_barrier_nospec’:
+> >   arch/powerpc/kernel/security.c:59:21: error: implicit declaration of
+> >   function ‘cpu_mitigations_off’ [-Werror=implicit-function-declaration]
+> >     if (!no_nospec && !cpu_mitigations_off())
+> >                        ^~~~~~~~~~~~~~~~~~~
+> > 
+> > Fixes: 782e69efb3df ("powerpc/speculation: Support 'mitigations=' cmdline option")
+> > Signed-off-by: Joel Stanley <joel@jms.id.au>
+> > ---
+> > This should be applied to the 4.14 and 4.19 trees. There is no issue
+> > with 5.1. The commit message contains a fixes line for the commit in
+> > Linus tree.
+> > ---
+> >  arch/powerpc/kernel/security.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> 
+> Isn't this just commit 42e2acde1237 ("powerpc/64s: Include cpu header")?
 
-This push fixes a number of issues in the chelsio driver and the
-caam driver.
-
-
-Please pull from
-
-git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
-
-
-Atul Gupta (4):
-      crypto: chelsio - Fix NULL pointer dereference
-      crypto: chelsio - Fix softlockup with heavy I/O
-      crypto: chelsio - count incomplete block in IV
-      MAINTAINERS: Maintainer for Chelsio crypto driver
-
-Herbert Xu (2):
-      crypto: caam - fix DKP detection logic
-      Revert "crypto: caam/jr - Remove extra memory barrier during job ring dequeue"
-
-Iuliana Prodan (1):
-      crypto: caam - fix caam_dump_sg that iterates through scatterlist
-
- MAINTAINERS                         |  2 +-
- drivers/crypto/caam/caamalg.c       |  9 +++++++--
- drivers/crypto/caam/caamalg_qi.c    |  7 +++++--
- drivers/crypto/caam/caamalg_qi2.c   |  8 +++++++-
- drivers/crypto/caam/error.c         |  2 +-
- drivers/crypto/caam/jr.c            |  2 +-
- drivers/crypto/caam/regs.h          |  8 --------
- drivers/crypto/chelsio/chcr_algo.c  | 17 +++++------------
- drivers/crypto/chelsio/chcr_core.c  |  4 ----
- drivers/crypto/chelsio/chcr_ipsec.c |  3 ++-
- 10 files changed, 29 insertions(+), 33 deletions(-)
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Which I have now queued up.
