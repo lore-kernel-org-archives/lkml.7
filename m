@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6C9C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D2FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB2F2089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C0C20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919372;
-	bh=/ee50LFzLtCJJcQ/CBmCLb5opISI5VQiCJQ39RIQn5g=;
+	s=default; t=1557919376;
+	bh=0Fnyoql+kdy/sAypx07YxOWkmMw4biyzyM65/a7OMAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LY02SSSaAB+sXCpY44A+FUtNu09S6LbQiI7k4RA4wuxhIM0IkiOp0kmy0c8wBUlRd
-	 pNVW2m1vWNmmH0yT1UOqTttAv7sICAMaAllfjjpF3c2uD3cuYW+idaAxBx9jZ32Icb
-	 E/3SGEkDLu+mYe7hL19i18aOfJ190DlzBtdjuTD4=
+	b=dokSPUm02MjP7vjtXE1eV0MFI5eZgX9EQfQo0Nea2Qz+z+WVeViVYJxPsy6E1RixM
+	 BiPd13p7tGN9/I1vNejVYDUwxSKu0+gfksFM8p08FG6ZJ6iK7sViODEd/sCvaifr1H
+	 8RCCB6+eTRgV7b9dRSi6fIbtuuajiOX665KTsujs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731528AbfEOLWu (ORCPT
+        id S1731552AbfEOLWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:22:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33052 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:22:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731249AbfEOLWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:22:47 -0400
+        id S1731539AbfEOLWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:22:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7E6E20818;
-        Wed, 15 May 2019 11:22:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFC3220818;
+        Wed, 15 May 2019 11:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919367;
-        bh=/ee50LFzLtCJJcQ/CBmCLb5opISI5VQiCJQ39RIQn5g=;
+        s=default; t=1557919372;
+        bh=0Fnyoql+kdy/sAypx07YxOWkmMw4biyzyM65/a7OMAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pi4RQlAQXctDLkTRmVijUXhMbH3cWx4wgXlPHrzaBSljmS6yMxZH56F9qWG3eySdb
-         Jk0R/pFEfelpVdavaoIAbrscfNARrsVMNbvziwNIwOHVE0KbvywZ94bgS4KTvXeZFK
-         e4Ci/hy8yw8NrR2fhCkFdBw+tAhI0Z2dLy9SwdRI=
+        b=o5S4nBE9U4qqgRPm8uv7ZJmDk7BAzsMB+PO6x4+QI8tBbAkryVADLFsk7mZQ8s//m
+         KIYUw05C1DMLi3LkfbDYvJsT8mATHyoOHf7M6VlMu3vx1j8DDPfTKel4aL8NeQLDkR
+         JQ34o01ze7hTepAyXCvU2vgdjIF6Q9Y0m5+NooOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 049/113] netfilter: nf_tables: prevent shift wrap in nft_chain_parse_hook()
-Date:   Wed, 15 May 2019 12:55:40 +0200
-Message-Id: <20190515090657.374463262@linuxfoundation.org>
+Subject: [PATCH 4.19 051/113] s390: ctcm: fix ctcm_new_device error return code
+Date:   Wed, 15 May 2019 12:55:42 +0200
+Message-Id: <20190515090657.529774104@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -60,35 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 33d1c018179d0a30c39cc5f1682b77867282694b ]
+[ Upstream commit 27b141fc234a3670d21bd742c35d7205d03cbb3a ]
 
-I believe that "hook->num" can be up to UINT_MAX.  Shifting more than
-31 bits would is undefined in C but in practice it would lead to shift
-wrapping.  That would lead to an array overflow in nf_tables_addchain():
+clang points out that the return code from this function is
+undefined for one of the error paths:
 
-	ops->hook       = hook.type->hooks[ops->hooknum];
+../drivers/s390/net/ctcm_main.c:1595:7: warning: variable 'result' is used uninitialized whenever 'if' condition is true
+      [-Wsometimes-uninitialized]
+                if (priv->channel[direction] == NULL) {
+                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/s390/net/ctcm_main.c:1638:9: note: uninitialized use occurs here
+        return result;
+               ^~~~~~
+../drivers/s390/net/ctcm_main.c:1595:3: note: remove the 'if' if its condition is always false
+                if (priv->channel[direction] == NULL) {
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../drivers/s390/net/ctcm_main.c:1539:12: note: initialize the variable 'result' to silence this warning
+        int result;
+                  ^
 
-Fixes: fe19c04ca137 ("netfilter: nf_tables: remove nhooks field from struct nft_af_info")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Make it return -ENODEV here, as in the related failure cases.
+gcc has a known bug in underreporting some of these warnings
+when it has already eliminated the assignment of the return code
+based on some earlier optimization step.
+
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/net/ctcm_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 1af54119bafc7..f272f9538c44a 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -1496,7 +1496,7 @@ static int nft_chain_parse_hook(struct net *net,
- 		if (IS_ERR(type))
- 			return PTR_ERR(type);
- 	}
--	if (!(type->hook_mask & (1 << hook->num)))
-+	if (hook->num > NF_MAX_HOOKS || !(type->hook_mask & (1 << hook->num)))
- 		return -EOPNOTSUPP;
- 
- 	if (type->type == NFT_CHAIN_T_NAT &&
+diff --git a/drivers/s390/net/ctcm_main.c b/drivers/s390/net/ctcm_main.c
+index 7617d21cb2960..f63c5c871d3dd 100644
+--- a/drivers/s390/net/ctcm_main.c
++++ b/drivers/s390/net/ctcm_main.c
+@@ -1595,6 +1595,7 @@ static int ctcm_new_device(struct ccwgroup_device *cgdev)
+ 		if (priv->channel[direction] == NULL) {
+ 			if (direction == CTCM_WRITE)
+ 				channel_free(priv->channel[CTCM_READ]);
++			result = -ENODEV;
+ 			goto out_dev;
+ 		}
+ 		priv->channel[direction]->netdev = dev;
 -- 
 2.20.1
 
