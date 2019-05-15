@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DE9C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF3AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 902F8206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A076220843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919751;
-	bh=pT8pxS8klidPn33smoRvZdqbifKG/O564mOdrnLgpaY=;
+	s=default; t=1557919754;
+	bh=j61LhSmK9TMQDLxOBZSEwT2LYqrNx4PDVEZ88ReSy0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zTe6NyU0XV/b0LMheSs6MrZlLxZOD4H7mr1qppzfZFTxpFImhIniFB98Ac1TpIpQ2
-	 jn1GBGVfjJVNoBpgNw48114AW7EHEduy1gK3BdxTQL+mkBfheYF8KF31HqqcEwRpZI
-	 SvFG9/w/Cch3aWKOqbqdaQVtVkTgvSMn5TZlMfy0=
+	b=0+rOqbp8yWO3R72usnpST5xvsiNuDQF8qO3i1jOUFpD+vs1WNq/N540rWGO20TZIG
+	 naXt16NX5AwVzQy+hYSMp1vDKRzVfmj54CzaC64F9ppyIu2vltrkafgtrGa69EQthI
+	 ID3f8w8Mg/hq1nF3DejXshkbqceUi1TonpzU/8Kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732499AbfEOL3K (ORCPT
+        id S1732511AbfEOL3N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:29:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40314 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:29:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731818AbfEOL3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:29:07 -0400
+        id S1732494AbfEOL3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:29:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 358CF206BF;
-        Wed, 15 May 2019 11:29:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08597206BF;
+        Wed, 15 May 2019 11:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919746;
-        bh=pT8pxS8klidPn33smoRvZdqbifKG/O564mOdrnLgpaY=;
+        s=default; t=1557919749;
+        bh=j61LhSmK9TMQDLxOBZSEwT2LYqrNx4PDVEZ88ReSy0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lxFDV+DIfFrFFj3Smg8Y25++mK+05hn8eGqn5Lwxu6+Dj9QCazN1XSX2bl/QhUE8U
-         LOC+HDUw9keFdJfcJ3KiziQ9x0XlqQ8KNnF9EY5IsabGh1hZA3mtmrKGKRT2bA8Z5x
-         5QEoR6BfUOHp0ukplYvdLPNpUmQK+mZbzqaef7Yk=
+        b=jy4pb13BbEP3oTyapBNSmNM3XO49ZYglXqdidICA/XBjWq6mdIbtRuxYRxqxB0Kj1
+         k+fc7TIK8y7Cc/lJbQkqUc8EmMCbiGzS99FiO3tmjKqyJCMgQ5QfVf3W4/TxN2D0SA
+         GZmZdbpQhl3T0M9vPlnLendDGlZEvw4Wu7paIcRE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Wentao Lou <Wentao.Lou@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 034/137] selftests: fib_tests: Fix Command line is not complete errors
-Date:   Wed, 15 May 2019 12:55:15 +0200
-Message-Id: <20190515090655.830958831@linuxfoundation.org>
+Subject: [PATCH 5.0 035/137] drm/amdgpu: shadow in shadow_list without tbo.mem.start cause page fault in sriov TDR
+Date:   Wed, 15 May 2019 12:55:16 +0200
+Message-Id: <20190515090655.911697440@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -60,177 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a5f622984a623df9a84cf43f6b098d8dd76fbe05 ]
+[ Upstream commit b575f10dbd6f84c2c8744ff1f486bfae1e4f6f38 ]
 
-A couple of tests are verifying a route has been removed. The helper
-expects the prefix as the first part of the expected output. When
-checking that a route has been deleted the prefix is empty leading
-to an invalid ip command:
+shadow was added into shadow_list by amdgpu_bo_create_shadow.
+meanwhile, shadow->tbo.mem was not fully configured.
+tbo.mem would be fully configured by amdgpu_vm_sdma_map_table until calling amdgpu_vm_clear_bo.
+If sriov TDR occurred between amdgpu_bo_create_shadow and amdgpu_vm_sdma_map_table,
+amdgpu_device_recover_vram would deal with shadow without tbo.mem.start.
 
-  $ ip ro ls match
-  Command line is not complete. Try option "help"
-
-Fix by moving the comparison of expected output and output to a new
-function that is used by both check_route and check_route6. Use the
-new helper for the 2 checks on route removal.
-
-Also, remove the reset of 'set -x' in route_setup which overrides the
-user managed setting.
-
-Fixes: d69faad76584c ("selftests: fib_tests: Add prefix route tests with metric")
-Signed-off-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Wentao Lou <Wentao.Lou@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/fib_tests.sh | 94 ++++++++++--------------
- 1 file changed, 40 insertions(+), 54 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/net/fib_tests.sh b/tools/testing/selftests/net/fib_tests.sh
-index 1080ff55a788f..0d2a5f4f1e638 100755
---- a/tools/testing/selftests/net/fib_tests.sh
-+++ b/tools/testing/selftests/net/fib_tests.sh
-@@ -605,6 +605,39 @@ run_cmd()
- 	return $rc
- }
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index d55dd570a7023..27baac26d8e9c 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -3150,6 +3150,7 @@ static int amdgpu_device_recover_vram(struct amdgpu_device *adev)
  
-+check_expected()
-+{
-+	local out="$1"
-+	local expected="$2"
-+	local rc=0
-+
-+	[ "${out}" = "${expected}" ] && return 0
-+
-+	if [ -z "${out}" ]; then
-+		if [ "$VERBOSE" = "1" ]; then
-+			printf "\nNo route entry found\n"
-+			printf "Expected:\n"
-+			printf "    ${expected}\n"
-+		fi
-+		return 1
-+	fi
-+
-+	# tricky way to convert output to 1-line without ip's
-+	# messy '\'; this drops all extra white space
-+	out=$(echo ${out})
-+	if [ "${out}" != "${expected}" ]; then
-+		rc=1
-+		if [ "${VERBOSE}" = "1" ]; then
-+			printf "    Unexpected route entry. Have:\n"
-+			printf "        ${out}\n"
-+			printf "    Expected:\n"
-+			printf "        ${expected}\n\n"
-+		fi
-+	fi
-+
-+	return $rc
-+}
-+
- # add route for a prefix, flushing any existing routes first
- # expected to be the first step of a test
- add_route6()
-@@ -652,31 +685,7 @@ check_route6()
- 	pfx=$1
+ 		/* No need to recover an evicted BO */
+ 		if (shadow->tbo.mem.mem_type != TTM_PL_TT ||
++		    shadow->tbo.mem.start == AMDGPU_BO_INVALID_OFFSET ||
+ 		    shadow->parent->tbo.mem.mem_type != TTM_PL_VRAM)
+ 			continue;
  
- 	out=$($IP -6 ro ls match ${pfx} | sed -e 's/ pref medium//')
--	[ "${out}" = "${expected}" ] && return 0
--
--	if [ -z "${out}" ]; then
--		if [ "$VERBOSE" = "1" ]; then
--			printf "\nNo route entry found\n"
--			printf "Expected:\n"
--			printf "    ${expected}\n"
--		fi
--		return 1
--	fi
--
--	# tricky way to convert output to 1-line without ip's
--	# messy '\'; this drops all extra white space
--	out=$(echo ${out})
--	if [ "${out}" != "${expected}" ]; then
--		rc=1
--		if [ "${VERBOSE}" = "1" ]; then
--			printf "    Unexpected route entry. Have:\n"
--			printf "        ${out}\n"
--			printf "    Expected:\n"
--			printf "        ${expected}\n\n"
--		fi
--	fi
--
--	return $rc
-+	check_expected "${out}" "${expected}"
- }
- 
- route_cleanup()
-@@ -725,7 +734,7 @@ route_setup()
- 	ip -netns ns2 addr add 172.16.103.2/24 dev veth4
- 	ip -netns ns2 addr add 172.16.104.1/24 dev dummy1
- 
--	set +ex
-+	set +e
- }
- 
- # assumption is that basic add of a single path route works
-@@ -960,7 +969,8 @@ ipv6_addr_metric_test()
- 	run_cmd "$IP li set dev dummy2 down"
- 	rc=$?
- 	if [ $rc -eq 0 ]; then
--		check_route6 ""
-+		out=$($IP -6 ro ls match 2001:db8:104::/64)
-+		check_expected "${out}" ""
- 		rc=$?
- 	fi
- 	log_test $rc 0 "Prefix route removed on link down"
-@@ -1091,38 +1101,13 @@ check_route()
- 	local pfx
- 	local expected="$1"
- 	local out
--	local rc=0
- 
- 	set -- $expected
- 	pfx=$1
- 	[ "${pfx}" = "unreachable" ] && pfx=$2
- 
- 	out=$($IP ro ls match ${pfx})
--	[ "${out}" = "${expected}" ] && return 0
--
--	if [ -z "${out}" ]; then
--		if [ "$VERBOSE" = "1" ]; then
--			printf "\nNo route entry found\n"
--			printf "Expected:\n"
--			printf "    ${expected}\n"
--		fi
--		return 1
--	fi
--
--	# tricky way to convert output to 1-line without ip's
--	# messy '\'; this drops all extra white space
--	out=$(echo ${out})
--	if [ "${out}" != "${expected}" ]; then
--		rc=1
--		if [ "${VERBOSE}" = "1" ]; then
--			printf "    Unexpected route entry. Have:\n"
--			printf "        ${out}\n"
--			printf "    Expected:\n"
--			printf "        ${expected}\n\n"
--		fi
--	fi
--
--	return $rc
-+	check_expected "${out}" "${expected}"
- }
- 
- # assumption is that basic add of a single path route works
-@@ -1387,7 +1372,8 @@ ipv4_addr_metric_test()
- 	run_cmd "$IP li set dev dummy2 down"
- 	rc=$?
- 	if [ $rc -eq 0 ]; then
--		check_route ""
-+		out=$($IP ro ls match 172.16.104.0/24)
-+		check_expected "${out}" ""
- 		rc=$?
- 	fi
- 	log_test $rc 0 "Prefix route removed on link down"
 -- 
 2.20.1
 
