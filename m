@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEE5C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A40AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1BBD20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F11520843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919091;
-	bh=fEl58TO3qbyRhsWQ3MIb3kKu4P+hvOm4yJGY1tFADg8=;
+	s=default; t=1557919095;
+	bh=qe0NEEBfQyHz+s/aUOwt23GSKbbMg/UR2UXQUUVIQHI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mh+BNfp3TLxeedZKhY+6s6AII2Dc3bloGhEP4q1MvAXCfaVYu4Y7HBa0qPDKYcoPA
-	 t2+/BdL3u6xKkEBKGoiQ1SVGUDpu6c/QLq0PtFmW3Br5PFVjQTBijdhRkRHyfHEWa1
-	 AC0QGiiBydaFdVkZeoKML3fgVbyFBXdQ45/anw8k=
+	b=TjaOlmgeMlkHtiDCTwDUIbWtXjqXKYKE4WS0o9fj4CtyApVK37jkWe+JU/3tq02BR
+	 lH83A12FK0KFUdlIAD/90RBScVHIb1VxOr2PDtqCIvX4lWRBmgchTZm2UMTqc+SLpa
+	 fTnJQkAWgS2In80U+uxAkgj7FCoOc8biQ7zvA/88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730760AbfEOLSJ (ORCPT
+        id S1730769AbfEOLSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:18:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55500 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:18:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730754AbfEOLSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:18:06 -0400
+        id S1729590AbfEOLSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:18:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E604C206BF;
-        Wed, 15 May 2019 11:18:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A30A216F4;
+        Wed, 15 May 2019 11:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919085;
-        bh=fEl58TO3qbyRhsWQ3MIb3kKu4P+hvOm4yJGY1tFADg8=;
+        s=default; t=1557919088;
+        bh=qe0NEEBfQyHz+s/aUOwt23GSKbbMg/UR2UXQUUVIQHI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EXEqGlyo5BP7RGchqrN2tZL9q856fijiOS1zNKdPK5074ThNiod/y997TuGLppcpY
-         sFlf94YuQYe3yJUnwo1wUcNTB16Wih7c683P+Lc2KyYQN4rUvDzkuLlIK0ndhdghIA
-         yhz+0yt9NZk6VFV7XAskxY80YbY7Tny9L0OxITtU=
+        b=kPe38SgFGEomicUPA/DDgbPB931gTIruCgAlDf4TJ8W/xDeOEjnP+FAZrbDvSYiLT
+         1+vd0nK54fmryIrzmLjXvUvd3wDTsPLuBLmpPLFxPUyAaiSlJj8d/a7BhmDW809iBS
+         /wf1GSdPY1qmDlDpQLuBVI7lEWZRbPfw6t93U/Ok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 062/115] net: stmmac: Move debugfs init/exit to ->probe()/->remove()
-Date:   Wed, 15 May 2019 12:55:42 +0200
-Message-Id: <20190515090704.047782660@linuxfoundation.org>
+Subject: [PATCH 4.14 063/115] Btrfs: fix missing delayed iputs on unmount
+Date:   Wed, 15 May 2019 12:55:43 +0200
+Message-Id: <20190515090704.117076835@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -61,95 +60,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5f2b8b62786853341a20d4cd4948f9cbca3db002 ]
+[ Upstream commit d6fd0ae25c6495674dc5a41a8d16bc8e0073276d ]
 
-Setting up and tearing down debugfs is current unbalanced, as seen by
-this error during resume from suspend:
+There's a race between close_ctree() and cleaner_kthread().
+close_ctree() sets btrfs_fs_closing(), and the cleaner stops when it
+sees it set, but this is racy; the cleaner might have already checked
+the bit and could be cleaning stuff. In particular, if it deletes unused
+block groups, it will create delayed iputs for the free space cache
+inodes. As of "btrfs: don't run delayed_iputs in commit", we're no
+longer running delayed iputs after a commit. Therefore, if the cleaner
+creates more delayed iputs after delayed iputs are run in
+btrfs_commit_super(), we will leak inodes on unmount and get a busy
+inode crash from the VFS.
 
-    [  752.134067] dwc-eth-dwmac 2490000.ethernet eth0: ERROR failed to create debugfs directory
-    [  752.134347] dwc-eth-dwmac 2490000.ethernet eth0: stmmac_hw_setup: failed debugFS registration
+Fix it by parking the cleaner before we actually close anything. Then,
+any remaining delayed iputs will always be handled in
+btrfs_commit_super(). This also ensures that the commit in close_ctree()
+is really the last commit, so we can get rid of the commit in
+cleaner_kthread().
 
-The imbalance happens because the driver creates the debugfs hierarchy
-when the device is opened and tears it down when the device is closed.
-There's little gain in that, and it could be argued that it is even
-surprising because it's not usually done for other devices. Fix the
-imbalance by moving the debugfs creation and teardown to the driver's
-->probe() and ->remove() implementations instead.
+The fstest/generic/475 followed by 476 can trigger a crash that
+manifests as a slab corruption caused by accessing the freed kthread
+structure by a wake up function. Sample trace:
 
-Note that the ring descriptors cannot be read while the interface is
-down, so make sure to return an empty file when the descriptors_status
-debugfs file is read.
+[ 5657.077612] BUG: unable to handle kernel NULL pointer dereference at 00000000000000cc
+[ 5657.079432] PGD 1c57a067 P4D 1c57a067 PUD da10067 PMD 0
+[ 5657.080661] Oops: 0000 [#1] PREEMPT SMP
+[ 5657.081592] CPU: 1 PID: 5157 Comm: fsstress Tainted: G        W         4.19.0-rc8-default+ #323
+[ 5657.083703] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.11.2-0-gf9626cc-prebuilt.qemu-project.org 04/01/2014
+[ 5657.086577] RIP: 0010:shrink_page_list+0x2f9/0xe90
+[ 5657.091937] RSP: 0018:ffffb5c745c8f728 EFLAGS: 00010287
+[ 5657.092953] RAX: 0000000000000074 RBX: ffffb5c745c8f830 RCX: 0000000000000000
+[ 5657.094590] RDX: 0000000000000000 RSI: 0000000000000001 RDI: ffff9a8747fdf3d0
+[ 5657.095987] RBP: ffffb5c745c8f9e0 R08: 0000000000000000 R09: 0000000000000000
+[ 5657.097159] R10: ffff9a8747fdf5e8 R11: 0000000000000000 R12: ffffb5c745c8f788
+[ 5657.098513] R13: ffff9a877f6ff2c0 R14: ffff9a877f6ff2c8 R15: dead000000000200
+[ 5657.099689] FS:  00007f948d853b80(0000) GS:ffff9a877d600000(0000) knlGS:0000000000000000
+[ 5657.101032] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 5657.101953] CR2: 00000000000000cc CR3: 00000000684bd000 CR4: 00000000000006e0
+[ 5657.103159] Call Trace:
+[ 5657.103776]  shrink_inactive_list+0x194/0x410
+[ 5657.104671]  shrink_node_memcg.constprop.84+0x39a/0x6a0
+[ 5657.105750]  shrink_node+0x62/0x1c0
+[ 5657.106529]  try_to_free_pages+0x1a4/0x500
+[ 5657.107408]  __alloc_pages_slowpath+0x2c9/0xb20
+[ 5657.108418]  __alloc_pages_nodemask+0x268/0x2b0
+[ 5657.109348]  kmalloc_large_node+0x37/0x90
+[ 5657.110205]  __kmalloc_node+0x236/0x310
+[ 5657.111014]  kvmalloc_node+0x3e/0x70
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Acked-by: Jose Abreu <joabreu@synopsys.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 30928e9baac2 ("btrfs: don't run delayed_iputs in commit")
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ add trace ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- .../net/ethernet/stmicro/stmmac/stmmac_main.c | 23 +++++++++++--------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ fs/btrfs/disk-io.c | 51 ++++++++++++++--------------------------------
+ 1 file changed, 15 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 0f85e540001ff..f4df9ab0aed5f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2530,12 +2530,6 @@ static int stmmac_hw_setup(struct net_device *dev, bool init_ptp)
- 			netdev_warn(priv->dev, "PTP init failed\n");
- 	}
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index e0bdc0c902e44..813834552aa10 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -1688,9 +1688,8 @@ static int cleaner_kthread(void *arg)
+ 	struct btrfs_root *root = arg;
+ 	struct btrfs_fs_info *fs_info = root->fs_info;
+ 	int again;
+-	struct btrfs_trans_handle *trans;
  
--#ifdef CONFIG_DEBUG_FS
--	ret = stmmac_init_fs(dev);
--	if (ret < 0)
--		netdev_warn(priv->dev, "%s: failed debugFS registration\n",
--			    __func__);
--#endif
- 	priv->tx_lpi_timer = STMMAC_DEFAULT_TWT_LS;
+-	do {
++	while (1) {
+ 		again = 0;
  
- 	if ((priv->use_riwt) && (priv->hw->dma->rx_watchdog)) {
-@@ -2729,10 +2723,6 @@ static int stmmac_release(struct net_device *dev)
- 
- 	netif_carrier_off(dev);
- 
--#ifdef CONFIG_DEBUG_FS
--	stmmac_exit_fs(dev);
--#endif
+ 		/* Make the cleaner go to sleep early. */
+@@ -1739,42 +1738,16 @@ static int cleaner_kthread(void *arg)
+ 		 */
+ 		btrfs_delete_unused_bgs(fs_info);
+ sleep:
++		if (kthread_should_park())
++			kthread_parkme();
++		if (kthread_should_stop())
++			return 0;
+ 		if (!again) {
+ 			set_current_state(TASK_INTERRUPTIBLE);
+-			if (!kthread_should_stop())
+-				schedule();
++			schedule();
+ 			__set_current_state(TASK_RUNNING);
+ 		}
+-	} while (!kthread_should_stop());
 -
- 	stmmac_release_ptp(priv);
- 
- 	return 0;
-@@ -3839,6 +3829,9 @@ static int stmmac_sysfs_ring_read(struct seq_file *seq, void *v)
- 	u32 tx_count = priv->plat->tx_queues_to_use;
- 	u32 queue;
- 
-+	if ((dev->flags & IFF_UP) == 0)
-+		return 0;
-+
- 	for (queue = 0; queue < rx_count; queue++) {
- 		struct stmmac_rx_queue *rx_q = &priv->rx_queue[queue];
- 
-@@ -4310,6 +4303,13 @@ int stmmac_dvr_probe(struct device *device,
- 		goto error_netdev_register;
+-	/*
+-	 * Transaction kthread is stopped before us and wakes us up.
+-	 * However we might have started a new transaction and COWed some
+-	 * tree blocks when deleting unused block groups for example. So
+-	 * make sure we commit the transaction we started to have a clean
+-	 * shutdown when evicting the btree inode - if it has dirty pages
+-	 * when we do the final iput() on it, eviction will trigger a
+-	 * writeback for it which will fail with null pointer dereferences
+-	 * since work queues and other resources were already released and
+-	 * destroyed by the time the iput/eviction/writeback is made.
+-	 */
+-	trans = btrfs_attach_transaction(root);
+-	if (IS_ERR(trans)) {
+-		if (PTR_ERR(trans) != -ENOENT)
+-			btrfs_err(fs_info,
+-				  "cleaner transaction attach returned %ld",
+-				  PTR_ERR(trans));
+-	} else {
+-		int ret;
+-
+-		ret = btrfs_commit_transaction(trans);
+-		if (ret)
+-			btrfs_err(fs_info,
+-				  "cleaner open transaction commit returned %d",
+-				  ret);
  	}
+-
+-	return 0;
+ }
  
-+#ifdef CONFIG_DEBUG_FS
-+	ret = stmmac_init_fs(ndev);
-+	if (ret < 0)
-+		netdev_warn(priv->dev, "%s: failed debugFS registration\n",
-+			    __func__);
-+#endif
-+
- 	return ret;
+ static int transaction_kthread(void *arg)
+@@ -3713,6 +3686,13 @@ void close_ctree(struct btrfs_fs_info *fs_info)
+ 	int ret;
  
- error_netdev_register:
-@@ -4343,6 +4343,9 @@ int stmmac_dvr_remove(struct device *dev)
+ 	set_bit(BTRFS_FS_CLOSING_START, &fs_info->flags);
++	/*
++	 * We don't want the cleaner to start new transactions, add more delayed
++	 * iputs, etc. while we're closing. We can't use kthread_stop() yet
++	 * because that frees the task_struct, and the transaction kthread might
++	 * still try to wake up the cleaner.
++	 */
++	kthread_park(fs_info->cleaner_kthread);
  
- 	netdev_info(priv->dev, "%s: removing driver", __func__);
+ 	/* wait for the qgroup rescan worker to stop */
+ 	btrfs_qgroup_wait_for_completion(fs_info, false);
+@@ -3740,9 +3720,8 @@ void close_ctree(struct btrfs_fs_info *fs_info)
  
-+#ifdef CONFIG_DEBUG_FS
-+	stmmac_exit_fs(ndev);
-+#endif
- 	stmmac_stop_all_dma(priv);
+ 	if (!sb_rdonly(fs_info->sb)) {
+ 		/*
+-		 * If the cleaner thread is stopped and there are
+-		 * block groups queued for removal, the deletion will be
+-		 * skipped when we quit the cleaner thread.
++		 * The cleaner kthread is stopped, so do one final pass over
++		 * unused block groups.
+ 		 */
+ 		btrfs_delete_unused_bgs(fs_info);
  
- 	priv->hw->mac->set_mac(priv->ioaddr, false);
 -- 
 2.20.1
 
