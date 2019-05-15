@@ -2,219 +2,162 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09538C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 22:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E51C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 22:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB0942084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 22:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD7320873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 22:26:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kASEZCAm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726265AbfEOWVI (ORCPT
+        id S1726342AbfEOW0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 18:21:08 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34690 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbfEOWVH (ORCPT
+        Wed, 15 May 2019 18:26:32 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39182 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfEOW0b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 18:21:07 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gportay)
-        with ESMTPSA id 523AA283E7A
-From:   =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        kernel@collabora.com,
-        =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>
-Subject: [PATCH v2] phy: rockchip-inno-usb2: allow to force the B-Device Session Valid bit.
-Date:   Wed, 15 May 2019 18:20:50 -0400
-Message-Id: <20190515222050.15075-1-gael.portay@collabora.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 15 May 2019 18:26:31 -0400
+Received: by mail-lj1-f195.google.com with SMTP id a10so1246705ljf.6;
+        Wed, 15 May 2019 15:26:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BI+5XxI12X2lRwb6h4wr8dsiBHIzz/BpYGz/CVy4Mc4=;
+        b=kASEZCAmJ6x7vfVCdxHXiPm2z4vZO3NkJuKAjvUA4di/S3kmxI7yJcUadArWTSGKpL
+         flpaOZvsU32pP/7Oupuu67XHJecRHcSY8W+sbK1yM63am8jUQPDBuD9eUhQAUinAZkoO
+         0ctD9R6ltTVnBaCyZcGERS7/qb08y+XNnSgSR9v7cAQi5VM9uAH3wQ23CkZ0vF2t8uN7
+         e2AeHm7U0VtIm8kbJHlpFpq3m/yr7Zj7A/w3OoAuI8ZhqlI/AoQt9ngJ9v8JZBK5zbEH
+         IP1yJo+yzcp+AqBlXM6uehBDbaaXDeWxGdYS3Gh7U/q2fNR5yHdFO0hmN0snP4NBVZjS
+         KBVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BI+5XxI12X2lRwb6h4wr8dsiBHIzz/BpYGz/CVy4Mc4=;
+        b=AKg3+9EhVTa+myoCRaoB3taF2DVC8EAydscC6qA6IYh8JzjUiBCIbHfEUgYKeup8L0
+         LpioMgRzlKcMEBxhbPOdbRNnbDUvcIcYk6Vn7GU7SOpzc8Y685xtcZJOwoNlAz6SnSiw
+         pklFThQkBLr13VCurOaI/pYCEdYWfTJKT17xsHxzJSNtEoMTpkaZpGecd+HfMW0ySQQN
+         devAxSaRVU23xaSlBR/0din7+hhK7ENyBq3Xo8F6RbaZnVg45jX6FlBitUI+FuXjzjdo
+         kZqdJr/9OL5ktsIi13o2CgzmhbhTuI4M8XJAJhc4cNkOnTC9JMWxLqlpH7BoY1miJfPx
+         YMsg==
+X-Gm-Message-State: APjAAAXhWr09sK8CXnsZ1xT3GJ9KbJicW3pAbt4h8qJ/LzLEu7+8mPRq
+        fd6hY2nDCMLEplIai6UvMhCrwYdnq3TQIVbLag==
+X-Google-Smtp-Source: APXvYqy4NdkTYy5zjAt5CzvxBa9Vv7mWMfLF8QYKz17MP7z6QNLaJDiFFildHcyL0EcxI/paLqlXCK7gCtFfTQHdphI=
+X-Received: by 2002:a2e:994:: with SMTP id 142mr13721967ljj.192.1557959189767;
+ Wed, 15 May 2019 15:26:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <1557954545-17831-1-git-send-email-longli@linuxonhyperv.com> <1557954545-17831-2-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1557954545-17831-2-git-send-email-longli@linuxonhyperv.com>
+From:   Pavel Shilovsky <piastryyy@gmail.com>
+Date:   Wed, 15 May 2019 15:26:18 -0700
+Message-ID: <CAKywueSxXB3av+4qhi07u2VCMmRPxXTiFBHc4kt5gdRQZQTJXQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] cifs: Allocate memory for all iovs in smb2_ioctl
+To:     Long Li <longli@microsoft.com>
+Cc:     Steve French <sfrench@samba.org>,
+        linux-cifs <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+=D1=81=D1=80, 15 =D0=BC=D0=B0=D1=8F 2019 =D0=B3. =D0=B2 14:10, <longli@linu=
+xonhyperv.com>:
+>
+> From: Long Li <longli@microsoft.com>
+>
+> An IOCTL uses up to 2 iovs. The 1st iov is the command itself, the 2nd io=
+v is
+> optional data for that command. The 1st iov is always allocated on the he=
+ap
+> but the 2nd iov may point to a variable on the stack. This will trigger a=
+n
+> error when passing the 2nd iov for RDMA I/O.
+>
+> Fix this by allocating a buffer for the 2nd iov.
+>
+> Signed-off-by: Long Li <longli@microsoft.com>
+> ---
+>  fs/cifs/smb2pdu.c | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
+> index 29f011d8d8e2..710ceb875161 100644
+> --- a/fs/cifs/smb2pdu.c
+> +++ b/fs/cifs/smb2pdu.c
+> @@ -2538,11 +2538,25 @@ SMB2_ioctl_init(struct cifs_tcon *tcon, struct sm=
+b_rqst *rqst,
+>         struct kvec *iov =3D rqst->rq_iov;
+>         unsigned int total_len;
+>         int rc;
+> +       char *in_data_buf;
+>
+>         rc =3D smb2_plain_req_init(SMB2_IOCTL, tcon, (void **) &req, &tot=
+al_len);
+>         if (rc)
+>                 return rc;
+>
+> +       if (indatalen) {
+> +               /*
+> +                * indatalen is usually small at a couple of bytes max, s=
+o
+> +                * just allocate through generic pool
+> +                */
+> +               in_data_buf =3D kmalloc(indatalen, GFP_NOFS);
+> +               if (!in_data_buf) {
+> +                       cifs_small_buf_release(req);
+> +                       return -ENOMEM;
+> +               }
+> +               memcpy(in_data_buf, in_data, indatalen);
+> +       }
+> +
+>         req->CtlCode =3D cpu_to_le32(opcode);
+>         req->PersistentFileId =3D persistent_fid;
+>         req->VolatileFileId =3D volatile_fid;
+> @@ -2563,7 +2577,7 @@ SMB2_ioctl_init(struct cifs_tcon *tcon, struct smb_=
+rqst *rqst,
+>                        cpu_to_le32(offsetof(struct smb2_ioctl_req, Buffer=
+));
+>                 rqst->rq_nvec =3D 2;
+>                 iov[0].iov_len =3D total_len - 1;
+> -               iov[1].iov_base =3D in_data;
+> +               iov[1].iov_base =3D in_data_buf;
+>                 iov[1].iov_len =3D indatalen;
+>         } else {
+>                 rqst->rq_nvec =3D 1;
+> @@ -2605,8 +2619,11 @@ SMB2_ioctl_init(struct cifs_tcon *tcon, struct smb=
+_rqst *rqst,
+>  void
+>  SMB2_ioctl_free(struct smb_rqst *rqst)
+>  {
+> -       if (rqst && rqst->rq_iov)
+> +       if (rqst && rqst->rq_iov) {
+>                 cifs_small_buf_release(rqst->rq_iov[0].iov_base); /* requ=
+est */
+> +               if (rqst->rq_iov[1].iov_len)
+> +                       kfree(rqst->rq_iov[1].iov_base);
+> +       }
+>  }
+>
+>
+> --
+> 2.17.1
+>
 
-The OTG disconnection event is generated after the presence/absence of
-an ID connection, but some platforms don't have the ID pin connected, so
-the event is not generated. In such case, for detecting the
-disconnection event, we can get the cable state from an extcon driver.
-We need, though, to force to set the B-Device Session Valid bit on the
-PHY to have the device respond to the setup address. Otherwise, the
-following error is shown:
+Looks correct.
 
-    usb 2-2: Device not responding to setup address.
-    usb 2-2: device not accepting address 14, error -71
-    usb usb2-port2: unable to enumerate USB device
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 
-The patch tells the PHY to force the B-Device Session Valid bit when the
-OTG role is device and clear that bit if the OTG role is host, when an
-extcon is available.
-
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Signed-off-by: Gaël PORTAY <gael.portay@collabora.com>
----
-
-Hi all,
-
-The main purpose of this patch is have the Type-C port on the Samsung
-Chromebook Plus work as a device or in OTG mode.
-
-That patch was originally a part of that patchset[1]; all other patches
-was merged recently in master.
-
-The patch was tested on a Samsung Chromebook Plus by configuring one
-port to work as device, configure a cdc ethernet gadget and communicate
-via ethernet gadget my workstation with the chromebook through a usb-a
-to type-c cable.
-
+--
 Best regards,
-Gaël
-
-[1]: https://lkml.org/lkml/2018/8/15/141
-
-Changes since v1:
- - [PATCH 3/4] Remove introduction of dt property "rockchip,force-bvalid"
-               and replace cable state using extcon instead (if set).
-
- drivers/phy/rockchip/phy-rockchip-inno-usb2.c | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
-
-diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-index ba07121c3eff..5e9d50b5ae16 100644
---- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-+++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-@@ -125,6 +125,7 @@ struct rockchip_chg_det_reg {
-  * @bvalid_det_en: vbus valid rise detection enable register.
-  * @bvalid_det_st: vbus valid rise detection status register.
-  * @bvalid_det_clr: vbus valid rise detection clear register.
-+ * @bvalid_session: force B-device session valid register.
-  * @ls_det_en: linestate detection enable register.
-  * @ls_det_st: linestate detection state register.
-  * @ls_det_clr: linestate detection clear register.
-@@ -138,6 +139,7 @@ struct rockchip_usb2phy_port_cfg {
- 	struct usb2phy_reg	bvalid_det_en;
- 	struct usb2phy_reg	bvalid_det_st;
- 	struct usb2phy_reg	bvalid_det_clr;
-+	struct usb2phy_reg	bvalid_session;
- 	struct usb2phy_reg	ls_det_en;
- 	struct usb2phy_reg	ls_det_st;
- 	struct usb2phy_reg	ls_det_clr;
-@@ -169,6 +171,7 @@ struct rockchip_usb2phy_cfg {
-  * @port_id: flag for otg port or host port.
-  * @suspended: phy suspended flag.
-  * @vbus_attached: otg device vbus status.
-+ * @force_bvalid: force the control of the B-device session valid bit.
-  * @bvalid_irq: IRQ number assigned for vbus valid rise detection.
-  * @ls_irq: IRQ number assigned for linestate detection.
-  * @otg_mux_irq: IRQ number which multiplex otg-id/otg-bvalid/linestate
-@@ -187,6 +190,7 @@ struct rockchip_usb2phy_port {
- 	unsigned int	port_id;
- 	bool		suspended;
- 	bool		vbus_attached;
-+	bool		force_bvalid;
- 	int		bvalid_irq;
- 	int		ls_irq;
- 	int		otg_mux_irq;
-@@ -553,6 +557,13 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
- 	switch (rport->state) {
- 	case OTG_STATE_UNDEFINED:
- 		rport->state = OTG_STATE_B_IDLE;
-+		if (rport->force_bvalid) {
-+			property_enable(rphy->grf,
-+					&rport->port_cfg->bvalid_session,
-+					true);
-+			dev_dbg(&rport->phy->dev,
-+				"set the B-Device Session Valid\n");
-+		}
- 		if (!vbus_attach)
- 			rockchip_usb2phy_power_off(rport->phy);
- 		/* fall through */
-@@ -560,6 +571,14 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
- 		if (extcon_get_state(rphy->edev, EXTCON_USB_HOST) > 0) {
- 			dev_dbg(&rport->phy->dev, "usb otg host connect\n");
- 			rport->state = OTG_STATE_A_HOST;
-+			/* When leaving device mode force end the session */
-+			if (rport->force_bvalid) {
-+				property_enable(rphy->grf,
-+					&rport->port_cfg->bvalid_session,
-+					false);
-+				dev_dbg(&rport->phy->dev,
-+					"clear the B-Device Session Valid\n");
-+			}
- 			rockchip_usb2phy_power_on(rport->phy);
- 			return;
- 		} else if (vbus_attach) {
-@@ -634,6 +653,14 @@ static void rockchip_usb2phy_otg_sm_work(struct work_struct *work)
- 		if (extcon_get_state(rphy->edev, EXTCON_USB_HOST) == 0) {
- 			dev_dbg(&rport->phy->dev, "usb otg host disconnect\n");
- 			rport->state = OTG_STATE_B_IDLE;
-+			/* When leaving host mode force start the session */
-+			if (rport->force_bvalid) {
-+				property_enable(rphy->grf,
-+					&rport->port_cfg->bvalid_session,
-+					true);
-+				dev_dbg(&rport->phy->dev,
-+					"set the B-Device Session Valid\n");
-+			}
- 			rockchip_usb2phy_power_off(rport->phy);
- 		}
- 		break;
-@@ -1016,6 +1043,28 @@ static int rockchip_usb2phy_otg_port_init(struct rockchip_usb2phy *rphy,
- 	INIT_DELAYED_WORK(&rport->chg_work, rockchip_chg_detect_work);
- 	INIT_DELAYED_WORK(&rport->otg_sm_work, rockchip_usb2phy_otg_sm_work);
- 
-+	/*
-+	 * Some platforms doesn't have the ID pin connected to the phy, hence
-+	 * the OTD ID event is not generated, but in some cases we can get the
-+	 * cable state from an extcon driver. In such case we can force to set
-+	 * the B-Device Session Valid bit on the PHY to have the device working
-+	 * as a OTG.
-+	 */
-+	if (rphy->edev) {
-+		/*
-+		 * Check if bvalid_session register is set in the structure
-+		 * rockchip_usb2phy_cfg for this SoC.
-+		 */
-+		if (rport->port_cfg->bvalid_session.offset == 0x0) {
-+			rport->force_bvalid = false;
-+			dev_err(rphy->dev,
-+				"cannot force B-device session, the register is not set for that SoC\n");
-+		} else {
-+			rport->force_bvalid = true;
-+			dev_info(rphy->dev, "force B-device session enabled\n");
-+		}
-+	}
-+
- 	/*
- 	 * Some SoCs use one interrupt with otg-id/otg-bvalid/linestate
- 	 * interrupts muxed together, so probe the otg-mux interrupt first,
-@@ -1338,6 +1387,7 @@ static const struct rockchip_usb2phy_cfg rk3399_phy_cfgs[] = {
- 				.bvalid_det_en	= { 0xe3c0, 3, 3, 0, 1 },
- 				.bvalid_det_st	= { 0xe3e0, 3, 3, 0, 1 },
- 				.bvalid_det_clr	= { 0xe3d0, 3, 3, 0, 1 },
-+				.bvalid_session = { 0x4498, 4, 4, 0, 1 },
- 				.utmi_avalid	= { 0xe2ac, 7, 7, 0, 1 },
- 				.utmi_bvalid	= { 0xe2ac, 12, 12, 0, 1 },
- 			},
-@@ -1373,6 +1423,7 @@ static const struct rockchip_usb2phy_cfg rk3399_phy_cfgs[] = {
- 				.bvalid_det_en  = { 0xe3c0, 8, 8, 0, 1 },
- 				.bvalid_det_st  = { 0xe3e0, 8, 8, 0, 1 },
- 				.bvalid_det_clr = { 0xe3d0, 8, 8, 0, 1 },
-+				.bvalid_session = { 0x4518, 4, 4, 0, 1 },
- 				.utmi_avalid	= { 0xe2ac, 10, 10, 0, 1 },
- 				.utmi_bvalid    = { 0xe2ac, 16, 16, 0, 1 },
- 			},
--- 
-2.21.0
-
+Pavel Shilovsky
