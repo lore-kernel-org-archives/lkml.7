@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2F9C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B38C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 015932053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E58832053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920095;
-	bh=okYy+GU6/N0t4Tvh74P9xri3NwBQ8lf9DQZpI4Zyqi4=;
+	s=default; t=1557920106;
+	bh=EEptWLvXtcTT+wCyIiDf9pjsHOcJnWWtsF9TgBhjmb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jDl1R6zMesjc+PdVpB5czHm/JSnn0fy468vQUwepLvjJySiHUP/bivy2JKXnCndNM
-	 Ps1HdxZDMxaVJEbqVFyTcVO/1swnvfGlStCCiTwM+kqPnTzv754Ve0T4ysuVc2sRCE
-	 dqFnXie/d93IRbqd0jZUyu7PUO+6Fax3aBpTp16A=
+	b=hHQpPbL0zewJcDYsKdRbMJvxsiRXPRL7vfGWaZp9V5wcAVFL0KqL4TuIoxq570zWn
+	 PQe8QoUJDSSHEiPcOQcPYXdpKR65D52SpDo6UZGuyIGQjPLlIruqE1mSefd7OuXEjb
+	 m/2YrXCPaUttwsFjLWVGvZbdu62Vzrfuie/AhgnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733061AbfEOLey (ORCPT
+        id S1733018AbfEOLfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:34:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45938 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:35:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732773AbfEOLd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:33:57 -0400
+        id S1732859AbfEOLdu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:33:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 602BA2053B;
-        Wed, 15 May 2019 11:33:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 669B72084A;
+        Wed, 15 May 2019 11:33:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557920036;
-        bh=okYy+GU6/N0t4Tvh74P9xri3NwBQ8lf9DQZpI4Zyqi4=;
+        s=default; t=1557920028;
+        bh=EEptWLvXtcTT+wCyIiDf9pjsHOcJnWWtsF9TgBhjmb0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Obk+UDVriScmBmqtTQTV2Sb/skIPxEf668Cyzc4SIYowHRbDTJjiHYB/fVMuoZr0y
-         fHQs116BmFOJecewyPb3t28xeqcx5RFxJ5Wzev+tHrIbwrq4CwnpJ3un3o8T6csjVY
-         xuA/POvZ2dJmuMAuG06dqhT8cfMs5Fny5qnoAkW4=
+        b=TAw8YA8GGNnVwHe0JF4s/N7eCdBsZ7JAqZg49Us0sP66UrzkrSSk177J4GKiyYdRz
+         dDKL8Jw1qzvRwdjttDjh1NfJdLiQd6a/7oUMuDdoSPac3874fyUVC9vqyvunQapckg
+         AstAlQi972TjBuFL7UuwdZSMagPq597i2Fnd1RJw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Timur Tabi <timur@freescale.com>,
-        Mihai Caraman <mihai.caraman@freescale.com>,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 37/46] drivers/virt/fsl_hypervisor.c: dereferencing error pointers in ioctl
-Date:   Wed, 15 May 2019 12:57:01 +0200
-Message-Id: <20190515090627.583258620@linuxfoundation.org>
+        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 5.1 46/46] f2fs: Fix use of number of devices
+Date:   Wed, 15 May 2019 12:57:10 +0200
+Message-Id: <20190515090629.749479039@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -63,104 +59,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Damien Le Moal <damien.lemoal@wdc.com>
 
-commit c8ea3663f7a8e6996d44500ee818c9330ac4fd88 upstream.
+commit 0916878da355650d7e77104a7ac0fa1784eca852 upstream.
 
-strndup_user() returns error pointers on error, and then in the error
-handling we pass the error pointers to kfree().  It will cause an Oops.
+For a single device mount using a zoned block device, the zone
+information for the device is stored in the sbi->devs single entry
+array and sbi->s_ndevs is set to 1. This differs from a single device
+mount using a regular block device which does not allocate sbi->devs
+and sets sbi->s_ndevs to 0.
 
-Link: http://lkml.kernel.org/r/20181218082003.GD32567@kadam
-Fixes: 6db7199407ca ("drivers/virt: introduce Freescale hypervisor management driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Timur Tabi <timur@freescale.com>
-Cc: Mihai Caraman <mihai.caraman@freescale.com>
-Cc: Kumar Gala <galak@kernel.crashing.org>
+However, sbi->s_devs == 0 condition is used throughout the code to
+differentiate a single device mount from a multi-device mount where
+sbi->s_ndevs is always larger than 1. This results in problems with
+single zoned block device volumes as these are treated as multi-device
+mounts but do not have the start_blk and end_blk information set. One
+of the problem observed is skipping of zone discard issuing resulting in
+write commands being issued to full zones or unaligned to a zone write
+pointer.
+
+Fix this problem by simply treating the cases sbi->s_ndevs == 0 (single
+regular block device mount) and sbi->s_ndevs == 1 (single zoned block
+device mount) in the same manner. This is done by introducing the
+helper function f2fs_is_multi_device() and using this helper in place
+of direct tests of sbi->s_ndevs value, improving code readability.
+
+Fixes: 7bb3a371d199 ("f2fs: Fix zoned block device support")
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/virt/fsl_hypervisor.c |   26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ fs/f2fs/data.c    |   17 +++++++++++------
+ fs/f2fs/f2fs.h    |   13 ++++++++++++-
+ fs/f2fs/file.c    |    2 +-
+ fs/f2fs/gc.c      |    2 +-
+ fs/f2fs/segment.c |   13 +++++++------
+ 5 files changed, 32 insertions(+), 15 deletions(-)
 
---- a/drivers/virt/fsl_hypervisor.c
-+++ b/drivers/virt/fsl_hypervisor.c
-@@ -331,8 +331,8 @@ static long ioctl_dtprop(struct fsl_hv_i
- 	struct fsl_hv_ioctl_prop param;
- 	char __user *upath, *upropname;
- 	void __user *upropval;
--	char *path = NULL, *propname = NULL;
--	void *propval = NULL;
-+	char *path, *propname;
-+	void *propval;
- 	int ret = 0;
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -220,12 +220,14 @@ struct block_device *f2fs_target_device(
+ 	struct block_device *bdev = sbi->sb->s_bdev;
+ 	int i;
  
- 	/* Get the parameters from the user. */
-@@ -344,32 +344,30 @@ static long ioctl_dtprop(struct fsl_hv_i
- 	upropval = (void __user *)(uintptr_t)param.propval;
- 
- 	path = strndup_user(upath, FH_DTPROP_MAX_PATHLEN);
--	if (IS_ERR(path)) {
--		ret = PTR_ERR(path);
--		goto out;
--	}
-+	if (IS_ERR(path))
-+		return PTR_ERR(path);
- 
- 	propname = strndup_user(upropname, FH_DTPROP_MAX_PATHLEN);
- 	if (IS_ERR(propname)) {
- 		ret = PTR_ERR(propname);
--		goto out;
-+		goto err_free_path;
- 	}
- 
- 	if (param.proplen > FH_DTPROP_MAX_PROPLEN) {
- 		ret = -EINVAL;
--		goto out;
-+		goto err_free_propname;
- 	}
- 
- 	propval = kmalloc(param.proplen, GFP_KERNEL);
- 	if (!propval) {
- 		ret = -ENOMEM;
--		goto out;
-+		goto err_free_propname;
- 	}
- 
- 	if (set) {
- 		if (copy_from_user(propval, upropval, param.proplen)) {
- 			ret = -EFAULT;
--			goto out;
-+			goto err_free_propval;
- 		}
- 
- 		param.ret = fh_partition_set_dtprop(param.handle,
-@@ -388,7 +386,7 @@ static long ioctl_dtprop(struct fsl_hv_i
- 			if (copy_to_user(upropval, propval, param.proplen) ||
- 			    put_user(param.proplen, &p->proplen)) {
- 				ret = -EFAULT;
--				goto out;
-+				goto err_free_propval;
- 			}
+-	for (i = 0; i < sbi->s_ndevs; i++) {
+-		if (FDEV(i).start_blk <= blk_addr &&
+-					FDEV(i).end_blk >= blk_addr) {
+-			blk_addr -= FDEV(i).start_blk;
+-			bdev = FDEV(i).bdev;
+-			break;
++	if (f2fs_is_multi_device(sbi)) {
++		for (i = 0; i < sbi->s_ndevs; i++) {
++			if (FDEV(i).start_blk <= blk_addr &&
++			    FDEV(i).end_blk >= blk_addr) {
++				blk_addr -= FDEV(i).start_blk;
++				bdev = FDEV(i).bdev;
++				break;
++			}
  		}
  	}
-@@ -396,10 +394,12 @@ static long ioctl_dtprop(struct fsl_hv_i
- 	if (put_user(param.ret, &p->ret))
- 		ret = -EFAULT;
+ 	if (bio) {
+@@ -239,6 +241,9 @@ int f2fs_target_device_index(struct f2fs
+ {
+ 	int i;
  
--out:
--	kfree(path);
-+err_free_propval:
- 	kfree(propval);
-+err_free_propname:
- 	kfree(propname);
-+err_free_path:
-+	kfree(path);
- 
- 	return ret;
++	if (!f2fs_is_multi_device(sbi))
++		return 0;
++
+ 	for (i = 0; i < sbi->s_ndevs; i++)
+ 		if (FDEV(i).start_blk <= blkaddr && FDEV(i).end_blk >= blkaddr)
+ 			return i;
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1366,6 +1366,17 @@ static inline bool time_to_inject(struct
  }
+ #endif
+ 
++/*
++ * Test if the mounted volume is a multi-device volume.
++ *   - For a single regular disk volume, sbi->s_ndevs is 0.
++ *   - For a single zoned disk volume, sbi->s_ndevs is 1.
++ *   - For a multi-device volume, sbi->s_ndevs is always 2 or more.
++ */
++static inline bool f2fs_is_multi_device(struct f2fs_sb_info *sbi)
++{
++	return sbi->s_ndevs > 1;
++}
++
+ /* For write statistics. Suppose sector size is 512 bytes,
+  * and the return value is in kbytes. s is of struct f2fs_sb_info.
+  */
+@@ -3615,7 +3626,7 @@ static inline bool f2fs_force_buffered_i
+ 
+ 	if (f2fs_post_read_required(inode))
+ 		return true;
+-	if (sbi->s_ndevs)
++	if (f2fs_is_multi_device(sbi))
+ 		return true;
+ 	/*
+ 	 * for blkzoned device, fallback direct IO to buffered IO, so
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -2573,7 +2573,7 @@ static int f2fs_ioc_flush_device(struct
+ 							sizeof(range)))
+ 		return -EFAULT;
+ 
+-	if (sbi->s_ndevs <= 1 || sbi->s_ndevs - 1 <= range.dev_num ||
++	if (!f2fs_is_multi_device(sbi) || sbi->s_ndevs - 1 <= range.dev_num ||
+ 			__is_large_section(sbi)) {
+ 		f2fs_msg(sbi->sb, KERN_WARNING,
+ 			"Can't flush %u in %d for segs_per_sec %u != 1\n",
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1346,7 +1346,7 @@ void f2fs_build_gc_manager(struct f2fs_s
+ 	sbi->gc_pin_file_threshold = DEF_GC_FAILED_PINNED_FILES;
+ 
+ 	/* give warm/cold data area from slower device */
+-	if (sbi->s_ndevs && !__is_large_section(sbi))
++	if (f2fs_is_multi_device(sbi) && !__is_large_section(sbi))
+ 		SIT_I(sbi)->last_victim[ALLOC_NEXT] =
+ 				GET_SEGNO(sbi, FDEV(0).end_blk) + 1;
+ }
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -580,7 +580,7 @@ static int submit_flush_wait(struct f2fs
+ 	int ret = 0;
+ 	int i;
+ 
+-	if (!sbi->s_ndevs)
++	if (!f2fs_is_multi_device(sbi))
+ 		return __submit_flush_wait(sbi, sbi->sb->s_bdev);
+ 
+ 	for (i = 0; i < sbi->s_ndevs; i++) {
+@@ -648,7 +648,8 @@ int f2fs_issue_flush(struct f2fs_sb_info
+ 		return ret;
+ 	}
+ 
+-	if (atomic_inc_return(&fcc->queued_flush) == 1 || sbi->s_ndevs > 1) {
++	if (atomic_inc_return(&fcc->queued_flush) == 1 ||
++	    f2fs_is_multi_device(sbi)) {
+ 		ret = submit_flush_wait(sbi, ino);
+ 		atomic_dec(&fcc->queued_flush);
+ 
+@@ -754,7 +755,7 @@ int f2fs_flush_device_cache(struct f2fs_
+ {
+ 	int ret = 0, i;
+ 
+-	if (!sbi->s_ndevs)
++	if (!f2fs_is_multi_device(sbi))
+ 		return 0;
+ 
+ 	for (i = 1; i < sbi->s_ndevs; i++) {
+@@ -1369,7 +1370,7 @@ static int __queue_discard_cmd(struct f2
+ 
+ 	trace_f2fs_queue_discard(bdev, blkstart, blklen);
+ 
+-	if (sbi->s_ndevs) {
++	if (f2fs_is_multi_device(sbi)) {
+ 		int devi = f2fs_target_device_index(sbi, blkstart);
+ 
+ 		blkstart -= FDEV(devi).start_blk;
+@@ -1732,7 +1733,7 @@ static int __f2fs_issue_discard_zone(str
+ 	block_t lblkstart = blkstart;
+ 	int devi = 0;
+ 
+-	if (sbi->s_ndevs) {
++	if (f2fs_is_multi_device(sbi)) {
+ 		devi = f2fs_target_device_index(sbi, blkstart);
+ 		blkstart -= FDEV(devi).start_blk;
+ 	}
+@@ -3089,7 +3090,7 @@ static void update_device_state(struct f
+ 	struct f2fs_sb_info *sbi = fio->sbi;
+ 	unsigned int devidx;
+ 
+-	if (!sbi->s_ndevs)
++	if (!f2fs_is_multi_device(sbi))
+ 		return;
+ 
+ 	devidx = f2fs_target_device_index(sbi, fio->new_blkaddr);
 
 
