@@ -3,110 +3,309 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0108C04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC098C04AB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A776B20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:30:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Stcpfomi"
+	by mail.kernel.org (Postfix) with ESMTP id 7355520862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:30:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557880238;
+	bh=8dwBcKVx/yiIphbK+gHGfSuRWMJUZ85EQgh8x6rQISU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bVuYd5wH92jJj2pvD1llSN4un0YErtvsL5I3Mm17wqu2BVMuplpACeY2MM11/L2ID
+	 8IVpJ6YNiqjgS2q+dxxTLH0l00y+mooc6JHr+kmiAvAOJYB8P5fpQeonoYBk1ER4HY
+	 uwmVqlNm9Y60D1B25RrdT2CVp0MMOcvyzhdlcPy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbfEOAae (ORCPT
+        id S1726923AbfEOAah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:30:34 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:38842 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726834AbfEOAac (ORCPT
+        Tue, 14 May 2019 20:30:37 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:54371 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726834AbfEOAag (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:30:32 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8BD27C0A63;
-        Wed, 15 May 2019 00:30:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1557880222; bh=uh9UA+kPv4V1KqsVc+h+XFlXPK5I/tzW1yJ39f1zSew=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=StcpfomiPaz311LQ+zHrKvFpn1jpoRgQ4U5VvLR5jyW8aGuPJHCeLon0S8wLmgwRg
-         17UCEsHzUm4FZ5jQf6RTYJWY9IlX5thtxG2FTyNia3olPBk/TajOXBDNaJ94AjDbh9
-         od3kqvN9+mrpMqBha1X3hzO2UjSDdfP2tPBrUrOPIy14kL0hjVJL8iAlJr7u0vaHim
-         YwT9Y4z9wFzbRDrUb7iYwztf/v+t08GpH8G1Zmk1QgSVsbTw8pClgy7hZdrE4n5ivR
-         OER2XW28gq8iJUKjK79wAtEI+SumU+qkEqA0l6QQ8v6UqR0GUTZ5SMOwvG8VvNGCFP
-         W7jphfenBauMA==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 93E18A0068;
-        Wed, 15 May 2019 00:30:31 +0000 (UTC)
-Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
- us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 14 May 2019 17:30:04 -0700
-Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
- IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 15 May 2019 06:00:01 +0530
-Received: from vineetg-Latitude-E7450.internal.synopsys.com (10.13.182.230) by
- IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 15 May 2019 06:00:12 +0530
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     <linux-snps-arc@lists.infradead.org>
-CC:     <paltsev@snyopsys.com>, <linux-kernel@vger.kernel.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH 3/9] ARC: mm: do_page_fault refactor #2: remove short lived variable
-Date:   Tue, 14 May 2019 17:29:30 -0700
-Message-ID: <1557880176-24964-4-git-send-email-vgupta@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557880176-24964-1-git-send-email-vgupta@synopsys.com>
-References: <1557880176-24964-1-git-send-email-vgupta@synopsys.com>
+        Tue, 14 May 2019 20:30:36 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id E3E6A258FD;
+        Tue, 14 May 2019 20:30:34 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Tue, 14 May 2019 20:30:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=oy9fP+do3vyKvofGVAe7dSTiTfxgdcAP/usds/7nvVs=; b=JP+QaqoT
+        NLF23ti+RRI/F/R5dfk9jyHYBzgmHBq0OqhzlQQFatkTX3V4WTfhX/r2Aske77+R
+        /+dZPMCbSRmPT5NCDw2v6RM01IPBOWxUSKmlnHOniAmRhf33u3ncC2UTn10z3wYR
+        2PNV4gbj+/7PheLMynou84yp2EmjdpDozbqHnNIHDAJclxBFsyiGvlGb331emtRR
+        5ZEjrRBKBkF28wmKad+tAxLr0qg1bmaWTUx1hQg/aNdHtOYPnE26ovH0C9mFfsRj
+        kB8PLooA12aSlEuclcNlMODJF2A49vjV2E/WSOfj48k3P9D7UbhL2a647DjUNiyl
+        GY1DO5aOsDTw/w==
+X-ME-Sender: <xms:ql3bXExuXOe6jrc3KO387uv9XaRasu3GEPVHbVLCtCu_QJ0B-805aA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrleejgdefiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
+    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
+    epuddvuddrgeegrddvvdefrddvuddunecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
+    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpeej
+X-ME-Proxy: <xmx:ql3bXCBKk3aevk3KdCA7hgq6DoDhtOIMHFSAEiMax3b6tKy9J15rUg>
+    <xmx:ql3bXC3QsN4536DgLs_GV0iyt_B8RGbWyd-D0UXHCa7PYK68ZWuLpw>
+    <xmx:ql3bXGUmb7cU9is45GuEhVkf7kER8mTF6qTi5nT1TJzXN_3jJeQ9aw>
+    <xmx:ql3bXBtswOyVC_2S7Y8smCkXFhlk8b0zMynax8eduOZZj71Pp3wjgA>
+Received: from eros.localdomain (ppp121-44-223-211.bras1.syd2.internode.on.net [121.44.223.211])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 186F010378;
+        Tue, 14 May 2019 20:30:30 -0400 (EDT)
+From:   "Tobin C. Harding" <tobin@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Neil Brown <neilb@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 8/9] docs: filesystems: vfs: Convert spaces to tabs
+Date:   Wed, 15 May 2019 10:29:12 +1000
+Message-Id: <20190515002913.12586-9-tobin@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515002913.12586-1-tobin@kernel.org>
+References: <20190515002913.12586-1-tobin@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.13.182.230]
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compiler will do this anyways, still..
+There are bunch of places with 8 spaces, in preparation for correctly
+indenting all code snippets (during conversion to RST) change these to
+use tabspaces.
 
-No functional change.
+This patch is whitespace only.
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Convert instances of 8 consecutive spaces to a single tabspace.
+
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
 ---
- arch/arc/mm/fault.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ Documentation/filesystems/vfs.txt | 124 +++++++++++++++---------------
+ 1 file changed, 62 insertions(+), 62 deletions(-)
 
-diff --git a/arch/arc/mm/fault.c b/arch/arc/mm/fault.c
-index 94d242740ac5..f1175685d914 100644
---- a/arch/arc/mm/fault.c
-+++ b/arch/arc/mm/fault.c
-@@ -67,23 +67,18 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
- 	struct task_struct *tsk = current;
- 	struct mm_struct *mm = tsk->mm;
- 	int si_code = SEGV_MAPERR;
--	int ret;
- 	vm_fault_t fault;
- 	int write = regs->ecr_cause & ECR_C_PROTV_STORE;  /* ST/EX */
- 	unsigned int flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
+diff --git a/Documentation/filesystems/vfs.txt b/Documentation/filesystems/vfs.txt
+index 43b18bafbc20..489bbdc6a40f 100644
+--- a/Documentation/filesystems/vfs.txt
++++ b/Documentation/filesystems/vfs.txt
+@@ -113,12 +113,12 @@ members are defined:
+ struct file_system_type {
+ 	const char *name;
+ 	int fs_flags;
+-        struct dentry *(*mount) (struct file_system_type *, int,
+-                       const char *, void *);
+-        void (*kill_sb) (struct super_block *);
+-        struct module *owner;
+-        struct file_system_type * next;
+-        struct list_head fs_supers;
++	struct dentry *(*mount) (struct file_system_type *, int,
++		       const char *, void *);
++	void (*kill_sb) (struct super_block *);
++	struct module *owner;
++	struct file_system_type * next;
++	struct list_head fs_supers;
+ 	struct lock_class_key s_lock_key;
+ 	struct lock_class_key s_umount_key;
+ };
+@@ -207,26 +207,26 @@ This describes how the VFS can manipulate the superblock of your
+ filesystem.  As of kernel 2.6.22, the following members are defined:
  
- 	/*
--	 * We fault-in kernel-space virtual memory on-demand. The
--	 * 'reference' page table is init_mm.pgd.
--	 *
- 	 * NOTE! We MUST NOT take any locks for this case. We may
- 	 * be in an interrupt or a critical region, and should
- 	 * only copy the information from the master page table,
- 	 * nothing more.
- 	 */
- 	if (address >= VMALLOC_START && !user_mode(regs)) {
--		ret = handle_kernel_vaddr_fault(address);
--		if (unlikely(ret))
-+		if (unlikely(handle_kernel_vaddr_fault(address)))
- 			goto no_context;
- 		else
- 			return;
+ struct super_operations {
+-        struct inode *(*alloc_inode)(struct super_block *sb);
+-        void (*destroy_inode)(struct inode *);
+-
+-        void (*dirty_inode) (struct inode *, int flags);
+-        int (*write_inode) (struct inode *, int);
+-        void (*drop_inode) (struct inode *);
+-        void (*delete_inode) (struct inode *);
+-        void (*put_super) (struct super_block *);
+-        int (*sync_fs)(struct super_block *sb, int wait);
+-        int (*freeze_fs) (struct super_block *);
+-        int (*unfreeze_fs) (struct super_block *);
+-        int (*statfs) (struct dentry *, struct kstatfs *);
+-        int (*remount_fs) (struct super_block *, int *, char *);
+-        void (*clear_inode) (struct inode *);
+-        void (*umount_begin) (struct super_block *);
+-
+-        int (*show_options)(struct seq_file *, struct dentry *);
+-
+-        ssize_t (*quota_read)(struct super_block *, int, char *, size_t, loff_t);
+-        ssize_t (*quota_write)(struct super_block *, int, const char *, size_t, loff_t);
++	struct inode *(*alloc_inode)(struct super_block *sb);
++	void (*destroy_inode)(struct inode *);
++
++	void (*dirty_inode) (struct inode *, int flags);
++	int (*write_inode) (struct inode *, int);
++	void (*drop_inode) (struct inode *);
++	void (*delete_inode) (struct inode *);
++	void (*put_super) (struct super_block *);
++	int (*sync_fs)(struct super_block *sb, int wait);
++	int (*freeze_fs) (struct super_block *);
++	int (*unfreeze_fs) (struct super_block *);
++	int (*statfs) (struct dentry *, struct kstatfs *);
++	int (*remount_fs) (struct super_block *, int *, char *);
++	void (*clear_inode) (struct inode *);
++	void (*umount_begin) (struct super_block *);
++
++	int (*show_options)(struct seq_file *, struct dentry *);
++
++	ssize_t (*quota_read)(struct super_block *, int, char *, size_t, loff_t);
++	ssize_t (*quota_write)(struct super_block *, int, const char *, size_t, loff_t);
+ 	int (*nr_cached_objects)(struct super_block *);
+ 	void (*free_cached_objects)(struct super_block *, int);
+ };
+@@ -475,7 +475,7 @@ otherwise noted.
+ 	filesystem.
+ 
+ 	May be called in rcu-walk mode (mask & MAY_NOT_BLOCK).  If in rcu-walk
+-        mode, the filesystem must check the permission without blocking or
++	mode, the filesystem must check the permission without blocking or
+ 	storing to the inode.
+ 
+ 	If a situation is encountered that rcu-walk cannot handle, return
+@@ -694,12 +694,12 @@ struct address_space_operations {
+ 	tagged as DIRTY and will pass them to ->writepage.
+ 
+   set_page_dirty: called by the VM to set a page dirty.
+-        This is particularly needed if an address space attaches
+-        private data to a page, and that data needs to be updated when
+-        a page is dirtied.  This is called, for example, when a memory
++	This is particularly needed if an address space attaches
++	private data to a page, and that data needs to be updated when
++	a page is dirtied.  This is called, for example, when a memory
+ 	mapped page gets modified.
+ 	If defined, it should set the PageDirty flag, and the
+-        PAGECACHE_TAG_DIRTY tag in the radix tree.
++	PAGECACHE_TAG_DIRTY tag in the radix tree.
+ 
+   readpages: called by the VM to read pages associated with the address_space
+ 	object.  This is essentially just a vector version of
+@@ -717,7 +717,7 @@ struct address_space_operations {
+ 	storage, then those blocks should be pre-read (if they haven't been
+ 	read already) so that the updated blocks can be written out properly.
+ 
+-        The filesystem must return the locked pagecache page for the specified
++	The filesystem must return the locked pagecache page for the specified
+ 	offset, in *pagep, for the caller to write into.
+ 
+ 	It must be able to cope with short writes (where the length passed to
+@@ -726,21 +726,21 @@ struct address_space_operations {
+ 	flags is a field for AOP_FLAG_xxx flags, described in
+ 	include/linux/fs.h.
+ 
+-        A void * may be returned in fsdata, which then gets passed into
+-        write_end.
++	A void * may be returned in fsdata, which then gets passed into
++	write_end.
+ 
+-        Returns 0 on success; < 0 on failure (which is the error code), in
++	Returns 0 on success; < 0 on failure (which is the error code), in
+ 	which case write_end is not called.
+ 
+   write_end: After a successful write_begin, and data copy, write_end must
+-        be called.  len is the original len passed to write_begin, and copied
+-        is the amount that was able to be copied.
++	be called.  len is the original len passed to write_begin, and copied
++	is the amount that was able to be copied.
+ 
+-        The filesystem must take care of unlocking the page and releasing it
+-        refcount, and updating i_size.
++	The filesystem must take care of unlocking the page and releasing it
++	refcount, and updating i_size.
+ 
+-        Returns < 0 on failure, otherwise the number of bytes (<= 'copied')
+-        that were able to be copied into pagecache.
++	Returns < 0 on failure, otherwise the number of bytes (<= 'copied')
++	that were able to be copied into pagecache.
+ 
+   bmap: called by the VFS to map a logical block offset within object to
+ 	physical block number.  This method is used by the FIBMAP
+@@ -751,7 +751,7 @@ struct address_space_operations {
+ 	are and uses those addresses directly.
+ 
+   invalidatepage: If a page has PagePrivate set, then invalidatepage
+-        will be called when part or all of the page is to be removed
++	will be called when part or all of the page is to be removed
+ 	from the address space.  This generally corresponds to either a
+ 	truncation, punch hole  or a complete invalidation of the address
+ 	space (in the latter case 'offset' will always be 0 and 'length'
+@@ -763,47 +763,47 @@ struct address_space_operations {
+ 	release MUST succeed.
+ 
+   releasepage: releasepage is called on PagePrivate pages to indicate
+-        that the page should be freed if possible.  ->releasepage
+-        should remove any private data from the page and clear the
+-        PagePrivate flag.  If releasepage() fails for some reason, it must
++	that the page should be freed if possible.  ->releasepage
++	should remove any private data from the page and clear the
++	PagePrivate flag.  If releasepage() fails for some reason, it must
+ 	indicate failure with a 0 return value.
+ 	releasepage() is used in two distinct though related cases.  The
+ 	first is when the VM finds a clean page with no active users and
+-        wants to make it a free page.  If ->releasepage succeeds, the
+-        page will be removed from the address_space and become free.
++	wants to make it a free page.  If ->releasepage succeeds, the
++	page will be removed from the address_space and become free.
+ 
+ 	The second case is when a request has been made to invalidate
+-        some or all pages in an address_space.  This can happen
+-        through the fadvise(POSIX_FADV_DONTNEED) system call or by the
+-        filesystem explicitly requesting it as nfs and 9fs do (when
+-        they believe the cache may be out of date with storage) by
+-        calling invalidate_inode_pages2().
++	some or all pages in an address_space.  This can happen
++	through the fadvise(POSIX_FADV_DONTNEED) system call or by the
++	filesystem explicitly requesting it as nfs and 9fs do (when
++	they believe the cache may be out of date with storage) by
++	calling invalidate_inode_pages2().
+ 	If the filesystem makes such a call, and needs to be certain
+-        that all pages are invalidated, then its releasepage will
+-        need to ensure this.  Possibly it can clear the PageUptodate
+-        bit if it cannot free private data yet.
++	that all pages are invalidated, then its releasepage will
++	need to ensure this.  Possibly it can clear the PageUptodate
++	bit if it cannot free private data yet.
+ 
+   freepage: freepage is called once the page is no longer visible in
+-        the page cache in order to allow the cleanup of any private
++	the page cache in order to allow the cleanup of any private
+ 	data.  Since it may be called by the memory reclaimer, it
+ 	should not assume that the original address_space mapping still
+ 	exists, and it should not block.
+ 
+   direct_IO: called by the generic read/write routines to perform
+-        direct_IO - that is IO requests which bypass the page cache
+-        and transfer data directly between the storage and the
+-        application's address space.
++	direct_IO - that is IO requests which bypass the page cache
++	and transfer data directly between the storage and the
++	application's address space.
+ 
+   isolate_page: Called by the VM when isolating a movable non-lru page.
+ 	If page is successfully isolated, VM marks the page as PG_isolated
+ 	via __SetPageIsolated.
+ 
+   migrate_page:  This is used to compact the physical memory usage.
+-        If the VM wants to relocate a page (maybe off a memory card
+-        that is signalling imminent failure) it will pass a new page
++	If the VM wants to relocate a page (maybe off a memory card
++	that is signalling imminent failure) it will pass a new page
+ 	and an old page to this function.  migrate_page should
+ 	transfer any private data across and update any references
+-        that it has to the page.
++	that it has to the page.
+ 
+   putback_page: Called by the VM when isolated page's migration fails.
+ 
 -- 
-2.7.4
+2.21.0
 
