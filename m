@@ -2,147 +2,132 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EDEDC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FF6C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA92E20881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3829720881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:22:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="Iu2i2uh7"
+	dkim=pass (2048-bit key) header.d=mvista-com.20150623.gappssmtp.com header.i=@mvista-com.20150623.gappssmtp.com header.b="uOrgnAPc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfEOQVC (ORCPT
+        id S1726618AbfEOQWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 12:21:02 -0400
-Received: from mail-eopbgr1410124.outbound.protection.outlook.com ([40.107.141.124]:22848
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726212AbfEOQU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 12:20:59 -0400
+        Wed, 15 May 2019 12:22:18 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43867 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbfEOQWR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 12:22:17 -0400
+Received: by mail-ot1-f65.google.com with SMTP id i8so536258oth.10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 09:22:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector1-bp-renesas-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2icqXe3cv8WFRbvp8GOGKnHNXmxAAvE24DOLej3JmCk=;
- b=Iu2i2uh7YhHsIpO/iiTHGbaZ+T4Uu98AfH2TCZXFvyllgYXk9nffdETCzrurbXWiMct85gpevmrEkwHabYag1StTTUUUa3WU6Ra308TM9jR5lvx7ShBsgnyY7GgucEqufwLkQEibgx2z4cMrFQdgD1X7smJwmmXExwoD3cUa2SI=
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com (52.133.163.13) by
- TY1PR01MB1756.jpnprd01.prod.outlook.com (52.133.164.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.22; Wed, 15 May 2019 16:20:51 +0000
-Received: from TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::60bb:89e4:1a58:e901]) by TY1PR01MB1770.jpnprd01.prod.outlook.com
- ([fe80::60bb:89e4:1a58:e901%2]) with mapi id 15.20.1878.024; Wed, 15 May 2019
- 16:20:51 +0000
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Simon Horman <horms@verge.net.au>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        "xu_shunji@hoperun.com" <xu_shunji@hoperun.com>
-Subject: RE: [PATCH 2/2] dt-bindings: arm: renesas: Add HopeRun RZ/G2[M]
- boards
-Thread-Topic: [PATCH 2/2] dt-bindings: arm: renesas: Add HopeRun RZ/G2[M]
- boards
-Thread-Index: AQHVCxOwuYt9Wb4pAkWyz0w1BKilraZsMd8AgAArkjA=
-Date:   Wed, 15 May 2019 16:20:51 +0000
-Message-ID: <TY1PR01MB17709902D813EB99E16FE6D2C0090@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1557920697-18057-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1557920697-18057-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAL_JsqLB+7-x8i=MDpZuW0ebg5BBLJ+Y3gruf40zFSNv8_42Xg@mail.gmail.com>
-In-Reply-To: <CAL_JsqLB+7-x8i=MDpZuW0ebg5BBLJ+Y3gruf40zFSNv8_42Xg@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fabrizio.castro@bp.renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cc953df1-1a6b-42e3-633e-08d6d9514c77
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:TY1PR01MB1756;
-x-ms-traffictypediagnostic: TY1PR01MB1756:
-x-ms-exchange-purlcount: 3
-x-microsoft-antispam-prvs: <TY1PR01MB1756555FC5F0C710E5D70DF7C0090@TY1PR01MB1756.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1013;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(346002)(376002)(396003)(136003)(189003)(199004)(6306002)(86362001)(6436002)(7736002)(52536014)(186003)(68736007)(4326008)(73956011)(66946007)(66556008)(64756008)(66446008)(66476007)(7416002)(55016002)(33656002)(476003)(11346002)(9686003)(305945005)(71190400001)(5660300002)(71200400001)(54906003)(66066001)(25786009)(478600001)(14454004)(81166006)(229853002)(81156014)(26005)(316002)(76116006)(8936002)(6116002)(256004)(3846002)(8676002)(53376002)(53546011)(6506007)(446003)(102836004)(486006)(966005)(2906002)(99286004)(6246003)(74316002)(7696005)(76176011)(53936002)(44832011)(12575105005);DIR:OUT;SFP:1102;SCL:1;SRVR:TY1PR01MB1756;H:TY1PR01MB1770.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: bp.renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: S1FgdMxGTiSUNgu6gXw/lqgGcMlG8CK/I3f7KjMK8GmolVlbSdxoyZavT3AnfaOweqWxUkIEkYuE48TqiI1we+NGHjUBVSI4Cd+WZLW4xcU4LOophQ68f06Ct6pZ5YkDr+a97HXklCdVmfqFwgL3CwfxuCQ44IqaqGeHQzILLNwSxm2N2OACDok+Amy46DAWV8E/tPnw/BBVEtejkagrOC+xcT8LcHc4Sr22nyjfV0S0EJ69qtJLkn4mt662FbLEMQrjLI2PWi3J3UnqN3r9KA7KiK8IjuiHK+IsAzQA/672x2A1zqya45kjE//IQu5slCWkV2fNkabdShGYa1iA/WFlcsobHtRNZ8ITytktAbXyah1r/4QyLsYGCo7I3KTzmLdAiIlN4DSgMnPaPxzEnNdZGJFi28F29yMmlbLHt1E=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=mvista-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WYwUsFSH86jSsfL1qchJ6LUvivM63x63FlzlKbdmfas=;
+        b=uOrgnAPc8uE+qBTcPGAZ/2bMJlapwUBTljMhCFiyEwWUGqnQvxXHV8F+8obCeEJm8s
+         4YEBF0qNhKDuYxgiEBDbbH6EhCxggKc1eEW4sDFugrOG2PktbT5uc67ibB2sLTrcPf+5
+         ZhSA3Ngg82GvDbiMSF0TfjCxvmNMjxxAn2XNp3eOw4nhOFt9CDOK010JZ0FTXf2jMdFR
+         NOlzt+CwucWaXURdPwb34To7dVoBPfvl45gkPIpLbI3iacAWIKZ//joKraLZuIchN8It
+         LQY55M8O5+xi3GZO/972ZZM7qsHCyEvyUDOEBFPoUSvVfj8cTfhWkg7X6MFdUOSrPYNd
+         IzOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WYwUsFSH86jSsfL1qchJ6LUvivM63x63FlzlKbdmfas=;
+        b=SCb+WiBtd1WYDsPAWoheAg3aQ8zk+F6TGCoDaEay460aj4Y6IU/biWamPIk1o4mShz
+         Aud7S/BI2zeCKFNpSaPVZTLQ/B93ScF9vOsQUGFyL6pj8iIxaEa/BQzLAOlLkoht9WfV
+         bNpSXnbBr91aMwYvXL3wb9n9MxvDvockaolTaFtzNrHr8WgTCgV5xb4FL4FK/JDZ7GvO
+         96mpk52Kt8wkytJGMTn0JB1SCYl0Q7rgT61qIP2EzKdrXQuqaNyqLntGpbQmvEvjjv6D
+         hrLzw4uhWzG77dwQ11O7F8nFf8fujwojmlOhssd5qeYPslo8zFEZP+KHSFcVGKPf6Z/H
+         /pdw==
+X-Gm-Message-State: APjAAAW37Zx+MJvBg2KXWPHpmThpWPS4YGMNsHD+Z5Ar1Gutdkefi/C9
+        XcXil6/sO5bk3d1SF5k5zG+ccQJpDtbZMw==
+X-Google-Smtp-Source: APXvYqx9YX6jALD3ezMYYUSQ97jbTW9srhfNABwloH1YvDooZkHcqR7PZkAP4Lndj8fbIzC9xyZS+w==
+X-Received: by 2002:a9d:7657:: with SMTP id o23mr26614794otl.358.1557937334761;
+        Wed, 15 May 2019 09:22:14 -0700 (PDT)
+Received: from minyard.net ([2001:470:b8f6:1b:9c84:ae86:ff6:562c])
+        by smtp.gmail.com with ESMTPSA id r23sm885582otg.49.2019.05.15.09.22.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 May 2019 09:22:13 -0700 (PDT)
+Date:   Wed, 15 May 2019 11:22:12 -0500
+From:   Corey Minyard <cminyard@mvista.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>, minyard@acm.org,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH RT v2] Fix a lockup in wait_for_completion() and friends
+Message-ID: <20190515162212.GB6050@minyard.net>
+Reply-To: cminyard@mvista.com
+References: <20190508205728.25557-1-minyard@acm.org>
+ <20190509161925.kul66w54wpjcinuc@linutronix.de>
+ <20190514084356.GJ2589@hirez.programming.kicks-ass.net>
+ <20190514091219.nesriqe7qplk3476@linutronix.de>
+ <20190514121350.GA6050@minyard.net>
+ <20190514153647.wri6ivffbq7r263y@linutronix.de>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc953df1-1a6b-42e3-633e-08d6d9514c77
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 16:20:51.6323
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY1PR01MB1756
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190514153647.wri6ivffbq7r263y@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gUm9iLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgZmVlZGJhY2shDQoNCj4gRnJvbTogUm9i
-IEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz4NCj4gU2VudDogMTUgTWF5IDIwMTkgMTQ6NDIN
-Cj4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzJdIGR0LWJpbmRpbmdzOiBhcm06IHJlbmVzYXM6IEFk
-ZCBIb3BlUnVuIFJaL0cyW01dIGJvYXJkcw0KPiANCj4gT24gV2VkLCBNYXkgMTUsIDIwMTkgYXQg
-Njo0NSBBTSBGYWJyaXppbyBDYXN0cm8NCj4gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNv
-bT4gd3JvdGU6DQo+ID4NCj4gPiBUaGlzIHBhdGNoIGFkZHMgYm9hcmQgSGlIb3BlIFJaL0cyTSAo
-dGhlIG1haW4gYm9hcmQsIHBvd2VyZWQgYnkNCj4gPiB0aGUgUjhBNzc0QTEpIGFuZCBib2FyZCBI
-aUhvcGUgUlovRzIgRVggKHRoZSBleHBhbnNpb24gYm9hcmQNCj4gPiB0aGF0IHNpdHMgb24gdG9w
-IG9mIHRoZSBIaUhvcGUgUlovRzJNKS4gQm90aCBib2FyZHMgYXJlIG1hZGUNCj4gPiBieSBKaWFu
-Z3N1IEhvcGVSdW4gU29mdHdhcmUgQ28uLCBMdGQuIChhLmsuYS4gSG9wZVJ1bikuDQo+ID4NCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5l
-c2FzLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogQ2hyaXMgUGF0ZXJzb24gPENocmlzLlBhdGVyc29u
-MkByZW5lc2FzLmNvbT4NCj4gPg0KPiA+IC0tLQ0KPiA+IFVzZWZ1bCBsaW5rczoNCj4gPiBodHRw
-Oi8vaGlob3BlLm9yZy9wcm9kdWN0L2RldGFpbC9yemcyDQo+ID4gaHR0cHM6Ly9pdGVtLnRhb2Jh
-by5jb20vaXRlbS5odG0/c3BtPWEyb3EwLjEyNTc1MjgxLjAuMC42YmNmMWRlYlFwemtSUyZmdD10
-JmlkPTU5MjE3NzQ5ODQ3Mg0KPiA+IGh0dHA6Ly93d3cuaG9wZXJ1bi5jb20vQ24vbmV3cy9pZC8z
-NzkNCj4gPg0KPiA+IFdlIGFscmVhZHkga25vdyB0aGF0IHRoZSBIaUhvcGUgUlovRzIgRVggd2ls
-bCBhbHNvIHNpdCBvbiB0aGUNCj4gPiBIaUhvcGUgUlovRzJOLCBldmVuIHRob3VnaCB0aGUgSGlI
-b3BlIFJaL0cyTiBkb2Vzbid0IGV4aXN0IGp1c3QNCj4gPiB5ZXQuDQo+IA0KPiBTZWVtcyBsaWtl
-IHVzZWZ1bCBpbnRvIHRvIHB1dCBpbiB0aGUgY29tbWl0IG1zZy4NCg0KT2ssIHdpbGwgbW92ZSB0
-aGUgbm90ZXMgdG8gdGhlIGNvbW1pdCBtc2cgdGhlbiBmb3IgdjIuDQoNCj4gDQo+ID4gLS0tDQo+
-ID4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vcmVuZXNhcy55YW1sIHwg
-OCArKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspDQo+ID4NCj4g
-PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9yZW5l
-c2FzLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3JlbmVzYXMu
-eWFtbA0KPiA+IGluZGV4IDE5ZjM3OTguLjk1MzAyYjkgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9yZW5lc2FzLnlhbWwNCj4gPiArKysgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3JlbmVzYXMueWFtbA0KPiA+IEBA
-IC0xMDYsNiArMTA2LDE0IEBAIHByb3BlcnRpZXM6DQo+ID4NCj4gPiAgICAgICAgLSBkZXNjcmlw
-dGlvbjogUlovRzJNIChSOEE3NzRBMSkNCj4gPiAgICAgICAgICBpdGVtczoNCj4gPiArICAgICAg
-ICAgIC0gZW51bToNCj4gPiArICAgICAgICAgICAgICAtIGhvcGVydW4saGlob3BlLXJ6ZzJtICMg
-SG9wZVJ1biBIaUhvcGUgUlovRzJNIHBsYXRmb3JtDQo+ID4gKyAgICAgICAgICAtIGNvbnN0OiBy
-ZW5lc2FzLHI4YTc3NGExDQo+ID4gKw0KPiA+ICsgICAgICAgIGl0ZW1zOg0KPiANCj4gRGlkIHlv
-dSBydW4gdGhpcyB0aHJ1IHRoZSBjaGVja3MgYmVjYXVzZSB0aGlzIGlzbid0IHZhbGlkIGpzb24t
-c2NoZW1hLg0KPiBZb3UgY2FuJ3QgaGF2ZSBzYW1lIGtleXdvcmQgdHdpY2UuIFRoaXMgJ2l0ZW1z
-JyBuZWVkcyB0byBiZSBhbm90aGVyDQo+IGxpc3QgZW50cnkgKGkuZS4gYWRkIGEgJy0nKS4NCg0K
-T29wcywgc29ycnkgYWJvdXQgdGhhdC4gV2lsbCBmaXggaW4gdjIuDQoNClRoYW5rcywNCkZhYg0K
-DQo+IA0KPiA+ICsgICAgICAgICAgLSBlbnVtOg0KPiA+ICsgICAgICAgICAgICAgIC0gaG9wZXJ1
-bixoaWhvcGUtcnpnMi1leCAjIEhvcGVSdW4gZXhwYW5zaW9uIGJvYXJkIGZvciBIaUhvcGUgUlov
-RzIgcGxhdGZvcm1zDQo+ID4gKyAgICAgICAgICAtIGNvbnN0OiBob3BlcnVuLGhpaG9wZS1yemcy
-bQ0KPiA+ICAgICAgICAgICAgLSBjb25zdDogcmVuZXNhcyxyOGE3NzRhMQ0KPiA+DQo+ID4gICAg
-ICAgIC0gZGVzY3JpcHRpb246IFJaL0cyRSAoUjhBNzc0QzApDQo+ID4gLS0NCj4gPiAyLjcuNA0K
-PiA+DQo=
+On Tue, May 14, 2019 at 05:36:47PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-05-14 07:13:50 [-0500], Corey Minyard wrote:
+> > > Corey, would it make any change which waiter is going to be woken up?
+> > 
+> > In the application that found this, the wake order probably isn't
+> > relevant.
+> 
+> what I expected.
+> 
+> > For other applications, I really doubt that very many are using multiple
+> > waiters.  If so, this bug would have been reported sooner, I think.
+> 
+> most other do either one waiter/waker pair or one waker and multiple
+> waiter. And then reinit_completion() is used for the next round.
+> 
+> > As you mention, for RT you would want waiter woken by priority and FIFO
+> > within priority.  I don't think POSIX says anything about FIFO within
+> > priority, but that's probably a good idea.  That's no longer a simple
+> > wait queue  The way it is now is probably closer to that than what Peter
+> > suggested, but not really that close.
+> > 
+> > This is heavily used in drivers and fs code, where it probably doesn't
+> > matter.  I looked through a few users in mm and kernel, and they had
+> > one waiter or were init/shutdown type things where order is not important.
+> > 
+> > So I'm not sure it's important.
+> 
+> Why did you bring POSIX into this? This isn't an API exported to
+> userland which would fall into that category.
+
+My understanding is that POSIX.1b scheduling classes affect everything.
+So if you have two processes blocked on the same things for any reason,
+you need to wake up the higher priority one first.  In reality, it
+probably doesn't matter unless something more critical uses completions. 
+
+> 
+> Peter's suggestion for FIFO is that we probably don't want to starve one
+> thread/waiter if it is always enqueued at the end of the list. As you
+> said, in your case it does not matter because (I assume) each waiter is
+> equal and the outcome would be the same.
+
+Yeah, my case is not relevant to this, I'm more concerned with the cases
+that are.
+
+-corey
+
+> 
+> > -corey
+> 
+> Sebastian
