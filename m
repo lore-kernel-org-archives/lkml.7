@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D87C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4705BC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49F6F20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E10020862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919079;
-	bh=mhyy14vgVAy+d4nL/aZ/iHds1lg2+Fkskpbjpiimj3o=;
+	s=default; t=1557919083;
+	bh=RiVvXlT1rWAM581dP90M99R4bVG9de482DvhP8acFcI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xCNHwk38i4VnCA/u1cIVVbnPQbsaXHrvcysu019IigIlcCuXcv6L/CvG7+s45u5UD
-	 DxzXBOTpy3Vn/eXTuULqXgKRHRoRAqpGRdh0goHa1rhjtDbEm15l5Rr6/64mCcnc2N
-	 5jh4nhailAbWnWTqjPxHeNcM+fQb6aW9Ekd/+65Y=
+	b=CKIY7cwKvpHOvwgE6JExOKvOhoqMnLDba/M1OdSnyiJauYlfeSUUwY8AmpPuBiwc6
+	 GowPNsSj89eLR1gEKseGTQZWghpoJjC1674eYltS5Skgyvk66oxlJOvmpUOQ/iEyu5
+	 RptdLfWEzgjpout+1LcET9+NwMR31vvcBSBIQI0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730391AbfEOLR6 (ORCPT
+        id S1730743AbfEOLSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:17:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55284 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:18:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730082AbfEOLRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:17:55 -0400
+        id S1730731AbfEOLR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:17:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 273EE20843;
-        Wed, 15 May 2019 11:17:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE17020862;
+        Wed, 15 May 2019 11:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919074;
-        bh=mhyy14vgVAy+d4nL/aZ/iHds1lg2+Fkskpbjpiimj3o=;
+        s=default; t=1557919077;
+        bh=RiVvXlT1rWAM581dP90M99R4bVG9de482DvhP8acFcI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AysbwO+BIwI46uR1iDKx9f2sfCrkZoADMOxQnHLmqCV3gY6Prvlt37ytPiZXbYchb
-         vETQuEVmly0nm19zq55/fuLKOOlB46aafR/iHQZqjub/O+ArrY6/rBSgnggsizzPqz
-         dDTDY+uq/XyPVaWLjdKB/vT+r9/i5djRDq4pYnUA=
+        b=OACK4pTR4mljf+ow2IfxZKEf6MHhMMoVeNshwVfJFKwFZ35zuN5+SVMAf2mAK8yV/
+         90sIgRIhJ4+xhzogkCh36US0bk6ac9N688D0l/lDJjO9lw7jfb52tmpSuAfWJ3Jllc
+         Y/I4cBe8YVc00yOAtSe+flZ5WHMJtGbM3+fax76M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 013/115] s390/dasd: Fix capacity calculation for large volumes
-Date:   Wed, 15 May 2019 12:54:53 +0200
-Message-Id: <20190515090700.249208009@linuxfoundation.org>
+Subject: [PATCH 4.14 014/115] mac80211: fix unaligned access in mesh table hash function
+Date:   Wed, 15 May 2019 12:54:54 +0200
+Message-Id: <20190515090700.320632007@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -62,57 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2cc9637ce825f3a9f51f8f78af7474e9e85bfa5f ]
+[ Upstream commit 40586e3fc400c00c11151804dcdc93f8c831c808 ]
 
-The DASD driver incorrectly limits the maximum number of blocks of ECKD
-DASD volumes to 32 bit numbers. Volumes with a capacity greater than
-2^32-1 blocks are incorrectly recognized as smaller volumes.
+The pointer to the last four bytes of the address is not guaranteed to be
+aligned, so we need to use __get_unaligned_cpu32 here
 
-This results in the following volume capacity limits depending on the
-formatted block size:
-
-  BLKSIZE  MAX_GB   MAX_CYL
-      512    2047   5843492
-     1024    4095   8676701
-     2048    8191  13634816
-     4096   16383  23860929
-
-The same problem occurs when a volume with more than 17895697 cylinders
-is accessed in raw-track-access mode.
-
-Fix this problem by adding an explicit type cast when calculating the
-maximum number of blocks.
-
-Signed-off-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/block/dasd_eckd.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/mac80211/mesh_pathtbl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index 0a1e7f9b5239d..0d5e2d92e05bc 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -2001,14 +2001,14 @@ static int dasd_eckd_end_analysis(struct dasd_block *block)
- 	blk_per_trk = recs_per_track(&private->rdc_data, 0, block->bp_block);
+diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
+index 1ce068865629b..1300220912051 100644
+--- a/net/mac80211/mesh_pathtbl.c
++++ b/net/mac80211/mesh_pathtbl.c
+@@ -23,7 +23,7 @@ static void mesh_path_free_rcu(struct mesh_table *tbl, struct mesh_path *mpath);
+ static u32 mesh_table_hash(const void *addr, u32 len, u32 seed)
+ {
+ 	/* Use last four bytes of hw addr as hash index */
+-	return jhash_1word(*(u32 *)(addr+2), seed);
++	return jhash_1word(__get_unaligned_cpu32((u8 *)addr + 2), seed);
+ }
  
- raw:
--	block->blocks = (private->real_cyl *
-+	block->blocks = ((unsigned long) private->real_cyl *
- 			  private->rdc_data.trk_per_cyl *
- 			  blk_per_trk);
- 
- 	dev_info(&device->cdev->dev,
--		 "DASD with %d KB/block, %d KB total size, %d KB/track, "
-+		 "DASD with %u KB/block, %lu KB total size, %u KB/track, "
- 		 "%s\n", (block->bp_block >> 10),
--		 ((private->real_cyl *
-+		 (((unsigned long) private->real_cyl *
- 		   private->rdc_data.trk_per_cyl *
- 		   blk_per_trk * (block->bp_block >> 9)) >> 1),
- 		 ((blk_per_trk * block->bp_block) >> 10),
+ static const struct rhashtable_params mesh_rht_params = {
 -- 
 2.20.1
 
