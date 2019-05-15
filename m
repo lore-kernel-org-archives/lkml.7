@@ -2,149 +2,82 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F359EC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76239C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF6A520862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:29:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F93820862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:34:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbfEOO3R (ORCPT
+        id S1727763AbfEOOeR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 10:29:17 -0400
-Received: from ou.quest-ce.net ([195.154.187.82]:38486 "EHLO ou.quest-ce.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726911AbfEOO3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 10:29:16 -0400
-X-Greylist: delayed 1655 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 May 2019 10:29:13 EDT
-Received: from [2a01:e35:39f2:1220:2452:dd6c:fe2f:be2c] (helo=opteyam2)
-        by ou.quest-ce.net with esmtpsa (TLS1.1:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <ydroneaud@opteya.com>)
-        id 1hQuSD-0003J6-UX; Wed, 15 May 2019 16:00:22 +0200
-Message-ID: <4c5ae46657e1931a832def5645db61eb0bf1accd.camel@opteya.com>
-From:   Yann Droneaud <ydroneaud@opteya.com>
-To:     Christian Brauner <christian@brauner.io>, jannh@google.com,
-        oleg@redhat.com, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de, dhowells@redhat.com
-Cc:     akpm@linux-foundation.org, cyphar@cyphar.com,
-        ebiederm@xmission.com, elena.reshetova@intel.com,
-        keescook@chromium.org, luto@amacapital.net, luto@kernel.org,
-        tglx@linutronix.de, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Date:   Wed, 15 May 2019 16:00:20 +0200
-In-Reply-To: <20190515100400.3450-1-christian@brauner.io>
-References: <20190515100400.3450-1-christian@brauner.io>
-Organization: OPTEYA
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Wed, 15 May 2019 10:34:17 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:59681 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726424AbfEOOeR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 10:34:17 -0400
+Received: from fsav108.sakura.ne.jp (fsav108.sakura.ne.jp [27.133.134.235])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4FEWZXf001426;
+        Wed, 15 May 2019 23:32:35 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav108.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav108.sakura.ne.jp);
+ Wed, 15 May 2019 23:32:35 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav108.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4FEWLke001195
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Wed, 15 May 2019 23:32:35 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] printk: Monitor change of console loglevel.
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <1557501546-10263-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20190514091917.GA26804@jagdpanzerIV>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <3e2cf31d-25af-e7c3-b308-62f64d650974@i-love.sakura.ne.jp>
+Date:   Wed, 15 May 2019 23:32:24 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a01:e35:39f2:1220:2452:dd6c:fe2f:be2c
-X-SA-Exim-Mail-From: ydroneaud@opteya.com
-Subject: Re: [PATCH 1/2] pid: add pidfd_open()
-X-SA-Exim-Version: 4.2.1 (built Mon, 26 Dec 2011 16:24:06 +0000)
-X-SA-Exim-Scanned: Yes (on ou.quest-ce.net)
+In-Reply-To: <20190514091917.GA26804@jagdpanzerIV>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Le mercredi 15 mai 2019 à 12:03 +0200, Christian Brauner a écrit :
+On 2019/05/14 18:19, Sergey Senozhatsky wrote:
+> On (05/11/19 00:19), Tetsuo Handa wrote:
+>> We are seeing syzbot reports [1] where printk() messages prior to panic()
+>> are missing for unknown reason. To test whether it is due to some testcase
+>> changing console loglevel, let's panic() as soon as console loglevel has
+>> changed. This patch is intended for testing on linux-next.git only, and
+>> will be removed after we found what is wrong.
 > 
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index 20881598bdfa..237d18d6ecb8 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -451,6 +452,53 @@ struct pid *find_ge_pid(int nr, struct
-> pid_namespace *ns)
->  	return idr_get_next(&ns->idr, &nr);
->  }
->  
-> +/**
-> + * pidfd_open() - Open new pid file descriptor.
-> + *
-> + * @pid:   pid for which to retrieve a pidfd
-> + * @flags: flags to pass
-> + *
-> + * This creates a new pid file descriptor with the O_CLOEXEC flag set for
-> + * the process identified by @pid. Currently, the process identified by
-> + * @pid must be a thread-group leader. This restriction currently exists
-> + * for all aspects of pidfds including pidfd creation (CLONE_PIDFD cannot
-> + * be used with CLONE_THREAD) and pidfd polling (only supports thread group
-> + * leaders).
-> + *
+> Clone linux-next, apply the patch, push to a github/gitlab repo,
+> configure syzbot to pull from github/gitlab?
 
-Would it be possible to create file descriptor with "restricted"
-operation ?
+I think that it is practically impossible to do so from the point of
+view of automation.
 
-- O_RDONLY: waiting for process completion allowed (for example)
-- O_WRONLY: sending process signal allowed
+>                                              Adding temp patches
+> to linux-next is hard and apparently not exactly what linux-next
+> is used for these days.
 
-For example, a process could send over a Unix socket a process a pidfd,
-allowing this to only wait for completion, but not sending signal ?
+Currently Andrew Morton is carrying "linux-next.git only" patches
+(a.k.a. CONFIG_DEBUG_AID_FOR_SYZBOT patches) via mmotm tree.
 
-I see the permission check is not done in pidfd_open(), so what prevent
-a user from sending a signal to another user owned process ?
-
-If it's in pidfd_send_signal(), then, passing the socket through
-SCM_RIGHT won't be useful if the target process is not owned by the
-same user, or root.
-
-> + * Return: On success, a cloexec pidfd is returned.
-> + *         On error, a negative errno number will be returned.
-> + */
-> +SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
-> +{
-> +	int fd, ret;
-> +	struct pid *p;
-> +	struct task_struct *tsk;
-> +
-> +	if (flags)
-> +		return -EINVAL;
-> +
-> +	if (pid <= 0)
-> +		return -EINVAL;
-> +
-> +	p = find_get_pid(pid);
-> +	if (!p)
-> +		return -ESRCH;
-> +
-> +	rcu_read_lock();
-> +	tsk = pid_task(p, PIDTYPE_PID);
-> +	if (!tsk)
-> +		ret = -ESRCH;
-> +	else if (unlikely(!thread_group_leader(tsk)))
-> +		ret = -EINVAL;
-> +	else
-> +		ret = 0;
-> +	rcu_read_unlock();
-> +
-> +	fd = ret ?: pidfd_create(p);
-> +	put_pid(p);
-> +	return fd;
-> +}
-> +
->  void __init pid_idr_init(void)
->  {
->  	/* Verify no one has done anything silly: */
-
-Regards.
-
--- 
-Yann Droneaud
-OPTEYA
-
+It would be nice if linux-next.git can directly import temp patches
+using "quilt push -a" on patches from a subversion repository. Then,
+we can casually add/remove/update temp patches like this.
 
