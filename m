@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCA1C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F9DC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 154B52053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B571C20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920271;
-	bh=hntAyRFrvw6Cr9yi4hm6U6Z3YwulC1viRtaaSaqeOA8=;
+	s=default; t=1557920279;
+	bh=vUQzSnELn00Y8vO8upYf8r+N3HxY9LCoXUePa8jzX6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UL3ZnEYMfwtVODnCaaDLvQtFzh85UR7w44mOC6XEe8b7Vqb612cKr8HyoaxEfgmjc
-	 7UhQM8XxwcZ5fqCfkt3xwov6BeiHdp8/hDMIyVXTt2cj2xb/KjBvMHVrD9QN83dyM8
-	 pIEKgfS4427uyiVPgTM9of2OaCs4ZkzrIxp5kWtQ=
+	b=UU5qGf/1PFac9xti7j6mxGBZVEjckN41pktj08Uz/LUZWkR5QyP3Ln36G82/fL79H
+	 A+PueZMX8Rn8RdWw3uQdXPJyt3u76Hq/JasENaRiIuYB4joJxyHwv0DaR8v/ibR+Xz
+	 lYUXjwcCAfzSnzbEl3VhLlkwtv2MrVY3oA3s3NLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733044AbfEOLhu (ORCPT
+        id S1731426AbfEOLb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:37:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43408 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:31:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727939AbfEOLbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:31:38 -0400
+        id S1732894AbfEOLbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:31:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C517C2084F;
-        Wed, 15 May 2019 11:31:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A7C120818;
+        Wed, 15 May 2019 11:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919897;
-        bh=hntAyRFrvw6Cr9yi4hm6U6Z3YwulC1viRtaaSaqeOA8=;
+        s=default; t=1557919884;
+        bh=vUQzSnELn00Y8vO8upYf8r+N3HxY9LCoXUePa8jzX6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Z/03CD/ogprc5LpOkCqJ6Lt3IpHMI1aS+nZaXWGBNZ1E7Na+JN1f4gBKBR6d6TcB
-         Z2i+hjYY/yVoJ7DUVeiYXPPVoZ6siHNLDrXDIMssFsOsEhSCWPGkkENTNrYg2IWyxZ
-         9hsdtdNG7b3qMjWiF+fwT0ixqnjKhziG8RMsf6T0=
+        b=h/gAaghPym6cTm621NQr/0YwQPgoQUwZHJIWMJzOXztGS/ZWTi4vOViAiuKCiyKcW
+         7/4LeDGib8pn9YWdyZZArT/fEcsAQb+HeAmfA0ekFDvE0HqiWB+XGzw3lVWm9TUJsY
+         QJ1ft7KFeNZ+ftTL1r2TpFAgaetUH1FDGunUZmnU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: [PATCH 5.0 136/137] PCI: hv: Add pci_destroy_slot() in pci_devices_present_work(), if necessary
-Date:   Wed, 15 May 2019 12:56:57 +0200
-Message-Id: <20190515090703.727867468@linuxfoundation.org>
+        stable@vger.kernel.org, Russell Currey <ruscur@russell.cc>,
+        Akshay Adiga <akshay.adiga@linux.vnet.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.0 131/137] powerpc/powernv/idle: Restore IAMR after idle
+Date:   Wed, 15 May 2019 12:56:52 +0200
+Message-Id: <20190515090703.387592033@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -61,91 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Russell Currey <ruscur@russell.cc>
 
-commit 340d455699400f2c2c0f9b3f703ade3085cdb501 upstream.
+commit a3f3072db6cad40895c585dce65e36aab997f042 upstream.
 
-When we hot-remove a device, usually the host sends us a PCI_EJECT message,
-and a PCI_BUS_RELATIONS message with bus_rel->device_count == 0.
+Without restoring the IAMR after idle, execution prevention on POWER9
+with Radix MMU is overwritten and the kernel can freely execute
+userspace without faulting.
 
-When we execute the quick hot-add/hot-remove test, the host may not send
-us the PCI_EJECT message if the guest has not fully finished the
-initialization by sending the PCI_RESOURCES_ASSIGNED* message to the
-host, so it's potentially unsafe to only depend on the
-pci_destroy_slot() in hv_eject_device_work() because the code path
+This is necessary when returning from any stop state that modifies
+user state, as well as hypervisor state.
 
-create_root_hv_pci_bus()
- -> hv_pci_assign_slots()
+To test how this fails without this patch, load the lkdtm driver and
+do the following:
 
-is not called in this case. Note: in this case, the host still sends the
-guest a PCI_BUS_RELATIONS message with bus_rel->device_count == 0.
+  $ echo EXEC_USERSPACE > /sys/kernel/debug/provoke-crash/DIRECT
 
-In the quick hot-add/hot-remove test, we can have such a race before
-the code path
+which won't fault, then boot the kernel with powersave=off, where it
+will fault. Applying this patch will fix this.
 
-pci_devices_present_work()
- -> new_pcichild_device()
-
-adds the new device into the hbus->children list, we may have already
-received the PCI_EJECT message, and since the tasklet handler
-
-hv_pci_onchannelcallback()
-
-may fail to find the "hpdev" by calling
-
-get_pcichild_wslot(hbus, dev_message->wslot.slot)
-
-hv_pci_eject_device() is not called; Later, by continuing execution
-
-create_root_hv_pci_bus()
- -> hv_pci_assign_slots()
-
-creates the slot and the PCI_BUS_RELATIONS message with
-bus_rel->device_count == 0 removes the device from hbus->children, and
-we end up being unable to remove the slot in
-
-hv_pci_remove()
- -> hv_pci_remove_slots()
-
-Remove the slot in pci_devices_present_work() when the device
-is removed to address this race.
-
-pci_devices_present_work() and hv_eject_device_work() run in the
-singled-threaded hbus->wq, so there is not a double-remove issue for the
-slot.
-
-We cannot offload hv_pci_eject_device() from hv_pci_onchannelcallback()
-to the workqueue, because we need the hv_pci_onchannelcallback()
-synchronously call hv_pci_eject_device() to poll the channel
-ringbuffer to work around the "hangs in hv_compose_msi_msg()" issue
-fixed in commit de0aa7b2f97d ("PCI: hv: Fix 2 hang issues in
-hv_compose_msi_msg()")
-
-Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-[lorenzo.pieralisi@arm.com: rewritten commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Stephen Hemminger <stephen@networkplumber.org>
-Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
-Cc: stable@vger.kernel.org
+Fixes: 3b10d0095a1e ("powerpc/mm/radix: Prevent kernel execution of user space")
+Cc: stable@vger.kernel.org # v4.10+
+Signed-off-by: Russell Currey <ruscur@russell.cc>
+Reviewed-by: Akshay Adiga <akshay.adiga@linux.vnet.ibm.com>
+Reviewed-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/controller/pci-hyperv.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/powerpc/kernel/idle_book3s.S |   20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1781,6 +1781,10 @@ static void pci_devices_present_work(str
- 		hpdev = list_first_entry(&removed, struct hv_pci_dev,
- 					 list_entry);
- 		list_del(&hpdev->list_entry);
-+
-+		if (hpdev->pci_slot)
-+			pci_destroy_slot(hpdev->pci_slot);
-+
- 		put_pcichild(hpdev);
- 	}
+--- a/arch/powerpc/kernel/idle_book3s.S
++++ b/arch/powerpc/kernel/idle_book3s.S
+@@ -170,6 +170,9 @@ core_idle_lock_held:
+ 	bne-	core_idle_lock_held
+ 	blr
  
++/* Reuse an unused pt_regs slot for IAMR */
++#define PNV_POWERSAVE_IAMR	_DAR
++
+ /*
+  * Pass requested state in r3:
+  *	r3 - PNV_THREAD_NAP/SLEEP/WINKLE in POWER8
+@@ -200,6 +203,12 @@ pnv_powersave_common:
+ 	/* Continue saving state */
+ 	SAVE_GPR(2, r1)
+ 	SAVE_NVGPRS(r1)
++
++BEGIN_FTR_SECTION
++	mfspr	r5, SPRN_IAMR
++	std	r5, PNV_POWERSAVE_IAMR(r1)
++END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
++
+ 	mfcr	r5
+ 	std	r5,_CCR(r1)
+ 	std	r1,PACAR1(r13)
+@@ -924,6 +933,17 @@ BEGIN_FTR_SECTION
+ END_FTR_SECTION_IFSET(CPU_FTR_HVMODE)
+ 	REST_NVGPRS(r1)
+ 	REST_GPR(2, r1)
++
++BEGIN_FTR_SECTION
++	/* IAMR was saved in pnv_powersave_common() */
++	ld	r5, PNV_POWERSAVE_IAMR(r1)
++	mtspr	SPRN_IAMR, r5
++	/*
++	 * We don't need an isync here because the upcoming mtmsrd is
++	 * execution synchronizing.
++	 */
++END_FTR_SECTION_IFSET(CPU_FTR_ARCH_207S)
++
+ 	ld	r4,PACAKMSR(r13)
+ 	ld	r5,_LINK(r1)
+ 	ld	r6,_CCR(r1)
 
 
