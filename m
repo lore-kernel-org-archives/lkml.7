@@ -2,224 +2,176 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 790EDC04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:14:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 384C1C04AB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2552082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:14:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 096242082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:16:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DtjFqYj3"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ii41x4BP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfEOAOg (ORCPT
+        id S1726799AbfEOAQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:14:36 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40209 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfEOAOf (ORCPT
+        Tue, 14 May 2019 20:16:32 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:45490 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726581AbfEOAQc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:14:35 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u17so350787pfn.7;
-        Tue, 14 May 2019 17:14:34 -0700 (PDT)
+        Tue, 14 May 2019 20:16:32 -0400
+Received: by mail-yb1-f194.google.com with SMTP id v2so283064ybm.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 17:16:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aAQdPwK8UhHmXdxJzm6jQLoLZaXI/Q5xb4j3/5myTwU=;
-        b=DtjFqYj39Dm0Rv+bcjGdBjQ6EN0VVznNIsEvch4bISyaQ/e0Png3fqdAoPlSGFyybQ
-         9RdNTatJQF70rYkneWxA0HwEKweBx5SaUxs2qBiWZDr2CTLQmWuFJ9nH5nKDx0Dww2GW
-         Z8rok8HxjbdcQqXcj08v6osdgn+0zsqQwd3jqGM6V3OG1lyeNu7zeDJOjnPSzz2eaTXl
-         jxqU2PXw8XetaV5HqNXVfIpEJuQGiWY6E99WNHu/hGpkNajhdTPWmMM+DcAwvntY2jlA
-         MKDGZsE67wbYfTS3WmTNpzqmm/7pYEDSBFFQRWFMC7Etq/VfKLXr71eehd6T4tb/NW+Q
-         rbkQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n6UubTu1HxL5JVqa4cIS4IiqN2UOsI0+Vavy5s5bkSQ=;
+        b=Ii41x4BPQ69+lEiDQCtrEuc+lF56MxJAe2Nu9E3XbvbR4rUAzOZNAXuAlZRNS6P1H0
+         g1yyCvGfKBvZs2+YsXBIRXAAt9TKkYkQT8esPIAPxIMrzkMFFDmkcCGxuibr51tDIoEf
+         hOvtu0p5Qti7QFT1qMeD2cxKaHTYxfMIvR16MTXd+gcnStMT2TE8onV6SNVb465wsnXH
+         wJp8kOMWTtX8IzL1/yOc8GesomdBPegBNpb3c6rVynA4KMxgNmF6NSTnPBOPUCewSG7b
+         unooTfA0p8UWmIEaIJ3dtmy1DpodFr7a94oCGmib2FAfj7Xgdla1FlVXjyqxjZB9wq8E
+         /Ang==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aAQdPwK8UhHmXdxJzm6jQLoLZaXI/Q5xb4j3/5myTwU=;
-        b=p0PxiK9JT6yDylKkFj7pEo61s2+4o7GjmdE91030oYKFG1H+80kG69yW1v7f62QjqN
-         1v1byjVvJ/tQn3StBnxx2IemaYTyKqYcpm0bGPUhlMMPQ8PnmkdZCDDwA4248OwGc/wE
-         jBFc8VjAFSeIXkJpD78jhPFDd8IlvIGji8uPwxQyt1DqSPGg+QkzTc6SOCUs0gBoIv+K
-         St4rdsej44N6MVlIwD0D2v6h2+Dist0Vj/3S7Cd7FDLzuNSxNrcvXI28350t2APX7I6K
-         AU4itUtrOnZtfpevHG6Wy6TAca37/8556Mja5sm/uJPmk4CNv/pEoKmhkxYd3suzIia8
-         38Cw==
-X-Gm-Message-State: APjAAAW2FBjlSkuSsGQx/jUKXwMEgpL/j2A4Lq6bNr5r4ZGqdGUzgW8i
-        JajfQ/plgoON7xm7AZN07Rk=
-X-Google-Smtp-Source: APXvYqy79bd1G+CGXC0fbDQHPyQsJJqd7yTY4vTthhujhOHeBpcxwWbjzotGY9gkl1u9fw5B3eNBzQ==
-X-Received: by 2002:a63:d04b:: with SMTP id s11mr41453267pgi.187.1557879274578;
-        Tue, 14 May 2019 17:14:34 -0700 (PDT)
-Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
-        by smtp.gmail.com with ESMTPSA id u6sm334194pfm.10.2019.05.14.17.14.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 17:14:33 -0700 (PDT)
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Theodore Ts'o <tytso@mit.edu>, Tim.Bird@sony.com,
-        knut.omang@oracle.com, gregkh@linuxfoundation.org,
-        keescook@google.com, kieran.bingham@ideasonboard.com,
-        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        mpe@ellerman.id.au, pmladek@suse.com, richard@nod.at,
-        rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com
-References: <20190509133551.GD29703@mit.edu>
- <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
- <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
- <20190509214233.GA20877@mit.edu>
- <b09ba170-229b-fde4-3e9a-e50d6ab4c1b5@deltatee.com>
- <20190509233043.GC20877@mit.edu>
- <8914afef-1e66-e6e3-f891-5855768d3018@deltatee.com>
- <6d6e91ec-33d3-830b-4895-4d7a20ba7d45@gmail.com>
- <3faa022b-0b70-0375-aa6d-12ea83a2671f@deltatee.com>
- <d148a554-2a71-a5a4-4bb2-d84d2c483277@gmail.com>
- <20190514083819.GC230665@google.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <5ff098a9-9424-901c-9017-d4492e306528@gmail.com>
-Date:   Tue, 14 May 2019 17:14:30 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n6UubTu1HxL5JVqa4cIS4IiqN2UOsI0+Vavy5s5bkSQ=;
+        b=k8Bn1rUdSYKRtTHS4htyIsaPGi11mPHIXgEvG78aIIa5dCrp0b/6jfIIEnD2jai1br
+         mrjoGDdGzy4ZABySxlDiTKVVUDMvCTDz44LKwai+w0K77MMU+7Sac3p2brFXGGKhjePo
+         CrUg/44X9Q3Pl9Z5Tl1nG8m0MnWmk0lsZmj5JvuK8sUSDMPAhS7Ed96HkngZdPIsEbto
+         Ozq90l8DiPVwhgsDREm3Hpxpzp56OleYCAuTd2tv7oZ7tBtk4DFmpzGKppeEF4gLC4uk
+         hmiJbEKCS7ZPl0OmSkYQwQxZ28z0yEGbCFPK0dmN8mCI+Qf6uJZxCKZGRfcNK+v4gsHg
+         fXwA==
+X-Gm-Message-State: APjAAAVsCaoPW8vsVZemHUCy9dEenwwWK0UnEK8eiH+XbZCJWoBLtZbN
+        2mxKgHyYOrSF76DeTh6sO/yO0f7+O+Dudwy6bMYCnA==
+X-Google-Smtp-Source: APXvYqwXpG8BpCaAhxMLZu1bQsUf0ZlBvmb6V18GIGFeDsrDFmUXX3NvR6sEHYqBkd0VzopGg8Iw+LuwYseyH2LTLrI=
+X-Received: by 2002:a25:ad11:: with SMTP id y17mr18143295ybi.393.1557879391180;
+ Tue, 14 May 2019 17:16:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190514083819.GC230665@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190514213940.2405198-1-guro@fb.com> <20190514213940.2405198-8-guro@fb.com>
+In-Reply-To: <20190514213940.2405198-8-guro@fb.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Tue, 14 May 2019 17:16:19 -0700
+Message-ID: <CALvZod5sPsvUCLS1Ud0sW=n+UoJb=DR5LbmMJKRhUeUoi+=64w@mail.gmail.com>
+Subject: Re: [PATCH v4 7/7] mm: fix /proc/kpagecgroup interface for slab pages
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Christoph Lameter <cl@linux.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Cgroups <cgroups@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/14/19 1:38 AM, Brendan Higgins wrote:
-> On Fri, May 10, 2019 at 03:13:40PM -0700, Frank Rowand wrote:
->> On 5/10/19 9:17 AM, Logan Gunthorpe wrote:
->>>
->>>
->>> On 2019-05-09 11:18 p.m., Frank Rowand wrote:
->>>
->>>> YES, kselftest has in-kernel tests.  (Excuse the shouting...)
->>>
->>> Cool. From my cursory look, in my opinion, these would be greatly
->>> improved by converting them to the framework Brendan is proposing for Kunit.
->>>
->>>>> If they do exists, it seems like it would make sense to
->>>>> convert those to kunit and have Kunit tests run-able in a VM or
->>>>> baremetal instance.
->>>>
->>>> They already run in a VM.
->>>>
->>>> They already run on bare metal.
->>>>
->>>> They already run in UML.
->>>
->>> Simply being able to run in UML is not the only thing here. Kunit
->>> provides the infrastructure to quickly build, run and report results for
->>> all the tests from userspace without needing to worry about the details
->>> of building and running a UML kernel, then parsing dmesg to figure out
->>> what tests were run or not.
->>
->> Yes.  But that is not the only environment that KUnit must support to be
->> of use to me for devicetree unittests (this is not new, Brendan is quite
->> aware of my needs and is not ignoring them).
->>
->>
->>>> This is not to say that KUnit does not make sense.  But I'm still trying
->>>> to get a better description of the KUnit features (and there are
->>>> some).
->>>
->>> So read the patches, or the documentation[1] or the LWN article[2]. It's
->>> pretty well described in a lot of places -- that's one of the big
->>> advantages of it. In contrast, few people seems to have any concept of
->>> what kselftests are or where they are or how to run them (I was
->>> surprised to find the in-kernel tests in the lib tree).
->>>
->>> Logan
->>>
->>> [1] https://google.github.io/kunit-docs/third_party/kernel/docs/
->>> [2] https://lwn.net/Articles/780985/
->>
->> I have been following the RFC versions.  I have installed the RFC patches
->> and run them to the extent that they worked (devicetree unittests were
->> a guinea pig for test conversion in the RFC series, but the converted
->> tests did not work).  I read portions of the code while trying to
->> understand the unittests conversion.  I made review comments based on
->> the portion of the code that I did read.  I have read the documentation
->> (very nice btw, as I have said before, but should be expanded).
->>
->> My comment is that the description to submit the patch series should
->> be fuller -- KUnit potentially has a lot of nice attributes, and I
->> still think I have only scratched the surface.  The average reviewer
->> may have even less in-depth knowledge than I do.  And as I have
->> commented before, I keep diving into areas that I had no previous
->> experience with (such as kselftest) to be able to properly judge this
->> patch series.
-> 
-> Thanks for the praise! That means a lot coming from you!
-> 
-> I really cannot disagree that I could use more documentation. You can
-> pretty much always use more documentation. Nevertheless, is there a
-> particular part of the documentation that you think it lacking?
+From: Roman Gushchin <guro@fb.com>
+Date: Tue, May 14, 2019 at 2:54 PM
+To: Andrew Morton, Shakeel Butt
+Cc: <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+<kernel-team@fb.com>, Johannes Weiner, Michal Hocko, Rik van Riel,
+Christoph Lameter, Vladimir Davydov, <cgroups@vger.kernel.org>, Roman
+Gushchin
 
-I wasn't talking about the documentation that is part of KUnit.  I was
-targeting patch 0.
+> Switching to an indirect scheme of getting mem_cgroup pointer for
+> !root slab pages broke /proc/kpagecgroup interface for them.
+>
+> Let's fix it by learning page_cgroup_ino() how to get memcg
+> pointer for slab pages.
+>
+> Reported-by: Shakeel Butt <shakeelb@google.com>
+> Signed-off-by: Roman Gushchin <guro@fb.com>
 
+Reviewed-by: Shakeel Butt <shakeelb@google.com>
 
-> It sounds like there was a pretty long discussion here about, a number
-> of different things.
-> 
-> Do you want a better description of what unit testing is and how KUnit
-> helps make it possible?
-> 
-> Do you want more of an explanation distinguishing KUnit from kselftest?
-> How so?
-
-The high level issue is to provide reviewers with enough context to be
-able to evaluate the patch series.  That is probably not very obvious
-at this point in the thread.  At this point I was responding to Logan's
-response to me that I should be reading Documentation to get a better
-description of KUnit features.  I _think_ that Logan thought that I
-did not understand KUnit features and was trying to be helpful by
-pointing out where I could get more information.  If so, he was missing
-my intended point had been that patch 0 should provide more information
-to justify adding this feature.
-
-One thing that has become very apparent in the discussion of this patch
-series is that some people do not understand that kselftest includes
-in-kernel tests, not just userspace tests.  As such, KUnit is an
-additional implementation of "the same feature".  (One can debate
-exactly which in-kernel test features kselftest and KUnit provide,
-and how much overlap exists or does not exist.  So don't take "the
-same feature" as my final opinion of how much overlap exists.)  So
-that is a key element to be noted and explained.
-
-I don't have a goal of finding all the things to include in patch 0,
-that is really your job as the patch submitter.  But as a reviewer,
-it is easy for me to point out an obvious hole, even if I don't find
-all of the holes.  kselftest vs KUnit overlap was an obvious hole to
-me.
-
-So, yes, more of an explanation about the in-kernel testing available
-via kselftest vs the in-kernel testing available via KUnit, and how
-they provide the same or different functionality.  Should both exist?
-Should one replace the other?  If one provides additional features,
-should the additional features be merged into a common base?
-
-> Do you just want better documentation on how to test the kernel? What
-> tools we have at our disposal and when to use what tools?
-> 
-> Thanks!
-> .
-> 
-
+> ---
+>  mm/memcontrol.c  |  5 ++++-
+>  mm/slab.h        | 25 +++++++++++++++++++++++++
+>  mm/slab_common.c |  1 +
+>  3 files changed, 30 insertions(+), 1 deletion(-)
+>
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 0655639433ed..9b2413c2e9ea 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -494,7 +494,10 @@ ino_t page_cgroup_ino(struct page *page)
+>         unsigned long ino = 0;
+>
+>         rcu_read_lock();
+> -       memcg = READ_ONCE(page->mem_cgroup);
+> +       if (PageHead(page) && PageSlab(page))
+> +               memcg = memcg_from_slab_page(page);
+> +       else
+> +               memcg = READ_ONCE(page->mem_cgroup);
+>         while (memcg && !(memcg->css.flags & CSS_ONLINE))
+>                 memcg = parent_mem_cgroup(memcg);
+>         if (memcg)
+> diff --git a/mm/slab.h b/mm/slab.h
+> index 7ba50e526d82..50fa534c0fc0 100644
+> --- a/mm/slab.h
+> +++ b/mm/slab.h
+> @@ -256,6 +256,26 @@ static inline struct kmem_cache *memcg_root_cache(struct kmem_cache *s)
+>         return s->memcg_params.root_cache;
+>  }
+>
+> +/*
+> + * Expects a pointer to a slab page. Please note, that PageSlab() check
+> + * isn't sufficient, as it returns true also for tail compound slab pages,
+> + * which do not have slab_cache pointer set.
+> + * So this function assumes that the page can pass PageHead() and PageSlab()
+> + * checks.
+> + */
+> +static inline struct mem_cgroup *memcg_from_slab_page(struct page *page)
+> +{
+> +       struct kmem_cache *s;
+> +
+> +       WARN_ON_ONCE(!rcu_read_lock_held());
+> +
+> +       s = READ_ONCE(page->slab_cache);
+> +       if (s && !is_root_cache(s))
+> +               return rcu_dereference(s->memcg_params.memcg);
+> +
+> +       return NULL;
+> +}
+> +
+>  /*
+>   * Charge the slab page belonging to the non-root kmem_cache.
+>   * Can be called for non-root kmem_caches only.
+> @@ -353,6 +373,11 @@ static inline struct kmem_cache *memcg_root_cache(struct kmem_cache *s)
+>         return s;
+>  }
+>
+> +static inline struct mem_cgroup *memcg_from_slab_page(struct page *page)
+> +{
+> +       return NULL;
+> +}
+> +
+>  static inline int memcg_charge_slab(struct page *page, gfp_t gfp, int order,
+>                                     struct kmem_cache *s)
+>  {
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index 354762394162..9d2a3d6245dc 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -254,6 +254,7 @@ static void memcg_unlink_cache(struct kmem_cache *s)
+>                 list_del(&s->memcg_params.kmem_caches_node);
+>                 mem_cgroup_put(rcu_dereference_protected(s->memcg_params.memcg,
+>                         lockdep_is_held(&slab_mutex)));
+> +               rcu_assign_pointer(s->memcg_params.memcg, NULL);
+>         }
+>  }
+>  #else
+> --
+> 2.20.1
+>
