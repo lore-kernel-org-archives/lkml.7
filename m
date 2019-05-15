@@ -4,69 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0565C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:10:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D7F1C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0B921773
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:10:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5AA20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:10:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rUlu/Uzq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rEZd9BQC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbfEOMKJ (ORCPT
+        id S1729490AbfEOMKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:10:09 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44179 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729014AbfEOMKD (ORCPT
+        Wed, 15 May 2019 08:10:15 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54624 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729014AbfEOMKN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 08:10:03 -0400
-Received: by mail-wr1-f68.google.com with SMTP id c5so2367225wrs.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 05:10:02 -0700 (PDT)
+        Wed, 15 May 2019 08:10:13 -0400
+Received: by mail-wm1-f67.google.com with SMTP id i3so2408846wml.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 05:10:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=04vE/yZS+t9ASvM0Tt3OFkOsi4P5+QK49E2+acvjvQQ=;
-        b=rUlu/UzqF/esvoHFPYwpMh1FUQbOvqo/ap9EWcHUkZXAodrJoa4A/WsClM0UxEhqPd
-         89uXP2igvjKzeI4J1Hkd3WYqDFy7q33uPxc2HUONPi+7AqmIu+A4ZEBys8tyXcAiAc2U
-         fgoDY1VGYNRUFKDU7TJNTJnC8UK9AifnCu8v+6RzQhrID9QsM+xFxw79b3qv01iR+u4j
-         ojzpdLQ8ZQf96P2uTac/x15aah6vPsvTGMzU0T/Lzktpgz6WLN0byC4GIaoettlYuPCo
-         9E3yRcMBK3+M83PdDgC1RDjydxwsPWcaYqYT04iCsYv6JIcZhmFFAMW6BKad48eiXbD7
-         nqEA==
+        bh=CFKFwgLozVIM6dscXeJBqjWNwAotJvVX+KZD7JqTJhw=;
+        b=rEZd9BQCMnveEHnW1EzvyB1mf4vdRdsj1KDivixg8uQO3ZRtnIPm9n7ribcAB6WmAG
+         rYiqArIQw4TWQrCbePoK51atfLhI8UASv873PwpBgqGeraXUomT8Q9OVMKqgS7zhUtW+
+         e6Um4yftwThM428E24xFoAy485veY5Sz6ep54y79hQmhvXUa6eqATSFqIkOP6TGCzmOj
+         rUwVPTteu1AsINuyrk5rKeuqH/sqc0lcyoon80pHmoRcsaKJzA2ElDkRnpVtpDu/jfrG
+         q4yz7DVm+2lRxc5346NALN5LG+Lg99spJProW6l2dzcESBAqDycAnG1Z/OD7wigZC6Vm
+         QQHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :mime-version:content-transfer-encoding;
-        bh=04vE/yZS+t9ASvM0Tt3OFkOsi4P5+QK49E2+acvjvQQ=;
-        b=I2aSokES5lCtYRA7ljKJ+aIhbevqvGhocnEuC7Cms84fbTZxqcAUl9RI0ATKqdfZdA
-         1UPHIgBkfYztpjK+5B5ZIFRMUlCvTu6fCyvz6JrDbNJx2rE/dcl758mDJ09Hny7EsqQ+
-         O1AMpYDdWB3a+TgVNNJWiNfQWOLuQJRH7o93Vc3QbaQnqiNcoztm+BHZbTN8ci0eibRf
-         Vudo2MuTbtUiolhxCbiGK1476VUK+ZwQFFdhDDhFny1COfB7PEXFbV2Y4Wu8MY8o3A7K
-         I/wc73UhAC7hefPKwLvQ9iAHkOyGdsgIHtL+mez4ENTr/q8ZygkqCbvuohLdn2btxLYW
-         9q+Q==
-X-Gm-Message-State: APjAAAWQwjz+twkUp0150Sqrx7P+7Fl/OWZ8Z7+kEig39mNpqRav1QJF
-        +8OAsz6uqLVAYUgw6gyNExM=
-X-Google-Smtp-Source: APXvYqwqRM2hZ1TYTAPN1pkRiFuk5jR7rSwKxqfJthKIZ+ilEP+0VrWCBasqLIcAE6IScwdALAL4Ug==
-X-Received: by 2002:a5d:4b0b:: with SMTP id v11mr24672581wrq.317.1557922201948;
-        Wed, 15 May 2019 05:10:01 -0700 (PDT)
+        bh=CFKFwgLozVIM6dscXeJBqjWNwAotJvVX+KZD7JqTJhw=;
+        b=T0WhSFPDOMBbTOVKjyAg9j5/XyHBbXBtF7dQ+q1sPj/ehjoMU1EhswjLYOMJN/B0bj
+         lr0/4XWhQTYdk4yEiwtHIYqpsbRZ+m/kcOvXbD4FCctO+fNSkHGhS93QwP98Bt6+5wIK
+         T5ugpbtBIAFX+Z0ccsDM3oefg9/I3Tmy9/OWhaOekS2VZKNqO4j1Ps89VODo2qzZiSPE
+         sjOsTpEQ/08ALS5dEXZE8sgFrSfaWu42sU7wGZDN81NbfBkSIf9ae4g15miSGQ+qYXnV
+         7EjkoEiqubpm476+jJ/XMS95FEdL1lfHX0SlgGzh1Honta1Mo7U11eSOihuexrc8zDok
+         fSHg==
+X-Gm-Message-State: APjAAAUIVUrkla7kpUg8JoksHfz3HwVA67TrDMdEFIqNpWEjGKPZtAsV
+        zVIziN/24PlRWPaNYDxk3Zs=
+X-Google-Smtp-Source: APXvYqyeRa0AATRlHj/RBPnO2Noo/rUCYItU5+6CIHDBuomet4LfUmlnkJB5oFmYAn07J0K50gSbdQ==
+X-Received: by 2002:a1c:5f02:: with SMTP id t2mr22591116wmb.19.1557922212170;
+        Wed, 15 May 2019 05:10:12 -0700 (PDT)
 Received: from macbookpro.malat.net (bru31-1-78-225-224-134.fbx.proxad.net. [78.225.224.134])
-        by smtp.gmail.com with ESMTPSA id b18sm2126219wrx.75.2019.05.15.05.10.01
+        by smtp.gmail.com with ESMTPSA id v1sm1847403wrd.47.2019.05.15.05.10.11
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 May 2019 05:10:01 -0700 (PDT)
+        Wed, 15 May 2019 05:10:11 -0700 (PDT)
 Received: by macbookpro.malat.net (Postfix, from userid 1000)
-        id 15A9A1146D7B; Wed, 15 May 2019 14:09:50 +0200 (CEST)
+        id 7FB421146D7B; Wed, 15 May 2019 14:10:10 +0200 (CEST)
 From:   Mathieu Malaterre <malat@debian.org>
 To:     Michael Ellerman <mpe@ellerman.id.au>
 Cc:     Mathieu Malaterre <malat@debian.org>,
-        Michael Neuling <mikey@neuling.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] powerpc: silence a -Wcast-function-type warning in dawr_write_file_bool
-Date:   Wed, 15 May 2019 14:09:42 +0200
-Message-Id: <20190515120942.3812-1-malat@debian.org>
+Subject: [PATCH] powerpc: Include <asm/pte-walk.h> header file to fix a warning
+Date:   Wed, 15 May 2019 14:10:08 +0200
+Message-Id: <20190515121008.3992-1-malat@debian.org>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -75,40 +76,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit c1fe190c0672 ("powerpc: Add force enable of DAWR on P9
-option") the following piece of code was added:
+Make sure to include <asm/pte-walk.h> to provide the following prototype:
+__find_linux_pte.
 
-   smp_call_function((smp_call_func_t)set_dawr, &null_brk, 0);
+Remove the following warning treated as error (W=1):
 
-Since GCC 8 this trigger the following warning about incompatible
-function types:
+  arch/powerpc/mm/pgtable.c:316:8: error: no previous prototype for '__find_linux_pte' [-Werror=missing-prototypes]
 
-  arch/powerpc/kernel/hw_breakpoint.c:408:21: error: cast between incompatible function types from 'int (*)(struct arch_hw_breakpoint *)' to 'void (*)(void *)' [-Werror=cast-function-type]
-
-Cast the function to an intermediate (void*) to make the compiler loose
-knowledge about actual type.
-
-Fixes: c1fe190c0672 ("powerpc: Add force enable of DAWR on P9 option")
-Cc: Michael Neuling <mikey@neuling.org>
+Fixes: 0caed4de502c ("powerpc/mm: move __find_linux_pte() out of hugetlbpage.c")
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Mathieu Malaterre <malat@debian.org>
 ---
- arch/powerpc/kernel/hw_breakpoint.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/powerpc/mm/pgtable.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index f70fb89dbf60..baeb4c58de3b 100644
---- a/arch/powerpc/kernel/hw_breakpoint.c
-+++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -405,7 +405,8 @@ static ssize_t dawr_write_file_bool(struct file *file,
+diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
+index db4a6253df92..2aa042193ace 100644
+--- a/arch/powerpc/mm/pgtable.c
++++ b/arch/powerpc/mm/pgtable.c
+@@ -31,6 +31,7 @@
+ #include <asm/tlbflush.h>
+ #include <asm/tlb.h>
+ #include <asm/hugetlb.h>
++#include <asm/pte-walk.h>
  
- 	/* If we are clearing, make sure all CPUs have the DAWR cleared */
- 	if (!dawr_force_enable)
--		smp_call_function((smp_call_func_t)set_dawr, &null_brk, 0);
-+		smp_call_function((smp_call_func_t)(void *)set_dawr,
-+				  &null_brk, 0);
- 
- 	return rc;
- }
+ static inline int is_exec_fault(void)
+ {
 -- 
 2.20.1
 
