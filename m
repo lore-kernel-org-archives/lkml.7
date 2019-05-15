@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E2FC04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA860C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECFB620578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B8BA2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921057;
-	bh=/jBHW+2TNSFoJi5HgXdm+/hCQ+Jojsit8Vqm+c1mV3o=;
+	s=default; t=1557921059;
+	bh=WZlyFhO+JGQg1hUuKPHTcaSqzz/6BThC/cW0P09xH18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pOlaZeW/cEWpovLBdEfiATb2FLGh/xpq9Utm944gFn6+4U4Fqm4Ss0h2cpC+h4kiP
-	 xMqYxL7GtXqVc935Uqa74FkQRHdztUj1DrIx6QXmVrs3wvt0q0Grh4nUvpF/9ic/5d
-	 HkOGlCimTorK+uG4lJ9wc6dLgjeDIyd7NBuX/XAE=
+	b=VZ42PKU1J8KgfjrPiCEy7AfW1jI9mvR8adx3wu/CNxQyxF0jPrvQ5HwLR/Y8Sc2Si
+	 M1eIS4uFOhSThXC2DJv/02VQG1KHv+UVQoHzLnb0R6EpZAHRzDopPJ1fLUYs1N+p4C
+	 Df9S30EQAylp6+2d2XiLTU5kmaoZp4eVPSVqFsPo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731367AbfEOLVz (ORCPT
+        id S1731579AbfEOLu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:21:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59908 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:50:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731342AbfEOLVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:21:52 -0400
+        id S1731368AbfEOLVz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:21:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE6C320881;
-        Wed, 15 May 2019 11:21:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CAA220862;
+        Wed, 15 May 2019 11:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919312;
-        bh=/jBHW+2TNSFoJi5HgXdm+/hCQ+Jojsit8Vqm+c1mV3o=;
+        s=default; t=1557919314;
+        bh=WZlyFhO+JGQg1hUuKPHTcaSqzz/6BThC/cW0P09xH18=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k8KLpqc0hdstDIV5w2GubVR01/8fxZuCi6G6pIeKuaGYqKyyiqkySw5mqm7NcMXX0
-         f7GS7VQO172fpHw4fVbSX2L+wdjTYjWn7ApmQyfsSWZNn41lioaG3f3npe2EjWIQSq
-         rZA0Jzmr/MCtSSDsjMpdiIusTipMyYP4j5XsR62E=
+        b=F8HfI6DFv37lSAd8UmGppqpupkU0tyzwbwHQw+vOoIiivdZWjZtnr+Y7GszMoHHMu
+         1W/4sHahKm8Fn3+rRvQpi/Cb3cSoo0vnaoJbriRWnDTo+Ej/YRvL2wD9ZeK28adI90
+         RyWrr5mfXTcksforzvcLxnBr7YBVmiPQKQMFv5j4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org, Daniel Golle <daniel@makrotopia.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 027/113] clocksource/drivers/npcm: select TIMER_OF
-Date:   Wed, 15 May 2019 12:55:18 +0200
-Message-Id: <20190515090655.577623764@linuxfoundation.org>
+Subject: [PATCH 4.19 028/113] clocksource/drivers/oxnas: Fix OX820 compatible
+Date:   Wed, 15 May 2019 12:55:19 +0200
+Message-Id: <20190515090655.665218556@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -60,33 +61,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 99834eead2a04e93a120abb112542b87c42ff5e1 ]
+[ Upstream commit fbc87aa0f7c429999dc31f1bac3b2615008cac32 ]
 
-When this is disabled, we get a link failure:
+The OX820 compatible is wrong is the driver, fix it.
 
-drivers/clocksource/timer-npcm7xx.o: In function `npcm7xx_timer_init':
-timer-npcm7xx.c:(.init.text+0xf): undefined reference to `timer_of_init'
-
-Fixes: 1c00289ecd12 ("clocksource/drivers/npcm: Add NPCM7xx timer driver")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 2ea3401e2a84 ("clocksource/drivers/oxnas: Add OX820 compatible")
+Reported-by: Daniel Golle <daniel@makrotopia.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clocksource/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clocksource/timer-oxnas-rps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index c1ddafa4c2994..4d37f018d846c 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -136,6 +136,7 @@ config VT8500_TIMER
- config NPCM7XX_TIMER
- 	bool "NPCM7xx timer driver" if COMPILE_TEST
- 	depends on HAS_IOMEM
-+	select TIMER_OF
- 	select CLKSRC_MMIO
- 	help
- 	  Enable 24-bit TIMER0 and TIMER1 counters in the NPCM7xx architecture,
+diff --git a/drivers/clocksource/timer-oxnas-rps.c b/drivers/clocksource/timer-oxnas-rps.c
+index eed6feff8b5f2..30c6f4ce672b3 100644
+--- a/drivers/clocksource/timer-oxnas-rps.c
++++ b/drivers/clocksource/timer-oxnas-rps.c
+@@ -296,4 +296,4 @@ static int __init oxnas_rps_timer_init(struct device_node *np)
+ TIMER_OF_DECLARE(ox810se_rps,
+ 		       "oxsemi,ox810se-rps-timer", oxnas_rps_timer_init);
+ TIMER_OF_DECLARE(ox820_rps,
+-		       "oxsemi,ox820se-rps-timer", oxnas_rps_timer_init);
++		       "oxsemi,ox820-rps-timer", oxnas_rps_timer_init);
 -- 
 2.20.1
 
