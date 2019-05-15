@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 248C9C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47719C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E28082166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC59206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919393;
-	bh=kLcfzGn5Vwa9npdD43qp06qIaJlAgpbDeFYCshauVk4=;
+	s=default; t=1557919395;
+	bh=jkLFPE0Btsk4k/1uPATuEs2Vl549eC/EjkT7x9ITssY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z32gVLPK+/FKCxvBiYLJCUFOmzifb5G2QEPXIUFOyLXo/iIci8Y6S/NKOPgeyb6jR
-	 P1Zq8D/C2GGF6SsECieVANqR+KchFhQFB2uYKxAQE9qKpX6Lq/R5dpxEwg75pub5+W
-	 N+lhXFreFT9Fa29Ic9bfZb+Cx+h2P4C3NZy7KwjA=
+	b=GNntkACOqWBDGCE0hBHfHoGZXfAqB2WjQk0yVVA0UHTR3/n0L8bZ2sZ/aZxLE15G3
+	 BSU9cSoBjrlif+byft3GaA78+DYwkApbmPPsuoG10YBJK60QSKuPL1kxJMpLiVSPs8
+	 cycpf3KSOfhiOPWhcdP57xgbh3iqfPoCoTdJ+tfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731079AbfEOLXL (ORCPT
+        id S1731595AbfEOLXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:23:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33338 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:23:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731563AbfEOLXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:23:03 -0400
+        id S1731326AbfEOLXL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:23:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89C48206BF;
-        Wed, 15 May 2019 11:23:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 763F7206BF;
+        Wed, 15 May 2019 11:23:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919383;
-        bh=kLcfzGn5Vwa9npdD43qp06qIaJlAgpbDeFYCshauVk4=;
+        s=default; t=1557919390;
+        bh=jkLFPE0Btsk4k/1uPATuEs2Vl549eC/EjkT7x9ITssY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0mUReaogfTzMdfkL9ny8XTnyH2RcQOFPZhYkt4C8Nrqcby2kM4nKfOruxXFiQUrV+
-         wdsLeX9Z540km4SDSZvlFyodbkwApQrD/LaWcylbJSPKL3Xkt+sjAtATHjCn43c1mL
-         2Ue2hxebrEHNX9C6isiKGaxZTD9Tt7t3MgfNLeWg=
+        b=EuCxPZoMJ2NOlqz2V365ZsttsprpBH4UvWpcS6vVyJO1sR7xW1arMKPiNafwvBA8A
+         c04yMoEE/2/7rFbBtGdArHJ/pMeMkzxPPn0q0A3NC/V5CIHNiom7zqV64uu5nkaLZi
+         nuwAICe6iLEA0WFl5iv7Fux7mnfKIlWKCO1pbjQI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Andrei Vagin <avagin@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Tigran Tadevosyan <tigran.tadevosyan@arm.com>,
+        Vladimir Murzin <vladimir.murzin@arm.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 055/113] netfilter: fix nf_l4proto_log_invalid to log invalid packets
-Date:   Wed, 15 May 2019 12:55:46 +0200
-Message-Id: <20190515090657.797760292@linuxfoundation.org>
+Subject: [PATCH 4.19 058/113] ARM: 8856/1: NOMMU: Fix CCR register faulty initialization when MPU is disabled
+Date:   Wed, 15 May 2019 12:55:49 +0200
+Message-Id: <20190515090658.008272513@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -61,35 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d48668052b2603b6262459625c86108c493588dd ]
+[ Upstream commit c3143967807adb1357c36b68a7563fc0c4e1f615 ]
 
-It doesn't log a packet if sysctl_log_invalid isn't equal to protonum
-OR sysctl_log_invalid isn't equal to IPPROTO_RAW. This sentence is
-always true. I believe we need to replace OR to AND.
+When CONFIG_ARM_MPU is not defined, the base address of v7M SCB register
+is not initialized with correct value. This prevents enabling I/D caches
+when the L1 cache poilcy is applied in kernel.
 
-Cc: Florian Westphal <fw@strlen.de>
-Fixes: c4f3db1595827 ("netfilter: conntrack: add and use nf_l4proto_log_invalid")
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 3c24121039c9da14692eb48f6e39565b28c0f3cf ("ARM: 8756/1: NOMMU: Postpone MPU activation till __after_proc_init")
+Signed-off-by: Tigran Tadevosyan <tigran.tadevosyan@arm.com>
+Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_proto.c | 2 +-
+ arch/arm/kernel/head-nommu.S | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_conntrack_proto.c b/net/netfilter/nf_conntrack_proto.c
-index 51c5d7eec0a35..e903ef9b96cf3 100644
---- a/net/netfilter/nf_conntrack_proto.c
-+++ b/net/netfilter/nf_conntrack_proto.c
-@@ -86,7 +86,7 @@ void nf_l4proto_log_invalid(const struct sk_buff *skb,
- 	struct va_format vaf;
- 	va_list args;
- 
--	if (net->ct.sysctl_log_invalid != protonum ||
-+	if (net->ct.sysctl_log_invalid != protonum &&
- 	    net->ct.sysctl_log_invalid != IPPROTO_RAW)
- 		return;
- 
+diff --git a/arch/arm/kernel/head-nommu.S b/arch/arm/kernel/head-nommu.S
+index ec29de2500764..cab89479d15ef 100644
+--- a/arch/arm/kernel/head-nommu.S
++++ b/arch/arm/kernel/head-nommu.S
+@@ -133,9 +133,9 @@ __secondary_data:
+  */
+ 	.text
+ __after_proc_init:
+-#ifdef CONFIG_ARM_MPU
+ M_CLASS(movw	r12, #:lower16:BASEADDR_V7M_SCB)
+ M_CLASS(movt	r12, #:upper16:BASEADDR_V7M_SCB)
++#ifdef CONFIG_ARM_MPU
+ M_CLASS(ldr	r3, [r12, 0x50])
+ AR_CLASS(mrc	p15, 0, r3, c0, c1, 4)          @ Read ID_MMFR0
+ 	and	r3, r3, #(MMFR0_PMSA)           @ PMSA field
 -- 
 2.20.1
 
