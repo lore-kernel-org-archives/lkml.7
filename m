@@ -2,137 +2,86 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A0FCC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F89C04AB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F07D52084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:17:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cXxy7EHD"
+	by mail.kernel.org (Postfix) with ESMTP id C1E0520881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:18:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557897515;
+	bh=r8mPtehsJJWWWKTFtaDkiAyjHz2G/dad5Gh3ld9AS+Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1mdoTtdAa2M2fpBm6XsGeRrpo4fazvspp0TTaf1xFw6XZApaGhlFy5oZ8ZiVqWsMF
+	 WGv4LWrBz8NKdkuxed3tbiX3jkCxYOz3yHz3Pu3ROKz1xR8U6C0paj0WPBYpPNTI38
+	 Eq4A1QbqsgpN2HHZOnuj3W+0X8KeG7bfN5MxKCMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbfEOFRI (ORCPT
+        id S1726335AbfEOFSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 01:17:08 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33988 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbfEOFRI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 01:17:08 -0400
-Received: by mail-wm1-f66.google.com with SMTP id j187so3783688wma.1;
-        Tue, 14 May 2019 22:17:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:openpgp:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tQy8LqZeiCTFZqYP9rZB9L8U43PniXX44buCC9T7XRQ=;
-        b=cXxy7EHD0VHyl+J6XVpGG3PC96z0a+gTj5JU481JIMYS+1Nb8ClavRkvrwWnHat3W0
-         YyyRtrlVLn9+XiwN4nNeKJCqU0+CgiMYuoLKSJh7vaOsrPRR8aanxkLcSrnpcS2Tv8TB
-         bvQZ3ABDnRzaHLlxQ8im5RprDZcP80YX4UQQCRGb/1YMCojzgJFW+4adDYabm6x8Fu/h
-         0ouFAQhTH+ZaGJqZiqgnhZNE7tWMKPgMiJ7JSBMnhmi7vdBIRklljdiXm+uCy6U59fhS
-         OSEjYlKiXMomHr+hefaYRUN97fmQc2kwD4lXxytC8hzeD81aiIc1HXfVge4bg40/NU1Z
-         tAcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:openpgp
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=tQy8LqZeiCTFZqYP9rZB9L8U43PniXX44buCC9T7XRQ=;
-        b=BvmW5kJcnrI7urirYh9KjpCMT+/1zNPPgTu9O/ymGOe/vRX8cz+kPFdQMm/QtRqNwo
-         Ic++GliKvYvIowSCcd8ibNwa0ix7T1NgDviRksJOzsjU415f4D/5/bdy16ihgb75CSMC
-         sQoo3bToq+z13QFxaK/dFmaxc9bv87oop9sPYVObJ7uDNNZjYEkUmBq5q7ZVqhHeLX5l
-         k1eMqbZHzvfXFwEid08rXlDKc/AVDgWFpjHBwBBdxFB8h3ObGF0Lre6N5Y/gxRqhwM5C
-         mArnHryom2ovL88ffuec2sKmgfgkHUUo8Kcupy+YkuosGsXe7YDhjVRUeTM0KezlS6K3
-         dpkA==
-X-Gm-Message-State: APjAAAXE7W0ant4sFTa84ECl3DI/bdnANCjOgjdZTkugYwAFwVYhmCiL
-        hIVJtLHULW8LltNecmdHtogW4xryAc4=
-X-Google-Smtp-Source: APXvYqy8EvVaju/xMm4Jje13j0EJOW0Q7G26RrYHu0wQEjHS2QudeQ+a4MJSnsZdrWYfC2r1m1O1FQ==
-X-Received: by 2002:a1c:2104:: with SMTP id h4mr21410644wmh.146.1557897425573;
-        Tue, 14 May 2019 22:17:05 -0700 (PDT)
-Received: from [192.168.1.43] (193.red-88-21-103.staticip.rima-tde.net. [88.21.103.193])
-        by smtp.gmail.com with ESMTPSA id k67sm1078521wmb.34.2019.05.14.22.17.04
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 22:17:04 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] firmware: bcm47xx_nvram: Correct size_t printf
- format
-To:     Florian Fainelli <f.fainelli@gmail.com>, linux-mips@linux-mips.org
-Cc:     joe@perches.com,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190514173816.17030-1-f.fainelli@gmail.com>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-Openpgp: url=http://pgp.mit.edu/pks/lookup?op=get&search=0xE3E32C2CDEADC0DE
-Message-ID: <2269a105-5338-14cf-025f-5764cedcd9b8@amsat.org>
-Date:   Wed, 15 May 2019 07:17:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 15 May 2019 01:18:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45384 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725781AbfEOFSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 01:18:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34DCE2084E;
+        Wed, 15 May 2019 05:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557897514;
+        bh=r8mPtehsJJWWWKTFtaDkiAyjHz2G/dad5Gh3ld9AS+Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JsOUXGgu2HtJPvwKm2McD8jqARO2uzseZN4bwGYeAFYiry/Hmt518DzHkhe35dpmI
+         LrFTlzLy9PhK2LzprfytE+8TYvsnm+e/5ym0R9n/K49Fzp23PegM7eJWj9uKjIQS7G
+         XWGnvzHEk3wYzC8q+bMM20vaaZJc/rn8lK2S46NE=
+Date:   Wed, 15 May 2019 07:18:30 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc/security: Fix build break
+Message-ID: <20190515051830.GA18166@kroah.com>
+References: <20190515045206.10610-1-joel@jms.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20190514173816.17030-1-f.fainelli@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190515045206.10610-1-joel@jms.id.au>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Florian,
-
-On 5/14/19 7:38 PM, Florian Fainelli wrote:
-> When building on a 64-bit host, we will get warnings like those:
+On Wed, May 15, 2019 at 02:22:06PM +0930, Joel Stanley wrote:
+> This fixes a build break introduced in with the recent round of CPU
+> bug patches.
 > 
-> drivers/firmware/broadcom/bcm47xx_nvram.c:103:3: note: in expansion of macro 'pr_err'
->    pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
->    ^~~~~~
-> drivers/firmware/broadcom/bcm47xx_nvram.c:103:28: note: format string is defined here
->    pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
->                            ~^
->                            %li
+>   arch/powerpc/kernel/security.c: In function ‘setup_barrier_nospec’:
+>   arch/powerpc/kernel/security.c:59:21: error: implicit declaration of
+>   function ‘cpu_mitigations_off’ [-Werror=implicit-function-declaration]
+>     if (!no_nospec && !cpu_mitigations_off())
+>                        ^~~~~~~~~~~~~~~~~~~
 > 
-> Use %zu instead for that purpose.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Fixes: 782e69efb3df ("powerpc/speculation: Support 'mitigations=' cmdline option")
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
 > ---
-> Changes in v2:
-> - Use %zu instead of %zi (Joe Perches)
-> 
->  drivers/firmware/broadcom/bcm47xx_nvram.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/firmware/broadcom/bcm47xx_nvram.c b/drivers/firmware/broadcom/bcm47xx_nvram.c
-> index d25f080fcb0d..8698c5dd29d9 100644
-> --- a/drivers/firmware/broadcom/bcm47xx_nvram.c
-> +++ b/drivers/firmware/broadcom/bcm47xx_nvram.c
-> @@ -100,7 +100,7 @@ static int nvram_find_and_copy(void __iomem *iobase, u32 lim)
->  		nvram_len = size;
->  	}
->  	if (nvram_len >= NVRAM_SPACE) {
-> -		pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
-> +		pr_err("nvram on flash (%zu bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
->  		       nvram_len, NVRAM_SPACE - 1);
+> This should be applied to the 4.14 and 4.19 trees. There is no issue
+> with 5.1. The commit message contains a fixes line for the commit in
+> Linus tree.
+> ---
+>  arch/powerpc/kernel/security.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-Why not change the other format too, to stay consistent?
+Isn't this just commit 42e2acde1237 ("powerpc/64s: Include cpu header")?
 
->  		nvram_len = NVRAM_SPACE - 1;
->  	}
-> @@ -152,7 +152,7 @@ static int nvram_init(void)
->  	    header.len > sizeof(header)) {
->  		nvram_len = header.len;
->  		if (nvram_len >= NVRAM_SPACE) {
-> -			pr_err("nvram on flash (%i bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
-> +			pr_err("nvram on flash (%zu bytes) is bigger than the reserved space in memory, will just copy the first %i bytes\n",
->  				header.len, NVRAM_SPACE);
+thanks,
 
-Ditto.
-
-Regardless:
-Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-
->  			nvram_len = NVRAM_SPACE - 1;
->  		}
-> 
+greg k-h
