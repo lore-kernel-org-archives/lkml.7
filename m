@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6994C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E28E4C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7A9921726
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B45C12084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918668;
-	bh=fPtg07mn5JXl1EnPfOeUz+GMrsIXGxbmZlTK9Er5cfk=;
+	s=default; t=1557918673;
+	bh=KyrzInzIctihZHeXFNGzJXBpOcxCFu5NTlF2DXVw9/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E97i+DAoceqvERedE0fpGonZrmlsVonj6Bold5bKA6ebsVW4QSYPCMIJc5uCEDd1t
-	 KMGxQ9cTz3R1YIrsu+AjCa9IMzfRfJcVMLaeAdOyEa3sB/9gTl6yHDq7lnHuepdqj6
-	 cjGAeQGjDdqQnJ9rYBG6mw3JxNC6ar26XdYfLkbs=
+	b=qioulPc0qUAd+Bey3Fp6aUGuwrrc9S0hk3rQvew22Kd8et8r5aVZd7WAjDhEM9MSG
+	 QPL5qSrZTfg5Juf5by/mad5AAY9X2QseGq9kl8RyM8QHubGUmjBIfO/aN5nJTThqxR
+	 2BxX++FSqN0qc1IKFyd/daH4Ngz0nWxksz+oet2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729533AbfEOLLH (ORCPT
+        id S1729537AbfEOLLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:11:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45322 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:11:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729513AbfEOLLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:11:04 -0400
+        id S1729513AbfEOLLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:11:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C6DA20843;
-        Wed, 15 May 2019 11:11:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45EBC21473;
+        Wed, 15 May 2019 11:11:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918662;
-        bh=fPtg07mn5JXl1EnPfOeUz+GMrsIXGxbmZlTK9Er5cfk=;
+        s=default; t=1557918667;
+        bh=KyrzInzIctihZHeXFNGzJXBpOcxCFu5NTlF2DXVw9/E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jd+oaGlUMSQAbJb2y9im+COaccDk8ckbSUmPUw0DV0CXFvPupMu95WUoGiMmjcs8p
-         oTlOSZxT7eaDCShk2HKbw0W3mZRiDa1EGMwrujL0GDw6a6eu0Jvj+sxUFHsgfPuI6I
-         /LyI2W08Rt4EPQZDHKY6lclfVuFZWzTGn904NtRo=
+        b=MAPXM2/JTZyhb9aXtoyBByEUYKBnBkoYoNcSOhNKWje+14aBD+2QTS9HqgcL58fkl
+         JI6S8RlWhxKttH6uP1p0ET8DCitYRN9udsegArlqMWzKRLPIt1+Gx2Zw3emCu+BEFK
+         QXDWVlLq5lFWv37FTxJ2UtxFlVv0nw4eN2wpenbs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -63,9 +63,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Dave Stewart <david.c.stewart@intel.com>,
         Kees Cook <keescook@chromium.org>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 218/266] x86/speculation: Avoid __switch_to_xtra() calls
-Date:   Wed, 15 May 2019 12:55:25 +0200
-Message-Id: <20190515090730.359208837@linuxfoundation.org>
+Subject: [PATCH 4.4 220/266] x86/speculation: Split out TIF update
+Date:   Wed, 15 May 2019 12:55:27 +0200
+Message-Id: <20190515090730.435582035@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -80,22 +80,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 5635d99953f04b550738f6f4c1c532667c3fd872 upstream.
+commit e6da8bb6f9abb2628381904b24163c770e630bac upstream.
 
-The TIF_SPEC_IB bit does not need to be evaluated in the decision to invoke
-__switch_to_xtra() when:
+The update of the TIF_SSBD flag and the conditional speculation control MSR
+update is done in the ssb_prctl_set() function directly. The upcoming prctl
+support for controlling indirect branch speculation via STIBP needs the
+same mechanism.
 
- - CONFIG_SMP is disabled
-
- - The conditional STIPB mode is disabled
-
-The TIF_SPEC_IB bit still controls IBPB in both cases so the TIF work mask
-checks might invoke __switch_to_xtra() for nothing if TIF_SPEC_IB is the
-only set bit in the work masks.
-
-Optimize it out by masking the bit at compile time for CONFIG_SMP=n and at
-run time when the static key controlling the conditional STIBP mode is
-disabled.
+Split the code out and make it reusable. Reword the comment about updates
+for other tasks.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
@@ -118,68 +111,77 @@ Cc: Waiman Long <longman9394@gmail.com>
 Cc: Greg KH <gregkh@linuxfoundation.org>
 Cc: Dave Stewart <david.c.stewart@intel.com>
 Cc: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20181125185005.374062201@linutronix.de
-[bwh: Backported to 4.4: adjust context]
+Link: https://lkml.kernel.org/r/20181125185005.652305076@linutronix.de
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/include/asm/thread_info.h |   13 +++++++++++--
- arch/x86/kernel/process.h          |   15 +++++++++++++++
- 2 files changed, 26 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/bugs.c |   35 +++++++++++++++++++++++------------
+ 1 file changed, 23 insertions(+), 12 deletions(-)
 
---- a/arch/x86/include/asm/thread_info.h
-+++ b/arch/x86/include/asm/thread_info.h
-@@ -150,9 +150,18 @@ struct thread_info {
- 	_TIF_NOHZ)
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -697,10 +697,29 @@ static void ssb_select_mitigation(void)
+ #undef pr_fmt
+ #define pr_fmt(fmt)     "Speculation prctl: " fmt
  
- /* flags to check in __switch_to() */
--#define _TIF_WORK_CTXSW							\
-+#define _TIF_WORK_CTXSW_BASE						\
- 	(_TIF_IO_BITMAP|_TIF_NOTSC|_TIF_BLOCKSTEP|			\
--	 _TIF_SSBD|_TIF_SPEC_IB)
-+	 _TIF_SSBD)
+-static int ssb_prctl_set(struct task_struct *task, unsigned long ctrl)
++static void task_update_spec_tif(struct task_struct *tsk, int tifbit, bool on)
+ {
+ 	bool update;
+ 
++	if (on)
++		update = !test_and_set_tsk_thread_flag(tsk, tifbit);
++	else
++		update = test_and_clear_tsk_thread_flag(tsk, tifbit);
 +
-+/*
-+ * Avoid calls to __switch_to_xtra() on UP as STIBP is not evaluated.
-+ */
-+#ifdef CONFIG_SMP
-+# define _TIF_WORK_CTXSW	(_TIF_WORK_CTXSW_BASE | _TIF_SPEC_IB)
-+#else
-+# define _TIF_WORK_CTXSW	(_TIF_WORK_CTXSW_BASE)
-+#endif
- 
- #define _TIF_WORK_CTXSW_PREV (_TIF_WORK_CTXSW|_TIF_USER_RETURN_NOTIFY)
- #define _TIF_WORK_CTXSW_NEXT (_TIF_WORK_CTXSW)
---- a/arch/x86/kernel/process.h
-+++ b/arch/x86/kernel/process.h
-@@ -2,6 +2,8 @@
- //
- // Code shared between 32 and 64 bit
- 
-+#include <asm/spec-ctrl.h>
++	/*
++	 * Immediately update the speculation control MSRs for the current
++	 * task, but for a non-current task delay setting the CPU
++	 * mitigation until it is scheduled next.
++	 *
++	 * This can only happen for SECCOMP mitigation. For PRCTL it's
++	 * always the current task.
++	 */
++	if (tsk == current && update)
++		speculation_ctrl_update_current();
++}
 +
- void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p);
++static int ssb_prctl_set(struct task_struct *task, unsigned long ctrl)
++{
+ 	if (ssb_mode != SPEC_STORE_BYPASS_PRCTL &&
+ 	    ssb_mode != SPEC_STORE_BYPASS_SECCOMP)
+ 		return -ENXIO;
+@@ -711,28 +730,20 @@ static int ssb_prctl_set(struct task_str
+ 		if (task_spec_ssb_force_disable(task))
+ 			return -EPERM;
+ 		task_clear_spec_ssb_disable(task);
+-		update = test_and_clear_tsk_thread_flag(task, TIF_SSBD);
++		task_update_spec_tif(task, TIF_SSBD, false);
+ 		break;
+ 	case PR_SPEC_DISABLE:
+ 		task_set_spec_ssb_disable(task);
+-		update = !test_and_set_tsk_thread_flag(task, TIF_SSBD);
++		task_update_spec_tif(task, TIF_SSBD, true);
+ 		break;
+ 	case PR_SPEC_FORCE_DISABLE:
+ 		task_set_spec_ssb_disable(task);
+ 		task_set_spec_ssb_force_disable(task);
+-		update = !test_and_set_tsk_thread_flag(task, TIF_SSBD);
++		task_update_spec_tif(task, TIF_SSBD, true);
+ 		break;
+ 	default:
+ 		return -ERANGE;
+ 	}
+-
+-	/*
+-	 * If being set on non-current task, delay setting the CPU
+-	 * mitigation until it is next scheduled.
+-	 */
+-	if (task == current && update)
+-		speculation_ctrl_update_current();
+-
+ 	return 0;
+ }
  
- /*
-@@ -14,6 +16,19 @@ static inline void switch_to_extra(struc
- 	unsigned long next_tif = task_thread_info(next)->flags;
- 	unsigned long prev_tif = task_thread_info(prev)->flags;
- 
-+	if (IS_ENABLED(CONFIG_SMP)) {
-+		/*
-+		 * Avoid __switch_to_xtra() invocation when conditional
-+		 * STIPB is disabled and the only different bit is
-+		 * TIF_SPEC_IB. For CONFIG_SMP=n TIF_SPEC_IB is not
-+		 * in the TIF_WORK_CTXSW masks.
-+		 */
-+		if (!static_branch_likely(&switch_to_cond_stibp)) {
-+			prev_tif &= ~_TIF_SPEC_IB;
-+			next_tif &= ~_TIF_SPEC_IB;
-+		}
-+	}
-+
- 	/*
- 	 * __switch_to_xtra() handles debug registers, i/o bitmaps,
- 	 * speculation mitigations etc.
 
 
