@@ -2,129 +2,206 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D734C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC98C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03032084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:03:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E6G3WkPN"
+	by mail.kernel.org (Postfix) with ESMTP id 79EE920657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:03:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557921820;
+	bh=IkVquPmi2ENgpVsO/PiNee7bREyvEPL0sBJQjUPvmto=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cQMs/9Y0rVg0FJGU7TTom9/CgBS3BdKOMfrH6ZREd9Y39UnjD9hWCc0n4+zpSagqv
+	 nXaOv0hIbaiHJWMy8SbTRx8ZnnYtBSKDHWZNFs9z1ro1HS1xlvALjff/54SgydCYcR
+	 9osG9rRNSPvQxXHwXeu+26xlEAsMPpTjx38WiQjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730234AbfEOMDX (ORCPT
+        id S1730120AbfEOMDi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:03:23 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36204 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728757AbfEOMDV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 08:03:21 -0400
-Received: by mail-io1-f65.google.com with SMTP id e19so1998790iob.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 05:03:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oXcC1WmqtHCA/25OGfVus2ss0Q8/KBx9Yi1Cn7vNm64=;
-        b=E6G3WkPNv9aRnK4QX8NVYVlIXkq1xCV+BGD0zKo/346Ai0W84w4531tTwaaoa6GiVa
-         pnG47pwJBnNz4UMUDTzh6hwKzV1NIzL8y18kMSF5/0yEMEXM6YYTUOE0TG7FtfOkjrye
-         rIJFqkh18+vzTKMC3c7twyU/M8TsVKijeLilBIoGSdYy6tXV9Tm7+WuqUO4bfaHtw10u
-         WFZENFZBeCpccvYJ+KKr4huEegGw+9Ld6LOsKXojNesHbgE/nQOTLt+wnxeCFd7DnLui
-         3GCr8DhvevVwiVKJ9y60rOqqYlJM5QTtIGTVpxYOWROhaYgqSr5cx4dWU9rNeGi+/mf/
-         FR+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oXcC1WmqtHCA/25OGfVus2ss0Q8/KBx9Yi1Cn7vNm64=;
-        b=Be5lTDDJLVN0MbJKejbcJVno74WWtO1wEdRNFyUPw06VayVmDAYFwDsptw9U7o0kht
-         6HfYKOa+cZzRkuMaUtw8BxpJ3e0vKI0lyDdornXVZPsPfJUsDqQTVMppQ1sZejLwIdXc
-         mFdBYR0J11tqaQTvc/DGqNZhXToQl8GMu/jmB4pkPfmr8ORB37Gx5L2yGKHdcgtRonZb
-         ru2b1knkrfLnSXhve6caBnWmDuSALpm8pDwDmpipT0NNsXg9RuBlyNRqbB6YAcO2dX3U
-         o0JrpbSRy6kbmdYP4Zje4oJmJiOn3PeZTJBjM0oX43PV9NDkI/5cktUZ+tyTbz4/HxHk
-         /O9g==
-X-Gm-Message-State: APjAAAV4da53A34apJ+x95gCoLnu8qwnw4bZL3s28HDaYDLh7ALhgthd
-        u87tr4LAuRdb2kM1abB6JukQyyoYm54=
-X-Google-Smtp-Source: APXvYqwtP6NSXcbHsqX0dDky2Qlej8/PFqCVyQfH3swfAJRmYCZiBBbts6OBrlklfZM/BpOIdhtDmg==
-X-Received: by 2002:a6b:fe0d:: with SMTP id x13mr23295482ioh.1.1557921799968;
-        Wed, 15 May 2019 05:03:19 -0700 (PDT)
-Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.googlemail.com with ESMTPSA id h191sm31334ith.5.2019.05.15.05.03.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 05:03:18 -0700 (PDT)
-Subject: Re: [PATCH 02/18] soc: qcom: create "include/soc/qcom/rmnet.h"
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        subashab@codeaurora.org, stranche@codeaurora.org,
-        YueHaibing <yuehaibing@huawei.com>,
-        Joe Perches <joe@perches.com>, syadagir@codeaurora.org,
-        mjavid@codeaurora.org, evgreen@chromium.org, benchan@google.com,
-        ejcaruso@google.com, abhishek.esse@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190512012508.10608-1-elder@linaro.org>
- <20190512012508.10608-3-elder@linaro.org>
- <CAK8P3a16HpKEUB7_6G_W_RKkyVeVBW_rofLbdhC2QmWjVOAHMg@mail.gmail.com>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <9cae00c4-29ab-6c3e-7437-6ed878a3061f@linaro.org>
-Date:   Wed, 15 May 2019 07:03:16 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 15 May 2019 08:03:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47686 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729787AbfEOLMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:12:30 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD1FD216FD;
+        Wed, 15 May 2019 11:12:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557918750;
+        bh=IkVquPmi2ENgpVsO/PiNee7bREyvEPL0sBJQjUPvmto=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Pf/be454uTJ++mMblqSN2INmpUWeM6oIuw+EW0xztKTK/rEIeT+YX6VvEZVtbDgKm
+         Dtqn703ioLzR1zGWM1bhiSLXMw5qSxpkDJcAsYOG3h+T759fswWR77U/ET3AmfS9JY
+         MqqEBElecJnkNBttPRqd50EvRkjl2KbHNqvRkAHc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Casey Schaufler <casey.schaufler@intel.com>,
+        Asit Mallick <asit.k.mallick@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Jon Masters <jcm@redhat.com>,
+        Waiman Long <longman9394@gmail.com>,
+        Dave Stewart <david.c.stewart@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 210/266] x86/speculation: Rework SMT state change
+Date:   Wed, 15 May 2019 12:55:17 +0200
+Message-Id: <20190515090730.071222249@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
+References: <20190515090722.696531131@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a16HpKEUB7_6G_W_RKkyVeVBW_rofLbdhC2QmWjVOAHMg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/15/19 1:59 AM, Arnd Bergmann wrote:
-> On Sun, May 12, 2019 at 3:25 AM Alex Elder <elder@linaro.org> wrote:
-> 
->> diff --git a/include/soc/qcom/rmnet.h b/include/soc/qcom/rmnet.h
->> new file mode 100644
->> index 000000000000..80dcd6e68c3d
->> --- /dev/null
->> +++ b/include/soc/qcom/rmnet.h
->> @@ -0,0 +1,38 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +
->> +/* Copyright (c) 2013-2018, The Linux Foundation. All rights reserved.
->> + * Copyright (C) 2018-2019 Linaro Ltd.
->> + */
->> +#ifndef _SOC_QCOM_RMNET_H_
->> +#define _SOC_QCOM_RMNET_H_
->> +
->> +#include <linux/types.h>
->> +
->> +/* Header structure that precedes packets in ETH_P_MAP protocol */
->> +struct rmnet_map_header {
->> +       u8  pad_len             : 6;
->> +       u8  reserved_bit        : 1;
->> +       u8  cd_bit              : 1;
->> +       u8  mux_id;
->> +       __be16 pkt_len;
->> +}  __aligned(1);
-> 
-> If we move this into include/soc/, I want the structure to be portable,
-> and avoid the bit fields. Please use mask/shift operations or the
-> include/linux/bits.h macros instead to make this work with big-endian
-> kernels.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Sure, I'll do that.  I did that everywhere else in the driver,
-but here I just tried to preserve the original code as I moved
-it.  I will update at least these structures, and all existing
-code (plus the IPA code) to use fields masks.
+commit a74cfffb03b73d41e08f84c2e5c87dec0ce3db9f upstream.
 
-					-Alex
-> 
->      Arnd
-> 
+arch_smt_update() is only called when the sysfs SMT control knob is
+changed. This means that when SMT is enabled in the sysfs control knob the
+system is considered to have SMT active even if all siblings are offline.
+
+To allow finegrained control of the speculation mitigations, the actual SMT
+state is more interesting than the fact that siblings could be enabled.
+
+Rework the code, so arch_smt_update() is invoked from each individual CPU
+hotplug function, and simplify the update function while at it.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Casey Schaufler <casey.schaufler@intel.com>
+Cc: Asit Mallick <asit.k.mallick@intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Waiman Long <longman9394@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Dave Stewart <david.c.stewart@intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20181125185004.521974984@linutronix.de
+[bwh: Backported to 4.4: adjust context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ arch/x86/kernel/cpu/bugs.c |   11 +++++------
+ include/linux/sched/smt.h  |    2 ++
+ kernel/cpu.c               |   10 +++++++++-
+ 3 files changed, 16 insertions(+), 7 deletions(-)
+
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -13,6 +13,7 @@
+ #include <linux/module.h>
+ #include <linux/nospec.h>
+ #include <linux/prctl.h>
++#include <linux/sched/smt.h>
+ 
+ #include <asm/spec-ctrl.h>
+ #include <asm/cmdline.h>
+@@ -340,16 +341,14 @@ void arch_smt_update(void)
+ 		return;
+ 
+ 	mutex_lock(&spec_ctrl_mutex);
+-	mask = x86_spec_ctrl_base;
+-	if (IS_ENABLED(CONFIG_SMP))
++
++	mask = x86_spec_ctrl_base & ~SPEC_CTRL_STIBP;
++	if (sched_smt_active())
+ 		mask |= SPEC_CTRL_STIBP;
+-	else
+-		mask &= ~SPEC_CTRL_STIBP;
+ 
+ 	if (mask != x86_spec_ctrl_base) {
+ 		pr_info("Spectre v2 cross-process SMT mitigation: %s STIBP\n",
+-				IS_ENABLED(CONFIG_SMP) ?
+-				"Enabling" : "Disabling");
++			mask & SPEC_CTRL_STIBP ? "Enabling" : "Disabling");
+ 		x86_spec_ctrl_base = mask;
+ 		on_each_cpu(update_stibp_msr, NULL, 1);
+ 	}
+--- a/include/linux/sched/smt.h
++++ b/include/linux/sched/smt.h
+@@ -15,4 +15,6 @@ static __always_inline bool sched_smt_ac
+ static inline bool sched_smt_active(void) { return false; }
+ #endif
+ 
++void arch_smt_update(void);
++
+ #endif
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -8,6 +8,7 @@
+ #include <linux/init.h>
+ #include <linux/notifier.h>
+ #include <linux/sched.h>
++#include <linux/sched/smt.h>
+ #include <linux/unistd.h>
+ #include <linux/cpu.h>
+ #include <linux/oom.h>
+@@ -199,6 +200,12 @@ void cpu_hotplug_enable(void)
+ EXPORT_SYMBOL_GPL(cpu_hotplug_enable);
+ #endif	/* CONFIG_HOTPLUG_CPU */
+ 
++/*
++ * Architectures that need SMT-specific errata handling during SMT hotplug
++ * should override this.
++ */
++void __weak arch_smt_update(void) { }
++
+ /* Need to know about CPUs going up/down? */
+ int register_cpu_notifier(struct notifier_block *nb)
+ {
+@@ -434,6 +441,7 @@ out_release:
+ 	cpu_hotplug_done();
+ 	if (!err)
+ 		cpu_notify_nofail(CPU_POST_DEAD | mod, hcpu);
++	arch_smt_update();
+ 	return err;
+ }
+ 
+@@ -537,7 +545,7 @@ out_notify:
+ 		__cpu_notify(CPU_UP_CANCELED | mod, hcpu, nr_calls, NULL);
+ out:
+ 	cpu_hotplug_done();
+-
++	arch_smt_update();
+ 	return ret;
+ }
+ 
+
 
