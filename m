@@ -2,106 +2,92 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50345C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177B6C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14A5920881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:15:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557929727;
-	bh=9oT0KsgoIHKp1gaIA3yGnSWjzLgttcSJqWsnHuMFklU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UGU6o/2rBJ1ZI37P+c0GCFrATL83h3VXH8LaDX6RU9tbvaYrsifkpRZUy4Xscy+7n
-	 jPR4+iDU49WN+cE/JhcdCPxx59E/fDcnvmIjJBfWsT4zbipdIucXGiaRPdF46jdGOd
-	 osfTWdCV3Pek6PuRMDylujpbuf/7QgSrSzdnilMI=
+	by mail.kernel.org (Postfix) with ESMTP id E4DEF2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:15:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbfEOOP0 (ORCPT
+        id S1728004AbfEOOPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 10:15:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37300 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 10:15:45 -0400
+Received: from mga04.intel.com ([192.55.52.120]:51762 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727188AbfEOOPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 10:15:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726766AbfEOOPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 10:15:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 07:15:44 -0700
+X-ExtLoop1: 1
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 15 May 2019 07:15:44 -0700
+Received: from [10.254.95.25] (kliang2-mobl.ccr.corp.intel.com [10.254.95.25])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6447F2084E;
-        Wed, 15 May 2019 14:15:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557929724;
-        bh=9oT0KsgoIHKp1gaIA3yGnSWjzLgttcSJqWsnHuMFklU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cymAmOBxyc1GTsEjFYm1jEEF6fF6ucwbLlFcVy2JUemumbYGXIUAaHBENIdwaXGtQ
-         Mo7G53E/Odw8uc2jvKrtkir0KuwxNzwtx1jzqSUEWS3JtVJt5MFoAzkVWiMzBfYKvr
-         LEJV4MU7MjXrMViY2dKAYcBUlOU+oAz5guTRnMw4=
-Date:   Wed, 15 May 2019 16:15:21 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Naveen Kumar Parna <parna.naveenkumar@gmail.com>
-Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] bsr: do not use assignment in if condition
-Message-ID: <20190515141521.GA8999@kroah.com>
-References: <20190515131524.26679-1-parna.naveenkumar@gmail.com>
- <20190515133230.GB5316@kroah.com>
- <CAKXhv7csf3Qys4KsN+OJuPwb4daakC3U93boUwxd3t-9D9uNQw@mail.gmail.com>
+        by linux.intel.com (Postfix) with ESMTPS id 89143580414;
+        Wed, 15 May 2019 07:15:43 -0700 (PDT)
+Subject: Re: [PATCH V2 1/3] perf parse-regs: Split parse_regs
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, acme@kernel.org
+Cc:     jolsa@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com
+References: <1557865174-56264-1-git-send-email-kan.liang@linux.intel.com>
+ <02cd8171-3dbf-b835-3fe0-245f6fbea1cb@linux.ibm.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+Message-ID: <c628c2a2-4d85-ccae-6de1-79d259209212@linux.intel.com>
+Date:   Wed, 15 May 2019 10:15:42 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKXhv7csf3Qys4KsN+OJuPwb4daakC3U93boUwxd3t-9D9uNQw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <02cd8171-3dbf-b835-3fe0-245f6fbea1cb@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 07:16:37PM +0530, Naveen Kumar Parna wrote:
-> On Wed, 15 May 2019 at 19:02, Greg KH <gregkh@linuxfoundation.org> wrote:
+
+
+On 5/15/2019 2:49 AM, Ravi Bangoria wrote:
 > 
-> > On Wed, May 15, 2019 at 06:45:24PM +0530, parna.naveenkumar@gmail.com
-> > wrote:
-> > > From: Naveen Kumar Parna <parna.naveenkumar@gmail.com>
-> > >
-> > > checkpatch.pl does not like assignment in if condition
-> > >
-> > > Signed-off-by: Naveen Kumar Parna <parna.naveenkumar@gmail.com>
-> > > ---
-> > >  drivers/char/bsr.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/char/bsr.c b/drivers/char/bsr.c
-> > > index a6cef548e01e..2b00748b83d2 100644
-> > > --- a/drivers/char/bsr.c
-> > > +++ b/drivers/char/bsr.c
-> > > @@ -322,7 +322,8 @@ static int __init bsr_init(void)
-> > >               goto out_err_2;
-> > >       }
-> > >
-> > > -     if ((ret = bsr_create_devs(np)) < 0) {
-> > > +     ret = bsr_create_devs(np);
-> > > +     if (ret  < 0) {
-> >
-> > Checkpatch also probably does not like that if statement :(
-> >
-> I ran checkpatch script and it did not show any warning or error.
+> On 5/15/19 1:49 AM, kan.liang@linux.intel.com wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> The available registers for --int-regs and --user-regs may be different,
+>> e.g. XMM registers.
+>>
+>> Split parse_regs into two dedicated functions for --int-regs and
+>> --user-regs respectively.
+>>
+>> Modify the warning message. "--user-regs=?" should be applied to show
+>> the available registers for --user-regs.
+>>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> ---
 > 
-> $ ./scripts/checkpatch.pl
-> 0001-bsr-do-not-use-assignment-in-if-condition.patch
-> total: 0 errors, 0 warnings, 9 lines checked
-> 0001-bsr-do-not-use-assignment-in-if-condition.patch has no obvious style
-> problems and is ready for submission.
+> For patch 1 and 2,
+> Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> 
+> Minor neat. Should we update document as well? May be something like:
+> 
+>    tools/perf/Documentation/perf-record.txt
+> 
+>    --user-regs::
+>    Similar to -I, but capture user registers at sample time. To list the available
+>    user registers use --user-regs=\?.
+>
+Hi Ravi,
 
-Ok, then checkpatch missed it, but your eyes should have caught it.
+Thanks for test.
 
-When you are doing code style fixes outside of the drivers/staging/
-area, you need to be very careful to be sure to get it right, as many
-maintainers do not like the churn.
+The change of document looks good.
 
-Please fix this up and resend.
+Thanks,
+Kan
 
-thanks,
-
-greg k-h
