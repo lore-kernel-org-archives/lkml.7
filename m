@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA6DC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59342C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE8E20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:44:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2147B2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920653;
-	bh=M1A+x2isSaTGTVAoH+Dy0WZMUUpWQu43cxkqdxAixws=;
+	s=default; t=1557920669;
+	bh=mYntcsVQf5ynlvW1HThSn5YNWwIDpm6Tb6YQEtUXdFw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OkYSrI8TbRSf/aWRbnU3PoX5zkjDAAQNlbELulQw77mQZlJpSpJZldZ/8HECgFLSO
-	 xlJ/hFHwGWvFa8NCxZB/u15MmhI2R6LyMuhuIRkFawjBemsppQwgTm3t1KguacakL3
-	 lCd8sE3JSAJzegMGHY3zQaEJKoj8xUefPMAxKHv4=
+	b=kMjmqNjyP6UumlZN/qh1yjntlkfA90kzxXBRZyq/kOEsZe/PxuMZlAJV3J5z6AiO2
+	 jI8vnVRLLO5g/SbC0GWHq+Fg6Z3iO5Gy0lE57RXHtSHStOncQyF+SZSmg/pFcIRtcg
+	 DAyvJjPRtaCyiiEY9647lx5FTdrEOejWPUK5dETM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732099AbfEOLoM (ORCPT
+        id S1732121AbfEOLo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:44:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37698 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:44:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730025AbfEOL0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:26:50 -0400
+        id S1728818AbfEOL0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:26:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E9CB206BF;
-        Wed, 15 May 2019 11:26:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA30920818;
+        Wed, 15 May 2019 11:26:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919609;
-        bh=M1A+x2isSaTGTVAoH+Dy0WZMUUpWQu43cxkqdxAixws=;
+        s=default; t=1557919596;
+        bh=mYntcsVQf5ynlvW1HThSn5YNWwIDpm6Tb6YQEtUXdFw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lIHYYSHhR3HAOhEiIEynNFMKyS98eVIzCfnuM3AIOu5VWriTJkDPkcys7yFhrVrOE
-         GoCI32IhbXNKeUDTf46eFEIkJ4L3CmHt4+MXHPzDucc5GtBNRCcv//1naD/rL1cF19
-         fUrFQXw0MP8cTbp+58n83kAMwbuEpdCKIGHZnrsc=
+        b=vqGyvEJBKoOXWAnMOsb3K3OIIn+NtqOKF+3PxJDHvHOAar8D/scWpbZrap6IXp71j
+         LscbhD328HWFuUq195J1a9HltxMPv6hfDGkEVB2pNs2hb6eiRqrfoJx65qe56DFDa+
+         nxguxYZO+cTjCQe6VBp5x09uVmiNHabao1sWr1bQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Jiang <dave.jiang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 026/137] libnvdimm/security: provide fix for secure-erase to use zero-key
-Date:   Wed, 15 May 2019 12:55:07 +0200
-Message-Id: <20190515090655.178173486@linuxfoundation.org>
+Subject: [PATCH 5.0 021/137] mac80211: fix unaligned access in mesh table hash function
+Date:   Wed, 15 May 2019 12:55:02 +0200
+Message-Id: <20190515090654.807376275@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -60,104 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 037c8489ade669e0f09ad40d5b91e5e1159a14b1 ]
+[ Upstream commit 40586e3fc400c00c11151804dcdc93f8c831c808 ]
 
-Add a zero key in order to standardize hardware that want a key of 0's to
-be passed. Some platforms defaults to a zero-key with security enabled
-rather than allow the OS to enable the security. The zero key would allow
-us to manage those platform as well. This also adds a fix to secure erase
-so it can use the zero key to do crypto erase. Some other security commands
-already use zero keys. This introduces a standard zero-key to allow
-unification of semantics cross nvdimm security commands.
+The pointer to the last four bytes of the address is not guaranteed to be
+aligned, so we need to use __get_unaligned_cpu32 here
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/security.c        | 17 ++++++++++++-----
- tools/testing/nvdimm/test/nfit.c | 11 +++++++++--
- 2 files changed, 21 insertions(+), 7 deletions(-)
+ net/mac80211/mesh_pathtbl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvdimm/security.c b/drivers/nvdimm/security.c
-index f8bb746a549f7..6bea6852bf278 100644
---- a/drivers/nvdimm/security.c
-+++ b/drivers/nvdimm/security.c
-@@ -22,6 +22,8 @@ static bool key_revalidate = true;
- module_param(key_revalidate, bool, 0444);
- MODULE_PARM_DESC(key_revalidate, "Require key validation at init.");
- 
-+static const char zero_key[NVDIMM_PASSPHRASE_LEN];
-+
- static void *key_data(struct key *key)
+diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
+index 88a6d5e18ccc9..ac1f5db529945 100644
+--- a/net/mac80211/mesh_pathtbl.c
++++ b/net/mac80211/mesh_pathtbl.c
+@@ -23,7 +23,7 @@ static void mesh_path_free_rcu(struct mesh_table *tbl, struct mesh_path *mpath);
+ static u32 mesh_table_hash(const void *addr, u32 len, u32 seed)
  {
- 	struct encrypted_key_payload *epayload = dereference_key_locked(key);
-@@ -286,8 +288,9 @@ int nvdimm_security_erase(struct nvdimm *nvdimm, unsigned int keyid,
- {
- 	struct device *dev = &nvdimm->dev;
- 	struct nvdimm_bus *nvdimm_bus = walk_to_nvdimm_bus(dev);
--	struct key *key;
-+	struct key *key = NULL;
- 	int rc;
-+	const void *data;
+ 	/* Use last four bytes of hw addr as hash index */
+-	return jhash_1word(*(u32 *)(addr+2), seed);
++	return jhash_1word(__get_unaligned_cpu32((u8 *)addr + 2), seed);
+ }
  
- 	/* The bus lock should be held at the top level of the call stack */
- 	lockdep_assert_held(&nvdimm_bus->reconfig_mutex);
-@@ -319,11 +322,15 @@ int nvdimm_security_erase(struct nvdimm *nvdimm, unsigned int keyid,
- 		return -EOPNOTSUPP;
- 	}
- 
--	key = nvdimm_lookup_user_key(nvdimm, keyid, NVDIMM_BASE_KEY);
--	if (!key)
--		return -ENOKEY;
-+	if (keyid != 0) {
-+		key = nvdimm_lookup_user_key(nvdimm, keyid, NVDIMM_BASE_KEY);
-+		if (!key)
-+			return -ENOKEY;
-+		data = key_data(key);
-+	} else
-+		data = zero_key;
- 
--	rc = nvdimm->sec.ops->erase(nvdimm, key_data(key), pass_type);
-+	rc = nvdimm->sec.ops->erase(nvdimm, data, pass_type);
- 	dev_dbg(dev, "key: %d erase%s: %s\n", key_serial(key),
- 			pass_type == NVDIMM_MASTER ? "(master)" : "(user)",
- 			rc == 0 ? "success" : "fail");
-diff --git a/tools/testing/nvdimm/test/nfit.c b/tools/testing/nvdimm/test/nfit.c
-index b579f962451d6..cad719876ef45 100644
---- a/tools/testing/nvdimm/test/nfit.c
-+++ b/tools/testing/nvdimm/test/nfit.c
-@@ -225,6 +225,8 @@ static struct workqueue_struct *nfit_wq;
- 
- static struct gen_pool *nfit_pool;
- 
-+static const char zero_key[NVDIMM_PASSPHRASE_LEN];
-+
- static struct nfit_test *to_nfit_test(struct device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
-@@ -1059,8 +1061,7 @@ static int nd_intel_test_cmd_secure_erase(struct nfit_test *t,
- 	struct device *dev = &t->pdev.dev;
- 	struct nfit_test_sec *sec = &dimm_sec_info[dimm];
- 
--	if (!(sec->state & ND_INTEL_SEC_STATE_ENABLED) ||
--			(sec->state & ND_INTEL_SEC_STATE_FROZEN)) {
-+	if (sec->state & ND_INTEL_SEC_STATE_FROZEN) {
- 		nd_cmd->status = ND_INTEL_STATUS_INVALID_STATE;
- 		dev_dbg(dev, "secure erase: wrong security state\n");
- 	} else if (memcmp(nd_cmd->passphrase, sec->passphrase,
-@@ -1068,6 +1069,12 @@ static int nd_intel_test_cmd_secure_erase(struct nfit_test *t,
- 		nd_cmd->status = ND_INTEL_STATUS_INVALID_PASS;
- 		dev_dbg(dev, "secure erase: wrong passphrase\n");
- 	} else {
-+		if (!(sec->state & ND_INTEL_SEC_STATE_ENABLED)
-+				&& (memcmp(nd_cmd->passphrase, zero_key,
-+					ND_INTEL_PASSPHRASE_SIZE) != 0)) {
-+			dev_dbg(dev, "invalid zero key\n");
-+			return 0;
-+		}
- 		memset(sec->passphrase, 0, ND_INTEL_PASSPHRASE_SIZE);
- 		memset(sec->master_passphrase, 0, ND_INTEL_PASSPHRASE_SIZE);
- 		sec->state = 0;
+ static const struct rhashtable_params mesh_rht_params = {
 -- 
 2.20.1
 
