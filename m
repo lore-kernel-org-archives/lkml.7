@@ -2,96 +2,160 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A415C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8CAC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35DEF20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5884D20862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:10:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbfEOHEN (ORCPT
+        id S1726032AbfEOHKs convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 03:04:13 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46601 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbfEOHEM (ORCPT
+        Wed, 15 May 2019 03:10:48 -0400
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:54068 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfEOHKr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 03:04:12 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z19so2032084qtz.13
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 00:04:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D/x4j8+P4m1EISwP0M38Z0UnU/waWQ3GkeT9+7Fw+Qg=;
-        b=scar3RWzvmgUc/lpb4oaZtUdJ2fSH26bHBk+UM9FLoJFz93vIxVaBXEd6rRmVShzqE
-         eq2h6jSN/60RJwJcZw7QbyDads4cpC1t0LJJh8PnN9il5oO83T85Px8wSdXuUpjrWiJ7
-         U7KnvMJliz/LISTrzFGpzPOno2DID6+BNowC57umCV2N7KG15nRou7eu/3vURlFOIqKg
-         nD5lveiM3BOK0dCRFYAy8TrSSdvEsRSpfh2ZllojR73QlwgW89AtPSZll/vKTLp2v8aH
-         3CuOsvNlcmOizwyTAkcog6EY5cPCkdon12+w3gOf8yyWn3hOgcAIv01VtRh53Utly0Yp
-         xPMg==
-X-Gm-Message-State: APjAAAWEuNqdC+Pavq9YCh6625K+pGveGBX8of/b9caEyCmM/sAzkg1Q
-        i10x7vPMq9FtPkMlDxDSmVZrMB3+3tYL3Q+x52E=
-X-Google-Smtp-Source: APXvYqyICkC3CerfJr0tm1djW5WSt2GGOXQAYHjspKEgLHZ/beQE4UMAmkhKyyx6kDREb3zH09Gz8zoKGde9aR/0mbc=
-X-Received: by 2002:ac8:2924:: with SMTP id y33mr33483911qty.212.1557903851749;
- Wed, 15 May 2019 00:04:11 -0700 (PDT)
+        Wed, 15 May 2019 03:10:47 -0400
+Received: from mailgate01.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x4F7AJQU030613
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 15 May 2019 16:10:20 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x4F7AJkx017304;
+        Wed, 15 May 2019 16:10:19 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x4F7AJj5007322;
+        Wed, 15 May 2019 16:10:19 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.135] [10.38.151.135]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-405354; Wed, 15 May 2019 16:09:44 +0900
+Received: from BPXM12GP.gisp.nec.co.jp ([10.38.151.204]) by
+ BPXC07GP.gisp.nec.co.jp ([10.38.151.135]) with mapi id 14.03.0319.002; Wed,
+ 15 May 2019 16:09:44 +0900
+From:   Junichi Nomura <j-nomura@ce.jp.nec.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+CC:     Baoquan He <bhe@redhat.com>,
+        "kasong@redhat.com" <kasong@redhat.com>,
+        "dyoung@redhat.com" <dyoung@redhat.com>,
+        "fanc.fnst@cn.fujitsu.com" <fanc.fnst@cn.fujitsu.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+Subject: Re: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI systab
+ and ACPI tables
+Thread-Topic: [PATCH v6 1/2] x86/kexec: Build identity mapping for EFI
+ systab and ACPI tables
+Thread-Index: AQHVCt13YD4lckvUHUCIqj5Wl9aEBaZrKqmAgAADEQA=
+Date:   Wed, 15 May 2019 07:09:43 +0000
+Message-ID: <20190515070942.GA17154@jeru.linux.bs1.fc.nec.co.jp>
+References: <20190424092944.30481-2-bhe@redhat.com>
+ <20190429002318.GA25400@MiWiFi-R3L-srv> <20190429135536.GC2324@zn.tnic>
+ <20190513014248.GA16774@MiWiFi-R3L-srv> <20190513070725.GA20105@zn.tnic>
+ <20190513073254.GB16774@MiWiFi-R3L-srv> <20190513075006.GB20105@zn.tnic>
+ <20190513080210.GC16774@MiWiFi-R3L-srv>
+ <20190515051717.GA13703@jeru.linux.bs1.fc.nec.co.jp>
+ <20190515065843.GA24212@zn.tnic>
+In-Reply-To: <20190515065843.GA24212@zn.tnic>
+Accept-Language: en-US, ja-JP
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.85]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <A094AF2DEB5936499C61698B73C9C0AC@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20190512012508.10608-1-elder@linaro.org> <20190512012508.10608-4-elder@linaro.org>
-In-Reply-To: <20190512012508.10608-4-elder@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 15 May 2019 09:03:55 +0200
-Message-ID: <CAK8P3a3KLj5x-5VS5eUQfNVhPL101Dg_rezEzra4GFY5Dva2Cg@mail.gmail.com>
-Subject: Re: [PATCH 03/18] dt-bindings: soc: qcom: add IPA bindings
-To:     Alex Elder <elder@linaro.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>, syadagir@codeaurora.org,
-        mjavid@codeaurora.org, evgreen@chromium.org, benchan@google.com,
-        ejcaruso@google.com, abhishek.esse@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 3:25 AM Alex Elder <elder@linaro.org> wrote:
->
-> Add the binding definitions for the "qcom,ipa" device tree node.
->
-> Signed-off-by: Alex Elder <elder@linaro.org>
-> ---
->  .../devicetree/bindings/net/qcom,ipa.txt      | 164 ++++++++++++++++++
->  1 file changed, 164 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipa.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.txt b/Documentation/devicetree/bindings/net/qcom,ipa.txt
-> new file mode 100644
-> index 000000000000..2705e198f12e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/qcom,ipa.txt
+On 5/15/19 3:58 PM, Borislav Petkov wrote:
+> On Wed, May 15, 2019 at 05:17:19AM +0000, Junichi Nomura wrote:
+>> Hi Kairui,
+>>
+>> On 5/13/19 5:02 PM, Baoquan He wrote:
+>>> On 05/13/19 at 09:50am, Borislav Petkov wrote:
+>>>> On Mon, May 13, 2019 at 03:32:54PM +0800, Baoquan He wrote:
+>>>> So we're going to try it again this cycle and if there's no fallout, it
+>>>> will go upstream. If not, it will have to be fixed. The usual thing.
+>>>>
+>>>> And I don't care if Kairui's patch fixes this one problem - judging by
+>>>> the fragility of this whole thing, it should be hammered on one more
+>>>> cycle on as many boxes as possible to make sure there's no other SNAFUs.
+>>>>
+>>>> So go test it on more machines instead. I've pushed it here:
+>>>>
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/bp/bp.git/log/?h=next-merge-window
+>>>
+>>> Pingfan has got a machine to reproduce the kexec breakage issue, and
+>>> applying these two patches fix it. He planned to paste the test result.
+>>> I will ask him to try this branch if he has time, or I can get his
+>>> machine to test.
+>>>
+>>> Junichi, also have a try on Boris's branch in NEC's test environment?
+>>
+>> while the patch set works on most of the machines I'm testing around,
+>> I found kexec(1) fails to load kernel on a few machines if this patch
+>> is applied.  Those machines don't have IORES_DESC_ACPI_TABLES region
+>> and have ACPI tables in IORES_DESC_ACPI_NV_STORAGE region instead.
+> 
+> Why? What kind of machines are those?
 
-For new bindings, we should use the yaml format so we can verify the
-device tree files against the binding.
+I don't know.  They are just general purpose Xeon-based servers
+and not some special purpose machines.  So I guess there are other
+such machines in the wild.
 
-> +
-> +- reg:
-> +       Resources specifying the physical address spaces of the IPA and GSI.
-> +
-> +- reg-names:
-> +       The names of the two address space ranges defined by the "reg"
-> +       property.  Must be:
-> +               "ipa-reg"
-> +               "ipa-shared"
-> +               "gsi"
+> Why are the ACPI tables in NV storage?
+> 
+> Looking at crash_setup_memmap_entries(), it already maps that type so I
+> guess this is needed.
+> 
+> + Rafael and leaving in the rest for reference.
+> 
+>  
+>> So I think map_acpi_tables() should try to map both regions.  I tried
+>> following change in addition and it worked.
+>>
+>> -- 
+>> Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
+>>
+>>
+>> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+>> index 3c77bdf..3837c4a 100644
+>> --- a/arch/x86/kernel/machine_kexec_64.c
+>> +++ b/arch/x86/kernel/machine_kexec_64.c
+>> @@ -56,12 +56,22 @@ static int mem_region_callback(struct resource *res, void *arg)
+>>  {
+>>  	unsigned long flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+>>  	struct init_pgtable_data data;
+>> +	int ret;
+>>  
+>>  	data.info = info;
+>>  	data.level4p = level4p;
+>>  	flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+>> -	return walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
+>> -				   &data, mem_region_callback);
+>> +	ret = walk_iomem_res_desc(IORES_DESC_ACPI_TABLES, flags, 0, -1,
+>> +				  &data, mem_region_callback);
+>> +	if (ret && ret != -EINVAL)
+>> +		return ret;
+>> +
+>> +	ret = walk_iomem_res_desc(IORES_DESC_ACPI_NV_STORAGE, flags, 0, -1,
+>> +				  &data, mem_region_callback);
+>> +	if (ret && ret != -EINVAL)
+>> +		return ret;
+>> +
+>> +	return 0;
+>>  }
+>>  #else
+>>  static int map_acpi_tables(struct x86_mapping_info *info, pgd_t *level4p) { return 0; }
 
-Those are three, not two ;-)
-
-        Arnd
+-- 
+Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
