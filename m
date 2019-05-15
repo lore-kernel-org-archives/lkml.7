@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA2AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 299C7C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0CAF20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBDD82166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918492;
-	bh=+IRaOdImXqku3mtR+U0O3ccsw4B39A+wBwxX/ebnjzI=;
+	s=default; t=1557918495;
+	bh=1Yv1ulet7f2zq3P9OmBjNYT9ff7UGG0qetTzwfVZDXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XrWVOJU/6jUPwbD06WVofVdD4IYiTkyR6OmevYH5WHNkpeNXOJt6Glnyr41FVaf7U
-	 6MexqJnBO25UH4dljLkctCTXXYPqR9Mv5/Aoh2n4qNhvq7tjkoyhG/3hP/yMsccrX8
-	 VO4ANVhM3HnoES8An2gpVu2Jzhb6ucGtZzP/CFj0=
+	b=h0Gzg5QQP44gn0BNKS2n94SPnaV37BoqActjyNeUxxsfC6HGH5XWILLYkDn2wKz7Y
+	 cWI1sM7XK/w22L1iX2MetkrBFt+KauDSDr5WubrrzXUrJ1f4d1c9PSzQbF3UhhTu8U
+	 DTsPfNdlr6lvDG7CnMFP7W3p3jLxxxcpq0WbHgbU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbfEOLIL (ORCPT
+        id S1728341AbfEOLIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:08:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40250 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:08:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727959AbfEOLIH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:08:07 -0400
+        id S1727206AbfEOLIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:08:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F68420644;
-        Wed, 15 May 2019 11:08:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07A2920644;
+        Wed, 15 May 2019 11:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918486;
-        bh=+IRaOdImXqku3mtR+U0O3ccsw4B39A+wBwxX/ebnjzI=;
+        s=default; t=1557918489;
+        bh=1Yv1ulet7f2zq3P9OmBjNYT9ff7UGG0qetTzwfVZDXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nvJOIK5EK1mkzjgO17kX7SX91kHa9zTbXkKf5H0N23k1NhddnSIUwzlmiIL/6l58K
-         mThHGTxiTq/ucvTlNHKtKziDtcpe+ZQH5IeHmVGYpbYKvRWFUJouGPsDjFTIzx1FnK
-         3x4L430AaUILotrJ2TPgJSRGn1dfpTrG3+XJZfhM=
+        b=FCmauftSDRL0rzQlPHinJAJ9qN/i7x5gm6uEqF9EaMezcBKT904iqBFrAekDRL76L
+         YyIy60Xss4M9fXaJXSP+ZHG9uNR64WMDRtR/Ld9na5s1LWs+DYMN8hljlNj0FHY8j3
+         z21a23CvfKhwsZYEpa+aC1Xu2TqHU0aYN4hfZlCw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
+        stable@vger.kernel.org, Prasad Sodagudi <psodagud@codeaurora.org>,
+        Thomas Gleixner <tglx@linutronix.de>, marc.zyngier@arm.com,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 149/266] iommu/amd: Set exclusion range correctly
-Date:   Wed, 15 May 2019 12:54:16 +0200
-Message-Id: <20190515090727.954099751@linuxfoundation.org>
+Subject: [PATCH 4.4 150/266] genirq: Prevent use-after-free and work list corruption
+Date:   Wed, 15 May 2019 12:54:17 +0200
+Message-Id: <20190515090727.987765802@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -59,36 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3c677d206210f53a4be972211066c0f1cd47fe12 ]
+[ Upstream commit 59c39840f5abf4a71e1810a8da71aaccd6c17d26 ]
 
-The exlcusion range limit register needs to contain the
-base-address of the last page that is part of the range, as
-bits 0-11 of this register are treated as 0xfff by the
-hardware for comparisons.
+When irq_set_affinity_notifier() replaces the notifier, then the
+reference count on the old notifier is dropped which causes it to be
+freed. But nothing ensures that the old notifier is not longer queued
+in the work list. If it is queued this results in a use after free and
+possibly in work list corruption.
 
-So correctly set the exclusion range in the hardware to the
-last page which is _in_ the range.
+Ensure that the work is canceled before the reference is dropped.
 
-Fixes: b2026aa2dce44 ('x86, AMD IOMMU: add functions for programming IOMMU MMIO space')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: marc.zyngier@arm.com
+Link: https://lkml.kernel.org/r/1553439424-6529-1-git-send-email-psodagud@codeaurora.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/irq/manage.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 94f1bf772ec93..db85cc5791dce 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -295,7 +295,7 @@ static void iommu_write_l2(struct amd_iommu *iommu, u8 address, u32 val)
- static void iommu_set_exclusion_range(struct amd_iommu *iommu)
- {
- 	u64 start = iommu->exclusion_start & PAGE_MASK;
--	u64 limit = (start + iommu->exclusion_length) & PAGE_MASK;
-+	u64 limit = (start + iommu->exclusion_length - 1) & PAGE_MASK;
- 	u64 entry;
+diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+index 83cea913983c5..92c7eb1aeded9 100644
+--- a/kernel/irq/manage.c
++++ b/kernel/irq/manage.c
+@@ -319,8 +319,10 @@ irq_set_affinity_notifier(unsigned int irq, struct irq_affinity_notify *notify)
+ 	desc->affinity_notify = notify;
+ 	raw_spin_unlock_irqrestore(&desc->lock, flags);
  
- 	if (!iommu->exclusion_start)
+-	if (old_notify)
++	if (old_notify) {
++		cancel_work_sync(&old_notify->work);
+ 		kref_put(&old_notify->kref, old_notify->release);
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
