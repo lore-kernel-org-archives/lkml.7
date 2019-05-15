@@ -2,130 +2,119 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9F2C04AA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B0FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4C492084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F33220881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:41:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fqYjW9xM"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="DK9rNl/h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726169AbfEOGks (ORCPT
+        id S1726286AbfEOGlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 02:40:48 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:42369 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfEOGkr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 02:40:47 -0400
-Received: by mail-ed1-f66.google.com with SMTP id l25so2533910eda.9;
-        Tue, 14 May 2019 23:40:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pB4/bDOJvccGfJ1FOhE3igeaMzQW1LB7DA9kw3mGwcA=;
-        b=fqYjW9xMBghHq0o/g67BmnEErWnQO3Q528XrcViy3Ry3AQWeUQ9G/R6U5IHeD1DwbN
-         yTejvLC/cc/pz3/Ibl2THEL83zztlPPqicbWEe2+FRupGDatdW9MBaKw2XpJCVNnYIwe
-         y6kuXS4I4/JzdOPoPBsisfkRwmUPadQTAdwWwRJ/3jvwtfSB7FtLM+0y7mB9XVq/n1SZ
-         aHq80r9aWWdQSMNUtXhhkr4THYUU/PBkcYtfJeqwCALI51lMxU1jF5p/f5TrBv5H6UEm
-         krUjx5hEQ557n+saixph+x+sOi/9Ry4BAHfSZBGH2XBllYG8vcFdlYFkvqIk/HiHq/B8
-         2gdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pB4/bDOJvccGfJ1FOhE3igeaMzQW1LB7DA9kw3mGwcA=;
-        b=YA9uX0HG8qf3gsdEl1zy1NcrL3ip9d2cSc8c8mYfFJ9iG33W+okNdB5iANl56V342L
-         hGSGNG82mGj13oYmG8Ar8WS43kfRi7MQzu/sx34cevfQsrzghpuAlExTyVWaEAM1LN8r
-         usEs1sQdx5jspzXxhLidbDcnpNgQwmQw0tu5zPJoEHkfyhQPaboB7IqxlrhGhLrzG2mW
-         9uAHeLuUghl2goI3nM23rlMRC/3BCOZNeJs/8f302v762ciorb9q0A8H2qGJAGIAfXsa
-         oL9MklQ4DYyeCKgYv79nuOVG5V6fZASl4VRZBds6XtIZuuF1A/j2dTPmMPE9P8DYfLzj
-         sLDw==
-X-Gm-Message-State: APjAAAWFrlsXs/iTqsznyzhqFLZD13DRvk7BD7IYASumzvAemJRsh6rQ
-        x8MARWo1kKV2bTp7Oyknsvs=
-X-Google-Smtp-Source: APXvYqxA7DciqvkmfZQQEWutHMBRO/nY3I3WvtxPUmgJFu6C8mxugQzAm6gBZpy4Kw6cHtHzjKbKOA==
-X-Received: by 2002:a50:b82d:: with SMTP id j42mr41043980ede.186.1557902445899;
-        Tue, 14 May 2019 23:40:45 -0700 (PDT)
-Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
-        by smtp.gmail.com with ESMTPSA id v2sm465028eds.69.2019.05.14.23.40.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 14 May 2019 23:40:45 -0700 (PDT)
-Date:   Tue, 14 May 2019 23:40:43 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "fengguang.wu@intel.com" <fengguang.wu@intel.com>,
-        "kbuild@01.org" <kbuild@01.org>,
-        Ariel Levkovich <lariel@mellanox.com>,
-        Eli Cohen <eli@mellanox.com>, Mark Bloch <markb@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: undefined reference to `__aeabi_uldivmod' after 25c13324d03d
- ("IB/mlx5: Add steering SW ICM device memory type")
-Message-ID: <20190515064043.GA944@archlinux-i9>
-References: <20190514194510.GA15465@archlinux-i9>
- <20190515003202.GA14522@ziepe.ca>
- <20190515050331.GC5225@mtr-leonro.mtl.com>
- <CAK8P3a0aH9Ezur3r7TDVMPreVKMip2HMEWhUsC_pKhOq7mE+3A@mail.gmail.com>
+        Wed, 15 May 2019 02:41:45 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:59598 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725902AbfEOGlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 02:41:45 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 453lMV1SRhz9vDbb;
+        Wed, 15 May 2019 08:41:42 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=DK9rNl/h; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id vcW5mbW1k2cL; Wed, 15 May 2019 08:41:42 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 453lMV0Ghrz9vDbZ;
+        Wed, 15 May 2019 08:41:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1557902502; bh=vplXhUCXMUkBbAhZdPnBIWeLAyV9BImQh2VZswTq/p8=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=DK9rNl/hiVMeXYj30ATLH1pH20dhQxionpq/UxS/vT//riqMQvuz/gPRNYuf2U8Ae
+         qS9JfvrNTWMBZ+s/mXy4S894wEpamc8nA1oUCT95clV5JI9lJSkZXZhLfwq8RRe6IV
+         wySDsUozN27vs0Zd+QUT2LvHmOpaya8JyuFtbF20=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EBB668B7D6;
+        Wed, 15 May 2019 08:41:42 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id iln7o7zUWlSr; Wed, 15 May 2019 08:41:42 +0200 (CEST)
+Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.231.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BC5188B7D2;
+        Wed, 15 May 2019 08:41:42 +0200 (CEST)
+Subject: Re: [PATCH] powerpc/lib: fix book3s/32 boot failure due to code
+ patching
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Greg KH <gregkh@linuxfoundation.org>, erhard_f@mailbox.org,
+        Michael Neuling <mikey@neuling.org>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <629c2acb1fcd09c2d2e3352370c3d9853372cf39.1557902321.git.christophe.leroy@c-s.fr>
+Message-ID: <b118ac0a-5ccb-2fae-f7a7-d9848b33b205@c-s.fr>
+Date:   Wed, 15 May 2019 08:41:38 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a0aH9Ezur3r7TDVMPreVKMip2HMEWhUsC_pKhOq7mE+3A@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <629c2acb1fcd09c2d2e3352370c3d9853372cf39.1557902321.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 08:31:49AM +0200, Arnd Bergmann wrote:
-> On Wed, May 15, 2019 at 7:04 AM Leon Romanovsky <leonro@mellanox.com> wrote:
-> > On Tue, May 14, 2019 at 09:32:02PM -0300, Jason Gunthorpe wrote:
-> > > On Tue, May 14, 2019 at 12:45:10PM -0700, Nathan Chancellor wrote:
-> > > > Hi all,
-> > > >
-> > > > I checked the RDMA mailing list and trees and I haven't seen this
-> > > > reported/fixed yet (forgive me if it has) but when building for arm32
-> > > > with multi_v7_defconfig and the following configs (distilled from
-> > > > allyesconfig):
-> > > >
-> > > > CONFIG_INFINIBAND=y
-> > > > CONFIG_INFINIBAND_ON_DEMAND_PAGING=y
-> > > > CONFIG_INFINIBAND_USER_ACCESS=y
-> > > > CONFIG_MLX5_CORE=y
-> > > > CONFIG_MLX5_INFINIBAND=y
-> > > >
-> > > > The following link time errors occur:
-> > > >
-> > > > arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/main.o: in function `mlx5_ib_alloc_dm':
-> > > > main.c:(.text+0x60c): undefined reference to `__aeabi_uldivmod'
-> > > > arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/cmd.o: in function `mlx5_cmd_alloc_sw_icm':
-> > > > cmd.c:(.text+0x6d4): undefined reference to `__aeabi_uldivmod'
-> > > > arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/cmd.o: in function `mlx5_cmd_dealloc_sw_icm':
-> > > > cmd.c:(.text+0x9ec): undefined reference to `__aeabi_uldivmod'
-> > >
-> > > Fengguang, I'm surprised that 0-day didn't report this earlier..
-> >
-> > I got many successful emails after I pushed this patch to 0-day testing.
-> 
-> The long division warnings can compiler specific, and depend on certain
-> optimization options, as compilers can optimize out certain divisions and
-> replace them with multiplications and/or shifts, or prove that they can be
-> replaced with a 32-bit division. If this is a case that gcc manages to
-> optimize but clang does not, it might be worth looking into whether an
-> optimization can be added to clang, in addition to improving the source.
-> 
->      Arnd
+Oops, forgot to tell it's for 4.9. Resending with proper subject.
 
-While I did run initially run into this with clang, the errors above are
-with gcc (mainly to show this was going to be a universal problem and
-not just something with clang).
-
-Nathan
+Le 15/05/2019 à 08:39, Christophe Leroy a écrit :
+> [Backport of upstream commit b45ba4a51cde29b2939365ef0c07ad34c8321789]
+> 
+> On powerpc32, patch_instruction() is called by apply_feature_fixups()
+> which is called from early_init()
+> 
+> There is the following note in front of early_init():
+>   * Note that the kernel may be running at an address which is different
+>   * from the address that it was linked at, so we must use RELOC/PTRRELOC
+>   * to access static data (including strings).  -- paulus
+> 
+> Therefore init_mem_is_free must be accessed with PTRRELOC()
+> 
+> Fixes: 1c38a84d4586 ("powerpc: Avoid code patching freed init sections")
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=203597
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> 
+> ---
+> Can't apply the upstream commit as such due to several other unrelated stuff
+> like for instance STRICT_KERNEL_RWX which are missing.
+> So instead, using same approach as for commit 252eb55816a6f69ef9464cad303cdb3326cdc61d
+> ---
+>   arch/powerpc/lib/code-patching.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/powerpc/lib/code-patching.c b/arch/powerpc/lib/code-patching.c
+> index 14535ad4cdd1..c312955977ce 100644
+> --- a/arch/powerpc/lib/code-patching.c
+> +++ b/arch/powerpc/lib/code-patching.c
+> @@ -23,7 +23,7 @@ int patch_instruction(unsigned int *addr, unsigned int instr)
+>   	int err;
+>   
+>   	/* Make sure we aren't patching a freed init section */
+> -	if (init_mem_is_free && init_section_contains(addr, 4)) {
+> +	if (*PTRRELOC(&init_mem_is_free) && init_section_contains(addr, 4)) {
+>   		pr_debug("Skipping init section patching addr: 0x%px\n", addr);
+>   		return 0;
+>   	}
+> 
