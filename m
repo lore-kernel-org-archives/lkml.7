@@ -2,108 +2,111 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70997C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC7FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BFBA2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB5E02089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:49:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557910172;
+	bh=5yrVffrVhaiJci/m6e+eB28C+yVItJeTAl4JbS9fw8s=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vBTBNQG5Jlb21kvNPpLoOWCghnCTbNLucroBvJGR0C0DmmkiPjZ1DXINHBT59SXJq
+	 MA6eRUK+tbaws6aS2i8SFlrUTRsisPVV4NYR3JtXk4ixKI0113NztJGi+9SFVGgkoN
+	 b3sKjhYf3HLeU0HB/5mDYxB7RzgnA3BeCQ8pvHTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfEOItI (ORCPT
+        id S1726519AbfEOIta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 04:49:08 -0400
-Received: from mga04.intel.com ([192.55.52.120]:30853 "EHLO mga04.intel.com"
+        Wed, 15 May 2019 04:49:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbfEOItH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 04:49:07 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 01:49:06 -0700
-X-ExtLoop1: 1
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
-  by orsmga004.jf.intel.com with ESMTP; 15 May 2019 01:49:00 -0700
-Date:   Wed, 15 May 2019 11:49:09 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
+        id S1726098AbfEOIta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 04:49:30 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BA4C2084F;
+        Wed, 15 May 2019 08:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557910169;
+        bh=5yrVffrVhaiJci/m6e+eB28C+yVItJeTAl4JbS9fw8s=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TYDo7u5Y1hG5Mhzio5nl+T0ybgMm0U6Qx8bXqmM92WKd1sfC/bTUtnb66E3AiGXAa
+         INb7avaebiiMa90I3+rOWtfipKFf/05lPqHpuiorv849dIf77GBJ4dR6VO8YTpB2+P
+         FeTWcD2kfmuRkM7UrR7BBE4TRn2WhjRItYNAqqkk=
+Date:   Wed, 15 May 2019 17:49:23 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v20 00/28] Intel SGX1 support
-Message-ID: <20190515084909.GA10043@linux.intel.com>
-References: <960B34DE67B9E140824F1DCDEC400C0F4E885F9D@ORSMSX116.amr.corp.intel.com>
- <979615a8-fd03-e3fd-fbdb-65c1e51afd93@fortanix.com>
- <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
- <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
- <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
- <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com>
- <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Changbin Du <changbin.du@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Nadav Amit <namit@vmware.com>,
+        Joel Fernandes <joel@joelfernandes.org>, yhs@fb.com
+Subject: Re: [PATCH -tip v9 0/6] tracing/probes: uaccess: Add support
+ user-space access
+Message-Id: <20190515174923.609532fe901b1e28761a2e6f@kernel.org>
+In-Reply-To: <20190515055534.GA39270@gmail.com>
+References: <155789866428.26965.8344923934342528416.stgit@devnote2>
+        <20190515055534.GA39270@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 08:13:36AM -0700, Andy Lutomirski wrote:
-> On Tue, May 14, 2019 at 3:43 AM Jarkko Sakkinen
-> <jarkko.sakkinen@linux.intel.com> wrote:
-> >
-> > On Mon, May 13, 2019 at 01:29:26PM +0300, Jarkko Sakkinen wrote:
-> > > I did study through SDK's file format and realized that it does not
-> > > does make sense after all to embed one.
-> > >
-> > > To implement it properly you would probably need a new syscall (lets say
-> > > sgx_load_enclave) and also that enclaves are not just executables
-> > > binaries. It is hard to find a generic format for them as applications
-> > > range from simply protecting part of an application to running a
-> > > containter inside enclave.
-> >
-> > I'm still puzzling what kind of changes you were discussing considering
-> > SGX_IOC_ENCLAVE_ADD_PAGE.
+Hi Ingo,
+
+On Wed, 15 May 2019 07:55:34 +0200
+Ingo Molnar <mingo@kernel.org> wrote:
+
 > 
-> I think it's as simple as requiring that, if SECINFO.X is set, then
-> the src pointer points to the appropriate number of bytes of
-> executable memory.  (Unless there's some way for an enclave to change
-> SECINFO after the fact -- is there?)  Sadly, we don't really have the
-> a nice in-kernel API for that right now.  You could do
-> down_read(mmap_sem) and find_vma().  Arguably there is no value to
-> checking that PKRU allows execute to the data.
+> * Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > Hi,
+> > 
+> > Here is the v9 series of probe-event to support user-space access.
+> > Previous version is here.
+> > 
+> > https://lkml.kernel.org/r/155741476971.28419.15837024173365724167.stgit@devnote2
+> > 
+> > In this version, I fixed more typos/style issues.
+> > 
+> > Changes in v9:
+> >  [3/6]
+> >       - Fix other style & coding issues (Thanks Ingo!)
+> >       - Update fetch_store_string() for style consistency.
+> >  [4/6]
+> >       - Remove an unneeded line break.
+> >       - Move || and && in if-condition at the end of line.
+> 
+> LGTM:
+> 
+> Acked-by: Ingo Molnar <mingo@kernel.org>
 
-OK, so you would actually go on to check whether the VMA where the data
-is copied contains executable data?
+Thank you for your Ack!
 
-What if SECINFO.X is not set and you EADD to region that is executable
-in the enclave VMA? E.g. have RWX VMA for the enclave just to give a
-simple example. Then you could carry executable code in the data
-sections of the binary.
+> 
+> Thanks,
+> 
+> 	Ingo
 
-/Jarkko
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
