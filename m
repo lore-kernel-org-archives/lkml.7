@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0C1C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5912BC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46EE420578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B52120578
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:46:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920770;
-	bh=hntAyRFrvw6Cr9yi4hm6U6Z3YwulC1viRtaaSaqeOA8=;
+	s=default; t=1557920773;
+	bh=MdUDI1ftMjX+Aqa71wHAC7B9+RYs/gQoQtW5huI566s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZH8edOK64ls5MNnv/KuqpSIOKCXMo0UmMjH6zEysl/ZVfW/W90qzgjBl6zP4by2bJ
-	 I3KS0+ihT+K7fVasbrinQwyESAQ9TG6dpNRNNIKKyur5QBGAB1A+Wn21YJj1UuNs9a
-	 5KBixVd4CBWlgk2zb3r7ckioW3aG03dI7j4m6cYQ=
+	b=LOdvqDTlG6X7R7h7F+BLdAHr2iS72dgK/jVr5fT/zRqpiUfm27MOP0A5SoX3WR17n
+	 V6sQUSp7LWqGEo2E65JDBbq3+Z/o/rpZljoYFMZWA2dEV05gBtLH4jUBtIe53v8GDY
+	 UpW8/Z27UZUO/sGZqevG7942mV9Scz0lBuUojUmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732231AbfEOLqJ (ORCPT
+        id S1731852AbfEOLqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:46:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36446 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:46:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732025AbfEOLZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:25:39 -0400
+        id S1732032AbfEOLZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:25:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A4A2206BF;
-        Wed, 15 May 2019 11:25:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF39720843;
+        Wed, 15 May 2019 11:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919538;
-        bh=hntAyRFrvw6Cr9yi4hm6U6Z3YwulC1viRtaaSaqeOA8=;
+        s=default; t=1557919541;
+        bh=MdUDI1ftMjX+Aqa71wHAC7B9+RYs/gQoQtW5huI566s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DvXQ2+N+7aocL6bHBzUHOgkReqyb6U3J76Fh0PWjeo1fw6SaYmnF6+JicRbLon01n
-         eBcMNkXHv4QO+G/572NqpaCEEX4Aiagqm5KLehRrh6WEpKv34laazVKfWmqnoJ2Csy
-         ABZpOxMJdtpTuQ1b/pIGaLtJtl7AvhCVaYlouYGI=
+        b=Ax43OwkJ1KRvT+cvMTlfpT5P7hNLtJocfyVL5bs7imWK1CGh+MVE7Ugf8wsqVq599
+         cMm55ZYAGn/hBtFrcGvRXeyonxufNlvEvYVcUlqCE/sr5U1gamhzXDVzWkhAJsHOEQ
+         p0CTE3dwTff2j97m1sCEMkoBHzEDRlldwYaUwfWA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: [PATCH 4.19 113/113] PCI: hv: Add pci_destroy_slot() in pci_devices_present_work(), if necessary
-Date:   Wed, 15 May 2019 12:56:44 +0200
-Message-Id: <20190515090702.312252361@linuxfoundation.org>
+        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 089/113] bridge: Fix error path for kobject_init_and_add()
+Date:   Wed, 15 May 2019 12:56:20 +0200
+Message-Id: <20190515090700.403876570@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -61,91 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: "Tobin C. Harding" <tobin@kernel.org>
 
-commit 340d455699400f2c2c0f9b3f703ade3085cdb501 upstream.
+[ Upstream commit bdfad5aec1392b93495b77b864d58d7f101dc1c1 ]
 
-When we hot-remove a device, usually the host sends us a PCI_EJECT message,
-and a PCI_BUS_RELATIONS message with bus_rel->device_count == 0.
+Currently error return from kobject_init_and_add() is not followed by a
+call to kobject_put().  This means there is a memory leak.  We currently
+set p to NULL so that kfree() may be called on it as a noop, the code is
+arguably clearer if we move the kfree() up closer to where it is
+called (instead of after goto jump).
 
-When we execute the quick hot-add/hot-remove test, the host may not send
-us the PCI_EJECT message if the guest has not fully finished the
-initialization by sending the PCI_RESOURCES_ASSIGNED* message to the
-host, so it's potentially unsafe to only depend on the
-pci_destroy_slot() in hv_eject_device_work() because the code path
+Remove a goto label 'err1' and jump to call to kobject_put() in error
+return from kobject_init_and_add() fixing the memory leak.  Re-name goto
+label 'put_back' to 'err1' now that we don't use err1, following current
+nomenclature (err1, err2 ...).  Move call to kfree out of the error
+code at bottom of function up to closer to where memory was allocated.
+Add comment to clarify call to kfree().
 
-create_root_hv_pci_bus()
- -> hv_pci_assign_slots()
-
-is not called in this case. Note: in this case, the host still sends the
-guest a PCI_BUS_RELATIONS message with bus_rel->device_count == 0.
-
-In the quick hot-add/hot-remove test, we can have such a race before
-the code path
-
-pci_devices_present_work()
- -> new_pcichild_device()
-
-adds the new device into the hbus->children list, we may have already
-received the PCI_EJECT message, and since the tasklet handler
-
-hv_pci_onchannelcallback()
-
-may fail to find the "hpdev" by calling
-
-get_pcichild_wslot(hbus, dev_message->wslot.slot)
-
-hv_pci_eject_device() is not called; Later, by continuing execution
-
-create_root_hv_pci_bus()
- -> hv_pci_assign_slots()
-
-creates the slot and the PCI_BUS_RELATIONS message with
-bus_rel->device_count == 0 removes the device from hbus->children, and
-we end up being unable to remove the slot in
-
-hv_pci_remove()
- -> hv_pci_remove_slots()
-
-Remove the slot in pci_devices_present_work() when the device
-is removed to address this race.
-
-pci_devices_present_work() and hv_eject_device_work() run in the
-singled-threaded hbus->wq, so there is not a double-remove issue for the
-slot.
-
-We cannot offload hv_pci_eject_device() from hv_pci_onchannelcallback()
-to the workqueue, because we need the hv_pci_onchannelcallback()
-synchronously call hv_pci_eject_device() to poll the channel
-ringbuffer to work around the "hangs in hv_compose_msi_msg()" issue
-fixed in commit de0aa7b2f97d ("PCI: hv: Fix 2 hang issues in
-hv_compose_msi_msg()")
-
-Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-[lorenzo.pieralisi@arm.com: rewritten commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Stephen Hemminger <stephen@networkplumber.org>
-Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/pci/controller/pci-hyperv.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ net/bridge/br_if.c |   13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1781,6 +1781,10 @@ static void pci_devices_present_work(str
- 		hpdev = list_first_entry(&removed, struct hv_pci_dev,
- 					 list_entry);
- 		list_del(&hpdev->list_entry);
-+
-+		if (hpdev->pci_slot)
-+			pci_destroy_slot(hpdev->pci_slot);
-+
- 		put_pcichild(hpdev);
- 	}
+--- a/net/bridge/br_if.c
++++ b/net/bridge/br_if.c
+@@ -603,13 +603,15 @@ int br_add_if(struct net_bridge *br, str
+ 	call_netdevice_notifiers(NETDEV_JOIN, dev);
+ 
+ 	err = dev_set_allmulti(dev, 1);
+-	if (err)
+-		goto put_back;
++	if (err) {
++		kfree(p);	/* kobject not yet init'd, manually free */
++		goto err1;
++	}
+ 
+ 	err = kobject_init_and_add(&p->kobj, &brport_ktype, &(dev->dev.kobj),
+ 				   SYSFS_BRIDGE_PORT_ATTR);
+ 	if (err)
+-		goto err1;
++		goto err2;
+ 
+ 	err = br_sysfs_addif(p);
+ 	if (err)
+@@ -692,12 +694,9 @@ err3:
+ 	sysfs_remove_link(br->ifobj, p->dev->name);
+ err2:
+ 	kobject_put(&p->kobj);
+-	p = NULL; /* kobject_put frees */
+-err1:
+ 	dev_set_allmulti(dev, -1);
+-put_back:
++err1:
+ 	dev_put(dev);
+-	kfree(p);
+ 	return err;
+ }
  
 
 
