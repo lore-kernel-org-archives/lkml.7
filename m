@@ -6,172 +6,210 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D9DC04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5537C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A20F20818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:02:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830F02082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:02:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbfEOVCP (ORCPT
+        id S1727935AbfEOVCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 17:02:15 -0400
-Received: from lilium.sigma-star.at ([109.75.188.150]:56102 "EHLO
-        lilium.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726319AbfEOVCP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 17:02:15 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lilium.sigma-star.at (Postfix) with ESMTP id 48EB71801442B;
-        Wed, 15 May 2019 23:02:11 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     linux-mtd@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michele Dionisio <michele.dionisio@gmail.com>,
-        Sebastian Andrzej Siewior <sebastian@breakpoint.cc>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH] ubifs: Add support for zstd compression.
-Date:   Wed, 15 May 2019 23:02:02 +0200
-Message-Id: <20190515210202.21169-1-richard@nod.at>
-X-Mailer: git-send-email 2.16.4
+        Wed, 15 May 2019 17:02:21 -0400
+Received: from mga11.intel.com ([192.55.52.93]:15270 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727806AbfEOVCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 17:02:10 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 14:02:10 -0700
+X-ExtLoop1: 1
+Received: from otc-lr-04.jf.intel.com ([10.54.39.157])
+  by fmsmga001.fm.intel.com with ESMTP; 15 May 2019 14:02:10 -0700
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     eranian@google.com, tj@kernel.org, mark.rutland@arm.com,
+        irogers@google.com, ak@linux.intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V2 4/4] perf cgroup: Add fast path for cgroup switch
+Date:   Wed, 15 May 2019 14:01:32 -0700
+Message-Id: <1557954092-67275-5-git-send-email-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1557954092-67275-1-git-send-email-kan.liang@linux.intel.com>
+References: <1557954092-67275-1-git-send-email-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michele Dionisio <michele.dionisio@gmail.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-zstd shows a good compression rate and is faster than lzo,
-also on slow ARM cores.
+Generic visit_groups_merge() is used in cgroup context switch to sched
+in cgroup events, which has high overhead especially in frequent context
+switch with several events and cgroups involved. Because it feeds all
+events on a given CPU to pinned/flexible_sched_in() regardless the
+cgroup.
 
-Cc: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
-Signed-off-by: Michele Dionisio <michele.dionisio@gmail.com>
-[rw: rewrote commit message]
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Add a fast path to only feed the specific cgroup events to
+pinned/flexible_sched_in() in cgroup context switch for non-multiplexing
+case.
+
+Don't need event_filter_match() to filter cgroup and CPU in fast path.
+Only pmu_filter_match() is enough.
+
+Don't need to specially handle system-wide event for fast path. Move it
+to slow path.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- fs/ubifs/Kconfig       | 10 ++++++++++
- fs/ubifs/compress.c    | 27 ++++++++++++++++++++++++++-
- fs/ubifs/super.c       |  2 ++
- fs/ubifs/ubifs-media.h |  2 ++
- 4 files changed, 40 insertions(+), 1 deletion(-)
+ kernel/events/core.c | 92 ++++++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 75 insertions(+), 17 deletions(-)
 
-diff --git a/fs/ubifs/Kconfig b/fs/ubifs/Kconfig
-index 9da2f135121b..8d84d2ed096d 100644
---- a/fs/ubifs/Kconfig
-+++ b/fs/ubifs/Kconfig
-@@ -5,8 +5,10 @@ config UBIFS_FS
- 	select CRYPTO if UBIFS_FS_ADVANCED_COMPR
- 	select CRYPTO if UBIFS_FS_LZO
- 	select CRYPTO if UBIFS_FS_ZLIB
-+	select CRYPTO if UBIFS_FS_ZSTD
- 	select CRYPTO_LZO if UBIFS_FS_LZO
- 	select CRYPTO_DEFLATE if UBIFS_FS_ZLIB
-+	select CRYPTO_ZSTD if UBIFS_FS_ZSTD
- 	select CRYPTO_HASH_INFO
- 	select UBIFS_FS_XATTR if FS_ENCRYPTION
- 	depends on MTD_UBI
-@@ -37,6 +39,14 @@ config UBIFS_FS_ZLIB
- 	help
- 	  Zlib compresses better than LZO but it is slower. Say 'Y' if unsure.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 6891c74..67b0135 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1780,6 +1780,20 @@ perf_event_groups_first_cgroup(struct perf_event_groups *groups,
+ 	return match;
+ }
  
-+config UBIFS_FS_ZSTD
-+	bool "ZSTD compression support" if UBIFS_FS_ADVANCED_COMPR
-+	depends on UBIFS_FS
-+	default y
-+	help
-+	  ZSTD compresses is a big win in speed over Zlib and
-+	  in compression ratio over LZO. Say 'Y' if unsure.
++static struct perf_event *
++perf_event_groups_next_cgroup(struct perf_event *event)
++{
++	struct perf_event *next;
 +
- config UBIFS_ATIME_SUPPORT
- 	bool "Access time support"
- 	default n
-diff --git a/fs/ubifs/compress.c b/fs/ubifs/compress.c
-index 565cb56d7225..89183aeeeb7a 100644
---- a/fs/ubifs/compress.c
-+++ b/fs/ubifs/compress.c
-@@ -71,6 +71,24 @@ static struct ubifs_compressor zlib_compr = {
- };
- #endif
++	next = rb_entry_safe(rb_next(&event->group_node), typeof(*event), group_node);
++	if (next && (next->cpu == event->cpu) &&
++	    (next->cgrp_group_index == event->cgrp_group_index) &&
++	    (next->cgrp_id == event->cgrp_id))
++		return next;
++
++	return NULL;
++}
++
+ static void
+ perf_event_groups_insert(struct perf_event_groups *groups,
+ 			 struct perf_event *event)
+@@ -3464,13 +3478,69 @@ static void cpu_ctx_sched_out(struct perf_cpu_context *cpuctx,
+ 	ctx_sched_out(&cpuctx->ctx, cpuctx, event_type);
+ }
  
-+#ifdef CONFIG_UBIFS_FS_ZSTD
-+static DEFINE_MUTEX(zstd_enc_mutex);
-+static DEFINE_MUTEX(zstd_dec_mutex);
++struct sched_in_data {
++	struct perf_event_context *ctx;
++	struct perf_cpu_context *cpuctx;
++	int can_add_hw;
++	enum event_type_t event_type;
++};
 +
-+static struct ubifs_compressor zstd_compr = {
-+	.compr_type = UBIFS_COMPR_ZSTD,
-+	.comp_mutex = &zstd_enc_mutex,
-+	.decomp_mutex = &zstd_dec_mutex,
-+	.name = "zstd",
-+	.capi_name = "zstd",
-+};
-+#else
-+static struct ubifs_compressor zstd_compr = {
-+	.compr_type = UBIFS_COMPR_ZSTD,
-+	.name = "zstd",
-+};
++#ifdef CONFIG_CGROUP_PERF
++
++static void cgroup_visit_groups(struct perf_event *evt, void *data,
++				int (*func)(struct perf_event *, void *, int (*)(struct perf_event *)))
++{
++	while (evt) {
++		if (func(evt, (void *)data, pmu_filter_match))
++			break;
++		evt = perf_event_groups_next_cgroup(evt);
++	}
++}
++
++static int cgroup_visit_groups_merge(int cpu, void *data,
++				     int (*func)(struct perf_event *, void *, int (*)(struct perf_event *)))
++{
++	struct sched_in_data *sid = data;
++	struct cgroup_subsys_state *css;
++	struct perf_cgroup *cgrp;
++	struct perf_event *evt, *rotated_evt = NULL;
++
++	for (css = &sid->cpuctx->cgrp->css; css; css = css->parent) {
++		/* root cgroup doesn't have events */
++		if (css->id == 1)
++			return 0;
++
++		cgrp = container_of(css, struct perf_cgroup, css);
++		/* Only visit groups when the cgroup has events */
++		if (cgrp->cgrp_event_type & sid->event_type) {
++			if (CGROUP_PINNED(sid->event_type))
++				evt = *per_cpu_ptr(cgrp->pinned_event, cpu);
++			else {
++				evt = *per_cpu_ptr(cgrp->flexible_event, cpu);
++				rotated_evt = *per_cpu_ptr(cgrp->rotated_event, cpu);
++			}
++			cgroup_visit_groups(evt, data, func);
++			cgroup_visit_groups(rotated_evt, data, func);
++		}
++	}
++
++	return 0;
++}
 +#endif
 +
- /* All UBIFS compressors */
- struct ubifs_compressor *ubifs_compressors[UBIFS_COMPR_TYPES_CNT];
- 
-@@ -228,13 +246,19 @@ int __init ubifs_compressors_init(void)
- 	if (err)
- 		return err;
- 
--	err = compr_init(&zlib_compr);
-+	err = compr_init(&zstd_compr);
- 	if (err)
- 		goto out_lzo;
- 
-+	err = compr_init(&zlib_compr);
-+	if (err)
-+		goto out_zstd;
-+
- 	ubifs_compressors[UBIFS_COMPR_NONE] = &none_compr;
- 	return 0;
- 
-+out_zstd:
-+	compr_exit(&zstd_compr);
- out_lzo:
- 	compr_exit(&lzo_compr);
- 	return err;
-@@ -247,4 +271,5 @@ void ubifs_compressors_exit(void)
+ static int visit_groups_merge(struct perf_event_groups *groups, int cpu,
+ 			      int (*func)(struct perf_event *, void *, int (*)(struct perf_event *)),
+ 			      void *data)
  {
- 	compr_exit(&lzo_compr);
- 	compr_exit(&zlib_compr);
-+	compr_exit(&zstd_compr);
+ 	struct perf_event **evt, *evt1, *evt2;
++	struct sched_in_data *sid = data;
+ 	int ret;
+ 
++#ifdef CONFIG_CGROUP_PERF
++	/* fast path for cgroup switch, not support multiplexing */
++	if ((sid->event_type) && !sid->cpuctx->hrtimer_active)
++		return cgroup_visit_groups_merge(cpu, data, func);
++#endif
+ 	evt1 = perf_event_groups_first(groups, -1);
+ 	evt2 = perf_event_groups_first(groups, cpu);
+ 
+@@ -3486,23 +3556,17 @@ static int visit_groups_merge(struct perf_event_groups *groups, int cpu,
+ 			evt = &evt2;
+ 		}
+ 
+-		ret = func(*evt, data, event_filter_match);
+-		if (ret)
+-			return ret;
+-
++		if (!perf_cgroup_skip_switch(sid->event_type, *evt, CGROUP_PINNED(sid->event_type))) {
++			ret = func(*evt, data, event_filter_match);
++			if (ret)
++				return ret;
++		}
+ 		*evt = perf_event_groups_next(*evt);
+ 	}
+ 
+ 	return 0;
  }
-diff --git a/fs/ubifs/super.c b/fs/ubifs/super.c
-index 04b8ecfd3470..ea8615261936 100644
---- a/fs/ubifs/super.c
-+++ b/fs/ubifs/super.c
-@@ -1055,6 +1055,8 @@ static int ubifs_parse_options(struct ubifs_info *c, char *options,
- 				c->mount_opts.compr_type = UBIFS_COMPR_LZO;
- 			else if (!strcmp(name, "zlib"))
- 				c->mount_opts.compr_type = UBIFS_COMPR_ZLIB;
-+			else if (!strcmp(name, "zstd"))
-+				c->mount_opts.compr_type = UBIFS_COMPR_ZSTD;
- 			else {
- 				ubifs_err(c, "unknown compressor \"%s\"", name); //FIXME: is c ready?
- 				kfree(name);
-diff --git a/fs/ubifs/ubifs-media.h b/fs/ubifs/ubifs-media.h
-index 8b7c1844014f..697b1b89066a 100644
---- a/fs/ubifs/ubifs-media.h
-+++ b/fs/ubifs/ubifs-media.h
-@@ -348,12 +348,14 @@ enum {
-  * UBIFS_COMPR_NONE: no compression
-  * UBIFS_COMPR_LZO: LZO compression
-  * UBIFS_COMPR_ZLIB: ZLIB compression
-+ * UBIFS_COMPR_ZSTD: ZSTD compression
-  * UBIFS_COMPR_TYPES_CNT: count of supported compression types
-  */
- enum {
- 	UBIFS_COMPR_NONE,
- 	UBIFS_COMPR_LZO,
- 	UBIFS_COMPR_ZLIB,
-+	UBIFS_COMPR_ZSTD,
- 	UBIFS_COMPR_TYPES_CNT,
- };
+ 
+-struct sched_in_data {
+-	struct perf_event_context *ctx;
+-	struct perf_cpu_context *cpuctx;
+-	int can_add_hw;
+-	enum event_type_t event_type;
+-};
+-
+ static int pinned_sched_in(struct perf_event *event, void *data,
+ 			   int (*filter_match)(struct perf_event *))
+ {
+@@ -3511,9 +3575,6 @@ static int pinned_sched_in(struct perf_event *event, void *data,
+ 	if (event->state <= PERF_EVENT_STATE_OFF)
+ 		return 0;
+ 
+-	if (perf_cgroup_skip_switch(sid->event_type, event, true))
+-		return 0;
+-
+ 	if (!filter_match(event))
+ 		return 0;
+ 
+@@ -3540,9 +3601,6 @@ static int flexible_sched_in(struct perf_event *event, void *data,
+ 	if (event->state <= PERF_EVENT_STATE_OFF)
+ 		return 0;
+ 
+-	if (perf_cgroup_skip_switch(sid->event_type, event, false))
+-		return 0;
+-
+ 	if (!filter_match(event))
+ 		return 0;
  
 -- 
-2.16.4
+2.7.4
 
