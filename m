@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2212C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD702C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850CD20881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FAEA20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:03:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918175;
-	bh=MssDB12zE7v7+lx5h55D6vGmX//645lmACRKe8OHhyA=;
+	s=default; t=1557918180;
+	bh=CmkATkjTIybT7qYVJXp3k9eIe/7DrljSKUx5jTjfP8c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ts0eghpU/wYzlNztf7Rn2KNtSK8vw1GYJ2osupj6zdZ0FakCjSlj+jYauZ7tSxRg/
-	 EF6RDn+iFsMP6QCKqQ7ERPDG6k7uHi6OL9YVxD65UEgBe7KNz48fy53x6Ef0/D6Ul2
-	 vdygpQ65HQbe42Kq3KI6BY34NKWuL04Nulle6m04=
+	b=c4h9zmR/C3stMYKnKZS/9pCNSmzAWZL8S4SKbUeFfnEhp46A/GPg/z2tUja0R82q9
+	 lhYkJ8hmh7ALgBep2eGdEpJ2kNBK+JCqBOvQBGBBxp+nZsknLRm2tM/v34itwRUcd4
+	 Z0pqFEx9mdI5u6wZRQJ5K7EbkEJvSQR1pjzAg3fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbfEOLCy (ORCPT
+        id S1728061AbfEOLC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:02:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60232 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:02:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbfEOLCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:02:49 -0400
+        id S1728002AbfEOLC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:02:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3656A216FD;
-        Wed, 15 May 2019 11:02:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D788216FD;
+        Wed, 15 May 2019 11:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918168;
-        bh=MssDB12zE7v7+lx5h55D6vGmX//645lmACRKe8OHhyA=;
+        s=default; t=1557918176;
+        bh=CmkATkjTIybT7qYVJXp3k9eIe/7DrljSKUx5jTjfP8c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KJbax8H0SDyxOkZG2vsS0xnDlwXNGYEs8ynS79cVOj5e5onoA9D88/7ai+SfcMhx+
-         ux+UlRhvhWP/wpkGpMWVyULePmibQEQTdvXcGdl0hM9BhfZoypCqTj5sjk+qezAT2u
-         panTIhNPCVI6dy2mR2HFdijhcg79wVSkxqFwTavs=
+        b=qTicBrPN0vCYnzGryb5mGBVlt+ersIy8TQ1Q0lHBwZHx/HG2AqQUiRZX9oEvKie/Z
+         T7oMRUgqbqQtwSz0/79IT/2+68DKzU4F8MYhS/pvPQGlBNBytnq4PnHFbCBYrJBicJ
+         F8XrDZ2RMitoA5TMXfj6dttmXR/NqP4xPBQ5a/UQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.4 024/266] powerpc/pseries: Set or clear security feature flags
-Date:   Wed, 15 May 2019 12:52:11 +0200
-Message-Id: <20190515090723.398874702@linuxfoundation.org>
+Subject: [PATCH 4.4 035/266] powerpc/64s: Fix section mismatch warnings from setup_rfi_flush()
+Date:   Wed, 15 May 2019 12:52:22 +0200
+Message-Id: <20190515090723.708456057@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,89 +60,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit f636c14790ead6cc22cf62279b1f8d7e11a67116 upstream.
+commit 501a78cbc17c329fabf8e9750a1e9ab810c88a0e upstream.
 
-Now that we have feature flags for security related things, set or
-clear them based on what we receive from the hypercall.
+The recent LPM changes to setup_rfi_flush() are causing some section
+mismatch warnings because we removed the __init annotation on
+setup_rfi_flush():
 
+  The function setup_rfi_flush() references
+  the function __init ppc64_bolted_size().
+  the function __init memblock_alloc_base().
+
+The references are actually in init_fallback_flush(), but that is
+inlined into setup_rfi_flush().
+
+These references are safe because:
+ - only pseries calls setup_rfi_flush() at runtime
+ - pseries always passes L1D_FLUSH_FALLBACK at boot
+ - so the fallback flush area will always be allocated
+ - so the check in init_fallback_flush() will always return early:
+   /* Only allocate the fallback flush area once (at boot time). */
+   if (l1d_flush_fallback_area)
+   	return;
+
+ - and therefore we won't actually call the freed init routines.
+
+We should rework the code to make it safer by default rather than
+relying on the above, but for now as a quick-fix just add a __ref
+annotation to squash the warning.
+
+Fixes: abf110f3e1ce ("powerpc/rfi-flush: Make it possible to call setup_rfi_flush() again")
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/platforms/pseries/setup.c |   43 +++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ arch/powerpc/kernel/setup_64.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -67,6 +67,7 @@
- #include <asm/eeh.h>
- #include <asm/reg.h>
- #include <asm/plpar_wrappers.h>
-+#include <asm/security_features.h>
- 
- #include "pseries.h"
- 
-@@ -499,6 +500,40 @@ static void __init find_and_init_phbs(vo
- 	of_pci_check_probe_only();
+--- a/arch/powerpc/kernel/setup_64.c
++++ b/arch/powerpc/kernel/setup_64.c
+@@ -882,7 +882,7 @@ void rfi_flush_enable(bool enable)
+ 	rfi_flush = enable;
  }
  
-+static void init_cpu_char_feature_flags(struct h_cpu_char_result *result)
-+{
-+	if (result->character & H_CPU_CHAR_SPEC_BAR_ORI31)
-+		security_ftr_set(SEC_FTR_SPEC_BAR_ORI31);
-+
-+	if (result->character & H_CPU_CHAR_BCCTRL_SERIALISED)
-+		security_ftr_set(SEC_FTR_BCCTRL_SERIALISED);
-+
-+	if (result->character & H_CPU_CHAR_L1D_FLUSH_ORI30)
-+		security_ftr_set(SEC_FTR_L1D_FLUSH_ORI30);
-+
-+	if (result->character & H_CPU_CHAR_L1D_FLUSH_TRIG2)
-+		security_ftr_set(SEC_FTR_L1D_FLUSH_TRIG2);
-+
-+	if (result->character & H_CPU_CHAR_L1D_THREAD_PRIV)
-+		security_ftr_set(SEC_FTR_L1D_THREAD_PRIV);
-+
-+	if (result->character & H_CPU_CHAR_COUNT_CACHE_DISABLED)
-+		security_ftr_set(SEC_FTR_COUNT_CACHE_DISABLED);
-+
-+	/*
-+	 * The features below are enabled by default, so we instead look to see
-+	 * if firmware has *disabled* them, and clear them if so.
-+	 */
-+	if (!(result->character & H_CPU_BEHAV_FAVOUR_SECURITY))
-+		security_ftr_clear(SEC_FTR_FAVOUR_SECURITY);
-+
-+	if (!(result->character & H_CPU_BEHAV_L1D_FLUSH_PR))
-+		security_ftr_clear(SEC_FTR_L1D_FLUSH_PR);
-+
-+	if (!(result->character & H_CPU_BEHAV_BNDS_CHK_SPEC_BAR))
-+		security_ftr_clear(SEC_FTR_BNDS_CHK_SPEC_BAR);
-+}
-+
- void pseries_setup_rfi_flush(void)
+-static void init_fallback_flush(void)
++static void __ref init_fallback_flush(void)
  {
- 	struct h_cpu_char_result result;
-@@ -512,6 +547,8 @@ void pseries_setup_rfi_flush(void)
- 
- 	rc = plpar_get_cpu_characteristics(&result);
- 	if (rc == H_SUCCESS) {
-+		init_cpu_char_feature_flags(&result);
-+
- 		if (result.character & H_CPU_CHAR_L1D_FLUSH_TRIG2)
- 			types |= L1D_FLUSH_MTTRIG;
- 		if (result.character & H_CPU_CHAR_L1D_FLUSH_ORI30)
-@@ -522,6 +559,12 @@ void pseries_setup_rfi_flush(void)
- 			enable = false;
- 	}
- 
-+	/*
-+	 * We're the guest so this doesn't apply to us, clear it to simplify
-+	 * handling of it elsewhere.
-+	 */
-+	security_ftr_clear(SEC_FTR_L1D_FLUSH_HV);
-+
- 	setup_rfi_flush(types, enable);
- }
- 
+ 	u64 l1d_size, limit;
+ 	int cpu;
 
 
