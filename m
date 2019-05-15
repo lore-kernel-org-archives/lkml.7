@@ -2,144 +2,99 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC636C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8746CC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A65C20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4735920657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922081;
-	bh=OM8vl/GWAXs0JLPIY+oNPZWngsNVDcy7xl0o7plMhXY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QdpFCR6sODQ7iYu4i7dKmNqttXCc5XtPxJhEHhZ+NfbslO0L/7cR/okcZfyzIhqln
-	 i7sAjqKWKgBXGwGqXVMUvpXLLtUWkEsC3m+VmZdU+gaq8V2dNigtFURC7BKJ8gf+gE
-	 m9nQeZnHN4/umHnbGaWzcbD3SnlnutpQa1eZ3B2Q=
+	s=default; t=1557922088;
+	bh=2MxWDzNlNdCDBvXBg6LBRyYuiVnvhAqSwsTvAScCRDw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=n3Ld5VWPGKlm7nDsdSNcUU3lzSromRjCpSuBz0MKAhGDf9EAdc1/6jaQx+w8sQcEW
+	 yIia5sX1PQqTjstJDCNZ7wNkcKVFHD/C0yNuNpzM9PrsVbLIOQ5GQr/QEJkaX9UO2m
+	 LCmGkVAAZYjK58Zo2hxxGedpvsE4xl3oK+6Xxs9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbfEOLI7 (ORCPT
+        id S1729453AbfEOMIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:08:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729168AbfEOLI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:08:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A43B5217D8;
-        Wed, 15 May 2019 11:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918535;
-        bh=OM8vl/GWAXs0JLPIY+oNPZWngsNVDcy7xl0o7plMhXY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=No6qYoip9ZwRrsBe97hRx3tFwB5Zveh8m7bUL8GQPAjtDNFHjfGeS6m04SEMo9HAc
-         FbvdwDqYO5nv1aYSo7XThGGx/0ko48F+DVxt8YUw3lmpnabe/1WxT/NBN720aBiQjK
-         +5H3dfSJyssTejKjfHKVvkqaeTO1Y8FXkRK7Pe4w=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Guenter Roeck <groeck@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Russell King <rmk@armlinux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 170/266] init: initialize jump labels before command line option parsing
-Date:   Wed, 15 May 2019 12:54:37 +0200
-Message-Id: <20190515090728.671901149@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
-References: <20190515090722.696531131@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 15 May 2019 08:08:06 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38396 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729172AbfEOLI5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:08:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ToVh8Upo0GLQhDEVaV9MC0FbfEVVYTO7nwOGlhyfbKM=; b=FKKAFpRcA4vfKWW+aLFvmH42Q
+        UC5vKw4w7g5FDQP75Xxz2BoSkqC++3N5akLiOMlKsVDSd5ChPubvwsv9OrOIi2ksD5rOtN3FXWcR1
+        2+JsIq+JpZtLIc6uv7B7IzqB8Uorrvze2xNwCE4fbtCXY10Jzyg1uZFFX0aYHB9uU3hq4=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hQrmF-0003av-Qk; Wed, 15 May 2019 11:08:51 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 320B91126D6A; Wed, 15 May 2019 12:08:51 +0100 (BST)
+Date:   Wed, 15 May 2019 12:08:51 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Keerthy <j-keerthy@ti.com>
+Cc:     lee.jones@linaro.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-omap@vger.kernel.org, t-kristo@ti.com
+Subject: Re: [PATCH 3/3] regulator: lp87565: Add 4-phase lp87561 regulator
+ support
+Message-ID: <20190515110851.GD5613@sirena.org.uk>
+References: <20190515100848.19560-1-j-keerthy@ti.com>
+ <20190515100848.19560-4-j-keerthy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="q9KOos5vDmpwPx9o"
+Content-Disposition: inline
+In-Reply-To: <20190515100848.19560-4-j-keerthy@ti.com>
+X-Cookie: You will lose an important tape file.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6041186a32585fc7a1d0f6cfe2f138b05fdc3c82 ]
 
-When a module option, or core kernel argument, toggles a static-key it
-requires jump labels to be initialized early.  While x86, PowerPC, and
-ARM64 arrange for jump_label_init() to be called before parse_args(),
-ARM does not.
+--q9KOos5vDmpwPx9o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1 console=ttyAMA0,115200 page_alloc.shuffle=1
-  ------------[ cut here ]------------
-  WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
-  page_alloc_shuffle+0x12c/0x1ac
-  static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
-  before call to jump_label_init()
-  Modules linked in:
-  CPU: 0 PID: 0 Comm: swapper Not tainted
-  5.1.0-rc4-next-20190410-00003-g3367c36ce744 #1
-  Hardware name: ARM Integrator/CP (Device Tree)
-  [<c0011c68>] (unwind_backtrace) from [<c000ec48>] (show_stack+0x10/0x18)
-  [<c000ec48>] (show_stack) from [<c07e9710>] (dump_stack+0x18/0x24)
-  [<c07e9710>] (dump_stack) from [<c001bb1c>] (__warn+0xe0/0x108)
-  [<c001bb1c>] (__warn) from [<c001bb88>] (warn_slowpath_fmt+0x44/0x6c)
-  [<c001bb88>] (warn_slowpath_fmt) from [<c0b0c4a8>]
-  (page_alloc_shuffle+0x12c/0x1ac)
-  [<c0b0c4a8>] (page_alloc_shuffle) from [<c0b0c550>] (shuffle_store+0x28/0x48)
-  [<c0b0c550>] (shuffle_store) from [<c003e6a0>] (parse_args+0x1f4/0x350)
-  [<c003e6a0>] (parse_args) from [<c0ac3c00>] (start_kernel+0x1c0/0x488)
+On Wed, May 15, 2019 at 03:38:48PM +0530, Keerthy wrote:
 
-Move the fallback call to jump_label_init() to occur before
-parse_args().
+> @@ -172,6 +178,9 @@ static int lp87565_regulator_probe(struct platform_device *pdev)
+>  	if (lp87565->dev_type == LP87565_DEVICE_TYPE_LP87565_Q1) {
+>  		min_idx = LP87565_BUCK_10;
+>  		max_idx = LP87565_BUCK_23;
+> +	} else if (lp87565->dev_type == LP87565_DEVICE_TYPE_LP87561_Q1) {
+> +		min_idx = LP87565_BUCK_3210;
+> +		max_idx = LP87565_BUCK_3210;
 
-The redundant calls to jump_label_init() in other archs are left intact
-in case they have static key toggling use cases that are even earlier
-than option parsing.
+This if/else chain should be a switch statement.
 
-Link: http://lkml.kernel.org/r/155544804466.1032396.13418949511615676665.stgit@dwillia2-desk3.amr.corp.intel.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Reported-by: Guenter Roeck <groeck@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Russell King <rmk@armlinux.org.uk>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- init/main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--q9KOos5vDmpwPx9o
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/init/main.c b/init/main.c
-index 49926d95442f8..e88c8cdef6a7c 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -538,6 +538,8 @@ asmlinkage __visible void __init start_kernel(void)
- 	page_alloc_init();
- 
- 	pr_notice("Kernel command line: %s\n", boot_command_line);
-+	/* parameters may set static keys */
-+	jump_label_init();
- 	parse_early_param();
- 	after_dashes = parse_args("Booting kernel",
- 				  static_command_line, __start___param,
-@@ -547,8 +549,6 @@ asmlinkage __visible void __init start_kernel(void)
- 		parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
- 			   NULL, set_init_arg);
- 
--	jump_label_init();
--
- 	/*
- 	 * These use large bootmem allocations and must precede
- 	 * kmem_cache_init()
--- 
-2.20.1
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzb80IACgkQJNaLcl1U
+h9A6lAf/e30hsZKGBDMeaM6cCqdg269DLgcFARjKCZ3zp0sp3UYHDCU7I7eBAscT
+wMqHKpBrhHVyS6swCG7Lbsy2xywm6b77fSxxvZiWPnsdgpDHjLrzbqu2nZvA8UpD
+8eXgfB8yOY1Pqw0Z9zJ55C26c+sjROltuBsJ1fGLo2HcAlSAPZtFu+zehJYKRUVq
+lrDGdgNGnXlxnZMVNnnAWNFCFZONW+rwZOVI9tdV8VqDX8g096T4/ZhFxVdTW3jU
+yMTcqq/1o12IRB26NToSf262mMa0g5ppI0k/Gq9SOFwhsi4ssXsHik2yceV0jOcA
+KadxC1Bmn6nfUWoNpZx2mjgylXOV8g==
+=dLEO
+-----END PGP SIGNATURE-----
 
-
+--q9KOos5vDmpwPx9o--
