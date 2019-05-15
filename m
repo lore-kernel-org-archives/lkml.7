@@ -2,109 +2,91 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1401BC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D33C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D029820657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 963B920675
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:09:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557922156;
+	bh=zwGtBDSqlRwBgCYuDo87ovQwB6xuBhuVJlPDglwGpPA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Zh/FdVynJsromTTEGiJm1qXt79SFsWviJ7YDYt6YoO+DdEWD7XeX1sqZxEoP86HQ3
+	 iNIsDQoyktjXrSgSpVSrwLjq66/Ec9BBXEm/gXdcdHpjzX0zJ0r/eQtMv1GfYLThaU
+	 dPQBife69/Qz2MFwmD4fjKLrC2GZ0OSWK6UkddqE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbfEOMJL convert rfc822-to-8bit (ORCPT
+        id S1729037AbfEOLID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:09:11 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:49093 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729362AbfEOMJJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 08:09:09 -0400
-X-Originating-IP: 77.136.197.83
-Received: from xps13 (83.197.136.77.rev.sfr.net [77.136.197.83])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 981291C0013;
-        Wed, 15 May 2019 12:08:59 +0000 (UTC)
-Date:   Wed, 15 May 2019 14:08:58 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     masonccyang@mxic.com.tw
-Cc:     bbrezillon@kernel.org, broonie@kernel.org,
-        christophe.kerello@st.com, computersforpeace@gmail.com,
-        devicetree@vger.kernel.org, dwmw2@infradead.org,
-        geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org,
-        liang.yang@amlogic.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        marcel.ziswiler@toradex.com, marek.vasut@gmail.com,
-        mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at,
-        robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
-Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND
- controller
-Message-ID: <20190515140858.77213af9@xps13>
-In-Reply-To: <OF8A566F14.A2F0F576-ON482583FB.002E7E32-482583FB.003068BA@mxic.com.tw>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw>
-        <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
-        <20190512151820.4f2dd9da@xps13>
-        <OF8A566F14.A2F0F576-ON482583FB.002E7E32-482583FB.003068BA@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 15 May 2019 07:08:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40070 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728245AbfEOLH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:07:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D943620644;
+        Wed, 15 May 2019 11:07:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557918479;
+        bh=zwGtBDSqlRwBgCYuDo87ovQwB6xuBhuVJlPDglwGpPA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zHnomMZkLez889YyPZAbIyqi8VzMr36cweOAx6Rl21TFdv9BbqiS8l6cLWfHkNs/s
+         dtDhHgutv8tGu5jw80tu5lsDebR78kfxvdwv4pfe8qrXTwbkRWiHLc5WPXe8xyUcS/
+         ORw7W/dXScjx8Lbw7+l5XlKHLQ8uqGcWW5vTzWWE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Annaliese McDermond <nh6z@nh6z.net>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 146/266] ASoC: tlv320aic32x4: Fix Common Pins
+Date:   Wed, 15 May 2019 12:54:13 +0200
+Message-Id: <20190515090727.844647342@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
+References: <20190515090722.696531131@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi masonccyang@mxic.com.tw,
+[ Upstream commit c63adb28f6d913310430f14c69f0a2ea55eed0cc ]
 
-masonccyang@mxic.com.tw wrote on Wed, 15 May 2019 16:48:46 +0800:
+The common pins were mistakenly not added to the DAPM graph.
+Adding these pins will allow valid graphs to be created.
 
-> Hi Miquel,
-> 
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +//
-> > > +// Copyright (C) 2019 Macronix International Co., Ltd.
-> > > +//
-> > > +// Authors:
-> > > +//   Mason Yang <masonccyang@mxic.com.tw>
-> > > +//   zhengxunli <zhengxunli@mxic.com.tw>  
-> > 
-> > This is not a valid name.
-> > 
-> > Also if he appears here I suppose he should be credited in the
-> > module_authors() macro too.  
-> 
-> I think Li should maintain this NAND driver later, 
+Signed-off-by: Annaliese McDermond <nh6z@nh6z.net>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/codecs/tlv320aic32x4.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-This entry is for the authors of the driver.
-
-If he will maintain the driver, then add a new entry in MAINTAINERS.
-
-> > > +}
-> > > +
-> > > +static const struct nand_controller_ops mxic_nand_controller_ops = {
-> > > +   .exec_op = mxic_nand_exec_op,
-> > > +};
-> > > +
-> > > +static int mx25f0a_nand_probe(struct platform_device *pdev)
-> > > +{
-> > > +   struct mtd_info *mtd;
-> > > +   struct mx25f0a_mfd *mfd = dev_get_drvdata(pdev->dev.parent);
-> > > +   struct mxic_nand_ctlr *mxic;
-> > > +   struct nand_chip *nand_chip;
-> > > +   int err;
-> > > +
-> > > +   mxic = devm_kzalloc(&pdev->dev, sizeof(struct mxic_nand_ctlr),
-> > > +             GFP_KERNEL);  
-> > 
-> > mxic for a NAND controller structure is probably not a name meaningful
-> > enough.  
-> 
-> How about *fmc or *mxic_fmc ?
-
-fmc is fine, even if I personally prefer nfc for NAND flash controller.
-Here the 'm' in fmc stands for 'memory' but I am not sure if the
-controller can manage something else than NAND flash anyway?
+diff --git a/sound/soc/codecs/tlv320aic32x4.c b/sound/soc/codecs/tlv320aic32x4.c
+index f2d3191961e14..714bd0e3fc71e 100644
+--- a/sound/soc/codecs/tlv320aic32x4.c
++++ b/sound/soc/codecs/tlv320aic32x4.c
+@@ -234,6 +234,8 @@ static const struct snd_soc_dapm_widget aic32x4_dapm_widgets[] = {
+ 	SND_SOC_DAPM_INPUT("IN2_R"),
+ 	SND_SOC_DAPM_INPUT("IN3_L"),
+ 	SND_SOC_DAPM_INPUT("IN3_R"),
++	SND_SOC_DAPM_INPUT("CM_L"),
++	SND_SOC_DAPM_INPUT("CM_R"),
+ };
+ 
+ static const struct snd_soc_dapm_route aic32x4_dapm_routes[] = {
+-- 
+2.20.1
 
 
-Thanks,
-Miquèl
+
