@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE8FC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2B8C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F30D2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 309362053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921120;
-	bh=c73fBmBoUFbpJi5x/+IpwqKCWz6Hyese2gMWQna4xCI=;
+	s=default; t=1557921126;
+	bh=mmGx9nuyYK0Z3uaZTIzF0eWLA+6eKo+Wh2LzkIO1VY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dBLHb+f2U0c+ZBj4jO3CrWGV8g96fW5R9MCO9Zgzjg57eEw975ssztZLC4O+JxBgS
-	 faQokIfmhwvUqcLchqdNNi1Q4od/QItBPHN+QZnFgHWGJW5xdzFbw84EAbJOlEl8GJ
-	 hAAmQHp7WAOYi2LLK51GGF6hK+E0WqQK1QhpEQWw=
+	b=s7VSTdjo92qXiD8qVKKt1pZbJ08tPegBQbHwXjzJY16pv/T0YNYX5Kx3ur+sYYKLQ
+	 Fyy8Fv/chTH8Y0Poa1g1KB4TIiGAeaczJJl0G3WIZgODbFUdjGnPtxyb7udfzYuYzr
+	 IQFjizFfeX9hjNhSq+4o7I2XW0Ql9pFEk1ILqHa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730337AbfEOLUx (ORCPT
+        id S1731142AbfEOLUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:20:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58656 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:20:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730800AbfEOLUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:20:49 -0400
+        id S1730947AbfEOLUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:20:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40748206BF;
-        Wed, 15 May 2019 11:20:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B481206BF;
+        Wed, 15 May 2019 11:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919248;
-        bh=c73fBmBoUFbpJi5x/+IpwqKCWz6Hyese2gMWQna4xCI=;
+        s=default; t=1557919238;
+        bh=mmGx9nuyYK0Z3uaZTIzF0eWLA+6eKo+Wh2LzkIO1VY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HvYQdqSTDt2W0cxU1rhKHzHbYs2JIawSr5DdAo3puR0LjOsTJOjmOcCUMG3LQNdCL
-         9VgHGtTfdZHo3+UXWLJOp9rzuvlEG/KYp2bZxolJ3Vw62mW681hlryiroIKzLcUKvz
-         MnQ93CJ60xHb4jgrc6JlTbV9RCvXKsqTAB3iYQd0=
+        b=lrkvV/62mUS+rocEBM64kTg0JeB3nLh5XieilkKzt+IE7KDxf3s1no5dDkpQyBtYM
+         81VGr5NXwkbzZ22dL3vtKn/bvek6inhBpFrv8LimOtydaKfEIbAuRWN7RNVVBDKdLB
+         M2qD+7xFJB5u5MrZKCM4V943IcOYMDfuBYq4iqtA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        stable@vger.kernel.org, Thomas Haller <thaller@redhat.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 106/115] net: seeq: fix crash caused by not set dev.parent
-Date:   Wed, 15 May 2019 12:56:26 +0200
-Message-Id: <20190515090706.834096793@linuxfoundation.org>
+Subject: [PATCH 4.14 102/115] fib_rules: return 0 directly if an exactly same rule exists when NLM_F_EXCL not supplied
+Date:   Wed, 15 May 2019 12:56:22 +0200
+Message-Id: <20190515090706.526248412@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -60,30 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 5afcd14cfc7fed1bcc8abcee2cef82732772bfc2 ]
+[ Upstream commit e9919a24d3022f72bcadc407e73a6ef17093a849 ]
 
-The old MIPS implementation of dma_cache_sync() didn't use the dev argument,
-but commit c9eb6172c328 ("dma-mapping: turn dma_cache_sync into a
-dma_map_ops method") changed that, so we now need to set dev.parent.
+With commit 153380ec4b9 ("fib_rules: Added NLM_F_EXCL support to
+fib_nl_newrule") we now able to check if a rule already exists. But this
+only works with iproute2. For other tools like libnl, NetworkManager,
+it still could add duplicate rules with only NLM_F_CREATE flag, like
 
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+[localhost ~ ]# ip rule
+0:      from all lookup local
+32766:  from all lookup main
+32767:  from all lookup default
+100000: from 192.168.7.5 lookup 5
+100000: from 192.168.7.5 lookup 5
+
+As it doesn't make sense to create two duplicate rules, let's just return
+0 if the rule exists.
+
+Fixes: 153380ec4b9 ("fib_rules: Added NLM_F_EXCL support to fib_nl_newrule")
+Reported-by: Thomas Haller <thaller@redhat.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/seeq/sgiseeq.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/core/fib_rules.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/seeq/sgiseeq.c
-+++ b/drivers/net/ethernet/seeq/sgiseeq.c
-@@ -734,6 +734,7 @@ static int sgiseeq_probe(struct platform
+--- a/net/core/fib_rules.c
++++ b/net/core/fib_rules.c
+@@ -563,9 +563,9 @@ int fib_nl_newrule(struct sk_buff *skb,
+ 		rule->uid_range = fib_kuid_range_unset;
  	}
  
- 	platform_set_drvdata(pdev, dev);
-+	SET_NETDEV_DEV(dev, &pdev->dev);
- 	sp = netdev_priv(dev);
+-	if ((nlh->nlmsg_flags & NLM_F_EXCL) &&
+-	    rule_exists(ops, frh, tb, rule)) {
+-		err = -EEXIST;
++	if (rule_exists(ops, frh, tb, rule)) {
++		if (nlh->nlmsg_flags & NLM_F_EXCL)
++			err = -EEXIST;
+ 		goto errout_free;
+ 	}
  
- 	/* Make private data page aligned */
 
 
