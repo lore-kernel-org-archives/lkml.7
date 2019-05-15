@@ -2,103 +2,173 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E99C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1D8C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF012082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B1C72082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:39:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="LtoTuRu+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727171AbfEOVjB (ORCPT
+        id S1727290AbfEOVjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 17:39:01 -0400
-Received: from mga07.intel.com ([134.134.136.100]:48585 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbfEOVjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 17:39:00 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 14:38:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,474,1549958400"; 
-   d="scan'208";a="172102692"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by fmsmga002.fm.intel.com with ESMTP; 15 May 2019 14:38:58 -0700
-Date:   Wed, 15 May 2019 14:38:58 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190515213858.GG5875@linux.intel.com>
-References: <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
- <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
- <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com>
- <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190514204527.GC1977@linux.intel.com>
- <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
- <20190515013031.GF1977@linux.intel.com>
- <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 15 May 2019 17:39:41 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:54779 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfEOVjk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 17:39:40 -0400
+Received: by mail-it1-f196.google.com with SMTP id a190so2661860ite.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 14:39:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digitalocean.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=SiXgF9x2/J3d2aHVUGJadEDzzKTOQ6u3eFYsxUlLv6Y=;
+        b=LtoTuRu+ueQTHokRdPa41+QCP5yRsq+8mJD2uWJQ6yA4dysOm/SWnaxqAIU0BOHKyA
+         EmCHL6Mo2VXSw3kpuiy7K2B1jc/DVOwKsdYnCaiZ8ZIytsTuGlae6qYyXCO82nIqHfaK
+         8KyzDMzo3iKT7HSFnrFh4bcd3pFqKWg9eC9RQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=SiXgF9x2/J3d2aHVUGJadEDzzKTOQ6u3eFYsxUlLv6Y=;
+        b=HpkwUi2zd/gMdlWwsuOxbMpYHecm8pFmAV8AXFjxvyNX9T9/qEmqYPA61L8U19oTHy
+         Nuum2VibQvVfmas0s1GeOJQGz2fRp+KW56fChNy3uUp1hEHEep0mfuFyHlEkCs2CJF49
+         inPAWnFtp7eIk94j+jS7AesOz28rUeoRS+u8Nt412CYY5AGZw5n/wSDXzCIXKJ+ha+S+
+         1uAq4+T/Olug4wNgZk6mAtW7d2p2Q1ykSeRvfbXWCAO4Ht40o1y7PXWXeH7YFwTsvdKk
+         k8POlUoMgIaAOERYNwC10uzKwm23EL56YqvXYBQNHVSifzXM8BVP+J7ty2A5g/9FvUBJ
+         b/bw==
+X-Gm-Message-State: APjAAAVcPEpq1ddTZNF0l+9DcK94N0FwPrS6G0ltwpbJVeq3rt1CrGum
+        qzgv4/yOS2FdH2sAW6PVPIvM6g==
+X-Google-Smtp-Source: APXvYqwqSrLBXoegOr6A8dYwtSLbSzWVwvo3JxWRbUWJE52+oTd/kMINHBVQntZPmL2oGN5Ebp/5Tw==
+X-Received: by 2002:a05:6638:29b:: with SMTP id c27mr29205969jaq.112.1557956379848;
+        Wed, 15 May 2019 14:39:39 -0700 (PDT)
+Received: from swap-tester ([178.128.225.14])
+        by smtp.gmail.com with ESMTPSA id p132sm1332175ita.2.2019.05.15.14.39.38
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 May 2019 14:39:39 -0700 (PDT)
+From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
+To:     Aubrey Li <aubrey.intel@gmail.com>
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Auld <pauld@redhat.com>
+Subject: Re: [RFC PATCH v2 00/17] Core scheduling v2
+Date:   Wed, 15 May 2019 21:39:36 +0000
+Message-Id: <20190515213936.3454-1-vpillai@digitalocean.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190424111913.1386-1-vpillai@digitalocean.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 11:27:04AM -0700, Andy Lutomirski wrote:
-> 2) Just like any other DSO, there are potential issues with how
-> enclaves deal with writable vs executable memory.  This takes two
-> forms.  First, a task should probably require EXECMEM, EXECMOD, or
-> similar permission to run an enclave that can modify its own text.
-> Second, it would be nice if a task that did *not* have EXECMEM,
-> EXECMOD, or similar could still run the enclave if it had EXECUTE
-> permission on the file containing the enclave.
-> 
-> Currently, this all works because DSOs are run by mmapping the file to
-> create multiple VMAs, some of which are executable, non-writable, and
-> non-CoWed, and some of which are writable but not executable.  With
-> SGX, there's only really one inode per enclave (the anon_inode that
-> comes form /dev/sgx/enclave), and it can only be sensibly mapped
-> MAP_SHARED.
+> Thanks for pointing this out. I think the ideal fix would be to
+> correctly initialize/cleanup the coresched attributes in the cpu
+> hotplug code path so that lock could be taken successfully if the
+> sibling is offlined/onlined after coresched was enabled. We are
+> working on another bug related to hotplugpath and shall introduce
+> the fix in v3.
+>
+A possible fix for handling the runqueues during cpu offline/online
+is attached here with.
 
-I was wrong when I said /dev/sgx/enclave creates and returns an anon
-inode.  I was thinking of the KVM model for creating VMs.  SGX creates
-an enclave when /dev/sgx/enclave is opened and associates the enclave
-with the newly opened /dev/sgx/enclave fd.
+Thanks,
+Vineeth
 
-Regardless, the fundamental problem remains, mmap() of EPC works on a
-single inode.
+---
+ kernel/sched/core.c | 28 +++++++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index e8e5f26db052..1a809849a1e7 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -253,7 +253,7 @@ static int __sched_core_stopper(void *data)
+ 	bool enabled = !!(unsigned long)data;
+ 	int cpu;
+ 
+-	for_each_possible_cpu(cpu)
++	for_each_online_cpu(cpu)
+ 		cpu_rq(cpu)->core_enabled = enabled;
+ 
+ 	return 0;
+@@ -3764,6 +3764,9 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 			struct rq *rq_i = cpu_rq(i);
+ 			struct task_struct *p;
+ 
++			if (cpu_is_offline(i))
++				continue;
++
+ 			if (rq_i->core_pick)
+ 				continue;
+ 
+@@ -3866,6 +3869,9 @@ next_class:;
+ 	for_each_cpu(i, smt_mask) {
+ 		struct rq *rq_i = cpu_rq(i);
+ 
++		if (cpu_is_offline(i))
++			continue;
++
+ 		WARN_ON_ONCE(!rq_i->core_pick);
+ 
+ 		rq_i->core_pick->core_occupation = occ;
+@@ -6410,8 +6416,14 @@ int sched_cpu_activate(unsigned int cpu)
+ 	/*
+ 	 * When going up, increment the number of cores with SMT present.
+ 	 */
+-	if (cpumask_weight(cpu_smt_mask(cpu)) == 2)
++	if (cpumask_weight(cpu_smt_mask(cpu)) == 2) {
+ 		static_branch_inc_cpuslocked(&sched_smt_present);
++#ifdef CONFIG_SCHED_CORE
++		if (static_branch_unlikely(&__sched_core_enabled)) {
++			rq->core_enabled = true;
++		}
++#endif
++	}
+ #endif
+ 	set_cpu_active(cpu, true);
+ 
+@@ -6459,8 +6471,15 @@ int sched_cpu_deactivate(unsigned int cpu)
+ 	/*
+ 	 * When going down, decrement the number of cores with SMT present.
+ 	 */
+-	if (cpumask_weight(cpu_smt_mask(cpu)) == 2)
++	if (cpumask_weight(cpu_smt_mask(cpu)) == 2) {
++#ifdef CONFIG_SCHED_CORE
++		struct rq *rq = cpu_rq(cpu);
++		if (static_branch_unlikely(&__sched_core_enabled)) {
++			rq->core_enabled = false;
++		}
++#endif
+ 		static_branch_dec_cpuslocked(&sched_smt_present);
++	}
+ #endif
+ 
+ 	if (!sched_smp_initialized)
+@@ -6537,6 +6556,9 @@ int sched_cpu_dying(unsigned int cpu)
+ 	update_max_interval();
+ 	nohz_balance_exit_idle(rq);
+ 	hrtick_clear(rq);
++#ifdef CONFIG_SCHED_CORE
++	rq->core = NULL;
++#endif
+ 	return 0;
+ }
+ #endif
+-- 
+2.17.1
