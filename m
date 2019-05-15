@@ -2,140 +2,82 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB61C04AA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 04:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD54C04AA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 04:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE3CD20881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 04:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A44720675
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 04:32:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="XZoH7GtX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfEOEar (ORCPT
+        id S1726732AbfEOEcj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 00:30:47 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:47192 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725941AbfEOEaq (ORCPT
+        Wed, 15 May 2019 00:32:39 -0400
+Received: from conuserg-07.nifty.com ([210.131.2.74]:36858 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfEOEcj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 00:30:46 -0400
-Received: from callcc.thunk.org (168-215-239-3.static.ctl.one [168.215.239.3] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4F4SdqA023241
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 May 2019 00:28:43 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 8480F420024; Wed, 15 May 2019 00:28:38 -0400 (EDT)
-Date:   Wed, 15 May 2019 00:28:38 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Frank Rowand <frowand.list@gmail.com>
-Cc:     Tim.Bird@sony.com, knut.omang@oracle.com,
-        gregkh@linuxfoundation.org, brendanhiggins@google.com,
-        keescook@google.com, kieran.bingham@ideasonboard.com,
-        mcgrof@kernel.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com
-Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
- testing framework
-Message-ID: <20190515042838.GA26954@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Frank Rowand <frowand.list@gmail.com>, Tim.Bird@sony.com,
-        knut.omang@oracle.com, gregkh@linuxfoundation.org,
-        brendanhiggins@google.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org, robh@kernel.org,
-        sboyd@kernel.org, shuah@kernel.org, devicetree@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-um@lists.infradead.org, Alexander.Levin@microsoft.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com,
-        dan.j.williams@intel.com, daniel@ffwll.ch, jdike@addtoit.com,
-        joel@jms.id.au, julia.lawall@lip6.fr, khilman@baylibre.com,
-        logang@deltatee.com, mpe@ellerman.id.au, pmladek@suse.com,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com
-References: <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
- <20190509032017.GA29703@mit.edu>
- <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
- <20190509133551.GD29703@mit.edu>
- <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
- <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
- <20190509214233.GA20877@mit.edu>
- <80c72e64-2665-bd51-f78c-97f50f9a53ba@gmail.com>
- <20190511173344.GA8507@mit.edu>
- <a305c732-9953-8724-b4a4-25aa50c89365@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a305c732-9953-8724-b4a4-25aa50c89365@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 15 May 2019 00:32:39 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id x4F4VXWg022418;
+        Wed, 15 May 2019 13:31:33 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x4F4VXWg022418
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557894694;
+        bh=GBhVHyqB4V20+0mYJbhNu4y/q2WNmGqZYid9a78MJE4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XZoH7GtXDV3vnWy/v1VeM769Jo2+KIK7XrWBoUzLH+vAEQVHuUB+aQ0pB1R+mRxKJ
+         0U5BDbpC8OFqBsg2cPaunQNiFz4AeqGvD4Gxpkvjg/LfhCzC7I2ezxxMx9JXxx6hyC
+         z0oJpm8ZlgNj9aoOsJOVkJ4x3qV/Q9wHUpQNuWSiHKR5EfiwRNY04P7fJI/1WGxshg
+         CXt/t8aZTV9nNp9mZ9mclzGZtqZfqHTMMnYmm91G8ChGdesX1dEEzEaz0ibNc0XUw9
+         daXB72Ye/pQ9liUDlNoL5b1wvf8XDVQPLtMF6er7M8xDkR28ez/IOA1alpkDiXzk9P
+         l09lvnoo1PWIw==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <yuchao0@huawei.com>,
+        linux-erofs@lists.ozlabs.org, Greg KH <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: erofs: drop unneeded -Wall addition
+Date:   Wed, 15 May 2019 13:31:22 +0900
+Message-Id: <20190515043123.9106-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 05:26:47PM -0700, Frank Rowand wrote:
-> On 5/11/19 10:33 AM, Theodore Ts'o wrote:
-> > On Fri, May 10, 2019 at 02:12:40PM -0700, Frank Rowand wrote:
-> >> However, the reply is incorrect.  Kselftest in-kernel tests (which
-> >> is the context here) can be configured as built in instead of as
-> >> a module, and built in a UML kernel.  The UML kernel can boot,
-> >> running the in-kernel tests before UML attempts to invoke the
-> >> init process.
-> > 
-> > Um, Citation needed?
-> 
-> The paragraph that you quoted tells you exactly how to run a kselftest
-> in-kernel test in a UML kernel.  Just to what that paragraph says.
+The top level Makefile adds -Wall globally:
 
-I didn't quote a paragraph.  But I'll quote from it now:
+  KBUILD_CFLAGS   := -Wall -Wundef -Werror=strict-prototypes -Wno-trigraphs \
 
-  $ make -C tools/testing/selftests run_tests
+I see two "-Wall" added for compiling objects in drivers/staging/erofs/.
 
-This runs the kselftest harness, *in userspace*.  That means you have
-to have a root file system, and it's run after init has started, by
-default.  You asserted that kselftests allows you to run modules
-before init has started.  There is absolutely zero, cero, nada, zilch
-mentions of any of anything like that in Documentation/dev-tools/kselftests.rst
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-> > There exists test modules in the kernel that run before the init
-> > scripts run --- but that's not strictly speaking part of kselftests,
-> > and do not have any kind of infrastructure.  As noted, the
-> > kselftests_harness header file fundamentally assumes that you are
-> > running test code in userspace.
-> 
-> You are ignoring the kselftest in-kernel tests.
+ drivers/staging/erofs/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'm talking specifically about what you have been *claiming* to be
-kselftest in-kernel tests above.  And I'm asserting they are really
-not kselftests.  They are just ad hoc tests that are run in kernel
-space, which, when compiled as modules, can be loaded by a kselftest
-shell script.  You can certainly hook in these ad hoc in-kernel tests
-via kselftests --- but then they aren't run before init starts,
-because kselftests is inherently a userspace-driven system.
+diff --git a/drivers/staging/erofs/Makefile b/drivers/staging/erofs/Makefile
+index 38ab344a285e..a34248a2a16a 100644
+--- a/drivers/staging/erofs/Makefile
++++ b/drivers/staging/erofs/Makefile
+@@ -2,7 +2,7 @@
+ 
+ EROFS_VERSION = "1.0pre1"
+ 
+-ccflags-y += -Wall -DEROFS_VERSION=\"$(EROFS_VERSION)\"
++ccflags-y += -DEROFS_VERSION=\"$(EROFS_VERSION)\"
+ 
+ obj-$(CONFIG_EROFS_FS) += erofs.o
+ # staging requirement: to be self-contained in its own directory
+-- 
+2.17.1
 
-If you build these tests (many of which existed before kselftests was
-merged) into the kernel such that they are run before init starts,
-without the kselftest harness, then they are not kselftests, by
-definition.  Both in how they are run, and since many of these
-in-kernel tests predate the introduction of kselftests --- in some
-cases, by many years.
-
-> We are talking in circles.  I'm done with this thread.
-
-Yes, that sounds like it would be best.
-
-						- Ted
