@@ -3,114 +3,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7F8C04AB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB159C04AB4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:31:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8087820873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:31:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557880268;
-	bh=txmzL9qyDgmrOy5l5Czsl5Q9wJBEjZAI/vVV5E/taJo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xVlYXE6fpx2mWsumvyPlZV8YKdtr2B43I6Ct3ovUgJv0IXL68hentP0XdAaf07/ZT
-	 Kq8IIqrqRXdmE8FpEjX1dlNnwcB13cZQI2x2HJcWDhen39dDia7OwgNGljzuZmpH1T
-	 b52/AuQJBMGAepDesAmLyHWhkQopIn7gWMcga+bE=
+	by mail.kernel.org (Postfix) with ESMTP id 8C33620873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:31:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="cvsuWs6C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfEOAbH (ORCPT
+        id S1726748AbfEOAaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:31:07 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:49113 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726766AbfEOAa1 (ORCPT
+        Tue, 14 May 2019 20:30:25 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:38628 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726705AbfEOAaX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:30:27 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7D46C25939;
-        Tue, 14 May 2019 20:30:26 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Tue, 14 May 2019 20:30:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=ooOKa/ZqqBINC0OX8j3RPnzyNMPjMfRf5UkgG248/x4=; b=3wx3nQvV
-        9JJFt1hQ5HwakV1L14h2ZaPHWWwKX2MdGQKCeiiiWVVYSxBBabhF8VoHNJwHfnCE
-        5ZE/cEMk5NvOUHlrnx1WOqJbrTFKXW2aQ6mqMAA6zn8W9Qp5SLSolnmGDELVzsSS
-        muCc8ONOVAbWsfK0lQj/CB9qVqmckHguMDUG0i9F16Iu2+IsKYeCjxRQznHnh/Qn
-        BwkngeSbKZhwvC99mCBcOsbudvkSo4iIaSOJJ3crhQBBXfTO8/ebS3VDmsKQhOys
-        gPUs+qtaDPc7d5ID8PbGr7TeoL/ureCfuAgIZCxM2RCm7OqH7Kr0kzzNW8L7L+7l
-        IW9yureqm/W9oA==
-X-ME-Sender: <xms:ol3bXAMAC2nQmR6krRNLxSDwBHbs8DVAos-MpnIv_ziXwcA7NebOnw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrleejgdefiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgjfhgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhn
-    ucevrdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkph
-    epuddvuddrgeegrddvvdefrddvuddunecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgs
-    ihhnsehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpeeh
-X-ME-Proxy: <xmx:ol3bXDsq5V73iF4d64PIn4Z6uSf3zKin72joYwVGjxR1dpNeBAssLg>
-    <xmx:ol3bXC2YALvR5Uf4GerJvgXVWzpBrq_cLzxb7jmB5EgEWnKRak8kMQ>
-    <xmx:ol3bXO1EhcpGmVY67xnAgHruU-sB7bqVOIneRBYBev6dlJJ073Qjvg>
-    <xmx:ol3bXMb43kk5h1MZPrUs9dHP5BTXaSylgEIr_qKmRwEAnRzB3PIsjA>
-Received: from eros.localdomain (ppp121-44-223-211.bras1.syd2.internode.on.net [121.44.223.211])
-        by mail.messagingengine.com (Postfix) with ESMTPA id F0CEF1037C;
-        Tue, 14 May 2019 20:30:22 -0400 (EDT)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Neil Brown <neilb@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 6/9] docs: filesystems: vfs: Use SPDX identifier
-Date:   Wed, 15 May 2019 10:29:10 +1000
-Message-Id: <20190515002913.12586-7-tobin@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515002913.12586-1-tobin@kernel.org>
-References: <20190515002913.12586-1-tobin@kernel.org>
+        Tue, 14 May 2019 20:30:23 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 622BBC125A;
+        Wed, 15 May 2019 00:30:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1557880228; bh=BbOArzhCYfXqLI1L+PWNkHvNIYDOVRl28L7WeykEn0k=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+        b=cvsuWs6C3nQmf2EnZKnLLueUjqsQMWTVettJFq+6AhkpWX10HAxgVupEuHll2KTxr
+         JFN1Fq4xkyPx7T1qYP7mbNWcO+A6gReec8fdsCHFXd7CG45wj/aPI2KIGNTr34eq2H
+         MlJ++0FI57ROZz4bFPjGrIEl95+t+RQHH+Y2YfrYLVVRR8vOxDfhoY0hgICHrEMu/Y
+         BObWS/2EoGA6Lh19saBMNmWNxIn4r3SDDfeG4w0hEK/rCUcosflQ3t0bYExWIc/Cc5
+         4+pwIYLo9zbpzGGJ2hyBXCXVvKRu7M/7j5J/chC1JHvMJCLrvmffJVuvIxyv27AdtX
+         7eQlxpUj/WeVQ==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 3DA49A023C;
+        Wed, 15 May 2019 00:30:18 +0000 (UTC)
+Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
+ US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 14 May 2019 17:30:01 -0700
+Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
+ IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 15 May 2019 05:59:57 +0530
+Received: from vineetg-Latitude-E7450.internal.synopsys.com (10.13.182.230) by
+ IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 15 May 2019 06:00:09 +0530
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     <linux-snps-arc@lists.infradead.org>
+CC:     <paltsev@snyopsys.com>, <linux-kernel@vger.kernel.org>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: [PATCH 2/9] ARC: mm: do_page_fault refactor #1: remove label @good_area
+Date:   Tue, 14 May 2019 17:29:29 -0700
+Message-ID: <1557880176-24964-3-git-send-email-vgupta@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1557880176-24964-1-git-send-email-vgupta@synopsys.com>
+References: <1557880176-24964-1-git-send-email-vgupta@synopsys.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.13.182.230]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the licence is indicated via a custom string.  We have SPDX
-license identifiers now for this task.
+Invert the condition for stack expansion.
+No functional change
 
-Use SPDX license identifier matching current license string.
-
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 ---
- Documentation/filesystems/vfs.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arc/mm/fault.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/filesystems/vfs.txt b/Documentation/filesystems/vfs.txt
-index 790feccca5f4..5c8358c73e30 100644
---- a/Documentation/filesystems/vfs.txt
-+++ b/Documentation/filesystems/vfs.txt
-@@ -1,3 +1,5 @@
-+.. SPDX-License-Identifier: GPL-2.0
+diff --git a/arch/arc/mm/fault.c b/arch/arc/mm/fault.c
+index 6836095251ed..94d242740ac5 100644
+--- a/arch/arc/mm/fault.c
++++ b/arch/arc/mm/fault.c
+@@ -100,21 +100,19 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
+ 		flags |= FAULT_FLAG_USER;
+ retry:
+ 	down_read(&mm->mmap_sem);
 +
- =========================================
- Overview of the Linux Virtual File System
- =========================================
-@@ -9,8 +11,6 @@ Overview of the Linux Virtual File System
-   Copyright (C) 1999 Richard Gooch
-   Copyright (C) 2005 Pekka Enberg
+ 	vma = find_vma(mm, address);
+ 	if (!vma)
+ 		goto bad_area;
+-	if (vma->vm_start <= address)
+-		goto good_area;
+-	if (!(vma->vm_flags & VM_GROWSDOWN))
+-		goto bad_area;
+-	if (expand_stack(vma, address))
+-		goto bad_area;
++	if (unlikely(address < vma->vm_start)) {
++		if (!(vma->vm_flags & VM_GROWSDOWN) || expand_stack(vma, address))
++			goto bad_area;
++	}
  
--  This file is released under the GPLv2.
--
+ 	/*
+ 	 * Ok, we have a good vm_area for this memory access, so
+ 	 * we can handle it..
+ 	 */
+-good_area:
+ 	si_code = SEGV_ACCERR;
  
- Introduction
- ============
+ 	/* Handle protection violation, execute on heap or stack */
 -- 
-2.21.0
+2.7.4
 
