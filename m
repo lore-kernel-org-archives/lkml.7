@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D78C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F982C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09D5420843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2361C20644
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919025;
-	bh=150jhkgBPAGqDHBLd7kUBOwIldgeC8zcqCG3Pz6Cp34=;
+	s=default; t=1557919028;
+	bh=PsE3L0Tytn+xs1zWFdeYNbl+o7QgsJvAnDvvDVgEk5c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=teH4ZhP+kS9aGLjw/Eus1Lw4jqv2dBSTt9DuTI5Q1SfdNyIoVIoVBwdK/iC68rU+d
-	 VO8r4yQeDAOPSAWxgdA0RScLQhi/ykPsY9Pwg2JqzOyGiUJH037qFRdYxIbpV6yw7b
-	 u7N0rHVMr6d3t7798zbgPeFuHwd5hzr155TtsFhc=
+	b=ly9ZBr6r3J5Xdm/Y9uNvI5eX9AIqeee+0ag6V9APAu5saO4WTlAgZeLbHTJsAC83U
+	 es//5K8J39XJEtrEtHyVlhwmEe2cbYXfB0HUsKT3Ck+K4THTZAuOONmceFoCdbphR4
+	 23pUGGRcimj9cvOT7F4rZ7BVNPNKy7vJV8jz1XEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730614AbfEOLRE (ORCPT
+        id S1730161AbfEOLRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:17:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53968 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:17:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730336AbfEOLQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:16:59 -0400
+        id S1728181AbfEOLRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:17:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 925DD20644;
-        Wed, 15 May 2019 11:16:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE51720644;
+        Wed, 15 May 2019 11:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919019;
-        bh=150jhkgBPAGqDHBLd7kUBOwIldgeC8zcqCG3Pz6Cp34=;
+        s=default; t=1557919024;
+        bh=PsE3L0Tytn+xs1zWFdeYNbl+o7QgsJvAnDvvDVgEk5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ocFETi6ZxNI4los/12x0wHy+uJ04R8grc6OibKYWG6oj2bKI7kKGjDERtVqKBata0
-         F3MacK5Cloy5TISd9FpxrqPPOK86Ky+eGxZe3bK1kOpHWRVoaNIwedbYtJEV2wgGuA
-         5b3cIBUvtzdz3udRi4bhkvjxG6dOR/G3xjZDmEBU=
+        b=x4QsHcuoRJAlmyo3gEFpRcI36+TfIhVAWrlptFAaL/+HzYrlqY4ovN3JZS7bGCALu
+         AlM0PzliOce6dosmQK7hVA36JR7X3DznkmbmQehO+chQQTjsjLyeqTLGYdk3T4x+Dr
+         jxeZ5Yl/V/XGjyyJMnD0N2Iw4AFJktq0BsiFsZ8U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>
-Subject: [PATCH 4.14 035/115] gpu: ipu-v3: dp: fix CSC handling
-Date:   Wed, 15 May 2019 12:55:15 +0200
-Message-Id: <20190515090701.968455671@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        Daniel Gomez <dagmcr@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 037/115] spi: Micrel eth switch: declare missing of table
+Date:   Wed, 15 May 2019 12:55:17 +0200
+Message-Id: <20190515090702.139538082@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -61,67 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d4fad0a426c6e26f48c9a7cdd21a7fe9c198d645 ]
+[ Upstream commit 2f23a2a768bee7ad2ff1e9527c3f7e279e794a46 ]
 
-Initialize the flow input colorspaces to unknown and reset to that value
-when the channel gets disabled. This avoids the state getting mixed up
-with a previous mode.
+Add missing <of_device_id> table for SPI driver relying on SPI
+device match since compatible is in a DT binding or in a DTS.
 
-Also keep the CSC settings for the background flow intact when disabling
-the foreground flow.
+Before this patch:
+modinfo drivers/net/phy/spi_ks8995.ko | grep alias
+alias:          spi:ksz8795
+alias:          spi:ksz8864
+alias:          spi:ks8995
 
-Root-caused-by: Jonathan Marek <jonathan@marek.ca>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+After this patch:
+modinfo drivers/net/phy/spi_ks8995.ko | grep alias
+alias:          spi:ksz8795
+alias:          spi:ksz8864
+alias:          spi:ks8995
+alias:          of:N*T*Cmicrel,ksz8795C*
+alias:          of:N*T*Cmicrel,ksz8795
+alias:          of:N*T*Cmicrel,ksz8864C*
+alias:          of:N*T*Cmicrel,ksz8864
+alias:          of:N*T*Cmicrel,ks8995C*
+alias:          of:N*T*Cmicrel,ks8995
+
+Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
+Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/ipu-v3/ipu-dp.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/net/phy/spi_ks8995.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/gpu/ipu-v3/ipu-dp.c b/drivers/gpu/ipu-v3/ipu-dp.c
-index 9b2b3fa479c46..5e44ff1f20851 100644
---- a/drivers/gpu/ipu-v3/ipu-dp.c
-+++ b/drivers/gpu/ipu-v3/ipu-dp.c
-@@ -195,7 +195,8 @@ int ipu_dp_setup_channel(struct ipu_dp *dp,
- 		ipu_dp_csc_init(flow, flow->foreground.in_cs, flow->out_cs,
- 				DP_COM_CONF_CSC_DEF_BOTH);
- 	} else {
--		if (flow->foreground.in_cs == flow->out_cs)
-+		if (flow->foreground.in_cs == IPUV3_COLORSPACE_UNKNOWN ||
-+		    flow->foreground.in_cs == flow->out_cs)
- 			/*
- 			 * foreground identical to output, apply color
- 			 * conversion on background
-@@ -261,6 +262,8 @@ void ipu_dp_disable_channel(struct ipu_dp *dp, bool sync)
- 	struct ipu_dp_priv *priv = flow->priv;
- 	u32 reg, csc;
+diff --git a/drivers/net/phy/spi_ks8995.c b/drivers/net/phy/spi_ks8995.c
+index 1e2d4f1179da3..45df03673e010 100644
+--- a/drivers/net/phy/spi_ks8995.c
++++ b/drivers/net/phy/spi_ks8995.c
+@@ -162,6 +162,14 @@ static const struct spi_device_id ks8995_id[] = {
+ };
+ MODULE_DEVICE_TABLE(spi, ks8995_id);
  
-+	dp->in_cs = IPUV3_COLORSPACE_UNKNOWN;
++static const struct of_device_id ks8895_spi_of_match[] = {
++        { .compatible = "micrel,ks8995" },
++        { .compatible = "micrel,ksz8864" },
++        { .compatible = "micrel,ksz8795" },
++        { },
++ };
++MODULE_DEVICE_TABLE(of, ks8895_spi_of_match);
 +
- 	if (!dp->foreground)
- 		return;
- 
-@@ -268,8 +271,9 @@ void ipu_dp_disable_channel(struct ipu_dp *dp, bool sync)
- 
- 	reg = readl(flow->base + DP_COM_CONF);
- 	csc = reg & DP_COM_CONF_CSC_DEF_MASK;
--	if (csc == DP_COM_CONF_CSC_DEF_FG)
--		reg &= ~DP_COM_CONF_CSC_DEF_MASK;
-+	reg &= ~DP_COM_CONF_CSC_DEF_MASK;
-+	if (csc == DP_COM_CONF_CSC_DEF_BOTH || csc == DP_COM_CONF_CSC_DEF_BG)
-+		reg |= DP_COM_CONF_CSC_DEF_BG;
- 
- 	reg &= ~DP_COM_CONF_FG_EN;
- 	writel(reg, flow->base + DP_COM_CONF);
-@@ -347,6 +351,8 @@ int ipu_dp_init(struct ipu_soc *ipu, struct device *dev, unsigned long base)
- 	mutex_init(&priv->mutex);
- 
- 	for (i = 0; i < IPUV3_NUM_FLOWS; i++) {
-+		priv->flow[i].background.in_cs = IPUV3_COLORSPACE_UNKNOWN;
-+		priv->flow[i].foreground.in_cs = IPUV3_COLORSPACE_UNKNOWN;
- 		priv->flow[i].foreground.foreground = true;
- 		priv->flow[i].base = priv->base + ipu_dp_flow_base[i];
- 		priv->flow[i].priv = priv;
+ static inline u8 get_chip_id(u8 val)
+ {
+ 	return (val >> ID1_CHIPID_S) & ID1_CHIPID_M;
+@@ -529,6 +537,7 @@ static int ks8995_remove(struct spi_device *spi)
+ static struct spi_driver ks8995_driver = {
+ 	.driver = {
+ 		.name	    = "spi-ks8995",
++		.of_match_table = of_match_ptr(ks8895_spi_of_match),
+ 	},
+ 	.probe	  = ks8995_probe,
+ 	.remove	  = ks8995_remove,
 -- 
 2.20.1
 
