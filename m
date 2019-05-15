@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A29EC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDDFC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD9720843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9942F20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920182;
-	bh=w0GHWwAugBhRjsJKO18Xs7KdslOVfCTcVmSyA8o/OJU=;
+	s=default; t=1557920185;
+	bh=tNIhxY8N0aSxd42ZQzJBvBfueaEFS+wqtYU5w+0ZFnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f3fs0evjcVZ9CotXzRVqbmrI5QfaQWJ/WxykBCKHyd+skv7XVxjZR3hq/yVqeqoMC
-	 yZmlFrBXhZ9gVwz1n0VLiaUR1mo82EWIjU+ZtGeaikC5kjAFOORXet0nbSpY6rAW9I
-	 yznay/Z88FIHdgqvj57KTgSugP05HiGo/VpUz0nI=
+	b=Oxb71WmPe992teUzWUX4mIzNewMsrXgVIVCweuYTnj6KUcWp5woid4ExFfbF0n/Tw
+	 4bHGy5Nr5rKQ8johKEXfUoloVNFMuxTybRv3jdBXEHW1cce+4mXJN3O9gj3K/AW/7f
+	 RPxGZ95fa5c0/fmlRhCuPoPp6lqv1X4v2LxTuLn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731224AbfEOLch (ORCPT
+        id S1731792AbfEOLgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:32:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44386 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:36:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733048AbfEOLcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:32:33 -0400
+        id S1730842AbfEOLci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:32:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 198082053B;
-        Wed, 15 May 2019 11:32:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D2812053B;
+        Wed, 15 May 2019 11:32:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919952;
-        bh=w0GHWwAugBhRjsJKO18Xs7KdslOVfCTcVmSyA8o/OJU=;
+        s=default; t=1557919957;
+        bh=tNIhxY8N0aSxd42ZQzJBvBfueaEFS+wqtYU5w+0ZFnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gDMzeSxoRS6GXaORQ6rPYtaH2GDVLpx7hIARceRVbXJkViro4kv24JDqpj/VuWW3z
-         qK18b81F2keXnB9HHZSKK+u9XynftNfCemUKLj/oeVJet0Tt1AaOhVBi9CFL5Xr8tM
-         CTkidXq7GtvDYzX3jNyHITnYVmkPsp1oM3xWAGts=
+        b=WMzkXaTKUUjmqpFsOMW8noY3oSmXK1FfuBP8Mnn0tsKpJDfDpUuHjgk83CyYRQoXx
+         TaU8lnpiOjmRJ26YRUr8rh4KmP/9ULGO1fmCz4QTkB/NBcfIsJW1I8RFIcbEnSqa8Y
+         +UULtyQOo7Dpe7lIHy8fXbiwJmar8Dhe7UVgXnKQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 19/46] net: dsa: Fix error cleanup path in dsa_init_module
-Date:   Wed, 15 May 2019 12:56:43 +0200
-Message-Id: <20190515090623.607888279@linuxfoundation.org>
+Subject: [PATCH 5.1 20/46] net: ethernet: stmmac: dwmac-sun8i: enable support of unicast filtering
+Date:   Wed, 15 May 2019 12:56:44 +0200
+Message-Id: <20190515090623.902014753@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -61,83 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Corentin Labbe <clabbe@baylibre.com>
 
-[ Upstream commit 68be930249d051fd54d3d99156b3dcadcb2a1f9b ]
+[ Upstream commit d4c26eb6e721683a0f93e346ce55bc8dc3cbb175 ]
 
-BUG: unable to handle kernel paging request at ffffffffa01c5430
-PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bc5067 PTE 0
-Oops: 0000 [#1
-CPU: 0 PID: 6159 Comm: modprobe Not tainted 5.1.0+ #33
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:raw_notifier_chain_register+0x16/0x40
-Code: 63 f8 66 90 e9 5d ff ff ff 90 90 90 90 90 90 90 90 90 90 90 55 48 8b 07 48 89 e5 48 85 c0 74 1c 8b 56 10 3b 50 10 7e 07 eb 12 <39> 50 10 7c 0d 48 8d 78 08 48 8b 40 08 48 85 c0 75 ee 48 89 46 08
-RSP: 0018:ffffc90001c33c08 EFLAGS: 00010282
-RAX: ffffffffa01c5420 RBX: ffffffffa01db420 RCX: 4fcef45928070a8b
-RDX: 0000000000000000 RSI: ffffffffa01db420 RDI: ffffffffa01b0068
-RBP: ffffc90001c33c08 R08: 000000003e0a33d0 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000094443661 R12: ffff88822c320700
-R13: ffff88823109be80 R14: 0000000000000000 R15: ffffc90001c33e78
-FS:  00007fab8bd08540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffa01c5430 CR3: 00000002297ea000 CR4: 00000000000006f0
-Call Trace:
- register_netdevice_notifier+0x43/0x250
- ? 0xffffffffa01e0000
- dsa_slave_register_notifier+0x13/0x70 [dsa_core
- ? 0xffffffffa01e0000
- dsa_init_module+0x2e/0x1000 [dsa_core
- do_one_initcall+0x6c/0x3cc
- ? do_init_module+0x22/0x1f1
- ? rcu_read_lock_sched_held+0x97/0xb0
- ? kmem_cache_alloc_trace+0x325/0x3b0
- do_init_module+0x5b/0x1f1
- load_module+0x1db1/0x2690
- ? m_show+0x1d0/0x1d0
- __do_sys_finit_module+0xc5/0xd0
- __x64_sys_finit_module+0x15/0x20
- do_syscall_64+0x6b/0x1d0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+When adding more MAC addresses to a dwmac-sun8i interface, the device goes
+directly in promiscuous mode.
+This is due to IFF_UNICAST_FLT missing flag.
 
-Cleanup allocated resourses if there are errors,
-otherwise it will trgger memleak.
+So since the hardware support unicast filtering, let's add IFF_UNICAST_FLT.
 
-Fixes: c9eb3e0f8701 ("net: dsa: Add support for learning FDB through notification")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/dsa/dsa.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/net/dsa/dsa.c
-+++ b/net/dsa/dsa.c
-@@ -344,15 +344,22 @@ static int __init dsa_init_module(void)
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -1015,6 +1015,8 @@ static struct mac_device_info *sun8i_dwm
+ 	mac->mac = &sun8i_dwmac_ops;
+ 	mac->dma = &sun8i_dwmac_dma_ops;
  
- 	rc = dsa_slave_register_notifier();
- 	if (rc)
--		return rc;
-+		goto register_notifier_fail;
- 
- 	rc = dsa_legacy_register();
- 	if (rc)
--		return rc;
-+		goto legacy_register_fail;
- 
- 	dev_add_pack(&dsa_pack_type);
- 
- 	return 0;
++	priv->dev->priv_flags |= IFF_UNICAST_FLT;
 +
-+legacy_register_fail:
-+	dsa_slave_unregister_notifier();
-+register_notifier_fail:
-+	destroy_workqueue(dsa_owq);
-+
-+	return rc;
- }
- module_init(dsa_init_module);
- 
+ 	/* The loopback bit seems to be re-set when link change
+ 	 * Simply mask it each time
+ 	 * Speed 10/100/1000 are set in BIT(2)/BIT(3)
 
 
