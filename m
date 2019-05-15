@@ -2,52 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0662C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5497C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A142206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BD4A20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919883;
-	bh=OVadQS8FRq9U3Y0HptqM8n/noUKP+J7NSlQ65DfLFaE=;
+	s=default; t=1557919892;
+	bh=oIQEaM9ehbUGjQp2n7XmPHer5wa2e7e8ImVmL2y+yzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ID6hQRvUWkgh44JbkqpViaOIcJgzTap6guAkqXQI1kSn/cK6ouIDc6QX425UI/v98
-	 JaYGD1WRGDKom6rdoJzAbywPJbldlDzcC2pKfYlCUVwQ8S0DsrN1KhljGIWhbSaBxG
-	 iB9l+VOBAKcsjmOBKPwOV5RvvvtGeYm88Hzt4NXg=
+	b=qJ3c7Yhii9QA3h+RkOze6j4n3dr5Qhxlp1WFwgUWkeA8Q4Xga3p8z1WLZtVfWPgnk
+	 hsaoObtag5o67RP/ZXa0LHWl57JCp/dC4S3ogXzb21YLBIHCvZWG7+ghwV1aYcqyrx
+	 Zr9Y/7LjMdph+mpCDvt7ocfoiTQdTUIvB36NmXKc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbfEOLbW (ORCPT
+        id S1732608AbfEOLbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:31:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42938 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:31:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732866AbfEOLbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:31:13 -0400
+        id S1731386AbfEOLb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:31:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E36CE20818;
-        Wed, 15 May 2019 11:31:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B34EE20818;
+        Wed, 15 May 2019 11:31:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919873;
-        bh=OVadQS8FRq9U3Y0HptqM8n/noUKP+J7NSlQ65DfLFaE=;
+        s=default; t=1557919889;
+        bh=oIQEaM9ehbUGjQp2n7XmPHer5wa2e7e8ImVmL2y+yzI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LufkawC4ptpJorKECUN8ZzsD43U128s6UsYDXN00YnOrHerf9WozE9iKB6pJiiXHj
-         1hqnEGEgzqnJ1w6SipLBu3glZ5mo6+RenSH3wDH9dtdlhhlOslccR+lcDuOJz3mIDc
-         8vq5xUGnfHpQ+W6U/UCYrmCe2vNhO8i1ZjfcSEig=
+        b=C4KBKLSrNRZjSq8tND2BrWyA4cuhsiDY/TCITx3AyM+fGuQMI39lIQ95OVZHDVYCK
+         wJDYN4UN6tE1i25IPk5CryqmMQu22+TBNsAYMjZF0mhXoHS0cdXXJYOkzcN/xVxkE0
+         uDdawZuPnJb/D1Ixzb7Kz+zf7fiikzPBv3BoR55k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 082/137] drm/imx: dont skip DP channel disable for background plane
-Date:   Wed, 15 May 2019 12:56:03 +0200
-Message-Id: <20190515090659.462701393@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH 5.0 133/137] virtio_ring: Fix potential mem leak in virtqueue_add_indirect_packed
+Date:   Wed, 15 May 2019 12:56:54 +0200
+Message-Id: <20190515090703.537212784@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -60,32 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7bcde275eb1d0ac8793c77c7e666a886eb16633d ]
+From: YueHaibing <yuehaibing@huawei.com>
 
-In order to make sure that the plane color space gets reset correctly.
+commit df0bfe7501e9319546ea380d39674a4179e059c3 upstream.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+'desc' should be freed before leaving from err handing path.
+
+Fixes: 1ce9e6055fa0 ("virtio_ring: introduce packed ring support")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
+stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/gpu/drm/imx/ipuv3-crtc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/virtio/virtio_ring.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
-index 058b53c0aa7ec..1bb3e598cb843 100644
---- a/drivers/gpu/drm/imx/ipuv3-crtc.c
-+++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
-@@ -70,7 +70,7 @@ static void ipu_crtc_disable_planes(struct ipu_crtc *ipu_crtc,
- 	if (disable_partial)
- 		ipu_plane_disable(ipu_crtc->plane[1], true);
- 	if (disable_full)
--		ipu_plane_disable(ipu_crtc->plane[0], false);
-+		ipu_plane_disable(ipu_crtc->plane[0], true);
- }
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -993,6 +993,7 @@ static int virtqueue_add_indirect_packed
  
- static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
--- 
-2.20.1
-
+ 	if (unlikely(vq->vq.num_free < 1)) {
+ 		pr_debug("Can't add buf len 1 - avail = 0\n");
++		kfree(desc);
+ 		END_USE(vq);
+ 		return -ENOSPC;
+ 	}
 
 
