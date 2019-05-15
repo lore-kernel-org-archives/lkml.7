@@ -3,125 +3,166 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 082FAC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 034BFC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D42B82084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAF092084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728099AbfEOT3D (ORCPT
+        id S1728194AbfEOT3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:29:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53902 "EHLO mx1.redhat.com"
+        Wed, 15 May 2019 15:29:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53886 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727636AbfEOT1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727560AbfEOT1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 May 2019 15:27:34 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1DE5F3003C77;
-        Wed, 15 May 2019 19:27:34 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id B3C34308ED53;
+        Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EE03919C71;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8B80B5D728;
         Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 31BA8225492; Wed, 15 May 2019 15:27:30 -0400 (EDT)
+        id D1897225485; Wed, 15 May 2019 15:27:29 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, linux-nvdimm@lists.01.org
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
         dgilbert@redhat.com, swhiteho@redhat.com
-Subject: [PATCH v2 30/30] virtio-fs: Do not provide abort interface in fusectl
-Date:   Wed, 15 May 2019 15:27:15 -0400
-Message-Id: <20190515192715.18000-31-vgoyal@redhat.com>
+Subject: [PATCH v2 17/30] fuse, dax: add fuse_conn->dax_dev field
+Date:   Wed, 15 May 2019 15:27:02 -0400
+Message-Id: <20190515192715.18000-18-vgoyal@redhat.com>
 In-Reply-To: <20190515192715.18000-1-vgoyal@redhat.com>
 References: <20190515192715.18000-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 15 May 2019 19:27:34 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-virtio-fs does not support aborting requests which are being processed. That
-is requests which have been sent to fuse daemon on host.
+From: Stefan Hajnoczi <stefanha@redhat.com>
 
-So do not provide "abort" interface for virtio-fs in fusectl.
+A struct dax_device instance is a prerequisite for the DAX filesystem
+APIs.  Let virtio_fs associate a dax_device with a fuse_conn.  Classic
+FUSE and CUSE set the pointer to NULL, disabling DAX.
 
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
 ---
- fs/fuse/control.c   | 4 ++--
- fs/fuse/fuse_i.h    | 4 ++++
- fs/fuse/inode.c     | 1 +
+ fs/fuse/cuse.c      | 3 ++-
+ fs/fuse/fuse_i.h    | 9 ++++++++-
+ fs/fuse/inode.c     | 9 ++++++---
  fs/fuse/virtio_fs.c | 1 +
- 4 files changed, 8 insertions(+), 2 deletions(-)
+ 4 files changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/fs/fuse/control.c b/fs/fuse/control.c
-index fe80bea4ad89..c1423f2ebc5e 100644
---- a/fs/fuse/control.c
-+++ b/fs/fuse/control.c
-@@ -278,8 +278,8 @@ int fuse_ctl_add_conn(struct fuse_conn *fc)
+diff --git a/fs/fuse/cuse.c b/fs/fuse/cuse.c
+index a509747153a7..417448f11f9f 100644
+--- a/fs/fuse/cuse.c
++++ b/fs/fuse/cuse.c
+@@ -504,7 +504,8 @@ static int cuse_channel_open(struct inode *inode, struct file *file)
+ 	 * Limit the cuse channel to requests that can
+ 	 * be represented in file->f_cred->user_ns.
+ 	 */
+-	fuse_conn_init(&cc->fc, file->f_cred->user_ns, &fuse_dev_fiq_ops, NULL);
++	fuse_conn_init(&cc->fc, file->f_cred->user_ns, NULL, &fuse_dev_fiq_ops,
++					NULL);
  
- 	if (!fuse_ctl_add_dentry(parent, fc, "waiting", S_IFREG | 0400, 1,
- 				 NULL, &fuse_ctl_waiting_ops) ||
--	    !fuse_ctl_add_dentry(parent, fc, "abort", S_IFREG | 0200, 1,
--				 NULL, &fuse_ctl_abort_ops) ||
-+	    (!fc->no_abort && !fuse_ctl_add_dentry(parent, fc, "abort",
-+			S_IFREG | 0200, 1, NULL, &fuse_ctl_abort_ops)) ||
- 	    !fuse_ctl_add_dentry(parent, fc, "max_background", S_IFREG | 0600,
- 				 1, NULL, &fuse_conn_max_background_ops) ||
- 	    !fuse_ctl_add_dentry(parent, fc, "congestion_threshold",
+ 	fud = fuse_dev_alloc_install(&cc->fc);
+ 	if (!fud) {
 diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index b4a5728444bb..7ac7f9a0b81b 100644
+index f5cb4d40b83f..46fc1a454084 100644
 --- a/fs/fuse/fuse_i.h
 +++ b/fs/fuse/fuse_i.h
-@@ -86,6 +86,7 @@ struct fuse_mount_data {
- 	unsigned allow_other:1;
- 	unsigned dax:1;
- 	unsigned destroy:1;
-+	unsigned no_abort:1;
+@@ -74,6 +74,9 @@ struct fuse_mount_data {
  	unsigned max_read;
  	unsigned blksize;
  
-@@ -847,6 +848,9 @@ struct fuse_conn {
- 	/** Does the filesystem support copy_file_range? */
- 	unsigned no_copy_file_range:1;
- 
-+	/** Do not create abort file in fuse control fs */
-+	unsigned no_abort:1;
++	/* DAX device, may be NULL */
++	struct dax_device *dax_dev;
 +
- 	/** The number of requests waiting for completion */
- 	atomic_t num_waiting;
+ 	/* fuse input queue operations */
+ 	const struct fuse_iqueue_ops *fiq_ops;
  
+@@ -822,6 +825,9 @@ struct fuse_conn {
+ 
+ 	/** List of device instances belonging to this connection */
+ 	struct list_head devices;
++
++	/** DAX device, non-NULL if DAX is supported */
++	struct dax_device *dax_dev;
+ };
+ 
+ static inline struct fuse_conn *get_fuse_conn_super(struct super_block *sb)
+@@ -1049,7 +1055,8 @@ struct fuse_conn *fuse_conn_get(struct fuse_conn *fc);
+  * Initialize fuse_conn
+  */
+ void fuse_conn_init(struct fuse_conn *fc, struct user_namespace *user_ns,
+-		    const struct fuse_iqueue_ops *fiq_ops, void *fiq_priv);
++			struct dax_device *dax_dev,
++			const struct fuse_iqueue_ops *fiq_ops, void *fiq_priv);
+ 
+ /**
+  * Release reference to fuse_conn
 diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index 8af7f31c6e19..302f7e04b645 100644
+index 731a8a74d032..42f3ac5b7521 100644
 --- a/fs/fuse/inode.c
 +++ b/fs/fuse/inode.c
-@@ -1272,6 +1272,7 @@ int fuse_fill_super_common(struct super_block *sb,
- 	fc->user_id = mount_data->user_id;
- 	fc->group_id = mount_data->group_id;
- 	fc->max_read = max_t(unsigned, 4096, mount_data->max_read);
-+	fc->no_abort = mount_data->no_abort;
+@@ -603,7 +603,8 @@ static void fuse_pqueue_init(struct fuse_pqueue *fpq)
+ }
  
- 	/* Used by get_root_inode() */
- 	sb->s_fs_info = fc;
+ void fuse_conn_init(struct fuse_conn *fc, struct user_namespace *user_ns,
+-		    const struct fuse_iqueue_ops *fiq_ops, void *fiq_priv)
++			struct dax_device *dax_dev,
++			const struct fuse_iqueue_ops *fiq_ops, void *fiq_priv)
+ {
+ 	memset(fc, 0, sizeof(*fc));
+ 	spin_lock_init(&fc->lock);
+@@ -628,6 +629,7 @@ void fuse_conn_init(struct fuse_conn *fc, struct user_namespace *user_ns,
+ 	atomic64_set(&fc->attr_version, 1);
+ 	get_random_bytes(&fc->scramble_key, sizeof(fc->scramble_key));
+ 	fc->pid_ns = get_pid_ns(task_active_pid_ns(current));
++	fc->dax_dev = dax_dev;
+ 	fc->user_ns = get_user_ns(user_ns);
+ 	fc->max_pages = FUSE_DEFAULT_MAX_PAGES_PER_REQ;
+ }
+@@ -1140,8 +1142,8 @@ int fuse_fill_super_common(struct super_block *sb,
+ 	if (!fc)
+ 		goto err;
+ 
+-	fuse_conn_init(fc, sb->s_user_ns, mount_data->fiq_ops,
+-		       mount_data->fiq_priv);
++	fuse_conn_init(fc, sb->s_user_ns, mount_data->dax_dev,
++		       mount_data->fiq_ops, mount_data->fiq_priv);
+ 	fc->release = fuse_free_conn;
+ 
+ 	fud = fuse_dev_alloc_install(fc);
+@@ -1243,6 +1245,7 @@ static int fuse_fill_super(struct super_block *sb, void *data, int silent)
+ 		goto err_fput;
+ 	__set_bit(FR_BACKGROUND, &init_req->flags);
+ 
++	d.dax_dev = NULL;
+ 	d.fiq_ops = &fuse_dev_fiq_ops;
+ 	d.fiq_priv = NULL;
+ 	d.fudptr = &file->private_data;
 diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-index 76c46edcc8ac..18fc0dca0abc 100644
+index e76e0f5dce40..a23a1fb67217 100644
 --- a/fs/fuse/virtio_fs.c
 +++ b/fs/fuse/virtio_fs.c
-@@ -1042,6 +1042,7 @@ static int virtio_fs_fill_super(struct super_block *sb, void *data,
+@@ -866,6 +866,7 @@ static int virtio_fs_fill_super(struct super_block *sb, void *data,
+  		goto err_free_fuse_devs;
+ 	__set_bit(FR_BACKGROUND, &init_req->flags);
+ 
++	d.dax_dev = NULL;
+ 	d.fiq_ops = &virtio_fs_fiq_ops;
  	d.fiq_priv = fs;
  	d.fudptr = (void **)&fs->vqs[VQ_REQUEST].fud;
- 	d.destroy = true; /* Send destroy request on unmount */
-+	d.no_abort = 1;
- 	err = fuse_fill_super_common(sb, &d);
- 	if (err < 0)
- 		goto err_free_init_req;
 -- 
 2.20.1
 
