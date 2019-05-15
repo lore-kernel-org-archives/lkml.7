@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C79EC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAD5C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32AFD2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C232053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920149;
-	bh=zgxJFo41n2tRNguAeuAbLqkNgYqPJNN4eVAR+xGXUoE=;
+	s=default; t=1557920153;
+	bh=Pbj+UVCC4TYDkmXlwC5abIs+I5M6h3icEkPBubW8FrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yb9kqAsqhGy1h9jAwWZLFO2mqQfd/fZkOiSCwXKghYVcjV2N60i6LumSYlvassAjM
-	 pDQHkB5epDGnRsPZptyv9P9XBXUYJ89RFy+msGko1nv/s9VbbLh62wzBpngVn4GfNh
-	 qmiCkSlvl9yWjfMcsYoBuq4RGFj7XyzipwcGhDCM=
+	b=dJwPoFSym7j/pVUM3oJTwXVcAdJlitsQRHKNORf78lMGmERJNOlwAc5A0QJQ+AhCB
+	 HUeNqEVInYYZRwHmdvR570R4MK5/IRo78l2rfbtJ9Yd4SMGjNobTNgkL/MgT/b5JX1
+	 58/bgw8YOzjE5b8TF6u1OB3lev4xBKOhlmBaODEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733150AbfEOLdI (ORCPT
+        id S1733003AbfEOLfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:33:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44902 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:35:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733110AbfEOLc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:32:56 -0400
+        id S1733146AbfEOLdH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:33:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0EA4206BF;
-        Wed, 15 May 2019 11:32:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45A212053B;
+        Wed, 15 May 2019 11:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919976;
-        bh=zgxJFo41n2tRNguAeuAbLqkNgYqPJNN4eVAR+xGXUoE=;
+        s=default; t=1557919986;
+        bh=Pbj+UVCC4TYDkmXlwC5abIs+I5M6h3icEkPBubW8FrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A57E3hU2GDt6tjDksdNCIeCAd1/0GGBEFDTt+JW3JRFhxz6kn82st3QfvFkKbulfD
-         KZeT19m/JycLNF4DFhy4TBfaTqc7lExEw+NSJv8qIZVGmUTt5hNUq7iiJVg2RjUNfm
-         /swsHwwwlGaxDOhZCLfoVkXoUI43oQssqR7kxwBk=
+        b=yGEuemmkPfXrr50iddCckDnyVjhRYukU5F9GjUB4X3kXrHTIHQbrpkcCEMQ3cPE3E
+         muO5eGJdvUBL3eJDPP1jDcTL7kD2nhOOVn67gJq5cHOjknU/BEyX9Z87MpwIi+PcZk
+         sBZQ5vITvyVOv8N1zIMAcqUmUQ9VPUHkpk3gCxuc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        Richard Cochran <richardcochran@gmail.com>,
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 27/46] vlan: disable SIOCSHWTSTAMP in container
-Date:   Wed, 15 May 2019 12:56:51 +0200
-Message-Id: <20190515090625.571849309@linuxfoundation.org>
+Subject: [PATCH 5.1 30/46] aqc111: fix writing to the phy on BE
+Date:   Wed, 15 May 2019 12:56:54 +0200
+Message-Id: <20190515090626.165408904@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -60,39 +59,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit 873017af778439f2f8e3d87f28ddb1fcaf244a76 ]
+[ Upstream commit 369b46e9fbcfa5136f2cb5f486c90e5f7fa92630 ]
 
-With NET_ADMIN enabled in container, a normal user could be mapped to
-root and is able to change the real device's rx filter via ioctl on
-vlan, which would affect the other ptp process on host. Fix it by
-disabling SIOCSHWTSTAMP in container.
+When writing to the phy on BE architectures an internal data structure
+was directly given, leading to it being byte swapped in the wrong
+way for the CPU in 50% of all cases. A temporary buffer must be used.
 
-Fixes: a6111d3c93d0 ("vlan: Pass SIOC[SG]HWTSTAMP ioctls to real device")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/8021q/vlan_dev.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/usb/aqc111.c |   23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
 
---- a/net/8021q/vlan_dev.c
-+++ b/net/8021q/vlan_dev.c
-@@ -367,10 +367,12 @@ static int vlan_dev_ioctl(struct net_dev
- 	ifrr.ifr_ifru = ifr->ifr_ifru;
+--- a/drivers/net/usb/aqc111.c
++++ b/drivers/net/usb/aqc111.c
+@@ -320,6 +320,7 @@ static int aqc111_get_link_ksettings(str
+ static void aqc111_set_phy_speed(struct usbnet *dev, u8 autoneg, u16 speed)
+ {
+ 	struct aqc111_data *aqc111_data = dev->driver_priv;
++	u32 phy_on_the_wire;
  
- 	switch (cmd) {
-+	case SIOCSHWTSTAMP:
-+		if (!net_eq(dev_net(dev), &init_net))
-+			break;
- 	case SIOCGMIIPHY:
- 	case SIOCGMIIREG:
- 	case SIOCSMIIREG:
--	case SIOCSHWTSTAMP:
- 	case SIOCGHWTSTAMP:
- 		if (netif_device_present(real_dev) && ops->ndo_do_ioctl)
- 			err = ops->ndo_do_ioctl(real_dev, &ifrr, cmd);
+ 	aqc111_data->phy_cfg &= ~AQ_ADV_MASK;
+ 	aqc111_data->phy_cfg |= AQ_PAUSE;
+@@ -361,7 +362,8 @@ static void aqc111_set_phy_speed(struct
+ 		}
+ 	}
+ 
+-	aqc111_write32_cmd(dev, AQ_PHY_OPS, 0, 0, &aqc111_data->phy_cfg);
++	phy_on_the_wire = aqc111_data->phy_cfg;
++	aqc111_write32_cmd(dev, AQ_PHY_OPS, 0, 0, &phy_on_the_wire);
+ }
+ 
+ static int aqc111_set_link_ksettings(struct net_device *net,
+@@ -755,6 +757,7 @@ static void aqc111_unbind(struct usbnet
+ {
+ 	struct aqc111_data *aqc111_data = dev->driver_priv;
+ 	u16 reg16;
++	u32 phy_on_the_wire;
+ 
+ 	/* Force bz */
+ 	reg16 = SFR_PHYPWR_RSTCTL_BZ;
+@@ -768,8 +771,9 @@ static void aqc111_unbind(struct usbnet
+ 	aqc111_data->phy_cfg &= ~AQ_ADV_MASK;
+ 	aqc111_data->phy_cfg |= AQ_LOW_POWER;
+ 	aqc111_data->phy_cfg &= ~AQ_PHY_POWER_EN;
++	phy_on_the_wire = aqc111_data->phy_cfg;
+ 	aqc111_write32_cmd_nopm(dev, AQ_PHY_OPS, 0, 0,
+-				&aqc111_data->phy_cfg);
++				&phy_on_the_wire);
+ 
+ 	kfree(aqc111_data);
+ }
+@@ -992,6 +996,7 @@ static int aqc111_reset(struct usbnet *d
+ {
+ 	struct aqc111_data *aqc111_data = dev->driver_priv;
+ 	u8 reg8 = 0;
++	u32 phy_on_the_wire;
+ 
+ 	dev->rx_urb_size = URB_SIZE;
+ 
+@@ -1004,8 +1009,9 @@ static int aqc111_reset(struct usbnet *d
+ 
+ 	/* Power up ethernet PHY */
+ 	aqc111_data->phy_cfg = AQ_PHY_POWER_EN;
++	phy_on_the_wire = aqc111_data->phy_cfg;
+ 	aqc111_write32_cmd(dev, AQ_PHY_OPS, 0, 0,
+-			   &aqc111_data->phy_cfg);
++			   &phy_on_the_wire);
+ 
+ 	/* Set the MAC address */
+ 	aqc111_write_cmd(dev, AQ_ACCESS_MAC, SFR_NODE_ID, ETH_ALEN,
+@@ -1036,6 +1042,7 @@ static int aqc111_stop(struct usbnet *de
+ {
+ 	struct aqc111_data *aqc111_data = dev->driver_priv;
+ 	u16 reg16 = 0;
++	u32 phy_on_the_wire;
+ 
+ 	aqc111_read16_cmd(dev, AQ_ACCESS_MAC, SFR_MEDIUM_STATUS_MODE,
+ 			  2, &reg16);
+@@ -1047,8 +1054,9 @@ static int aqc111_stop(struct usbnet *de
+ 
+ 	/* Put PHY to low power*/
+ 	aqc111_data->phy_cfg |= AQ_LOW_POWER;
++	phy_on_the_wire = aqc111_data->phy_cfg;
+ 	aqc111_write32_cmd(dev, AQ_PHY_OPS, 0, 0,
+-			   &aqc111_data->phy_cfg);
++			   &phy_on_the_wire);
+ 
+ 	netif_carrier_off(dev->net);
+ 
+@@ -1324,6 +1332,7 @@ static int aqc111_suspend(struct usb_int
+ 	u16 temp_rx_ctrl = 0x00;
+ 	u16 reg16;
+ 	u8 reg8;
++	u32 phy_on_the_wire;
+ 
+ 	usbnet_suspend(intf, message);
+ 
+@@ -1395,12 +1404,14 @@ static int aqc111_suspend(struct usb_int
+ 
+ 		aqc111_write_cmd(dev, AQ_WOL_CFG, 0, 0,
+ 				 WOL_CFG_SIZE, &wol_cfg);
++		phy_on_the_wire = aqc111_data->phy_cfg;
+ 		aqc111_write32_cmd(dev, AQ_PHY_OPS, 0, 0,
+-				   &aqc111_data->phy_cfg);
++				   &phy_on_the_wire);
+ 	} else {
+ 		aqc111_data->phy_cfg |= AQ_LOW_POWER;
++		phy_on_the_wire = aqc111_data->phy_cfg;
+ 		aqc111_write32_cmd(dev, AQ_PHY_OPS, 0, 0,
+-				   &aqc111_data->phy_cfg);
++				   &phy_on_the_wire);
+ 
+ 		/* Disable RX path */
+ 		aqc111_read16_cmd_nopm(dev, AQ_ACCESS_MAC,
 
 
