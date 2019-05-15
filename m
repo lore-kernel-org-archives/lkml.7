@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35966C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AE9C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05B422168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830AB20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918854;
-	bh=Sqre4+W0dfk+YkgD2o79RpVqoU8yw9v+ixeml1EpZHA=;
+	s=default; t=1557918858;
+	bh=2h4RZBvYY35P/AdQ40WgdooKRgk8s+apePeMFdS1hiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fgWShk/PNWv5aWRbHUOmo/vIgIFBofXkCJS31ACvu/qP/ELkmEtmHEaQStx2ygzAX
-	 yTXMvWxuQHI8upLJKTrMjOaoyI7yP176oGVD4I27f9HDcrUEEF4bmZbSLrFnlWemQV
-	 O58VrAcQyN67pG+8T1hGkWFlW5cw1uuIvN6pIL+s=
+	b=oU83evoGfcu+b/Bi1w/KwwEVA7iqanDkWABbscK+qcXVht/1BXobN//8sAffUk79U
+	 B1Z2v5QgP5GMT5ZTIYYak1AYj9yvglekYGydhX9HI9H+uxBAKNiS8Kw280sFrcjwel
+	 PgaUqkJeErzBZfJ6AGzPVkEc9tjMrFdAgRh5hudc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730099AbfEOLOM (ORCPT
+        id S1730111AbfEOLOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:14:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50178 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:14:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730085AbfEOLOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:14:11 -0400
+        id S1730085AbfEOLON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:14:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0804E20644;
-        Wed, 15 May 2019 11:14:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA92120881;
+        Wed, 15 May 2019 11:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918850;
-        bh=Sqre4+W0dfk+YkgD2o79RpVqoU8yw9v+ixeml1EpZHA=;
+        s=default; t=1557918853;
+        bh=2h4RZBvYY35P/AdQ40WgdooKRgk8s+apePeMFdS1hiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s4+XOn/BMsz5ebJ9M1oDPtHtey0eVW9FQU9VodyC4yftF5Qd+LHXZ1fpgdTCpNnNP
-         qtbI9Irsy1HlUtiFbxyJ+wELn7K/9srYm2IBG5yOb3b36Uwdbmj/mITPdJAaYEgt96
-         gSGUS7dhN8EfTSiPiyV4fMQXSCZXu/QQ569mIZdA=
+        b=qL1LA2snmI73JoZ8EyOdFcMjMtSJhEOCmqq5FiEypRqEKm6q4UQYTssWRIC9loQl8
+         BlRD6FB5Oq2AYttHr7x7cEKpB1JWqnJcVHFbMCjt+sX/mB3w9o5YKmFN6UWJzbX6dX
+         IYRH5mTXuIPnZuJUsAk/WQKIUXLsjhqKGdQyK14U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 23/51] s390: ctcm: fix ctcm_new_device error return code
-Date:   Wed, 15 May 2019 12:55:58 +0200
-Message-Id: <20190515090623.961966830@linuxfoundation.org>
+Subject: [PATCH 4.9 24/51] drm/sun4i: Set device driver data at bind time for use in unbind
+Date:   Wed, 15 May 2019 12:55:59 +0200
+Message-Id: <20190515090624.134510798@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
 References: <20190515090616.669619870@linuxfoundation.org>
@@ -63,51 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 27b141fc234a3670d21bd742c35d7205d03cbb3a ]
+[ Upstream commit 02b92adbe33e6dbd15dc6e32540b22f47c4ff0a2 ]
 
-clang points out that the return code from this function is
-undefined for one of the error paths:
+Our sun4i_drv_unbind gets the drm device using dev_get_drvdata.
+However, that driver data is never set in sun4i_drv_bind.
 
-../drivers/s390/net/ctcm_main.c:1595:7: warning: variable 'result' is used uninitialized whenever 'if' condition is true
-      [-Wsometimes-uninitialized]
-                if (priv->channel[direction] == NULL) {
-                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-../drivers/s390/net/ctcm_main.c:1638:9: note: uninitialized use occurs here
-        return result;
-               ^~~~~~
-../drivers/s390/net/ctcm_main.c:1595:3: note: remove the 'if' if its condition is always false
-                if (priv->channel[direction] == NULL) {
-                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-../drivers/s390/net/ctcm_main.c:1539:12: note: initialize the variable 'result' to silence this warning
-        int result;
-                  ^
+Set it there to avoid getting a NULL pointer at unbind time.
 
-Make it return -ENODEV here, as in the related failure cases.
-gcc has a known bug in underreporting some of these warnings
-when it has already eliminated the assignment of the return code
-based on some earlier optimization step.
-
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 9026e0d122ac ("drm: Add Allwinner A10 Display Engine support")
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190418132727.5128-3-paul.kocialkowski@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/ctcm_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/sun4i/sun4i_drv.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/s390/net/ctcm_main.c b/drivers/s390/net/ctcm_main.c
-index ad17fc5883f61..e22b9ac3e564f 100644
---- a/drivers/s390/net/ctcm_main.c
-+++ b/drivers/s390/net/ctcm_main.c
-@@ -1595,6 +1595,7 @@ static int ctcm_new_device(struct ccwgroup_device *cgdev)
- 		if (priv->channel[direction] == NULL) {
- 			if (direction == CTCM_WRITE)
- 				channel_free(priv->channel[CTCM_READ]);
-+			result = -ENODEV;
- 			goto out_dev;
- 		}
- 		priv->channel[direction]->netdev = dev;
+diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+index 97828faf2a1ff..d58991b06a470 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+@@ -137,6 +137,8 @@ static int sun4i_drv_bind(struct device *dev)
+ 		ret = -ENOMEM;
+ 		goto free_drm;
+ 	}
++
++	dev_set_drvdata(dev, drm);
+ 	drm->dev_private = drv;
+ 
+ 	drm_vblank_init(drm, 1);
 -- 
 2.20.1
 
