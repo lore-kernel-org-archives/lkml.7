@@ -3,90 +3,148 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3317C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D921FC04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B75120862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:59:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kosd0lCi"
+	by mail.kernel.org (Postfix) with ESMTP id A9CB520862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557910814;
+	bh=tSH/SNkqFDsOd/9r+vHhCsEA1xWapzNBIYn3LDQTcU4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OM0GUOqzfhoAFD/1t3loIQ35fgh67uksX9EXuyWUlXIKTFL9bYzaDSXxlr0pm1qAe
+	 paJ/OyTQDfBWL7OvBVlosW/B+hnQANcma/uSGEQs7ibJ5uhgwprQZf0dAuI3QGPJhl
+	 l0VrAnK4Hi8BMbmIOzUu4zerwueAUf5R66hqz0nI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726261AbfEOI7c (ORCPT
+        id S1726325AbfEOJAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 04:59:32 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:46402 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfEOI7c (ORCPT
+        Wed, 15 May 2019 05:00:13 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40586 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfEOJAN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 04:59:32 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4F8x9if014833;
-        Wed, 15 May 2019 03:59:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1557910749;
-        bh=BacRUcskBltX/i52n+AsRzYrFd9sD+yl78NxjnBclHI=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kosd0lCiXD8DfciWJXgCLGiMS3sPUTeM9UTJb7F+LGGGDWrRIhWRO52LCSzguBNxS
-         b85NOQ30jcnHydbCZGnp0jGVCQGu7xqAaO7XpBTr1+2h6UGLIot4TIik4aTSdOVIMG
-         HF1nzvt3kzN5eLChYNMwXGwVWVULMtyRjoK6Bp5g=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4F8x8A8010345
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 May 2019 03:59:09 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 15
- May 2019 03:59:08 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 15 May 2019 03:59:08 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4F8x2MI071131;
-        Wed, 15 May 2019 03:59:04 -0500
-Subject: Re: [PATCH] clk: Remove io.h from clk-provider.h
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Heiko Stuebner <heiko@sntech.de>
-References: <20190514170931.56312-1-sboyd@kernel.org>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <a3aecc47-aa1e-bc12-2170-4c55b491f891@ti.com>
-Date:   Wed, 15 May 2019 11:58:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 15 May 2019 05:00:13 -0400
+Received: by mail-oi1-f193.google.com with SMTP id r136so1255768oie.7;
+        Wed, 15 May 2019 02:00:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lrqj6jKrkXcRwqIiYwyrhsIxd6bZvvZrh2+SSoZ20J0=;
+        b=tLbNnFqCG9b+NM2rIAUZ3p401DLBMhEowpQVywyUJuqe1NuU7hLXgyOfLcuIEGNEIY
+         haRT3DT1ooSlHyJ3S43fgJAJbNOBMY7tmmobwebz/n9GHyV8fDqi6vZr9sWHFgssBueJ
+         Xq1H2T2vGslplMg3CDjxYVo3mJK1zZ7ZZ9FdI9JMY7OeJfiIjOlychV4DiW82shbblQM
+         vRCD4uYg8mdgyEzIcvJpkyyRwqidgYmBhGkwP5+OMGFEeYvj1us69HXMO9UuS67eW8AB
+         DkIvqWEf7iBkhllkR9Z8yK9rOtQNMpGDSngFbE1K00nvUqzQMYnvGOYmRbLyOSzWoj8J
+         9N3w==
+X-Gm-Message-State: APjAAAWk4IHf4+IRvt2UFihEeI8lr06/xN5nsRqW+PV0Ygx2M0bmRv+Q
+        DnousFCZiId3rYhK5KskGoCW86g7JDevlPNcDR8RcQ==
+X-Google-Smtp-Source: APXvYqwHaBsNdrxgMt9H08QfD06eGXj4HaMnSdWMvb9W72y+vEGR3kUnlh0NIou/5pP1CEOGRrXrlsI/Ydn/lftSsq8=
+X-Received: by 2002:aca:f4c3:: with SMTP id s186mr5432131oih.68.1557910812335;
+ Wed, 15 May 2019 02:00:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190514170931.56312-1-sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190510212937.11661-1-keith.busch@intel.com> <0080aaff18e5445dabca509d4113eca8@AUSX13MPC105.AMER.DELL.COM>
+ <955722d8fc16425dbba0698c4806f8fd@AUSX13MPC105.AMER.DELL.COM>
+ <20190513143741.GA25500@lst.de> <b12ff66f8c224e4199ff1b90ed6bc393@AUSX13MPC105.AMER.DELL.COM>
+ <20190513145522.GA15421@localhost.localdomain> <d69ff7154191492eaa8f55535a7effa5@AUSX13MPC105.AMER.DELL.COM>
+ <20190513150458.GA15437@localhost.localdomain> <CAJZ5v0g3cCYK3rAQn09pCr7LMrRr=zQy_ceaEB5AKhVx604YgA@mail.gmail.com>
+ <20190514221609.GC19977@localhost.localdomain>
+In-Reply-To: <20190514221609.GC19977@localhost.localdomain>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 15 May 2019 11:00:01 +0200
+Message-ID: <CAJZ5v0hrzV+cz+112sfgJ1eNznuf5oLH+kpFwhQb5VA05EAS2g@mail.gmail.com>
+Subject: Re: [PATCH] nvme/pci: Use host managed power state for suspend
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/05/2019 20:09, Stephen Boyd wrote:
-> Now that we've gotten rid of clk_readl() we can remove io.h from the
-> clk-provider header and push out the io.h include to any code that isn't
-> already including the io.h header but using things like readl/writel,
-> etc.
-> 
+On Wed, May 15, 2019 at 12:21 AM Keith Busch <kbusch@kernel.org> wrote:
+>
+> On Tue, May 14, 2019 at 10:04:22AM +0200, Rafael J. Wysocki wrote:
+> > On Mon, May 13, 2019 at 5:10 PM Keith Busch <kbusch@kernel.org> wrote:
+> > >
+> > > On Mon, May 13, 2019 at 03:05:42PM +0000, Mario.Limonciello@dell.com wrote:
+> > > > This system power state - suspend to idle is going to freeze threads.
+> > > > But we're talking a multi threaded kernel.  Can't there be a timing problem going
+> > > > on then too?  With a disk flush being active in one task and the other task trying
+> > > > to put the disk into the deepest power state.  If you don't freeze the queues how
+> > > > can you guarantee that didn't happen?
+> > >
+> > > But if an active data flush task is running, then we're not idle and
+> > > shouldn't go to low power.
+> >
+> > To be entirely precise, system suspend prevents user space from
+> > running while it is in progress.  It doesn't do that to kernel
+> > threads, at least not by default, though, so if there is a kernel
+> > thread flushing the data, it needs to be stopped or suspended somehow
+> > directly in the system suspend path.  [And yes, system suspend (or
+> > hibernation) may take place at any time so long as all user space can
+> > be prevented from running then (by means of the tasks freezer).]
+> >
+> > However, freezing the queues from a driver ->suspend callback doesn't
+> > help in general and the reason why is hibernation.  Roughly speaking,
+> > hibernation works in two steps, the first of which creates a snapshot
+> > image of system memory and the second one writes that image to
+> > persistent storage.  Devices are resumed between the two steps in
+> > order to make it possible to do the write, but that would unfreeze the
+> > queues and let the data flusher run.  If it runs, it may cause the
+> > memory snapshot image that has just been created to become outdated
+> > and restoring the system memory contents from that image going forward
+> > may cause corruption to occur.
+> >
+> > Thus freezing the queues from a driver ->suspend callback should not
+> > be relied on for correctness if the same callback is used for system
+> > suspend and hibernation, which is the case here.  If doing that
+> > prevents the system from crashing, it is critical to find out why IMO,
+> > as that may very well indicate a broader issue, not necessarily in the
+> > driver itself.
+> >
+> > But note that even if the device turns out to behave oddly, it still
+> > needs to be handled, unless it may be prevented from shipping to users
+> > in that shape.  If it ships, users will face the odd behavior anyway.
+>
+> Thanks for all the information. I'll take another shot at this, should
+> have it posted tomorrow.
+>
+> It's mostly not a problem to ensure enqueued and dispatched requests are
+> completed before returning from our suspend callback. I originally had
+> that behavior and backed it out when I thought it wasn't necessary. So
+> I'll reintroduce that. I'm not sure yet how we may handle kernel tasks
+> that are about to read/write pages, but haven't yet enqueued their
+> requests.
 
-For drivers/clk/ti portions:
+That is a hard problem in general.
 
-Acked-by: Tero Kristo <t-kristo@ti.com>
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Currently, there are two ways to prevent a kernel thread from running
+across hibernation.  One of them is to freeze it with the help of the
+tasks freezer, but that isn't nice.  The second one would be to
+register a PM notifier with register_pm_notifier() and then stop the
+thread on the PM_HIBERNATION_PREPARE events (and restart it on the
+PM_POST_HIBERNATION and PM_POST_RESTORE events).  The drawback here
+is, though, that PM_HIBERNATION_PREPARE is signaled before freezing
+user space which may produce some deadlock scenarios in principle if
+anything in user space may be blocked waiting for the stopped kernel
+thread.
+
+It may be necessary to add PM_HIBERNATION/SUSPEND_POSTFREEZE and
+_PRETHAW events to the PM notifier for that, which will be signaled
+after running the tasks freezer and before unfreezing tasks,
+respectively.  Or something else to that effect.
+
+If you need something like that, please let me know and I will prepare
+a core patch to add it.
