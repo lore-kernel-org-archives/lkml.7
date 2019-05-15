@@ -2,118 +2,130 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD23C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:26:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC46C46470
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF2620873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:26:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="BmVVmLPD"
+	by mail.kernel.org (Postfix) with ESMTP id 0AABE20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:27:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfEOS0F (ORCPT
+        id S1727270AbfEOS1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 14:26:05 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41438 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726517AbfEOS0E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 14:26:04 -0400
-Received: by mail-qk1-f194.google.com with SMTP id g190so608786qkf.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 11:26:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jFj8dh23g2idvSds2JYPP7kaIEok3DfVq0OP/6qEkjo=;
-        b=BmVVmLPDeF0Gh1VuUSf55t4gi1/UnkJVNXU6pn3dvbTIbUr3GxfpIKRwrHu4flb3CG
-         HTKZuXRN+BVDiyYtSqmjpKwFx3Bh00cbTfGG6bOcV9qX9VXnAILuUU7Y1v/0ih30no4w
-         8gkbCH9MFy4Y544krG1rk/QqQmJeKFeOLst+j5q9VQIiRN27xsFJ3otCgPv3RlMQEUIZ
-         tR1VE2Wrv4wzsnARmTsh7skwOd7YDlTtR5DagCMfo4NlY4yXpzS/Dz30DtgVtj6H4Oec
-         JHh86xeV6tAR1Pj/JSY/zUj4zCxOeWJdikDAe/3NxIhDClKJf0UhbFttr3IzSE4bHCBi
-         kSaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jFj8dh23g2idvSds2JYPP7kaIEok3DfVq0OP/6qEkjo=;
-        b=MWH2q2fNdsJ9ZW/4XGyNMTuSlgNFsRrQoAYk5PhT8ohIjpKibRF98fJUBcB+19OjFo
-         h+4XW/AgsPR+vf7z2t/MvYmnktBYJWkfpGinIPMCuiYfGt0TzHz1JsGQOTnlBizV+hlF
-         p+cIVVe9fVzRu203J0ciVMQf22GW8i3UcrS8cXmW9nID8+e2cIgoyP9RMpKjzEKxoBeM
-         2tkJV1Gmu0EZQFhrfwxZ9MmxqbzjwZ/FO4Hf3+ECXzrIV454AbEJsbQFuR5pAIFp8Hyi
-         C+KX8Do+RMOoBAdCJGGV3GWTdd7Y4dIuWzaOyInR7AwCV2mYYc2rpC0v6KwV+2T7qESm
-         cLVg==
-X-Gm-Message-State: APjAAAXVN82c7/Yol9OFkH/UIbXn3R7WVEPFgpcPwaiYS5lLMX57uLfr
-        Od9w24Sfv8QoY65okJYy3FzJZA==
-X-Google-Smtp-Source: APXvYqx5lu/OaoclV0DLdEX2WJ5Nw8BWbL4Pl6MEnRYhtodr67RdCqsBRDyDKxOX/wdl9ukhI9O9Wg==
-X-Received: by 2002:a05:620a:3:: with SMTP id j3mr17330454qki.95.1557944763567;
-        Wed, 15 May 2019 11:26:03 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id h17sm1372773qkk.13.2019.05.15.11.26.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 May 2019 11:26:03 -0700 (PDT)
-Date:   Wed, 15 May 2019 14:26:02 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-rockchip@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Mark Rutland <mark.rutland@arm.com>, mka@chromium.org,
-        Sean Paul <seanpaul@chromium.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 5/5] ARM: dts: rockchip: Add HDMI i2c unwedging for
- rk3288-veyron
-Message-ID: <20190515182602.GY17077@art_vandelay>
-References: <20190502225336.206885-1-dianders@chromium.org>
- <20190502225336.206885-5-dianders@chromium.org>
+        Wed, 15 May 2019 14:27:00 -0400
+Received: from fieldses.org ([173.255.197.46]:32774 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726467AbfEOS07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 14:26:59 -0400
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 9AF7C1E3A; Wed, 15 May 2019 14:26:58 -0400 (EDT)
+Date:   Wed, 15 May 2019 14:26:58 -0400
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] nfsd changes for 5.2
+Message-ID: <20190515182658.GA11614@fieldses.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190502225336.206885-5-dianders@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 02, 2019 at 03:53:36PM -0700, Douglas Anderson wrote:
-> Veyron uses the builtin i2c controller that's part of dw-hdmi.  Hook
-> up the unwedging feature.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Please pull:
 
-Reviewed-by: Sean Paul <sean@poorly.run>
+  git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.2
 
-> ---
-> 
->  arch/arm/boot/dts/rk3288-veyron.dtsi | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> index e1bee663d2c5..340b276b6333 100644
-> --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-> @@ -163,8 +163,9 @@
->  };
->  
->  &hdmi {
-> -	pinctrl-names = "default";
-> +	pinctrl-names = "default", "unwedge";
->  	pinctrl-0 = <&hdmi_ddc>;
-> +	pinctrl-1 = <&hdmi_ddc_unwedge>;
->  	status = "okay";
->  };
->  
-> -- 
-> 2.21.0.1020.gf2820cf01a-goog
-> 
+This pull consists mostly of nfsd container work:
 
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+Scott Mayhew revived an old api that communicates with a userspace
+daemon to manage some on-disk state that's used to track clients across
+server reboots.  We've been using a usermode_helper upcall for that, but
+it's tough to run those with the right namespaces, so a daemon is much
+friendlier to container use cases.
+
+Trond fixed nfsd's handling of user credentials in user namespaces.  He
+also contributed patches that allow containers to support different sets
+of NFS protocol versions.
+
+The only remaining container bug I'm aware of is that the NFS reply
+cache is shared between all containers.  If anyone's aware of other gaps
+in our container support, let me know.
+
+The rest of this is miscellaneous bugfixes.
+
+--b.
+
+Arnd Bergmann (1):
+      nfsd: avoid uninitialized variable warning
+
+J. Bruce Fields (2):
+      nfsd: allow fh_want_write to be called twice
+      nfsd: fh_drop_write in nfsd_unlink
+
+NeilBrown (2):
+      sunrpc/cache: handle missing listeners better.
+      locks: move checks from locks_free_lock() to locks_release_private()
+
+Scott Mayhew (6):
+      nfsd: make nfs4_client_reclaim use an xdr_netobj instead of a fixed char array
+      nfsd: un-deprecate nfsdcld
+      nfsd: keep a tally of RECLAIM_COMPLETE operations when using nfsdcld
+      nfsd: re-order client tracking method selection
+      nfsd: handle legacy client tracking records sent by nfsdcld
+      nfsd: update callback done processing
+
+Trond Myklebust (12):
+      SUNRPC/nfs: Fix return value for nfs4_callback_compound()
+      SUNRPC: Add a callback to initialise server requests
+      SUNRPC: Clean up generic dispatcher code
+      SUNRPC: Allow further customisation of RPC program registration
+      nfsd: Add custom rpcbind callbacks for knfsd
+      nfsd: Allow containers to set supported nfs versions
+      SUNRPC: Cache the process user cred in the RPC server listener
+      SUNRPC: Temporary sockets should inherit the cred from their parent
+      lockd: Pass the user cred from knfsd when starting the lockd server
+      SUNRPC: Fix the server AUTH_UNIX userspace mappings
+      SUNRPC: rsi_parse() should use the current user namespace
+      nfsd: knfsd must use the container user namespace
+
+ fs/lockd/clntlock.c               |   4 +-
+ fs/lockd/svc.c                    |  33 +--
+ fs/locks.c                        |  12 +-
+ fs/nfs/callback.c                 |   9 +-
+ fs/nfs/callback_xdr.c             |   2 +-
+ fs/nfs/client.c                   |   1 +
+ fs/nfsd/export.c                  |  18 +-
+ fs/nfsd/netns.h                   |  11 +
+ fs/nfsd/nfs3xdr.c                 |  21 +-
+ fs/nfsd/nfs4callback.c            |   9 +-
+ fs/nfsd/nfs4idmap.c               |   8 +-
+ fs/nfsd/nfs4layouts.c             |   2 +-
+ fs/nfsd/nfs4proc.c                |   3 +-
+ fs/nfsd/nfs4recover.c             | 436 +++++++++++++++++++++++++++++++++++---
+ fs/nfsd/nfs4state.c               |  68 ++++--
+ fs/nfsd/nfs4xdr.c                 |   9 +-
+ fs/nfsd/nfsctl.c                  |  42 ++--
+ fs/nfsd/nfsd.h                    |  17 +-
+ fs/nfsd/nfssvc.c                  | 271 ++++++++++++++++++-----
+ fs/nfsd/nfsxdr.c                  |  17 +-
+ fs/nfsd/state.h                   |   8 +-
+ fs/nfsd/vfs.c                     |   8 +-
+ fs/nfsd/vfs.h                     |   5 +-
+ include/linux/lockd/bind.h        |   3 +-
+ include/linux/sunrpc/svc.h        |  33 +++
+ include/linux/sunrpc/svc_xprt.h   |   4 +-
+ include/linux/sunrpc/svcsock.h    |   3 +-
+ include/uapi/linux/nfsd/cld.h     |   1 +
+ net/sunrpc/auth_gss/svcauth_gss.c |   6 +-
+ net/sunrpc/cache.c                |   4 +-
+ net/sunrpc/svc.c                  | 298 +++++++++++++++++---------
+ net/sunrpc/svc_xprt.c             |  17 +-
+ net/sunrpc/svcauth_unix.c         |  15 +-
+ net/sunrpc/svcsock.c              |   4 +-
+ 34 files changed, 1086 insertions(+), 316 deletions(-)
