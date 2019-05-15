@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A81C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D31C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3985F21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E202168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557917898;
-	bh=O51IcFakGuOgXhOuci8TbJmMC0n8xvIIuyNT2UA6TJ8=;
+	s=default; t=1557917900;
+	bh=J/MujyT89XVFd+QaMgS2rxgq10bcaAAGLw9s82tiKdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rUR8mMZds2OkzOoYO/+dmUlRXOSi4ioVuCW+kjp860brygr8welL/vv1eLV9IUhTw
-	 DUZnkfHNKh6nHG8TZLSVj7IIYiVAufMJko+5zh/MrdSfXptZjPsGAqe7unQY6jrxDu
-	 dE91eBwZSjI6F3gKeTTVo1K6AEkoxI3gLchldVfI=
+	b=ZnuNVC/hCjuiovbuGYlr89dWIQZtDD3xBJ/WWjOYiTOs9VwdAdAco6U6n8sWKtzyz
+	 BqGzlV/SEvkIyNn94nt/5gCy7RDNWpJTwYA8a0RTZhiTJuXo4fz2Xyg1c3PLM2XyIC
+	 8MnEPl5lJyIwJhAQIUQOYTQcWq9Oak2O0IPqVyY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfEOK6R (ORCPT
+        id S1726753AbfEOK6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:58:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54258 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 06:58:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbfEOK6I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:58:08 -0400
+        id S1726720AbfEOK6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:58:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F10621473;
-        Wed, 15 May 2019 10:58:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E20932084E;
+        Wed, 15 May 2019 10:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557917887;
-        bh=O51IcFakGuOgXhOuci8TbJmMC0n8xvIIuyNT2UA6TJ8=;
+        s=default; t=1557917895;
+        bh=J/MujyT89XVFd+QaMgS2rxgq10bcaAAGLw9s82tiKdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2JRC9RNTqEzTBLVkOcX2k4D5yDmI8DVC0Z8yEWrDrSz44iPLHUrMz29D0uB1n+WGY
-         expDRBhHc+myHmC7Z/QYQgynacqC4mT4CVuw4OuC0Tlyp/oJZEq0mtFYvqdpDwW0ro
-         OaQ7USDlQy/3vnz+0GtleZ5QgZ3I8M+B84boK6uI=
+        b=Cwl7T1GHnBD/hzzk4ZXK/tsomjRJXaYz3lBWKBbB4fmG+RtApDFjKSOc/ubxvES0M
+         hEP7Q5FDm0iCvxWMuUhTcsy96LZGXpMdg0hHtv0l5fgfV3knTp/kjSEbu6Y10Ow+Rn
+         XWXgCQWxefjMPgqspjElBLmzusRC5R+jo1GaV2cA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaofei Shen <xiaofeis@codeaurora.org>,
-        Sneh Shah <snehshah@codeaurora.org>,
-        Vinod Koul <vkoul@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 13/86] net: stmmac: move stmmac_check_ether_addr() to driver probe
-Date:   Wed, 15 May 2019 12:54:50 +0200
-Message-Id: <20190515090645.283801074@linuxfoundation.org>
+        stable@vger.kernel.org, Xie XiuQi <xiexiuqi@huawei.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>, cj.chengjian@huawei.com,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 3.18 03/86] sched/numa: Fix a possible divide-by-zero
+Date:   Wed, 15 May 2019 12:54:40 +0200
+Message-Id: <20190515090643.049301271@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -61,46 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinod Koul <vkoul@kernel.org>
+From: Xie XiuQi <xiexiuqi@huawei.com>
 
-[ Upstream commit b561af36b1841088552464cdc3f6371d92f17710 ]
+commit a860fa7b96e1a1c974556327aa1aee852d434c21 upstream.
 
-stmmac_check_ether_addr() checks the MAC address and assigns one in
-driver open(). In many cases when we create slave netdevice, the dev
-addr is inherited from master but the master dev addr maybe NULL at
-that time, so move this call to driver probe so that address is
-always valid.
+sched_clock_cpu() may not be consistent between CPUs. If a task
+migrates to another CPU, then se.exec_start is set to that CPU's
+rq_clock_task() by update_stats_curr_start(). Specifically, the new
+value might be before the old value due to clock skew.
 
-Signed-off-by: Xiaofei Shen <xiaofeis@codeaurora.org>
-Tested-by: Xiaofei Shen <xiaofeis@codeaurora.org>
-Signed-off-by: Sneh Shah <snehshah@codeaurora.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+So then if in numa_get_avg_runtime() the expression:
+
+  'now - p->last_task_numa_placement'
+
+ends up as -1, then the divider '*period + 1' in task_numa_placement()
+is 0 and things go bang. Similar to update_curr(), check if time goes
+backwards to avoid this.
+
+[ peterz: Wrote new changelog. ]
+[ mingo: Tweaked the code comment. ]
+
+Signed-off-by: Xie XiuQi <xiexiuqi@huawei.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: cj.chengjian@huawei.com
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20190425080016.GX11158@hirez.programming.kicks-ass.net
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -1736,8 +1736,6 @@ static int stmmac_open(struct net_device
- 	struct stmmac_priv *priv = netdev_priv(dev);
- 	int ret;
- 
--	stmmac_check_ether_addr(priv);
--
- 	if (priv->pcs != STMMAC_PCS_RGMII && priv->pcs != STMMAC_PCS_TBI &&
- 	    priv->pcs != STMMAC_PCS_RTBI) {
- 		ret = stmmac_init_phy(dev);
-@@ -2824,6 +2822,8 @@ struct stmmac_priv *stmmac_dvr_probe(str
- 	if (ret)
- 		goto error_hw_init;
- 
-+	stmmac_check_ether_addr(priv);
+---
+ kernel/sched/fair.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1569,6 +1569,10 @@ static u64 numa_get_avg_runtime(struct t
+ 	if (p->last_task_numa_placement) {
+ 		delta = runtime - p->last_sum_exec_runtime;
+ 		*period = now - p->last_task_numa_placement;
 +
- 	ndev->netdev_ops = &stmmac_netdev_ops;
- 
- 	ndev->hw_features = NETIF_F_SG | NETIF_F_IP_CSUM | NETIF_F_IPV6_CSUM |
++		/* Avoid time going backwards, prevent potential divide error: */
++		if (unlikely((s64)*period < 0))
++			*period = 0;
+ 	} else {
+ 		delta = p->se.avg.runnable_avg_sum;
+ 		*period = p->se.avg.runnable_avg_period;
 
 
