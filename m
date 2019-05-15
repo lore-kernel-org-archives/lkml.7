@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E70C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C79EC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1894C2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32AFD2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920143;
-	bh=f+/E2dM8tseZgOi6tp1gOUPwluA21xqL5ItupbIbfPI=;
+	s=default; t=1557920149;
+	bh=zgxJFo41n2tRNguAeuAbLqkNgYqPJNN4eVAR+xGXUoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mccHy8krVLnBVEFh50wIGRoFXJPsgy8aNf+uVoVUve3Czk1xRiXJsz15BDfuc9ddI
-	 APjp0hZivO/N5NHQWi9c21BCkfR/kl3G8wR5IMd9B3JQsLTkIJU05jaIFmTx2/bpOQ
-	 /z1DcTp2GhwxSj8kk4r9JGBbmxCZMaoi+Bm/JohQ=
+	b=Yb9kqAsqhGy1h9jAwWZLFO2mqQfd/fZkOiSCwXKghYVcjV2N60i6LumSYlvassAjM
+	 pDQHkB5epDGnRsPZptyv9P9XBXUYJ89RFy+msGko1nv/s9VbbLh62wzBpngVn4GfNh
+	 qmiCkSlvl9yWjfMcsYoBuq4RGFj7XyzipwcGhDCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732891AbfEOLdS (ORCPT
+        id S1733150AbfEOLdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:33:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45124 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:33:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733156AbfEOLdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:33:09 -0400
+        id S1733110AbfEOLc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:32:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D319E2084A;
-        Wed, 15 May 2019 11:33:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0EA4206BF;
+        Wed, 15 May 2019 11:32:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919989;
-        bh=f+/E2dM8tseZgOi6tp1gOUPwluA21xqL5ItupbIbfPI=;
+        s=default; t=1557919976;
+        bh=zgxJFo41n2tRNguAeuAbLqkNgYqPJNN4eVAR+xGXUoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b3fCV9URAHaZBRgG6uXo6MTSPmJBbF53xAqgpBp+Ak1OmukRmW7hEhl2C4xJQSr6G
-         utwxQ9a1T8i1Wq0+YOZiRvij1SU7jfSuBjKdR/0aZJ/J8RYbkzWax2k99Mgo2hlmdA
-         d3trL2ZSjDTN7RnDUClNDaBXsgcNo/uWHS5ztFzo=
+        b=A57E3hU2GDt6tjDksdNCIeCAd1/0GGBEFDTt+JW3JRFhxz6kn82st3QfvFkKbulfD
+         KZeT19m/JycLNF4DFhy4TBfaTqc7lExEw+NSJv8qIZVGmUTt5hNUq7iiJVg2RjUNfm
+         /swsHwwwlGaxDOhZCLfoVkXoUI43oQssqR7kxwBk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Richard Cochran <richardcochran@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 31/46] aqc111: fix double endianness swap on BE
-Date:   Wed, 15 May 2019 12:56:55 +0200
-Message-Id: <20190515090626.291728022@linuxfoundation.org>
+Subject: [PATCH 5.1 27/46] vlan: disable SIOCSHWTSTAMP in container
+Date:   Wed, 15 May 2019 12:56:51 +0200
+Message-Id: <20190515090625.571849309@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -59,44 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 2cf672709beb005f6e90cb4edbed6f2218ba953e ]
+[ Upstream commit 873017af778439f2f8e3d87f28ddb1fcaf244a76 ]
 
-If you are using a function that does a swap in place,
-you cannot just reuse the buffer on the assumption that it has
-not been changed.
+With NET_ADMIN enabled in container, a normal user could be mapped to
+root and is able to change the real device's rx filter via ioctl on
+vlan, which would affect the other ptp process on host. Fix it by
+disabling SIOCSHWTSTAMP in container.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Fixes: a6111d3c93d0 ("vlan: Pass SIOC[SG]HWTSTAMP ioctls to real device")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/aqc111.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/8021q/vlan_dev.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/usb/aqc111.c
-+++ b/drivers/net/usb/aqc111.c
-@@ -1428,7 +1428,7 @@ static int aqc111_resume(struct usb_inte
- {
- 	struct usbnet *dev = usb_get_intfdata(intf);
- 	struct aqc111_data *aqc111_data = dev->driver_priv;
--	u16 reg16;
-+	u16 reg16, oldreg16;
- 	u8 reg8;
+--- a/net/8021q/vlan_dev.c
++++ b/net/8021q/vlan_dev.c
+@@ -367,10 +367,12 @@ static int vlan_dev_ioctl(struct net_dev
+ 	ifrr.ifr_ifru = ifr->ifr_ifru;
  
- 	netif_carrier_off(dev->net);
-@@ -1444,9 +1444,11 @@ static int aqc111_resume(struct usb_inte
- 	/* Configure RX control register => start operation */
- 	reg16 = aqc111_data->rxctl;
- 	reg16 &= ~SFR_RX_CTL_START;
-+	/* needs to be saved in case endianness is swapped */
-+	oldreg16 = reg16;
- 	aqc111_write16_cmd_nopm(dev, AQ_ACCESS_MAC, SFR_RX_CTL, 2, &reg16);
- 
--	reg16 |= SFR_RX_CTL_START;
-+	reg16 = oldreg16 | SFR_RX_CTL_START;
- 	aqc111_write16_cmd_nopm(dev, AQ_ACCESS_MAC, SFR_RX_CTL, 2, &reg16);
- 
- 	aqc111_set_phy_speed(dev, aqc111_data->autoneg,
+ 	switch (cmd) {
++	case SIOCSHWTSTAMP:
++		if (!net_eq(dev_net(dev), &init_net))
++			break;
+ 	case SIOCGMIIPHY:
+ 	case SIOCGMIIREG:
+ 	case SIOCSMIIREG:
+-	case SIOCSHWTSTAMP:
+ 	case SIOCGHWTSTAMP:
+ 		if (netif_device_present(real_dev) && ops->ndo_do_ioctl)
+ 			err = ops->ndo_do_ioctl(real_dev, &ifrr, cmd);
 
 
