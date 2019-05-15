@@ -2,105 +2,144 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B56CC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 556F6C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 193E920815
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:08:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557911319;
-	bh=93+hwjR+w10zrRciL6qS4A51sEOe7GwHd9c0pmdYCQE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=1NcmcWUipHa8AjJb0vtIrbnVHoSfqW2ZB3U18o6zd4Hjcn+Txb0u6ECuiFBko0Erj
-	 PzCBmxp4xt+i9JNd2fRjgkGhtdDdHNDwU0fhaclfHgxGpF91DUiVt/lzHfY3oNPGaz
-	 tJs/AbO96IZZ6PvvvSAtgmOhwge+CgcoefTLcWJE=
+	by mail.kernel.org (Postfix) with ESMTP id 31D8F20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:08:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbfEOJIi (ORCPT
+        id S1726537AbfEOJIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 05:08:38 -0400
-Received: from out1-smtp.messagingengine.com ([66.111.4.25]:38179 "EHLO
-        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726084AbfEOJIh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 05:08:37 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id BC9412585C;
-        Wed, 15 May 2019 05:08:36 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 15 May 2019 05:08:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=QzKWRK6NBMbQhyE5i
-        rhebHpSXfQiq/oIHcfVwvxA9Y4=; b=X4g8GcvpmrFXvz4Gj+kjjbvd4BPxDWmlu
-        mNe90vPHAMVXSibDmqRNLZb64qEOgU228oZwvNPD74T9V6CdAUsZ6J55nusBzdhC
-        4vFb40XprJhib+5m3b0NFw65vVO1G0ZCPv+n+1STYqckkhDn+rNNvdhk1/PnIXng
-        3B1bBP8iZhS+0AdcJ1Ih54UKFoX152+nrRB2/2lrqICOFdKpfzo6o5OLm0ScRsGN
-        fqBu+46x5v7yePLyzOWBN7Xw48SwYG9nrUAAxAJc9zUiCLxDL9xm2zQQEFW7AcPb
-        h2ju5oVCv1bJFlQqq6owvWKHsWkrIK0iT0cqgRml0610dGsw4qK4Q==
-X-ME-Sender: <xms:E9fbXGVMGEptq4lh2RslL3ArPI-x-CuE5CUGVOIO_Dq_ox8-7U9b2g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrleekgddufecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhnucev
-    rdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkphepud
-    dvuddrgeegrddvvdefrddvuddunecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgsihhn
-    sehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:E9fbXM7rxPa7ECgArhApF1fvOBPthKBeUL1zvWMDd9vcXBhU5uN0TQ>
-    <xmx:E9fbXB5rLkY5YhKlE8JSgRqNgSDwtoWviUMDDS6UM_kNrDtIYRFbiQ>
-    <xmx:E9fbXMHEWC3oc2unyDvSJsVOOO16s5StNp-bUos_MySsDuvlPtK1RA>
-    <xmx:FNfbXA5U7c8WkVrzs-DrEv-MfDHDi9NwbMb_B6uBsxgtr_pM0CH8Eg>
-Received: from eros.localdomain (ppp121-44-223-211.bras1.syd2.internode.on.net [121.44.223.211])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 1E8C81037C;
-        Wed, 15 May 2019 05:08:32 -0400 (EDT)
-From:   "Tobin C. Harding" <tobin@kernel.org>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] powerpc: Remove double free
-Date:   Wed, 15 May 2019 19:07:50 +1000
-Message-Id: <20190515090750.30647-1-tobin@kernel.org>
-X-Mailer: git-send-email 2.21.0
+        Wed, 15 May 2019 05:08:47 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38746 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726084AbfEOJIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 05:08:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09FF6341;
+        Wed, 15 May 2019 02:08:46 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7370C3F703;
+        Wed, 15 May 2019 02:08:43 -0700 (PDT)
+Subject: Re: [PATCH v7 10/13] selftests/resctrl: Add vendor detection
+ mechanism
+To:     =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaochen Shen <xiaochen.shen@intel.com>,
+        Arshiya Hayatkhan Pathan <arshiya.hayatkhan.pathan@intel.com>,
+        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
+        Babu Moger <babu.moger@amd.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <1549767042-95827-1-git-send-email-fenghua.yu@intel.com>
+ <1549767042-95827-11-git-send-email-fenghua.yu@intel.com>
+ <20190510183909.65732a67@donnerap.cambridge.arm.com>
+ <5cc3b562-6e48-f64c-06dd-b1ee1059e33e@arm.com>
+ <676ca766-fcd0-6b47-2961-92ef21ecf32e@arm.com>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <f40850cf-5e16-3e99-5ee4-bc4538b5c06d@arm.com>
+Date:   Wed, 15 May 2019 10:08:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <676ca766-fcd0-6b47-2961-92ef21ecf32e@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kfree() after kobject_put().  Who ever wrote this was on crack.
+Hi André,
 
-Fixes: 7e8039795a80 ("powerpc/cacheinfo: Fix kobject memleak")
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
----
+On 14/05/2019 20:40, André Przywara wrote:
+> On 14/05/2019 18:20, James Morse wrote:
+>> On 10/05/2019 18:39, Andre Przywara wrote:
+>>> On Sat,  9 Feb 2019 18:50:39 -0800
+>>> Fenghua Yu <fenghua.yu@intel.com> wrote:
+>>>> From: Babu Moger <babu.moger@amd.com>
+>>>>
+>>>> RESCTRL feature is supported both on Intel and AMD now. Some features
+>>>> are implemented differently. Add vendor detection mechanism. Use the vendor
+>>>> check where there are differences.
+>>>
+>>> I don't think vendor detection is the right approach. The Linux userland
+>>> interface should be even architecture agnostic, not to speak of different
+>>> vendors.
+>>>
+>>> But even if we need this for some reason ...
 
-FTR
+>> What do we need it for? Surely it indicates something is wrong with the kernel interface
+>> if you need to know which flavour of CPU this is.
+> 
+> As you mentioned, we should not need it. I just couldn't find a better
+> way (yet) to differentiate between L3 cache ID and physical package ID
+> (see patch 11/13). So this is a kludge for now to not break this
+> particular code.
 
-git log --pretty=format:"%h%x09%an%x09%ad%x09%s" | grep 7e8039795a80
-7e8039795a80	Tobin C. Harding	Tue Apr 30 11:09:23 2019 +1000	powerpc/cacheinfo: Fix kobject memleak
+[0]? That's broken. It needs to take the 'cache/index?/id' field, and not hard-code '3',
+search each 'cache/index?/level' instead.
 
- arch/powerpc/kernel/cacheinfo.c | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/cacheinfo.c b/arch/powerpc/kernel/cacheinfo.c
-index f2ed3ef4b129..862e2890bd3d 100644
---- a/arch/powerpc/kernel/cacheinfo.c
-+++ b/arch/powerpc/kernel/cacheinfo.c
-@@ -767,7 +767,6 @@ static void cacheinfo_create_index_dir(struct cache *cache, int index,
- 				  cache_dir->kobj, "index%d", index);
- 	if (rc) {
- 		kobject_put(&index_dir->kobj);
--		kfree(index_dir);
- 		return;
- 	}
- 
--- 
-2.21.0
+Documentation/x86/resctrl_ui.rst's "Cache IDs" section says:
+| On current generation systems there is one L3 cache per socket and L2
+| caches are generally just shared by the hyperthreads on a core, but this
+| isn't an architectural requirement.
+[...]
+| So instead of using "socket" or "core" to define the set of logical cpus
+| sharing a resource we use a "Cache ID"
+[...]
+| To find the ID for each logical CPU look in
+| /sys/devices/system/cpu/cpu*/cache/index*/id
 
+arch/x86/kernel/cpu/restrl/core.c:domain_add_cpu() pulls the domain-id out of struct
+cacheinfo:
+|	int id = get_cache_id(cpu, r->cache_level);
+
+drivers/base/cacheinfo.c has some macro-foliage that exports this same field via sysfs,
+and arch/x86/kernel/cpu/restrl/ctrlmondata.c:parse_line() matches that id against the
+value user-space provides in the schemata.
+
+(we've got some horrible code for arm64 to make this work without 'cache id' as a hardware
+property!)
+
+On x86 these numbers are of the order 0,1,2, so its very likely physical_package_id and
+cache_id alias, and you get away with it.
+
+
+> Out of curiosity: Is there any userland tool meant to control the
+> resources? I guess poking around in sysfs is not how admins are expected
+> to use this?
+
+I've come across:
+https://github.com/intel/intel-cmt-cat/
+
+but I've never even cloned it. The rdtset man page has:
+| With --iface-os (-I) parameter, rdtset uses resctrl filesystem (/sys/fs/resctrl)
+| instead of accessing MSRs directly.
+
+
+> This tool would surely run into the same problems, which somewhat tell
+> me that the interface is not really right.
+
+At the moment its not as-documented or as the kernel is using those numbers.
+
+I assume this is something that changed in resctrl when it was merged, and this selftest
+tool just needs updating.
+
+
+Thanks,
+
+James
+
+[0] https://lkml.org/lkml/2019/2/9/384
