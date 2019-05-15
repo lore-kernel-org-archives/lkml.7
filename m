@@ -2,143 +2,142 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 387D8C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:07:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187BFC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06BC720873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE39420815
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:08:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="wXrr8sCc"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="wDx042KZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727553AbfEOSHt (ORCPT
+        id S1727558AbfEOSIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 14:07:49 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33431 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726542AbfEOSHt (ORCPT
+        Wed, 15 May 2019 14:08:44 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:44636 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726842AbfEOSIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 14:07:49 -0400
-Received: by mail-wr1-f65.google.com with SMTP id d9so559894wrx.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 11:07:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=8a0Ne4dNSZVwjHUcXcSPoak6AY4jKew3Xjufj621ND0=;
-        b=wXrr8sCcejr0Sn5P42P7EREL6isxTX27F1XE5Ee8AJaQxQNI5CgunlVJb57CoD2rXl
-         IBT7eqq4OtTkutBPtV2HM7UEnraymUDCXGEnfknCLekAj0Wz+0Jv7VpD0azbH4KR2vVj
-         P+F7mdwtoYqJjQVJg6Dqgz+q4AvQQdGdtIJQH2XSp6odv2SJ/6q5vRLKMjQ+qfdbZbAC
-         jT+QK91WiZo0a1dZsZ2GqUrfZrTpg7CkDiXcFuMtC1LQtPs8PjubgRAvh+Y7+yoMq+xo
-         bujFGr/Bk0lcqtFXtg7eTNqaR6HsLhb8CPSGzSkYoD0q9WD7sNsG/3wjS3P19Atgzw+W
-         q+LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=8a0Ne4dNSZVwjHUcXcSPoak6AY4jKew3Xjufj621ND0=;
-        b=ijtyugON1VTM3ZwQNXEs7KJDwG5Gj+V41NnJETqBbKDjdIyZSW14aBWLUD0BTUh5Wr
-         QgUzhA1RVKZ1M1OC00L2AV9DbDIw8Ct7zBB0EHoPfX9u4NWQgFtjO5OVievXNnm6nPsO
-         uE/3kJpJ/UOsDXLRgJCvNl0IaP0jscqRlZjjqmD6kqEjHMdAE3kot8Wfy1RO37yB5ixj
-         YMn2z8p11i61Y8CJLnvb4UnXy9WvhXLbE6OY0hRRJCpRXzlCPy9A9AsDoBfed5EBVSWp
-         SnvGB/Y6SVvszZKs7dBriJQMov8bM3gQeC7f84sUWUUg2fVDhEBPcE3DTCr4MghRKHoX
-         PQ2g==
-X-Gm-Message-State: APjAAAUW0sBT8+vs3QB3MyA0Bh2DcOVlZJCrxj835CmwApO7b3OEsOcj
-        7WxGpWv/ftgDxVymnMJhq3glBw==
-X-Google-Smtp-Source: APXvYqwd+fZ372FY962ClZLlouA2RJtuhiS2tWYmp0FxdAbIVFhEtHVlJZJTNskXwPFnO8h/ICF98w==
-X-Received: by 2002:adf:b3d4:: with SMTP id x20mr29130196wrd.284.1557943667392;
-        Wed, 15 May 2019 11:07:47 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id d9sm3560590wro.26.2019.05.15.11.07.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 11:07:46 -0700 (PDT)
-Message-ID: <5cdc5572.1c69fb81.b2944.5072@mx.google.com>
-Date:   Wed, 15 May 2019 11:07:46 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Wed, 15 May 2019 14:08:44 -0400
+Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com [209.85.217.45]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x4FI8VT5009311;
+        Thu, 16 May 2019 03:08:32 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x4FI8VT5009311
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557943712;
+        bh=6pFm6Si0MzJA90GLBMP/sW2nK2yccg1/ZbKr730+hpg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wDx042KZ/Xy6piBKo5Gu3W93+m0o840oPxcym00+7GKA+3JYNsU5KLZPQVp3HM1UW
+         bSdVapy+y37aXusoKfF0ulSAp+MwoSSJVVGWEeLu0086iPkZlI1PzzGspSjrrZ+GNw
+         txQnrDK56GkS6nPfB+ni4YFVD7RhMhM9H4sBNDnWL64q8kAjxsPwmpyZyybReJq9Oe
+         n1OImzsIDwwfmryTTBNorL8WwqJ9qFRFmC1768K5zoo0pNFPQMoAFlmO7TzLhWly/9
+         1bviLqPcupBNmeoum7VcUxZGmgYoYeArQPujANJ99p5zpXgfgm2odNyRa61qEomyzT
+         FSAe9Yzlz0qPQ==
+X-Nifty-SrcIP: [209.85.217.45]
+Received: by mail-vs1-f45.google.com with SMTP id q13so554145vso.2;
+        Wed, 15 May 2019 11:08:31 -0700 (PDT)
+X-Gm-Message-State: APjAAAUjw8pkzs/wAJptQaBtIC+XZ6T54BYBeLlglceVGkE2fo4IU7tE
+        Myk73Qe84gdp+HnW9NvXJ11Uiow+Gqqp39xLdz4=
+X-Google-Smtp-Source: APXvYqzZZx1htXz6f2GzTXyLUF2YOsNvJFgXL440Vi7ZKxgAuCywki7F2v6W8Z/X2+LnThem7cFyE76Zx6ie9hbEHdU=
+X-Received: by 2002:a67:1783:: with SMTP id 125mr803135vsx.54.1557943710766;
+ Wed, 15 May 2019 11:08:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Branch: linux-4.14.y
-X-Kernelci-Kernel: v4.14.119-116-g7b9ae876e241
-In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
-References: <20190515090659.123121100@linuxfoundation.org>
-Subject: Re: [PATCH 4.14 000/115] 4.14.120-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+References: <20190515073818.22486-1-yamada.masahiro@socionext.com>
+In-Reply-To: <20190515073818.22486-1-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 16 May 2019 03:07:54 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATUvPMqt93iwzNud0mxk99Si=CEBDyjA8BLEXM_tcTBfQ@mail.gmail.com>
+Message-ID: <CAK7LNATUvPMqt93iwzNud0mxk99Si=CEBDyjA8BLEXM_tcTBfQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] kbuild: check uniqueness of basename of modules
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Kees Cook <keescook@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.14.y boot: 128 boots: 1 failed, 122 passed with 3 offline=
-, 2 conflicts (v4.14.119-116-g7b9ae876e241)
+On Wed, May 15, 2019 at 4:40 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.14.y/kernel/v4.14.119-116-g7b9ae876e241/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
-y/kernel/v4.14.119-116-g7b9ae876e241/
+>         $(Q)$(AWK) '!x[$$0]++' $^ > $(objtree)/modules.builtin
+> diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
+> new file mode 100755
+> index 000000000000..944e68bd22b0
+> --- /dev/null
+> +++ b/scripts/modules-check.sh
+> @@ -0,0 +1,18 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +# Warn if two or more modules have the same basename
+> +check_same_name_modules()
+> +{
+> +       same_name_modules=$(cat modules.order modules.builtin | \
+> +                               xargs basename -a | sort | uniq -d)
 
-Tree: stable-rc
-Branch: linux-4.14.y
-Git Describe: v4.14.119-116-g7b9ae876e241
-Git Commit: 7b9ae876e2410f72fbc14db54f141d516adeabca
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 65 unique boards, 23 SoC families, 14 builds out of 201
 
-Boot Regressions Detected:
+I noticed a bug here.
 
-arm:
 
-    multi_v7_defconfig:
-        gcc-8:
-          omap4-panda:
-              lab-baylibre: new failure (last pass: v4.14.119-98-g8d3df192f=
-d69)
+allnoconfig + CONFIG_MODULES=y
+will create empty modules.order and modules.builtin.
 
-Boot Failure Detected:
+Then, 'basename -a' will emit the error messages
+since it receives zero arguments.
 
-arm64:
-    defconfig:
-        gcc-8:
-            rk3399-firefly: 1 failed lab
 
-Offline Platforms:
+basename: missing operand
+Try 'basename --help' for more information.
 
-arm:
 
-    tegra_defconfig:
-        gcc-8
-            tegra20-iris-512: 1 offline lab
 
-    multi_v7_defconfig:
-        gcc-8
-            stih410-b2120: 1 offline lab
-            tegra20-iris-512: 1 offline lab
+I can fix it by checking the size of them.
 
-Conflicting Boot Failures Detected: (These likely are not failures as other=
- labs are reporting PASS. Needs review.)
 
-arm:
-    multi_v7_defconfig:
-        omap4-panda:
-            lab-baylibre: FAIL (gcc-8)
-            lab-baylibre-seattle: PASS (gcc-8)
+    # If both modules.order and modules.builtin are empty,
+    # "basename -a" emits error messages.
+    if [ ! -s modules.order -a ! -s modules.builtin ]; then
+            return
+    fi
 
-    davinci_all_defconfig:
-        da850-lcdk:
-            lab-baylibre: PASS (gcc-8)
-            lab-baylibre-seattle: FAIL (gcc-8)
+    same_name_modules=$(cat modules.order modules.builtin | \
+                                   xargs basename -a | sort | uniq -d)
 
----
-For more info write to <info@kernelci.org>
+
+
+
+I wonder if there is a more elegant way...
+
+
+
+
+> +       for m in $same_name_modules
+> +       do
+> +               echo "warning: same basename '$m' if the following are built as modules:"
+> +               grep --no-filename -e /$m modules.order modules.builtin | \
+> +                                                       sed 's:^kernel/:  :'
+> +       done
+> +}
+> +
+> +check_same_name_modules
+> --
+> 2.17.1
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
