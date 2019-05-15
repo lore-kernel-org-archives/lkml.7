@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61CFC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:12:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C83AEC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B586720843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:12:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 970EC20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:12:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Db2STe7U"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="e8yA7Gku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbfEONMi (ORCPT
+        id S1727662AbfEONMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 09:12:38 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:60882 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727279AbfEONMT (ORCPT
+        Wed, 15 May 2019 09:12:36 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:1044 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725977AbfEONMT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 May 2019 09:12:19 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4FDBiB6004311;
-        Wed, 15 May 2019 15:12:05 +0200
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4FDBBEr031840;
+        Wed, 15 May 2019 15:12:08 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=Nushr9Q4ATrGXX1cBhEzuz9GYEidZFGLJO4tbBczcbM=;
- b=Db2STe7UxW1FEPSN2ItGT+VUAYbPjDC1xrsS1tpWJ7Tv2hE3wen+CCsnWMIHe9ShUpqf
- onpkGHkNa/6Yuda/EDs3zbtZxspgLtQtNg12lK2joxVNplB/LtJwOneWk+7sThnXtZAT
- 6OGLPg7WXkEFTPPnRKJ5JuUbMlc4dcFB/QwxXKvC3uxGvJqGAr6HbhhZG3y+sJN8moqt
- huIkibREvpjfkJ0lNE/k0dfNkv0m/t2zS7XfECGz0osM1iZBzQ9E4ReAxbO2Ly4JA8Da
- 1z9bDngVfndzZBdF+XtTb5ls4RUjtHdUzdBNm0ZYRbPLdIEdGK4937XbD2otIkpd77kf TQ== 
+ bh=8NQw4ybPrTmbk6atvWzEug5p4ly6IPD/vByobMwQlWs=;
+ b=e8yA7GkuwUcHC8QJYOGT8O1YoxLYncnlRByUHHNUM9lp8CmbJhlaZ0Tcimuib+Kd+o3j
+ d9wdsyRaC7zQycrq4LVU0a8n/j37ao0UeUNV4uqcs7fzqZ+IlqmfsrEiTGZQmfPwxtKj
+ agjUF5W0v4vQSbKHqFnCF8K4EMUNVVJRC6PXOIRAW+kM1JD8QAcabrUiuGZrpKFkyud2
+ fmgIAyj3E8esjWDtKCQWa+0vDCCa+bYIcDKjYoTgACs109MJiQ6F6DfCSl12cqPuOaOv
+ pFGxp9om4w13kCeu/X2etTnhrHqBM3v77JAlRpUvz05i4g7Zwi4vainoclLczKLyyOgm bg== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2sdn9g0yej-1
+        by mx07-00178001.pphosted.com with ESMTP id 2sg0an6gk1-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 15 May 2019 15:12:05 +0200
+        Wed, 15 May 2019 15:12:08 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D352E34;
-        Wed, 15 May 2019 13:12:02 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A844127F6;
-        Wed, 15 May 2019 13:12:02 +0000 (GMT)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 15 May
- 2019 15:12:02 +0200
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4356A34;
+        Wed, 15 May 2019 13:12:07 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 23ED727F6;
+        Wed, 15 May 2019 13:12:07 +0000 (GMT)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.93) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 15 May
+ 2019 15:12:06 +0200
 Received: from localhost (10.201.20.122) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 15 May 2019 15:12:01
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 15 May 2019 15:12:06
  +0200
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <rafael.j.wysocki@intel.com>, <dmitry.torokhov@gmail.com>,
@@ -60,9 +60,9 @@ CC:     <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         <linux-stm32@st-md-mailman.stormreply.com>, <broonie@kernel.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2 1/5] of/device: Add of_device_link_add function
-Date:   Wed, 15 May 2019 15:11:50 +0200
-Message-ID: <20190515131154.18373-2-benjamin.gaignard@st.com>
+Subject: [PATCH v2 5/5] input: goodix - Call of_device_links_add() to create links
+Date:   Wed, 15 May 2019 15:11:54 +0200
+Message-ID: <20190515131154.18373-6-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
 In-Reply-To: <20190515131154.18373-1-benjamin.gaignard@st.com>
 References: <20190515131154.18373-1-benjamin.gaignard@st.com>
@@ -76,93 +76,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use 'suspend-dependencies' property from device node to ensure that
-the listed devices will suspended after it and resumed before it.
+Add a call to of_device_links_add() to create links with
+suspend dependencies at probe time.
 
 Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
 ---
-CC: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-version 2:
-- only keep of_device_links_add() and use 
-  DL_FLAG_PM_RUNTIME and DL_FLAG_AUTOREMOVE_CONSUMER flags to follow Rafael
-  advices
-- reword function description
-- try to use a more explicit property name
-  
- drivers/of/device.c       | 37 +++++++++++++++++++++++++++++++++++++
- include/linux/of_device.h |  7 +++++++
- 2 files changed, 44 insertions(+)
+ drivers/input/touchscreen/goodix.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 3717f2a20d0d..44ec84eee310 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -336,3 +336,40 @@ int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
-+
-+/**
-+ * of_device_links_add - Create links between a consumer device
-+ * and it listed dependencies from device tree data
-+ *
-+ * @consumer: consumer device
-+ *
-+ * Ensure that consumer's dependencies will be suspended after it
-+ * and resumed before it.
-+ *
-+ * Returns 0 on success, < 0 on failure.
-+ */
-+int of_device_links_add(struct device *consumer)
-+{
-+	struct device_node *np;
-+	struct platform_device *pdev;
-+	int i = 0;
-+
-+	np = of_parse_phandle(consumer->of_node, "suspend-dependencies", i++);
-+	while (np) {
-+		pdev = of_find_device_by_node(np);
-+		of_node_put(np);
-+		if (!pdev)
-+			return -EINVAL;
-+
-+		device_link_add(consumer, &pdev->dev,
-+				DL_FLAG_PM_RUNTIME |
-+				DL_FLAG_AUTOREMOVE_CONSUMER);
-+		platform_device_put(pdev);
-+
-+		np = of_parse_phandle(consumer->of_node, "suspend-dependencies",
-+				      i++);
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_device_links_add);
-diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-index 8d31e39dd564..83f24c386d51 100644
---- a/include/linux/of_device.h
-+++ b/include/linux/of_device.h
-@@ -41,6 +41,8 @@ extern int of_device_request_module(struct device *dev);
- extern void of_device_uevent(struct device *dev, struct kobj_uevent_env *env);
- extern int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env);
+diff --git a/drivers/input/touchscreen/goodix.c b/drivers/input/touchscreen/goodix.c
+index f57d82220a88..49fd4763f17b 100644
+--- a/drivers/input/touchscreen/goodix.c
++++ b/drivers/input/touchscreen/goodix.c
+@@ -30,6 +30,7 @@
+ #include <linux/slab.h>
+ #include <linux/acpi.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <asm/unaligned.h>
  
-+extern int of_device_links_add(struct device *consumer);
-+
- static inline void of_device_node_put(struct device *dev)
- {
- 	of_node_put(dev->of_node);
-@@ -91,6 +93,11 @@ static inline int of_device_uevent_modalias(struct device *dev,
- 	return -ENODEV;
- }
+ struct goodix_ts_data;
+@@ -812,6 +813,8 @@ static int goodix_ts_probe(struct i2c_client *client,
  
-+static int of_device_links_add(struct device *consumer)
-+{
-+	return 0;
-+}
-+
- static inline void of_device_node_put(struct device *dev) { }
+ 	ts->chip = goodix_get_chip_data(ts->id);
  
- static inline const struct of_device_id *__of_match_device(
++	of_device_links_add(&client->dev);
++
+ 	if (ts->gpiod_int && ts->gpiod_rst) {
+ 		/* update device config */
+ 		ts->cfg_name = devm_kasprintf(&client->dev, GFP_KERNEL,
 -- 
 2.15.0
 
