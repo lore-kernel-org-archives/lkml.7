@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB37C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2487C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:03:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F6D52084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84E6E20644
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918203;
-	bh=v7eepkvE9X3gOsWfXzlAdf62ha4J/+pUxpU3NZnV/FE=;
+	s=default; t=1557918207;
+	bh=u/K2cW4Q9SEf0uYS4B2Rx2sSgoiByXOMmPvBjsJHEyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=brCRv0R2FjUWxiM6wdxxA5VXwoMwIKLDKLpVacy88V9jhOaBQA0EZP4DHweyfBYyz
-	 Y1zXV/IrfgjAbbZctI70yNMIwLiWx8loEnU7TaDCYCHlkw1JDqqcDNapBsj1K2GRR+
-	 ecYcfSWiYF2eIJW4i91Sq5uYqRQty4nSnYDcCDzA=
+	b=Kg4UgOycmUmkZXenmugOU2rHHEsn/CHzdP5q7EDj9AZsqSEEUCv2PphcEcY39LMcK
+	 ZAK/C9F+uEUKV9hWt41/63EXt0o8CXvTI1Z4ej9B2qOZtQPze6U8ONpSEopCZmsNy8
+	 6zS0HfQeGTTv/ypa2rYsO36Dik/5FNqd7xKPOA68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728170AbfEOLDW (ORCPT
+        id S1728183AbfEOLD0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:03:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60842 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:03:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727528AbfEOLDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:03:18 -0400
+        id S1727406AbfEOLDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:03:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6428620644;
-        Wed, 15 May 2019 11:03:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92DF320644;
+        Wed, 15 May 2019 11:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918197;
-        bh=v7eepkvE9X3gOsWfXzlAdf62ha4J/+pUxpU3NZnV/FE=;
+        s=default; t=1557918203;
+        bh=u/K2cW4Q9SEf0uYS4B2Rx2sSgoiByXOMmPvBjsJHEyk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZKy+DHZxXaYcI5U0gMXiv44ObzfdZYADoRfOl+N1m5D54eVHGN6LhZ9IbKDH66OV+
-         LHlmDkE/ikDs3C61/rPor5pSzFikwjRpUEknuwtsaUnY/bRl9Vyr4C9ysIk9Dt1C24
-         +XvKzDZjD+iAajwa/roVfpX2syJSIQvqCKkYVtNI=
+        b=wvyJdGkP/ROQFIRL2WsYtd59+FAvysuF8CsfuLt7IiqmcHI/g1J+DWuw00P0VrfDP
+         2+5+AArLhPqFFjAF5ay8tF0iXXFpHzkysWndKbeMgxZByzkXkxoNk91qFT2q6CWQlp
+         aWGsrVdFBZWKB6koAjvyZtsiKqvn3y1fT7ihzxUk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.4 025/266] powerpc/powernv: Set or clear security feature flags
-Date:   Wed, 15 May 2019 12:52:12 +0200
-Message-Id: <20190515090723.426925975@linuxfoundation.org>
+Subject: [PATCH 4.4 044/266] powerpc64s: Show ori31 availability in spectre_v1 sysfs file not v2
+Date:   Wed, 15 May 2019 12:52:31 +0200
+Message-Id: <20190515090723.963137613@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,92 +60,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 77addf6e95c8689e478d607176b399a6242a777e upstream.
+commit 6d44acae1937b81cf8115ada8958e04f601f3f2e upstream.
 
-Now that we have feature flags for security related things, set or
-clear them based on what we see in the device tree provided by
-firmware.
+When I added the spectre_v2 information in sysfs, I included the
+availability of the ori31 speculation barrier.
 
+Although the ori31 barrier can be used to mitigate v2, it's primarily
+intended as a spectre v1 mitigation. Spectre v2 is mitigated by
+hardware changes.
+
+So rework the sysfs files to show the ori31 information in the
+spectre_v1 file, rather than v2.
+
+Currently we display eg:
+
+  $ grep . spectre_v*
+  spectre_v1:Mitigation: __user pointer sanitization
+  spectre_v2:Mitigation: Indirect branch cache disabled, ori31 speculation barrier enabled
+
+After:
+
+  $ grep . spectre_v*
+  spectre_v1:Mitigation: __user pointer sanitization, ori31 speculation barrier enabled
+  spectre_v2:Mitigation: Indirect branch cache disabled
+
+Fixes: d6fbe1c55c55 ("powerpc/64s: Wire up cpu_show_spectre_v2()")
+Cc: stable@vger.kernel.org # v4.17+
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/platforms/powernv/setup.c |   56 +++++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ arch/powerpc/kernel/security.c |   27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
---- a/arch/powerpc/platforms/powernv/setup.c
-+++ b/arch/powerpc/platforms/powernv/setup.c
-@@ -37,9 +37,63 @@
- #include <asm/smp.h>
- #include <asm/tm.h>
- #include <asm/setup.h>
-+#include <asm/security_features.h>
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -118,25 +118,35 @@ ssize_t cpu_show_meltdown(struct device
  
- #include "powernv.h"
- 
-+
-+static bool fw_feature_is(const char *state, const char *name,
-+			  struct device_node *fw_features)
-+{
-+	struct device_node *np;
-+	bool rc = false;
-+
-+	np = of_get_child_by_name(fw_features, name);
-+	if (np) {
-+		rc = of_property_read_bool(np, state);
-+		of_node_put(np);
-+	}
-+
-+	return rc;
-+}
-+
-+static void init_fw_feat_flags(struct device_node *np)
-+{
-+	if (fw_feature_is("enabled", "inst-spec-barrier-ori31,31,0", np))
-+		security_ftr_set(SEC_FTR_SPEC_BAR_ORI31);
-+
-+	if (fw_feature_is("enabled", "fw-bcctrl-serialized", np))
-+		security_ftr_set(SEC_FTR_BCCTRL_SERIALISED);
-+
-+	if (fw_feature_is("enabled", "inst-spec-barrier-ori31,31,0", np))
-+		security_ftr_set(SEC_FTR_L1D_FLUSH_ORI30);
-+
-+	if (fw_feature_is("enabled", "inst-l1d-flush-trig2", np))
-+		security_ftr_set(SEC_FTR_L1D_FLUSH_TRIG2);
-+
-+	if (fw_feature_is("enabled", "fw-l1d-thread-split", np))
-+		security_ftr_set(SEC_FTR_L1D_THREAD_PRIV);
-+
-+	if (fw_feature_is("enabled", "fw-count-cache-disabled", np))
-+		security_ftr_set(SEC_FTR_COUNT_CACHE_DISABLED);
-+
-+	/*
-+	 * The features below are enabled by default, so we instead look to see
-+	 * if firmware has *disabled* them, and clear them if so.
-+	 */
-+	if (fw_feature_is("disabled", "speculation-policy-favor-security", np))
-+		security_ftr_clear(SEC_FTR_FAVOUR_SECURITY);
-+
-+	if (fw_feature_is("disabled", "needs-l1d-flush-msr-pr-0-to-1", np))
-+		security_ftr_clear(SEC_FTR_L1D_FLUSH_PR);
-+
-+	if (fw_feature_is("disabled", "needs-l1d-flush-msr-hv-1-to-0", np))
-+		security_ftr_clear(SEC_FTR_L1D_FLUSH_HV);
-+
-+	if (fw_feature_is("disabled", "needs-spec-barrier-for-bound-checks", np))
-+		security_ftr_clear(SEC_FTR_BNDS_CHK_SPEC_BAR);
-+}
-+
- static void pnv_setup_rfi_flush(void)
+ ssize_t cpu_show_spectre_v1(struct device *dev, struct device_attribute *attr, char *buf)
  {
- 	struct device_node *np, *fw_features;
-@@ -55,6 +109,8 @@ static void pnv_setup_rfi_flush(void)
- 	of_node_put(np);
- 
- 	if (fw_features) {
-+		init_fw_feat_flags(fw_features);
+-	if (!security_ftr_enabled(SEC_FTR_BNDS_CHK_SPEC_BAR))
+-		return sprintf(buf, "Not affected\n");
++	struct seq_buf s;
 +
- 		np = of_get_child_by_name(fw_features, "inst-l1d-flush-trig2");
- 		if (np && of_property_read_bool(np, "enabled"))
- 			type = L1D_FLUSH_MTTRIG;
++	seq_buf_init(&s, buf, PAGE_SIZE - 1);
++
++	if (security_ftr_enabled(SEC_FTR_BNDS_CHK_SPEC_BAR)) {
++		if (barrier_nospec_enabled)
++			seq_buf_printf(&s, "Mitigation: __user pointer sanitization");
++		else
++			seq_buf_printf(&s, "Vulnerable");
+ 
+-	if (barrier_nospec_enabled)
+-		return sprintf(buf, "Mitigation: __user pointer sanitization\n");
++		if (security_ftr_enabled(SEC_FTR_SPEC_BAR_ORI31))
++			seq_buf_printf(&s, ", ori31 speculation barrier enabled");
+ 
+-	return sprintf(buf, "Vulnerable\n");
++		seq_buf_printf(&s, "\n");
++	} else
++		seq_buf_printf(&s, "Not affected\n");
++
++	return s.len;
+ }
+ 
+ ssize_t cpu_show_spectre_v2(struct device *dev, struct device_attribute *attr, char *buf)
+ {
+-	bool bcs, ccd, ori;
+ 	struct seq_buf s;
++	bool bcs, ccd;
+ 
+ 	seq_buf_init(&s, buf, PAGE_SIZE - 1);
+ 
+ 	bcs = security_ftr_enabled(SEC_FTR_BCCTRL_SERIALISED);
+ 	ccd = security_ftr_enabled(SEC_FTR_COUNT_CACHE_DISABLED);
+-	ori = security_ftr_enabled(SEC_FTR_SPEC_BAR_ORI31);
+ 
+ 	if (bcs || ccd) {
+ 		seq_buf_printf(&s, "Mitigation: ");
+@@ -152,9 +162,6 @@ ssize_t cpu_show_spectre_v2(struct devic
+ 	} else
+ 		seq_buf_printf(&s, "Vulnerable");
+ 
+-	if (ori)
+-		seq_buf_printf(&s, ", ori31 speculation barrier enabled");
+-
+ 	seq_buf_printf(&s, "\n");
+ 
+ 	return s.len;
 
 
