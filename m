@@ -4,61 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C904FC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B9E7C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:16:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9462920675
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 049FF20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922588;
-	bh=PY83nNRfvy6AsMvB6zhM8qpy4kWbxWXj25HJ8FDV6TY=;
+	s=default; t=1557922598;
+	bh=t84knI770UIPOC1bJAb0sh7vtZjL/RRH6KawfuiUgGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NcZZaGOp8hLVmmijgtfiy6hFArkIsYz20NshG+Lfdn6n3KR/9qS89tazkgtmAZRVN
-	 2nGMQlu3vSardMmGAWbNCXG9EEEImA4scxab4nSkBfFi1nET5JtWz/QbOEhniJdNUF
-	 bHoZ7QE/2cPUjJJzzaginGyP5iMrnnEJ/Lu3GZEE=
+	b=OMPRd2e/IyG4ZrnoPLxfKlfofaJ5zL9wl6ytMJUtVC4B/KpNhfnpJYQzNZJazMvqj
+	 a07wBSCvUv7GyQBfsPtTYdehTAetp+1ecIKy+knSrQ+n6//fmJdaMftQatuTtF5OL1
+	 /Dp/A5Mk6A1bm5HjP3IVq3GkxCaya3qGmk9Yc80k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728378AbfEOMQ1 (ORCPT
+        id S1728466AbfEOMQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:16:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59864 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:16:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727105AbfEOLCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:02:33 -0400
+        id S1727929AbfEOLCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:02:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44A5020644;
-        Wed, 15 May 2019 11:02:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 760EC20644;
+        Wed, 15 May 2019 11:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918152;
-        bh=PY83nNRfvy6AsMvB6zhM8qpy4kWbxWXj25HJ8FDV6TY=;
+        s=default; t=1557918145;
+        bh=t84knI770UIPOC1bJAb0sh7vtZjL/RRH6KawfuiUgGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WaP4JCiPyOXLHU++UlUR8KZBpu1B2c7UYrg6NwQg8CsrH4M9NWaanAu3zKHK65CEX
-         MjvskWQE5931ZhfMZA0mgoeuM6xLYoG909sNkgDiZo4Lud5oR8sgJ3VhtVhLW2S4J8
-         reaTMKvz+Z2w1PlLPIH5DFGaRuOUN9nvfsOxaCsc=
+        b=n7t6tsa17/PIsxNJADG/uMcMSOXfSsrV/5JZySKHGEfMMvetrTMBczxAxky7g95/6
+         qQv6C3FbGLzMnRMtUyggYQu7CvQy5FdlySVg7XQ42SpRSzLdaN2q7ErG+HELamhOqJ
+         6hZja3xyeOBDLKlfirocQ61eePKPsTNqRL5bADPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Waiman Long <longman@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.4 005/266] trace: Fix preempt_enable_no_resched() abuse
-Date:   Wed, 15 May 2019 12:51:52 +0200
-Message-Id: <20190515090722.861525812@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>
+Subject: [PATCH 4.4 022/266] powerpc/rfi-flush: Call setup_rfi_flush() after LPM migration
+Date:   Wed, 15 May 2019 12:52:09 +0200
+Message-Id: <20190515090723.339061118@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -71,48 +58,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit d6097c9e4454adf1f8f2c9547c2fa6060d55d952 upstream.
+commit 921bc6cf807ceb2ab8005319cf39f33494d6b100 upstream.
 
-Unless the very next line is schedule(), or implies it, one must not use
-preempt_enable_no_resched(). It can cause a preemption to go missing and
-thereby cause arbitrary delays, breaking the PREEMPT=y invariant.
+We might have migrated to a machine that uses a different flush type,
+or doesn't need flushing at all.
 
-Link: http://lkml.kernel.org/r/20190423200318.GY14281@hirez.programming.kicks-ass.net
-
-Cc: Waiman Long <longman@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: the arch/x86 maintainers <x86@kernel.org>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: huang ying <huang.ying.caritas@gmail.com>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: stable@vger.kernel.org
-Fixes: 2c2d7329d8af ("tracing/ftrace: use preempt_enable_no_resched_notrace in ring_buffer_time_stamp()")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/trace/ring_buffer.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/mobility.c |    3 +++
+ arch/powerpc/platforms/pseries/pseries.h  |    2 ++
+ arch/powerpc/platforms/pseries/setup.c    |    2 +-
+ 3 files changed, 6 insertions(+), 1 deletion(-)
 
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -701,7 +701,7 @@ u64 ring_buffer_time_stamp(struct ring_b
+--- a/arch/powerpc/platforms/pseries/mobility.c
++++ b/arch/powerpc/platforms/pseries/mobility.c
+@@ -314,6 +314,9 @@ void post_mobility_fixup(void)
+ 		printk(KERN_ERR "Post-mobility device tree update "
+ 			"failed: %d\n", rc);
  
- 	preempt_disable_notrace();
- 	time = rb_time_stamp(buffer);
--	preempt_enable_no_resched_notrace();
-+	preempt_enable_notrace();
- 
- 	return time;
++	/* Possibly switch to a new RFI flush type */
++	pseries_setup_rfi_flush();
++
+ 	return;
  }
+ 
+--- a/arch/powerpc/platforms/pseries/pseries.h
++++ b/arch/powerpc/platforms/pseries/pseries.h
+@@ -81,4 +81,6 @@ extern struct pci_controller_ops pseries
+ 
+ unsigned long pseries_memory_block_size(void);
+ 
++void pseries_setup_rfi_flush(void);
++
+ #endif /* _PSERIES_PSERIES_H */
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -499,7 +499,7 @@ static void __init find_and_init_phbs(vo
+ 	of_pci_check_probe_only();
+ }
+ 
+-static void pseries_setup_rfi_flush(void)
++void pseries_setup_rfi_flush(void)
+ {
+ 	struct h_cpu_char_result result;
+ 	enum l1d_flush_type types;
 
 
