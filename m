@@ -2,51 +2,53 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B8CC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEE5C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78C1F20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1BBD20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919087;
-	bh=l4qCbCUfAKIx9IdszqCc6HCPvo6RyGsWhdupjLim59c=;
+	s=default; t=1557919091;
+	bh=fEl58TO3qbyRhsWQ3MIb3kKu4P+hvOm4yJGY1tFADg8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tNFAwYo8HbYieHMdTGZTPc4vqLw6Ah39tDu186bH9sxpAYLrXeDB6WOG5ulauGybc
-	 xdkqjOEzk3hdS1TNareX2LAs3WpwityG5WPZ5TRgjqyCqjkdX9JkFR8DYic068ESUq
-	 PQY2pTdI3447qflaPC1YRSve86IA7qfvFtSDxfno=
+	b=mh+BNfp3TLxeedZKhY+6s6AII2Dc3bloGhEP4q1MvAXCfaVYu4Y7HBa0qPDKYcoPA
+	 t2+/BdL3u6xKkEBKGoiQ1SVGUDpu6c/QLq0PtFmW3Br5PFVjQTBijdhRkRHyfHEWa1
+	 AC0QGiiBydaFdVkZeoKML3fgVbyFBXdQ45/anw8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730753AbfEOLSF (ORCPT
+        id S1730760AbfEOLSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:18:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55414 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:18:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730546AbfEOLSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:18:00 -0400
+        id S1730754AbfEOLSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:18:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F58B21848;
-        Wed, 15 May 2019 11:17:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E604C206BF;
+        Wed, 15 May 2019 11:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919079;
-        bh=l4qCbCUfAKIx9IdszqCc6HCPvo6RyGsWhdupjLim59c=;
+        s=default; t=1557919085;
+        bh=fEl58TO3qbyRhsWQ3MIb3kKu4P+hvOm4yJGY1tFADg8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pL5eDbj2ucQpTcCw0uFKRggZ49z30vlNzFdKUtQl7aYDNRE4q4321zbSaun4J4NgI
-         d8Hjhp4mHD8uZC4xqJav76w30Q46YgjaFkSTTXw5bXEWXyBwPfBx7isJ96UhZIw7tc
-         gKTsUiBvVmE8omUS8SZqXPhVBeVU9tLYzzYpp5MU=
+        b=EXEqGlyo5BP7RGchqrN2tZL9q856fijiOS1zNKdPK5074ThNiod/y997TuGLppcpY
+         sFlf94YuQYe3yJUnwo1wUcNTB16Wih7c683P+Lc2KyYQN4rUvDzkuLlIK0ndhdghIA
+         yhz+0yt9NZk6VFV7XAskxY80YbY7Tny9L0OxITtU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Tejun Heo <tj@kernel.org>
-Subject: [PATCH 4.14 005/115] kernfs: fix barrier usage in __kernfs_new_node()
-Date:   Wed, 15 May 2019 12:54:45 +0200
-Message-Id: <20190515090659.610201644@linuxfoundation.org>
+        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: [PATCH 4.14 062/115] net: stmmac: Move debugfs init/exit to ->probe()/->remove()
+Date:   Wed, 15 May 2019 12:55:42 +0200
+Message-Id: <20190515090704.047782660@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -59,38 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Parri <andrea.parri@amarulasolutions.com>
+[ Upstream commit 5f2b8b62786853341a20d4cd4948f9cbca3db002 ]
 
-commit 998267900cee901c5d1dfa029a6304d00acbc29f upstream.
+Setting up and tearing down debugfs is current unbalanced, as seen by
+this error during resume from suspend:
 
-smp_mb__before_atomic() can not be applied to atomic_set().  Remove the
-barrier and rely on RELEASE synchronization.
+    [  752.134067] dwc-eth-dwmac 2490000.ethernet eth0: ERROR failed to create debugfs directory
+    [  752.134347] dwc-eth-dwmac 2490000.ethernet eth0: stmmac_hw_setup: failed debugFS registration
 
-Fixes: ba16b2846a8c6 ("kernfs: add an API to get kernfs node from inode number")
-Cc: stable@vger.kernel.org
-Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The imbalance happens because the driver creates the debugfs hierarchy
+when the device is opened and tears it down when the device is closed.
+There's little gain in that, and it could be argued that it is even
+surprising because it's not usually done for other devices. Fix the
+imbalance by moving the debugfs creation and teardown to the driver's
+->probe() and ->remove() implementations instead.
 
+Note that the ring descriptors cannot be read while the interface is
+down, so make sure to return an empty file when the descriptors_status
+debugfs file is read.
+
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Acked-by: Jose Abreu <joabreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- fs/kernfs/dir.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c | 23 +++++++++++--------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
---- a/fs/kernfs/dir.c
-+++ b/fs/kernfs/dir.c
-@@ -649,11 +649,10 @@ static struct kernfs_node *__kernfs_new_
- 	kn->id.generation = gen;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 0f85e540001ff..f4df9ab0aed5f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2530,12 +2530,6 @@ static int stmmac_hw_setup(struct net_device *dev, bool init_ptp)
+ 			netdev_warn(priv->dev, "PTP init failed\n");
+ 	}
  
- 	/*
--	 * set ino first. This barrier is paired with atomic_inc_not_zero in
-+	 * set ino first. This RELEASE is paired with atomic_inc_not_zero in
- 	 * kernfs_find_and_get_node_by_ino
- 	 */
--	smp_mb__before_atomic();
--	atomic_set(&kn->count, 1);
-+	atomic_set_release(&kn->count, 1);
- 	atomic_set(&kn->active, KN_DEACTIVATED_BIAS);
- 	RB_CLEAR_NODE(&kn->rb);
+-#ifdef CONFIG_DEBUG_FS
+-	ret = stmmac_init_fs(dev);
+-	if (ret < 0)
+-		netdev_warn(priv->dev, "%s: failed debugFS registration\n",
+-			    __func__);
+-#endif
+ 	priv->tx_lpi_timer = STMMAC_DEFAULT_TWT_LS;
  
+ 	if ((priv->use_riwt) && (priv->hw->dma->rx_watchdog)) {
+@@ -2729,10 +2723,6 @@ static int stmmac_release(struct net_device *dev)
+ 
+ 	netif_carrier_off(dev);
+ 
+-#ifdef CONFIG_DEBUG_FS
+-	stmmac_exit_fs(dev);
+-#endif
+-
+ 	stmmac_release_ptp(priv);
+ 
+ 	return 0;
+@@ -3839,6 +3829,9 @@ static int stmmac_sysfs_ring_read(struct seq_file *seq, void *v)
+ 	u32 tx_count = priv->plat->tx_queues_to_use;
+ 	u32 queue;
+ 
++	if ((dev->flags & IFF_UP) == 0)
++		return 0;
++
+ 	for (queue = 0; queue < rx_count; queue++) {
+ 		struct stmmac_rx_queue *rx_q = &priv->rx_queue[queue];
+ 
+@@ -4310,6 +4303,13 @@ int stmmac_dvr_probe(struct device *device,
+ 		goto error_netdev_register;
+ 	}
+ 
++#ifdef CONFIG_DEBUG_FS
++	ret = stmmac_init_fs(ndev);
++	if (ret < 0)
++		netdev_warn(priv->dev, "%s: failed debugFS registration\n",
++			    __func__);
++#endif
++
+ 	return ret;
+ 
+ error_netdev_register:
+@@ -4343,6 +4343,9 @@ int stmmac_dvr_remove(struct device *dev)
+ 
+ 	netdev_info(priv->dev, "%s: removing driver", __func__);
+ 
++#ifdef CONFIG_DEBUG_FS
++	stmmac_exit_fs(ndev);
++#endif
+ 	stmmac_stop_all_dma(priv);
+ 
+ 	priv->hw->mac->set_mac(priv->ioaddr, false);
+-- 
+2.20.1
+
 
 
