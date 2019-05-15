@@ -2,276 +2,106 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED02C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84857C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BF5B20873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:35:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557948905;
-	bh=T8KZMtAQaa1AWpMPzkJfrn31xMbxudTFZ6VKkGQgaMQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=aVvnKHzoWQk8SkoKsmhM2W8zMqJs0RBpmusYyhuyTjReq8dG6FOghAnLUAsNiYTGX
-	 gptLyJpAeniov29o6UCnmbKW9L7QuRDH8ErXxhCNQQe6M9+F5gjkcUHrDF7FnrKBcM
-	 XRkHmn/a1s96hGnS4ICptaHrtRBDGPrLA+12LV0A=
+	by mail.kernel.org (Postfix) with ESMTP id 5C1762166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfEOTfE (ORCPT
+        id S1727724AbfEOTiS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:35:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53624 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbfEOTfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 15:35:03 -0400
-Received: from earth.universe (host-091-097-031-090.ewe-ip-backbone.de [91.97.31.90])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E654F2084F;
-        Wed, 15 May 2019 19:35:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557948903;
-        bh=T8KZMtAQaa1AWpMPzkJfrn31xMbxudTFZ6VKkGQgaMQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lnMIkkcRqYl5S6/EHGKHAMSKige22qxnEicu7gElNzWmq8lgX+4G79y5n5h1DHclu
-         55jVQdkX3awLLlg55pwU8rUc+njYyma2TtTlCEwoYjDHemZ0I8K/lFFYMuCbjWKMND
-         zRPRNcU/ERhUmK49KQKuy7arkLz6H3sMNEn32/bY=
-Received: by earth.universe (Postfix, from userid 1000)
-        id EC33F3C0CAB; Wed, 15 May 2019 21:35:00 +0200 (CEST)
-Date:   Wed, 15 May 2019 21:35:00 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [GIT PULL] power-supply changes for 5.2
-Message-ID: <20190515193500.6wpstcuacfuwt6ty@earth.universe>
+        Wed, 15 May 2019 15:38:18 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:44736 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726807AbfEOTiR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 15:38:17 -0400
+Received: by mail-qt1-f196.google.com with SMTP id f24so1063615qtk.11
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 12:38:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lyWzyI2UXZXBor7mB3ol4MqEYJD1vGyEwW2168pojnA=;
+        b=tHzNRfOBQ54qbbT/dL+JbqVJtaqmHgbBjn3uGwAYvsGvtdQfwos4Q+oD4RMf5U/wLQ
+         f8DTl5BXDXi+h3b8/Hyv9qqiZPqtIRO61WCfSOy9hBfd8Bs89QmrZ2n0eDliZekHQDi3
+         8yP39XNuRo3wEyP/yHL31s3jSuMrODQun22aE9sPKluc8M4N3VeHhrnsQcTYbzy0LXTz
+         oLSkL1lpSbahfO7I/5MyqUXwbxYKhK8Eq3shwgGtCsCnfOAeWzUuKAj/oethb+xu0a7B
+         RNatvmordXvtGpZNzE3ttplrLn2L7gKRqxq7YHVzWxdhbzzFzwZCfEqyzM8v5TlPpo/q
+         ez9Q==
+X-Gm-Message-State: APjAAAXF04Ur8p9hzbMalI7f2GXVXzPeOMbi/ed66i7tBmVJ5hc21QcP
+        4wSh56KsUJ7PDgmzQSePoK7dvFiJV7OZj+JARP4=
+X-Google-Smtp-Source: APXvYqyXfEWrkoVlkor6gduR93XqdVIZZomQkQEF8yId7Hd2cBQHS2Q/QxxMEAgT5gNl9idHYeSfw2ZA7A9JEVXuXhU=
+X-Received: by 2002:ac8:2924:: with SMTP id y33mr37005088qty.212.1557949096837;
+ Wed, 15 May 2019 12:38:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lar6j6naw6ub2ikt"
-Content-Disposition: inline
-User-Agent: NeoMutt/20180716
+References: <20190512012508.10608-1-elder@linaro.org> <20190512012508.10608-9-elder@linaro.org>
+In-Reply-To: <20190512012508.10608-9-elder@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 15 May 2019 21:37:59 +0200
+Message-ID: <CAK8P3a2QZ3-VEQ21AHGAz4JPEDSKAUZtqtVarQ9Uk7Bg32PpNQ@mail.gmail.com>
+Subject: Re: [PATCH 08/18] soc: qcom: ipa: the generic software interface
+To:     Alex Elder <elder@linaro.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        syadagir@codeaurora.org, mjavid@codeaurora.org,
+        evgreen@chromium.org, Ben Chan <benchan@google.com>,
+        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, May 12, 2019 at 3:25 AM Alex Elder <elder@linaro.org> wrote:
 
---lar6j6naw6ub2ikt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> +static int gsi_ring_alloc(struct gsi *gsi, struct gsi_ring *ring, u32 count)
+> +{
+> +       size_t size = roundup_pow_of_two(count * sizeof(struct gsi_tre));
+> +       dma_addr_t addr;
+> +
+> +       /* Hardware requires a power-of-2 ring size (and alignment) */
+> +       ring->virt = dma_alloc_coherent(gsi->dev, size, &addr, GFP_KERNEL);
+> +       if (!ring->virt)
+> +               return -ENOMEM;
+> +       ring->addr = addr;
+> +       ring->base = addr & GENMASK(31, 0);
+> +       ring->size = size;
+> +       ring->end = ring->base + size;
+> +       spin_lock_init(&ring->spinlock);
+> +
+> +       return 0;
+> +}
 
-Hi Linus,
+Another comment for this patch: dma_alloc_coherent() does not guarantee
+alignment of the requested buffer as implied by the comment. In many
+configurations, it /is/ naturally aligned because the buffer comes from
+alloc_pages(), but you can't really be sure.
 
-Here is the power-supply pull request for the 5.2 merge window.
-Everything except for a few small fixes have been in linux-next
-for > 10 days. The pull request is touching some bits in x86 for
-the OLPC changes and some bits in IIO for the new Ingenic JZ47xx
-battery driver, that have been Acked by the respective maintainers
-and no merge issues have been reported by Stephen.
+I suspect it's actually only broken when the buffer spans a 4GB boundary
+(and updating the lower 32 bit in the register gives a wrong pointer), which
+is unlikely but will happen at some point according to Murphy's law.
+If you just need the dma_addr_t to not cross a 4GB boundary, the
+easiest solution would be to use GFP_DMA32, which gives you a
+buffer that is mapped to the first 4GB bus address space (not necessarily
+the first 4GB of RAM if you have an iommu).
 
--- Sebastian
+If you manually align the ring buffer, it should be fine too, though I have
+to say that the way the driver does pointer arithmetic on 32-bit integers
+seems rather fragile as well.
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+A nicer way to deal with ring buffers in general is to only ever use a
+32-bit index number stored in an atomic_t, use atomic_inc_return()
+to advance the index and then mask the number when turning it into
+an index. With that, you should also be able to avoid the shared
+spinlock. Moving the rp and wp into separate cache lines further
+reduces the coherency traffic by avoiding concurrent writes on the
+same line.
 
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
-
-are available in the Git repository at:
-
-  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git tags/for-v5.2
-
-for you to fetch changes up to baf5964ecfe19a0109fe2e497e72840ce0f488e6:
-
-  power: supply: olpc_battery: force the le/be casts (2019-05-14 23:17:56 +0200)
-
-----------------------------------------------------------------
-power supply and reset changes for the v5.2 series
-
-Core:
- * Add over-current health state
- * Add standard, adaptive and custom charge types
- * Add new properties for start/end charge threshold
-
-New Drivers / Hardware:
- * UCS1002 Programmable USB Port Power Controller
- * Ingenic JZ47xx Battery Fuel Gauge
- * AXP20x USB Power: Add AXP813 support
- * AT91 poweroff: Add SAM9X60 support
- * OLPC battery: Add XO-1.5 and XO-1.75 support
-
-Misc. Changes:
- * syscon-reboot: support mask property
- * AXP288 fuel gauge: Blacklist ACEPC T8/T11
-  - Looks like some vendor thought it's a good idea to
-    build a desktop system with a fuel gauge, that slowly
-    "discharges"...
- * cpcap-battery: Fix calculation errors
- * misc. fixes
-
-----------------------------------------------------------------
-Andrey Smirnov (3):
-      power: supply: core: Add POWER_SUPPLY_HEALTH_OVERCURRENT constant
-      dt-bindings: power: supply: Add bindings for Microchip UCS1002
-      power: supply: Add driver for Microchip UCS1002
-
-Artur Rojek (6):
-      iio: inkern: API for reading available iio channel attribute values
-      iio: inkern: Convert iio_read_avail_channel_raw into a wrapper
-      dt-bindings: power: supply: Add charge-status-gpios property
-      power: supply: gpio-charger: Add support for charger status.
-      dt-bindings: power: supply: Add docs for Ingenic JZ47xx SoCs battery.
-      power: supply: add Ingenic JZ47xx battery driver.
-
-Axel Lin (1):
-      power: supply: ucs1002: Fix wrong return value checking
-
-Chen-Yu Tsai (3):
-      dt-bindings: power: supply: axp20x_usb_power: add axp813 compatible
-      power: supply: axp20x_usb_power: Fix typo in VBUS current limit macros
-      power: supply: axp20x_usb_power: use polling to detect vbus status change
-
-Claudiu Beznea (3):
-      power: reset: at91-poweroff: add RTT wakeup capability
-      power: reset: at91-poweroff: add support for SAM9X60
-      dt-bindings: arm: atmel: add binding for SAM9X60 shutdown controller
-
-Enric Balletbo i Serra (1):
-      power: supply: core: fix typo in function to get current charge control limit
-
-Gustavo A. R. Silva (1):
-      power: supply: axp288_charger: Fix unchecked return value
-
-Hans de Goede (1):
-      power: supply: axp288_fuel_gauge: Add ACEPC T8 and T11 mini PCs to the blacklist
-
-Kangjie Lu (1):
-      power: charger-manager: fix a potential NULL pointer dereference
-
-Krzysztof Kozlowski (1):
-      power: supply: bq27xxx_battery: Notify also about status changes
-
-Lubomir Rintel (11):
-      dt-bindings: olpc_battery: Add XO-1.5 battery
-      x86/platform/olpc: Don't split string literals when fixing up the DT
-      x86/platform/olpc: Trivial code move in DT fixup
-      x86/platform/olpc: Use a correct version when making up a battery node
-      power: supply: olpc_battery: Use DT to get battery version
-      power: supply: olpc_battery: Move priv data to a struct
-      power: supply: olpc_battery: Use devm_power_supply_register()
-      power: supply: olpc_battery: Avoid using platform_info
-      power: supply: olpc_battery: Add OLPC XO 1.75 support
-      power: supply: olpc_battery: Have the framework register sysfs files for us
-      power: supply: olpc_battery: force the le/be casts
-
-Martin Schiller (1):
-      power: reset: syscon-reboot: add a mask property
-
-Maxime Ripard (1):
-      power: supply: Fix the simple battery property names
-
-Michael Hennerich (2):
-      power: supply: ltc3651-charger: Fix device name
-      power: supply: ltc3651-charger: Fix device name (rename files)
-
-Nick Crews (3):
-      power: supply: core: Add Standard, Adaptive, and Custom charge types
-      power: supply: core: Add CHARGE_CONTROL_{START_THRESHOLD,END_THRESHOLD} properties
-      power: supply: core: Add missing documentation for CHARGE_CONTROL_* properties
-
-Phong Tran (1):
-      power: supply: core: fix clang -Wunsequenced
-
-Quentin Schulz (2):
-      power: supply: axp20x_usb_power: add function to get max current
-      power: supply: axp20x_usb_power: add support for AXP813
-
-Sebastian Reichel (3):
-      Merge branch 'psy-fixes' into psy-next
-      Merge 'ib-jz47xx-battery-prereq' into psy-next
-      Merge tag 'psy-olpc-1.75-battery-signed' into psy-next
-
-Sebastien Bourdelin (1):
-      dt-bindings: power: supply: gpio-charger: add missing semi-colon in example
-
-Sven Van Asbroeck (2):
-      power: supply: max14656: fix potential use-before-alloc
-      power: supply: max14656: fix potential use-after-free
-
-Tony Lindgren (7):
-      power: supply: cpcap-battery: Fix division by zero
-      power: supply: cpcap-battery: Fix low battery check
-      power: supply: cpcap-battery: Fix signed counter sample register
-      power: supply: cpcap-battery: Fix coulomb counter calibration register use
-      power: supply: cpcap-battery: Use accumulator for current and power average
-      power: supply: cpcap-battery: Fix pointless EPROBE_DEFER warnings
-      power: supply: cpcap-charger: Fix pointless EPROBE_DEFER warnings
-
-Wen Yang (2):
-      power: supply: ab8500: fix leaked of_node refs in ab8500_bm_of_probe
-      power: supply: core: fix leaked of_node refs in power_supply_get_battery_info
-
-YueHaibing (1):
-      power: supply: ucs1002: Fix build error without CONFIG_REGULATOR
-
- Documentation/ABI/testing/sysfs-class-power        |  51 +-
- .../devicetree/bindings/arm/atmel-sysregs.txt      |   5 +-
- .../bindings/power/reset/syscon-reboot.txt         |  11 +-
- .../bindings/power/supply/axp20x_usb_power.txt     |   1 +
- .../bindings/power/supply/gpio-charger.txt         |   8 +-
- .../bindings/power/supply/ingenic,battery.txt      |  31 +
- .../{ltc3651-charger.txt => lt3651-charger.txt}    |  10 +-
- .../bindings/power/supply/microchip,ucs1002.txt    |  27 +
- .../bindings/power/supply/olpc_battery.txt         |   2 +-
- arch/x86/platform/olpc/olpc_dt.c                   | 101 +++-
- drivers/iio/inkern.c                               |  22 +-
- drivers/power/reset/at91-sama5d2_shdwc.c           |  25 +
- drivers/power/reset/syscon-reboot.c                |  19 +-
- drivers/power/supply/Kconfig                       |  29 +-
- drivers/power/supply/Makefile                      |   4 +-
- drivers/power/supply/ab8500_bmdata.c               |   1 +
- drivers/power/supply/axp20x_usb_power.c            | 179 +++++-
- drivers/power/supply/axp288_charger.c              |   4 +
- drivers/power/supply/axp288_fuel_gauge.c           |  20 +
- drivers/power/supply/bq27xxx_battery.c             |   3 +-
- drivers/power/supply/charger-manager.c             |   3 +
- drivers/power/supply/cpcap-battery.c               |  45 +-
- drivers/power/supply/cpcap-charger.c               |   5 +-
- drivers/power/supply/gpio-charger.c                |  57 +-
- drivers/power/supply/ingenic-battery.c             | 184 ++++++
- .../supply/{ltc3651-charger.c => lt3651-charger.c} | 123 ++--
- drivers/power/supply/max14656_charger_detector.c   |  27 +-
- drivers/power/supply/olpc_battery.c                | 171 +++---
- drivers/power/supply/power_supply_core.c           |  38 +-
- drivers/power/supply/power_supply_sysfs.c          |   6 +-
- drivers/power/supply/ucs1002_power.c               | 646 +++++++++++++++++++++
- include/linux/iio/consumer.h                       |  14 +
- include/linux/power_supply.h                       |  11 +-
- 33 files changed, 1613 insertions(+), 270 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
- rename Documentation/devicetree/bindings/power/supply/{ltc3651-charger.txt => lt3651-charger.txt} (71%)
- create mode 100644 Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
- create mode 100644 drivers/power/supply/ingenic-battery.c
- rename drivers/power/supply/{ltc3651-charger.c => lt3651-charger.c} (50%)
- create mode 100644 drivers/power/supply/ucs1002_power.c
-
---lar6j6naw6ub2ikt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzcad8ACgkQ2O7X88g7
-+poi0xAApnCY691TqGx8LZEyLlBely8pPsOVnchJierfz18QXB0oQdnsMTTRS22P
-wsPELGWqr+s5sOGAfKdQ9qZcKIpZfHc1J3ibU97wANefNA8uNV/mMOD73/Y5DDUF
-ptSkkEJ1yEx07yrMOUeGFCrpcOOajUDBVrKqIjc9Zab+u016/8UDiMUQA8XQD4wa
-BZZHFMtCzRlyVCQPxumZxW18qjMjNzaGOXprPgl690++0YRpd1+VZN8VLt/d5Weu
-BGrp1gblE5lX+vjt+CliGWGUzQHotSk0ioMmyvbiL8UQesMCpTiGKXNOxI3rVWrQ
-Aq+HT1qAQnlxdR+1qB+YdZuqubyvDMEaJR13gKU6A220glBdqhteKDbzMSFBH7Iz
-UR1aZesbB8RWyAhjDshrYqhvWbInQ0otCegn8nNn4s9NQw4KtW2JhpyF/yyyexh2
-kSP8zhaif9HhfnQG8C/C7toehdPiuD4tuSicehpr55jL26M5GNR6xh8K8eiCmjnz
-1sO1q2Q3cK/1Ufgj5MeOFd7gP/r1sUZRfN/kIxT3tr6Yq4KQwzZa/rL1ld7xvpHi
-WeFtau0pb4GJ62U/3g7zpQN6sf5xYCL/GkiXKvQkM+PuFDBgDwjOkXL1GekQEB1K
-OOsJK/HqQdwkvc2NZScbqAoFD4VZb4GJuijv9trCv5eKKREFO1c=
-=Dmon
------END PGP SIGNATURE-----
-
---lar6j6naw6ub2ikt--
+      Arnd
