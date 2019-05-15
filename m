@@ -2,82 +2,139 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76239C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165D1C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F93820862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E33732084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbfEOOeR (ORCPT
+        id S1728028AbfEOOge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 10:34:17 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:59681 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726424AbfEOOeR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 10:34:17 -0400
-Received: from fsav108.sakura.ne.jp (fsav108.sakura.ne.jp [27.133.134.235])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4FEWZXf001426;
-        Wed, 15 May 2019 23:32:35 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav108.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav108.sakura.ne.jp);
- Wed, 15 May 2019 23:32:35 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav108.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4FEWLke001195
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Wed, 15 May 2019 23:32:35 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] printk: Monitor change of console loglevel.
+        Wed, 15 May 2019 10:36:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49246 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726753AbfEOOgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 10:36:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1A56DAFBC;
+        Wed, 15 May 2019 14:36:32 +0000 (UTC)
+Date:   Wed, 15 May 2019 16:36:31 +0200
+From:   Petr Mladek <pmladek@suse.com>
 To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <1557501546-10263-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <20190514091917.GA26804@jagdpanzerIV>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <3e2cf31d-25af-e7c3-b308-62f64d650974@i-love.sakura.ne.jp>
-Date:   Wed, 15 May 2019 23:32:24 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCHv2 3/4] printk: factor out register_console() code
+Message-ID: <20190515143631.vuhbda6btucrkskx@pathway.suse.cz>
+References: <20190426053302.4332-1-sergey.senozhatsky@gmail.com>
+ <20190426053302.4332-4-sergey.senozhatsky@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190514091917.GA26804@jagdpanzerIV>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190426053302.4332-4-sergey.senozhatsky@gmail.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/05/14 18:19, Sergey Senozhatsky wrote:
-> On (05/11/19 00:19), Tetsuo Handa wrote:
->> We are seeing syzbot reports [1] where printk() messages prior to panic()
->> are missing for unknown reason. To test whether it is due to some testcase
->> changing console loglevel, let's panic() as soon as console loglevel has
->> changed. This patch is intended for testing on linux-next.git only, and
->> will be removed after we found what is wrong.
+On Fri 2019-04-26 14:33:01, Sergey Senozhatsky wrote:
+> We need to take console_sem lock when we iterate console drivers
+> list. Otherwise, another CPU can concurrently modify console drivers
+> list or console drivers. Current register_console() has several
+> race conditions - for_each_console() must be done under console_sem.
 > 
-> Clone linux-next, apply the patch, push to a github/gitlab repo,
-> configure syzbot to pull from github/gitlab?
+> Factor out console registration code and hold console_sem throughout
+> entire registration process. Note that we need to unlock console_sem
+> and lock it again after we added new console to the list and before
+> we unregister boot consoles. This might look a bit weird, but this
+> is how we print pending logbuf messages to all registered and
+> available consoles.
 
-I think that it is practically impossible to do so from the point of
-view of automation.
+My main concern was whether we could call newcon->setup() under
+console_lock. I checked many console drivers and all looked safe.
+There should not be much reasons to do it.
 
->                                              Adding temp patches
-> to linux-next is hard and apparently not exactly what linux-next
-> is used for these days.
 
-Currently Andrew Morton is carrying "linux-next.git only" patches
-(a.k.a. CONFIG_DEBUG_AID_FOR_SYZBOT patches) via mmotm tree.
+> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+> ---
+>  kernel/printk/printk.c | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index 3ac71701afa3..3b36e26d4a51 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -2771,7 +2771,6 @@ void register_console(struct console *newcon)
+>  	 *	Put this console in the list - keep the
+>  	 *	preferred driver at the head of the list.
+>  	 */
+> -	console_lock();
+>  	if ((newcon->flags & CON_CONSDEV) || console_drivers == NULL) {
+>  		newcon->next = console_drivers;
+>  		console_drivers = newcon;
+> @@ -2818,6 +2817,7 @@ void register_console(struct console *newcon)
+>  
+>  	console_unlock();
+>  	console_sysfs_notify();
+> +	console_lock();
 
-It would be nice if linux-next.git can directly import temp patches
-using "quilt push -a" on patches from a subversion repository. Then,
-we can casually add/remove/update temp patches like this.
+I have got an idea how to get rid of this weirdness:
 
+1. The check for bcon seems to be just an optimization. There is not need
+   to remove boot consoles when there are none.
+
+2. The condition (newcon->flags & (CON_CONSDEV|CON_BOOT)) == CON_CONSDEV)
+   is valid only when the preferred console was really added.
+
+Therefore we could move the code to a separate function, e.g.
+
+void unregister_boot_consoles(void)
+{
+	struct console *bcon;
+
+	console_lock();
+	for_each_console(bcon)
+		if (bcon->flags & CON_BOOT)
+			__unregister_console(bcon);
+	}
+	console_unlock();
+	console_sysfs_notify();
+}
+
+Then we could do something like:
+
+void register_console(struct console *newcon)
+{
+	bool newcon_is_preferred = false;
+
+	console_lock();
+	__register_console(newcon);
+	if ((newcon->flags & (CON_CONSDEV|CON_BOOT)) == CON_CONSDEV)
+		newcon_is_preferred = true;
+	console_unlock();
+	console_sysfs_notify();
+
+	/*
+	 * By unregistering the bootconsoles after we enable the real console
+	 * we get the "console xxx enabled" message on all the consoles -
+	 * boot consoles, real consoles, etc - this is to ensure that end
+	 * users know there might be something in the kernel's log buffer that
+	 * went to the bootconsole (that they do not see on the real console)
+	 */
+	if (newcon_is_preferred && !keep_bootcon)
+		unregister_boot_consoles();
+}
+
+How does that sound?
+
+Otherwise, the patch looks fine to me.
+
+Best Regards,
+Petr
