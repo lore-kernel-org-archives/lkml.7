@@ -2,52 +2,59 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A0EC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554CCC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0525420644
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2794320644
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918623;
-	bh=wbbv2rLdj/LG2hH35y8e8rYDgU3PTulxfxIol5QGOk4=;
+	s=default; t=1557918626;
+	bh=GbpUk4r4PtP7gKqjhb0KZaStS70Io0Byd3pEUMZQV6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=piUKeaC2BHTOLh983EKk7rg2anAt9em6Ykqi8UQAi1ArMo7nwfN+zTZ5Dzs89qfEt
-	 C6ULdTbUW298D8H30Qcvlr3bayBFaNuSN/H3It9TtBijdcsPdlt7lE5paltR133UGA
-	 CcBUE5gw28hO4BfwgXr5Y8sRoAedYzyyRJ8nuwsY=
+	b=LB42JjCxaF037dMO0S2yhMaJzBqv9YQ2E1DT5iRTyj2/O8MZ664RNMq8dNuhAQwOl
+	 G4gNFSaK8ymUkYRBhxvmGBtyaazr1TiJ8LY6cVt/wRLkOvVfSAAHZZlCd98tAZ7fPg
+	 FczWV65dqoKUOUJfdtSXCq13V3eJPKrFUeHAK3ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbfEOLKV (ORCPT
+        id S1729418AbfEOLKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:10:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44098 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:10:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728928AbfEOLKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:10:17 -0400
+        id S1729391AbfEOLKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:10:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6937F20644;
-        Wed, 15 May 2019 11:10:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D152220843;
+        Wed, 15 May 2019 11:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918616;
-        bh=wbbv2rLdj/LG2hH35y8e8rYDgU3PTulxfxIol5QGOk4=;
+        s=default; t=1557918619;
+        bh=GbpUk4r4PtP7gKqjhb0KZaStS70Io0Byd3pEUMZQV6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=peP1Z5xCDOODKKwXppr0GWmHRkdUMo/Jrq1s1CEkF8SYt6ivbRk26GTV3HX56Qp+k
-         cB6+qHZ9Nu/2chxMo8W2A4CG+AePxBFHnwB+pmbYwFcFqH9DJXjjpYd6aQo8kMMOth
-         FEp0beQNUBs1cAFv6D4Uq9sfx/xkkHWRkA8BOR2c=
+        b=hPjMXSd01ATzgpMAhCu6EPxwOtpjkxgOBRGKTRu82FGtw1gAGp/j2HcQGn7P61AYY
+         svvW15m7he5GilpGY4EQr8XNVVEx0m/mR/VJL92/CXptQWJVI3yd6+M3It/u+Gb3FV
+         8IL3yDooA5BG9+B6IB5+kB4OBnIY1CZMYheg5pQQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 164/266] HID: input: add mapping for keyboard Brightness Up/Down/Toggle keys
-Date:   Wed, 15 May 2019 12:54:31 +0200
-Message-Id: <20190515090728.467323516@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "WoodhouseDavid" <dwmw@amazon.co.uk>,
+        Andi Kleen <ak@linux.intel.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        "SchauflerCasey" <casey.schaufler@intel.com>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 200/266] x86/speculation: Propagate information about RSB filling mitigation to sysfs
+Date:   Wed, 15 May 2019 12:55:07 +0200
+Message-Id: <20190515090729.720560936@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,34 +67,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7975a1d6a7afeb3eb61c971a153d24dd8fa032f3 ]
+From: Jiri Kosina <jkosina@suse.cz>
 
-According to HUTRR73 usages 0x79, 0x7a and 0x7c from the consumer page
-correspond to Brightness Up/Down/Toggle keys, so let's add the mappings.
+commit bb4b3b7762735cdaba5a40fd94c9303d9ffa147a upstream.
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+If spectrev2 mitigation has been enabled, RSB is filled on context switch
+in order to protect from various classes of spectrev2 attacks.
+
+If this mitigation is enabled, say so in sysfs for spectrev2.
+
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc:  "WoodhouseDavid" <dwmw@amazon.co.uk>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc:  "SchauflerCasey" <casey.schaufler@intel.com>
+Link: https://lkml.kernel.org/r/nycvar.YFH.7.76.1809251438580.15880@cbobk.fhfr.pm
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/hid/hid-input.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/kernel/cpu/bugs.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index 01b41ff430564..ee3c66c020438 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -783,6 +783,10 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 		case 0x074: map_key_clear(KEY_BRIGHTNESS_MAX);		break;
- 		case 0x075: map_key_clear(KEY_BRIGHTNESS_AUTO);		break;
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -779,10 +779,11 @@ static ssize_t cpu_show_common(struct de
+ 		return sprintf(buf, "Mitigation: __user pointer sanitization\n");
  
-+		case 0x079: map_key_clear(KEY_KBDILLUMUP);	break;
-+		case 0x07a: map_key_clear(KEY_KBDILLUMDOWN);	break;
-+		case 0x07c: map_key_clear(KEY_KBDILLUMTOGGLE);	break;
-+
- 		case 0x082: map_key_clear(KEY_VIDEO_NEXT);	break;
- 		case 0x083: map_key_clear(KEY_LAST);		break;
- 		case 0x084: map_key_clear(KEY_ENTER);		break;
--- 
-2.20.1
-
+ 	case X86_BUG_SPECTRE_V2:
+-		ret = sprintf(buf, "%s%s%s%s%s\n", spectre_v2_strings[spectre_v2_enabled],
++		ret = sprintf(buf, "%s%s%s%s%s%s\n", spectre_v2_strings[spectre_v2_enabled],
+ 			       boot_cpu_has(X86_FEATURE_USE_IBPB) ? ", IBPB" : "",
+ 			       boot_cpu_has(X86_FEATURE_USE_IBRS_FW) ? ", IBRS_FW" : "",
+ 			       (x86_spec_ctrl_base & SPEC_CTRL_STIBP) ? ", STIBP" : "",
++			       boot_cpu_has(X86_FEATURE_RSB_CTXSW) ? ", RSB filling" : "",
+ 			       spectre_v2_module_string());
+ 		return ret;
+ 
 
 
