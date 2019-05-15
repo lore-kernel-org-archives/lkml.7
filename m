@@ -2,154 +2,137 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD96C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D86C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395AE21473
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:54:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E2921473
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:54:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=globallogic.com header.i=@globallogic.com header.b="NVTnC0Ie"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbfEONyC (ORCPT
+        id S1728256AbfEONyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 09:54:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53402 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728030AbfEONyB (ORCPT
+        Wed, 15 May 2019 09:54:11 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45322 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728030AbfEONyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 09:54:01 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4FDrA9d079793
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 09:54:00 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sgk1ybx2f-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 09:53:59 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
-        Wed, 15 May 2019 14:53:55 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 15 May 2019 14:53:51 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4FDroQ025100530
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 May 2019 13:53:50 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9C32252050;
-        Wed, 15 May 2019 13:53:50 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.102.18.182])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 79C345204F;
-        Wed, 15 May 2019 13:53:48 +0000 (GMT)
-From:   Parth Shah <parth@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com,
-        dsmythies@telus.net
-Subject: [RFCv2 6/6] sched/fair: Bound non idle core search by DIE domain
-Date:   Wed, 15 May 2019 19:23:22 +0530
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190515135322.19393-1-parth@linux.ibm.com>
-References: <20190515135322.19393-1-parth@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19051513-0020-0000-0000-0000033CFCA2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051513-0021-0000-0000-0000218FBF30
-Message-Id: <20190515135322.19393-7-parth@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905150087
+        Wed, 15 May 2019 09:54:10 -0400
+Received: by mail-ed1-f65.google.com with SMTP id g57so4188299edc.12
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 06:54:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=globallogic.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FKV+uSM8ED3SyB5lJb/FZewRZDk4c2DIjIkqO9WcvJ0=;
+        b=NVTnC0Ie5XWK7QVTDvul3LRHk3EvVSRyo7cTLoQNPRAamduiRDXkYcJ/Ytv6iDxH2/
+         23bQAXbUZ6H4BT5QlNky91b6mn07g0QlVEoXG1OFGaCYDlGjdwMnNa5Ii36QfRHNH9hA
+         +D5nxQ1oFWbIRmtkuB1a32nvJMr2C2JsN7NqWhX6lk6JETQCdw4D/8tIZ2sCXIoW5isk
+         ElgW++GL8jgwpOM82/g/xJBxB2mxW+SW4GHJhdRA5iXw1zHlvipBzkMrJsAQqcjn6n6A
+         TYgr2Fb9T8vmo2GE2Y9FZyzfykFAckO+GPz7q0BuawIUstPOLrXl+y8gs/TtK3RDhrkF
+         UuXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FKV+uSM8ED3SyB5lJb/FZewRZDk4c2DIjIkqO9WcvJ0=;
+        b=JfamNGf79CmY/F6wUNOkr0jnBV34UMVK4mi0H5+9vrs/PA2FtTAeynNZFPgz7Dd0c4
+         X7ZhSnbcpslfE2F77oVGPBdtP/B6qGUgbBzK24nAhyBCZxGlQopgZJXLhZwCEtBe3T9S
+         OcHUvVSifSSiLNrOgkHdbGL1XspkdUfW4T8iyYfA1SUUWMi1ebN8/SCgwetpFxf+wRfV
+         nTJdJXfSdcnHIN4exxSb+zEqjwqSW/Uc4Lbh2ZnVaHIcS62sBGEfvCbtr1uteIC67ArE
+         TRPih+Jt5A6km+iPjo4Pn89irEIa7GwG2VSyBhEPZu+zF2tYmpH6KZ9KV0Mf1wCLzHpW
+         qZUQ==
+X-Gm-Message-State: APjAAAXDeZqw9rLCzrM0iEYo1gT4PC8//tEk0G1Awav+AWuBjAPNnkHJ
+        jESjGhmXmuRNxoAy6YNP8+ZMO0boxayDEULJ37ApNKgX
+X-Google-Smtp-Source: APXvYqzRmoeD2vpymxFiAGQFSGz4QZRDGGzJMEQiMwkPUkjEncjhQY5mvhbAnBhNEbe10t44+E9P0okUkbnlKj2a/qc=
+X-Received: by 2002:a17:906:5e10:: with SMTP id n16mr32619643eju.143.1557928448803;
+ Wed, 15 May 2019 06:54:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190515111436.14513-1-roman.stratiienko@globallogic.com>
+ <20190515123241.GL7622@piout.net> <CAODwZ7vuBndm2i7CFm0RT1wM3phyQkQ+g0Gyjb1GE7k1-bHccQ@mail.gmail.com>
+In-Reply-To: <CAODwZ7vuBndm2i7CFm0RT1wM3phyQkQ+g0Gyjb1GE7k1-bHccQ@mail.gmail.com>
+From:   Roman Stratiienko <roman.stratiienko@globallogic.com>
+Date:   Wed, 15 May 2019 16:53:57 +0300
+Message-ID: <CAODwZ7t1UgPMeMYcadALD_gCa1Zp1fq65oF9fL65u5DTTft0Sw@mail.gmail.com>
+Subject: Re: [PATCH] rtc: test: enable wakeup flags
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch specifies the sched domain to search for a non idle core.
+Hi Alexandre,
 
-The select_non_idle_core searches for the non idle cores across whole
-system. But in the systems with multiple NUMA domains, the Turbo frequency
-can be sustained within the NUMA domain without being affected from other
-NUMA.
+Thank you for the review.
+See my answers below.
 
-This patch provides an architecture specific implementation for defining
-the turbo domain to make searching of the core to be bound within the NUMA.
 
-Signed-off-by: Parth Shah <parth@linux.ibm.com>
----
- arch/powerpc/include/asm/topology.h |  3 +++
- arch/powerpc/kernel/smp.c           |  5 +++++
- kernel/sched/fair.c                 | 10 +++++++++-
- 3 files changed, 17 insertions(+), 1 deletion(-)
+On Wed, May 15, 2019 at 3:32 PM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+>
+> Hi,
+>
+> (You didn't use my correct email address, please update your kernel)
 
-diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
-index 1c777ee67180..410b94c9e1a2 100644
---- a/arch/powerpc/include/asm/topology.h
-+++ b/arch/powerpc/include/asm/topology.h
-@@ -133,10 +133,13 @@ static inline void shared_proc_topology_init(void) {}
- #define topology_core_cpumask(cpu)	(per_cpu(cpu_core_map, cpu))
- #define topology_core_id(cpu)		(cpu_to_core_id(cpu))
- #define arch_scale_core_capacity	powerpc_scale_core_capacity
-+#define arch_turbo_domain		powerpc_turbo_domain
- 
- unsigned long powerpc_scale_core_capacity(int first_smt,
- 					  unsigned long smt_cap);
- 
-+struct cpumask *powerpc_turbo_domain(int cpu);
-+
- int dlpar_cpu_readd(int cpu);
- #endif
- #endif
-diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-index 256ab2a50f6e..e13ba3981891 100644
---- a/arch/powerpc/kernel/smp.c
-+++ b/arch/powerpc/kernel/smp.c
-@@ -1203,6 +1203,11 @@ inline unsigned long powerpc_scale_core_capacity(int first_cpu,
- 	/* Scale core capacity based on smt mode */
- 	return smt_mode == 1 ? cap : ((cap * smt_mode) >> 3) + cap;
- }
-+
-+inline struct cpumask *powerpc_turbo_domain(int cpu)
-+{
-+	return cpumask_of_node(cpu_to_node(cpu));
-+}
- #endif
- 
- static inline void add_cpu_to_smallcore_masks(int cpu)
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index d2d556eb6d0f..bd9985775db4 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -6260,6 +6260,13 @@ static inline bool core_underutilized(unsigned long core_util,
- 	return core_util < (core_capacity >> 3);
- }
- 
-+#ifndef arch_turbo_domain
-+static __always_inline struct cpumask *arch_turbo_domain(int cpu)
-+{
-+	return sched_domain_span(rcu_dereference(per_cpu(sd_llc, cpu)));
-+}
-+#endif
-+
- /*
-  * Try to find a non idle core in the system  with spare capacity
-  * available for task packing, thereby keeping minimal cores active.
-@@ -6270,7 +6277,8 @@ static int select_non_idle_core(struct task_struct *p, int prev_cpu)
- 	struct cpumask *cpus = this_cpu_cpumask_var_ptr(turbo_sched_mask);
- 	int iter_cpu, sibling;
- 
--	cpumask_and(cpus, cpu_online_mask, &p->cpus_allowed);
-+	cpumask_and(cpus, cpu_online_mask, arch_turbo_domain(prev_cpu));
-+	cpumask_and(cpus, cpus, &p->cpus_allowed);
- 
- 	for_each_cpu_wrap(iter_cpu, cpus, prev_cpu) {
- 		unsigned long core_util = 0;
+Fixed.
+
+>
+> On 15/05/2019 14:14:36+0300, roman.stratiienko@globallogic.com wrote:
+> > From: Roman Stratiienko <roman.stratiienko@globallogic.com>
+> >
+> > Alarmtimer interface uses only the RTC with wekeup flags enabled.
+> > Allow to use rtc-test driver with alarmtimer interface.
+> >
+> > Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
+> > ---
+> >  drivers/rtc/rtc-test.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/rtc/rtc-test.c b/drivers/rtc/rtc-test.c
+> > index 6c5f09c815e8..c839ae575c77 100644
+> > --- a/drivers/rtc/rtc-test.c
+> > +++ b/drivers/rtc/rtc-test.c
+> > @@ -123,6 +123,8 @@ static int test_probe(struct platform_device *plat_dev)
+> >
+> >       platform_set_drvdata(plat_dev, rtd);
+> >
+> > +     device_init_wakeup(&plat_dev->dev, 1);
+> > +
+>
+> The first created RTC doesn't have any alarm, so this must not be done
+> for all the devices.
+
+Thanks. I will fix this in v2.
+
+>
+> Also, this driver will never wake up the platform so I'm not sure it is
+> relevant to test alarmtimers.
+
+Alarmtimer interface relies only on RTC with alarm support,
+but it also checks wake flags for some reason.
+As far as rtc-test driver do have alarm support, I expect
+that related drivers should use it.
+
+Let me share some information about my use-case:
+Alarmtimer support is required for generic AOSP bluedroid library.
+To enable Bluetooth in Android on the devices that does not
+have hardware RTC, enabling rtc-test driver is a good option.
+
+>
+> --
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
 -- 
-2.17.1
-
+Best regards,
+Roman Stratiienko
+Global Logic Inc.
