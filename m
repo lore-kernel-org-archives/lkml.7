@@ -2,137 +2,110 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D86C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73529C46460
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05E2921473
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 467C420873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:56:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=globallogic.com header.i=@globallogic.com header.b="NVTnC0Ie"
+	dkim=pass (1024-bit key) header.d=AQUANTIA1COM.onmicrosoft.com header.i=@AQUANTIA1COM.onmicrosoft.com header.b="COBA8uNR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbfEONyL (ORCPT
+        id S1727159AbfEON4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 09:54:11 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45322 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728030AbfEONyK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 09:54:10 -0400
-Received: by mail-ed1-f65.google.com with SMTP id g57so4188299edc.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 06:54:09 -0700 (PDT)
+        Wed, 15 May 2019 09:56:52 -0400
+Received: from mail-eopbgr780054.outbound.protection.outlook.com ([40.107.78.54]:8883
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725953AbfEON4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 09:56:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=globallogic.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FKV+uSM8ED3SyB5lJb/FZewRZDk4c2DIjIkqO9WcvJ0=;
-        b=NVTnC0Ie5XWK7QVTDvul3LRHk3EvVSRyo7cTLoQNPRAamduiRDXkYcJ/Ytv6iDxH2/
-         23bQAXbUZ6H4BT5QlNky91b6mn07g0QlVEoXG1OFGaCYDlGjdwMnNa5Ii36QfRHNH9hA
-         +D5nxQ1oFWbIRmtkuB1a32nvJMr2C2JsN7NqWhX6lk6JETQCdw4D/8tIZ2sCXIoW5isk
-         ElgW++GL8jgwpOM82/g/xJBxB2mxW+SW4GHJhdRA5iXw1zHlvipBzkMrJsAQqcjn6n6A
-         TYgr2Fb9T8vmo2GE2Y9FZyzfykFAckO+GPz7q0BuawIUstPOLrXl+y8gs/TtK3RDhrkF
-         UuXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FKV+uSM8ED3SyB5lJb/FZewRZDk4c2DIjIkqO9WcvJ0=;
-        b=JfamNGf79CmY/F6wUNOkr0jnBV34UMVK4mi0H5+9vrs/PA2FtTAeynNZFPgz7Dd0c4
-         X7ZhSnbcpslfE2F77oVGPBdtP/B6qGUgbBzK24nAhyBCZxGlQopgZJXLhZwCEtBe3T9S
-         OcHUvVSifSSiLNrOgkHdbGL1XspkdUfW4T8iyYfA1SUUWMi1ebN8/SCgwetpFxf+wRfV
-         nTJdJXfSdcnHIN4exxSb+zEqjwqSW/Uc4Lbh2ZnVaHIcS62sBGEfvCbtr1uteIC67ArE
-         TRPih+Jt5A6km+iPjo4Pn89irEIa7GwG2VSyBhEPZu+zF2tYmpH6KZ9KV0Mf1wCLzHpW
-         qZUQ==
-X-Gm-Message-State: APjAAAXDeZqw9rLCzrM0iEYo1gT4PC8//tEk0G1Awav+AWuBjAPNnkHJ
-        jESjGhmXmuRNxoAy6YNP8+ZMO0boxayDEULJ37ApNKgX
-X-Google-Smtp-Source: APXvYqzRmoeD2vpymxFiAGQFSGz4QZRDGGzJMEQiMwkPUkjEncjhQY5mvhbAnBhNEbe10t44+E9P0okUkbnlKj2a/qc=
-X-Received: by 2002:a17:906:5e10:: with SMTP id n16mr32619643eju.143.1557928448803;
- Wed, 15 May 2019 06:54:08 -0700 (PDT)
+ d=AQUANTIA1COM.onmicrosoft.com; s=selector1-AQUANTIA1COM-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wu7TxdjWrUtbYdwbYkCOV/k5XVlz0gZ47S8VZtELt9s=;
+ b=COBA8uNRD3ktjiv9v4ujLjXFP4KZD1NSmRBUE8ZWVQFHgwHWa1Z4X4HELrPsr7ogcutJquDmweGzrp0+OkWvRRgDoGaBVTGkvsqhL/WJMmoPq/71R9YSCD4aZkn+z7oQKQPv2KRq2sxm6pCGnyDbJhQQ9e8YAUPwsbliBYtFKBU=
+Received: from DM6PR11MB3625.namprd11.prod.outlook.com (20.178.230.149) by
+ DM6PR11MB3531.namprd11.prod.outlook.com (20.177.220.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Wed, 15 May 2019 13:56:47 +0000
+Received: from DM6PR11MB3625.namprd11.prod.outlook.com
+ ([fe80::512d:4596:4513:424a]) by DM6PR11MB3625.namprd11.prod.outlook.com
+ ([fe80::512d:4596:4513:424a%5]) with mapi id 15.20.1900.010; Wed, 15 May 2019
+ 13:56:47 +0000
+From:   Igor Russkikh <Igor.Russkikh@aquantia.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "patches@kernelci.org" <patches@kernelci.org>,
+        "ben.hutchings@codethink.co.uk" <ben.hutchings@codethink.co.uk>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Oliver Neukum <oneukum@suse.com>
+Subject: Re: [PATCH 5.1 00/46] 5.1.3-stable review
+Thread-Topic: [PATCH 5.1 00/46] 5.1.3-stable review
+Thread-Index: AQHVCyYELfi8Y6EzMUWYboZEUlmuhw==
+Date:   Wed, 15 May 2019 13:56:47 +0000
+Message-ID: <583de1c8-585c-e656-6251-84b6e563af42@aquantia.com>
+References: <20190515090616.670410738@linuxfoundation.org>
+In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR05CA0265.eurprd05.prod.outlook.com
+ (2603:10a6:3:fc::17) To DM6PR11MB3625.namprd11.prod.outlook.com
+ (2603:10b6:5:13a::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Igor.Russkikh@aquantia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [95.79.108.179]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: aabe77b7-4c99-4b75-2e82-08d6d93d2bfc
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM6PR11MB3531;
+x-ms-traffictypediagnostic: DM6PR11MB3531:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DM6PR11MB35319BCDBB9922905628EFE398090@DM6PR11MB3531.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0038DE95A2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(376002)(346002)(396003)(39850400004)(199004)(189003)(6246003)(316002)(256004)(81166006)(4326008)(6506007)(386003)(68736007)(71190400001)(8936002)(6306002)(6512007)(5660300002)(110136005)(54906003)(2906002)(52116002)(71200400001)(31696002)(86362001)(81156014)(25786009)(99286004)(102836004)(4744005)(36756003)(53546011)(186003)(31686004)(6116002)(3846002)(26005)(486006)(476003)(2616005)(11346002)(446003)(53936002)(66476007)(66556008)(66946007)(66446008)(73956011)(64756008)(2501003)(478600001)(6486002)(8676002)(966005)(229853002)(14454004)(6436002)(305945005)(44832011)(66066001)(7736002)(72206003)(7416002)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB3531;H:DM6PR11MB3625.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: aquantia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jlaukTdMgqR/qXRRJhpa7ZOF/DFXeTpvsOxauruFe14F7UqpBSWFLCcoEVJH8BZDZO9GcpAKmTk8yde+iJUCdlXJydTs3kVXZBxrXKO7O2fqceDVKJ10+05xni0Kkxzsxh33OcX13PSJSm3Dt0QimdLQGbv6SWS0nk2E8NA03qxSJVRFDkOXn/leBV8WAaFR1HasMTsKfI1OJNRSrW9+s3b3A7V3s+wR5odOUT+XpzZcGiYbrVJR3UvmxBnPpO7j2ECZu+YCrWguostUIBOOlKpx0xeKuqJaMFEEfcPxeICQFUHvUgR4uZ8Qnq+L+FegiItaL80RJTpEctsZ8wQE6OMmN7sM8uAzqjlwFi1Aztw6AzowXXFegduSswAvU3Kk0ptprFc38p5I8Fj7M5rrsW0DIh3JOH2hEE0lw2HCGEg=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C46F7130C7BBD34A9AB554D52923C2C0@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190515111436.14513-1-roman.stratiienko@globallogic.com>
- <20190515123241.GL7622@piout.net> <CAODwZ7vuBndm2i7CFm0RT1wM3phyQkQ+g0Gyjb1GE7k1-bHccQ@mail.gmail.com>
-In-Reply-To: <CAODwZ7vuBndm2i7CFm0RT1wM3phyQkQ+g0Gyjb1GE7k1-bHccQ@mail.gmail.com>
-From:   Roman Stratiienko <roman.stratiienko@globallogic.com>
-Date:   Wed, 15 May 2019 16:53:57 +0300
-Message-ID: <CAODwZ7t1UgPMeMYcadALD_gCa1Zp1fq65oF9fL65u5DTTft0Sw@mail.gmail.com>
-Subject: Re: [PATCH] rtc: test: enable wakeup flags
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     a.zummo@towertech.it, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: aquantia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aabe77b7-4c99-4b75-2e82-08d6d93d2bfc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 13:56:47.7091
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 83e2e134-991c-4ede-8ced-34d47e38e6b1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3531
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexandre,
-
-Thank you for the review.
-See my answers below.
-
-
-On Wed, May 15, 2019 at 3:32 PM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> Hi,
->
-> (You didn't use my correct email address, please update your kernel)
-
-Fixed.
-
->
-> On 15/05/2019 14:14:36+0300, roman.stratiienko@globallogic.com wrote:
-> > From: Roman Stratiienko <roman.stratiienko@globallogic.com>
-> >
-> > Alarmtimer interface uses only the RTC with wekeup flags enabled.
-> > Allow to use rtc-test driver with alarmtimer interface.
-> >
-> > Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
-> > ---
-> >  drivers/rtc/rtc-test.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/rtc/rtc-test.c b/drivers/rtc/rtc-test.c
-> > index 6c5f09c815e8..c839ae575c77 100644
-> > --- a/drivers/rtc/rtc-test.c
-> > +++ b/drivers/rtc/rtc-test.c
-> > @@ -123,6 +123,8 @@ static int test_probe(struct platform_device *plat_dev)
-> >
-> >       platform_set_drvdata(plat_dev, rtd);
-> >
-> > +     device_init_wakeup(&plat_dev->dev, 1);
-> > +
->
-> The first created RTC doesn't have any alarm, so this must not be done
-> for all the devices.
-
-Thanks. I will fix this in v2.
-
->
-> Also, this driver will never wake up the platform so I'm not sure it is
-> relevant to test alarmtimers.
-
-Alarmtimer interface relies only on RTC with alarm support,
-but it also checks wake flags for some reason.
-As far as rtc-test driver do have alarm support, I expect
-that related drivers should use it.
-
-Let me share some information about my use-case:
-Alarmtimer support is required for generic AOSP bluedroid library.
-To enable Bluetooth in Android on the devices that does not
-have hardware RTC, enabling rtc-test driver is a good option.
-
->
-> --
-> Alexandre Belloni, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
--- 
-Best regards,
-Roman Stratiienko
-Global Logic Inc.
+DQoNCk9uIDE1LjA1LjIwMTkgMTM6NTYsIEdyZWcgS3JvYWgtSGFydG1hbiB3cm90ZToNCj4gVGhp
+cyBpcyB0aGUgc3RhcnQgb2YgdGhlIHN0YWJsZSByZXZpZXcgY3ljbGUgZm9yIHRoZSA1LjEuMyBy
+ZWxlYXNlLg0KPiBUaGVyZSBhcmUgNDYgcGF0Y2hlcyBpbiB0aGlzIHNlcmllcywgYWxsIHdpbGwg
+YmUgcG9zdGVkIGFzIGEgcmVzcG9uc2UNCj4gdG8gdGhpcyBvbmUuICBJZiBhbnlvbmUgaGFzIGFu
+eSBpc3N1ZXMgd2l0aCB0aGVzZSBiZWluZyBhcHBsaWVkLCBwbGVhc2UNCj4gbGV0IG1lIGtub3cu
+DQoNCi4uLg0KDQo+IE9saXZlciBOZXVrdW0gPG9uZXVrdW1Ac3VzZS5jb20+DQo+ICAgICBhcWMx
+MTE6IGZpeCBkb3VibGUgZW5kaWFubmVzcyBzd2FwIG9uIEJFDQo+IA0KPiBPbGl2ZXIgTmV1a3Vt
+IDxvbmV1a3VtQHN1c2UuY29tPg0KPiAgICAgYXFjMTExOiBmaXggd3JpdGluZyB0byB0aGUgcGh5
+IG9uIEJFDQo+IA0KPiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPg0KPiAgICAgYXFj
+MTExOiBmaXggZW5kaWFubmVzcyBpc3N1ZSBpbiBhcWMxMTFfY2hhbmdlX210dQ0KDQpIZWxsbyBH
+cmVnLA0KDQpDb3VsZCB5b3UgcGxlYXNlIGRyb3AgdGhlc2UgdGhyZWUgcGF0Y2hlcyBmcm9tIHRo
+ZSBxdWV1ZT8NClRoZXkgYXJlIGludmFsaWQgYW5kIHdpbGwgYmUgcmV2ZXJ0ZWQgaW4gbmV0IHRy
+ZWUuDQoNCmh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL25ldGRldi8xNTU3ODM5NjQ0LjExMjYxLjQu
+Y2FtZWxAc3VzZS5jb20vDQoNClRoYW5rcywNCiAgSWdvcg0K
