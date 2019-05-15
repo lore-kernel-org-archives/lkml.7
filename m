@@ -4,58 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D413EC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B5CC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E07720843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB8AC20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921992;
-	bh=r8UsJHeobUmrU9dWDtYjj8wQqq1tEaW8hScVYrx/nBo=;
+	s=default; t=1557922001;
+	bh=JbPRabLIMrTvWdkn5zLLgPu/FCNDuIM6k0f73dNLetE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jEaqO/GG/cVulH9K5wwtHjr1HqtRfTITORDVHwmVxVimmY8rISHfl+3ATftEvlTva
-	 4oi6HRC8KnHE5eYofJZ4v2bNljvq9bp0KSMVj+WH/BbolO9ZhZ8649YOwceGC2MOe5
-	 +BlrqulM9CtLpZEeH80ZYduo1Nnsa5v9mb+q8Ohw=
+	b=IHbnGXb3+hT96DgzHHQKA5I9FzbJhWh5vfAHinon7KBDH6FA1XDnvqqr7J/IXL8Yt
+	 VytlmXHIXW4PxLY+GjhmFRaLlMt7AoOWZG98KkNUHHHwUm16BotXw9RSMVo2CToNat
+	 KHd4n5RZjkex1YUZM5FkrcUfqb2wzAC0qwMmiA6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729664AbfEOMGb (ORCPT
+        id S1729330AbfEOLKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:06:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43772 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:10:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728925AbfEOLKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:10:08 -0400
+        id S1729315AbfEOLJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:09:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 954602166E;
-        Wed, 15 May 2019 11:10:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BF0C20843;
+        Wed, 15 May 2019 11:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918607;
-        bh=r8UsJHeobUmrU9dWDtYjj8wQqq1tEaW8hScVYrx/nBo=;
+        s=default; t=1557918592;
+        bh=JbPRabLIMrTvWdkn5zLLgPu/FCNDuIM6k0f73dNLetE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1rIPjNqdTk8gWAaAjLxEeF4AIHjBppXF12ViJepG7n3nOreyQ0VKvoA5qr9bsqk0J
-         BlNFZLxGBlwRycPdSbxrkU+ZhqRx/oD7Irdsu2tIum9VAyhbvrFWjXLNOaet0WP2FQ
-         bjhypkJwMfPAvq2Uf9QGzUgrLe4saEtN8Rxff87w=
+        b=kNA4xfyOThsK3VpryKIMa7jh4tPXKqEnprUBb9JmyC43O5x61N2oeW3onxP64PUvC
+         2wkXzZ3jbgrdNo3yddpGMnmm4Xa4Cu8nOpghXv3gajrai+juinmlA3006K6lyZJUcR
+         oMlAJdoWyumrmlu0roYlOJiLX62EZI8P+nvxU1EU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        stable@vger.kernel.org, Will Deacon <will.deacon@arm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Joerg Roedel <joro@8bytes.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Borislav Petkov <bp@suse.de>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>, kvm@vger.kernel.org,
-        x86@kernel.org, Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 196/266] KVM: x86: SVM: Call x86_spec_ctrl_set_guest/host() with interrupts disabled
-Date:   Wed, 15 May 2019 12:55:03 +0200
-Message-Id: <20190515090729.575734497@linuxfoundation.org>
+        linux-arm-kernel@lists.infradead.org,
+        yamada.masahiro@socionext.com, Ingo Molnar <mingo@kernel.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 190/266] locking/atomics, asm-generic: Move some macros from <linux/bitops.h> to a new <linux/bits.h> file
+Date:   Wed, 15 May 2019 12:54:57 +0200
+Message-Id: <20190515090729.368808952@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -68,106 +63,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@xxxxxxxxxxxxx>
+From: Will Deacon <will.deacon@arm.com>
 
-commit 024d83cadc6b2af027e473720f3c3da97496c318 upstream.
+commit 8bd9cb51daac89337295b6f037b0486911e1b408 upstream.
 
-Mikhail reported the following lockdep splat:
+In preparation for implementing the asm-generic atomic bitops in terms
+of atomic_long_*(), we need to prevent <asm/atomic.h> implementations from
+pulling in <linux/bitops.h>. A common reason for this include is for the
+BITS_PER_BYTE definition, so move this and some other BIT() and masking
+macros into a new header file, <linux/bits.h>.
 
-WARNING: possible irq lock inversion dependency detected
-CPU 0/KVM/10284 just changed the state of lock:
-  000000000d538a88 (&st->lock){+...}, at:
-  speculative_store_bypass_update+0x10b/0x170
-
-but this lock was taken by another, HARDIRQ-safe lock
-in the past:
-
-(&(&sighand->siglock)->rlock){-.-.}
-
-   and interrupts could create inverse lock ordering between them.
-
-Possible interrupt unsafe locking scenario:
-
-    CPU0                    CPU1
-    ----                    ----
-   lock(&st->lock);
-                           local_irq_disable();
-                           lock(&(&sighand->siglock)->rlock);
-                           lock(&st->lock);
-    <Interrupt>
-     lock(&(&sighand->siglock)->rlock);
-     *** DEADLOCK ***
-
-The code path which connects those locks is:
-
-   speculative_store_bypass_update()
-   ssb_prctl_set()
-   do_seccomp()
-   do_syscall_64()
-
-In svm_vcpu_run() speculative_store_bypass_update() is called with
-interupts enabled via x86_virt_spec_ctrl_set_guest/host().
-
-This is actually a false positive, because GIF=0 so interrupts are
-disabled even if IF=1; however, we can easily move the invocations of
-x86_virt_spec_ctrl_set_guest/host() into the interrupt disabled region to
-cure it, and it's a good idea to keep the GIF=0/IF=1 area as small
-and self-contained as possible.
-
-Fixes: 1f50ddb4f418 ("x86/speculation: Handle HT correctly on AMD")
-Reported-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: yamada.masahiro@socionext.com
+Link: https://lore.kernel.org/lkml/1529412794-17720-4-git-send-email-will.deacon@arm.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: kvm@vger.kernel.org
-Cc: x86@kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kvm/svm.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/linux/bitops.h |   22 +---------------------
+ include/linux/bits.h   |   26 ++++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+), 21 deletions(-)
+ create mode 100644 include/linux/bits.h
 
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -3928,8 +3928,6 @@ static void svm_vcpu_run(struct kvm_vcpu
+--- a/include/linux/bitops.h
++++ b/include/linux/bitops.h
+@@ -1,29 +1,9 @@
+ #ifndef _LINUX_BITOPS_H
+ #define _LINUX_BITOPS_H
+ #include <asm/types.h>
++#include <linux/bits.h>
  
- 	clgi();
- 
--	local_irq_enable();
+-#ifdef	__KERNEL__
+-#define BIT(nr)			(1UL << (nr))
+-#define BIT_ULL(nr)		(1ULL << (nr))
+-#define BIT_MASK(nr)		(1UL << ((nr) % BITS_PER_LONG))
+-#define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
+-#define BIT_ULL_MASK(nr)	(1ULL << ((nr) % BITS_PER_LONG_LONG))
+-#define BIT_ULL_WORD(nr)	((nr) / BITS_PER_LONG_LONG)
+-#define BITS_PER_BYTE		8
+ #define BITS_TO_LONGS(nr)	DIV_ROUND_UP(nr, BITS_PER_BYTE * sizeof(long))
+-#endif
 -
- 	/*
- 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
- 	 * it's non-zero. Since vmentry is serialising on affected CPUs, there
-@@ -3938,6 +3936,8 @@ static void svm_vcpu_run(struct kvm_vcpu
- 	 */
- 	x86_spec_ctrl_set_guest(svm->spec_ctrl, svm->virt_spec_ctrl);
- 
-+	local_irq_enable();
-+
- 	asm volatile (
- 		"push %%" _ASM_BP "; \n\t"
- 		"mov %c[rbx](%[svm]), %%" _ASM_BX " \n\t"
-@@ -4060,12 +4060,12 @@ static void svm_vcpu_run(struct kvm_vcpu
- 	if (!msr_write_intercepted(vcpu, MSR_IA32_SPEC_CTRL))
- 		svm->spec_ctrl = native_read_msr(MSR_IA32_SPEC_CTRL);
- 
--	x86_spec_ctrl_restore_host(svm->spec_ctrl, svm->virt_spec_ctrl);
+-/*
+- * Create a contiguous bitmask starting at bit position @l and ending at
+- * position @h. For example
+- * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
+- */
+-#define GENMASK(h, l) \
+-	(((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
 -
- 	reload_tss(vcpu);
+-#define GENMASK_ULL(h, l) \
+-	(((~0ULL) - (1ULL << (l)) + 1) & \
+-	 (~0ULL >> (BITS_PER_LONG_LONG - 1 - (h))))
  
- 	local_irq_disable();
- 
-+	x86_spec_ctrl_restore_host(svm->spec_ctrl, svm->virt_spec_ctrl);
+ extern unsigned int __sw_hweight8(unsigned int w);
+ extern unsigned int __sw_hweight16(unsigned int w);
+--- /dev/null
++++ b/include/linux/bits.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __LINUX_BITS_H
++#define __LINUX_BITS_H
++#include <asm/bitsperlong.h>
 +
- 	vcpu->arch.cr2 = svm->vmcb->save.cr2;
- 	vcpu->arch.regs[VCPU_REGS_RAX] = svm->vmcb->save.rax;
- 	vcpu->arch.regs[VCPU_REGS_RSP] = svm->vmcb->save.rsp;
++#define BIT(nr)			(1UL << (nr))
++#define BIT_ULL(nr)		(1ULL << (nr))
++#define BIT_MASK(nr)		(1UL << ((nr) % BITS_PER_LONG))
++#define BIT_WORD(nr)		((nr) / BITS_PER_LONG)
++#define BIT_ULL_MASK(nr)	(1ULL << ((nr) % BITS_PER_LONG_LONG))
++#define BIT_ULL_WORD(nr)	((nr) / BITS_PER_LONG_LONG)
++#define BITS_PER_BYTE		8
++
++/*
++ * Create a contiguous bitmask starting at bit position @l and ending at
++ * position @h. For example
++ * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
++ */
++#define GENMASK(h, l) \
++	(((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
++
++#define GENMASK_ULL(h, l) \
++	(((~0ULL) - (1ULL << (l)) + 1) & \
++	 (~0ULL >> (BITS_PER_LONG_LONG - 1 - (h))))
++
++#endif	/* __LINUX_BITS_H */
 
 
