@@ -2,143 +2,131 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8C0C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A53C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C53421473
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 271E420843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:54:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="phkhaaNi"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="X54YMTl3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbfEOHyA (ORCPT
+        id S1726546AbfEOHyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 03:54:00 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:59053 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725902AbfEOHyA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 03:54:00 -0400
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x4F7rpK8004335;
-        Wed, 15 May 2019 16:53:52 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x4F7rpK8004335
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557906832;
-        bh=h8aUMqSjFhFTzxGtS0eQk15Ap/Kh5ZwDzppa2eG7Jz4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=phkhaaNiL4RSl0dwv6qsOlLxFd6FhymD8fs4j7KQFbN431WA7K//nUf3dnBEEbWfj
-         yfuhnUQ/ONC2k7DJcy3PYKovKOkR0yJXk0X4DAOwnsFGaduMF+AeI00lTK26KB+Kdr
-         qsGfJqHnbiOxkljUtkqVl4rnN/LakI1d7bQeFrQeFsk6TYLFRnNBb7wKksWKVRYeE5
-         XcbTEyPDlChR+LLJNOL33rLtdzvzO+qcoI+qLo90n3xEKaJtY49elsQJkfd+UxmFmT
-         vNY3qEX7R7DamkT2rEzusFyZBRu9Ly8l5HQ0Fkkxz4m4K9IzbmZ78u85Y13HpI9Hz7
-         AYmGuMOzNjC7Q==
-X-Nifty-SrcIP: [209.85.222.53]
-Received: by mail-ua1-f53.google.com with SMTP id e9so661231uar.9;
-        Wed, 15 May 2019 00:53:51 -0700 (PDT)
-X-Gm-Message-State: APjAAAV9nWRiJFHFY5gGP0TSjWHlHTcy0oT5X/0qnkOAiaUlSdjNkU2w
-        pXmDDIBxxl6iGLDTXwAEVYqbXBVeK+A8Qe0VnDc=
-X-Google-Smtp-Source: APXvYqxmvII94whKLCXDmQ+neOgMzj0hp1Ty2I7Wuinbpwm3/DrSgP+yEtioF73Sy4Ya9UwTBmSP1VMGn2/FLKHBsQk=
-X-Received: by 2002:a9f:3381:: with SMTP id p1mr12017844uab.40.1557906830783;
- Wed, 15 May 2019 00:53:50 -0700 (PDT)
+        Wed, 15 May 2019 03:54:12 -0400
+Received: from mail-eopbgr70074.outbound.protection.outlook.com ([40.107.7.74]:22405
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725902AbfEOHyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 03:54:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=atuw0vm2vG5b5veSw8QMxIgSohixJ8N+8t5oMhh5Mek=;
+ b=X54YMTl3wYmNwXYOJqoq99YmrtD1DBJIavOkUpt53zqYo6OPUiA0THAUPwLzYbCMNPB7qo2510D42McQTPgarAbfMHETss7bwNDHW9gpMH2zwsnA1GBVF0c6i4tg4tSboWR72SEziYkXQW5DQlUHhlyTMM7h42HtxD061Lzh4EI=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4644.eurprd04.prod.outlook.com (52.135.149.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.24; Wed, 15 May 2019 07:53:34 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::3173:24:d401:2378]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::3173:24:d401:2378%6]) with mapi id 15.20.1878.024; Wed, 15 May 2019
+ 07:53:34 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "van.freenix@gmail.com" <van.freenix@gmail.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Olof Johansson <olof@lixom.net>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH V3 3/4] defconfig: arm64: enable i.MX8 SCU octop driver
+Thread-Topic: [PATCH V3 3/4] defconfig: arm64: enable i.MX8 SCU octop driver
+Thread-Index: AQHVCvNMhS1OyIt63E63UNMkVlEQZQ==
+Date:   Wed, 15 May 2019 07:53:34 +0000
+Message-ID: <20190515080703.19147-3-peng.fan@nxp.com>
+References: <20190515080703.19147-1-peng.fan@nxp.com>
+In-Reply-To: <20190515080703.19147-1-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.16.4
+x-clientproxiedby: HK0PR01CA0044.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:3e::32) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 15b5011e-b68b-4291-d7bf-08d6d90a6e51
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4644;
+x-ms-traffictypediagnostic: AM0PR04MB4644:
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-microsoft-antispam-prvs: <AM0PR04MB4644E66B86EEC290F3BF386F88090@AM0PR04MB4644.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:632;
+x-forefront-prvs: 0038DE95A2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(366004)(39860400002)(396003)(346002)(199004)(189003)(99286004)(54906003)(256004)(110136005)(50226002)(478600001)(8936002)(14454004)(2501003)(66066001)(71190400001)(71200400001)(52116002)(102836004)(53936002)(7736002)(4326008)(305945005)(6506007)(81156014)(386003)(81166006)(25786009)(8676002)(6636002)(66476007)(66446008)(64756008)(76176011)(66946007)(73956011)(66556008)(486006)(3846002)(44832011)(476003)(6512007)(6436002)(2616005)(446003)(11346002)(68736007)(6486002)(186003)(7416002)(2906002)(6116002)(316002)(1076003)(36756003)(26005)(86362001)(5660300002)(2201001)(4744005)(15866825006);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4644;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gFTimrszKPlTjblWyhT+4KdGC4VERPvvCQ05cPRrYK+y3szh4jDK9sbsVfGLMEEUxWMCIHB09Zzx8It4m5uUU20FYZz2F/CljXCoPvAbnRMVE8aW0xIh8VA8Y7hYaoLA64STu0P4k3SWYz0q5zO7c0eJK1gB+8YktlNb9+Xqm9ZS07CvOacI+pVsUwEsJWO3e/7B7mNbD0vhiva8X6PGRSEZu9Bfu+bNsxsxBhmMZNwG8x4gLuj1JfB/R5L6xBuWAb7JfXs1wX75otIpY8IEU65z6tS021BxUYTxm17sirdt48mkICZRHboc1k7v1aQo3Q0f/k7cHA+RtAoSxPCEQWXPOiUdkZ+fj2HYouDk4M9jDkaZE1Y4VkMpXbbnoomurDpBV+42Zt+I2Cq+MMY6/n1RwlW9UqdyCp+xnotCKM8=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190515073818.22486-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190515073818.22486-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 15 May 2019 16:53:15 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQgBKq9JDGtQUD1kgKrfLZ4jOjuLJi7_tpSPLJZsWtmag@mail.gmail.com>
-Message-ID: <CAK7LNAQgBKq9JDGtQUD1kgKrfLZ4jOjuLJi7_tpSPLJZsWtmag@mail.gmail.com>
-Subject: Re: [RFC PATCH] kbuild: check uniqueness of basename of modules
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Kees Cook <keescook@chromium.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15b5011e-b68b-4291-d7bf-08d6d90a6e51
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 07:53:34.8258
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4644
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 4:40 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> In the recent build test of linux-next, Stephen saw a build error
-> caused by a broken .tmp_versions/*.mod file:
->
->   https://lkml.org/lkml/2019/5/13/991
->
-> drivers/net/phy/asix.ko and drivers/net/usb/asix.ko have the same
-> basename, and there is a race in generating .tmp_versions/asix.mod
->
-> Kbuild has not checked this before, and it occasionally shows up with
-> obscure error message when this kind of race occurs.
->
-> It is not trivial to catch this potential issue by eyes.
->
-> Hence, this script.
->
-> I compile-tested allmodconfig for the latest kernel as of writing,
-> it detected the following:
->
-> warning: same basename '88pm800.ko' if the following are built as modules:
->   drivers/regulator/88pm800.ko
->   drivers/mfd/88pm800.ko
-> warning: same basename 'adv7511.ko' if the following are built as modules:
->   drivers/gpu/drm/bridge/adv7511/adv7511.ko
->   drivers/media/i2c/adv7511.ko
-> warning: same basename 'asix.ko' if the following are built as modules:
->   drivers/net/phy/asix.ko
->   drivers/net/usb/asix.ko
-> warning: same basename 'coda.ko' if the following are built as modules:
->   fs/coda/coda.ko
->   drivers/media/platform/coda/coda.ko
-> warning: same basename 'realtek.ko' if the following are built as modules:
->   drivers/net/phy/realtek.ko
->   drivers/net/dsa/realtek.ko
->
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
-
-> diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
-> new file mode 100755
-> index 000000000000..944e68bd22b0
-> --- /dev/null
-> +++ b/scripts/modules-check.sh
-> @@ -0,0 +1,18 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +# Warn if two or more modules have the same basename
-> +check_same_name_modules()
-> +{
-> +       same_name_modules=$(cat modules.order modules.builtin | \
-> +                               xargs basename -a | sort | uniq -d)
-> +
-> +       for m in $same_name_modules
-> +       do
-> +               echo "warning: same basename '$m' if the following are built as modules:"
-> +               grep --no-filename -e /$m modules.order modules.builtin | \
-> +                                                       sed 's:^kernel/:  :'
-
-
-Self nit-picking:
-It might be better to send these messages to stderr instead of stdout.
-
-
-
-
---
-Best Regards
-Masahiro Yamada
+QnVpbGQgaW4gQ09ORklHX05WTUVNX0lNWF9PQ09UUF9TQ1UuDQoNCkNjOiBDYXRhbGluIE1hcmlu
+YXMgPGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tPg0KQ2M6IFdpbGwgRGVhY29uIDx3aWxsLmRlYWNv
+bkBhcm0uY29tPg0KQ2M6IFNoYXduIEd1byA8c2hhd24uZ3VvQGxpbmFyby5vcmc+DQpDYzogQW5k
+eSBHcm9zcyA8YW5keS5ncm9zc0BsaW5hcm8ub3JnPg0KQ2M6IE1heGltZSBSaXBhcmQgPG1heGlt
+ZS5yaXBhcmRAYm9vdGxpbi5jb20+DQpDYzogT2xvZiBKb2hhbnNzb24gPG9sb2ZAbGl4b20ubmV0
+Pg0KQ2M6IEphZ2FuIFRla2kgPGphZ2FuQGFtYXJ1bGFzb2x1dGlvbnMuY29tPg0KQ2M6IEJqb3Ju
+IEFuZGVyc3NvbiA8Ympvcm4uYW5kZXJzc29uQGxpbmFyby5vcmc+DQpDYzogTGVvbmFyZCBDcmVz
+dGV6IDxsZW9uYXJkLmNyZXN0ZXpAbnhwLmNvbT4NCkNjOiBNYXJjIEdvbnphbGV6IDxtYXJjLncu
+Z29uemFsZXpAZnJlZS5mcj4NCkNjOiBFbnJpYyBCYWxsZXRibyBpIFNlcnJhIDxlbnJpYy5iYWxs
+ZXRib0Bjb2xsYWJvcmEuY29tPg0KQ2M6IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZw0KUmV2aWV3ZWQtYnk6IERvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQpT
+aWduZWQtb2ZmLWJ5OiBQZW5nIEZhbiA8cGVuZy5mYW5AbnhwLmNvbT4NCi0tLQ0KDQpWMzoNCiBO
+byBjaGFuZ2UNClYyOg0KIHJlbmFtZSBwYXRjaCB0aXRsZSwgYWRkIHJldmlldyB0YWcNCg0KIGFy
+Y2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcgfCAxICsNCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNl
+cnRpb24oKykNCg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcgYi9h
+cmNoL2FybTY0L2NvbmZpZ3MvZGVmY29uZmlnDQppbmRleCA5NzlhOTVjOTE1YjYuLjMyYjg1MTAy
+Yjg1NyAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcNCisrKyBiL2Fy
+Y2gvYXJtNjQvY29uZmlncy9kZWZjb25maWcNCkBAIC03NDgsNiArNzQ4LDcgQEAgQ09ORklHX0hJ
+U0lfUE1VPXkNCiBDT05GSUdfUUNPTV9MMl9QTVU9eQ0KIENPTkZJR19RQ09NX0wzX1BNVT15DQog
+Q09ORklHX05WTUVNX0lNWF9PQ09UUD15DQorQ09ORklHX05WTUVNX0lNWF9PQ09UUF9TQ1U9eQ0K
+IENPTkZJR19RQ09NX1FGUFJPTT15DQogQ09ORklHX1JPQ0tDSElQX0VGVVNFPXkNCiBDT05GSUdf
+VU5JUEhJRVJfRUZVU0U9eQ0KLS0gDQoyLjE2LjQNCg0K
