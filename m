@@ -2,120 +2,177 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D94C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F2AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 689AF2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:49:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920990;
-	bh=g9jCtB5gl9JiHyWKlpnL0NFovymRrGJkLdFVFGcjShA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KRbsOs9MdbpI48HT5IQtelEUk221wJZZzL0Y27y6vVYneGpIcOzZ3QlhPMqV0vvve
-	 y78pUUkW2N040cbWsBsbN78Pi6BjOnnASAU93x1zNBG0+gLdafjgND9qKN1g4+rPXS
-	 Bfhw/27OwPFAKmoIFZaDJ9HcrVOCzUEkxnMEiCXk=
+	by mail.kernel.org (Postfix) with ESMTP id 1C5B820843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:49:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="znIzqg9/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731731AbfEOLtt (ORCPT
+        id S1731833AbfEOLty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:49:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33004 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730379AbfEOLWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:22:45 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20F33206BF;
-        Wed, 15 May 2019 11:22:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919364;
-        bh=g9jCtB5gl9JiHyWKlpnL0NFovymRrGJkLdFVFGcjShA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v9uPRBhpeD/QLChV1aIfp+BO/SHj6UIDYsMz3YPvOTfG868nVvF1ffZRRJ6r0Py+7
-         cZY5dykfarihYT2gcrNE9pseokk4Hoh9CZz6Ktzr7Cyit5RV8O6MFkkx5adIQTYiDJ
-         jQLVeiFgTed1xMPkgQZcotrl3mRyFQn9REipFotw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 040/113] tools lib traceevent: Fix missing equality check for strcmp
-Date:   Wed, 15 May 2019 12:55:31 +0200
-Message-Id: <20190515090656.657160855@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
-References: <20190515090652.640988966@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 15 May 2019 07:49:54 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:60224 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730379AbfEOLtw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:49:52 -0400
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id D60B82E149B;
+        Wed, 15 May 2019 14:49:48 +0300 (MSK)
+Received: from smtpcorp1o.mail.yandex.net (smtpcorp1o.mail.yandex.net [2a02:6b8:0:1a2d::30])
+        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id pJ6tum1Z9K-nm0OmG23;
+        Wed, 15 May 2019 14:49:48 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1557920988; bh=alH5k1PNJm4GaPT+kDtijaHC8uREaNw9t/O/7YUmZy4=;
+        h=Message-ID:Date:To:From:Subject;
+        b=znIzqg9/ngOeS3fHiE8MN2BO+J2dJ6ks5jQ+p1cRHJMbe2W0/uzVk8wq6yhiG8zns
+         ChZzw7O3mUfGMNH/9nEcuU1BXNh9cFalHl9jlGpnxrwSrOeivKTgLSg5XTMhV9ZXh5
+         znBZ2y+31vvCp6gcMKP0r2/TwqssR19FpPwgEXCE=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:ed19:3833:7ce1:2324])
+        by smtpcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id b7fTz8WA2V-nml8HR87;
+        Wed, 15 May 2019 14:49:48 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH RFC] proc/meminfo: add KernelMisc counter
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Date:   Wed, 15 May 2019 14:49:48 +0300
+Message-ID: <155792098821.1536.17069603544573830315.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f32c2877bcb068a718bb70094cd59ccc29d4d082 ]
+Some kernel memory allocations are not accounted anywhere.
+This adds easy-read counter for them by subtracting all tracked kinds.
 
-There was a missing comparison with 0 when checking if type is "s64" or
-"u64". Therefore, the body of the if-statement was entered if "type" was
-"u64" or not "s64", which made the first strcmp() redundant since if
-type is "u64", it's not "s64".
-
-If type is "s64", the body of the if-statement is not entered but since
-the remainder of the function consists of if-statements which will not
-be entered if type is "s64", we will just return "val", which is
-correct, albeit at the cost of a few more calls to strcmp(), i.e., it
-will behave just as if the if-statement was entered.
-
-If type is neither "s64" or "u64", the body of the if-statement will be
-entered incorrectly and "val" returned. This means that any type that is
-checked after "s64" and "u64" is handled the same way as "s64" and
-"u64", i.e., the limiting of "val" to fit in for example "s8" is never
-reached.
-
-This was introduced in the kernel tree when the sources were copied from
-trace-cmd in commit f7d82350e597 ("tools/events: Add files to create
-libtraceevent.a"), and in the trace-cmd repo in 1cdbae6035cei
-("Implement typecasting in parser") when the function was introduced,
-i.e., it has always behaved the wrong way.
-
-Detected by cppcheck.
-
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
-Link: http://lkml.kernel.org/r/20190409091529.2686-1-rikard.falkeborn@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 ---
- tools/lib/traceevent/event-parse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/filesystems/proc.txt |    2 ++
+ fs/proc/meminfo.c                  |   41 +++++++++++++++++++++++++-----------
+ 2 files changed, 30 insertions(+), 13 deletions(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 10985d991ed29..6ccfd13d5cf9c 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -2192,7 +2192,7 @@ eval_type_str(unsigned long long val, const char *type, int pointer)
- 		return val & 0xffffffff;
+diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+index 66cad5c86171..f11ce167124c 100644
+--- a/Documentation/filesystems/proc.txt
++++ b/Documentation/filesystems/proc.txt
+@@ -891,6 +891,7 @@ VmallocTotal:   112216 kB
+ VmallocUsed:       428 kB
+ VmallocChunk:   111088 kB
+ Percpu:          62080 kB
++KernelMisc:     212856 kB
+ HardwareCorrupted:   0 kB
+ AnonHugePages:   49152 kB
+ ShmemHugePages:      0 kB
+@@ -988,6 +989,7 @@ VmallocTotal: total size of vmalloc memory area
+ VmallocChunk: largest contiguous block of vmalloc area which is free
+       Percpu: Memory allocated to the percpu allocator used to back percpu
+               allocations. This stat excludes the cost of metadata.
++  KernelMisc: All other kinds of kernel memory allocaitons
  
- 	if (strcmp(type, "u64") == 0 ||
--	    strcmp(type, "s64"))
-+	    strcmp(type, "s64") == 0)
- 		return val;
+ ..............................................................................
  
- 	if (strcmp(type, "s8") == 0)
--- 
-2.20.1
-
-
+diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
+index 568d90e17c17..7bc14716fc5d 100644
+--- a/fs/proc/meminfo.c
++++ b/fs/proc/meminfo.c
+@@ -38,15 +38,21 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
+ 	long cached;
+ 	long available;
+ 	unsigned long pages[NR_LRU_LISTS];
+-	unsigned long sreclaimable, sunreclaim;
++	unsigned long sreclaimable, sunreclaim, misc_reclaimable;
++	unsigned long kernel_stack_kb, page_tables, percpu_pages;
++	unsigned long anon_pages, file_pages, swap_cached;
++	long kernel_misc;
+ 	int lru;
+ 
+ 	si_meminfo(&i);
+ 	si_swapinfo(&i);
+ 	committed = percpu_counter_read_positive(&vm_committed_as);
+ 
+-	cached = global_node_page_state(NR_FILE_PAGES) -
+-			total_swapcache_pages() - i.bufferram;
++	anon_pages = global_node_page_state(NR_ANON_MAPPED);
++	file_pages = global_node_page_state(NR_FILE_PAGES);
++	swap_cached = total_swapcache_pages();
++
++	cached = file_pages - swap_cached - i.bufferram;
+ 	if (cached < 0)
+ 		cached = 0;
+ 
+@@ -56,13 +62,25 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
+ 	available = si_mem_available();
+ 	sreclaimable = global_node_page_state(NR_SLAB_RECLAIMABLE);
+ 	sunreclaim = global_node_page_state(NR_SLAB_UNRECLAIMABLE);
++	misc_reclaimable = global_node_page_state(NR_KERNEL_MISC_RECLAIMABLE);
++	kernel_stack_kb = global_zone_page_state(NR_KERNEL_STACK_KB);
++	page_tables = global_zone_page_state(NR_PAGETABLE);
++	percpu_pages = pcpu_nr_pages();
++
++	/* all other kinds of kernel memory allocations */
++	kernel_misc = i.totalram - i.freeram - anon_pages - file_pages
++		      - sreclaimable - sunreclaim - misc_reclaimable
++		      - (kernel_stack_kb >> (PAGE_SHIFT - 10))
++		      - page_tables - percpu_pages;
++	if (kernel_misc < 0)
++		kernel_misc = 0;
+ 
+ 	show_val_kb(m, "MemTotal:       ", i.totalram);
+ 	show_val_kb(m, "MemFree:        ", i.freeram);
+ 	show_val_kb(m, "MemAvailable:   ", available);
+ 	show_val_kb(m, "Buffers:        ", i.bufferram);
+ 	show_val_kb(m, "Cached:         ", cached);
+-	show_val_kb(m, "SwapCached:     ", total_swapcache_pages());
++	show_val_kb(m, "SwapCached:     ", swap_cached);
+ 	show_val_kb(m, "Active:         ", pages[LRU_ACTIVE_ANON] +
+ 					   pages[LRU_ACTIVE_FILE]);
+ 	show_val_kb(m, "Inactive:       ", pages[LRU_INACTIVE_ANON] +
+@@ -92,20 +110,16 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
+ 		    global_node_page_state(NR_FILE_DIRTY));
+ 	show_val_kb(m, "Writeback:      ",
+ 		    global_node_page_state(NR_WRITEBACK));
+-	show_val_kb(m, "AnonPages:      ",
+-		    global_node_page_state(NR_ANON_MAPPED));
++	show_val_kb(m, "AnonPages:      ", anon_pages);
+ 	show_val_kb(m, "Mapped:         ",
+ 		    global_node_page_state(NR_FILE_MAPPED));
+ 	show_val_kb(m, "Shmem:          ", i.sharedram);
+-	show_val_kb(m, "KReclaimable:   ", sreclaimable +
+-		    global_node_page_state(NR_KERNEL_MISC_RECLAIMABLE));
++	show_val_kb(m, "KReclaimable:   ", sreclaimable + misc_reclaimable);
+ 	show_val_kb(m, "Slab:           ", sreclaimable + sunreclaim);
+ 	show_val_kb(m, "SReclaimable:   ", sreclaimable);
+ 	show_val_kb(m, "SUnreclaim:     ", sunreclaim);
+-	seq_printf(m, "KernelStack:    %8lu kB\n",
+-		   global_zone_page_state(NR_KERNEL_STACK_KB));
+-	show_val_kb(m, "PageTables:     ",
+-		    global_zone_page_state(NR_PAGETABLE));
++	seq_printf(m, "KernelStack:    %8lu kB\n", kernel_stack_kb);
++	show_val_kb(m, "PageTables:     ", page_tables);
+ #ifdef CONFIG_QUICKLIST
+ 	show_val_kb(m, "Quicklists:     ", quicklist_total_size());
+ #endif
+@@ -122,7 +136,8 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
+ 		   (unsigned long)VMALLOC_TOTAL >> 10);
+ 	show_val_kb(m, "VmallocUsed:    ", 0ul);
+ 	show_val_kb(m, "VmallocChunk:   ", 0ul);
+-	show_val_kb(m, "Percpu:         ", pcpu_nr_pages());
++	show_val_kb(m, "Percpu:         ", percpu_pages);
++	show_val_kb(m, "KernelMisc:     ", kernel_misc);
+ 
+ #ifdef CONFIG_MEMORY_FAILURE
+ 	seq_printf(m, "HardwareCorrupted: %5lu kB\n",
 
