@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2E3C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCA1C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E8042053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 154B52053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920263;
-	bh=XEBQsgEMtGwqV0S4Aabkcag4Y+CbX6J+lt0ONluxREA=;
+	s=default; t=1557920271;
+	bh=hntAyRFrvw6Cr9yi4hm6U6Z3YwulC1viRtaaSaqeOA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZyDMywOjriLayarG+wjlGJ6LepG428sdNDgei3psoemoZVFwAVKT3MVpGZPUn0kLk
-	 d/9g2vIKxunMxxr3Klx/CrzyWH4+qAlYxZ7pxgfqUE5DQIh3MJ2u3E3ybCZinhmUr2
-	 oosJQ+C9u/Thx8/wwWqP2QkyMkQQUW+uutVlK8EA=
+	b=UL3ZnEYMfwtVODnCaaDLvQtFzh85UR7w44mOC6XEe8b7Vqb612cKr8HyoaxEfgmjc
+	 7UhQM8XxwcZ5fqCfkt3xwov6BeiHdp8/hDMIyVXTt2cj2xb/KjBvMHVrD9QN83dyM8
+	 pIEKgfS4427uyiVPgTM9of2OaCs4ZkzrIxp5kWtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732925AbfEOLbr (ORCPT
+        id S1733044AbfEOLhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:31:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43556 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:37:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732389AbfEOLbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:31:45 -0400
+        id S1727939AbfEOLbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:31:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96DCF206BF;
-        Wed, 15 May 2019 11:31:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C517C2084F;
+        Wed, 15 May 2019 11:31:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919905;
-        bh=XEBQsgEMtGwqV0S4Aabkcag4Y+CbX6J+lt0ONluxREA=;
+        s=default; t=1557919897;
+        bh=hntAyRFrvw6Cr9yi4hm6U6Z3YwulC1viRtaaSaqeOA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1JkxUj9+DshaTjIOtyXgy42ev8uZLmkVcVg8l9BMawmnv9BvjSig+RpvdxuxuFn+L
-         Wstnk33kjY4zU3RYHHiVc3huWYqAtW/33VQHVii44TK5qoXyzb7UMysAV3qqrSHFZO
-         Wc9Q7GlVGe+zCw9GxBd8WtUU+Fv6s5bheQ2JX3Ok=
+        b=2Z/03CD/ogprc5LpOkCqJ6Lt3IpHMI1aS+nZaXWGBNZ1E7Na+JN1f4gBKBR6d6TcB
+         Z2i+hjYY/yVoJ7DUVeiYXPPVoZ6siHNLDrXDIMssFsOsEhSCWPGkkENTNrYg2IWyxZ
+         9hsdtdNG7b3qMjWiF+fwT0ixqnjKhziG8RMsf6T0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "weiyongjun (A)" <weiyongjun1@huawei.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 124/137] tuntap: synchronize through tfiles array instead of tun->numqueues
-Date:   Wed, 15 May 2019 12:56:45 +0200
-Message-Id: <20190515090702.734469763@linuxfoundation.org>
+        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Michael Kelley <mikelley@microsoft.com>
+Subject: [PATCH 5.0 136/137] PCI: hv: Add pci_destroy_slot() in pci_devices_present_work(), if necessary
+Date:   Wed, 15 May 2019 12:56:57 +0200
+Message-Id: <20190515090703.727867468@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -63,70 +61,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+From: Dexuan Cui <decui@microsoft.com>
 
-[ Upstream commit 9871a9e47a2646fe30ae7fd2e67668a8d30912f6 ]
+commit 340d455699400f2c2c0f9b3f703ade3085cdb501 upstream.
 
-When a queue(tfile) is detached through __tun_detach(), we move the
-last enabled tfile to the position where detached one sit but don't
-NULL out last position. We expect to synchronize the datapath through
-tun->numqueues. Unfortunately, this won't work since we're lacking
-sufficient mechanism to order or synchronize the access to
-tun->numqueues.
+When we hot-remove a device, usually the host sends us a PCI_EJECT message,
+and a PCI_BUS_RELATIONS message with bus_rel->device_count == 0.
 
-To fix this, NULL out the last position during detaching and check
-RCU protected tfile against NULL instead of checking tun->numqueues in
-datapath.
+When we execute the quick hot-add/hot-remove test, the host may not send
+us the PCI_EJECT message if the guest has not fully finished the
+initialization by sending the PCI_RESOURCES_ASSIGNED* message to the
+host, so it's potentially unsafe to only depend on the
+pci_destroy_slot() in hv_eject_device_work() because the code path
 
-Cc: YueHaibing <yuehaibing@huawei.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: weiyongjun (A) <weiyongjun1@huawei.com>
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Fixes: c8d68e6be1c3b ("tuntap: multiqueue support")
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Reviewed-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+create_root_hv_pci_bus()
+ -> hv_pci_assign_slots()
+
+is not called in this case. Note: in this case, the host still sends the
+guest a PCI_BUS_RELATIONS message with bus_rel->device_count == 0.
+
+In the quick hot-add/hot-remove test, we can have such a race before
+the code path
+
+pci_devices_present_work()
+ -> new_pcichild_device()
+
+adds the new device into the hbus->children list, we may have already
+received the PCI_EJECT message, and since the tasklet handler
+
+hv_pci_onchannelcallback()
+
+may fail to find the "hpdev" by calling
+
+get_pcichild_wslot(hbus, dev_message->wslot.slot)
+
+hv_pci_eject_device() is not called; Later, by continuing execution
+
+create_root_hv_pci_bus()
+ -> hv_pci_assign_slots()
+
+creates the slot and the PCI_BUS_RELATIONS message with
+bus_rel->device_count == 0 removes the device from hbus->children, and
+we end up being unable to remove the slot in
+
+hv_pci_remove()
+ -> hv_pci_remove_slots()
+
+Remove the slot in pci_devices_present_work() when the device
+is removed to address this race.
+
+pci_devices_present_work() and hv_eject_device_work() run in the
+singled-threaded hbus->wq, so there is not a double-remove issue for the
+slot.
+
+We cannot offload hv_pci_eject_device() from hv_pci_onchannelcallback()
+to the workqueue, because we need the hv_pci_onchannelcallback()
+synchronously call hv_pci_eject_device() to poll the channel
+ringbuffer to work around the "hangs in hv_compose_msi_msg()" issue
+fixed in commit de0aa7b2f97d ("PCI: hv: Fix 2 hang issues in
+hv_compose_msi_msg()")
+
+Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+[lorenzo.pieralisi@arm.com: rewritten commit log]
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Stephen Hemminger <stephen@networkplumber.org>
+Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/tun.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -705,6 +705,8 @@ static void __tun_detach(struct tun_file
- 				   tun->tfiles[tun->numqueues - 1]);
- 		ntfile = rtnl_dereference(tun->tfiles[index]);
- 		ntfile->queue_index = index;
-+		rcu_assign_pointer(tun->tfiles[tun->numqueues - 1],
-+				   NULL);
+---
+ drivers/pci/controller/pci-hyperv.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1781,6 +1781,10 @@ static void pci_devices_present_work(str
+ 		hpdev = list_first_entry(&removed, struct hv_pci_dev,
+ 					 list_entry);
+ 		list_del(&hpdev->list_entry);
++
++		if (hpdev->pci_slot)
++			pci_destroy_slot(hpdev->pci_slot);
++
+ 		put_pcichild(hpdev);
+ 	}
  
- 		--tun->numqueues;
- 		if (clean) {
-@@ -1087,7 +1089,7 @@ static netdev_tx_t tun_net_xmit(struct s
- 	tfile = rcu_dereference(tun->tfiles[txq]);
- 
- 	/* Drop packet if interface is not attached */
--	if (txq >= tun->numqueues)
-+	if (!tfile)
- 		goto drop;
- 
- 	if (!rcu_dereference(tun->steering_prog))
-@@ -1310,6 +1312,7 @@ static int tun_xdp_xmit(struct net_devic
- 
- 	rcu_read_lock();
- 
-+resample:
- 	numqueues = READ_ONCE(tun->numqueues);
- 	if (!numqueues) {
- 		rcu_read_unlock();
-@@ -1318,6 +1321,8 @@ static int tun_xdp_xmit(struct net_devic
- 
- 	tfile = rcu_dereference(tun->tfiles[smp_processor_id() %
- 					    numqueues]);
-+	if (unlikely(!tfile))
-+		goto resample;
- 
- 	spin_lock(&tfile->tx_ring.producer_lock);
- 	for (i = 0; i < n; i++) {
 
 
