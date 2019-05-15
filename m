@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1131AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91726C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D003321773
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D6C2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920893;
-	bh=CH0+JtbkQNQLC85ldheuVY08kzo49DZ/3EggvHzvjv0=;
+	s=default; t=1557920901;
+	bh=x78V6glkD3FrZhsB1aPYUajBeskWtj2i4dms4jnPZ8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lsnt+JK0ENNMH9EvFEprkqAThIQQyS5ZOX34bfcjzQpU+oX/gFUuWXZu9O151lqkq
-	 b9sA0ggLEYGDLQ9keeKsmsnV2J/lcTPA/IKF2eKnPryTp3a7qiO/2iyKJjwp+42vcD
-	 stDIB2bsKXxX66KwgRlM9FMbQxXWwrqQQPYCKEzE=
+	b=g983rmnRCbI0rK2TggzKGdlSiJAV6Ix73Lm/JPgplNIAB48TTEu6L3KhjFOO2bCsj
+	 xz6LNDBdd81UDVqI/VIZq9xSRt6FIHfqZvUSSilF8okyUTNaRSQCMxCo+UDt6eiS21
+	 Tcog3+AAoOb6bdLN4FWE8EN9LgPd4iMolbNbeGGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731915AbfEOLsM (ORCPT
+        id S1731921AbfEOLsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:48:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34698 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:48:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731765AbfEOLYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:24:10 -0400
+        id S1731754AbfEOLYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:24:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68F29206BF;
-        Wed, 15 May 2019 11:24:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 396AA20818;
+        Wed, 15 May 2019 11:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919448;
-        bh=CH0+JtbkQNQLC85ldheuVY08kzo49DZ/3EggvHzvjv0=;
+        s=default; t=1557919443;
+        bh=x78V6glkD3FrZhsB1aPYUajBeskWtj2i4dms4jnPZ8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hEDdYn8bEqRqRjshNy93z4ZYe4qPt3knqM3PuD5R9HfqmHKrkr1w5rU34udQ701ZS
-         R8OQWk0OpcOEVrz8A7Squ2lsNmxrdspI/CXAYYzQl5TUmDtxdg2yEFC8g9OgT2qg3Z
-         34AsIDLZtpZuryUOvz37UtJiaMcCaDf+vTwSGC88=
+        b=eozuOcJ8pBdh+Wom+j0TmTevZBGMxzqCqdOkNZrvxoWKxRWqNRE5IAQTO96KcaPnb
+         dGDrPLRFGqtfCJ1A5+oQOlSruGjOL2YB174iCebQvxg0AhrTADz96jKGpFnEvUANRW
+         gKWjeY0oX0pM1GIUmRsvSEMnDUUW8RtGK3lwffAo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
-        Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.19 078/113] net: strparser: partially revert "strparser: Call skb_unclone conditionally"
-Date:   Wed, 15 May 2019 12:56:09 +0200
-Message-Id: <20190515090659.530462851@linuxfoundation.org>
+Subject: [PATCH 4.19 076/113] mlxsw: core: Do not use WQ_MEM_RECLAIM for mlxsw workqueue
+Date:   Wed, 15 May 2019 12:56:07 +0200
+Message-Id: <20190515090659.330723241@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -63,91 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4a9c2e3746e6151fd5d077259d79ce9ca86d47d7 ]
+[ Upstream commit b442fed1b724af0de087912a5718ddde1b87acbb ]
 
-This reverts the first part of commit 4e485d06bb8c ("strparser: Call
-skb_unclone conditionally").  To build a message with multiple
-fragments we need our own root of frag_list.  We can't simply
-use the frag_list of orig_skb, because it will lead to linking
-all orig_skbs together creating very long frag chains, and causing
-stack overflow on kfree_skb() (which is called recursively on
-the frag_lists).
+The workqueue is used to periodically update the networking stack about
+activity / statistics of various objects such as neighbours and TC
+actions.
 
-BUG: stack guard page was hit at 00000000d40fad41 (stack is 0000000029dde9f4..000000008cce03d5)
-kernel stack overflow (double-fault): 0000 [#1] PREEMPT SMP
-RIP: 0010:free_one_page+0x2b/0x490
+It should not be called as part of memory reclaim path, so remove the
+WQ_MEM_RECLAIM flag.
 
-Call Trace:
-  __free_pages_ok+0x143/0x2c0
-  skb_release_data+0x8e/0x140
-  ? skb_release_data+0xad/0x140
-  kfree_skb+0x32/0xb0
-
-  [...]
-
-  skb_release_data+0xad/0x140
-  ? skb_release_data+0xad/0x140
-  kfree_skb+0x32/0xb0
-  skb_release_data+0xad/0x140
-  ? skb_release_data+0xad/0x140
-  kfree_skb+0x32/0xb0
-  skb_release_data+0xad/0x140
-  ? skb_release_data+0xad/0x140
-  kfree_skb+0x32/0xb0
-  skb_release_data+0xad/0x140
-  ? skb_release_data+0xad/0x140
-  kfree_skb+0x32/0xb0
-  skb_release_data+0xad/0x140
-  __kfree_skb+0xe/0x20
-  tcp_disconnect+0xd6/0x4d0
-  tcp_close+0xf4/0x430
-  ? tcp_check_oom+0xf0/0xf0
-  tls_sk_proto_close+0xe4/0x1e0 [tls]
-  inet_release+0x36/0x60
-  __sock_release+0x37/0xa0
-  sock_close+0x11/0x20
-  __fput+0xa2/0x1d0
-  task_work_run+0x89/0xb0
-  exit_to_usermode_loop+0x9a/0xa0
-  do_syscall_64+0xc0/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Let's leave the second unclone conditional, as I'm not entirely
-sure what is its purpose :)
-
-Fixes: 4e485d06bb8c ("strparser: Call skb_unclone conditionally")
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+Fixes: 3d5479e92087 ("mlxsw: core: Remove deprecated create_workqueue")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- net/strparser/strparser.c | 12 +++++-------
- 1 file changed, 5 insertions(+), 7 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/strparser/strparser.c b/net/strparser/strparser.c
-index da1a676860cad..0f4e427928781 100644
---- a/net/strparser/strparser.c
-+++ b/net/strparser/strparser.c
-@@ -140,13 +140,11 @@ static int __strp_recv(read_descriptor_t *desc, struct sk_buff *orig_skb,
- 			/* We are going to append to the frags_list of head.
- 			 * Need to unshare the frag_list.
- 			 */
--			if (skb_has_frag_list(head)) {
--				err = skb_unclone(head, GFP_ATOMIC);
--				if (err) {
--					STRP_STATS_INCR(strp->stats.mem_fail);
--					desc->error = err;
--					return 0;
--				}
-+			err = skb_unclone(head, GFP_ATOMIC);
-+			if (err) {
-+				STRP_STATS_INCR(strp->stats.mem_fail);
-+				desc->error = err;
-+				return 0;
- 			}
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
+index 7482db0767afb..2e6df5804b356 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
+@@ -1875,7 +1875,7 @@ static int __init mlxsw_core_module_init(void)
+ {
+ 	int err;
  
- 			if (unlikely(skb_shinfo(head)->frag_list)) {
+-	mlxsw_wq = alloc_workqueue(mlxsw_core_driver_name, WQ_MEM_RECLAIM, 0);
++	mlxsw_wq = alloc_workqueue(mlxsw_core_driver_name, 0, 0);
+ 	if (!mlxsw_wq)
+ 		return -ENOMEM;
+ 	mlxsw_owq = alloc_ordered_workqueue("%s_ordered", 0,
 -- 
 2.20.1
 
