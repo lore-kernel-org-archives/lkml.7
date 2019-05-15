@@ -2,167 +2,263 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87661C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F67C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA542084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B362F20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:45:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CviqV5yd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfEORmy (ORCPT
+        id S1727333AbfEORpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 13:42:54 -0400
-Received: from mga02.intel.com ([134.134.136.20]:27990 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726657AbfEORmx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 13:42:53 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 10:42:52 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by fmsmga007.fm.intel.com with ESMTP; 15 May 2019 10:42:52 -0700
-Date:   Wed, 15 May 2019 10:42:51 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>
-Subject: Re: [PATCH v2 4/4] KVM: LAPIC: Optimize timer latency further
-Message-ID: <20190515174251.GF5875@linux.intel.com>
-References: <1557893514-5815-1-git-send-email-wanpengli@tencent.com>
- <1557893514-5815-5-git-send-email-wanpengli@tencent.com>
+        Wed, 15 May 2019 13:45:22 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:34182 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbfEORpV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 13:45:21 -0400
+Received: by mail-ua1-f68.google.com with SMTP id 7so197012uah.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 10:45:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y2m7yv1XhZnPjtDDyBcaCJV3OfxxWTymy93VR6KaE5U=;
+        b=CviqV5ydQdEcHOiodPrSzU5jMvwQcoHtcBbzWljh20l7kJfiKaNVIzcADvvKuuu2lZ
+         D5dv2aAqIdF3YAbFDCrxnTcTBU90PWElfvdDYQCMrr+nOoGhBZEoDopVuiUf5M58ccQ5
+         2tsQw9iTnMF7r9zi5Sax0dbLHIsqOuXqo8Xfad/2eoJL05xFPBEVJVo7Bpy74nSJSWJp
+         tiCTG9TdzKLOLYvR9JjOrasUQhZxX3L73rtKi0MnSX2QN8wYp4yV5eT8d6JR0AW98TkG
+         CWnq5Zzgpx7YK5fuwC3vCdixJtYQICLk60N+E5r9tJiENbkf1RQcDw4tlX99XRV1SGwF
+         SySQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y2m7yv1XhZnPjtDDyBcaCJV3OfxxWTymy93VR6KaE5U=;
+        b=muuM67LJkMzJkCXtyT++CRlreBr8bW0MeTFipXJeDFERgB/X8vISLQE0nYhq/sdCeC
+         lWh/tU3WLJUUk7DueZ+uXbwwq5pihgnNqcgu77HBoeVjWpuPnX0pfDdg36mOtkwBqj6B
+         cunzFufxlVKSUWnhEH06T2pIFoAvJDxTNC/EgDE2tLCIDEnzvSfnSzVJyF08gtAm3Kbl
+         rOQTvt5cPUzk52LgpoSNm5aEQAVFghJ3mMmIaRrwbIqTtJFWRt9anc7VjsrcFUCY9zrI
+         BUkZjRLu2NGRmn73lWAP5vbnM1VTezb/2K0jGlQuFGOCLSIPfSg/+tFaewxmJ/25stdJ
+         ZsKw==
+X-Gm-Message-State: APjAAAUQTzwXTWoicY8Y7XojgKWMalCCG9dPY4Tc5f04wbNHV74+v2Jv
+        ElTqf5ifckWf1+Q46OjBDxZ0U4ULcOJDjEaY6gBDkA==
+X-Google-Smtp-Source: APXvYqywR4mX+Nl6g9f5/Sp0unLUl+sgnKvLBMi1P4KMj6h1ZwXo6NEp9s5gtpFZIlqrfauTRtA7ILfjhAlSpHxYz88=
+X-Received: by 2002:ab0:14ab:: with SMTP id d40mr21334220uae.41.1557942319615;
+ Wed, 15 May 2019 10:45:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1557893514-5815-5-git-send-email-wanpengli@tencent.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190515100400.3450-1-christian@brauner.io>
+In-Reply-To: <20190515100400.3450-1-christian@brauner.io>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Wed, 15 May 2019 10:45:06 -0700
+Message-ID: <CAKOZuesPF+ftwqsNDMBy1LpwJgWTNuQm9-E=C90sSTBYEEsDww@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pid: add pidfd_open()
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        elena.reshetova@intel.com, Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 12:11:54PM +0800, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> Advance lapic timer tries to hidden the hypervisor overhead between the 
-> host emulated timer fires and the guest awares the timer is fired. However, 
-> it just hidden the time between apic_timer_fn/handle_preemption_timer -> 
-> wait_lapic_expire, instead of the real position of vmentry which is 
-> mentioned in the orignial commit d0659d946be0 ("KVM: x86: add option to 
-> advance tscdeadline hrtimer expiration"). There is 700+ cpu cycles between 
-> the end of wait_lapic_expire and before world switch on my haswell desktop, 
-> it will be 2400+ cycles if vmentry_l1d_flush is tuned to always. 
-> 
-> This patch tries to narrow the last gap(wait_lapic_expire -> world switch), 
-> it takes the real overhead time between apic_timer_fn/handle_preemption_timer
-> and before world switch into consideration when adaptively tuning timer 
-> advancement. The patch can reduce 40% latency (~1600+ cycles to ~1000+ cycles 
-> on a haswell desktop) for kvm-unit-tests/tscdeadline_latency when testing 
-> busy waits.
-> 
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Liran Alon <liran.alon@oracle.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/lapic.c   | 3 ++-
->  arch/x86/kvm/lapic.h   | 2 +-
->  arch/x86/kvm/svm.c     | 4 ++++
->  arch/x86/kvm/vmx/vmx.c | 4 ++++
->  arch/x86/kvm/x86.c     | 3 ---
->  5 files changed, 11 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index af38ece..63513de 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -1531,7 +1531,7 @@ static inline void adaptive_tune_timer_advancement(struct kvm_vcpu *vcpu,
->  	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
->  }
->  
-> -void wait_lapic_expire(struct kvm_vcpu *vcpu)
-> +void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
->  {
->  	struct kvm_lapic *apic = vcpu->arch.apic;
->  	u64 guest_tsc, tsc_deadline;
-> @@ -1553,6 +1553,7 @@ void wait_lapic_expire(struct kvm_vcpu *vcpu)
->  	if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
->  		adaptive_tune_timer_advancement(vcpu, apic->lapic_timer.advance_expire_delta);
->  }
-> +EXPORT_SYMBOL_GPL(kvm_wait_lapic_expire);
->  
->  static void start_sw_tscdeadline(struct kvm_lapic *apic)
->  {
-> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> index 3e72a25..f974a3d 100644
-> --- a/arch/x86/kvm/lapic.h
-> +++ b/arch/x86/kvm/lapic.h
-> @@ -220,7 +220,7 @@ static inline int kvm_lapic_latched_init(struct kvm_vcpu *vcpu)
->  
->  bool kvm_apic_pending_eoi(struct kvm_vcpu *vcpu, int vector);
->  
-> -void wait_lapic_expire(struct kvm_vcpu *vcpu);
-> +void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu);
->  
->  bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_irq *irq,
->  			struct kvm_vcpu **dest_vcpu);
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 406b558..740fb3f 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -5646,6 +5646,10 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
->  	 */
->  	x86_spec_ctrl_set_guest(svm->spec_ctrl, svm->virt_spec_ctrl);
->  
-> +	if (lapic_in_kernel(vcpu) &&
-> +		vcpu->arch.apic->lapic_timer.timer_advance_ns)
-> +		kvm_wait_lapic_expire(vcpu);
-> +
->  	local_irq_enable();
->  
->  	asm volatile (
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 9663d41..1c49946 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -6437,6 +6437,10 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->  	if (vcpu->arch.cr2 != read_cr2())
->  		write_cr2(vcpu->arch.cr2);
->  
-> +	if (lapic_in_kernel(vcpu) &&
-> +		vcpu->arch.apic->lapic_timer.timer_advance_ns)
-> +		kvm_wait_lapic_expire(vcpu);
+On Wed, May 15, 2019 at 3:04 AM Christian Brauner <christian@brauner.io> wrote:
+>
+> This adds the pidfd_open() syscall. It allows a caller to retrieve pollable
+> pidfds for a process which did not get created via CLONE_PIDFD, i.e. for a
+> process that is created via traditional fork()/clone() calls that is only
+> referenced by a PID:
 
-One potential hiccup with this approach is that we're now accessing more
-data after flushing the L1.  Not sure if that's actually a problem here,
-but it probably should be explicitly addressed/considered.
+Thanks for doing this work. I'm really looking forward to this new
+approach to process management.
 
+> int pidfd = pidfd_open(1234, 0);
+> ret = pidfd_send_signal(pidfd, SIGSTOP, NULL, 0);
+>
+> With the introduction of pidfds through CLONE_PIDFD it is possible to
+> created pidfds at process creation time.
+> However, a lot of processes get created with traditional PID-based calls
+> such as fork() or clone() (without CLONE_PIDFD). For these processes a
+> caller can currently not create a pollable pidfd. This is a huge problem
+> for Android's low memory killer (LMK) and service managers such as systemd.
+> Both are examples of tools that want to make use of pidfds to get reliable
+> notification of process exit for non-parents (pidfd polling) and race-free
+> signal sending (pidfd_send_signal()). They intend to switch to this API for
+> process supervision/management as soon as possible. Having no way to get
+> pollable pidfds from PID-only processes is one of the biggest blockers for
+> them in adopting this api. With pidfd_open() making it possible to retrieve
+> pidfd for PID-based processes we enable them to adopt this api.
+>
+> In line with Arnd's recent changes to consolidate syscall numbers across
+> architectures, I have added the pidfd_open() syscall to all architectures
+> at the same time.
+
+I'm glad it's easier now.
+
+>  arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
+>  arch/arm64/include/asm/unistd32.h           |  2 +
+>  arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
+>  arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
+>  arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
+>  arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
+>  arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
+>  arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
+>  arch/s390/kernel/syscalls/syscall.tbl       |  1 +
+>  arch/sh/kernel/syscalls/syscall.tbl         |  1 +
+>  arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
+>  arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
+>  arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
+
+It'd be nice to arrange the system call tables so that we need to
+change only one file when adding a new system call.
+
+[Snip system call wiring]
+
+> --- a/include/linux/pid.h
+> +++ b/include/linux/pid.h
+> @@ -67,6 +67,7 @@ struct pid
+>  extern struct pid init_struct_pid;
+>
+>  extern const struct file_operations pidfd_fops;
+> +extern int pidfd_create(struct pid *pid);
+>
+>  static inline struct pid *get_pid(struct pid *pid)
+>  {
+> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+> index e2870fe1be5b..989055e0b501 100644
+> --- a/include/linux/syscalls.h
+> +++ b/include/linux/syscalls.h
+> @@ -929,6 +929,7 @@ asmlinkage long sys_clock_adjtime32(clockid_t which_clock,
+>                                 struct old_timex32 __user *tx);
+>  asmlinkage long sys_syncfs(int fd);
+>  asmlinkage long sys_setns(int fd, int nstype);
+> +asmlinkage long sys_pidfd_open(pid_t pid, unsigned int flags);
+>  asmlinkage long sys_sendmmsg(int fd, struct mmsghdr __user *msg,
+>                              unsigned int vlen, unsigned flags);
+>  asmlinkage long sys_process_vm_readv(pid_t pid,
+> diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+> index dee7292e1df6..94a257a93d20 100644
+> --- a/include/uapi/asm-generic/unistd.h
+> +++ b/include/uapi/asm-generic/unistd.h
+> @@ -832,9 +832,11 @@ __SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
+>  __SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
+>  #define __NR_io_uring_register 427
+>  __SYSCALL(__NR_io_uring_register, sys_io_uring_register)
+> +#define __NR_pidfd_open 428
+> +__SYSCALL(__NR_pidfd_open, sys_pidfd_open)
+>
+>  #undef __NR_syscalls
+> -#define __NR_syscalls 428
+> +#define __NR_syscalls 429
+>
+>  /*
+>   * 32 bit systems traditionally used different
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 737db1828437..980cc1d2b8d4 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -1714,7 +1714,7 @@ const struct file_operations pidfd_fops = {
+>   * Return: On success, a cloexec pidfd is returned.
+>   *         On error, a negative errno number will be returned.
+>   */
+> -static int pidfd_create(struct pid *pid)
+> +int pidfd_create(struct pid *pid)
+>  {
+>         int fd;
+>
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index 20881598bdfa..237d18d6ecb8 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -38,6 +38,7 @@
+>  #include <linux/syscalls.h>
+>  #include <linux/proc_ns.h>
+>  #include <linux/proc_fs.h>
+> +#include <linux/sched/signal.h>
+>  #include <linux/sched/task.h>
+>  #include <linux/idr.h>
+>
+> @@ -451,6 +452,53 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
+>         return idr_get_next(&ns->idr, &nr);
+>  }
+>
+> +/**
+> + * pidfd_open() - Open new pid file descriptor.
+> + *
+> + * @pid:   pid for which to retrieve a pidfd
+> + * @flags: flags to pass
+> + *
+> + * This creates a new pid file descriptor with the O_CLOEXEC flag set for
+> + * the process identified by @pid. Currently, the process identified by
+> + * @pid must be a thread-group leader. This restriction currently exists
+> + * for all aspects of pidfds including pidfd creation (CLONE_PIDFD cannot
+> + * be used with CLONE_THREAD) and pidfd polling (only supports thread group
+> + * leaders).
+> + *
+> + * Return: On success, a cloexec pidfd is returned.
+> + *         On error, a negative errno number will be returned.
+> + */
+> +SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+> +{
+> +       int fd, ret;
+> +       struct pid *p;
+> +       struct task_struct *tsk;
 > +
->  	vmx->fail = __vmx_vcpu_run(vmx, (unsigned long *)&vcpu->arch.regs,
->  				   vmx->loaded_vmcs->launched);
->  
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 1d89cb9..0eb9549 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -7894,9 +7894,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->  	}
->  
->  	trace_kvm_entry(vcpu->vcpu_id);
-> -	if (lapic_in_kernel(vcpu) &&
-> -	    vcpu->arch.apic->lapic_timer.timer_advance_ns)
-> -		wait_lapic_expire(vcpu);
->  	guest_enter_irqoff();
->  
->  	fpregs_assert_state_consistent();
-> -- 
-> 2.7.4
-> 
+> +       if (flags)
+> +               return -EINVAL;
+
+If we support blocking operations on pidfds, we'll want to be able to
+put them in non-blocking mode. Does it make sense to accept and ignore
+O_NONBLOCK here now?
+
+> +       if (pid <= 0)
+> +               return -EINVAL;
+
+WDYT of defining pid == 0 to mean "open myself"?
+
+> +       p = find_get_pid(pid);
+> +       if (!p)
+> +               return -ESRCH;
+> +
+> +       rcu_read_lock();
+> +       tsk = pid_task(p, PIDTYPE_PID);
+> +       if (!tsk)
+> +               ret = -ESRCH;
+> +       else if (unlikely(!thread_group_leader(tsk)))
+> +               ret = -EINVAL;
+> +       else
+> +               ret = 0;
+> +       rcu_read_unlock();
+> +
+> +       fd = ret ?: pidfd_create(p);
+> +       put_pid(p);
+> +       return fd;
+> +}
