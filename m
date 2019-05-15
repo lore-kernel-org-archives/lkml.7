@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69E6C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8C9C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E44720843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E04520843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918823;
-	bh=HQ+lJteZp8Yv+EUVj4S5b2W0pIBl6pcps4eBLWe9F1I=;
+	s=default; t=1557918826;
+	bh=CFP61ogKUaFlMEANdTpgbEgjc/Z+NZmy6sxfd+TvkqE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i3hL3Hft0cASBBbgZqdw+DIdVTjBiORTCZqbRi4P/JC7NXXJSRrj0Z+vkrmu/Z+5/
-	 qQ2bbT0VaH5gEoFPegAV8adzINcYRY4oPTpNsc+9iVFMBhhLqS4vssldge6LHV2fe3
-	 IpN2PB5bffR+zsFoLePEMqOBLZ1tORlIvjvun1dQ=
+	b=c2A986Ur9C9KiOmaFF5q0OJPh5snydBlkPPABk1ZpiPPyq669F19iIysWyIaTs4Yb
+	 IkAmnrP34SmrYxEnTvgubBFifg+9GCKWHt5jnej67kD7u8u7/cDKc+riSEgvANYwxq
+	 D4Br2+KKSj0+SCr/g573Zb0DkMmMMJj7CeyqaudU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730015AbfEOLNm (ORCPT
+        id S1730022AbfEOLNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:13:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49340 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:13:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730000AbfEOLNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:13:37 -0400
+        id S1730013AbfEOLNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:13:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2423B20644;
-        Wed, 15 May 2019 11:13:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F5C12084E;
+        Wed, 15 May 2019 11:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918816;
-        bh=HQ+lJteZp8Yv+EUVj4S5b2W0pIBl6pcps4eBLWe9F1I=;
+        s=default; t=1557918821;
+        bh=CFP61ogKUaFlMEANdTpgbEgjc/Z+NZmy6sxfd+TvkqE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ANn2FzshAEAtqwLiU+izkwsU1C6ahd4RphwEVzLRoGD7A1g8wfuu8GsMdZuPexKhW
-         vH5sDVMx/g2pY0OEi0GjSvWBJgQU9+5dIGSl1WA74l0A/NppxRYoNpIZV92/itX+W2
-         ItPs3N//MhcQflOa2FkAf3e1hDUFjbYA9mvmNtjg=
+        b=lyDuUxsnf9MBjLA9fOJmpZJXhN752t3Fa1b6LJf4BagGG3jhyWLSYkeT9qMnGYSvr
+         0YmfolmVMZdLqbORBxyywnXsOZN+Oi/05q4mdAznbiD73rA2ceA+fOL8NAYrhWFXyQ
+         0EJ8shtWX28UPJx1a9cS3Y3xzVifyC3awIU/S+Qw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 11/51] libnvdimm/btt: Fix a kmemdup failure check
-Date:   Wed, 15 May 2019 12:55:46 +0200
-Message-Id: <20190515090620.710701999@linuxfoundation.org>
+Subject: [PATCH 4.9 13/51] mac80211: fix unaligned access in mesh table hash function
+Date:   Wed, 15 May 2019 12:55:48 +0200
+Message-Id: <20190515090621.557590829@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
 References: <20190515090616.669619870@linuxfoundation.org>
@@ -60,57 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 486fa92df4707b5df58d6508728bdb9321a59766 ]
+[ Upstream commit 40586e3fc400c00c11151804dcdc93f8c831c808 ]
 
-In case kmemdup fails, the fix releases resources and returns to
-avoid the NULL pointer dereference.
+The pointer to the last four bytes of the address is not guaranteed to be
+aligned, so we need to use __get_unaligned_cpu32 here
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/btt_devs.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ net/mac80211/mesh_pathtbl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvdimm/btt_devs.c b/drivers/nvdimm/btt_devs.c
-index 97dd2925ed6e9..5d2c766828488 100644
---- a/drivers/nvdimm/btt_devs.c
-+++ b/drivers/nvdimm/btt_devs.c
-@@ -190,14 +190,15 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
- 		return NULL;
- 
- 	nd_btt->id = ida_simple_get(&nd_region->btt_ida, 0, 0, GFP_KERNEL);
--	if (nd_btt->id < 0) {
--		kfree(nd_btt);
--		return NULL;
--	}
-+	if (nd_btt->id < 0)
-+		goto out_nd_btt;
- 
- 	nd_btt->lbasize = lbasize;
--	if (uuid)
-+	if (uuid) {
- 		uuid = kmemdup(uuid, 16, GFP_KERNEL);
-+		if (!uuid)
-+			goto out_put_id;
-+	}
- 	nd_btt->uuid = uuid;
- 	dev = &nd_btt->dev;
- 	dev_set_name(dev, "btt%d.%d", nd_region->id, nd_btt->id);
-@@ -212,6 +213,13 @@ static struct device *__nd_btt_create(struct nd_region *nd_region,
- 		return NULL;
- 	}
- 	return dev;
-+
-+out_put_id:
-+	ida_simple_remove(&nd_region->btt_ida, nd_btt->id);
-+
-+out_nd_btt:
-+	kfree(nd_btt);
-+	return NULL;
+diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
+index 197753ad50b4e..8c17d498df301 100644
+--- a/net/mac80211/mesh_pathtbl.c
++++ b/net/mac80211/mesh_pathtbl.c
+@@ -23,7 +23,7 @@ static void mesh_path_free_rcu(struct mesh_table *tbl, struct mesh_path *mpath);
+ static u32 mesh_table_hash(const void *addr, u32 len, u32 seed)
+ {
+ 	/* Use last four bytes of hw addr as hash index */
+-	return jhash_1word(*(u32 *)(addr+2), seed);
++	return jhash_1word(__get_unaligned_cpu32((u8 *)addr + 2), seed);
  }
  
- struct device *nd_btt_create(struct nd_region *nd_region)
+ static const struct rhashtable_params mesh_rht_params = {
 -- 
 2.20.1
 
