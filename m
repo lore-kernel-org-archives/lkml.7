@@ -2,125 +2,104 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682D7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5576C04AB4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3612520862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5750F20862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:34:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v/iBtmpp"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="hzCWaktO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727023AbfEOAcJ (ORCPT
+        id S1726424AbfEOAeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:32:09 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:46696 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfEOAcI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:32:08 -0400
-Received: by mail-pf1-f202.google.com with SMTP id d9so456356pfo.13
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 17:32:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=RTskpJzrqjSfKamQuryjYgpBB8UNg8rBhhyvKDtP8Jc=;
-        b=v/iBtmppsGFx8fleVlGl5FyzcENGHfuP9fHcZoab0NyXIBDYPrxa5R32Jvgpl7IU6F
-         xXjqQZdjrTjRiyYIwg1LJfSqon7Gau5FSrRXq7C84LbOwMIC/DyhUk23yNOdp6647IQj
-         pJHSJlvQD8aItNKPUtiF4HEz14o0wFtx7cDJ1fgmKWvokxJma08MNDOeRRtSsSSJm5VV
-         vxIlYi3Z0x8CfQJS0gcZ7kVdnCRkbt7tVhJx3w1hEAEMWq5HQctSS2j9xy4lqNiq7K80
-         mXoaW5Ytl9RJfZYE8A1Qk3ZF/iauoztRI0B4B8d21HU+sXtfhrH6fj0R0o1kcY+zwOJa
-         oLJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=RTskpJzrqjSfKamQuryjYgpBB8UNg8rBhhyvKDtP8Jc=;
-        b=m4ooY08/MqXpumpiXfzvpsqwC7qh4CaGiJ0ORqizfPVE5qgzp/3mkBOtIqD8Z/G66C
-         W9arQrFVaxWMm8ywxKl5mHtblDX9W033iZcOrBwmx1WCWaThVIcTFZfMwmX36io8lW7h
-         aBfD31dLNjYyp9V3Ks0E4lwFNbOFOI/WjJXPOAA+w7Q6fg5zmcgVHdlH3eUaX1PF0gUM
-         /2n1PskHR8e5AJCSlwOtt58p/slxz0qe6mND+sQISOK2DPT1k41fC1URIoONX5JKiqUW
-         H+9pwH7qocig14hGdy96CEqMtFCnBEIYb3rA7GeTMYeN2U3taKanJciKj+QSrbD2nxpL
-         H+7g==
-X-Gm-Message-State: APjAAAUnJofggfPLlw4YYhSoXW2rMpzZLiH0TeTkmlOEGQexQPlBi02o
-        EK56dsF9NBma1VzJMbFhYyMBrMbnJg==
-X-Google-Smtp-Source: APXvYqxXVEDKuBgb5OQ4XZpudHbVkE8PutAYv0Z8IBFEIzSl+Wtc/MG9h9QzPY0Stjw+V/+iaO6JvwQotSs=
-X-Received: by 2002:a63:4006:: with SMTP id n6mr41416529pga.424.1557880327498;
- Tue, 14 May 2019 17:32:07 -0700 (PDT)
-Date:   Tue, 14 May 2019 17:30:59 -0700
-Message-Id: <20190515003059.23920-1-yabinc@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: [PATCH] perf/ring_buffer: Fix exposing a temporarily decreased data_head.
-From:   Yabin Cui <yabinc@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Yabin Cui <yabinc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 14 May 2019 20:34:07 -0400
+Received: from mail-eopbgr70050.outbound.protection.outlook.com ([40.107.7.50]:29633
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726195AbfEOAeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 20:34:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6+Qdn/3XjScKwtXA3XU85Q5cO5eg7JzAM530DsfIYpc=;
+ b=hzCWaktOJWBawFQwCUHmvSLf7VPIN/DmIqJpeeNxIh0AZ0oPrnjsEyud3z93AsqimeL4wV+7E4e1XvRDQyz3xcjUuocAoIOpVOj4em2KnXloVcerg7Mvs6tuCPTk60zUhlaogVep5a9R4EVzB3Qmxzt5YuE0KiUJ5ts0wEIZZUc=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB6301.eurprd05.prod.outlook.com (20.179.24.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1878.22; Wed, 15 May 2019 00:34:01 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1900.010; Wed, 15 May 2019
+ 00:34:01 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+CC:     Ariel Levkovich <lariel@mellanox.com>,
+        Eli Cohen <eli@mellanox.com>, Mark Bloch <markb@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: undefined reference to `__aeabi_uldivmod' after 25c13324d03d
+ ("IB/mlx5: Add steering SW ICM device memory type")
+Thread-Topic: undefined reference to `__aeabi_uldivmod' after 25c13324d03d
+ ("IB/mlx5: Add steering SW ICM device memory type")
+Thread-Index: AQHVCrXk+svdC7ZGA0+cplzbz6uAcA==
+Date:   Wed, 15 May 2019 00:34:00 +0000
+Message-ID: <20190515003355.GB14522@ziepe.ca>
+References: <20190514194510.GA15465@archlinux-i9>
+In-Reply-To: <20190514194510.GA15465@archlinux-i9>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YTBPR01CA0033.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:14::46) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.49.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 449c6bdc-9af5-4ad4-11bb-08d6d8cd0665
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6301;
+x-ms-traffictypediagnostic: VI1PR05MB6301:
+x-microsoft-antispam-prvs: <VI1PR05MB630101945A3301CF14616D03CF090@VI1PR05MB6301.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 0038DE95A2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(396003)(376002)(136003)(346002)(199004)(189003)(81156014)(14454004)(68736007)(36756003)(6916009)(8676002)(81166006)(71200400001)(6246003)(478600001)(66066001)(5660300002)(53936002)(26005)(6116002)(186003)(3846002)(446003)(11346002)(9686003)(6512007)(86362001)(71190400001)(2906002)(256004)(8936002)(6486002)(486006)(6436002)(1076003)(73956011)(229853002)(386003)(66946007)(76176011)(66476007)(64756008)(66556008)(66446008)(6506007)(1411001)(7736002)(102836004)(316002)(33656002)(54906003)(476003)(99286004)(305945005)(4326008)(52116002)(25786009)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6301;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gpMz1T7fdkDlcvY9a65utpV0R5+dJbZDGGCEtNSmXeH4hn9cqNozQk9NnC0NSVtudXsZyPpnUH+WyKzK64IxrpdCuRWs+AnwE2HcSFpyi/RGY8uEMMDFGHp2bgZOPINBZASLwA0H0Ug4zuQXtIfJq6u49hPdDjmnj1NiCpdrytIuAmm7X4/P1FH2fnzm06jVfxhKUTJBKOB+GL4qq9H8+SA+aHDJZJjS0D0705r1RJmDaY08OoHdBOGblnmiPAglWtvryJhol7zPvIBZ3L0M5fSxQBrg9jsZd0T0aOdh0J57y2KFPRZ9BG6hh55h+682AhCofpAROcfGchFAVDJjN5gBIt2HBQ4PTCxdgV/fHrv1ueQ+LGURuHvDabtB2tu91nQlwdqvCJUNTIw8zkRrRUZZ3/+uOiYZ9dxvq72KVT8=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3F636368DFC389429E2F9FABF9C45786@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 449c6bdc-9af5-4ad4-11bb-08d6d8cd0665
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 00:34:00.9624
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6301
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In perf_output_put_handle(), an IRQ/NMI can happen in below location and
-write records to the same ring buffer:
-	...
-	local_dec_and_test(&rb->nest)
-	...                          <-- an IRQ/NMI can happen here
-	rb->user_page->data_head = head;
-	...
+On Tue, May 14, 2019 at 12:45:10PM -0700, Nathan Chancellor wrote:
+> DIV_ROUND_UP is u64 / u32 in this case. I think DIV_ROUND_UP_ULL is
+> needed but I am not sure if that has any unintended side effects so I
+> didn't want to send a patch.
 
-In this case, a value A is written to data_head in the IRQ, then a value
-B is written to data_head after the IRQ. And A > B. As a result,
-data_head is temporarily decreased from A to B. And a reader may see
-data_head < data_tail if it read the buffer frequently enough, which
-creates unexpected behaviors.
+Hmm. Most likely those u64 length's should really be size_t.=20
 
-This can be fixed by moving dec(&rb->nest) to after updating data_head,
-which prevents the IRQ/NMI above from updating data_head.
+Ariel?
 
-Signed-off-by: Yabin Cui <yabinc@google.com>
----
- kernel/events/ring_buffer.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 674b35383491..0b9aefe13b04 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -54,8 +54,10 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	 * IRQ/NMI can happen here, which means we can miss a head update.
- 	 */
- 
--	if (!local_dec_and_test(&rb->nest))
-+	if (local_read(&rb->nest) > 1) {
-+		local_dec(&rb->nest);
- 		goto out;
-+	}
- 
- 	/*
- 	 * Since the mmap() consumer (userspace) can run on a different CPU:
-@@ -86,6 +88,13 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	smp_wmb(); /* B, matches C */
- 	rb->user_page->data_head = head;
- 
-+	/*
-+	 * Clear rb->nest after updating data_head. This prevents IRQ/NMI from
-+	 * updating data_head before us. If that happens, we will expose a
-+	 * temporarily decreased data_head.
-+	 */
-+	local_set(&rb->nest, 0);
-+
- 	/*
- 	 * Now check if we missed an update -- rely on previous implied
- 	 * compiler barriers to force a re-read.
--- 
-2.21.0.1020.gf2820cf01a-goog
-
+Jason
