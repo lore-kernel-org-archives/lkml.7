@@ -2,90 +2,92 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05516C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D288CC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88492089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:40:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920458;
-	bh=WZlyFhO+JGQg1hUuKPHTcaSqzz/6BThC/cW0P09xH18=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=loEkPsJSayyP8XhZ4JZSaI/YBP8qYLUiWIR19WihujVsAg2emU/UNGJuwObCOcYWe
-	 UKFEudPicWWyfLa+CKvWxeVBxWgvxjSTO3/nb5TLlIzm9O2WpexrxkeA8/wT6FIbmx
-	 V9vIaPh2ZJrfbqa06YvO7S1Li+8tzTLf+zh61SFo=
+	by mail.kernel.org (Postfix) with ESMTP id 7E2802053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:41:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="V5lqzoBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbfEOLk5 (ORCPT
+        id S1732819AbfEOLlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 15 May 2019 07:41:00 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:40668 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732491AbfEOLk5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 May 2019 07:40:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40276 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732213AbfEOL3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:29:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A63B620818;
-        Wed, 15 May 2019 11:29:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919744;
-        bh=WZlyFhO+JGQg1hUuKPHTcaSqzz/6BThC/cW0P09xH18=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NeNvbCHoyCkJ5CJLXTw6YoUdN7wjv2x1ynTFfA67M35/3DkeQ7Hq8r8qGS0SFqTnG
-         bes0H6p42T7eoDpX4tdTiIdz2ksrt0PypSQoiVch5U5jGTlNwAmi0m3fwrICcXpTWT
-         IFysKNR7vEy5bYGt8YRo15Q3aGpsdA1nODEZFJ1c=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Golle <daniel@makrotopia.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 033/137] clocksource/drivers/oxnas: Fix OX820 compatible
-Date:   Wed, 15 May 2019 12:55:14 +0200
-Message-Id: <20190515090655.747533894@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
-References: <20190515090651.633556783@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 225C12E0464;
+        Wed, 15 May 2019 14:40:54 +0300 (MSK)
+Received: from smtpcorp1j.mail.yandex.net (smtpcorp1j.mail.yandex.net [2a02:6b8:0:1619::137])
+        by mxbackcorp1o.mail.yandex.net (nwsmtp/Yandex) with ESMTP id 08gEU9pJ8f-er0GLCfw;
+        Wed, 15 May 2019 14:40:54 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1557920454; bh=OSHZ1+IwIacwVlIgWbLEW2/VGId4KBozS/H+7QUKVY0=;
+        h=Message-ID:Date:To:From:Subject;
+        b=V5lqzoByyCilaEh1pURelX2t3ayYGtJn4oGqQJB0r26wOsNxalgH/GtFCbT40cmct
+         nZe9YLXlz7duPOMJCDloVh0zRUQ7Z76bVTWUmSJD10XP0aqopsDZ+VUZ4qsKx93mdi
+         OLGDd+vYSKm6wxxXMXRej09kinTtg2NGl8xxyzr8=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:ed19:3833:7ce1:2324])
+        by smtpcorp1j.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id cPqsRtmpGc-er8ePror;
+        Wed, 15 May 2019 14:40:53 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH] net: bpfilter: fallback to netfilter if failed to load
+ bpfilter kernel module
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Wed, 15 May 2019 14:40:52 +0300
+Message-ID: <155792045295.940.7526963251434168966.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fbc87aa0f7c429999dc31f1bac3b2615008cac32 ]
+If bpfilter is not available return ENOPROTOOPT to fallback to netfilter.
 
-The OX820 compatible is wrong is the driver, fix it.
+Function request_module() returns both errors and userspace exit codes.
+Just ignore them. Rechecking bpfilter_ops is enough.
 
-Fixes: 2ea3401e2a84 ("clocksource/drivers/oxnas: Add OX820 compatible")
-Reported-by: Daniel Golle <daniel@makrotopia.org>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: d2ba09c17a06 ("net: add skeleton of bpfilter kernel module")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 ---
- drivers/clocksource/timer-oxnas-rps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/bpfilter/sockopt.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clocksource/timer-oxnas-rps.c b/drivers/clocksource/timer-oxnas-rps.c
-index eed6feff8b5f2..30c6f4ce672b3 100644
---- a/drivers/clocksource/timer-oxnas-rps.c
-+++ b/drivers/clocksource/timer-oxnas-rps.c
-@@ -296,4 +296,4 @@ static int __init oxnas_rps_timer_init(struct device_node *np)
- TIMER_OF_DECLARE(ox810se_rps,
- 		       "oxsemi,ox810se-rps-timer", oxnas_rps_timer_init);
- TIMER_OF_DECLARE(ox820_rps,
--		       "oxsemi,ox820se-rps-timer", oxnas_rps_timer_init);
-+		       "oxsemi,ox820-rps-timer", oxnas_rps_timer_init);
--- 
-2.20.1
-
-
+diff --git a/net/ipv4/bpfilter/sockopt.c b/net/ipv4/bpfilter/sockopt.c
+index 15427163a041..0480918bfc7c 100644
+--- a/net/ipv4/bpfilter/sockopt.c
++++ b/net/ipv4/bpfilter/sockopt.c
+@@ -30,13 +30,11 @@ static int bpfilter_mbox_request(struct sock *sk, int optname,
+ 	mutex_lock(&bpfilter_ops.lock);
+ 	if (!bpfilter_ops.sockopt) {
+ 		mutex_unlock(&bpfilter_ops.lock);
+-		err = request_module("bpfilter");
++		request_module("bpfilter");
+ 		mutex_lock(&bpfilter_ops.lock);
+ 
+-		if (err)
+-			goto out;
+ 		if (!bpfilter_ops.sockopt) {
+-			err = -ECHILD;
++			err = -ENOPROTOOPT;
+ 			goto out;
+ 		}
+ 	}
 
