@@ -2,53 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E6CC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D3EC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9304D2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:44:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19892053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920677;
-	bh=pL0hkTf2rl78dlcSOKzwSlb/2Hh1mO15LS8IoPCp9ww=;
+	s=default; t=1557920687;
+	bh=bBVkt7ke+7BX2VBGJQpe2SV4R2dH9B1EORuNlsATUiA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mnrySaXbyhMHBJI5en0b5G6a6G+ShOFyDQjAUyCsZS5AnINm5hsEsqRvPEyY6E4f7
-	 mOJjx+cNmKNvjXr9SnKFN4thPyZtWdOBO3nQhvGaskMBRYm+8aNe14jSTektD8zxdy
-	 T4gSxUxzexq4YPOEU+Q6IM/VT0emU/yaqFBlfFSg=
+	b=TBlM7De0v9RJnWkn1IXI4Ma3nZkyFxYv7jsCU6yK9a4U50EPOMZVHQuNd1We4xcli
+	 zrtDcgg+9iX7Y7Wv7COGFwd2wGTEefWndcz8e19K7u/+9/Q1Kvd6OSOeGzQrGgk8DZ
+	 eBdCJyDj8Q7XQA8DhtkinagyvPcF97Fwq9fEH3L4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732125AbfEOLog (ORCPT
+        id S1732248AbfEOLoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:44:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37348 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:44:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbfEOL0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:26:31 -0400
+        id S1732139AbfEOL0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:26:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B22C7206BF;
-        Wed, 15 May 2019 11:26:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6CBB20818;
+        Wed, 15 May 2019 11:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919591;
-        bh=pL0hkTf2rl78dlcSOKzwSlb/2Hh1mO15LS8IoPCp9ww=;
+        s=default; t=1557919583;
+        bh=bBVkt7ke+7BX2VBGJQpe2SV4R2dH9B1EORuNlsATUiA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zbSsGYeMmVqMqpBEKwjW45hc4bxd7+avvhRn77+4h6MOONSNbfiAm8h/jLTO8Zfse
-         wUsP3e6Bxv1NPTqoEmUowzWkgCB5Wt2O1OFhmq3I43+qRfOb/b+NwHUeqnNuR0zMRb
-         kS0wpsOtjLigWhRgiiNAzQokvSL2eDCaNCaMz2Hc=
+        b=lh9e3ERrEPgkt+2My3HORAscAd+zNq620WN/UZmOcg4/69tCn0J9tou9WHeZXvfRY
+         hO2XUay2vVdRwt2WmTHI62eA4L/MLFz5AdeIs9m1QOWkXfhQsKQPRMTTfLO3LjM+x5
+         LomzdgnDneqaOcA1Zj7lKPaYC6E+Dr0X2QJ1APkU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.0 002/137] platform/x86: sony-laptop: Fix unintentional fall-through
-Date:   Wed, 15 May 2019 12:54:43 +0200
-Message-Id: <20190515090652.050120540@linuxfoundation.org>
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 017/137] HID: input: add mapping for keyboard Brightness Up/Down/Toggle keys
+Date:   Wed, 15 May 2019 12:54:58 +0200
+Message-Id: <20190515090654.564437644@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -61,53 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+[ Upstream commit 7975a1d6a7afeb3eb61c971a153d24dd8fa032f3 ]
 
-commit 1cbd7a64959d33e7a2a1fa2bf36a62b350a9fcbd upstream.
+According to HUTRR73 usages 0x79, 0x7a and 0x7c from the consumer page
+correspond to Brightness Up/Down/Toggle keys, so let's add the mappings.
 
-It seems that the default case should return AE_CTRL_TERMINATE, instead
-of falling through to case ACPI_RESOURCE_TYPE_END_TAG and returning AE_OK;
-otherwise the line of code at the end of the function is unreachable and
-makes no sense:
-
-return AE_CTRL_TERMINATE;
-
-This fix is based on the following thread of discussion:
-
-https://lore.kernel.org/patchwork/patch/959782/
-
-Fixes: 33a04454527e ("sony-laptop: Add SNY6001 device handling (sonypi reimplementation)")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/sony-laptop.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/hid/hid-input.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -4424,14 +4424,16 @@ sony_pic_read_possible_resource(struct a
- 			}
- 			return AE_OK;
- 		}
-+
-+	case ACPI_RESOURCE_TYPE_END_TAG:
-+		return AE_OK;
-+
- 	default:
- 		dprintk("Resource %d isn't an IRQ nor an IO port\n",
- 			resource->type);
-+		return AE_CTRL_TERMINATE;
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index 468da6f6765db..290efac7e6bfd 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -908,6 +908,10 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 		case 0x074: map_key_clear(KEY_BRIGHTNESS_MAX);		break;
+ 		case 0x075: map_key_clear(KEY_BRIGHTNESS_AUTO);		break;
  
--	case ACPI_RESOURCE_TYPE_END_TAG:
--		return AE_OK;
- 	}
--	return AE_CTRL_TERMINATE;
- }
- 
- static int sony_pic_possible_resources(struct acpi_device *device)
++		case 0x079: map_key_clear(KEY_KBDILLUMUP);	break;
++		case 0x07a: map_key_clear(KEY_KBDILLUMDOWN);	break;
++		case 0x07c: map_key_clear(KEY_KBDILLUMTOGGLE);	break;
++
+ 		case 0x082: map_key_clear(KEY_VIDEO_NEXT);	break;
+ 		case 0x083: map_key_clear(KEY_LAST);		break;
+ 		case 0x084: map_key_clear(KEY_ENTER);		break;
+-- 
+2.20.1
+
 
 
