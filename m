@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEACC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0148FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7EE620843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD5E62084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921395;
-	bh=8Uz16CvAtl+tNrHWkgfYSlyp5v7oH57ghqhc/k/96aM=;
+	s=default; t=1557921399;
+	bh=UjomiwKQ7V06zr0Xy9Uqky2wKgB5pF8Eyx6JImB/WFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VEwX/VY5CFtrwFXs2ciQx79wrWkfKhbJAyXSWEuN2FV6y1y59Q2dbKfJpefBlIPRL
-	 rjlfXwhCrZSZx6vr6kcDG4guAGDty39K/3JB3OadQIIe45FZAc6rAGaYF/yFKHUPkK
-	 1h/m00cwM5hy19amo1BgpwgSDVKTrz0hKME/O9v0=
+	b=NqSTx10svn3kiK34eirWFHvcGQj/9uJVhMcxgj5MkJWlVED5GGP7vPKxEgm6L6TVA
+	 feFcc8aEPaLVzSM+pDe2E3SNhDUOPtcxecEx36+VlfvfjBiZ17qS6B8IZxfbrTNgpi
+	 D12quI8UqOgmklckfpWzGom1udS3N4gS5HQEJbTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbfEOLRu (ORCPT
+        id S1731381AbfEOL4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:17:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55122 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:56:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730131AbfEOLRr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:17:47 -0400
+        id S1729870AbfEOLRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:17:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29A4E20644;
-        Wed, 15 May 2019 11:17:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D279920644;
+        Wed, 15 May 2019 11:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919066;
-        bh=8Uz16CvAtl+tNrHWkgfYSlyp5v7oH57ghqhc/k/96aM=;
+        s=default; t=1557919069;
+        bh=UjomiwKQ7V06zr0Xy9Uqky2wKgB5pF8Eyx6JImB/WFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m/r+DLOFzJX6nFg4Uf1RXK7kMLdLxCr4spqDdkRgjWbJbEhM/uCFMJwR7bE+A1vbk
-         1GIdAFIs4zHZbTZ2dIdnpWKt6U5DXurc75LbUoGm9RFHkK4HwFGxvHBqg2UeeTXi0n
-         kaTu56Jsa73b5w2HvG09wv6rAF4i0scEswqn3Rks=
+        b=PJ1MVWkWJFY0n3qQfxNFAtGjeDEHpqH8HWxDqp9o5fF0Q6ixB0yhid1iXRY4gLkDt
+         wV3feUfjCMpdL7lMfna1El6LxVDwXwKYoPBYJZMOCZmzTylDSG1xlkiwTEtvPkMSo4
+         uFTQJ9Gm0wQuCK2r1gh61gZCh0CEhGliIgCnAc6M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 010/115] HID: input: add mapping for keyboard Brightness Up/Down/Toggle keys
-Date:   Wed, 15 May 2019 12:54:50 +0200
-Message-Id: <20190515090700.022624365@linuxfoundation.org>
+Subject: [PATCH 4.14 011/115] HID: input: add mapping for "Toggle Display" key
+Date:   Wed, 15 May 2019 12:54:51 +0200
+Message-Id: <20190515090700.094498395@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -60,32 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7975a1d6a7afeb3eb61c971a153d24dd8fa032f3 ]
+[ Upstream commit c01908a14bf735b871170092807c618bb9dae654 ]
 
-According to HUTRR73 usages 0x79, 0x7a and 0x7c from the consumer page
-correspond to Brightness Up/Down/Toggle keys, so let's add the mappings.
+According to HUT 1.12 usage 0xb5 from the generic desktop page is reserved
+for switching between external and internal display, so let's add the
+mapping.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-input.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/hid/hid-input.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index 693cd19e9dd40..f736bdf774dd8 100644
+index f736bdf774dd8..d723185de3ba2 100644
 --- a/drivers/hid/hid-input.c
 +++ b/drivers/hid/hid-input.c
-@@ -886,6 +886,10 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 		case 0x074: map_key_clear(KEY_BRIGHTNESS_MAX);		break;
- 		case 0x075: map_key_clear(KEY_BRIGHTNESS_AUTO);		break;
+@@ -677,6 +677,14 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 			break;
+ 		}
  
-+		case 0x079: map_key_clear(KEY_KBDILLUMUP);	break;
-+		case 0x07a: map_key_clear(KEY_KBDILLUMDOWN);	break;
-+		case 0x07c: map_key_clear(KEY_KBDILLUMTOGGLE);	break;
++		if ((usage->hid & 0xf0) == 0xb0) {	/* SC - Display */
++			switch (usage->hid & 0xf) {
++			case 0x05: map_key_clear(KEY_SWITCHVIDEOMODE); break;
++			default: goto ignore;
++			}
++			break;
++		}
 +
- 		case 0x082: map_key_clear(KEY_VIDEO_NEXT);	break;
- 		case 0x083: map_key_clear(KEY_LAST);		break;
- 		case 0x084: map_key_clear(KEY_ENTER);		break;
+ 		/*
+ 		 * Some lazy vendors declare 255 usages for System Control,
+ 		 * leading to the creation of ABS_X|Y axis and too many others.
 -- 
 2.20.1
 
