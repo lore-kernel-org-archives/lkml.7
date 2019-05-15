@@ -4,52 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 657BCC46460
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E268C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36ABD2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB7120862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918711;
-	bh=FTEsq0Izl/156k72JmWu9fo5PR4FGCZvEiY5YIAEHuk=;
+	s=default; t=1557918713;
+	bh=ZE/wyIpieYWpS3jmasNG/txzYJIV0+xGGC7dW8gk/1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v/tHoAMPGolRLM7HjSoAOQiUtWdjq0q6FLok/GrbFyIcyy0Ow25ahtga22gZuQDhN
-	 YKVc4Y2P0IuJSOQlp2A8+Xm/ca95e3djlRgJmla3eHaFf5Yup9N5/wdOY8MMyMfI7y
-	 JFYdZO4Ew5flS1I3/7FbDznu3VWTy2cfjCdj7iLw=
+	b=ZpA0Aq5fL1TjwFUqgs8cni22bnOOlpyXdyiUYf75Iy5kKXI3yPPUm8P1jMI00CId6
+	 ot5x91amrsBrHv2srlaIDdDY5NYG/AQPsfM+Gb7oMXrvhdqH4ij9U1fNsh1IlIWPuZ
+	 eiY9MO30sSWbkGI9V6mkf2aZhQGKAaTKSEGBUH6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729644AbfEOLLt (ORCPT
+        id S1729652AbfEOLLw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:11:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46496 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:11:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729414AbfEOLLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:11:47 -0400
+        id S1729637AbfEOLLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:11:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87DBC20843;
-        Wed, 15 May 2019 11:11:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 191DC2184C;
+        Wed, 15 May 2019 11:11:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918706;
-        bh=FTEsq0Izl/156k72JmWu9fo5PR4FGCZvEiY5YIAEHuk=;
+        s=default; t=1557918708;
+        bh=ZE/wyIpieYWpS3jmasNG/txzYJIV0+xGGC7dW8gk/1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NiNE72SpCcZnRsaOS1X4EN7nNM4XZrMMnTwoMtoBoGNfYHblNW7NsXBnIxADmK55A
-         trcElUgGdjEnanqaJ4Q+xjoot01HRj6avf8CK+MONSqc2FKMFfaj6o2zSfpNDE47Pz
-         ASyj0D0rOTFdQe7Sv+cY2Cl66RQAkHfvGEzgh7Y4=
+        b=p0irSYnWxrE5ntedmw8IbGsotfd2wxh/QfP2uiIShFJF93Z7V9wQg1JaYiD5JzSpu
+         QUy4fPzTLoFxallxuBBUnqAdgRygp656f3h4SA8sixhQ4I1pGQVKfk5GsHNKIgaciZ
+         EPkQmvnqk+4oTB3TUAyedeGNLyvap1+UBuzBj3EI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Casey Schaufler <casey.schaufler@intel.com>,
+        Asit Mallick <asit.k.mallick@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
         Jon Masters <jcm@redhat.com>,
+        Waiman Long <longman9394@gmail.com>,
+        Dave Stewart <david.c.stewart@intel.com>,
+        Kees Cook <keescook@chromium.org>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 234/266] x86/speculation/mds: Clear CPU buffers on exit to user
-Date:   Wed, 15 May 2019 12:55:41 +0200
-Message-Id: <20190515090730.918029836@linuxfoundation.org>
+Subject: [PATCH 4.4 208/266] x86/Kconfig: Select SCHED_SMT if SMP enabled
+Date:   Wed, 15 May 2019 12:55:15 +0200
+Message-Id: <20190515090729.996216353@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -64,194 +79,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 04dcbdb8057827b043b3c71aa397c4c63e67d086 upstream.
+commit dbe733642e01dd108f71436aaea7b328cb28fd87 upstream.
 
-Add a static key which controls the invocation of the CPU buffer clear
-mechanism on exit to user space and add the call into
-prepare_exit_to_usermode() and do_nmi() right before actually returning.
+CONFIG_SCHED_SMT is enabled by all distros, so there is not a real point to
+have it configurable. The runtime overhead in the core scheduler code is
+minimal because the actual SMT scheduling parts are conditional on a static
+key.
 
-Add documentation which kernel to user space transition this covers and
-explain why some corner cases are not mitigated.
+This allows to expose the scheduler's SMT state static key to the
+speculation control code. Alternatively the scheduler's static key could be
+made always available when CONFIG_SMP is enabled, but that's just adding an
+unused static key to every other architecture for nothing.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Reviewed-by: Jon Masters <jcm@redhat.com>
-Tested-by: Jon Masters <jcm@redhat.com>
-[bwh: Backported to 4.4: adjust context]
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Casey Schaufler <casey.schaufler@intel.com>
+Cc: Asit Mallick <asit.k.mallick@intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Waiman Long <longman9394@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Dave Stewart <david.c.stewart@intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20181125185004.337452245@linutronix.de
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Documentation/x86/mds.rst            |   52 +++++++++++++++++++++++++++++++++++
- arch/x86/entry/common.c              |    3 ++
- arch/x86/include/asm/nospec-branch.h |   13 ++++++++
- arch/x86/kernel/cpu/bugs.c           |    3 ++
- arch/x86/kernel/nmi.c                |    4 ++
- arch/x86/kernel/traps.c              |    8 +++++
- 6 files changed, 83 insertions(+)
+ arch/x86/Kconfig |    8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
---- a/Documentation/x86/mds.rst
-+++ b/Documentation/x86/mds.rst
-@@ -97,3 +97,55 @@ According to current knowledge additiona
- itself are not required because the necessary gadgets to expose the leaked
- data cannot be controlled in a way which allows exploitation from malicious
- user space or VM guests.
-+
-+Mitigation points
-+-----------------
-+
-+1. Return to user space
-+^^^^^^^^^^^^^^^^^^^^^^^
-+
-+   When transitioning from kernel to user space the CPU buffers are flushed
-+   on affected CPUs when the mitigation is not disabled on the kernel
-+   command line. The migitation is enabled through the static key
-+   mds_user_clear.
-+
-+   The mitigation is invoked in prepare_exit_to_usermode() which covers
-+   most of the kernel to user space transitions. There are a few exceptions
-+   which are not invoking prepare_exit_to_usermode() on return to user
-+   space. These exceptions use the paranoid exit code.
-+
-+   - Non Maskable Interrupt (NMI):
-+
-+     Access to sensible data like keys, credentials in the NMI context is
-+     mostly theoretical: The CPU can do prefetching or execute a
-+     misspeculated code path and thereby fetching data which might end up
-+     leaking through a buffer.
-+
-+     But for mounting other attacks the kernel stack address of the task is
-+     already valuable information. So in full mitigation mode, the NMI is
-+     mitigated on the return from do_nmi() to provide almost complete
-+     coverage.
-+
-+   - Double fault (#DF):
-+
-+     A double fault is usually fatal, but the ESPFIX workaround, which can
-+     be triggered from user space through modify_ldt(2) is a recoverable
-+     double fault. #DF uses the paranoid exit path, so explicit mitigation
-+     in the double fault handler is required.
-+
-+   - Machine Check Exception (#MC):
-+
-+     Another corner case is a #MC which hits between the CPU buffer clear
-+     invocation and the actual return to user. As this still is in kernel
-+     space it takes the paranoid exit path which does not clear the CPU
-+     buffers. So the #MC handler repopulates the buffers to some
-+     extent. Machine checks are not reliably controllable and the window is
-+     extremly small so mitigation would just tick a checkbox that this
-+     theoretical corner case is covered. To keep the amount of special
-+     cases small, ignore #MC.
-+
-+   - Debug Exception (#DB):
-+
-+     This takes the paranoid exit path only when the INT1 breakpoint is in
-+     kernel space. #DB on a user space address takes the regular exit path,
-+     so no extra mitigation required.
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -28,6 +28,7 @@
- #include <asm/vdso.h>
- #include <asm/uaccess.h>
- #include <asm/cpufeature.h>
-+#include <asm/nospec-branch.h>
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -893,13 +893,7 @@ config NR_CPUS
+ 	  approximately eight kilobytes to the kernel image.
  
- #define CREATE_TRACE_POINTS
- #include <trace/events/syscalls.h>
-@@ -295,6 +296,8 @@ __visible inline void prepare_exit_to_us
- #endif
+ config SCHED_SMT
+-	bool "SMT (Hyperthreading) scheduler support"
+-	depends on SMP
+-	---help---
+-	  SMT scheduler support improves the CPU scheduler's decision making
+-	  when dealing with Intel Pentium 4 chips with HyperThreading at a
+-	  cost of slightly increased overhead in some places. If unsure say
+-	  N here.
++	def_bool y if SMP
  
- 	user_enter();
-+
-+	mds_user_clear_cpu_buffers();
- }
- 
- #define SYSCALL_EXIT_WORK_FLAGS				\
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -262,6 +262,8 @@ DECLARE_STATIC_KEY_FALSE(switch_to_cond_
- DECLARE_STATIC_KEY_FALSE(switch_mm_cond_ibpb);
- DECLARE_STATIC_KEY_FALSE(switch_mm_always_ibpb);
- 
-+DECLARE_STATIC_KEY_FALSE(mds_user_clear);
-+
- #include <asm/segment.h>
- 
- /**
-@@ -287,6 +289,17 @@ static inline void mds_clear_cpu_buffers
- 	asm volatile("verw %[ds]" : : [ds] "m" (ds) : "cc");
- }
- 
-+/**
-+ * mds_user_clear_cpu_buffers - Mitigation for MDS vulnerability
-+ *
-+ * Clear CPU buffers if the corresponding static key is enabled
-+ */
-+static inline void mds_user_clear_cpu_buffers(void)
-+{
-+	if (static_branch_likely(&mds_user_clear))
-+		mds_clear_cpu_buffers();
-+}
-+
- #endif /* __ASSEMBLY__ */
- 
- /*
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -58,6 +58,9 @@ DEFINE_STATIC_KEY_FALSE(switch_mm_cond_i
- /* Control unconditional IBPB in switch_mm() */
- DEFINE_STATIC_KEY_FALSE(switch_mm_always_ibpb);
- 
-+/* Control MDS CPU buffer clear before returning to user space */
-+DEFINE_STATIC_KEY_FALSE(mds_user_clear);
-+
- void __init check_bugs(void)
- {
- 	identify_boot_cpu();
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -29,6 +29,7 @@
- #include <asm/mach_traps.h>
- #include <asm/nmi.h>
- #include <asm/x86_init.h>
-+#include <asm/nospec-branch.h>
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/nmi.h>
-@@ -522,6 +523,9 @@ nmi_restart:
- 		write_cr2(this_cpu_read(nmi_cr2));
- 	if (this_cpu_dec_return(nmi_state))
- 		goto nmi_restart;
-+
-+	if (user_mode(regs))
-+		mds_user_clear_cpu_buffers();
- }
- NOKPROBE_SYMBOL(do_nmi);
- 
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -61,6 +61,7 @@
- #include <asm/alternative.h>
- #include <asm/fpu/xstate.h>
- #include <asm/trace/mpx.h>
-+#include <asm/nospec-branch.h>
- #include <asm/mpx.h>
- #include <asm/vm86.h>
- 
-@@ -337,6 +338,13 @@ dotraplinkage void do_double_fault(struc
- 		regs->ip = (unsigned long)general_protection;
- 		regs->sp = (unsigned long)&normal_regs->orig_ax;
- 
-+		/*
-+		 * This situation can be triggered by userspace via
-+		 * modify_ldt(2) and the return does not take the regular
-+		 * user space exit, so a CPU buffer clear is required when
-+		 * MDS mitigation is enabled.
-+		 */
-+		mds_user_clear_cpu_buffers();
- 		return;
- 	}
- #endif
+ config SCHED_MC
+ 	def_bool y
 
 
