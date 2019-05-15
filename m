@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0814BC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EE1C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24D62053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF63A2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920215;
-	bh=U+cZlY8muUchaepQ07mFSd7U+l0+CHSxVPLR5nRyDus=;
+	s=default; t=1557920219;
+	bh=x2IW5V1R7abNeKNENdkQGPFxlDV0i+9VcjNCq4UwCTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ITmXrd6hnuH4+AosQVe83LVZGrIzckV8MT4B3Yam8auGHWHALyxu2YgNHLk+pZT0f
-	 KAbF+M2JLwxk+9/d2qwoKkqn7H7+vecC/NSuYGXAR2d/6WiVIoFqVUyLNrZdifpSdc
-	 d6FOiMAbitlTEghqkRSaE7V1Pp6kzI0C4AeqOHrk=
+	b=ybJ/jvewH7g5AFpucfvNxHXBhmDnihP/Ebsnbog4bWohV4y8opyvnzv5oPHgqGc0m
+	 uK3KtYT16+aWweeVgTb4cH3MTgWUaEXupQJmYXurASGuNd+RgX7Zz8lqeYI2T2jMaf
+	 lJ/zV5a9NKUa6wptJvXlL0GI2TXg5LWE61VZZ8hU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732996AbfEOLcP (ORCPT
+        id S1732179AbfEOLg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:32:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43978 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:36:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732968AbfEOLcL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:32:11 -0400
+        id S1732992AbfEOLcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:32:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A35620843;
-        Wed, 15 May 2019 11:32:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7DC120843;
+        Wed, 15 May 2019 11:32:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919929;
-        bh=U+cZlY8muUchaepQ07mFSd7U+l0+CHSxVPLR5nRyDus=;
+        s=default; t=1557919934;
+        bh=x2IW5V1R7abNeKNENdkQGPFxlDV0i+9VcjNCq4UwCTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f1vVnTq77qVHq+Kg2gUsoy+4Fbm6PG2CrHTNQ+ri/XHZoSNL/+uYgqMUC0ChyZtmI
-         RD+G/2YoysSH2muyHYy12ZLp/ObY9hin+Xvyr0iWXLRtM8YFXbtDf7ylTKQedQnr2B
-         pUDOXNOmD/sIpNuOnUZvD7BHd8brltz+n0XKSz14=
+        b=sMBFNGXxzqvxBVDpdzcg+Oll8y9b2y3WUgC4IeXRpzEXAI1XDOe6oBSsix921lBqy
+         1ffwLp4YPBlDnvIvpwYlrnPqMjBmQ6vfP9h+b/zHLhBIB0nWxzhUobs8bvMCntlaCn
+         ezy0DPXV6zogmpeg5KBZ6vehLLN2Y8gPGeHmvkCs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.1 10/46] USB: serial: fix unthrottle races
-Date:   Wed, 15 May 2019 12:56:34 +0200
-Message-Id: <20190515090621.586245951@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.1 12/46] rtlwifi: rtl8723ae: Fix missing break in switch statement
+Date:   Wed, 15 May 2019 12:56:36 +0200
+Message-Id: <20190515090622.164708788@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -58,132 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 3f5edd58d040bfa4b74fb89bc02f0bc6b9cd06ab upstream.
+commit 84242b82d81c54e009a2aaa74d3d9eff70babf56 upstream.
 
-Fix two long-standing bugs which could potentially lead to memory
-corruption or leave the port throttled until it is reopened (on weakly
-ordered systems), respectively, when read-URB completion races with
-unthrottle().
+Add missing break statement in order to prevent the code from falling
+through to case 0x1025, and erroneously setting rtlhal->oem_id to
+RT_CID_819X_ACER when rtlefuse->eeprom_svid is equal to 0x10EC and
+none of the cases in switch (rtlefuse->eeprom_smid) match.
 
-First, the URB must not be marked as free before processing is complete
-to prevent it from being submitted by unthrottle() on another CPU.
+This bug was found thanks to the ongoing efforts to enable
+-Wimplicit-fallthrough.
 
-	CPU 1				CPU 2
-	================		================
-	complete()			unthrottle()
-	  process_urb();
-	  smp_mb__before_atomic();
-	  set_bit(i, free);		  if (test_and_clear_bit(i, free))
-	  					  submit_urb();
-
-Second, the URB must be marked as free before checking the throttled
-flag to prevent unthrottle() on another CPU from failing to observe that
-the URB needs to be submitted if complete() sees that the throttled flag
-is set.
-
-	CPU 1				CPU 2
-	================		================
-	complete()			unthrottle()
-	  set_bit(i, free);		  throttled = 0;
-	  smp_mb__after_atomic();	  smp_mb();
-	  if (throttled)		  if (test_and_clear_bit(i, free))
-	  	  return;			  submit_urb();
-
-Note that test_and_clear_bit() only implies barriers when the test is
-successful. To handle the case where the URB is still in use an explicit
-barrier needs to be added to unthrottle() for the second race condition.
-
-Fixes: d83b405383c9 ("USB: serial: add support for multiple read urbs")
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: 238ad2ddf34b ("rtlwifi: rtl8723ae: Clean up the hardware info routine")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/generic.c |   39 ++++++++++++++++++++++++++++++++-------
- 1 file changed, 32 insertions(+), 7 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/usb/serial/generic.c
-+++ b/drivers/usb/serial/generic.c
-@@ -376,6 +376,7 @@ void usb_serial_generic_read_bulk_callba
- 	struct usb_serial_port *port = urb->context;
- 	unsigned char *data = urb->transfer_buffer;
- 	unsigned long flags;
-+	bool stopped = false;
- 	int status = urb->status;
- 	int i;
- 
-@@ -383,33 +384,51 @@ void usb_serial_generic_read_bulk_callba
- 		if (urb == port->read_urbs[i])
- 			break;
- 	}
--	set_bit(i, &port->read_urbs_free);
- 
- 	dev_dbg(&port->dev, "%s - urb %d, len %d\n", __func__, i,
- 							urb->actual_length);
- 	switch (status) {
- 	case 0:
-+		usb_serial_debug_data(&port->dev, __func__, urb->actual_length,
-+							data);
-+		port->serial->type->process_read_urb(urb);
- 		break;
- 	case -ENOENT:
- 	case -ECONNRESET:
- 	case -ESHUTDOWN:
- 		dev_dbg(&port->dev, "%s - urb stopped: %d\n",
- 							__func__, status);
--		return;
-+		stopped = true;
-+		break;
- 	case -EPIPE:
- 		dev_err(&port->dev, "%s - urb stopped: %d\n",
- 							__func__, status);
--		return;
-+		stopped = true;
-+		break;
- 	default:
- 		dev_dbg(&port->dev, "%s - nonzero urb status: %d\n",
- 							__func__, status);
--		goto resubmit;
-+		break;
- 	}
- 
--	usb_serial_debug_data(&port->dev, __func__, urb->actual_length, data);
--	port->serial->type->process_read_urb(urb);
-+	/*
-+	 * Make sure URB processing is done before marking as free to avoid
-+	 * racing with unthrottle() on another CPU. Matches the barriers
-+	 * implied by the test_and_clear_bit() in
-+	 * usb_serial_generic_submit_read_urb().
-+	 */
-+	smp_mb__before_atomic();
-+	set_bit(i, &port->read_urbs_free);
-+	/*
-+	 * Make sure URB is marked as free before checking the throttled flag
-+	 * to avoid racing with unthrottle() on another CPU. Matches the
-+	 * smp_mb() in unthrottle().
-+	 */
-+	smp_mb__after_atomic();
-+
-+	if (stopped)
-+		return;
- 
--resubmit:
- 	/* Throttle the device if requested by tty */
- 	spin_lock_irqsave(&port->lock, flags);
- 	port->throttled = port->throttle_req;
-@@ -484,6 +503,12 @@ void usb_serial_generic_unthrottle(struc
- 	port->throttled = port->throttle_req = 0;
- 	spin_unlock_irq(&port->lock);
- 
-+	/*
-+	 * Matches the smp_mb__after_atomic() in
-+	 * usb_serial_generic_read_bulk_callback().
-+	 */
-+	smp_mb();
-+
- 	if (was_throttled)
- 		usb_serial_generic_submit_read_urbs(port, GFP_KERNEL);
- }
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
+@@ -1675,6 +1675,7 @@ static void _rtl8723e_read_adapter_info(
+ 					rtlhal->oem_id = RT_CID_819X_LENOVO;
+ 					break;
+ 				}
++				break;
+ 			case 0x1025:
+ 				rtlhal->oem_id = RT_CID_819X_ACER;
+ 				break;
 
 
