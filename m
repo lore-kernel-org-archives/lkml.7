@@ -2,51 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB773C46460
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F6AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F53F2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E699820843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919222;
-	bh=SKZ9qeeTBySRAnlYi0jC94wl+mrFfYTefmuPbd65elQ=;
+	s=default; t=1557919226;
+	bh=VOzyVEwaHQ3QiLL2gypp87BN0AL/CMY/laDhtadXgN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m2E/qUybhPRfcaQw51z+U/kN6+rNvX+qav5SADOKd95qlxjUuELhIaRunv+F6QuAN
-	 DaqHhre+2zY9lFF6FrUo9+wW6kJoLqQgR6Gds79CnNNKsxlskyJTLhGDqMQYKi9oeT
-	 z8oy0825yrszf0hRTRS+V6fxJCNpDKw6dveOUJrQ=
+	b=wdH0yZUqI0o42ZGAwAoSgbVybx7SX/BFVYCKCAi+wwkuGvsZbJXXCdX0/YTVU2Boh
+	 lHTo7JnMqoPE7YnIPNTiruH4cqtzeECYOCgsKrewgCbpuWfKXsWgIw3rN1x8lqvQ9/
+	 s+9uxdb41wbtqUQuBxtV3oxtugw0OLL2njHq0er8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731077AbfEOLUV (ORCPT
+        id S1731087AbfEOLUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:20:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58036 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:20:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730864AbfEOLUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:20:17 -0400
+        id S1730701AbfEOLUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:20:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90C7E206BF;
-        Wed, 15 May 2019 11:20:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0016D206BF;
+        Wed, 15 May 2019 11:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919216;
-        bh=SKZ9qeeTBySRAnlYi0jC94wl+mrFfYTefmuPbd65elQ=;
+        s=default; t=1557919219;
+        bh=VOzyVEwaHQ3QiLL2gypp87BN0AL/CMY/laDhtadXgN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0EP862omoafKtwlaxxEZ0+a7vEx9nkVspr5CxNiDgfUAvzVdVTn3icChZA2K3PNr4
-         6FmwVJTQB9DVV8OSXbtmrBt6grgGIUtUa2TN9HHwjyL4dqVmScJfiyzYgWerHJtKVk
-         5Z6K1tluJa9cXXvml3owhVBJHawFuc7cYoqNgDok=
+        b=z/PdCQB+hw0k4EhuHB4DnLiilUJoiiDYFv/mutTPh/CxxFgC+PZLc5nbaoKlkTG8P
+         Wwpo9sV6MgXaF9iqB/xnll5JG8pjFtQYCopm4hN0P7EHc6yxjhvB1wPagbrSiYtip9
+         3J2kll7NT+CG70JFLY7R/YZIxuNSpy5c8ewP9QQo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 052/115] fuse: fix possibly missed wake-up after abort
-Date:   Wed, 15 May 2019 12:55:32 +0200
-Message-Id: <20190515090703.370416818@linuxfoundation.org>
+        stable@vger.kernel.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 101/115] dpaa_eth: fix SG frame cleanup
+Date:   Wed, 15 May 2019 12:56:21 +0200
+Message-Id: <20190515090706.461075029@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -59,62 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2d84a2d19b6150c6dbac1e6ebad9c82e4c123772 ]
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-In current fuse_drop_waiting() implementation it's possible that
-fuse_wait_aborted() will not be woken up in the unlikely case that
-fuse_abort_conn() + fuse_wait_aborted() runs in between checking
-fc->connected and calling atomic_dec(&fc->num_waiting).
+[ Upstream commit 17170e6570c082717c142733d9a638bcd20551f8 ]
 
-Do the atomic_dec_and_test() unconditionally, which also provides the
-necessary barrier against reordering with the fc->connected check.
+Fix issue with the entry indexing in the sg frame cleanup code being
+off-by-1. This problem showed up when doing some basic iperf tests and
+manifested in traffic coming to a halt.
 
-The explicit smp_mb() in fuse_wait_aborted() is not actually needed, since
-the spin_unlock() in fuse_abort_conn() provides the necessary RELEASE
-barrier after resetting fc->connected.  However, this is not a performance
-sensitive path, and adding the explicit barrier makes it easier to
-document.
-
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-Fixes: b8f95e5d13f5 ("fuse: umount should wait for all requests")
-Cc: <stable@vger.kernel.org> #v4.19
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Acked-by: Madalin Bucur <madalin.bucur@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/fuse/dev.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
-index 770733106d6d4..c934fab444529 100644
---- a/fs/fuse/dev.c
-+++ b/fs/fuse/dev.c
-@@ -133,9 +133,13 @@ static bool fuse_block_alloc(struct fuse_conn *fc, bool for_background)
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -1639,7 +1639,7 @@ static struct sk_buff *dpaa_cleanup_tx_f
+ 				 qm_sg_entry_get_len(&sgt[0]), dma_dir);
  
- static void fuse_drop_waiting(struct fuse_conn *fc)
- {
--	if (fc->connected) {
--		atomic_dec(&fc->num_waiting);
--	} else if (atomic_dec_and_test(&fc->num_waiting)) {
-+	/*
-+	 * lockess check of fc->connected is okay, because atomic_dec_and_test()
-+	 * provides a memory barrier mached with the one in fuse_wait_aborted()
-+	 * to ensure no wake-up is missed.
-+	 */
-+	if (atomic_dec_and_test(&fc->num_waiting) &&
-+	    !READ_ONCE(fc->connected)) {
- 		/* wake up aborters */
- 		wake_up_all(&fc->blocked_waitq);
- 	}
-@@ -2170,6 +2174,8 @@ EXPORT_SYMBOL_GPL(fuse_abort_conn);
+ 		/* remaining pages were mapped with skb_frag_dma_map() */
+-		for (i = 1; i < nr_frags; i++) {
++		for (i = 1; i <= nr_frags; i++) {
+ 			WARN_ON(qm_sg_entry_is_ext(&sgt[i]));
  
- void fuse_wait_aborted(struct fuse_conn *fc)
- {
-+	/* matches implicit memory barrier in fuse_drop_waiting() */
-+	smp_mb();
- 	wait_event(fc->blocked_waitq, atomic_read(&fc->num_waiting) == 0);
- }
- 
--- 
-2.20.1
-
+ 			dma_unmap_page(dev, qm_sg_addr(&sgt[i]),
 
 
