@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C417BC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D743C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9511420843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF9520843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918968;
-	bh=yIyJkzzQjrTWbjqp2MxSyWJme/g22/0eI+Om+vpCOBE=;
+	s=default; t=1557918971;
+	bh=FgOaEdWXWdI9Uio6JxtBlVsp/ME4wbq9iRoBd2VUNTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pN8k8VYjM8IQ6xKAQx8DmvxGt4Q9CTaacv4B37y9QUCzkiPO52+S8rkwDE/c14+t+
-	 1mXg4F3iRN+X6mrA04yzFz5I2UBWghSujj9xtsnuwxnninHcJyhTAyfEEfJgww72aV
-	 wYNml/MWL+q44FVpLHoYJRUwGA0f678RQbBcGtEs=
+	b=g7pd33bpbYuUwKbkF21nVNKbqsVqi3spKBjIBtG5cxUPQjD2YowvwRVU7SYsrjOYq
+	 Z8sO4P4rsKm+wMUanDstD75Bd1Vi80DhZZaotd0h92Jfgzmay0EyC1OBPlNWDx54MO
+	 l02+cf2xEzFqSO9+iiSa6NZsCWPrqHmIKidz7OwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730428AbfEOLQH (ORCPT
+        id S1730439AbfEOLQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:16:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52716 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:16:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726879AbfEOLQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:16:05 -0400
+        id S1730424AbfEOLQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:16:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E464520843;
-        Wed, 15 May 2019 11:16:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F96A20843;
+        Wed, 15 May 2019 11:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918964;
-        bh=yIyJkzzQjrTWbjqp2MxSyWJme/g22/0eI+Om+vpCOBE=;
+        s=default; t=1557918966;
+        bh=FgOaEdWXWdI9Uio6JxtBlVsp/ME4wbq9iRoBd2VUNTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gEWZA4jQ2vtK8oDPUJmd8RxUEovTU+jF5QNKiJ7G66KtYLy3sMDL9myVHMEHv0ALo
-         3VoGZA1ciLFeqK6DCQa1JVFgAYB3zrthfQ7BWDuV5FhzyrYoe7ocMCuBG5GhuGSa2f
-         jRpYaljmanfH/o1DzSKRNM7CzqJR0oZSdY+AyBsg=
+        b=T2CJP5npm9+FImBEs4AoI1iZDMXLBV0cZWMl2wTENvMKd6vBPM2M9jJL6tjxijE5j
+         0i3Q/yGSADbfUNnh1Y40hftCeGarx9rHMu+ubhJByA8vF3vpv/cENnkqI/xpWxHA/2
+         RJiyES1S7M2mco71l6vba5g3vMO7rPJC7s8C9pOg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        stable@vger.kernel.org, Sunil Dutt <usdutt@codeaurora.org>,
         Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 016/115] mac80211: fix memory accounting with A-MSDU aggregation
-Date:   Wed, 15 May 2019 12:54:56 +0200
-Message-Id: <20190515090700.479527633@linuxfoundation.org>
+Subject: [PATCH 4.14 017/115] nl80211: Add NL80211_FLAG_CLEAR_SKB flag for other NL commands
+Date:   Wed, 15 May 2019 12:54:57 +0200
+Message-Id: <20190515090700.546516764@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -61,47 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eb9b64e3a9f8483e6e54f4e03b2ae14ae5db2690 ]
+[ Upstream commit d6db02a88a4aaa1cd7105137c67ddec7f3bdbc05 ]
 
-skb->truesize can change due to memory reallocation or when adding extra
-fragments. Adjust fq->memory_usage accordingly
+This commit adds NL80211_FLAG_CLEAR_SKB flag to other NL commands
+that carry key data to ensure they do not stick around on heap
+after the SKB is freed.
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Also introduced this flag for NL80211_CMD_VENDOR as there are sub
+commands which configure the keys.
+
+Signed-off-by: Sunil Dutt <usdutt@codeaurora.org>
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/tx.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/wireless/nl80211.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
-index 305a4655f23e1..09c7aa519ca82 100644
---- a/net/mac80211/tx.c
-+++ b/net/mac80211/tx.c
-@@ -3125,6 +3125,7 @@ static bool ieee80211_amsdu_aggregate(struct ieee80211_sub_if_data *sdata,
- 	u8 max_subframes = sta->sta.max_amsdu_subframes;
- 	int max_frags = local->hw.max_tx_fragments;
- 	int max_amsdu_len = sta->sta.max_amsdu_len;
-+	int orig_truesize;
- 	__be16 len;
- 	void *data;
- 	bool ret = false;
-@@ -3158,6 +3159,7 @@ static bool ieee80211_amsdu_aggregate(struct ieee80211_sub_if_data *sdata,
- 	if (!head)
- 		goto out;
- 
-+	orig_truesize = head->truesize;
- 	orig_len = head->len;
- 
- 	if (skb->len + head->len > max_amsdu_len)
-@@ -3212,6 +3214,7 @@ static bool ieee80211_amsdu_aggregate(struct ieee80211_sub_if_data *sdata,
- 	*frag_tail = skb;
- 
- out_recalc:
-+	fq->memory_usage += head->truesize - orig_truesize;
- 	if (head->len != orig_len) {
- 		flow->backlog += head->len - orig_len;
- 		tin->backlog_bytes += head->len - orig_len;
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index 46e9812d13c02..c1a2ad050e617 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -12761,7 +12761,8 @@ static const struct genl_ops nl80211_ops[] = {
+ 		.policy = nl80211_policy,
+ 		.flags = GENL_UNS_ADMIN_PERM,
+ 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
+-				  NL80211_FLAG_NEED_RTNL,
++				  NL80211_FLAG_NEED_RTNL |
++				  NL80211_FLAG_CLEAR_SKB,
+ 	},
+ 	{
+ 		.cmd = NL80211_CMD_DEAUTHENTICATE,
+@@ -12812,7 +12813,8 @@ static const struct genl_ops nl80211_ops[] = {
+ 		.policy = nl80211_policy,
+ 		.flags = GENL_UNS_ADMIN_PERM,
+ 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
+-				  NL80211_FLAG_NEED_RTNL,
++				  NL80211_FLAG_NEED_RTNL |
++				  NL80211_FLAG_CLEAR_SKB,
+ 	},
+ 	{
+ 		.cmd = NL80211_CMD_UPDATE_CONNECT_PARAMS,
+@@ -12820,7 +12822,8 @@ static const struct genl_ops nl80211_ops[] = {
+ 		.policy = nl80211_policy,
+ 		.flags = GENL_ADMIN_PERM,
+ 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
+-				  NL80211_FLAG_NEED_RTNL,
++				  NL80211_FLAG_NEED_RTNL |
++				  NL80211_FLAG_CLEAR_SKB,
+ 	},
+ 	{
+ 		.cmd = NL80211_CMD_DISCONNECT,
+@@ -12849,7 +12852,8 @@ static const struct genl_ops nl80211_ops[] = {
+ 		.policy = nl80211_policy,
+ 		.flags = GENL_UNS_ADMIN_PERM,
+ 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
+-				  NL80211_FLAG_NEED_RTNL,
++				  NL80211_FLAG_NEED_RTNL |
++				  NL80211_FLAG_CLEAR_SKB,
+ 	},
+ 	{
+ 		.cmd = NL80211_CMD_DEL_PMKSA,
+@@ -13201,7 +13205,8 @@ static const struct genl_ops nl80211_ops[] = {
+ 		.policy = nl80211_policy,
+ 		.flags = GENL_UNS_ADMIN_PERM,
+ 		.internal_flags = NL80211_FLAG_NEED_WIPHY |
+-				  NL80211_FLAG_NEED_RTNL,
++				  NL80211_FLAG_NEED_RTNL |
++				  NL80211_FLAG_CLEAR_SKB,
+ 	},
+ 	{
+ 		.cmd = NL80211_CMD_SET_QOS_MAP,
+@@ -13256,7 +13261,8 @@ static const struct genl_ops nl80211_ops[] = {
+ 		.doit = nl80211_set_pmk,
+ 		.policy = nl80211_policy,
+ 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
+-				  NL80211_FLAG_NEED_RTNL,
++				  NL80211_FLAG_NEED_RTNL |
++				  NL80211_FLAG_CLEAR_SKB,
+ 	},
+ 	{
+ 		.cmd = NL80211_CMD_DEL_PMK,
 -- 
 2.20.1
 
