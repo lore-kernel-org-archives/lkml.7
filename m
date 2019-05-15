@@ -6,48 +6,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A72AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2BAC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 581962089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BB74206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920033;
-	bh=KUpiOZuEOqTzBTuC56ivdGRza6doXC9lpZTvlDeEGGc=;
+	s=default; t=1557920036;
+	bh=Fsna/64TZ5f41MRSB9y1QYQgLzTM+sOs5ADmu9gRS8g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YS6owr3E5SnPjApG1gWcFZnjAeTSQfZWE5TYV3qG480ZvOm4y4QHWtDswyLrRTYHW
-	 puvmPCUHGHRMgTD6sp7PmJlA6qvpy2yiZ2dVpAhBtRm4T4WGJ6msQlyjvLTcX1vNqR
-	 C0RapYQOjesSPFtXJfrdjIUyp1UCpfgV5hIoGfAE=
+	b=hSBs6NM/l1UIpsEJSxwcsTCcFYCW+lUlyuinM02f7KQLiqPWuqrJ+zRhB2+vv90sE
+	 wE27xitu3UlDshYsCWoSic1ZLnbOE6tO4lHfqRJecPJP+MtCF6GOcMKB3wD08wTqqb
+	 b1nFm7FiFuO5O/VQixb1koyxNahfL08EhTcW80ng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733272AbfEOLdw (ORCPT
+        id S1733285AbfEOLdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:33:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45738 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:33:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733264AbfEOLdr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:33:47 -0400
+        id S1732737AbfEOLdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:33:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3CCB206BF;
-        Wed, 15 May 2019 11:33:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEA65206BF;
+        Wed, 15 May 2019 11:33:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557920026;
-        bh=KUpiOZuEOqTzBTuC56ivdGRza6doXC9lpZTvlDeEGGc=;
+        s=default; t=1557920031;
+        bh=Fsna/64TZ5f41MRSB9y1QYQgLzTM+sOs5ADmu9gRS8g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xDtV61xaTDFkWkl1a8w6RQAwK7n0tjStDIS2exYqySxV3kkWT5fmVqxOm0ew7gNRg
-         NOJrRX4yVPirAxWxOMjr8LnBfl9sX3nZKjQ+SmNb2Ju7ZcCIOTcM2sMfhZUly8OyFQ
-         TE/5hy5ZsgDgErTscgkN9p+HeQsDFHogem5AHgGc=
+        b=ynIO9k9zuL76r8zhJUrwrtCWNHmFZQSkCCUuWHUhP1EzGxEtqOaHF5XiCm6ZlPeFr
+         zIaAih0hYHa0EY8LM7hZFJ5LeOK/0iFK5NCdjITezwTYkh+hpYRsaXAcQZXL/UZXdB
+         Dy+TKq0lajyLSGyO+3KfhoP5gUybez3VV64ajUFQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: [PATCH 5.1 45/46] PCI: hv: Add pci_destroy_slot() in pci_devices_present_work(), if necessary
-Date:   Wed, 15 May 2019 12:57:09 +0200
-Message-Id: <20190515090629.650669766@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 35/46] flow_dissector: disable preemption around BPF calls
+Date:   Wed, 15 May 2019 12:56:59 +0200
+Message-Id: <20190515090627.278573502@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -60,91 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 340d455699400f2c2c0f9b3f703ade3085cdb501 upstream.
+[ Upstream commit b1c17a9a353878602fd5bfe9103e4afe5e9a3f96 ]
 
-When we hot-remove a device, usually the host sends us a PCI_EJECT message,
-and a PCI_BUS_RELATIONS message with bus_rel->device_count == 0.
+Various things in eBPF really require us to disable preemption
+before running an eBPF program.
 
-When we execute the quick hot-add/hot-remove test, the host may not send
-us the PCI_EJECT message if the guest has not fully finished the
-initialization by sending the PCI_RESOURCES_ASSIGNED* message to the
-host, so it's potentially unsafe to only depend on the
-pci_destroy_slot() in hv_eject_device_work() because the code path
+syzbot reported :
 
-create_root_hv_pci_bus()
- -> hv_pci_assign_slots()
+BUG: assuming atomic context at net/core/flow_dissector.c:737
+in_atomic(): 0, irqs_disabled(): 0, pid: 24710, name: syz-executor.3
+2 locks held by syz-executor.3/24710:
+ #0: 00000000e81a4bf1 (&tfile->napi_mutex){+.+.}, at: tun_get_user+0x168e/0x3ff0 drivers/net/tun.c:1850
+ #1: 00000000254afebd (rcu_read_lock){....}, at: __skb_flow_dissect+0x1e1/0x4bb0 net/core/flow_dissector.c:822
+CPU: 1 PID: 24710 Comm: syz-executor.3 Not tainted 5.1.0+ #6
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ __cant_sleep kernel/sched/core.c:6165 [inline]
+ __cant_sleep.cold+0xa3/0xbb kernel/sched/core.c:6142
+ bpf_flow_dissect+0xfe/0x390 net/core/flow_dissector.c:737
+ __skb_flow_dissect+0x362/0x4bb0 net/core/flow_dissector.c:853
+ skb_flow_dissect_flow_keys_basic include/linux/skbuff.h:1322 [inline]
+ skb_probe_transport_header include/linux/skbuff.h:2500 [inline]
+ skb_probe_transport_header include/linux/skbuff.h:2493 [inline]
+ tun_get_user+0x2cfe/0x3ff0 drivers/net/tun.c:1940
+ tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2037
+ call_write_iter include/linux/fs.h:1872 [inline]
+ do_iter_readv_writev+0x5fd/0x900 fs/read_write.c:693
+ do_iter_write fs/read_write.c:970 [inline]
+ do_iter_write+0x184/0x610 fs/read_write.c:951
+ vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
+ do_writev+0x15b/0x330 fs/read_write.c:1058
+ __do_sys_writev fs/read_write.c:1131 [inline]
+ __se_sys_writev fs/read_write.c:1128 [inline]
+ __x64_sys_writev+0x75/0xb0 fs/read_write.c:1128
+ do_syscall_64+0x103/0x670 arch/x86/entry/common.c:298
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-is not called in this case. Note: in this case, the host still sends the
-guest a PCI_BUS_RELATIONS message with bus_rel->device_count == 0.
-
-In the quick hot-add/hot-remove test, we can have such a race before
-the code path
-
-pci_devices_present_work()
- -> new_pcichild_device()
-
-adds the new device into the hbus->children list, we may have already
-received the PCI_EJECT message, and since the tasklet handler
-
-hv_pci_onchannelcallback()
-
-may fail to find the "hpdev" by calling
-
-get_pcichild_wslot(hbus, dev_message->wslot.slot)
-
-hv_pci_eject_device() is not called; Later, by continuing execution
-
-create_root_hv_pci_bus()
- -> hv_pci_assign_slots()
-
-creates the slot and the PCI_BUS_RELATIONS message with
-bus_rel->device_count == 0 removes the device from hbus->children, and
-we end up being unable to remove the slot in
-
-hv_pci_remove()
- -> hv_pci_remove_slots()
-
-Remove the slot in pci_devices_present_work() when the device
-is removed to address this race.
-
-pci_devices_present_work() and hv_eject_device_work() run in the
-singled-threaded hbus->wq, so there is not a double-remove issue for the
-slot.
-
-We cannot offload hv_pci_eject_device() from hv_pci_onchannelcallback()
-to the workqueue, because we need the hv_pci_onchannelcallback()
-synchronously call hv_pci_eject_device() to poll the channel
-ringbuffer to work around the "hangs in hv_compose_msi_msg()" issue
-fixed in commit de0aa7b2f97d ("PCI: hv: Fix 2 hang issues in
-hv_compose_msi_msg()")
-
-Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-[lorenzo.pieralisi@arm.com: rewritten commit log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Stephen Hemminger <stephen@networkplumber.org>
-Reviewed-by:  Michael Kelley <mikelley@microsoft.com>
-Cc: stable@vger.kernel.org
+Fixes: d58e468b1112 ("flow_dissector: implements flow dissector BPF hook")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Petar Penkov <ppenkov@google.com>
+Cc: Stanislav Fomichev <sdf@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/pci/controller/pci-hyperv.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ net/core/flow_dissector.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1776,6 +1776,10 @@ static void pci_devices_present_work(str
- 		hpdev = list_first_entry(&removed, struct hv_pci_dev,
- 					 list_entry);
- 		list_del(&hpdev->list_entry);
-+
-+		if (hpdev->pci_slot)
-+			pci_destroy_slot(hpdev->pci_slot);
-+
- 		put_pcichild(hpdev);
- 	}
+--- a/net/core/flow_dissector.c
++++ b/net/core/flow_dissector.c
+@@ -712,7 +712,10 @@ bool __skb_flow_bpf_dissect(struct bpf_p
+ 	flow_keys->thoff = flow_keys->nhoff;
  
+ 	bpf_compute_data_pointers((struct sk_buff *)skb);
++
++	preempt_disable();
+ 	result = BPF_PROG_RUN(prog, skb);
++	preempt_enable();
+ 
+ 	/* Restore state */
+ 	memcpy(cb, &cb_saved, sizeof(cb_saved));
 
 
