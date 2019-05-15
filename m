@@ -2,52 +2,51 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4705BC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B8CC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E10020862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78C1F20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919083;
-	bh=RiVvXlT1rWAM581dP90M99R4bVG9de482DvhP8acFcI=;
+	s=default; t=1557919087;
+	bh=l4qCbCUfAKIx9IdszqCc6HCPvo6RyGsWhdupjLim59c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CKIY7cwKvpHOvwgE6JExOKvOhoqMnLDba/M1OdSnyiJauYlfeSUUwY8AmpPuBiwc6
-	 GowPNsSj89eLR1gEKseGTQZWghpoJjC1674eYltS5Skgyvk66oxlJOvmpUOQ/iEyu5
-	 RptdLfWEzgjpout+1LcET9+NwMR31vvcBSBIQI0Y=
+	b=tNFAwYo8HbYieHMdTGZTPc4vqLw6Ah39tDu186bH9sxpAYLrXeDB6WOG5ulauGybc
+	 xdkqjOEzk3hdS1TNareX2LAs3WpwityG5WPZ5TRgjqyCqjkdX9JkFR8DYic068ESUq
+	 PQY2pTdI3447qflaPC1YRSve86IA7qfvFtSDxfno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730743AbfEOLSB (ORCPT
+        id S1730753AbfEOLSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:18:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55346 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:18:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730731AbfEOLR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:17:57 -0400
+        id S1730546AbfEOLSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:18:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE17020862;
-        Wed, 15 May 2019 11:17:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F58B21848;
+        Wed, 15 May 2019 11:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919077;
-        bh=RiVvXlT1rWAM581dP90M99R4bVG9de482DvhP8acFcI=;
+        s=default; t=1557919079;
+        bh=l4qCbCUfAKIx9IdszqCc6HCPvo6RyGsWhdupjLim59c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OACK4pTR4mljf+ow2IfxZKEf6MHhMMoVeNshwVfJFKwFZ35zuN5+SVMAf2mAK8yV/
-         90sIgRIhJ4+xhzogkCh36US0bk6ac9N688D0l/lDJjO9lw7jfb52tmpSuAfWJ3Jllc
-         Y/I4cBe8YVc00yOAtSe+flZ5WHMJtGbM3+fax76M=
+        b=pL5eDbj2ucQpTcCw0uFKRggZ49z30vlNzFdKUtQl7aYDNRE4q4321zbSaun4J4NgI
+         d8Hjhp4mHD8uZC4xqJav76w30Q46YgjaFkSTTXw5bXEWXyBwPfBx7isJ96UhZIw7tc
+         gKTsUiBvVmE8omUS8SZqXPhVBeVU9tLYzzYpp5MU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 014/115] mac80211: fix unaligned access in mesh table hash function
-Date:   Wed, 15 May 2019 12:54:54 +0200
-Message-Id: <20190515090700.320632007@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Tejun Heo <tj@kernel.org>
+Subject: [PATCH 4.14 005/115] kernfs: fix barrier usage in __kernfs_new_node()
+Date:   Wed, 15 May 2019 12:54:45 +0200
+Message-Id: <20190515090659.610201644@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -60,33 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 40586e3fc400c00c11151804dcdc93f8c831c808 ]
+From: Andrea Parri <andrea.parri@amarulasolutions.com>
 
-The pointer to the last four bytes of the address is not guaranteed to be
-aligned, so we need to use __get_unaligned_cpu32 here
+commit 998267900cee901c5d1dfa029a6304d00acbc29f upstream.
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+smp_mb__before_atomic() can not be applied to atomic_set().  Remove the
+barrier and rely on RELEASE synchronization.
+
+Fixes: ba16b2846a8c6 ("kernfs: add an API to get kernfs node from inode number")
+Cc: stable@vger.kernel.org
+Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/mac80211/mesh_pathtbl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/kernfs/dir.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
-index 1ce068865629b..1300220912051 100644
---- a/net/mac80211/mesh_pathtbl.c
-+++ b/net/mac80211/mesh_pathtbl.c
-@@ -23,7 +23,7 @@ static void mesh_path_free_rcu(struct mesh_table *tbl, struct mesh_path *mpath);
- static u32 mesh_table_hash(const void *addr, u32 len, u32 seed)
- {
- 	/* Use last four bytes of hw addr as hash index */
--	return jhash_1word(*(u32 *)(addr+2), seed);
-+	return jhash_1word(__get_unaligned_cpu32((u8 *)addr + 2), seed);
- }
+--- a/fs/kernfs/dir.c
++++ b/fs/kernfs/dir.c
+@@ -649,11 +649,10 @@ static struct kernfs_node *__kernfs_new_
+ 	kn->id.generation = gen;
  
- static const struct rhashtable_params mesh_rht_params = {
--- 
-2.20.1
-
+ 	/*
+-	 * set ino first. This barrier is paired with atomic_inc_not_zero in
++	 * set ino first. This RELEASE is paired with atomic_inc_not_zero in
+ 	 * kernfs_find_and_get_node_by_ino
+ 	 */
+-	smp_mb__before_atomic();
+-	atomic_set(&kn->count, 1);
++	atomic_set_release(&kn->count, 1);
+ 	atomic_set(&kn->active, KN_DEACTIVATED_BIAS);
+ 	RB_CLEAR_NODE(&kn->rb);
+ 
 
 
