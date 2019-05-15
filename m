@@ -2,246 +2,169 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81440C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4191C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4267F2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:43:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920604;
-	bh=T2QqfvhbHzDVSRQbMsQ6S98gh0+Bw32FInU2Ut6QmSA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q7WauXbjWimmFtE8RCam4dL3Ws50xAs1cf5q9gbDPpQqhDlb80a2jT2NumrFJuHT6
-	 Gh3wAhA18EKlhZE9OTfIxwIcC75/eStk5+LpFD3GQoRcESliyrMe2BlVx33ZScEcp8
-	 DkRJVmYTZfdXLKTgy7Tz9OU1MeQB7yPw00QEpwis=
+	by mail.kernel.org (Postfix) with ESMTP id 8541F2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:43:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="tx5hgVYt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732405AbfEOLnX (ORCPT
+        id S1731630AbfEOLn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:43:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38328 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732224AbfEOL11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:27:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2219820843;
-        Wed, 15 May 2019 11:27:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919646;
-        bh=T2QqfvhbHzDVSRQbMsQ6S98gh0+Bw32FInU2Ut6QmSA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tl07EyPDif8UjhZFPdsCa7Ot4/mwcbmPar9EmZ2PCaQlGc2Jx4cU8ZvcZOuerBefR
-         KUtCzBt1g1+B9iQzpb4/ighVQsH6sjP+zzcoJQ8XUUCDr4ca3CWprisjTFq35sAnBp
-         swsylspcTblIwR6COa2FNwH7QQSKIfspYnYDDkus=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Denis Bolotin <dbolotin@marvell.com>,
-        Michal Kalderon <mkalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 041/137] qed: Delete redundant doorbell recovery types
-Date:   Wed, 15 May 2019 12:55:22 +0200
-Message-Id: <20190515090656.397170610@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
-References: <20190515090651.633556783@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 15 May 2019 07:43:27 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:55727 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732170AbfEOLnY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:43:24 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x4FBhEDa019916;
+        Wed, 15 May 2019 20:43:15 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x4FBhEDa019916
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557920595;
+        bh=+/we/8cOii8b99PZhVYm0AcO3nqZi/sKx4erv7OLIUE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=tx5hgVYtzu12J6V2/Rn+WH6NWqubXfxd43BXwabA/gnxqGOvkQ+bsagPcytr4hoZq
+         Tu1sMHuxX8abGfAwnPfxGso5be69sJb4Cy0MIgIETskeC5emqoDQ3+AGkVkq7bCW2W
+         YCO/x8bwl77Hmg/vGH1bilfZ0p24kjqhiFGTde21w/IZm0/nXOEcVVdsG+Bf9r/TVv
+         jw+tjE4dlYX7+C2qhmEjWvCbx0PVBnIHEErdidHacE6kgE4rmra1cEL3G/+anwKQaM
+         r1JaR4J/0WBNIBKHS82iPAblY7cVhQLP1/MI2GgsDy7eq/j30YvOcoE0s+VMQv8ff6
+         O0nINqS+RcyXQ==
+X-Nifty-SrcIP: [209.85.160.175]
+Received: by mail-qt1-f175.google.com with SMTP id i26so940210qtr.10;
+        Wed, 15 May 2019 04:43:15 -0700 (PDT)
+X-Gm-Message-State: APjAAAWf1CHLyu/JbvYAC3tWazBU22ZZPN+nIQuYwBZf1FtckmP4MP6w
+        L6j12Bb+Bzd6mWrGOjmqdYpYzhOMDJRQUgXMxso=
+X-Google-Smtp-Source: APXvYqz8UMUEkHKjEaRHNMHyCfn133IiH2H+rDbuxuhm9tMwfpfNPVI6ERliCWZVO3MkCJsAQpIuSxV/RFmmLdZueU4=
+X-Received: by 2002:a0c:c686:: with SMTP id d6mr31378804qvj.179.1557920593889;
+ Wed, 15 May 2019 04:43:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190515073818.22486-1-yamada.masahiro@socionext.com>
+ <CAK8P3a1y7hxME0me_Zu-F8a8jU6n=T+c32mv83utOtsL-+gc0A@mail.gmail.com>
+ <20190515081422.GA22750@kroah.com> <CAK7LNASpJFAgvuak=mz5kkM3oGh9-M8y_84KZv-xcUkQ0h=d_A@mail.gmail.com>
+ <20190515113113.GC11749@kroah.com>
+In-Reply-To: <20190515113113.GC11749@kroah.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 15 May 2019 20:42:36 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARLk7avr71vWEzHdRVMk5bCrFDrFUapD-ab_75-Li_8aw@mail.gmail.com>
+Message-ID: <CAK7LNARLk7avr71vWEzHdRVMk5bCrFDrFUapD-ab_75-Li_8aw@mail.gmail.com>
+Subject: Re: [RFC PATCH] kbuild: check uniqueness of basename of modules
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sam Ravnborg <sam@ravnborg.org>, Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Kees Cook <keescook@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9ac6bb1414ac0d45fe9cefbd1f5b06f0e1a3c98a ]
+On Wed, May 15, 2019 at 8:34 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, May 15, 2019 at 05:57:50PM +0900, Masahiro Yamada wrote:
+> > On Wed, May 15, 2019 at 5:14 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Wed, May 15, 2019 at 10:08:12AM +0200, Arnd Bergmann wrote:
+> > > > On Wed, May 15, 2019 at 9:39 AM Masahiro Yamada
+> > > > <yamada.masahiro@socionext.com> wrote:
+> > > > >
+> > > > > In the recent build test of linux-next, Stephen saw a build error
+> > > > > caused by a broken .tmp_versions/*.mod file:
+> > > > >
+> > > > >   https://lkml.org/lkml/2019/5/13/991
+> > > > >
+> > > > > drivers/net/phy/asix.ko and drivers/net/usb/asix.ko have the same
+> > > > > basename, and there is a race in generating .tmp_versions/asix.mod
+> > > > >
+> > > > > Kbuild has not checked this before, and it occasionally shows up with
+> > > > > obscure error message when this kind of race occurs.
+> > > > >
+> > > > > It is not trivial to catch this potential issue by eyes.
+> > > > >
+> > > > > Hence, this script.
+> > > > >
+> > > > > I compile-tested allmodconfig for the latest kernel as of writing,
+> > > > > it detected the following:
+> > > > >
+> > > > > warning: same basename '88pm800.ko' if the following are built as modules:
+> > > > >   drivers/regulator/88pm800.ko
+> > > > >   drivers/mfd/88pm800.ko
+> > > > > warning: same basename 'adv7511.ko' if the following are built as modules:
+> > > > >   drivers/gpu/drm/bridge/adv7511/adv7511.ko
+> > > > >   drivers/media/i2c/adv7511.ko
+> > > > > warning: same basename 'asix.ko' if the following are built as modules:
+> > > > >   drivers/net/phy/asix.ko
+> > > > >   drivers/net/usb/asix.ko
+> > > > > warning: same basename 'coda.ko' if the following are built as modules:
+> > > > >   fs/coda/coda.ko
+> > > > >   drivers/media/platform/coda/coda.ko
+> > > > > warning: same basename 'realtek.ko' if the following are built as modules:
+> > > > >   drivers/net/phy/realtek.ko
+> > > > >   drivers/net/dsa/realtek.ko
+> > > > >
+> > > > > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > > > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > > >
+> > > > That looks great!
+> > > >
+> > > > > ---
+> > > > >
+> > > > >  [Alternative fix ? ]
+> > > > >
+> > > > > I do not know about the user experience of modprobe etc.
+> > > > > when two different modules have the same name.
+> > > > > It does not matter if this is correctly handled by modules.order?
+> > > > >
+> > > > > If this is just a problem of the build system, it is pretty easy to fix.
+> > > > > For example, if we prepend the directory path, parallel build will
+> > > > > never write to the same file simultanously.
+> > > > >
+> > > > >   asix.mod -> drivers/net/phy/asix.mod
+> > > > >   asix.mod -> drivers/net/usb/asix.mod
+> > > >
+> > > > non-unique module names cause all kinds of problems, and
+> > > > modprobe can certainly not handle them correctly, and there
+> > > > are issues with symbols exported from a module when another
+> > > > one has the same name.
+> > >
+> > > /sys/modules/ will fall over when this happens as well.  I thought we
+> > > had the "rule" that module names had to be unique, I guess it was only a
+> > > matter of time before they started colliding :(
+> > >
+> > > So warning is good, but forbidding this is better, as things will break.
+> > >
+> > > Or we need to fix up the places where things will break.
+> >
+> >
+> > If we intentionally break the build,
+> > we need to send fix-up patches to subsystems first.
+>
+> True, but those builds are already broken if anyone tries to use them :)
+>
+> A warning for now would be nice, that way we can find these and know to
+> fix them up over time.
 
-DB_REC_DRY_RUN (running doorbell recovery without sending doorbells) is
-never used. DB_REC_ONCE (send a single doorbell from the doorbell recovery)
-is not needed anymore because by running the periodic handler we make sure
-we check the overflow status later instead.
-This patch is needed because in the next patches, the only doorbell
-recovery type being used is DB_REC_REAL_DEAL, and the fixes are much
-cleaner without this enum.
 
-Signed-off-by: Denis Bolotin <dbolotin@marvell.com>
-Signed-off-by: Michal Kalderon <mkalderon@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/qlogic/qed/qed.h     |  3 +-
- drivers/net/ethernet/qlogic/qed/qed_dev.c | 69 +++++++++--------------
- drivers/net/ethernet/qlogic/qed/qed_int.c |  6 +-
- drivers/net/ethernet/qlogic/qed/qed_int.h |  4 +-
- 4 files changed, 31 insertions(+), 51 deletions(-)
+Yes, I think it is a fair point.
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed.h b/drivers/net/ethernet/qlogic/qed/qed.h
-index 2d8a77cc156ba..d5fece7eb1698 100644
---- a/drivers/net/ethernet/qlogic/qed/qed.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed.h
-@@ -918,8 +918,7 @@ u16 qed_get_cm_pq_idx_llt_mtc(struct qed_hwfn *p_hwfn, u8 tc);
- 
- /* doorbell recovery mechanism */
- void qed_db_recovery_dp(struct qed_hwfn *p_hwfn);
--void qed_db_recovery_execute(struct qed_hwfn *p_hwfn,
--			     enum qed_db_rec_exec db_exec);
-+void qed_db_recovery_execute(struct qed_hwfn *p_hwfn);
- bool qed_edpm_enabled(struct qed_hwfn *p_hwfn);
- 
- /* Other Linux specific common definitions */
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-index 2ecaaaa4469a6..ff0bbf8d073d6 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-@@ -300,26 +300,19 @@ void qed_db_recovery_dp(struct qed_hwfn *p_hwfn)
- 
- /* Ring the doorbell of a single doorbell recovery entry */
- static void qed_db_recovery_ring(struct qed_hwfn *p_hwfn,
--				 struct qed_db_recovery_entry *db_entry,
--				 enum qed_db_rec_exec db_exec)
--{
--	if (db_exec != DB_REC_ONCE) {
--		/* Print according to width */
--		if (db_entry->db_width == DB_REC_WIDTH_32B) {
--			DP_VERBOSE(p_hwfn, QED_MSG_SPQ,
--				   "%s doorbell address %p data %x\n",
--				   db_exec == DB_REC_DRY_RUN ?
--				   "would have rung" : "ringing",
--				   db_entry->db_addr,
--				   *(u32 *)db_entry->db_data);
--		} else {
--			DP_VERBOSE(p_hwfn, QED_MSG_SPQ,
--				   "%s doorbell address %p data %llx\n",
--				   db_exec == DB_REC_DRY_RUN ?
--				   "would have rung" : "ringing",
--				   db_entry->db_addr,
--				   *(u64 *)(db_entry->db_data));
--		}
-+				 struct qed_db_recovery_entry *db_entry)
-+{
-+	/* Print according to width */
-+	if (db_entry->db_width == DB_REC_WIDTH_32B) {
-+		DP_VERBOSE(p_hwfn, QED_MSG_SPQ,
-+			   "ringing doorbell address %p data %x\n",
-+			   db_entry->db_addr,
-+			   *(u32 *)db_entry->db_data);
-+	} else {
-+		DP_VERBOSE(p_hwfn, QED_MSG_SPQ,
-+			   "ringing doorbell address %p data %llx\n",
-+			   db_entry->db_addr,
-+			   *(u64 *)(db_entry->db_data));
- 	}
- 
- 	/* Sanity */
-@@ -334,14 +327,12 @@ static void qed_db_recovery_ring(struct qed_hwfn *p_hwfn,
- 	wmb();
- 
- 	/* Ring the doorbell */
--	if (db_exec == DB_REC_REAL_DEAL || db_exec == DB_REC_ONCE) {
--		if (db_entry->db_width == DB_REC_WIDTH_32B)
--			DIRECT_REG_WR(db_entry->db_addr,
--				      *(u32 *)(db_entry->db_data));
--		else
--			DIRECT_REG_WR64(db_entry->db_addr,
--					*(u64 *)(db_entry->db_data));
--	}
-+	if (db_entry->db_width == DB_REC_WIDTH_32B)
-+		DIRECT_REG_WR(db_entry->db_addr,
-+			      *(u32 *)(db_entry->db_data));
-+	else
-+		DIRECT_REG_WR64(db_entry->db_addr,
-+				*(u64 *)(db_entry->db_data));
- 
- 	/* Flush the write combined buffer. Next doorbell may come from a
- 	 * different entity to the same address...
-@@ -350,29 +341,21 @@ static void qed_db_recovery_ring(struct qed_hwfn *p_hwfn,
- }
- 
- /* Traverse the doorbell recovery entry list and ring all the doorbells */
--void qed_db_recovery_execute(struct qed_hwfn *p_hwfn,
--			     enum qed_db_rec_exec db_exec)
-+void qed_db_recovery_execute(struct qed_hwfn *p_hwfn)
- {
- 	struct qed_db_recovery_entry *db_entry = NULL;
- 
--	if (db_exec != DB_REC_ONCE) {
--		DP_NOTICE(p_hwfn,
--			  "Executing doorbell recovery. Counter was %d\n",
--			  p_hwfn->db_recovery_info.db_recovery_counter);
-+	DP_NOTICE(p_hwfn, "Executing doorbell recovery. Counter was %d\n",
-+		  p_hwfn->db_recovery_info.db_recovery_counter);
- 
--		/* Track amount of times recovery was executed */
--		p_hwfn->db_recovery_info.db_recovery_counter++;
--	}
-+	/* Track amount of times recovery was executed */
-+	p_hwfn->db_recovery_info.db_recovery_counter++;
- 
- 	/* Protect the list */
- 	spin_lock_bh(&p_hwfn->db_recovery_info.lock);
- 	list_for_each_entry(db_entry,
--			    &p_hwfn->db_recovery_info.list, list_entry) {
--		qed_db_recovery_ring(p_hwfn, db_entry, db_exec);
--		if (db_exec == DB_REC_ONCE)
--			break;
--	}
--
-+			    &p_hwfn->db_recovery_info.list, list_entry)
-+		qed_db_recovery_ring(p_hwfn, db_entry);
- 	spin_unlock_bh(&p_hwfn->db_recovery_info.lock);
- }
- 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.c b/drivers/net/ethernet/qlogic/qed/qed_int.c
-index 92340919d8521..b994f81eb51c3 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_int.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_int.c
-@@ -409,10 +409,8 @@ int qed_db_rec_handler(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt)
- 
- 	overflow = qed_rd(p_hwfn, p_ptt, DORQ_REG_PF_OVFL_STICKY);
- 	DP_NOTICE(p_hwfn, "PF Overflow sticky 0x%x\n", overflow);
--	if (!overflow) {
--		qed_db_recovery_execute(p_hwfn, DB_REC_ONCE);
-+	if (!overflow)
- 		return 0;
--	}
- 
- 	if (qed_edpm_enabled(p_hwfn)) {
- 		rc = qed_db_rec_flush_queue(p_hwfn, p_ptt);
-@@ -427,7 +425,7 @@ int qed_db_rec_handler(struct qed_hwfn *p_hwfn, struct qed_ptt *p_ptt)
- 	qed_wr(p_hwfn, p_ptt, DORQ_REG_PF_OVFL_STICKY, 0x0);
- 
- 	/* Repeat all last doorbells (doorbell drop recovery) */
--	qed_db_recovery_execute(p_hwfn, DB_REC_REAL_DEAL);
-+	qed_db_recovery_execute(p_hwfn);
- 
- 	return 0;
- }
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.h b/drivers/net/ethernet/qlogic/qed/qed_int.h
-index d81a62ebd5244..df26bf333893d 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_int.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_int.h
-@@ -192,8 +192,8 @@ void qed_int_disable_post_isr_release(struct qed_dev *cdev);
- 
- /**
-  * @brief - Doorbell Recovery handler.
-- *          Run DB_REAL_DEAL doorbell recovery in case of PF overflow
-- *          (and flush DORQ if needed), otherwise run DB_REC_ONCE.
-+ *          Run doorbell recovery in case of PF overflow (and flush DORQ if
-+ *          needed).
-  *
-  * @param p_hwfn
-  * @param p_ptt
+Start this with warning, then people will soon notice the problem.
+
+Turning it into error is easy once we fix all instances.
+
+
 -- 
-2.20.1
-
-
-
+Best Regards
+Masahiro Yamada
