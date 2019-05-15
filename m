@@ -2,139 +2,173 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4C2C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051D1C04AA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B3B2168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C5520881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 06:48:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GMSayusQ"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="VMrmMPuQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726465AbfEOGqx (ORCPT
+        id S1726201AbfEOGsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 02:46:53 -0400
-Received: from mail-eopbgr80080.outbound.protection.outlook.com ([40.107.8.80]:9737
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725902AbfEOGqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 02:46:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=btTHRitrwesrTb0WgFFCXCFfFT0QQciVa1ooaDatsKI=;
- b=GMSayusQiudWvxXKcUjUkNsRkxp4Tnan32Nphqk7eCilrR5UOdhu/I3HjNqXbbvBMi/1bVp1TqgwOatnrPn6cSr5O+3Aw0IW6NpXz9AxxwdC94rYPZE3e6ykskionzFbDsJA3GZ4QCTt+Pfse+0XAJOUNzMqEBAYKsgbcvm7yq0=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3549.eurprd04.prod.outlook.com (52.134.4.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.22; Wed, 15 May 2019 06:46:48 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::dd3c:969d:89b9:f422]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::dd3c:969d:89b9:f422%4]) with mapi id 15.20.1878.024; Wed, 15 May 2019
- 06:46:48 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 1/2] crypto: caam - fix pkcs1pad(rsa-caam, sha256) failure
- because of invalid input
-Thread-Topic: [PATCH 1/2] crypto: caam - fix pkcs1pad(rsa-caam, sha256)
- failure because of invalid input
-Thread-Index: AQHVCnRqYSdT4/1YZ0yCFxU3GNf2og==
-Date:   Wed, 15 May 2019 06:46:48 +0000
-Message-ID: <VI1PR0402MB34853587C20B018A8F53C2BF98090@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <1557852263-26896-1-git-send-email-iuliana.prodan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4b1150cd-3f2a-461e-5468-08d6d9011ab2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3549;
-x-ms-traffictypediagnostic: VI1PR0402MB3549:
-x-microsoft-antispam-prvs: <VI1PR0402MB3549610F9EFB54BF799BBEE898090@VI1PR0402MB3549.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3383;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(396003)(136003)(366004)(376002)(43544003)(189003)(199004)(6246003)(44832011)(476003)(55016002)(74316002)(76116006)(316002)(14444005)(66946007)(6506007)(53546011)(25786009)(64756008)(66446008)(66476007)(446003)(66556008)(26005)(53936002)(14454004)(486006)(4326008)(5660300002)(256004)(9686003)(6436002)(33656002)(305945005)(6636002)(99286004)(68736007)(54906003)(7736002)(229853002)(71190400001)(71200400001)(81166006)(81156014)(8676002)(186003)(86362001)(8936002)(73956011)(66066001)(102836004)(6116002)(3846002)(2906002)(76176011)(110136005)(52536014)(478600001)(7696005)(32563001)(309714004);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3549;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Og/9WwFjYmr4i36xki/femT7WxQ2+NwP4m/sVEkSRvAIxjXIsXapRp3mgJ9d8MR2xsPBK/uGzvnqlRRrDc1MJrg0BtL0mSBx6kZ+MqZV4eEFjzh5IfYHLsAf8Szt3nsDf26A2BbAsWKDf5P7kFPM7qGZ9k9nb2/0ZWMbJ+bwrl+2ntARjf0ZHOz15KbzJdV50eZOUcBFiJ6oSkb2K5I3ExIX5v/cSdIO91GYYzetRB+w1R/FLZUT1A/HRAKbG8wJttUHTdQDRFZQyK4xLdo6rQ4pQXMtdlhzGSNqwG+DW0Rs+0Yl17+YVpwV35zvZ1o0Kv68hxBt1aEE3zJpHcxEpgiA0FIew78zuiQD4SRCbtW+wuQnCmcJYlVvJ7dgO09Ntz61bTA7UnTufaYjoUIXZvg3XY20jOLnoMT+bx7lX/8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 15 May 2019 02:48:47 -0400
+Received: from mout.web.de ([217.72.192.78]:52071 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725929AbfEOGsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 02:48:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1557902897;
+        bh=0emlYhO8SllnssBdf65BYJeAb+8XEqHtDjbbN6cl5Lw=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=VMrmMPuQv/X9iH4N4f5lNWgoRoFnNyUR8FX9VthmxnMZS5W2R+klatRalA2DyJf5J
+         WSbdhIzdYPAZPUZL/FC5zYOcPNN5wFSnE2h11eAGSbHvtpGnAg5nOWAIib3Wet5b65
+         f0D+6YT+MweIyZsdxuiEwNByvSd92y+GGc0pucOc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([2.244.73.153]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MWjAd-1hAbMZ3djH-00XtsD; Wed, 15
+ May 2019 08:48:17 +0200
+Subject: Re: [3/3] Coccinelle: pci_free_consistent: Extend when constraints
+ for two SmPL ellipses
+To:     Wen Yang <wen.yang99@zte.com.cn>,
+        Julia Lawall <julia.lawall@lip6.fr>
+Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
+        Ma Jiang <ma.jiang@zte.com.cn>,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <201905151043340243098@zte.com.cn>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <39c4150c-b238-a0b4-19b4-6215012bb497@web.de>
+Date:   Wed, 15 May 2019 08:48:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b1150cd-3f2a-461e-5468-08d6d9011ab2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 06:46:48.4692
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3549
+In-Reply-To: <201905151043340243098@zte.com.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:xzURLSqG+7U4MauJlZvgeN7etaHtK88Z441il8v+AE2R1FWi1Bs
+ C9TCa3JRE6eRlxuqF3TD89EEDEsmIEJHp/1x3hb/3avEWI0flApLY/rVHeEU2//EukgZPNT
+ abBd3+EPD4ubB+W9RLMNxT/aWjJW6HblI8y/VMfaxnzPHV4RceyImfv819ofjZqs8szbXyi
+ XGSY1oNhDYTeZFc24xtPQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ysM+/KxubjY=:O2bH0NF60X6TTx8meAD5io
+ OwZt7TcREvMe8HCG1wsc9+9l559hGF8Y70NSWs7i2smDjsgHoEXYxpwpJtc1hIwqeuRtPdjAY
+ rTmeM0Vpywl71YL4M05VGlazsF6woGMXRgDZBvarA6mI2h7okSw0dr0sQLqW/+1aQiZkHCIPx
+ MfoLFAnCIHcOpGlcpLQrK7BcjiwTdHMR2KU1MC7tOVczjvGiXtr6LJ9iD+sP0Uijx357xgtu6
+ rrLKXtp3Zf4s1LIPqWnlpGuaLcRP6eD7WydpJVcOcWNFeJDhv/lq961DUAIXAZ+k8aqVMLJNV
+ W+Nuvi5bLF/gvkq8eaNphrhcd1uWvSS7MyDVn0F7WMGVcuYt6P4ZAw68InDi5oOOrEpEyWLux
+ lyJ1i/ZYTwpE/slusQG8bjfr6Fw4AejPtXL0AZTKjcZTEaOaA80jPDb8jzPiQMqZXfSFTERY4
+ 4ZVDRuRtVzTaUY9il998j31Zazqzi4UsrSNUWhLtDKt2NQNkObscIGZDx3LWPUOKb5HWnBiYS
+ 9gGjoKt/e2MJYuVODioA26ZIRyMLSARCPxoWlPy93Xl4lbd8TttfnXh5HvLAg9s+qEoR6THqE
+ cNFoNH/I75sXP9NtmVv0XofiLBtpm8AlfOiVerN4c1SDLdQia06OYOtV5xZ5xDSUoIVlgFOt4
+ nA5KNoPrANlhq0iFtjnei08fHxdOdyXJjk6xlfhNCAvlK9ViWw0whonuyRzOHJPmYZxJ+3hga
+ JrlMUCAVtPQyZSf0T2PhvWmGAeYANDlkt7Z67muDj3tQQzLrmyrP/jUjPygu9wrMrgcNwdB4u
+ vVf4hcac2GadhSePD3p6Pxaf2fkm89n0jk5VJpjlTYN+KRTJHo0XCZyOpKrUozY99YoaMe1z2
+ ZllNfTiKqfIULSihIzhyP1I5Xv8Y4U9vKHBW0SEXF/SC7aR0ZMtS2RkVrXsW3XmatUxMXb3Oe
+ eQhNOsPFkMw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/14/2019 7:45 PM, Iuliana Prodan wrote:=0A=
-[...]=0A=
-> diff --git a/drivers/crypto/caam/caampkc.c b/drivers/crypto/caam/caampkc.=
-c=0A=
-[...]=0A=
-> @@ -218,27 +230,45 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akc=
-ipher_request *req,=0A=
->  	struct caam_rsa_ctx *ctx =3D akcipher_tfm_ctx(tfm);=0A=
->  	struct device *dev =3D ctx->dev;=0A=
->  	struct caam_rsa_req_ctx *req_ctx =3D akcipher_request_ctx(req);=0A=
-> +	struct caam_rsa_key *key =3D &ctx->key;=0A=
->  	struct rsa_edesc *edesc;=0A=
->  	gfp_t flags =3D (req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?=0A=
->  		       GFP_KERNEL : GFP_ATOMIC;=0A=
->  	int sg_flags =3D (flags =3D=3D GFP_ATOMIC) ? SG_MITER_ATOMIC : 0;=0A=
->  	int sgc;=0A=
-> -	int sec4_sg_index, sec4_sg_len =3D 0, sec4_sg_bytes;=0A=
-> +	int sec4_sg_index =3D 0, sec4_sg_len =3D 0, sec4_sg_bytes;=0A=
-Initialization of sec4_sg_index not needed, it's unconditionally set furthe=
-r below.=0A=
-=0A=
-[...]=0A=
-> -	if (src_nents > 1)=0A=
-> -		sec4_sg_len =3D src_nents;=0A=
-> +	if (!diff_size && src_nents =3D=3D 1)=0A=
-> +		sec4_sg_len =3D 0; /* no need for an input hw s/g table */=0A=
-> +	else=0A=
-> +		sec4_sg_len =3D src_nents + !!diff_size;=0A=
-> +	sec4_sg_index =3D sec4_sg_len;=0A=
->  	if (dst_nents > 1)=0A=
->  		sec4_sg_len +=3D dst_nents;=0A=
->  =0A=
-=0A=
-[...]=0A=
-> @@ -1060,6 +1107,12 @@ static int __init caam_pkc_init(void)=0A=
->  		goto out_put_dev;=0A=
->  	}=0A=
->  =0A=
-> +	/* allocate zero buffer, used for padding input */=0A=
-> +	zero_buffer =3D kzalloc(CAAM_RSA_MAX_INPUT_SIZE - 1, GFP_DMA |=0A=
-> +			      GFP_KERNEL);=0A=
-> +	if (!zero_buffer)=0A=
-> +		return -ENOMEM;=0A=
-Need to take care of freeing resources on error path.=0A=
-=0A=
-> +=0A=
->  	err =3D crypto_register_akcipher(&caam_rsa);=0A=
->  	if (err)=0A=
->  		dev_warn(ctrldev, "%s alg registration failed\n",=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+> 1, "id =3D (T2)(e)" is rare.
+
+I can follow this view for such a filter.
+
+
+> It may be a minor detail that will have no impact in practice.
+
+I suggest to reconsider this view once more.
+
+Should such exclusion specifications take also =E2=80=9Cunexpected=E2=80=
+=9D source code
+into account so that analysis results will be presented with a low
+false positive rate?
+
+
+> We've tested it, and this SmPL may only need to fix the following two fa=
+lse positives:
+
+Thanks for your acknowledgement that my proposal can give us
+another useful effect.
+
+
+> 2,  If you really plan to add the two restrictions above,
+> you may need to consider this further than simply adding a "when !=3D id=
+ =3D (T2)(e)" statement.
+> I constructed the flollowing code snippet as a test case:
+=E2=80=A6
+> Using the original SmPL, we can find a bug.
+
+I observe on my system that I do not get a desired warning
+by the software combination =E2=80=9CCoccinelle 1.0.7-00186-g99e081e9 (OCa=
+ml 4.07.1)=E2=80=9D
+(even from the unmodified SmPL script) for your test example.
+
+Which version are you using for the spatch program?
+
+
+> But with your modified SmPL, we can't find the bug.
+
+I do not see a difference here. - I wonder also about this situation then.
+
+But this gives us the opportunity to clarify the really desired
+software behaviour in more detail.
+How many developers would like to help with additional insights?
+
+Regards,
+Markus
