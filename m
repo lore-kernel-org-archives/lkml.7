@@ -2,112 +2,75 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F893C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E1FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F7C20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:58:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921539;
-	bh=ItPj+Nbvo0KNZmmn+28rj26rGJqd7jzYZpfB+8lrKk8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K++BPCaQ3h3b6S7OhHiJj8aBcEfHQhIJ2vCziCZcXJ7QGapYPgYSnOjQ6t1AhEAT7
-	 2SkwtsH8aRJjuG/pnxYn9L50JSb2xGYB/wpIpiDo78+8gmOWSP2MmQKkNYOL832nKv
-	 ZOX6cf0alge6HSIeYs9C2n0lOA/uWnDeVtFdrbrI=
+	by mail.kernel.org (Postfix) with ESMTP id EB03020657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:59:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbfEOL65 (ORCPT
+        id S1730722AbfEOL7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:58:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729938AbfEOLPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:15:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53EAB20843;
-        Wed, 15 May 2019 11:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918948;
-        bh=ItPj+Nbvo0KNZmmn+28rj26rGJqd7jzYZpfB+8lrKk8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b/YO6AKqmdwRQTr8TjsFQ0qNShEiMefSW1UCS21YonNNKUkT2w2KpthJ4uc1iKcUj
-         iw5JLC0eWGVRfZc5FBlkFySoS1vRC2STq4sYRzUscM+mdzO8VpWiMzppcwY0TPMRTw
-         +840oCcvpUktwjTinLQRpuYXBuneJgc7TefLllHg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.14 002/115] platform/x86: sony-laptop: Fix unintentional fall-through
-Date:   Wed, 15 May 2019 12:54:42 +0200
-Message-Id: <20190515090659.332039601@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
-References: <20190515090659.123121100@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 15 May 2019 07:59:05 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:54668 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730686AbfEOL7C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:59:02 -0400
+Received: by mail-io1-f69.google.com with SMTP id t7so1595570iof.21
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 04:59:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=wLlE37yrPzANdfG8Iq9EHwFi5Q9N85cm606vgS2oU/4=;
+        b=O4xdWYL6z2aN7QqTbIx/Q3XUhynuQHbVUiXnUOW4g+kvuxxLCwmMG+bdLiOgutzfNS
+         OuL9Uxx347rYnb+I7L6dqkzOCGubWcusKMdh3iswwXPniZk9X3t5ixl2UH1nHKNliwrd
+         H83LJUdED1TDwuAl+gCoPF3ijgL/MQ453UedoA+dj6qI/aUqAs8IGZCesVGs3YWOiHNR
+         yt2bOZ3fS3QC7Uv8GGM5z+Jb8UHJNnHlyRZynQl88ZfeNls5NfPlvuWrW0SK8hbZ/P58
+         ee1fJUjAAU58eXmZDZy2lk4NJThfJ2Wf8WEZgdRkrgguailAjyLT9+uYR+PNN3xh72t7
+         3ORg==
+X-Gm-Message-State: APjAAAX3wioyKDzMiTAfG1i3ey4lg77MJLORedCC0j566CbC7phJuu5Y
+        EOfmXkQBaHvVLfK8xzrwD8MRdsrOjjIyo7nk+fQ3wxjTsVy7
+X-Google-Smtp-Source: APXvYqxhuea74sT72yLEr885VWUmC0yDDZPYDcDl1CPKw5tL3esMrV9W9iAbuAnr0eDXBy6JlimI1pULYWtWhNarz5FlgldoTSCn
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a24:f68b:: with SMTP id u133mr7534350ith.139.1557921541063;
+ Wed, 15 May 2019 04:59:01 -0700 (PDT)
+Date:   Wed, 15 May 2019 04:59:01 -0700
+In-Reply-To: <20190515102133.GA16193@quack2.suse.cz>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000b0c360588ebe04f@google.com>
+Subject: Re: INFO: task hung in __get_super
+From:   syzbot <syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, dvyukov@google.com, jack@suse.cz,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, penguin-kernel@i-love.sakura.ne.jp,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Hello,
 
-commit 1cbd7a64959d33e7a2a1fa2bf36a62b350a9fcbd upstream.
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
 
-It seems that the default case should return AE_CTRL_TERMINATE, instead
-of falling through to case ACPI_RESOURCE_TYPE_END_TAG and returning AE_OK;
-otherwise the line of code at the end of the function is unreachable and
-makes no sense:
+Reported-and-tested-by:  
+syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com
 
-return AE_CTRL_TERMINATE;
+Tested on:
 
-This fix is based on the following thread of discussion:
+commit:         e93c9c99 Linux 5.1
+git tree:        
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git v5.1
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5edd1df52e9bc982
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=133626d8a00000
 
-https://lore.kernel.org/patchwork/patch/959782/
-
-Fixes: 33a04454527e ("sony-laptop: Add SNY6001 device handling (sonypi reimplementation)")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/platform/x86/sony-laptop.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -4422,14 +4422,16 @@ sony_pic_read_possible_resource(struct a
- 			}
- 			return AE_OK;
- 		}
-+
-+	case ACPI_RESOURCE_TYPE_END_TAG:
-+		return AE_OK;
-+
- 	default:
- 		dprintk("Resource %d isn't an IRQ nor an IO port\n",
- 			resource->type);
-+		return AE_CTRL_TERMINATE;
- 
--	case ACPI_RESOURCE_TYPE_END_TAG:
--		return AE_OK;
- 	}
--	return AE_CTRL_TERMINATE;
- }
- 
- static int sony_pic_possible_resources(struct acpi_device *device)
-
-
+Note: testing is done by a robot and is best-effort only.
