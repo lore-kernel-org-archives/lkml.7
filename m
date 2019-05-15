@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F7BC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 331BFC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5F02053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFE9B2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920323;
-	bh=4KSBbtptG3jiW28pPbGqgjyq8g5hxBbZvktWcGJSOW0=;
+	s=default; t=1557920333;
+	bh=X8flbAO2akxSEzZQ8zHamo1pcx8klqpvg+NacVqQhnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wcpmWECghv4fZ0jEE65Mxqr0DgsdZfC7FegYKzuBKcpT3IRHkPaj1pUP4Z3VpGRLx
-	 wu7Q9D6IiKrt14C18btCq79ZFrI+6X2i19zioExNlYr8DbL7nxZMY8Lukd7gUbRu5M
-	 NloDu8xTMYvTWm7iLbewoyj5nXfRM6v7DZCIVudw=
+	b=I1STtqMeMPGGaSJtWrdD2Ox6Tloi6vJl/a58YiFZaVwMM1RrhQlIvoXhzQOmvj7x0
+	 VOVmuqEICda7Tp2olMSuWYjI+kcAvlAG+LXcqAYQ7LIjQgvqseCu4RmA/tbc+wHBgr
+	 6uCRLO9HAs1OyEqE67SivUMvSstex4jxCagVw3+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731753AbfEOLim (ORCPT
+        id S1732781AbfEOLaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:38:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42552 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:30:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732046AbfEOLaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:30:55 -0400
+        id S1732752AbfEOLaj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:30:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F99C20843;
-        Wed, 15 May 2019 11:30:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EDE920843;
+        Wed, 15 May 2019 11:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919855;
-        bh=4KSBbtptG3jiW28pPbGqgjyq8g5hxBbZvktWcGJSOW0=;
+        s=default; t=1557919839;
+        bh=X8flbAO2akxSEzZQ8zHamo1pcx8klqpvg+NacVqQhnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DRMfubO8lLi/4IjMNlOZyFJ53LDKAn1JqdFiKdYRDOjjfyAgu6ZvObm8SBukUOUKJ
-         rE/PpxqnLiwvQ0iMTn5fSFtWUr8/JlFEKBXQfPixljaVKZz4BxF6n5NRttwyBj91lF
-         Z/Ga5XISDSyFScxv/W+/zl+OY1ShsDS84vaHso0A=
+        b=JMEZAO+UIRwKqg+BiZZnXQXWOjtppPJoIuPCGqsCl8pVgXmIgE5R13wyObxEbGQua
+         NMuOc6EJBro2El++8krvlQurm64hKfhqlR1MZZB0do6cGZh18vSmYefOvZOdkRhqso
+         BPgRw2k0Csj5E/QOGx961QRgc9WRJV3gbxm4GoS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Parthasarathy Bhuvaragan <parthasarathy.bhuvaragan@gmail.com>,
-        Jon Maloy <jon.maloy@ericsson.se>,
+        stable@vger.kernel.org, Harini Katakam <harini.katakam@xilinx.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 117/137] tipc: fix hanging clients using poll with EPOLLOUT flag
-Date:   Wed, 15 May 2019 12:56:38 +0200
-Message-Id: <20190515090702.138296556@linuxfoundation.org>
+Subject: [PATCH 5.0 112/137] net: macb: Change interrupt and napi enable order in open
+Date:   Wed, 15 May 2019 12:56:33 +0200
+Message-Id: <20190515090701.711180496@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -61,54 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parthasarathy Bhuvaragan <parthasarathy.bhuvaragan@gmail.com>
+From: Harini Katakam <harini.katakam@xilinx.com>
 
-[ Upstream commit ff946833b70e0c7f93de9a3f5b329b5ae2287b38 ]
+[ Upstream commit 0504453139ef5a593c9587e1e851febee859c7d8 ]
 
-commit 517d7c79bdb398 ("tipc: fix hanging poll() for stream sockets")
-introduced a regression for clients using non-blocking sockets.
-After the commit, we send EPOLLOUT event to the client even in
-TIPC_CONNECTING state. This causes the subsequent send() to fail
-with ENOTCONN, as the socket is still not in TIPC_ESTABLISHED state.
+Current order in open:
+-> Enable interrupts (macb_init_hw)
+-> Enable NAPI
+-> Start PHY
 
-In this commit, we:
-- improve the fix for hanging poll() by replacing sk_data_ready()
-  with sk_state_change() to wake up all clients.
-- revert the faulty updates introduced by commit 517d7c79bdb398
-  ("tipc: fix hanging poll() for stream sockets").
+Sequence of RX handling:
+-> RX interrupt occurs
+-> Interrupt is cleared and interrupt bits disabled in handler
+-> NAPI is scheduled
+-> In NAPI, RX budget is processed and RX interrupts are re-enabled
 
-Fixes: 517d7c79bdb398 ("tipc: fix hanging poll() for stream sockets")
-Signed-off-by: Parthasarathy Bhuvaragan <parthasarathy.bhuvaragan@gmail.com>
-Acked-by: Jon Maloy <jon.maloy@ericsson.se>
+With the above, on QEMU or fixed link setups (where PHY state doesn't
+matter), there's a chance macb RX interrupt occurs before NAPI is
+enabled. This will result in NAPI being scheduled before it is enabled.
+Fix this macb open by changing the order.
+
+Fixes: ae1f2a56d273 ("net: macb: Added support for many RX queues")
+Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/socket.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/cadence/macb_main.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/tipc/socket.c
-+++ b/net/tipc/socket.c
-@@ -734,11 +734,11 @@ static __poll_t tipc_poll(struct file *f
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -2414,12 +2414,12 @@ static int macb_open(struct net_device *
+ 		return err;
+ 	}
  
- 	switch (sk->sk_state) {
- 	case TIPC_ESTABLISHED:
--	case TIPC_CONNECTING:
- 		if (!tsk->cong_link_cnt && !tsk_conn_cong(tsk))
- 			revents |= EPOLLOUT;
- 		/* fall thru' */
- 	case TIPC_LISTEN:
-+	case TIPC_CONNECTING:
- 		if (!skb_queue_empty(&sk->sk_receive_queue))
- 			revents |= EPOLLIN | EPOLLRDNORM;
- 		break;
-@@ -2041,7 +2041,7 @@ static bool tipc_sk_filter_connect(struc
- 			if (msg_data_sz(hdr))
- 				return true;
- 			/* Empty ACK-, - wake up sleeping connect() and drop */
--			sk->sk_data_ready(sk);
-+			sk->sk_state_change(sk);
- 			msg_set_dest_droppable(hdr, 1);
- 			return false;
- 		}
+-	bp->macbgem_ops.mog_init_rings(bp);
+-	macb_init_hw(bp);
+-
+ 	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue)
+ 		napi_enable(&queue->napi);
+ 
++	bp->macbgem_ops.mog_init_rings(bp);
++	macb_init_hw(bp);
++
+ 	/* schedule a link state check */
+ 	phy_start(dev->phydev);
+ 
 
 
