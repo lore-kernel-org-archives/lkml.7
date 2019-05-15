@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32E25C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75626C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0174220818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FFF6206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:17:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919049;
-	bh=oGHSbytJsiHse1qv2YgnDOtzQdItpFrlh6u6E/WJa2c=;
+	s=default; t=1557919052;
+	bh=u7u4Dz4YT91VRcG84O/hfdq+TWT2v1ljyr3+Li6aAaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hzR6IW26ye9xMCShweKvAVxnOwwk/9wK4Mwx3fJU7mKSEhy/G6Ww6rgqnnnAGe5L1
-	 sqti20xTJERRBfkUW4G1QeFiF5P6HJDfFFY5yjtyV1ccohtLbdzch7vBHX6HNbLuiN
-	 xK2GHa5DKxh2wjbql8Ggm7jYkYkKZQ1l4hpR2TJY=
+	b=hKjvQLzqoidqbNlZZXD1e7H/+ri6DbHj8x0jsPxZ+g4Xp9uGcRzYdpkCvTOmBfKIZ
+	 4p4FQRwh/usIj6RM0B3TNQdhEd3bv8B3rZ4eIuvfJmsAiDles5E/bp/we/fUdnY++Q
+	 eNMK6Ch6uBrtrinnmJFyky+soGV86/uTnE6g3kOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbfEOLR1 (ORCPT
+        id S1730673AbfEOLRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:17:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54588 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:17:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728459AbfEOLRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:17:23 -0400
+        id S1730293AbfEOLR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:17:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B27B206BF;
-        Wed, 15 May 2019 11:17:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E3042070D;
+        Wed, 15 May 2019 11:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919043;
-        bh=oGHSbytJsiHse1qv2YgnDOtzQdItpFrlh6u6E/WJa2c=;
+        s=default; t=1557919045;
+        bh=u7u4Dz4YT91VRcG84O/hfdq+TWT2v1ljyr3+Li6aAaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B56J3S0/FJVYgOlnhJTyNd7qwqZz6GiJOSeXJA0TfM95B0Z/ITTsczwUiWesPDODu
-         XT5F9rfhV1Vxu53Yaw2XG+xl0cFl/QaD0BARbvtSc7Za/cBptszOpFoK90dvf3gSN4
-         XpXYGE0KrgX0/5jU1G3UnCKqUguqhuhwKeQk0d8E=
+        b=ht646VU6GfH3E/Yc9+s/EVg67WWdeJZZGUzUhEfiqDJ5UWIpfwJfoNY8LXCeZhIlA
+         WDWWo1aetLJCyIKNyhl15ayvgfXulGXLMVUsoq8qmZOgY/aUN/PFOHa1BXlgIVhpIM
+         Pj2ZOR+UtwTAF0ABKttwbBvdaurHTE2vP7m6fuPM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jean-Marc Lenoir <archlinux@jihemel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 044/115] ACPICA: AML interpreter: add region addresses in global list during initialization
-Date:   Wed, 15 May 2019 12:55:24 +0200
-Message-Id: <20190515090702.692348707@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 009/115] HID: input: add mapping for Expose/Overview key
+Date:   Wed, 15 May 2019 12:54:49 +0200
+Message-Id: <20190515090659.939631733@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -61,45 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4abb951b73ff0a8a979113ef185651aa3c8da19b ]
+[ Upstream commit 96dd86871e1fffbc39e4fa61c9c75ec54ee9af0f ]
 
-The table load process omitted adding the operation region address
-range to the global list. This omission is problematic because the OS
-queries the global list to check for address range conflicts before
-deciding which drivers to load. This commit may result in warning
-messages that look like the following:
+According to HUTRR77 usage 0x29f from the consumer page is reserved for
+the Desktop application to present all running user’s application windows.
+Linux defines KEY_SCALE to request Compiz Scale (Expose) mode, so let's
+add the mapping.
 
-[    7.871761] ACPI Warning: system_IO range 0x00000428-0x0000042F conflicts with op_region 0x00000400-0x0000047F (\PMIO) (20180531/utaddress-213)
-[    7.871769] ACPI: If an ACPI driver is available for this device, you should use it instead of the native driver
-
-However, these messages do not signify regressions. It is a result of
-properly adding address ranges within the global address list.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=200011
-Tested-by: Jean-Marc Lenoir <archlinux@jihemel.com>
-Signed-off-by: Erik Schmauss <erik.schmauss@intel.com>
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpica/dsopcode.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/hid/hid-input.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/acpi/acpica/dsopcode.c b/drivers/acpi/acpica/dsopcode.c
-index 0336df7ac47dd..e8070f6ca835e 100644
---- a/drivers/acpi/acpica/dsopcode.c
-+++ b/drivers/acpi/acpica/dsopcode.c
-@@ -451,6 +451,10 @@ acpi_ds_eval_region_operands(struct acpi_walk_state *walk_state,
- 			  ACPI_FORMAT_UINT64(obj_desc->region.address),
- 			  obj_desc->region.length));
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index 1aa7d268686b9..693cd19e9dd40 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -1017,6 +1017,8 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 		case 0x2cb: map_key_clear(KEY_KBDINPUTASSIST_ACCEPT);	break;
+ 		case 0x2cc: map_key_clear(KEY_KBDINPUTASSIST_CANCEL);	break;
  
-+	status = acpi_ut_add_address_range(obj_desc->region.space_id,
-+					   obj_desc->region.address,
-+					   obj_desc->region.length, node);
++		case 0x29f: map_key_clear(KEY_SCALE);		break;
 +
- 	/* Now the address and length are valid for this opregion */
- 
- 	obj_desc->region.flags |= AOPOBJ_DATA_VALID;
+ 		default: map_key_clear(KEY_UNKNOWN);
+ 		}
+ 		break;
 -- 
 2.20.1
 
