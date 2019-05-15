@@ -2,160 +2,92 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B68AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C245C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 685C920862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F79520862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbfEOJA2 convert rfc822-to-8bit (ORCPT
+        id S1726254AbfEOJCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 05:00:28 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:36524 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725871AbfEOJA1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 05:00:27 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-151-LzCPBcH1MgOVKjpg1pcjcg-1; Wed, 15 May 2019 10:00:24 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Wed, 15 May 2019 10:00:23 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 15 May 2019 10:00:23 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Petr Mladek' <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "Russell Currey" <ruscur@russell.cc>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: RE: [PATCH] vsprintf: Do not break early boot with probing addresses
-Thread-Topic: [PATCH] vsprintf: Do not break early boot with probing addresses
-Thread-Index: AQHVB1bC/iTC8Q7sI0elwkZY5/gFJaZowlxwgAEika2AAGmPsIABhHoSgAAVWGA=
-Date:   Wed, 15 May 2019 09:00:23 +0000
-Message-ID: <0a816ea272a0405f89d8ca7178604531@AcuMS.aculab.com>
-References: <20190510084213.22149-1-pmladek@suse.com>
- <20190510122401.21a598f6@gandalf.local.home>
- <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
- <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
- <20190513091320.GK9224@smile.fi.intel.com>
- <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
- <20190514020730.GA651@jagdpanzerIV>
- <45348cf615fe40d383c1a25688d4a88f@AcuMS.aculab.com>
- <CAMuHMdXaMObq9h2Sb49PW1-HUysPeaWXB7wJmKFz=xLmSoUDZg@mail.gmail.com>
- <20190514143751.48e81e05@oasis.local.home>
- <20190515073542.y6ru2nfagtcrpdl7@pathway.suse.cz>
-In-Reply-To: <20190515073542.y6ru2nfagtcrpdl7@pathway.suse.cz>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 15 May 2019 05:02:15 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33134 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725933AbfEOJCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 05:02:14 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A5EA2FF5CA70894C1290;
+        Wed, 15 May 2019 17:02:12 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 15 May 2019
+ 17:02:09 +0800
+Subject: Re: [PATCH v2 1/3] perf vendor events arm64: Remove [[:xdigit:]]
+ wildcard
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        <linux-kernel@vger.kernel.org>
+References: <20190513202522.9050-1-f.fainelli@gmail.com>
+ <20190513202522.9050-2-f.fainelli@gmail.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Will Deacon" <will.deacon@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Ganapatrao Kulkarni <ganapatrao.kulkarni@cavium.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Sean V Kelley <seanvk.dev@oregontracks.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        "moderated list:ARM PMU PROFILING AND DEBUGGING" 
+        <linux-arm-kernel@lists.infradead.org>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <153ce6d0-d4dd-ef2f-9fd7-47335cfeb67b@huawei.com>
+Date:   Wed, 15 May 2019 10:02:01 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-X-MC-Unique: LzCPBcH1MgOVKjpg1pcjcg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190513202522.9050-2-f.fainelli@gmail.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Mladek
-> Sent: 15 May 2019 08:36
-> On Tue 2019-05-14 14:37:51, Steven Rostedt wrote:
-> >
-> > [ Purple is a nice shade on the bike shed. ;-) ]
-> >
-> > On Tue, 14 May 2019 11:02:17 +0200
-> > Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >
-> > > On Tue, May 14, 2019 at 10:29 AM David Laight <David.Laight@aculab.com> wrote:
-> > > > > And I like Steven's "(fault)" idea.
-> > > > > How about this:
-> > > > >
-> > > > >       if ptr < PAGE_SIZE              -> "(null)"
-> > > > >       if IS_ERR_VALUE(ptr)            -> "(fault)"
-> > > > >
-> > > > >       -ss
-> > > >
-> > > > Or:
-> > > >         if (ptr < PAGE_SIZE)
-> > > >                 return ptr ? "(null+)" : "(null)";
-> >
-> > Hmm, that is useful.
-> >
-> > > >         if IS_ERR_VALUE(ptr)
-> > > >                 return "(errno)"
-> >
-> > I still prefer "(fault)" as is pretty much all I would expect from a
-> > pointer dereference, even if it is just bad parsing of, say, a parsing
-> > an MAC address. "fault" is generic enough. "errno" will be confusing,
-> > because that's normally a variable not a output.
-> >
-> > >
-> > > Do we care about the value? "(-E%u)"?
-> >
-> > That too could be confusing. What would (-E22) be considered by a user
-> > doing an sprintf() on some string. I know that would confuse me, or I
-> > would think that it was what the %pX displayed, and wonder why it
-> > displayed it that way. Whereas "(fault)" is quite obvious for any %p
-> > use case.
-> 
-> This discussion clearly shows that it is hard to make anyone happy.
-> 
-> I considered switching to "(fault)" because there seems to be more
-> people in favor of this.
-> 
-> But there is used also "(einval)" when an unsupported pointer
-> modifier is passed. The idea is to show error codes that people
-> are familiar with.
-> 
-> It might have been better to use the uppercase "(EFAULT)" and
-> "(EINVAL)" to make it more obvious. But I wanted to follow
-> the existing style with the lowercase "(null)".
+On 13/05/2019 21:25, Florian Fainelli wrote:
+> ARM64's implementation of get_cpuidr_str() masks out the revision bits
+> [3:0] while reading the CPU identifier, there is no need for the
+> [[:xdigit:]] wildcard.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  tools/perf/pmu-events/arch/arm64/mapfile.csv | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/pmu-events/arch/arm64/mapfile.csv b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+> index 59cd8604b0bd..da5ff2204bf6 100644
+> --- a/tools/perf/pmu-events/arch/arm64/mapfile.csv
+> +++ b/tools/perf/pmu-events/arch/arm64/mapfile.csv
+> @@ -12,7 +12,7 @@
+>  #
 
-Printing 'fault' when the code was (trying to) validate the
-address was ok.
-When the only check is for an -errno value it seems wrong as
-most invalid addresses will actually fault (and panic).
+JFYI, this was discussed before, but this a53 entry seemed to make it 
+though:
+https://lkml.org/lkml/2018/3/7/1236
 
-The reason modern printf generate "(null)" is that it is far too
-easy for a diagnostic print to fail to test a pointer.
-It also makes it easier when 'throwing in' printf while debugging
-to add a single trace that will work regardless of whether a
-call had succeeded or not.
+>  #
+>  #Family-model,Version,Filename,EventType
+> -0x00000000410fd03[[:xdigit:]],v1,arm/cortex-a53,core
+> +0x00000000410fd030,v1,arm/cortex-a53,core
+>  0x00000000420f5160,v1,cavium/thunderx2,core
+>  0x00000000430f0af0,v1,cavium/thunderx2,core
+>  0x00000000480fd010,v1,hisilicon/hip08,core
+>
 
-With the Linux kernel putting errno values into pointers it
-seems likely that most invalid pointers in printf will actaully
-be error values.
-Printing the value will be helpful during debugging - as a
-trace can be put after a call and show the parameters and result.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
 
