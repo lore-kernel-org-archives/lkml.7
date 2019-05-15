@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B74FC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608D2C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E8CC2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 271C420862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918924;
-	bh=oRtn80z79lTgd3d40Qj1X4uvziikYMgHRd602Jyep20=;
+	s=default; t=1557918929;
+	bh=6zO7tVXG4/5IUdBroFzjK/pJRlz3x3muihcqwl8q3JA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ek5x4caZVRZAojohQqH9DFeFcUIxuEjXYmQZv4RlxpK+V+lX4NX1oxyTsF/jjZo/O
-	 WqbjVdtvL2s8eu5ScAdG1DpV95OIKAq27HbFhA7Q7F/vx+n0AVCPFQrXVRrqsOLdnS
-	 WomxIms3g6+l/tLTMULJiqVd4dG1++kriX4zxGUU=
+	b=2hOXGvNzcRUQzIaaDDoPCgC0qBfiW2Zt1e7lOgW0zUgRohOLmcOFymf3pYljK9kBO
+	 puVR089017yxEkTFiLFRkqfyeGpuVRVFytujF+2sLIwO1oZUg4yLXJwXxkwkYDaAVz
+	 pK3S9tv514+KHQ8bzoQCTnpIi2onB1m9LsUoKi7k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730291AbfEOLPW (ORCPT
+        id S1730074AbfEOLP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:15:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51710 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:15:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730261AbfEOLPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:15:16 -0400
+        id S1730261AbfEOLPX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:15:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E027F20644;
-        Wed, 15 May 2019 11:15:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DE7920644;
+        Wed, 15 May 2019 11:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918915;
-        bh=oRtn80z79lTgd3d40Qj1X4uvziikYMgHRd602Jyep20=;
+        s=default; t=1557918923;
+        bh=6zO7tVXG4/5IUdBroFzjK/pJRlz3x3muihcqwl8q3JA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SgmtaC/pN5dw/9A5kFWm1flUM1mq4YA7CQPjOPrsvKx0MA/cmPSdHLPGVj/zA+bFb
-         9m0lpHyWV7phfurOFgIr0g2fg+8S3HYrlH6wyJ0WXNOCdL9akRzfIA+5O1ib/rIhiy
-         sUr4rXjbSGv2qdvIo1RMesD5Z+Z0Iw8uHQa0Y/sk=
+        b=DROwB0RJHYJpTUXoN+svIIHhRXYWsTqTNJphOE6tKPGSPnD/H0AtBZtKATw5xnSky
+         FIzLs8cUL/DgsnWzrpyaqzFM1o54NfyaM1jJlHIAc91Cb7sKGjd8lm4ee4lqDVxEDb
+         MP/M+NhWBf4vZR0jmWIRfdQjSnYhcptwQNXMgJjk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Timur Tabi <timur@freescale.com>,
-        Mihai Caraman <mihai.caraman@freescale.com>,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 48/51] drivers/virt/fsl_hypervisor.c: dereferencing error pointers in ioctl
-Date:   Wed, 15 May 2019 12:56:23 +0200
-Message-Id: <20190515090629.669805710@linuxfoundation.org>
+        stable@vger.kernel.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.9 51/51] powerpc/booke64: set RI in default MSR
+Date:   Wed, 15 May 2019 12:56:26 +0200
+Message-Id: <20190515090630.242063612@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
 References: <20190515090616.669619870@linuxfoundation.org>
@@ -63,104 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-commit c8ea3663f7a8e6996d44500ee818c9330ac4fd88 upstream.
+commit 5266e58d6cd90ac85c187d673093ad9cb649e16d upstream.
 
-strndup_user() returns error pointers on error, and then in the error
-handling we pass the error pointers to kfree().  It will cause an Oops.
+Set RI in the default kernel's MSR so that the architected way of
+detecting unrecoverable machine check interrupts has a chance to work.
+This is inline with the MSR setup of the rest of booke powerpc
+architectures configured here.
 
-Link: http://lkml.kernel.org/r/20181218082003.GD32567@kadam
-Fixes: 6db7199407ca ("drivers/virt: introduce Freescale hypervisor management driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Timur Tabi <timur@freescale.com>
-Cc: Mihai Caraman <mihai.caraman@freescale.com>
-Cc: Kumar Gala <galak@kernel.crashing.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/virt/fsl_hypervisor.c |   26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
+ arch/powerpc/include/asm/reg_booke.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/virt/fsl_hypervisor.c
-+++ b/drivers/virt/fsl_hypervisor.c
-@@ -334,8 +334,8 @@ static long ioctl_dtprop(struct fsl_hv_i
- 	struct fsl_hv_ioctl_prop param;
- 	char __user *upath, *upropname;
- 	void __user *upropval;
--	char *path = NULL, *propname = NULL;
--	void *propval = NULL;
-+	char *path, *propname;
-+	void *propval;
- 	int ret = 0;
+--- a/arch/powerpc/include/asm/reg_booke.h
++++ b/arch/powerpc/include/asm/reg_booke.h
+@@ -41,7 +41,7 @@
+ #if defined(CONFIG_PPC_BOOK3E_64)
+ #define MSR_64BIT	MSR_CM
  
- 	/* Get the parameters from the user. */
-@@ -347,32 +347,30 @@ static long ioctl_dtprop(struct fsl_hv_i
- 	upropval = (void __user *)(uintptr_t)param.propval;
- 
- 	path = strndup_user(upath, FH_DTPROP_MAX_PATHLEN);
--	if (IS_ERR(path)) {
--		ret = PTR_ERR(path);
--		goto out;
--	}
-+	if (IS_ERR(path))
-+		return PTR_ERR(path);
- 
- 	propname = strndup_user(upropname, FH_DTPROP_MAX_PATHLEN);
- 	if (IS_ERR(propname)) {
- 		ret = PTR_ERR(propname);
--		goto out;
-+		goto err_free_path;
- 	}
- 
- 	if (param.proplen > FH_DTPROP_MAX_PROPLEN) {
- 		ret = -EINVAL;
--		goto out;
-+		goto err_free_propname;
- 	}
- 
- 	propval = kmalloc(param.proplen, GFP_KERNEL);
- 	if (!propval) {
- 		ret = -ENOMEM;
--		goto out;
-+		goto err_free_propname;
- 	}
- 
- 	if (set) {
- 		if (copy_from_user(propval, upropval, param.proplen)) {
- 			ret = -EFAULT;
--			goto out;
-+			goto err_free_propval;
- 		}
- 
- 		param.ret = fh_partition_set_dtprop(param.handle,
-@@ -391,7 +389,7 @@ static long ioctl_dtprop(struct fsl_hv_i
- 			if (copy_to_user(upropval, propval, param.proplen) ||
- 			    put_user(param.proplen, &p->proplen)) {
- 				ret = -EFAULT;
--				goto out;
-+				goto err_free_propval;
- 			}
- 		}
- 	}
-@@ -399,10 +397,12 @@ static long ioctl_dtprop(struct fsl_hv_i
- 	if (put_user(param.ret, &p->ret))
- 		ret = -EFAULT;
- 
--out:
--	kfree(path);
-+err_free_propval:
- 	kfree(propval);
-+err_free_propname:
- 	kfree(propname);
-+err_free_path:
-+	kfree(path);
- 
- 	return ret;
- }
+-#define MSR_		(MSR_ME | MSR_CE)
++#define MSR_		(MSR_ME | MSR_RI | MSR_CE)
+ #define MSR_KERNEL	(MSR_ | MSR_64BIT)
+ #define MSR_USER32	(MSR_ | MSR_PR | MSR_EE)
+ #define MSR_USER64	(MSR_USER32 | MSR_64BIT)
 
 
