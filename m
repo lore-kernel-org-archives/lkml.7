@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4E0C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3A4C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B6920818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C8A4206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919398;
-	bh=K2IkrEi/tD2IaYZmqAfSJbHk+BOVouzFnQkxLuBR1/o=;
+	s=default; t=1557919405;
+	bh=/6v4q7HorDwUbu/gg1s9GVvcdOTHYUySSEJ4nqN5lH0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lW47t4w3lgiEP6mH/1ByTWkOJbAoizOXiczuUU1eRBPQkpAlQDBaQlY1RgE56HlwF
-	 qnPS/hVF58IuJO4XMKei+tfah0eBx17zagjDjFrGG+KeERUMkTnf4uHllTtv0uloRR
-	 73Y2iTFyGQrFerwdlabtB3nPC6nNGr4wRkqC73v0=
+	b=mmW6A17MO8Nl5oUEr+PRyYeggpeC0dPVIOilDexufn7afEDanJ7CpopCKeX0QpGyW
+	 OeMMgrE6kqCVeIh+3aDq1c3HoQCW6oBa3/aTgIyd6qFvL1bXd/PSV2dyIv8WAWzSGZ
+	 4oKNs020aqGEMUKGg05WSp8TDL52JthvIHWSu6gQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731609AbfEOLXR (ORCPT
+        id S1731642AbfEOLXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:23:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33562 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:23:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731600AbfEOLXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:23:14 -0400
+        id S1731630AbfEOLXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:23:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E9D22173C;
-        Wed, 15 May 2019 11:23:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06D41206BF;
+        Wed, 15 May 2019 11:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919393;
-        bh=K2IkrEi/tD2IaYZmqAfSJbHk+BOVouzFnQkxLuBR1/o=;
+        s=default; t=1557919401;
+        bh=/6v4q7HorDwUbu/gg1s9GVvcdOTHYUySSEJ4nqN5lH0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R/AmU3Uuxzh0loV85j20P4HVXXHNddoLr/zBG1vPR06iv+4zsqGH9s3+p/5EbjZpH
-         iY4tIA5VVJL5Qh1n5ptddY6lb2RndwCdtV8u95+XWrtsnUhkQZyzEXyhJ4REH/5MCt
-         +Ypk9ZqJeJU4beZ9OUBTV6KCp4VD/XVLlsNQpLnA=
+        b=WZMm8QtjGwyj27XjgsjHaxc76FWoW7nCg1fLhNAGQpnr1EthcTvXV5qdREFKMhiCJ
+         4tCbMZBILBMKSDr8AEv9KlAvxcZKKLIHY8h79qwD2jFugSSy/C2E1KZNkJgKWAWbZR
+         qC0QzMb3xJORjqVd1Qoqm80XVo3Us1FOIAyO0ASo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Camuso <tcamuso@redhat.com>,
-        Corey Minyard <cminyard@mvista.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 041/113] ipmi: ipmi_si_hardcode.c: init si_type array to fix a crash
-Date:   Wed, 15 May 2019 12:55:32 +0200
-Message-Id: <20190515090656.736553667@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 061/113] drm/sun4i: Unbind components before releasing DRM and memory
+Date:   Wed, 15 May 2019 12:55:52 +0200
+Message-Id: <20190515090658.200297776@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -60,46 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a885bcfd152f97b25005298ab2d6b741aed9b49c ]
+[ Upstream commit e02bc29b2cfa7806830d6da8b2322cddd67e8dfe ]
 
-The intended behavior of function ipmi_hardcode_init_one() is to default
-to kcs interface when no type argument is presented when initializing
-ipmi with hard coded addresses.
+Our components may still be using the DRM device driver (if only to
+access our driver's private data), so make sure to unbind them before
+the final drm_dev_put.
 
-However, the array of char pointers allocated on the stack by function
-ipmi_hardcode_init() was not inited to zeroes, so it contained stack
-debris.
+Also release our reserved memory after component unbind instead of
+before to match reverse creation order.
 
-Consequently, passing the cruft stored in this array to function
-ipmi_hardcode_init_one() caused a crash when it was unable to detect
-that the char * being passed was nonsense and tried to access the
-address specified by the bogus pointer.
-
-The fix is simply to initialize the si_type array to zeroes, so if
-there were no type argument given to at the command line, function
-ipmi_hardcode_init_one() could properly default to the kcs interface.
-
-Signed-off-by: Tony Camuso <tcamuso@redhat.com>
-Message-Id: <1554837603-40299-1-git-send-email-tcamuso@redhat.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Fixes: f5a9ed867c83 ("drm/sun4i: Fix component unbinding and component master deletion")
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190424090413.6918-1-paul.kocialkowski@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_si_hardcode.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_drv.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_hardcode.c b/drivers/char/ipmi/ipmi_si_hardcode.c
-index 9ae2405c28bbd..0c28e872ad3ae 100644
---- a/drivers/char/ipmi/ipmi_si_hardcode.c
-+++ b/drivers/char/ipmi/ipmi_si_hardcode.c
-@@ -200,6 +200,8 @@ void __init ipmi_hardcode_init(void)
- 	char *str;
- 	char *si_type[SI_MAX_PARMS];
+diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+index 62703630090aa..57f61ec4bc6be 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+@@ -158,10 +158,11 @@ static void sun4i_drv_unbind(struct device *dev)
+ 	drm_kms_helper_poll_fini(drm);
+ 	sun4i_framebuffer_free(drm);
+ 	drm_mode_config_cleanup(drm);
+-	of_reserved_mem_device_release(dev);
+-	drm_dev_put(drm);
  
-+	memset(si_type, 0, sizeof(si_type));
+ 	component_unbind_all(dev, NULL);
++	of_reserved_mem_device_release(dev);
 +
- 	/* Parse out the si_type string into its components. */
- 	str = si_type_str;
- 	if (*str != '\0') {
++	drm_dev_put(drm);
+ }
+ 
+ static const struct component_master_ops sun4i_drv_master_ops = {
 -- 
 2.20.1
 
