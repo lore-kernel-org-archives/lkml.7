@@ -4,58 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656D5C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC70C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 314DA2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEAFD2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918817;
-	bh=EPd20mHdzbvtQrcoHfWRAyuF3QmcVTLdRG1MIV51Cec=;
+	s=default; t=1557918819;
+	bh=/AiU08ka8+dVsEJGtAMl6vYttxKX5SWO+2AiJuBBxEs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NF1GI7ed5T8vDcikWAjx2AZ35OHYiV55YZDuBGncanzTWoRAlKL3n54j8cHKG1hxe
-	 oEH0Nd+8VURtRRVf9/9BbfMmaXmZXm5AgllW2LcGUbBpb8Hx5Crx56eqE2e3y9hk2j
-	 qO1amge44oDQYGS3tr98k1OWXF4Snfgd8Vno6Mg4=
+	b=yWHCWmHBhBoPmt8LL11L62skXuLBL4gOGn+MBnt+Q9EduWe5VNOoLkBvgGM/73RMu
+	 fLTNJSJvFwG9GjhmjtXVr0HRsn2U3qGPkauFmWXRprkQk3gNK6HUJ7eV85wqyLczuz
+	 vQoRuUkq5CHsNEfhSt5mxjMbbVn3ZyurgrArRPrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729996AbfEOLNg (ORCPT
+        id S1729748AbfEOLNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:13:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49234 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:13:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729977AbfEOLNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:13:32 -0400
+        id S1729988AbfEOLNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:13:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E5EF20644;
-        Wed, 15 May 2019 11:13:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 930F72084E;
+        Wed, 15 May 2019 11:13:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918811;
-        bh=EPd20mHdzbvtQrcoHfWRAyuF3QmcVTLdRG1MIV51Cec=;
+        s=default; t=1557918814;
+        bh=/AiU08ka8+dVsEJGtAMl6vYttxKX5SWO+2AiJuBBxEs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CpxATUoSCM7dA1cZvJLuJWbqMI3/sXeI0ADARMg1Td3BExhvj+cN/+wqL3nns+zdu
-         03r3PjrQlccPppKCQ0YMguSp7zJM1pddB0tcF2/DdOJiQIer0aqUkUNwhBidm3FOYV
-         MD1+PzhjjUXOQQO1RTWlt2zIDz6WjAZ3IbWwdAhM=
+        b=mpDAQLsU2BcDNjHrjVb5RFAPvCBD5GwanKY5ijj5vQ+0fWl+cRDehlra5Kgre29M9
+         kqjuG3nZj/GJQouB15MJy1HGUYUb+GCFRhy2Pyo0XOepUv4gdlIB/9QL5eSgUHBydj
+         X2/oj4QYSoPdLyF/mx2MwMEuCUxFxAogMwmxxbTA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Zubin Mithra <zsm@chromium.org>,
+        stable@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 01/51] netfilter: compat: initialize all fields in xt_init
-Date:   Wed, 15 May 2019 12:55:36 +0200
-Message-Id: <20190515090618.008520070@linuxfoundation.org>
+Subject: [PATCH 4.9 10/51] HID: input: add mapping for "Toggle Display" key
+Date:   Wed, 15 May 2019 12:55:45 +0200
+Message-Id: <20190515090620.495149719@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
 References: <20190515090616.669619870@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,68 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 8d29d16d21342a0c86405d46de0c4ac5daf1760f upstream
+[ Upstream commit c01908a14bf735b871170092807c618bb9dae654 ]
 
-If a non zero value happens to be in xt[NFPROTO_BRIDGE].cur at init
-time, the following panic can be caused by running
+According to HUT 1.12 usage 0xb5 from the generic desktop page is reserved
+for switching between external and internal display, so let's add the
+mapping.
 
-% ebtables -t broute -F BROUTING
-
-from a 32-bit user level on a 64-bit kernel. This patch replaces
-kmalloc_array with kcalloc when allocating xt.
-
-[  474.680846] BUG: unable to handle kernel paging request at 0000000009600920
-[  474.687869] PGD 2037006067 P4D 2037006067 PUD 2038938067 PMD 0
-[  474.693838] Oops: 0000 [#1] SMP
-[  474.697055] CPU: 9 PID: 4662 Comm: ebtables Kdump: loaded Not tainted 4.19.17-11302235.AroraKernelnext.fc18.x86_64 #1
-[  474.707721] Hardware name: Supermicro X9DRT/X9DRT, BIOS 3.0 06/28/2013
-[  474.714313] RIP: 0010:xt_compat_calc_jump+0x2f/0x63 [x_tables]
-[  474.720201] Code: 40 0f b6 ff 55 31 c0 48 6b ff 70 48 03 3d dc 45 00 00 48 89 e5 8b 4f 6c 4c 8b 47 60 ff c9 39 c8 7f 2f 8d 14 08 d1 fa 48 63 fa <41> 39 34 f8 4c 8d 0c fd 00 00 00 00 73 05 8d 42 01 eb e1 76 05 8d
-[  474.739023] RSP: 0018:ffffc9000943fc58 EFLAGS: 00010207
-[  474.744296] RAX: 0000000000000000 RBX: ffffc90006465000 RCX: 0000000002580249
-[  474.751485] RDX: 00000000012c0124 RSI: fffffffff7be17e9 RDI: 00000000012c0124
-[  474.758670] RBP: ffffc9000943fc58 R08: 0000000000000000 R09: ffffffff8117cf8f
-[  474.765855] R10: ffffc90006477000 R11: 0000000000000000 R12: 0000000000000001
-[  474.773048] R13: 0000000000000000 R14: ffffc9000943fcb8 R15: ffffc9000943fcb8
-[  474.780234] FS:  0000000000000000(0000) GS:ffff88a03f840000(0063) knlGS:00000000f7ac7700
-[  474.788612] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-[  474.794632] CR2: 0000000009600920 CR3: 0000002037422006 CR4: 00000000000606e0
-[  474.802052] Call Trace:
-[  474.804789]  compat_do_replace+0x1fb/0x2a3 [ebtables]
-[  474.810105]  compat_do_ebt_set_ctl+0x69/0xe6 [ebtables]
-[  474.815605]  ? try_module_get+0x37/0x42
-[  474.819716]  compat_nf_setsockopt+0x4f/0x6d
-[  474.824172]  compat_ip_setsockopt+0x7e/0x8c
-[  474.828641]  compat_raw_setsockopt+0x16/0x3a
-[  474.833220]  compat_sock_common_setsockopt+0x1d/0x24
-[  474.838458]  __compat_sys_setsockopt+0x17e/0x1b1
-[  474.843343]  ? __check_object_size+0x76/0x19a
-[  474.847960]  __ia32_compat_sys_socketcall+0x1cb/0x25b
-[  474.853276]  do_fast_syscall_32+0xaf/0xf6
-[  474.857548]  entry_SYSENTER_compat+0x6b/0x7a
-
-Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Zubin Mithra <zsm@chromium.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/x_tables.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-input.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/net/netfilter/x_tables.c b/net/netfilter/x_tables.c
-index 751fec729ffb0..e065140d0c93b 100644
---- a/net/netfilter/x_tables.c
-+++ b/net/netfilter/x_tables.c
-@@ -1728,7 +1728,7 @@ static int __init xt_init(void)
- 		seqcount_init(&per_cpu(xt_recseq, i));
- 	}
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index 302a24931147b..9f7b1cf726a8d 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -607,6 +607,14 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 			break;
+ 		}
  
--	xt = kmalloc(sizeof(struct xt_af) * NFPROTO_NUMPROTO, GFP_KERNEL);
-+	xt = kcalloc(NFPROTO_NUMPROTO, sizeof(struct xt_af), GFP_KERNEL);
- 	if (!xt)
- 		return -ENOMEM;
- 
++		if ((usage->hid & 0xf0) == 0xb0) {	/* SC - Display */
++			switch (usage->hid & 0xf) {
++			case 0x05: map_key_clear(KEY_SWITCHVIDEOMODE); break;
++			default: goto ignore;
++			}
++			break;
++		}
++
+ 		/*
+ 		 * Some lazy vendors declare 255 usages for System Control,
+ 		 * leading to the creation of ABS_X|Y axis and too many others.
 -- 
 2.20.1
 
