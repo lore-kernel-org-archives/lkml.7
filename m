@@ -4,52 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D78C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B39C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18398216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA3C920881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:04:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918272;
-	bh=M2A9iqhs/KVUvfAoeL7RgXhLq80Db758QtOaHvcXZro=;
+	s=default; t=1557918276;
+	bh=WhorkiFiqkF4ZHAk8OdsEvnCoxSGeafgCh7Xbs/PbnM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BFeTgNRYNW0i3f6EM2uOt6yGQJXP0dLvsbYOoDJDXq6Ew8Y1aww7NPiS9rAt1BYpI
-	 UgYlktVwpPKqANdELEFFbp4q5WAdv9GnQ4Q9H3BezVJsBUqVYlPmxv2tCjdgolb1xe
-	 xKTjmpHd0hz8FhZewHVvp1tolz/GYOfyRD+OOodk=
+	b=Y9P1MtyDV8HmPWuC5rSba0DC0zA1UV9Ant/TPSCb2M89RO5N15Gc3sZ3zeaT+E5I6
+	 8Aab/MV/hs5VooXMKDJftJh73vvclVd1MiKlfCH+aJUZKw24IwQCRsnnBabLYfDLNK
+	 3SrxNubVdGMFiVuq7zij846JmgygmAo2stv2FDYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbfEOLEb (ORCPT
+        id S1728469AbfEOLEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:04:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34040 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:04:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727753AbfEOLE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:04:26 -0400
+        id S1727753AbfEOLEb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:04:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B022E2084F;
-        Wed, 15 May 2019 11:04:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E287820881;
+        Wed, 15 May 2019 11:04:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918266;
-        bh=M2A9iqhs/KVUvfAoeL7RgXhLq80Db758QtOaHvcXZro=;
+        s=default; t=1557918271;
+        bh=WhorkiFiqkF4ZHAk8OdsEvnCoxSGeafgCh7Xbs/PbnM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xKbr4ltNPoHZ+Ep7GjIYp1ewWz4SxLeB3KbhV6g0n8XP6vnKhQfC+6TjrLjHt3L2U
-         mhNNAbG2pvGdf2v8wbQz277KstYExDcTRpDqd0Hcw6CVqMQAGXke7ovJUsAQAAPKxp
-         wbHervbi/10ifjsiPzecxyV1LtlCWLwCc8aFYNSU=
+        b=goT2ea5Ej0LHCL8fD7diUUMAPx01SiQKi02tI6Ma6oSfM9GKmLip/MYgWpnnrQF9P
+         yJVHiovSB9QB6CosztHUHBsjaLSa0p0hCYscYjzdKoFE0XwNS71NdbYSKeFYXMtiTE
+         GaFmHN0VQlBHp25uiiMolwWF+v9HMw1o96NT0wBA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com,
-        Ben Hutchings <ben@decadent.org.uk>,
-        David Miller <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 066/266] slip: make slhc_free() silently accept an error pointer
-Date:   Wed, 15 May 2019 12:52:53 +0200
-Message-Id: <20190515090724.672954939@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.4 029/266] powerpc/pseries: Use the security flags in pseries_setup_rfi_flush()
+Date:   Wed, 15 May 2019 12:52:16 +0200
+Message-Id: <20190515090723.540871847@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -62,48 +57,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit baf76f0c58aec435a3a864075b8f6d8ee5d1f17e upstream.
+commit 2e4a16161fcd324b1f9bf6cb6856529f7eaf0689 upstream.
 
-This way, slhc_free() accepts what slhc_init() returns, whether that is
-an error or not.
+Now that we have the security flags we can simplify the code in
+pseries_setup_rfi_flush() because the security flags have pessimistic
+defaults.
 
-In particular, the pattern in sl_alloc_bufs() is
-
-        slcomp = slhc_init(16, 16);
-        ...
-        slhc_free(slcomp);
-
-for the error handling path, and rather than complicate that code, just
-make it ok to always free what was returned by the init function.
-
-That's what the code used to do before commit 4ab42d78e37a ("ppp, slip:
-Validate VJ compression slot parameters completely") when slhc_init()
-just returned NULL for the error case, with no actual indication of the
-details of the error.
-
-Reported-by: syzbot+45474c076a4927533d2e@syzkaller.appspotmail.com
-Fixes: 4ab42d78e37a ("ppp, slip: Validate VJ compression slot parameters completely")
-Acked-by: Ben Hutchings <ben@decadent.org.uk>
-Cc: David Miller <davem@davemloft.net>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/slip/slhc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/setup.c |   27 ++++++++++++---------------
+ 1 file changed, 12 insertions(+), 15 deletions(-)
 
---- a/drivers/net/slip/slhc.c
-+++ b/drivers/net/slip/slhc.c
-@@ -153,7 +153,7 @@ out_fail:
- void
- slhc_free(struct slcompress *comp)
- {
--	if ( comp == NULLSLCOMPR )
-+	if ( IS_ERR_OR_NULL(comp) )
- 		return;
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -541,30 +541,27 @@ void pseries_setup_rfi_flush(void)
+ 	bool enable;
+ 	long rc;
  
- 	if ( comp->tstate != NULLSLSTATE )
+-	/* Enable by default */
+-	enable = true;
+-	types = L1D_FLUSH_FALLBACK;
+-
+ 	rc = plpar_get_cpu_characteristics(&result);
+-	if (rc == H_SUCCESS) {
++	if (rc == H_SUCCESS)
+ 		init_cpu_char_feature_flags(&result);
+ 
+-		if (result.character & H_CPU_CHAR_L1D_FLUSH_TRIG2)
+-			types |= L1D_FLUSH_MTTRIG;
+-		if (result.character & H_CPU_CHAR_L1D_FLUSH_ORI30)
+-			types |= L1D_FLUSH_ORI;
+-
+-		if ((!(result.behaviour & H_CPU_BEHAV_L1D_FLUSH_PR)) ||
+-		    (!(result.behaviour & H_CPU_BEHAV_FAVOUR_SECURITY)))
+-			enable = false;
+-	}
+-
+ 	/*
+ 	 * We're the guest so this doesn't apply to us, clear it to simplify
+ 	 * handling of it elsewhere.
+ 	 */
+ 	security_ftr_clear(SEC_FTR_L1D_FLUSH_HV);
+ 
++	types = L1D_FLUSH_FALLBACK;
++
++	if (security_ftr_enabled(SEC_FTR_L1D_FLUSH_TRIG2))
++		types |= L1D_FLUSH_MTTRIG;
++
++	if (security_ftr_enabled(SEC_FTR_L1D_FLUSH_ORI30))
++		types |= L1D_FLUSH_ORI;
++
++	enable = security_ftr_enabled(SEC_FTR_FAVOUR_SECURITY) && \
++		 security_ftr_enabled(SEC_FTR_L1D_FLUSH_PR);
++
+ 	setup_rfi_flush(types, enable);
+ }
+ 
 
 
