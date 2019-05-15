@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0691EC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B680C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D012E20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F16E721473
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918636;
-	bh=Hd5vy4q62hfBLjztqv2TBTTb3X8Iw4+gOurjXUZf9xk=;
+	s=default; t=1557918640;
+	bh=N93FoCanKW+t8w2WAwAyPKBHEcqsnpdW47AZe0O+MdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YwQVR/9ePwouyqs85m9ZTN3Qy5KK2DiwdupqdW38AUWzKfdPaLfNUAwpvje1YkedS
-	 T/uwG/wT8XINDbh1gjSSRGys8YrKzVzUkOpoQsgvHY/JVMFgsUxxSsynBS8xxIf6p1
-	 JC5nWFMTbazsJW2tZUywTNl1alD3pW0tOGC10FuI=
+	b=jqK5T//D8eMLrgB5Z0Shir3OhYStL/B/bTJZdaQQQTuBcumHbcPdfXB0Th9tYLhgK
+	 D4AIWBd84bMtvofEmJyF5D2U4diQBET4eImCkrEGTdQgCzRbL3Tau/8NLrlTn2Myr6
+	 qLK9V1N23Im4GXTSZcD61PdhSrEkGlcI+aVhtZnQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729428AbfEOLKf (ORCPT
+        id S1729440AbfEOLKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:10:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44392 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:10:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729004AbfEOLKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:10:31 -0400
+        id S1729431AbfEOLKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:10:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD12E20843;
-        Wed, 15 May 2019 11:10:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BA412084F;
+        Wed, 15 May 2019 11:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918630;
-        bh=Hd5vy4q62hfBLjztqv2TBTTb3X8Iw4+gOurjXUZf9xk=;
+        s=default; t=1557918634;
+        bh=N93FoCanKW+t8w2WAwAyPKBHEcqsnpdW47AZe0O+MdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=usffUBvovIPJ4Exa+guN25k79aZilNcB1Ce+nHWi0ZuefBtwVlIFte92XfnTDgaIx
-         C14UsxuNKgkQcPuRTN1QeISGSOCKL/tFPCc5QS2lpy6apNWj1z2jwpQ3aAk+Rk2vVW
-         6CGajPMgVhS+97KQ4b3FeGrTCcSFybOQhWOANIfk=
+        b=HSUKpxuddJW7lNUW4KJD173YV+LJwti0n+zB1KHsLAfBTCBeqwDhmIAe8P1o5Tz0T
+         W1tTPDgVC1C8+hlsCMh+xt0A6lK0vx3POMLNgXcqAtcyQcYcP8z2IBvKhiEwPmt7yc
+         eyBVfVyUzlq6Sc9SgD6o6vBQcDTL+JDt7JArvEPg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -63,9 +63,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Dave Stewart <david.c.stewart@intel.com>,
         Kees Cook <keescook@chromium.org>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 202/266] x86/speculation: Clean up spectre_v2_parse_cmdline()
-Date:   Wed, 15 May 2019 12:55:09 +0200
-Message-Id: <20190515090729.789060107@linuxfoundation.org>
+Subject: [PATCH 4.4 204/266] x86/speculation: Move STIPB/IBPB string conditionals out of cpu_show_common()
+Date:   Wed, 15 May 2019 12:55:11 +0200
+Message-Id: <20190515090729.858917277@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -80,10 +80,15 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tim Chen <tim.c.chen@linux.intel.com>
 
-commit 24848509aa55eac39d524b587b051f4e86df3c12 upstream.
+commit a8f76ae41cd633ac00be1b3019b1eb4741be3828 upstream.
 
-Remove the unnecessary 'else' statement in spectre_v2_parse_cmdline()
-to save an indentation level.
+The Spectre V2 printout in cpu_show_common() handles conditionals for the
+various mitigation methods directly in the sprintf() argument list. That's
+hard to read and will become unreadable if more complex decisions need to
+be made for a particular method.
+
+Move the conditionals for STIBP and IBPB string selection into helper
+functions, so they can be extended later on.
 
 Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
@@ -106,50 +111,49 @@ Cc: Waiman Long <longman9394@gmail.com>
 Cc: Greg KH <gregkh@linuxfoundation.org>
 Cc: Dave Stewart <david.c.stewart@intel.com>
 Cc: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20181125185003.688010903@linutronix.de
+Link: https://lkml.kernel.org/r/20181125185003.874479208@linutronix.de
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/cpu/bugs.c |   27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ arch/x86/kernel/cpu/bugs.c |   20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -273,22 +273,21 @@ static enum spectre_v2_mitigation_cmd __
+@@ -759,6 +759,22 @@ static void __init l1tf_select_mitigatio
  
- 	if (cmdline_find_option_bool(boot_command_line, "nospectre_v2"))
- 		return SPECTRE_V2_CMD_NONE;
--	else {
--		ret = cmdline_find_option(boot_command_line, "spectre_v2", arg, sizeof(arg));
--		if (ret < 0)
--			return SPECTRE_V2_CMD_AUTO;
+ #ifdef CONFIG_SYSFS
  
--		for (i = 0; i < ARRAY_SIZE(mitigation_options); i++) {
--			if (!match_option(arg, ret, mitigation_options[i].option))
--				continue;
--			cmd = mitigation_options[i].cmd;
--			break;
--		}
-+	ret = cmdline_find_option(boot_command_line, "spectre_v2", arg, sizeof(arg));
-+	if (ret < 0)
-+		return SPECTRE_V2_CMD_AUTO;
- 
--		if (i >= ARRAY_SIZE(mitigation_options)) {
--			pr_err("unknown option (%s). Switching to AUTO select\n", arg);
--			return SPECTRE_V2_CMD_AUTO;
--		}
-+	for (i = 0; i < ARRAY_SIZE(mitigation_options); i++) {
-+		if (!match_option(arg, ret, mitigation_options[i].option))
-+			continue;
-+		cmd = mitigation_options[i].cmd;
-+		break;
-+	}
++static char *stibp_state(void)
++{
++	if (x86_spec_ctrl_base & SPEC_CTRL_STIBP)
++		return ", STIBP";
++	else
++		return "";
++}
 +
-+	if (i >= ARRAY_SIZE(mitigation_options)) {
-+		pr_err("unknown option (%s). Switching to AUTO select\n", arg);
-+		return SPECTRE_V2_CMD_AUTO;
- 	}
++static char *ibpb_state(void)
++{
++	if (boot_cpu_has(X86_FEATURE_USE_IBPB))
++		return ", IBPB";
++	else
++		return "";
++}
++
+ static ssize_t cpu_show_common(struct device *dev, struct device_attribute *attr,
+ 			       char *buf, unsigned int bug)
+ {
+@@ -777,9 +793,9 @@ static ssize_t cpu_show_common(struct de
  
- 	if ((cmd == SPECTRE_V2_CMD_RETPOLINE ||
+ 	case X86_BUG_SPECTRE_V2:
+ 		return sprintf(buf, "%s%s%s%s%s%s\n", spectre_v2_strings[spectre_v2_enabled],
+-			       boot_cpu_has(X86_FEATURE_USE_IBPB) ? ", IBPB" : "",
++			       ibpb_state(),
+ 			       boot_cpu_has(X86_FEATURE_USE_IBRS_FW) ? ", IBRS_FW" : "",
+-			       (x86_spec_ctrl_base & SPEC_CTRL_STIBP) ? ", STIBP" : "",
++			       stibp_state(),
+ 			       boot_cpu_has(X86_FEATURE_RSB_CTXSW) ? ", RSB filling" : "",
+ 			       spectre_v2_module_string());
+ 
 
 
