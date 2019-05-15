@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D893C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0662C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FF2206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A142206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919880;
-	bh=oHXUAOsbOGuTuFUb/ynXgCuDOCmUrG66929WmRtc8iw=;
+	s=default; t=1557919883;
+	bh=OVadQS8FRq9U3Y0HptqM8n/noUKP+J7NSlQ65DfLFaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lX8nQQKpZE3TTaBPEr7xP3cHIKOlD3AMWMaXM5X8f5Lvx/5c4e64zF/u8kIB1Mp3V
-	 WWFAGLK73/OwOI6uJqdS/Kt7GQpfEYWAt58KG3DhB0roIBMgyadE9vdI9BYdMVmhzb
-	 ZTiW+BvnPI/vbT6ffo4Ig6lRnuvvRgCpNjNzcn7Q=
+	b=ID6hQRvUWkgh44JbkqpViaOIcJgzTap6guAkqXQI1kSn/cK6ouIDc6QX425UI/v98
+	 JaYGD1WRGDKom6rdoJzAbywPJbldlDzcC2pKfYlCUVwQ8S0DsrN1KhljGIWhbSaBxG
+	 iB9l+VOBAKcsjmOBKPwOV5RvvvtGeYm88Hzt4NXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732885AbfEOLbT (ORCPT
+        id S1728845AbfEOLbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:31:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43014 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:31:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732587AbfEOLbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:31:16 -0400
+        id S1732866AbfEOLbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:31:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A693C206BF;
-        Wed, 15 May 2019 11:31:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E36CE20818;
+        Wed, 15 May 2019 11:31:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919876;
-        bh=oHXUAOsbOGuTuFUb/ynXgCuDOCmUrG66929WmRtc8iw=;
+        s=default; t=1557919873;
+        bh=OVadQS8FRq9U3Y0HptqM8n/noUKP+J7NSlQ65DfLFaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cuqhsiFC6IMSYw+PGdm1s1/pmycBzdK8HytjeoLFO6YsD9+6KDprG6StQXBlBiXU1
-         irxBLsB5zHkrV926XJbbh+5q4CL5x7VUNDBULDTJtYoCgvWMcH+OA9IbgTGLeVErq6
-         pJ8yOzRneJpfoRH4TbPfqGHS2AKnGBwfq3y6wBCg=
+        b=LufkawC4ptpJorKECUN8ZzsD43U128s6UsYDXN00YnOrHerf9WozE9iKB6pJiiXHj
+         1hqnEGEgzqnJ1w6SipLBu3glZ5mo6+RenSH3wDH9dtdlhhlOslccR+lcDuOJz3mIDc
+         8vq5xUGnfHpQ+W6U/UCYrmCe2vNhO8i1ZjfcSEig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 083/137] ARM: fix function graph tracer and unwinder dependencies
-Date:   Wed, 15 May 2019 12:56:04 +0200
-Message-Id: <20190515090659.543869830@linuxfoundation.org>
+Subject: [PATCH 5.0 082/137] drm/imx: dont skip DP channel disable for background plane
+Date:   Wed, 15 May 2019 12:56:03 +0200
+Message-Id: <20190515090659.462701393@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -60,70 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 503621628b32782a07b2318e4112bd4372aa3401 ]
+[ Upstream commit 7bcde275eb1d0ac8793c77c7e666a886eb16633d ]
 
-Naresh Kamboju recently reported that the function-graph tracer crashes
-on ARM. The function-graph tracer assumes that the kernel is built with
-frame pointers.
+In order to make sure that the plane color space gets reset correctly.
 
-We explicitly disabled the function-graph tracer when building Thumb2,
-since the Thumb2 ABI doesn't have frame pointers.
-
-We recently changed the way the unwinder method was selected, which
-seems to have made it more likely that we can end up with the function-
-graph tracer enabled but without the kernel built with frame pointers.
-
-Fix up the function graph tracer dependencies so the option is not
-available when we have no possibility of having frame pointers, and
-adjust the dependencies on the unwinder option to hide the non-frame
-pointer unwinder options if the function-graph tracer is enabled.
-
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/Kconfig       | 2 +-
- arch/arm/Kconfig.debug | 6 +++---
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/imx/ipuv3-crtc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index e5d56d9b712c2..3b353af9c48dc 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -69,7 +69,7 @@ config ARM
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS if (CPU_V6 || CPU_V6K || CPU_V7) && MMU
- 	select HAVE_EXIT_THREAD
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
--	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL
-+	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
- 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
- 	select HAVE_GCC_PLUGINS
- 	select HAVE_GENERIC_DMA_COHERENT
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 6d6e0330930b5..e388af4594a6e 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -47,8 +47,8 @@ config DEBUG_WX
+diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
+index 058b53c0aa7ec..1bb3e598cb843 100644
+--- a/drivers/gpu/drm/imx/ipuv3-crtc.c
++++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
+@@ -70,7 +70,7 @@ static void ipu_crtc_disable_planes(struct ipu_crtc *ipu_crtc,
+ 	if (disable_partial)
+ 		ipu_plane_disable(ipu_crtc->plane[1], true);
+ 	if (disable_full)
+-		ipu_plane_disable(ipu_crtc->plane[0], false);
++		ipu_plane_disable(ipu_crtc->plane[0], true);
+ }
  
- choice
- 	prompt "Choose kernel unwinder"
--	default UNWINDER_ARM if AEABI && !FUNCTION_GRAPH_TRACER
--	default UNWINDER_FRAME_POINTER if !AEABI || FUNCTION_GRAPH_TRACER
-+	default UNWINDER_ARM if AEABI
-+	default UNWINDER_FRAME_POINTER if !AEABI
- 	help
- 	  This determines which method will be used for unwinding kernel stack
- 	  traces for panics, oopses, bugs, warnings, perf, /proc/<pid>/stack,
-@@ -65,7 +65,7 @@ config UNWINDER_FRAME_POINTER
- 
- config UNWINDER_ARM
- 	bool "ARM EABI stack unwinder"
--	depends on AEABI
-+	depends on AEABI && !FUNCTION_GRAPH_TRACER
- 	select ARM_UNWIND
- 	help
- 	  This option enables stack unwinding support in the kernel
+ static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
 -- 
 2.20.1
 
