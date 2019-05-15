@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A903CC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4879C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB082166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 888222166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918571;
-	bh=QJLn3MhYYMiQkOw7GCZd4wzuFVq9wPRftRqIVNE/dic=;
+	s=default; t=1557918573;
+	bh=0romyWTBFUYbeSjBFCYeTB6M9EA7wEz8HCJSZqFhoOw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tz50QRqvr1lMbl82X6boIUUJDzO3YvW6AhrrDxqIBukCZzTOicm/jOECQX/jDJR+F
-	 rqEFBEaMAQ+vknm4sKVqx6EQKLqkJ/2H6uWs4QbmDxUC8J4Ao6/h/kLNRV8GntbiHe
-	 j8dqDKYt6GCTOJpz+EwJANZM0+ZzYmUdegC1hoKQ=
+	b=QuSuOwJ8LtMecxw8OJi0rbMIfxP4FmqPaxJdAx6I9cwIAh/qYMwStp9J5M6Sx7VrL
+	 9ru3NNroB5eFcH+E0AOdzaQXERtjJ2OJ/yz6l8UK8ia/N/t0IHTlrbwx/w+5sUHyhU
+	 5lP8FMVLJNkEGBBIAnQKS7RFwY8vb/FviwREhBFQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729264AbfEOLJ3 (ORCPT
+        id S1729270AbfEOLJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:09:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42396 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:09:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729251AbfEOLJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:09:27 -0400
+        id S1729263AbfEOLJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:09:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D53E3216FD;
-        Wed, 15 May 2019 11:09:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91D9E20843;
+        Wed, 15 May 2019 11:09:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918566;
-        bh=QJLn3MhYYMiQkOw7GCZd4wzuFVq9wPRftRqIVNE/dic=;
+        s=default; t=1557918569;
+        bh=0romyWTBFUYbeSjBFCYeTB6M9EA7wEz8HCJSZqFhoOw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B9lEq978+D+iWY6br0pXABJ5xR18IY7HOpOf/UKu4IDdDttKLpA3X5C3+rx5h5C1F
-         5jPV6T+jPs3tGKTTbCOtpi3zm9C3x6Ih9arU4EpR5KddXmhslNaPHGAfbfLDSPAYGE
-         Xm/rVa4luTiGFnbqI0T1E3upFwhPpiQZpMuBU9+4=
+        b=InYCE8qvKLtnJyz7EZDmumo3bqLcmonf+o6Ak8Q4I/6oxBhhgSrvbsrAjpVNU0VQ1
+         WF5a9BCEwSasGLgoJ+5NxqY25o7wxkqdeknd/hGcB/oWdSNOvZFZtsvHKPSFculjAr
+         pdoGYH3hPEkeHC8NZzJhNHZc2MuHCCouaXVb5Q1A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Arjan Van De Ven <arjan.van.de.ven@intel.com>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 181/266] bitops: avoid integer overflow in GENMASK(_ULL)
-Date:   Wed, 15 May 2019 12:54:48 +0200
-Message-Id: <20190515090729.051143618@linuxfoundation.org>
+Subject: [PATCH 4.4 182/266] x86/microcode/intel: Check microcode revision before updating sibling threads
+Date:   Wed, 15 May 2019 12:54:49 +0200
+Message-Id: <20190515090729.085096103@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -61,42 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Kaehlcke <mka@chromium.org>
+From: Ashok Raj <ashok.raj@intel.com>
 
-commit c32ee3d9abd284b4fcaacc250b101f93829c7bae upstream.
+commit c182d2b7d0ca48e0d6ff16f7d883161238c447ed upstream.
 
-GENMASK(_ULL) performs a left-shift of ~0UL(L), which technically
-results in an integer overflow.  clang raises a warning if the overflow
-occurs in a preprocessor expression.  Clear the low-order bits through a
-substraction instead of the left-shift to avoid the overflow.
+After updating microcode on one of the threads of a core, the other
+thread sibling automatically gets the update since the microcode
+resources on a hyperthreaded core are shared between the two threads.
 
-(akpm: no change in .text size in my testing)
+Check the microcode revision on the CPU before performing a microcode
+update and thus save us the WRMSR 0x79 because it is a particularly
+expensive operation.
 
-Link: http://lkml.kernel.org/r/20170803212020.24939-1-mka@chromium.org
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[ Borislav: Massage changelog and coding style. ]
+
+Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Tom Lendacky <thomas.lendacky@amd.com>
+Tested-by: Ashok Raj <ashok.raj@intel.com>
+Cc: Arjan Van De Ven <arjan.van.de.ven@intel.com>
+Link: http://lkml.kernel.org/r/1519352533-15992-2-git-send-email-ashok.raj@intel.com
+Link: https://lkml.kernel.org/r/20180228102846.13447-3-bp@alien8.de
+[bwh: Backported to 4.4:
+ - s/mc->/mc_intel->/
+ - Return 0 in this case
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/bitops.h |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/microcode/intel.c |   23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -19,10 +19,11 @@
-  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-  */
- #define GENMASK(h, l) \
--	(((~0UL) << (l)) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
-+	(((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
+--- a/arch/x86/kernel/cpu/microcode/intel.c
++++ b/arch/x86/kernel/cpu/microcode/intel.c
+@@ -653,6 +653,17 @@ static int apply_microcode_early(struct
+ 	if (mc_intel == NULL)
+ 		return 0;
  
- #define GENMASK_ULL(h, l) \
--	(((~0ULL) << (l)) & (~0ULL >> (BITS_PER_LONG_LONG - 1 - (h))))
-+	(((~0ULL) - (1ULL << (l)) + 1) & \
-+	 (~0ULL >> (BITS_PER_LONG_LONG - 1 - (h))))
++	/*
++	 * Save us the MSR write below - which is a particular expensive
++	 * operation - when the other hyperthread has updated the microcode
++	 * already.
++	 */
++	rev = intel_get_microcode_revision();
++	if (rev >= mc_intel->hdr.rev) {
++		uci->cpu_sig.rev = rev;
++		return 0;
++	}
++
+ 	/* write microcode via MSR 0x79 */
+ 	native_wrmsr(MSR_IA32_UCODE_WRITE,
+ 	      (unsigned long) mc_intel->bits,
+@@ -861,6 +872,18 @@ static int apply_microcode_intel(int cpu
+ 	if (get_matching_mc(mc_intel, cpu) == 0)
+ 		return 0;
  
- extern unsigned int __sw_hweight8(unsigned int w);
- extern unsigned int __sw_hweight16(unsigned int w);
++	/*
++	 * Save us the MSR write below - which is a particular expensive
++	 * operation - when the other hyperthread has updated the microcode
++	 * already.
++	 */
++	rev = intel_get_microcode_revision();
++	if (rev >= mc_intel->hdr.rev) {
++		uci->cpu_sig.rev = rev;
++		c->microcode = rev;
++		return 0;
++	}
++
+ 	/* write microcode via MSR 0x79 */
+ 	wrmsr(MSR_IA32_UCODE_WRITE,
+ 	      (unsigned long) mc_intel->bits,
 
 
