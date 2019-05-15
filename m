@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064F2C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D413EC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7DC020843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E07720843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921983;
-	bh=CX3+NgyXHWJ/A5jbSUuIf6vviov4VbQA1rAfKKbRaXY=;
+	s=default; t=1557921992;
+	bh=r8UsJHeobUmrU9dWDtYjj8wQqq1tEaW8hScVYrx/nBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BjWcGfBPv4mlCHbFyjXfNyTo1i9jzw/8L22nFnZP9mkOW7Kbl2K2Nep8kxF4Lj8XK
-	 HiX0+CtE0+HUdY2mu1ScSOa9+nyV0pGx5PnGw+dcuD7O74IcxO/l2Y2gvBAAx3BcPw
-	 m3lwaNCSRotEz/fEG62WYL/5C+6KJQjfwrYCa04M=
+	b=jEaqO/GG/cVulH9K5wwtHjr1HqtRfTITORDVHwmVxVimmY8rISHfl+3ATftEvlTva
+	 4oi6HRC8KnHE5eYofJZ4v2bNljvq9bp0KSMVj+WH/BbolO9ZhZ8649YOwceGC2MOe5
+	 +BlrqulM9CtLpZEeH80ZYduo1Nnsa5v9mb+q8Ohw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729782AbfEOMGW (ORCPT
+        id S1729664AbfEOMGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:06:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43880 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:06:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729362AbfEOLKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:10:10 -0400
+        id S1728925AbfEOLKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:10:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01F312168B;
-        Wed, 15 May 2019 11:10:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 954602166E;
+        Wed, 15 May 2019 11:10:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918609;
-        bh=CX3+NgyXHWJ/A5jbSUuIf6vviov4VbQA1rAfKKbRaXY=;
+        s=default; t=1557918607;
+        bh=r8UsJHeobUmrU9dWDtYjj8wQqq1tEaW8hScVYrx/nBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wCD+vYCJ8Q/MUyGp7E2c3+W6X3rJEtkzaHruetcDJ3U7xG6HI3zV2HUHz6KCnMMBT
-         iaFItEGXD0MbKrVFHtc1wPBygMACaq8oiYb3milQ0We72/ZfBfMzdykJygMePEPro1
-         upSPtTwVZdig3ZdXwbD9ZiynErqoYOow/8DuFa+M=
+        b=1rIPjNqdTk8gWAaAjLxEeF4AIHjBppXF12ViJepG7n3nOreyQ0VKvoA5qr9bsqk0J
+         BlNFZLxGBlwRycPdSbxrkU+ZhqRx/oD7Irdsu2tIum9VAyhbvrFWjXLNOaet0WP2FQ
+         bjhypkJwMfPAvq2Uf9QGzUgrLe4saEtN8Rxff87w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nadav Amit <namit@vmware.com>,
+        stable@vger.kernel.org,
+        Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 197/266] x86/mm: Use WRITE_ONCE() when setting PTEs
-Date:   Wed, 15 May 2019 12:55:04 +0200
-Message-Id: <20190515090729.610153491@linuxfoundation.org>
+        Joerg Roedel <joro@8bytes.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Borislav Petkov <bp@suse.de>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>, kvm@vger.kernel.org,
+        x86@kernel.org, Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 196/266] KVM: x86: SVM: Call x86_spec_ctrl_set_guest/host() with interrupts disabled
+Date:   Wed, 15 May 2019 12:55:03 +0200
+Message-Id: <20190515090729.575734497@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -68,125 +68,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nadav Amit <namit@vmware.com>
+From: Thomas Gleixner <tglx@xxxxxxxxxxxxx>
 
-commit 9bc4f28af75a91aea0ae383f50b0a430c4509303 upstream.
+commit 024d83cadc6b2af027e473720f3c3da97496c318 upstream.
 
-When page-table entries are set, the compiler might optimize their
-assignment by using multiple instructions to set the PTE. This might
-turn into a security hazard if the user somehow manages to use the
-interim PTE. L1TF does not make our lives easier, making even an interim
-non-present PTE a security hazard.
+Mikhail reported the following lockdep splat:
 
-Using WRITE_ONCE() to set PTEs and friends should prevent this potential
-security hazard.
+WARNING: possible irq lock inversion dependency detected
+CPU 0/KVM/10284 just changed the state of lock:
+  000000000d538a88 (&st->lock){+...}, at:
+  speculative_store_bypass_update+0x10b/0x170
 
-I skimmed the differences in the binary with and without this patch. The
-differences are (obviously) greater when CONFIG_PARAVIRT=n as more
-code optimizations are possible. For better and worse, the impact on the
-binary with this patch is pretty small. Skimming the code did not cause
-anything to jump out as a security hazard, but it seems that at least
-move_soft_dirty_pte() caused set_pte_at() to use multiple writes.
+but this lock was taken by another, HARDIRQ-safe lock
+in the past:
 
-Signed-off-by: Nadav Amit <namit@vmware.com>
+(&(&sighand->siglock)->rlock){-.-.}
+
+   and interrupts could create inverse lock ordering between them.
+
+Possible interrupt unsafe locking scenario:
+
+    CPU0                    CPU1
+    ----                    ----
+   lock(&st->lock);
+                           local_irq_disable();
+                           lock(&(&sighand->siglock)->rlock);
+                           lock(&st->lock);
+    <Interrupt>
+     lock(&(&sighand->siglock)->rlock);
+     *** DEADLOCK ***
+
+The code path which connects those locks is:
+
+   speculative_store_bypass_update()
+   ssb_prctl_set()
+   do_seccomp()
+   do_syscall_64()
+
+In svm_vcpu_run() speculative_store_bypass_update() is called with
+interupts enabled via x86_virt_spec_ctrl_set_guest/host().
+
+This is actually a false positive, because GIF=0 so interrupts are
+disabled even if IF=1; however, we can easily move the invocations of
+x86_virt_spec_ctrl_set_guest/host() into the interrupt disabled region to
+cure it, and it's a good idea to keep the GIF=0/IF=1 area as small
+and self-contained as possible.
+
+Fixes: 1f50ddb4f418 ("x86/speculation: Handle HT correctly on AMD")
+Reported-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Link: https://lkml.kernel.org/r/20180902181451.80520-1-namit@vmware.com
-[bwh: Backported to 4.4:
- - Drop changes in pmdp_establish(), native_set_p4d(), pudp_set_access_flags()
- - Adjust context]
+Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: kvm@vger.kernel.org
+Cc: x86@kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/include/asm/pgtable_64.h |   16 ++++++++--------
- arch/x86/mm/pgtable.c             |    6 +++---
- 2 files changed, 11 insertions(+), 11 deletions(-)
+ arch/x86/kvm/svm.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/arch/x86/include/asm/pgtable_64.h
-+++ b/arch/x86/include/asm/pgtable_64.h
-@@ -44,15 +44,15 @@ struct mm_struct;
- void set_pte_vaddr_pud(pud_t *pud_page, unsigned long vaddr, pte_t new_pte);
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -3928,8 +3928,6 @@ static void svm_vcpu_run(struct kvm_vcpu
  
+ 	clgi();
  
--static inline void native_pte_clear(struct mm_struct *mm, unsigned long addr,
--				    pte_t *ptep)
-+static inline void native_set_pte(pte_t *ptep, pte_t pte)
- {
--	*ptep = native_make_pte(0);
-+	WRITE_ONCE(*ptep, pte);
- }
+-	local_irq_enable();
+-
+ 	/*
+ 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
+ 	 * it's non-zero. Since vmentry is serialising on affected CPUs, there
+@@ -3938,6 +3936,8 @@ static void svm_vcpu_run(struct kvm_vcpu
+ 	 */
+ 	x86_spec_ctrl_set_guest(svm->spec_ctrl, svm->virt_spec_ctrl);
  
--static inline void native_set_pte(pte_t *ptep, pte_t pte)
-+static inline void native_pte_clear(struct mm_struct *mm, unsigned long addr,
-+				    pte_t *ptep)
- {
--	*ptep = pte;
-+	native_set_pte(ptep, native_make_pte(0));
- }
++	local_irq_enable();
++
+ 	asm volatile (
+ 		"push %%" _ASM_BP "; \n\t"
+ 		"mov %c[rbx](%[svm]), %%" _ASM_BX " \n\t"
+@@ -4060,12 +4060,12 @@ static void svm_vcpu_run(struct kvm_vcpu
+ 	if (!msr_write_intercepted(vcpu, MSR_IA32_SPEC_CTRL))
+ 		svm->spec_ctrl = native_read_msr(MSR_IA32_SPEC_CTRL);
  
- static inline void native_set_pte_atomic(pte_t *ptep, pte_t pte)
-@@ -62,7 +62,7 @@ static inline void native_set_pte_atomic
+-	x86_spec_ctrl_restore_host(svm->spec_ctrl, svm->virt_spec_ctrl);
+-
+ 	reload_tss(vcpu);
  
- static inline void native_set_pmd(pmd_t *pmdp, pmd_t pmd)
- {
--	*pmdp = pmd;
-+	WRITE_ONCE(*pmdp, pmd);
- }
+ 	local_irq_disable();
  
- static inline void native_pmd_clear(pmd_t *pmd)
-@@ -98,7 +98,7 @@ static inline pmd_t native_pmdp_get_and_
- 
- static inline void native_set_pud(pud_t *pudp, pud_t pud)
- {
--	*pudp = pud;
-+	WRITE_ONCE(*pudp, pud);
- }
- 
- static inline void native_pud_clear(pud_t *pud)
-@@ -131,7 +131,7 @@ static inline pgd_t *native_get_shadow_p
- 
- static inline void native_set_pgd(pgd_t *pgdp, pgd_t pgd)
- {
--	*pgdp = kaiser_set_shadow_pgd(pgdp, pgd);
-+	WRITE_ONCE(*pgdp, kaiser_set_shadow_pgd(pgdp, pgd));
- }
- 
- static inline void native_pgd_clear(pgd_t *pgd)
---- a/arch/x86/mm/pgtable.c
-+++ b/arch/x86/mm/pgtable.c
-@@ -247,7 +247,7 @@ static void pgd_mop_up_pmds(struct mm_st
- 		if (pgd_val(pgd) != 0) {
- 			pmd_t *pmd = (pmd_t *)pgd_page_vaddr(pgd);
- 
--			pgdp[i] = native_make_pgd(0);
-+			pgd_clear(&pgdp[i]);
- 
- 			paravirt_release_pmd(pgd_val(pgd) >> PAGE_SHIFT);
- 			pmd_free(mm, pmd);
-@@ -424,7 +424,7 @@ int ptep_set_access_flags(struct vm_area
- 	int changed = !pte_same(*ptep, entry);
- 
- 	if (changed && dirty) {
--		*ptep = entry;
-+		set_pte(ptep, entry);
- 		pte_update_defer(vma->vm_mm, address, ptep);
- 	}
- 
-@@ -441,7 +441,7 @@ int pmdp_set_access_flags(struct vm_area
- 	VM_BUG_ON(address & ~HPAGE_PMD_MASK);
- 
- 	if (changed && dirty) {
--		*pmdp = entry;
-+		set_pmd(pmdp, entry);
- 		pmd_update_defer(vma->vm_mm, address, pmdp);
- 		/*
- 		 * We had a write-protection fault here and changed the pmd
++	x86_spec_ctrl_restore_host(svm->spec_ctrl, svm->virt_spec_ctrl);
++
+ 	vcpu->arch.cr2 = svm->vmcb->save.cr2;
+ 	vcpu->arch.regs[VCPU_REGS_RAX] = svm->vmcb->save.rax;
+ 	vcpu->arch.regs[VCPU_REGS_RSP] = svm->vmcb->save.rsp;
 
 
