@@ -4,51 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79CDBC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 353B0C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401092053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 049D02053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920503;
-	bh=WlWMS1xXo7beueki27apiS84qmVZ+m3dhjYsOpVi51o=;
+	s=default; t=1557920512;
+	bh=OBQuELnhqmPV0sBmv0eweVPY123OuzMvGNhslJ0/i7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2M/v3TvzOwJd0oV9AzjyOnjFoTzQSypgP2072oBRWhFJxpkzM92ji1brUf3v4L0Fh
-	 Z2ozr8oFAJJ1vmHCQjhvE4S/PE0hNhQYt/5VzbEqSHrSWivuHNoD1QG9grE1BD+Gth
-	 4AuRLADiJQ+EJ5snNpYc101ppPd7abLCGh493UPE=
+	b=Nx+fn2ve8pr/njm4XwyK52GU8qC0RAupWPNNXwTUvm5mGGRqi/+mPb8phfibG55Ff
+	 OoHfafyB6yaFt6n7t+vqqHCMmpVV60C0O72nBGg7s2m8aRnlIJxfZbVmiEA6GyI7B2
+	 CU2Yy3bqrhqcOvMdDi6YFiQ7OOifqwH6eh6KDRME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732687AbfEOLlm (ORCPT
+        id S1732706AbfEOLlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:41:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39718 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:41:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726525AbfEOL2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:28:35 -0400
+        id S1732027AbfEOL22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:28:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89F7F20818;
-        Wed, 15 May 2019 11:28:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97C2420881;
+        Wed, 15 May 2019 11:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919715;
-        bh=WlWMS1xXo7beueki27apiS84qmVZ+m3dhjYsOpVi51o=;
+        s=default; t=1557919707;
+        bh=OBQuELnhqmPV0sBmv0eweVPY123OuzMvGNhslJ0/i7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lT5LOs2fe2uxrIigCuzrK85ZDYYGGK+/FSEFznQbm/HTUPckrWKSBDh5eg2TLZ9kV
-         v6NfQuBLx2WtjK6jF+xl1dKK4e7BgMX5KLPw7mhbizdVBqhaNl8ZLNR7NGLyazxqei
-         YOpbpLXRTzUSbbKzYqiz9hMDliuzQTeiQbP3pyik=
+        b=khQt5NtuxZA7CortcvVu/ctQQoBsxzNXgFzTQG7ip2NLGmb8sS4f1ev5oCr9u8hLV
+         goxX6jeTFuBIC+amzk3iMZRGpyiLGVRYQExk71N3mJ58SCfWd79YjCSvp9mGJMNmOp
+         maiDjIi1zb+DMsnCcoh/47PIxlRSYOipwMhgNlwU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Anastasov <ja@ssi.bg>,
-        Simon Horman <horms@verge.net.au>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Guenter Roeck <groeck@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Russell King <rmk@armlinux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 065/137] ipvs: do not schedule icmp errors from tunnels
-Date:   Wed, 15 May 2019 12:55:46 +0200
-Message-Id: <20190515090658.180646169@linuxfoundation.org>
+Subject: [PATCH 5.0 062/137] init: initialize jump labels before command line option parsing
+Date:   Wed, 15 May 2019 12:55:43 +0200
+Message-Id: <20190515090657.981383435@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -61,36 +67,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0261ea1bd1eb0da5c0792a9119b8655cf33c80a3 ]
+[ Upstream commit 6041186a32585fc7a1d0f6cfe2f138b05fdc3c82 ]
 
-We can receive ICMP errors from client or from
-tunneling real server. While the former can be
-scheduled to real server, the latter should
-not be scheduled, they are decapsulated only when
-existing connection is found.
+When a module option, or core kernel argument, toggles a static-key it
+requires jump labels to be initialized early.  While x86, PowerPC, and
+ARM64 arrange for jump_label_init() to be called before parse_args(),
+ARM does not.
 
-Fixes: 6044eeffafbe ("ipvs: attempt to schedule icmp packets")
-Signed-off-by: Julian Anastasov <ja@ssi.bg>
-Signed-off-by: Simon Horman <horms@verge.net.au>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+  Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1 console=ttyAMA0,115200 page_alloc.shuffle=1
+  ------------[ cut here ]------------
+  WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
+  page_alloc_shuffle+0x12c/0x1ac
+  static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
+  before call to jump_label_init()
+  Modules linked in:
+  CPU: 0 PID: 0 Comm: swapper Not tainted
+  5.1.0-rc4-next-20190410-00003-g3367c36ce744 #1
+  Hardware name: ARM Integrator/CP (Device Tree)
+  [<c0011c68>] (unwind_backtrace) from [<c000ec48>] (show_stack+0x10/0x18)
+  [<c000ec48>] (show_stack) from [<c07e9710>] (dump_stack+0x18/0x24)
+  [<c07e9710>] (dump_stack) from [<c001bb1c>] (__warn+0xe0/0x108)
+  [<c001bb1c>] (__warn) from [<c001bb88>] (warn_slowpath_fmt+0x44/0x6c)
+  [<c001bb88>] (warn_slowpath_fmt) from [<c0b0c4a8>]
+  (page_alloc_shuffle+0x12c/0x1ac)
+  [<c0b0c4a8>] (page_alloc_shuffle) from [<c0b0c550>] (shuffle_store+0x28/0x48)
+  [<c0b0c550>] (shuffle_store) from [<c003e6a0>] (parse_args+0x1f4/0x350)
+  [<c003e6a0>] (parse_args) from [<c0ac3c00>] (start_kernel+0x1c0/0x488)
+
+Move the fallback call to jump_label_init() to occur before
+parse_args().
+
+The redundant calls to jump_label_init() in other archs are left intact
+in case they have static key toggling use cases that are even earlier
+than option parsing.
+
+Link: http://lkml.kernel.org/r/155544804466.1032396.13418949511615676665.stgit@dwillia2-desk3.amr.corp.intel.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reported-by: Guenter Roeck <groeck@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Russell King <rmk@armlinux.org.uk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipvs/ip_vs_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ init/main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-index 235205c93e14b..df112b27246a3 100644
---- a/net/netfilter/ipvs/ip_vs_core.c
-+++ b/net/netfilter/ipvs/ip_vs_core.c
-@@ -1647,7 +1647,7 @@ ip_vs_in_icmp(struct netns_ipvs *ipvs, struct sk_buff *skb, int *related,
- 	if (!cp) {
- 		int v;
+diff --git a/init/main.c b/init/main.c
+index c86a1c8f19f40..7ae8245452650 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -574,6 +574,8 @@ asmlinkage __visible void __init start_kernel(void)
+ 	page_alloc_init();
  
--		if (!sysctl_schedule_icmp(ipvs))
-+		if (ipip || !sysctl_schedule_icmp(ipvs))
- 			return NF_ACCEPT;
+ 	pr_notice("Kernel command line: %s\n", boot_command_line);
++	/* parameters may set static keys */
++	jump_label_init();
+ 	parse_early_param();
+ 	after_dashes = parse_args("Booting kernel",
+ 				  static_command_line, __start___param,
+@@ -583,8 +585,6 @@ asmlinkage __visible void __init start_kernel(void)
+ 		parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
+ 			   NULL, set_init_arg);
  
- 		if (!ip_vs_try_to_schedule(ipvs, AF_INET, skb, pd, &v, &cp, &ciph))
+-	jump_label_init();
+-
+ 	/*
+ 	 * These use large bootmem allocations and must precede
+ 	 * kmem_cache_init()
 -- 
 2.20.1
 
