@@ -2,51 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF96FC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C254C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A627320657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 525502084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921428;
-	bh=xFiCKmtsOvgoT4wK1Uqxsoxvd2pdKj+Zjdqq4SnKHgk=;
+	s=default; t=1557921432;
+	bh=1UczZCQc5x+59X5jdJ/yq07EnrU2Dd/9+SuVc8m4S8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w8QOcf+uiAbHKyLpi5kZ1JCoarhrNq01qN3adOGZJZ2baGJbYVBfqLDiGfCLzxIU7
-	 odTjqQ9qJc/gHwm/zEULlIMs0xn97zEt9IvDwSf7oSB1Jtehc4fUKzlThm5lWXFW45
-	 gS7fzEh4ScA2CtolIFQ0G1A6eb391nTLDQQaMKZI=
+	b=P4QgSYA7thRsZBvgV31H0A48ZjhtyJqHZPwLn/lYRfsiiDS29p3xtMEqAMcMS5+1p
+	 rTsPYKflwwScqlxiCdajI7DFsKGXF3ua8Cx30X+2RXvn+aFTPUy+krOv/4PWAZSVZx
+	 JT9a/Idb5Nhn0JLk1+XgBljgveN5Dl6B65OwlCD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730652AbfEOLRU (ORCPT
+        id S1731041AbfEOL5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:17:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54436 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:57:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730641AbfEOLRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:17:15 -0400
+        id S1730377AbfEOLRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:17:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7445920644;
-        Wed, 15 May 2019 11:17:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEC452084E;
+        Wed, 15 May 2019 11:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919034;
-        bh=xFiCKmtsOvgoT4wK1Uqxsoxvd2pdKj+Zjdqq4SnKHgk=;
+        s=default; t=1557919040;
+        bh=1UczZCQc5x+59X5jdJ/yq07EnrU2Dd/9+SuVc8m4S8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LO/beIkktyGom5i/y9W4mkJMx+PgeSCqk9+r3VeE5bIjqhWHr0cOPSSi1tRFmLwac
-         KoEPW9okYpvYP6xjotdSRcfuUq2rNhXe1y7eFh5y8LClwdFYYMiPezf4XUCr4VLPwz
-         vT7vdrp7VijHkGEaIOG6ibBNMgvZ79EUWQGShd8k=
+        b=zDrX+sCHyVJ+mAsY7B2h03YU89pY2QIkF7n3FnGAd8mAlmz5q4mGqv1XKgbYal6//
+         jd2EGUxIyQA4TkomFeLVqJHxeaBa1QYDzATuTc3xYX40J+TVOQEGwoSOSGg6Gj5K+g
+         5N8M1AIbwXNakYaVopuilEb+FZ994Q+JjZ42Vl7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Tang Junhui <tang.junhui.linux@gmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 041/115] sparc64: Make corrupted user stacks more debuggable.
-Date:   Wed, 15 May 2019 12:55:21 +0200
-Message-Id: <20190515090702.483620383@linuxfoundation.org>
+Subject: [PATCH 4.14 043/115] bcache: correct dirty data statistics
+Date:   Wed, 15 May 2019 12:55:23 +0200
+Message-Id: <20190515090702.631103131@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -59,167 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5b4fc3882a649c9411dd0dcad2ddb78e911d340e ]
+[ Upstream commit 2e17a262a2371d38d2ec03614a2675a32cef9912 ]
 
-Right now if we get a corrupted user stack frame we do a
-do_exit(SIGILL) which is not helpful.
+When bcache device is clean, dirty keys may still exist after
+journal replay, so we need to count these dirty keys even
+device in clean status, otherwise after writeback, the amount
+of dirty data would be incorrect.
 
-If under a debugger, this behavior causes the inferior process to
-exit.  So the register and other state cannot be examined at the time
-of the event.
-
-Instead, conditionally log a rate limited kernel log message and then
-force a SIGSEGV.
-
-With bits and ideas borrowed (as usual) from powerpc.
-
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Tang Junhui <tang.junhui.linux@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- arch/sparc/include/asm/switch_to_64.h |  3 ++-
- arch/sparc/kernel/process_64.c        | 25 +++++++++++++++++++------
- arch/sparc/kernel/rtrap_64.S          |  1 +
- arch/sparc/kernel/signal32.c          | 12 ++++++++++--
- arch/sparc/kernel/signal_64.c         |  6 +++++-
- 5 files changed, 37 insertions(+), 10 deletions(-)
+ drivers/md/bcache/super.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/sparc/include/asm/switch_to_64.h b/arch/sparc/include/asm/switch_to_64.h
-index 4ff29b1406a9b..b1d4e2e3210fb 100644
---- a/arch/sparc/include/asm/switch_to_64.h
-+++ b/arch/sparc/include/asm/switch_to_64.h
-@@ -67,6 +67,7 @@ do {	save_and_clear_fpu();						\
- } while(0)
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index fe6e4c319b7cf..9e875aba41b9b 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1045,12 +1045,13 @@ int bch_cached_dev_attach(struct cached_dev *dc, struct cache_set *c,
+ 	}
  
- void synchronize_user_stack(void);
--void fault_in_user_windows(void);
-+struct pt_regs;
-+void fault_in_user_windows(struct pt_regs *);
+ 	if (BDEV_STATE(&dc->sb) == BDEV_STATE_DIRTY) {
+-		bch_sectors_dirty_init(&dc->disk);
+ 		atomic_set(&dc->has_dirty, 1);
+ 		atomic_inc(&dc->count);
+ 		bch_writeback_queue(dc);
+ 	}
  
- #endif /* __SPARC64_SWITCH_TO_64_H */
-diff --git a/arch/sparc/kernel/process_64.c b/arch/sparc/kernel/process_64.c
-index 318efd784a0b3..5640131e2abf3 100644
---- a/arch/sparc/kernel/process_64.c
-+++ b/arch/sparc/kernel/process_64.c
-@@ -36,6 +36,7 @@
- #include <linux/sysrq.h>
- #include <linux/nmi.h>
- #include <linux/context_tracking.h>
-+#include <linux/signal.h>
- 
- #include <linux/uaccess.h>
- #include <asm/page.h>
-@@ -528,7 +529,12 @@ static void stack_unaligned(unsigned long sp)
- 	force_sig_info(SIGBUS, &info, current);
- }
- 
--void fault_in_user_windows(void)
-+static const char uwfault32[] = KERN_INFO \
-+	"%s[%d]: bad register window fault: SP %08lx (orig_sp %08lx) TPC %08lx O7 %08lx\n";
-+static const char uwfault64[] = KERN_INFO \
-+	"%s[%d]: bad register window fault: SP %016lx (orig_sp %016lx) TPC %08lx O7 %016lx\n";
++	bch_sectors_dirty_init(&dc->disk);
 +
-+void fault_in_user_windows(struct pt_regs *regs)
- {
- 	struct thread_info *t = current_thread_info();
- 	unsigned long window;
-@@ -541,9 +547,9 @@ void fault_in_user_windows(void)
- 		do {
- 			struct reg_window *rwin = &t->reg_window[window];
- 			int winsize = sizeof(struct reg_window);
--			unsigned long sp;
-+			unsigned long sp, orig_sp;
- 
--			sp = t->rwbuf_stkptrs[window];
-+			orig_sp = sp = t->rwbuf_stkptrs[window];
- 
- 			if (test_thread_64bit_stack(sp))
- 				sp += STACK_BIAS;
-@@ -554,8 +560,16 @@ void fault_in_user_windows(void)
- 				stack_unaligned(sp);
- 
- 			if (unlikely(copy_to_user((char __user *)sp,
--						  rwin, winsize)))
-+						  rwin, winsize))) {
-+				if (show_unhandled_signals)
-+					printk_ratelimited(is_compat_task() ?
-+							   uwfault32 : uwfault64,
-+							   current->comm, current->pid,
-+							   sp, orig_sp,
-+							   regs->tpc,
-+							   regs->u_regs[UREG_I7]);
- 				goto barf;
-+			}
- 		} while (window--);
- 	}
- 	set_thread_wsaved(0);
-@@ -563,8 +577,7 @@ void fault_in_user_windows(void)
- 
- barf:
- 	set_thread_wsaved(window + 1);
--	user_exit();
--	do_exit(SIGILL);
-+	force_sig(SIGSEGV, current);
- }
- 
- asmlinkage long sparc_do_fork(unsigned long clone_flags,
-diff --git a/arch/sparc/kernel/rtrap_64.S b/arch/sparc/kernel/rtrap_64.S
-index 0b21042ab181b..ad88d60bb740c 100644
---- a/arch/sparc/kernel/rtrap_64.S
-+++ b/arch/sparc/kernel/rtrap_64.S
-@@ -30,6 +30,7 @@ __handle_preemption:
- 		 wrpr			%g0, RTRAP_PSTATE_IRQOFF, %pstate
- 
- __handle_user_windows:
-+		add			%sp, PTREGS_OFF, %o0
- 		call			fault_in_user_windows
- 		 wrpr			%g0, RTRAP_PSTATE, %pstate
- 		ba,pt			%xcc, __handle_preemption_continue
-diff --git a/arch/sparc/kernel/signal32.c b/arch/sparc/kernel/signal32.c
-index 5c572de64c748..879f8d86bc21c 100644
---- a/arch/sparc/kernel/signal32.c
-+++ b/arch/sparc/kernel/signal32.c
-@@ -442,7 +442,11 @@ static int setup_frame32(struct ksignal *ksig, struct pt_regs *regs,
- 		get_sigframe(ksig, regs, sigframe_size);
- 	
- 	if (invalid_frame_pointer(sf, sigframe_size)) {
--		do_exit(SIGILL);
-+		if (show_unhandled_signals)
-+			pr_info("%s[%d] bad frame in setup_frame32: %08lx TPC %08lx O7 %08lx\n",
-+				current->comm, current->pid, (unsigned long)sf,
-+				regs->tpc, regs->u_regs[UREG_I7]);
-+		force_sigsegv(ksig->sig, current);
- 		return -EINVAL;
- 	}
- 
-@@ -573,7 +577,11 @@ static int setup_rt_frame32(struct ksignal *ksig, struct pt_regs *regs,
- 		get_sigframe(ksig, regs, sigframe_size);
- 	
- 	if (invalid_frame_pointer(sf, sigframe_size)) {
--		do_exit(SIGILL);
-+		if (show_unhandled_signals)
-+			pr_info("%s[%d] bad frame in setup_rt_frame32: %08lx TPC %08lx O7 %08lx\n",
-+				current->comm, current->pid, (unsigned long)sf,
-+				regs->tpc, regs->u_regs[UREG_I7]);
-+		force_sigsegv(ksig->sig, current);
- 		return -EINVAL;
- 	}
- 
-diff --git a/arch/sparc/kernel/signal_64.c b/arch/sparc/kernel/signal_64.c
-index 20426a1c28f29..2d0a50bde3f96 100644
---- a/arch/sparc/kernel/signal_64.c
-+++ b/arch/sparc/kernel/signal_64.c
-@@ -373,7 +373,11 @@ setup_rt_frame(struct ksignal *ksig, struct pt_regs *regs)
- 		get_sigframe(ksig, regs, sf_size);
- 
- 	if (invalid_frame_pointer (sf)) {
--		do_exit(SIGILL);	/* won't return, actually */
-+		if (show_unhandled_signals)
-+			pr_info("%s[%d] bad frame in setup_rt_frame: %016lx TPC %016lx O7 %016lx\n",
-+				current->comm, current->pid, (unsigned long)sf,
-+				regs->tpc, regs->u_regs[UREG_I7]);
-+		force_sigsegv(ksig->sig, current);
- 		return -EINVAL;
- 	}
+ 	bch_cached_dev_run(dc);
+ 	bcache_device_link(&dc->disk, c, "bdev");
  
 -- 
 2.20.1
