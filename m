@@ -2,95 +2,276 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8447DC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ED02C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52C892084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:32:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QtF+5tgN"
+	by mail.kernel.org (Postfix) with ESMTP id 2BF5B20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:35:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557948905;
+	bh=T8KZMtAQaa1AWpMPzkJfrn31xMbxudTFZ6VKkGQgaMQ=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=aVvnKHzoWQk8SkoKsmhM2W8zMqJs0RBpmusYyhuyTjReq8dG6FOghAnLUAsNiYTGX
+	 gptLyJpAeniov29o6UCnmbKW9L7QuRDH8ErXxhCNQQe6M9+F5gjkcUHrDF7FnrKBcM
+	 XRkHmn/a1s96hGnS4ICptaHrtRBDGPrLA+12LV0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbfEOTcW (ORCPT
+        id S1726843AbfEOTfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:32:22 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37650 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfEOTcV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 15:32:21 -0400
-Received: by mail-qt1-f193.google.com with SMTP id o7so1105994qtp.4;
-        Wed, 15 May 2019 12:32:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gzpcBe/FuCRcBmmlscvWqZ1cuF+a9s/93eQ2vkoMdBg=;
-        b=QtF+5tgNf9v/pOLbGmN/KkniYbjrTT3+zG+tsS6Kms+1PFJMvcfqBzH1n9jCpYjLPN
-         rUJJ+CE6pK+4Csxpxh5JKbYHnYbwj2zKrcq8mt6Y+2O5wJ9y7cJ6X913mLznQu1+hmrA
-         729oInNbB9ALcMRxLQigEACcaOaj0PEs9PTANqHWLj7reIDQJLX5BCeEvzKhegDNLTsd
-         IjZkBfMCh9iyDLwT7Cw/hZbaIVRS61r9Hr5qf8c/gaLztb2dbtKL+YD+VxvtHaMhKSau
-         IdtAJTdE3xKXUoXSUDusffpw6c8MSFgE9qgqzrMZacApD//bevsHU8IoOKtApxEzyOSb
-         NXRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gzpcBe/FuCRcBmmlscvWqZ1cuF+a9s/93eQ2vkoMdBg=;
-        b=aNLCPIsLZXDzhdTxYCS6yPUAiB7ALABkYzif2Y9Bhw69axGVXN5ALzbrT+IFiMg6ex
-         HRLIXN2XHfsZfhXsCoHf7y3XpSjM/6536rde7YPxK20xZjHXJwFMFQdYxKUxhyscKDPb
-         Fo91HieR9FofiH+J7FjPM2T4IJqiCEc0vDHkD5uXI2sMCmLPA2ju2fbiWckezl9/tO43
-         yg+Ie+zyCt+TM65bqDWGrIMBqQEUejfRj5rIX6RfcWP9Xd0kD5K6EWXxiFwFq1zPuRpe
-         fsM7pr516JNItxN5UIPAZy7w7WYBeQuQFH5NyrTSg+1uk6QmI5fCr6CTUVoOR0Mxaw8M
-         gMEw==
-X-Gm-Message-State: APjAAAVsjInLD+nmAMfMAtRkbbUanB2N6usuPtuuLgj8PkTFqfPxPT97
-        RpP+Rtesn/qJI/lVFxgTdX4=
-X-Google-Smtp-Source: APXvYqzIAHhWJNUUfCmZY70fFSGLSaJ/WlMHpaIUQbVegDmEP+0LWpkvXn1BZFJ52H/pXcLteY5cbg==
-X-Received: by 2002:ac8:610e:: with SMTP id a14mr35361096qtm.51.1557948740959;
-        Wed, 15 May 2019 12:32:20 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.35.11])
-        by smtp.gmail.com with ESMTPSA id t2sm1426001qkm.11.2019.05.15.12.32.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 May 2019 12:32:19 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 739F9404A1; Wed, 15 May 2019 16:32:17 -0300 (-03)
-Date:   Wed, 15 May 2019 16:32:17 -0300
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com
-Subject: Re: [PATCH] perf docu: Add description for stderr
-Message-ID: <20190515193217.GG23162@kernel.org>
-References: <20190513080220.91966-1-tmricht@linux.ibm.com>
+        Wed, 15 May 2019 15:35:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53624 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726124AbfEOTfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 15:35:03 -0400
+Received: from earth.universe (host-091-097-031-090.ewe-ip-backbone.de [91.97.31.90])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E654F2084F;
+        Wed, 15 May 2019 19:35:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557948903;
+        bh=T8KZMtAQaa1AWpMPzkJfrn31xMbxudTFZ6VKkGQgaMQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=lnMIkkcRqYl5S6/EHGKHAMSKige22qxnEicu7gElNzWmq8lgX+4G79y5n5h1DHclu
+         55jVQdkX3awLLlg55pwU8rUc+njYyma2TtTlCEwoYjDHemZ0I8K/lFFYMuCbjWKMND
+         zRPRNcU/ERhUmK49KQKuy7arkLz6H3sMNEn32/bY=
+Received: by earth.universe (Postfix, from userid 1000)
+        id EC33F3C0CAB; Wed, 15 May 2019 21:35:00 +0200 (CEST)
+Date:   Wed, 15 May 2019 21:35:00 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [GIT PULL] power-supply changes for 5.2
+Message-ID: <20190515193500.6wpstcuacfuwt6ty@earth.universe>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lar6j6naw6ub2ikt"
 Content-Disposition: inline
-In-Reply-To: <20190513080220.91966-1-tmricht@linux.ibm.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, May 13, 2019 at 10:02:20AM +0200, Thomas Richter escreveu:
-> Perf report displays recorded data on the screen and emits
-> warnings and debug messages in the status line (last one on screen).
-> Perf also supports the possibility to write all debug messages
-> to stderr (instead of writing them to the status line).
-> This is achieved with the following command:
-> 
->  # ./perf --debug stderr=1 report -vvvvv -i ~/fast.data 2>/tmp/2
->  # ll /tmp/2
->  -rw-rw-r-- 1 tmricht tmricht 5420835 May  7 13:46 /tmp/2
->  #
 
-Thanks, applied.
+--lar6j6naw6ub2ikt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-- Arnaldo
+Hi Linus,
+
+Here is the power-supply pull request for the 5.2 merge window.
+Everything except for a few small fixes have been in linux-next
+for > 10 days. The pull request is touching some bits in x86 for
+the OLPC changes and some bits in IIO for the new Ingenic JZ47xx
+battery driver, that have been Acked by the respective maintainers
+and no merge issues have been reported by Stephen.
+
+-- Sebastian
+
+The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+
+  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git tags/for-v5.2
+
+for you to fetch changes up to baf5964ecfe19a0109fe2e497e72840ce0f488e6:
+
+  power: supply: olpc_battery: force the le/be casts (2019-05-14 23:17:56 +0200)
+
+----------------------------------------------------------------
+power supply and reset changes for the v5.2 series
+
+Core:
+ * Add over-current health state
+ * Add standard, adaptive and custom charge types
+ * Add new properties for start/end charge threshold
+
+New Drivers / Hardware:
+ * UCS1002 Programmable USB Port Power Controller
+ * Ingenic JZ47xx Battery Fuel Gauge
+ * AXP20x USB Power: Add AXP813 support
+ * AT91 poweroff: Add SAM9X60 support
+ * OLPC battery: Add XO-1.5 and XO-1.75 support
+
+Misc. Changes:
+ * syscon-reboot: support mask property
+ * AXP288 fuel gauge: Blacklist ACEPC T8/T11
+  - Looks like some vendor thought it's a good idea to
+    build a desktop system with a fuel gauge, that slowly
+    "discharges"...
+ * cpcap-battery: Fix calculation errors
+ * misc. fixes
+
+----------------------------------------------------------------
+Andrey Smirnov (3):
+      power: supply: core: Add POWER_SUPPLY_HEALTH_OVERCURRENT constant
+      dt-bindings: power: supply: Add bindings for Microchip UCS1002
+      power: supply: Add driver for Microchip UCS1002
+
+Artur Rojek (6):
+      iio: inkern: API for reading available iio channel attribute values
+      iio: inkern: Convert iio_read_avail_channel_raw into a wrapper
+      dt-bindings: power: supply: Add charge-status-gpios property
+      power: supply: gpio-charger: Add support for charger status.
+      dt-bindings: power: supply: Add docs for Ingenic JZ47xx SoCs battery.
+      power: supply: add Ingenic JZ47xx battery driver.
+
+Axel Lin (1):
+      power: supply: ucs1002: Fix wrong return value checking
+
+Chen-Yu Tsai (3):
+      dt-bindings: power: supply: axp20x_usb_power: add axp813 compatible
+      power: supply: axp20x_usb_power: Fix typo in VBUS current limit macros
+      power: supply: axp20x_usb_power: use polling to detect vbus status change
+
+Claudiu Beznea (3):
+      power: reset: at91-poweroff: add RTT wakeup capability
+      power: reset: at91-poweroff: add support for SAM9X60
+      dt-bindings: arm: atmel: add binding for SAM9X60 shutdown controller
+
+Enric Balletbo i Serra (1):
+      power: supply: core: fix typo in function to get current charge control limit
+
+Gustavo A. R. Silva (1):
+      power: supply: axp288_charger: Fix unchecked return value
+
+Hans de Goede (1):
+      power: supply: axp288_fuel_gauge: Add ACEPC T8 and T11 mini PCs to the blacklist
+
+Kangjie Lu (1):
+      power: charger-manager: fix a potential NULL pointer dereference
+
+Krzysztof Kozlowski (1):
+      power: supply: bq27xxx_battery: Notify also about status changes
+
+Lubomir Rintel (11):
+      dt-bindings: olpc_battery: Add XO-1.5 battery
+      x86/platform/olpc: Don't split string literals when fixing up the DT
+      x86/platform/olpc: Trivial code move in DT fixup
+      x86/platform/olpc: Use a correct version when making up a battery node
+      power: supply: olpc_battery: Use DT to get battery version
+      power: supply: olpc_battery: Move priv data to a struct
+      power: supply: olpc_battery: Use devm_power_supply_register()
+      power: supply: olpc_battery: Avoid using platform_info
+      power: supply: olpc_battery: Add OLPC XO 1.75 support
+      power: supply: olpc_battery: Have the framework register sysfs files for us
+      power: supply: olpc_battery: force the le/be casts
+
+Martin Schiller (1):
+      power: reset: syscon-reboot: add a mask property
+
+Maxime Ripard (1):
+      power: supply: Fix the simple battery property names
+
+Michael Hennerich (2):
+      power: supply: ltc3651-charger: Fix device name
+      power: supply: ltc3651-charger: Fix device name (rename files)
+
+Nick Crews (3):
+      power: supply: core: Add Standard, Adaptive, and Custom charge types
+      power: supply: core: Add CHARGE_CONTROL_{START_THRESHOLD,END_THRESHOLD} properties
+      power: supply: core: Add missing documentation for CHARGE_CONTROL_* properties
+
+Phong Tran (1):
+      power: supply: core: fix clang -Wunsequenced
+
+Quentin Schulz (2):
+      power: supply: axp20x_usb_power: add function to get max current
+      power: supply: axp20x_usb_power: add support for AXP813
+
+Sebastian Reichel (3):
+      Merge branch 'psy-fixes' into psy-next
+      Merge 'ib-jz47xx-battery-prereq' into psy-next
+      Merge tag 'psy-olpc-1.75-battery-signed' into psy-next
+
+Sebastien Bourdelin (1):
+      dt-bindings: power: supply: gpio-charger: add missing semi-colon in example
+
+Sven Van Asbroeck (2):
+      power: supply: max14656: fix potential use-before-alloc
+      power: supply: max14656: fix potential use-after-free
+
+Tony Lindgren (7):
+      power: supply: cpcap-battery: Fix division by zero
+      power: supply: cpcap-battery: Fix low battery check
+      power: supply: cpcap-battery: Fix signed counter sample register
+      power: supply: cpcap-battery: Fix coulomb counter calibration register use
+      power: supply: cpcap-battery: Use accumulator for current and power average
+      power: supply: cpcap-battery: Fix pointless EPROBE_DEFER warnings
+      power: supply: cpcap-charger: Fix pointless EPROBE_DEFER warnings
+
+Wen Yang (2):
+      power: supply: ab8500: fix leaked of_node refs in ab8500_bm_of_probe
+      power: supply: core: fix leaked of_node refs in power_supply_get_battery_info
+
+YueHaibing (1):
+      power: supply: ucs1002: Fix build error without CONFIG_REGULATOR
+
+ Documentation/ABI/testing/sysfs-class-power        |  51 +-
+ .../devicetree/bindings/arm/atmel-sysregs.txt      |   5 +-
+ .../bindings/power/reset/syscon-reboot.txt         |  11 +-
+ .../bindings/power/supply/axp20x_usb_power.txt     |   1 +
+ .../bindings/power/supply/gpio-charger.txt         |   8 +-
+ .../bindings/power/supply/ingenic,battery.txt      |  31 +
+ .../{ltc3651-charger.txt => lt3651-charger.txt}    |  10 +-
+ .../bindings/power/supply/microchip,ucs1002.txt    |  27 +
+ .../bindings/power/supply/olpc_battery.txt         |   2 +-
+ arch/x86/platform/olpc/olpc_dt.c                   | 101 +++-
+ drivers/iio/inkern.c                               |  22 +-
+ drivers/power/reset/at91-sama5d2_shdwc.c           |  25 +
+ drivers/power/reset/syscon-reboot.c                |  19 +-
+ drivers/power/supply/Kconfig                       |  29 +-
+ drivers/power/supply/Makefile                      |   4 +-
+ drivers/power/supply/ab8500_bmdata.c               |   1 +
+ drivers/power/supply/axp20x_usb_power.c            | 179 +++++-
+ drivers/power/supply/axp288_charger.c              |   4 +
+ drivers/power/supply/axp288_fuel_gauge.c           |  20 +
+ drivers/power/supply/bq27xxx_battery.c             |   3 +-
+ drivers/power/supply/charger-manager.c             |   3 +
+ drivers/power/supply/cpcap-battery.c               |  45 +-
+ drivers/power/supply/cpcap-charger.c               |   5 +-
+ drivers/power/supply/gpio-charger.c                |  57 +-
+ drivers/power/supply/ingenic-battery.c             | 184 ++++++
+ .../supply/{ltc3651-charger.c => lt3651-charger.c} | 123 ++--
+ drivers/power/supply/max14656_charger_detector.c   |  27 +-
+ drivers/power/supply/olpc_battery.c                | 171 +++---
+ drivers/power/supply/power_supply_core.c           |  38 +-
+ drivers/power/supply/power_supply_sysfs.c          |   6 +-
+ drivers/power/supply/ucs1002_power.c               | 646 +++++++++++++++++++++
+ include/linux/iio/consumer.h                       |  14 +
+ include/linux/power_supply.h                       |  11 +-
+ 33 files changed, 1613 insertions(+), 270 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/ingenic,battery.txt
+ rename Documentation/devicetree/bindings/power/supply/{ltc3651-charger.txt => lt3651-charger.txt} (71%)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/microchip,ucs1002.txt
+ create mode 100644 drivers/power/supply/ingenic-battery.c
+ rename drivers/power/supply/{ltc3651-charger.c => lt3651-charger.c} (50%)
+ create mode 100644 drivers/power/supply/ucs1002_power.c
+
+--lar6j6naw6ub2ikt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlzcad8ACgkQ2O7X88g7
++poi0xAApnCY691TqGx8LZEyLlBely8pPsOVnchJierfz18QXB0oQdnsMTTRS22P
+wsPELGWqr+s5sOGAfKdQ9qZcKIpZfHc1J3ibU97wANefNA8uNV/mMOD73/Y5DDUF
+ptSkkEJ1yEx07yrMOUeGFCrpcOOajUDBVrKqIjc9Zab+u016/8UDiMUQA8XQD4wa
+BZZHFMtCzRlyVCQPxumZxW18qjMjNzaGOXprPgl690++0YRpd1+VZN8VLt/d5Weu
+BGrp1gblE5lX+vjt+CliGWGUzQHotSk0ioMmyvbiL8UQesMCpTiGKXNOxI3rVWrQ
+Aq+HT1qAQnlxdR+1qB+YdZuqubyvDMEaJR13gKU6A220glBdqhteKDbzMSFBH7Iz
+UR1aZesbB8RWyAhjDshrYqhvWbInQ0otCegn8nNn4s9NQw4KtW2JhpyF/yyyexh2
+kSP8zhaif9HhfnQG8C/C7toehdPiuD4tuSicehpr55jL26M5GNR6xh8K8eiCmjnz
+1sO1q2Q3cK/1Ufgj5MeOFd7gP/r1sUZRfN/kIxT3tr6Yq4KQwzZa/rL1ld7xvpHi
+WeFtau0pb4GJ62U/3g7zpQN6sf5xYCL/GkiXKvQkM+PuFDBgDwjOkXL1GekQEB1K
+OOsJK/HqQdwkvc2NZScbqAoFD4VZb4GJuijv9trCv5eKKREFO1c=
+=Dmon
+-----END PGP SIGNATURE-----
+
+--lar6j6naw6ub2ikt--
