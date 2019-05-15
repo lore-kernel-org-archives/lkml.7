@@ -2,91 +2,111 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CF2C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 20:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA728C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 20:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E49120818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 20:54:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A38CB20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 20:54:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A8Ng9owo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UX21WeiK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbfEOUyP (ORCPT
+        id S1727799AbfEOUy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 16:54:15 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:42910 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726290AbfEOUyO (ORCPT
+        Wed, 15 May 2019 16:54:27 -0400
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:39676 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726290AbfEOUy1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 16:54:14 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4FKs2rH056136;
-        Wed, 15 May 2019 15:54:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1557953642;
-        bh=+wUqRqbw1z4xlc63HNeRQzojTjDL8233B/q0TJ3CDqU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=A8Ng9owoXW5xqTffS3aPfLW8Ey+bkIZHgNfVox3ygbbiBBABQCxRXh06OkZ8Zi0ww
-         sBv2bwYChvfIauYs74HPHMLklrNqtFgmBl8QS/oPlBveBq0xPcZcVxdsK6W7QKxnt0
-         EE8xQOmslh2qdP1exvQZU8AvZ8H3fZCRVizCAHgQ=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4FKs2lE060513
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 May 2019 15:54:02 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 15
- May 2019 15:54:01 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 15 May 2019 15:54:01 -0500
-Received: from [10.250.90.63] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4FKs1ew020719;
-        Wed, 15 May 2019 15:54:01 -0500
-Subject: Re: [PATCH v12 1/5] can: m_can: Create a m_can platform framework
-To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190509161109.10499-1-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <dbb7bdef-820d-5dcc-d7b5-a82bc1b076fb@ti.com>
-Date:   Wed, 15 May 2019 15:54:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 15 May 2019 16:54:27 -0400
+Received: by mail-yb1-f194.google.com with SMTP id x5so373631ybn.6;
+        Wed, 15 May 2019 13:54:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=zGQL9LsQuN8YbfL9CZrmVDIRemP16gWSExM1zmbLHfI=;
+        b=UX21WeiKiMm1amsk6NGUYy3M4Nti2lsSKl6MKM6BS+lq8NRd9Cr7qMEOD2LLK1Unmp
+         +0qIBD3Bu0wIMILU+QUtXS+zVtqx3xAcOYRfKUtgAAs98u3+RKt1NEnOf7K7mccokB6v
+         4R8Ajvm+/t44yfnuO+D4XwV+ZvqmjRXqcPSm1rcb/JX29aq+aT48bDyCq9JEZvDSypxj
+         W7MA3b5rC7eY0zKgS6RrDc6n0ZacL9Zk5E4nKCLs65ipLLQ77WAySqWcZfLxvf1wiO7I
+         2AL5pBX0Ouo49JzF4OzKP8R9tvEa3CrWmoAtqFbW0uoz6/wPQ1vK9GrB1wy67ugnCj64
+         5Xdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=zGQL9LsQuN8YbfL9CZrmVDIRemP16gWSExM1zmbLHfI=;
+        b=tcnWCtZu74H43TKKxevglzmkUsST3oXpiltkkbfk88GLp3Mq2m7POukARLeOhcmBVz
+         fuJ3AvTkOKWUC5cMAToTytpCzL1xC6JpbAGsAvO/zdBzBangutt1Sq0SDE/3mK33ASG/
+         bsHZMX4Z2HvRvLQ3vBY2xFE6uMEVL1cdTvC5Mf1UgWzcaVrWVMryirfx3do8vPkR0VEq
+         dBfermx1VbuKtVn/8XwypSMiRpIIMNax5WxG+8vmol8+bPtMGDE/S5XfO6/Z/gTlu+Sa
+         8FEQrYbVpQYlMJg+ttvi9dluFSbyNIfeGSMdhL9uGq4RiLabGjFB4xSLPpUlMYbpkn4N
+         IStA==
+X-Gm-Message-State: APjAAAUn0ac+UUZUCWGHfKGH6x20Fyhhbvf4BSaR/4bwUoPjFvTDJqaL
+        miuVZ6VWrKnBQklSTRkB3A==
+X-Google-Smtp-Source: APXvYqzRu8lyusD1DkMs23H3rduOlPrjafvFoOkpVG/6eiGHgJpgXgdz7GFWvCdaL01XydqdltxUuw==
+X-Received: by 2002:a25:e687:: with SMTP id d129mr20151432ybh.475.1557953665967;
+        Wed, 15 May 2019 13:54:25 -0700 (PDT)
+Received: from 960 ([69.41.96.247])
+        by smtp.gmail.com with ESMTPSA id 75sm1065562ywp.64.2019.05.15.13.54.24
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 15 May 2019 13:54:25 -0700 (PDT)
+Message-ID: <39f32949f84185c87b245b594131824b1865d1ee.camel@gmail.com>
+Subject: Re: [PATCH v1 2/2] sound: Enable micmute led for Huawei laptops
+From:   ayman.bagabas@gmail.com
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     alsa-devel@alsa-project.org, Hui Wang <hui.wang@canonical.com>,
+        Chris Chiu <chiu@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Kailang Yang <kailang@realtek.com>,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+Date:   Wed, 15 May 2019 16:54:23 -0400
+In-Reply-To: <s5hk1erj20h.wl-tiwai@suse.de>
+References: <20190513203009.28686-1-ayman.bagabas@gmail.com>
+         <20190513203009.28686-3-ayman.bagabas@gmail.com>
+         <s5hk1erj20h.wl-tiwai@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-In-Reply-To: <20190509161109.10499-1-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marc
-
-On 5/9/19 11:11 AM, Dan Murphy wrote:
-> Create a m_can platform framework that peripheral
-> devices can register to and use common code and register sets.
-> The peripheral devices may provide read/write and configuration
-> support of the IP.
+On Wed, 2019-05-15 at 15:11 +0200, Takashi Iwai wrote:
+> On Mon, 13 May 2019 22:30:06 +0200,
+> Ayman Bagabas wrote:
+> > Since this LED is found on huawei laptops, we can hook it to
+> > huawei-wmi platform driver which uses the common WMI interface
+> > present
+> > in these laptops to control the LED.
+> > 
+> > I've also made some renames and used product name instead of common
+> > name
+> > to avoid confusion.
+> > 
+> > Signed-off-by: Ayman Bagabas <ayman.bagabas@gmail.com>
 > 
-> Acked-by: Wolfgang Grandegger <wg@grandegger.com>
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
-> 
-> v12 - Update the m_can_read/write functions to create a backtrace if the callback
-> pointer is NULL. - https://lore.kernel.org/patchwork/patch/1052302/
+> This looks applicable independently from the patch 1?
+> If so, it can go via sound git tree while another via x86-platform
+> tree.
 > 
 
-Is this able to be merged now?
+Yes it is. Will send another one.
 
-Dan
+> 
+> thanks,
+> 
+> Takashi
+> 
 
-<snip>
