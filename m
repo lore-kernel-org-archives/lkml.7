@@ -2,113 +2,144 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58527C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0528C46470
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C99C20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921216;
-	bh=h3xdNg/q9zhRaJaNp3VWSoaqbdpc4FxgzygEbgsDw2c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HWwpK9bbJDBQvVLvDi8muqt0db9X4dIbkAikwjfSE3M73LRVhY5QZRur3sd1zanz0
-	 DrblBTK9t0UUNzeQfpKm0nbh43SYHFLAeFRBb9y12TL5jG0p8qdNOruw7cpXwQO56j
-	 BJR0JLBVWSYRkJdOqSkTB0nCwvFhWExFzhjM3pAM=
+	by mail.kernel.org (Postfix) with ESMTP id 7BF1A20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:53:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731414AbfEOLxf (ORCPT
+        id S1730557AbfEOLTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:53:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57150 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730963AbfEOLT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:19:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69C7120843;
-        Wed, 15 May 2019 11:19:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919166;
-        bh=h3xdNg/q9zhRaJaNp3VWSoaqbdpc4FxgzygEbgsDw2c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bsZQBtRe+sJxpZpx5a4OtpG+Xf1VE5ZQTmVKejEQUPhYv+RubP9HZcgVt1FqhWfNy
-         ANu/laCs0dxkXlJDb9I+qAMz7JIX/H8gyNi8/JW7QWmH4JhYvDiJQWTqFFNIk1mTwU
-         KCWPtabiamskDeLLiFJA8zJUXbr1Wx6qTb6yWTLY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 091/115] NFC: nci: Add some bounds checking in nci_hci_cmd_received()
-Date:   Wed, 15 May 2019 12:56:11 +0200
-Message-Id: <20190515090705.861199865@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
-References: <20190515090659.123121100@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 15 May 2019 07:19:23 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:32942 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730926AbfEOLTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:19:18 -0400
+Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 140A8AC54039E2847CA4;
+        Wed, 15 May 2019 12:19:16 +0100 (IST)
+Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
+ (10.201.108.37) with Microsoft SMTP Server (TLS) id 14.3.408.0; Wed, 15 May
+ 2019 12:19:06 +0100
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+To:     Arvind Sankar <nivedita@alum.mit.edu>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>
+CC:     Rob Landley <rob@landley.net>, Andy Lutomirski <luto@kernel.org>,
+        "Arvind Sankar" <niveditas98@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Linux API" <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        <initramfs@vger.kernel.org>,
+        "Silviu Vlasceanu" <Silviu.Vlasceanu@huawei.com>
+References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
+ <20190512194322.GA71658@rani.riverdale.lan>
+ <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
+ <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
+ <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
+ <CALCETrV3b205L38xqPr6QqwGn6-vxQdPoJGUygJJpgM-JqqXfQ@mail.gmail.com>
+ <1557861511.3378.19.camel@HansenPartnership.com>
+ <4da3dbda-bb76-5d71-d5c5-c03d98350ab0@landley.net>
+ <1557878052.2873.6.camel@HansenPartnership.com>
+ <20190515005221.GB88615@rani.riverdale.lan>
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+Message-ID: <a138af12-d983-453e-f0b2-661a80b7e837@huawei.com>
+Date:   Wed, 15 May 2019 13:19:04 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190515005221.GB88615@rani.riverdale.lan>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.220.96.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d7ee81ad09f072eab1681877fc71ec05f9c1ae92 ]
+On 5/15/2019 2:52 AM, Arvind Sankar wrote:
+> On Tue, May 14, 2019 at 04:54:12PM -0700, James Bottomley wrote:
+>> On Tue, 2019-05-14 at 18:39 -0500, Rob Landley wrote:
+>>> On 5/14/19 2:18 PM, James Bottomley wrote:
+>>>>> I think Rob is right here.  If /init was statically built into
+>>>>> the kernel image, it has no more ability to compromise the kernel
+>>>>> than anything else in the kernel.  What's the problem here?
+>>>>
+>>>> The specific problem is that unless you own the kernel signing key,
+>>>> which is really untrue for most distribution consumers because the
+>>>> distro owns the key, you cannot build the initrd statically into
+>>>> the kernel.  You can take the distro signed kernel, link it with
+>>>> the initrd then resign the combination with your key, provided you
+>>>> insert your key into the MoK variables as a trusted secure boot
+>>>> key, but the distros have been unhappy recommending this as
+>>>> standard practice.
+>>>>
+>>>> If our model for security is going to be to link the kernel and the
+>>>> initrd statically to give signature protection over the aggregate
+>>>> then we need to figure out how to execute this via the distros.  If
+>>>> we accept that the split model, where the distro owns and signs the
+>>>> kernel but the machine owner builds and is responsible for the
+>>>> initrd, then we need to explore split security models like this
+>>>> proposal.
+>>>
+>>> You can have a built-in and an external initrd? The second extracts
+>>> over the first? (I know because once upon a time conflicting files
+>>> would append. It sounds like the desired behavior here is O_EXCL fail
+>>> and move on.)
+>>
+>> Technically yes, because the first initrd could find the second by some
+>> predefined means, extract it to a temporary directory and do a
+>> pivot_root() and then the second would do some stuff, find the real
+>> root and do a pivot_root() again.  However, while possible, wouldn't it
+>> just add to the rendezvous complexity without adding any benefits? even
+>> if the first initrd is built and signed by the distro and the second is
+>> built by you, the first has to verify the second somehow.  I suppose
+>> the second could be tar extracted, which would add xattrs, if that's
+>> the goal?
+>>
+>> James
+>>
+> You can specify multiple initrd's to the boot loader, and they get
+> loaded in sequence into memory and parsed by the kernel before /init is
+> launched. Currently I believe later ones will overwrite the earlier
+> ones, which is why we've been talking about adding an option to prevent
+> that. You don't have to mess with manually finding/parsing initramfs's
+> which wouldn't even be feasible since you may not have the drivers
+> loaded yet to access the device/filesystem on which they live.
+> 
+> Once that's done, the embedded /init is just going to do in userspace
+> wht the current patch does in the kernel. So all the files in the
+> external initramfs(es) would need to have IMA signatures via the special
+> xattr file.
 
-This is similar to commit 674d9de02aa7 ("NFC: Fix possible memory
-corruption when handling SHDLC I-Frame commands").
+So, the scheme you are proposing is not equivalent: using the distro key
+to verify signatures, compared to adding a new user key to verify the
+initramfs he builds. Why would it be necessary for the user to share
+responsibility with the distro, if the only files he uses come from the
+distro?
 
-I'm not totally sure, but I think that commit description may have
-overstated the danger.  I was under the impression that this data came
-from the firmware?  If you can't trust your networking firmware, then
-you're already in trouble.
 
-Anyway, these days we add bounds checking where ever we can and we call
-it kernel hardening.  Better safe than sorry.
+> Note that if you want the flexibility to be able to load one or both of
+> two external initramfs's, the current in-kernel proposal wouldn't be
+> enough -- the xattr specification would have to be more flexible (eg
+> reading .xattr-list* to allow each initramfs to specifiy its own
+> xattrs. This sort of enhancement would be much easier to handle with the
+> userspace variant.
 
-Fixes: 11f54f228643 ("NFC: nci: Add HCI over NCI protocol support")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
----
- net/nfc/nci/hci.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Yes, the alternative solution is to parse .xattr-list at the time it is
+extracted. The .xattr-list of each initramfs will be processed. Also,
+the CPIO parser doesn't have to reopen the file after all other files
+have been extracted.
 
-diff --git a/net/nfc/nci/hci.c b/net/nfc/nci/hci.c
-index ddfc52ac1f9b4..c0d323b58e732 100644
---- a/net/nfc/nci/hci.c
-+++ b/net/nfc/nci/hci.c
-@@ -312,6 +312,10 @@ static void nci_hci_cmd_received(struct nci_dev *ndev, u8 pipe,
- 		create_info = (struct nci_hci_create_pipe_resp *)skb->data;
- 		dest_gate = create_info->dest_gate;
- 		new_pipe = create_info->pipe;
-+		if (new_pipe >= NCI_HCI_MAX_PIPES) {
-+			status = NCI_HCI_ANY_E_NOK;
-+			goto exit;
-+		}
- 
- 		/* Save the new created pipe and bind with local gate,
- 		 * the description for skb->data[3] is destination gate id
-@@ -336,6 +340,10 @@ static void nci_hci_cmd_received(struct nci_dev *ndev, u8 pipe,
- 			goto exit;
- 		}
- 		delete_info = (struct nci_hci_delete_pipe_noti *)skb->data;
-+		if (delete_info->pipe >= NCI_HCI_MAX_PIPES) {
-+			status = NCI_HCI_ANY_E_NOK;
-+			goto exit;
-+		}
- 
- 		ndev->hci_dev->pipes[delete_info->pipe].gate =
- 						NCI_HCI_INVALID_GATE;
+Roberto
+
 -- 
-2.20.1
-
-
-
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Bo PENG, Jian LI, Yanli SHI
