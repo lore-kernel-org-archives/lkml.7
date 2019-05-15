@@ -3,189 +3,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3771C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E80BC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE0B12084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C9332084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:22:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbfEOJSk (ORCPT
+        id S1726168AbfEOJWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 05:18:40 -0400
-Received: from twhmllg4.macronix.com ([122.147.135.202]:32813 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfEOJSk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 05:18:40 -0400
-Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id x4F9IYq4083398;
-        Wed, 15 May 2019 17:18:34 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id C9C318AF5007845D623E;
-        Wed, 15 May 2019 17:18:34 +0800 (CST)
-In-Reply-To: <OF8A566F14.A2F0F576-ON482583FB.002E7E32-482583FB.003068B1@LocalDomain>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw> <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw> <20190512151820.4f2dd9da@xps13> <OF8A566F14.A2F0F576-ON482583FB.002E7E32-482583FB.003068B1@LocalDomain>
-To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
-Cc:     bbrezillon@kernel.org, broonie@kernel.org,
-        christophe.kerello@st.com, computersforpeace@gmail.com,
-        devicetree@vger.kernel.org, dwmw2@infradead.org,
-        geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org,
-        liang.yang@amlogic.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        marcel.ziswiler@toradex.com, marek.vasut@gmail.com,
-        mark.rutland@arm.com, "Miquel Raynal" <miquel.raynal@bootlin.com>,
-        paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org,
-        stefan@agner.ch, zhengxunli@mxic.com.tw
-Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND controller
+        Wed, 15 May 2019 05:22:49 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38912 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725871AbfEOJWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 05:22:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C126341;
+        Wed, 15 May 2019 02:22:48 -0700 (PDT)
+Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBFCF3F703;
+        Wed, 15 May 2019 02:22:45 -0700 (PDT)
+Date:   Wed, 15 May 2019 10:22:44 +0100
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
+        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
+        will.deacon@arm.com, catalin.marinas@arm.com,
+        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
+        mka@chromium.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 1/3] arm64: defconfig: Enable CONFIG_ENERGY_MODEL
+Message-ID: <20190515092242.azcracudtdnruwnz@queper01-lin>
+References: <20190515082318.7993-1-quentin.perret@arm.com>
+ <20190515082318.7993-2-quentin.perret@arm.com>
+ <2f598ea3-752d-0f1d-fd33-f07cda3b7bd0@linaro.org>
 MIME-Version: 1.0
-X-KeepSent: BFE3CB74:F4E01135-482583FB:00313C7E;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OFBFE3CB74.F4E01135-ON482583FB.00313C7E-482583FB.003323B4@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Wed, 15 May 2019 17:18:35 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/05/15 PM 05:18:34,
-        Serialize complete at 2019/05/15 PM 05:18:34
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG4.macronix.com x4F9IYq4083398
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2f598ea3-752d-0f1d-fd33-f07cda3b7bd0@linaro.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Miquel,
-
-Sorry, previous email missed this mxic_nand_data_xfer() reply.
-
-This Flash Memory Controller implemented the Buffer read-write data 
-transfer 
-for SPI mode and raw NAND mode.
-
-That is each time driver write to the transmit of the TXD port and the 
-data 
-is shifted out, new data is received in RXD port. 
-By transmitting the entire buffer without reading any data, driver are 
-losing
-the received data.
-
-Actually the mxic_nand_data_xfer() is a copy of mxic_spi_data_xfer().
-
-https://github.com/torvalds/linux/blame/master/drivers/spi/spi-mxic.c 
-
-therefore, I plan to patch this part to MFD as a common code for 
-both raw NAND and SPI.
-
-i.e,. 
-In driver/mfd/mxic-mfd.c, we have mxic_mfd_data_xfer() and 
-
-here call mxic_mfd_data_xfer() for raw NAND data read-write.
-
-
-> > > +static int mxic_nand_data_xfer(struct mxic_nand_ctlr *mxic, const 
-void *txbuf,
-> > > +                void *rxbuf, unsigned int len)
-> > > +{
+On Wednesday 15 May 2019 at 10:46:09 (+0200), Daniel Lezcano wrote:
+> On 15/05/2019 10:23, Quentin Perret wrote:
+> > The recently introduced Energy Model (EM) framework manages power cost
+> > tables for the CPUs of the system. Its only user right now is the
+> > scheduler, in the context of Energy Aware Scheduling (EAS).
 > > 
-> > There is not so much code shared, why not separating this function for
-> > rx and tx cases?
+> > However, the EM framework also offers a generic infrastructure that
+> > could replace subsystem-specific implementations of the same concepts,
+> > as this is the case in the thermal framework.
 > > 
-> > > +   unsigned int pos = 0;
-> > > +
-> > > +   while (pos < len) {
-> > > +      unsigned int nbytes = len - pos;
-> > > +      u32 data = 0xffffffff;
-> > > +      u32 sts;
-> > > +      int ret;
-> > > +
-> > > +      if (nbytes > 4)
-> > > +         nbytes = 4;
-> > > +
-> > > +      if (txbuf)
-> > > +         memcpy(&data, txbuf + pos, nbytes);
-> > > +
-> > > +      ret = readl_poll_timeout(mxic->mfd->regs + INT_STS, sts,
-> > > +                sts & INT_TX_EMPTY, 0, USEC_PER_SEC);
+> > So, in order to prepare the migration of the thermal subsystem to use
+> > the EM framework, enable it in the default arm64 defconfig, which is the
+> > most commonly used architecture for IPA. This will also compile-in all
+> > of the EAS code, although it won't be enabled by default -- EAS requires
+> > to use the 'schedutil' CPUFreq governor while arm64 defaults to
+> > 'performance'.
 > > 
-> > Using USEC_PER_SEC for a delay is weird
-> > 
-> > > +      if (ret)
-> > > +         return ret;
-> > > +
-> > > +      writel(data, mxic->mfd->regs + TXD(nbytes % 4));
-> > > +
-> > > +      if (rxbuf) {
-> > > +         ret = readl_poll_timeout(mxic->mfd->regs + INT_STS, sts,
-> > > +                   sts & INT_TX_EMPTY, 0,
-> > > +                   USEC_PER_SEC);
-> > > +         if (ret)
-> > > +            return ret;
-> > > +
-> > > +         ret = readl_poll_timeout(mxic->mfd->regs + INT_STS, sts,
-> > > +                   sts & INT_RX_NOT_EMPTY, 0,
-> > > +                   USEC_PER_SEC);
-> > > +         if (ret)
-> > > +            return ret;
-> > > +
-> > > +         data = readl(mxic->mfd->regs + RXD);
-> > > +         data >>= (8 * (4 - nbytes));
-> > 
-> > What is this? Are you trying to handle some endianness issue?
+> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > Signed-off-by: Quentin Perret <quentin.perret@arm.com>
 > 
-> yes,
-> 
-> > 
-> > > +         memcpy(rxbuf + pos, &data, nbytes);
-> > > +         WARN_ON(readl(mxic->mfd->regs + INT_STS) &
-> > > +            INT_RX_NOT_EMPTY);
-> > > +      } else {
-> > > +         readl(mxic->mfd->regs + RXD);
-> > > +      }
-> > > +      WARN_ON(readl(mxic->mfd->regs + INT_STS) & INT_RX_NOT_EMPTY);
-> > > +
-> > > +      pos += nbytes;
-> > > +   }
-> > > +
-> > > +   return 0;
-> > > +}
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-thanks for your review.
-
-best regards,
-Mason
-
---
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+Thanks !
+Quentin
