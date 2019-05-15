@@ -2,104 +2,109 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5576C04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65202C04AB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5750F20862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 295DA20873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:39:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="hzCWaktO"
+	dkim=pass (2048-bit key) header.d=ucsc.edu header.i=@ucsc.edu header.b="hmkVWGZb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfEOAeH (ORCPT
+        id S1726332AbfEOAj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:34:07 -0400
-Received: from mail-eopbgr70050.outbound.protection.outlook.com ([40.107.7.50]:29633
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726195AbfEOAeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:34:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6+Qdn/3XjScKwtXA3XU85Q5cO5eg7JzAM530DsfIYpc=;
- b=hzCWaktOJWBawFQwCUHmvSLf7VPIN/DmIqJpeeNxIh0AZ0oPrnjsEyud3z93AsqimeL4wV+7E4e1XvRDQyz3xcjUuocAoIOpVOj4em2KnXloVcerg7Mvs6tuCPTk60zUhlaogVep5a9R4EVzB3Qmxzt5YuE0KiUJ5ts0wEIZZUc=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB6301.eurprd05.prod.outlook.com (20.179.24.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.22; Wed, 15 May 2019 00:34:01 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1900.010; Wed, 15 May 2019
- 00:34:01 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-CC:     Ariel Levkovich <lariel@mellanox.com>,
-        Eli Cohen <eli@mellanox.com>, Mark Bloch <markb@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: undefined reference to `__aeabi_uldivmod' after 25c13324d03d
- ("IB/mlx5: Add steering SW ICM device memory type")
-Thread-Topic: undefined reference to `__aeabi_uldivmod' after 25c13324d03d
- ("IB/mlx5: Add steering SW ICM device memory type")
-Thread-Index: AQHVCrXk+svdC7ZGA0+cplzbz6uAcA==
-Date:   Wed, 15 May 2019 00:34:00 +0000
-Message-ID: <20190515003355.GB14522@ziepe.ca>
-References: <20190514194510.GA15465@archlinux-i9>
-In-Reply-To: <20190514194510.GA15465@archlinux-i9>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YTBPR01CA0033.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:14::46) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.49.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 449c6bdc-9af5-4ad4-11bb-08d6d8cd0665
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB6301;
-x-ms-traffictypediagnostic: VI1PR05MB6301:
-x-microsoft-antispam-prvs: <VI1PR05MB630101945A3301CF14616D03CF090@VI1PR05MB6301.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(396003)(376002)(136003)(346002)(199004)(189003)(81156014)(14454004)(68736007)(36756003)(6916009)(8676002)(81166006)(71200400001)(6246003)(478600001)(66066001)(5660300002)(53936002)(26005)(6116002)(186003)(3846002)(446003)(11346002)(9686003)(6512007)(86362001)(71190400001)(2906002)(256004)(8936002)(6486002)(486006)(6436002)(1076003)(73956011)(229853002)(386003)(66946007)(76176011)(66476007)(64756008)(66556008)(66446008)(6506007)(1411001)(7736002)(102836004)(316002)(33656002)(54906003)(476003)(99286004)(305945005)(4326008)(52116002)(25786009)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6301;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gpMz1T7fdkDlcvY9a65utpV0R5+dJbZDGGCEtNSmXeH4hn9cqNozQk9NnC0NSVtudXsZyPpnUH+WyKzK64IxrpdCuRWs+AnwE2HcSFpyi/RGY8uEMMDFGHp2bgZOPINBZASLwA0H0Ug4zuQXtIfJq6u49hPdDjmnj1NiCpdrytIuAmm7X4/P1FH2fnzm06jVfxhKUTJBKOB+GL4qq9H8+SA+aHDJZJjS0D0705r1RJmDaY08OoHdBOGblnmiPAglWtvryJhol7zPvIBZ3L0M5fSxQBrg9jsZd0T0aOdh0J57y2KFPRZ9BG6hh55h+682AhCofpAROcfGchFAVDJjN5gBIt2HBQ4PTCxdgV/fHrv1ueQ+LGURuHvDabtB2tu91nQlwdqvCJUNTIw8zkRrRUZZ3/+uOiYZ9dxvq72KVT8=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3F636368DFC389429E2F9FABF9C45786@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 449c6bdc-9af5-4ad4-11bb-08d6d8cd0665
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 00:34:00.9624
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6301
+        Tue, 14 May 2019 20:39:57 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:32989 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfEOAj5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 20:39:57 -0400
+Received: by mail-pf1-f194.google.com with SMTP id z28so396613pfk.0
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 17:39:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ucsc.edu; s=ucsc-google-2018;
+        h=from:to:cc:subject:date:message-id;
+        bh=aBmiAOmZcdYY0O365EiKabnGd5fG0JCgLUx8je4V9gc=;
+        b=hmkVWGZbVyVVrQmfIO/zA/A5PprcEYZo9Fgh2bNu/OxBdej3W4auhEAANb9btrTC3z
+         6WnUnSvpBLIArEZcgVTJOdv5AvWyxa5RbFtgGMjZNP7BYe38q1j7z3E2vtv72P3is6Ej
+         Y8zLMqyZwp9gpLW3cYA/2fv3s+h6aYy08zeAk5vQmOtmh3OC7VyCeyUEscFXQx6r2jlI
+         GycW9Jf+mzGfJXNLVPZC4M3ySs8k/XPhjas7X8U2XXwaClcmq+AfNNGVpO5Lgu14GqXx
+         bPpgxnqG2/P2hygAyd2Qy6hoAvO2UqN9bqm7tv05qd9DlkfC+87qXWIn8mlo73vKzXlp
+         T3Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aBmiAOmZcdYY0O365EiKabnGd5fG0JCgLUx8je4V9gc=;
+        b=odx94cLxepzSxrKXD289WWQNqOrBGJ+LLUVMYVi3y0dkJda88evcg3kQd3oWPwzZum
+         GKO5ntHlpg0pcYA/n1hwEOWoN32vfTkJauGFadZkiob4NT/zh/r1opeJhf8uECS2pEX3
+         q3eSEqTzzZ5odcTcJq1iXwXhVA6JoaeUJK64pLA/wE0+pTsFJjY3ocvuGejHj8iUCBl/
+         ltXOJzC1w71LNlRryDmOkB13nr0Gw4z/teRRvoeGLZ1kVNT6hFNnxkpPDwQJSLRHkITD
+         I6jEMUFApai/lUZhNXFGDHeg8xUU77x843lKRZlwgCzfR9it17wxfA05Obd5AKs1O5+0
+         vqrA==
+X-Gm-Message-State: APjAAAVHqS/qIK0B5BkwhoEPUmJiyFC2mQxqDl/vnqThGy4s1LolsKMS
+        +O3EcKZcFK5PbYSs2lY8gacVE39AUtM=
+X-Google-Smtp-Source: APXvYqzhrP+LtYZUGswHP9CMkZx92NYmqyOYiODyiaeHyjNWAUphjgsfhiKzXRO4XISxvyvjJdlDjA==
+X-Received: by 2002:a63:7054:: with SMTP id a20mr27458699pgn.354.1557880796429;
+        Tue, 14 May 2019 17:39:56 -0700 (PDT)
+Received: from bohr1.soe.ucsc.edu (bohr1.soe.ucsc.edu. [128.114.52.184])
+        by smtp.gmail.com with ESMTPSA id c142sm370727pfb.171.2019.05.14.17.39.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 17:39:55 -0700 (PDT)
+From:   Heiner Litz <hlitz@ucsc.edu>
+To:     mb@lightnvm.io
+Cc:     javier@javigon.com, hans.holmberg@cnexlabs.com,
+        igor.j.konopko@intel.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Heiner Litz <hlitz@ucsc.edu>
+Subject: [PATCH] lightnvm: pblk: Fix freeing merged pages
+Date:   Tue, 14 May 2019 17:39:52 -0700
+Message-Id: <20190515003952.12541-1-hlitz@ucsc.edu>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 12:45:10PM -0700, Nathan Chancellor wrote:
-> DIV_ROUND_UP is u64 / u32 in this case. I think DIV_ROUND_UP_ULL is
-> needed but I am not sure if that has any unintended side effects so I
-> didn't want to send a patch.
+bio_add_pc_page() may merge pages when a bio is padded due to a flush.
+Fix iteration over the bio to free the correct pages in case of a merge.
 
-Hmm. Most likely those u64 length's should really be size_t.=20
+Signed-off-by: Heiner Litz <hlitz@ucsc.edu>
+---
+ drivers/lightnvm/pblk-core.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-Ariel?
+diff --git a/drivers/lightnvm/pblk-core.c b/drivers/lightnvm/pblk-core.c
+index 773537804319..88d61b27a9ab 100644
+--- a/drivers/lightnvm/pblk-core.c
++++ b/drivers/lightnvm/pblk-core.c
+@@ -323,14 +323,16 @@ void pblk_free_rqd(struct pblk *pblk, struct nvm_rq *rqd, int type)
+ void pblk_bio_free_pages(struct pblk *pblk, struct bio *bio, int off,
+ 			 int nr_pages)
+ {
+-	struct bio_vec bv;
+-	int i;
+-
+-	WARN_ON(off + nr_pages != bio->bi_vcnt);
+-
+-	for (i = off; i < nr_pages + off; i++) {
+-		bv = bio->bi_io_vec[i];
+-		mempool_free(bv.bv_page, &pblk->page_bio_pool);
++	struct bio_vec *bv;
++	struct page *page;
++	int i,e, nbv = 0;
++
++	for (i = 0; i < bio->bi_vcnt; i++) {
++		bv = &bio->bi_io_vec[i];
++		page = bv->bv_page;
++		for (e = 0; e < bv->bv_len; e += PBLK_EXPOSED_PAGE_SIZE, nbv++)
++			if (nbv >= off)
++				mempool_free(page++, &pblk->page_bio_pool);
+ 	}
+ }
+ 
+-- 
+2.17.1
 
-Jason
