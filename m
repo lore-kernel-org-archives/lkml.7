@@ -2,148 +2,122 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAD0C04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570A0C04AB6
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:30:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0762320862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:30:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="fm8wJJTR"
+	by mail.kernel.org (Postfix) with ESMTP id 23E1720862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:30:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557880208;
+	bh=uleURrusNbHVKJwLnZQFXYRLky51nQBHGphx+HpP9hc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=RUdqpJp89Mf5FqGMI4Bg8w3rgGEWOa9Q1y0MbEIq2nWXInvYSt1xIoyCUdPU1BxtY
+	 qS+hy05y0B6r5ciw8+OobV/cJBNSbwzqCU2Z3ayEX87+jjhUASbl6rrsaEcL8jSYWK
+	 sBSvVWDD5BUkmkrl9DEslQKiE9Y8wlVJz3DrTphQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726383AbfEOAaA (ORCPT
+        id S1726466AbfEOAaH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:30:00 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:38602 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726319AbfEOA36 (ORCPT
+        Tue, 14 May 2019 20:30:07 -0400
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:43805 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726044AbfEOAaG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:29:58 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 79857C125A;
-        Wed, 15 May 2019 00:30:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1557880203; bh=c+tBAWKr/xKiZA4fRxsv2x0bDL2srnRGcv7daF0X8oU=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=fm8wJJTRYvByHd81d5Z5I9rzlO3TJp/3oPm3BJr7Q2pL+QY82ToWFR8FvRXXNZzVO
-         AC9KoJovQdsJWDB/o3C5Lp+YSD8G5FztED2SkH56d1JpgEzdF7mqo86yJye/L7Nt3r
-         DwgF1YwoMyFwgBj0POwA+4ywtkEMRXV4zS7Yit4HVNy6JA/kKWVEdOxcmcnCdoYAAE
-         qVzKE66HS7Tlv88d4rnQa2/+dxprK3Ke29tSTdBnxgddP5e/q9ZOkviyAJDu2XWVNB
-         9V+gT1d+/dkMtlkPDs4WejwVBZRy9txAF2qEmOTeMbtWo6YqWzD6+gMnEa3aurgEa6
-         xbRq0T9YfkvUQ==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 0751CA023C;
-        Wed, 15 May 2019 00:29:58 +0000 (UTC)
-Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 14 May 2019 17:29:57 -0700
-Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
- IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 15 May 2019 05:59:54 +0530
-Received: from vineetg-Latitude-E7450.internal.synopsys.com (10.13.182.230) by
- IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 15 May 2019 06:00:05 +0530
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     <linux-snps-arc@lists.infradead.org>
-CC:     <paltsev@snyopsys.com>, <linux-kernel@vger.kernel.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        <stable@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH 1/9] ARC: mm: SIGSEGV userspace trying to access kernel virtual memory
-Date:   Tue, 14 May 2019 17:29:28 -0700
-Message-ID: <1557880176-24964-2-git-send-email-vgupta@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557880176-24964-1-git-send-email-vgupta@synopsys.com>
-References: <1557880176-24964-1-git-send-email-vgupta@synopsys.com>
+        Tue, 14 May 2019 20:30:06 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id CCDF8251DB;
+        Tue, 14 May 2019 20:30:02 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Tue, 14 May 2019 20:30:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=q3z4I4gm6Mw+lXsJj
+        Da5nhawsrQXblcwi8YUEi0Hioo=; b=M2qu06aapz11eJf9dFDkR3Y/2bM6HB+Fw
+        E4nIFtVHWupkNUE/cJnUJQlXVflKVtSjpMNAfvqeqfZ20aeMsKvqK/WG9cbLNy9j
+        tQKrK/OrB/jF/ocMthFTOje3K/PqatUPTULewREv0WDn+IFwXofVvBuBMi2m9Zsh
+        hBLyOO4qmRsOIN9BSk7Pxgl7BaIhLunPNKUfPRkKPcBbcznZtFft/ddpzrJ2l1Il
+        B7NTIA/Kg3OUb47FaU21kLqn1k+aS9NiH2+ATXRk8ljjQ7uef8P3C4OAhRlnB5vq
+        oLIyjSeMjfHCRulyn3NTwcV4VkYEDykKB+Atf66jhtYxWn9Dear0w==
+X-ME-Sender: <xms:il3bXIKVnGX0OFMlzj72yS4enIZ8VZBbz6bxD6AJt045n56Ca-Fl9w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrleejgdefiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefhvffufffkofgggfestdekredtredttdenucfhrhhomhepfdfvohgsihhnucev
+    rdcujfgrrhguihhnghdfuceothhosghinheskhgvrhhnvghlrdhorhhgqeenucfkphepud
+    dvuddrgeegrddvvdefrddvuddunecurfgrrhgrmhepmhgrihhlfhhrohhmpehtohgsihhn
+    sehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:il3bXMZLfc105Qj-6yvQ4WrVBAIoMBm6J7oy0nQn2N9WHeuz-z0tFg>
+    <xmx:il3bXL3L6uaVf77uMH5hmRy5PwyhDoNv7fJZVSGL9eGFqd7FpiRHWw>
+    <xmx:il3bXDvFIsMKHUR8pGmE4MOiDJC_U9XEsq8CJl-UbJjkKr2MWRwJGw>
+    <xmx:il3bXMc3ScoLEo--ES8KWZRhgBBR-7GwfLSS8904jjFSlV48I1ZVZQ>
+Received: from eros.localdomain (ppp121-44-223-211.bras1.syd2.internode.on.net [121.44.223.211])
+        by mail.messagingengine.com (Postfix) with ESMTPA id C075110379;
+        Tue, 14 May 2019 20:29:58 -0400 (EDT)
+From:   "Tobin C. Harding" <tobin@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Neil Brown <neilb@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/9] docs: Convert VFS doc to RST
+Date:   Wed, 15 May 2019 10:29:04 +1000
+Message-Id: <20190515002913.12586-1-tobin@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.13.182.230]
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Hi Jon,
 
-As of today if userspace process tries to access a kernel virtual addres
-(0x7000_0000 to 0x7ffff_ffff) such that a legit kernel mapping already
-exists, that process hangs instead of being killed with SIGSEGV
+Here is an updated version of the VFS doc conversion.  This series in no
+way represents a final point for the VFS documentation rather it is a
+small step towards getting VFS docs updated.  This series does not
+update the content of vfs.txt, only does formatting.
 
-Fix that by ensuring that do_page_fault() handles kenrel vaddr only if
-in kernel mode.
+Testing: the following produces no new build warnings
 
-And given this, we can also simplify the code a bit. Now a vmalloc fault
-implies kernel mode so its failure (for some reason) can reuse the
-@no_context label and we can remove @bad_area_nosemaphore.
+	make cleandocs
+	make htmldocs 2> pre.stderr
 
-Reproduce user test for original problem:
+	# apply this patch series
 
------------------------->8-----------------
- #include <stdlib.h>
- #include <stdint.h>
+	make cleandocs
+	make htmldocs 2> post.stderr
+	diff pre.stderr post.stderr
+	
 
- int main(int argc, char *argv[])
- {
- 	volatile uint32_t temp;
+thanks,
+Tobin.
 
- 	temp = *(uint32_t *)(0x70000000);
- }
------------------------->8-----------------
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
----
- arch/arc/mm/fault.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Tobin C. Harding (9):
+  docs: filesystems: vfs: Remove space before tab
+  docs: filesystems: vfs: Use uniform space after period.
+  docs: filesystems: vfs: Use 72 character column width
+  docs: filesystems: vfs: Use uniform spacing around headings
+  docs: filesystems: vfs: Use correct initial heading
+  docs: filesystems: vfs: Use SPDX identifier
+  docs: filesystems: vfs: Fix pre-amble indentation
+  docs: filesystems: vfs: Convert spaces to tabs
+  docs: filesystems: vfs: Convert vfs.txt to RST
 
-diff --git a/arch/arc/mm/fault.c b/arch/arc/mm/fault.c
-index 8df1638259f3..6836095251ed 100644
---- a/arch/arc/mm/fault.c
-+++ b/arch/arc/mm/fault.c
-@@ -66,7 +66,7 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
- 	struct vm_area_struct *vma = NULL;
- 	struct task_struct *tsk = current;
- 	struct mm_struct *mm = tsk->mm;
--	int si_code = 0;
-+	int si_code = SEGV_MAPERR;
- 	int ret;
- 	vm_fault_t fault;
- 	int write = regs->ecr_cause & ECR_C_PROTV_STORE;  /* ST/EX */
-@@ -81,16 +81,14 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
- 	 * only copy the information from the master page table,
- 	 * nothing more.
- 	 */
--	if (address >= VMALLOC_START) {
-+	if (address >= VMALLOC_START && !user_mode(regs)) {
- 		ret = handle_kernel_vaddr_fault(address);
- 		if (unlikely(ret))
--			goto bad_area_nosemaphore;
-+			goto no_context;
- 		else
- 			return;
- 	}
- 
--	si_code = SEGV_MAPERR;
--
- 	/*
- 	 * If we're in an interrupt or have no user
- 	 * context, we must not take the fault..
-@@ -198,7 +196,6 @@ void do_page_fault(unsigned long address, struct pt_regs *regs)
- bad_area:
- 	up_read(&mm->mmap_sem);
- 
--bad_area_nosemaphore:
- 	/* User mode accesses just cause a SIGSEGV */
- 	if (user_mode(regs)) {
- 		tsk->thread.fault_address = address;
+ Documentation/filesystems/index.rst |    1 +
+ Documentation/filesystems/vfs.rst   | 1286 +++++++++++++++++++++++++++
+ Documentation/filesystems/vfs.txt   | 1264 --------------------------
+ 3 files changed, 1287 insertions(+), 1264 deletions(-)
+ create mode 100644 Documentation/filesystems/vfs.rst
+ delete mode 100644 Documentation/filesystems/vfs.txt
+
 -- 
-2.7.4
+2.21.0
 
