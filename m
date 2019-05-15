@@ -7,48 +7,54 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E680C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6238CC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A6EB21473
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3425B20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918480;
-	bh=9PorQw6wI6nmwpcY/qHdGn/33vFC21FkBTQj9GRvmUw=;
+	s=default; t=1557918488;
+	bh=7VliSGnR/dW4Q3WZ7MyplmKOYIsdE4OTnLI9UAW+9Yw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OVV7NrlzJYfkJ5XDqiyJpIrLkowkcmZCoGsSxIPJbbgyvRS71RTNwsbRT+Attqf7n
-	 CZ3gkGvvDmajX0vyAT4mrmUMbvJ2KeCJF3r/cEs0pquD59HCLz9BeEnSdK1Qhsn8dz
-	 KztJaZXSNPfIfT6OZGSJwMKx9D6JBJaEJyEkkqn8=
+	b=RqL+n//46+qdiiDS9asJbY1IgdYLQJ4NkSSOBg2JTztz7KJoUsU+7RiMlUscomJYQ
+	 tNzqeF2TCots39v8qS4sguoZenxJiD9mbBu0JO2JSH218IJTsqwRl0kze5mDLcfSpd
+	 knSdKtYkRZpwhyd7kzmMWgGEErYrwefU2sSPCw7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729027AbfEOLH6 (ORCPT
+        id S1729045AbfEOLIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:07:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39958 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:08:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728444AbfEOLHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:07:54 -0400
+        id S1728703AbfEOLID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:08:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A65BE2084F;
-        Wed, 15 May 2019 11:07:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 495D520862;
+        Wed, 15 May 2019 11:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918474;
-        bh=9PorQw6wI6nmwpcY/qHdGn/33vFC21FkBTQj9GRvmUw=;
+        s=default; t=1557918481;
+        bh=7VliSGnR/dW4Q3WZ7MyplmKOYIsdE4OTnLI9UAW+9Yw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SjxjL8SpVYLICnmO7otdRjD4W3ifuzDH+aMwDGIYQUHWB38sTnBi8NjwEG98R+Rfq
-         mZI9o4+BCHbSWqyWDuccbSgCY2pEfEcu9RvujyC9EbcIhkW3+ktyn7/ZOumd1ZSLH5
-         ai46X6Bo+THEjlZ8/kT8OIKRicyT9fOEyzycC7Gw=
+        b=zA+p1VKptm1Zw58tncISZu4QpndmQpvjqCj2aB1qoIi2Bf5NATIt2fxblimD8QK0S
+         FM22QtceH6xubJadNgtKsPz0DISZyFrVE2NuxiaCb2l6OpCmcH/+xcVpAzkXZaSGfz
+         m9L15JZ8lhn1vKOrMfJuIH8BYfIbJUyZsPACTMNA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rander Wang <rander.wang@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 144/266] ASoC:soc-pcm:fix a codec fixup issue in TDM case
-Date:   Wed, 15 May 2019 12:54:11 +0200
-Message-Id: <20190515090727.773563652@linuxfoundation.org>
+        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, kan.liang@intel.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 147/266] perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS
+Date:   Wed, 15 May 2019 12:54:14 +0200
+Message-Id: <20190515090727.878360969@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -61,60 +67,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 570f18b6a8d1f0e60e8caf30e66161b6438dcc91 ]
+[ Upstream commit 583feb08e7f7ac9d533b446882eb3a54737a6dbb ]
 
-On HDaudio platforms, if playback is started when capture is working,
-there is no audible output.
+When an event is programmed with attr.wakeup_events=N (N>0), it means
+the caller is interested in getting a user level notification after
+N samples have been recorded in the kernel sampling buffer.
 
-This can be root-caused to the use of the rx|tx_mask to store an HDaudio
-stream tag.
+With precise events on Intel processors, the kernel uses PEBS.
+The kernel tries minimize sampling overhead by verifying
+if the event configuration is compatible with multi-entry PEBS mode.
+If so, the kernel is notified only when the buffer has reached its threshold.
+Other PEBS operates in single-entry mode, the kenrel is notified for each
+PEBS sample.
 
-If capture is stared before playback, rx_mask would be non-zero on HDaudio
-platform, then the channel number of playback, which is in the same codec
-dai with the capture, would be changed by soc_pcm_codec_params_fixup based
-on the tx_mask at first, then overwritten by this function based on rx_mask
-at last.
+The problem is that the current implementation look at frequency
+mode and event sample_type but ignores the wakeup_events field. Thus,
+it may not be possible to receive a notification after each precise event.
 
-According to the author of tx|rx_mask, tx_mask is for playback and rx_mask
-is for capture. And stream direction is checked at all other references of
-tx|rx_mask in ASoC, so here should be an error. This patch checks stream
-direction for tx|rx_mask for fixup function.
+This patch fixes this problem by disabling multi-entry PEBS if wakeup_events
+is non-zero.
 
-This issue would affect not only HDaudio+ASoC, but also I2S codecs if the
-channel number based on rx_mask is not equal to the one for tx_mask. It could
-be rarely reproduecd because most drivers in kernel set the same channel number
-to tx|rx_mask or rx_mask is zero.
-
-Tested on all platforms using stream_tag & HDaudio and intel I2S platforms.
-
-Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: kan.liang@intel.com
+Link: https://lkml.kernel.org/r/20190306195048.189514-1-eranian@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/soc-pcm.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/perf_event_intel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
-index f99eb8f442829..1c0d44c86c018 100644
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -882,10 +882,13 @@ static int soc_pcm_hw_params(struct snd_pcm_substream *substream,
- 		codec_params = *params;
+diff --git a/arch/x86/kernel/cpu/perf_event_intel.c b/arch/x86/kernel/cpu/perf_event_intel.c
+index 7b79c80ce029a..325ed90511cff 100644
+--- a/arch/x86/kernel/cpu/perf_event_intel.c
++++ b/arch/x86/kernel/cpu/perf_event_intel.c
+@@ -2513,7 +2513,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		return ret;
  
- 		/* fixup params based on TDM slot masks */
--		if (codec_dai->tx_mask)
-+		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK &&
-+		    codec_dai->tx_mask)
- 			soc_pcm_codec_params_fixup(&codec_params,
- 						   codec_dai->tx_mask);
--		if (codec_dai->rx_mask)
-+
-+		if (substream->stream == SNDRV_PCM_STREAM_CAPTURE &&
-+		    codec_dai->rx_mask)
- 			soc_pcm_codec_params_fixup(&codec_params,
- 						   codec_dai->rx_mask);
- 
+ 	if (event->attr.precise_ip) {
+-		if (!event->attr.freq) {
++		if (!(event->attr.freq || event->attr.wakeup_events)) {
+ 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+ 			if (!(event->attr.sample_type &
+ 			      ~intel_pmu_free_running_flags(event)))
 -- 
 2.20.1
 
