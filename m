@@ -2,54 +2,54 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07F5DC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D40ADC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE72720657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1AAB20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922308;
-	bh=y3w1d/5Hm7qIf9nhoyxW/DRzHmYT4GzIgiA9U9cOWLQ=;
+	s=default; t=1557922317;
+	bh=wn9NK9BonpFtix8c3B2GMJjIcTZDq56qxvXJhz5UG1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yRDujW777pqbST9snh9/Pt1GYAaLDXOt3DdDAINw5+6hhl5w9+MiskqNekzmaxjGo
-	 OjL3UER2rdUDFgNMUK0D/5+6WbjQWkhOaJOQuDZGCGDeeFbEZr3PtBX0khv6u+S6JW
-	 jjWvSIf8DP3ubMdTzvoMuKxIXmKvSBFAnRzRQsws=
+	b=Zyp+s+/b9NkfbMI6rGBHV1j91E4Sln6CUZrIFf2XcdKpLZVR/+VIoNPAbfmuCJc++
+	 fMvM2W/HihHpYe4BdGMrWkJfEFw9jkJfyvbj/hWhh9HPSrGtMkCMY6g74Th97UOgnT
+	 1MS+zNdqGp/oc5Sl47Ae7RyBhO/IPhppQMIVAcUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729086AbfEOMLq (ORCPT
+        id S1729125AbfEOML5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:11:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37202 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:11:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726813AbfEOLG1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:06:27 -0400
+        id S1728701AbfEOLGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:06:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB32A216FD;
-        Wed, 15 May 2019 11:06:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 974C821734;
+        Wed, 15 May 2019 11:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918386;
-        bh=y3w1d/5Hm7qIf9nhoyxW/DRzHmYT4GzIgiA9U9cOWLQ=;
+        s=default; t=1557918376;
+        bh=wn9NK9BonpFtix8c3B2GMJjIcTZDq56qxvXJhz5UG1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tx6OdKXwBhtZCE9FUs4KOgnh9O5E5MmVlITRXPmqdfodbsjhLh3ejMa4M9cgYrmj1
-         yo5soj4DpQpWbDvwwSYoZh7sEkvgs1QW7QH/NZmZe3S8OvM85yOthWMImwpSIlFTSH
-         3AtjgWRdhLaIVC5e9+FPgIzyRgztXO2/3KjejJgU=
+        b=Imxb09H4yTR2pXOpXXCoqFG1ENkLn2/ElgDPDnn5G2FR8thHU6ijW36BpUNfmnG87
+         zhZeWULNS0bUDMgjHEODN7Zhmnk5VNrgb857HKSXXpmLY7G9nb7M7xTQ3qVIZ2qOa/
+         8vF/fMEYYfY84j2FvmY0fa1skUVqXbG+P/kndLIs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Auger <eric.auger@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.4 109/266] vfio/type1: Limit DMA mappings per container
-Date:   Wed, 15 May 2019 12:53:36 +0200
-Message-Id: <20190515090726.143970178@linuxfoundation.org>
+        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 4.4 106/266] scsi: zfcp: reduce flood of fcrscn1 trace records on multi-element RSCN
+Date:   Wed, 15 May 2019 12:53:33 +0200
+Message-Id: <20190515090726.040195607@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -62,93 +62,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+[ Upstream commit c8206579175c34a2546de8a74262456278a7795a ]
 
-commit 492855939bdb59c6f947b0b5b44af9ad82b7e38c upstream.
+If an incoming ELS of type RSCN contains more than one element, zfcp
+suboptimally causes repeated erp trigger NOP trace records for each
+previously failed port. These could be ports that went away.  It loops over
+each RSCN element, and for each of those in an inner loop over all
+zfcp_ports.
 
-Memory backed DMA mappings are accounted against a user's locked
-memory limit, including multiple mappings of the same memory.  This
-accounting bounds the number of such mappings that a user can create.
-However, DMA mappings that are not backed by memory, such as DMA
-mappings of device MMIO via mmaps, do not make use of page pinning
-and therefore do not count against the user's locked memory limit.
-These mappings still consume memory, but the memory is not well
-associated to the process for the purpose of oom killing a task.
+The trigger to recover failed ports should be just the reception of some
+RSCN, no matter how many elements it has. So we can loop over failed ports
+separately, and only then loop over each RSCN element to handle the
+non-failed ports.
 
-To add bounding on this use case, we introduce a limit to the total
-number of concurrent DMA mappings that a user is allowed to create.
-This limit is exposed as a tunable module option where the default
-value of 64K is expected to be well in excess of any reasonable use
-case (a large virtual machine configuration would typically only make
-use of tens of concurrent mappings).
+The call chain was:
 
-This fixes CVE-2019-3882.
+  zfcp_fc_incoming_rscn
+    for (i = 1; i < no_entries; i++)
+      _zfcp_fc_incoming_rscn
+        list_for_each_entry(port, &adapter->port_list, list)
+          if (masked port->d_id match) zfcp_fc_test_link
+          if (!port->d_id) zfcp_erp_port_reopen "fcrscn1"   <===
 
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Tested-by: Eric Auger <eric.auger@redhat.com>
-Reviewed-by: Peter Xu <peterx@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-[groeck: Adjust for missing upstream commit]
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In order the reduce the "flooding" of the REC trace area in such cases, we
+factor out handling the failed ports to be outside of the entries loop:
+
+  zfcp_fc_incoming_rscn
+    if (no_entries > 1)                                     <===
+      list_for_each_entry(port, &adapter->port_list, list)  <===
+        if (!port->d_id) zfcp_erp_port_reopen "fcrscn1"     <===
+    for (i = 1; i < no_entries; i++)
+      _zfcp_fc_incoming_rscn
+        list_for_each_entry(port, &adapter->port_list, list)
+          if (masked port->d_id match) zfcp_fc_test_link
+
+Abbreviated example trace records before this code change:
+
+Tag            : fcrscn1
+WWPN           : 0x500507630310d327
+ERP want       : 0x02
+ERP need       : 0x02
+
+Tag            : fcrscn1
+WWPN           : 0x500507630310d327
+ERP want       : 0x02
+ERP need       : 0x00                 NOP => superfluous trace record
+
+The last trace entry repeats if there are more than 2 RSCN elements.
+
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/vfio/vfio_iommu_type1.c |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/s390/scsi/zfcp_fc.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -53,10 +53,16 @@ module_param_named(disable_hugepages,
- MODULE_PARM_DESC(disable_hugepages,
- 		 "Disable VFIO IOMMU support for IOMMU hugepages.");
- 
-+static unsigned int dma_entry_limit __read_mostly = U16_MAX;
-+module_param_named(dma_entry_limit, dma_entry_limit, uint, 0644);
-+MODULE_PARM_DESC(dma_entry_limit,
-+		 "Maximum number of user DMA mappings per container (65535).");
-+
- struct vfio_iommu {
- 	struct list_head	domain_list;
- 	struct mutex		lock;
- 	struct rb_root		dma_list;
-+	unsigned int		dma_avail;
- 	bool			v2;
- 	bool			nesting;
- };
-@@ -382,6 +388,7 @@ static void vfio_remove_dma(struct vfio_
- 	vfio_unmap_unpin(iommu, dma);
- 	vfio_unlink_dma(iommu, dma);
- 	kfree(dma);
-+	iommu->dma_avail++;
- }
- 
- static unsigned long vfio_pgsize_bitmap(struct vfio_iommu *iommu)
-@@ -582,12 +589,18 @@ static int vfio_dma_do_map(struct vfio_i
- 		return -EEXIST;
+diff --git a/drivers/s390/scsi/zfcp_fc.c b/drivers/s390/scsi/zfcp_fc.c
+index 237688af179b..f7630cf581cd 100644
+--- a/drivers/s390/scsi/zfcp_fc.c
++++ b/drivers/s390/scsi/zfcp_fc.c
+@@ -238,10 +238,6 @@ static void _zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req, u32 range,
+ 	list_for_each_entry(port, &adapter->port_list, list) {
+ 		if ((port->d_id & range) == (ntoh24(page->rscn_fid) & range))
+ 			zfcp_fc_test_link(port);
+-		if (!port->d_id)
+-			zfcp_erp_port_reopen(port,
+-					     ZFCP_STATUS_COMMON_ERP_FAILED,
+-					     "fcrscn1");
  	}
+ 	read_unlock_irqrestore(&adapter->port_list_lock, flags);
+ }
+@@ -249,6 +245,7 @@ static void _zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req, u32 range,
+ static void zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req)
+ {
+ 	struct fsf_status_read_buffer *status_buffer = (void *)fsf_req->data;
++	struct zfcp_adapter *adapter = fsf_req->adapter;
+ 	struct fc_els_rscn *head;
+ 	struct fc_els_rscn_page *page;
+ 	u16 i;
+@@ -261,6 +258,22 @@ static void zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req)
+ 	/* see FC-FS */
+ 	no_entries = head->rscn_plen / sizeof(struct fc_els_rscn_page);
  
-+	if (!iommu->dma_avail) {
-+		mutex_unlock(&iommu->lock);
-+		return -ENOSPC;
++	if (no_entries > 1) {
++		/* handle failed ports */
++		unsigned long flags;
++		struct zfcp_port *port;
++
++		read_lock_irqsave(&adapter->port_list_lock, flags);
++		list_for_each_entry(port, &adapter->port_list, list) {
++			if (port->d_id)
++				continue;
++			zfcp_erp_port_reopen(port,
++					     ZFCP_STATUS_COMMON_ERP_FAILED,
++					     "fcrscn1");
++		}
++		read_unlock_irqrestore(&adapter->port_list_lock, flags);
 +	}
 +
- 	dma = kzalloc(sizeof(*dma), GFP_KERNEL);
- 	if (!dma) {
- 		mutex_unlock(&iommu->lock);
- 		return -ENOMEM;
- 	}
- 
-+	iommu->dma_avail--;
- 	dma->iova = iova;
- 	dma->vaddr = vaddr;
- 	dma->prot = prot;
-@@ -903,6 +916,7 @@ static void *vfio_iommu_type1_open(unsig
- 
- 	INIT_LIST_HEAD(&iommu->domain_list);
- 	iommu->dma_list = RB_ROOT;
-+	iommu->dma_avail = dma_entry_limit;
- 	mutex_init(&iommu->lock);
- 
- 	return iommu;
+ 	for (i = 1; i < no_entries; i++) {
+ 		/* skip head and start with 1st element */
+ 		page++;
+-- 
+2.19.1
+
 
 
