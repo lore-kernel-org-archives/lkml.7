@@ -4,51 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B8BC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B85C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7846F2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:49:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 936172053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920971;
-	bh=150jhkgBPAGqDHBLd7kUBOwIldgeC8zcqCG3Pz6Cp34=;
+	s=default; t=1557920980;
+	bh=Wk3h8qta0dSeyNdeZXz5+gFK1Qw7oSRFsGllNW+DLJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a0thBmJFoBGnVsyikED6xuTkWw1FIsv2zWWTFeFzstjXMT2cPV7o3x1jBUbjD+0LB
-	 OjqSnMJuzeCv2Uj9uxvdEseuzUBU7PiD1PxZslCIwpLt8Z98gK7OgohZAFbReACNq+
-	 5vGr4g6WO+/gKBSm1/crRkPmzxzPd/4gsubt8o/k=
+	b=L8SStPIKNyLgC1ZVtOErBRKFUU2hlfOFXjbR+JR5ziD/5TJUIIygxAtCUX05Uufqa
+	 SF/EJ1KwOxloHkYeEe9zguUUQsOsnNYE5bj4dpPnKztnyo7v5nG/qJpZr1uvYVzihf
+	 gpaodD0eV00pPvokJ3XUfyFWg7zLXOi6onKjpZTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731829AbfEOLta (ORCPT
+        id S1731540AbfEOLWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:49:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33390 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:22:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731130AbfEOLXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:23:06 -0400
+        id S1731274AbfEOLWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:22:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 323F62089E;
-        Wed, 15 May 2019 11:23:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 446AA20881;
+        Wed, 15 May 2019 11:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919385;
-        bh=150jhkgBPAGqDHBLd7kUBOwIldgeC8zcqCG3Pz6Cp34=;
+        s=default; t=1557919369;
+        bh=Wk3h8qta0dSeyNdeZXz5+gFK1Qw7oSRFsGllNW+DLJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qelRt/Zibt7Pi8QdHrjhkoDAFttLO8PIGBUJvV2oQ9/7L8LzEMwCtD9V8qjPPZ2TD
-         ++vJz2mqPEHmKHN5w+tYeZOXWcvyOaudHWOksWlrRT61zkMzeBUU/so729h7kJJVpf
-         x7NQrMtBwqL8fU4DKlSFP6LCVO2+g7fanS2esbyk=
+        b=yW2IJ7R0Oq2etNDpLKXMwYKkzocCZtzkHZH3id1ve77P31CIB5SCj+BCtr6Ol5MKD
+         LDs3Ka2B9ZGoJ3s7euMY+6nj5eBAQs+hEIfPZWUdjIHP6XrwH9Ndsg1PZpZuPPmz10
+         O7pHM4RF50Qs+ftEmfK8SI8HbrEEaqKSyIS1y/VI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>
-Subject: [PATCH 4.19 056/113] gpu: ipu-v3: dp: fix CSC handling
-Date:   Wed, 15 May 2019 12:55:47 +0200
-Message-Id: <20190515090657.878982630@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kevin ldir Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
+        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+        John Crispin <john@phrozen.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 050/113] MIPS: perf: ath79: Fix perfcount IRQ assignment
+Date:   Wed, 15 May 2019 12:55:41 +0200
+Message-Id: <20190515090657.452540426@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -61,67 +68,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d4fad0a426c6e26f48c9a7cdd21a7fe9c198d645 ]
+[ Upstream commit a1e8783db8e0d58891681bc1e6d9ada66eae8e20 ]
 
-Initialize the flow input colorspaces to unknown and reset to that value
-when the channel gets disabled. This avoids the state getting mixed up
-with a previous mode.
+Currently it's not possible to use perf on ath79 due to genirq flags
+mismatch happening on static virtual IRQ 13 which is used for
+performance counters hardware IRQ 5.
 
-Also keep the CSC settings for the background flow intact when disabling
-the foreground flow.
+On TP-Link Archer C7v5:
 
-Root-caused-by: Jonathan Marek <jonathan@marek.ca>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+           CPU0
+  2:          0      MIPS   2  ath9k
+  4:        318      MIPS   4  19000000.eth
+  7:      55034      MIPS   7  timer
+  8:       1236      MISC   3  ttyS0
+ 12:          0      INTC   1  ehci_hcd:usb1
+ 13:          0  gpio-ath79   2  keys
+ 14:          0  gpio-ath79   5  keys
+ 15:         31  AR724X PCI    1  ath10k_pci
+
+ $ perf top
+ genirq: Flags mismatch irq 13. 00014c83 (mips_perf_pmu) vs. 00002003 (keys)
+
+On TP-Link Archer C7v4:
+
+         CPU0
+  4:          0      MIPS   4  19000000.eth
+  5:       7135      MIPS   5  1a000000.eth
+  7:      98379      MIPS   7  timer
+  8:         30      MISC   3  ttyS0
+ 12:      90028      INTC   0  ath9k
+ 13:       5520      INTC   1  ehci_hcd:usb1
+ 14:       4623      INTC   2  ehci_hcd:usb2
+ 15:      32844  AR724X PCI    1  ath10k_pci
+ 16:          0  gpio-ath79  16  keys
+ 23:          0  gpio-ath79  23  keys
+
+ $ perf top
+ genirq: Flags mismatch irq 13. 00014c80 (mips_perf_pmu) vs. 00000080 (ehci_hcd:usb1)
+
+This problem is happening, because currently statically assigned virtual
+IRQ 13 for performance counters is not claimed during the initialization
+of MIPS PMU during the bootup, so the IRQ subsystem doesn't know, that
+this interrupt isn't available for further use.
+
+So this patch fixes the issue by simply booking hardware IRQ 5 for MIPS PMU.
+
+Tested-by: Kevin 'ldir' Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+Acked-by: John Crispin <john@phrozen.org>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/ipu-v3/ipu-dp.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/mips/ath79/setup.c          |  6 ------
+ drivers/irqchip/irq-ath79-misc.c | 11 +++++++++++
+ 2 files changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/ipu-v3/ipu-dp.c b/drivers/gpu/ipu-v3/ipu-dp.c
-index 9b2b3fa479c46..5e44ff1f20851 100644
---- a/drivers/gpu/ipu-v3/ipu-dp.c
-+++ b/drivers/gpu/ipu-v3/ipu-dp.c
-@@ -195,7 +195,8 @@ int ipu_dp_setup_channel(struct ipu_dp *dp,
- 		ipu_dp_csc_init(flow, flow->foreground.in_cs, flow->out_cs,
- 				DP_COM_CONF_CSC_DEF_BOTH);
- 	} else {
--		if (flow->foreground.in_cs == flow->out_cs)
-+		if (flow->foreground.in_cs == IPUV3_COLORSPACE_UNKNOWN ||
-+		    flow->foreground.in_cs == flow->out_cs)
- 			/*
- 			 * foreground identical to output, apply color
- 			 * conversion on background
-@@ -261,6 +262,8 @@ void ipu_dp_disable_channel(struct ipu_dp *dp, bool sync)
- 	struct ipu_dp_priv *priv = flow->priv;
- 	u32 reg, csc;
+diff --git a/arch/mips/ath79/setup.c b/arch/mips/ath79/setup.c
+index 4c7a93f4039a0..7c0b2e6cdfbd7 100644
+--- a/arch/mips/ath79/setup.c
++++ b/arch/mips/ath79/setup.c
+@@ -211,12 +211,6 @@ const char *get_system_type(void)
+ 	return ath79_sys_type;
+ }
  
-+	dp->in_cs = IPUV3_COLORSPACE_UNKNOWN;
+-int get_c0_perfcount_int(void)
+-{
+-	return ATH79_MISC_IRQ(5);
+-}
+-EXPORT_SYMBOL_GPL(get_c0_perfcount_int);
+-
+ unsigned int get_c0_compare_int(void)
+ {
+ 	return CP0_LEGACY_COMPARE_IRQ;
+diff --git a/drivers/irqchip/irq-ath79-misc.c b/drivers/irqchip/irq-ath79-misc.c
+index aa72907846360..0390603170b40 100644
+--- a/drivers/irqchip/irq-ath79-misc.c
++++ b/drivers/irqchip/irq-ath79-misc.c
+@@ -22,6 +22,15 @@
+ #define AR71XX_RESET_REG_MISC_INT_ENABLE	4
+ 
+ #define ATH79_MISC_IRQ_COUNT			32
++#define ATH79_MISC_PERF_IRQ			5
 +
- 	if (!dp->foreground)
- 		return;
++static int ath79_perfcount_irq;
++
++int get_c0_perfcount_int(void)
++{
++	return ath79_perfcount_irq;
++}
++EXPORT_SYMBOL_GPL(get_c0_perfcount_int);
  
-@@ -268,8 +271,9 @@ void ipu_dp_disable_channel(struct ipu_dp *dp, bool sync)
+ static void ath79_misc_irq_handler(struct irq_desc *desc)
+ {
+@@ -113,6 +122,8 @@ static void __init ath79_misc_intc_domain_init(
+ {
+ 	void __iomem *base = domain->host_data;
  
- 	reg = readl(flow->base + DP_COM_CONF);
- 	csc = reg & DP_COM_CONF_CSC_DEF_MASK;
--	if (csc == DP_COM_CONF_CSC_DEF_FG)
--		reg &= ~DP_COM_CONF_CSC_DEF_MASK;
-+	reg &= ~DP_COM_CONF_CSC_DEF_MASK;
-+	if (csc == DP_COM_CONF_CSC_DEF_BOTH || csc == DP_COM_CONF_CSC_DEF_BG)
-+		reg |= DP_COM_CONF_CSC_DEF_BG;
- 
- 	reg &= ~DP_COM_CONF_FG_EN;
- 	writel(reg, flow->base + DP_COM_CONF);
-@@ -347,6 +351,8 @@ int ipu_dp_init(struct ipu_soc *ipu, struct device *dev, unsigned long base)
- 	mutex_init(&priv->mutex);
- 
- 	for (i = 0; i < IPUV3_NUM_FLOWS; i++) {
-+		priv->flow[i].background.in_cs = IPUV3_COLORSPACE_UNKNOWN;
-+		priv->flow[i].foreground.in_cs = IPUV3_COLORSPACE_UNKNOWN;
- 		priv->flow[i].foreground.foreground = true;
- 		priv->flow[i].base = priv->base + ipu_dp_flow_base[i];
- 		priv->flow[i].priv = priv;
++	ath79_perfcount_irq = irq_create_mapping(domain, ATH79_MISC_PERF_IRQ);
++
+ 	/* Disable and clear all interrupts */
+ 	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_ENABLE);
+ 	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_STATUS);
 -- 
 2.20.1
 
