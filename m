@@ -4,53 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 628A0C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F68DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24DA0216F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F62B20644
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918999;
-	bh=YxO9ejvOV8qZoh6Ip48XjP0macGpbOhi/pIk6GnodX4=;
+	s=default; t=1557919002;
+	bh=12Axfxaj2ZreBYI3TqlwI2dgzfb4nwHY8+g5938RwFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mYXvJx9ig84Qn08ZZKBtbQ1mqLudqiCFhjQkcjDsZTgwOseohpqYId0AzgIU4ezcT
-	 /yDZxXKMBljGkPecqW/j5Edoqdnrw8DAHBwMy1sk11rhJj8azdpbqiVm4pzMg/rnVw
-	 OpNu1Rdg7Z8B5NoekXQNkgyI0k2EhEEZlx37zvls=
+	b=i7Yw1FBV9SCbKPK3jRSiou9mfnLcMoiwxEaXHmJqNPMj+Qv9DGa/h8IH8A23hbjct
+	 lkyCfR3U2xNlNNV0CFpRiVIER1wVR6xYi1XD2SrmtZd98WitBr6XfNLN1k7a9pSM+/
+	 Av82dmz4/p9xuhQDkK4ZsDdo7c2kwr45usX44LT4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730520AbfEOLQi (ORCPT
+        id S1730529AbfEOLQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:16:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53406 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:16:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730509AbfEOLQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:16:34 -0400
+        id S1730515AbfEOLQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:16:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6AB5420644;
-        Wed, 15 May 2019 11:16:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01F292084E;
+        Wed, 15 May 2019 11:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918992;
-        bh=YxO9ejvOV8qZoh6Ip48XjP0macGpbOhi/pIk6GnodX4=;
+        s=default; t=1557918995;
+        bh=12Axfxaj2ZreBYI3TqlwI2dgzfb4nwHY8+g5938RwFY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ykVfuJZmEQypgTdJMjM4MetaRwscRHBvaSn6Dqpn5u2ihHgFM3Gm8J/Juo7Sj6DMh
-         4XOZaKcQ1V/JUjNHzdz96xrgLU1fkJ8BeixGxvi6C4aOunNHZdVBqYU6YhfE/jyCcc
-         RU1GShNykuHr8lyqDVZNg/m4iyIg2CM3ewHx/ZIY=
+        b=nwuryJ4Ql1xF1ONApZdNLVB4vA88tagF/ccsiN5r7snD6X+r79ojVpLScb8atiqjS
+         s84SjBsniNnygz8Fz5caRSareupG2toegzp7Ilh5T4jFZLrDJtt+HMFnTHmkUaVPym
+         uFJHYxtF85kExH3FJtjmnDO9GEPPKPXBOzJTckqQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Guenter Roeck <groeck@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Russell King <rmk@armlinux.org.uk>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 026/115] mm: fix inactive list balancing between NUMA nodes and cgroups
-Date:   Wed, 15 May 2019 12:55:06 +0200
-Message-Id: <20190515090701.215778388@linuxfoundation.org>
+Subject: [PATCH 4.14 027/115] init: initialize jump labels before command line option parsing
+Date:   Wed, 15 May 2019 12:55:07 +0200
+Message-Id: <20190515090701.305102004@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -63,141 +67,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b991208b897f52507168374033771a984b947b1 ]
+[ Upstream commit 6041186a32585fc7a1d0f6cfe2f138b05fdc3c82 ]
 
-During !CONFIG_CGROUP reclaim, we expand the inactive list size if it's
-thrashing on the node that is about to be reclaimed.  But when cgroups
-are enabled, we suddenly ignore the node scope and use the cgroup scope
-only.  The result is that pressure bleeds between NUMA nodes depending
-on whether cgroups are merely compiled into Linux.  This behavioral
-difference is unexpected and undesirable.
+When a module option, or core kernel argument, toggles a static-key it
+requires jump labels to be initialized early.  While x86, PowerPC, and
+ARM64 arrange for jump_label_init() to be called before parse_args(),
+ARM does not.
 
-When the refault adaptivity of the inactive list was first introduced,
-there were no statistics at the lruvec level - the intersection of node
-and memcg - so it was better than nothing.
+  Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1 console=ttyAMA0,115200 page_alloc.shuffle=1
+  ------------[ cut here ]------------
+  WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
+  page_alloc_shuffle+0x12c/0x1ac
+  static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
+  before call to jump_label_init()
+  Modules linked in:
+  CPU: 0 PID: 0 Comm: swapper Not tainted
+  5.1.0-rc4-next-20190410-00003-g3367c36ce744 #1
+  Hardware name: ARM Integrator/CP (Device Tree)
+  [<c0011c68>] (unwind_backtrace) from [<c000ec48>] (show_stack+0x10/0x18)
+  [<c000ec48>] (show_stack) from [<c07e9710>] (dump_stack+0x18/0x24)
+  [<c07e9710>] (dump_stack) from [<c001bb1c>] (__warn+0xe0/0x108)
+  [<c001bb1c>] (__warn) from [<c001bb88>] (warn_slowpath_fmt+0x44/0x6c)
+  [<c001bb88>] (warn_slowpath_fmt) from [<c0b0c4a8>]
+  (page_alloc_shuffle+0x12c/0x1ac)
+  [<c0b0c4a8>] (page_alloc_shuffle) from [<c0b0c550>] (shuffle_store+0x28/0x48)
+  [<c0b0c550>] (shuffle_store) from [<c003e6a0>] (parse_args+0x1f4/0x350)
+  [<c003e6a0>] (parse_args) from [<c0ac3c00>] (start_kernel+0x1c0/0x488)
 
-But now that we have that infrastructure, use lruvec_page_state() to
-make the list balancing decision always NUMA aware.
+Move the fallback call to jump_label_init() to occur before
+parse_args().
 
-[hannes@cmpxchg.org: fix bisection hole]
-  Link: http://lkml.kernel.org/r/20190417155241.GB23013@cmpxchg.org
-Link: http://lkml.kernel.org/r/20190412144438.2645-1-hannes@cmpxchg.org
-Fixes: 2a2e48854d70 ("mm: vmscan: fix IO/refault regression in cache workingset transition")
-Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Michal Hocko <mhocko@kernel.org>
+The redundant calls to jump_label_init() in other archs are left intact
+in case they have static key toggling use cases that are even earlier
+than option parsing.
+
+Link: http://lkml.kernel.org/r/155544804466.1032396.13418949511615676665.stgit@dwillia2-desk3.amr.corp.intel.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reported-by: Guenter Roeck <groeck@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Russell King <rmk@armlinux.org.uk>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/vmscan.c | 29 +++++++++--------------------
- 1 file changed, 9 insertions(+), 20 deletions(-)
+ init/main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 99837e931f531..7b140c967bca6 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -2120,7 +2120,6 @@ static void shrink_active_list(unsigned long nr_to_scan,
-  *   10TB     320        32GB
-  */
- static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
--				 struct mem_cgroup *memcg,
- 				 struct scan_control *sc, bool actual_reclaim)
- {
- 	enum lru_list active_lru = file * LRU_FILE + LRU_ACTIVE;
-@@ -2141,16 +2140,12 @@ static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
- 	inactive = lruvec_lru_size(lruvec, inactive_lru, sc->reclaim_idx);
- 	active = lruvec_lru_size(lruvec, active_lru, sc->reclaim_idx);
+diff --git a/init/main.c b/init/main.c
+index 3d3d79c5a2324..51067e2db509d 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -550,6 +550,8 @@ asmlinkage __visible void __init start_kernel(void)
+ 	page_alloc_init();
  
--	if (memcg)
--		refaults = memcg_page_state(memcg, WORKINGSET_ACTIVATE);
--	else
--		refaults = node_page_state(pgdat, WORKINGSET_ACTIVATE);
+ 	pr_notice("Kernel command line: %s\n", boot_command_line);
++	/* parameters may set static keys */
++	jump_label_init();
+ 	parse_early_param();
+ 	after_dashes = parse_args("Booting kernel",
+ 				  static_command_line, __start___param,
+@@ -559,8 +561,6 @@ asmlinkage __visible void __init start_kernel(void)
+ 		parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
+ 			   NULL, set_init_arg);
+ 
+-	jump_label_init();
 -
  	/*
- 	 * When refaults are being observed, it means a new workingset
- 	 * is being established. Disable active list protection to get
- 	 * rid of the stale workingset quickly.
- 	 */
-+	refaults = lruvec_page_state(lruvec, WORKINGSET_ACTIVATE);
- 	if (file && actual_reclaim && lruvec->refaults != refaults) {
- 		inactive_ratio = 0;
- 	} else {
-@@ -2171,12 +2166,10 @@ static bool inactive_list_is_low(struct lruvec *lruvec, bool file,
- }
- 
- static unsigned long shrink_list(enum lru_list lru, unsigned long nr_to_scan,
--				 struct lruvec *lruvec, struct mem_cgroup *memcg,
--				 struct scan_control *sc)
-+				 struct lruvec *lruvec, struct scan_control *sc)
- {
- 	if (is_active_lru(lru)) {
--		if (inactive_list_is_low(lruvec, is_file_lru(lru),
--					 memcg, sc, true))
-+		if (inactive_list_is_low(lruvec, is_file_lru(lru), sc, true))
- 			shrink_active_list(nr_to_scan, lruvec, sc, lru);
- 		return 0;
- 	}
-@@ -2276,7 +2269,7 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
- 			 * anonymous pages on the LRU in eligible zones.
- 			 * Otherwise, the small LRU gets thrashed.
- 			 */
--			if (!inactive_list_is_low(lruvec, false, memcg, sc, false) &&
-+			if (!inactive_list_is_low(lruvec, false, sc, false) &&
- 			    lruvec_lru_size(lruvec, LRU_INACTIVE_ANON, sc->reclaim_idx)
- 					>> sc->priority) {
- 				scan_balance = SCAN_ANON;
-@@ -2294,7 +2287,7 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
- 	 * lruvec even if it has plenty of old anonymous pages unless the
- 	 * system is under heavy pressure.
- 	 */
--	if (!inactive_list_is_low(lruvec, true, memcg, sc, false) &&
-+	if (!inactive_list_is_low(lruvec, true, sc, false) &&
- 	    lruvec_lru_size(lruvec, LRU_INACTIVE_FILE, sc->reclaim_idx) >> sc->priority) {
- 		scan_balance = SCAN_FILE;
- 		goto out;
-@@ -2447,7 +2440,7 @@ static void shrink_node_memcg(struct pglist_data *pgdat, struct mem_cgroup *memc
- 				nr[lru] -= nr_to_scan;
- 
- 				nr_reclaimed += shrink_list(lru, nr_to_scan,
--							    lruvec, memcg, sc);
-+							    lruvec, sc);
- 			}
- 		}
- 
-@@ -2514,7 +2507,7 @@ static void shrink_node_memcg(struct pglist_data *pgdat, struct mem_cgroup *memc
- 	 * Even if we did not try to evict anon pages at all, we want to
- 	 * rebalance the anon lru active/inactive ratio.
- 	 */
--	if (inactive_list_is_low(lruvec, false, memcg, sc, true))
-+	if (inactive_list_is_low(lruvec, false, sc, true))
- 		shrink_active_list(SWAP_CLUSTER_MAX, lruvec,
- 				   sc, LRU_ACTIVE_ANON);
- }
-@@ -2839,12 +2832,8 @@ static void snapshot_refaults(struct mem_cgroup *root_memcg, pg_data_t *pgdat)
- 		unsigned long refaults;
- 		struct lruvec *lruvec;
- 
--		if (memcg)
--			refaults = memcg_page_state(memcg, WORKINGSET_ACTIVATE);
--		else
--			refaults = node_page_state(pgdat, WORKINGSET_ACTIVATE);
--
- 		lruvec = mem_cgroup_lruvec(pgdat, memcg);
-+		refaults = lruvec_page_state(lruvec, WORKINGSET_ACTIVATE);
- 		lruvec->refaults = refaults;
- 	} while ((memcg = mem_cgroup_iter(root_memcg, memcg, NULL)));
- }
-@@ -3192,7 +3181,7 @@ static void age_active_anon(struct pglist_data *pgdat,
- 	do {
- 		struct lruvec *lruvec = mem_cgroup_lruvec(pgdat, memcg);
- 
--		if (inactive_list_is_low(lruvec, false, memcg, sc, true))
-+		if (inactive_list_is_low(lruvec, false, sc, true))
- 			shrink_active_list(SWAP_CLUSTER_MAX, lruvec,
- 					   sc, LRU_ACTIVE_ANON);
- 
+ 	 * These use large bootmem allocations and must precede
+ 	 * kmem_cache_init()
 -- 
 2.20.1
 
