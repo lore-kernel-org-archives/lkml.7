@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78843C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 958F6C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A80520843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F32F20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919427;
-	bh=sArjO93LdjXnGm7f5fCgwScBap13y8eJduemGfPgfn4=;
+	s=default; t=1557919432;
+	bh=JYkujlxxw32yNS0nlfdlOjicILURIxzUFUSHXFtYckM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OocT6HmwqJgdOVuvUXY4wAbftbKMNny8yWjYFoyT7CRGSVab1A2uvAtgKvI+pY7MW
-	 mMfNUpaUMV/pAiCvIuDMfdwezhw4YSRd6oo+tLVqUTdebvwOVxrFB1V19OtNrIP+Gz
-	 ABoGfOAxNydXV9QCkzIrHOkrabLdqU1ZlbbMVYA8=
+	b=ubAFjbdXh8gG4DenNA1IbapPz0DqaQnX+WptEY+BRrXWkpbL6Hr9YI52K7kplbm+h
+	 bMBImOWDNIs1I4q8zGG416gIq3iLwV3D8yP+Sd/34qWRXYiVWd4nGyvNsWFwCVK89i
+	 NTtZOLwgO6qjt72LSbEkozEubyjI8MBJ8Xni1ut4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731705AbfEOLXq (ORCPT
+        id S1731727AbfEOLXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:23:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34166 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:23:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731694AbfEOLXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:23:43 -0400
+        id S1731694AbfEOLXs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:23:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 156A520862;
-        Wed, 15 May 2019 11:23:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A27920881;
+        Wed, 15 May 2019 11:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919422;
-        bh=sArjO93LdjXnGm7f5fCgwScBap13y8eJduemGfPgfn4=;
+        s=default; t=1557919427;
+        bh=JYkujlxxw32yNS0nlfdlOjicILURIxzUFUSHXFtYckM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GG6THTIzDABEUTvVGbftWogPaBzTNhibcZzq7e4AqEl7ZWHHkGFDtbCzjE+cbquLz
-         iUoiIkCjfwZ3Z8AwQAn09jc4BWAWaS6OdRH9zPc8/ILaweZPFWVmZoHqhamJCcsm3G
-         qALKnliX7s9id0lx/6zCYZDO42khRZaMQY7SErAU=
+        b=n8McB0ICo8WY4Vqj/V4K0h2XaeVw6MDv4MVwXL/Qo7zxkR7cS9rlxU3JuJfRB0Fn+
+         3WyQ1KhaIUG2/8RmeUKQX5OyTxcF+tu6gpurxiabAHRoSMfUR0st5thXPvBCwN5QNt
+         0tn+U6yIM6F2ngvn3CGI9qR82KtJLLHWu0rq3gKQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 042/113] ocelot: Dont sleep in atomic context (irqs_disabled())
-Date:   Wed, 15 May 2019 12:55:33 +0200
-Message-Id: <20190515090656.813206864@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: [PATCH 4.19 070/113] netfilter: nf_tables: use-after-free in dynamic operations
+Date:   Wed, 15 May 2019 12:56:01 +0200
+Message-Id: <20190515090658.842149354@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -60,43 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a8fd48b50deaa20808bbf0f6685f6f1acba6a64c ]
+[ Upstream commit 3f3a390dbd59d236f62cff8e8b20355ef7069e3d ]
 
-Preemption disabled at:
- [<ffff000008cabd54>] dev_set_rx_mode+0x1c/0x38
- Call trace:
- [<ffff00000808a5c0>] dump_backtrace+0x0/0x3d0
- [<ffff00000808a9a4>] show_stack+0x14/0x20
- [<ffff000008e6c0c0>] dump_stack+0xac/0xe4
- [<ffff0000080fe76c>] ___might_sleep+0x164/0x238
- [<ffff0000080fe890>] __might_sleep+0x50/0x88
- [<ffff0000082261e4>] kmem_cache_alloc+0x17c/0x1d0
- [<ffff000000ea0ae8>] ocelot_set_rx_mode+0x108/0x188 [mscc_ocelot_common]
- [<ffff000008cabcf0>] __dev_set_rx_mode+0x58/0xa0
- [<ffff000008cabd5c>] dev_set_rx_mode+0x24/0x38
+Smatch reports:
 
-Fixes: a556c76adc05 ("net: mscc: Add initial Ocelot switch support")
+       net/netfilter/nf_tables_api.c:2167 nf_tables_expr_destroy()
+        error: dereferencing freed memory 'expr->ops'
 
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+net/netfilter/nf_tables_api.c
+    2162 static void nf_tables_expr_destroy(const struct nft_ctx *ctx,
+    2163                                   struct nft_expr *expr)
+    2164 {
+    2165        if (expr->ops->destroy)
+    2166                expr->ops->destroy(ctx, expr);
+                                                ^^^^
+--> 2167        module_put(expr->ops->type->owner);
+                           ^^^^^^^^^
+    2168 }
+
+Smatch says there are three functions which free expr->ops.
+
+Fixes: b8e204006340 ("netfilter: nft_compat: use .release_ops and remove list of extension")
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/net/ethernet/mscc/ocelot.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/nf_tables_api.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
-index 0bdd3c400c92f..10291198decd6 100644
---- a/drivers/net/ethernet/mscc/ocelot.c
-+++ b/drivers/net/ethernet/mscc/ocelot.c
-@@ -605,7 +605,7 @@ static int ocelot_mact_mc_add(struct ocelot_port *port,
- 			      struct netdev_hw_addr *hw_addr)
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index f272f9538c44a..ef7ff13a7b992 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -2113,9 +2113,11 @@ static int nf_tables_newexpr(const struct nft_ctx *ctx,
+ static void nf_tables_expr_destroy(const struct nft_ctx *ctx,
+ 				   struct nft_expr *expr)
  {
- 	struct ocelot *ocelot = port->ocelot;
--	struct netdev_hw_addr *ha = kzalloc(sizeof(*ha), GFP_KERNEL);
-+	struct netdev_hw_addr *ha = kzalloc(sizeof(*ha), GFP_ATOMIC);
++	const struct nft_expr_type *type = expr->ops->type;
++
+ 	if (expr->ops->destroy)
+ 		expr->ops->destroy(ctx, expr);
+-	module_put(expr->ops->type->owner);
++	module_put(type->owner);
+ }
  
- 	if (!ha)
- 		return -ENOMEM;
+ struct nft_expr *nft_expr_init(const struct nft_ctx *ctx,
 -- 
 2.20.1
 
