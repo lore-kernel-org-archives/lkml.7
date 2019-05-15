@@ -2,221 +2,121 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0959C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09086C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20C82087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C6A2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:37:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HoTCTtfo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbfEORgQ (ORCPT
+        id S1727069AbfEORhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 13:36:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47966 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfEORgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 13:36:16 -0400
-Received: from oasis.local.home (50-204-120-225-static.hfc.comcastbusiness.net [50.204.120.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73FEB20815;
-        Wed, 15 May 2019 17:36:14 +0000 (UTC)
-Date:   Wed, 15 May 2019 13:36:14 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] tracing: Updates for 5.2
-Message-ID: <20190515133614.31dcbbe0@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 15 May 2019 13:37:45 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42557 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfEORhp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 13:37:45 -0400
+Received: by mail-pl1-f195.google.com with SMTP id x15so202254pln.9
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 10:37:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6MPB6abkHkJ0qbicT9wcmWrQ37/LHEgzn/YrZbRl8XQ=;
+        b=HoTCTtforuL3wGQfErSjO1VKyUwbCZGxLa9EOSZVgemOObkuInPAHO8GmGZuXzlYDZ
+         w7v/VQsM6dXv1zCy6Dc9qkv59qQc9CjNrGtMrHxcv1H+jW0700gP+qQPZ0Ep0blVPy0P
+         OxOH0OzNtVo6l/g+dXJXpxXKvwc+9I8FhEK2L03R48/lbHLegUZAWGTwnQkHhwoF4Kzf
+         n6j06NHwghm96dIcPgV3xuM2hw5KWSxlovdMA33Ch5uh7UOmTaMrEJSJB9vqkmkLNZgV
+         X3zZ0Y2XxyoIEklWJzzMC+t3rcv/ygRXp+7E3aiqGBoXXpSJij/qGTjk/J/tKvXoG0eb
+         VrcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6MPB6abkHkJ0qbicT9wcmWrQ37/LHEgzn/YrZbRl8XQ=;
+        b=Lx/eXTtGYDJ/GT5OcdvjYj0Pngrsi01P7U74rTzD9G4RezcXcvflvBUhORRq9TR6k0
+         fmi6CtS3HNH7ZmcmdbsR3zlB1r4lnseqOQJKKlD3ZH5IVGAsIpuY3eYm1xtCBLkPx+ZD
+         +O0nC3XRSj1GUdo0eptaEWVCTQ2Y9tT4LRh8hrHsjAYb3de8qnkYx9WSciXgeu7ItVFA
+         o79Os5UyxqIEK8dOCLGToKDajBI6UzkjRahr9ll7VGTPIqKx+oUqrkfuyd5hGAV9NQfT
+         92QjKI4xnGeesicMAAhwe9tU7z0p9Nr79n76FXWJ6+rpVC9u2i1vbK4BLWUwiglCfiX8
+         x7hw==
+X-Gm-Message-State: APjAAAUTc/RkcXM+wItVu6vD7iweYjMkaiO4vg2CPy1RBChZDPt0b324
+        4WB4DMJu5dhHUs2uywdnXXMvc/Iz3rNTiIJrzm4uJA==
+X-Google-Smtp-Source: APXvYqxiNynwv+C+4bYX03W2HuvbOdJC2rqQW/r3u5j9Ys7lSGVzYYIJx/dUWNXg+rGmmOCTRmnALz6ockaHwhtll/Y=
+X-Received: by 2002:a17:902:2aab:: with SMTP id j40mr21495934plb.238.1557941863681;
+ Wed, 15 May 2019 10:37:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190513222109.110020-1-ndesaulniers@google.com>
+ <20190513232910.GA30209@archlinux-i9> <CAKwvOd=W9nm04zvRQ3iu=AGHnitongZ7VQ9S32U9hBZKwNyeMw@mail.gmail.com>
+ <201905141041.C38DA1B305@keescook> <CAKwvOdn2ESh+-T8=YFT=W=gjZHPpCY8QJVS7ytPHM04tN1v13g@mail.gmail.com>
+ <201905150935.3AFE8CC68B@keescook>
+In-Reply-To: <201905150935.3AFE8CC68B@keescook>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 15 May 2019 10:37:31 -0700
+Message-ID: <CAKwvOdk_KmyT4yZOz8iczxeP7mYq-h5LmjzkE5yhsodupRLxEQ@mail.gmail.com>
+Subject: Re: [PATCH] lkdtm: support llvm-objcopy
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nathan Chancellor <nathanchance@gmail.com>,
+        Jordan Rupprect <rupprecht@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Wed, May 15, 2019 at 9:43 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Tue, May 14, 2019 at 01:24:37PM -0700, Nick Desaulniers wrote:
+> > On Tue, May 14, 2019 at 11:11 AM Kees Cook <keescook@chromium.org> wrote:
+> > >
+> > > On Mon, May 13, 2019 at 04:50:05PM -0700, Nick Desaulniers wrote:
+> > > > On Mon, May 13, 2019 at 4:29 PM Nathan Chancellor
+> > > > <natechancellor@gmail.com> wrote:
+> > > > >
+> > > > > On Mon, May 13, 2019 at 03:21:09PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
+> > > > > > With CONFIG_LKDTM=y and make OBJCOPY=llvm-objcopy, llvm-objcopy errors:
+> > > > > > llvm-objcopy: error: --set-section-flags=.text conflicts with
+> > > > > > --rename-section=.text=.rodata
+> > > > > >
+> > > > > > Rather than support setting flags then renaming sections vs renaming
+> > > > > > then setting flags, it's simpler to just change both at the same time
+> > > > > > via --rename-section.
+> >
+> > I'm not sure I want to call it a bug in the initial implementation.  I've filed:
+> > https://sourceware.org/bugzilla/show_bug.cgi?id=24554 for
+> > clarification.  Jordan, I hope you can participate in any discussion
+> > there?
+>
+> Based on the hint from Alan Modra, it seems PROGBITS/NOBITS can be
+> controlled with the presence/absence of the "load" section flag. This
+> appears to work for both BFD and LLVM:
+>
+> $ objcopy --rename-section .text=.rodata,alloc,readonly,load rodata.o rodata_objcopy.o
+> $ readelf -WS rodata_objcopy.o | grep \.rodata
+>  [ 1] .rodata    PROGBITS     0000000000000000 000040 000002 00   A  0   0 16
+>
+> $ llvm-objcopy --rename-section .text=.rodata,alloc,readonly,load rodata.o rodata_objcopy.o
+> $ readelf -WS rodata_objcopy.o | grep \.rodata
+>  [ 1] .rodata    PROGBITS     0000000000000000 000040 000002 00   A  0   0 16
+>
+> So, that's an easy change that could be folded into the original version
+> of this patch (no need for my two-phase work-around).
 
-The major changes in this tracing update includes:
-
- - Removing of non-DYNAMIC_FTRACE from 32bit x86
-
- - Removing of mcount support from x86
-
- - Emulating a call from int3 on x86_64, fixes live kernel patching
-
- - Consolidated Tracing Error logs file
-
-Minor updates:
-
- - Removal of klp_check_compiler_support()
-
- - kdb ftrace dumping output changes
-
- - Accessing and creating ftrace instances from inside the kernel
-
- - Clean up of #define if macro
-
- - Introduction of TRACE_EVENT_NOP() to disable trace events based on config
-   options
-
-And other minor fixes and clean ups
-
- *** NOTE *** This has conflicts with your tree, with the following files:
-
-     Conflicts:
-            arch/x86/entry/entry_64.S
-            include/linux/compiler.h
-
-I did a merge against the commit d7a02fa0a8f9ec in your tree, and put
-my conflict resolution at my branch in the same tree as this pull request:
-
-  ftrace/conflicts
-
-
-Please pull the latest trace-v5.2 tree, which can be found at:
-
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-trace-v5.2
-
-Tag SHA1: 666ff819de73a218eae4b7850ce9112942b40d4e
-Head SHA1: 693713cbdb3a4bda5a8a678c31f06560bbb14657
-
-Anders Roxell (1):
-      tracing: Allow RCU to run between postponed startup tests
-
-Colin Ian King (1):
-      tracing: Fix white space issues in parse_pred() function
-
-Divya Indi (1):
-      tracing: Kernel access to Ftrace instances
-
-Douglas Anderson (3):
-      tracing: kdb: The skip_lines parameter should have been skip_entries
-      tracing: Add trace_total_entries() / trace_total_entries_cpu()
-      tracing: kdb: Allow ftdump to skip all but the last few entries
-
-Elazar Leibovich (1):
-      tracing: Fix partial reading of trace event's id file
-
-Gustavo A. R. Silva (1):
-      tracing: Replace kzalloc with kcalloc
-
-Jiri Kosina (1):
-      livepatch: Remove klp_check_compiler_support()
-
-Josh Poimboeuf (1):
-      x86_64: Add gap to int3 to allow for call emulation
-
-Linus Torvalds (1):
-      tracing: Simplify "if" macro code
-
-Masami Hiramatsu (5):
-      tracing: Use tracing error_log with probe events
-      selftests/ftrace: Add error_log testcase for probe errors
-      tracing: uprobes: Re-enable $comm support for uprobe events
-      tracing: probeevent: Do not accumulate on ret variable
-      tracing: probeevent: Fix to make the type of $comm string
-
-Peter Zijlstra (2):
-      x86_64: Allow breakpoints to emulate call instructions
-      ftrace/x86_64: Emulate call function while updating in breakpoint handler
-
-Rasmus Villemoes (1):
-      tracing: Eliminate const char[] auto variables
-
-Srivatsa S. Bhat (VMware) (1):
-      tracing: Fix documentation about disabling options using trace_options
-
-Steven Rostedt (VMware) (10):
-      tracing: Add trace_array parameter to create_event_filter()
-      tracing: Have histogram code pass around trace_array for error handling
-      tracing: Have the error logs show up in the proper instances
-      ftrace: Remove ASSIGN_OPS_HASH() macro from ftrace.c
-      ftrace: Do not process STUB functions in ftrace_ops_list_func()
-      function_graph: Have selftest also emulate tr->reset() as it did with tr->init()
-      function_graph: Place ftrace_graph_entry_stub() prototype in include/linux/ftrace.h
-      ftrace/x86_32: Remove support for non DYNAMIC_FTRACE
-      ftrace/x86: Remove mcount support
-      x86: Hide the int3_emulate_call/jmp functions from UML
-
-Tom Zanussi (9):
-      tracing: Add tracing error log
-      tracing: Save the last hist command's associated event name
-      tracing: Use tracing error_log with hist triggers
-      tracing: Use tracing error_log with trace event filters
-      selftests/ftrace: Move kprobe/uprobe check_error() to test.d/functions
-      selftests/ftrace: Remove trigger-extended-error-support testcase
-      selftests/ftrace: Add tracing/error_log testcase
-      tracing: Add tracing/error_log Documentation
-      tracing: Add error_log to README
-
-Yafang Shao (3):
-      tracing: introduce TRACE_EVENT_NOP()
-      sched/fair: do not expose some tracepoints to user if CONFIG_SCHEDSTATS is not set
-      rcu: validate arguments for rcu tracepoints
-
-Yangtao Li (1):
-      ring-buffer: Fix mispelling of Calculate
-
-YueHaibing (1):
-      ring-buffer: Fix ring buffer size in rb_write_something()
-
-----
-Documentation/trace/ftrace.rst                     |  31 ++
- Documentation/trace/histogram.rst                  |  16 +-
- arch/nds32/kernel/ftrace.c                         |   1 -
- arch/parisc/kernel/ftrace.c                        |   1 -
- arch/powerpc/include/asm/livepatch.h               |   5 -
- arch/s390/include/asm/livepatch.h                  |   5 -
- arch/x86/Kconfig                                   |  11 +
- arch/x86/entry/entry_64.S                          |  18 +-
- arch/x86/include/asm/ftrace.h                      |   8 +-
- arch/x86/include/asm/livepatch.h                   |   8 -
- arch/x86/include/asm/text-patching.h               |  30 ++
- arch/x86/kernel/ftrace.c                           |  32 +-
- arch/x86/kernel/ftrace_32.S                        |  75 +---
- arch/x86/kernel/ftrace_64.S                        |  28 +-
- include/linux/compiler.h                           |  35 +-
- include/linux/ftrace.h                             |   2 +
- include/linux/tracepoint.h                         |  15 +
- include/trace/define_trace.h                       |   8 +
- include/trace/events/rcu.h                         |  81 ++--
- include/trace/events/sched.h                       |  21 +-
- kernel/livepatch/core.c                            |   8 -
- kernel/rcu/rcu.h                                   |   9 +-
- kernel/rcu/tree.c                                  |   8 +-
- kernel/trace/ftrace.c                              |   9 +-
- kernel/trace/ring_buffer.c                         |   2 +-
- kernel/trace/ring_buffer_benchmark.c               |   2 +-
- kernel/trace/trace.c                               | 417 ++++++++++++++++++---
- kernel/trace/trace.h                               |  13 +-
- kernel/trace/trace_events.c                        |   4 +-
- kernel/trace/trace_events_filter.c                 |  84 +++--
- kernel/trace/trace_events_hist.c                   | 268 +++++++------
- kernel/trace/trace_events_trigger.c                |   3 +-
- kernel/trace/trace_kdb.c                           |  61 +--
- kernel/trace/trace_kprobe.c                        |  77 ++--
- kernel/trace/trace_probe.c                         | 291 +++++++++-----
- kernel/trace/trace_probe.h                         |  78 +++-
- kernel/trace/trace_probe_tmpl.h                    |   2 +-
- kernel/trace/trace_selftest.c                      |   5 +-
- kernel/trace/trace_uprobe.c                        |  57 ++-
- .../ftrace/test.d/ftrace/tracing-error-log.tc      |  19 +
- tools/testing/selftests/ftrace/test.d/functions    |  12 +
- .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |  85 +++++
- .../ftrace/test.d/kprobe/uprobe_syntax_errors.tc   |  23 ++
- .../inter-event/trigger-extended-error-support.tc  |  28 --
- 44 files changed, 1345 insertions(+), 651 deletions(-)
-create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/tracing-error-log.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/uprobe_syntax_errors.tc
- delete mode 100644 tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-extended-error-support.tc
----------------------------
+Ah, yes that's better.  I'll fold that into a v2 and resend shortly.
+I'm going to carry your Ack from earlier, please let me know offlist
+if that's not appropriate.
+-- 
+Thanks,
+~Nick Desaulniers
