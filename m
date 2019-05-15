@@ -2,106 +2,74 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E2FC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3295C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E51FC2084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D4C21473
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920060;
-	bh=G1gKMeTX9JbVl501Usv3mK5qUwAQA8ljIadRchKIreU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o8nsbJuldySKCRFrC4ZhTrvbT8mv2/CyrW4kM0VgfQ+f0OApIQN40xRf6e+Tsx9AV
-	 Q0HCuvh4DaYkTCXn+7asjnUCbzOn1GNAChI9UHq7zseoSJauLLNKEh+WjzOIEVXIcl
-	 EV8jGkZwg4gzElgQbIIkl/pTf/+1SndynZWbQ93Y=
+	s=default; t=1557920067;
+	bh=UKdAqxo5hGOoDMAl9NLSkpt4zg9p5OCAItHb4xUscto=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ws7ISVa0W3ntzu3WNziTryGgGq5Y9o8BDUAcGxrOzuWfhkn4CIMlJUz3dN7d1mHT+
+	 O8TaYKD8RlW8YK/GK6odQxTO8nA5lhbBYb+Tx1UF1N90Sjkj1uEi96HMbJc7acymL4
+	 N+Pn9ePL8bvYwxY8HmHc2S7v/N67VkJwigwR6Raw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387440AbfEOLeT (ORCPT
+        id S1733023AbfEOLe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:34:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46372 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:34:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732485AbfEOLeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:34:17 -0400
+        id S1727283AbfEOLeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:34:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9E0B2053B;
-        Wed, 15 May 2019 11:34:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 522922053B;
+        Wed, 15 May 2019 11:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557920057;
-        bh=G1gKMeTX9JbVl501Usv3mK5qUwAQA8ljIadRchKIreU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XgPmMlLMnipSyJinvFqw1y5eEQ7Qrajoyn9LfqpHBmbt5K/90XkOkYYbKSBXqwXuc
-         4exwrqcC5WJeouLFG0bzi+6DdOlO7yWLD6yIlnzldl7N7SbojNmAGEFBXbZOIjKQEw
-         BIQrwAOQ4LCWSAb8bGUR/V+vPau1c/Qa5Uw5SCC0=
+        s=default; t=1557920064;
+        bh=UKdAqxo5hGOoDMAl9NLSkpt4zg9p5OCAItHb4xUscto=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0INscPJUwspjjab4+Ys0uyPkmH3TYHvz0F5xmbtnQ+A6D3MDwqBqNrbGh64zhPHAH
+         qkrpQ3WdcqkqAIQNM97IqfuuML5BH9yZH5XjOzjncOvYvGckk/vCJnSBkG+x4QATpQ
+         Te7wIAaisgKKB5rhWXwslNrfah0Qp0vHk/YHWt+4=
+Date:   Wed, 15 May 2019 13:30:19 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Frank Pavlic <f.pavlic@kunbus.de>,
-        Stephen Boyd <sboyd@codeaurora.org>,
-        Nishanth Menon <nm@ti.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.4 097/266] net: ks8851: Reassert reset pin if chip ID check fails
-Date:   Wed, 15 May 2019 12:53:24 +0200
-Message-Id: <20190515090725.730795185@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
-References: <20190515090722.696531131@linuxfoundation.org>
-User-Agent: quilt/0.66
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc: Remove double free
+Message-ID: <20190515113019.GB11749@kroah.com>
+References: <20190515090750.30647-1-tobin@kernel.org>
+ <aa001c3b-f96e-2078-0861-315613ec33a0@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aa001c3b-f96e-2078-0861-315613ec33a0@c-s.fr>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 761cfa979a0c177d6c2d93ef5585cd79ae49a7d5 ]
+On Wed, May 15, 2019 at 11:26:03AM +0200, Christophe Leroy wrote:
+> kobject_put() released index_dir->kobj
 
-Commit 73fdeb82e963 ("net: ks8851: Add optional vdd_io regulator and
-reset gpio") amended the ks8851 driver to briefly assert the chip's
-reset pin on probe. It also amended the probe routine's error path to
-reassert the reset pin if a subsequent initialization step fails.
+Yes, but what is that kobject enclosed in?
 
-However the commit misplaced reassertion of the reset pin in the error
-path such that it is not performed if the check of the Chip ID and
-Enable Register (CIDER) fails. The error path is therefore slightly
-asymmetrical to the probe routine's body. Fix it.
+> but who will release 'index' ?
 
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Frank Pavlic <f.pavlic@kunbus.de>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Nishanth Menon <nm@ti.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
----
- drivers/net/ethernet/micrel/ks8851.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The final kobject_put() will do that, see cacheinfo_create_index_dir()
+for the details.
 
-diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
-index 247a3377b951..a8c5641ff955 100644
---- a/drivers/net/ethernet/micrel/ks8851.c
-+++ b/drivers/net/ethernet/micrel/ks8851.c
-@@ -1567,9 +1567,9 @@ static int ks8851_probe(struct spi_device *spi)
- 	free_irq(ndev->irq, ks);
- 
- err_irq:
-+err_id:
- 	if (gpio_is_valid(gpio))
- 		gpio_set_value(gpio, 0);
--err_id:
- 	regulator_disable(ks->vdd_reg);
- err_reg:
- 	regulator_disable(ks->vdd_io);
--- 
-2.19.1
+And please do not top-post, you lost all context.
 
-
-
+greg k-h
