@@ -4,50 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DCDC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DBFDC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81EAB20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61EF820862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919408;
-	bh=oy2kEOxIb6zKFnVnzlNUiUlY5ldvM1xcaN4RpTUfQFc=;
+	s=default; t=1557919412;
+	bh=tgkD4hdVNYfmGU8kBXy6K9TdVHq1FpxTKLU/f6FbWjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x8Tpj3JaOeRSsg2Rw0uTuUlgSaUeupYTyepsn8OHZJemstJ9+2UWqMaIQk29O9NZu
-	 gB9RqyINv5MqXS9e9k1KhqG9Cuwg+mCsMOR5dYcJMfKCBmEo0lpF0yhhTVINAlyXta
-	 d3xJdh0GfH+h+7jLcNFkuCeqoCMzTChp6kApZ8gA=
+	b=lylktK9W0Y5XNfBj4NdJP6dajf4sZueS2DT8UvCR6d/mW7IF6vqG4oG4VCLZ10aBl
+	 J0I1/zecRY9Cl9VsmG03ZgPvW90pUw3cyIGAe6kgDiX2cBuWmyYAmtNMaX2tySzbhG
+	 zYjdQV/hQvWUuvdHueYscKg2zGnVmdvfDH2Tf/0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731649AbfEOLX1 (ORCPT
+        id S1731658AbfEOLXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:23:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33764 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:23:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731641AbfEOLXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:23:24 -0400
+        id S1731383AbfEOLX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:23:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A163020843;
-        Wed, 15 May 2019 11:23:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A616E216FD;
+        Wed, 15 May 2019 11:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919404;
-        bh=oy2kEOxIb6zKFnVnzlNUiUlY5ldvM1xcaN4RpTUfQFc=;
+        s=default; t=1557919409;
+        bh=tgkD4hdVNYfmGU8kBXy6K9TdVHq1FpxTKLU/f6FbWjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=unUp4PSGxQJR9JiGhpurvKNeS+fLJkgU6sZSt99l9FQVQclNySPhPFztAHTUmiEPz
-         IsBgQNlk9fZj7NNJ0ewVWWoDeo17frMH1uMUADlU+Bq5kQxEb3um4RQlRNbOW/My5i
-         OrQ0LsU4K+4rHK1XbchsL6+cDP0Zg/RLKAVRyA0Q=
+        b=YUCV5rLg1QJbFU4MeZRrDshEEnp/PCmWNkRIZTQ3qCCUECEw3L4RvtQDCvxtCJsEV
+         EZtdgskP1+hu35NnxjKpezsja9SxRO1bfGCmuSL7tMtYpyhWoJmcB2SwdWjsoVBZVu
+         DNhbMSl8xwCURW22PUmJxJmgRZOObDNJQVNUP8GA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Qian Cai <cai@lca.pw>, Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 062/113] Input: synaptics-rmi4 - fix possible double free
-Date:   Wed, 15 May 2019 12:55:53 +0200
-Message-Id: <20190515090658.270679295@linuxfoundation.org>
+Subject: [PATCH 4.19 064/113] mm/memory_hotplug.c: drop memory device reference after find_memory_block()
+Date:   Wed, 15 May 2019 12:55:55 +0200
+Message-Id: <20190515090658.411439340@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -60,43 +68,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bce1a78423961fce676ac65540a31b6ffd179e6d ]
+[ Upstream commit 89c02e69fc5245f8a2f34b58b42d43a737af1a5e ]
 
-The RMI4 function structure has been released in rmi_register_function
-if error occurs. However, it will be released again in the function
-rmi_create_function, which may result in a double-free bug.
+Right now we are using find_memory_block() to get the node id for the
+pfn range to online.  We are missing to drop a reference to the memory
+block device.  While the device still gets unregistered via
+device_unregister(), resulting in no user visible problem, the device is
+never released via device_release(), resulting in a memory leak.  Fix
+that by properly using a put_device().
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Link: http://lkml.kernel.org/r/20190411110955.1430-1-david@redhat.com
+Fixes: d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug")
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Pankaj Gupta <pagupta@redhat.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Arun KS <arunks@codeaurora.org>
+Cc: Mathieu Malaterre <malat@debian.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/input/rmi4/rmi_driver.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ mm/memory_hotplug.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/input/rmi4/rmi_driver.c b/drivers/input/rmi4/rmi_driver.c
-index fc3ab93b7aea4..7fb358f961957 100644
---- a/drivers/input/rmi4/rmi_driver.c
-+++ b/drivers/input/rmi4/rmi_driver.c
-@@ -860,7 +860,7 @@ static int rmi_create_function(struct rmi_device *rmi_dev,
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 156991edec2a8..af67355622159 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -901,6 +901,7 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages, int online_typ
+ 	 */
+ 	mem = find_memory_block(__pfn_to_section(pfn));
+ 	nid = mem->nid;
++	put_device(&mem->dev);
  
- 	error = rmi_register_function(fn);
- 	if (error)
--		goto err_put_fn;
-+		return error;
- 
- 	if (pdt->function_number == 0x01)
- 		data->f01_container = fn;
-@@ -870,10 +870,6 @@ static int rmi_create_function(struct rmi_device *rmi_dev,
- 	list_add_tail(&fn->node, &data->function_list);
- 
- 	return RMI_SCAN_CONTINUE;
--
--err_put_fn:
--	put_device(&fn->dev);
--	return error;
- }
- 
- void rmi_enable_irq(struct rmi_device *rmi_dev, bool clear_wake)
+ 	/* associate pfn range with the zone */
+ 	zone = move_pfn_range(online_type, nid, pfn, nr_pages);
 -- 
 2.20.1
 
