@@ -7,47 +7,65 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 001B3C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DF9C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC89420843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E53B20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921784;
-	bh=0ywGC9Yqkg12L/7St2LmkxMzLNi5o8y1OqY36oPd8S0=;
+	s=default; t=1557921788;
+	bh=XTbGk+eNjaxn2smx4uoCJQ9q2ZQ0CP6flhJiitiT/pE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NpvIpwVpiO4wnZHy/PrumIpH8MwwK93c0cThFqLBOZLReaHr8hGyd5cL0YQCp6kvk
-	 wU18DldfAjgBLGclN7+ceFGGiJTl1e7BNdFaMc9hbM8HQqybp8kVCTvN9lC+FmfKFk
-	 /VGE6ygOR4seMfpKi40+QEyiSkhY0hNCHUymgBUI=
+	b=eclH57rg8TuIctKezNrEtkGx6mrh862cozt576Eou0IeCLY9NLoMXa59vxayvnrKP
+	 kbi9FQTCEJ9O8MXXcS0bb5x88xDQYRDqRtJx1nIBGxBMQ8xwjsnV9ERtZba14biPqE
+	 X6bf9y3wRguxTzQapfROHbRbf1r2NK16Y0l681QY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbfEOMDD (ORCPT
+        id S1729857AbfEOLMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:03:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48362 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48198 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729840AbfEOLMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:12:48 -0400
+        id S1728929AbfEOLMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:12:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FD7F216F4;
-        Wed, 15 May 2019 11:12:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05ED120644;
+        Wed, 15 May 2019 11:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918767;
-        bh=0ywGC9Yqkg12L/7St2LmkxMzLNi5o8y1OqY36oPd8S0=;
+        s=default; t=1557918762;
+        bh=XTbGk+eNjaxn2smx4uoCJQ9q2ZQ0CP6flhJiitiT/pE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jpiGzf9bZCGPWbe6MZcaK6yq76qCoPeiKmiw9y9RI8CM/iauZZcir64Q9OIk9pc0F
-         MlJBVy4IHFsBYJh5JOtIaCWVaadpgXYax7jCvZZ00G9U6pah/KvIT893PkhreQ1S+9
-         wJY4+ps/0bsS3GNxZ1FLUnr+yhDv22kNQ1ghUXBM=
+        b=oVrTJ3cVX7E8558A9xOHqA3G1L25hGEJdDNgvCbW0pzrAwXnuWG3ZSnFEsXr2MNPb
+         zNDbSxKMu7KB4gugPdSa9735vqkH1blMq4yCgkA3pj/DEQYG5+kxrU+3r4K2xE1sih
+         Lh7+x9L+Oeu+BpF2iFbA6zaauTAJhsApIe+QAzME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 259/266] packet: Fix error path in packet_init
-Date:   Wed, 15 May 2019 12:56:06 +0200
-Message-Id: <20190515090731.778326344@linuxfoundation.org>
+        stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Casey Schaufler <casey.schaufler@intel.com>,
+        Asit Mallick <asit.k.mallick@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Jon Masters <jcm@redhat.com>,
+        Waiman Long <longman9394@gmail.com>,
+        Dave Stewart <david.c.stewart@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 205/266] x86/speculation: Disable STIBP when enhanced IBRS is in use
+Date:   Wed, 15 May 2019 12:55:12 +0200
+Message-Id: <20190515090729.892869678@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,87 +78,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Tim Chen <tim.c.chen@linux.intel.com>
 
-[ Upstream commit 36096f2f4fa05f7678bc87397665491700bae757 ]
+commit 34bce7c9690b1d897686aac89604ba7adc365556 upstream.
 
-kernel BUG at lib/list_debug.c:47!
-invalid opcode: 0000 [#1
-CPU: 0 PID: 12914 Comm: rmmod Tainted: G        W         5.1.0+ #47
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:__list_del_entry_valid+0x53/0x90
-Code: 48 8b 32 48 39 fe 75 35 48 8b 50 08 48 39 f2 75 40 b8 01 00 00 00 5d c3 48
-89 fe 48 89 c2 48 c7 c7 18 75 fe 82 e8 cb 34 78 ff <0f> 0b 48 89 fe 48 c7 c7 50 75 fe 82 e8 ba 34 78 ff 0f 0b 48 89 f2
-RSP: 0018:ffffc90001c2fe40 EFLAGS: 00010286
-RAX: 000000000000004e RBX: ffffffffa0184000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffff888237a17788 RDI: 00000000ffffffff
-RBP: ffffc90001c2fe40 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffc90001c2fe10 R11: 0000000000000000 R12: 0000000000000000
-R13: ffffc90001c2fe50 R14: ffffffffa0184000 R15: 0000000000000000
-FS:  00007f3d83634540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000555c350ea818 CR3: 0000000231677000 CR4: 00000000000006f0
-Call Trace:
- unregister_pernet_operations+0x34/0x120
- unregister_pernet_subsys+0x1c/0x30
- packet_exit+0x1c/0x369 [af_packet
- __x64_sys_delete_module+0x156/0x260
- ? lockdep_hardirqs_on+0x133/0x1b0
- ? do_syscall_64+0x12/0x1f0
- do_syscall_64+0x6e/0x1f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+If enhanced IBRS is active, STIBP is redundant for mitigating Spectre v2
+user space exploits from hyperthread sibling.
 
-When modprobe af_packet, register_pernet_subsys
-fails and does a cleanup, ops->list is set to LIST_POISON1,
-but the module init is considered to success, then while rmmod it,
-BUG() is triggered in __list_del_entry_valid which is called from
-unregister_pernet_subsys. This patch fix error handing path in
-packet_init to avoid possilbe issue if some error occur.
+Disable STIBP when enhanced IBRS is used.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Casey Schaufler <casey.schaufler@intel.com>
+Cc: Asit Mallick <asit.k.mallick@intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Waiman Long <longman9394@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Dave Stewart <david.c.stewart@intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20181125185003.966801480@linutronix.de
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/packet/af_packet.c |   25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ arch/x86/kernel/cpu/bugs.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -4523,14 +4523,29 @@ static void __exit packet_exit(void)
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -317,6 +317,10 @@ static bool stibp_needed(void)
+ 	if (spectre_v2_enabled == SPECTRE_V2_NONE)
+ 		return false;
  
- static int __init packet_init(void)
- {
--	int rc = proto_register(&packet_proto, 0);
-+	int rc;
- 
--	if (rc != 0)
-+	rc = proto_register(&packet_proto, 0);
-+	if (rc)
- 		goto out;
-+	rc = sock_register(&packet_family_ops);
-+	if (rc)
-+		goto out_proto;
-+	rc = register_pernet_subsys(&packet_net_ops);
-+	if (rc)
-+		goto out_sock;
-+	rc = register_netdevice_notifier(&packet_netdev_notifier);
-+	if (rc)
-+		goto out_pernet;
- 
--	sock_register(&packet_family_ops);
--	register_pernet_subsys(&packet_net_ops);
--	register_netdevice_notifier(&packet_netdev_notifier);
-+	return 0;
++	/* Enhanced IBRS makes using STIBP unnecessary. */
++	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
++		return false;
 +
-+out_pernet:
-+	unregister_pernet_subsys(&packet_net_ops);
-+out_sock:
-+	sock_unregister(PF_PACKET);
-+out_proto:
-+	proto_unregister(&packet_proto);
- out:
- 	return rc;
- }
+ 	if (!boot_cpu_has(X86_FEATURE_STIBP))
+ 		return false;
+ 
+@@ -761,6 +765,9 @@ static void __init l1tf_select_mitigatio
+ 
+ static char *stibp_state(void)
+ {
++	if (spectre_v2_enabled == SPECTRE_V2_IBRS_ENHANCED)
++		return "";
++
+ 	if (x86_spec_ctrl_base & SPEC_CTRL_STIBP)
+ 		return ", STIBP";
+ 	else
 
 
