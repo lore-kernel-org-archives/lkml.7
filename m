@@ -4,48 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FE0C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CFD1C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D072082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ED072082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:18:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922699;
-	bh=m5v/VQDEu53kIn8smOqM7gN/gtLhfkr4W9EBM+BYU1s=;
+	s=default; t=1557922704;
+	bh=Ae834Yg6qZ5u8T4XF6JHp9pzGVNBWpmWOlqXab3Qssk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xPckJIgbbRZ1oEr8+qq+OeAHtzoLh5wS1aPLZQdHDdOmqmKFguRAZrpTCvN35Tgy0
-	 CRVve3ThWkoElo5Y9eDkRfOh+6YNvgoLqbwiZCVTeB8AmTxEl/nMLRycKomnXWD311
-	 wtD3rzbVBlIZLJ7R5CK2x3oNsotLA/Rs32kfD5MY=
+	b=TrEGoTuwqUzhtN8SJL3JtCLMWgPPEx2ej/4GeFdXXkMWSh4HhiuanRvz3QPVioGlr
+	 SB5s27SvdmNCf4fHbqzDD6FxWJHBMvr9ACB0s7XnbJjDkmW1gxBvNfJWR5Ru5RBOye
+	 zoMbgNPmGc8/RVty3KZd/FucjB7O+cuI1Be/3+9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbfEOMSS (ORCPT
+        id S1727694AbfEOLBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:18:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58486 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:01:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726290AbfEOLB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:01:27 -0400
+        id S1727092AbfEOLBR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:01:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 868D420881;
-        Wed, 15 May 2019 11:01:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C4632173C;
+        Wed, 15 May 2019 11:01:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918087;
-        bh=m5v/VQDEu53kIn8smOqM7gN/gtLhfkr4W9EBM+BYU1s=;
+        s=default; t=1557918076;
+        bh=Ae834Yg6qZ5u8T4XF6JHp9pzGVNBWpmWOlqXab3Qssk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mu8hAB/WV9M7Cm3BvXYGy9lKQGBO9w3d6duY62z6aIszRmG5HWUpBv73/U+xjE86Z
-         U0ADae159oOxhJ0DCVzjzy/C2U/n9wVK5qKJUV0wsqSqF5J4jDHbBpfObvEYByQhDG
-         2Rswdf7vQ7Msp9yEgPaf+eH2kBMjRUP+1C+GN8dQ=
+        b=zN9ohaIHmKvlYsvzKGfky4pvE1FGYZv14RlTnMGKn8WDX+N+03ZIx62AauWQRDNRX
+         6jpfDWToY4MKgCLnuPDk5GEC1q9IE2vFTFm6/h42SYo1s88gQsugjzI+QdSWi3F4zk
+         83cw4J6YF9/+AvyYNWSif8K+qJUcqP2eX3STgApU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Young Xiao <YangX92@hotmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 3.18 60/86] Bluetooth: hidp: fix buffer overflow
-Date:   Wed, 15 May 2019 12:55:37 +0200
-Message-Id: <20190515090654.266276064@linuxfoundation.org>
+        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jarod Wilson <jarod@redhat.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+Subject: [PATCH 3.18 83/86] bonding: fix arp_validate toggling in active-backup mode
+Date:   Wed, 15 May 2019 12:56:00 +0200
+Message-Id: <20190515090656.025421215@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -58,34 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Young Xiao <YangX92@hotmail.com>
+From: Jarod Wilson <jarod@redhat.com>
 
-commit a1616a5ac99ede5d605047a9012481ce7ff18b16 upstream.
+[ Upstream commit a9b8a2b39ce65df45687cf9ef648885c2a99fe75 ]
 
-Struct ca is copied from userspace. It is not checked whether the "name"
-field is NULL terminated, which allows local users to obtain potentially
-sensitive information from kernel stack memory, via a HIDPCONNADD command.
+There's currently a problem with toggling arp_validate on and off with an
+active-backup bond. At the moment, you can start up a bond, like so:
 
-This vulnerability is similar to CVE-2011-1079.
+modprobe bonding mode=1 arp_interval=100 arp_validate=0 arp_ip_targets=192.168.1.1
+ip link set bond0 down
+echo "ens4f0" > /sys/class/net/bond0/bonding/slaves
+echo "ens4f1" > /sys/class/net/bond0/bonding/slaves
+ip link set bond0 up
+ip addr add 192.168.1.2/24 dev bond0
 
-Signed-off-by: Young Xiao <YangX92@hotmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
-Cc: stable@vger.kernel.org
+Pings to 192.168.1.1 work just fine. Now turn on arp_validate:
+
+echo 1 > /sys/class/net/bond0/bonding/arp_validate
+
+Pings to 192.168.1.1 continue to work just fine. Now when you go to turn
+arp_validate off again, the link falls flat on it's face:
+
+echo 0 > /sys/class/net/bond0/bonding/arp_validate
+dmesg
+...
+[133191.911987] bond0: Setting arp_validate to none (0)
+[133194.257793] bond0: bond_should_notify_peers: slave ens4f0
+[133194.258031] bond0: link status definitely down for interface ens4f0, disabling it
+[133194.259000] bond0: making interface ens4f1 the new active one
+[133197.330130] bond0: link status definitely down for interface ens4f1, disabling it
+[133197.331191] bond0: now running without any active interface!
+
+The problem lies in bond_options.c, where passing in arp_validate=0
+results in bond->recv_probe getting set to NULL. This flies directly in
+the face of commit 3fe68df97c7f, which says we need to set recv_probe =
+bond_arp_recv, even if we're not using arp_validate. Said commit fixed
+this in bond_option_arp_interval_set, but missed that we can get to that
+same state in bond_option_arp_validate_set as well.
+
+One solution would be to universally set recv_probe = bond_arp_recv here
+as well, but I don't think bond_option_arp_validate_set has any business
+touching recv_probe at all, and that should be left to the arp_interval
+code, so we can just make things much tidier here.
+
+Fixes: 3fe68df97c7f ("bonding: always set recv_probe to bond_arp_rcv in arp monitor")
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/bluetooth/hidp/sock.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/bonding/bond_options.c |    7 -------
+ 1 file changed, 7 deletions(-)
 
---- a/net/bluetooth/hidp/sock.c
-+++ b/net/bluetooth/hidp/sock.c
-@@ -76,6 +76,7 @@ static int hidp_sock_ioctl(struct socket
- 			sockfd_put(csock);
- 			return err;
- 		}
-+		ca.name[sizeof(ca.name)-1] = 0;
+--- a/drivers/net/bonding/bond_options.c
++++ b/drivers/net/bonding/bond_options.c
+@@ -1032,13 +1032,6 @@ static int bond_option_arp_validate_set(
+ {
+ 	netdev_info(bond->dev, "Setting arp_validate to %s (%llu)\n",
+ 		    newval->string, newval->value);
+-
+-	if (bond->dev->flags & IFF_UP) {
+-		if (!newval->value)
+-			bond->recv_probe = NULL;
+-		else if (bond->params.arp_interval)
+-			bond->recv_probe = bond_arp_rcv;
+-	}
+ 	bond->params.arp_validate = newval->value;
  
- 		err = hidp_connection_add(&ca, csock, isock);
- 		if (!err && copy_to_user(argp, &ca, sizeof(ca)))
+ 	return 0;
 
 
