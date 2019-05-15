@@ -2,52 +2,54 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8E4C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 049E4C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D75020843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:21:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C062220578
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922874;
-	bh=0zpnh0d0f+Vzu30ow5qiWYKPN9+R2GAGxkYHqv2dcnM=;
+	s=default; t=1557922890;
+	bh=zKswGvSRSrlJ9yPK1emjp0wB8r+fjmFbtrUTF8Q5H6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pLzQwo6VZfK0vE1iDyOc4PqNDASTzYSDaCle0P0xOiPcXum3bH1p7u2pg3Mx7jhrs
-	 sURw+cpd2UMQPrsJ2MVtl8Fd52I2+iXCLqH+RyKpI+HCOYEGtOmdsC38cfAExwWvov
-	 efENYh55OVtroqsv5tYDw0qd30NiG+vI7vJxTobs=
+	b=XZXr21gG79V0tyG0ADymeevLf2a4Pc6CmhziT9/0wWASfOCHy58xh066260/35oEB
+	 pF+kWG/jjrTekviGNuN1HqZPzyJDV8wUl3/YfGwt0RCiOhJZu+tQ+wx3M9IZ0IyuxY
+	 PnHZ0g8EFJeU7bliCwmDiJFSubaNrh/s9MSr7UFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfEOMVN (ORCPT
+        id S1727393AbfEOMV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:21:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55220 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:21:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbfEOK6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:58:53 -0400
+        id S1726909AbfEOK6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:58:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DB3F21473;
-        Wed, 15 May 2019 10:58:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EC8721744;
+        Wed, 15 May 2019 10:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557917931;
-        bh=0zpnh0d0f+Vzu30ow5qiWYKPN9+R2GAGxkYHqv2dcnM=;
+        s=default; t=1557917918;
+        bh=zKswGvSRSrlJ9yPK1emjp0wB8r+fjmFbtrUTF8Q5H6w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KW4AO9xpZUSQ0g4omRggX0s+pJ6aNW3ckcOGwKWTEA9olMeSFgDpDW1X4Bp0mz6ru
-         NCYuNIg1E3ipuwbZbtwA8CHZgWdXucDh9YFh9zZd9cWlGg0upz5c8vrpf3fPP3rBaL
-         Cy5gku8Tttj/LDnCW4+tBp55XjiMvgVRBDBYZM/8=
+        b=IGTyw6x/Y60lMEKT3xXU72JdE8IG7AcgiYWv+2um5yr6JEwXzuzQlJ3Za1G6D5N2/
+         mNFOOjL6XtJCee+g8vwvKYK72+Qg9fIK+p5vQZ+LuQF9GGSjaPgFIlKe1PfLPg96w2
+         iVWtjKiN8Wu54/KxS373RJ0k5SeAn8zsSrQLDioI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Laight <David.Laight@aculab.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 3.18 30/86] packet: validate msg_namelen in send directly
-Date:   Wed, 15 May 2019 12:55:07 +0200
-Message-Id: <20190515090648.745084289@linuxfoundation.org>
+        stable@vger.kernel.org, Steffen Maier <maier@linux.ibm.com>,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 3.18 25/86] scsi: zfcp: reduce flood of fcrscn1 trace records on multi-element RSCN
+Date:   Wed, 15 May 2019 12:55:02 +0200
+Message-Id: <20190515090647.871060271@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -60,89 +62,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+[ Upstream commit c8206579175c34a2546de8a74262456278a7795a ]
 
-[ Upstream commit 486efdc8f6ce802b27e15921d2353cc740c55451 ]
+If an incoming ELS of type RSCN contains more than one element, zfcp
+suboptimally causes repeated erp trigger NOP trace records for each
+previously failed port. These could be ports that went away.  It loops over
+each RSCN element, and for each of those in an inner loop over all
+zfcp_ports.
 
-Packet sockets in datagram mode take a destination address. Verify its
-length before passing to dev_hard_header.
+The trigger to recover failed ports should be just the reception of some
+RSCN, no matter how many elements it has. So we can loop over failed ports
+separately, and only then loop over each RSCN element to handle the
+non-failed ports.
 
-Prior to 2.6.14-rc3, the send code ignored sll_halen. This is
-established behavior. Directly compare msg_namelen to dev->addr_len.
+The call chain was:
 
-Change v1->v2: initialize addr in all paths
+  zfcp_fc_incoming_rscn
+    for (i = 1; i < no_entries; i++)
+      _zfcp_fc_incoming_rscn
+        list_for_each_entry(port, &adapter->port_list, list)
+          if (masked port->d_id match) zfcp_fc_test_link
+          if (!port->d_id) zfcp_erp_port_reopen "fcrscn1"   <===
 
-Fixes: 6b8d95f1795c4 ("packet: validate address length if non-zero")
-Suggested-by: David Laight <David.Laight@aculab.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In order the reduce the "flooding" of the REC trace area in such cases, we
+factor out handling the failed ports to be outside of the entries loop:
+
+  zfcp_fc_incoming_rscn
+    if (no_entries > 1)                                     <===
+      list_for_each_entry(port, &adapter->port_list, list)  <===
+        if (!port->d_id) zfcp_erp_port_reopen "fcrscn1"     <===
+    for (i = 1; i < no_entries; i++)
+      _zfcp_fc_incoming_rscn
+        list_for_each_entry(port, &adapter->port_list, list)
+          if (masked port->d_id match) zfcp_fc_test_link
+
+Abbreviated example trace records before this code change:
+
+Tag            : fcrscn1
+WWPN           : 0x500507630310d327
+ERP want       : 0x02
+ERP need       : 0x02
+
+Tag            : fcrscn1
+WWPN           : 0x500507630310d327
+ERP want       : 0x02
+ERP need       : 0x00                 NOP => superfluous trace record
+
+The last trace entry repeats if there are more than 2 RSCN elements.
+
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- net/packet/af_packet.c |   23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ drivers/s390/scsi/zfcp_fc.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -2252,8 +2252,8 @@ static int tpacket_snd(struct packet_soc
- 	void *ph;
- 	DECLARE_SOCKADDR(struct sockaddr_ll *, saddr, msg->msg_name);
- 	bool need_wait = !(msg->msg_flags & MSG_DONTWAIT);
-+	unsigned char *addr = NULL;
- 	int tp_len, size_max;
--	unsigned char *addr;
- 	int len_sum = 0;
- 	int status = TP_STATUS_AVAILABLE;
- 	int hlen, tlen;
-@@ -2273,10 +2273,13 @@ static int tpacket_snd(struct packet_soc
- 						sll_addr)))
- 			goto out;
- 		proto	= saddr->sll_protocol;
--		addr	= saddr->sll_halen ? saddr->sll_addr : NULL;
- 		dev = dev_get_by_index(sock_net(&po->sk), saddr->sll_ifindex);
--		if (addr && dev && saddr->sll_halen < dev->addr_len)
--			goto out_put;
-+		if (po->sk.sk_socket->type == SOCK_DGRAM) {
-+			if (dev && msg->msg_namelen < dev->addr_len +
-+				   offsetof(struct sockaddr_ll, sll_addr))
-+				goto out_put;
-+			addr = saddr->sll_addr;
-+		}
+diff --git a/drivers/s390/scsi/zfcp_fc.c b/drivers/s390/scsi/zfcp_fc.c
+index ca28e1c66115..f9d59262da88 100644
+--- a/drivers/s390/scsi/zfcp_fc.c
++++ b/drivers/s390/scsi/zfcp_fc.c
+@@ -195,10 +195,6 @@ static void _zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req, u32 range,
+ 	list_for_each_entry(port, &adapter->port_list, list) {
+ 		if ((port->d_id & range) == (ntoh24(page->rscn_fid) & range))
+ 			zfcp_fc_test_link(port);
+-		if (!port->d_id)
+-			zfcp_erp_port_reopen(port,
+-					     ZFCP_STATUS_COMMON_ERP_FAILED,
+-					     "fcrscn1");
  	}
+ 	read_unlock_irqrestore(&adapter->port_list_lock, flags);
+ }
+@@ -206,6 +202,7 @@ static void _zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req, u32 range,
+ static void zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req)
+ {
+ 	struct fsf_status_read_buffer *status_buffer = (void *)fsf_req->data;
++	struct zfcp_adapter *adapter = fsf_req->adapter;
+ 	struct fc_els_rscn *head;
+ 	struct fc_els_rscn_page *page;
+ 	u16 i;
+@@ -218,6 +215,22 @@ static void zfcp_fc_incoming_rscn(struct zfcp_fsf_req *fsf_req)
+ 	/* see FC-FS */
+ 	no_entries = head->rscn_plen / sizeof(struct fc_els_rscn_page);
  
- 	err = -ENXIO;
-@@ -2411,7 +2414,7 @@ static int packet_snd(struct socket *soc
- 	struct sk_buff *skb;
- 	struct net_device *dev;
- 	__be16 proto;
--	unsigned char *addr;
-+	unsigned char *addr = NULL;
- 	int err, reserve = 0;
- 	struct virtio_net_hdr vnet_hdr = { 0 };
- 	int offset = 0;
-@@ -2428,7 +2431,6 @@ static int packet_snd(struct socket *soc
- 	if (likely(saddr == NULL)) {
- 		dev	= packet_cached_dev_get(po);
- 		proto	= po->num;
--		addr	= NULL;
- 	} else {
- 		err = -EINVAL;
- 		if (msg->msg_namelen < sizeof(struct sockaddr_ll))
-@@ -2436,10 +2438,13 @@ static int packet_snd(struct socket *soc
- 		if (msg->msg_namelen < (saddr->sll_halen + offsetof(struct sockaddr_ll, sll_addr)))
- 			goto out;
- 		proto	= saddr->sll_protocol;
--		addr	= saddr->sll_halen ? saddr->sll_addr : NULL;
- 		dev = dev_get_by_index(sock_net(sk), saddr->sll_ifindex);
--		if (addr && dev && saddr->sll_halen < dev->addr_len)
--			goto out_unlock;
-+		if (sock->type == SOCK_DGRAM) {
-+			if (dev && msg->msg_namelen < dev->addr_len +
-+				   offsetof(struct sockaddr_ll, sll_addr))
-+				goto out_unlock;
-+			addr = saddr->sll_addr;
++	if (no_entries > 1) {
++		/* handle failed ports */
++		unsigned long flags;
++		struct zfcp_port *port;
++
++		read_lock_irqsave(&adapter->port_list_lock, flags);
++		list_for_each_entry(port, &adapter->port_list, list) {
++			if (port->d_id)
++				continue;
++			zfcp_erp_port_reopen(port,
++					     ZFCP_STATUS_COMMON_ERP_FAILED,
++					     "fcrscn1");
 +		}
- 	}
- 
- 	err = -ENXIO;
++		read_unlock_irqrestore(&adapter->port_list_lock, flags);
++	}
++
+ 	for (i = 1; i < no_entries; i++) {
+ 		/* skip head and start with 1st element */
+ 		page++;
+-- 
+2.19.1
+
 
 
