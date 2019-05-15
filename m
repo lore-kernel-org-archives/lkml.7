@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F954C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0509C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40D3E2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD0122053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920826;
-	bh=OU8sNd8F8lxRYqqaTc9NVhkBLTtyB79LwudRJSzN5Bw=;
+	s=default; t=1557920833;
+	bh=5FMtJThSLK+F+z4iXDndoqJkNHDhzMBT/XAonkQGkOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=08Piw0Wgp/ZsE5BtOxEeucvDnhq5SZPTkLltM6EHEA+FgRMaBr29Mlx1Qh9FSub65
-	 W+bCrMmj+RAH182KI3NaZWv44Km96fx+EcFln+DaKlUFerCiO88hx+bMWu/mDC56Wb
-	 c2iBYLLzYtGen6AWEOv1eYghXWmcXowhy3uGsv8c=
+	b=KGXEQJXJECNTYIumn4Ii8OMoGL2BXSjeCyIett4WH71Miso0VrNZVyE7tAYvuNUwA
+	 eLelDReQhruxGkyajrYz5KL5FDt6G1swB9YUsahwvklXEjovZcvEiiYPyk3iHiUEok
+	 NkZ+0eKIUVX3LdoaMab/SGeTUSX8E6j80c57J+2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732110AbfEOLrF (ORCPT
+        id S1731696AbfEOLrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:47:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35640 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:47:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731430AbfEOLY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:24:59 -0400
+        id S1731421AbfEOLYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:24:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 827CF20843;
-        Wed, 15 May 2019 11:24:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 235A720818;
+        Wed, 15 May 2019 11:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919499;
-        bh=OU8sNd8F8lxRYqqaTc9NVhkBLTtyB79LwudRJSzN5Bw=;
+        s=default; t=1557919493;
+        bh=5FMtJThSLK+F+z4iXDndoqJkNHDhzMBT/XAonkQGkOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1fiSQe9XxqzqOlfvtr3RivmfjDEDp9ZLiAGoGU79FXrHZFrMJfqRg53ASN6Eoe9K6
-         DvnFmDJy+KXmfPx/w+VS9QzXobgOFrFz1DlUphaLalrSTSUoKKNenjt+y3918Dq39x
-         4iMfF+SZPUTKFZgdfx8qHbDKu2Xvn3mdc1Z7zr7Q=
+        b=j8Pk2wAdS4hyH2fQWdTexxfDqyFxYwOvBAMZejpKoP4zhbYo3hYOmNFs+mxNuUn6Y
+         FcDXVnL0TdpupeXRtcgosfUKMG/bifcO7MiWtTlvidxfcHj4SuFJfrLzd+toonPL4H
+         rQSvGusHbVzJeHLFvIsjL9mrhYNZ0b03Y5GUtVJA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Deseyn <tdeseyn@redhat.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 099/113] selinux: do not report error on connect(AF_UNSPEC)
-Date:   Wed, 15 May 2019 12:56:30 +0200
-Message-Id: <20190515090701.140481639@linuxfoundation.org>
+Subject: [PATCH 4.19 097/113] net: ucc_geth - fix Oops when changing number of buffers in the ring
+Date:   Wed, 15 May 2019 12:56:28 +0200
+Message-Id: <20190515090700.964429020@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -61,55 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-[ Upstream commit c7e0d6cca86581092cbbf2cd868b3601495554cf ]
+[ Upstream commit ee0df19305d9fabd9479b785918966f6e25b733b ]
 
-calling connect(AF_UNSPEC) on an already connected TCP socket is an
-established way to disconnect() such socket. After commit 68741a8adab9
-("selinux: Fix ltp test connect-syscall failure") it no longer works
-and, in the above scenario connect() fails with EAFNOSUPPORT.
+When changing the number of buffers in the RX ring while the interface
+is running, the following Oops is encountered due to the new number
+of buffers being taken into account immediately while their allocation
+is done when opening the device only.
 
-Fix the above falling back to the generic/old code when the address family
-is not AF_INET{4,6}, but leave the SCTP code path untouched, as it has
-specific constraints.
+[   69.882706] Unable to handle kernel paging request for data at address 0xf0000100
+[   69.890172] Faulting instruction address: 0xc033e164
+[   69.895122] Oops: Kernel access of bad area, sig: 11 [#1]
+[   69.900494] BE PREEMPT CMPCPRO
+[   69.907120] CPU: 0 PID: 0 Comm: swapper Not tainted 4.14.115-00006-g179ade8ce3-dirty #269
+[   69.915956] task: c0684310 task.stack: c06da000
+[   69.920470] NIP:  c033e164 LR: c02e44d0 CTR: c02e41fc
+[   69.925504] REGS: dfff1e20 TRAP: 0300   Not tainted  (4.14.115-00006-g179ade8ce3-dirty)
+[   69.934161] MSR:  00009032 <EE,ME,IR,DR,RI>  CR: 22004428  XER: 20000000
+[   69.940869] DAR: f0000100 DSISR: 20000000
+[   69.940869] GPR00: c0352d70 dfff1ed0 c0684310 f00000a4 00000040 dfff1f68 00000000 0000001f
+[   69.940869] GPR08: df53f410 1cc00040 00000021 c0781640 42004424 100c82b6 f00000a4 df53f5b0
+[   69.940869] GPR16: df53f6c0 c05daf84 00000040 00000000 00000040 c0782be4 00000000 00000001
+[   69.940869] GPR24: 00000000 df53f400 000001b0 df53f410 df53f000 0000003f df708220 1cc00044
+[   69.978348] NIP [c033e164] skb_put+0x0/0x5c
+[   69.982528] LR [c02e44d0] ucc_geth_poll+0x2d4/0x3f8
+[   69.987384] Call Trace:
+[   69.989830] [dfff1ed0] [c02e4554] ucc_geth_poll+0x358/0x3f8 (unreliable)
+[   69.996522] [dfff1f20] [c0352d70] net_rx_action+0x248/0x30c
+[   70.002099] [dfff1f80] [c04e93e4] __do_softirq+0xfc/0x310
+[   70.007492] [dfff1fe0] [c0021124] irq_exit+0xd0/0xd4
+[   70.012458] [dfff1ff0] [c000e7e0] call_do_irq+0x24/0x3c
+[   70.017683] [c06dbe80] [c0006bac] do_IRQ+0x64/0xc4
+[   70.022474] [c06dbea0] [c001097c] ret_from_except+0x0/0x14
+[   70.027964] --- interrupt: 501 at rcu_idle_exit+0x84/0x90
+[   70.027964]     LR = rcu_idle_exit+0x74/0x90
+[   70.037585] [c06dbf60] [20000000] 0x20000000 (unreliable)
+[   70.042984] [c06dbf80] [c004bb0c] do_idle+0xb4/0x11c
+[   70.047945] [c06dbfa0] [c004bd14] cpu_startup_entry+0x18/0x1c
+[   70.053682] [c06dbfb0] [c05fb034] start_kernel+0x370/0x384
+[   70.059153] [c06dbff0] [00003438] 0x3438
+[   70.063062] Instruction dump:
+[   70.066023] 38a00000 38800000 90010014 4bfff015 80010014 7c0803a6 3123ffff 7c691910
+[   70.073767] 38210010 4e800020 38600000 4e800020 <80e3005c> 80c30098 3107ffff 7d083910
+[   70.081690] ---[ end trace be7ccd9c1e1a9f12 ]---
 
-Fixes: 68741a8adab9 ("selinux: Fix ltp test connect-syscall failure")
-Reported-by: Tom Deseyn <tdeseyn@redhat.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+This patch forbids the modification of the number of buffers in the
+ring while the interface is running.
+
+Fixes: ac421852b3a0 ("ucc_geth: add ethtool support")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- security/selinux/hooks.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/freescale/ucc_geth_ethtool.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -4800,7 +4800,7 @@ static int selinux_socket_connect_helper
- 		struct lsm_network_audit net = {0,};
- 		struct sockaddr_in *addr4 = NULL;
- 		struct sockaddr_in6 *addr6 = NULL;
--		unsigned short snum;
-+		unsigned short snum = 0;
- 		u32 sid, perm;
+--- a/drivers/net/ethernet/freescale/ucc_geth_ethtool.c
++++ b/drivers/net/ethernet/freescale/ucc_geth_ethtool.c
+@@ -252,14 +252,12 @@ uec_set_ringparam(struct net_device *net
+ 		return -EINVAL;
+ 	}
  
- 		/* sctp_connectx(3) calls via selinux_sctp_bind_connect()
-@@ -4823,12 +4823,12 @@ static int selinux_socket_connect_helper
- 			break;
- 		default:
- 			/* Note that SCTP services expect -EINVAL, whereas
--			 * others expect -EAFNOSUPPORT.
-+			 * others must handle this at the protocol level:
-+			 * connect(AF_UNSPEC) on a connected socket is
-+			 * a documented way disconnect the socket.
- 			 */
- 			if (sksec->sclass == SECCLASS_SCTP_SOCKET)
- 				return -EINVAL;
--			else
--				return -EAFNOSUPPORT;
- 		}
++	if (netif_running(netdev))
++		return -EBUSY;
++
+ 	ug_info->bdRingLenRx[queue] = ring->rx_pending;
+ 	ug_info->bdRingLenTx[queue] = ring->tx_pending;
  
- 		err = sel_netport_sid(sk->sk_protocol, snum, &sid);
+-	if (netif_running(netdev)) {
+-		/* FIXME: restart automatically */
+-		netdev_info(netdev, "Please re-open the interface\n");
+-	}
+-
+ 	return ret;
+ }
+ 
 
 
