@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F13EBC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3153C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9001206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99F05206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922672;
-	bh=e7y/WSro2eF3J9GEEv3f0dnT2fkMcdnBHSY38CIXJ9Y=;
+	s=default; t=1557922679;
+	bh=aMmX476O5e2zqLOgv+552QeHV9MB/KW6/VlPHFGbxZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zM5ZzCqcELH0RWZip8RJZLOleY4LDfaf3lrOHTjNT0gt2f3Nz+RUeixejhQs5l7qR
-	 24I9hS5oRJNY8dnDhZS9s5zQqRW1S2DDKev5bj2Po+nzmWhqtnDr+F1nk+FxdojaiD
-	 kjGPMpyFQs7xoLVhNmNCNKxp9/TI9JNtt/BAkXo4=
+	b=Zo6nzTqw1xnF4kFC1vbbBv/uATM+Z0H19JX5+9PJq2wRjbeBaSZLHE/OyVhfCiYF/
+	 nOs7waOsmrIt8eNhDhF5dG6evsgzNtmhv8w3MwTynm++uzh0IGP9dNSUOgjHPLv2ug
+	 27+EaJS2BSyxT/CPeA0ijJsLHzuQujkobE4zakpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbfEOLBt (ORCPT
+        id S1728043AbfEOMR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:01:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58848 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:17:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727265AbfEOLBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:01:45 -0400
+        id S1727217AbfEOLBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:01:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C899C216FD;
-        Wed, 15 May 2019 11:01:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B0992173C;
+        Wed, 15 May 2019 11:01:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918105;
-        bh=e7y/WSro2eF3J9GEEv3f0dnT2fkMcdnBHSY38CIXJ9Y=;
+        s=default; t=1557918102;
+        bh=aMmX476O5e2zqLOgv+552QeHV9MB/KW6/VlPHFGbxZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1AogZBldDfc2RLF5DHNOvf+18h3QLJxu5It27OSoS8hNbMLeiN9GKyIisuDEf/kHZ
-         Z57X94bnlH6EMoxzfUutd+2+4n4CbfFTrmP8jiTLwZUIXUqfqg2PyY5F/v5GccFG6X
-         gAFE9o+Im9iuOgUfzSygWcNzNj33fV3VSpIqFa8w=
+        b=Fl0aYsnT8/haLiVSo/4n4LVZGNpO3fcO2FFTSoltFttSHhAh1nmBUuEwc58DMFIfk
+         iix4ENDeLwZ0IqM1+wg4T4RzMuXhC0rbqNnG8xrXjnCEK3WgoeRdEOOk36P4wj5k+p
+         4YdoQQp6HG6GJZi64a5iK6JFKC8joejHQxbp0YZQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joerg Roedel <jroedel@suse.de>,
+        stable@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 57/86] iommu/amd: Set exclusion range correctly
-Date:   Wed, 15 May 2019 12:55:34 +0200
-Message-Id: <20190515090653.790224124@linuxfoundation.org>
+Subject: [PATCH 3.18 66/86] HID: input: add mapping for keyboard Brightness Up/Down/Toggle keys
+Date:   Wed, 15 May 2019 12:55:43 +0200
+Message-Id: <20190515090654.704182723@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -59,36 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3c677d206210f53a4be972211066c0f1cd47fe12 ]
+[ Upstream commit 7975a1d6a7afeb3eb61c971a153d24dd8fa032f3 ]
 
-The exlcusion range limit register needs to contain the
-base-address of the last page that is part of the range, as
-bits 0-11 of this register are treated as 0xfff by the
-hardware for comparisons.
+According to HUTRR73 usages 0x79, 0x7a and 0x7c from the consumer page
+correspond to Brightness Up/Down/Toggle keys, so let's add the mappings.
 
-So correctly set the exclusion range in the hardware to the
-last page which is _in_ the range.
-
-Fixes: b2026aa2dce44 ('x86, AMD IOMMU: add functions for programming IOMMU MMIO space')
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/amd_iommu_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-input.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 2f3475247f0ff..127f9cc563e9b 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -294,7 +294,7 @@ static void iommu_write_l2(struct amd_iommu *iommu, u8 address, u32 val)
- static void iommu_set_exclusion_range(struct amd_iommu *iommu)
- {
- 	u64 start = iommu->exclusion_start & PAGE_MASK;
--	u64 limit = (start + iommu->exclusion_length) & PAGE_MASK;
-+	u64 limit = (start + iommu->exclusion_length - 1) & PAGE_MASK;
- 	u64 entry;
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index bb870ee75a903..b7d5a88354247 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -745,6 +745,10 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 		case 0x074: map_key_clear(KEY_BRIGHTNESS_MAX);		break;
+ 		case 0x075: map_key_clear(KEY_BRIGHTNESS_AUTO);		break;
  
- 	if (!iommu->exclusion_start)
++		case 0x079: map_key_clear(KEY_KBDILLUMUP);	break;
++		case 0x07a: map_key_clear(KEY_KBDILLUMDOWN);	break;
++		case 0x07c: map_key_clear(KEY_KBDILLUMTOGGLE);	break;
++
+ 		case 0x082: map_key_clear(KEY_VIDEO_NEXT);	break;
+ 		case 0x083: map_key_clear(KEY_LAST);		break;
+ 		case 0x084: map_key_clear(KEY_ENTER);		break;
 -- 
 2.20.1
 
