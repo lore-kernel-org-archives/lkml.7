@@ -2,96 +2,87 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49053C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F117FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:17:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2620A2084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:16:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E662084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:17:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbfEOJQT (ORCPT
+        id S1726406AbfEOJRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 05:16:19 -0400
-Received: from relay.sw.ru ([185.231.240.75]:49850 "EHLO relay.sw.ru"
+        Wed, 15 May 2019 05:17:06 -0400
+Received: from foss.arm.com ([217.140.101.70]:38820 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbfEOJQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 05:16:19 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hQq1H-00071z-GC; Wed, 15 May 2019 12:16:15 +0300
-Subject: Re: [PATCH 1/5] proc: use down_read_killable for /proc/pid/maps
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Cyrill Gorcunov <gorcunov@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-References: <155790967258.1319.11531787078240675602.stgit@buzz>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <77650cec-70cc-149a-74e9-2256c6138032@virtuozzo.com>
-Date:   Wed, 15 May 2019 12:16:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1725912AbfEOJRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 05:17:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B06D341;
+        Wed, 15 May 2019 02:17:05 -0700 (PDT)
+Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA3A53F703;
+        Wed, 15 May 2019 02:17:02 -0700 (PDT)
+Date:   Wed, 15 May 2019 10:17:01 +0100
+From:   Quentin Perret <quentin.perret@arm.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
+        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
+        will.deacon@arm.com, catalin.marinas@arm.com,
+        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
+        mka@chromium.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 2/3] PM / EM: Expose perf domain struct
+Message-ID: <20190515091658.sbpg6qiovhtblqyr@queper01-lin>
+References: <20190515082318.7993-1-quentin.perret@arm.com>
+ <20190515082318.7993-3-quentin.perret@arm.com>
+ <0ced18eb-e424-fe6b-b11e-165a3c108170@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <155790967258.1319.11531787078240675602.stgit@buzz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0ced18eb-e424-fe6b-b11e-165a3c108170@linaro.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.05.2019 11:41, Konstantin Khlebnikov wrote:
-> Do not stuck forever if something wrong.
-> This function also used for /proc/pid/smaps.
+Hi Daniel,
+
+On Wednesday 15 May 2019 at 11:06:18 (+0200), Daniel Lezcano wrote:
+> On 15/05/2019 10:23, Quentin Perret wrote:
+> > In the current state, the perf_domain struct is fully defined only when
+> > CONFIG_ENERGY_MODEL=y. Since we need to write code that compiles both
+> > with or without that option in the thermal framework, make sure to
+> > actually define the struct regardless of the config option. That allows
+> > to avoid using stubbed accessor functions all the time in code paths
+> > that use the EM.
+> > 
+> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > Signed-off-by: Quentin Perret <quentin.perret@arm.com>
 > 
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-
-For the series:
-
-Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-
-> ---
->  fs/proc/task_mmu.c   |    6 +++++-
->  fs/proc/task_nommu.c |    6 +++++-
->  2 files changed, 10 insertions(+), 2 deletions(-)
+> This patch implies the cpu cooling device can be set without the energy
+> model.
 > 
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index 01d4eb0e6bd1..2bf210229daf 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -166,7 +166,11 @@ static void *m_start(struct seq_file *m, loff_t *ppos)
->  	if (!mm || !mmget_not_zero(mm))
->  		return NULL;
->  
-> -	down_read(&mm->mmap_sem);
-> +	if (down_read_killable(&mm->mmap_sem)) {
-> +		mmput(mm);
-> +		return ERR_PTR(-EINTR);
-> +	}
-> +
->  	hold_task_mempolicy(priv);
->  	priv->tail_vma = get_gate_vma(mm);
->  
-> diff --git a/fs/proc/task_nommu.c b/fs/proc/task_nommu.c
-> index 36bf0f2e102e..7907e6419e57 100644
-> --- a/fs/proc/task_nommu.c
-> +++ b/fs/proc/task_nommu.c
-> @@ -211,7 +211,11 @@ static void *m_start(struct seq_file *m, loff_t *pos)
->  	if (!mm || !mmget_not_zero(mm))
->  		return NULL;
->  
-> -	down_read(&mm->mmap_sem);
-> +	if (down_read_killable(&mm->mmap_sem)) {
-> +		mmput(mm);
-> +		return ERR_PTR(-EINTR);
-> +	}
-> +
->  	/* start from the Nth VMA */
->  	for (p = rb_first(&mm->mm_rb); p; p = rb_next(p))
->  		if (n-- == 0)
+> Isn't it possible to make a strong dependency for the cpu cooling device
+> on the energy model option, add the energy model as default on arm arch
+> and drop this patch?
 
+Right, that should work too.
+
+> After all, the cpu cooling is using the em framework.
+
+The reason I did it that way is simply to keep things flexible. If you
+don't compile in THERMAL_GOV_POWER_ALLOCATOR, you will never use the EM
+for CPU thermal. So I thought it would be good to not mandate compiling
+in ENERGY_MODEL in this case -- that should save a bit of space.
+
+But TBH I don't have a strong opinion on this one, so if everybody
+agrees it's fine to just make CPU_THERMAL depend on ENERGY_MODEL, I'm
+happy to drop this patch and fix patch 3/3. That would indeed simplify
+things a bit.
+
+Thanks,
+Quentin
