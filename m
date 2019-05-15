@@ -2,175 +2,119 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6901CC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFCAC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3582D20818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:56:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UZqRX0DB"
+	by mail.kernel.org (Postfix) with ESMTP id D871A20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:58:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfEOT4z (ORCPT
+        id S1727598AbfEOT6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:56:55 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33676 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbfEOT4y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 15:56:54 -0400
-Received: by mail-lj1-f196.google.com with SMTP id w1so952717ljw.0
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 12:56:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=uawGo0pp4OmePKbkNx2sxcNCeNCfcT4KDWSlS/V5nfE=;
-        b=UZqRX0DBmVZ98VRCkQCaZzWygZXcixX7IuKkUdy1kRnSMal3XducHjoWqRAK1h/5No
-         hPLcJgtxCaHtlODhOtVQpIaB5UnR+RSXKx5qn9I4DNS9/qTgE7vACJFpQn4WYoE6QfNX
-         jWO++73yb3AQZLKio+dTbvpaNlSasCpESYPY3z/fl40jFITRveB5lV4tUcR4SQPDlYVM
-         8WT/0cF7+8N0Ni/szAQquAUMEUdGV4IXVk79Wcu0aKCsks1ugOTOw0dicsCPSgcrZPuF
-         K93ealeQZ+TyMXhyfQlcy6mTxqMgVlzTY0g26RwMZT98bs/BEfFc6UCIuWEsKCKeTrR3
-         S2wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=uawGo0pp4OmePKbkNx2sxcNCeNCfcT4KDWSlS/V5nfE=;
-        b=iuTlIbGoz9d3QE8fbBJcQ81DSNwkQ2hSQBWfXMoHR57NjaeV+pLKvmppR+fwkBA0fX
-         t6VhxR6/fIMbz1aMOw8F/JftBNA15+FCGa8Ryu4FjTGuSNkMhAfsD9bAvbkLbMToLGNB
-         i3awXYtI67r2iykRAM+3OvbHaOhS9F7oKGIavXjSxyigVQImqfDkpzCf4WrCWgvTswuT
-         fDaswm39ZGdhb17EKkHbjYxOBp73iqfNO4Z8rtDkg6/4F9OJHIpEy7sKXWYdeEQidlgJ
-         TRII2iaB+HH5RYMQsuYPajwc1Hj7bPCQgL7lK/LBVPvD9jp/QegWfSoioVtQpbSTuQ3p
-         jEug==
-X-Gm-Message-State: APjAAAWi0j2vO04jZvfLzlFaOpillA6eEV1WS2vSz2i/Y3+CNJmFpoxT
-        eGyIggbsVepEhE7br2AHc4gtc7vLb0RTsq2l1GCtXQ==
-X-Google-Smtp-Source: APXvYqy8TgyWEnRTbD9W6CoU8NmcSoWphn9ncxVdumlDIxezcPMsJJOd1dYZXJfc/yN6IGuFVPSC4TcWA4pX6x47h+s=
-X-Received: by 2002:a2e:309:: with SMTP id 9mr23198480ljd.114.1557950212619;
- Wed, 15 May 2019 12:56:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190515090616.670410738@linuxfoundation.org>
-In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 16 May 2019 01:26:41 +0530
-Message-ID: <CA+G9fYuYYDpNTv9B5Y0uc1hAWfjv08EoUMhLFdOwVr6FQQC6Rw@mail.gmail.com>
-Subject: Re: [PATCH 5.1 00/46] 5.1.3-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Wed, 15 May 2019 15:58:53 -0400
+Received: from namei.org ([65.99.196.166]:39338 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726124AbfEOT6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 15:58:53 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x4FJw8lS021896;
+        Wed, 15 May 2019 19:58:08 GMT
+Date:   Thu, 16 May 2019 05:58:08 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Andy Lutomirski <luto@kernel.org>
+cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+In-Reply-To: <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+Message-ID: <alpine.LRH.2.21.1905160543070.19802@namei.org>
+References: <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com> <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com> <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com> <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
+ <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com> <20190513102926.GD8743@linux.intel.com> <20190514104323.GA7591@linux.intel.com> <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com> <20190514204527.GC1977@linux.intel.com>
+ <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com> <20190515013031.GF1977@linux.intel.com> <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 May 2019 at 17:04, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Wed, 15 May 2019, Andy Lutomirski wrote:
+
+> There are two issues with how this interacts with LSMs:
+> 
+> 1) LSMs might want to be able to whitelist, blacklist, or otherwise
+> restrict what enclaves can run at all.  The current proposal that
+> everyone seems to dislike the least is to have a .sigstruct file on
+> disk that contains a hash and signature of the enclave in a
+> CPU-defined format.  To initialize an enclave, a program will pass an
+> fd to this file, and a new LSM hook can be called to allow or disallow
+> the operation.  In a SELinux context, the idea is that policy could
+> require the .sigstruct file to be labeled with a type like
+> sgx_sigstruct_t, and only enclaves that have a matching .sigstruct
+> with such a label could run.
+
+
+The .sigstruct file is for the CPU to consume, not the kernel correct?
+
+How is it bound to the enclave file?
+
+Why not just use an xattr, like security.sgx ?
+
+> 
+> 2) Just like any other DSO, there are potential issues with how
+> enclaves deal with writable vs executable memory.  This takes two
+> forms.  First, a task should probably require EXECMEM, EXECMOD, or
+> similar permission to run an enclave that can modify its own text.
+> Second, it would be nice if a task that did *not* have EXECMEM,
+> EXECMOD, or similar could still run the enclave if it had EXECUTE
+> permission on the file containing the enclave.
 >
-> This is the start of the stable review cycle for the 5.1.3 release.
-> There are 46 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri 17 May 2019 09:04:22 AM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.1.3-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.1.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+> Currently, this all works because DSOs are run by mmapping the file to
+> create multiple VMAs, some of which are executable, non-writable, and
+> non-CoWed, and some of which are writable but not executable.  With
+> SGX, there's only really one inode per enclave (the anon_inode that
+> comes form /dev/sgx/enclave), and it can only be sensibly mapped
+> MAP_SHARED.
+> 
+> With the current version of the SGX driver, to run an enclave, I think
+> you'll need either EXECUTE rights to /dev/sgx/enclave or EXECMOD or
+> similar, all of which more or less mean that you can run any modified
+> code you want, and none of which is useful to prevent enclaves from
+> contain RWX segments.
+> 
+> So my question is: what, if anything, should change to make this work better?
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Would it be possible to provide multiple fds (perhaps via a pseudo fs 
+interface) which can be mapped to different types of VMAs?
 
-Summary
-------------------------------------------------------------------------
+-- 
+James Morris
+<jmorris@namei.org>
 
-kernel: 5.1.3-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.1.y
-git commit: 6c9703ae24981e4e4fa32f4e181fdcfc94988591
-git describe: v5.1.2-47-g6c9703ae2498
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.1-oe/bui=
-ld/v5.1.2-47-g6c9703ae2498
-
-No regressions (compared to build v5.1.2)
-
-No fixes (compared to build v5.1.2)
-
-
-Ran 19126 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
