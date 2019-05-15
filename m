@@ -2,95 +2,103 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13264C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F814C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:16:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D900B20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:15:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWZQTkhW"
+	by mail.kernel.org (Postfix) with ESMTP id 324F220843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:16:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557926178;
+	bh=1TxEXFah2M9u43FIIA78oBJ2DyOsfI9FRsah6e17zWM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oaoVv1IamrxaAKmVDlMt1ztEdqr6yC/ZuDHpoTT7yljrT1wuFinubNMHi3EUfuKvF
+	 gWovVJgeaQsLoFVgcTVY+XkWYslcM9FBSA5d5EeWjhzovCpjR1Mc7keHcE4TcAnK6J
+	 FJsOQt+321Ep6HiKblEyFnkaOIg0S7XhAw1iz6h8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727477AbfEONPc (ORCPT
+        id S1727561AbfEONQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 09:15:32 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36100 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbfEONPc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 09:15:32 -0400
-Received: by mail-pf1-f195.google.com with SMTP id v80so1367256pfa.3
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 06:15:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=AyFACiWTp3aKjfUBwEnUu0WG1DOJlwF3PCOsQcuUqWA=;
-        b=YWZQTkhWIqwZYS3NJiPxmflNVTDKBAgSM0ZG2CbE+UQZOeSt7jhlAR+znBPfjI6QmS
-         wUlxiaK6skwmXDz5Rbv2RtDx+j5lyAZObR6S0CbC4T6h4baeF3fBEhRAReZUSpr1f2fI
-         inYxaMfEBy8eAykUr2JXl78hAlpmvrYIvaTlVim3BzD3lR1WiyHT7Srf/q6HtIwnniJq
-         TupTXlCE9dWa6PjctkfkPMQmfzj0WmekOEdOH7MUn3UVF/FUld/+AdVMVKySXOfx/vjx
-         ErPmqVC9cSaI/2Nuq+05G+e7yXMKEdXh3p3mH04X3HT/BlE3R/rVKqSV4J5uChX94vlp
-         hAdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=AyFACiWTp3aKjfUBwEnUu0WG1DOJlwF3PCOsQcuUqWA=;
-        b=kQoXw2pV5LNX5u3fXMQqHywrSKYSD0ntvZ+YyocHhJ/mFLeb4a5zbOAqUTDsK9oCm1
-         +FynrgPYssEblgtBuQ+uJVWyzhXp2dbpTLCzOwiVdLfXrKVDSyENdFk+piw7tTD9l26s
-         EFCEeHFjJ++LEDuHG/jpEiN168fe2xaEgToUl6Ql/ubGnGidQps9BFiVzppy5JlR3MQ0
-         p5Y4fRIh1/gv09BOD6ZeNZH57vicVFVYMQrYmiCO+cxXJ3iV7ICV5d8/5zqldp3VTjSM
-         g7BzJw7q+ThSjVf4D3icT8gSsrTWucjrtkA6loTDes6vS8tDTcToDRQlM3YXCwG7ayvQ
-         r7qA==
-X-Gm-Message-State: APjAAAWInE8RFLOtJnlvP6//fckvUpxk2ZvqxHmky7HVHkJOajPOkZS4
-        uW9M8j/pFzvNE1gQ/EuLoX0=
-X-Google-Smtp-Source: APXvYqxmvof4fRRspg+ye1j0yVT94uaBDV/MGhX/xl4UG5qV7M2rzl3aePo6tL8fewaGSrtdb8PWDg==
-X-Received: by 2002:a63:318b:: with SMTP id x133mr44446918pgx.297.1557926131728;
-        Wed, 15 May 2019 06:15:31 -0700 (PDT)
-Received: from hydra-Latitude-E5440.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com. [103.229.18.19])
-        by smtp.gmail.com with ESMTPSA id k26sm2687147pfi.136.2019.05.15.06.15.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 06:15:30 -0700 (PDT)
-From:   parna.naveenkumar@gmail.com
-To:     arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org,
-        Naveen Kumar Parna <parna.naveenkumar@gmail.com>
-Subject: [PATCH] bsr: do not use assignment in if condition
-Date:   Wed, 15 May 2019 18:45:24 +0530
-Message-Id: <20190515131524.26679-1-parna.naveenkumar@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 15 May 2019 09:16:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42002 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726752AbfEONQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 09:16:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C8B020862;
+        Wed, 15 May 2019 13:16:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557926175;
+        bh=1TxEXFah2M9u43FIIA78oBJ2DyOsfI9FRsah6e17zWM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KlEjSZvgMb3mBU3d3OJfPt+KqQQR5m6rieM6xRBDwBt9z9EGW+lLJ1jNxpcYrmmM5
+         GA+0mmOCJb4GciqwsvWO9j45gqEPK9EC8633dI7lgS6K4juUP0v4tU8Gx/UVbL6D6i
+         VsGDrFKXtmJZsG4g6tic8bOV4F8AtUsEMKGPC3bs=
+Date:   Wed, 15 May 2019 15:16:13 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Matt Sickler <Matt.Sickler@daktronics.com>, kbuild-all@01.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: kpc2000: fix alloc_cast.cocci warnings
+Message-ID: <20190515131613.GA23302@kroah.com>
+References: <201905152009.JVEMePDb%lkp@intel.com>
+ <20190515121615.GA52823@lkp-kbuild04>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190515121615.GA52823@lkp-kbuild04>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naveen Kumar Parna <parna.naveenkumar@gmail.com>
+On Wed, May 15, 2019 at 08:16:15PM +0800, kbuild test robot wrote:
+> From: kbuild test robot <lkp@intel.com>
+> 
+> drivers/staging/kpc2000/kpc_dma/fileops.c:60:8-26: WARNING: casting value returned by memory allocation function to (struct aio_cb_data *) is useless.
+> 
+>  Remove casting the values returned by memory allocation functions
+>  like kmalloc, kzalloc, kmem_cache_alloc, kmem_cache_zalloc etc.
+> 
+> Semantic patch information:
+>  This makes an effort to find cases of casting of values returned by
+>  kmalloc, kzalloc, kcalloc, kmem_cache_alloc, kmem_cache_zalloc,
+>  kmem_cache_alloc_node, kmalloc_node and kzalloc_node and removes
+>  the casting as it is not required. The result in the patch case may
+>  need some reformatting.
+> 
+> Generated by: scripts/coccinelle/api/alloc/alloc_cast.cocci
+> 
+> Fixes: 7df95299b94a ("staging: kpc2000: Add DMA driver")
+> CC: Matt Sickler <Matt.Sickler@daktronics.com>
+> Signed-off-by: kbuild test robot <lkp@intel.com>
+> ---
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   5ac94332248ee017964ba368cdda4ce647e3aba7
+> commit: 7df95299b94a63ec67a6389fc02dc25019a80ee8 staging: kpc2000: Add DMA driver
+> 
+>  fileops.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- a/drivers/staging/kpc2000/kpc_dma/fileops.c
+> +++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
+> @@ -57,7 +57,7 @@ int  kpc_dma_transfer(struct dev_private
+>  	
+>  	dev_dbg(&priv->ldev->pldev->dev, "kpc_dma_transfer(priv = [%p], kcb = [%p], iov_base = [%p], iov_len = %ld) ldev = [%p]\n", priv, kcb, (void*)iov_base, iov_len, ldev);
+>  	
+> -	acd = (struct aio_cb_data *) kzalloc(sizeof(struct aio_cb_data), GFP_KERNEL);
+> +	acd = kzalloc(sizeof(struct aio_cb_data), GFP_KERNEL);
+>  	if (!acd){
+>  		dev_err(&priv->ldev->pldev->dev, "Couldn't kmalloc space for for the aio data\n");
+>  		return -ENOMEM;
 
-checkpatch.pl does not like assignment in if condition
+Already fixed in my staging-testing branch, thanks.
 
-Signed-off-by: Naveen Kumar Parna <parna.naveenkumar@gmail.com>
----
- drivers/char/bsr.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/char/bsr.c b/drivers/char/bsr.c
-index a6cef548e01e..2b00748b83d2 100644
---- a/drivers/char/bsr.c
-+++ b/drivers/char/bsr.c
-@@ -322,7 +322,8 @@ static int __init bsr_init(void)
- 		goto out_err_2;
- 	}
- 
--	if ((ret = bsr_create_devs(np)) < 0) {
-+	ret = bsr_create_devs(np);
-+	if (ret  < 0) {
- 		np = NULL;
- 		goto out_err_3;
- 	}
--- 
-2.17.1
-
+greg k-h
