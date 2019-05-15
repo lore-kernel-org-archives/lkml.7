@@ -2,55 +2,55 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6EE1C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A323DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF63A2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8092168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920219;
-	bh=x2IW5V1R7abNeKNENdkQGPFxlDV0i+9VcjNCq4UwCTE=;
+	s=default; t=1557920225;
+	bh=0oV+JBh2Ho1YfNfpbz9I/rH9Sbuze7VYWAW0BTmi4js=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ybJ/jvewH7g5AFpucfvNxHXBhmDnihP/Ebsnbog4bWohV4y8opyvnzv5oPHgqGc0m
-	 uK3KtYT16+aWweeVgTb4cH3MTgWUaEXupQJmYXurASGuNd+RgX7Zz8lqeYI2T2jMaf
-	 lJ/zV5a9NKUa6wptJvXlL0GI2TXg5LWE61VZZ8hU=
+	b=hq4fFn9Mt3SHe0ZnbWtXuIzZGLPRBO/PgcYncsjkBDRKXLT/wFXLYpmJ6z1f5Jmoi
+	 UmX38DaIuxGtvaSzb4vhyZWhBDzHSWqPq34wHAS9Og0BDAdQIA75/ccpMBJDLOsQed
+	 2TxEU4MFDmmTBvcxlFOEJwusBe/BL4naqYMDUPNs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732179AbfEOLg6 (ORCPT
+        id S1732695AbfEOLhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:36:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44096 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:37:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732992AbfEOLcO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:32:14 -0400
+        id S1731673AbfEOLg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:36:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7DC120843;
-        Wed, 15 May 2019 11:32:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22ABE2053B;
+        Wed, 15 May 2019 11:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919934;
-        bh=x2IW5V1R7abNeKNENdkQGPFxlDV0i+9VcjNCq4UwCTE=;
+        s=default; t=1557920217;
+        bh=0oV+JBh2Ho1YfNfpbz9I/rH9Sbuze7VYWAW0BTmi4js=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sMBFNGXxzqvxBVDpdzcg+Oll8y9b2y3WUgC4IeXRpzEXAI1XDOe6oBSsix921lBqy
-         1ffwLp4YPBlDnvIvpwYlrnPqMjBmQ6vfP9h+b/zHLhBIB0nWxzhUobs8bvMCntlaCn
-         ezy0DPXV6zogmpeg5KBZ6vehLLN2Y8gPGeHmvkCs=
+        b=J6FKGYSUZ5rLlquJgq7ox3aFBTYJylE4cH+YO1c/oA6OrhRT0eIuKMGDFcH3mSow8
+         36kDA6FZN5Ve7tpwFv45XU3sPOmW7kwptpKC16mdS3ZPX8FamsrRxns2Q9n7PjdPAb
+         fnsMO+648kLBGx0iFFyUQn93Z6a3qY2RymehOohA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.1 12/46] rtlwifi: rtl8723ae: Fix missing break in switch statement
-Date:   Wed, 15 May 2019 12:56:36 +0200
-Message-Id: <20190515090622.164708788@linuxfoundation.org>
+        stable@vger.kernel.org, "he, bo" <bo.he@intel.com>,
+        "Zhang, Jun" <jun.zhang@intel.com>, Jiri Kosina <jkosina@suse.cz>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 3.18 37/86] HID: debug: fix race condition with between rdesc_show() and device removal
+Date:   Wed, 15 May 2019 12:55:14 +0200
+Message-Id: <20190515090650.117386371@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
-References: <20190515090616.670410738@linuxfoundation.org>
+In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
+References: <20190515090642.339346723@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,37 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+[ Upstream commit cef0d4948cb0a02db37ebfdc320e127c77ab1637 ]
 
-commit 84242b82d81c54e009a2aaa74d3d9eff70babf56 upstream.
+There is a race condition that could happen if hid_debug_rdesc_show()
+is running while hdev is in the process of going away (device removal,
+system suspend, etc) which could result in NULL pointer dereference:
 
-Add missing break statement in order to prevent the code from falling
-through to case 0x1025, and erroneously setting rtlhal->oem_id to
-RT_CID_819X_ACER when rtlefuse->eeprom_svid is equal to 0x10EC and
-none of the cases in switch (rtlefuse->eeprom_smid) match.
+	 BUG: unable to handle kernel paging request at 0000000783316040
+	 CPU: 1 PID: 1512 Comm: getevent Tainted: G     U     O 4.19.20-quilt-2e5dc0ac-00029-gc455a447dd55 #1
+	 RIP: 0010:hid_dump_device+0x9b/0x160
+	 Call Trace:
+	  hid_debug_rdesc_show+0x72/0x1d0
+	  seq_read+0xe0/0x410
+	  full_proxy_read+0x5f/0x90
+	  __vfs_read+0x3a/0x170
+	  vfs_read+0xa0/0x150
+	  ksys_read+0x58/0xc0
+	  __x64_sys_read+0x1a/0x20
+	  do_syscall_64+0x55/0x110
+	  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-This bug was found thanks to the ongoing efforts to enable
--Wimplicit-fallthrough.
+Grab driver_input_lock to make sure the input device exists throughout the
+whole process of dumping the rdesc.
 
-Fixes: 238ad2ddf34b ("rtlwifi: rtl8723ae: Clean up the hardware info routine")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+[jkosina@suse.cz: update changelog a bit]
+Signed-off-by: he, bo <bo.he@intel.com>
+Signed-off-by: "Zhang, Jun" <jun.zhang@intel.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/hid/hid-debug.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c
-@@ -1675,6 +1675,7 @@ static void _rtl8723e_read_adapter_info(
- 					rtlhal->oem_id = RT_CID_819X_LENOVO;
- 					break;
- 				}
-+				break;
- 			case 0x1025:
- 				rtlhal->oem_id = RT_CID_819X_ACER;
- 				break;
+diff --git a/drivers/hid/hid-debug.c b/drivers/hid/hid-debug.c
+index e930627d0c76..71b069bd2a24 100644
+--- a/drivers/hid/hid-debug.c
++++ b/drivers/hid/hid-debug.c
+@@ -1057,10 +1057,15 @@ static int hid_debug_rdesc_show(struct seq_file *f, void *p)
+ 	seq_printf(f, "\n\n");
+ 
+ 	/* dump parsed data and input mappings */
++	if (down_interruptible(&hdev->driver_input_lock))
++		return 0;
++
+ 	hid_dump_device(hdev, f);
+ 	seq_printf(f, "\n");
+ 	hid_dump_input_mapping(hdev, f);
+ 
++	up(&hdev->driver_input_lock);
++
+ 	return 0;
+ }
+ 
+-- 
+2.20.1
+
 
 
