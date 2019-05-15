@@ -2,58 +2,54 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA8FC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72D1C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A346206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 883312168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920709;
-	bh=0x8tNMF2GxGVdUOlx+DPgH3PHdSC/X+m1eoIStvq3HA=;
+	s=default; t=1557920717;
+	bh=tNIhxY8N0aSxd42ZQzJBvBfueaEFS+wqtYU5w+0ZFnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CJyAW8L5eC7xgVlIGjB9XLY5gxA+g0lzXOa38z1Xvd4U0BMYJJBOC1iH7GoI34jZj
-	 Ig6jxSF4w2QTCcqK4jpmsVvnoDBTmJKaoHI5uv+l/QhEnF/Dw8b5Pd21l68HCAsmN3
-	 Edzvv82MbdFGkmdjiXwqthLRuRrs002uaubptPF4=
+	b=XeC4THQIyXPUAZfItAW8xWKtGcM/mHMulaLnH9oaGfiFjeKHRGOgCmcQZpVlWKA1r
+	 1E/l3GFUym2beKZBqLxGOc69mR2e5SAGY2SeTkd2ZbYgccaHAHe7wAUtuVPbdvMJVM
+	 pAXRXz/hPyIGz2b4vMs0qBlaSNycv5fNbev5UmxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732177AbfEOLpI (ORCPT
+        id S1732086AbfEOLZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:45:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36888 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:25:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732101AbfEOL0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:26:03 -0400
+        id S1732070AbfEOLZy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:25:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A39EF2089E;
-        Wed, 15 May 2019 11:26:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D268120818;
+        Wed, 15 May 2019 11:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919562;
-        bh=0x8tNMF2GxGVdUOlx+DPgH3PHdSC/X+m1eoIStvq3HA=;
+        s=default; t=1557919554;
+        bh=tNIhxY8N0aSxd42ZQzJBvBfueaEFS+wqtYU5w+0ZFnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VO05Fb0xeKjnTdXHGJIcFMQyxd1UtwBFNwddr2VZV8rWVtEw73iSYARw/XrOzdSDm
-         r8/AveqANDunXTC+rlnlh4C+3UrzUOugHLPXZdM61wfMUD6CEKZ7kcE+huiWxivrHB
-         lWNpUF/6yVY/ngXtxbgsXgxkmOYqB+amWjNsn+ss=
+        b=1WB0WdFRQS8e6rfs/mXfVD5T7b6r6kDbsihRwJ9n+9PPk4+Iwfr6VV3HV/hfbvN89
+         0F1NytIXOlcOPXgek4jYkdSeYM3p6fYuAn1kxcyrzpemQY3mvglN+l9ax9Bsp1mDw7
+         lKN38V8qqSFxRuZfokSd8C073bw9AJut4MvKPpt0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kai Krakow <kai@kaishome.de>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 001/137] bfq: update internal depth state when queue depth changes
-Date:   Wed, 15 May 2019 12:54:42 +0200
-Message-Id: <20190515090651.807776995@linuxfoundation.org>
+        stable@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 094/113] net: ethernet: stmmac: dwmac-sun8i: enable support of unicast filtering
+Date:   Wed, 15 May 2019 12:56:25 +0200
+Message-Id: <20190515090700.740634731@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
-References: <20190515090651.633556783@linuxfoundation.org>
+In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
+References: <20190515090652.640988966@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,87 +58,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 77f1e0a52d26242b6c2dba019f6ebebfb9ff701e ]
+From: Corentin Labbe <clabbe@baylibre.com>
 
-A previous commit moved the shallow depth and BFQ depth map calculations
-to be done at init time, moving it outside of the hotter IO path. This
-potentially causes hangs if the users changes the depth of the scheduler
-map, by writing to the 'nr_requests' sysfs file for that device.
+[ Upstream commit d4c26eb6e721683a0f93e346ce55bc8dc3cbb175 ]
 
-Add a blk-mq-sched hook that allows blk-mq to inform the scheduler if
-the depth changes, so that the scheduler can update its internal state.
+When adding more MAC addresses to a dwmac-sun8i interface, the device goes
+directly in promiscuous mode.
+This is due to IFF_UNICAST_FLT missing flag.
 
-Tested-by: Kai Krakow <kai@kaishome.de>
-Reported-by: Paolo Valente <paolo.valente@linaro.org>
-Fixes: f0635b8a416e ("bfq: calculate shallow depths at init time")
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+So since the hardware support unicast filtering, let's add IFF_UNICAST_FLT.
+
+Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- block/bfq-iosched.c      | 8 +++++++-
- block/blk-mq.c           | 2 ++
- include/linux/elevator.h | 1 +
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 72510c4700014..356620414cf94 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -5353,7 +5353,7 @@ static unsigned int bfq_update_depths(struct bfq_data *bfqd,
- 	return min_shallow;
- }
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -1015,6 +1015,8 @@ static struct mac_device_info *sun8i_dwm
+ 	mac->mac = &sun8i_dwmac_ops;
+ 	mac->dma = &sun8i_dwmac_dma_ops;
  
--static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
-+static void bfq_depth_updated(struct blk_mq_hw_ctx *hctx)
- {
- 	struct bfq_data *bfqd = hctx->queue->elevator->elevator_data;
- 	struct blk_mq_tags *tags = hctx->sched_tags;
-@@ -5361,6 +5361,11 @@ static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
- 
- 	min_shallow = bfq_update_depths(bfqd, &tags->bitmap_tags);
- 	sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, min_shallow);
-+}
++	priv->dev->priv_flags |= IFF_UNICAST_FLT;
 +
-+static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
-+{
-+	bfq_depth_updated(hctx);
- 	return 0;
- }
- 
-@@ -5783,6 +5788,7 @@ static struct elevator_type iosched_bfq_mq = {
- 		.requests_merged	= bfq_requests_merged,
- 		.request_merged		= bfq_request_merged,
- 		.has_work		= bfq_has_work,
-+		.depth_updated		= bfq_depth_updated,
- 		.init_hctx		= bfq_init_hctx,
- 		.init_sched		= bfq_init_queue,
- 		.exit_sched		= bfq_exit_queue,
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 6930c82ab75fc..5b920a82bfe60 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -3131,6 +3131,8 @@ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr)
- 		}
- 		if (ret)
- 			break;
-+		if (q->elevator && q->elevator->type->ops.depth_updated)
-+			q->elevator->type->ops.depth_updated(hctx);
- 	}
- 
- 	if (!ret)
-diff --git a/include/linux/elevator.h b/include/linux/elevator.h
-index 2e9e2763bf47d..6e8bc53740f05 100644
---- a/include/linux/elevator.h
-+++ b/include/linux/elevator.h
-@@ -31,6 +31,7 @@ struct elevator_mq_ops {
- 	void (*exit_sched)(struct elevator_queue *);
- 	int (*init_hctx)(struct blk_mq_hw_ctx *, unsigned int);
- 	void (*exit_hctx)(struct blk_mq_hw_ctx *, unsigned int);
-+	void (*depth_updated)(struct blk_mq_hw_ctx *);
- 
- 	bool (*allow_merge)(struct request_queue *, struct request *, struct bio *);
- 	bool (*bio_merge)(struct blk_mq_hw_ctx *, struct bio *);
--- 
-2.20.1
-
+ 	/* The loopback bit seems to be re-set when link change
+ 	 * Simply mask it each time
+ 	 * Speed 10/100/1000 are set in BIT(2)/BIT(3)
 
 
