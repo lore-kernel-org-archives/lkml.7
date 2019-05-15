@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37623C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D75DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0920A2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6056821726
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557917967;
-	bh=iHx3Ka/phA/8s7Iny4Bl/gW1DnuS8OKqP7Z7MljoNhk=;
+	s=default; t=1557917971;
+	bh=Rigk2BP1vhzhrGcwtIj8zm7+kw/wq++uhMPtlRGgHN4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pCUYXWi0oq0F/U+kN7WBwFvqc+0mJNr8ulT/jvVLrbQ0gaytHR/yDvAf2vlvORk0l
-	 uJGvWmNOcjsBL6/iDweqoLqGLoQRXZpcGr3beJfrkrYFCHcEJDPasoj6IeDnYOj265
-	 E8RM3KjU/lyz9xe2mdBfI0i1q691G7s2ExGHQeEo=
+	b=lKir1c28McXVhQtYZpMwWLoTamNuPnxG18BA60ShBpcWS/ANlIEGwVsalVc0/C6j1
+	 OJ3UQoTvj092G5cUFAL3xYFBkKyvZYsgseDsiaPEmwWqBiDRSU9bdwI2+8+4/gSxcL
+	 /NVHoyAe47/p8AQVzP4CZlI7iIPv4w4/Sc+RNwNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727157AbfEOK70 (ORCPT
+        id S1727168AbfEOK7a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:59:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55898 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 06:59:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727142AbfEOK7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:59:23 -0400
+        id S1727153AbfEOK7Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:59:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21B852084E;
-        Wed, 15 May 2019 10:59:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD0662166E;
+        Wed, 15 May 2019 10:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557917962;
-        bh=iHx3Ka/phA/8s7Iny4Bl/gW1DnuS8OKqP7Z7MljoNhk=;
+        s=default; t=1557917965;
+        bh=Rigk2BP1vhzhrGcwtIj8zm7+kw/wq++uhMPtlRGgHN4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yf3cDIfGUdrBGINWjIb/M+P6drXH9dAPCY74ZLYEFUd7Hsf8aZ8LUF+Vg9/hqiIaz
-         sPai4tq/dYq2VBreC9uPLIwOIwsMUaIfO8HXhc2n2CJ0u2A3kJnkC0Wpsvz/I33IHn
-         BbFMiaK6We5fVou6e+VMgSpHWVAVS/zNlJBCGAyk=
+        b=JWEa4yJAU+x8hHsPqhP2FyuYZ72mDyTLm3DS6abLuy1ZySc0nxAJDgdIO2a/yODU0
+         v1/+CoSeGYv6RH9A4zJqfoLkMNViO2yVSX1qiUASbviWST8jYebvjjhia1y60IeVQ7
+         ec7Au3o4cq4XopBTv166en+eYBeVG6nqoTBKqJzQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        stable@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Long Li <longli@microsoft.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 41/86] jffs2: fix use-after-free on symlink traversal
-Date:   Wed, 15 May 2019 12:55:18 +0200
-Message-Id: <20190515090650.702530211@linuxfoundation.org>
+Subject: [PATCH 3.18 42/86] scsi: storvsc: Fix calculation of sub-channel count
+Date:   Wed, 15 May 2019 12:55:19 +0200
+Message-Id: <20190515090650.899536539@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -59,51 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4fdcfab5b5537c21891e22e65996d4d0dd8ab4ca ]
+[ Upstream commit 382e06d11e075a40b4094b6ef809f8d4bcc7ab2a ]
 
-free the symlink body after the same RCU delay we have for freeing the
-struct inode itself, so that traversal during RCU pathwalk wouldn't step
-into freed memory.
+When the number of sub-channels offered by Hyper-V is >= the number of CPUs
+in the VM, calculate the correct number of sub-channels.  The current code
+produces one too many.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+This scenario arises only when the number of CPUs is artificially
+restricted (for example, with maxcpus=<n> on the kernel boot line), because
+Hyper-V normally offers a sub-channel count < number of CPUs.  While the
+current code doesn't break, the extra sub-channel is unbalanced across the
+CPUs (for example, a total of 5 channels on a VM with 4 CPUs).
+
+Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Long Li <longli@microsoft.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jffs2/readinode.c | 5 -----
- fs/jffs2/super.c     | 5 ++++-
- 2 files changed, 4 insertions(+), 6 deletions(-)
+ drivers/scsi/storvsc_drv.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/fs/jffs2/readinode.c b/fs/jffs2/readinode.c
-index 386303dca382..4f390be71723 100644
---- a/fs/jffs2/readinode.c
-+++ b/fs/jffs2/readinode.c
-@@ -1429,11 +1429,6 @@ void jffs2_do_clear_inode(struct jffs2_sb_info *c, struct jffs2_inode_info *f)
- 
- 	jffs2_kill_fragtree(&f->fragtree, deleted?c:NULL);
- 
--	if (f->target) {
--		kfree(f->target);
--		f->target = NULL;
--	}
--
- 	fds = f->dents;
- 	while(fds) {
- 		fd = fds;
-diff --git a/fs/jffs2/super.c b/fs/jffs2/super.c
-index 0bbc31d10857..d1be5991bb66 100644
---- a/fs/jffs2/super.c
-+++ b/fs/jffs2/super.c
-@@ -47,7 +47,10 @@ static struct inode *jffs2_alloc_inode(struct super_block *sb)
- static void jffs2_i_callback(struct rcu_head *head)
+diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+index 96c6e75bbfe6..bc29b571e3fb 100644
+--- a/drivers/scsi/storvsc_drv.c
++++ b/drivers/scsi/storvsc_drv.c
+@@ -788,13 +788,22 @@ static void handle_sc_creation(struct vmbus_channel *new_sc)
+ static void  handle_multichannel_storage(struct hv_device *device, int max_chns)
  {
- 	struct inode *inode = container_of(head, struct inode, i_rcu);
--	kmem_cache_free(jffs2_inode_cachep, JFFS2_INODE_INFO(inode));
-+	struct jffs2_inode_info *f = JFFS2_INODE_INFO(inode);
-+
-+	kfree(f->target);
-+	kmem_cache_free(jffs2_inode_cachep, f);
- }
+ 	struct storvsc_device *stor_device;
+-	int num_cpus = num_online_cpus();
+ 	int num_sc;
+ 	struct storvsc_cmd_request *request;
+ 	struct vstor_packet *vstor_packet;
+ 	int ret, t;
  
- static void jffs2_destroy_inode(struct inode *inode)
+-	num_sc = ((max_chns > num_cpus) ? num_cpus : max_chns);
++	/*
++	 * If the number of CPUs is artificially restricted, such as
++	 * with maxcpus=1 on the kernel boot line, Hyper-V could offer
++	 * sub-channels >= the number of CPUs. These sub-channels
++	 * should not be created. The primary channel is already created
++	 * and assigned to one CPU, so check against # CPUs - 1.
++	 */
++	num_sc = min((int)(num_online_cpus() - 1), max_chns);
++	if (!num_sc)
++		return;
++
+ 	stor_device = get_out_stor_device(device);
+ 	if (!stor_device)
+ 		return;
 -- 
 2.20.1
 
