@@ -7,47 +7,53 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7F5C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA95C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85532166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F392720843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922784;
-	bh=Omne4r+s1g/2qzaYihCg5sc49UBqUWfWids8nK21U2c=;
+	s=default; t=1557922812;
+	bh=EMkLnOSZMMv4MZEje/xzNx+RTKH8T3X3TlZQylSguD4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cWlge6hQ4fE6n0X8ZW12zzvWofIqVSDRVizEM3HxS+3TcWY/YfyPV7oX7cQSd9s56
-	 3/QehR+Afg9rIhJjPWPq7Fxs9Q1nHN0+jse5Bb6YJ3AOFr5+azTJoZ0eEz4h1uvn1D
-	 vaapJuumBo7zMAjknAtQpp2om1dIzBFo7rilb5FQ=
+	b=VxfZT/kgWZxeW4qaY/K6V6T0F8mipi9LsYl/3ImyFlQB1Q1q1EQtbiGmuhEpLrhfS
+	 IQ4nF+CRfkbgKCrR5CR3vCJmo82DH7xo8vALTvxpRDV1V6B1gwp4RjXXK/DyUC/VoZ
+	 5z3K/U5fqnS+IWRmcxYPVLCdpcuke+sDWhquYZZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbfEOMTm (ORCPT
+        id S1727304AbfEOK75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:19:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57328 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 06:59:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726917AbfEOLAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:00:30 -0400
+        id S1727281AbfEOK7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:59:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C35C2084F;
-        Wed, 15 May 2019 11:00:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B43B216FD;
+        Wed, 15 May 2019 10:59:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918029;
-        bh=Omne4r+s1g/2qzaYihCg5sc49UBqUWfWids8nK21U2c=;
+        s=default; t=1557917993;
+        bh=EMkLnOSZMMv4MZEje/xzNx+RTKH8T3X3TlZQylSguD4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zb9+HrRJMg0oekM9SB32C+1ZIaFCn1ezEdMB45HoRRl4TfR3cNpq0dEh0pNIM705D
-         3N0OhLVjrbq7JxoBjLh7wtpPn+q1uBN9pwc1nhZnoBaF5Nz7YyCuUToQ9Tv3o0fZUG
-         rtv2VtPQbk6gwCSfyEsFg4uKyJxsrU6+DoZ62bdA=
+        b=ybxMWn63CGVPeS9pfjAsCLbRjVbTcfNL6mEoFW27SgdyVo/cDKdFYSiZWXFb+bLq1
+         Wx5N2b18CnWWU1++VwfSRBtrlnkxdM3QKwbV8ITdXldq6Z1UHHLZgSxho6LwRodDXJ
+         P8mFHktFo8mOH0QNc6cg3fTZVHw89P0+GI/9+hg8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prasad Sodagudi <psodagud@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>, marc.zyngier@arm.com,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 58/86] genirq: Prevent use-after-free and work list corruption
-Date:   Wed, 15 May 2019 12:55:35 +0200
-Message-Id: <20190515090653.859366861@linuxfoundation.org>
+        stable@vger.kernel.org, chenxiang <chenxiang66@hisilicon.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        John Garry <john.garry@huawei.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Ewan Milne <emilne@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Tomas Henzl <thenzl@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 3.18 52/86] scsi: libsas: fix a race condition when smp task timeout
+Date:   Wed, 15 May 2019 12:55:29 +0200
+Message-Id: <20190515090652.571651333@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -60,38 +66,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 59c39840f5abf4a71e1810a8da71aaccd6c17d26 ]
+From: Jason Yan <yanaijie@huawei.com>
 
-When irq_set_affinity_notifier() replaces the notifier, then the
-reference count on the old notifier is dropped which causes it to be
-freed. But nothing ensures that the old notifier is not longer queued
-in the work list. If it is queued this results in a use after free and
-possibly in work list corruption.
+commit b90cd6f2b905905fb42671009dc0e27c310a16ae upstream.
 
-Ensure that the work is canceled before the reference is dropped.
+When the lldd is processing the complete sas task in interrupt and set the
+task stat as SAS_TASK_STATE_DONE, the smp timeout timer is able to be
+triggered at the same time. And smp_task_timedout() will complete the task
+wheter the SAS_TASK_STATE_DONE is set or not. Then the sas task may freed
+before lldd end the interrupt process. Thus a use-after-free will happen.
 
-Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: marc.zyngier@arm.com
-Link: https://lkml.kernel.org/r/1553439424-6529-1-git-send-email-psodagud@codeaurora.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix this by calling the complete() only when SAS_TASK_STATE_DONE is not
+set. And remove the check of the return value of the del_timer(). Once the
+LLDD sets DONE, it must call task->done(), which will call
+smp_task_done()->complete() and the task will be completed and freed
+correctly.
+
+Reported-by: chenxiang <chenxiang66@hisilicon.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+CC: John Garry <john.garry@huawei.com>
+CC: Johannes Thumshirn <jthumshirn@suse.de>
+CC: Ewan Milne <emilne@redhat.com>
+CC: Christoph Hellwig <hch@lst.de>
+CC: Tomas Henzl <thenzl@redhat.com>
+CC: Dan Williams <dan.j.williams@intel.com>
+CC: Hannes Reinecke <hare@suse.com>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Reviewed-by: John Garry <john.garry@huawei.com>
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: Guenter Roeck <linux@roeck-us.net
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/irq/manage.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/scsi/libsas/sas_expander.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -307,8 +307,10 @@ irq_set_affinity_notifier(unsigned int i
- 	desc->affinity_notify = notify;
- 	raw_spin_unlock_irqrestore(&desc->lock, flags);
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -47,17 +47,16 @@ static void smp_task_timedout(unsigned l
+ 	unsigned long flags;
  
--	if (old_notify)
-+	if (old_notify) {
-+		cancel_work_sync(&old_notify->work);
- 		kref_put(&old_notify->kref, old_notify->release);
+ 	spin_lock_irqsave(&task->task_state_lock, flags);
+-	if (!(task->task_state_flags & SAS_TASK_STATE_DONE))
++	if (!(task->task_state_flags & SAS_TASK_STATE_DONE)) {
+ 		task->task_state_flags |= SAS_TASK_STATE_ABORTED;
++		complete(&task->slow_task->completion);
 +	}
- 
- 	return 0;
+ 	spin_unlock_irqrestore(&task->task_state_lock, flags);
+-
+-	complete(&task->slow_task->completion);
  }
+ 
+ static void smp_task_done(struct sas_task *task)
+ {
+-	if (!del_timer(&task->slow_task->timer))
+-		return;
++	del_timer(&task->slow_task->timer);
+ 	complete(&task->slow_task->completion);
+ }
+ 
 
 
