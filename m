@@ -2,205 +2,353 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00860C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8207DC04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA5F02082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:54:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NK1N5xkJ"
+	by mail.kernel.org (Postfix) with ESMTP id 51EA62082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:55:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbfEOMyy (ORCPT
+        id S1727231AbfEOMzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:54:54 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45070 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726923AbfEOMyy (ORCPT
+        Wed, 15 May 2019 08:55:03 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59366 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfEOMzD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 08:54:54 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4FCmdlc060905;
-        Wed, 15 May 2019 12:53:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=qqsyAWE2i/voQnpUJu/NRs+qTwt/c05VpPNY04BS1Jg=;
- b=NK1N5xkJDCeLh4n4t5QRRa/QeUiCSiZ62sXI+pIViFP/bG4kce7PUYzx3CgY8gjYJWYG
- QGZPV5rp0I5IydXmkaIrqcS3703IpyPk74fRV1A8fvNG8J+whG30zwkGWzqpeDyLn5j8
- REvESvk1q1afxajKj2RMI6P3of80n0R4PhZnTtJHn+jnyV7mJS2VKrViFvw5N1V+OJjg
- UfTL0WpjgEEzw2spLdP0xMyx6jAPOd0E9va6CwCikusw+ND21CwKnjmjxBng9VcMNL3b
- uXar1ljkEbdQ6MUtrtBhJyks8FLTQxOp3I37wkGqnUJSpQFRV4Bvhw7HsvFK/WBsBTNZ /w== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2sdnttvj3v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 May 2019 12:53:00 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4FCpMpl025522;
-        Wed, 15 May 2019 12:52:59 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2sggdutcgt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 May 2019 12:52:59 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4FCqs75023757;
-        Wed, 15 May 2019 12:52:55 GMT
-Received: from [10.166.106.34] (/10.166.106.34)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 15 May 2019 05:52:54 -0700
-Subject: Re: [RFC KVM 00/27] KVM Address Space Isolation
-To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        kvm@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
-        liran.alon@oracle.com, jwadams@google.com
-References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <b5ebe77f-14f5-5f87-a4bd-8befb71a9969@oracle.com>
-Date:   Wed, 15 May 2019 14:52:50 +0200
+        Wed, 15 May 2019 08:55:03 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id CF0C1281ED8
+Subject: Re: [PATCH v8 1/2] platform/chrome: wilco_ec: Add property helper
+ library
+To:     Nick Crews <ncrews@chromium.org>, bleung@chromium.org,
+        sre@kernel.org, linux-pm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
+        lamzin@google.com, bartfab@google.com, derat@google.com,
+        dtor@google.com, sjg@chromium.org, jchwong@chromium.org,
+        tbroch@chromium.org
+References: <20190424165651.236391-1-ncrews@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <d5bf4678-e5d1-c01d-4701-5d81e24986a1@collabora.com>
+Date:   Wed, 15 May 2019 14:54:57 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9257 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905150082
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9257 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905150082
+In-Reply-To: <20190424165651.236391-1-ncrews@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-Thanks all for your replies and comments. I am trying to summarize main
-feedback below, and define next steps.
+On 24/4/19 18:56, Nick Crews wrote:
+> A Property is typically a data item that is stored to NVRAM
+> by the EC. Each of these data items has an index associated
+> with it, known as the Property ID (PID). Properties may have
+> variable lengths, up to a max of WILCO_EC_PROPERTY_MAX_SIZE
+> bytes. Properties can be simple integers, or they may be more
+> complex binary data.
+> 
+> This patch adds support for getting and setting properties.
+> This will be useful for setting the charge algorithm and charge
+> schedules, which all use properties.
+> 
+> Signed-off-by: Nick Crews <ncrews@chromium.org>
 
-But first, let me clarify what should happen when exiting the KVM isolated
-address space (i.e. when we need to access to the full kernel). There was
-some confusion because this was not clearly described in the cover letter.
-Thanks to Liran for this better explanation:
-
-   When a hyperthread needs to switch from KVM isolated address space to
-   kernel full address space, it should first kick all sibling hyperthreads
-   outside of guest and only then safety switch to full kernel address
-   space. Only once all sibling hyperthreads are running with KVM isolated
-   address space, it is safe to enter guest.
-
-   The main point of this address space is to avoid kicking all sibling
-   hyperthreads on *every* VMExit from guest but instead only kick them when
-   switching address space. The assumption is that the vast majority of exits
-   can be handled in KVM isolated address space and therefore do not require
-   to kick the sibling hyperthreads outside of guest.
-
-   “kick” in this context means sending an IPI to all sibling hyperthreads.
-   This IPI will cause these sibling hyperthreads to exit from guest to host
-   on EXTERNAL_INTERRUPT and wait for a condition that again allows to enter
-   back into guest. This condition will be once all hyperthreads of CPU core
-   is again running only within KVM isolated address space of this VM.
-
-
-Feedback
-========
-
-Page-table Management
-
-- Need to cleanup terminology mm vs page-table. It looks like we just need
-   a KVM page-table, not a KVM mm.
-
-- Interfaces for creating and managing page-table should be provided by
-   the kernel, and not implemented in KVM. KVM shouldn't access kernel
-   low-level memory management functions.
-
-KVM Isolation Enter/Exit
-
-- Changing CR3 in #PF could be a natural extension as #PF can already
-   change page-tables, but we need a very coherent design and strong
-   rules.
-
-- Reduce kernel code running without the whole kernel mapping to the
-   minimum.
-
-- Avoid using current and task_struct while running with KVM page table.
-
-- Ensure KVM page-table is not used with vmalloc.
-
-- Try to avoid copying parts of the vmalloc page tables. This
-   interacts unpleasantly with having the kernel stack.  We can freely
-   use a different stack (the IRQ stack, for example) as long as
-   we don't schedule, but that means we can't run preemptable code.
-
-- Potential issues with tracing, kprobes... A solution would be to
-   compile the isolated code with tracing off.
-
-- Better centralize KVM isolation exit on IRQ, NMI, MCE, faults...
-   Switch back to full kernel before switching to IRQ stack or
-   shorlty after.
-
-- Can we disable IRQ while running with KVM page-table?
-
-   For IRQs it's somewhat feasible, but not for NMIs since NMIs are
-   unblocked on VMX immediately after VM-Exit
-
-   Exits due to INTR, NMI and #MC are considered high priority and are
-   serviced before re-enabling IRQs and preemption[1].  All other exits
-   are handled after IRQs and preemption are re-enabled.
-
-   A decent number of exit handlers are quite short, but many exit
-   handlers require significantly longer flows. In short, leaving
-   IRQs disabled across all exits is not practical.
-
-   It makes sense to pinpoint exactly what exits are:
-   a) in the hot path for the use case (configuration)
-   b) can be handled fast enough that they can run with IRQs disabled.
-
-   Generating that list might allow us to tightly bound the contents
-   of kvm_mm and sidestep many of the corner cases, i.e. select VM-Exits
-   are handle with IRQs disabled using KVM's mm, while "slow" VM-Exits
-   go through the full context switch.
-
-
-KVM Page Table Content
-
-- Check and reduce core mappings (kernel text size, cpu_entry_area,
-   espfix64, IRQ stack...)
-
-- Check and reduce percpu mapping, percpu memory can contain secrets (e.g.
-   percpu random pool)
-
-
-Next Steps
-==========
-
-I will investigate Sean's suggestion to see which VM-Exits can be handled
-fast enough so that they can run with IRQs disabled (fast VM-Exits),
-and which slow VM-Exits are in the hot path.
-
-So I will work on a new POC which just handles fast VM-Exits with IRQs
-disabled. This should largely reduce mappings required in the KVM page
-table. I will also try to just have a KVM page-table and not a KVM mm.
-
-After this new POC, we should be able to evaluate the need for handling
-slow VM-Exits. And if there's an actual need, we can investigate how
-to handle them with IRQs enabled.
-
+The following patch is queued to the for-next branch for the autobuilders to
+play with, if all goes well I'll add the patch for 5.3 when current merge window
+closes.
 
 Thanks,
+ Enric
 
-alex.
-
+> ---
+> v7 changes:
+> -Remove bogus gerrit FROMLIST tag in commit title
+> v6 changes:
+> -Add EC_* prefix to enum property_ops so they are more unique.
+> -Split up the commit so properties are added in a first commit
+> v5 changes:
+> -Remove OP_SYNC, it has no immediate use case.
+> -Merge properties.h into wilco-ec.h
+> -Remove enum get_set_sync_op from the public interface,
+>  since without OP_SYNC they are irrelevant.
+> -Fix Kconfigs and Makefiles so they actually work
+>  with the v4 changes
+> -Tweak some formatting, spacing, and comments
+> -Fix validation of charge_type so illegal values
+>  can't be set. Before negative error codes were
+>  accidentally getting casted to positive numbers
+> -Remove more unneeded parentheses.
+> v4 changes:
+> -Use put_unaligned_le32() to store PID in request.
+> -Move implementation from
+>  drivers/platform/chrome/wilco_ec/charge_config.c to
+>  drivers/power/supply/wilco_charger.c
+> -Move drivers/platform/chrome/wilco_ec/properties.h to
+>  include/linux/platform_data/wilco-ec-properties.h
+> -Remove parentheses in switch statement in psp_val_to_charge_mode()
+> -Check for any negatvie return code from psp_val_to_charge_mode()
+>  instead of just -EINVAL so its less brittle
+> -Tweak comments in wilco-ec-properties.h
+> v3 changes:
+> -Add this changelog
+> -Fix commit message tags
+> v2 changes:
+> -Update Documentation to say KernelVersion 5.2
+> -Update Documentation to explain Trickle mode better.
+> -rename things from using *PCC* to *CHARGE*
+> -Split up conversions between POWER_SUPPLY_PROP_CHARGE_TYPE values
+> and Wilco EC codes
+> -Use devm_ flavor of power_supply_register(), which simplifies things
+> -Add extra error checking on property messages received from the EC
+> -Fix bug in memcpy() calls in properties.c
+> -Refactor fill_property_id()
+> -Add valid input checks to charge_type
+> -Properly convert charge_type when get()ting
+> 
+>  drivers/platform/chrome/wilco_ec/Makefile     |   2 +-
+>  drivers/platform/chrome/wilco_ec/properties.c | 132 ++++++++++++++++++
+>  include/linux/platform_data/wilco-ec.h        |  71 ++++++++++
+>  3 files changed, 204 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/platform/chrome/wilco_ec/properties.c
+> 
+> diff --git a/drivers/platform/chrome/wilco_ec/Makefile b/drivers/platform/chrome/wilco_ec/Makefile
+> index 063e7fb4ea17..29b734137786 100644
+> --- a/drivers/platform/chrome/wilco_ec/Makefile
+> +++ b/drivers/platform/chrome/wilco_ec/Makefile
+> @@ -1,6 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> -wilco_ec-objs				:= core.o mailbox.o
+> +wilco_ec-objs				:= core.o mailbox.o properties.o
+>  obj-$(CONFIG_WILCO_EC)			+= wilco_ec.o
+>  wilco_ec_debugfs-objs			:= debugfs.o
+>  obj-$(CONFIG_WILCO_EC_DEBUGFS)		+= wilco_ec_debugfs.o
+> diff --git a/drivers/platform/chrome/wilco_ec/properties.c b/drivers/platform/chrome/wilco_ec/properties.c
+> new file mode 100644
+> index 000000000000..e69682c95ea2
+> --- /dev/null
+> +++ b/drivers/platform/chrome/wilco_ec/properties.c
+> @@ -0,0 +1,132 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2019 Google LLC
+> + */
+> +
+> +#include <linux/platform_data/wilco-ec.h>
+> +#include <linux/string.h>
+> +#include <linux/unaligned/le_memmove.h>
+> +
+> +/* Operation code; what the EC should do with the property */
+> +enum ec_property_op {
+> +	EC_OP_GET = 0,
+> +	EC_OP_SET = 1,
+> +};
+> +
+> +struct ec_property_request {
+> +	u8 op; /* One of enum ec_property_op */
+> +	u8 property_id[4]; /* The 32 bit PID is stored Little Endian */
+> +	u8 length;
+> +	u8 data[WILCO_EC_PROPERTY_MAX_SIZE];
+> +} __packed;
+> +
+> +struct ec_property_response {
+> +	u8 reserved[2];
+> +	u8 op; /* One of enum ec_property_op */
+> +	u8 property_id[4]; /* The 32 bit PID is stored Little Endian */
+> +	u8 length;
+> +	u8 data[WILCO_EC_PROPERTY_MAX_SIZE];
+> +} __packed;
+> +
+> +static int send_property_msg(struct wilco_ec_device *ec,
+> +			     struct ec_property_request *rq,
+> +			     struct ec_property_response *rs)
+> +{
+> +	struct wilco_ec_message ec_msg;
+> +	int ret;
+> +
+> +	memset(&ec_msg, 0, sizeof(ec_msg));
+> +	ec_msg.type = WILCO_EC_MSG_PROPERTY;
+> +	ec_msg.request_data = rq;
+> +	ec_msg.request_size = sizeof(*rq);
+> +	ec_msg.response_data = rs;
+> +	ec_msg.response_size = sizeof(*rs);
+> +
+> +	ret = wilco_ec_mailbox(ec, &ec_msg);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (rs->op != rq->op)
+> +		return -EBADMSG;
+> +	if (memcmp(rq->property_id, rs->property_id, sizeof(rs->property_id)))
+> +		return -EBADMSG;
+> +
+> +	return 0;
+> +}
+> +
+> +int wilco_ec_get_property(struct wilco_ec_device *ec,
+> +			  struct wilco_ec_property_msg *prop_msg)
+> +{
+> +	struct ec_property_request rq;
+> +	struct ec_property_response rs;
+> +	int ret;
+> +
+> +	memset(&rq, 0, sizeof(rq));
+> +	rq.op = EC_OP_GET;
+> +	put_unaligned_le32(prop_msg->property_id, rq.property_id);
+> +
+> +	ret = send_property_msg(ec, &rq, &rs);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	prop_msg->length = rs.length;
+> +	memcpy(prop_msg->data, rs.data, rs.length);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(wilco_ec_get_property);
+> +
+> +int wilco_ec_set_property(struct wilco_ec_device *ec,
+> +			  struct wilco_ec_property_msg *prop_msg)
+> +{
+> +	struct ec_property_request rq;
+> +	struct ec_property_response rs;
+> +	int ret;
+> +
+> +	memset(&rq, 0, sizeof(rq));
+> +	rq.op = EC_OP_SET;
+> +	put_unaligned_le32(prop_msg->property_id, rq.property_id);
+> +	rq.length = prop_msg->length;
+> +	memcpy(rq.data, prop_msg->data, prop_msg->length);
+> +
+> +	ret = send_property_msg(ec, &rq, &rs);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (rs.length != prop_msg->length)
+> +		return -EBADMSG;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(wilco_ec_set_property);
+> +
+> +int wilco_ec_get_byte_property(struct wilco_ec_device *ec, u32 property_id,
+> +			       u8 *val)
+> +{
+> +	struct wilco_ec_property_msg msg;
+> +	int ret;
+> +
+> +	msg.property_id = property_id;
+> +
+> +	ret = wilco_ec_get_property(ec, &msg);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (msg.length != 1)
+> +		return -EBADMSG;
+> +
+> +	*val = msg.data[0];
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(wilco_ec_get_byte_property);
+> +
+> +int wilco_ec_set_byte_property(struct wilco_ec_device *ec, u32 property_id,
+> +			       u8 val)
+> +{
+> +	struct wilco_ec_property_msg msg;
+> +
+> +	msg.property_id = property_id;
+> +	msg.data[0] = val;
+> +	msg.length = 1;
+> +
+> +	return wilco_ec_set_property(ec, &msg);
+> +}
+> +EXPORT_SYMBOL_GPL(wilco_ec_set_byte_property);
+> diff --git a/include/linux/platform_data/wilco-ec.h b/include/linux/platform_data/wilco-ec.h
+> index 1ff224793c99..50a21bd5fd44 100644
+> --- a/include/linux/platform_data/wilco-ec.h
+> +++ b/include/linux/platform_data/wilco-ec.h
+> @@ -123,4 +123,75 @@ struct wilco_ec_message {
+>   */
+>  int wilco_ec_mailbox(struct wilco_ec_device *ec, struct wilco_ec_message *msg);
+>  
+> +/*
+> + * A Property is typically a data item that is stored to NVRAM
+> + * by the EC. Each of these data items has an index associated
+> + * with it, known as the Property ID (PID). Properties may have
+> + * variable lengths, up to a max of WILCO_EC_PROPERTY_MAX_SIZE
+> + * bytes. Properties can be simple integers, or they may be more
+> + * complex binary data.
+> + */
+> +
+> +#define WILCO_EC_PROPERTY_MAX_SIZE	4
+> +
+> +/**
+> + * struct ec_property_set_msg - Message to get or set a property.
+> + * @property_id: Which property to get or set.
+> + * @length: Number of bytes of |data| that are used.
+> + * @data: Actual property data.
+> + */
+> +struct wilco_ec_property_msg {
+> +	u32 property_id;
+> +	int length;
+> +	u8 data[WILCO_EC_PROPERTY_MAX_SIZE];
+> +};
+> +
+> +/**
+> + * wilco_ec_get_property() - Retrieve a property from the EC.
+> + * @ec: Embedded Controller device.
+> + * @prop_msg: Message for request and response.
+> + *
+> + * The property_id field of |prop_msg| should be filled before calling this
+> + * function. The result will be stored in the data and length fields.
+> + *
+> + * Return: 0 on success, negative error code on failure.
+> + */
+> +int wilco_ec_get_property(struct wilco_ec_device *ec,
+> +			  struct wilco_ec_property_msg *prop_msg);
+> +
+> +/**
+> + * wilco_ec_set_property() - Store a property on the EC.
+> + * @ec: Embedded Controller device.
+> + * @prop_msg: Message for request and response.
+> + *
+> + * The property_id, length, and data fields of |prop_msg| should be
+> + * filled before calling this function.
+> + *
+> + * Return: 0 on success, negative error code on failure.
+> + */
+> +int wilco_ec_set_property(struct wilco_ec_device *ec,
+> +			  struct wilco_ec_property_msg *prop_msg);
+> +
+> +/**
+> + * wilco_ec_get_byte_property() - Retrieve a byte-size property from the EC.
+> + * @ec: Embedded Controller device.
+> + * @property_id: Which property to retrieve.
+> + * @val: The result value, will be filled by this function.
+> + *
+> + * Return: 0 on success, negative error code on failure.
+> + */
+> +int wilco_ec_get_byte_property(struct wilco_ec_device *ec, u32 property_id,
+> +			       u8 *val);
+> +
+> +/**
+> + * wilco_ec_get_byte_property() - Store a byte-size property on the EC.
+> + * @ec: Embedded Controller device.
+> + * @property_id: Which property to store.
+> + * @val: Value to store.
+> + *
+> + * Return: 0 on success, negative error code on failure.
+> + */
+> +int wilco_ec_set_byte_property(struct wilco_ec_device *ec, u32 property_id,
+> +			       u8 val);
+> +
+>  #endif /* WILCO_EC_H */
+> 
