@@ -2,55 +2,55 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2CFC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3930C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0395020578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A65D120578
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:51:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921094;
-	bh=FZ3t0OnChxZV9ueVH16QdGppkw7o2a88aTU3+IzD3GI=;
+	s=default; t=1557921110;
+	bh=e9SlbsSwwGqGYGbtJo8NT4Zf+Ol+2sOs+dlgoDuvKFw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nqQ9pMBX4fxI0SSYoOVyLVUE1NZ8RT0XgyLzd79fVd/9AAZJFakiSvmDA7+lmWLPC
-	 vs4YTb93bZPaAHeq8dHFeXbSlN4fIiQo3qAWuPEU4VG4hJI4DbZOemdJIdV3s8/fe0
-	 ++HqlUvOI69lkmMQMn87FgG9l7fiwM37sffS53KI=
+	b=xp8ZF/vQKKgNHlBYpxeWEk1G0x7l57qikglSpLwGMeaclT/xCPdwFZBlOAxghTvhm
+	 ZFjgFshwmGWDdJBcynCc98RU5d6V+CCsfVBSWn5QXo8+HCDUshnenjUpA+BbiWJ9Ue
+	 YITgK29UZ8R8A2yxSm7rozZEAk2MfM79H9/2hC0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbfEOLVS (ORCPT
+        id S1730825AbfEOLU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:21:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59186 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:20:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731248AbfEOLVP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:21:15 -0400
+        id S1730354AbfEOLUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:20:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9947D206BF;
-        Wed, 15 May 2019 11:21:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73F09206BF;
+        Wed, 15 May 2019 11:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919275;
-        bh=FZ3t0OnChxZV9ueVH16QdGppkw7o2a88aTU3+IzD3GI=;
+        s=default; t=1557919253;
+        bh=e9SlbsSwwGqGYGbtJo8NT4Zf+Ol+2sOs+dlgoDuvKFw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EvEbEu7RttCAX1UZz6ZFy3u/e+gTwf1oU/JZP//QdH/c3vKTl9pZGGQK8jtBfVhph
-         U3TBMGbdIsbbaf8I1QOaV9+RdgVmod8JkBdlwXDM5XSPq1GBe5Iwzyu7AE/dqGdJpG
-         HesQaxtvm3CHuiVd1c+r5Pt+b4xtJsOJ8I+z4SK4=
+        b=DZWwMpAvBRgTqANX9CvCtF8WqeEH0aUzaMS7PLi0KIImlN4Nc0MGVmnxdfXl2kXpA
+         j2XmfG6J/gm6c0k9CgkegumTacjxJ7t6laYL991b0CV7wnU84h8E7z5lLpLABO+b1J
+         DRymqKzNwSgWGvt2+9CSPF4AWeK2hBxrbjaoWoQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 014/113] HID: input: add mapping for Expose/Overview key
-Date:   Wed, 15 May 2019 12:55:05 +0200
-Message-Id: <20190515090654.596677937@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 108/115] packet: Fix error path in packet_init
+Date:   Wed, 15 May 2019 12:56:28 +0200
+Message-Id: <20190515090706.952441016@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
-References: <20190515090652.640988966@linuxfoundation.org>
+In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
+References: <20190515090659.123121100@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,34 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 96dd86871e1fffbc39e4fa61c9c75ec54ee9af0f ]
+From: YueHaibing <yuehaibing@huawei.com>
 
-According to HUTRR77 usage 0x29f from the consumer page is reserved for
-the Desktop application to present all running user’s application windows.
-Linux defines KEY_SCALE to request Compiz Scale (Expose) mode, so let's
-add the mapping.
+[ Upstream commit 36096f2f4fa05f7678bc87397665491700bae757 ]
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+kernel BUG at lib/list_debug.c:47!
+invalid opcode: 0000 [#1
+CPU: 0 PID: 12914 Comm: rmmod Tainted: G        W         5.1.0+ #47
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:__list_del_entry_valid+0x53/0x90
+Code: 48 8b 32 48 39 fe 75 35 48 8b 50 08 48 39 f2 75 40 b8 01 00 00 00 5d c3 48
+89 fe 48 89 c2 48 c7 c7 18 75 fe 82 e8 cb 34 78 ff <0f> 0b 48 89 fe 48 c7 c7 50 75 fe 82 e8 ba 34 78 ff 0f 0b 48 89 f2
+RSP: 0018:ffffc90001c2fe40 EFLAGS: 00010286
+RAX: 000000000000004e RBX: ffffffffa0184000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffff888237a17788 RDI: 00000000ffffffff
+RBP: ffffc90001c2fe40 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffc90001c2fe10 R11: 0000000000000000 R12: 0000000000000000
+R13: ffffc90001c2fe50 R14: ffffffffa0184000 R15: 0000000000000000
+FS:  00007f3d83634540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555c350ea818 CR3: 0000000231677000 CR4: 00000000000006f0
+Call Trace:
+ unregister_pernet_operations+0x34/0x120
+ unregister_pernet_subsys+0x1c/0x30
+ packet_exit+0x1c/0x369 [af_packet
+ __x64_sys_delete_module+0x156/0x260
+ ? lockdep_hardirqs_on+0x133/0x1b0
+ ? do_syscall_64+0x12/0x1f0
+ do_syscall_64+0x6e/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+When modprobe af_packet, register_pernet_subsys
+fails and does a cleanup, ops->list is set to LIST_POISON1,
+but the module init is considered to success, then while rmmod it,
+BUG() is triggered in __list_del_entry_valid which is called from
+unregister_pernet_subsys. This patch fix error handing path in
+packet_init to avoid possilbe issue if some error occur.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/hid/hid-input.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/packet/af_packet.c |   25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-index e649940e065da..a9892cabe7cd8 100644
---- a/drivers/hid/hid-input.c
-+++ b/drivers/hid/hid-input.c
-@@ -1026,6 +1026,8 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
- 		case 0x2cb: map_key_clear(KEY_KBDINPUTASSIST_ACCEPT);	break;
- 		case 0x2cc: map_key_clear(KEY_KBDINPUTASSIST_CANCEL);	break;
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -4629,14 +4629,29 @@ static void __exit packet_exit(void)
  
-+		case 0x29f: map_key_clear(KEY_SCALE);		break;
+ static int __init packet_init(void)
+ {
+-	int rc = proto_register(&packet_proto, 0);
++	int rc;
+ 
+-	if (rc != 0)
++	rc = proto_register(&packet_proto, 0);
++	if (rc)
+ 		goto out;
++	rc = sock_register(&packet_family_ops);
++	if (rc)
++		goto out_proto;
++	rc = register_pernet_subsys(&packet_net_ops);
++	if (rc)
++		goto out_sock;
++	rc = register_netdevice_notifier(&packet_netdev_notifier);
++	if (rc)
++		goto out_pernet;
+ 
+-	sock_register(&packet_family_ops);
+-	register_pernet_subsys(&packet_net_ops);
+-	register_netdevice_notifier(&packet_netdev_notifier);
++	return 0;
 +
- 		default: map_key_clear(KEY_UNKNOWN);
- 		}
- 		break;
--- 
-2.20.1
-
++out_pernet:
++	unregister_pernet_subsys(&packet_net_ops);
++out_sock:
++	sock_unregister(PF_PACKET);
++out_proto:
++	proto_unregister(&packet_proto);
+ out:
+ 	return rc;
+ }
 
 
