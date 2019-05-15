@@ -2,117 +2,101 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D29EC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72D7FC04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30D7520873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4310E2166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 14:11:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rYNRVOFX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="diNffEIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfEOOFP (ORCPT
+        id S1727929AbfEOOLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 10:05:15 -0400
-Received: from mail-eopbgr20081.outbound.protection.outlook.com ([40.107.2.81]:4622
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726646AbfEOOFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 10:05:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZuWhjNo0yAfWVBkZhdwfp7qUe2X1r9MNjzX2ykJy+2M=;
- b=rYNRVOFXJ0KMJqnGQb3lXawAj2BfeP352mGNyuZ2C5tK+X12b+4a9dYrqhnoquaezy8ptsYYqJfM9MFdlR7KjGsCVWCPI45UYjTj9h9+Qrqs+al4woqKFwqe0n10/48Bsu0IWlRHd386h0stkqQugv0lzjP2ZtC582Z1+jeOrvc=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3533.eurprd04.prod.outlook.com (52.134.4.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Wed, 15 May 2019 14:05:11 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::dd3c:969d:89b9:f422]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::dd3c:969d:89b9:f422%4]) with mapi id 15.20.1878.024; Wed, 15 May 2019
- 14:05:11 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH] crypto: talitos - fix skcipher failure due to wrong
- output IV
-Thread-Topic: [PATCH] crypto: talitos - fix skcipher failure due to wrong
- output IV
-Thread-Index: AQHVCxnMCzIthJlccEajEJwlNrxcew==
-Date:   Wed, 15 May 2019 14:05:11 +0000
-Message-ID: <VI1PR0402MB34858D80A15D4B55F64570E398090@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <a5b0d31d8fc9fc9bc2b69baa5330466090825a39.1557923113.git.christophe.leroy@c-s.fr>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f7fdb8af-9fd2-46b4-c1e6-08d6d93e5888
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3533;
-x-ms-traffictypediagnostic: VI1PR0402MB3533:
-x-microsoft-antispam-prvs: <VI1PR0402MB353302E4E36E8C6ADAF3DDE698090@VI1PR0402MB3533.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(136003)(376002)(396003)(39860400002)(199004)(189003)(53546011)(81156014)(81166006)(8936002)(6506007)(8676002)(76176011)(74316002)(54906003)(316002)(7696005)(305945005)(7736002)(33656002)(3846002)(102836004)(2906002)(99286004)(229853002)(110136005)(256004)(14444005)(6116002)(6436002)(55016002)(9686003)(66476007)(52536014)(5660300002)(44832011)(71190400001)(66066001)(68736007)(26005)(71200400001)(66446008)(66556008)(64756008)(186003)(4326008)(53936002)(86362001)(476003)(6246003)(478600001)(14454004)(25786009)(486006)(66946007)(446003)(76116006)(73956011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3533;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: tqRKJ8tn+veTogvMVEoaMg8qQ++6AsiP2XHRa2EwSnXCvbywl8PLczPTwZFA8hrZ3VeWGGxLBVGWhfP89SHEfOQ6NoQjU1Njse/DfmVq3LHNMxRZL7R54W+9xJ54rjUQ2faCGwJRIM6XR1+eyMieuvpOe74TlcpKIrAhkIFnekkIfPhrDFwOy4BKDyraR1AXrWz+UjucDSV6sAC4eM559kHOQe7/kyTClYDKwRGJ9dHb9+E/pi+GekeTIu+O15ORskuf7biBhXLhEzyEY6YYV8CC8C8EtQ+4XnuZlbsTm1TlAmbK+nfzMN9icSX3RV48nwGEHKjkWwcOrzGZuYNbUr9lJP/OkQNtIrhQVikWtnRLiNKdKS4DJYrzI0hA+SxRD/5V5QYZuc3hjz7foG8ReuPKSlv1KgrE4j+n9hkpDK0=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 15 May 2019 10:11:43 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:40745 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727018AbfEOOLm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 10:11:42 -0400
+Received: by mail-yb1-f193.google.com with SMTP id q17so972780ybg.7
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 07:11:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DkABSB9+ocVSEDM1acJkspFNCkj7bZrir9llBRZBZbk=;
+        b=diNffEIXfA/QFvQ4JDN4yWPbBFk9QYgBHQ4+BVJ1NfD0TF6g+5vVE0YSL1BnVjtejf
+         CrAeQK4hrTmj1WQuMCeXacIymo+qMfuKsRMkXThtVIfdGWD3UWU68tOQie85EkAx3kZA
+         YA78rnXPrmWhtTDNmjqohIlpLATlRKpAgbVUzdHZ/0oIWDRCWeJPe4MkeQfL4NNPlAhb
+         5gw18O/g48n/nZ7gRYd6s2xdXe7fCpmxbuVDtTd8Fhd7nK4blg8+HLxt6MmLicorJV+J
+         ANLAPFx1lNLWprZ3HdLcTYYUg1gfx/xT6ADtn2L5nwfSQpvrZp2SEK2dbyUh8ZEYZ9Xq
+         UKcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DkABSB9+ocVSEDM1acJkspFNCkj7bZrir9llBRZBZbk=;
+        b=OPCFVvDBAkOudy5p4iODlM3oaIfnuTE0rhkvLvO0VCB3lC5MbHPer+qUMNvRG84tjI
+         NdLhvzEoBN2n0mKaba3zeDpdc9F/asJLa81ZMu3yJaVZQBx2q/jdteSUSMpPsSarkUWU
+         1n6XEfxrrLNHYWvsNnUE810RaLKqxD+ySprdqgNAujmiNd5MidO25eKzhHdtJoeIvij3
+         47fsjVHPL9pKB/eR0wz2iTwr8EWHRXZ3Qg96piQiVzauz1HjIkWUkaBXiUifWjkp0HIr
+         BTvFV89s8ybB/ZzDjnFH0CMp2x24u3Ih6WCw1dUGyzpuIvTKSfdyeyB6jEZvzlSkNvBQ
+         B75Q==
+X-Gm-Message-State: APjAAAW0q/lePWbBqdR2bg6M9Ld2dRpi8O0HKYSQu4daJrt27b1ReQHj
+        9FCTWz82jvtflRS+/caE57RX13V+x4QPtMxdhY9uQA==
+X-Google-Smtp-Source: APXvYqwFVrkJc6Ars41vZLv1PWwWvp79P7NNy1HRLGKPliMA4SZgci9iPnaAggH1BDGnbrEDsgGovH0KqGY39VpJ6TM=
+X-Received: by 2002:a25:4147:: with SMTP id o68mr20740148yba.148.1557929501573;
+ Wed, 15 May 2019 07:11:41 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7fdb8af-9fd2-46b4-c1e6-08d6d93e5888
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 14:05:11.4920
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3533
+References: <20190514213940.2405198-1-guro@fb.com> <20190514213940.2405198-6-guro@fb.com>
+ <0100016abbcb13b1-a1f70846-1d8c-4212-8e74-2b9be8c32ce7-000000@email.amazonses.com>
+In-Reply-To: <0100016abbcb13b1-a1f70846-1d8c-4212-8e74-2b9be8c32ce7-000000@email.amazonses.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 15 May 2019 07:11:30 -0700
+Message-ID: <CALvZod5dMM50pZWuOR5SN7aPPG8Zsp-+U3Y+q-UHTNo=Dgz-Nw@mail.gmail.com>
+Subject: Re: [PATCH v4 5/7] mm: rework non-root kmem_cache lifecycle management
+To:     Christopher Lameter <cl@linux.com>
+Cc:     Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Team <kernel-team@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Cgroups <cgroups@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/15/2019 3:29 PM, Christophe Leroy wrote:=0A=
-> Selftests report the following:=0A=
-> =0A=
-> [    2.984845] alg: skcipher: cbc-aes-talitos encryption test failed (wro=
-ng output IV) on test vector 0, cfg=3D"in-place"=0A=
-> [    2.995377] 00000000: 3d af ba 42 9d 9e b4 30 b4 22 da 80 2c 9f ac 41=
-=0A=
-> [    3.032673] alg: skcipher: cbc-des-talitos encryption test failed (wro=
-ng output IV) on test vector 0, cfg=3D"in-place"=0A=
-> [    3.043185] 00000000: fe dc ba 98 76 54 32 10=0A=
-> [    3.063238] alg: skcipher: cbc-3des-talitos encryption test failed (wr=
-ong output IV) on test vector 0, cfg=3D"in-place"=0A=
-> [    3.073818] 00000000: 7d 33 88 93 0f 93 b2 42=0A=
-> =0A=
-> This above dumps show that the actual output IV is indeed the input IV.=
-=0A=
-> This is due to the IV not being copied back into the request.=0A=
-> =0A=
-> This patch fixes that.=0A=
-> =0A=
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-While here, could you please check ecb mode (which by definition does not h=
-ave=0A=
-an IV) is behaving correctly?=0A=
-Looking in driver_algs[] list of crypto algorithms supported by talitos,=0A=
-ecb(aes,des,3des) are declared with ivsize !=3D 0.=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+From: Christopher Lameter <cl@linux.com>
+Date: Wed, May 15, 2019 at 7:00 AM
+To: Roman Gushchin
+Cc: Andrew Morton, Shakeel Butt, <linux-mm@kvack.org>,
+<linux-kernel@vger.kernel.org>, <kernel-team@fb.com>, Johannes Weiner,
+Michal Hocko, Rik van Riel, Vladimir Davydov,
+<cgroups@vger.kernel.org>
+
+> On Tue, 14 May 2019, Roman Gushchin wrote:
+>
+> > To make this possible we need to introduce a new percpu refcounter
+> > for non-root kmem_caches. The counter is initialized to the percpu
+> > mode, and is switched to atomic mode after deactivation, so we never
+> > shutdown an active cache. The counter is bumped for every charged page
+> > and also for every running allocation. So the kmem_cache can't
+> > be released unless all allocations complete.
+>
+> Increase refcounts during each allocation? Looks to be quite heavy
+> processing.
+
+Not really, it's a percpu refcnt. Basically the memcg's
+percpu_ref_tryget* is replaced with kmem_cache's percpu_ref_tryget,
+so, no additional processing.
