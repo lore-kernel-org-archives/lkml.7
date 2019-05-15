@@ -2,97 +2,101 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB2FC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16BB7C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A087020873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:49:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1Ibci09C"
+	by mail.kernel.org (Postfix) with ESMTP id DB4B320873
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 16:50:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557939021;
+	bh=7dYD8EWc+6lYAgEl6bVHxWTQKwYRKTC7OokjvBWBMW8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=beLzsUety14aN8ttMe6AZ6IT5/uZjIufTRVtQ+oeQLtJYjpCSdlbuvbKPoZ3MmAn8
+	 4IReaiiC3E3pzSRMYG4yQ9jIqy3qaAZBKO0QNe9idXHoFsFA6qO4gIe+yBE9v0gz51
+	 d2JgIYIOXAN3vIrEoJnGuzjJJhzmBsWYGrKi/EyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbfEOQtA (ORCPT
+        id S1727423AbfEOQuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 12:49:00 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:49054 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbfEOQs7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 12:48:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=I9b5O3t91nRnKaPiDj7b09CmwJCZOHCIeDVo1tkyaEo=; b=1Ibci09C5bcghosVjzuvVBDlG
-        uCiEvLMMdMwm19qEU87UcA5ETmfXSmdQU9/qMHOPBEchMzKzp7us1sQxEVhRU9rJ1K22g1YX8ZHB+
-        aD8ba824YUYhvv8drTyFlQ701ImDmOxTkzMH7y6Xzv5rpLvn+QP2Wnvslk6w83ZDiXK7BoKI4p0HU
-        48ow/7uTwcej0kp/NvwoR/N0Ti9SFTRT4bjX+qdmaQ7SE34U97t+Rt/YohTwxW/p0h04kyxaFzwQ6
-        YL4xb/4NaUad88A8H6OwN6VUfrC4izIXrtBUQC9OycRai105dT3W7jBZiUE7/tSjE91G4RMD2MUBy
-        8nE25lhYw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hQx5L-0001Q9-UF; Wed, 15 May 2019 16:48:56 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B35712029906B; Wed, 15 May 2019 18:48:54 +0200 (CEST)
-Date:   Wed, 15 May 2019 18:48:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Parth Shah <parth@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, dietmar.eggemann@arm.com, dsmythies@telus.net
-Subject: Re: [RFCv2 0/6] TurboSched: A scheduler for sustaining Turbo
- Frequencies for longer durations
-Message-ID: <20190515164854.GZ2589@hirez.programming.kicks-ass.net>
-References: <20190515135322.19393-1-parth@linux.ibm.com>
+        Wed, 15 May 2019 12:50:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726325AbfEOQuU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 12:50:20 -0400
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B562920881
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 16:50:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557939019;
+        bh=7dYD8EWc+6lYAgEl6bVHxWTQKwYRKTC7OokjvBWBMW8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JBdrSqnOaS2pHUR9XAffw6PyEf1N/MTlCP3T9gaXwbsqCxjG4G73SbbsoucB88HXr
+         GHwrP4QtJUB8zmWVkR9hkgahbsqB8SkW1E/sS+niM09oZc5tXtKU//SLslpvOo4Y2i
+         qMj6CdDaNP7Gn31Qt5L+51BWuvBmxCPAwKkes5Pw=
+Received: by mail-qt1-f169.google.com with SMTP id y42so443526qtk.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 09:50:19 -0700 (PDT)
+X-Gm-Message-State: APjAAAWxAVRypgMgU70knx328k6u0F2JrrCBPiWvmlXUnYQBfmF8quVa
+        WEJtoMH11qyeVZXJjNJQyJKgdP6XC9Rz6HDx0Q==
+X-Google-Smtp-Source: APXvYqz5rWpeCdEqfqN13e8iw24ki/RNn8YX3lZWk59nC3g2TOG8biR7Rus/sOG+5AUpoQxrvuEhgJL80nb9tvnLdMk=
+X-Received: by 2002:a0c:b0c7:: with SMTP id p7mr1843852qvc.246.1557939019006;
+ Wed, 15 May 2019 09:50:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190515135322.19393-1-parth@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190512012508.10608-1-elder@linaro.org> <20190512012508.10608-4-elder@linaro.org>
+ <CAK8P3a3KLj5x-5VS5eUQfNVhPL101Dg_rezEzra4GFY5Dva2Cg@mail.gmail.com> <fa75eb5e-90bc-b164-740f-4dbba8bccc46@linaro.org>
+In-Reply-To: <fa75eb5e-90bc-b164-740f-4dbba8bccc46@linaro.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 15 May 2019 11:50:07 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLz_ALmzhV9ezjPCvbuBmZmzMCeowYJkHo7WfNvqruubA@mail.gmail.com>
+Message-ID: <CAL_JsqLz_ALmzhV9ezjPCvbuBmZmzMCeowYJkHo7WfNvqruubA@mail.gmail.com>
+Subject: Re: [PATCH 03/18] dt-bindings: soc: qcom: add IPA bindings
+To:     Alex Elder <elder@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>, syadagir@codeaurora.org,
+        mjavid@codeaurora.org, Evan Green <evgreen@chromium.org>,
+        Ben Chan <benchan@google.com>, ejcaruso@google.com,
+        abhishek.esse@gmail.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 07:23:16PM +0530, Parth Shah wrote:
-> Abstract
-> ========
-> 
-> The modern servers allows multiple cores to run at range of
-> frequencies higher than rated range of frequencies. But the power budget
-> of the system inhibits sustaining these higher frequencies for
-> longer durations.
-> 
-> However when certain cores are put to idle states, the power can be
-> effectively channelled to other busy cores, allowing them to sustain
-> the higher frequency.
-> 
-> One way to achieve this is to pack tasks onto fewer cores keeping others idle,
-> but it may lead to performance penalty for such tasks and sustaining higher
-> frequencies proves to be of no benefit. But if one can identify unimportant low
-> utilization tasks which can be packed on the already active cores then waking up
-> of new cores can be avoided. Such tasks are short and/or bursty "jitter tasks"
-> and waking up new core is expensive for such case.
-> 
-> Current CFS algorithm in kernel scheduler is performance oriented and hence
-> tries to assign any idle CPU first for the waking up of new tasks. This policy
-> is perfect for major categories of the workload, but for jitter tasks, one
-> can save energy by packing it onto active cores and allow other cores to run at
-> higher frequencies.
-> 
-> These patch-set tunes the task wake up logic in scheduler to pack exclusively
-> classified jitter tasks onto busy cores. The work involves the use of additional
-> attributes inside "cpu" cgroup controller to manually classify tasks as jitter. 
+On Wed, May 15, 2019 at 7:04 AM Alex Elder <elder@linaro.org> wrote:
+>
+> On 5/15/19 2:03 AM, Arnd Bergmann wrote:
+> > On Sun, May 12, 2019 at 3:25 AM Alex Elder <elder@linaro.org> wrote:
+> >>
+> >> Add the binding definitions for the "qcom,ipa" device tree node.
+> >>
+> >> Signed-off-by: Alex Elder <elder@linaro.org>
+> >> ---
+> >>  .../devicetree/bindings/net/qcom,ipa.txt      | 164 ++++++++++++++++++
+> >>  1 file changed, 164 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipa.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.txt b/Documentation/devicetree/bindings/net/qcom,ipa.txt
+> >> new file mode 100644
+> >> index 000000000000..2705e198f12e
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/net/qcom,ipa.txt
+> >
+> > For new bindings, we should use the yaml format so we can verify the
+> > device tree files against the binding.
+>
+> OK.  I didn't realize that was upstream yet.  I will convert.
 
-Why does this make sense? Don't these higher freq bins burn power like
-stupid? That is, it makes sense to use turbo-bins for single threaded
-workloads that are CPU-bound and need performance.
+Not required yet, but it puts the maintainer in a good mood. :)
 
-But why pack a bunch of 'crap' tasks onto a core and give it turbo;
-that's just burning power without getting anything back for it.
+As does CCing the DT list.
 
-
+Rob
