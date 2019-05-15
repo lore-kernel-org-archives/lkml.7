@@ -2,162 +2,140 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BB6C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB42C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:48:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0FCA2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF48C2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:48:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BtNC5WcF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfEOKsP (ORCPT
+        id S1726691AbfEOKs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:48:15 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46510 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfEOKsP (ORCPT
+        Wed, 15 May 2019 06:48:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44456 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbfEOKs3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:48:15 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z19so2595102qtz.13
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 03:48:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4gZYwYdV7q8QDeTTZWUnY8ifdtmwlYBuJRTK/kQFSoo=;
-        b=TvItq2gK2vyiCLAgUBTWYrLoVuli/b8UXSjFemSOSO2OfWBChgfHL1K1mpbEcYNrXO
-         0bVdIIlTgkK3/5NmtaxBf4lJXKL1gRsv6cvVhYNnqQ3kEmZBfjZ1tgP2qC+x1YnUs7ze
-         87lvyXAzD1VzHADPySADdJMIer3d8mHzQVXwkNShiKbIriP3i7RMsvLZ78J7Jnrx1kaQ
-         xgp07xbTpYxv3NmfcaJni+CGk3GbhroyNDglHVVdgZUhAqinr4aGZK5nIWDqmjmGQJeY
-         eEef4cr4nZWdsmBg+W0bw9sr0BBu8w4IJFBuF634J7ANMz8oH0hbqWWMK7LEeNDW5aqE
-         u+tA==
-X-Gm-Message-State: APjAAAVU3YNMAfDq2GmWvx2qnzcJwYpJJBbSH0bxnD8fhqVXtSUxmpds
-        xzCWl0x1UphqTlOJVN0hq79j4mXCSKqji1nkvJM=
-X-Google-Smtp-Source: APXvYqxRoI0q2OGN6GbVhrk5jmHWu7TGkiTHYPmPP1u5t5qX2nKN5Fu+XpYP2rpSa1K+4pKahIf3rh57LHMarN1Y+ps=
-X-Received: by 2002:ac8:2924:: with SMTP id y33mr34295279qty.212.1557917294353;
- Wed, 15 May 2019 03:48:14 -0700 (PDT)
+        Wed, 15 May 2019 06:48:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=eT98c9ZJEKzSBV1OwAhd/D5fyFJk9KO5ces9PubNUPQ=; b=BtNC5WcFTIWlxnIopvRtU44XL
+        UBiXr92kU2jaHbFs/6BoO4H5WendDQQ0uCEAZYamVzI+yLaVnUtaekqULM9LsigCBnIjvUi6UnHUa
+        A3KZPajbJWY0ZGAogherjThCh1qWHjTobQFNx5hOmGFGzlq6GEDPhncFkVvKdOLjTbY9+BW4fSib0
+        r4gv/Xa6pGQwmqrrGQmmFuzZu8nEoXRB3RGiegOL0CQ/nQW164JPz7W/n5Hn3NDuppOQoPtK1LHxr
+        3nT5lDlhoKPIVvgnxJfuWc1pMpoTocueIYPAAXoF0XhyRBMqa+wIJ+MzD+iXjIgOHLXwOObd1E3lS
+        0sc7kTEfA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQrSV-0003zJ-2E; Wed, 15 May 2019 10:48:27 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EDC9E20297D4B; Wed, 15 May 2019 12:48:24 +0200 (CEST)
+Date:   Wed, 15 May 2019 12:48:24 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yabin Cui <yabinc@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf/ring_buffer: Fix exposing a temporarily decreased
+ data_head.
+Message-ID: <20190515104824.GD2623@hirez.programming.kicks-ass.net>
+References: <20190515003059.23920-1-yabinc@google.com>
 MIME-Version: 1.0
-References: <20190512012508.10608-1-elder@linaro.org> <20190512012508.10608-9-elder@linaro.org>
-In-Reply-To: <20190512012508.10608-9-elder@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 15 May 2019 12:47:58 +0200
-Message-ID: <CAK8P3a0r5rg-_Vet+aUUzq3S9g=TJHPz9-0yQ0sY21NGd+4J0w@mail.gmail.com>
-Subject: Re: [PATCH 08/18] soc: qcom: ipa: the generic software interface
-To:     Alex Elder <elder@linaro.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        syadagir@codeaurora.org, mjavid@codeaurora.org,
-        evgreen@chromium.org, Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190515003059.23920-1-yabinc@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 3:25 AM Alex Elder <elder@linaro.org> wrote:
+On Tue, May 14, 2019 at 05:30:59PM -0700, Yabin Cui wrote:
+> In perf_output_put_handle(), an IRQ/NMI can happen in below location and
+> write records to the same ring buffer:
+> 	...
+> 	local_dec_and_test(&rb->nest)
+> 	...                          <-- an IRQ/NMI can happen here
+> 	rb->user_page->data_head = head;
+> 	...
+> 
+> In this case, a value A is written to data_head in the IRQ, then a value
+> B is written to data_head after the IRQ. And A > B. As a result,
+> data_head is temporarily decreased from A to B. And a reader may see
+> data_head < data_tail if it read the buffer frequently enough, which
+> creates unexpected behaviors.
 
-The per-event interrupt handling seems to be more complex than
-necessary:
+Indeed, good catch! Have you observed this, or is this patch due to code
+inspection?
 
-> +/* Enable or disable an event interrupt */
-> +static void
-> +_gsi_irq_control_event(struct gsi *gsi, u32 evt_ring_id, bool enable)
-> +{
-> +       u32 mask = BIT(evt_ring_id);
-> +       u32 val;
-> +
-> +       if (enable)
-> +               gsi->event_enable_bitmap |= mask;
-> +       else
-> +               gsi->event_enable_bitmap &= ~mask;
-> +
-> +       val = gsi->event_enable_bitmap;
-> +       iowrite32(val, gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET);
-> +}
-> +
-> +static void gsi_irq_enable_event(struct gsi *gsi, u32 evt_ring_id)
-> +{
-> +       _gsi_irq_control_event(gsi, evt_ring_id, true);
+> This can be fixed by moving dec(&rb->nest) to after updating data_head,
+> which prevents the IRQ/NMI above from updating data_head.
+> 
+> Signed-off-by: Yabin Cui <yabinc@google.com>
+> ---
+>  kernel/events/ring_buffer.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+> index 674b35383491..0b9aefe13b04 100644
+> --- a/kernel/events/ring_buffer.c
+> +++ b/kernel/events/ring_buffer.c
+> @@ -54,8 +54,10 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
+>  	 * IRQ/NMI can happen here, which means we can miss a head update.
+>  	 */
+>  
+> -	if (!local_dec_and_test(&rb->nest))
+> +	if (local_read(&rb->nest) > 1) {
+> +		local_dec(&rb->nest);
+>  		goto out;
+> +	}
+>  
+>  	/*
+>  	 * Since the mmap() consumer (userspace) can run on a different CPU:
+> @@ -86,6 +88,13 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
+>  	smp_wmb(); /* B, matches C */
+>  	rb->user_page->data_head = head;
 
-You maintain a bitmap here of the enabled-state, and have
-to use a spinlock to ensure that the two are in sync.
+At the very least this needs:
 
-> +/* Returns true if the interrupt state (enabled or not) changed */
-> +static bool gsi_channel_intr(struct gsi_channel *channel, bool enable)
-> +{
-> +       u32 evt_ring_id = channel->evt_ring_id;
-> +       struct gsi *gsi = channel->gsi;
-> +       u32 mask = BIT(evt_ring_id);
-> +       unsigned long flags;
-> +       bool different;
-> +       u32 enabled;
-> +
-> +       spin_lock_irqsave(&gsi->spinlock, flags);
-> +
-> +       enabled = gsi->event_enable_bitmap & mask;
-> +       different = enable == !enabled;
-> +
-> +       if (different) {
-> +               if (enabled)
-> +                       gsi_irq_disable_event(channel->gsi, evt_ring_id);
-> +               else
-> +                       gsi_irq_enable_event(channel->gsi, evt_ring_id);
-> +       }
-> +
-> +       spin_unlock_irqrestore(&gsi->spinlock, flags);
-> +
-> +       return different;
-> +}
+	barrier();
 
-This gets called for each active channel, so you repeatedly
-have to get the spinlock and read the irq-enabled state for it.
+> +	/*
+> +	 * Clear rb->nest after updating data_head. This prevents IRQ/NMI from
+> +	 * updating data_head before us. If that happens, we will expose a
+> +	 * temporarily decreased data_head.
+> +	 */
+> +	local_set(&rb->nest, 0);
 
-> +static void gsi_isr_ieob(struct gsi *gsi)
-> +{
-> +       u32 evt_mask;
-> +
-> +       evt_mask = ioread32(gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_OFFSET);
-> +       evt_mask &= ioread32(gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET);
-> +       iowrite32(evt_mask, gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_CLR_OFFSET);
-> +
-> +       while (evt_mask) {
-> +               u32 evt_ring_id = __ffs(evt_mask);
-> +
-> +               evt_mask ^= BIT(evt_ring_id);
-> +
-> +               gsi_event_handle(gsi, evt_ring_id);
-> +       }
-> +}
+Since you rely on the 'decrement' (1->0) to happen after we've written
+head.
 
-However, you start out by clearing all bits here.
+And similarly, you need:
 
-Why not skip the clearing and and leave the interrupts enabled,
-while moving the GSI_CNTXT_SRC_IEOB_IRQ_CLR_OFFSET
-write (for a single channel that was completed) to the end of
-gsi_channel_poll()?
+	barrier();
 
-Something like
+Because we must re-check the head after we've 'decremented'.
 
-static void gsi_isr_ieob(struct gsi *gsi)
-{
-      u32 evt_mask;
+>  	/*
+>  	 * Now check if we missed an update -- rely on previous implied
+>  	 * compiler barriers to force a re-read.
 
-      evt_mask = ioread32(gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_OFFSET);
-      while (evt_mask) {
-               u32 evt_ring_id = __ffs(evt_mask);
-               evt_mask ^= BIT(evt_ring_id);
 
-               napi_schedule(gsi->evt_ring[evt_ring_id].channel.napi);
-      }
-}
+A more paranoid person might've written:
 
-I also removed the GSI_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET
-read here, as that is probably more expensive than calling napi_schedule()
-for a channel that is already scheduled. Most of the time, I'd expect the
-interrupt to only signal a single channel anyway.
+	WARN_ON_ONCE(local_cmpxchg(&rb->nest, 1, 0) != 1);
 
-        Arnd
+which would've also implied both barrier()s.
+
