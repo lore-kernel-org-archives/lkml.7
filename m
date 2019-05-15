@@ -2,53 +2,53 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AC7C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D723C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2C22084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1043920843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919993;
-	bh=Rw5aZz2Yzs6QVR9aXm4MlXZDJk78bhm1T0dAQyRCfG0=;
+	s=default; t=1557920001;
+	bh=iajolfmDkExgkErxz/VgBj8MRe1bH0OyF4BKtvzNiw4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gSx0z77XQwuwpQKVMhZZOMrfejTPQgzLrUzJdoUpcP/RoSlpaBpyV0BOl8NLoj425
-	 HXPeGyTnR+yGiacvuJ+91H9X8+SN6REpiXG61ntKV4VrRviGz+GueCiQsACo3tu3XQ
-	 /CDno5YNkXi/ftW5BlDHvuRJXFBDDGZeE0UbbB9w=
+	b=rvx7C1pLBqp9l7c6F30jknf1QmsIfY8Z6mpYW3TNwSExX8vLkpJ8TeV/LLjcu78C9
+	 hU2PPukWkXzdnqXRIsG3XYdw89Fr3nl/ymnls41cmV3+gbK6I3/4Mu22fCxwTffHfw
+	 vo/jNGESMscuGhs2x+xPYVcJ7V0EQKYyL6ev14v0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733166AbfEOLdL (ORCPT
+        id S1733181AbfEOLdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:33:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45002 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:33:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732808AbfEOLdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:33:04 -0400
+        id S1732868AbfEOLdR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:33:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1C272084F;
-        Wed, 15 May 2019 11:33:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F5A020843;
+        Wed, 15 May 2019 11:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919984;
-        bh=Rw5aZz2Yzs6QVR9aXm4MlXZDJk78bhm1T0dAQyRCfG0=;
+        s=default; t=1557919997;
+        bh=iajolfmDkExgkErxz/VgBj8MRe1bH0OyF4BKtvzNiw4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=beCzEpb3mFsaOIoX+dHM2yf/7tzkGIQ7ibXQIE1tb7+EGQIjeiSygRADM1FP0CGMR
-         Cz3x2onHWP1vfaLSynauSbgClzwSnOFmSe6YXjSM7xJ32/OKGtYN0SEFMd97FOht1p
-         eCA3DmW04n4fgqHqyW6hriZqpel5mTFeiq7K5qk4=
+        b=uLvaoS0T80G/BAK+aHXgUXKDGkY+IEsB780BtDbQqCtaSpsb0KdNhelvze9oHpBS+
+         SUJy7/bs9xxBZYVN1AD77wbPj/KW8y/+GDXHVpOMX9uFcQGziGtFFlZkAKhmDKD2Yo
+         3S4sLyI+bH/TVuz8d25bKIbjvK3sdVCpnAj7wkPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pepijn de Vos <pepijndevos@gmail.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        "Darren Hart (VMware)" <dvhart@infradead.org>
-Subject: [PATCH 5.1 03/46] platform/x86: dell-laptop: fix rfkill functionality
-Date:   Wed, 15 May 2019 12:56:27 +0200
-Message-Id: <20190515090618.617681245@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 32/46] tuntap: fix dividing by zero in ebpf queue selection
+Date:   Wed, 15 May 2019 12:56:56 +0200
+Message-Id: <20190515090626.573484348@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -61,54 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mario Limonciello <mario.limonciello@dell.com>
+From: Jason Wang <jasowang@redhat.com>
 
-commit 6cc13c28da5beee0f706db6450e190709700b34a upstream.
+[ Upstream commit a35d310f03a692bf4798eb309a1950a06a150620 ]
 
-When converting the driver two arguments were transposed leading
-to rfkill not working.
+We need check if tun->numqueues is zero (e.g for the persist device)
+before trying to use it for modular arithmetic.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=201427
-Reported-by: Pepijn de Vos <pepijndevos@gmail.com>
-Fixes: 549b49 ("platform/x86: dell-smbios: Introduce dispatcher for SMM calls")
-Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-Acked-by: Pali Rohár <pali.rohar@gmail.com>
-Cc: <stable@vger.kernel.org> # 4.14.x
-Signed-off-by: Darren Hart (VMware) <dvhart@infradead.org>
+Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
+Fixes: 96f84061620c6("tun: add eBPF based queue selection method")
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/platform/x86/dell-laptop.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/tun.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/platform/x86/dell-laptop.c
-+++ b/drivers/platform/x86/dell-laptop.c
-@@ -531,7 +531,7 @@ static void dell_rfkill_query(struct rfk
- 		return;
- 	}
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -596,13 +596,18 @@ static u16 tun_automq_select_queue(struc
+ static u16 tun_ebpf_select_queue(struct tun_struct *tun, struct sk_buff *skb)
+ {
+ 	struct tun_prog *prog;
++	u32 numqueues;
+ 	u16 ret = 0;
  
--	dell_fill_request(&buffer, 0, 0x2, 0, 0);
-+	dell_fill_request(&buffer, 0x2, 0, 0, 0);
- 	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_RFKILL);
- 	hwswitch = buffer.output[1];
++	numqueues = READ_ONCE(tun->numqueues);
++	if (!numqueues)
++		return 0;
++
+ 	prog = rcu_dereference(tun->steering_prog);
+ 	if (prog)
+ 		ret = bpf_prog_run_clear_cb(prog->prog, skb);
  
-@@ -562,7 +562,7 @@ static int dell_debugfs_show(struct seq_
- 		return ret;
- 	status = buffer.output[1];
+-	return ret % tun->numqueues;
++	return ret % numqueues;
+ }
  
--	dell_fill_request(&buffer, 0, 0x2, 0, 0);
-+	dell_fill_request(&buffer, 0x2, 0, 0, 0);
- 	hwswitch_ret = dell_send_request(&buffer, CLASS_INFO, SELECT_RFKILL);
- 	if (hwswitch_ret)
- 		return hwswitch_ret;
-@@ -647,7 +647,7 @@ static void dell_update_rfkill(struct wo
- 	if (ret != 0)
- 		return;
- 
--	dell_fill_request(&buffer, 0, 0x2, 0, 0);
-+	dell_fill_request(&buffer, 0x2, 0, 0, 0);
- 	ret = dell_send_request(&buffer, CLASS_INFO, SELECT_RFKILL);
- 
- 	if (ret == 0 && (status & BIT(0)))
+ static u16 tun_select_queue(struct net_device *dev, struct sk_buff *skb,
 
 
