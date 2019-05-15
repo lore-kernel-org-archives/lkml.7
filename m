@@ -2,59 +2,61 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9BEC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75252C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 305ED20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39CE220843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921975;
-	bh=thvOr7Hp/0reyBoea1gsug2/SCALyYgn8KZc0DpQ55A=;
+	s=default; t=1557921981;
+	bh=Z9vTtJmt6IZiKqhO4fLOOf2IbkRqFeSXn9VVvQdAheE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=plPAEGr5xvdUMCcxlRWmY01A4Xbhvu4oEny4wmjw6V7JmrLo6qEu1Id+F50gfYbAU
-	 ZQIrAHbwZ7eABmpINUEom32Svb9hQm8wTvXPdMu1AOMBpREVz7s47rnUzB+HYtshUe
-	 TrtcGDArtEIDxBUtkaaIP6Y/OKXBuNgSZBLbrYfI=
+	b=Xv8LYKjHdIOPUAXYjizTy0oBKxw6BW53wVnY021/61IxctL0J6Ymx1kLrUlFRyxIw
+	 7JLDWq5S1/f5tX+lQ5mSsF/0xLEZcirMvVWs+Mrpf1fivv8w/cHSbRioujBvm7xzt/
+	 0/aFbz93MHFzFBL53jFen00d4O/mqsSrYV+5UGn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbfEOLKU (ORCPT
+        id S1729366AbfEOLKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:10:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44020 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:10:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729167AbfEOLKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:10:15 -0400
+        id S1729136AbfEOLKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:10:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAED821726;
-        Wed, 15 May 2019 11:10:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33C63216F4;
+        Wed, 15 May 2019 11:10:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918614;
-        bh=thvOr7Hp/0reyBoea1gsug2/SCALyYgn8KZc0DpQ55A=;
+        s=default; t=1557918604;
+        bh=Z9vTtJmt6IZiKqhO4fLOOf2IbkRqFeSXn9VVvQdAheE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MFU9tlqn4EV0td+jg8yIqVW6uGLUm4ipmFFIAvnfKC6RPNouvLtQQrGjIhKYENU8Z
-         EO8ntHhDaT9CT9pCwDXs9xTu6H/kobUsDUWbgx/3mQUDsIZm7m3JdhbMOZoZEHf2IV
-         pmbIHrs1aTEhVH+WvBgM1WM9y21qkW0CJhCsG3t4=
+        b=JfSRR0OK/Z8ofy7V4HpV9gVfatLIqJF/PJkG927BnthUByaMuF4OZ72cjtLB9/9dq
+         DqPFK/oFTD/eAErFZMRDDGpUSF5U30zUpndZ7xpTbgE1nF07RfXfTKvlmhAeWc3A6H
+         uZUq5ft1UBNLTFFHidOtRHlXyhz/cNAPRJeIoE3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>,
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephane Eranian <eranian@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        "WoodhouseDavid" <dwmw@amazon.co.uk>,
-        Andi Kleen <ak@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        "SchauflerCasey" <casey.schaufler@intel.com>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        dave.hansen@linux.intel.com, len.brown@intel.com,
+        Ingo Molnar <mingo@kernel.org>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 199/266] x86/speculation: Enable cross-hyperthread spectre v2 STIBP mitigation
-Date:   Wed, 15 May 2019 12:55:06 +0200
-Message-Id: <20190515090729.686124279@linuxfoundation.org>
+Subject: [PATCH 4.4 195/266] x86/cpu: Sanitize FAM6_ATOM naming
+Date:   Wed, 15 May 2019 12:55:02 +0200
+Message-Id: <20190515090729.540621917@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -67,147 +69,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Kosina <jkosina@suse.cz>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit 53c613fe6349994f023245519265999eed75957f upstream.
+commit f2c4db1bd80720cd8cb2a5aa220d9bc9f374f04e upstream.
 
-STIBP is a feature provided by certain Intel ucodes / CPUs. This feature
-(once enabled) prevents cross-hyperthread control of decisions made by
-indirect branch predictors.
+Going primarily by:
 
-Enable this feature if
+  https://en.wikipedia.org/wiki/List_of_Intel_Atom_microprocessors
 
-- the CPU is vulnerable to spectre v2
-- the CPU supports SMT and has SMT siblings online
-- spectre_v2 mitigation autoselection is enabled (default)
+with additional information gleaned from other related pages; notably:
 
-After some previous discussion, this leaves STIBP on all the time, as wrmsr
-on crossing kernel boundary is a no-no. This could perhaps later be a bit
-more optimized (like disabling it in NOHZ, experiment with disabling it in
-idle, etc) if needed.
+ - Bonnell shrink was called Saltwell
+ - Moorefield is the Merriefield refresh which makes it Airmont
 
-Note that the synchronization of the mask manipulation via newly added
-spec_ctrl_mutex is currently not strictly needed, as the only updater is
-already being serialized by cpu_add_remove_lock, but let's make this a
-little bit more future-proof.
+The general naming scheme is: FAM6_ATOM_UARCH_SOCTYPE
 
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+  for i in `git grep -l FAM6_ATOM` ; do
+	sed -i  -e 's/ATOM_PINEVIEW/ATOM_BONNELL/g'		\
+		-e 's/ATOM_LINCROFT/ATOM_BONNELL_MID/'		\
+		-e 's/ATOM_PENWELL/ATOM_SALTWELL_MID/g'		\
+		-e 's/ATOM_CLOVERVIEW/ATOM_SALTWELL_TABLET/g'	\
+		-e 's/ATOM_CEDARVIEW/ATOM_SALTWELL/g'		\
+		-e 's/ATOM_SILVERMONT1/ATOM_SILVERMONT/g'	\
+		-e 's/ATOM_SILVERMONT2/ATOM_SILVERMONT_X/g'	\
+		-e 's/ATOM_MERRIFIELD/ATOM_SILVERMONT_MID/g'	\
+		-e 's/ATOM_MOOREFIELD/ATOM_AIRMONT_MID/g'	\
+		-e 's/ATOM_DENVERTON/ATOM_GOLDMONT_X/g'		\
+		-e 's/ATOM_GEMINI_LAKE/ATOM_GOLDMONT_PLUS/g' ${i}
+  done
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc:  "WoodhouseDavid" <dwmw@amazon.co.uk>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc:  "SchauflerCasey" <casey.schaufler@intel.com>
-Link: https://lkml.kernel.org/r/nycvar.YFH.7.76.1809251438240.15880@cbobk.fhfr.pm
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: dave.hansen@linux.intel.com
+Cc: len.brown@intel.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 [bwh: Backported to 4.4:
- - Don't add any calls to arch_smt_update() yet. They will be introduced by
-   "x86/speculation: Rework SMT state change".
- - Use IS_ENABLED(CONFIG_SMP) instead of cpu_smt_control for now. This
-   will be fixed by "x86/speculation: Rework SMT state change".]
+ - Drop changes to CPU IDs that weren't already included
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/cpu/bugs.c |   55 ++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 50 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/intel-family.h |   30 +++++++++++++++++-------------
+ arch/x86/kernel/cpu/common.c        |   28 ++++++++++++++--------------
+ 2 files changed, 31 insertions(+), 27 deletions(-)
 
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -32,12 +32,10 @@ static void __init spectre_v2_select_mit
- static void __init ssb_select_mitigation(void);
- static void __init l1tf_select_mitigation(void);
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -50,19 +50,23 @@
  
--/*
-- * Our boot-time value of the SPEC_CTRL MSR. We read it once so that any
-- * writes to SPEC_CTRL contain whatever reserved bits have been set.
-- */
-+/* The base value of the SPEC_CTRL MSR that always has to be preserved. */
- u64 x86_spec_ctrl_base;
- EXPORT_SYMBOL_GPL(x86_spec_ctrl_base);
-+static DEFINE_MUTEX(spec_ctrl_mutex);
+ /* "Small Core" Processors (Atom) */
  
- /*
-  * The vendor and possibly platform specific bits which can be modified in
-@@ -315,6 +313,46 @@ static enum spectre_v2_mitigation_cmd __
- 	return cmd;
+-#define INTEL_FAM6_ATOM_PINEVIEW	0x1C
+-#define INTEL_FAM6_ATOM_LINCROFT	0x26
+-#define INTEL_FAM6_ATOM_PENWELL		0x27
+-#define INTEL_FAM6_ATOM_CLOVERVIEW	0x35
+-#define INTEL_FAM6_ATOM_CEDARVIEW	0x36
+-#define INTEL_FAM6_ATOM_SILVERMONT1	0x37 /* BayTrail/BYT / Valleyview */
+-#define INTEL_FAM6_ATOM_SILVERMONT2	0x4D /* Avaton/Rangely */
+-#define INTEL_FAM6_ATOM_AIRMONT		0x4C /* CherryTrail / Braswell */
+-#define INTEL_FAM6_ATOM_MERRIFIELD	0x4A /* Tangier */
+-#define INTEL_FAM6_ATOM_MOOREFIELD	0x5A /* Annidale */
+-#define INTEL_FAM6_ATOM_GOLDMONT	0x5C
+-#define INTEL_FAM6_ATOM_DENVERTON	0x5F /* Goldmont Microserver */
+-#define INTEL_FAM6_ATOM_GEMINI_LAKE	0x7A
++#define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
++#define INTEL_FAM6_ATOM_BONNELL_MID	0x26 /* Silverthorne, Lincroft */
++
++#define INTEL_FAM6_ATOM_SALTWELL	0x36 /* Cedarview */
++#define INTEL_FAM6_ATOM_SALTWELL_MID	0x27 /* Penwell */
++#define INTEL_FAM6_ATOM_SALTWELL_TABLET	0x35 /* Cloverview */
++
++#define INTEL_FAM6_ATOM_SILVERMONT	0x37 /* Bay Trail, Valleyview */
++#define INTEL_FAM6_ATOM_SILVERMONT_X	0x4D /* Avaton, Rangely */
++#define INTEL_FAM6_ATOM_SILVERMONT_MID	0x4A /* Merriefield */
++
++#define INTEL_FAM6_ATOM_AIRMONT		0x4C /* Cherry Trail, Braswell */
++#define INTEL_FAM6_ATOM_AIRMONT_MID	0x5A /* Moorefield */
++
++#define INTEL_FAM6_ATOM_GOLDMONT	0x5C /* Apollo Lake */
++#define INTEL_FAM6_ATOM_GOLDMONT_X	0x5F /* Denverton */
++#define INTEL_FAM6_ATOM_GOLDMONT_PLUS	0x7A /* Gemini Lake */
+ 
+ /* Xeon Phi */
+ 
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -848,11 +848,11 @@ static void identify_cpu_without_cpuid(s
  }
  
-+static bool stibp_needed(void)
-+{
-+	if (spectre_v2_enabled == SPECTRE_V2_NONE)
-+		return false;
-+
-+	if (!boot_cpu_has(X86_FEATURE_STIBP))
-+		return false;
-+
-+	return true;
-+}
-+
-+static void update_stibp_msr(void *info)
-+{
-+	wrmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
-+}
-+
-+void arch_smt_update(void)
-+{
-+	u64 mask;
-+
-+	if (!stibp_needed())
-+		return;
-+
-+	mutex_lock(&spec_ctrl_mutex);
-+	mask = x86_spec_ctrl_base;
-+	if (IS_ENABLED(CONFIG_SMP))
-+		mask |= SPEC_CTRL_STIBP;
-+	else
-+		mask &= ~SPEC_CTRL_STIBP;
-+
-+	if (mask != x86_spec_ctrl_base) {
-+		pr_info("Spectre v2 cross-process SMT mitigation: %s STIBP\n",
-+				IS_ENABLED(CONFIG_SMP) ?
-+				"Enabling" : "Disabling");
-+		x86_spec_ctrl_base = mask;
-+		on_each_cpu(update_stibp_msr, NULL, 1);
-+	}
-+	mutex_unlock(&spec_ctrl_mutex);
-+}
-+
- static void __init spectre_v2_select_mitigation(void)
- {
- 	enum spectre_v2_mitigation_cmd cmd = spectre_v2_parse_cmdline();
-@@ -414,6 +452,9 @@ specv2_set_mode:
- 		setup_force_cpu_cap(X86_FEATURE_USE_IBRS_FW);
- 		pr_info("Enabling Restricted Speculation for firmware calls\n");
- 	}
-+
-+	/* Enable STIBP if appropriate */
-+	arch_smt_update();
- }
+ static const __initconst struct x86_cpu_id cpu_no_speculation[] = {
+-	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_CEDARVIEW,	X86_FEATURE_ANY },
+-	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_CLOVERVIEW,	X86_FEATURE_ANY },
+-	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_LINCROFT,	X86_FEATURE_ANY },
+-	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_PENWELL,	X86_FEATURE_ANY },
+-	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_PINEVIEW,	X86_FEATURE_ANY },
++	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_SALTWELL,	X86_FEATURE_ANY },
++	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_SALTWELL_TABLET,	X86_FEATURE_ANY },
++	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_BONNELL_MID,	X86_FEATURE_ANY },
++	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_SALTWELL_MID,	X86_FEATURE_ANY },
++	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_BONNELL,	X86_FEATURE_ANY },
+ 	{ X86_VENDOR_CENTAUR,	5 },
+ 	{ X86_VENDOR_INTEL,	5 },
+ 	{ X86_VENDOR_NSC,	5 },
+@@ -867,10 +867,10 @@ static const __initconst struct x86_cpu_
  
- #undef pr_fmt
-@@ -722,6 +763,8 @@ static void __init l1tf_select_mitigatio
- static ssize_t cpu_show_common(struct device *dev, struct device_attribute *attr,
- 			       char *buf, unsigned int bug)
- {
-+	int ret;
-+
- 	if (!boot_cpu_has_bug(bug))
- 		return sprintf(buf, "Not affected\n");
+ /* Only list CPUs which speculate but are non susceptible to SSB */
+ static const __initconst struct x86_cpu_id cpu_no_spec_store_bypass[] = {
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT1	},
++	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT	},
+ 	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_AIRMONT		},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT2	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_MERRIFIELD	},
++	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT_X	},
++	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT_MID	},
+ 	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_CORE_YONAH		},
+ 	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNL		},
+ 	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNM		},
+@@ -883,14 +883,14 @@ static const __initconst struct x86_cpu_
  
-@@ -736,10 +779,12 @@ static ssize_t cpu_show_common(struct de
- 		return sprintf(buf, "Mitigation: __user pointer sanitization\n");
- 
- 	case X86_BUG_SPECTRE_V2:
--		return sprintf(buf, "%s%s%s%s\n", spectre_v2_strings[spectre_v2_enabled],
-+		ret = sprintf(buf, "%s%s%s%s%s\n", spectre_v2_strings[spectre_v2_enabled],
- 			       boot_cpu_has(X86_FEATURE_USE_IBPB) ? ", IBPB" : "",
- 			       boot_cpu_has(X86_FEATURE_USE_IBRS_FW) ? ", IBRS_FW" : "",
-+			       (x86_spec_ctrl_base & SPEC_CTRL_STIBP) ? ", STIBP" : "",
- 			       spectre_v2_module_string());
-+		return ret;
- 
- 	case X86_BUG_SPEC_STORE_BYPASS:
- 		return sprintf(buf, "%s\n", ssb_strings[ssb_mode]);
+ static const __initconst struct x86_cpu_id cpu_no_l1tf[] = {
+ 	/* in addition to cpu_no_speculation */
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT1	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT2	},
++	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT	},
++	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT_X	},
+ 	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_AIRMONT		},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_MERRIFIELD	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_MOOREFIELD	},
++	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT_MID	},
++	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_AIRMONT_MID	},
+ 	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_GOLDMONT	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_DENVERTON	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_GEMINI_LAKE	},
++	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_GOLDMONT_X	},
++	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_GOLDMONT_PLUS	},
+ 	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNL		},
+ 	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNM		},
+ 	{}
 
 
