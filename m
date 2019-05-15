@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E52C9C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83674C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B56292084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55697206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919169;
-	bh=EeXegtB9IY6jVYQGc/zxNmd20QzgJGVLjO7aS6tSl50=;
+	s=default; t=1557919175;
+	bh=rM3Wb2qCqHGGq8V5wW4paFWyDqiCvYc1efac+ZgWVqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xP4yzpDEO6fSzm0ALxNsWWTEKrmS86OhjF3CVftSJ9rUbcw7rloYrhMScqm6r+sG2
-	 8sFhMPpkwWGSc1CB86drsom3sseEckncTeN93VLLFwsDHms8LT/ZbA1/Ieg76SxKSw
-	 DjW946EWJ9yy0yvfKjozI2UO6VOlkFn5QY8JweR8=
+	b=17cUg3WcXbSpCzGejGojt9oVrLl1nf37wObDm5q0DgvGxDiCjRj98/whXi9DRj6gj
+	 E8QGAvkvumRr0A8+L3U/hzZbbH+scRZy13d+DcseZIhxVXCgr3OILVdLrC4b9Th0OI
+	 SjfHToC6sdXcxPypKW8l40cvpbOVBVSBlxgS2qKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730667AbfEOLT2 (ORCPT
+        id S1727511AbfEOLTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:19:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57096 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:19:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730959AbfEOLTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:19:25 -0400
+        id S1730572AbfEOLTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:19:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFCAD206BF;
-        Wed, 15 May 2019 11:19:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28EB0206BF;
+        Wed, 15 May 2019 11:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919164;
-        bh=EeXegtB9IY6jVYQGc/zxNmd20QzgJGVLjO7aS6tSl50=;
+        s=default; t=1557919169;
+        bh=rM3Wb2qCqHGGq8V5wW4paFWyDqiCvYc1efac+ZgWVqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eRE+RI9r+G81axEi2dcc22FL7ASjGYFGZYiyOOScrEKeKWEvf7/n0Fp8BqDaMEvqL
-         KN7ZPav8rWeU0bybZO/NXleSs2E+d92t7GWWae54U00aK0Jc8bCtNXPfF3tQnlFcrp
-         Gr8pRvkx348+Ulo1AtKbdwtBxWYbVnTzsc5P91FM=
+        b=tMnfXsQFjGdoir38Ku4KLQhGQ1tqzLljIUC+AOhAe7FeTlShUvMXuq66qY0NJZnTQ
+         0U+HFpt4C3AcFL0gyKC4/CTjw94DPHzn6D5ExFMQdid70BLxNSyPzZKxrH1ee4cCH0
+         R/ehY+dNmhLqHNAK7ViCTK/MXsvHYFQZQJJx0n2c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Hugues Fruchet <hugues.fruchet@st.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 090/115] mlxsw: core: Do not use WQ_MEM_RECLAIM for mlxsw workqueue
-Date:   Wed, 15 May 2019 12:56:10 +0200
-Message-Id: <20190515090705.813986708@linuxfoundation.org>
+Subject: [PATCH 4.14 056/115] media: ov5640: fix auto controls values when switching to manual mode
+Date:   Wed, 15 May 2019 12:55:36 +0200
+Message-Id: <20190515090703.664617652@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -61,37 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b442fed1b724af0de087912a5718ddde1b87acbb ]
+[ Upstream commit a8f438c684eaa4cbe6c98828eb996d5ec53e24fb ]
 
-The workqueue is used to periodically update the networking stack about
-activity / statistics of various objects such as neighbours and TC
-actions.
+When switching from auto to manual mode, V4L2 core is calling
+g_volatile_ctrl() in manual mode in order to get the manual initial value.
+Remove the manual mode check/return to not break this behaviour.
 
-It should not be called as part of memory reclaim path, so remove the
-WQ_MEM_RECLAIM flag.
-
-Fixes: 3d5479e92087 ("mlxsw: core: Remove deprecated create_workqueue")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+Tested-by: Jacopo Mondi <jacopo@jmondi.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- drivers/net/ethernet/mellanox/mlxsw/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/i2c/ov5640.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
-index 33262c09c703c..fad26046e1595 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/core.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
-@@ -1812,7 +1812,7 @@ static int __init mlxsw_core_module_init(void)
- {
- 	int err;
+diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+index 0366c8dc6ecf7..acf5c8a55bbd2 100644
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -1900,16 +1900,12 @@ static int ov5640_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
  
--	mlxsw_wq = alloc_workqueue(mlxsw_core_driver_name, WQ_MEM_RECLAIM, 0);
-+	mlxsw_wq = alloc_workqueue(mlxsw_core_driver_name, 0, 0);
- 	if (!mlxsw_wq)
- 		return -ENOMEM;
- 	mlxsw_owq = alloc_ordered_workqueue("%s_ordered", 0,
+ 	switch (ctrl->id) {
+ 	case V4L2_CID_AUTOGAIN:
+-		if (!ctrl->val)
+-			return 0;
+ 		val = ov5640_get_gain(sensor);
+ 		if (val < 0)
+ 			return val;
+ 		sensor->ctrls.gain->val = val;
+ 		break;
+ 	case V4L2_CID_EXPOSURE_AUTO:
+-		if (ctrl->val == V4L2_EXPOSURE_MANUAL)
+-			return 0;
+ 		val = ov5640_get_exposure(sensor);
+ 		if (val < 0)
+ 			return val;
 -- 
 2.20.1
 
