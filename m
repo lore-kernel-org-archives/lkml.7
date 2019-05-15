@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E51C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03472C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 678902084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2CA720881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:28:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919695;
-	bh=PczNOFJktXN3VBGMmm6fxJmj8u3wVCD0yPxlwkl9P4Q=;
+	s=default; t=1557919701;
+	bh=2nKhsu9tMWEjLlvM99c5ERV5jFbUMSCrYu3qMJU9t5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FP/rKP2cb36siaKn1MQIW2n75Hvgp9sXg0lrgJNwLqDf2Gsrhownx+nXVYEer5e3X
-	 OoAo6vmeEh2yGQyJSLmWbWyco8pPmxFVx3yxr5IVpp5miMYRGotrDKMQTj0vQ9peRS
-	 JvWw9g+h1HgRsj7ZMLC2dHdp+kwuhp/DXi3C2cXQ=
+	b=jzhtr/EYeHrKIHMJJHL7uV+QFm04fZMRBFcikLri2aQsUufxejle0oD3gjdTg4tJF
+	 1Vt9uaTA+vEgbv7YHCSdzrdYskQd0IcAvsyl+c/X3oneuDfHXQvWatHwNfYlMDxeF4
+	 GZYCiNS8M6mAbd0k8Y8MMzG/XNi/yC9pizBccuoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732358AbfEOL2O (ORCPT
+        id S1732378AbfEOL2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:28:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39142 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:28:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731652AbfEOL2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:28:09 -0400
+        id S1732362AbfEOL2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:28:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40C172168B;
-        Wed, 15 May 2019 11:28:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3469020881;
+        Wed, 15 May 2019 11:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919688;
-        bh=PczNOFJktXN3VBGMmm6fxJmj8u3wVCD0yPxlwkl9P4Q=;
+        s=default; t=1557919696;
+        bh=2nKhsu9tMWEjLlvM99c5ERV5jFbUMSCrYu3qMJU9t5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ducOcRVgfBLvaiCceH0eqda57oHj2JB7FfVmvKW1XNXKxTdLYlyAdd+xqf1+TDjYV
-         soEnzngMSjXkVKYmZmI7vHRMO8WnZxYtIkJuPHZHcP5gou6+0Os+uStG78i8shmi6s
-         YqRkR/TBIcre3QQt8Ic+afCATrM3aM3jZuInEBIU=
+        b=mTfJgbh8/xT7Rr1JcB3FTwHiRzUpnCVywPs9Q6t7O1GoDusS39lmuzMft5GiHpYRz
+         Ir326ioHlyZlC1euyn+i3wRykSJrxMjoKtdpvBwutjQLULtV842Rut301DBPR5EkCB
+         kAHtBTofWcuaGoqIdwXyKKWZjXiR+MgUc7eOkmCk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Matthew Whitehead <tedheadster@gmail.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 056/137] ocelot: Dont sleep in atomic context (irqs_disabled())
-Date:   Wed, 15 May 2019 12:55:37 +0200
-Message-Id: <20190515090657.560828436@linuxfoundation.org>
+Subject: [PATCH 5.0 058/137] scsi: aic7xxx: fix EISA support
+Date:   Wed, 15 May 2019 12:55:39 +0200
+Message-Id: <20190515090657.699637201@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -60,43 +61,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a8fd48b50deaa20808bbf0f6685f6f1acba6a64c ]
+[ Upstream commit 144ec97493af34efdb77c5aba146e9c7de8d0a06 ]
 
-Preemption disabled at:
- [<ffff000008cabd54>] dev_set_rx_mode+0x1c/0x38
- Call trace:
- [<ffff00000808a5c0>] dump_backtrace+0x0/0x3d0
- [<ffff00000808a9a4>] show_stack+0x14/0x20
- [<ffff000008e6c0c0>] dump_stack+0xac/0xe4
- [<ffff0000080fe76c>] ___might_sleep+0x164/0x238
- [<ffff0000080fe890>] __might_sleep+0x50/0x88
- [<ffff0000082261e4>] kmem_cache_alloc+0x17c/0x1d0
- [<ffff000000ea0ae8>] ocelot_set_rx_mode+0x108/0x188 [mscc_ocelot_common]
- [<ffff000008cabcf0>] __dev_set_rx_mode+0x58/0xa0
- [<ffff000008cabd5c>] dev_set_rx_mode+0x24/0x38
+Instead of relying on the now removed NULL argument to
+pci_alloc_consistent, switch to the generic DMA API, and store the struct
+device so that we can pass it.
 
-Fixes: a556c76adc05 ("net: mscc: Add initial Ocelot switch support")
-
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 4167b2ad5182 ("PCI: Remove NULL device handling from PCI DMA API")
+Reported-by: Matthew Whitehead <tedheadster@gmail.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Tested-by: Matthew Whitehead <tedheadster@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mscc/ocelot.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/aic7xxx/aic7770_osm.c     |  1 +
+ drivers/scsi/aic7xxx/aic7xxx.h         |  1 +
+ drivers/scsi/aic7xxx/aic7xxx_osm.c     | 10 ++++------
+ drivers/scsi/aic7xxx/aic7xxx_osm_pci.c |  1 +
+ 4 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
-index 215a45374d7b0..0ef95abde6bb0 100644
---- a/drivers/net/ethernet/mscc/ocelot.c
-+++ b/drivers/net/ethernet/mscc/ocelot.c
-@@ -613,7 +613,7 @@ static int ocelot_mact_mc_add(struct ocelot_port *port,
- 			      struct netdev_hw_addr *hw_addr)
- {
- 	struct ocelot *ocelot = port->ocelot;
--	struct netdev_hw_addr *ha = kzalloc(sizeof(*ha), GFP_KERNEL);
-+	struct netdev_hw_addr *ha = kzalloc(sizeof(*ha), GFP_ATOMIC);
+diff --git a/drivers/scsi/aic7xxx/aic7770_osm.c b/drivers/scsi/aic7xxx/aic7770_osm.c
+index 3d401d02c0195..bdd177e3d7622 100644
+--- a/drivers/scsi/aic7xxx/aic7770_osm.c
++++ b/drivers/scsi/aic7xxx/aic7770_osm.c
+@@ -91,6 +91,7 @@ aic7770_probe(struct device *dev)
+ 	ahc = ahc_alloc(&aic7xxx_driver_template, name);
+ 	if (ahc == NULL)
+ 		return (ENOMEM);
++	ahc->dev = dev;
+ 	error = aic7770_config(ahc, aic7770_ident_table + edev->id.driver_data,
+ 			       eisaBase);
+ 	if (error != 0) {
+diff --git a/drivers/scsi/aic7xxx/aic7xxx.h b/drivers/scsi/aic7xxx/aic7xxx.h
+index 5614921b4041a..88b90f9806c99 100644
+--- a/drivers/scsi/aic7xxx/aic7xxx.h
++++ b/drivers/scsi/aic7xxx/aic7xxx.h
+@@ -943,6 +943,7 @@ struct ahc_softc {
+ 	 * Platform specific device information.
+ 	 */
+ 	ahc_dev_softc_t		  dev_softc;
++	struct device		  *dev;
  
- 	if (!ha)
- 		return -ENOMEM;
+ 	/*
+ 	 * Bus specific device information.
+diff --git a/drivers/scsi/aic7xxx/aic7xxx_osm.c b/drivers/scsi/aic7xxx/aic7xxx_osm.c
+index 3c9c17450bb39..d5c4a0d237062 100644
+--- a/drivers/scsi/aic7xxx/aic7xxx_osm.c
++++ b/drivers/scsi/aic7xxx/aic7xxx_osm.c
+@@ -860,8 +860,8 @@ int
+ ahc_dmamem_alloc(struct ahc_softc *ahc, bus_dma_tag_t dmat, void** vaddr,
+ 		 int flags, bus_dmamap_t *mapp)
+ {
+-	*vaddr = pci_alloc_consistent(ahc->dev_softc,
+-				      dmat->maxsize, mapp);
++	/* XXX: check if we really need the GFP_ATOMIC and unwind this mess! */
++	*vaddr = dma_alloc_coherent(ahc->dev, dmat->maxsize, mapp, GFP_ATOMIC);
+ 	if (*vaddr == NULL)
+ 		return ENOMEM;
+ 	return 0;
+@@ -871,8 +871,7 @@ void
+ ahc_dmamem_free(struct ahc_softc *ahc, bus_dma_tag_t dmat,
+ 		void* vaddr, bus_dmamap_t map)
+ {
+-	pci_free_consistent(ahc->dev_softc, dmat->maxsize,
+-			    vaddr, map);
++	dma_free_coherent(ahc->dev, dmat->maxsize, vaddr, map);
+ }
+ 
+ int
+@@ -1123,8 +1122,7 @@ ahc_linux_register_host(struct ahc_softc *ahc, struct scsi_host_template *templa
+ 
+ 	host->transportt = ahc_linux_transport_template;
+ 
+-	retval = scsi_add_host(host,
+-			(ahc->dev_softc ? &ahc->dev_softc->dev : NULL));
++	retval = scsi_add_host(host, ahc->dev);
+ 	if (retval) {
+ 		printk(KERN_WARNING "aic7xxx: scsi_add_host failed\n");
+ 		scsi_host_put(host);
+diff --git a/drivers/scsi/aic7xxx/aic7xxx_osm_pci.c b/drivers/scsi/aic7xxx/aic7xxx_osm_pci.c
+index 0fc14dac7070c..717d8d1082ce1 100644
+--- a/drivers/scsi/aic7xxx/aic7xxx_osm_pci.c
++++ b/drivers/scsi/aic7xxx/aic7xxx_osm_pci.c
+@@ -250,6 +250,7 @@ ahc_linux_pci_dev_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		}
+ 	}
+ 	ahc->dev_softc = pci;
++	ahc->dev = &pci->dev;
+ 	error = ahc_pci_config(ahc, entry);
+ 	if (error != 0) {
+ 		ahc_free(ahc);
 -- 
 2.20.1
 
