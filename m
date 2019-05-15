@@ -2,220 +2,147 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40074C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA8FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9A2206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A346206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:45:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557920709;
+	bh=0x8tNMF2GxGVdUOlx+DPgH3PHdSC/X+m1eoIStvq3HA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CJyAW8L5eC7xgVlIGjB9XLY5gxA+g0lzXOa38z1Xvd4U0BMYJJBOC1iH7GoI34jZj
+	 Ig6jxSF4w2QTCcqK4jpmsVvnoDBTmJKaoHI5uv+l/QhEnF/Dw8b5Pd21l68HCAsmN3
+	 Edzvv82MbdFGkmdjiXwqthLRuRrs002uaubptPF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732105AbfEOL0D (ORCPT
+        id S1732177AbfEOLpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:26:03 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:44668 "EHLO inva020.nxp.com"
+        Wed, 15 May 2019 07:45:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732068AbfEOLZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:25:55 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5EB681A0221;
-        Wed, 15 May 2019 13:25:53 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 520B01A002D;
-        Wed, 15 May 2019 13:25:53 +0200 (CEST)
-Received: from lorenz.ea.freescale.net (lorenz.ea.freescale.net [10.171.71.5])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 07D98205F4;
-        Wed, 15 May 2019 13:25:52 +0200 (CEST)
-From:   Iuliana Prodan <iuliana.prodan@nxp.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-imx <linux-imx@nxp.com>
-Subject: [PATCH v2 2/2] crypto: caam - strip input without changing crypto request
-Date:   Wed, 15 May 2019 14:25:46 +0300
-Message-Id: <1557919546-360-2-git-send-email-iuliana.prodan@nxp.com>
-X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1557919546-360-1-git-send-email-iuliana.prodan@nxp.com>
-References: <1557919546-360-1-git-send-email-iuliana.prodan@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1732101AbfEOL0D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:26:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A39EF2089E;
+        Wed, 15 May 2019 11:26:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557919562;
+        bh=0x8tNMF2GxGVdUOlx+DPgH3PHdSC/X+m1eoIStvq3HA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VO05Fb0xeKjnTdXHGJIcFMQyxd1UtwBFNwddr2VZV8rWVtEw73iSYARw/XrOzdSDm
+         r8/AveqANDunXTC+rlnlh4C+3UrzUOugHLPXZdM61wfMUD6CEKZ7kcE+huiWxivrHB
+         lWNpUF/6yVY/ngXtxbgsXgxkmOYqB+amWjNsn+ss=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Kai Krakow <kai@kaishome.de>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 001/137] bfq: update internal depth state when queue depth changes
+Date:   Wed, 15 May 2019 12:54:42 +0200
+Message-Id: <20190515090651.807776995@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
+References: <20190515090651.633556783@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For rsa/pkcs1pad(rsa-caam, sha256), CAAM expects an input of modulus size.
-For this we strip the leading zeros in case the size is more than modulus.
-This commit avoids modifying the crypto request while striping zeros from
-input, to comply with the crypto API requirement. This is done by adding
-a fixup input pointer and length.
+[ Upstream commit 77f1e0a52d26242b6c2dba019f6ebebfb9ff701e ]
 
-Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
----
-Changes since V1:
-	- changed the commit message and summary.
----
- drivers/crypto/caam/caampkc.c | 39 ++++++++++++++++++++++++++-------------
- drivers/crypto/caam/caampkc.h |  7 ++++++-
- 2 files changed, 32 insertions(+), 14 deletions(-)
+A previous commit moved the shallow depth and BFQ depth map calculations
+to be done at init time, moving it outside of the hotter IO path. This
+potentially causes hangs if the users changes the depth of the scheduler
+map, by writing to the 'nr_requests' sysfs file for that device.
 
-diff --git a/drivers/crypto/caam/caampkc.c b/drivers/crypto/caam/caampkc.c
-index e356413..41591f8 100644
---- a/drivers/crypto/caam/caampkc.c
-+++ b/drivers/crypto/caam/caampkc.c
-@@ -32,8 +32,10 @@ static u8 *zero_buffer;
- static void rsa_io_unmap(struct device *dev, struct rsa_edesc *edesc,
- 			 struct akcipher_request *req)
+Add a blk-mq-sched hook that allows blk-mq to inform the scheduler if
+the depth changes, so that the scheduler can update its internal state.
+
+Tested-by: Kai Krakow <kai@kaishome.de>
+Reported-by: Paolo Valente <paolo.valente@linaro.org>
+Fixes: f0635b8a416e ("bfq: calculate shallow depths at init time")
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ block/bfq-iosched.c      | 8 +++++++-
+ block/blk-mq.c           | 2 ++
+ include/linux/elevator.h | 1 +
+ 3 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 72510c4700014..356620414cf94 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -5353,7 +5353,7 @@ static unsigned int bfq_update_depths(struct bfq_data *bfqd,
+ 	return min_shallow;
+ }
+ 
+-static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
++static void bfq_depth_updated(struct blk_mq_hw_ctx *hctx)
  {
-+	struct caam_rsa_req_ctx *req_ctx = akcipher_request_ctx(req);
+ 	struct bfq_data *bfqd = hctx->queue->elevator->elevator_data;
+ 	struct blk_mq_tags *tags = hctx->sched_tags;
+@@ -5361,6 +5361,11 @@ static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
+ 
+ 	min_shallow = bfq_update_depths(bfqd, &tags->bitmap_tags);
+ 	sbitmap_queue_min_shallow_depth(&tags->bitmap_tags, min_shallow);
++}
 +
- 	dma_unmap_sg(dev, req->dst, edesc->dst_nents, DMA_FROM_DEVICE);
--	dma_unmap_sg(dev, req->src, edesc->src_nents, DMA_TO_DEVICE);
-+	dma_unmap_sg(dev, req_ctx->fixup_src, edesc->src_nents, DMA_TO_DEVICE);
- 
- 	if (edesc->sec4_sg_bytes)
- 		dma_unmap_single(dev, edesc->sec4_sg_dma, edesc->sec4_sg_bytes,
-@@ -251,17 +253,21 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
- 		if (lzeros < 0)
- 			return ERR_PTR(lzeros);
- 
--		req->src_len -= lzeros;
--		req->src = scatterwalk_ffwd(req_ctx->src, req->src, lzeros);
-+		req_ctx->fixup_src = scatterwalk_ffwd(req_ctx->src, req->src,
-+						      lzeros);
-+		req_ctx->fixup_src_len = req->src_len - lzeros;
- 	} else {
- 		/*
- 		 * input src is less then n key modulus,
- 		 * so there will be zero padding
- 		 */
- 		diff_size = key->n_sz - req->src_len;
-+		req_ctx->fixup_src = req->src;
-+		req_ctx->fixup_src_len = req->src_len;
- 	}
- 
--	src_nents = sg_nents_for_len(req->src, req->src_len);
-+	src_nents = sg_nents_for_len(req_ctx->fixup_src,
-+				     req_ctx->fixup_src_len);
- 	dst_nents = sg_nents_for_len(req->dst, req->dst_len);
- 
- 	if (!diff_size && src_nents == 1)
-@@ -280,7 +286,7 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
- 	if (!edesc)
- 		return ERR_PTR(-ENOMEM);
- 
--	sgc = dma_map_sg(dev, req->src, src_nents, DMA_TO_DEVICE);
-+	sgc = dma_map_sg(dev, req_ctx->fixup_src, src_nents, DMA_TO_DEVICE);
- 	if (unlikely(!sgc)) {
- 		dev_err(dev, "unable to map source\n");
- 		goto src_fail;
-@@ -298,8 +304,8 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
- 				   0);
- 
- 	if (sec4_sg_index)
--		sg_to_sec4_sg_last(req->src, src_nents, edesc->sec4_sg +
--				   !!diff_size, 0);
-+		sg_to_sec4_sg_last(req_ctx->fixup_src, src_nents,
-+				   edesc->sec4_sg + !!diff_size, 0);
- 
- 	if (dst_nents > 1)
- 		sg_to_sec4_sg_last(req->dst, dst_nents,
-@@ -330,7 +336,7 @@ static struct rsa_edesc *rsa_edesc_alloc(struct akcipher_request *req,
- sec4_sg_fail:
- 	dma_unmap_sg(dev, req->dst, dst_nents, DMA_FROM_DEVICE);
- dst_fail:
--	dma_unmap_sg(dev, req->src, src_nents, DMA_TO_DEVICE);
-+	dma_unmap_sg(dev, req_ctx->fixup_src, src_nents, DMA_TO_DEVICE);
- src_fail:
- 	kfree(edesc);
- 	return ERR_PTR(-ENOMEM);
-@@ -340,6 +346,7 @@ static int set_rsa_pub_pdb(struct akcipher_request *req,
- 			   struct rsa_edesc *edesc)
- {
- 	struct crypto_akcipher *tfm = crypto_akcipher_reqtfm(req);
-+	struct caam_rsa_req_ctx *req_ctx = akcipher_request_ctx(req);
- 	struct caam_rsa_ctx *ctx = akcipher_tfm_ctx(tfm);
- 	struct caam_rsa_key *key = &ctx->key;
- 	struct device *dev = ctx->dev;
-@@ -364,7 +371,7 @@ static int set_rsa_pub_pdb(struct akcipher_request *req,
- 		pdb->f_dma = edesc->sec4_sg_dma;
- 		sec4_sg_index += edesc->src_nents;
- 	} else {
--		pdb->f_dma = sg_dma_address(req->src);
-+		pdb->f_dma = sg_dma_address(req_ctx->fixup_src);
- 	}
- 
- 	if (edesc->dst_nents > 1) {
-@@ -376,7 +383,7 @@ static int set_rsa_pub_pdb(struct akcipher_request *req,
- 	}
- 
- 	pdb->sgf |= (key->e_sz << RSA_PDB_E_SHIFT) | key->n_sz;
--	pdb->f_len = req->src_len;
-+	pdb->f_len = req_ctx->fixup_src_len;
- 
++static int bfq_init_hctx(struct blk_mq_hw_ctx *hctx, unsigned int index)
++{
++	bfq_depth_updated(hctx);
  	return 0;
  }
-@@ -409,7 +416,9 @@ static int set_rsa_priv_f1_pdb(struct akcipher_request *req,
- 		pdb->g_dma = edesc->sec4_sg_dma;
- 		sec4_sg_index += edesc->src_nents;
- 	} else {
--		pdb->g_dma = sg_dma_address(req->src);
-+		struct caam_rsa_req_ctx *req_ctx = akcipher_request_ctx(req);
-+
-+		pdb->g_dma = sg_dma_address(req_ctx->fixup_src);
+ 
+@@ -5783,6 +5788,7 @@ static struct elevator_type iosched_bfq_mq = {
+ 		.requests_merged	= bfq_requests_merged,
+ 		.request_merged		= bfq_request_merged,
+ 		.has_work		= bfq_has_work,
++		.depth_updated		= bfq_depth_updated,
+ 		.init_hctx		= bfq_init_hctx,
+ 		.init_sched		= bfq_init_queue,
+ 		.exit_sched		= bfq_exit_queue,
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 6930c82ab75fc..5b920a82bfe60 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -3131,6 +3131,8 @@ int blk_mq_update_nr_requests(struct request_queue *q, unsigned int nr)
+ 		}
+ 		if (ret)
+ 			break;
++		if (q->elevator && q->elevator->type->ops.depth_updated)
++			q->elevator->type->ops.depth_updated(hctx);
  	}
  
- 	if (edesc->dst_nents > 1) {
-@@ -472,7 +481,9 @@ static int set_rsa_priv_f2_pdb(struct akcipher_request *req,
- 		pdb->g_dma = edesc->sec4_sg_dma;
- 		sec4_sg_index += edesc->src_nents;
- 	} else {
--		pdb->g_dma = sg_dma_address(req->src);
-+		struct caam_rsa_req_ctx *req_ctx = akcipher_request_ctx(req);
-+
-+		pdb->g_dma = sg_dma_address(req_ctx->fixup_src);
- 	}
+ 	if (!ret)
+diff --git a/include/linux/elevator.h b/include/linux/elevator.h
+index 2e9e2763bf47d..6e8bc53740f05 100644
+--- a/include/linux/elevator.h
++++ b/include/linux/elevator.h
+@@ -31,6 +31,7 @@ struct elevator_mq_ops {
+ 	void (*exit_sched)(struct elevator_queue *);
+ 	int (*init_hctx)(struct blk_mq_hw_ctx *, unsigned int);
+ 	void (*exit_hctx)(struct blk_mq_hw_ctx *, unsigned int);
++	void (*depth_updated)(struct blk_mq_hw_ctx *);
  
- 	if (edesc->dst_nents > 1) {
-@@ -559,7 +570,9 @@ static int set_rsa_priv_f3_pdb(struct akcipher_request *req,
- 		pdb->g_dma = edesc->sec4_sg_dma;
- 		sec4_sg_index += edesc->src_nents;
- 	} else {
--		pdb->g_dma = sg_dma_address(req->src);
-+		struct caam_rsa_req_ctx *req_ctx = akcipher_request_ctx(req);
-+
-+		pdb->g_dma = sg_dma_address(req_ctx->fixup_src);
- 	}
- 
- 	if (edesc->dst_nents > 1) {
-diff --git a/drivers/crypto/caam/caampkc.h b/drivers/crypto/caam/caampkc.h
-index 5ac7201..2c488c9 100644
---- a/drivers/crypto/caam/caampkc.h
-+++ b/drivers/crypto/caam/caampkc.h
-@@ -95,14 +95,19 @@ struct caam_rsa_ctx {
- 	struct caam_rsa_key key;
- 	struct device *dev;
- 	dma_addr_t padding_dma;
-+
- };
- 
- /**
-  * caam_rsa_req_ctx - per request context.
-- * @src: input scatterlist (stripped of leading zeros)
-+ * @src           : input scatterlist (stripped of leading zeros)
-+ * @fixup_src     : input scatterlist (that might be stripped of leading zeros)
-+ * @fixup_src_len : length of the fixup_src input scatterlist
-  */
- struct caam_rsa_req_ctx {
- 	struct scatterlist src[2];
-+	struct scatterlist *fixup_src;
-+	unsigned int fixup_src_len;
- };
- 
- /**
+ 	bool (*allow_merge)(struct request_queue *, struct request *, struct bio *);
+ 	bool (*bio_merge)(struct blk_mq_hw_ctx *, struct bio *);
 -- 
-2.1.0
+2.20.1
+
+
 
