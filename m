@@ -2,123 +2,168 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF13C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 20:31:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 898E8C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 20:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 268D42087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 20:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C82C2070D
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 20:35:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557952530;
+	bh=lonIHOL7Ap+kfl9T5uZ3da9vJ8adxkY6vHSVJzCp+ZQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=zCn/EmqXElLjpZbuowhq4pqhPbrSSEDhYhF8xinQwFU57Ffw8K1tzfPxCCDW9WsqW
+	 01jWBIhz9cVl6U1kUS3ij6u6f6Y4LRWCVQlFrn1XC3Y/Vx0AD7hsSzIsBxyJKDy6bF
+	 9KyOcXVNFJMHnyzl23ZG20M6mCvIzd6I89cPm1Bs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfEOUbW (ORCPT
+        id S1727550AbfEOUf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 16:31:22 -0400
-Received: from lilium.sigma-star.at ([109.75.188.150]:55244 "EHLO
-        lilium.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbfEOUbV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 16:31:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by lilium.sigma-star.at (Postfix) with ESMTP id 5E18B1801442F;
-        Wed, 15 May 2019 22:31:20 +0200 (CEST)
-From:   Richard Weinberger <richard@nod.at>
-To:     linux-mtd@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, Richard Weinberger <richard@nod.at>
-Subject: [PATCH] ubifs: Check link count of inodes when killing orphans.
-Date:   Wed, 15 May 2019 22:31:13 +0200
-Message-Id: <20190515203113.19398-1-richard@nod.at>
-X-Mailer: git-send-email 2.16.4
+        Wed, 15 May 2019 16:35:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726465AbfEOUf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 16:35:28 -0400
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9921320881
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 20:35:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557952527;
+        bh=lonIHOL7Ap+kfl9T5uZ3da9vJ8adxkY6vHSVJzCp+ZQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rhEbFWklK8KJ4407LJXZUaExo8eNRQRVUMQHO/r11MhK37vDC9cxpqYZdL7tugr9d
+         0PKfHGeZGnMSwnFej4wSGmrgcl1xL2U9xpVQFsRZsFy/uwghLUeMTGBpOR1UMat2zm
+         tw9SS3E9F5zNAOrF8Bxw4l7Yv6tlxNlmDZo1jD5U=
+Received: by mail-wr1-f50.google.com with SMTP id g12so629778wro.8
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 13:35:27 -0700 (PDT)
+X-Gm-Message-State: APjAAAXqwjv8+TYQjOXfGw9dvvyUjhUBy2/oWEDPkTEf7huXuvvvE/E8
+        YOnhXhR9aTd0jD6tsb8xqWvQ3UY5VK91pRyw+Qoj2w==
+X-Google-Smtp-Source: APXvYqy8ElLQiZWZBdNYQb+QMBcNXMeyfSb7qt7WK7UozAoZUQdnF5nB0ZLitp/BruUmurMT7qwYd0XN/O4CcJ+S/Rc=
+X-Received: by 2002:a5d:4907:: with SMTP id x7mr15080115wrq.199.1557952526190;
+ Wed, 15 May 2019 13:35:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
+ <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com> <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
+ <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com> <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+ <20190513102926.GD8743@linux.intel.com> <20190514104323.GA7591@linux.intel.com>
+ <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+ <20190514204527.GC1977@linux.intel.com> <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
+ <20190515013031.GF1977@linux.intel.com> <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+ <alpine.LRH.2.21.1905160543070.19802@namei.org>
+In-Reply-To: <alpine.LRH.2.21.1905160543070.19802@namei.org>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 15 May 2019 13:35:14 -0700
+X-Gmail-Original-Message-ID: <CALCETrX_Q6qwNRNF0TL2tgfm1j6DKLX7NVHHmWbMFtk3WnHDKw@mail.gmail.com>
+Message-ID: <CALCETrX_Q6qwNRNF0TL2tgfm1j6DKLX7NVHHmWbMFtk3WnHDKw@mail.gmail.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+To:     James Morris <jmorris@namei.org>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-O_TMPFILE files can change their link count back to non-zero.
-This corner case needs to get addressed in the orphans subsystem
-too.
+On Wed, May 15, 2019 at 12:58 PM James Morris <jmorris@namei.org> wrote:
+>
+> On Wed, 15 May 2019, Andy Lutomirski wrote:
+>
+> > There are two issues with how this interacts with LSMs:
+> >
+> > 1) LSMs might want to be able to whitelist, blacklist, or otherwise
+> > restrict what enclaves can run at all.  The current proposal that
+> > everyone seems to dislike the least is to have a .sigstruct file on
+> > disk that contains a hash and signature of the enclave in a
+> > CPU-defined format.  To initialize an enclave, a program will pass an
+> > fd to this file, and a new LSM hook can be called to allow or disallow
+> > the operation.  In a SELinux context, the idea is that policy could
+> > require the .sigstruct file to be labeled with a type like
+> > sgx_sigstruct_t, and only enclaves that have a matching .sigstruct
+> > with such a label could run.
+>
+>
+> The .sigstruct file is for the CPU to consume, not the kernel correct?
 
-Fixes: 474b93704f32 ("ubifs: Implement O_TMPFILE")
-Reported-by: Lars Persson <lists@bofh.nu>
-Signed-off-by: Richard Weinberger <richard@nod.at>
----
- fs/ubifs/orphan.c | 39 ++++++++++++++++++++++++++++++---------
- 1 file changed, 30 insertions(+), 9 deletions(-)
+Yes, unless an LSM wants to examine it to make a decision.
 
-diff --git a/fs/ubifs/orphan.c b/fs/ubifs/orphan.c
-index 2f1618f300fb..575c36dfd751 100644
---- a/fs/ubifs/orphan.c
-+++ b/fs/ubifs/orphan.c
-@@ -642,6 +642,7 @@ static int do_kill_orphans(struct ubifs_info *c, struct ubifs_scan_leb *sleb,
- {
- 	struct ubifs_scan_node *snod;
- 	struct ubifs_orph_node *orph;
-+	struct ubifs_ino_node *ino = NULL;
- 	unsigned long long cmt_no;
- 	ino_t inum;
- 	int i, n, err, first = 1;
-@@ -688,23 +689,40 @@ static int do_kill_orphans(struct ubifs_info *c, struct ubifs_scan_leb *sleb,
- 		if (first)
- 			first = 0;
- 
-+		ino = kmalloc(UBIFS_MAX_INO_NODE_SZ, GFP_NOFS);
-+		if (!ino)
-+			return -ENOMEM;
-+
- 		n = (le32_to_cpu(orph->ch.len) - UBIFS_ORPH_NODE_SZ) >> 3;
- 		for (i = 0; i < n; i++) {
- 			union ubifs_key key1, key2;
- 
- 			inum = le64_to_cpu(orph->inos[i]);
--			dbg_rcvry("deleting orphaned inode %lu",
--				  (unsigned long)inum);
- 
--			lowest_ino_key(c, &key1, inum);
--			highest_ino_key(c, &key2, inum);
--
--			err = ubifs_tnc_remove_range(c, &key1, &key2);
-+			ino_key_init(c, &key1, inum);
-+			err = ubifs_tnc_lookup(c, &key1, ino);
- 			if (err)
--				return err;
-+				goto out_free;
-+
-+			/*
-+			 * Check whether an inode can really get deleted.
-+			 * linkat() with O_TMPFILE allows rebirth of an inode.
-+			 */
-+			if (ino->nlink == 0) {
-+				dbg_rcvry("deleting orphaned inode %lu",
-+					  (unsigned long)inum);
-+
-+				lowest_ino_key(c, &key1, inum);
-+				highest_ino_key(c, &key2, inum);
-+
-+				err = ubifs_tnc_remove_range(c, &key1, &key2);
-+				if (err)
-+					goto out_err;
-+			}
-+
- 			err = insert_dead_orphan(c, inum);
- 			if (err)
--				return err;
-+				goto out_err;
- 		}
- 
- 		*last_cmt_no = cmt_no;
-@@ -716,7 +734,10 @@ static int do_kill_orphans(struct ubifs_info *c, struct ubifs_scan_leb *sleb,
- 			*last_flagged = 0;
- 	}
- 
--	return 0;
-+	err = 0;
-+out_free:
-+	kfree(ino);
-+	return err;
- }
- 
- /**
--- 
-2.16.4
+>
+> How is it bound to the enclave file?
 
+It's not bound to the enclave *file* at all, but it contains a hash
+that covers the enclave, so two different files in two different
+formats representing exactly the same enclave would get the same hash,
+but any change to the enclave would get a different hash.
+
+>
+> Why not just use an xattr, like security.sgx ?
+
+Wouldn't this make it so that only someone with CAP_MAC_ADMIN could
+install an enclave?  I think that this decision should be left up the
+administrator, and it should be easy to set up a loose policy where
+anyone can load whatever enclave they want.  That's what would happen
+in my proposal if there was no LSM loaded or of the LSM policy didn't
+restrict what .sigstruct files were acceptable.
+
+>
+> >
+> > 2) Just like any other DSO, there are potential issues with how
+> > enclaves deal with writable vs executable memory.  This takes two
+> > forms.  First, a task should probably require EXECMEM, EXECMOD, or
+> > similar permission to run an enclave that can modify its own text.
+> > Second, it would be nice if a task that did *not* have EXECMEM,
+> > EXECMOD, or similar could still run the enclave if it had EXECUTE
+> > permission on the file containing the enclave.
+> >
+> > Currently, this all works because DSOs are run by mmapping the file to
+> > create multiple VMAs, some of which are executable, non-writable, and
+> > non-CoWed, and some of which are writable but not executable.  With
+> > SGX, there's only really one inode per enclave (the anon_inode that
+> > comes form /dev/sgx/enclave), and it can only be sensibly mapped
+> > MAP_SHARED.
+> >
+> > With the current version of the SGX driver, to run an enclave, I think
+> > you'll need either EXECUTE rights to /dev/sgx/enclave or EXECMOD or
+> > similar, all of which more or less mean that you can run any modified
+> > code you want, and none of which is useful to prevent enclaves from
+> > contain RWX segments.
+> >
+> > So my question is: what, if anything, should change to make this work better?
+>
+> Would it be possible to provide multiple fds (perhaps via a pseudo fs
+> interface) which can be mapped to different types of VMAs?
+
+Maybe.  The tricky bit is that, even if there was a separate inode for
+the writable and the executable parts of the enclave, I think that
+both would have to be mapped MAP_SHARED since MAP_ANONYMOUS is
+nonsensical for SGX.  This would certainly push more complexity into
+the user code.  Jarkko?
