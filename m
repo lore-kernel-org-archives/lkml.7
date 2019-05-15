@@ -2,51 +2,53 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB566C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B521CC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC19A20818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87BDB2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919324;
-	bh=/RZNkOEy9RpGkPQRFCiWVgNa/ydrQi1vf5+n8uojKD0=;
+	s=default; t=1557919327;
+	bh=sDiO5l3AAV6W+m0k+TpDaXZsjbUGzwUgt7IamaM5LEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KDG1IKKI5S0LrSlF9SyShVAJ/WusMMG2++8ci5t+VqB7VQl9q/PowPFQJrN0SV9Mt
-	 L5uuegoH/lCa1K5d7Sw2tp3HaEcApbkOQs5dgnPGRcdZtqNFaqMGeZg7XWw5mtxzdl
-	 KtSdC3wSpw5QygIKalOtP35Iv314klRTWc7YND0U=
+	b=xHGOOwamZ4EiFqHG79oR3r2JtorbKFuj5NgyV2UfDIbQ4EQW0rtjLv6xYZxt5dJMT
+	 yuEz+fWi84V24GdERyAyIMfIe05Cf2n9ItQxxhM97/E/SZOnSWLwdrnNta5OW+S1PC
+	 WRZRQPpriDGZLRnurGG1cnCWE8oMTBuf+S6rJAyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731396AbfEOLWD (ORCPT
+        id S1731407AbfEOLWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:22:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60110 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:22:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731382AbfEOLWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:22:01 -0400
+        id S1731147AbfEOLWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:22:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 839FD20818;
-        Wed, 15 May 2019 11:21:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2431921734;
+        Wed, 15 May 2019 11:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919320;
-        bh=/RZNkOEy9RpGkPQRFCiWVgNa/ydrQi1vf5+n8uojKD0=;
+        s=default; t=1557919322;
+        bh=sDiO5l3AAV6W+m0k+TpDaXZsjbUGzwUgt7IamaM5LEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T9hYmzHuaEKbvfjRnqDCTCjnIrxIJ8VOI5iNim/a+crdTzVv4xAMtN62MIv8Yjfvr
-         cqHYY8qT/Lt7IKnx/BFttuyveVpQbgMamoD5wmoLIcEC678Qy1hTw3kSatRwPIKC4a
-         nhjTlTxgjp0bbnXH3uY715fz8nJJXxYX2sZvF4oc=
+        b=POVofSZQYFNoSDoUHWpeYqeULhvXCQxBSBTOYUBX0J6A9eqIjKB2Ba8BUtBXE53gC
+         Thk0VPaFtyfxOePx15jqi5i7HFQEFb8YJutjqeVVUtypmP2s9Vm4qNWYBFQ1/4u0Nc
+         +QJPqkABvz2hK3VZqK9GgqPX27R3R8a6SDzFAWOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.19 003/113] platform/x86: thinkpad_acpi: Disable Bluetooth for some machines
-Date:   Wed, 15 May 2019 12:54:54 +0200
-Message-Id: <20190515090653.198561680@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 030/113] mISDN: Check address length before reading address family
+Date:   Wed, 15 May 2019 12:55:21 +0200
+Message-Id: <20190515090655.839119619@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -59,119 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+[ Upstream commit 238ffdc49ef98b15819cfd5e3fb23194e3ea3d39 ]
 
-commit f7db839fccf087664e5587966220821289b6a9cb upstream.
+KMSAN will complain if valid address length passed to bind() is shorter
+than sizeof("struct sockaddr_mISDN"->family) bytes.
 
-Some AMD based ThinkPads have a firmware bug that calling
-"GBDC" will cause Bluetooth on Intel wireless cards blocked.
-
-Probe these models by DMI match and disable Bluetooth subdriver
-if specified Intel wireless card exist.
-
-Cc: stable <stable@vger.kernel.org> # 4.14+
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/thinkpad_acpi.c |   72 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 70 insertions(+), 2 deletions(-)
+ drivers/isdn/mISDN/socket.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/platform/x86/thinkpad_acpi.c
-+++ b/drivers/platform/x86/thinkpad_acpi.c
-@@ -79,7 +79,7 @@
- #include <linux/jiffies.h>
- #include <linux/workqueue.h>
- #include <linux/acpi.h>
--#include <linux/pci_ids.h>
-+#include <linux/pci.h>
- #include <linux/power_supply.h>
- #include <linux/thinkpad_acpi.h>
- #include <sound/core.h>
-@@ -4496,6 +4496,74 @@ static void bluetooth_exit(void)
- 	bluetooth_shutdown();
- }
+diff --git a/drivers/isdn/mISDN/socket.c b/drivers/isdn/mISDN/socket.c
+index 18c0a1281914f..b2abc44fa5cb8 100644
+--- a/drivers/isdn/mISDN/socket.c
++++ b/drivers/isdn/mISDN/socket.c
+@@ -711,10 +711,10 @@ base_sock_bind(struct socket *sock, struct sockaddr *addr, int addr_len)
+ 	struct sock *sk = sock->sk;
+ 	int err = 0;
  
-+static const struct dmi_system_id bt_fwbug_list[] __initconst = {
-+	{
-+		.ident = "ThinkPad E485",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_BOARD_NAME, "20KU"),
-+		},
-+	},
-+	{
-+		.ident = "ThinkPad E585",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_BOARD_NAME, "20KV"),
-+		},
-+	},
-+	{
-+		.ident = "ThinkPad A285 - 20MW",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_BOARD_NAME, "20MW"),
-+		},
-+	},
-+	{
-+		.ident = "ThinkPad A285 - 20MX",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_BOARD_NAME, "20MX"),
-+		},
-+	},
-+	{
-+		.ident = "ThinkPad A485 - 20MU",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_BOARD_NAME, "20MU"),
-+		},
-+	},
-+	{
-+		.ident = "ThinkPad A485 - 20MV",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+			DMI_MATCH(DMI_BOARD_NAME, "20MV"),
-+		},
-+	},
-+	{}
-+};
-+
-+static const struct pci_device_id fwbug_cards_ids[] __initconst = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24F3) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x24FD) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x2526) },
-+	{}
-+};
-+
-+
-+static int __init have_bt_fwbug(void)
-+{
-+	/*
-+	 * Some AMD based ThinkPads have a firmware bug that calling
-+	 * "GBDC" will cause bluetooth on Intel wireless cards blocked
-+	 */
-+	if (dmi_check_system(bt_fwbug_list) && pci_dev_present(fwbug_cards_ids)) {
-+		vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_RFKILL,
-+			FW_BUG "disable bluetooth subdriver for Intel cards\n");
-+		return 1;
-+	} else
-+		return 0;
-+}
-+
- static int __init bluetooth_init(struct ibm_init_struct *iibm)
- {
- 	int res;
-@@ -4508,7 +4576,7 @@ static int __init bluetooth_init(struct
+-	if (!maddr || maddr->family != AF_ISDN)
++	if (addr_len < sizeof(struct sockaddr_mISDN))
+ 		return -EINVAL;
  
- 	/* bluetooth not supported on 570, 600e/x, 770e, 770x, A21e, A2xm/p,
- 	   G4x, R30, R31, R40e, R50e, T20-22, X20-21 */
--	tp_features.bluetooth = hkey_handle &&
-+	tp_features.bluetooth = !have_bt_fwbug() && hkey_handle &&
- 	    acpi_evalf(hkey_handle, &status, "GBDC", "qd");
+-	if (addr_len < sizeof(struct sockaddr_mISDN))
++	if (!maddr || maddr->family != AF_ISDN)
+ 		return -EINVAL;
  
- 	vdbg_printk(TPACPI_DBG_INIT | TPACPI_DBG_RFKILL,
+ 	lock_sock(sk);
+-- 
+2.20.1
+
 
 
