@@ -2,76 +2,102 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B8BC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 22:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33C0C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 22:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA1320843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 22:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A94FB2087E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 22:44:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557960280;
+	bh=RD/BsQzuTKMqyx5gPDoTRwO4+h8UvnjsTAjiA4VH+dg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=V70Lk+8WqPN2wsKxjjyMFxUu+o0XqhUDhgAqsCL+xTQbq5wPzmjWA7lJqirGjL9xc
+	 VDiElGVVHzOgDkSWrS8kmrVfEMfSytPDaT3Zj4f5K6BhxxfswejPDRsJWt5ojZ+Zat
+	 JTF/EeAFJ3Ar6gD1djBjtjV7clvKReDSB5EWO14U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726348AbfEOW3w (ORCPT
+        id S1726409AbfEOWoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 18:29:52 -0400
-Received: from smtprelay0104.hostedemail.com ([216.40.44.104]:42184 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725937AbfEOW3w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 18:29:52 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 992CE837F24C;
-        Wed, 15 May 2019 22:29:50 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: lace66_38b74b7a2e71a
-X-Filterd-Recvd-Size: 1692
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 15 May 2019 22:29:49 +0000 (UTC)
-Message-ID: <391f21cf5f04c61b75e739f67c8a308864b4e68c.camel@perches.com>
-Subject: Re: [PATCH] MAINTAINERS: Update UBI/UBIFS git tree location
-From:   Joe Perches <joe@perches.com>
-To:     Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org
-Date:   Wed, 15 May 2019 15:29:48 -0700
-In-Reply-To: <20190515200423.17809-1-richard@nod.at>
-References: <20190515200423.17809-1-richard@nod.at>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.1-1build1 
-Mime-Version: 1.0
+        Wed, 15 May 2019 18:44:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725937AbfEOWoj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 18:44:39 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C817820862;
+        Wed, 15 May 2019 22:44:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557960278;
+        bh=RD/BsQzuTKMqyx5gPDoTRwO4+h8UvnjsTAjiA4VH+dg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LhV5qBs8pKqjgncDeKAmibIV69CTrusSWRPh93xY7VBDQkKGjDxTiZ/FncfOxjMCs
+         3Yfzmtz29l+sKYfhD8THMKoQwc8pnMywTG5ttCrzX6dW9e+EpWOniSwYeLCzmvEomX
+         BC8c7i4KWwWOWt2kwd58MPu7X8iAzRAkttnoyO0Q=
+Subject: Re: Linux Testing Microconference at LPC
+To:     Dhaval Giani <dhaval.giani@gmail.com>,
+        Sasha Levin <alexander.levin@microsoft.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Tim Bird <tbird20d@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        "Carpenter,Dan" <dan.carpenter@oracle.com>, willy@infradead.org,
+        gustavo.padovan@collabora.co.uk,
+        Dmitry Vyukov <dvyukov@google.com>, knut.omang@oracle.com,
+        shuah <shuah@kernel.org>
+References: <CAPhKKr_uVTFAzne0QkZFUGfb8RxQdVFx41G9kXRY7sFN-=pZ6w@mail.gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <3c6c9405-7e90-fb03-aa1c-0ada13203980@kernel.org>
+Date:   Wed, 15 May 2019 16:44:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <CAPhKKr_uVTFAzne0QkZFUGfb8RxQdVFx41G9kXRY7sFN-=pZ6w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-15 at 22:04 +0200, Richard Weinberger wrote:
-> Linus asked to use kernel.org.
+Hi Sasha and Dhaval,
+
+On 4/11/19 11:37 AM, Dhaval Giani wrote:
+> Hi Folks,
 > 
-> Signed-off-by: Richard Weinberger <richard@nod.at>
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> This is a call for participation for the Linux Testing microconference
+> at LPC this year.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5c38f21aee78..ba428cd613b8 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15879,7 +15879,7 @@ M:	Richard Weinberger <richard@nod.at>
->  M:	Artem Bityutskiy <dedekind1@gmail.com>
->  M:	Adrian Hunter <adrian.hunter@intel.com>
->  L:	linux-mtd@lists.infradead.org
-> -T:	git git://git.infradead.org/ubifs-2.6.git
-> +T:	git://git.kernel.org/pub/scm/linux/kernel/git/rw/ubifs.git
+> For those who were at LPC last year, as the closing panel mentioned,
+> testing is probably the next big push needed to improve quality. From
+> getting more selftests in, to regression testing to ensure we don't
+> break realtime as more of PREEMPT_RT comes in, to more stable distros,
+> we need more testing around the kernel.
+> 
+> We have talked about different efforts around testing, such as fuzzing
+> (using syzkaller and trinity), automating fuzzing with syzbot, 0day
+> testing, test frameworks such as ktests, smatch to find bugs in the
+> past. We want to push this discussion further this year and are
+> interested in hearing from you what you want to talk about, and where
+> kernel testing needs to go next.
+> 
+> Please let us know what topics you believe should be a part of the
+> micro conference this year.
+> 
+> Thanks!
+> Sasha and Dhaval
+> 
 
-Please keep the initial separate git
+A talk on KUnit from Brendan Higgins will be good addition to this
+Micro-conference. I am cc'ing Brendan on this thread.
 
-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/rw/ubifs.git
+Please consider adding it.
 
->  W:	http://www.linux-mtd.infradead.org/doc/ubifs.html
->  S:	Supported
->  F:	Documentation/filesystems/ubifs.txt
-
+thanks,
+-- Shuah
