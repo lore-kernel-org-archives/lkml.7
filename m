@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A60F4C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F93DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68CCF206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 478192084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920198;
-	bh=UU3Ny3DXCIZiG/CnTQgtWArACPnuP6EUlUSiPWLi2ss=;
+	s=default; t=1557920203;
+	bh=kndu8SAtUtlE6O5XFX8Lvk1NrcXtcxLc7hvEAE7f7uk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uVXWu2rJf8Ks0GdwwxmFEC41eNoxoOVE+Nf8UiclnEMxCNmkJAZJQArRIEoKW5VlA
-	 INkdkpkw2kYhdDW6NmXeDZgHj0ay+jE2JWujPSbyNNr93mOXplND9i5a0d3p1FkQwH
-	 ILraT88ImVcDYHwzA0kxFJLyclqByR8VIW4OW7ag=
+	b=PYF1BK0B2x3H/6WaM/xt15VnHzuEsB8yS3xIQM/CRmQl1hxOIvv6HiQO1wBocM8++
+	 BPlKAPuuD+L7PPBqgufWaXj7hA6JVPluDO5pRWv6OCKO+xUSCpv5fswz+wiTxA9r2l
+	 /egUKfW3HBQOTNICZv7VnP1UzBCrN6UIUD2qQ22c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733037AbfEOLc3 (ORCPT
+        id S1732145AbfEOLgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:32:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44224 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:36:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733007AbfEOLcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:32:22 -0400
+        id S1733028AbfEOLc1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:32:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71D7B2053B;
-        Wed, 15 May 2019 11:32:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B92F7206BF;
+        Wed, 15 May 2019 11:32:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919941;
-        bh=UU3Ny3DXCIZiG/CnTQgtWArACPnuP6EUlUSiPWLi2ss=;
+        s=default; t=1557919947;
+        bh=kndu8SAtUtlE6O5XFX8Lvk1NrcXtcxLc7hvEAE7f7uk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yx8XhmDPgwn50o0gLJbGfUsV1W34UtUtNm6bN74b5rGezHBF7B9XF0zDCLC22hrpK
-         75l/Twaflkp3BtQRGCUhPDxCsKX3k9Xnr4XcnDjm8D3lFUpEoyz1t27Kl/HyBG7QlS
-         VYetWQI3gp3q4isJGQbEREflKToS2vISHmysLUgw=
+        b=z0L8jsMIcJBTjfLYMA6JVl5h2gHlg/SUsgwEKscHuI6UquwUAyBp2W7H1dpsE2JMe
+         vIqHgWjjWEXP4tnh7pxGavOgoSLGpGc4823lfvqJ50jBal7wHcFsYy9nUc23igixz/
+         NCF548m+UNExj5M17woA3ur7ZRaIznVAqAKTxKZw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
+        stable@vger.kernel.org, Thomas Haller <thaller@redhat.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 15/46] bridge: Fix error path for kobject_init_and_add()
-Date:   Wed, 15 May 2019 12:56:39 +0200
-Message-Id: <20190515090622.969444556@linuxfoundation.org>
+Subject: [PATCH 5.1 17/46] fib_rules: return 0 directly if an exactly same rule exists when NLM_F_EXCL not supplied
+Date:   Wed, 15 May 2019 12:56:41 +0200
+Message-Id: <20190515090623.324742464@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -58,64 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Tobin C. Harding" <tobin@kernel.org>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit bdfad5aec1392b93495b77b864d58d7f101dc1c1 ]
+[ Upstream commit e9919a24d3022f72bcadc407e73a6ef17093a849 ]
 
-Currently error return from kobject_init_and_add() is not followed by a
-call to kobject_put().  This means there is a memory leak.  We currently
-set p to NULL so that kfree() may be called on it as a noop, the code is
-arguably clearer if we move the kfree() up closer to where it is
-called (instead of after goto jump).
+With commit 153380ec4b9 ("fib_rules: Added NLM_F_EXCL support to
+fib_nl_newrule") we now able to check if a rule already exists. But this
+only works with iproute2. For other tools like libnl, NetworkManager,
+it still could add duplicate rules with only NLM_F_CREATE flag, like
 
-Remove a goto label 'err1' and jump to call to kobject_put() in error
-return from kobject_init_and_add() fixing the memory leak.  Re-name goto
-label 'put_back' to 'err1' now that we don't use err1, following current
-nomenclature (err1, err2 ...).  Move call to kfree out of the error
-code at bottom of function up to closer to where memory was allocated.
-Add comment to clarify call to kfree().
+[localhost ~ ]# ip rule
+0:      from all lookup local
+32766:  from all lookup main
+32767:  from all lookup default
+100000: from 192.168.7.5 lookup 5
+100000: from 192.168.7.5 lookup 5
 
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+As it doesn't make sense to create two duplicate rules, let's just return
+0 if the rule exists.
+
+Fixes: 153380ec4b9 ("fib_rules: Added NLM_F_EXCL support to fib_nl_newrule")
+Reported-by: Thomas Haller <thaller@redhat.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_if.c |   13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ net/core/fib_rules.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/bridge/br_if.c
-+++ b/net/bridge/br_if.c
-@@ -602,13 +602,15 @@ int br_add_if(struct net_bridge *br, str
- 	call_netdevice_notifiers(NETDEV_JOIN, dev);
- 
- 	err = dev_set_allmulti(dev, 1);
--	if (err)
--		goto put_back;
-+	if (err) {
-+		kfree(p);	/* kobject not yet init'd, manually free */
-+		goto err1;
-+	}
- 
- 	err = kobject_init_and_add(&p->kobj, &brport_ktype, &(dev->dev.kobj),
- 				   SYSFS_BRIDGE_PORT_ATTR);
+--- a/net/core/fib_rules.c
++++ b/net/core/fib_rules.c
+@@ -756,9 +756,9 @@ int fib_nl_newrule(struct sk_buff *skb,
  	if (err)
--		goto err1;
-+		goto err2;
+ 		goto errout;
  
- 	err = br_sysfs_addif(p);
- 	if (err)
-@@ -700,12 +702,9 @@ err3:
- 	sysfs_remove_link(br->ifobj, p->dev->name);
- err2:
- 	kobject_put(&p->kobj);
--	p = NULL; /* kobject_put frees */
--err1:
- 	dev_set_allmulti(dev, -1);
--put_back:
-+err1:
- 	dev_put(dev);
--	kfree(p);
- 	return err;
- }
+-	if ((nlh->nlmsg_flags & NLM_F_EXCL) &&
+-	    rule_exists(ops, frh, tb, rule)) {
+-		err = -EEXIST;
++	if (rule_exists(ops, frh, tb, rule)) {
++		if (nlh->nlmsg_flags & NLM_F_EXCL)
++			err = -EEXIST;
+ 		goto errout_free;
+ 	}
  
 
 
