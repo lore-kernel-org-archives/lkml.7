@@ -2,141 +2,148 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B328FC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85604C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 821EC2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55DA62084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 15:09:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MjJ+LF+8"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vs8iIGiz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbfEOPJZ (ORCPT
+        id S1727692AbfEOPJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 11:09:25 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38484 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726572AbfEOPJY (ORCPT
+        Wed, 15 May 2019 11:09:42 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:56392 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726572AbfEOPJm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 11:09:24 -0400
-Received: by mail-oi1-f194.google.com with SMTP id u199so19153oie.5;
-        Wed, 15 May 2019 08:09:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FzdAY9eNLFH6q18HeEB4S9VM37pJLDSHQjylPsT3TbY=;
-        b=MjJ+LF+8pBMZJmrf/PUQGYzx6jkAIvZXVOaDkwDUy9j8LjnckyRKVimNt3qRpZ7QXs
-         odt09gcUESirFG4LKGWD8wrs44NwvpmYA2lxf+ihQ7feGSSECN829NXz97xTZk1YqWok
-         35/lGba1azoqDEabJk9bWsU7/bkhsjO9nkRYDhC0oT9sbfj+MNtAHSqEKLAJhOF3S6Rs
-         R+rUWZGYA0dVjK3uQ9i1dVZfPXcCRFzlBj3LZ2YdHmMedSaa4kOtX9v0QZ8SKRLyhu7Z
-         yvA1skM2zKLs6y+yPy3x/+CSXqODR2VRcyLDYU2/3JhylYVvTFrpq49h0oyAJEL7ENkN
-         jPtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FzdAY9eNLFH6q18HeEB4S9VM37pJLDSHQjylPsT3TbY=;
-        b=rSQxCXZ7QavzWRWgkflSEk87bo14SgVlvLzbfqgB0pNmbsdXtnlvhhbQgYBNTv/Sx0
-         F3DP0/7XyPKgyLZ9jxa4H0TcQMuJERs7jSaiSZbCCOSkHBQAE235B2kqm3BhN8hcjdWb
-         /U3QQZTKCMJ3y5G9vLUZZipX2uBSm/rrZdtFDFBk/UHhu0PBamd8FJHBJ7KYCSPoFzzv
-         GTBo0lI9fnFkMt90Z9S6W/JtKkKTMyYHqy8e9ovsn8lpFOyqzrBOZp6Rnrn1ezgxMCnc
-         raqC01dqPPqVhr/jMSln0jl/1wx6hYe3vVg+OIsoJbWdKJ/447hz8OvLBzEnrHu7GGoE
-         WZJA==
-X-Gm-Message-State: APjAAAUhgiW2+wuUBRqtwYfSgvynFpNBA/dUtRIQI3n9ZbMaPH29aoDB
-        6EIgkk6YovpedHN99KIZpDrtsi5S14Ahqr4qKZ0=
-X-Google-Smtp-Source: APXvYqx2op3tX9A4P1hZwzw0eFhbk5CfYg0Tbl3ieHQEQJwA11MZzaowFPPO1ZfSsj+7d5NaD8TUBJpiL4dsKvwOW9o=
-X-Received: by 2002:aca:240d:: with SMTP id n13mr6735433oic.145.1557932964018;
- Wed, 15 May 2019 08:09:24 -0700 (PDT)
+        Wed, 15 May 2019 11:09:42 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4FF8Atg026402;
+        Wed, 15 May 2019 17:09:27 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=9sDHCBobyGwN5zX9QrGG4fMjtEr0teqvHD1XBP671OE=;
+ b=vs8iIGizAr8EZcpEPvULzixNjpcbcuSJOC5vtbzzWdw7a0/5BZYjzGufuG8RfIzQcBw1
+ uGIh2sEdKRSCj8W2h1bxTJC7ajb3KG4CRqba25GHYF67xZoovwvHFGRuMH//dvE0NPup
+ ShlIpJeh5pqDYMW67fGQchXaKv4qgMe1++YWb4qxSTkcJ6YZF9f16fQWw9fzMKVN+4uI
+ WgGvTacKmjS4EoHLSV/iBUKNiZCr/hTK9BvTpDTPxnvwz2SlKbVd/ZdpE4xvFfJpkSEj
+ lx2bDETNO4RKcA3AbAsCvydmgwwD6rM/QzvQK6FmTLVv8mTEeTkcODHBJiya0gQEWC+c 3Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2sdn9g1m3w-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 15 May 2019 17:09:27 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 51BC238;
+        Wed, 15 May 2019 15:09:24 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2E6EF29E7;
+        Wed, 15 May 2019 15:09:24 +0000 (GMT)
+Received: from localhost (10.75.127.45) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 15 May 2019 17:09:23
+ +0200
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <wsa@the-dreams.de>, <pierre-yves.mordret@st.com>
+CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] i2c: i2c-stm32f7: fix the get_irq error cases
+Date:   Wed, 15 May 2019 17:09:09 +0200
+Message-ID: <1557932949-15912-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190514155911.6C0AC68B05@newverein.lst.de> <20190514160241.9EAC768C7B@newverein.lst.de>
- <CA+E=qVfuKBzWK7dpM_eabjU8mLdzOw3zCnYk6Tc1oXdavH7CNA@mail.gmail.com> <20190515093141.41016b11@blackhole.lan>
-In-Reply-To: <20190515093141.41016b11@blackhole.lan>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Wed, 15 May 2019 08:08:57 -0700
-Message-ID: <CA+E=qVf6K_0T0x2Hsfp6EDqM-ok6xiAzeZPvp6SRg0yt010pKA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] arm64: DTS: allwinner: a64: enable ANX6345 bridge on Teres-I
-To:     Torsten Duwe <duwe@lst.de>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Harald Geyer <harald@ccbib.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_10:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 12:32 AM Torsten Duwe <duwe@lst.de> wrote:
->
-> On Tue, 14 May 2019 10:48:40 -0700
-> Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->
-> > > +       anx6345: anx6345@38 {
-> > > +               compatible = "analogix,anx6345";
-> > > +               reg = <0x38>;
-> > > +               reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24
-> > > */
-> > > +               dvdd25-supply = <&reg_dldo2>;
-> > > +               dvdd12-supply = <&reg_dldo3>;
-> > > +
-> > > +               port {
-> > > +                       anx6345_in: endpoint {
-> > > +                               remote-endpoint =
-> > > <&tcon0_out_anx6345>;
-> > > +                       };
-> > > +               };
-> >
-> > It doesn't comply with bindings document. You need to add out endpoint
->
-> It does comply with the bindings. The ports are all optional.
-> As far as DT is concerned, the signal path ends here. This is also the
-> final component _required_ to get the Linux kernel DRI up and running.
+During probe, return the "get_irq" error value instead of -EINVAL which
+allows the driver to be deferred probed if needed.
+Fix also the case where of_irq_get() returns a negative value.
+Note :
+On failure of_irq_get() returns 0 or a negative value while
+platform_get_irq() returns a negative value.
 
-Ugh, then bindings should be fixed. It's not optional. It may work if
-bootloader enables power for you, but it won't if you disable display
-driver in u-boot.
+Fixes: aeb068c57214 ("i2c: i2c-stm32f7: add driver")
 
-> > as well, and to do so you need to add bindings for eDP connector first
-> > and then implement panel driver.
-> > See Rob's suggestions here: http://patchwork.ozlabs.org/patch/1042593/
->
-> Well, one *could* extend the hardware description down to the actual
-> panel if necessary, but on the Teres-I it is not. I assume the panel
-> they ship provides proper EDID to the anx6345, because the display
-> works fine here with this DT.
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ drivers/i2c/busses/i2c-stm32f7.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
-I guess you're testing it with older version of anx6345. Newer version
-that supports power management [1] needs startup delay for panel.
-Another issue that you're seeing is that backlight is not disabled on
-DPMS events. All in all, you need to describe panel in dts.
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 4284fc9..14fb105 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -25,7 +25,6 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+-#include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/pinctrl/consumer.h>
+@@ -1812,15 +1811,14 @@ static struct i2c_algorithm stm32f7_i2c_algo = {
+ 
+ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ {
+-	struct device_node *np = pdev->dev.of_node;
+ 	struct stm32f7_i2c_dev *i2c_dev;
+ 	const struct stm32f7_i2c_setup *setup;
+ 	struct resource *res;
+-	u32 irq_error, irq_event, clk_rate, rise_time, fall_time;
++	u32 clk_rate, rise_time, fall_time;
+ 	struct i2c_adapter *adap;
+ 	struct reset_control *rst;
+ 	dma_addr_t phy_addr;
+-	int ret;
++	int irq_error, irq_event, ret;
+ 
+ 	i2c_dev = devm_kzalloc(&pdev->dev, sizeof(*i2c_dev), GFP_KERNEL);
+ 	if (!i2c_dev)
+@@ -1832,16 +1830,20 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(i2c_dev->base);
+ 	phy_addr = (dma_addr_t)res->start;
+ 
+-	irq_event = irq_of_parse_and_map(np, 0);
+-	if (!irq_event) {
+-		dev_err(&pdev->dev, "IRQ event missing or invalid\n");
+-		return -EINVAL;
++	irq_event = platform_get_irq(pdev, 0);
++	if (irq_event < 0) {
++		if (irq_event != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to get IRQ event: %d\n",
++				irq_event);
++		return irq_event;
+ 	}
+ 
+-	irq_error = irq_of_parse_and_map(np, 1);
+-	if (!irq_error) {
+-		dev_err(&pdev->dev, "IRQ error missing or invalid\n");
+-		return -EINVAL;
++	irq_error = platform_get_irq(pdev, 1);
++	if (irq_error < 0) {
++		if (irq_error != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "Failed to get IRQ error: %d\n",
++				irq_error);
++		return irq_error;
+ 	}
+ 
+ 	i2c_dev->clk = devm_clk_get(&pdev->dev, NULL);
+-- 
+2.7.4
 
-[1] https://github.com/anarsoul/linux-2.6/commit/2fbf9c242419c8bda698e8331a02d4312143ae2c
-
-
-> Do I understand this correctly that the (3 different?) pinebook panels
-> are not that easy to handle? I try to include the pinebook wherever
-> possible, just because it's so similar, but here I'm a bit lost, so I
-> had to omit these parts.
->
-> Should I also have added a Tested-by: ? ;-)
-
-I don't have Teres, so I haven't tested these.
-
->
->         Torsten
