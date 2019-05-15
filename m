@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8C9C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E411DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E04520843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B815B20862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918826;
-	bh=CFP61ogKUaFlMEANdTpgbEgjc/Z+NZmy6sxfd+TvkqE=;
+	s=default; t=1557918830;
+	bh=uGqX99loL05PByMQw1blL16J0HtQ2rM0VMZvYsHnLqU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c2A986Ur9C9KiOmaFF5q0OJPh5snydBlkPPABk1ZpiPPyq669F19iIysWyIaTs4Yb
-	 IkAmnrP34SmrYxEnTvgubBFifg+9GCKWHt5jnej67kD7u8u7/cDKc+riSEgvANYwxq
-	 D4Br2+KKSj0+SCr/g573Zb0DkMmMMJj7CeyqaudU=
+	b=l163LCnYk9kcVopT2YikM7ew0Ao9BSKMUuNmbnmvO6KnchQ+U8ZVekSEDFGdCeTlo
+	 IdKjqgGJssBm3p6uShUk0bu6ON6NnIhS2HKaDgDZuHE3URCsaLF8jPPOb1gKSxRawI
+	 O9t5dmwxuP2i8bypZipp9tMb8oPHaVl0hJ7dgMbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbfEOLNp (ORCPT
+        id S1730031AbfEOLNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:13:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49480 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:13:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730013AbfEOLNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:13:42 -0400
+        id S1728897AbfEOLNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:13:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F5C12084E;
-        Wed, 15 May 2019 11:13:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 804632084E;
+        Wed, 15 May 2019 11:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918821;
-        bh=CFP61ogKUaFlMEANdTpgbEgjc/Z+NZmy6sxfd+TvkqE=;
+        s=default; t=1557918827;
+        bh=uGqX99loL05PByMQw1blL16J0HtQ2rM0VMZvYsHnLqU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lyDuUxsnf9MBjLA9fOJmpZJXhN752t3Fa1b6LJf4BagGG3jhyWLSYkeT9qMnGYSvr
-         0YmfolmVMZdLqbORBxyywnXsOZN+Oi/05q4mdAznbiD73rA2ceA+fOL8NAYrhWFXyQ
-         0EJ8shtWX28UPJx1a9cS3Y3xzVifyC3awIU/S+Qw=
+        b=liE8YVeBEHuZPIKFL03GhP7ebca3CJox/GtYNSoGeA9rb4iQSt1kN0CWY/7Bu1ohG
+         eC0c62uSVxKuc8cuz1npZPWb7BNjLaQYz3K3GvBumjTuKTkJDMDxgAqlz1UGn/rojK
+         JEOFz4Bzaqxp+Op84A8IeVBcJWSLU//iDE76l89Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 13/51] mac80211: fix unaligned access in mesh table hash function
-Date:   Wed, 15 May 2019 12:55:48 +0200
-Message-Id: <20190515090621.557590829@linuxfoundation.org>
+Subject: [PATCH 4.9 15/51] mISDN: Check address length before reading address family
+Date:   Wed, 15 May 2019 12:55:50 +0200
+Message-Id: <20190515090622.323232071@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
 References: <20190515090616.669619870@linuxfoundation.org>
@@ -60,31 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 40586e3fc400c00c11151804dcdc93f8c831c808 ]
+[ Upstream commit 238ffdc49ef98b15819cfd5e3fb23194e3ea3d39 ]
 
-The pointer to the last four bytes of the address is not guaranteed to be
-aligned, so we need to use __get_unaligned_cpu32 here
+KMSAN will complain if valid address length passed to bind() is shorter
+than sizeof("struct sockaddr_mISDN"->family) bytes.
 
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mesh_pathtbl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/isdn/mISDN/socket.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
-index 197753ad50b4e..8c17d498df301 100644
---- a/net/mac80211/mesh_pathtbl.c
-+++ b/net/mac80211/mesh_pathtbl.c
-@@ -23,7 +23,7 @@ static void mesh_path_free_rcu(struct mesh_table *tbl, struct mesh_path *mpath);
- static u32 mesh_table_hash(const void *addr, u32 len, u32 seed)
- {
- 	/* Use last four bytes of hw addr as hash index */
--	return jhash_1word(*(u32 *)(addr+2), seed);
-+	return jhash_1word(__get_unaligned_cpu32((u8 *)addr + 2), seed);
- }
+diff --git a/drivers/isdn/mISDN/socket.c b/drivers/isdn/mISDN/socket.c
+index 99e5f9751e8b1..f96b8f2bdf743 100644
+--- a/drivers/isdn/mISDN/socket.c
++++ b/drivers/isdn/mISDN/socket.c
+@@ -712,10 +712,10 @@ base_sock_bind(struct socket *sock, struct sockaddr *addr, int addr_len)
+ 	struct sock *sk = sock->sk;
+ 	int err = 0;
  
- static const struct rhashtable_params mesh_rht_params = {
+-	if (!maddr || maddr->family != AF_ISDN)
++	if (addr_len < sizeof(struct sockaddr_mISDN))
+ 		return -EINVAL;
+ 
+-	if (addr_len < sizeof(struct sockaddr_mISDN))
++	if (!maddr || maddr->family != AF_ISDN)
+ 		return -EINVAL;
+ 
+ 	lock_sock(sk);
 -- 
 2.20.1
 
