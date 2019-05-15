@@ -6,104 +6,112 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9A9C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498BFC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 051F22084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA982084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728205AbfEOT3i (ORCPT
+        id S1727672AbfEOT1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:29:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46604 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727651AbfEOT1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 May 2019 15:27:34 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+Received: from mx1.redhat.com ([209.132.183.28]:53864 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726677AbfEOT1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 15:27:33 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 17A6144FB1;
-        Wed, 15 May 2019 19:27:34 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id B04FF3004405;
+        Wed, 15 May 2019 19:27:32 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E58975D723;
-        Wed, 15 May 2019 19:27:33 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8ACF31001DE1;
+        Wed, 15 May 2019 19:27:32 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 1EF9022548F; Wed, 15 May 2019 15:27:30 -0400 (EDT)
+        id 769C3225479; Wed, 15 May 2019 15:27:29 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, linux-nvdimm@lists.01.org
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
         dgilbert@redhat.com, swhiteho@redhat.com
-Subject: [PATCH v2 27/30] fuse: Release file in process context
-Date:   Wed, 15 May 2019 15:27:12 -0400
-Message-Id: <20190515192715.18000-28-vgoyal@redhat.com>
+Subject: [PATCH v2 05/30] fuse: export fuse_len_args()
+Date:   Wed, 15 May 2019 15:26:50 -0400
+Message-Id: <20190515192715.18000-6-vgoyal@redhat.com>
 In-Reply-To: <20190515192715.18000-1-vgoyal@redhat.com>
 References: <20190515192715.18000-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 15 May 2019 19:27:34 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 15 May 2019 19:27:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fuse_file_put(sync) can be called with sync=true/false. If sync=true,
-it waits for release request response and then calls iput() in the
-caller's context. If sync=false, it does not wait for release request
-response, frees the fuse_file struct immediately and req->end function
-does the iput().
+From: Stefan Hajnoczi <stefanha@redhat.com>
 
-iput() can be a problem with DAX if called in req->end context. If this
-is last reference to inode (VFS has let go its reference already), then
-iput() will clean DAX mappings as well and send REMOVEMAPPING requests
-and wait for completion. (All the the worker thread context which is
-processing fuse replies from daemon on the host).
+virtio-fs will need to query the length of fuse_arg lists.  Make the
+symbol visible.
 
-That means it blocks worker thread and it stops processing further
-replies and system deadlocks.
-
-So for now, force sync release of file in case of DAX inodes.
-
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
 ---
- fs/fuse/file.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ fs/fuse/dev.c    | 7 ++++---
+ fs/fuse/fuse_i.h | 5 +++++
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 87fc2b5e0a3a..b0293a308b5e 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -475,6 +475,7 @@ void fuse_release_common(struct file *file, bool isdir)
- 	struct fuse_file *ff = file->private_data;
- 	struct fuse_req *req = ff->reserved_req;
- 	int opcode = isdir ? FUSE_RELEASEDIR : FUSE_RELEASE;
-+	bool sync = false;
- 
- 	fuse_prepare_release(fi, ff, file->f_flags, opcode);
- 
-@@ -495,8 +496,20 @@ void fuse_release_common(struct file *file, bool isdir)
- 	 * Make the release synchronous if this is a fuseblk mount,
- 	 * synchronous RELEASE is allowed (and desirable) in this case
- 	 * because the server can be trusted not to screw up.
-+	 *
-+	 * For DAX, fuse server is trusted. So it should be fine to
-+	 * do a sync file put. Doing async file put is creating
-+	 * problems right now because when request finish, iput()
-+	 * can lead to freeing of inode. That means it tears down
-+	 * mappings backing DAX memory and sends REMOVEMAPPING message
-+	 * to server and blocks for completion. Currently, waiting
-+	 * in req->end context deadlocks the system as same worker thread
-+	 * can't process REMOVEMAPPING reply it is waiting for.
- 	 */
--	fuse_file_put(ff, ff->fc->destroy_req != NULL, isdir);
-+	if (IS_DAX(req->misc.release.inode) || ff->fc->destroy_req != NULL)
-+		sync = true;
-+
-+	fuse_file_put(ff, sync, isdir);
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index 46d1aecd7506..d8054b1a45f5 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -350,7 +350,7 @@ void fuse_put_request(struct fuse_conn *fc, struct fuse_req *req)
  }
+ EXPORT_SYMBOL_GPL(fuse_put_request);
  
- static int fuse_open(struct inode *inode, struct file *file)
+-static unsigned len_args(unsigned numargs, struct fuse_arg *args)
++unsigned fuse_len_args(unsigned numargs, struct fuse_arg *args)
+ {
+ 	unsigned nbytes = 0;
+ 	unsigned i;
+@@ -360,6 +360,7 @@ static unsigned len_args(unsigned numargs, struct fuse_arg *args)
+ 
+ 	return nbytes;
+ }
++EXPORT_SYMBOL_GPL(fuse_len_args);
+ 
+ static u64 fuse_get_unique(struct fuse_iqueue *fiq)
+ {
+@@ -375,7 +376,7 @@ static unsigned int fuse_req_hash(u64 unique)
+ static void queue_request(struct fuse_iqueue *fiq, struct fuse_req *req)
+ {
+ 	req->in.h.len = sizeof(struct fuse_in_header) +
+-		len_args(req->in.numargs, (struct fuse_arg *) req->in.args);
++		fuse_len_args(req->in.numargs, (struct fuse_arg *) req->in.args);
+ 	list_add_tail(&req->list, &fiq->pending);
+ 	wake_up_locked(&fiq->waitq);
+ 	kill_fasync(&fiq->fasync, SIGIO, POLL_IN);
+@@ -1894,7 +1895,7 @@ static int copy_out_args(struct fuse_copy_state *cs, struct fuse_out *out,
+ 	if (out->h.error)
+ 		return nbytes != reqsize ? -EINVAL : 0;
+ 
+-	reqsize += len_args(out->numargs, out->args);
++	reqsize += fuse_len_args(out->numargs, out->args);
+ 
+ 	if (reqsize < nbytes || (reqsize > nbytes && !out->argvar))
+ 		return -EINVAL;
+diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+index c4584c873b87..3a235386d667 100644
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -1091,4 +1091,9 @@ int fuse_set_acl(struct inode *inode, struct posix_acl *acl, int type);
+ /* readdir.c */
+ int fuse_readdir(struct file *file, struct dir_context *ctx);
+ 
++/**
++ * Return the number of bytes in an arguments list
++ */
++unsigned fuse_len_args(unsigned numargs, struct fuse_arg *args);
++
+ #endif /* _FS_FUSE_I_H */
 -- 
 2.20.1
 
