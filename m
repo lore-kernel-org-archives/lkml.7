@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0C2C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE44C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FB0620657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:04:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B358F20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921841;
-	bh=/Tbe6qeLDDvit17MLfzrZarMMLypuT7YzG0hJorRKFk=;
+	s=default; t=1557921863;
+	bh=TMeOBgDtjVi5XUK8LA/Zc80O0TNNpj3QnIxLvUtITCE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A1t2vC2BRlFIHV66GEQwGQrG5u3MfIJzYHKFTFVUTrmsPkC+FD03KC8xlJvHEapju
-	 XSkD2UHGtPukt9nG+oYtgj/1WfKwIy2yj5Y3R5Or3y4+pfAthXf/ITrb5a0a8sxK3Q
-	 NsMJqAhZhHi5lbd1S7qY3Grvb+Ra2UD+hL/rPcGk=
+	b=tvu6u0IrtZneA+Ui+FAVl+RlKYNUBmtIIJZa+sigXPLR1HbLOMMIpD2SWnCJn8gtL
+	 qKPNL4qLCnw/mzuGIaTnL6+qAevw6Aan/iZUoZNmn++FC1KFE1jtpd9vyvBvMBKQr0
+	 gEBsJTvbdzkBxGrbI7wJurZgjFieAd4U83mPB4oU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbfEOLMF (ORCPT
+        id S1729762AbfEOMEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:12:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46932 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:04:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729692AbfEOLMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:12:02 -0400
+        id S1729411AbfEOLLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:11:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D1212084E;
-        Wed, 15 May 2019 11:12:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7B662084E;
+        Wed, 15 May 2019 11:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918721;
-        bh=/Tbe6qeLDDvit17MLfzrZarMMLypuT7YzG0hJorRKFk=;
+        s=default; t=1557918703;
+        bh=TMeOBgDtjVi5XUK8LA/Zc80O0TNNpj3QnIxLvUtITCE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=upL9r9ZgE9aNRckM6UzRNE6JJ9nVRNYsINPhCl8hVnTeCkT/ztFomZcvnUPokM3kT
-         wIOvhe71Nwp76xpXnaFiBGocH84RWwfOaBZXtkxmOmK8HtXE4wxlIAfMDzRjFcrfLH
-         +IF/AEO7kP/Tr1xfK7ZgiOE2PdV/8E2jfdiIg6IY=
+        b=BTIymkAEBDD3ifWWsXqResFgXhUhcIhVLFjUg1j1sJiXIVqxDGQBNV+RZBtUhTAvy
+         rwOW3lXYpM5NV+prSHvUkuPn/3fbVlHTcLKZsWoRrqBvwsqW3zidtV2IeT6Y6osmA5
+         H2IiffEoM3Lu2nxF0ig94kwezURMsQk8Zv5MjNQg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>, Jon Masters <jcm@redhat.com>,
+        Borislav Petkov <bp@suse.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Jon Masters <jcm@redhat.com>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 239/266] x86/speculation/mds: Add mitigation mode VMWERV
-Date:   Wed, 15 May 2019 12:55:46 +0200
-Message-Id: <20190515090731.087091202@linuxfoundation.org>
+Subject: [PATCH 4.4 233/266] x86/speculation/mds: Add mds_clear_cpu_buffers()
+Date:   Wed, 15 May 2019 12:55:40 +0200
+Message-Id: <20190515090730.885031770@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -62,125 +64,182 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 22dd8365088b6403630b82423cf906491859b65e upstream.
+commit 6a9e529272517755904b7afa639f6db59ddb793e upstream.
 
-In virtualized environments it can happen that the host has the microcode
-update which utilizes the VERW instruction to clear CPU buffers, but the
-hypervisor is not yet updated to expose the X86_FEATURE_MD_CLEAR CPUID bit
-to guests.
+The Microarchitectural Data Sampling (MDS) vulernabilities are mitigated by
+clearing the affected CPU buffers. The mechanism for clearing the buffers
+uses the unused and obsolete VERW instruction in combination with a
+microcode update which triggers a CPU buffer clear when VERW is executed.
 
-Introduce an internal mitigation mode VMWERV which enables the invocation
-of the CPU buffer clearing even if X86_FEATURE_MD_CLEAR is not set. If the
-system has no updated microcode this results in a pointless execution of
-the VERW instruction wasting a few CPU cycles. If the microcode is updated,
-but not exposed to a guest then the CPU buffers will be cleared.
+Provide a inline function with the assembly magic. The argument of the VERW
+instruction must be a memory operand as documented:
 
-That said: Virtual Machines Will Eventually Receive Vaccine
+  "MD_CLEAR enumerates that the memory-operand variant of VERW (for
+   example, VERW m16) has been extended to also overwrite buffers affected
+   by MDS. This buffer overwriting functionality is not guaranteed for the
+   register operand variant of VERW."
+
+Documentation also recommends to use a writable data segment selector:
+
+  "The buffer overwriting occurs regardless of the result of the VERW
+   permission check, as well as when the selector is null or causes a
+   descriptor load segment violation. However, for lowest latency we
+   recommend using a selector that indicates a valid writable data
+   segment."
+
+Add x86 specific documentation about MDS and the internal workings of the
+mitigation.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 Reviewed-by: Jon Masters <jcm@redhat.com>
 Tested-by: Jon Masters <jcm@redhat.com>
+[bwh: Backported to 4.4: drop changes to doc index and configuration]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Documentation/x86/mds.rst        |   27 +++++++++++++++++++++++++++
- arch/x86/include/asm/processor.h |    1 +
- arch/x86/kernel/cpu/bugs.c       |   18 ++++++++++++------
- 3 files changed, 40 insertions(+), 6 deletions(-)
+ Documentation/x86/mds.rst            |   99 +++++++++++++++++++++++++++++++++++
+ arch/x86/include/asm/nospec-branch.h |   25 ++++++++
+ 2 files changed, 124 insertions(+)
+ create mode 100644 Documentation/x86/mds.rst
 
---- a/Documentation/x86/mds.rst
+--- /dev/null
 +++ b/Documentation/x86/mds.rst
-@@ -93,11 +93,38 @@ The kernel provides a function to invoke
- The mitigation is invoked on kernel/userspace, hypervisor/guest and C-state
- (idle) transitions.
- 
-+As a special quirk to address virtualization scenarios where the host has
-+the microcode updated, but the hypervisor does not (yet) expose the
-+MD_CLEAR CPUID bit to guests, the kernel issues the VERW instruction in the
-+hope that it might actually clear the buffers. The state is reflected
-+accordingly.
+@@ -0,0 +1,99 @@
++Microarchitectural Data Sampling (MDS) mitigation
++=================================================
 +
- According to current knowledge additional mitigations inside the kernel
- itself are not required because the necessary gadgets to expose the leaked
- data cannot be controlled in a way which allows exploitation from malicious
- user space or VM guests.
- 
-+Kernel internal mitigation modes
-+--------------------------------
++.. _mds:
 +
-+ ======= ============================================================
-+ off      Mitigation is disabled. Either the CPU is not affected or
-+          mds=off is supplied on the kernel command line
++Overview
++--------
 +
-+ full     Mitigation is eanbled. CPU is affected and MD_CLEAR is
-+          advertised in CPUID.
++Microarchitectural Data Sampling (MDS) is a family of side channel attacks
++on internal buffers in Intel CPUs. The variants are:
 +
-+ vmwerv	  Mitigation is enabled. CPU is affected and MD_CLEAR is not
-+	  advertised in CPUID. That is mainly for virtualization
-+	  scenarios where the host has the updated microcode but the
-+	  hypervisor does not expose MD_CLEAR in CPUID. It's a best
-+	  effort approach without guarantee.
-+ ======= ============================================================
++ - Microarchitectural Store Buffer Data Sampling (MSBDS) (CVE-2018-12126)
++ - Microarchitectural Fill Buffer Data Sampling (MFBDS) (CVE-2018-12130)
++ - Microarchitectural Load Port Data Sampling (MLPDS) (CVE-2018-12127)
 +
-+If the CPU is affected and mds=off is not supplied on the kernel command
-+line then the kernel selects the appropriate mitigation mode depending on
-+the availability of the MD_CLEAR CPUID bit.
++MSBDS leaks Store Buffer Entries which can be speculatively forwarded to a
++dependent load (store-to-load forwarding) as an optimization. The forward
++can also happen to a faulting or assisting load operation for a different
++memory address, which can be exploited under certain conditions. Store
++buffers are partitioned between Hyper-Threads so cross thread forwarding is
++not possible. But if a thread enters or exits a sleep state the store
++buffer is repartitioned which can expose data from one thread to the other.
 +
- Mitigation points
- -----------------
++MFBDS leaks Fill Buffer Entries. Fill buffers are used internally to manage
++L1 miss situations and to hold data which is returned or sent in response
++to a memory or I/O operation. Fill buffers can forward data to a load
++operation and also write data to the cache. When the fill buffer is
++deallocated it can retain the stale data of the preceding operations which
++can then be forwarded to a faulting or assisting load operation, which can
++be exploited under certain conditions. Fill buffers are shared between
++Hyper-Threads so cross thread leakage is possible.
++
++MLPDS leaks Load Port Data. Load ports are used to perform load operations
++from memory or I/O. The received data is then forwarded to the register
++file or a subsequent operation. In some implementations the Load Port can
++contain stale data from a previous operation which can be forwarded to
++faulting or assisting loads under certain conditions, which again can be
++exploited eventually. Load ports are shared between Hyper-Threads so cross
++thread leakage is possible.
++
++
++Exposure assumptions
++--------------------
++
++It is assumed that attack code resides in user space or in a guest with one
++exception. The rationale behind this assumption is that the code construct
++needed for exploiting MDS requires:
++
++ - to control the load to trigger a fault or assist
++
++ - to have a disclosure gadget which exposes the speculatively accessed
++   data for consumption through a side channel.
++
++ - to control the pointer through which the disclosure gadget exposes the
++   data
++
++The existence of such a construct in the kernel cannot be excluded with
++100% certainty, but the complexity involved makes it extremly unlikely.
++
++There is one exception, which is untrusted BPF. The functionality of
++untrusted BPF is limited, but it needs to be thoroughly investigated
++whether it can be used to create such a construct.
++
++
++Mitigation strategy
++-------------------
++
++All variants have the same mitigation strategy at least for the single CPU
++thread case (SMT off): Force the CPU to clear the affected buffers.
++
++This is achieved by using the otherwise unused and obsolete VERW
++instruction in combination with a microcode update. The microcode clears
++the affected CPU buffers when the VERW instruction is executed.
++
++For virtualization there are two ways to achieve CPU buffer
++clearing. Either the modified VERW instruction or via the L1D Flush
++command. The latter is issued when L1TF mitigation is enabled so the extra
++VERW can be avoided. If the CPU is not affected by L1TF then VERW needs to
++be issued.
++
++If the VERW instruction with the supplied segment selector argument is
++executed on a CPU without the microcode update there is no side effect
++other than a small number of pointlessly wasted CPU cycles.
++
++This does not protect against cross Hyper-Thread attacks except for MSBDS
++which is only exploitable cross Hyper-thread when one of the Hyper-Threads
++enters a C-state.
++
++The kernel provides a function to invoke the buffer clearing:
++
++    mds_clear_cpu_buffers()
++
++The mitigation is invoked on kernel/userspace, hypervisor/guest and C-state
++(idle) transitions.
++
++According to current knowledge additional mitigations inside the kernel
++itself are not required because the necessary gadgets to expose the leaked
++data cannot be controlled in a way which allows exploitation from malicious
++user space or VM guests.
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -262,6 +262,31 @@ DECLARE_STATIC_KEY_FALSE(switch_to_cond_
+ DECLARE_STATIC_KEY_FALSE(switch_mm_cond_ibpb);
+ DECLARE_STATIC_KEY_FALSE(switch_mm_always_ibpb);
  
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -849,6 +849,7 @@ void df_debug(struct pt_regs *regs, long
- enum mds_mitigations {
- 	MDS_MITIGATION_OFF,
- 	MDS_MITIGATION_FULL,
-+	MDS_MITIGATION_VMWERV,
- };
++#include <asm/segment.h>
++
++/**
++ * mds_clear_cpu_buffers - Mitigation for MDS vulnerability
++ *
++ * This uses the otherwise unused and obsolete VERW instruction in
++ * combination with microcode which triggers a CPU buffer flush when the
++ * instruction is executed.
++ */
++static inline void mds_clear_cpu_buffers(void)
++{
++	static const u16 ds = __KERNEL_DS;
++
++	/*
++	 * Has to be the memory-operand variant because only that
++	 * guarantees the CPU buffer flush functionality according to
++	 * documentation. The register-operand variant does not.
++	 * Works with any segment selector, but a valid writable
++	 * data segment is the fastest variant.
++	 *
++	 * "cc" clobber is required because VERW modifies ZF.
++	 */
++	asm volatile("verw %[ds]" : : [ds] "m" (ds) : "cc");
++}
++
+ #endif /* __ASSEMBLY__ */
  
- #endif /* _ASM_X86_PROCESSOR_H */
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -213,7 +213,8 @@ static enum mds_mitigations mds_mitigati
- 
- static const char * const mds_strings[] = {
- 	[MDS_MITIGATION_OFF]	= "Vulnerable",
--	[MDS_MITIGATION_FULL]	= "Mitigation: Clear CPU buffers"
-+	[MDS_MITIGATION_FULL]	= "Mitigation: Clear CPU buffers",
-+	[MDS_MITIGATION_VMWERV]	= "Vulnerable: Clear CPU buffers attempted, no microcode",
- };
- 
- static void __init mds_select_mitigation(void)
-@@ -224,10 +225,9 @@ static void __init mds_select_mitigation
- 	}
- 
- 	if (mds_mitigation == MDS_MITIGATION_FULL) {
--		if (boot_cpu_has(X86_FEATURE_MD_CLEAR))
--			static_branch_enable(&mds_user_clear);
--		else
--			mds_mitigation = MDS_MITIGATION_OFF;
-+		if (!boot_cpu_has(X86_FEATURE_MD_CLEAR))
-+			mds_mitigation = MDS_MITIGATION_VMWERV;
-+		static_branch_enable(&mds_user_clear);
- 	}
- 	pr_info("%s\n", mds_strings[mds_mitigation]);
- }
-@@ -687,8 +687,14 @@ void arch_smt_update(void)
- 		break;
- 	}
- 
--	if (mds_mitigation == MDS_MITIGATION_FULL)
-+	switch (mds_mitigation) {
-+	case MDS_MITIGATION_FULL:
-+	case MDS_MITIGATION_VMWERV:
- 		update_mds_branch_idle();
-+		break;
-+	case MDS_MITIGATION_OFF:
-+		break;
-+	}
- 
- 	mutex_unlock(&spec_ctrl_mutex);
- }
+ /*
 
 
