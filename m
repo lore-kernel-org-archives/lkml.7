@@ -2,52 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40ACEC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1A6C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3992084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF3A320843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918446;
-	bh=/8t7sR6yshO0rm6d8GV/7qh4yOkTDpZvtfJVpBiEOFE=;
+	s=default; t=1557918449;
+	bh=pWx+gOD2V8JM4p0svlMqSMD6Grb5nz9Xoi1IWHwocTI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KP8p0ODbnvOluW4E9+FzZ/S80o/MkFzGXanquxJGhcstwJXo0cw7jN6UdIm214iko
-	 H02NcAlfY9rzZWYOQXrq6VBx8cIvevfjNj1tNR5kcKtR4V3wnwRDT7+zMsDHlrCgNX
-	 z6FPrDhbnJn0ZTKXlHB0sKhONSwQHM4rQewCyy8A=
+	b=S1abyAt0IYTn9rPAgHSa/VrkLIsIou0Mg6h27J0ns8wKkvX4R+v4/dr0s2OnZZHjj
+	 dtyptnEMMzqaZglMCAQIgB8jWvWt6O3wlSPHbp8OgGd47vMxOcH6VLBDR0S+YYO5++
+	 YaC3sH1hbikGrScD5NOkadUmeDV1sWnM/cgm/14M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbfEOLHY (ORCPT
+        id S1728923AbfEOLH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:07:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38830 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:07:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728902AbfEOLHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:07:21 -0400
+        id S1728523AbfEOLHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:07:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1948520881;
-        Wed, 15 May 2019 11:07:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6E0C21473;
+        Wed, 15 May 2019 11:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918440;
-        bh=/8t7sR6yshO0rm6d8GV/7qh4yOkTDpZvtfJVpBiEOFE=;
+        s=default; t=1557918443;
+        bh=pWx+gOD2V8JM4p0svlMqSMD6Grb5nz9Xoi1IWHwocTI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L31j9cbAjsElzBo77pOvI8Mag0doPwwOjjp7sNci3HTcGZJsNLa8kmRxTwc0MOG8c
-         xVmUwX3BzNCf1u6SS8GoXJTnWLfKi7Fa8oYpVYZN00PbXeOwTpKKTGfFqdZ1y3f3C7
-         FGs7k6SMANh6qvWPfIA5ATQa06c1QA7AuSYRigEU=
+        b=U7omnVXfV0iI4fBGe1udqgrPGxp6t7vdI3zon10vRhcXh+V0ws7wmHlJl06qky8LZ
+         CAO7uP3kBwbBabcTOeWbeqOQtnAYz0pqWIQN3SxuMZo5pFhHoNWD9CeUX3oZLIZ1g5
+         0oGBlaJZNYcqGy3l2MwqVmtBluCWfMiSlHalWgh4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Laight <David.Laight@aculab.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 115/266] packet: validate msg_namelen in send directly
-Date:   Wed, 15 May 2019 12:53:42 +0200
-Message-Id: <20190515090726.348855449@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Olof Johansson <olof@lixom.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 133/266] ARM: orion: dont use using 64-bit DMA masks
+Date:   Wed, 15 May 2019 12:54:00 +0200
+Message-Id: <20190515090727.444360804@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,89 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willem de Bruijn <willemb@google.com>
+[ Upstream commit cd92d74d67c811dc22544430b9ac3029f5bd64c5 ]
 
-[ Upstream commit 486efdc8f6ce802b27e15921d2353cc740c55451 ]
+clang warns about statically defined DMA masks from the DMA_BIT_MASK
+macro with length 64:
 
-Packet sockets in datagram mode take a destination address. Verify its
-length before passing to dev_hard_header.
+arch/arm/plat-orion/common.c:625:29: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+                .coherent_dma_mask      = DMA_BIT_MASK(64),
+                                          ^~~~~~~~~~~~~~~~
+include/linux/dma-mapping.h:141:54: note: expanded from macro 'DMA_BIT_MASK'
+ #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
 
-Prior to 2.6.14-rc3, the send code ignored sll_halen. This is
-established behavior. Directly compare msg_namelen to dev->addr_len.
+The ones in orion shouldn't really be 64 bit masks, so changing them
+to what the driver can support avoids the warning.
 
-Change v1->v2: initialize addr in all paths
-
-Fixes: 6b8d95f1795c4 ("packet: validate address length if non-zero")
-Suggested-by: David Laight <David.Laight@aculab.com>
-Signed-off-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/packet/af_packet.c |   23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+ arch/arm/plat-orion/common.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -2490,8 +2490,8 @@ static int tpacket_snd(struct packet_soc
- 	void *ph;
- 	DECLARE_SOCKADDR(struct sockaddr_ll *, saddr, msg->msg_name);
- 	bool need_wait = !(msg->msg_flags & MSG_DONTWAIT);
-+	unsigned char *addr = NULL;
- 	int tp_len, size_max;
--	unsigned char *addr;
- 	int len_sum = 0;
- 	int status = TP_STATUS_AVAILABLE;
- 	int hlen, tlen;
-@@ -2511,10 +2511,13 @@ static int tpacket_snd(struct packet_soc
- 						sll_addr)))
- 			goto out;
- 		proto	= saddr->sll_protocol;
--		addr	= saddr->sll_halen ? saddr->sll_addr : NULL;
- 		dev = dev_get_by_index(sock_net(&po->sk), saddr->sll_ifindex);
--		if (addr && dev && saddr->sll_halen < dev->addr_len)
--			goto out_put;
-+		if (po->sk.sk_socket->type == SOCK_DGRAM) {
-+			if (dev && msg->msg_namelen < dev->addr_len +
-+				   offsetof(struct sockaddr_ll, sll_addr))
-+				goto out_put;
-+			addr = saddr->sll_addr;
-+		}
- 	}
- 
- 	err = -ENXIO;
-@@ -2652,7 +2655,7 @@ static int packet_snd(struct socket *soc
- 	struct sk_buff *skb;
- 	struct net_device *dev;
- 	__be16 proto;
--	unsigned char *addr;
-+	unsigned char *addr = NULL;
- 	int err, reserve = 0;
- 	struct sockcm_cookie sockc;
- 	struct virtio_net_hdr vnet_hdr = { 0 };
-@@ -2672,7 +2675,6 @@ static int packet_snd(struct socket *soc
- 	if (likely(saddr == NULL)) {
- 		dev	= packet_cached_dev_get(po);
- 		proto	= po->num;
--		addr	= NULL;
- 	} else {
- 		err = -EINVAL;
- 		if (msg->msg_namelen < sizeof(struct sockaddr_ll))
-@@ -2680,10 +2682,13 @@ static int packet_snd(struct socket *soc
- 		if (msg->msg_namelen < (saddr->sll_halen + offsetof(struct sockaddr_ll, sll_addr)))
- 			goto out;
- 		proto	= saddr->sll_protocol;
--		addr	= saddr->sll_halen ? saddr->sll_addr : NULL;
- 		dev = dev_get_by_index(sock_net(sk), saddr->sll_ifindex);
--		if (addr && dev && saddr->sll_halen < dev->addr_len)
--			goto out_unlock;
-+		if (sock->type == SOCK_DGRAM) {
-+			if (dev && msg->msg_namelen < dev->addr_len +
-+				   offsetof(struct sockaddr_ll, sll_addr))
-+				goto out_unlock;
-+			addr = saddr->sll_addr;
-+		}
- 	}
- 
- 	err = -ENXIO;
+diff --git a/arch/arm/plat-orion/common.c b/arch/arm/plat-orion/common.c
+index 8861c367d061..51c3737ddba7 100644
+--- a/arch/arm/plat-orion/common.c
++++ b/arch/arm/plat-orion/common.c
+@@ -645,7 +645,7 @@ static struct platform_device orion_xor0_shared = {
+ 	.resource	= orion_xor0_shared_resources,
+ 	.dev            = {
+ 		.dma_mask               = &orion_xor_dmamask,
+-		.coherent_dma_mask      = DMA_BIT_MASK(64),
++		.coherent_dma_mask      = DMA_BIT_MASK(32),
+ 		.platform_data          = &orion_xor0_pdata,
+ 	},
+ };
+@@ -706,7 +706,7 @@ static struct platform_device orion_xor1_shared = {
+ 	.resource	= orion_xor1_shared_resources,
+ 	.dev            = {
+ 		.dma_mask               = &orion_xor_dmamask,
+-		.coherent_dma_mask      = DMA_BIT_MASK(64),
++		.coherent_dma_mask      = DMA_BIT_MASK(32),
+ 		.platform_data          = &orion_xor1_pdata,
+ 	},
+ };
+-- 
+2.20.1
+
 
 
