@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DC2C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6C4C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7768220657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E2F20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921564;
-	bh=X9ywAzZBUkXSlTEyua4mUfQjXW1QYxM2AGR+Qdlo5C4=;
+	s=default; t=1557921568;
+	bh=J3RLMfzo+nRwLHRwAtAg0VMgCVR+ronI7cHNuzp2X3Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rQpdkz05V8jLlDlel4pRi0qxnxS2UrJtIewut5XYfXVpmTsGTRAKr4Xwh6lLR8xnn
-	 LuMR3tiidLV+54b5a1iNY50tDBf29TtGm6uUYTdu9urCCnb2biBN6r+lJFny5nlEje
-	 HPJmq8ReEfjY/2l9tqUIWfyZxvVkGAHVvfJIekrY=
+	b=Uxd/HaHeaRgzMXGXzqW+IkodeJGE/nkSWZuj6ScsfqwMkKGT/cTKrM93GsAlRRyXh
+	 mvpb4ZFQlq94v8Jr9qAAuPjJTr0u6XQ4Wh8f+3Q3C0IZ/S+Dx0lQM7+Xa/tIXn7xdI
+	 W/MHJm97bX35SIuzQw8Zwb0pQpGTTDZDMElYP8zU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730309AbfEOLPc (ORCPT
+        id S1730720AbfEOL71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:15:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51938 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:59:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730065AbfEOLP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:15:26 -0400
+        id S1730305AbfEOLPb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:15:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CF772084F;
-        Wed, 15 May 2019 11:15:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FB4D20843;
+        Wed, 15 May 2019 11:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918925;
-        bh=X9ywAzZBUkXSlTEyua4mUfQjXW1QYxM2AGR+Qdlo5C4=;
+        s=default; t=1557918930;
+        bh=J3RLMfzo+nRwLHRwAtAg0VMgCVR+ronI7cHNuzp2X3Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HwmcQaYADnmpaZL/jGNnjd2YT1Gtn1mQIR+gWYkkIkurCXB7WbcdV0g9pWpHKMGkv
-         /kAoCKgY0pOuTBKB+/PJCfCRLnjg7Xr926x1vc9E1uMfqgUPVysM0XT4n6BLloZ8WR
-         v6Ypp7kj/fjzIodaNr39nUNMXiVsgN6k2RgYKyac=
+        b=QzhvsGYRrTzfsbyu3EzvBWaENiQvZxjxXMWa31uIq9ln9Q3z9YuO5PrscAerqGA1m
+         0lU847v2fwaEPXS9Li0RzIYrxscFa3u0mtjLkDwzAReHnxiD+LRhUp0iasOoJtBTeJ
+         vBaUISYucol3Hz1mERHOxzzSguam6RM8DpaQvnmY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pan Bian <bianpan2016@163.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 29/51] Input: synaptics-rmi4 - fix possible double free
-Date:   Wed, 15 May 2019 12:56:04 +0200
-Message-Id: <20190515090625.458047030@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Subject: [PATCH 4.9 31/51] ALSA: pcm: remove SNDRV_PCM_IOCTL1_INFO internal command
+Date:   Wed, 15 May 2019 12:56:06 +0200
+Message-Id: <20190515090626.104628544@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
 References: <20190515090616.669619870@linuxfoundation.org>
@@ -59,40 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bce1a78423961fce676ac65540a31b6ffd179e6d ]
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-The RMI4 function structure has been released in rmi_register_function
-if error occurs. However, it will be released again in the function
-rmi_create_function, which may result in a double-free bug.
+commit e11f0f90a626f93899687b1cc909ee37dd6c5809 upstream.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Drivers can implement 'struct snd_pcm_ops.ioctl' to handle some requests
+from ALSA PCM core. These requests are internal purpose in kernel land.
+Usually common set of operations are used for it.
+
+SNDRV_PCM_IOCTL1_INFO is one of the requests. According to code comment,
+it has been obsoleted in the old days.
+
+We can see old releases in ftp.alsa-project.org. The command was firstly
+introduced in v0.5.0 release as SND_PCM_IOCTL1_INFO, to allow drivers to
+fill data of 'struct snd_pcm_channel_info' type. In v0.9.0 release,
+this was obsoleted by the other commands for ioctl(2) such as
+SNDRV_PCM_IOCTL_CHANNEL_INFO.
+
+This commit removes the long-abandoned command, bye.
+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/input/rmi4/rmi_driver.c |    6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ include/sound/pcm.h     |    2 +-
+ sound/core/pcm_lib.c    |    2 --
+ sound/core/pcm_native.c |    6 +-----
+ 3 files changed, 2 insertions(+), 8 deletions(-)
 
---- a/drivers/input/rmi4/rmi_driver.c
-+++ b/drivers/input/rmi4/rmi_driver.c
-@@ -772,7 +772,7 @@ static int rmi_create_function(struct rm
+--- a/include/sound/pcm.h
++++ b/include/sound/pcm.h
+@@ -100,7 +100,7 @@ struct snd_pcm_ops {
+ #endif
  
- 	error = rmi_register_function(fn);
- 	if (error)
--		goto err_put_fn;
-+		return error;
- 
- 	if (pdt->function_number == 0x01)
- 		data->f01_container = fn;
-@@ -780,10 +780,6 @@ static int rmi_create_function(struct rm
- 	list_add_tail(&fn->node, &data->function_list);
- 
- 	return RMI_SCAN_CONTINUE;
--
--err_put_fn:
--	put_device(&fn->dev);
--	return error;
+ #define SNDRV_PCM_IOCTL1_RESET		0
+-#define SNDRV_PCM_IOCTL1_INFO		1
++/* 1 is absent slot. */
+ #define SNDRV_PCM_IOCTL1_CHANNEL_INFO	2
+ #define SNDRV_PCM_IOCTL1_GSTATE		3
+ #define SNDRV_PCM_IOCTL1_FIFO_SIZE	4
+--- a/sound/core/pcm_lib.c
++++ b/sound/core/pcm_lib.c
+@@ -1849,8 +1849,6 @@ int snd_pcm_lib_ioctl(struct snd_pcm_sub
+ 		      unsigned int cmd, void *arg)
+ {
+ 	switch (cmd) {
+-	case SNDRV_PCM_IOCTL1_INFO:
+-		return 0;
+ 	case SNDRV_PCM_IOCTL1_RESET:
+ 		return snd_pcm_lib_ioctl_reset(substream, arg);
+ 	case SNDRV_PCM_IOCTL1_CHANNEL_INFO:
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -214,11 +214,7 @@ int snd_pcm_info(struct snd_pcm_substrea
+ 	info->subdevices_avail = pstr->substream_count - pstr->substream_opened;
+ 	strlcpy(info->subname, substream->name, sizeof(info->subname));
+ 	runtime = substream->runtime;
+-	/* AB: FIXME!!! This is definitely nonsense */
+-	if (runtime) {
+-		info->sync = runtime->sync;
+-		substream->ops->ioctl(substream, SNDRV_PCM_IOCTL1_INFO, info);
+-	}
++
+ 	return 0;
  }
  
- int rmi_driver_suspend(struct rmi_device *rmi_dev)
 
 
