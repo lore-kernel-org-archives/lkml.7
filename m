@@ -2,619 +2,291 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE1CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DD3C04AB4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E88762082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E09352082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:56:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="IYo5F4rb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbfEOAy6 (ORCPT
+        id S1726557AbfEOA4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:54:58 -0400
-Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:15861 "EHLO
-        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726044AbfEOAy6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:54:58 -0400
-X-Greylist: delayed 604 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 May 2019 20:53:46 EDT
-From:   Chenxi Mao <chenxi.mao@sony.com>
-To:     <akpm@linux-foundation.org>
-CC:     <gaoxiang25@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <roy.feng@sony.com>, <yuanli.xu@sony.com>, <robert.alm@sony.com>,
-        <masaya.a.takahashi@sony.com>, "chenxi . mao" <chenxi.mao@sony.com>
-Subject: [PATCH 1/1] LZ4: Port LZ4 1.9.x FAST_DEC_LOOP and enable it on x86 and ARM64
-Date:   Wed, 15 May 2019 08:43:36 +0800
-Message-ID: <20190515004336.66555-1-chenxi.mao@sony.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 14 May 2019 20:56:09 -0400
+Received: from mail-eopbgr680101.outbound.protection.outlook.com ([40.107.68.101]:2023
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726044AbfEOA4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 20:56:09 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=oigbJS5dK74b905sNEydOXIN6tydKwbQDM2tyvsjzANd+SqC+RRy/ZoyaI2kNVu5EQFFBvUQyVzqlHeX49kGS74Kw+jVRSRkMqBALsLmKiOMzm3EZVGaG8L/fYHNQHLjSry46Ve9Hp21U4R+NmtAIL0o4sRJ8HZ4kpK3NDuYAJ0=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bkdc3/5BuBGXEIH/Fh/sVpiIPNxeNgPy74/riz32xzc=;
+ b=OV/7lCVUBV0SuEfW0NVWuZD/hvltmWhihk7QfuF9p6fLKqmedxcMvw3wZluPoiT1s59BxqatF+Yh+9YiLzgUocohLJJAozWZsb9qV1xIi6FZpb7GQnzmcMSF/32ZwSX60Jlg6h+INuaYeC9YD8ZG4AF2SXapJiFxhFcThOH9pkI=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bkdc3/5BuBGXEIH/Fh/sVpiIPNxeNgPy74/riz32xzc=;
+ b=IYo5F4rbvs6NtIrkoFMLQswIoCtx1TXOeOaGQ9Fn3AlzPYdudFvxGC8A9c8KiblXz4VLo1WXkU454gqy8p9UInAmL5sqXe6clnx/ZrtWltUeZfvAghJzoGMICsweXTm04uolyNtZUKavdBwosA48JFwE7xcreW49jYlMDAcxj2Q=
+Received: from BN6PR21MB0465.namprd21.prod.outlook.com (2603:10b6:404:b2::15)
+ by BN6PR21MB0179.namprd21.prod.outlook.com (2603:10b6:404:94::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1922.4; Wed, 15 May
+ 2019 00:56:05 +0000
+Received: from BN6PR21MB0465.namprd21.prod.outlook.com
+ ([fe80::6cf3:89fb:af21:b168]) by BN6PR21MB0465.namprd21.prod.outlook.com
+ ([fe80::6cf3:89fb:af21:b168%12]) with mapi id 15.20.1922.002; Wed, 15 May
+ 2019 00:56:05 +0000
+From:   Sunil Muthuswamy <sunilmut@microsoft.com>
+To:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dexuan Cui <decui@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] hv_sock: Add support for delayed close
+Thread-Topic: [PATCH v2] hv_sock: Add support for delayed close
+Thread-Index: AdUKtaBXG33lHE0AQU2ynJ9GbZ74Uw==
+Date:   Wed, 15 May 2019 00:56:05 +0000
+Message-ID: <BN6PR21MB0465043C08E519774EE73E99C0090@BN6PR21MB0465.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=sunilmut@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:7:f8d4:c8e7:5ebf:2c16]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 96ff9b84-c6ac-46dd-4022-08d6d8d01c3f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:BN6PR21MB0179;
+x-ms-traffictypediagnostic: BN6PR21MB0179:
+x-microsoft-antispam-prvs: <BN6PR21MB01793379E5425F94C748387FC0090@BN6PR21MB0179.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0038DE95A2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(366004)(376002)(396003)(39860400002)(199004)(189003)(476003)(76116006)(86612001)(99286004)(86362001)(73956011)(46003)(55016002)(7696005)(9686003)(8936002)(2906002)(8676002)(81166006)(6436002)(186003)(66446008)(81156014)(14444005)(1511001)(66946007)(66476007)(66556008)(64756008)(256004)(52396003)(102836004)(316002)(6506007)(486006)(6116002)(7736002)(54906003)(25786009)(478600001)(4326008)(68736007)(53936002)(10090500001)(71200400001)(71190400001)(22452003)(110136005)(52536014)(33656002)(14454004)(305945005)(6636002)(74316002)(10290500003)(5660300002)(8990500004);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR21MB0179;H:BN6PR21MB0465.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: iMQye8ecMFwkXmGJoaKXfahKuEUVQgAeu4N0GVn5XeC23Q2zOiCFv1wP4DkrCDyYF3YE0QySQpvh4s6eJJA3twrvxwwWXCEb+ePlSOnXX+QLAJIyUGmo3ks53cqIHR6rgNWAWrioxsSdHaR/RaMY3ql/yRnvXDvwEI7Vvsmau6BNs4FBRW/7mAQjJW32tutVt64+dBcuoQVUcZ+5eAxjWfWCYfi1SY70JK59kFTZN8IrM7uwCoQwosHRxt37SE+eO8uKRfRfe5E0FN2NKtqxMzstta4Ov4fv9COnsXgLFkxABde+EMEdMtAKZxRQaMkuKL+cd3x+HVwQYw67lIyUmN/hydrIWQhAvLXNiIqvBTz6WY9gjoWP3nEo3znzl/zIz8G8oDtlfA5mtCBqoM5gIVwskVPnFyAdmBhNdLh/YPU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 96ff9b84-c6ac-46dd-4022-08d6d8d01c3f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 00:56:05.5466
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sunilmut@ntdev.microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR21MB0179
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-FAST_DEC_LOOP was introduced from LZ4 1.9.
-This change would be introduce 10% on decompress operation
-according to LZ4 benchmark result on X86 devices.
-Meanwhile, LZ4 with FAST_DEC_LOOP could get improvements,
-however clang compiler has downgrade if FAST_DEC_LOOP enabled.
+Currently, hvsock does not implement any delayed or background close
+logic. Whenever the hvsock socket is closed, a FIN is sent to the peer, and
+the last reference to the socket is dropped, which leads to a call to
+.destruct where the socket can hang indefinitely waiting for the peer to
+close it's side. The can cause the user application to hang in the close()
+call.
 
-So FAST_DEC_LOOP only enabled on X86/X86-64 or ARM64 with GCC build.
+This change implements proper STREAM(TCP) closing handshake mechanism by
+sending the FIN to the peer and the waiting for the peer's FIN to arrive
+for a given timeout. On timeout, it will try to terminate the connection
+(i.e. a RST). This is in-line with other socket providers such as virtio.
 
-Here is the test result on ARM64(cortex-A53)
+This change does not address the hang in the vmbus_hvsock_device_unregister
+where it waits indefinitely for the host to rescind the channel. That
+should be taken up as a separate fix.
 
-Benchmark via ZRAM:
-
-Test case:
-fio --bs=32k --randrepeat=1 --randseed=100 --refill_buffers \
---buffer_compress_percentage=75 \
---scramble_buffers=1 --direct=1 --loops=100 --numjobs=8 \
---filename=/dev/block/zram0 --name=seq-write --rw=write --stonewall \
---name=seq-read --rw=read --stonewall --name=seq-readwrite \
---rw=rw --stonewall --name=rand-readwrite --rw=randrw --stonewall
-
-Patched:
-   READ: bw=7077MiB/s (7421MB/s)
-Vanilla:
-   READ: bw=5134MiB/s (5384MB/s)
-
-Reference:
-1. https://github.com/lz4/lz4/pull/645
-2. https://github.com/lz4/lz4/pull/707
-
-Signed-off-by: chenxi.mao <chenxi.mao@sony.com>
+Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
 ---
- lib/lz4/lz4_decompress.c | 425 +++++++++++++++++++++++++++++++++------
- 1 file changed, 361 insertions(+), 64 deletions(-)
+Changes since v1:
+- Updated the title and description to better reflect the change. The title
+was previously called 'hv_sock: Fix data loss upon socket close'
+- Removed the sk_state_change call to keep the fix focused.
+- Removed 'inline' keyword from the .c file and letting compiler do it.
 
-diff --git a/lib/lz4/lz4_decompress.c b/lib/lz4/lz4_decompress.c
-index 0c9d3ad17e0f..a4c87e32b3c0 100644
---- a/lib/lz4/lz4_decompress.c
-+++ b/lib/lz4/lz4_decompress.c
-@@ -50,6 +50,131 @@
- #define assert(condition) ((void)0)
- #endif
- 
-+#ifndef LZ4_FAST_DEC_LOOP
-+#if defined(__i386__) || defined(__x86_64__)
-+#define LZ4_FAST_DEC_LOOP 1
-+#elif defined(__aarch64__) && !defined(__clang__)
-+     /* On aarch64, we disable this optimization for clang because on certain
-+      * mobile chipsets and clang, it reduces performance. For more information
-+      * refer to https://github.com/lz4/lz4/pull/707. */
-+#define LZ4_FAST_DEC_LOOP 1
-+#else
-+#define LZ4_FAST_DEC_LOOP 0
-+#endif
-+#endif
+ net/vmw_vsock/hyperv_transport.c | 108 ++++++++++++++++++++++++++++-------=
+----
+ 1 file changed, 77 insertions(+), 31 deletions(-)
+
+diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transp=
+ort.c
+index a827547..982a8dc 100644
+--- a/net/vmw_vsock/hyperv_transport.c
++++ b/net/vmw_vsock/hyperv_transport.c
+@@ -35,6 +35,9 @@
+ /* The MTU is 16KB per the host side's design */
+ #define HVS_MTU_SIZE		(1024 * 16)
+=20
++/* How long to wait for graceful shutdown of a connection */
++#define HVS_CLOSE_TIMEOUT (8 * HZ)
 +
-+static const unsigned inc32table[8] = { 0, 1, 2, 1, 0, 4, 4, 4 };
-+static const int dec64table[8] = { 0, 0, 0, -1, -4, 1, 2, 3 };
-+
-+#if LZ4_FAST_DEC_LOOP
-+#define FASTLOOP_SAFE_DISTANCE 64
-+FORCE_INLINE void
-+LZ4_memcpy_using_offset_base(BYTE * dstPtr, const BYTE * srcPtr, BYTE * dstEnd,
-+			     const size_t offset)
-+{
-+	if (offset < 8) {
-+		dstPtr[0] = srcPtr[0];
-+
-+		dstPtr[1] = srcPtr[1];
-+		dstPtr[2] = srcPtr[2];
-+		dstPtr[3] = srcPtr[3];
-+		srcPtr += inc32table[offset];
-+		memcpy(dstPtr + 4, srcPtr, 4);
-+		srcPtr -= dec64table[offset];
-+		dstPtr += 8;
-+	} else {
-+		memcpy(dstPtr, srcPtr, 8);
-+		dstPtr += 8;
-+		srcPtr += 8;
-+	}
-+
-+	LZ4_wildCopy(dstPtr, srcPtr, dstEnd);
-+}
-+
-+/* customized variant of memcpy, which can overwrite up to 32 bytes beyond dstEnd
-+ * this version copies two times 16 bytes (instead of one time 32 bytes)
-+ * because it must be compatible with offsets >= 16. */
-+FORCE_INLINE void LZ4_wildCopy32(void *dstPtr, const void *srcPtr, void *dstEnd)
-+{
-+	BYTE *d = (BYTE *) dstPtr;
-+	const BYTE *s = (const BYTE *)srcPtr;
-+	BYTE *const e = (BYTE *) dstEnd;
-+
-+	do {
-+		memcpy(d, s, 16);
-+		memcpy(d + 16, s + 16, 16);
-+		d += 32;
-+		s += 32;
-+	} while (d < e);
-+}
-+
-+FORCE_INLINE void
-+LZ4_memcpy_using_offset(BYTE *dstPtr, const BYTE *srcPtr, BYTE *dstEnd,
-+			const size_t offset)
-+{
-+	BYTE v[8];
-+	switch (offset) {
-+
-+	case 1:
-+		memset(v, *srcPtr, 8);
-+		goto copy_loop;
-+	case 2:
-+		memcpy(v, srcPtr, 2);
-+		memcpy(&v[2], srcPtr, 2);
-+		memcpy(&v[4], &v[0], 4);
-+		goto copy_loop;
-+	case 4:
-+		memcpy(v, srcPtr, 4);
-+		memcpy(&v[4], srcPtr, 4);
-+		goto copy_loop;
-+	default:
-+		LZ4_memcpy_using_offset_base(dstPtr, srcPtr, dstEnd, offset);
-+		return;
-+	}
-+
-+      copy_loop:
-+	memcpy(dstPtr, v, 8);
-+	dstPtr += 8;
-+	while (dstPtr < dstEnd) {
-+		memcpy(dstPtr, v, 8);
-+		dstPtr += 8;
-+	}
-+}
-+
-+/* Read the variable-length literal or match length.
-+ *
-+ * ip - pointer to use as input.
-+ * lencheck - end ip.  Return an error if ip advances >= lencheck.
-+ * loop_check - check ip >= lencheck in body of loop.  Returns loop_error if so.
-+ * initial_check - check ip >= lencheck before start of loop.  Returns initial_error if so.
-+ * error (output) - error code.  Should be set to 0 before call.
-+ */
-+typedef enum { loop_error = -2, initial_error = -1, ok = 0} variable_length_error;
-+FORCE_INLINE unsigned read_variable_length(const BYTE **ip,
-+					   const BYTE *lencheck,
-+					   int loop_check, int initial_check,
-+					   variable_length_error *error)
-+{
-+	unsigned length = 0;
-+	unsigned s;
-+	if (initial_check && unlikely((*ip) >= lencheck)) {	/* overflow detection */
-+		*error = initial_error;
-+		return length;
-+	}
-+	do {
-+		s = **ip;
-+		(*ip)++;
-+		length += s;
-+		if (loop_check && unlikely((*ip) >= lencheck)) {	/* overflow detection */
-+			*error = loop_error;
-+			return length;
-+		}
-+	} while (s == 255);
-+
-+	return length;
-+}
-+#endif
-+
- /*
-  * LZ4_decompress_generic() :
-  * This generic decompression function covers all use cases.
-@@ -80,25 +205,28 @@ static FORCE_INLINE int LZ4_decompress_generic(
- 	 const size_t dictSize
- 	 )
+ struct vmpipe_proto_header {
+ 	u32 pkt_type;
+ 	u32 data_size;
+@@ -305,19 +308,32 @@ static void hvs_channel_cb(void *ctx)
+ 		sk->sk_write_space(sk);
+ }
+=20
+-static void hvs_close_connection(struct vmbus_channel *chan)
++static void hvs_do_close_lock_held(struct vsock_sock *vsk,
++				   bool cancel_timeout)
  {
--	const BYTE *ip = (const BYTE *) src;
--	const BYTE * const iend = ip + srcSize;
-+	const BYTE *ip = (const BYTE *)src;
-+	const BYTE *const iend = ip + srcSize;
- 
- 	BYTE *op = (BYTE *) dst;
--	BYTE * const oend = op + outputSize;
-+	BYTE *const oend = op + outputSize;
- 	BYTE *cpy;
- 
--	const BYTE * const dictEnd = (const BYTE *)dictStart + dictSize;
--	static const unsigned int inc32table[8] = {0, 1, 2, 1, 0, 4, 4, 4};
--	static const int dec64table[8] = {0, 0, 0, -1, -4, 1, 2, 3};
-+	const BYTE *const dictEnd = (const BYTE *)dictStart + dictSize;
- 
- 	const int safeDecode = (endOnInput == endOnInputSize);
- 	const int checkOffset = ((safeDecode) && (dictSize < (int)(64 * KB)));
- 
- 	/* Set up the "end" pointers for the shortcut. */
- 	const BYTE *const shortiend = iend -
--		(endOnInput ? 14 : 8) /*maxLL*/ - 2 /*offset*/;
-+	    (endOnInput ? 14 : 8) /*maxLL*/ - 2 /*offset*/;
- 	const BYTE *const shortoend = oend -
--		(endOnInput ? 14 : 8) /*maxLL*/ - 18 /*maxML*/;
-+	    (endOnInput ? 14 : 8) /*maxLL*/ - 18 /*maxML*/;
-+
-+	const BYTE *match;
-+	size_t offset;
-+	unsigned int token;
-+	size_t length;
- 
- 	DEBUGLOG(5, "%s (srcSize:%i, dstSize:%i)", __func__,
- 		 srcSize, outputSize);
-@@ -117,15 +245,194 @@ static FORCE_INLINE int LZ4_decompress_generic(
- 	if ((endOnInput) && unlikely(srcSize == 0))
- 		return -1;
- 
--	/* Main Loop : decode sequences */
-+#if LZ4_FAST_DEC_LOOP
-+	if ((oend - op) < FASTLOOP_SAFE_DISTANCE) {
-+		DEBUGLOG(6, "skip fast decode loop");
-+		goto safe_decode;
+-	struct sock *sk =3D get_per_channel_state(chan);
+-	struct vsock_sock *vsk =3D vsock_sk(sk);
+-
+-	lock_sock(sk);
++	struct sock *sk =3D sk_vsock(vsk);
+=20
+-	sk->sk_state =3D TCP_CLOSE;
+ 	sock_set_flag(sk, SOCK_DONE);
+-	vsk->peer_shutdown |=3D SEND_SHUTDOWN | RCV_SHUTDOWN;
+-
++	vsk->peer_shutdown =3D SHUTDOWN_MASK;
++	if (vsock_stream_has_data(vsk) <=3D 0)
++		sk->sk_state =3D TCP_CLOSING;
+ 	sk->sk_state_change(sk);
++	if (vsk->close_work_scheduled &&
++	    (!cancel_timeout || cancel_delayed_work(&vsk->close_work))) {
++		vsk->close_work_scheduled =3D false;
++		vsock_remove_sock(vsk);
+=20
++		/* Release the reference taken while scheduling the timeout */
++		sock_put(sk);
 +	}
++}
 +
-+	/* Fast loop : decode sequences as long as output < iend-FASTLOOP_SAFE_DISTANCE */
- 	while (1) {
--		size_t length;
--		const BYTE *match;
--		size_t offset;
-+		/* Main fastloop assertion: We can always wildcopy FASTLOOP_SAFE_DISTANCE */
-+		assert(oend - op >= FASTLOOP_SAFE_DISTANCE);
-+		if (endOnInput) {
-+			assert(ip < iend);
-+		}
-+		token = *ip++;
-+		length = token >> ML_BITS;	/* literal length */
++static void hvs_close_connection(struct vmbus_channel *chan)
++{
++	struct sock *sk =3D get_per_channel_state(chan);
 +
-+		assert(!endOnInput || ip <= iend);	/* ip < iend before the increment */
++	lock_sock(sk);
++	hvs_do_close_lock_held(vsock_sk(sk), true);
+ 	release_sock(sk);
+ }
+=20
+@@ -452,50 +468,80 @@ static int hvs_connect(struct vsock_sock *vsk)
+ 	return vmbus_send_tl_connect_request(&h->vm_srv_id, &h->host_srv_id);
+ }
+=20
++static void hvs_shutdown_lock_held(struct hvsock *hvs, int mode)
++{
++	struct vmpipe_proto_header hdr;
 +
-+		/* decode literal length */
-+		if (length == RUN_MASK) {
-+			variable_length_error error = ok;
-+			length +=
-+			    read_variable_length(&ip, iend - RUN_MASK,
-+						 endOnInput, endOnInput,
-+						 &error);
-+			if (error == initial_error) {
-+				goto _output_error;
-+			}
-+			if ((safeDecode)
-+			    && unlikely((uptrval) (op) + length <
-+					(uptrval) (op))) {
-+				goto _output_error;
-+			}	/* overflow detection */
-+			if ((safeDecode)
-+			    && unlikely((uptrval) (ip) + length <
-+					(uptrval) (ip))) {
-+				goto _output_error;
-+			}
++	if (hvs->fin_sent || !hvs->chan)
++		return;
 +
-+			/* overflow detection */
-+			/* copy literals */
-+			cpy = op + length;
-+			LZ4_STATIC_ASSERT(MFLIMIT >= WILDCOPYLENGTH);
-+			if (endOnInput) {	/* LZ4_decompress_safe() */
-+				if ((cpy > oend - 32)
-+				    || (ip + length > iend - 32)) {
-+					goto safe_literal_copy;
-+				}
-+				LZ4_wildCopy32(op, ip, cpy);
-+			} else {	/* LZ4_decompress_fast() */
-+				if (cpy > oend - 8) {
-+					goto safe_literal_copy;
-+				}
-+				LZ4_wildCopy(op, ip, cpy);
-+				/* LZ4_decompress_fast() cannot copy more than 8 bytes at a time */
-+				/* it doesn't know input length, and only relies on end-of-block */
-+				/* properties */
-+			}
-+			ip += length;
-+			op = cpy;
-+		} else {
-+			cpy = op + length;
-+			if (endOnInput) {	/* LZ4_decompress_safe() */
-+				DEBUGLOG(7,
-+					 "copy %u bytes in a 16-bytes stripe",
-+					 (unsigned)length);
-+				/* We don't need to check oend */
-+				/* since we check it once for each loop below */
-+				if (ip > iend - (16 + 1)) {	/*max lit + offset + nextToken */
-+					goto safe_literal_copy;
-+				}
-+				/* Literals can only be 14, but hope compilers optimize */
-+				/*if we copy by a register size */
-+				memcpy(op, ip, 16);
-+			} else {
-+				/* LZ4_decompress_fast() cannot copy more than 8 bytes at a time */
-+				/* it doesn't know input length, and relies on end-of-block */
-+				/* properties */
-+				memcpy(op, ip, 8);
-+				if (length > 8) {
-+					memcpy(op + 8, ip + 8, 8);
-+				}
-+			}
-+			ip += length;
-+			op = cpy;
-+		}
++	/* It can't fail: see hvs_channel_writable_bytes(). */
++	(void)hvs_send_data(hvs->chan, (struct hvs_send_buf *)&hdr, 0);
++	hvs->fin_sent =3D true;
++}
 +
-+		/* get offset */
-+		offset = LZ4_readLE16(ip);
-+		ip += 2;	/* end-of-block condition violated */
-+		match = op - offset;
-+
-+		/* get matchlength */
-+		length = token & ML_MASK;
- 
--		/* get literal length */
--		unsigned int const token = *ip++;
--		length = token>>ML_BITS;
-+		if ((checkOffset) && (unlikely(match + dictSize < lowPrefix))) {
-+			goto _output_error;
-+		}
-+		/* Error : offset outside buffers */
-+		if (length == ML_MASK) {
-+			variable_length_error error = ok;
-+			length +=
-+			    read_variable_length(&ip, iend - LASTLITERALS + 1,
-+						 endOnInput, 0, &error);
-+			if (error != ok) {
-+				goto _output_error;
-+			}
-+			if ((safeDecode)
-+			    && unlikely((uptrval) (op) + length < (uptrval) op)) {
-+				goto _output_error;
-+			}	/* overflow detection */
-+			length += MINMATCH;
-+			if (op + length >= oend - FASTLOOP_SAFE_DISTANCE) {
-+				goto safe_match_copy;
-+			}
-+		} else {
-+			length += MINMATCH;
-+			if (op + length >= oend - FASTLOOP_SAFE_DISTANCE) {
-+				goto safe_match_copy;
-+			}
-+
-+			/* Fastpath check: Avoids a branch in LZ4_wildCopy32 if true */
-+			if (!(dict == usingExtDict) || (match >= lowPrefix)) {
-+				if (offset >= 8) {
-+					memcpy(op, match, 8);
-+					memcpy(op + 8, match + 8, 8);
-+					memcpy(op + 16, match + 16, 2);
-+					op += length;
-+					continue;
-+				}
-+			}
-+		}
-+
-+		/* match starting within external dictionary */
-+		if ((dict == usingExtDict) && (match < lowPrefix)) {
-+			if (unlikely(op + length > oend - LASTLITERALS)) {
-+				if (partialDecoding) {
-+					/* reach end of buffer */
-+					length =
-+					    min(length, (size_t) (oend - op));
-+				} else {
-+					/* end-of-block condition violated */
-+					goto _output_error;
-+				}
-+			}
-+
-+			if (length <= (size_t) (lowPrefix - match)) {
-+				/* match fits entirely within external dictionary : just copy */
-+				memmove(op, dictEnd - (lowPrefix - match), length);
-+				op += length;
-+			} else {
-+				/* match stretches into both external dict and current block */
-+				size_t const copySize =
-+				    (size_t) (lowPrefix - match);
-+				size_t const restSize = length - copySize;
-+				memcpy(op, dictEnd - copySize, copySize);
-+				op += copySize;
-+				if (restSize > (size_t) (op - lowPrefix)) {	/* overlap copy */
-+					BYTE *const endOfMatch = op + restSize;
-+					const BYTE *copyFrom = lowPrefix;
-+					while (op < endOfMatch) {
-+						*op++ = *copyFrom++;
-+					}
-+				} else {
-+					memcpy(op, lowPrefix, restSize);
-+					op += restSize;
-+				}
-+			}
-+			continue;
-+		}
-+
-+		/* copy match within block */
-+		cpy = op + length;
-+
-+		assert((op <= oend) && (oend - op >= 32));
-+		if (unlikely(offset < 16)) {
-+			LZ4_memcpy_using_offset(op, match, cpy, offset);
-+		} else {
-+			LZ4_wildCopy32(op, match, cpy);
-+		}
-+
-+		op = cpy;	/* wildcopy correction */
-+	}
-+      safe_decode:
-+#endif
-+	/* Main Loop : decode sequences */
-+	while (1) {
-+		length = token >> ML_BITS;
- 
- 		/* ip < iend before the increment */
- 		assert(!endOnInput || ip <= iend);
-@@ -143,26 +450,27 @@ static FORCE_INLINE int LZ4_decompress_generic(
- 		 * combined check for both stages).
- 		 */
- 		if ((endOnInput ? length != RUN_MASK : length <= 8)
--		   /*
--		    * strictly "less than" on input, to re-enter
--		    * the loop with at least one byte
--		    */
--		   && likely((endOnInput ? ip < shortiend : 1) &
--			     (op <= shortoend))) {
-+		    /*
-+		     * strictly "less than" on input, to re-enter
-+		     * the loop with at least one byte
-+		     */
-+		    && likely((endOnInput ? ip < shortiend : 1) &
-+			      (op <= shortoend))) {
- 			/* Copy the literals */
- 			memcpy(op, ip, endOnInput ? 16 : 8);
--			op += length; ip += length;
-+			op += length;
-+			ip += length;
- 
- 			/*
- 			 * The second stage:
- 			 * prepare for match copying, decode full info.
- 			 * If it doesn't work out, the info won't be wasted.
- 			 */
--			length = token & ML_MASK; /* match length */
-+			length = token & ML_MASK;	/* match length */
- 			offset = LZ4_readLE16(ip);
- 			ip += 2;
- 			match = op - offset;
--			assert(match <= op); /* check overflow */
-+			assert(match <= op);	/* check overflow */
- 
- 			/* Do not deal with overlapping matches. */
- 			if ((length != ML_MASK) &&
-@@ -187,28 +495,24 @@ static FORCE_INLINE int LZ4_decompress_generic(
- 
- 		/* decode literal length */
- 		if (length == RUN_MASK) {
--			unsigned int s;
- 
--			if (unlikely(endOnInput ? ip >= iend - RUN_MASK : 0)) {
--				/* overflow detection */
-+			variable_length_error error = ok;
-+			length +=
-+			    read_variable_length(&ip, iend - RUN_MASK,
-+						 endOnInput, endOnInput,
-+						 &error);
-+			if (error == initial_error)
- 				goto _output_error;
--			}
--			do {
--				s = *ip++;
--				length += s;
--			} while (likely(endOnInput
--				? ip < iend - RUN_MASK
--				: 1) & (s == 255));
- 
- 			if ((safeDecode)
--			    && unlikely((uptrval)(op) +
--					length < (uptrval)(op))) {
-+			    && unlikely((uptrval) (op) +
-+					length < (uptrval) (op))) {
- 				/* overflow detection */
- 				goto _output_error;
- 			}
- 			if ((safeDecode)
--			    && unlikely((uptrval)(ip) +
--					length < (uptrval)(ip))) {
-+			    && unlikely((uptrval) (ip) +
-+					length < (uptrval) (ip))) {
- 				/* overflow detection */
- 				goto _output_error;
- 			}
-@@ -216,11 +520,15 @@ static FORCE_INLINE int LZ4_decompress_generic(
- 
- 		/* copy literals */
- 		cpy = op + length;
-+#if LZ4_FAST_DEC_LOOP
-+	      safe_literal_copy:
-+#endif
- 		LZ4_STATIC_ASSERT(MFLIMIT >= WILDCOPYLENGTH);
- 
- 		if (((endOnInput) && ((cpy > oend - MFLIMIT)
--			|| (ip + length > iend - (2 + 1 + LASTLITERALS))))
--			|| ((!endOnInput) && (cpy > oend - WILDCOPYLENGTH))) {
-+				      || (ip + length >
-+					  iend - (2 + 1 + LASTLITERALS))))
-+		    || ((!endOnInput) && (cpy > oend - WILDCOPYLENGTH))) {
- 			if (partialDecoding) {
- 				if (cpy > oend) {
- 					/*
-@@ -231,7 +539,7 @@ static FORCE_INLINE int LZ4_decompress_generic(
- 					length = oend - op;
- 				}
- 				if ((endOnInput)
--					&& (ip + length > iend)) {
-+				    && (ip + length > iend)) {
- 					/*
- 					 * Error :
- 					 * read attempt beyond
-@@ -241,7 +549,7 @@ static FORCE_INLINE int LZ4_decompress_generic(
- 				}
- 			} else {
- 				if ((!endOnInput)
--					&& (cpy != oend)) {
-+				    && (cpy != oend)) {
- 					/*
- 					 * Error :
- 					 * block decoding must
-@@ -250,7 +558,7 @@ static FORCE_INLINE int LZ4_decompress_generic(
- 					goto _output_error;
- 				}
- 				if ((endOnInput)
--					&& ((ip + length != iend)
-+				    && ((ip + length != iend)
- 					|| (cpy > oend))) {
- 					/*
- 					 * Error :
-@@ -288,29 +596,14 @@ static FORCE_INLINE int LZ4_decompress_generic(
- 			goto _output_error;
- 		}
- 
--		/* costs ~1%; silence an msan warning when offset == 0 */
--		/*
--		 * note : when partialDecoding, there is no guarantee that
--		 * at least 4 bytes remain available in output buffer
--		 */
--		if (!partialDecoding) {
--			assert(oend > op);
--			assert(oend - op >= 4);
+ static int hvs_shutdown(struct vsock_sock *vsk, int mode)
+ {
+ 	struct sock *sk =3D sk_vsock(vsk);
+-	struct vmpipe_proto_header hdr;
+-	struct hvs_send_buf *send_buf;
+-	struct hvsock *hvs;
+=20
+ 	if (!(mode & SEND_SHUTDOWN))
+ 		return 0;
+=20
+ 	lock_sock(sk);
++	hvs_shutdown_lock_held(vsk->trans, mode);
++	release_sock(sk);
++	return 0;
++}
+=20
+-	hvs =3D vsk->trans;
+-	if (hvs->fin_sent)
+-		goto out;
 -
--			LZ4_write32(op, (U32)offset);
--		}
--
- 		if (length == ML_MASK) {
--			unsigned int s;
--
--			do {
--				s = *ip++;
--
--				if ((endOnInput) && (ip > iend - LASTLITERALS))
--					goto _output_error;
- 
--				length += s;
--			} while (s == 255);
-+			variable_length_error error = ok;
-+			length +=
-+			    read_variable_length(&ip, iend - LASTLITERALS + 1,
-+						 endOnInput, 0, &error);
-+			if (error != ok)
-+				goto _output_error;
- 
- 			if ((safeDecode)
- 				&& unlikely(
-@@ -322,6 +615,10 @@ static FORCE_INLINE int LZ4_decompress_generic(
- 
- 		length += MINMATCH;
- 
-+#if LZ4_FAST_DEC_LOOP
-+safe_match_copy:
-+#endif
+-	send_buf =3D (struct hvs_send_buf *)&hdr;
++static void hvs_close_timeout(struct work_struct *work)
++{
++	struct vsock_sock *vsk =3D
++		container_of(work, struct vsock_sock, close_work.work);
++	struct sock *sk =3D sk_vsock(vsk);
+=20
+-	/* It can't fail: see hvs_channel_writable_bytes(). */
+-	(void)hvs_send_data(hvs->chan, send_buf, 0);
++	sock_hold(sk);
++	lock_sock(sk);
++	if (!sock_flag(sk, SOCK_DONE))
++		hvs_do_close_lock_held(vsk, false);
+=20
+-	hvs->fin_sent =3D true;
+-out:
++	vsk->close_work_scheduled =3D false;
+ 	release_sock(sk);
+-	return 0;
++	sock_put(sk);
+ }
+=20
+-static void hvs_release(struct vsock_sock *vsk)
++/* Returns true, if it is safe to remove socket; false otherwise */
++static bool hvs_close_lock_held(struct vsock_sock *vsk)
+ {
+ 	struct sock *sk =3D sk_vsock(vsk);
+-	struct hvsock *hvs =3D vsk->trans;
+-	struct vmbus_channel *chan;
+=20
+-	lock_sock(sk);
++	if (!(sk->sk_state =3D=3D TCP_ESTABLISHED ||
++	      sk->sk_state =3D=3D TCP_CLOSING))
++		return true;
+=20
+-	sk->sk_state =3D TCP_CLOSING;
+-	vsock_remove_sock(vsk);
++	if ((sk->sk_shutdown & SHUTDOWN_MASK) !=3D SHUTDOWN_MASK)
++		hvs_shutdown_lock_held(vsk->trans, SHUTDOWN_MASK);
+=20
+-	release_sock(sk);
++	if (sock_flag(sk, SOCK_DONE))
++		return true;
+=20
+-	chan =3D hvs->chan;
+-	if (chan)
+-		hvs_shutdown(vsk, RCV_SHUTDOWN | SEND_SHUTDOWN);
++	/* This reference will be dropped by the delayed close routine */
++	sock_hold(sk);
++	INIT_DELAYED_WORK(&vsk->close_work, hvs_close_timeout);
++	vsk->close_work_scheduled =3D true;
++	schedule_delayed_work(&vsk->close_work, HVS_CLOSE_TIMEOUT);
++	return false;
++}
+=20
++static void hvs_release(struct vsock_sock *vsk)
++{
++	struct sock *sk =3D sk_vsock(vsk);
++	bool remove_sock;
 +
- 		/* match starting within external dictionary */
- 		if ((dict == usingExtDict) && (match < lowPrefix)) {
- 			if (unlikely(op + length > oend - LASTLITERALS)) {
--- 
-2.17.1
++	lock_sock(sk);
++	remove_sock =3D hvs_close_lock_held(vsk);
++	release_sock(sk);
++	if (remove_sock)
++		vsock_remove_sock(vsk);
+ }
+=20
+ static void hvs_destruct(struct vsock_sock *vsk)
+--=20
+2.7.4
 
