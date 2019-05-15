@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F24A8C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADCAC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB04320818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF3DF20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919119;
-	bh=if+cigsVb9L5vqMDI0IdmjwNkCaIJB4Q0xkEqqjUYls=;
+	s=default; t=1557919125;
+	bh=p3ZG5RJaKfArlN53APF3EKv1lFnczoNnYj2IOkU0MpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ImsqaT9WqeIEhUXMiaIiiIqLAhdLt+U3ldwOhn5Sv8zsgWstpOExVhZUkaazpYq5l
-	 nN3XuNjYz2NtgQ3QH7p4VYK+8nFzLI4eNm31Sx1IDrV/nLyK0CB8WF/BCJXR4k2j55
-	 3kNwGgKkGsphNeREzKg88FwqfMTE20b9rFPkDXWs=
+	b=BdA6qYehM0p5sMssIaeSavQokWueRrT/CWxWNPfNEGKun1nzM1nsIygSbayvXLM72
+	 LodcNeMv0EGlw1Qct53RTrzL5XD08Nytv+T4iiwjFwdUXPwvRsxzdCZeyQkNDiN5Pr
+	 hcwpQzDGe/s2UqOEq7PVbpBkOjRaZ4qy0WnGIVzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730837AbfEOLSi (ORCPT
+        id S1727179AbfEOLSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:18:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56044 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:18:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730833AbfEOLSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:18:34 -0400
+        id S1730833AbfEOLSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:18:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B997D2084F;
-        Wed, 15 May 2019 11:18:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B76E4206BF;
+        Wed, 15 May 2019 11:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919114;
-        bh=if+cigsVb9L5vqMDI0IdmjwNkCaIJB4Q0xkEqqjUYls=;
+        s=default; t=1557919119;
+        bh=p3ZG5RJaKfArlN53APF3EKv1lFnczoNnYj2IOkU0MpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OtWSk8fIAWESpEZ8pFIHjqEXV7CNRbDqv+X5IeSSod2CSlTKVMlwd9zXjeQvRb6nK
-         BeANFnZIysUTkjdcjT87/qxLA6pr+T7m5J4IxDZfBjkXKwf4kO8OGadNd4aYrIvalG
-         4Cj+7lP3oq4zLRysCoJoMj4OgO/cxlVzhjQ5HjGI=
+        b=tmDTfT1YNkGp72xaeKC+0iFI4cyu4ka7uquwGwhRlt3GN4TgzlAMxxfqYFI0QIJei
+         b0CMcbxVE9wlSdzMsqq5YOlKO+n3bYQJnuFKdr5pJ2gnWQtRjou2iC4NrYvzzc83F7
+         8XEQIp1xslHbXfICFXIJh/EvIFEzTD62Q8dT1hlE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
+        stable@vger.kernel.org, Alexey Brodkin <abrodkin@synopsys.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Will Deacon <will.deacon@arm.com>, Greg KH <greg@kroah.com>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 072/115] arm64: dts: marvell: armada-ap806: reserve PSCI area
-Date:   Wed, 15 May 2019 12:55:52 +0200
-Message-Id: <20190515090704.676783539@linuxfoundation.org>
+Subject: [PATCH 4.14 074/115] devres: Align data[] to ARCH_KMALLOC_MINALIGN
+Date:   Wed, 15 May 2019 12:55:54 +0200
+Message-Id: <20190515090704.786241438@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -60,49 +65,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 132ac39cffbcfed80ada38ef0fc6d34d95da7be6 ]
+[ Upstream commit a66d972465d15b1d89281258805eb8b47d66bd36 ]
 
-The memory area [0x4000000-0x4200000[ is occupied by the PSCI firmware. Any
-attempt to access it from Linux leads to an immediate crash.
+Initially we bumped into problem with 32-bit aligned atomic64_t
+on ARC, see [1]. And then during quite lengthly discussion Peter Z.
+mentioned ARCH_KMALLOC_MINALIGN which IMHO makes perfect sense.
+If allocation is done by plain kmalloc() obtained buffer will be
+ARCH_KMALLOC_MINALIGN aligned and then why buffer obtained via
+devm_kmalloc() should have any other alignment?
 
-So let's make the same memory reservation as the vendor kernel.
+This way we at least get the same behavior for both types of
+allocation.
 
-[gregory: added as comment that this region matches the mainline U-boot]
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+[1] http://lists.infradead.org/pipermail/linux-snps-arc/2018-July/004009.html
+[2] http://lists.infradead.org/pipermail/linux-snps-arc/2018-July/004036.html
+
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: David Laight <David.Laight@ACULAB.COM>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Greg KH <greg@kroah.com>
+Cc: <stable@vger.kernel.org> # 4.8+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/base/devres.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-index 30d48ecf46e08..27d2bd85d1ae9 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-@@ -65,6 +65,23 @@
- 		method = "smc";
- 	};
+diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+index 71d577025285b..e43a04a495a31 100644
+--- a/drivers/base/devres.c
++++ b/drivers/base/devres.c
+@@ -25,8 +25,14 @@ struct devres_node {
  
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/*
-+		 * This area matches the mapping done with a
-+		 * mainline U-Boot, and should be updated by the
-+		 * bootloader.
-+		 */
-+
-+		psci-area@4000000 {
-+			reg = <0x0 0x4000000 0x0 0x200000>;
-+			no-map;
-+		};
-+	};
-+
- 	ap806 {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
+ struct devres {
+ 	struct devres_node		node;
+-	/* -- 3 pointers */
+-	unsigned long long		data[];	/* guarantee ull alignment */
++	/*
++	 * Some archs want to perform DMA into kmalloc caches
++	 * and need a guaranteed alignment larger than
++	 * the alignment of a 64-bit integer.
++	 * Thus we use ARCH_KMALLOC_MINALIGN here and get exactly the same
++	 * buffer alignment as if it was allocated by plain kmalloc().
++	 */
++	u8 __aligned(ARCH_KMALLOC_MINALIGN) data[];
+ };
+ 
+ struct devres_group {
 -- 
 2.20.1
 
