@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354ACC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EF5C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C8B206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155D420862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919551;
-	bh=JDCjz2uejUGz1Wl/+wSooTpOrcmdF/YYT9dMSQKOIF8=;
+	s=default; t=1557919554;
+	bh=RgwmXrYQ83zdOZuHtIQ2WDfOT51GhqHrvZ5TTmhItSk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XdsulC/NESy2Ht/0ButuR0YXoYRIkgQK0jClDiOCQ8CEWNtxW3zgMg+sdUgngEdrn
-	 3VzQnuNWn0ZifO542p6KGDwzZLnvENgNhavOaRiUcsUuk5qsmqv1trJd10AoRjTeVw
-	 rZvBjdcKhtfLF23kpYntU6h0p9KuO/OabWsfG9bw=
+	b=ljc/VM4Sg2JG3XgzGlr524PjmiRMpgUJ6giNeRmV2TWXqIMNrQUaKKgqhXshyuN+Z
+	 qVUTbkr0RQgc4wvy6dfrScRT9DTFB/xiOMyeExcidemqOJwrWsMIxihqDfExIbxuOJ
+	 YWYkfMbCDvATI6yYq4sSApUeOC/gsKmqBZn0Y30k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732053AbfEOLZt (ORCPT
+        id S1730360AbfEOLZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:25:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36540 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:25:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732039AbfEOLZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:25:44 -0400
+        id S1732049AbfEOLZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:25:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45F90206BF;
-        Wed, 15 May 2019 11:25:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D284206BF;
+        Wed, 15 May 2019 11:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919543;
-        bh=JDCjz2uejUGz1Wl/+wSooTpOrcmdF/YYT9dMSQKOIF8=;
+        s=default; t=1557919549;
+        bh=RgwmXrYQ83zdOZuHtIQ2WDfOT51GhqHrvZ5TTmhItSk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s40kOWwPflBqEnDHrp/CUExCnxGwkOoAAc2D+0UwwF9K9bOm1YFi9lfCldGuDv679
-         /ISYl7JlTOwP4+sea/9sYwTTLSGY3MxBBewGO0KDNJg/i3946IKitkTTzOlG8o03T4
-         35U1HdWehz1iP42Scy9nS0MV4Eito3qNGcUUxmiE=
+        b=o3vQonviCxucFC5HCUhszZJGsCC1DrFGCKgi+Ib+u2/m5qsCtXtTjcOZLATNMg3xl
+         jvr7V6vp4zvLTiFVzD3W5BSiXh8QGZbWXmY0sOvDaEF5JA9nhkjTj0d2D1m3gGhifJ
+         ITqa/3zoexvswdaYNZT2uwbExZGJ6BG/YzvYbVf4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        Madalin Bucur <madalin.bucur@nxp.com>,
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 090/113] dpaa_eth: fix SG frame cleanup
-Date:   Wed, 15 May 2019 12:56:21 +0200
-Message-Id: <20190515090700.466456129@linuxfoundation.org>
+Subject: [PATCH 4.19 092/113] ipv4: Fix raw socket lookup for local traffic
+Date:   Wed, 15 May 2019 12:56:23 +0200
+Message-Id: <20190515090700.606264137@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -59,32 +58,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+From: David Ahern <dsahern@gmail.com>
 
-[ Upstream commit 17170e6570c082717c142733d9a638bcd20551f8 ]
+[ Upstream commit 19e4e768064a87b073a4b4c138b55db70e0cfb9f ]
 
-Fix issue with the entry indexing in the sg frame cleanup code being
-off-by-1. This problem showed up when doing some basic iperf tests and
-manifested in traffic coming to a halt.
+inet_iif should be used for the raw socket lookup. inet_iif considers
+rt_iif which handles the case of local traffic.
 
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Acked-by: Madalin Bucur <madalin.bucur@nxp.com>
+As it stands, ping to a local address with the '-I <dev>' option fails
+ever since ping was changed to use SO_BINDTODEVICE instead of
+cmsg + IP_PKTINFO.
+
+IPv6 works fine.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/raw.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -1648,7 +1648,7 @@ static struct sk_buff *dpaa_cleanup_tx_f
- 				 qm_sg_entry_get_len(&sgt[0]), dma_dir);
+--- a/net/ipv4/raw.c
++++ b/net/ipv4/raw.c
+@@ -174,6 +174,7 @@ static int icmp_filter(const struct sock
+ static int raw_v4_input(struct sk_buff *skb, const struct iphdr *iph, int hash)
+ {
+ 	int sdif = inet_sdif(skb);
++	int dif = inet_iif(skb);
+ 	struct sock *sk;
+ 	struct hlist_head *head;
+ 	int delivered = 0;
+@@ -186,8 +187,7 @@ static int raw_v4_input(struct sk_buff *
  
- 		/* remaining pages were mapped with skb_frag_dma_map() */
--		for (i = 1; i < nr_frags; i++) {
-+		for (i = 1; i <= nr_frags; i++) {
- 			WARN_ON(qm_sg_entry_is_ext(&sgt[i]));
+ 	net = dev_net(skb->dev);
+ 	sk = __raw_v4_lookup(net, __sk_head(head), iph->protocol,
+-			     iph->saddr, iph->daddr,
+-			     skb->dev->ifindex, sdif);
++			     iph->saddr, iph->daddr, dif, sdif);
  
- 			dma_unmap_page(dev, qm_sg_addr(&sgt[i]),
+ 	while (sk) {
+ 		delivered = 1;
 
 
