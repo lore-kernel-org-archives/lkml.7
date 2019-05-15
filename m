@@ -2,51 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C56C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9ED6C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE6220657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81B1220657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922255;
-	bh=pmDpI0mOfPRu39fWnUV4I/+4ZjVdkBEGEqtqWuIjavQ=;
+	s=default; t=1557922263;
+	bh=NZk7Q8HWqSMvKNuUCzj9q5KAgh4kCTpC4hjYxmctfFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=moa48GosdtHton0S1ByqMg/NJk2sIJwDUATqH8SRaOzx3fG2PeaWsF3fLrils+CIS
-	 rMTzhM6+ArghobPAyZgxun/KrF0kx//2I9gyofsJrQ1/JEFX/9QwQJ4IkKtGvVG0e2
-	 LeH9824WmyxvYmpFFXIpackk5lPPGzBETdGB8ZPk=
+	b=xs26n1X8S6WEj9NO1VY/LDB0c6vZbmVlV+3FZg3nyziFuqG57Fvx4tN2dTMFNBYZV
+	 n0O/1FkaglBwpLM1AJ/smWwzTWiyk9q412AVRzsuzq28OHfB0D/OALjTG79wAL/uVu
+	 GGEQOibILr4ltWgXjHoiKdFnsauO4U2bGzgn7KYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728871AbfEOMKy (ORCPT
+        id S1728816AbfEOLGx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:10:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38182 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:06:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728532AbfEOLHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:07:00 -0400
+        id S1728788AbfEOLGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:06:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FE5E21734;
-        Wed, 15 May 2019 11:06:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8155B21743;
+        Wed, 15 May 2019 11:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918419;
-        bh=pmDpI0mOfPRu39fWnUV4I/+4ZjVdkBEGEqtqWuIjavQ=;
+        s=default; t=1557918407;
+        bh=NZk7Q8HWqSMvKNuUCzj9q5KAgh4kCTpC4hjYxmctfFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0wym0iVvw9U2XZxjHTZZicNsqRkLQznxNl89y1QRlMIozlPLir8YzSbi4A4ZN/fQ+
-         tjD8Xv8KLTUaoKRzgGmIA+7rpib1P1bcwZpuiZfqu0UCIuZiGTRrUqKeQwNhbawBtH
-         g6JNHrU8Gjt1Y5dNRPsOjNqX8Zu1bEQE7ijzWTR8=
+        b=Kt4875PUG78v+ZW+JUhRQ/XN+g6tIfPb0N+ctKckjghFMtcnzl6BhaNxjgRdPmlDb
+         xYNW7Be05aVj3uzV0Ih7ZOHKtdLQmxhulyHu0tynaFHr3S4PhsMvEnG+Flc84+ODCa
+         QYitVHtM7kZJaijltYtO7ZEFC2xZkIZKOrLZwRDc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 125/266] debugfs: fix use-after-free on symlink traversal
-Date:   Wed, 15 May 2019 12:53:52 +0200
-Message-Id: <20190515090727.007426951@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 076/266] team: fix possible recursive locking when add slaves
+Date:   Wed, 15 May 2019 12:53:03 +0200
+Message-Id: <20190515090725.008867622@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -59,54 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 93b919da64c15b90953f96a536e5e61df896ca57 ]
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-symlink body shouldn't be freed without an RCU delay.  Switch debugfs to
-->destroy_inode() and use of call_rcu(); free both the inode and symlink
-body in the callback.  Similar to solution for bpf, only here it's even
-more obvious that ->evict_inode() can be dropped.
+[ Upstream commit 925b0c841e066b488cc3a60272472b2c56300704 ]
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+If we add a bond device which is already the master of the team interface,
+we will hold the team->lock in team_add_slave() first and then request the
+lock in team_set_mac_address() again. The functions are called like:
+
+- team_add_slave()
+ - team_port_add()
+   - team_port_enter()
+     - team_modeop_port_enter()
+       - __set_port_dev_addr()
+         - dev_set_mac_address()
+           - bond_set_mac_address()
+             - dev_set_mac_address()
+  	       - team_set_mac_address
+
+Although team_upper_dev_link() would check the upper devices but it is
+called too late. Fix it by adding a checking before processing the slave.
+
+v2: Do not split the string in netdev_err()
+
+Fixes: 3d249d4ca7d0 ("net: introduce ethernet teaming device")
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/debugfs/inode.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/net/team/team.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
-index 22fe11baef2b..3530e1c3ff56 100644
---- a/fs/debugfs/inode.c
-+++ b/fs/debugfs/inode.c
-@@ -164,19 +164,24 @@ static int debugfs_show_options(struct seq_file *m, struct dentry *root)
- 	return 0;
- }
+--- a/drivers/net/team/team.c
++++ b/drivers/net/team/team.c
+@@ -1136,6 +1136,12 @@ static int team_port_add(struct team *te
+ 		return -EINVAL;
+ 	}
  
--static void debugfs_evict_inode(struct inode *inode)
-+static void debugfs_i_callback(struct rcu_head *head)
- {
--	truncate_inode_pages_final(&inode->i_data);
--	clear_inode(inode);
-+	struct inode *inode = container_of(head, struct inode, i_rcu);
- 	if (S_ISLNK(inode->i_mode))
- 		kfree(inode->i_link);
-+	free_inode_nonrcu(inode);
-+}
++	if (netdev_has_upper_dev(dev, port_dev)) {
++		netdev_err(dev, "Device %s is already an upper device of the team interface\n",
++			   portname);
++		return -EBUSY;
++	}
 +
-+static void debugfs_destroy_inode(struct inode *inode)
-+{
-+	call_rcu(&inode->i_rcu, debugfs_i_callback);
- }
- 
- static const struct super_operations debugfs_super_operations = {
- 	.statfs		= simple_statfs,
- 	.remount_fs	= debugfs_remount,
- 	.show_options	= debugfs_show_options,
--	.evict_inode	= debugfs_evict_inode,
-+	.destroy_inode	= debugfs_destroy_inode,
- };
- 
- static struct vfsmount *debugfs_automount(struct path *path)
--- 
-2.20.1
-
+ 	if (port_dev->features & NETIF_F_VLAN_CHALLENGED &&
+ 	    vlan_uses_dev(dev)) {
+ 		netdev_err(dev, "Device %s is VLAN challenged and team device has VLAN set up\n",
 
 
