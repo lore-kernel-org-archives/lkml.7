@@ -2,676 +2,212 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A232C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7839C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 457C42084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835032084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:28:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="apiHQfMA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbfEOT2Z (ORCPT
+        id S1728031AbfEOT2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:28:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41198 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727658AbfEOT1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 15:27:35 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 49C078110C;
-        Wed, 15 May 2019 19:27:34 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EEBC71972D;
-        Wed, 15 May 2019 19:27:33 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 173E022548E; Wed, 15 May 2019 15:27:30 -0400 (EDT)
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, linux-nvdimm@lists.01.org
-Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
-        dgilbert@redhat.com, swhiteho@redhat.com
-Subject: [PATCH v2 26/30] fuse: Add logic to free up a memory range
-Date:   Wed, 15 May 2019 15:27:11 -0400
-Message-Id: <20190515192715.18000-27-vgoyal@redhat.com>
-In-Reply-To: <20190515192715.18000-1-vgoyal@redhat.com>
-References: <20190515192715.18000-1-vgoyal@redhat.com>
+        Wed, 15 May 2019 15:28:35 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:43279 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728000AbfEOT2d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 15:28:33 -0400
+Received: by mail-qt1-f195.google.com with SMTP id i26so1031142qtr.10
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 12:28:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=STSjYwvZPuyl75wjWMZHV1XwXZxjAw1KyH4vRRF0KX8=;
+        b=apiHQfMAlW6NdEEAax9R6re99NyJOcDdZy2jTV4CwwZbr5QQmEx9ZV6HEhtBs1Q03Y
+         U5uEDfUOSlz8ay5Rwj8vd5iOQWeRCpNQl/IxxaCJ3KZyM+p4OdzcmbZGN3gWMiqxkRvD
+         U0c95D8dcuW7veGpMiyZv+OW7I6AvfEhUFzGyJ7FPZuwZcO1bBmx3l+lGsOMJqW1Y7u6
+         XEEkrybeb5tdDMEzc82NwAoue4e/8reaAnLXRHlWrXN5gI02kNx0HE9ZzQZyIwR/OHKg
+         na2f6YEic01lBMtZQUBgOyBsoNbMdD8kr+wcQKVpej2PTS1y07g26hPA+S87MhOShJQ2
+         KdZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=STSjYwvZPuyl75wjWMZHV1XwXZxjAw1KyH4vRRF0KX8=;
+        b=XBG4VHJPO22r5KbqD6bdYkSOwgFfDECZtkQM1wcfy1p0jLvATljBbZGcJgMj5wfPCd
+         o//akoqAl3gMdI3Y3eCw6Y8vWdDydtg/EemaQ/87ZP0q7cFOwP4vwfbmH3ImP5/D+BKF
+         RjLYiZDEKk5lYdMZRTERaO+GZi51XaSb3m+OyfDwKOl295L4QZTsXDUelXnQcktOJuNT
+         RFCjsqs0xoXEm7PouKs8La9bbCT9HCYzMTh3TSk5vg5YA0J+5hTw00T+BPELWgwcMa+W
+         8Fo6d9pkr9fKFyod8RSJiQLAxKL1QLjyJS/OXa4Y5fo51XTn/eRhRbgteq08xVqJQtR3
+         3hgA==
+X-Gm-Message-State: APjAAAWEmHZOzCqiBvIsDxTe3xmC5NqE0590fkQpB/B5dgKpwMka0fzZ
+        vFlat8+pwAH5RJ7XuAxEOQw=
+X-Google-Smtp-Source: APXvYqwBunKfIfD9LvK+AmQpafx+LF47puQRVgGLx/4jbjVbwI60YZ1g50Gxjt9XL+VPCKE5s9li3A==
+X-Received: by 2002:a0c:ff44:: with SMTP id y4mr33761774qvt.238.1557948511961;
+        Wed, 15 May 2019 12:28:31 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id o37sm2141805qta.86.2019.05.15.12.28.30
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 May 2019 12:28:30 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9D795404A1; Wed, 15 May 2019 16:28:26 -0300 (-03)
+Date:   Wed, 15 May 2019 16:28:26 -0300
+To:     kan.liang@linux.intel.com
+Cc:     jolsa@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com
+Subject: Re: [PATCH V2 3/3] perf regs x86: Add X86 specific
+ arch__intr_reg_mask()
+Message-ID: <20190515192826.GE23162@kernel.org>
+References: <1557865174-56264-1-git-send-email-kan.liang@linux.intel.com>
+ <1557865174-56264-3-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 15 May 2019 19:27:34 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557865174-56264-3-git-send-email-kan.liang@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add logic to free up a busy memory range. Freed memory range will be
-returned to free pool. Add a worker which can be started to select
-and free some busy memory ranges.
+Em Tue, May 14, 2019 at 01:19:34PM -0700, kan.liang@linux.intel.com escreveu:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> XMM registers can be collected on Icelake and later platforms.
+> 
+> Add specific arch__intr_reg_mask(), which creating an event to check if
+> the kernel and hardware can collect XMM registers.
+> 
+> Test on Skylake which doesn't support XMM registers collection. There is
+> nothing changed.
 
-In certain cases (write path), process can steal one of its busy
-dax ranges if free range is not available.
+Thanks a lot for doing this and tested on both a machine without these
+registers as well as on one with it.
 
-If free range is not available and nothing can't be stolen from same
-inode, caller waits on a waitq for free range to become available.
+Applied, together with Ravi's tested-by for the first two and the change
+in the --user-regs doc,
 
-For reclaiming a range, as of now we need to hold following locks in
-specified order.
+Regards,
 
-	inode_trylock(inode);
-	down_write(&fi->i_mmap_sem);
-	down_write(&fi->i_dmap_sem);
+- Arnaldo
+ 
+>    #perf record -I?
+>    available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9
+>    R10 R11 R12 R13 R14 R15
+> 
+>    Usage: perf record [<options>] [<command>]
+>     or: perf record [<options>] -- <command> [<options>]
+> 
+>     -I, --intr-regs[=<any register>]
+>                           sample selected machine registers on
+>    interrupt, use '-I?' to list register names
+> 
+>    #perf record -I
+>    [ perf record: Woken up 1 times to write data ]
+>    [ perf record: Captured and wrote 0.905 MB perf.data (2520 samples) ]
+> 
+>    #perf evlist -v
+>    cycles: size: 112, { sample_period, sample_freq }: 4000, sample_type:
+>    IP|TID|TIME|CPU|PERIOD|REGS_INTR, read_format: ID, disabled: 1,
+>    inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3,
+>    sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol:
+>    1, bpf_event: 1, sample_regs_intr: 0xff0fff
+> 
+> Test on Icelake which support XMM registers collection.
+> 
+>    #perf record -I?
+>    available registers: AX BX CX DX SI DI BP SP IP FLAGS CS SS R8 R9 R10
+>    R11 R12 R13 R14 R15 XMM0 XMM1 XMM2 XMM3 XMM4 XMM5 XMM6 XMM7 XMM8 XMM9
+>    XMM10 XMM11 XMM12 XMM13 XMM14 XMM15
+> 
+>    Usage: perf record [<options>] [<command>]
+>     or: perf record [<options>] -- <command> [<options>]
+> 
+>     -I, --intr-regs[=<any register>]
+>                           sample selected machine registers on
+>    interrupt, use '-I?' to list register names
+> 
+>    #perf record -I
+>    [ perf record: Woken up 1 times to write data ]
+>    [ perf record: Captured and wrote 0.800 MB perf.data (318 samples) ]
+> 
+>    #perf evlist -v
+>    cycles: size: 112, { sample_period, sample_freq }: 4000, sample_type:
+>    IP|TID|TIME|CPU|PERIOD|REGS_INTR, read_format: ID, disabled: 1,
+>    inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3,
+>    sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol:
+>    1, bpf_event: 1, sample_regs_intr: 0xffffffff00ff0fff
+> 
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+> 
+> Changes since V1:
+> - Add specific arch__intr_reg_mask() support
+>   Drop specific has_non_gprs_support() and non_gprs_mask()
+> 
+>  tools/perf/arch/x86/include/perf_regs.h |  1 +
+>  tools/perf/arch/x86/util/perf_regs.c    | 25 +++++++++++++++++++++++++
+>  2 files changed, 26 insertions(+)
+> 
+> diff --git a/tools/perf/arch/x86/include/perf_regs.h b/tools/perf/arch/x86/include/perf_regs.h
+> index b732133..b7cd91a 100644
+> --- a/tools/perf/arch/x86/include/perf_regs.h
+> +++ b/tools/perf/arch/x86/include/perf_regs.h
+> @@ -9,6 +9,7 @@
+>  void perf_regs_load(u64 *regs);
+>  
+>  #define PERF_REGS_MAX PERF_REG_X86_XMM_MAX
+> +#define PERF_XMM_REGS_MASK	(~((1ULL << PERF_REG_X86_XMM0) - 1))
+>  #ifndef HAVE_ARCH_X86_64_SUPPORT
+>  #define PERF_REGS_MASK ((1ULL << PERF_REG_X86_32_MAX) - 1)
+>  #define PERF_SAMPLE_REGS_ABI PERF_SAMPLE_REGS_ABI_32
+> diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
+> index 71d7604..c3d7479 100644
+> --- a/tools/perf/arch/x86/util/perf_regs.c
+> +++ b/tools/perf/arch/x86/util/perf_regs.c
+> @@ -270,3 +270,28 @@ int arch_sdt_arg_parse_op(char *old_op, char **new_op)
+>  
+>  	return SDT_ARG_VALID;
+>  }
+> +
+> +uint64_t arch__intr_reg_mask(void)
+> +{
+> +	struct perf_event_attr attr = {
+> +		.type			= PERF_TYPE_HARDWARE,
+> +		.config			= PERF_COUNT_HW_CPU_CYCLES,
+> +		.sample_period		= 1,
+> +		.sample_type		= PERF_SAMPLE_REGS_INTR,
+> +		.sample_regs_intr	= PERF_XMM_REGS_MASK,
+> +		.precise_ip		= 1,
+> +		.disabled 		= 1,
+> +		.exclude_kernel		= 1,
+> +	};
+> +	int fd;
+> +
+> +	event_attr_init(&attr);
+> +
+> +	fd = sys_perf_event_open(&attr, 0, -1, -1, 0);
+> +	if (fd != -1) {
+> +		close(fd);
+> +		return (PERF_XMM_REGS_MASK | PERF_REGS_MASK);
+> +	}
+> +
+> +	return PERF_REGS_MASK;
+> +}
+> -- 
+> 2.7.4
 
-This means, one can not wait for a range to become free when in fault
-path because it can lead to deadlock in following two situations.
-
-- Worker thread to free memory might block on fuse_inode->i_mmap_sem as well.
-- This inode is holding all the memory and more memory can't be freed.
-
-In both the cases, deadlock will ensue. So return -ENOSPC from iomap_begin()
-in fault path if memory can't be allocated. Drop fuse_inode->i_mmap_sem,
-and wait for a free range to become available and retry.
-
-read path can't do direct reclaim as well because it holds shared inode
-lock while reclaim assumes that inode lock is held exclusively. Due to
-shared lock, it might happen that one reader is still reading from range
-and another reader reclaims that range leading to problems. So read path
-also returns -ENOSPC and higher layers retry (like fault path).
-
- a different story. We hold inode lock and lock ordering
-allows to grab fuse_inode->immap_sem, if needed. That means we can do direct
-reclaim in that path. But if there is no memory allocated to this inode,
-then direct reclaim will not work and we need to wait for a memory range
-to become free. So try following order.
-
-A. Try to get a free range.
-B. If not, try direct reclaim.
-C. If not, wait for a memory range to become free
-
-Here sleeping with locks held should be fine because in step B, we made
-sure this inode is not holding any ranges. That means other inodes are
-holding ranges and somebody should be able to free memory. Also, worker
-thread does a trylock() on inode lock. That means worker tread will not
-wait on this inode and move onto next memory range. Hence above sequence
-should be deadlock free.
-
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- fs/fuse/file.c   | 357 +++++++++++++++++++++++++++++++++++++++++++++--
- fs/fuse/fuse_i.h |  22 +++
- fs/fuse/inode.c  |   4 +
- 3 files changed, 374 insertions(+), 9 deletions(-)
-
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 3f0f7a387341..87fc2b5e0a3a 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -25,6 +25,8 @@
- INTERVAL_TREE_DEFINE(struct fuse_dax_mapping, rb, __u64, __subtree_last,
-                      START, LAST, static inline, fuse_dax_interval_tree);
- 
-+static struct fuse_dax_mapping *alloc_dax_mapping_reclaim(struct fuse_conn *fc,
-+				struct inode *inode);
- static int fuse_send_open(struct fuse_conn *fc, u64 nodeid, struct file *file,
- 			  int opcode, struct fuse_open_out *outargp)
- {
-@@ -179,6 +181,7 @@ static void fuse_link_write_file(struct file *file)
- 
- static struct fuse_dax_mapping *alloc_dax_mapping(struct fuse_conn *fc)
- {
-+	unsigned long free_threshold;
- 	struct fuse_dax_mapping *dmap = NULL;
- 
- 	spin_lock(&fc->lock);
-@@ -186,7 +189,7 @@ static struct fuse_dax_mapping *alloc_dax_mapping(struct fuse_conn *fc)
- 	/* TODO: Add logic to try to free up memory if wait is allowed */
- 	if (fc->nr_free_ranges <= 0) {
- 		spin_unlock(&fc->lock);
--		return NULL;
-+		goto out_kick;
- 	}
- 
- 	WARN_ON(list_empty(&fc->free_ranges));
-@@ -197,15 +200,43 @@ static struct fuse_dax_mapping *alloc_dax_mapping(struct fuse_conn *fc)
- 	list_del_init(&dmap->list);
- 	fc->nr_free_ranges--;
- 	spin_unlock(&fc->lock);
-+
-+out_kick:
-+	/* If number of free ranges are below threshold, start reclaim */
-+	free_threshold = max((fc->nr_ranges * FUSE_DAX_RECLAIM_THRESHOLD)/100,
-+				(unsigned long)1);
-+	if (fc->nr_free_ranges < free_threshold) {
-+		pr_debug("fuse: Kicking dax memory reclaim worker. nr_free_ranges=0x%ld nr_total_ranges=%ld\n", fc->nr_free_ranges, fc->nr_ranges);
-+		queue_delayed_work(system_long_wq, &fc->dax_free_work, 0);
-+	}
- 	return dmap;
- }
- 
-+/* This assumes fc->lock is held */
-+static void __dmap_remove_busy_list(struct fuse_conn *fc,
-+				struct fuse_dax_mapping *dmap)
-+{
-+	list_del_init(&dmap->busy_list);
-+	WARN_ON(fc->nr_busy_ranges == 0);
-+	fc->nr_busy_ranges--;
-+}
-+
-+static void dmap_remove_busy_list(struct fuse_conn *fc,
-+				struct fuse_dax_mapping *dmap)
-+{
-+	spin_lock(&fc->lock);
-+	__dmap_remove_busy_list(fc, dmap);
-+	spin_unlock(&fc->lock);
-+}
-+
- /* This assumes fc->lock is held */
- static void __free_dax_mapping(struct fuse_conn *fc,
- 				struct fuse_dax_mapping *dmap)
- {
- 	list_add_tail(&dmap->list, &fc->free_ranges);
- 	fc->nr_free_ranges++;
-+	/* TODO: Wake up only when needed */
-+	wake_up(&fc->dax_range_waitq);
- }
- 
- static void free_dax_mapping(struct fuse_conn *fc,
-@@ -267,7 +298,15 @@ static int fuse_setup_one_mapping(struct inode *inode,
- 
- 	pr_debug("fuse_setup_one_mapping() succeeded. offset=0x%llx err=%zd\n", offset, err);
- 
--	/* TODO: What locking is required here. For now, using fc->lock */
-+	/*
-+	 * We don't take a refernce on inode. inode is valid right now and
-+	 * when inode is going away, cleanup logic should first cleanup
-+	 * dmap entries.
-+	 *
-+	 * TODO: Do we need to ensure that we are holding inode lock
-+	 * as well.
-+	 */
-+	dmap->inode = inode;
- 	dmap->start = offset;
- 	dmap->end = offset + FUSE_DAX_MEM_RANGE_SZ - 1;
- 	/* Protected by fi->i_dmap_sem */
-@@ -321,10 +360,7 @@ void fuse_removemapping(struct inode *inode)
- 		if (dmap) {
- 			fuse_dax_interval_tree_remove(dmap, &fi->dmap_tree);
- 			fi->nr_dmaps--;
--			spin_lock(&fc->lock);
--			list_del_init(&dmap->busy_list);
--			fc->nr_busy_ranges--;
--			spin_unlock(&fc->lock);
-+			dmap_remove_busy_list(fc, dmap);
- 		}
- 
- 		if (!dmap)
-@@ -347,6 +383,8 @@ void fuse_removemapping(struct inode *inode)
- 			}
- 		}
- 
-+		dmap->inode = NULL;
-+
- 		/* Add it back to free ranges list */
- 		free_dax_mapping(fc, dmap);
- 	}
-@@ -1784,8 +1822,23 @@ static int fuse_iomap_begin(struct inode *inode, loff_t pos, loff_t length,
- 		if (pos >= i_size_read(inode))
- 			goto iomap_hole;
- 
--		alloc_dmap = alloc_dax_mapping(fc);
--		if (!alloc_dmap)
-+		/* Can't do reclaim in fault path yet due to lock ordering.
-+		 * Read path takes shared inode lock and that's not sufficient
-+		 * for inline range reclaim. Caller needs to drop lock, wait
-+		 * and retry.
-+		 */
-+		if (flags & IOMAP_FAULT || !(flags & IOMAP_WRITE)) {
-+			alloc_dmap = alloc_dax_mapping(fc);
-+			if (!alloc_dmap)
-+				return -ENOSPC;
-+		} else {
-+			alloc_dmap = alloc_dax_mapping_reclaim(fc, inode);
-+			if (IS_ERR(alloc_dmap))
-+				return PTR_ERR(alloc_dmap);
-+		}
-+
-+		/* If we are here, we should have memory allocated */
-+		if (WARN_ON(!alloc_dmap))
- 			return -EBUSY;
- 
- 		/*
-@@ -1850,7 +1903,18 @@ static const struct iomap_ops fuse_iomap_ops = {
- static ssize_t fuse_dax_read_iter(struct kiocb *iocb, struct iov_iter *to)
- {
- 	struct inode *inode = file_inode(iocb->ki_filp);
-+	struct fuse_conn *fc = get_fuse_conn(inode);
- 	ssize_t ret;
-+	bool retry = false;
-+
-+retry:
-+	if (retry && !(fc->nr_free_ranges > 0)) {
-+		ret = -EINTR;
-+		if (wait_event_killable_exclusive(fc->dax_range_waitq,
-+						  (fc->nr_free_ranges > 0))) {
-+			goto out;
-+		}
-+	}
- 
- 	if (iocb->ki_flags & IOCB_NOWAIT) {
- 		if (!inode_trylock_shared(inode))
-@@ -1862,8 +1926,19 @@ static ssize_t fuse_dax_read_iter(struct kiocb *iocb, struct iov_iter *to)
- 	ret = dax_iomap_rw(iocb, to, &fuse_iomap_ops);
- 	inode_unlock_shared(inode);
- 
-+	/* If a dax range could not be allocated and it can't be reclaimed
-+	 * inline, then drop inode lock and retry. Range reclaim logic
-+	 * requires exclusive access to inode lock.
-+	 *
-+	 * TODO: What if -ENOSPC needs to be returned to user space. Fix it.
-+	 */
-+	if (ret == -ENOSPC) {
-+		retry = true;
-+		goto retry;
-+	}
- 	/* TODO file_accessed(iocb->f_filp) */
- 
-+out:
- 	return ret;
- }
- 
-@@ -2642,10 +2717,21 @@ static int __fuse_dax_fault(struct vm_fault *vmf, enum page_entry_size pe_size,
- 	struct inode *inode = file_inode(vmf->vma->vm_file);
- 	struct super_block *sb = inode->i_sb;
- 	pfn_t pfn;
-+	int error = 0;
-+	struct fuse_conn *fc = get_fuse_conn(inode);
-+	bool retry = false;
- 
- 	if (write)
- 		sb_start_pagefault(sb);
- 
-+retry:
-+	if (retry && !(fc->nr_free_ranges > 0)) {
-+		ret = -EINTR;
-+		if (wait_event_killable_exclusive(fc->dax_range_waitq,
-+					(fc->nr_free_ranges > 0)))
-+			goto out;
-+	}
-+
- 	/*
- 	 * We need to serialize against not only truncate but also against
- 	 * fuse dax memory range reclaim. While a range is being reclaimed,
-@@ -2653,13 +2739,20 @@ static int __fuse_dax_fault(struct vm_fault *vmf, enum page_entry_size pe_size,
- 	 * to populate page cache or access memory we are trying to free.
- 	 */
- 	down_read(&get_fuse_inode(inode)->i_mmap_sem);
--	ret = dax_iomap_fault(vmf, pe_size, &pfn, NULL, &fuse_iomap_ops);
-+	ret = dax_iomap_fault(vmf, pe_size, &pfn, &error, &fuse_iomap_ops);
-+	if ((ret & VM_FAULT_ERROR) && error == -ENOSPC) {
-+		error = 0;
-+		retry = true;
-+		up_read(&get_fuse_inode(inode)->i_mmap_sem);
-+		goto retry;
-+	}
- 
- 	if (ret & VM_FAULT_NEEDDSYNC)
- 		ret = dax_finish_sync_fault(vmf, pe_size, pfn);
- 
- 	up_read(&get_fuse_inode(inode)->i_mmap_sem);
- 
-+out:
- 	if (write)
- 		sb_end_pagefault(sb);
- 
-@@ -3762,3 +3855,249 @@ void fuse_init_file_inode(struct inode *inode)
- 		inode->i_data.a_ops = &fuse_dax_file_aops;
- 	}
- }
-+
-+int fuse_dax_reclaim_dmap_locked(struct fuse_conn *fc, struct inode *inode,
-+				struct fuse_dax_mapping *dmap)
-+{
-+	int ret;
-+	struct fuse_inode *fi = get_fuse_inode(inode);
-+
-+	ret = filemap_fdatawrite_range(inode->i_mapping, dmap->start,
-+					dmap->end);
-+	if (ret) {
-+		printk("filemap_fdatawrite_range() failed. err=%d start=0x%llx,"
-+			" end=0x%llx\n", ret, dmap->start, dmap->end);
-+		return ret;
-+	}
-+
-+	ret = invalidate_inode_pages2_range(inode->i_mapping,
-+					dmap->start >> PAGE_SHIFT,
-+					dmap->end >> PAGE_SHIFT);
-+	/* TODO: What to do if above fails? For now,
-+	 * leave the range in place.
-+	 */
-+	if (ret) {
-+		printk("invalidate_inode_pages2_range() failed err=%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Remove dax mapping from inode interval tree now */
-+	fuse_dax_interval_tree_remove(dmap, &fi->dmap_tree);
-+	fi->nr_dmaps--;
-+
-+	ret = fuse_removemapping_one(inode, dmap);
-+	if (ret) {
-+		pr_warn("Failed to remove mapping. offset=0x%llx len=0x%llx\n",
-+			dmap->window_offset, dmap->length);
-+	}
-+
-+	return 0;
-+}
-+
-+/* First first mapping in the tree and free it. */
-+struct fuse_dax_mapping *fuse_dax_reclaim_first_mapping_locked(
-+				struct fuse_conn *fc, struct inode *inode)
-+{
-+	struct fuse_inode *fi = get_fuse_inode(inode);
-+	struct fuse_dax_mapping *dmap;
-+	int ret;
-+
-+	/* Find fuse dax mapping at file offset inode. */
-+	dmap = fuse_dax_interval_tree_iter_first(&fi->dmap_tree, 0, -1);
-+	if (!dmap)
-+		return NULL;
-+
-+	ret = fuse_dax_reclaim_dmap_locked(fc, inode, dmap);
-+	if (ret < 0)
-+		return ERR_PTR(ret);
-+
-+	/* Clean up dmap. Do not add back to free list */
-+	dmap_remove_busy_list(fc, dmap);
-+	dmap->inode = NULL;
-+	dmap->start = dmap->end = 0;
-+
-+	pr_debug("fuse: reclaimed memory range window_offset=0x%llx,"
-+				" length=0x%llx\n", dmap->window_offset,
-+				dmap->length);
-+	return dmap;
-+}
-+
-+/*
-+ * First first mapping in the tree and free it and return it. Do not add
-+ * it back to free pool.
-+ *
-+ * This is called with inode lock held.
-+ */
-+struct fuse_dax_mapping *fuse_dax_reclaim_first_mapping(struct fuse_conn *fc,
-+					struct inode *inode)
-+{
-+	struct fuse_inode *fi = get_fuse_inode(inode);
-+	struct fuse_dax_mapping *dmap;
-+
-+	down_write(&fi->i_mmap_sem);
-+	down_write(&fi->i_dmap_sem);
-+	dmap = fuse_dax_reclaim_first_mapping_locked(fc, inode);
-+	up_write(&fi->i_dmap_sem);
-+	up_write(&fi->i_mmap_sem);
-+	return dmap;
-+}
-+
-+static struct fuse_dax_mapping *alloc_dax_mapping_reclaim(struct fuse_conn *fc,
-+					struct inode *inode)
-+{
-+	struct fuse_dax_mapping *dmap;
-+	struct fuse_inode *fi = get_fuse_inode(inode);
-+
-+	while(1) {
-+		dmap = alloc_dax_mapping(fc);
-+		if (dmap)
-+			return dmap;
-+
-+		if (fi->nr_dmaps)
-+			return fuse_dax_reclaim_first_mapping(fc, inode);
-+		/*
-+		 * There are no mappings which can be reclaimed.
-+		 * Wait for one.
-+		 */
-+		if (!(fc->nr_free_ranges > 0)) {
-+			if (wait_event_killable_exclusive(fc->dax_range_waitq,
-+					(fc->nr_free_ranges > 0)))
-+				return ERR_PTR(-EINTR);
-+		}
-+	}
-+}
-+
-+int fuse_dax_free_one_mapping_locked(struct fuse_conn *fc, struct inode *inode,
-+				u64 dmap_start)
-+{
-+	int ret;
-+	struct fuse_inode *fi = get_fuse_inode(inode);
-+	struct fuse_dax_mapping *dmap;
-+
-+	WARN_ON(!inode_is_locked(inode));
-+
-+	/* Find fuse dax mapping at file offset inode. */
-+	dmap = fuse_dax_interval_tree_iter_first(&fi->dmap_tree, dmap_start,
-+							dmap_start);
-+
-+	/* Range already got cleaned up by somebody else */
-+	if (!dmap)
-+		return 0;
-+
-+	ret = fuse_dax_reclaim_dmap_locked(fc, inode, dmap);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Cleanup dmap entry and add back to free list */
-+	spin_lock(&fc->lock);
-+	__dmap_remove_busy_list(fc, dmap);
-+	dmap->inode = NULL;
-+	dmap->start = dmap->end = 0;
-+	__free_dax_mapping(fc, dmap);
-+	spin_unlock(&fc->lock);
-+
-+	pr_debug("fuse: freed memory range window_offset=0x%llx,"
-+				" length=0x%llx\n", dmap->window_offset,
-+				dmap->length);
-+	return ret;
-+}
-+
-+/*
-+ * Free a range of memory.
-+ * Locking.
-+ * 1. Take inode->i_rwsem to prever further read/write.
-+ * 2. Take fuse_inode->i_mmap_sem to block dax faults.
-+ * 3. Take fuse_inode->i_dmap_sem to protect interval tree. It might not
-+ *    be strictly necessary as lock 1 and 2 seem sufficient.
-+ */
-+int fuse_dax_free_one_mapping(struct fuse_conn *fc, struct inode *inode,
-+				u64 dmap_start)
-+{
-+	int ret;
-+	struct fuse_inode *fi = get_fuse_inode(inode);
-+
-+	/*
-+	 * If process is blocked waiting for memory while holding inode
-+	 * lock, we will deadlock. So continue to free next range.
-+	 */
-+	if (!inode_trylock(inode))
-+		return -EAGAIN;
-+	down_write(&fi->i_mmap_sem);
-+	down_write(&fi->i_dmap_sem);
-+	ret = fuse_dax_free_one_mapping_locked(fc, inode, dmap_start);
-+	up_write(&fi->i_dmap_sem);
-+	up_write(&fi->i_mmap_sem);
-+	inode_unlock(inode);
-+	return ret;
-+}
-+
-+int fuse_dax_free_memory(struct fuse_conn *fc, unsigned long nr_to_free)
-+{
-+	struct fuse_dax_mapping *dmap, *pos, *temp;
-+	int ret, nr_freed = 0;
-+	u64 dmap_start = 0, window_offset = 0;
-+	struct inode *inode = NULL;
-+
-+	/* Pick first busy range and free it for now*/
-+	while(1) {
-+		if (nr_freed >= nr_to_free)
-+			break;
-+
-+		dmap = NULL;
-+		spin_lock(&fc->lock);
-+
-+		list_for_each_entry_safe(pos, temp, &fc->busy_ranges,
-+						busy_list) {
-+			inode = igrab(pos->inode);
-+			/*
-+			 * This inode is going away. That will free
-+			 * up all the ranges anyway, continue to
-+			 * next range.
-+			 */
-+			if (!inode)
-+				continue;
-+			/*
-+			 * Take this element off list and add it tail. If
-+			 * inode lock can't be obtained, this will help with
-+			 * selecting new element
-+			 */
-+			dmap = pos;
-+			list_move_tail(&dmap->busy_list, &fc->busy_ranges);
-+			dmap_start = dmap->start;
-+			window_offset = dmap->window_offset;
-+			break;
-+		}
-+		spin_unlock(&fc->lock);
-+		if (!dmap)
-+			return 0;
-+
-+		ret = fuse_dax_free_one_mapping(fc, inode, dmap_start);
-+		iput(inode);
-+		if (ret && ret != -EAGAIN) {
-+			printk("%s(window_offset=0x%llx) failed. err=%d\n",
-+				__func__, window_offset, ret);
-+			return ret;
-+		}
-+
-+		/* Could not get inode lock. Try next element */
-+		if (ret == -EAGAIN)
-+			continue;
-+		nr_freed++;
-+	}
-+	return 0;
-+}
-+
-+/* TODO: This probably should go in inode.c */
-+void fuse_dax_free_mem_worker(struct work_struct *work)
-+{
-+	int ret;
-+	struct fuse_conn *fc = container_of(work, struct fuse_conn,
-+						dax_free_work.work);
-+	pr_debug("fuse: Worker to free memory called.\n");
-+	pr_debug("fuse: Worker to free memory called. nr_free_ranges=%lu"
-+		 " nr_busy_ranges=%lu\n", fc->nr_free_ranges,
-+		 fc->nr_busy_ranges);
-+	ret = fuse_dax_free_memory(fc, FUSE_DAX_RECLAIM_CHUNK);
-+	if (ret)
-+		pr_debug("fuse: fuse_dax_free_memory() failed with err=%d\n", ret);
-+}
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index c93e9155b723..b4a5728444bb 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -50,6 +50,16 @@
- #define FUSE_DAX_MEM_RANGE_SZ	(2*1024*1024)
- #define FUSE_DAX_MEM_RANGE_PAGES	(FUSE_DAX_MEM_RANGE_SZ/PAGE_SIZE)
- 
-+/* Number of ranges reclaimer will try to free in one invocation */
-+#define FUSE_DAX_RECLAIM_CHUNK		(10)
-+
-+/*
-+ * Dax memory reclaim threshold in percetage of total ranges. When free
-+ * number of free ranges drops below this threshold, reclaim can trigger
-+ * Default is 20%
-+ * */
-+#define FUSE_DAX_RECLAIM_THRESHOLD	(20)
-+
- /** List of active connections */
- extern struct list_head fuse_conn_list;
- 
-@@ -103,6 +113,9 @@ struct fuse_forget_link {
- 
- /** Translation information for file offsets to DAX window offsets */
- struct fuse_dax_mapping {
-+	/* Pointer to inode where this memory range is mapped */
-+	struct inode *inode;
-+
- 	/* Will connect in fc->free_ranges to keep track of free memory */
- 	struct list_head list;
- 
-@@ -880,12 +893,20 @@ struct fuse_conn {
- 	unsigned long nr_busy_ranges;
- 	struct list_head busy_ranges;
- 
-+	/* Worker to free up memory ranges */
-+	struct delayed_work dax_free_work;
-+
-+	/* Wait queue for a dax range to become free */
-+	wait_queue_head_t dax_range_waitq;
-+
- 	/*
- 	 * DAX Window Free Ranges. TODO: This might not be best place to store
- 	 * this free list
- 	 */
- 	long nr_free_ranges;
- 	struct list_head free_ranges;
-+
-+	unsigned long nr_ranges;
- };
- 
- static inline struct fuse_conn *get_fuse_conn_super(struct super_block *sb)
-@@ -1260,6 +1281,7 @@ unsigned fuse_len_args(unsigned numargs, struct fuse_arg *args);
-  * Get the next unique ID for a request
-  */
- u64 fuse_get_unique(struct fuse_iqueue *fiq);
-+void fuse_dax_free_mem_worker(struct work_struct *work);
- void fuse_removemapping(struct inode *inode);
- 
- #endif /* _FS_FUSE_I_H */
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index f57f7ce02acc..8af7f31c6e19 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -678,6 +678,7 @@ static int fuse_dax_mem_range_init(struct fuse_conn *fc,
- 
- 	list_replace_init(&mem_ranges, &fc->free_ranges);
- 	fc->nr_free_ranges = nr_ranges;
-+	fc->nr_ranges = nr_ranges;
- 	return 0;
- out_err:
- 	/* Free All allocated elements */
-@@ -704,6 +705,7 @@ void fuse_conn_init(struct fuse_conn *fc, struct user_namespace *user_ns,
- 	atomic_set(&fc->dev_count, 1);
- 	init_waitqueue_head(&fc->blocked_waitq);
- 	init_waitqueue_head(&fc->reserved_req_waitq);
-+	init_waitqueue_head(&fc->dax_range_waitq);
- 	fuse_iqueue_init(&fc->iq, fiq_ops, fiq_priv);
- 	INIT_LIST_HEAD(&fc->bg_queue);
- 	INIT_LIST_HEAD(&fc->entry);
-@@ -724,6 +726,7 @@ void fuse_conn_init(struct fuse_conn *fc, struct user_namespace *user_ns,
- 	fc->max_pages = FUSE_DEFAULT_MAX_PAGES_PER_REQ;
- 	INIT_LIST_HEAD(&fc->free_ranges);
- 	INIT_LIST_HEAD(&fc->busy_ranges);
-+	INIT_DELAYED_WORK(&fc->dax_free_work, fuse_dax_free_mem_worker);
- }
- EXPORT_SYMBOL_GPL(fuse_conn_init);
- 
-@@ -732,6 +735,7 @@ void fuse_conn_put(struct fuse_conn *fc)
- 	if (refcount_dec_and_test(&fc->count)) {
- 		if (fc->destroy_req)
- 			fuse_request_free(fc->destroy_req);
-+		flush_delayed_work(&fc->dax_free_work);
- 		if (fc->dax_dev)
- 			fuse_free_dax_mem_ranges(&fc->free_ranges);
- 		put_pid_ns(fc->pid_ns);
 -- 
-2.20.1
 
+- Arnaldo
