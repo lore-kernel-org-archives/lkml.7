@@ -2,133 +2,115 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933CCC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65437C04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C5DD20881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:57:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kVWsmQN8"
+	by mail.kernel.org (Postfix) with ESMTP id 40AAC2084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:58:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726547AbfEOJ5R (ORCPT
+        id S1726491AbfEOJ6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 05:57:17 -0400
-Received: from mail-eopbgr130045.outbound.protection.outlook.com ([40.107.13.45]:16610
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725977AbfEOJ5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 05:57:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dppGzgebjPo1AJQyzMCQOUh3IaiJM6Z+MV7oriSNvSg=;
- b=kVWsmQN8ixeLh67ux0jKYP2oDruZQBMOlZfELJo4eJl2j5to3h8C40DZHZrWzhm2sErF1ZoasNsWEt3ATZhf4Q0xf43th2Inxj68Av6m95sJrDsYesEY5vOezkBHvnxf0JPL+yCWrSEMMwzOeqBzYkMSrqJmZs0jXFS3abhyDkk=
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.50.159) by
- VI1PR04MB5391.eurprd04.prod.outlook.com (20.178.120.209) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Wed, 15 May 2019 09:57:12 +0000
-Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::8942:6d16:631:413]) by VI1PR04MB5134.eurprd04.prod.outlook.com
- ([fe80::8942:6d16:631:413%4]) with mapi id 15.20.1878.024; Wed, 15 May 2019
- 09:57:12 +0000
-From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "marex@denx.de" <marex@denx.de>, Leo Li <leoyang.li@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>
-Subject: Re: [RFC PATCH v2 1/3] USB: use genalloc for USB HCs with local
- memory
-Thread-Topic: [RFC PATCH v2 1/3] USB: use genalloc for USB HCs with local
- memory
-Thread-Index: AQHVCmKqi2RLbkcB50+PlEfeksPwEqZqsaYAgAFCsgA=
-Date:   Wed, 15 May 2019 09:57:12 +0000
-Message-ID: <f4fc0151-5e49-77fd-7736-37cdfe57c268@nxp.com>
-References: <20190514143807.7745-1-laurentiu.tudor@nxp.com>
- <20190514143807.7745-2-laurentiu.tudor@nxp.com>
- <20190514144210.GA14625@lst.de>
-In-Reply-To: <20190514144210.GA14625@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=laurentiu.tudor@nxp.com; 
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 859a986c-3961-4da0-91e6-08d6d91bb3ed
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5391;
-x-ms-traffictypediagnostic: VI1PR04MB5391:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <VI1PR04MB5391B5C45057BEA12A932AF8EC090@VI1PR04MB5391.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(366004)(136003)(376002)(396003)(39860400002)(189003)(199004)(54094003)(81166006)(53546011)(81156014)(8936002)(8676002)(6506007)(31686004)(54906003)(316002)(76176011)(305945005)(7736002)(3846002)(6916009)(102836004)(2906002)(99286004)(6116002)(229853002)(256004)(6436002)(6486002)(6512007)(66476007)(64756008)(66556008)(5660300002)(44832011)(71190400001)(66066001)(68736007)(71200400001)(26005)(36756003)(66446008)(186003)(4326008)(53936002)(86362001)(6246003)(31696002)(476003)(2616005)(478600001)(14454004)(25786009)(966005)(11346002)(486006)(66946007)(446003)(91956017)(76116006)(73956011)(6306002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5391;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: yW0dQZRgz7ZYJQNMRpu6QWAVfaNPn96jxaeYrgkPKE5XLCY1LVm5SCajuAHBEKq8Yf4iT6SoRmQOuA0aW/i40uA2b0fLLd7WYWloTwmOTUQRMALOSFIzyQqjnvI4WjCfPz1RtA+GEFUxqI4VtFiKUPB8P1QOxC5z+OSDuhYdcjYaD+YXKcsdzUfBtIxvS1oZogpfOE6P7AYWgT5J4LoD8xnT8EeX+KXqPgllogNxcpGj8LyFKZi5kNtJSh1OwMQ5EIFIXUFKRw5H42w+vBcpNYEb4W22KJ1Lu28P+AAlqtq97jsyyZ5BDAnG0RDNQhzLsGwkU2NgyNOLCOwHAM498bap0xk1HHKYcmUSlJ3ptocVtu4FkZ87T98KFlbxijT+TsRKtNt0OTx7FjOOlmfnoRU/1g6cI+SSil/KrlureNY=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2C2AEA4CE488064C8DE45118DD24BB87@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 15 May 2019 05:58:38 -0400
+Received: from mga09.intel.com ([134.134.136.24]:11059 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725977AbfEOJ6h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 05:58:37 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 02:58:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,472,1549958400"; 
+   d="scan'208";a="171908010"
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
+  by fmsmga002.fm.intel.com with ESMTP; 15 May 2019 02:58:31 -0700
+Date:   Wed, 15 May 2019 12:58:40 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+Message-ID: <20190515095840.GA10917@linux.intel.com>
+References: <979615a8-fd03-e3fd-fbdb-65c1e51afd93@fortanix.com>
+ <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
+ <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
+ <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
+ <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+ <20190513102926.GD8743@linux.intel.com>
+ <20190514104323.GA7591@linux.intel.com>
+ <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+ <20190515084909.GA10043@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 859a986c-3961-4da0-91e6-08d6d91bb3ed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 09:57:12.3988
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5391
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190515084909.GA10043@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTQuMDUuMjAxOSAxNzo0MiwgQ2hyaXN0b3BoIEhlbGx3aWcgd3JvdGU6DQo+PiBAQCAtMTM2
-LDYgKzEzNywxMCBAQCB2b2lkICpoY2RfYnVmZmVyX2FsbG9jKA0KPj4gICAJCWlmIChzaXplIDw9
-IHBvb2xfbWF4W2ldKQ0KPj4gICAJCQlyZXR1cm4gZG1hX3Bvb2xfYWxsb2MoaGNkLT5wb29sW2ld
-LCBtZW1fZmxhZ3MsIGRtYSk7DQo+PiAgIAl9DQo+PiArDQo+PiArCWlmIChoY2QtPmRyaXZlci0+
-ZmxhZ3MgJiBIQ0RfTE9DQUxfTUVNKQ0KPj4gKwkJcmV0dXJuIGdlbl9wb29sX2RtYV9hbGxvYyho
-Y2QtPmxvY2FsbWVtX3Bvb2wsIHNpemUsIGRtYSk7DQo+IA0KPiBJIHRoaW5rIHRoaXMgY2hlY2sg
-bmVlZHMgdG8gYmUgYmVmb3JlIHRoZSBhYm92ZSBjb2RlIHRvIHVzZSB0aGUgZG1hDQo+IHBvb2xz
-LCBhcyB3ZSBzaG91bGQgYWx3YXlzIHVzZSB0aGUgSENEIGxvY2FsIG1lbW9yeS4gIFByb2JhYmx5
-IGFsbCB0aGUNCj4gd2F5IHVwIGp1c3QgYmVsb3cgdGhlIHNpemUgPT0gMCBjaGVjaywgdGhhdCB3
-YXkgd2UgY2FuIGFsc28gcmVtb3ZlIHRoZQ0KPiBvdGhlciBIQ0RfTE9DQUxfTUVNIGNoZWNrLg0K
-DQpBbHJpZ2h0Lg0KDQo+PiBAQCAtMTY1LDUgKzE3MCwxMCBAQCB2b2lkIGhjZF9idWZmZXJfZnJl
-ZSgNCj4+ICAgCQkJcmV0dXJuOw0KPj4gICAJCX0NCj4+ICAgCX0NCj4+IC0JZG1hX2ZyZWVfY29o
-ZXJlbnQoaGNkLT5zZWxmLnN5c2Rldiwgc2l6ZSwgYWRkciwgZG1hKTsNCj4+ICsNCj4+ICsJaWYg
-KGhjZC0+ZHJpdmVyLT5mbGFncyAmIEhDRF9MT0NBTF9NRU0pDQo+PiArCQlnZW5fcG9vbF9mcmVl
-KGhjZC0+bG9jYWxtZW1fcG9vbCwgKHVuc2lnbmVkIGxvbmcpYWRkciwNCj4+ICsJCQkgICAgICBz
-aXplKTsNCj4+ICsJZWxzZQ0KPj4gKwkJZG1hX2ZyZWVfY29oZXJlbnQoaGNkLT5zZWxmLnN5c2Rl
-diwgc2l6ZSwgYWRkciwgZG1hKTsNCj4gDQo+IFNhbWUgaGVyZS4NCg0KT2suDQoNCj4+IEBAIC01
-MDUsOCArNTA2LDE1IEBAIHN0YXRpYyBpbnQgb2hjaV9pbml0IChzdHJ1Y3Qgb2hjaV9oY2QgKm9o
-Y2kpDQo+PiAgIAl0aW1lcl9zZXR1cCgmb2hjaS0+aW9fd2F0Y2hkb2csIGlvX3dhdGNoZG9nX2Z1
-bmMsIDApOw0KPj4gICAJb2hjaS0+cHJldl9mcmFtZV9ubyA9IElPX1dBVENIRE9HX09GRjsNCj4+
-ICAgDQo+PiAtCW9oY2ktPmhjY2EgPSBkbWFfYWxsb2NfY29oZXJlbnQgKGhjZC0+c2VsZi5jb250
-cm9sbGVyLA0KPj4gLQkJCXNpemVvZigqb2hjaS0+aGNjYSksICZvaGNpLT5oY2NhX2RtYSwgR0ZQ
-X0tFUk5FTCk7DQo+PiArCWlmIChoY2QtPmRyaXZlci0+ZmxhZ3MgJiBIQ0RfTE9DQUxfTUVNKQ0K
-Pj4gKwkJb2hjaS0+aGNjYSA9IGdlbl9wb29sX2RtYV9hbGxvYyhoY2QtPmxvY2FsbWVtX3Bvb2ws
-DQo+PiArCQkJCQkJc2l6ZW9mKCpvaGNpLT5oY2NhKSwNCj4+ICsJCQkJCQkmb2hjaS0+aGNjYV9k
-bWEpOw0KPj4gKwllbHNlDQo+PiArCQlvaGNpLT5oY2NhID0gZG1hX2FsbG9jX2NvaGVyZW50KGhj
-ZC0+c2VsZi5jb250cm9sbGVyLA0KPj4gKwkJCQkJCXNpemVvZigqb2hjaS0+aGNjYSksDQo+PiAr
-CQkJCQkJJm9oY2ktPmhjY2FfZG1hLA0KPj4gKwkJCQkJCUdGUF9LRVJORUwpOw0KPiANCj4gSSB3
-b25kZXIgaWYgd2UgY291bGQganVzdCB1c2UgaGNkX2J1ZmZlcl9hbGxvYy9mcmVlIGhlcmUsIGFs
-dGhvdWdodA0KPiB0aGF0IHdvdWxkIHJlcXVpcmUgdGhlbSB0byBiZSBleHBvcnRlZC4gIEknbGwg
-bGVhdmUgdGhhdCBkZWNpc2lvbiB0bw0KPiB0aGUgcmVsZXZhbnQgbWFpbnRhaW5lcnMsIHRob3Vn
-aC4NCj4gDQo+IEV4Y2VwdCBmb3IgdGhpcyB0aGUgc2VyaWVzIGxvb2tzIGV4YWN0bHkgd2hhdCBJ
-IGhhZCBlbnZpc2lvbmVkIHRvDQo+IGdldCByaWQgb2YgdGhlIGRldmljZSBsb2NhbCBkbWFfZGVj
-bGFyZV9jb2hlcmVudCB1c2UgY2FzZSwgdGhhbmtzIQ0KDQpHbGFkIEkgY291bGQgaGVscC4gT24g
-dGhlIHJlbW90ZXByb2NfdmlydGlvLmMgY2FzZSwgSSBoYWQgYSBjdXJzb3J5IGxvb2sgDQphbmQg
-Zm91bmQgb3V0IHRoYXQgdGhlIGRtYV9kZWNsYXJlX2NvaGVyZW50X21lbW9yeSgpIHVzYWdlIHdh
-cyANCmludHJvZHVjZWQgcXVpdGUgcmVjZW50bHksIGJ5IHRoaXMgcGF0Y2g6DQpodHRwczovL2dp
-dC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQv
-Y29tbWl0Lz9pZD0wODZkMDg3MjVkMzRjNmIzMzMzZGI3MTAzNDRhZTljNGZkYWZiMmQ1DQoNCi0t
-LQ0KQmVzdCBSZWdhcmRzLCBMYXVyZW50aXU=
+On Wed, May 15, 2019 at 11:49:09AM +0300, Jarkko Sakkinen wrote:
+> On Tue, May 14, 2019 at 08:13:36AM -0700, Andy Lutomirski wrote:
+> > On Tue, May 14, 2019 at 3:43 AM Jarkko Sakkinen
+> > <jarkko.sakkinen@linux.intel.com> wrote:
+> > >
+> > > On Mon, May 13, 2019 at 01:29:26PM +0300, Jarkko Sakkinen wrote:
+> > > > I did study through SDK's file format and realized that it does not
+> > > > does make sense after all to embed one.
+> > > >
+> > > > To implement it properly you would probably need a new syscall (lets say
+> > > > sgx_load_enclave) and also that enclaves are not just executables
+> > > > binaries. It is hard to find a generic format for them as applications
+> > > > range from simply protecting part of an application to running a
+> > > > containter inside enclave.
+> > >
+> > > I'm still puzzling what kind of changes you were discussing considering
+> > > SGX_IOC_ENCLAVE_ADD_PAGE.
+> > 
+> > I think it's as simple as requiring that, if SECINFO.X is set, then
+> > the src pointer points to the appropriate number of bytes of
+> > executable memory.  (Unless there's some way for an enclave to change
+> > SECINFO after the fact -- is there?)  Sadly, we don't really have the
+> > a nice in-kernel API for that right now.  You could do
+> > down_read(mmap_sem) and find_vma().  Arguably there is no value to
+> > checking that PKRU allows execute to the data.
+> 
+> OK, so you would actually go on to check whether the VMA where the data
+> is copied contains executable data?
+> 
+> What if SECINFO.X is not set and you EADD to region that is executable
+> in the enclave VMA? E.g. have RWX VMA for the enclave just to give a
+> simple example. Then you could carry executable code in the data
+> sections of the binary.
+
+This would require to be done after the enclave is initialized of course
+with EMODPR, which requires the enclave to accept the permission change
+with EACCEPT, which limits somewhat. This means that the static enclave
+would be fully covered.
+
+/Jarkko
