@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAA0C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 916F8C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B442B2084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCB12084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921598;
-	bh=BrGBuaBYFEbSew5mma2LdrWM9G9Zzz1MNTXJovmdlt8=;
+	s=default; t=1557921609;
+	bh=Y7dQ3JoNXOqLMwYaqAhM/oyX57p+juN8prrUDw2nv3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qFTqHlvLflTS6wbuwjUj1WDXe9d3L3VPDXb9/83qSN+TfF2/4wmZvXK/KCyxM0P86
-	 5McFZ0YqKCA9M4FNYDSl/HM4jgL5oeSwc1mCAIUAp9lPkmtWh6p2DdzY+ei6pl5rYB
-	 N1MjpM/7766qamrFt0DE+GfzV1Qc6QGm9rqPAe6k=
+	b=0NdGsJLZsuFTopFyy4ew5XW62KMZCIPJf1H63lggERutWp5k1/xjWH3JV2WqsGRjo
+	 voeBquz75Hr9XzaKEg9J1M4h0A2Ia6uCKZ4bwoWtOUdzE9kk3ZcLrHcyGh28SzrJxD
+	 GypesvK9jdvsOLwoFcFV21HEZ9GFFa1Vdl+y8les=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730599AbfEOL75 (ORCPT
+        id S1730630AbfEOMAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:59:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51578 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:00:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730013AbfEOLPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:15:10 -0400
+        id S1730012AbfEOLPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:15:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB7EB20644;
-        Wed, 15 May 2019 11:15:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 758832084E;
+        Wed, 15 May 2019 11:14:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918910;
-        bh=BrGBuaBYFEbSew5mma2LdrWM9G9Zzz1MNTXJovmdlt8=;
+        s=default; t=1557918899;
+        bh=Y7dQ3JoNXOqLMwYaqAhM/oyX57p+juN8prrUDw2nv3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b8f4eRUoEBhKb98CWNCUs5R55rAJ92i77noHnGz7OkdG+yuRKlhmWyLKnLPPayXmW
-         50yzbk7vTgZwPG6T3A+/FEHO517vRCR+cR7MY/Hpuy++Gdj+4DNMxSibr5UFJKo7uf
-         J6dGszvzkz5ovgEr0WjXb5HqwftoIS1Dzn2dKdSs=
+        b=MDUhjj4vhdjIi03MKgXMjbGfL0RpVzu3yjC74PN5qXaQ0xvT7uF7a/3+I1epIYNOE
+         DtaCzQRw0xJma5xSVBThAVUsNY+oqstCiOsa20TlklCepl0Bz0ut0UDG2rOmTjjehh
+         tzIlMArtaZ2wEu4poSOtNLsLtkNHnJwvDAFd4Bb4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        YueHaibing <yuehaibing@huawei.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 46/51] ipv4: Fix raw socket lookup for local traffic
-Date:   Wed, 15 May 2019 12:56:21 +0200
-Message-Id: <20190515090629.253646048@linuxfoundation.org>
+Subject: [PATCH 4.9 43/51] packet: Fix error path in packet_init
+Date:   Wed, 15 May 2019 12:56:18 +0200
+Message-Id: <20190515090628.491325386@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
 References: <20190515090616.669619870@linuxfoundation.org>
@@ -59,46 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 19e4e768064a87b073a4b4c138b55db70e0cfb9f ]
+[ Upstream commit 36096f2f4fa05f7678bc87397665491700bae757 ]
 
-inet_iif should be used for the raw socket lookup. inet_iif considers
-rt_iif which handles the case of local traffic.
+kernel BUG at lib/list_debug.c:47!
+invalid opcode: 0000 [#1
+CPU: 0 PID: 12914 Comm: rmmod Tainted: G        W         5.1.0+ #47
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:__list_del_entry_valid+0x53/0x90
+Code: 48 8b 32 48 39 fe 75 35 48 8b 50 08 48 39 f2 75 40 b8 01 00 00 00 5d c3 48
+89 fe 48 89 c2 48 c7 c7 18 75 fe 82 e8 cb 34 78 ff <0f> 0b 48 89 fe 48 c7 c7 50 75 fe 82 e8 ba 34 78 ff 0f 0b 48 89 f2
+RSP: 0018:ffffc90001c2fe40 EFLAGS: 00010286
+RAX: 000000000000004e RBX: ffffffffa0184000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffff888237a17788 RDI: 00000000ffffffff
+RBP: ffffc90001c2fe40 R08: 0000000000000000 R09: 0000000000000000
+R10: ffffc90001c2fe10 R11: 0000000000000000 R12: 0000000000000000
+R13: ffffc90001c2fe50 R14: ffffffffa0184000 R15: 0000000000000000
+FS:  00007f3d83634540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555c350ea818 CR3: 0000000231677000 CR4: 00000000000006f0
+Call Trace:
+ unregister_pernet_operations+0x34/0x120
+ unregister_pernet_subsys+0x1c/0x30
+ packet_exit+0x1c/0x369 [af_packet
+ __x64_sys_delete_module+0x156/0x260
+ ? lockdep_hardirqs_on+0x133/0x1b0
+ ? do_syscall_64+0x12/0x1f0
+ do_syscall_64+0x6e/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-As it stands, ping to a local address with the '-I <dev>' option fails
-ever since ping was changed to use SO_BINDTODEVICE instead of
-cmsg + IP_PKTINFO.
+When modprobe af_packet, register_pernet_subsys
+fails and does a cleanup, ops->list is set to LIST_POISON1,
+but the module init is considered to success, then while rmmod it,
+BUG() is triggered in __list_del_entry_valid which is called from
+unregister_pernet_subsys. This patch fix error handing path in
+packet_init to avoid possilbe issue if some error occur.
 
-IPv6 works fine.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: David Ahern <dsahern@gmail.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/raw.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/packet/af_packet.c |   25 ++++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
---- a/net/ipv4/raw.c
-+++ b/net/ipv4/raw.c
-@@ -169,6 +169,7 @@ static int icmp_filter(const struct sock
-  */
- static int raw_v4_input(struct sk_buff *skb, const struct iphdr *iph, int hash)
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -4624,14 +4624,29 @@ static void __exit packet_exit(void)
+ 
+ static int __init packet_init(void)
  {
-+	int dif = inet_iif(skb);
- 	struct sock *sk;
- 	struct hlist_head *head;
- 	int delivered = 0;
-@@ -181,8 +182,7 @@ static int raw_v4_input(struct sk_buff *
+-	int rc = proto_register(&packet_proto, 0);
++	int rc;
  
- 	net = dev_net(skb->dev);
- 	sk = __raw_v4_lookup(net, __sk_head(head), iph->protocol,
--			     iph->saddr, iph->daddr,
--			     skb->dev->ifindex);
-+			     iph->saddr, iph->daddr, dif);
+-	if (rc != 0)
++	rc = proto_register(&packet_proto, 0);
++	if (rc)
+ 		goto out;
++	rc = sock_register(&packet_family_ops);
++	if (rc)
++		goto out_proto;
++	rc = register_pernet_subsys(&packet_net_ops);
++	if (rc)
++		goto out_sock;
++	rc = register_netdevice_notifier(&packet_netdev_notifier);
++	if (rc)
++		goto out_pernet;
  
- 	while (sk) {
- 		delivered = 1;
+-	sock_register(&packet_family_ops);
+-	register_pernet_subsys(&packet_net_ops);
+-	register_netdevice_notifier(&packet_netdev_notifier);
++	return 0;
++
++out_pernet:
++	unregister_pernet_subsys(&packet_net_ops);
++out_sock:
++	sock_unregister(PF_PACKET);
++out_proto:
++	proto_unregister(&packet_proto);
+ out:
+ 	return rc;
+ }
 
 
