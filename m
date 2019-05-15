@@ -7,50 +7,54 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 223A8C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC13C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:58:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E42052084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224FF2084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:58:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921485;
-	bh=m5iosIFsI2ncGxd+NaJq4L+uefMkxQMOT3SpPDn2rwc=;
+	s=default; t=1557921492;
+	bh=JgBM/wCgs/2NqfkScBOeU3yDhKLS3px3A4CeR1lsOek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SL7qLYXXYWje45Av+QPOhwTH5niBgAjCQ9OLELxMcJDKfvTBsDIMVhW6QGL6xO3jr
-	 LmeXiolztxVwzSD3ofPmbj2A3YCmbOJ/C5T6K9px0ZK7sg1NE3aB6SvljKBpPKYanA
-	 eZY8Eavbc6wqh/14d3nxAQEvAzPr8R9bsvmVBxkc=
+	b=RsDEFhKQb1HudXdwNr4CqlLwZFrcnEGaExjitX1RFxNGNlJZSjw2ggaaZoUieduy2
+	 8zxkJdVb04ZhAlCIon4vvu4a1KPOFOvWTVBIqUhhaQWteZ3rRwCQSNTO/02G9yEoeM
+	 aIkhYyAgUyXhPwDyUg70aM6fykf2DffLl8h+UmEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbfEOLQf (ORCPT
+        id S1730488AbfEOLQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:16:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53346 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:16:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730504AbfEOLQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:16:30 -0400
+        id S1730473AbfEOLQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:16:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D21C920843;
-        Wed, 15 May 2019 11:16:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C0E120843;
+        Wed, 15 May 2019 11:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918990;
-        bh=m5iosIFsI2ncGxd+NaJq4L+uefMkxQMOT3SpPDn2rwc=;
+        s=default; t=1557918979;
+        bh=JgBM/wCgs/2NqfkScBOeU3yDhKLS3px3A4CeR1lsOek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dw+haINKXJPkHgJ61XJcI2LsDTzieKdPcD9lU64g9XaMpqZdV356uHYJGQHyvbPO+
-         Sh8V/2x31HidoZ2+fLpaRQA6Qyk2cHL4eVK9HxerjUa+4oQckyA/HIdB3Uy713PZ9I
-         TJY2Xp4sZo/I7rnIHUgBYgWNLCoc4isAGRNhXkUg=
+        b=j+n52R4PWFaweeSXLwcGWaUGDu4wWGuoA2vjHc7cc1MiyCD5kt0057H3lPqdbUazZ
+         rQMQGK43VQG/NPC8Sj6DP2jZAJfhTk35Ce8hoZW7kSeUSyh6nCM3ofJRB92QuKE5TN
+         OANxWPVDV8ZtZJykco1Fn5gDWIXAlB1hXB2n+00M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 025/115] tools lib traceevent: Fix missing equality check for strcmp
-Date:   Wed, 15 May 2019 12:55:05 +0200
-Message-Id: <20190515090701.130504781@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi@vger.kernel.org, linux@endlessm.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 022/115] x86/reboot, efi: Use EFI reboot for Acer TravelMate X514-51T
+Date:   Wed, 15 May 2019 12:55:02 +0200
+Message-Id: <20190515090700.904928784@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -63,57 +67,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f32c2877bcb068a718bb70094cd59ccc29d4d082 ]
+[ Upstream commit 0082517fa4bce073e7cf542633439f26538a14cc ]
 
-There was a missing comparison with 0 when checking if type is "s64" or
-"u64". Therefore, the body of the if-statement was entered if "type" was
-"u64" or not "s64", which made the first strcmp() redundant since if
-type is "u64", it's not "s64".
+Upon reboot, the Acer TravelMate X514-51T laptop appears to complete the
+shutdown process, but then it hangs in BIOS POST with a black screen.
 
-If type is "s64", the body of the if-statement is not entered but since
-the remainder of the function consists of if-statements which will not
-be entered if type is "s64", we will just return "val", which is
-correct, albeit at the cost of a few more calls to strcmp(), i.e., it
-will behave just as if the if-statement was entered.
+The problem is intermittent - at some points it has appeared related to
+Secure Boot settings or different kernel builds, but ultimately we have
+not been able to identify the exact conditions that trigger the issue to
+come and go.
 
-If type is neither "s64" or "u64", the body of the if-statement will be
-entered incorrectly and "val" returned. This means that any type that is
-checked after "s64" and "u64" is handled the same way as "s64" and
-"u64", i.e., the limiting of "val" to fit in for example "s8" is never
-reached.
+Besides, the EFI mode cannot be disabled in the BIOS of this model.
 
-This was introduced in the kernel tree when the sources were copied from
-trace-cmd in commit f7d82350e597 ("tools/events: Add files to create
-libtraceevent.a"), and in the trace-cmd repo in 1cdbae6035cei
-("Implement typecasting in parser") when the function was introduced,
-i.e., it has always behaved the wrong way.
+However, after extensive testing, we observe that using the EFI reboot
+method reliably avoids the issue in all cases.
 
-Detected by cppcheck.
+So add a boot time quirk to use EFI reboot on such systems.
 
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
-Link: http://lkml.kernel.org/r/20190409091529.2686-1-rikard.falkeborn@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=203119
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Matt Fleming <matt@codeblueprint.co.uk>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Cc: linux@endlessm.com
+Link: http://lkml.kernel.org/r/20190412080152.3718-1-jian-hong@endlessm.com
+[ Fix !CONFIG_EFI build failure, clarify the code and the changelog a bit. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/event-parse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/reboot.c | 21 +++++++++++++++++++++
+ include/linux/efi.h      |  7 ++++++-
+ 2 files changed, 27 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 3955ba9e6fcb5..7989dd6289e7a 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -2206,7 +2206,7 @@ eval_type_str(unsigned long long val, const char *type, int pointer)
- 		return val & 0xffffffff;
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index 2126b9d27c340..c663d5fcff2ee 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -81,6 +81,19 @@ static int __init set_bios_reboot(const struct dmi_system_id *d)
+ 	return 0;
+ }
  
- 	if (strcmp(type, "u64") == 0 ||
--	    strcmp(type, "s64"))
-+	    strcmp(type, "s64") == 0)
- 		return val;
++/*
++ * Some machines don't handle the default ACPI reboot method and
++ * require the EFI reboot method:
++ */
++static int __init set_efi_reboot(const struct dmi_system_id *d)
++{
++	if (reboot_type != BOOT_EFI && !efi_runtime_disabled()) {
++		reboot_type = BOOT_EFI;
++		pr_info("%s series board detected. Selecting EFI-method for reboot.\n", d->ident);
++	}
++	return 0;
++}
++
+ void __noreturn machine_real_restart(unsigned int type)
+ {
+ 	local_irq_disable();
+@@ -166,6 +179,14 @@ static const struct dmi_system_id reboot_dmi_table[] __initconst = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "AOA110"),
+ 		},
+ 	},
++	{	/* Handle reboot issue on Acer TravelMate X514-51T */
++		.callback = set_efi_reboot,
++		.ident = "Acer TravelMate X514-51T",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate X514-51T"),
++		},
++	},
  
- 	if (strcmp(type, "s8") == 0)
+ 	/* Apple */
+ 	{	/* Handle problems with rebooting on Apple MacBook5 */
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index b68b7d199feea..2dab158b74c45 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1518,7 +1518,12 @@ efi_status_t efi_setup_gop(efi_system_table_t *sys_table_arg,
+ 			   struct screen_info *si, efi_guid_t *proto,
+ 			   unsigned long size);
+ 
+-bool efi_runtime_disabled(void);
++#ifdef CONFIG_EFI
++extern bool efi_runtime_disabled(void);
++#else
++static inline bool efi_runtime_disabled(void) { return true; }
++#endif
++
+ extern void efi_call_virt_check_flags(unsigned long flags, const char *call);
+ 
+ enum efi_secureboot_mode {
 -- 
 2.20.1
 
