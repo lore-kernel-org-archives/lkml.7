@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A485C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCDCC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C422084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06CE72084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919844;
-	bh=tNIhxY8N0aSxd42ZQzJBvBfueaEFS+wqtYU5w+0ZFnE=;
+	s=default; t=1557919850;
+	bh=A5n4mTZtTb5EEfrTR3AlfarJ5yVRdt4gFPUi2LZqFk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OeP8FPiQqcFx3gFe+q07krk9LLJTdPiy3UslntxY1YA5USNut2IhO3srhSJADmHR9
-	 vImoKaMvL2Go4UYleyMEimlcPB+DjbIQLXm/twvqrbS1VPdPcVjJqvnKyQt/YpzPEn
-	 Mv6oaBCmck9B1B8UFuw9K15I5wkN3S91PNaNhj30=
+	b=yqMfqA+9IF2NSQIiinnEp5ryl79F5fVpXMdno67JOYbUG3A4iyVfNJ6Em5jph1aYR
+	 tGZ15bK5D8kaUQWK322hj9oGaRgDgHSlqh7pGOQbxrgE2gyUfytmg0qzuU1g6BMM0h
+	 hTmeRCOEtfXzKf3VKMrQ/eOIjArxCWC221WmzEUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732284AbfEOLan (ORCPT
+        id S1732787AbfEOLat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:30:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42188 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:30:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732070AbfEOLah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:30:37 -0400
+        id S1732766AbfEOLam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:30:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D43622084F;
-        Wed, 15 May 2019 11:30:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35A2820843;
+        Wed, 15 May 2019 11:30:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919836;
-        bh=tNIhxY8N0aSxd42ZQzJBvBfueaEFS+wqtYU5w+0ZFnE=;
+        s=default; t=1557919841;
+        bh=A5n4mTZtTb5EEfrTR3AlfarJ5yVRdt4gFPUi2LZqFk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qA/BSn+UOKXMeWwfu/PBEz609mKV+BnFZBQPl5k8FtrmGzyY+dJQt9/ZaYY9kSbEw
-         pYzBkPYK64lFD/eVoMIhIXI4KJuSqcHA5kFqeU2tf8j/EomHLdYRJ5RV6Yi7dvZzk5
-         VirO4ziSQ8ezECpZ0ATZ1PPcYfJA+RKv2mp1zLFA=
+        b=vO3RnjZYHACO5+TldRahTeO0EiRn9ACQodE0t6zNFSZTDidut5rOH9ymeLgEP0QF5
+         KEwbLIwl2JDY8L+eZ7JBwz5DjiZph/pwyYqtOEXBREffXWh8sXlmN7uA8CnQ9Sm9+G
+         50oKzH3E7G2uH6HwVIPG6aBDMnkYE+DBnDT26z+M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>,
+        stable@vger.kernel.org,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 111/137] net: ethernet: stmmac: dwmac-sun8i: enable support of unicast filtering
-Date:   Wed, 15 May 2019 12:56:32 +0200
-Message-Id: <20190515090701.648918998@linuxfoundation.org>
+Subject: [PATCH 5.0 113/137] net: seeq: fix crash caused by not set dev.parent
+Date:   Wed, 15 May 2019 12:56:34 +0200
+Message-Id: <20190515090701.794869633@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -59,34 +60,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corentin Labbe <clabbe@baylibre.com>
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-[ Upstream commit d4c26eb6e721683a0f93e346ce55bc8dc3cbb175 ]
+[ Upstream commit 5afcd14cfc7fed1bcc8abcee2cef82732772bfc2 ]
 
-When adding more MAC addresses to a dwmac-sun8i interface, the device goes
-directly in promiscuous mode.
-This is due to IFF_UNICAST_FLT missing flag.
+The old MIPS implementation of dma_cache_sync() didn't use the dev argument,
+but commit c9eb6172c328 ("dma-mapping: turn dma_cache_sync into a
+dma_map_ops method") changed that, so we now need to set dev.parent.
 
-So since the hardware support unicast filtering, let's add IFF_UNICAST_FLT.
-
-Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/seeq/sgiseeq.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -1015,6 +1015,8 @@ static struct mac_device_info *sun8i_dwm
- 	mac->mac = &sun8i_dwmac_ops;
- 	mac->dma = &sun8i_dwmac_dma_ops;
+--- a/drivers/net/ethernet/seeq/sgiseeq.c
++++ b/drivers/net/ethernet/seeq/sgiseeq.c
+@@ -735,6 +735,7 @@ static int sgiseeq_probe(struct platform
+ 	}
  
-+	priv->dev->priv_flags |= IFF_UNICAST_FLT;
-+
- 	/* The loopback bit seems to be re-set when link change
- 	 * Simply mask it each time
- 	 * Speed 10/100/1000 are set in BIT(2)/BIT(3)
+ 	platform_set_drvdata(pdev, dev);
++	SET_NETDEV_DEV(dev, &pdev->dev);
+ 	sp = netdev_priv(dev);
+ 
+ 	/* Make private data page aligned */
 
 
