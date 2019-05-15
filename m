@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D91C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C688C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F01822173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27D221773
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918018;
-	bh=0LLQCSE2fNasj2xKeMezdrIxH17F8BSitWgnINPgfHM=;
+	s=default; t=1557918025;
+	bh=vo7pB0BKLG9yBOtmC9NETLZsnrgre1dFnVX5xGVxn7c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eOIibvrgsEcUpx4SLCJiJan7utLmRyc1nyFqmE1knYqodbd96wWN6x4oleE0P+pvO
-	 yO4SpSmmYfOkm4VbIjPr606XB/Cnui/fW/UKghE4AcPuuytygLQc6ON20MVBA/9tC8
-	 HAw9BXJcrtbgYfRw2udhaF+QFcougmXjHoCTgkzs=
+	b=dVxKxtd7TW2vGlJu9twWNvFyWze8Tgu1U1qV+70nHwwREHil9fwnqSEQplX96OpyI
+	 kFz1Q4F2X7OMwPLWihbFkIqylAly4gTXcUivvjJPm4HycOB8G9E/MoQzVE5uQfFWw6
+	 FWLruby/t/2ChiS7avjJXZEdMGbLvZuQiyDlxyZ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfEOLAQ (ORCPT
+        id S1727422AbfEOLAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:00:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57012 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:00:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727376AbfEOLAO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:00:14 -0400
+        id S1726871AbfEOLAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:00:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFD5320843;
-        Wed, 15 May 2019 11:00:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 006062173C;
+        Wed, 15 May 2019 11:00:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918014;
-        bh=0LLQCSE2fNasj2xKeMezdrIxH17F8BSitWgnINPgfHM=;
+        s=default; t=1557918019;
+        bh=vo7pB0BKLG9yBOtmC9NETLZsnrgre1dFnVX5xGVxn7c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ocv1vtKwCfyLNdvygGXiOULha6tNR9wEMIcfxAzH2HgpLC7vwydMrijI2zALiOmwl
-         OjceWdsBpEgrZv/sG/K5EF+P7acIw+vMaE6ESNwQLKOP7RcHUfwpGiyF66wAifO2lJ
-         tthI6q1hVOaXQsipzwphVgJXlnLwjwW3b+kQdBfo=
+        b=Ediuh3tiM+UiPAq6hW7l1G+pSWAoGfq/l90QkSn5sS622dEqaQAyxhMnhTA3GzT5g
+         nmu8q3T1r4gQxLloUmgLjLzcVjePx4pMg+7B8aNYoUn4GWUSLOZ+4l6Pa7Cn6Cgo2L
+         vtPYSGjjDeFB04atdSRW/fzmxGWAhoxklwT+a5gw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Frank Pavlic <f.pavlic@kunbus.de>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Tristram Ha <Tristram.Ha@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Manish Rangankar <mrangankar@marvell.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 3.18 20/86] net: ks8851: Set initial carrier state to down
-Date:   Wed, 15 May 2019 12:54:57 +0200
-Message-Id: <20190515090646.601766733@linuxfoundation.org>
+Subject: [PATCH 3.18 22/86] scsi: qla4xxx: fix a potential NULL pointer dereference
+Date:   Wed, 15 May 2019 12:54:59 +0200
+Message-Id: <20190515090647.105586549@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -63,52 +62,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9624bafa5f6418b9ca5b3f66d1f6a6a2e8bf6d4c ]
+[ Upstream commit fba1bdd2a9a93f3e2181ec1936a3c2f6b37e7ed6 ]
 
-The ks8851 chip's initial carrier state is down. A Link Change Interrupt
-is signaled once interrupts are enabled if the carrier is up.
+In case iscsi_lookup_endpoint fails, the fix returns -EINVAL to avoid NULL
+pointer dereference.
 
-The ks8851 driver has it backwards by assuming that the initial carrier
-state is up. The state is therefore misrepresented if the interface is
-opened with no cable attached. Fix it.
-
-The Link Change interrupt is sometimes not signaled unless the P1MBSR
-register (which contains the Link Status bit) is read on ->ndo_open().
-This might be a hardware erratum. Read the register by calling
-mii_check_link(), which has the desirable side effect of setting the
-carrier state to down if the cable was detached while the interface was
-closed.
-
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Frank Pavlic <f.pavlic@kunbus.de>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Tristram Ha <Tristram.Ha@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Acked-by: Manish Rangankar <mrangankar@marvell.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851.c | 2 ++
+ drivers/scsi/qla4xxx/ql4_os.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
-index f90a1396535a..8a94add287de 100644
---- a/drivers/net/ethernet/micrel/ks8851.c
-+++ b/drivers/net/ethernet/micrel/ks8851.c
-@@ -870,6 +870,7 @@ static int ks8851_net_open(struct net_device *dev)
- 	netif_dbg(ks, ifup, ks->netdev, "network device up\n");
- 
- 	mutex_unlock(&ks->lock);
-+	mii_check_link(&ks->mii);
- 	return 0;
- }
- 
-@@ -1527,6 +1528,7 @@ static int ks8851_probe(struct spi_device *spi)
- 
- 	spi_set_drvdata(spi, ks);
- 
-+	netif_carrier_off(ks->netdev);
- 	ndev->if_port = IF_PORT_100BASET;
- 	ndev->netdev_ops = &ks8851_netdev_ops;
- 	ndev->irq = spi->irq;
+diff --git a/drivers/scsi/qla4xxx/ql4_os.c b/drivers/scsi/qla4xxx/ql4_os.c
+index a9fac1eb8306..28f6d5ef04e0 100644
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -3213,6 +3213,8 @@ static int qla4xxx_conn_bind(struct iscsi_cls_session *cls_session,
+ 	if (iscsi_conn_bind(cls_session, cls_conn, is_leading))
+ 		return -EINVAL;
+ 	ep = iscsi_lookup_endpoint(transport_fd);
++	if (!ep)
++		return -EINVAL;
+ 	conn = cls_conn->dd_data;
+ 	qla_conn = conn->dd_data;
+ 	qla_conn->qla_ep = ep->dd_data;
 -- 
 2.19.1
 
