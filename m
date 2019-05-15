@@ -2,150 +2,421 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB3A5C04AA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 03:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A29C04AA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 04:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B00522084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 03:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121B720881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 04:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726330AbfEOD7G (ORCPT
+        id S1726406AbfEOECi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 23:59:06 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:52712 "EHLO inva020.nxp.com"
+        Wed, 15 May 2019 00:02:38 -0400
+Received: from mga17.intel.com ([192.55.52.151]:26399 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726201AbfEOD7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 23:59:05 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A068A1A0170;
-        Wed, 15 May 2019 05:59:03 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EE9DC1A00B9;
-        Wed, 15 May 2019 05:58:57 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B762540302;
-        Wed, 15 May 2019 11:58:50 +0800 (SGT)
-From:   Yinbo Zhu <yinbo.zhu@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     yinbo.zhu@nxp.com, xiaobo.xie@nxp.com,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
-        yangbo.lu@nxp.com, jiafei.pan@nxp.com,
-        Ashish Kumar <Ashish.Kumar@nxp.com>
-Subject: [PATCH v2] arm64: dts: ls1028a: Add esdhc node in dts
-Date:   Wed, 15 May 2019 12:00:46 +0800
-Message-Id: <20190515040046.9230-1-yinbo.zhu@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725875AbfEOECh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 00:02:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 May 2019 21:02:37 -0700
+X-ExtLoop1: 1
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga005.fm.intel.com with ESMTP; 14 May 2019 21:02:36 -0700
+Subject: [PATCH] dax: Arrange for dax_supported check to span multiple
+ devices
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     snitzer@redhat.com
+Cc:     stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        dm-devel@redhat.com, linux-kernel@vger.kernel.org
+Date:   Tue, 14 May 2019 20:48:49 -0700
+Message-ID: <155789172402.748145.11853718580748830476.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ashish Kumar <Ashish.Kumar@nxp.com>
+Pankaj reports that starting with commit ad428cdb525a "dax: Check the
+end of the block-device capacity with dax_direct_access()" device-mapper
+no longer allows dax operation. This results from the stricter checks in
+__bdev_dax_supported() that validate that the start and end of a
+block-device map to the same 'pagemap' instance.
 
-This patch is to add esdhc node and enable SD UHS-I,
-eMMC HS200 for ls1028ardb/ls1028aqds board.
+Teach the dax-core and device-mapper to validate the 'pagemap' on a
+per-target basis. This is accomplished by refactoring the
+bdev_dax_supported() internals into generic_fsdax_supported() which
+takes a sector range to validate. Consequently generic_fsdax_supported()
+is suitable to be used in a device-mapper ->iterate_devices() callback.
+A new ->dax_supported() operation is added to allow composite devices to
+split and route upper-level bdev_dax_supported() requests.
 
-Signed-off-by: Ashish Kumar <Ashish.Kumar@nxp.com>
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+Fixes: ad428cdb525a ("dax: Check the end of the block-device...")
+Cc: <stable@vger.kernel.org>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Mike Snitzer <snitzer@redhat.com>
+Cc: Keith Busch <keith.busch@intel.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Reported-by: Pankaj Gupta <pagupta@redhat.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
-Change in v2:
-		Update the patch title
-		Add a commont in dts code
+Hi Mike,
 
- arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts |    8 ++++++
- arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts |   13 ++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi    |   27 +++++++++++++++++++++
- 3 files changed, 48 insertions(+), 0 deletions(-)
+Another day another new dax operation to allow device-mapper to better
+scope dax operations.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-index 14c79f4..180e5d2 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dts
-@@ -42,6 +42,14 @@
- 	status = "okay";
+Let me know if the device-mapper changes look sane. This passes a new
+unit test that indeed fails on current mainline.
+
+https://github.com/pmem/ndctl/blob/device-mapper-pending/test/dm.sh
+
+ drivers/dax/super.c          |   88 +++++++++++++++++++++++++++---------------
+ drivers/md/dm-table.c        |   17 +++++---
+ drivers/md/dm.c              |   20 ++++++++++
+ drivers/md/dm.h              |    1 
+ drivers/nvdimm/pmem.c        |    1 
+ drivers/s390/block/dcssblk.c |    1 
+ include/linux/dax.h          |   19 +++++++++
+ 7 files changed, 110 insertions(+), 37 deletions(-)
+
+diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+index 0a339b85133e..ec2f2262e3a9 100644
+--- a/drivers/dax/super.c
++++ b/drivers/dax/super.c
+@@ -73,22 +73,12 @@ struct dax_device *fs_dax_get_by_bdev(struct block_device *bdev)
+ EXPORT_SYMBOL_GPL(fs_dax_get_by_bdev);
+ #endif
+ 
+-/**
+- * __bdev_dax_supported() - Check if the device supports dax for filesystem
+- * @bdev: block device to check
+- * @blocksize: The block size of the device
+- *
+- * This is a library function for filesystems to check if the block device
+- * can be mounted with dax option.
+- *
+- * Return: true if supported, false if unsupported
+- */
+-bool __bdev_dax_supported(struct block_device *bdev, int blocksize)
++bool generic_fsdax_supported(struct dax_device *dax_dev,
++		struct block_device *bdev, int blocksize, sector_t start,
++		sector_t sectors)
+ {
+-	struct dax_device *dax_dev;
+ 	bool dax_enabled = false;
+ 	pgoff_t pgoff, pgoff_end;
+-	struct request_queue *q;
+ 	char buf[BDEVNAME_SIZE];
+ 	void *kaddr, *end_kaddr;
+ 	pfn_t pfn, end_pfn;
+@@ -102,21 +92,14 @@ bool __bdev_dax_supported(struct block_device *bdev, int blocksize)
+ 		return false;
+ 	}
+ 
+-	q = bdev_get_queue(bdev);
+-	if (!q || !blk_queue_dax(q)) {
+-		pr_debug("%s: error: request queue doesn't support dax\n",
+-				bdevname(bdev, buf));
+-		return false;
+-	}
+-
+-	err = bdev_dax_pgoff(bdev, 0, PAGE_SIZE, &pgoff);
++	err = bdev_dax_pgoff(bdev, start, PAGE_SIZE, &pgoff);
+ 	if (err) {
+ 		pr_debug("%s: error: unaligned partition for dax\n",
+ 				bdevname(bdev, buf));
+ 		return false;
+ 	}
+ 
+-	last_page = PFN_DOWN(i_size_read(bdev->bd_inode) - 1) * 8;
++	last_page = PFN_DOWN((start + sectors - 1) * 512) * PAGE_SIZE / 512;
+ 	err = bdev_dax_pgoff(bdev, last_page, PAGE_SIZE, &pgoff_end);
+ 	if (err) {
+ 		pr_debug("%s: error: unaligned partition for dax\n",
+@@ -124,20 +107,11 @@ bool __bdev_dax_supported(struct block_device *bdev, int blocksize)
+ 		return false;
+ 	}
+ 
+-	dax_dev = dax_get_by_host(bdev->bd_disk->disk_name);
+-	if (!dax_dev) {
+-		pr_debug("%s: error: device does not support dax\n",
+-				bdevname(bdev, buf));
+-		return false;
+-	}
+-
+ 	id = dax_read_lock();
+ 	len = dax_direct_access(dax_dev, pgoff, 1, &kaddr, &pfn);
+ 	len2 = dax_direct_access(dax_dev, pgoff_end, 1, &end_kaddr, &end_pfn);
+ 	dax_read_unlock(id);
+ 
+-	put_dax(dax_dev);
+-
+ 	if (len < 1 || len2 < 1) {
+ 		pr_debug("%s: error: dax access failed (%ld)\n",
+ 				bdevname(bdev, buf), len < 1 ? len : len2);
+@@ -178,6 +152,49 @@ bool __bdev_dax_supported(struct block_device *bdev, int blocksize)
+ 	}
+ 	return true;
+ }
++EXPORT_SYMBOL_GPL(generic_fsdax_supported);
++
++/**
++ * __bdev_dax_supported() - Check if the device supports dax for filesystem
++ * @bdev: block device to check
++ * @blocksize: The block size of the device
++ *
++ * This is a library function for filesystems to check if the block device
++ * can be mounted with dax option.
++ *
++ * Return: true if supported, false if unsupported
++ */
++bool __bdev_dax_supported(struct block_device *bdev, int blocksize)
++{
++	struct dax_device *dax_dev;
++	struct request_queue *q;
++	char buf[BDEVNAME_SIZE];
++	bool ret;
++	int id;
++
++	q = bdev_get_queue(bdev);
++	if (!q || !blk_queue_dax(q)) {
++		pr_debug("%s: error: request queue doesn't support dax\n",
++				bdevname(bdev, buf));
++		return false;
++	}
++
++	dax_dev = dax_get_by_host(bdev->bd_disk->disk_name);
++	if (!dax_dev) {
++		pr_debug("%s: error: device does not support dax\n",
++				bdevname(bdev, buf));
++		return false;
++	}
++
++	id = dax_read_lock();
++	ret = dax_supported(dax_dev, bdev, blocksize, 0,
++			i_size_read(bdev->bd_inode) / 512);
++	dax_read_unlock(id);
++
++	put_dax(dax_dev);
++
++	return ret;
++}
+ EXPORT_SYMBOL_GPL(__bdev_dax_supported);
+ #endif
+ 
+@@ -303,6 +320,15 @@ long dax_direct_access(struct dax_device *dax_dev, pgoff_t pgoff, long nr_pages,
+ }
+ EXPORT_SYMBOL_GPL(dax_direct_access);
+ 
++bool dax_supported(struct dax_device *dax_dev, struct block_device *bdev,
++		int blocksize, sector_t start, sector_t len)
++{
++	if (!dax_alive(dax_dev))
++		return false;
++
++	return dax_dev->ops->dax_supported(dax_dev, bdev, blocksize, start, len);
++}
++
+ size_t dax_copy_from_iter(struct dax_device *dax_dev, pgoff_t pgoff, void *addr,
+ 		size_t bytes, struct iov_iter *i)
+ {
+diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+index cde3b49b2a91..350cf0451456 100644
+--- a/drivers/md/dm-table.c
++++ b/drivers/md/dm-table.c
+@@ -880,13 +880,17 @@ void dm_table_set_type(struct dm_table *t, enum dm_queue_mode type)
+ }
+ EXPORT_SYMBOL_GPL(dm_table_set_type);
+ 
++/* validate the dax capability of the target device span */
+ static int device_supports_dax(struct dm_target *ti, struct dm_dev *dev,
+-			       sector_t start, sector_t len, void *data)
++				       sector_t start, sector_t len, void *data)
+ {
+-	return bdev_dax_supported(dev->bdev, PAGE_SIZE);
++	int blocksize = *(int *) data;
++
++	return generic_fsdax_supported(dev->dax_dev, dev->bdev, blocksize,
++			start, len);
+ }
+ 
+-static bool dm_table_supports_dax(struct dm_table *t)
++bool dm_table_supports_dax(struct dm_table *t, int blocksize)
+ {
+ 	struct dm_target *ti;
+ 	unsigned i;
+@@ -899,7 +903,8 @@ static bool dm_table_supports_dax(struct dm_table *t)
+ 			return false;
+ 
+ 		if (!ti->type->iterate_devices ||
+-		    !ti->type->iterate_devices(ti, device_supports_dax, NULL))
++		    !ti->type->iterate_devices(ti, device_supports_dax,
++			    &blocksize))
+ 			return false;
+ 	}
+ 
+@@ -979,7 +984,7 @@ static int dm_table_determine_type(struct dm_table *t)
+ verify_bio_based:
+ 		/* We must use this table as bio-based */
+ 		t->type = DM_TYPE_BIO_BASED;
+-		if (dm_table_supports_dax(t) ||
++		if (dm_table_supports_dax(t, PAGE_SIZE) ||
+ 		    (list_empty(devices) && live_md_type == DM_TYPE_DAX_BIO_BASED)) {
+ 			t->type = DM_TYPE_DAX_BIO_BASED;
+ 		} else {
+@@ -1905,7 +1910,7 @@ void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
+ 	}
+ 	blk_queue_write_cache(q, wc, fua);
+ 
+-	if (dm_table_supports_dax(t))
++	if (dm_table_supports_dax(t, PAGE_SIZE))
+ 		blk_queue_flag_set(QUEUE_FLAG_DAX, q);
+ 	else
+ 		blk_queue_flag_clear(QUEUE_FLAG_DAX, q);
+diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+index 043f0761e4a0..c28787f5357b 100644
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -1105,6 +1105,25 @@ static long dm_dax_direct_access(struct dax_device *dax_dev, pgoff_t pgoff,
+ 	return ret;
+ }
+ 
++static bool dm_dax_supported(struct dax_device *dax_dev, struct block_device *bdev,
++		int blocksize, sector_t start, sector_t len)
++{
++	struct mapped_device *md = dax_get_private(dax_dev);
++	struct dm_table *map;
++	int srcu_idx;
++	bool ret;
++
++	map = dm_get_live_table(md, &srcu_idx);
++	if (!map)
++		return false;
++
++	ret = dm_table_supports_dax(map, blocksize);
++
++	dm_put_live_table(md, srcu_idx);
++
++	return ret;
++}
++
+ static size_t dm_dax_copy_from_iter(struct dax_device *dax_dev, pgoff_t pgoff,
+ 				    void *addr, size_t bytes, struct iov_iter *i)
+ {
+@@ -3192,6 +3211,7 @@ static const struct block_device_operations dm_blk_dops = {
+ 
+ static const struct dax_operations dm_dax_ops = {
+ 	.direct_access = dm_dax_direct_access,
++	.dax_supported = dm_dax_supported,
+ 	.copy_from_iter = dm_dax_copy_from_iter,
+ 	.copy_to_iter = dm_dax_copy_to_iter,
  };
+diff --git a/drivers/md/dm.h b/drivers/md/dm.h
+index 2d539b82ec08..e5e240bfa2d0 100644
+--- a/drivers/md/dm.h
++++ b/drivers/md/dm.h
+@@ -78,6 +78,7 @@ void dm_unlock_md_type(struct mapped_device *md);
+ void dm_set_md_type(struct mapped_device *md, enum dm_queue_mode type);
+ enum dm_queue_mode dm_get_md_type(struct mapped_device *md);
+ struct target_type *dm_get_immutable_target_type(struct mapped_device *md);
++bool dm_table_supports_dax(struct dm_table *t, int blocksize);
  
-+&esdhc {
-+	status = "okay";
-+};
-+
-+&esdhc1 {
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
+ int dm_setup_md_queue(struct mapped_device *md, struct dm_table *t);
  
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-index f86b054..1bfaf42 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
-@@ -30,6 +30,19 @@
- 	};
+diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
+index 0279eb1da3ef..845c5b430cdd 100644
+--- a/drivers/nvdimm/pmem.c
++++ b/drivers/nvdimm/pmem.c
+@@ -295,6 +295,7 @@ static size_t pmem_copy_to_iter(struct dax_device *dax_dev, pgoff_t pgoff,
+ 
+ static const struct dax_operations pmem_dax_ops = {
+ 	.direct_access = pmem_dax_direct_access,
++	.dax_supported = generic_fsdax_supported,
+ 	.copy_from_iter = pmem_copy_from_iter,
+ 	.copy_to_iter = pmem_copy_to_iter,
  };
+diff --git a/drivers/s390/block/dcssblk.c b/drivers/s390/block/dcssblk.c
+index 4e8aedd50cb0..d04d4378ca50 100644
+--- a/drivers/s390/block/dcssblk.c
++++ b/drivers/s390/block/dcssblk.c
+@@ -59,6 +59,7 @@ static size_t dcssblk_dax_copy_to_iter(struct dax_device *dax_dev,
  
-+&esdhc {
-+	status = "okay";
-+	sd-uhs-sdr104;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr12;
-+	};
-+
-+&esdhc1 {
-+	status = "okay";
-+	mmc-hs200-1_8v;
-+	};
-+
- &i2c0 {
- 	status = "okay";
+ static const struct dax_operations dcssblk_dax_ops = {
+ 	.direct_access = dcssblk_dax_direct_access,
++	.dax_supported = generic_fsdax_supported,
+ 	.copy_from_iter = dcssblk_dax_copy_from_iter,
+ 	.copy_to_iter = dcssblk_dax_copy_to_iter,
+ };
+diff --git a/include/linux/dax.h b/include/linux/dax.h
+index 0dd316a74a29..f5544fc62319 100644
+--- a/include/linux/dax.h
++++ b/include/linux/dax.h
+@@ -19,6 +19,12 @@ struct dax_operations {
+ 	 */
+ 	long (*direct_access)(struct dax_device *, pgoff_t, long,
+ 			void **, pfn_t *);
++	/*
++	 * Validate whether this device is usable as an fsdax backing
++	 * device.
++	 */
++	bool (*dax_supported)(struct dax_device *, struct block_device *, int,
++			sector_t, sector_t);
+ 	/* copy_from_iter: required operation for fs-dax direct-i/o */
+ 	size_t (*copy_from_iter)(struct dax_device *, pgoff_t, void *, size_t,
+ 			struct iov_iter *);
+@@ -75,6 +81,10 @@ static inline bool bdev_dax_supported(struct block_device *bdev, int blocksize)
+ 	return __bdev_dax_supported(bdev, blocksize);
+ }
  
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 2896bbc..5c7546f 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -274,6 +274,33 @@
- 			status = "disabled";
- 		};
++bool generic_fsdax_supported(struct dax_device *dax_dev,
++		struct block_device *bdev, int blocksize, sector_t start,
++		sector_t sectors);
++
+ static inline struct dax_device *fs_dax_get_by_host(const char *host)
+ {
+ 	return dax_get_by_host(host);
+@@ -99,6 +109,13 @@ static inline bool bdev_dax_supported(struct block_device *bdev,
+ 	return false;
+ }
  
-+		esdhc: esdhc@2140000 {
-+			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
-+			reg = <0x0 0x2140000 0x0 0x10000>;
-+			interrupts = <0 28 0x4>; /* Level high type */
-+			clock-frequency = <0>; /* fixed up by bootloader */
-+			clocks = <&clockgen 2 1>;
-+			voltage-ranges = <1800 1800 3300 3300>;
-+			sdhci,auto-cmd12;
-+			little-endian;
-+			bus-width = <4>;
-+			status = "disabled";
-+		};
++static inline bool generic_fsdax_supported(struct dax_device *dax_dev,
++		struct block_device *bdev, int blocksize, sector_t start,
++		sector_t sectors)
++{
++	return false;
++}
 +
-+		esdhc1: esdhc@2150000 {
-+			compatible = "fsl,ls1028a-esdhc", "fsl,esdhc";
-+			reg = <0x0 0x2150000 0x0 0x10000>;
-+			interrupts = <0 63 0x4>; /* Level high type */
-+			clock-frequency = <0>; /* fixed up by bootloader */
-+			clocks = <&clockgen 2 1>;
-+			voltage-ranges = <1800 1800 3300 3300>;
-+			sdhci,auto-cmd12;
-+			broken-cd;
-+			little-endian;
-+			bus-width = <4>;
-+			status = "disabled";
-+		};
-+
- 		sata: sata@3200000 {
- 			compatible = "fsl,ls1028a-ahci";
- 			reg = <0x0 0x3200000 0x0 0x10000>,
--- 
-1.7.1
+ static inline struct dax_device *fs_dax_get_by_host(const char *host)
+ {
+ 	return NULL;
+@@ -142,6 +159,8 @@ bool dax_alive(struct dax_device *dax_dev);
+ void *dax_get_private(struct dax_device *dax_dev);
+ long dax_direct_access(struct dax_device *dax_dev, pgoff_t pgoff, long nr_pages,
+ 		void **kaddr, pfn_t *pfn);
++bool dax_supported(struct dax_device *dax_dev, struct block_device *bdev,
++		int blocksize, sector_t start, sector_t len);
+ size_t dax_copy_from_iter(struct dax_device *dax_dev, pgoff_t pgoff, void *addr,
+ 		size_t bytes, struct iov_iter *i);
+ size_t dax_copy_to_iter(struct dax_device *dax_dev, pgoff_t pgoff, void *addr,
 
