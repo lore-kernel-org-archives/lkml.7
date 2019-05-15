@@ -2,87 +2,103 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F03EC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3948BC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF132082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 054172082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:40:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c4eMVd1c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726472AbfEOIi3 (ORCPT
+        id S1726136AbfEOIk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 04:38:29 -0400
-Received: from relay.sw.ru ([185.231.240.75]:48082 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbfEOIi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 04:38:28 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hQpQZ-0006hD-8M; Wed, 15 May 2019 11:38:19 +0300
-Subject: Re: [PATCH] mm: fix protection of mm_struct fields in get_cmdline()
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-mm@kvack.org, mkoutny@suse.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>
-References: <155790813764.2995.13706842444028749629.stgit@buzz>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <f0978f70-716c-0272-d8f0-87dc163d0784@virtuozzo.com>
-Date:   Wed, 15 May 2019 11:38:18 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 15 May 2019 04:40:57 -0400
+Received: from mail-lf1-f41.google.com ([209.85.167.41]:38785 "EHLO
+        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfEOIk4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 04:40:56 -0400
+Received: by mail-lf1-f41.google.com with SMTP id y19so1334391lfy.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 01:40:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=PqVaSFiBytC8hxBsEh/HgINdW7HiuF2nkdZ+Xr3sRJM=;
+        b=c4eMVd1cLxlB6SJBmNhemOrHGlx22bRWlhjGFOgNaLhbLW2OsPnJ6q7IN/0qHO2SJT
+         44NH8SW7Cz7C3NbkZ6LUVyuc+HzNnulv1amtnBP+4BzX65YCeVqIiFPthbsIvGNRastI
+         FbjiJSRIsNnOy55OzOM24lwDTwQ8e3guvD/twvzX8/U23YRpw/0O0FdUM5g8ol8rvtGT
+         3HQfxeXNsLpmFjaOI0s2beybpvYsZWr56AL1iTqZnKWFCOtzAIRlXYsgw/i9aL/6NEPD
+         g7GWfCO0vCdWKEMkUAxLxifdzh0t3jxTgaNvygX4vDQBbW/QJM0RreiOZzIYruK6B9fL
+         hGdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=PqVaSFiBytC8hxBsEh/HgINdW7HiuF2nkdZ+Xr3sRJM=;
+        b=PkKjxky2OoT0OMedOoCH/OCgwpM6b3zSjThO3d+2NeFmRNHcPXduacl4GSz12gNkWg
+         eYHeY4TMOD9KhAHJ9VLx7FU7SYGxZhCyhWzWrYYglXurRHAAT0o7X4Ngf8OpsQGNH/Tt
+         LjNO4i/8fbUHsrsDvLNou5OKkN1vO9eo1507v1DMsrROD5JEXiQKoY++Z93WzWe0GS5/
+         /rUOZ1feMkZQcnoeDKGJUIhLGTBSec+/z4cL42WonXcGOdjcpp/Gm5nOeu4L4X4EHhA8
+         ovjIGngBCYEPy71ZpYoXqtTu4wTiUPN7gbFldVXPAx1d/xkcR98Z0YIVHw9yuFwmxIc4
+         N+KQ==
+X-Gm-Message-State: APjAAAVM5XBtPPOzvLcL3isMP0oslSEiWv8lb8tWZ2OIuJQNeiBVut78
+        w6Q9WlNSgKnYgtoN6P9z4S0hJzr49cGmpg7BuMLWpg==
+X-Google-Smtp-Source: APXvYqz27fihyYyeqJzcm9uZcyrM35iaJPBOLqtP38PCvZvb3HdahvBJTwe31L0dHMb3DcwxQ1okZ20YuVymiVG6A6k=
+X-Received: by 2002:a19:6b0e:: with SMTP id d14mr16922584lfa.137.1557909654616;
+ Wed, 15 May 2019 01:40:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <155790813764.2995.13706842444028749629.stgit@buzz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 15 May 2019 14:10:43 +0530
+Message-ID: <CA+G9fYu254sYc77jOVifOmxrd_jNmr4wNHTrqnW54a8F=EQZ6Q@mail.gmail.com>
+Subject: LTP: mm: overcommit_memory01, 03...06 failed
+To:     ltp@lists.linux.it, linux-mm@kvack.org
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Jan Stancek <jstancek@redhat.com>,
+        lkft-triage@lists.linaro.org, dengke.du@windriver.com,
+        petr.vorel@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Konstantin,
+ltp-mm-tests failed on Linux mainline kernel  5.1.0,
+  * overcommit_memory01 overcommit_memory
+  * overcommit_memory03 overcommit_memory -R 30
+  * overcommit_memory04 overcommit_memory -R 80
+  * overcommit_memory05 overcommit_memory -R 100
+  * overcommit_memory06 overcommit_memory -R 200
 
-On 15.05.2019 11:15, Konstantin Khlebnikov wrote:
-> Since commit 88aa7cc688d4 ("mm: introduce arg_lock to protect arg_start|
-> end and env_start|end in mm_struct") related mm fields are protected with
-> separate spinlock and mmap_sem held for read is not enough for protection.
-> 
-> Fixes: 88aa7cc688d4 ("mm: introduce arg_lock to protect arg_start|end and env_start|end in mm_struct")
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+mem.c:814: INFO: set overcommit_memory to 0
+overcommit_memory.c:185: INFO: malloc 8094844 kB successfully
+overcommit_memory.c:204: PASS: alloc passed as expected
+overcommit_memory.c:189: INFO: malloc 32379376 kB failed
+overcommit_memory.c:210: PASS: alloc failed as expected
+overcommit_memory.c:185: INFO: malloc 16360216 kB successfully
+overcommit_memory.c:212: FAIL: alloc passed, expected to fail
 
-is this already fixed in Michal's series: https://lkml.org/lkml/2019/5/2/422 ?
+Failed test log,
+https://lkft.validation.linaro.org/scheduler/job/726417#L22852
 
-Thanks,
-Kirill
+LTP version 20190115
 
-> ---
->  mm/util.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/util.c b/mm/util.c
-> index e2e4f8c3fa12..540e7c157cf2 100644
-> --- a/mm/util.c
-> +++ b/mm/util.c
-> @@ -717,12 +717,12 @@ int get_cmdline(struct task_struct *task, char *buffer, int buflen)
->  	if (!mm->arg_end)
->  		goto out_mm;	/* Shh! No looking before we're done */
->  
-> -	down_read(&mm->mmap_sem);
-> +	spin_lock(&mm->arg_lock);
->  	arg_start = mm->arg_start;
->  	arg_end = mm->arg_end;
->  	env_start = mm->env_start;
->  	env_end = mm->env_end;
-> -	up_read(&mm->mmap_sem);
-> +	spin_unlock(&mm->arg_lock);
->  
->  	len = arg_end - arg_start;
->  
-> 
+Test case link,
+https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/mem/tunable/overcommit_memory.c#L212
 
+First bad commit:
+git branch master
+git commit e0654264c4806dc436b291294a0fbf9be7571ab6
+git describe v5.1-10706-ge0654264c480
+git repo https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+
+Last good commit:
+git branch master
+git commit 7e9890a3500d95c01511a4c45b7e7192dfa47ae2
+git describe v5.1-10326-g7e9890a3500d
+git repo https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+
+Best regards
+Naresh Kamboju
