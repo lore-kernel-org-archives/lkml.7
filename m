@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFE5C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 811BAC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D78B20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49CF120675
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922095;
-	bh=Re0HA3ln7k11xpNxtCQEBg9xjJjfXQ40diY9RwfKKQo=;
+	s=default; t=1557922102;
+	bh=LOD1V+6gL9WXMN4zviTvrNZvb9jMmiuHBYDaYzfhRek=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H9PhiG/feD0QARa6JeXobks3mWwUWSPcO5FsX3XsDlwXrwymZk0Hwl+7jtIvrBRxj
-	 zo3hP915eWPL+SixZScbbHbxu2+bM9zDcztQHvVGz6aHPhtzHZ7Vx5jg8YWA2bvdj0
-	 CuUVtdDfIoPlVI+nxUFu94q2PMxODhI1hpXl2NDE=
+	b=h2m+X2GBGoztDV29G8cfRMKkGvZseRSTl7M+rye7E3nVpYncF7qmxNW3dz0NALNiW
+	 cvbdAJQD/f+YDC8g0fSfDAWZjuKAYBhvRZIRDY9f0qqQvlgubhaOZ+Jcp0ljzkvtDK
+	 ts2ThMxgdWDUnihRjNI+EccvzxY4ebvkpM+5xgsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729469AbfEOMIN (ORCPT
+        id S1729139AbfEOLIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:08:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41446 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:08:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729161AbfEOLIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:08:53 -0400
+        id S1729127AbfEOLIi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:08:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D87720644;
-        Wed, 15 May 2019 11:08:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 588562084F;
+        Wed, 15 May 2019 11:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918532;
-        bh=Re0HA3ln7k11xpNxtCQEBg9xjJjfXQ40diY9RwfKKQo=;
+        s=default; t=1557918517;
+        bh=LOD1V+6gL9WXMN4zviTvrNZvb9jMmiuHBYDaYzfhRek=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O7L3pomEUVHy5CJfnR/2GuB7EDsrKOuR3Aqm29NwrzjvhrUDOQJX9DdOYQqF84D0l
-         WX/OiHQbA4p+t7eOY2oq/VPcMcm5WKz3YT+utmbGVHtTJFzBTQ0VAQQd/WbXbCsNyo
-         SnYVmc9jml7DS8q4XGv54jcNawpOeVeHzMDcCys0=
+        b=vJ/Ll3+epe6yEqIhD4uFxk5WsU5Nzsgt/HmBquCyKrtkZkXjX6cSj1zOlHfqJV18G
+         fwzQxOlN/wdVJx1PrguYsNs7rN26+GL24c7Tx93F1RW9Ee2VDm4HhvNpZcaV941ux8
+         RDMp+YNvAbHY5Ttx/0PLBmj0ivkKTRB1mXeY6xFk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.4 161/266] platform/x86: sony-laptop: Fix unintentional fall-through
-Date:   Wed, 15 May 2019 12:54:28 +0200
-Message-Id: <20190515090728.363267446@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 118/266] USB: core: Fix unterminated string returned by usb_string()
+Date:   Wed, 15 May 2019 12:53:45 +0200
+Message-Id: <20190515090726.450787742@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -61,53 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 1cbd7a64959d33e7a2a1fa2bf36a62b350a9fcbd upstream.
+commit c01c348ecdc66085e44912c97368809612231520 upstream.
 
-It seems that the default case should return AE_CTRL_TERMINATE, instead
-of falling through to case ACPI_RESOURCE_TYPE_END_TAG and returning AE_OK;
-otherwise the line of code at the end of the function is unreachable and
-makes no sense:
+Some drivers (such as the vub300 MMC driver) expect usb_string() to
+return a properly NUL-terminated string, even when an error occurs.
+(In fact, vub300's probe routine doesn't bother to check the return
+code from usb_string().)  When the driver goes on to use an
+unterminated string, it leads to kernel errors such as
+stack-out-of-bounds, as found by the syzkaller USB fuzzer.
 
-return AE_CTRL_TERMINATE;
+An out-of-range string index argument is not at all unlikely, given
+that some devices don't provide string descriptors and therefore list
+0 as the value for their string indexes.  This patch makes
+usb_string() return a properly terminated empty string along with the
+-EINVAL error code when an out-of-range index is encountered.
 
-This fix is based on the following thread of discussion:
+And since a USB string index is a single-byte value, indexes >= 256
+are just as invalid as values of 0 or below.
 
-https://lore.kernel.org/patchwork/patch/959782/
-
-Fixes: 33a04454527e ("sony-laptop: Add SNY6001 device handling (sonypi reimplementation)")
-Cc: stable@vger.kernel.org
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-by: syzbot+b75b85111c10b8d680f1@syzkaller.appspotmail.com
+CC: <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/sony-laptop.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/usb/core/message.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/platform/x86/sony-laptop.c
-+++ b/drivers/platform/x86/sony-laptop.c
-@@ -4394,14 +4394,16 @@ sony_pic_read_possible_resource(struct a
- 			}
- 			return AE_OK;
- 		}
-+
-+	case ACPI_RESOURCE_TYPE_END_TAG:
-+		return AE_OK;
-+
- 	default:
- 		dprintk("Resource %d isn't an IRQ nor an IO port\n",
- 			resource->type);
-+		return AE_CTRL_TERMINATE;
+--- a/drivers/usb/core/message.c
++++ b/drivers/usb/core/message.c
+@@ -820,9 +820,11 @@ int usb_string(struct usb_device *dev, i
  
--	case ACPI_RESOURCE_TYPE_END_TAG:
--		return AE_OK;
- 	}
--	return AE_CTRL_TERMINATE;
- }
- 
- static int sony_pic_possible_resources(struct acpi_device *device)
+ 	if (dev->state == USB_STATE_SUSPENDED)
+ 		return -EHOSTUNREACH;
+-	if (size <= 0 || !buf || !index)
++	if (size <= 0 || !buf)
+ 		return -EINVAL;
+ 	buf[0] = 0;
++	if (index <= 0 || index >= 256)
++		return -EINVAL;
+ 	tbuf = kmalloc(256, GFP_NOIO);
+ 	if (!tbuf)
+ 		return -ENOMEM;
 
 
