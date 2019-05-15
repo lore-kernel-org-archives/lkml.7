@@ -2,144 +2,129 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81701C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C9CC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A3652084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 198352084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:49:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="alaIWujE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kCFk8tj8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfEOMtY (ORCPT
+        id S1727055AbfEOMtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:49:24 -0400
-Received: from mout.web.de ([212.227.15.14]:44397 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726567AbfEOMtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 May 2019 08:49:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1557924532;
-        bh=BibXL/bw4+Gpkysah4bgldEaHhl9ZLOemLAMNjbkECI=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=alaIWujE6HdLKpTK+dWu8pwtFetsKmmTWZIjUm5FfixiRnlQhgZ5Q6HR5GNtSYfCd
-         Y4thboLNoQcl7ZEfU0XKX3sf4U5VIrSgEK7JRm+epREsZYOvr1AD9Fv29L7rZEYW29
-         Vnia3/HWrJCQ06mBO48RjAFwA+iz5a2tEhYj92Hc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([2.244.73.153]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Ldn19-1h1UL10X0V-00izmL; Wed, 15
- May 2019 14:48:52 +0200
-Subject: Re: [3/3] Coccinelle: pci_free_consistent: Extend when constraints
- for two SmPL ellipses
-To:     Wen Yang <wen.yang99@zte.com.cn>,
-        Julia Lawall <julia.lawall@lip6.fr>
-Cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Yi Wang <wang.yi59@zte.com.cn>,
-        Cheng Shengyu <cheng.shengyu@zte.com.cn>,
-        Ma Jiang <ma.jiang@zte.com.cn>,
-        Coccinelle <cocci@systeme.lip6.fr>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <201905151043340243098@zte.com.cn>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <e7db2c6b-645d-e82b-9d79-f64d7c5edfc5@web.de>
-Date:   Wed, 15 May 2019 14:48:48 +0200
+Received: from mail-it1-f194.google.com ([209.85.166.194]:51886 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726392AbfEOMtX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 08:49:23 -0400
+Received: by mail-it1-f194.google.com with SMTP id s3so4596102itk.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 05:49:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+GFSJ1Koy8Si0K5sXRcA8ZC/zU9KgNxm9g2aj30I4eQ=;
+        b=kCFk8tj84FOx+psvF8/YHbnE2IILGZ2tt4L5oEjShzpHPGmUHdZav3vVziD0qk8FBe
+         kS4IcnBhgjuOaMvPm+IFK2lgowVpCpgVCwbtNI+YfUZcR8cIj0A3EjpTsA6KNjC733IM
+         mXnFDIj/eaCfO5wfwY4ixwNfqe/kU+sbw2lxf31LJJsADpxSKHySERshIMjtKvAeolvQ
+         5kIhi4OuS7xWsAKiB6uhrMwC5BibM9UcDskeq8+AbZy74C/9ksjCOHsbSk9HfaQQeoR9
+         eKoBsmo04JDle/SO+rp6GZ+qonQC4skO6jbOwNpy9d1Rkok7qz3PzSPp/yNr/6zAbb5G
+         N9fQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+GFSJ1Koy8Si0K5sXRcA8ZC/zU9KgNxm9g2aj30I4eQ=;
+        b=IHs1vWwBIBdtpR/7I5ZClMJgRvZw67btuv9t84vURuGNzJHp1V6ySKCj5Ve99xfydT
+         2SarCKSi/4Tw1nMv+PWV3Z4ltstEoxgxWMbDXVqdA7OcckZPp8+/YKjfy49ROH8PZOS8
+         hY5oT+R6ANsgGAL+iiws+MKaBDjj2DC9unH5U7JDUccv45EwHo7hxx4UDboUuLI9W0dF
+         I0FdX2nqZtIBIpG7cI0Imy0Mgoj3hYXmvBja7dKpd3RKesgudAD9cg3wE1UBOHzwEuru
+         Wui3e/ClcFvqDugxYnPQ+zqmXVDT7YAY40ZuD3JSY82Al29yCN4VF7Yp0VqmPQZHMZNG
+         L8Dg==
+X-Gm-Message-State: APjAAAXQCrawoL/ALgmkkSYK8aCnHqp/3cXX3OwRZg4Zd/6yn+/KbnzV
+        Ssa+rk4781RLlwZ+nL1nY+q5Pe7i8Gw=
+X-Google-Smtp-Source: APXvYqzHeU+KgELUyM0+d8l9eN8p8X38YXlvIDCnC19xRK3orLHsAi+j9EUb1g7KwUJQqngW9VPswg==
+X-Received: by 2002:a24:94c6:: with SMTP id j189mr835055ite.97.1557924562092;
+        Wed, 15 May 2019 05:49:22 -0700 (PDT)
+Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
+        by smtp.googlemail.com with ESMTPSA id 74sm105226itk.3.2019.05.15.05.49.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 05:49:21 -0700 (PDT)
+Subject: Re: [PATCH 18/18] arm64: defconfig: enable build of IPA code
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        syadagir@codeaurora.org, mjavid@codeaurora.org,
+        evgreen@chromium.org, Ben Chan <benchan@google.com>,
+        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190512012508.10608-1-elder@linaro.org>
+ <20190512012508.10608-19-elder@linaro.org>
+ <CAK8P3a3f++abVkXo3eEky5+xx+Jpp3ApFbWfwvh4rekQzpmepw@mail.gmail.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <e7a0bff9-ee4a-0842-3e4d-c3e0da9e8523@linaro.org>
+Date:   Wed, 15 May 2019 07:49:20 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <201905151043340243098@zte.com.cn>
+In-Reply-To: <CAK8P3a3f++abVkXo3eEky5+xx+Jpp3ApFbWfwvh4rekQzpmepw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ueQqxBLqM+qy26wITlwzI8OOJYO4FtsxYHduS0PdsRbVQYNXOQz
- /T6rk6RE3PobY1jQq9+YUE7YztNbuDpn7PE2/ghDaPpAbHpRpRD2ykcpVhaciZ1G4rMqt6A
- 1CHGbkqZ9S4fJ9/JFv/4uDAHI9+q2JUgqiPM/GqZv7ypVU5UX6o0GIvEICjiI1VXlO2CTQH
- rLnrQhzhIW5YAuAB6C11g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:LYi9/rCcdGQ=:9efYs156LJklRTRRDGyu9f
- pjb4a8AcL2VICFYTiaVgrVgAu5jIOtAhVO2vDZQK+O5SH3m/TRn3Sn+CZuwvvMu1Z6F1RmHcn
- Bfs4SeEu75xjAvOESenzwgj4wL9cB83S8Ub7+0HwZD7K79NPgvkem2r65qoqNByMgQtu8lWl0
- KopRY13QRj82R5mb2E7hIXuP7ytx8DPNp458rRrRfi3kMdPAkVMaBZoL6xe5lSMfWYFch6zOy
- /370x9mryK8IY0GBkNwzVdNtsuhy35d6jY6hYsOGaaKPNxmIkK0eutrdkqNOKnst715h0Fsjk
- F6vt/VUUilMUrbEKH8q1cZI+GU71p/4/mwD8s2NQmqNZPsTjG81p+rW6l+8CtitXXxSjz/jF+
- mQOe2hhk/jDU5xSRyt7J4IC7w6voN4JegbKgJNDkJwOKlFbfOgdl7uVuJwYsQ0dZc/mTcOkZ+
- Qki7+WWG0ZriEsqfyEs1XiTb9J6Lxm9BgNW9g1rrAYhD+cb7iaKQPdjIgnY6TNVo1GEqlZLhZ
- UxX9jsG0efyWeBCAImd8IrKdU4XIKDbseErqEiczN7AF7hlfqIvWzZlxB8ajvQsVs83yvO4Uo
- AABuns7FQGPgIOVqmhYCTGySz0BO/uouwwpsqCFmAb8PTwm2G8cb7v4kASaBIOvJQY4B/ey28
- PI50gfKig0oR6857O57mayDbA5yPZJo0ydCbmL8ZskPU/a2GPG0dlUwSK6YEUS1gItUyp4XFk
- YKWdJDzgHWtBNYULYydG7LGa3w9Z60rtXsoBYgW+DV+h9KwUvBWT1HR6XEP7ixjCUegVrjC4Y
- IzXFnq5WUUtRbE6uWeO7FfSEArdWsB3cxKUMftHaog7woayh6otSDoCab1R90Zw/bTycmMWFZ
- 3P3dtLAAflP5PEqsb26xugzevDws2g369eXz4yYTqzfupj7hl1zwhCxInWPoWiIePtdbYL0Kz
- weTa4Pfq06Q==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> 2,  If you really plan to add the two restrictions above,
-> you may need to consider this further than simply adding a "when !=3D id=
- =3D (T2)(e)" statement.
-> I constructed the flollowing code snippet as a test case:
-=E2=80=A6
-> Using the original SmPL, we can find a bug.
-> But with your modified SmPL, we can't find the bug.
+On 5/15/19 3:23 AM, Arnd Bergmann wrote:
+> On Sun, May 12, 2019 at 3:25 AM Alex Elder <elder@linaro.org> wrote:
+> 
+>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+>> index 2d9c39033c1a..4f4d803e563d 100644
+>> --- a/arch/arm64/configs/defconfig
+>> +++ b/arch/arm64/configs/defconfig
+>> @@ -268,6 +268,7 @@ CONFIG_SMSC911X=y
+>>  CONFIG_SNI_AVE=y
+>>  CONFIG_SNI_NETSEC=y
+>>  CONFIG_STMMAC_ETH=m
+>> +CONFIG_IPA=y
+>>  CONFIG_MDIO_BUS_MUX_MMIOREG=y
+>>  CONFIG_AT803X_PHY=m
+>>  CONFIG_MARVELL_PHY=m
+> 
+> Since the device is not needed for booting, please make this
+> CONFIG_IPA=m instead to keep the kernel image a little smaller.
+> 
+>      Arnd
+> 
 
-The difference is the possible exclusion of a reassignment to a local vari=
-able
-in which a pointer was stored for a resource allocation.
+Oops, yes, that was my intention but I forgot to fix that
+before I sent it out.   This code works as a module, but
+in order to make the whole system allow the module to be both
+removed and re-inserted safely, I need some work to be done
+on the modem end and that's beyond my direct control.  I have
+been testing with it as a kernel built-in driver in the mean
+time.
 
-Would you like to adjust corresponding case distinctions any further?
+In any case, it is my intention to have it be normally built
+as a module and I will ensure that when I send out future
+revisions of this series.
 
-How many script variants will become relevant here?
-
-Regards,
-Markus
+					-Alex
