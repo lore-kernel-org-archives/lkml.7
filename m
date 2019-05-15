@@ -2,120 +2,107 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1325C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E5BC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7D82053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B448C2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920556;
-	bh=Zzwu0lQza0Dk0N4IkQenYME2SbLJibUQ7DVqa5x/odY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vyy8IZcvFSfThRXgkjcwj3EpZ+YyhcxKrgHW9nyj9fi2WoDd8DZEuARQiv9bMxMhV
-	 fCk1apDlwtci0b1FI+AznP75EcwIgeJVYSy+a7KmgPwP/0BSnjf/287c0w7uU6OJms
-	 Zi4Y9vq8ux3YV35mkMH9oiGffRl8Rx32p1M2DlBw=
+	s=default; t=1557920562;
+	bh=/fxcwBNlOIJVPhCMWVxXSwQdPos2m1xrMFbd5iKMrKo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KgMo02DL67blLNei0xP5S+g38pUTqcgo//sUcvV95VYRgyZo3K0UL2cqg9BiNlf7I
+	 ZvTzOu75pAW6ueBiy9+RB82flDWvbS5PRz/L561Cano0fRqGguTsqgMDIGi6PMXH0z
+	 /J5CPACpXUho8GyJS9Brs344y3sBOiGBMVrkywQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732552AbfEOLmf (ORCPT
+        id S1732572AbfEOLml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:42:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38980 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732322AbfEOL2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:28:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B250206BF;
-        Wed, 15 May 2019 11:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919680;
-        bh=Zzwu0lQza0Dk0N4IkQenYME2SbLJibUQ7DVqa5x/odY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wtL/r0H8hk/fd6/m/O4ut3gOEim4f+h6ZdJHRKc/sN8MMDGKUWPwa0nbDjPXtg3LS
-         Nxvr4XlRGr9yMdFz7xd3Y5hKw1qfoR5hCGLlKzuARQdDeMuSpeappJaDW/6z4GC6a1
-         +Ckw1hDjYXhe0+bowMbjYn9D/O5jwfRq9/XGuCiE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 053/137] tools lib traceevent: Fix missing equality check for strcmp
-Date:   Wed, 15 May 2019 12:55:34 +0200
-Message-Id: <20190515090657.347481345@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
-References: <20190515090651.633556783@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 15 May 2019 07:42:41 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:38536 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732060AbfEOLmk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:42:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=MsMZWcEhieyD9y/MB1UTwo9lx4vEdenhn0ViWkYWga0=; b=YPUAoCHj9TAeCyAY9x620+maF
+        MTsK55mHerI2S3KHuTJN/zQumYR2a2uJqdILUENk4iqLHEOmIwGJypY2hAbthxdHYkg6tsOcweSEq
+        6VO7MTxNMmCVGpF3dp1/ga4D+WAiMxz2CW3RgmVnMnUyFz6XEZpRZbAjxyCKf618uMvL8=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hQsIv-0003eS-5H; Wed, 15 May 2019 11:42:37 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 319621126D6A; Wed, 15 May 2019 12:42:33 +0100 (BST)
+Date:   Wed, 15 May 2019 12:42:33 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Krishna Yarlagadda <kyarlagadda@nvidia.com>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+Subject: Re: [PATCH V5 1/4] spi: tegra114: add support for gpio based CS
+Message-ID: <20190515114233.GF5613@sirena.org.uk>
+References: <1557810235-16401-1-git-send-email-skomatineni@nvidia.com>
+ <1557810235-16401-2-git-send-email-skomatineni@nvidia.com>
+ <cf4bd167-49b8-5649-a2e2-7bf5ddcc6e2d@nvidia.com>
+ <BYAPR12MB33986B88CF3A30036E3F1F04C2080@BYAPR12MB3398.namprd12.prod.outlook.com>
+ <20190515093522.GC5613@sirena.org.uk>
+ <BYAPR12MB3398ED52051F5BFA08D7B3A6C2090@BYAPR12MB3398.namprd12.prod.outlook.com>
+ <20190515112900.GE5613@sirena.org.uk>
+ <BYAPR12MB3398528B86D3DE9CC3AA6D85C2090@BYAPR12MB3398.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dgjlcl3Tl+kb3YDk"
+Content-Disposition: inline
+In-Reply-To: <BYAPR12MB3398528B86D3DE9CC3AA6D85C2090@BYAPR12MB3398.namprd12.prod.outlook.com>
+X-Cookie: You will lose an important tape file.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f32c2877bcb068a718bb70094cd59ccc29d4d082 ]
 
-There was a missing comparison with 0 when checking if type is "s64" or
-"u64". Therefore, the body of the if-statement was entered if "type" was
-"u64" or not "s64", which made the first strcmp() redundant since if
-type is "u64", it's not "s64".
+--dgjlcl3Tl+kb3YDk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If type is "s64", the body of the if-statement is not entered but since
-the remainder of the function consists of if-statements which will not
-be entered if type is "s64", we will just return "val", which is
-correct, albeit at the cost of a few more calls to strcmp(), i.e., it
-will behave just as if the if-statement was entered.
+On Wed, May 15, 2019 at 11:40:41AM +0000, Sowjanya Komatineni wrote:
+> I tried few settings before sending V5 too but didn't made diff.
+> Will try with different email client.
+>=20
+> What email client are you using?
 
-If type is neither "s64" or "u64", the body of the if-statement will be
-entered incorrectly and "val" returned. This means that any type that is
-checked after "s64" and "u64" is handled the same way as "s64" and
-"u64", i.e., the limiting of "val" to fit in for example "s8" is never
-reached.
+I personally use mutt.  I know people also use things like Thunderbird
+and Evolution successfully.  There should be other people at nVidia you
+can ask about how they get things set up I guess?
 
-This was introduced in the kernel tree when the sources were copied from
-trace-cmd in commit f7d82350e597 ("tools/events: Add files to create
-libtraceevent.a"), and in the trace-cmd repo in 1cdbae6035cei
-("Implement typecasting in parser") when the function was introduced,
-i.e., it has always behaved the wrong way.
+--dgjlcl3Tl+kb3YDk
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Detected by cppcheck.
+-----BEGIN PGP SIGNATURE-----
 
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
-Link: http://lkml.kernel.org/r/20190409091529.2686-1-rikard.falkeborn@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/lib/traceevent/event-parse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzb+ygACgkQJNaLcl1U
+h9B1yQf/aoNSV/N3Iq8hWgg8l7YtShuKh8pJ5p5FRa8eM/RrsWiGS0Ih3uARw12Y
+jwhP0HRwm1WMSphc4F/gwbRIS6KiCLmtK21uVfQ8ZhwePMzM7riNNCNInkHsEyq/
+MWm7JRK3YEjPpbqRhzGjUylGbuMqeY2oifTnZPMhLpu98nqZBxdkLlbvVMvQ4Lzq
+bs8R5PeuqWFOZgb2d89fb6jGVheVWKGjP4cxlreDlGd00IlBZDdKFMUlkxqWytj8
+LRLPtjy6Ekaq5qQh7TDrxHkogptz9dQo5cB4gfDPj3AN+UVX7caCwUe2qc3x3e66
+xjey0jls24Elt0FLSZAgUIPOremvZw==
+=Fhe/
+-----END PGP SIGNATURE-----
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 87494c7c619d8..981c6ce2da2c7 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -2233,7 +2233,7 @@ eval_type_str(unsigned long long val, const char *type, int pointer)
- 		return val & 0xffffffff;
- 
- 	if (strcmp(type, "u64") == 0 ||
--	    strcmp(type, "s64"))
-+	    strcmp(type, "s64") == 0)
- 		return val;
- 
- 	if (strcmp(type, "s8") == 0)
--- 
-2.20.1
-
-
-
+--dgjlcl3Tl+kb3YDk--
