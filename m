@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4879C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D29C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 888222166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 787F12166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918573;
-	bh=0romyWTBFUYbeSjBFCYeTB6M9EA7wEz8HCJSZqFhoOw=;
+	s=default; t=1557918577;
+	bh=Pv+cuU1oQq8sv5bQHcuM70TsMYPx2umA4E6VGL4RuXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QuSuOwJ8LtMecxw8OJi0rbMIfxP4FmqPaxJdAx6I9cwIAh/qYMwStp9J5M6Sx7VrL
-	 9ru3NNroB5eFcH+E0AOdzaQXERtjJ2OJ/yz6l8UK8ia/N/t0IHTlrbwx/w+5sUHyhU
-	 5lP8FMVLJNkEGBBIAnQKS7RFwY8vb/FviwREhBFQ=
+	b=0LyIeZ4Tr6/4KIflTo4YdBpDnnLNBiNUUPp8qPTP+uRcijI+obzrpylbFDLJ0iEJX
+	 QYLj6QzR2zbSBAcCTCfo7ernVHjZKJH55Ah3+hKrlcrczjyisPAxPrKqr4u2tB6oLr
+	 xmJD8ijjQaO1LVAvS+NCHEy3hDYY9utrLIZ77pMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbfEOLJc (ORCPT
+        id S1729280AbfEOLJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:09:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42474 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:09:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729263AbfEOLJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:09:29 -0400
+        id S1728810AbfEOLJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:09:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91D9E20843;
-        Wed, 15 May 2019 11:09:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2FAED2084F;
+        Wed, 15 May 2019 11:09:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918569;
-        bh=0romyWTBFUYbeSjBFCYeTB6M9EA7wEz8HCJSZqFhoOw=;
+        s=default; t=1557918571;
+        bh=Pv+cuU1oQq8sv5bQHcuM70TsMYPx2umA4E6VGL4RuXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=InYCE8qvKLtnJyz7EZDmumo3bqLcmonf+o6Ak8Q4I/6oxBhhgSrvbsrAjpVNU0VQ1
-         WF5a9BCEwSasGLgoJ+5NxqY25o7wxkqdeknd/hGcB/oWdSNOvZFZtsvHKPSFculjAr
-         pdoGYH3hPEkeHC8NZzJhNHZc2MuHCCouaXVb5Q1A=
+        b=zykT1a+jGj3zbveM0ZR/7QzYYXnzA4xkUDp7ZLbjV9knpe+LTDqwCMr7T2NR6kIUG
+         r45C8QLo9xOrElHHW7kbymqhYcHzdNfNof1q2QN12SGgIdA2jKwSkfBKKnBT8sZK7M
+         eqTWr7Gyh1Sx8w14UpMmYr4YC15gkrbgNHBjyZtk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
+        stable@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
         Borislav Petkov <bp@suse.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Arjan Van De Ven <arjan.van.de.ven@intel.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        linux-edac <linux-edac@vger.kernel.org>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 182/266] x86/microcode/intel: Check microcode revision before updating sibling threads
-Date:   Wed, 15 May 2019 12:54:49 +0200
-Message-Id: <20190515090729.085096103@linuxfoundation.org>
+Subject: [PATCH 4.4 183/266] x86/MCE: Save microcode revision in machine check records
+Date:   Wed, 15 May 2019 12:54:50 +0200
+Message-Id: <20190515090729.120763201@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -63,76 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ashok Raj <ashok.raj@intel.com>
+From: Tony Luck <tony.luck@intel.com>
 
-commit c182d2b7d0ca48e0d6ff16f7d883161238c447ed upstream.
+commit fa94d0c6e0f3431523f5701084d799c77c7d4a4f upstream.
 
-After updating microcode on one of the threads of a core, the other
-thread sibling automatically gets the update since the microcode
-resources on a hyperthreaded core are shared between the two threads.
+Updating microcode used to be relatively rare. Now that it has become
+more common we should save the microcode version in a machine check
+record to make sure that those people looking at the error have this
+important information bundled with the rest of the logged information.
 
-Check the microcode revision on the CPU before performing a microcode
-update and thus save us the WRMSR 0x79 because it is a particularly
-expensive operation.
+[ Borislav: Simplify a bit. ]
 
-[ Borislav: Massage changelog and coding style. ]
-
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Tom Lendacky <thomas.lendacky@amd.com>
-Tested-by: Ashok Raj <ashok.raj@intel.com>
-Cc: Arjan Van De Ven <arjan.van.de.ven@intel.com>
-Link: http://lkml.kernel.org/r/1519352533-15992-2-git-send-email-ashok.raj@intel.com
-Link: https://lkml.kernel.org/r/20180228102846.13447-3-bp@alien8.de
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20180301233449.24311-1-tony.luck@intel.com
 [bwh: Backported to 4.4:
- - s/mc->/mc_intel->/
- - Return 0 in this case
+ - Also add earlier fields to struct mce, to match upstream UAPI
  - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/cpu/microcode/intel.c |   23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/x86/include/uapi/asm/mce.h  |    4 ++++
+ arch/x86/kernel/cpu/mcheck/mce.c |    4 +++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kernel/cpu/microcode/intel.c
-+++ b/arch/x86/kernel/cpu/microcode/intel.c
-@@ -653,6 +653,17 @@ static int apply_microcode_early(struct
- 	if (mc_intel == NULL)
- 		return 0;
+--- a/arch/x86/include/uapi/asm/mce.h
++++ b/arch/x86/include/uapi/asm/mce.h
+@@ -26,6 +26,10 @@ struct mce {
+ 	__u32 socketid;	/* CPU socket ID */
+ 	__u32 apicid;	/* CPU initial apic ID */
+ 	__u64 mcgcap;	/* MCGCAP MSR: machine check capabilities of CPU */
++	__u64 synd;	/* MCA_SYND MSR: only valid on SMCA systems */
++	__u64 ipid;	/* MCA_IPID MSR: only valid on SMCA systems */
++	__u64 ppin;	/* Protected Processor Inventory Number */
++	__u32 microcode;/* Microcode revision */
+ };
  
-+	/*
-+	 * Save us the MSR write below - which is a particular expensive
-+	 * operation - when the other hyperthread has updated the microcode
-+	 * already.
-+	 */
-+	rev = intel_get_microcode_revision();
-+	if (rev >= mc_intel->hdr.rev) {
-+		uci->cpu_sig.rev = rev;
-+		return 0;
-+	}
+ #define MCE_GET_RECORD_LEN   _IOR('M', 1, int)
+--- a/arch/x86/kernel/cpu/mcheck/mce.c
++++ b/arch/x86/kernel/cpu/mcheck/mce.c
+@@ -138,6 +138,8 @@ void mce_setup(struct mce *m)
+ 	m->socketid = cpu_data(m->extcpu).phys_proc_id;
+ 	m->apicid = cpu_data(m->extcpu).initial_apicid;
+ 	rdmsrl(MSR_IA32_MCG_CAP, m->mcgcap);
 +
- 	/* write microcode via MSR 0x79 */
- 	native_wrmsr(MSR_IA32_UCODE_WRITE,
- 	      (unsigned long) mc_intel->bits,
-@@ -861,6 +872,18 @@ static int apply_microcode_intel(int cpu
- 	if (get_matching_mc(mc_intel, cpu) == 0)
- 		return 0;
++	m->microcode = boot_cpu_data.microcode;
+ }
  
-+	/*
-+	 * Save us the MSR write below - which is a particular expensive
-+	 * operation - when the other hyperthread has updated the microcode
-+	 * already.
-+	 */
-+	rev = intel_get_microcode_revision();
-+	if (rev >= mc_intel->hdr.rev) {
-+		uci->cpu_sig.rev = rev;
-+		c->microcode = rev;
-+		return 0;
-+	}
-+
- 	/* write microcode via MSR 0x79 */
- 	wrmsr(MSR_IA32_UCODE_WRITE,
- 	      (unsigned long) mc_intel->bits,
+ DEFINE_PER_CPU(struct mce, injectm);
+@@ -258,7 +260,7 @@ static void print_mce(struct mce *m)
+ 	 */
+ 	pr_emerg(HW_ERR "PROCESSOR %u:%x TIME %llu SOCKET %u APIC %x microcode %x\n",
+ 		m->cpuvendor, m->cpuid, m->time, m->socketid, m->apicid,
+-		cpu_data(m->extcpu).microcode);
++		m->microcode);
+ 
+ 	/*
+ 	 * Print out human-readable details about the MCE error,
 
 
