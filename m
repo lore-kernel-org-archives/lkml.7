@@ -2,126 +2,179 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B03AC04AA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78FBC04AA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE63C2084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:23:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dnFPVfJQ"
+	by mail.kernel.org (Postfix) with ESMTP id 9DE492084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfEOFX4 (ORCPT
+        id S1726389AbfEOF2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 01:23:56 -0400
-Received: from ozlabs.org ([203.11.71.1]:47843 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbfEOFX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 01:23:56 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 453jdj3H7kz9s3q;
-        Wed, 15 May 2019 15:23:53 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1557897833;
-        bh=HKtRqT95fMWpgGUEtteCItQk0zAydtyXJGGCafMscX0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=dnFPVfJQbzRfXlUg7ATgT+BOW9lbkra54pAKTFukx3atJlEaG196IA8ZZs0WVkxE1
-         qpeeWFHqcbAZUs7SjDOhiW5pu2UP/6sC99ea4RhRoiJg0jPombZev5kHxd2CxL1bpF
-         uyiLFFIR13ZvT65eeHjtrlsnvNzQXOFdmnEfj5DwlmPu5VUvBquSP8jk2km09wHu5z
-         ne9+nhAh+REz/4EaQkAidbsfnQ7QdyyAKawgzAx/8VOiUOeiHpJXqkxBtjKBwpbN/w
-         9UTTz1ZP/3xnruamWL6LRyqgHIsy2CsrYFU0vhCvCp4Gik8gVmu27OH5TQhXjJljNe
-         WiGv5Jcw+AzLw==
-Date:   Wed, 15 May 2019 15:23:52 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linus <torvalds@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Linux-kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH] kernel/compat.c: mark expected switch fall-throughs
-Message-ID: <20190515152352.26dac479@canb.auug.org.au>
+        Wed, 15 May 2019 01:28:06 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:55795 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbfEOF2G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 01:28:06 -0400
+Received: by mail-io1-f70.google.com with SMTP id s16so971094ioe.22
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 22:28:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=xITO4LMjns8xgRj22LzdjFUrCDzUiFsmGkIMv5L+L3k=;
+        b=Io8+n8CeuoOAQipRVT7A3NXEaNkrfFlkQxrkdzLBx+YwBnY2nYTm87jz4QcExyT7Qb
+         cbgCkmQRmUZtxarOYxagcJ9fCC/rMd1ZDu9gjA6ovaS2ozXWzaFoGc49zs2PYRHtLiHS
+         NOS4K20lINSAr5/COts+pyGPKJ0OOalAcGS+L9qiIT3h7kkX0hxORr7cWRuvyYCeDNAw
+         rhbzrwtaPbI+6V7aREiKzZSR52E34X1zb4gfrGyV/E0U+FxjHy5greu+ziVXeLQ++ShQ
+         u50aJk41BItcIiJ67DYsJOoMi0HDBJKJw9EX8KovDJPFA0o/M9pOc78U9hbww8mcrkqQ
+         DXhw==
+X-Gm-Message-State: APjAAAVLQyh6EQl9CG2knVl7iDxW41SQPX7gJEZcXK9vM+hLpEctQYAT
+        rCxH6paKc5eh8hHNL4iNYClvU+TMc/lnFwQqE4Kv4DT9+veh
+X-Google-Smtp-Source: APXvYqx84ozCvl1LtJXc2wNe4ICy9zxdQJD91pctT7S7DOsaKLc440ipX1NMnK0cQcLuzuVl7iOGisF0ocLsqELR8OMYk+vMvY9V
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/o=5Dr.yTyRmquu8K7bXatxC"; protocol="application/pgp-signature"
+X-Received: by 2002:a24:dac7:: with SMTP id z190mr6331441itg.57.1557898084915;
+ Tue, 14 May 2019 22:28:04 -0700 (PDT)
+Date:   Tue, 14 May 2019 22:28:04 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f29ffd0588e669d4@google.com>
+Subject: KASAN: use-after-free Read in timer_is_static_object (2)
+From:   syzbot <syzbot+81215bf96c82318c7e74@syzkaller.appspotmail.com>
+To:     ast@kernel.org, aviadye@mellanox.com, borisp@mellanox.com,
+        bpf@vger.kernel.org, daniel@iogearbox.net, davejwatson@fb.com,
+        davem@davemloft.net, john.fastabend@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/o=5Dr.yTyRmquu8K7bXatxC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch cases
-where we are expecting to fall through.
+syzbot found the following crash on:
 
-This patch aims to suppress 3 missing-break-in-switch false positives
-on some architectures.
+HEAD commit:    63863ee8 Merge tag 'gcc-plugins-v5.2-rc1' of ssh://gitolit..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=128b8d74a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=52ff73a1f6d0b441
+dashboard link: https://syzkaller.appspot.com/bug?extid=81215bf96c82318c7e74
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Cc: Deepa Dinamani <deepa.kernel@gmail.com>
-Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Jann Horn <jannh@google.com>
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+81215bf96c82318c7e74@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in timer_is_static_object+0x80/0x90  
+kernel/time/timer.c:608
+Read of size 8 at addr ffff8880a5e88da8 by task kworker/0:2/2851
+
+CPU: 0 PID: 2851 Comm: kworker/0:2 Not tainted 5.1.0+ #7
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: pencrypt padata_serial_worker
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
+  __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+  kasan_report+0x12/0x20 mm/kasan/common.c:614
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  timer_is_static_object+0x80/0x90 kernel/time/timer.c:608
+  debug_object_activate+0x298/0x4f0 lib/debugobjects.c:510
+  debug_timer_activate kernel/time/timer.c:710 [inline]
+  __mod_timer kernel/time/timer.c:1035 [inline]
+  mod_timer kernel/time/timer.c:1096 [inline]
+  add_timer+0x3c6/0x930 kernel/time/timer.c:1132
+  __queue_delayed_work+0x1af/0x270 kernel/workqueue.c:1648
+  queue_delayed_work_on+0x19a/0x200 kernel/workqueue.c:1673
+  queue_delayed_work include/linux/workqueue.h:509 [inline]
+  schedule_delayed_work include/linux/workqueue.h:610 [inline]
+  tls_encrypt_done+0x44c/0x560 net/tls/tls_sw.c:477
+  aead_request_complete include/crypto/internal/aead.h:75 [inline]
+  pcrypt_aead_serial+0x7f/0xb0 crypto/pcrypt.c:123
+  padata_serial_worker+0x2a8/0x4b0 kernel/padata.c:349
+  process_one_work+0x98e/0x1790 kernel/workqueue.c:2268
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2414
+  kthread+0x357/0x430 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+Allocated by task 9310:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_kmalloc mm/kasan/common.c:489 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
+  kmem_cache_alloc_trace+0x151/0x760 mm/slab.c:3586
+  kmalloc include/linux/slab.h:547 [inline]
+  kzalloc include/linux/slab.h:742 [inline]
+  tls_set_sw_offload+0x123e/0x1640 net/tls/tls_sw.c:2193
+  do_tls_setsockopt_conf net/tls/tls_main.c:527 [inline]
+  do_tls_setsockopt net/tls/tls_main.c:574 [inline]
+  tls_setsockopt+0x7cd/0x8d0 net/tls/tls_main.c:593
+  sock_common_setsockopt+0x9a/0xe0 net/core/sock.c:3130
+  __sys_setsockopt+0x180/0x280 net/socket.c:2078
+  __do_sys_setsockopt net/socket.c:2089 [inline]
+  __se_sys_setsockopt net/socket.c:2086 [inline]
+  __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2086
+  do_syscall_64+0x103/0x670 arch/x86/entry/common.c:298
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 9303:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+  __cache_free mm/slab.c:3463 [inline]
+  kfree+0xcf/0x230 mm/slab.c:3786
+  tls_sw_free_resources_tx+0x3b3/0x6e0 net/tls/tls_sw.c:2100
+  tls_sk_proto_close+0x5fa/0x780 net/tls/tls_main.c:289
+  inet_release+0x105/0x1f0 net/ipv4/af_inet.c:432
+  inet6_release+0x53/0x80 net/ipv6/af_inet6.c:474
+  __sock_release+0xd3/0x2b0 net/socket.c:607
+  sock_close+0x1b/0x30 net/socket.c:1279
+  __fput+0x302/0x890 fs/file_table.c:279
+  ____fput+0x16/0x20 fs/file_table.c:312
+  task_work_run+0x14a/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x273/0x2c0 arch/x86/entry/common.c:167
+  prepare_exit_to_usermode arch/x86/entry/common.c:198 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:276 [inline]
+  do_syscall_64+0x57e/0x670 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880a5e88d00
+  which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 168 bytes inside of
+  512-byte region [ffff8880a5e88d00, ffff8880a5e88f00)
+The buggy address belongs to the page:
+page:ffffea000297a200 count:1 mapcount:0 mapping:ffff8880aa400940 index:0x0
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea00012ac408 ffffea0002947608 ffff8880aa400940
+raw: 0000000000000000 ffff8880a5e88080 0000000100000006 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880a5e88c80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff8880a5e88d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff8880a5e88d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                   ^
+  ffff8880a5e88e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880a5e88e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
 ---
- kernel/compat.c | 3 +++
- 1 file changed, 3 insertions(+)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Hi Linus,
-
-This has been sitting in my fixes tree in linux-next for quite some
-time.  It silences some warnings that irritated me in my builds since I
-am building with -Wimplicit-fallthrough to help Gustavo catch new
-additions.
-
-diff --git a/kernel/compat.c b/kernel/compat.c
-index d8a36c6ad7c9..b5f7063c0db6 100644
---- a/kernel/compat.c
-+++ b/kernel/compat.c
-@@ -346,8 +346,11 @@ get_compat_sigset(sigset_t *set, const compat_sigset_t=
- __user *compat)
- 		return -EFAULT;
- 	switch (_NSIG_WORDS) {
- 	case 4: set->sig[3] =3D v.sig[6] | (((long)v.sig[7]) << 32 );
-+		/* fall through */
- 	case 3: set->sig[2] =3D v.sig[4] | (((long)v.sig[5]) << 32 );
-+		/* fall through */
- 	case 2: set->sig[1] =3D v.sig[2] | (((long)v.sig[3]) << 32 );
-+		/* fall through */
- 	case 1: set->sig[0] =3D v.sig[0] | (((long)v.sig[1]) << 32 );
- 	}
- #else
---=20
-2.20.1
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/o=5Dr.yTyRmquu8K7bXatxC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzbomgACgkQAVBC80lX
-0GzjMgf+KB+cFxudcloxl70eUYKsHDk/IQkVO5qgPeQgW5wIcoxQEnf595I8IYUh
-7UktGpfs7pRpS6L3pHuLorMA7/ZVFoz9YTXJv8S6tv1aTNJNcW4Zs0hLgkiRSKl+
-uCM9ydXEjtN6P2FMYJnn1dxaPaZezxaOycpVFffXr1XT0h6uSiEwYKT7BkOBILZC
-LxsoUEtG5PKlR700QgkAaIPZSGf00IrkHxz4G9lu4gRG4jXTYASZRPzTR5X9cu6R
-X4hNxJALHlFo9dYyC2ni1pB/LX0ekim/055Z9TyjYVvPDhAIRxThWbuJR2nLI29Q
-GHFIBsa6nlqMqP/n/0Sc6kXUgzwXTQ==
-=HenF
------END PGP SIGNATURE-----
-
---Sig_/o=5Dr.yTyRmquu8K7bXatxC--
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
