@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB8AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED585C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B9C0216FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B566D20881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918223;
-	bh=pI3Nrf7RMqFhLtRxtIesr5/VGQzifFxpPtHO/H0ku4o=;
+	s=default; t=1557918230;
+	bh=4wTWFXDjryCe5iFXbF2nI5BOQ8SlDGdkom76bwAV1Hs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xv8MNgaA2n3zF7HXqLY+lSiJVT2Fw6WZLmmsw88kHlIvzsIOBnc3GuAWBhrjb/eO6
-	 C8601MotMc2LAscja+5tcmd0E10w/aKc2OrlM6PPFn2AG30EmjkR0RPzeyVEYxJ8tH
-	 SZ/jDMjcjr5LGodPA5JYeGy4LiZx6TysJZoNgmdw=
+	b=Kw8/peI9T8E+0eJN02TIBvRWDO2cu1ZslO9FTQncbGosG8dtF3DNA4i2SjrQqccKI
+	 PZKzzC6g9ivV/Y8fIGrHrnmG3cuggDK0ic0Uu1p4yOlf0O6EVa2LNNC+CMMmCpEiQQ
+	 /1CZSiLtUEThyMCH8NROGM/YPv8Ena0gJOuUbGiA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728240AbfEOLDm (ORCPT
+        id S1727726AbfEOLDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:03:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32980 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:03:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727336AbfEOLDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:03:39 -0400
+        id S1727502AbfEOLDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:03:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 472F920881;
-        Wed, 15 May 2019 11:03:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3645C2084F;
+        Wed, 15 May 2019 11:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918218;
-        bh=pI3Nrf7RMqFhLtRxtIesr5/VGQzifFxpPtHO/H0ku4o=;
+        s=default; t=1557918226;
+        bh=4wTWFXDjryCe5iFXbF2nI5BOQ8SlDGdkom76bwAV1Hs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cH9XPaAr3eivUaqz69kRm0Dt+jh3dlamVbXxE15amWbBkJychFguX4cM4D1yVNlrE
-         xBzO/Ig7BaZNHqPrQl3l0ClXqHT2zKI1YBoZwhtJaG7U0K6sX2c1fJbVK/bjUDXDQi
-         KwmMqsDTg6B0jgyOfger0pQz/WrkJhLw22ieK9KU=
+        b=sQhYdomCZybn3vb4hNeatzwL2XRPcKgL1bXw9NjylvJ7lqIqczrLjOBzvQSUFBEUY
+         R+fp2M5s3NA6xiGVvGSXIlnLqN1T2AsfMBSzjQs3hWscx4Z+PKvpO0Q4I5HNFeqNu1
+         /ipbwqfNPYZK1W5NIevjRPog72vGSvB07Iney3bc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.4 050/266] powerpc/fsl: Add barrier_nospec implementation for NXP PowerPC Book3E
-Date:   Wed, 15 May 2019 12:52:37 +0200
-Message-Id: <20190515090724.143101907@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.4 026/266] powerpc/64s: Move cpu_show_meltdown()
+Date:   Wed, 15 May 2019 12:52:13 +0200
+Message-Id: <20190515090723.454615121@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -59,106 +58,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Diana Craciun <diana.craciun@nxp.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit ebcd1bfc33c7a90df941df68a6e5d4018c022fba upstream.
+commit 8ad33041563a10b34988800c682ada14b2612533 upstream.
 
-Implement the barrier_nospec as a isync;sync instruction sequence.
-The implementation uses the infrastructure built for BOOK3S 64.
+This landed in setup_64.c for no good reason other than we had nowhere
+else to put it. Now that we have a security-related file, that is a
+better place for it so move it.
 
-Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
-[mpe: Add PPC_INST_ISYNC for backport]
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/Kconfig                  |    2 +-
- arch/powerpc/include/asm/barrier.h    |    8 +++++++-
- arch/powerpc/include/asm/ppc-opcode.h |    1 +
- arch/powerpc/lib/feature-fixups.c     |   31 +++++++++++++++++++++++++++++++
- 4 files changed, 40 insertions(+), 2 deletions(-)
+ arch/powerpc/kernel/security.c |   11 +++++++++++
+ arch/powerpc/kernel/setup_64.c |    8 --------
+ 2 files changed, 11 insertions(+), 8 deletions(-)
 
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -165,7 +165,7 @@ config PPC
- config PPC_BARRIER_NOSPEC
-     bool
-     default y
--    depends on PPC_BOOK3S_64
-+    depends on PPC_BOOK3S_64 || PPC_FSL_BOOK3E
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -5,6 +5,8 @@
+ // Copyright 2018, Michael Ellerman, IBM Corporation.
  
- config GENERIC_CSUM
- 	def_bool CPU_LITTLE_ENDIAN
---- a/arch/powerpc/include/asm/barrier.h
-+++ b/arch/powerpc/include/asm/barrier.h
-@@ -92,12 +92,18 @@ do {									\
- #define smp_mb__after_atomic()      smp_mb()
- #define smp_mb__before_spinlock()   smp_mb()
- 
-+#ifdef CONFIG_PPC_BOOK3S_64
-+#define NOSPEC_BARRIER_SLOT   nop
-+#elif defined(CONFIG_PPC_FSL_BOOK3E)
-+#define NOSPEC_BARRIER_SLOT   nop; nop
-+#endif
+ #include <linux/kernel.h>
++#include <linux/device.h>
 +
- #ifdef CONFIG_PPC_BARRIER_NOSPEC
- /*
-  * Prevent execution of subsequent instructions until preceding branches have
-  * been fully resolved and are no longer executing speculatively.
-  */
--#define barrier_nospec_asm NOSPEC_BARRIER_FIXUP_SECTION; nop
-+#define barrier_nospec_asm NOSPEC_BARRIER_FIXUP_SECTION; NOSPEC_BARRIER_SLOT
+ #include <asm/security_features.h>
  
- // This also acts as a compiler barrier due to the memory clobber.
- #define barrier_nospec() asm (stringify_in_c(barrier_nospec_asm) ::: "memory")
---- a/arch/powerpc/include/asm/ppc-opcode.h
-+++ b/arch/powerpc/include/asm/ppc-opcode.h
-@@ -147,6 +147,7 @@
- #define PPC_INST_LWSYNC			0x7c2004ac
- #define PPC_INST_SYNC			0x7c0004ac
- #define PPC_INST_SYNC_MASK		0xfc0007fe
-+#define PPC_INST_ISYNC			0x4c00012c
- #define PPC_INST_LXVD2X			0x7c000698
- #define PPC_INST_MCRXR			0x7c000400
- #define PPC_INST_MCRXR_MASK		0xfc0007fe
---- a/arch/powerpc/lib/feature-fixups.c
-+++ b/arch/powerpc/lib/feature-fixups.c
-@@ -315,6 +315,37 @@ void do_barrier_nospec_fixups(bool enabl
- }
- #endif /* CONFIG_PPC_BARRIER_NOSPEC */
  
-+#ifdef CONFIG_PPC_FSL_BOOK3E
-+void do_barrier_nospec_fixups_range(bool enable, void *fixup_start, void *fixup_end)
+@@ -13,3 +15,12 @@ unsigned long powerpc_security_features
+ 	SEC_FTR_L1D_FLUSH_PR | \
+ 	SEC_FTR_BNDS_CHK_SPEC_BAR | \
+ 	SEC_FTR_FAVOUR_SECURITY;
++
++
++ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, char *buf)
 +{
-+	unsigned int instr[2], *dest;
-+	long *start, *end;
-+	int i;
++	if (rfi_flush)
++		return sprintf(buf, "Mitigation: RFI Flush\n");
 +
-+	start = fixup_start;
-+	end = fixup_end;
-+
-+	instr[0] = PPC_INST_NOP;
-+	instr[1] = PPC_INST_NOP;
-+
-+	if (enable) {
-+		pr_info("barrier-nospec: using isync; sync as speculation barrier\n");
-+		instr[0] = PPC_INST_ISYNC;
-+		instr[1] = PPC_INST_SYNC;
-+	}
-+
-+	for (i = 0; start < end; start++, i++) {
-+		dest = (void *)start + *start;
-+
-+		pr_devel("patching dest %lx\n", (unsigned long)dest);
-+		patch_instruction(dest, instr[0]);
-+		patch_instruction(dest + 1, instr[1]);
-+	}
-+
-+	printk(KERN_DEBUG "barrier-nospec: patched %d locations\n", i);
++	return sprintf(buf, "Vulnerable\n");
 +}
-+#endif /* CONFIG_PPC_FSL_BOOK3E */
-+
- void do_lwsync_fixups(unsigned long value, void *fixup_start, void *fixup_end)
- {
- 	long *start, *end;
+--- a/arch/powerpc/kernel/setup_64.c
++++ b/arch/powerpc/kernel/setup_64.c
+@@ -961,12 +961,4 @@ static __init int rfi_flush_debugfs_init
+ }
+ device_initcall(rfi_flush_debugfs_init);
+ #endif
+-
+-ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, char *buf)
+-{
+-	if (rfi_flush)
+-		return sprintf(buf, "Mitigation: RFI Flush\n");
+-
+-	return sprintf(buf, "Vulnerable\n");
+-}
+ #endif /* CONFIG_PPC_BOOK3S_64 */
 
 
