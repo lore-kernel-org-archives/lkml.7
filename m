@@ -2,83 +2,205 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADAAC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00860C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABE262082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5F02082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:54:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NK1N5xkJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfEOMyH (ORCPT
+        id S1727198AbfEOMyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:54:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60302 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726677AbfEOMyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 08:54:06 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 585B1AC8E;
-        Wed, 15 May 2019 12:54:05 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id B7B24DA866; Wed, 15 May 2019 14:55:05 +0200 (CEST)
-Date:   Wed, 15 May 2019 14:55:05 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Can crypto API provide information about hw acceleration?
-Message-ID: <20190515125505.GP3138@suse.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Eric Biggers <ebiggers@kernel.org>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190514163348.GM3138@twin.jikos.cz>
- <20190514213409.GA115510@gmail.com>
+        Wed, 15 May 2019 08:54:54 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:45070 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726923AbfEOMyy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 08:54:54 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4FCmdlc060905;
+        Wed, 15 May 2019 12:53:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=qqsyAWE2i/voQnpUJu/NRs+qTwt/c05VpPNY04BS1Jg=;
+ b=NK1N5xkJDCeLh4n4t5QRRa/QeUiCSiZ62sXI+pIViFP/bG4kce7PUYzx3CgY8gjYJWYG
+ QGZPV5rp0I5IydXmkaIrqcS3703IpyPk74fRV1A8fvNG8J+whG30zwkGWzqpeDyLn5j8
+ REvESvk1q1afxajKj2RMI6P3of80n0R4PhZnTtJHn+jnyV7mJS2VKrViFvw5N1V+OJjg
+ UfTL0WpjgEEzw2spLdP0xMyx6jAPOd0E9va6CwCikusw+ND21CwKnjmjxBng9VcMNL3b
+ uXar1ljkEbdQ6MUtrtBhJyks8FLTQxOp3I37wkGqnUJSpQFRV4Bvhw7HsvFK/WBsBTNZ /w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2sdnttvj3v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 May 2019 12:53:00 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4FCpMpl025522;
+        Wed, 15 May 2019 12:52:59 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2sggdutcgt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 May 2019 12:52:59 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4FCqs75023757;
+        Wed, 15 May 2019 12:52:55 GMT
+Received: from [10.166.106.34] (/10.166.106.34)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 May 2019 05:52:54 -0700
+Subject: Re: [RFC KVM 00/27] KVM Address Space Isolation
+To:     pbonzini@redhat.com, rkrcmar@redhat.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        kvm@vger.kernel.org, x86@kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     konrad.wilk@oracle.com, jan.setjeeilers@oracle.com,
+        liran.alon@oracle.com, jwadams@google.com
+References: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <b5ebe77f-14f5-5f87-a4bd-8befb71a9969@oracle.com>
+Date:   Wed, 15 May 2019 14:52:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514213409.GA115510@gmail.com>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+In-Reply-To: <1557758315-12667-1-git-send-email-alexandre.chartre@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9257 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905150082
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9257 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905150082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 02:34:10PM -0700, Eric Biggers wrote:
-> On Tue, May 14, 2019 at 06:33:48PM +0200, David Sterba wrote:
-> > Hi,
-> > 
-> > Q: is there a way to query the crypto layer whether a given algorithm
-> > (digest, crypto) is accelerated by the driver?
-> > 
-> > This information can be used to decide if eg. a checksum should can be
-> > calculated right away or offloaded to a thread. This is done in btrfs,
-> > (fs/btrfs/disk-io.c:check_async_write).
-> > 
-> > At this moment it contains a static check for a cpu feature, and only
-> > for x86. I briefly searched the arch/ directory for implementations of
-> > crc32c that possibly use hw aid and there are several of them. Adding a
-> > static check a-la x86 for the other architectures (arm, ppc, mips,
-> > sparc, s390) is wrong, so I'm looking for a clean solution.
-> > 
-> > The struct shash_alg definition of the algorithms does not say anything
-> > about the acceleration. The closest thing is the cra_priority, but I
-> > don't know if this is reliable information. The default implementations
-> > seem to have 100, and acceleated 200 or 300.
-> > 
-> > This would be probably sufficient, but I'd like a confirmation from
-> > crypto people.
-> > 
-> 
-> There's only one default implementation of crc32c, not multiple, and it has
-> priority 100.  All other crc32c implementations have priority > 100.  So yes,
-> you can check the priority (which would require adding a function to
-> lib/libcrc32c.c to get it).  Alternatively you could check whether the driver
-> name is "crc32c-generic" or not.
 
-Thanks, the driver name check seems to be ok for my needs. At mount time
-the struct crypto_shash is initialized and this provides the driver
-name, then a bit is set whether it's generic or not and later used to
-decide whether to offload.
+Thanks all for your replies and comments. I am trying to summarize main
+feedback below, and define next steps.
+
+But first, let me clarify what should happen when exiting the KVM isolated
+address space (i.e. when we need to access to the full kernel). There was
+some confusion because this was not clearly described in the cover letter.
+Thanks to Liran for this better explanation:
+
+   When a hyperthread needs to switch from KVM isolated address space to
+   kernel full address space, it should first kick all sibling hyperthreads
+   outside of guest and only then safety switch to full kernel address
+   space. Only once all sibling hyperthreads are running with KVM isolated
+   address space, it is safe to enter guest.
+
+   The main point of this address space is to avoid kicking all sibling
+   hyperthreads on *every* VMExit from guest but instead only kick them when
+   switching address space. The assumption is that the vast majority of exits
+   can be handled in KVM isolated address space and therefore do not require
+   to kick the sibling hyperthreads outside of guest.
+
+   “kick” in this context means sending an IPI to all sibling hyperthreads.
+   This IPI will cause these sibling hyperthreads to exit from guest to host
+   on EXTERNAL_INTERRUPT and wait for a condition that again allows to enter
+   back into guest. This condition will be once all hyperthreads of CPU core
+   is again running only within KVM isolated address space of this VM.
+
+
+Feedback
+========
+
+Page-table Management
+
+- Need to cleanup terminology mm vs page-table. It looks like we just need
+   a KVM page-table, not a KVM mm.
+
+- Interfaces for creating and managing page-table should be provided by
+   the kernel, and not implemented in KVM. KVM shouldn't access kernel
+   low-level memory management functions.
+
+KVM Isolation Enter/Exit
+
+- Changing CR3 in #PF could be a natural extension as #PF can already
+   change page-tables, but we need a very coherent design and strong
+   rules.
+
+- Reduce kernel code running without the whole kernel mapping to the
+   minimum.
+
+- Avoid using current and task_struct while running with KVM page table.
+
+- Ensure KVM page-table is not used with vmalloc.
+
+- Try to avoid copying parts of the vmalloc page tables. This
+   interacts unpleasantly with having the kernel stack.  We can freely
+   use a different stack (the IRQ stack, for example) as long as
+   we don't schedule, but that means we can't run preemptable code.
+
+- Potential issues with tracing, kprobes... A solution would be to
+   compile the isolated code with tracing off.
+
+- Better centralize KVM isolation exit on IRQ, NMI, MCE, faults...
+   Switch back to full kernel before switching to IRQ stack or
+   shorlty after.
+
+- Can we disable IRQ while running with KVM page-table?
+
+   For IRQs it's somewhat feasible, but not for NMIs since NMIs are
+   unblocked on VMX immediately after VM-Exit
+
+   Exits due to INTR, NMI and #MC are considered high priority and are
+   serviced before re-enabling IRQs and preemption[1].  All other exits
+   are handled after IRQs and preemption are re-enabled.
+
+   A decent number of exit handlers are quite short, but many exit
+   handlers require significantly longer flows. In short, leaving
+   IRQs disabled across all exits is not practical.
+
+   It makes sense to pinpoint exactly what exits are:
+   a) in the hot path for the use case (configuration)
+   b) can be handled fast enough that they can run with IRQs disabled.
+
+   Generating that list might allow us to tightly bound the contents
+   of kvm_mm and sidestep many of the corner cases, i.e. select VM-Exits
+   are handle with IRQs disabled using KVM's mm, while "slow" VM-Exits
+   go through the full context switch.
+
+
+KVM Page Table Content
+
+- Check and reduce core mappings (kernel text size, cpu_entry_area,
+   espfix64, IRQ stack...)
+
+- Check and reduce percpu mapping, percpu memory can contain secrets (e.g.
+   percpu random pool)
+
+
+Next Steps
+==========
+
+I will investigate Sean's suggestion to see which VM-Exits can be handled
+fast enough so that they can run with IRQs disabled (fast VM-Exits),
+and which slow VM-Exits are in the hot path.
+
+So I will work on a new POC which just handles fast VM-Exits with IRQs
+disabled. This should largely reduce mappings required in the KVM page
+table. I will also try to just have a KVM page-table and not a KVM mm.
+
+After this new POC, we should be able to evaluate the need for handling
+slow VM-Exits. And if there's an actual need, we can investigate how
+to handle them with IRQs enabled.
+
+
+Thanks,
+
+alex.
+
