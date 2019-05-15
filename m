@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA2CC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0916C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA7720843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2BAB2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919586;
-	bh=oiJOyLPDWRvk2Wus+Qtzhl3VbMKgPsCI12Y4tdz2gjU=;
+	s=default; t=1557919588;
+	bh=DUjKZn5emODJcuQLKllJ8Z6KyVBSBziyGSgnE1R3ogA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UpbEFCV1MXkesip9+2myQPjH1LsrbBg00PpbWtxSUdmKAluCeC5n5d/qfc/4HIUbg
-	 Vtr4h6CFFqDF5dkqDU0O9nc4A1Pz0de7nh6+zAOlVanzgowDyDlIvQ8YYfLIHZz/eS
-	 xKjRpGDTvJHSk+BCNCAhiR+I5LLIp7R6vTR1hzUE=
+	b=Rwk/4wxZZejaPJ2y6bC652xLCP1lUpX+gsNL7H61qJQq0NArHrW1pk8VHJtONGdLO
+	 xMkFtm9Ldnx4pa6MqW5mkFe3pkS3MXX8sdUDPz+rJF+/FOOy6KZSO3ZVZ8BRB4092o
+	 XXaInQV5E7Yeozp5FHk7u3x7WAjvTNbj8fbLtIEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732147AbfEOL0Y (ORCPT
+        id S1732158AbfEOL01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:26:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37100 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:26:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732090AbfEOL0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:26:15 -0400
+        id S1731670AbfEOL0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:26:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAE6120818;
-        Wed, 15 May 2019 11:26:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B45520818;
+        Wed, 15 May 2019 11:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919575;
-        bh=oiJOyLPDWRvk2Wus+Qtzhl3VbMKgPsCI12Y4tdz2gjU=;
+        s=default; t=1557919580;
+        bh=DUjKZn5emODJcuQLKllJ8Z6KyVBSBziyGSgnE1R3ogA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o+IQD9uAJk9Jzizx1gUtbBVS9zgGuUOkXKnv4Bdc+6CvtIXVQ6/BDpsq0iA+nWSjp
-         nErpBzn3OJWO/dYoUETZpKiWI7m9hBU7yHhhviOUCYoSFhQNq4ZWa1KdzphMUnRVRF
-         b+LZ/o+Atn/z9WFgVJKMPtiCw93bEp7L8Sh6Z7Gk=
+        b=n4UHVHYFTP/VyOnvQsd2oq+dp3R8O6HYpIgOQ2IFVvapvQw2sPgRIlY3HsXE7cNvi
+         Ybgdl6mgqzZT8nj2x3dUO6L3sDh4PtBpVjXrkVPDiFn8eei0aQg9Q7HKctLWigeugs
+         Q9+4FPtWX8SRbsVm0a+vSl7qWqnJMGkuWgpXhbhM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 014/137] acpi/nfit: Always dump _DSM output payload
-Date:   Wed, 15 May 2019 12:54:55 +0200
-Message-Id: <20190515090654.386390171@linuxfoundation.org>
+Subject: [PATCH 5.0 016/137] HID: input: add mapping for Expose/Overview key
+Date:   Wed, 15 May 2019 12:54:57 +0200
+Message-Id: <20190515090654.518511281@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -60,50 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 351f339faa308c1c1461314a18c832239a841ca0 ]
+[ Upstream commit 96dd86871e1fffbc39e4fa61c9c75ec54ee9af0f ]
 
-The dynamic-debug statements for command payload output only get emitted
-when the command is not ND_CMD_CALL. Move the output payload dumping
-ahead of the early return path for ND_CMD_CALL.
+According to HUTRR77 usage 0x29f from the consumer page is reserved for
+the Desktop application to present all running user’s application windows.
+Linux defines KEY_SCALE to request Compiz Scale (Expose) mode, so let's
+add the mapping.
 
-Fixes: 31eca76ba2fc9 ("...whitelisted dimm command marshaling mechanism")
-Reported-by: Vishal Verma <vishal.l.verma@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/nfit/core.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/hid/hid-input.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-index 4be4dc3e8aa62..38ec79bb3edde 100644
---- a/drivers/acpi/nfit/core.c
-+++ b/drivers/acpi/nfit/core.c
-@@ -563,6 +563,12 @@ int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
- 		goto out;
- 	}
+diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
+index ff92a7b2fc897..468da6f6765db 100644
+--- a/drivers/hid/hid-input.c
++++ b/drivers/hid/hid-input.c
+@@ -1042,6 +1042,8 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
+ 		case 0x2cb: map_key_clear(KEY_KBDINPUTASSIST_ACCEPT);	break;
+ 		case 0x2cc: map_key_clear(KEY_KBDINPUTASSIST_CANCEL);	break;
  
-+	dev_dbg(dev, "%s cmd: %s output length: %d\n", dimm_name,
-+			cmd_name, out_obj->buffer.length);
-+	print_hex_dump_debug(cmd_name, DUMP_PREFIX_OFFSET, 4, 4,
-+			out_obj->buffer.pointer,
-+			min_t(u32, 128, out_obj->buffer.length), true);
++		case 0x29f: map_key_clear(KEY_SCALE);		break;
 +
- 	if (call_pkg) {
- 		call_pkg->nd_fw_size = out_obj->buffer.length;
- 		memcpy(call_pkg->nd_payload + call_pkg->nd_size_in,
-@@ -581,12 +587,6 @@ int acpi_nfit_ctl(struct nvdimm_bus_descriptor *nd_desc, struct nvdimm *nvdimm,
- 		return 0;
- 	}
- 
--	dev_dbg(dev, "%s cmd: %s output length: %d\n", dimm_name,
--			cmd_name, out_obj->buffer.length);
--	print_hex_dump_debug(cmd_name, DUMP_PREFIX_OFFSET, 4, 4,
--			out_obj->buffer.pointer,
--			min_t(u32, 128, out_obj->buffer.length), true);
--
- 	for (i = 0, offset = 0; i < desc->out_num; i++) {
- 		u32 out_size = nd_cmd_out_size(nvdimm, cmd, desc, i, buf,
- 				(u32 *) out_obj->buffer.pointer,
+ 		default: map_key_clear(KEY_UNKNOWN);
+ 		}
+ 		break;
 -- 
 2.20.1
 
