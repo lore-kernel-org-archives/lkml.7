@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBFFC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA5DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA3420818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E73C21848
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:28:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919721;
-	bh=8WcMDF/PXPpdVisfIhIjlmXv/zbwSAypEvVBSJOhkK4=;
+	s=default; t=1557919725;
+	bh=yp94k15qVYX917pnAhp4n7gKvHuaedyl+IKE7TfqXws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RB2+CYQNk1IuauNbHBf95RiT611BA57NxEeIOnPmlEZ95fpaoK0X+O8Q+90GwfpSP
-	 hF+uCV4L2ZvB/5iUyizQ6+MD2zoz64XHEPPm2HyiBHJEU/MJ3Z4sTDiIoRcobTHIwQ
-	 4yzFyiV46GyV2fn3XknSBlABOXA5NhsL+iSwE180=
+	b=GrXETSfWshLeo3c/LT+Ha3YIHIlsGLJcNrG8/sf/NlbfBLYSiIFBrPpbJIRST46GL
+	 C0YrG6XcE77FdpYiprzfzRcTMu/HBKmTtAf8TJrLf1OXbJGq7xEw8eZp+xSR7kQS5r
+	 lWwMTegAwg4jVCDABdUaMlYypWK+IdpY7iBtzNJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732425AbfEOL2k (ORCPT
+        id S1732436AbfEOL2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:28:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39776 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:28:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727376AbfEOL2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:28:39 -0400
+        id S1732423AbfEOL2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:28:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41F0620843;
-        Wed, 15 May 2019 11:28:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7AA5206BF;
+        Wed, 15 May 2019 11:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919717;
-        bh=8WcMDF/PXPpdVisfIhIjlmXv/zbwSAypEvVBSJOhkK4=;
+        s=default; t=1557919720;
+        bh=yp94k15qVYX917pnAhp4n7gKvHuaedyl+IKE7TfqXws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pHgmUbAoWB0mhsT9pDivjVT26GMSglaUden57hJr7oJCbl+Fot5YBJ3MqTvAYRRqd
-         WhNxEzXrGAIXtaLznBpoiOaIQCHe6vBkoQwLEVdI5B6HW6WjKRZmIjDiPkQx8RgYq3
-         dFyfM+0wrNv8Y0OkzS7aIB6yV+6wZ+psIP3OPLyo=
+        b=wrHVYYeoUbxzh5qjZ4f7D8JfhG6cILh4DslRzfK4Z2+ii9pE+naYT7yTlNuJe16z1
+         mnPPsnjC5F7OlyZLWVxSvPUHyeLKNopM0dEhyQEqYmRl36Xl/HZf1p6ixV7KMAToGf
+         qcRE9bNsq0PTIeXwIjEwwDjflCzRTvPZohY3SCqM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Martin Leung <martin.leung@amd.com>,
+        Jun Lei <Jun.Lei@amd.com>,
+        Joshua Aberback <Joshua.Aberback@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 066/137] netfilter: ctnetlink: dont use conntrack/expect object addresses as id
-Date:   Wed, 15 May 2019 12:55:47 +0200
-Message-Id: <20190515090658.251430186@linuxfoundation.org>
+Subject: [PATCH 5.0 031/137] drm/amd/display: extending AUX SW Timeout
+Date:   Wed, 15 May 2019 12:55:12 +0200
+Message-Id: <20190515090655.568098205@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -60,174 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3c79107631db1f7fd32cf3f7368e4672004a3010 ]
+[ Upstream commit f4bbebf8e7eb4d294b040ab2d2ba71e70e69b930 ]
 
-else, we leak the addresses to userspace via ctnetlink events
-and dumps.
+[Why]
+AUX takes longer to reply when using active DP-DVI dongle on some asics
+resulting in up to 2000+ us edid read (timeout).
 
-Compute an ID on demand based on the immutable parts of nf_conn struct.
+[How]
+1. Adjust AUX poll to match spec
+2. Extend the SW timeout. This does not affect normal
+operation since we exit the loop as soon as AUX acks.
 
-Another advantage compared to using an address is that there is no
-immediate re-use of the same ID in case the conntrack entry is freed and
-reallocated again immediately.
-
-Fixes: 3583240249ef ("[NETFILTER]: nf_conntrack_expect: kill unique ID")
-Fixes: 7f85f914721f ("[NETFILTER]: nf_conntrack: kill unique ID")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Martin Leung <martin.leung@amd.com>
+Reviewed-by: Jun Lei <Jun.Lei@amd.com>
+Acked-by: Joshua Aberback <Joshua.Aberback@amd.com>
+Acked-by: Leo Li <sunpeng.li@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/netfilter/nf_conntrack.h |  2 ++
- net/netfilter/nf_conntrack_core.c    | 35 ++++++++++++++++++++++++++++
- net/netfilter/nf_conntrack_netlink.c | 34 +++++++++++++++++++++++----
- 3 files changed, 66 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dce/dce_aux.c | 9 ++++++---
+ drivers/gpu/drm/amd/display/dc/dce/dce_aux.h | 6 +++---
+ 2 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
-index 249d0a5b12b82..63fd47e924b92 100644
---- a/include/net/netfilter/nf_conntrack.h
-+++ b/include/net/netfilter/nf_conntrack.h
-@@ -318,6 +318,8 @@ struct nf_conn *nf_ct_tmpl_alloc(struct net *net,
- 				 gfp_t flags);
- void nf_ct_tmpl_free(struct nf_conn *tmpl);
- 
-+u32 nf_ct_get_id(const struct nf_conn *ct);
+diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
+index aaeb7faac0c43..e0fff5744b5f6 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
++++ b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
+@@ -189,6 +189,12 @@ static void submit_channel_request(
+ 				1,
+ 				0);
+ 	}
 +
- static inline void
- nf_ct_set(struct sk_buff *skb, struct nf_conn *ct, enum ip_conntrack_info info)
- {
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index 9dd4c2048a2ba..1982faf21ebb5 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -25,6 +25,7 @@
- #include <linux/slab.h>
- #include <linux/random.h>
- #include <linux/jhash.h>
-+#include <linux/siphash.h>
- #include <linux/err.h>
- #include <linux/percpu.h>
- #include <linux/moduleparam.h>
-@@ -424,6 +425,40 @@ nf_ct_invert_tuple(struct nf_conntrack_tuple *inverse,
++	REG_UPDATE(AUX_INTERRUPT_CONTROL, AUX_SW_DONE_ACK, 1);
++
++	REG_WAIT(AUX_SW_STATUS, AUX_SW_DONE, 0,
++				10, aux110->timeout_period/10);
++
+ 	/* set the delay and the number of bytes to write */
+ 
+ 	/* The length include
+@@ -241,9 +247,6 @@ static void submit_channel_request(
+ 		}
+ 	}
+ 
+-	REG_UPDATE(AUX_INTERRUPT_CONTROL, AUX_SW_DONE_ACK, 1);
+-	REG_WAIT(AUX_SW_STATUS, AUX_SW_DONE, 0,
+-				10, aux110->timeout_period/10);
+ 	REG_UPDATE(AUX_SW_CONTROL, AUX_SW_GO, 1);
  }
- EXPORT_SYMBOL_GPL(nf_ct_invert_tuple);
  
-+/* Generate a almost-unique pseudo-id for a given conntrack.
-+ *
-+ * intentionally doesn't re-use any of the seeds used for hash
-+ * table location, we assume id gets exposed to userspace.
-+ *
-+ * Following nf_conn items do not change throughout lifetime
-+ * of the nf_conn after it has been committed to main hash table:
-+ *
-+ * 1. nf_conn address
-+ * 2. nf_conn->ext address
-+ * 3. nf_conn->master address (normally NULL)
-+ * 4. tuple
-+ * 5. the associated net namespace
-+ */
-+u32 nf_ct_get_id(const struct nf_conn *ct)
-+{
-+	static __read_mostly siphash_key_t ct_id_seed;
-+	unsigned long a, b, c, d;
-+
-+	net_get_random_once(&ct_id_seed, sizeof(ct_id_seed));
-+
-+	a = (unsigned long)ct;
-+	b = (unsigned long)ct->master ^ net_hash_mix(nf_ct_net(ct));
-+	c = (unsigned long)ct->ext;
-+	d = (unsigned long)siphash(&ct->tuplehash, sizeof(ct->tuplehash),
-+				   &ct_id_seed);
-+#ifdef CONFIG_64BIT
-+	return siphash_4u64((u64)a, (u64)b, (u64)c, (u64)d, &ct_id_seed);
-+#else
-+	return siphash_4u32((u32)a, (u32)b, (u32)c, (u32)d, &ct_id_seed);
-+#endif
-+}
-+EXPORT_SYMBOL_GPL(nf_ct_get_id);
-+
- static void
- clean_from_lists(struct nf_conn *ct)
- {
-diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
-index 1213beb5a7146..36619ad8ab8c2 100644
---- a/net/netfilter/nf_conntrack_netlink.c
-+++ b/net/netfilter/nf_conntrack_netlink.c
-@@ -29,6 +29,7 @@
- #include <linux/spinlock.h>
- #include <linux/interrupt.h>
- #include <linux/slab.h>
-+#include <linux/siphash.h>
- 
- #include <linux/netfilter.h>
- #include <net/netlink.h>
-@@ -485,7 +486,9 @@ static int ctnetlink_dump_ct_synproxy(struct sk_buff *skb, struct nf_conn *ct)
- 
- static int ctnetlink_dump_id(struct sk_buff *skb, const struct nf_conn *ct)
- {
--	if (nla_put_be32(skb, CTA_ID, htonl((unsigned long)ct)))
-+	__be32 id = (__force __be32)nf_ct_get_id(ct);
-+
-+	if (nla_put_be32(skb, CTA_ID, id))
- 		goto nla_put_failure;
- 	return 0;
- 
-@@ -1286,8 +1289,9 @@ static int ctnetlink_del_conntrack(struct net *net, struct sock *ctnl,
- 	}
- 
- 	if (cda[CTA_ID]) {
--		u_int32_t id = ntohl(nla_get_be32(cda[CTA_ID]));
--		if (id != (u32)(unsigned long)ct) {
-+		__be32 id = nla_get_be32(cda[CTA_ID]);
-+
-+		if (id != (__force __be32)nf_ct_get_id(ct)) {
- 			nf_ct_put(ct);
- 			return -ENOENT;
- 		}
-@@ -2694,6 +2698,25 @@ static int ctnetlink_exp_dump_mask(struct sk_buff *skb,
- 
- static const union nf_inet_addr any_addr;
- 
-+static __be32 nf_expect_get_id(const struct nf_conntrack_expect *exp)
-+{
-+	static __read_mostly siphash_key_t exp_id_seed;
-+	unsigned long a, b, c, d;
-+
-+	net_get_random_once(&exp_id_seed, sizeof(exp_id_seed));
-+
-+	a = (unsigned long)exp;
-+	b = (unsigned long)exp->helper;
-+	c = (unsigned long)exp->master;
-+	d = (unsigned long)siphash(&exp->tuple, sizeof(exp->tuple), &exp_id_seed);
-+
-+#ifdef CONFIG_64BIT
-+	return (__force __be32)siphash_4u64((u64)a, (u64)b, (u64)c, (u64)d, &exp_id_seed);
-+#else
-+	return (__force __be32)siphash_4u32((u32)a, (u32)b, (u32)c, (u32)d, &exp_id_seed);
-+#endif
-+}
-+
- static int
- ctnetlink_exp_dump_expect(struct sk_buff *skb,
- 			  const struct nf_conntrack_expect *exp)
-@@ -2741,7 +2764,7 @@ ctnetlink_exp_dump_expect(struct sk_buff *skb,
- 	}
- #endif
- 	if (nla_put_be32(skb, CTA_EXPECT_TIMEOUT, htonl(timeout)) ||
--	    nla_put_be32(skb, CTA_EXPECT_ID, htonl((unsigned long)exp)) ||
-+	    nla_put_be32(skb, CTA_EXPECT_ID, nf_expect_get_id(exp)) ||
- 	    nla_put_be32(skb, CTA_EXPECT_FLAGS, htonl(exp->flags)) ||
- 	    nla_put_be32(skb, CTA_EXPECT_CLASS, htonl(exp->class)))
- 		goto nla_put_failure;
-@@ -3046,7 +3069,8 @@ static int ctnetlink_get_expect(struct net *net, struct sock *ctnl,
- 
- 	if (cda[CTA_EXPECT_ID]) {
- 		__be32 id = nla_get_be32(cda[CTA_EXPECT_ID]);
--		if (ntohl(id) != (u32)(unsigned long)exp) {
-+
-+		if (id != nf_expect_get_id(exp)) {
- 			nf_ct_expect_put(exp);
- 			return -ENOENT;
- 		}
+diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.h b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.h
+index f7caab85dc801..2c6f50b4245a4 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.h
++++ b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.h
+@@ -69,11 +69,11 @@ enum {	/* This is the timeout as defined in DP 1.2a,
+ 	 * at most within ~240usec. That means,
+ 	 * increasing this timeout will not affect normal operation,
+ 	 * and we'll timeout after
+-	 * SW_AUX_TIMEOUT_PERIOD_MULTIPLIER * AUX_TIMEOUT_PERIOD = 1600usec.
++	 * SW_AUX_TIMEOUT_PERIOD_MULTIPLIER * AUX_TIMEOUT_PERIOD = 2400usec.
+ 	 * This timeout is especially important for
+-	 * resume from S3 and CTS.
++	 * converters, resume from S3, and CTS.
+ 	 */
+-	SW_AUX_TIMEOUT_PERIOD_MULTIPLIER = 4
++	SW_AUX_TIMEOUT_PERIOD_MULTIPLIER = 6
+ };
+ struct aux_engine_dce110 {
+ 	struct aux_engine base;
 -- 
 2.20.1
 
