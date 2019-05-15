@@ -4,135 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E34C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 792BFC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5456820818
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47AF020862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557963132;
-	bh=DdQxNOhT2rkARm+F4+I9o5A8l2BLuAeEqMtxCtDdsTs=;
+	s=default; t=1557963236;
+	bh=vy+VFByWZpBcZJS+x+zDXWWK4vc1948YkZDdImJfXt4=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NRuPffovwNRh4IcH/tdZDIOwzBE4b7U4cqIy0eNZWUoHH/x+guK6jHTaJpm7LJUr6
-	 ITx2qJkd2bPBkYHE04EIkoNxoKm4b4qEYXGXkVyNsl4j3iBYaOIViS/buPpHo8QlYo
-	 DGur8fL7lesSqFQGOSDIvGtUlSVVCOudnleXtfc4=
+	b=RG7Njbwxh+LrctTtGUy21NNOetWciTv0493n5R3dvGOA6i7P+EOCWI4hlEtzg35ZR
+	 5zHBrNOjp9yqu+XyruuWCv4+53cso25KUsP4CjnzGZZJWODee8dpohz7XxfvHfSe+i
+	 VC4efn2G2rgkOGRnkynID6en9AAxccFlhG/9j7G0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfEOXcK (ORCPT
+        id S1726645AbfEOXdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 19:32:10 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40606 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbfEOXaK (ORCPT
+        Wed, 15 May 2019 19:33:54 -0400
+Received: from mail-lj1-f173.google.com ([209.85.208.173]:36503 "EHLO
+        mail-lj1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbfEOXby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 19:30:10 -0400
-Received: by mail-lj1-f194.google.com with SMTP id d15so1340280ljc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 16:30:09 -0700 (PDT)
+        Wed, 15 May 2019 19:31:54 -0400
+Received: by mail-lj1-f173.google.com with SMTP id z1so1361277ljb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 16:31:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=rj8eiKEfKQp+r4kU9L07lOLZVjOy1p00iMYQoQzNM1g=;
-        b=Jd4/tDKEvp+hE+t3buf26fXCZjFpIqo785n5ciqv6R11gys8cOxk924sG82V47MMTS
-         KWGX4flrn9O1MphiePtZy6rBOY4DrEPz4wddSOpILtzncpeasMMd3u2vobOU5muw2mWm
-         kFhZckpJrzaMMWO/ZPNRKFhPu4YsTQU3KZsKs=
+         :cc;
+        bh=O821PFVQcmUzDw+ClN21Dk/2JbyQeuDOYDUBLRj/u2k=;
+        b=A78Teddfh1YhL1soJd7LNhYcXrvlyqK4Kc3vdaOAMu5c8k1jOFXAvEr7XGLgepjug1
+         0d2fNXS4jnwj6r8hxFpjY//Wmfhsq8p0GDy9LNbArvdhKCoefmCn5Ui4ybYNXCg5HYhz
+         nSH4sgiTc0szmPt1XaFA9Zc1ScZUgfvMlc37I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=rj8eiKEfKQp+r4kU9L07lOLZVjOy1p00iMYQoQzNM1g=;
-        b=o4zqlku6LBEqk2tYBiOxs46TnJ//5YO7QOzhtW57G7pZu6ZKKkljL7/J8LclRoyDHI
-         FKrEUKtGRy88YBIpV9XyQEtTcinX386CoiZCzY6db/7M243dhsH59j7qXqMu5Am8GnSK
-         TxpvE+twiDhIWwkji4WaNG7T1shb4UsS67QGhYPtLk5dstQ43cTe54Zn7/SUBM+3ltUP
-         wDzjDubC9dTFhITYy5w5GzlACQyCbFIH4pzIa9Z3JL0l/s3eONH6pod2zLQb/q60XMrm
-         eQz9GgdQO+IwUyFKeig+qhiuGDKmomjcu8EmaYCtqHQxfL9CFreMGDdahPbcngOAt3fh
-         AF2g==
-X-Gm-Message-State: APjAAAV7nPR9z0IkIz/D89df3jtRtAs0kEPIk5yIltwsGE3F2MNp9Q+S
-        GeyjNj1zzw7APE3IVxLafdEVECuilZw=
-X-Google-Smtp-Source: APXvYqwQUE5IcUrTUezootSnL09xtH5PQ3Gih+UhJhtIA24/y+KGQYFnlBaEjd9N4JGJOXSvYGBOxA==
-X-Received: by 2002:a2e:9142:: with SMTP id q2mr2574573ljg.18.1557963008240;
-        Wed, 15 May 2019 16:30:08 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id y7sm578688ljj.34.2019.05.15.16.30.07
+         :message-id:subject:to:cc;
+        bh=O821PFVQcmUzDw+ClN21Dk/2JbyQeuDOYDUBLRj/u2k=;
+        b=iM3O718ABOVFO+TAv/cIEMaM2M7ViLboC0iO9B3c6VGVbQi2OYJpM1LBinzmYh3OX+
+         wXlZtdpYcoWPPnJ3MOfQVQBhcMlfZp1OPtVxfsKr1jDpMFXIDODYbdOBlrIxV43RFTN7
+         nJKC1ZDrl/Rn+EhOjGBz+lRsnp1e9DINrwUnnd2GPVwLrcdgE/9S+n9f637Q//u/wpEW
+         3JHGbqif4TimsYFGzZPWkIj4KTOt4cq84o5yF8TQZVz9qGOeZ0fKoD/+yjLNggAgHipt
+         zN+G2dAtCMOMFTQ+nVXl1Nq+zy512Gj/vD6D0Mzro506tNg2V0jKPlt5cqoW5LIovgoG
+         p1zg==
+X-Gm-Message-State: APjAAAUe0AmhX3ZV5PLaWTiu1VcUuvVEj45lJVD78ApmeQ2l755toFru
+        aT8ddPQUeRTHPTJU3JUJk++YPgV7rKk=
+X-Google-Smtp-Source: APXvYqzEu5o2fIOiUNMgccellRbCOwxqd91tS/z/xE/sYYjAR4QvwmJuFJZX0A0eZhwA8523U2c6Mw==
+X-Received: by 2002:a2e:98c1:: with SMTP id s1mr13756835ljj.68.1557963111124;
+        Wed, 15 May 2019 16:31:51 -0700 (PDT)
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
+        by smtp.gmail.com with ESMTPSA id i12sm432695lfo.67.2019.05.15.16.31.50
         for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 16:30:07 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id u27so1085114lfg.10
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 16:30:07 -0700 (PDT)
-X-Received: by 2002:a19:4f54:: with SMTP id a20mr21404667lfk.136.1557963006849;
- Wed, 15 May 2019 16:30:06 -0700 (PDT)
+        Wed, 15 May 2019 16:31:50 -0700 (PDT)
+Received: by mail-lj1-f179.google.com with SMTP id m20so1372611lji.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 16:31:50 -0700 (PDT)
+X-Received: by 2002:a2e:9a94:: with SMTP id p20mr11957491lji.2.1557963109896;
+ Wed, 15 May 2019 16:31:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190515133614.31dcbbe0@oasis.local.home>
-In-Reply-To: <20190515133614.31dcbbe0@oasis.local.home>
+References: <20190515133614.31dcbbe0@oasis.local.home> <CAHk-=wihYB8w__YQjgYjYZsVniu5CtkTcFycmCGdqVg8GUje7g@mail.gmail.com>
+In-Reply-To: <CAHk-=wihYB8w__YQjgYjYZsVniu5CtkTcFycmCGdqVg8GUje7g@mail.gmail.com>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 15 May 2019 16:29:50 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wihYB8w__YQjgYjYZsVniu5CtkTcFycmCGdqVg8GUje7g@mail.gmail.com>
-Message-ID: <CAHk-=wihYB8w__YQjgYjYZsVniu5CtkTcFycmCGdqVg8GUje7g@mail.gmail.com>
+Date:   Wed, 15 May 2019 16:31:34 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjbVZcZXkq5xOnBk3ibXorEYKdmRG5YFzzV-Rw3Q-VUEA@mail.gmail.com>
+Message-ID: <CAHk-=wjbVZcZXkq5xOnBk3ibXorEYKdmRG5YFzzV-Rw3Q-VUEA@mail.gmail.com>
 Subject: Re: [GIT PULL] tracing: Updates for 5.2
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 10:36 AM Steven Rostedt <rostedt@goodmis.org> wrote=
-:
+On Wed, May 15, 2019 at 4:29 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> The major changes in this tracing update includes:
+> One option is to just rewrite it something like
+>
+>         const unsigned int offset = offsetof(struct trace_iterator, seq);
+>         memset(offset+(void *)&iter, 0, sizeof(iter) - offset);
 
-This is not directly related to this pull request, but newer versions
-of gcc hate your trace_iterator clearing trick.
+Side note: make it a well-named helper function, since
+"ftrace_dump_buf()" does this too in kernel/trace/trace_kdb.c, and
+gets the exact same warning.
 
-This code:
-
-                /* reset all but tr, trace, and overruns */
-                memset(&iter.seq, 0,
-                       sizeof(struct trace_iterator) -
-                       offsetof(struct trace_iterator, seq));
-
-not only has a completely misleading comment (it resets a lot more
-than the comment states), but modern gcc looks at that code and says
-"oh, you're passing it a pointer to 'iter.seq', but then clearing a
-lot more than a 'trace_seq'":
-
-  In function =E2=80=98memset=E2=80=99,
-      inlined from =E2=80=98ftrace_dump=E2=80=99 at kernel/trace/trace.c:89=
-14:3:
- /include/linux/string.h:344:9: warning: =E2=80=98__builtin_memset=E2=80=99=
- offset
-[8505, 8560] from the object at =E2=80=98iter=E2=80=99 is out of the bounds=
- of
-referenced subobject =E2=80=98seq=E2=80=99 with type =E2=80=98struct trace_=
-seq=E2=80=99 at offset 4368
-[-Warray-bounds]
-    344 |  return __builtin_memset(p, c, size);
-        |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-It's a somewhat annoying warning because the code itself is
-technically correct, but at the same time, I think the gcc warning is
-reasonable. You *are* passing it a 'struct trace_seq' pointer, and
-then you're clearing a whole lot more than that.
-
-One option is to just rewrite it something like
-
-        const unsigned int offset =3D offsetof(struct trace_iterator, seq);
-        memset(offset+(void *)&iter, 0, sizeof(iter) - offset);
-
-which should compile cleanly - because now you're doing the memset on
-a part of the much bigger 'iter' structure, not on one member (and
-overflowing that one member).
-
-Another option might be to separate the zeroed part of the structure
-into a sub-structure of its own, and then just use
-
-        memset(&iter.sub, 0, sizeof(iter.sub));
-
-but then you'd obviously have to change all the uses of the sub-fields..
-
-                      Linus
+              Linus
