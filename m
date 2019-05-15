@@ -2,85 +2,155 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7381C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B203CC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFDCC20881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 843DD2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:00:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557918009;
+	bh=MutqT2n7jn8yjfQNslKMhQrXlo4Dl9tXlg8BSGnTsaQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ivAuw6m1CAsOHbmOTgZOeirCyZ6jCLgtJMpHyY5FrUq5TE/DmGaiQ97iVrMWx73BA
+	 iu9xvMhNF7aHNJa875nNkE1vaRSf5z32MChQVRypFL2aRE+FQ2tLjFBomdICBT1gwh
+	 RdFGsg3pvwJl048zXdh4/LtilSIT//s5U1Q9WNMs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbfEOLAE (ORCPT
+        id S1727354AbfEOLAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:00:04 -0400
-Received: from mga11.intel.com ([192.55.52.93]:37157 "EHLO mga11.intel.com"
+        Wed, 15 May 2019 07:00:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727316AbfEOLAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:00:02 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 04:00:02 -0700
-X-ExtLoop1: 1
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
-  by fmsmga006.fm.intel.com with ESMTP; 15 May 2019 03:59:56 -0700
-Date:   Wed, 15 May 2019 14:00:05 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v20 00/28] Intel SGX1 support
-Message-ID: <20190515110005.GA14718@linux.intel.com>
-References: <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
- <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
- <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
- <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com>
- <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190514204527.GC1977@linux.intel.com>
- <20190515103531.GB10917@linux.intel.com>
+        id S1727316AbfEOLAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:00:07 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A3312084E;
+        Wed, 15 May 2019 11:00:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557918006;
+        bh=MutqT2n7jn8yjfQNslKMhQrXlo4Dl9tXlg8BSGnTsaQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IG4H8mPUWYFZt8hSF9W7KZJo2gg0T70JDVWfXWZY+nlL9ykShCDHx/+RZTkNUOkZC
+         B81EERCotTI+ZU5MyHqHMrXZV4xchShJwB3J0+o4X4x7roo66xT35oDE/cVQqQrD9r
+         wJOsysO07vcmvtsGF4CZYQzVKmVwrjICsITHQoRs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Frank Pavlic <f.pavlic@kunbus.de>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Tristram Ha <Tristram.Ha@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 3.18 19/86] net: ks8851: Delay requesting IRQ until opened
+Date:   Wed, 15 May 2019 12:54:56 +0200
+Message-Id: <20190515090646.415819394@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
+References: <20190515090642.339346723@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190515103531.GB10917@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 01:35:31PM +0300, Jarkko Sakkinen wrote:
-> This brings me to an open question in Andy's model: lets say that we
-> change the source for SIGSTRUCT from memory address to fd. How can the
-> policy prevent the use not creating a file containing a SIGSTRUCT and
-> passing fd of that to the EINIT ioctl?
+[ Upstream commit d268f31552794abf5b6aa5af31021643411f25f5 ]
 
-Also wondering if a path would be better than plain fd for defining a
-reasonable policy i.e. have sigstruct_path as part of the ioctl
-parameters and not sigstruct_fd.
+The ks8851 driver currently requests the IRQ before registering the
+net_device.  Because the net_device name is used as IRQ name and is
+still "eth%d" when the IRQ is requested, it's impossibe to tell IRQs
+apart if multiple ks8851 chips are present.  Most other drivers delay
+requesting the IRQ until the net_device is opened.  Do the same.
 
-/Jarkko
+The driver doesn't enable interrupts on the chip before opening the
+net_device and disables them when closing it, so there doesn't seem to
+be a need to request the IRQ already on probe.
+
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Frank Pavlic <f.pavlic@kunbus.de>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Tristram Ha <Tristram.Ha@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+---
+ drivers/net/ethernet/micrel/ks8851.c | 24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
+index e218e45dcf35..f90a1396535a 100644
+--- a/drivers/net/ethernet/micrel/ks8851.c
++++ b/drivers/net/ethernet/micrel/ks8851.c
+@@ -797,6 +797,15 @@ static void ks8851_tx_work(struct work_struct *work)
+ static int ks8851_net_open(struct net_device *dev)
+ {
+ 	struct ks8851_net *ks = netdev_priv(dev);
++	int ret;
++
++	ret = request_threaded_irq(dev->irq, NULL, ks8851_irq,
++				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
++				   dev->name, ks);
++	if (ret < 0) {
++		netdev_err(dev, "failed to get irq\n");
++		return ret;
++	}
+ 
+ 	/* lock the card, even if we may not actually be doing anything
+ 	 * else at the moment */
+@@ -911,6 +920,8 @@ static int ks8851_net_stop(struct net_device *dev)
+ 		dev_kfree_skb(txb);
+ 	}
+ 
++	free_irq(dev->irq, ks);
++
+ 	return 0;
+ }
+ 
+@@ -1542,14 +1553,6 @@ static int ks8851_probe(struct spi_device *spi)
+ 	ks8851_read_selftest(ks);
+ 	ks8851_init_mac(ks);
+ 
+-	ret = request_threaded_irq(spi->irq, NULL, ks8851_irq,
+-				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
+-				   ndev->name, ks);
+-	if (ret < 0) {
+-		dev_err(&spi->dev, "failed to get irq\n");
+-		goto err_irq;
+-	}
+-
+ 	ret = register_netdev(ndev);
+ 	if (ret) {
+ 		dev_err(&spi->dev, "failed to register network device\n");
+@@ -1562,11 +1565,7 @@ static int ks8851_probe(struct spi_device *spi)
+ 
+ 	return 0;
+ 
+-
+ err_netdev:
+-	free_irq(ndev->irq, ks);
+-
+-err_irq:
+ err_id:
+ 	if (gpio_is_valid(gpio))
+ 		gpio_set_value(gpio, 0);
+@@ -1587,7 +1586,6 @@ static int ks8851_remove(struct spi_device *spi)
+ 		dev_info(&spi->dev, "remove\n");
+ 
+ 	unregister_netdev(priv->netdev);
+-	free_irq(spi->irq, priv);
+ 	if (gpio_is_valid(priv->gpio))
+ 		gpio_set_value(priv->gpio, 0);
+ 	regulator_disable(priv->vdd_reg);
+-- 
+2.19.1
+
+
+
