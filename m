@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A89B0C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EFAC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:49:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 710572053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69E482053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:49:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920936;
-	bh=xOLBCSAStprb0C6iQ2nis4ye9Oz+cCxKK8aQHE2OgS0=;
+	s=default; t=1557920947;
+	bh=OGmgcPDYmpGZoe6b7p5Kka/NjwDpmejKew+gZBRRk08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iu7k7xPd33k9drFBwVWJpxOTtdHuSmUgkGIyQPSpjAig/ifmSgWynMAU1LFzVd2Kt
-	 8+wI32B/BxRVAQTGqyJ6YinPfrI8w7jCqyMNKk/4zTXPQxOszzgPgKjbbxuNdoDGx9
-	 sXTf8vkGIYz5Ayu9ChMR9cnFdjbwvJoXrr/ImS5M=
+	b=bHmKiSRBC4kpn3oRykjQd+AdujG6EcPu6tn7BCNczq2/5gemTqG5fduLUcsBNqJUw
+	 67V1B1BWI8Dn6AMQ9yNtedMUjlBeR0fM6wUPFaNUE8SjZyW3RKIhIBvEukXfgqGTko
+	 u8FOBu1W5V5MKok4PUnWT8+w1+jv6La9+g5a5JyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731842AbfEOLsz (ORCPT
+        id S1731618AbfEOLXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:48:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33834 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:23:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729355AbfEOLX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:23:27 -0400
+        id S1730404AbfEOLXT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:23:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44F81206BF;
-        Wed, 15 May 2019 11:23:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D444206BF;
+        Wed, 15 May 2019 11:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919406;
-        bh=xOLBCSAStprb0C6iQ2nis4ye9Oz+cCxKK8aQHE2OgS0=;
+        s=default; t=1557919398;
+        bh=OGmgcPDYmpGZoe6b7p5Kka/NjwDpmejKew+gZBRRk08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=umORqie1/eqQwxlWgqII1DFiVeKeXE9kPbLn7ORZpr8mgXi1wVcg2xuN6/V+prn0/
-         h3JK35br9zqNyV+pcK6VDf4hJwO8lZI3Of5WdZ3XS87bEydFqiA5LW8QnAthuCg4wv
-         1eC3ixwpRBb2FUVo8z0dc/j8+4E6FC4y95nckJqo=
+        b=MGq4N46bitv9NeYqupu4MqBpqI8/kkWvhjBxjxgi2V1hiSEq/Kbm00nE2p5M9oBOQ
+         by1mMPnOmlD1UhxdFOIpJuY/5BY/Ic59FczU+vjj7rf0xPTv5yexuLnlLk+ATITcIv
+         Uz4a0n5jQWj2CuGDeS97zp5BGTgE4qD10JZ4aqCk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lijun Ou <oulijun@huawei.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        Daniel Gomez <dagmcr@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 063/113] RDMA/hns: Bugfix for mapping user db
-Date:   Wed, 15 May 2019 12:55:54 +0200
-Message-Id: <20190515090658.342043883@linuxfoundation.org>
+Subject: [PATCH 4.19 060/113] spi: ST ST95HF NFC: declare missing of table
+Date:   Wed, 15 May 2019 12:55:51 +0200
+Message-Id: <20190515090658.139662955@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -60,44 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2557fabd6e29f349bfa0ac13f38ac98aa5eafc74 ]
+[ Upstream commit d04830531d0c4a99c897a44038e5da3d23331d2f ]
 
-When the maximum send wr delivered by the user is zero, the qp does not
-have a sq.
+Add missing <of_device_id> table for SPI driver relying on SPI
+device match since compatible is in a DT binding or in a DTS.
 
-When allocating the sq db buffer to store the user sq pi pointer and map
-it to the kernel mode, max_send_wr is used as the trigger condition, while
-the kernel does not consider the max_send_wr trigger condition when
-mapmping db. It will cause sq record doorbell map fail and create qp fail.
+Before this patch:
+modinfo drivers/nfc/st95hf/st95hf.ko | grep alias
+alias:          spi:st95hf
 
-The failed print information as follows:
+After this patch:
+modinfo drivers/nfc/st95hf/st95hf.ko | grep alias
+alias:          spi:st95hf
+alias:          of:N*T*Cst,st95hfC*
+alias:          of:N*T*Cst,st95hf
 
- hns3 0000:7d:00.1: Send cmd: tail - 418, opcode - 0x8504, flag - 0x0011, retval - 0x0000
- hns3 0000:7d:00.1: Send cmd: 0xe59dc000 0x00000000 0x00000000 0x00000000 0x00000116 0x0000ffff
- hns3 0000:7d:00.1: sq record doorbell map failed!
- hns3 0000:7d:00.1: Create RC QP failed
-
-Fixes: 0425e3e6e0c7 ("RDMA/hns: Support flush cqe for hip08 in kernel space")
-Signed-off-by: Lijun Ou <oulijun@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
+Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hns/hns_roce_qp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nfc/st95hf/core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
-index efb7e961ca651..2fa4fb17f6d3c 100644
---- a/drivers/infiniband/hw/hns/hns_roce_qp.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
-@@ -494,7 +494,7 @@ static int hns_roce_set_kernel_sq_size(struct hns_roce_dev *hr_dev,
+diff --git a/drivers/nfc/st95hf/core.c b/drivers/nfc/st95hf/core.c
+index 2b26f762fbc3b..01acb6e533655 100644
+--- a/drivers/nfc/st95hf/core.c
++++ b/drivers/nfc/st95hf/core.c
+@@ -1074,6 +1074,12 @@ static const struct spi_device_id st95hf_id[] = {
+ };
+ MODULE_DEVICE_TABLE(spi, st95hf_id);
  
- static int hns_roce_qp_has_sq(struct ib_qp_init_attr *attr)
++static const struct of_device_id st95hf_spi_of_match[] = {
++        { .compatible = "st,st95hf" },
++        { },
++};
++MODULE_DEVICE_TABLE(of, st95hf_spi_of_match);
++
+ static int st95hf_probe(struct spi_device *nfc_spi_dev)
  {
--	if (attr->qp_type == IB_QPT_XRC_TGT)
-+	if (attr->qp_type == IB_QPT_XRC_TGT || !attr->cap.max_send_wr)
- 		return 0;
- 
- 	return 1;
+ 	int ret;
+@@ -1260,6 +1266,7 @@ static struct spi_driver st95hf_driver = {
+ 	.driver = {
+ 		.name = "st95hf",
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(st95hf_spi_of_match),
+ 	},
+ 	.id_table = st95hf_id,
+ 	.probe = st95hf_probe,
 -- 
 2.20.1
 
