@@ -2,102 +2,193 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA50FC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 618FDC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B20C2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25AF420862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:45:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="C6MlpCQK"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Qu+v9GI3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfEOMpg (ORCPT
+        id S1727167AbfEOMpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:45:36 -0400
-Received: from mail-eopbgr20046.outbound.protection.outlook.com ([40.107.2.46]:8260
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726594AbfEOMpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 08:45:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6vjulWNtFIuDzzZVLB3YmibWuEZ93u2o20N7TkbUFrI=;
- b=C6MlpCQK0Iisv09AcfN36zfMyjdZL4TvMbwhtXMuiq8NIfAwq0C2qlxqBvI850YmhrD3tbwDpydzikblt5zecYbo+Lbl5a4PbSk/6Ki5HfxcaCcoQakMYpnJIk0vvFI0oNEEY/UcQ1Fh8+Jl0P8BkRKMmaUgSBtd0RiE7Nu//JI=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB2896.eurprd04.prod.outlook.com (10.175.24.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Wed, 15 May 2019 12:45:32 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::dd3c:969d:89b9:f422]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::dd3c:969d:89b9:f422%4]) with mapi id 15.20.1878.024; Wed, 15 May 2019
- 12:45:32 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v2 1/2] crypto: caam - fix pkcs1pad(rsa-caam, sha256)
- failure because of invalid input
-Thread-Topic: [PATCH v2 1/2] crypto: caam - fix pkcs1pad(rsa-caam, sha256)
- failure because of invalid input
-Thread-Index: AQHVCxD13Q1EOIwSiEGsSCDp99Uy8Q==
-Date:   Wed, 15 May 2019 12:45:32 +0000
-Message-ID: <VI1PR0402MB348554352CD4DF0A451A5CBC98090@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <1557919546-360-1-git-send-email-iuliana.prodan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: fce0594e-26df-43c3-1075-08d6d93337f7
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB2896;
-x-ms-traffictypediagnostic: VI1PR0402MB2896:
-x-microsoft-antispam-prvs: <VI1PR0402MB289666C30C360F65D56A43B198090@VI1PR0402MB2896.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39860400002)(396003)(366004)(136003)(376002)(189003)(199004)(8936002)(256004)(81156014)(6116002)(33656002)(2906002)(66476007)(86362001)(68736007)(8676002)(3846002)(66066001)(76116006)(73956011)(71200400001)(71190400001)(66946007)(66556008)(64756008)(66446008)(53936002)(102836004)(26005)(9686003)(52536014)(6246003)(186003)(99286004)(81166006)(5660300002)(53546011)(6506007)(7696005)(76176011)(55016002)(74316002)(476003)(6436002)(4326008)(305945005)(6636002)(44832011)(14454004)(7736002)(229853002)(446003)(478600001)(486006)(25786009)(4744005)(316002)(110136005)(54906003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2896;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: DcDUpBmAazVTfpJFjmckR6N/61PsPr/3XlRDsfVnDVVEkPs3+wC+vnHr6I8z7tBdRtu2bVNhn/pOXntMB9NyS8DRchwrZdRFXyDnuwPkGaPL3M9f/eNulBIXV67E7Kh1mEcU2AqOjvz2e6zyJ1Fldn9AsWPM89P5eExPSJqfJPvwi8mlbDo6oqRYDmnvMWfn8DC37uC9xhqmN1niCgU1AF7gl6vUFDbC109VA0/FgC6QJmWYfWH28OhsgBecIMqGaO2NGynjuOkv8LIESkhoHmHMfN+tHV7prdHBMpktGBQXiERHw7CqudzNgpPsu6VV6rGQi8PX/XjBQ2epvXCDpNuk0QtNfYzyWqarOm3mMrUWKAh/4TwXyoaIhfpTbu95Qflvaob5KarQChQ9fTN6SBEMs/z82xQRWQArQkMpOmk=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 15 May 2019 08:45:43 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:54305 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726613AbfEOMpm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 08:45:42 -0400
+Received: by mail-wm1-f68.google.com with SMTP id i3so2527027wml.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 05:45:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ReSQaVih+Q9te16ORE5lE2qmgrC17kx402jUecsg9QI=;
+        b=Qu+v9GI3JomCUkUat/f+tbwsZfSCBImRIVeETnIlVsIDO+593U3BB8zCqsr1lsOLBZ
+         pIbFzADe/l6EEja1nJWn9U+pzajDtEPXtW+HvOtind6uYk/AT240jWnredyzEJKBV/iq
+         hT9BsDDUKbZ5kmXav1f1FtSmvjXeyIAn2aXOyuvWrc1yq3vknvgbJg+0OzftWeoWpPNz
+         eKWxvoEVwc4IQsw8+Y7mOZJqXGRHnGb5Og0KbasuvXoGQQbC3VNcAbhs25zZeexdEbnO
+         KBrGiyPqK7n/W3m5VgMYDmKGit9oCssfDdPn8gIxmPweDgW+23yyj+S2Gegy7UQdC8Z6
+         NcKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=ReSQaVih+Q9te16ORE5lE2qmgrC17kx402jUecsg9QI=;
+        b=lp8CH8v59CV1VzsGETNpagTf32l7QISRyKL6YHfijAxN3odt64LbOlGz740L0m5hAe
+         w0FYmAah8WluO+WfOrjvtc5tLrjic2cRLZ47SEqaJEFi+BtVCrPvFspSQQWs0YBPZNd3
+         x7Uh/acJyhKTcufJMQ3ccBmKXePm37UFo9WbBVr6Au9uMtQ2zuDKxTZKlbblquCMTw4z
+         tR9JnFW3T9HpiCmrxQ6kN5wAyZp/IDYpBiDEyg2sfp5sRLWGe4GpTRgEXlbArTYW+sxt
+         XUa0diJY2Vtki8M+7flfWXWERIDEyBRFp1NkmizehW12060tHIURIo45mWqEVqNLaY/1
+         O8zA==
+X-Gm-Message-State: APjAAAXbnNVQApzkYh1Qk9NMHRGFTntP9ZWQMYhapQ/gA0b+AIGtbsnY
+        8jwwABnPu5opnxGVdcNeB/Q95A==
+X-Google-Smtp-Source: APXvYqySTzxGi5v5lFBjybibNA6ulVdJ65NAOlu9pPb5TtagsyoN0sW6BOGkU/4I4B2mGi6UyK8NCA==
+X-Received: by 2002:a1c:eb18:: with SMTP id j24mr24313664wmh.32.1557924339535;
+        Wed, 15 May 2019 05:45:39 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id 24sm2285234wmo.3.2019.05.15.05.45.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 05:45:38 -0700 (PDT)
+Subject: Re: [PATCH 2/3] mmc: meson-gx: add ddr-access-quirk
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     ulf.hansson@linaro.org, khilman@baylibre.com,
+        baylibre-upstreaming@groups.io, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190513091548.16674-1-narmstrong@baylibre.com>
+ <20190513091548.16674-3-narmstrong@baylibre.com>
+ <CAFBinCAMoNDnxoQA9XHKy0Xo9MduxD1CvQXOeLZQ3zZ4ViWm7A@mail.gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <a54f7a4a-c280-6181-969f-4979dadb36b2@baylibre.com>
+Date:   Wed, 15 May 2019 14:45:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fce0594e-26df-43c3-1075-08d6d93337f7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 12:45:32.3130
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2896
+In-Reply-To: <CAFBinCAMoNDnxoQA9XHKy0Xo9MduxD1CvQXOeLZQ3zZ4ViWm7A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/15/2019 2:25 PM, Iuliana Prodan wrote:=0A=
-> The problem is with the input data size sent to CAAM for encrypt/decrypt.=
-=0A=
-> Pkcs1pad is failing due to pkcs1 padding done in SW starting with0x01=0A=
-> instead of 0x00 0x01.=0A=
-> CAAM expects an input of modulus size. For this we strip the leading=0A=
-> zeros in case the size is more than modulus or pad the input with zeros=
-=0A=
-> until the modulus size is reached.=0A=
-> =0A=
-> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>=0A=
-Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+On 14/05/2019 19:58, Martin Blumenstingl wrote:
+> Hi Neil,
+> 
+> On Mon, May 13, 2019 at 11:16 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+> [...]
+>> @@ -1158,15 +1183,27 @@ static int meson_mmc_probe(struct platform_device *pdev)
+>>          */
+>>         mmc->caps2 &= ~MMC_CAP2_HS400;
+>>
+>> -       /* data bounce buffer */
+>> -       host->bounce_buf_size = mmc->max_req_size;
+>> -       host->bounce_buf =
+>> -               dma_alloc_coherent(host->dev, host->bounce_buf_size,
+>> -                                  &host->bounce_dma_addr, GFP_KERNEL);
+>> -       if (host->bounce_buf == NULL) {
+>> -               dev_err(host->dev, "Unable to map allocate DMA bounce buffer.\n");
+>> -               ret = -ENOMEM;
+>> -               goto err_free_irq;
+>> +       if (host->ddr_access_quirk) {
+>> +               /*
+>> +                * The MMC Controller embeds 1,5KiB of internal SRAM
+>> +                * that can be used to be used as bounce buffer.
+>> +                * In the case of the G12A SDIO controller, use these
+>> +                * instead of the DDR memory
+>> +                */
+>> +               host->bounce_buf_size = SD_EMMC_SRAM_DATA_BUF_LEN;
+>> +               host->bounce_buf = host->regs + SD_EMMC_SRAM_DATA_BUF_OFF;
+>> +               host->bounce_dma_addr = res->start + SD_EMMC_SRAM_DATA_BUF_OFF;
+> I'm curious: why do you need to set bounce_dma_addr in this case?
+
+We still need the physical bounce buffer address since we write in the registers,
+and we need the logical address to memcpy() in the buffer.
+
+> 
+>> +       } else {
+>> +               /* data bounce buffer */
+>> +               host->bounce_buf_size = mmc->max_req_size;
+>> +               host->bounce_buf =
+>> +                       dma_alloc_coherent(host->dev, host->bounce_buf_size,
+>> +                                          &host->bounce_dma_addr, GFP_KERNEL);
+>> +               if (host->bounce_buf == NULL) {
+>> +                       dev_err(host->dev, "Unable to map allocate DMA bounce buffer.\n");
+>> +                       ret = -ENOMEM;
+>> +                       goto err_free_irq;
+>> +               }
+>>         }
+>>
+>>         host->descs = dma_alloc_coherent(host->dev, SD_EMMC_DESC_BUF_LEN,
+> if host->descs cannot be allocated then you need to conditionally skip
+> dma_free_coherent for the bounce buffer in the goto err_bounce_buf
+> case a few lines below (just like you did in meson_mmc_remove)
+
+It can be allocated, it's only useless. I can skip it but I don't want
+to break any logic in the driver.
+
+> 
+> 
+> Martin
+> 
+
