@@ -2,90 +2,135 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EC3C04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BC0C04AB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86E512084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B90B52084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:26:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PetMlvwp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n8yIZHng"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbfEOAX5 (ORCPT
+        id S1726286AbfEOA0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:23:57 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46506 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfEOAX4 (ORCPT
+        Tue, 14 May 2019 20:26:01 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44890 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfEOA0A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:23:56 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t187so370905pgb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 17:23:56 -0700 (PDT)
+        Tue, 14 May 2019 20:26:00 -0400
+Received: by mail-qt1-f194.google.com with SMTP id f24so1265195qtk.11;
+        Tue, 14 May 2019 17:25:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=wdHUSojhWcuxM8z/4jOLd1SbHmFBMx7gtwGTAimM+xw=;
-        b=PetMlvwplvZt9XhqbP1EVC/t4NW4tFZGnpR6f4xmO3APjwNOBr7IRwhHO2zXUzogKc
-         DsrzEtiMeD2BO9dlHELmxuxdz1TMetbRaKuAY1gv/3DHtJvAhVQPUSHNr9yRn/DPdXxU
-         C9Ld1A72ps2umwULHtHnM8mvYuC1ehSUCxVbZz0sMTTHvDwc/g1J+uAoE6NJbTTFcte+
-         FywVeYiBt0N4dpLoME85x0Ii1PI2ayjNBf4u0slU1u9m4RfrYwFr3uUgGWvtw5xvKhnm
-         6dQzntHqJYBbFROvCBtrtixkubohPxPkGXaD0zZPJYjNw0I4+BeB325/IxQfhEWaZ/9W
-         RwSg==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xbEZhhiTM5wPNpwedpHvuoXmY8IRI4IkCvFgEMZLO20=;
+        b=n8yIZHnglVsiT8HXDCM669WIA0nw/n9iXppL/q3GzyAOYP9Y4q7SzKD4rxVRcCTqcJ
+         CZK+uGoT1Dt2X04VI/OkFE1HiFZUVbrQDK7lZBrx7SZ0kG6FfxdH5SYNqBEu7/LCVAg5
+         +wnmct38kudlNt8EOeaiJB1ihdceeI5u5UKfjcdTjKr7WjAVWrhjfgGpDkBoEDPlPNxP
+         nN3hCl5OPu60Nm1KkdBCo5oIw9KNmw5juEsTFnZjLRfWoAYOO+Cqjeg0DvN6J8Sdzruc
+         CeSKNPwMYtjTsDMu73uP2YdKS5s+gjziyao3h2D+c3MenoM8YaQuJdHIJizEMifYAvq3
+         qTfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=wdHUSojhWcuxM8z/4jOLd1SbHmFBMx7gtwGTAimM+xw=;
-        b=uEGeARwIlxdN1sZwX/vSmcdtoMy2d1G6n7ZxsgVjkqq7FKInc3AV72XKkqjzAja4mw
-         g2qxh0ySwVUSHHb82dn6gZknlDXKshBLwBEP1T/BmrPvqRJQBzPpmuiuEj6FssHbkN4y
-         zCmSEN7KtCycwnX9NzLURbKRLMU62P5L4un1bSUcB2OdEgBBsLWC6nlabOdWLJbZlmON
-         //+kS5BrQ3w5SfTKrQnXQj8RtlcGA32CeLWO7Rhdm9xAm/FXeXzgVg295mwnL7u0fd4A
-         kpEK5nBlUKzT50AqegTMbVjiaN49NdyeCCAUIwbGM0vsSGo9WZfzY3hLRJp8l+x7AKVj
-         tEeQ==
-X-Gm-Message-State: APjAAAWcAdqEa2YMCzwxF1eaCiAKkaKlaX9rR6L59kpmM6GLGSs3rzNn
-        QgvP3KGzRbfiqZnk4hLhRhuYe0ExwV+rew==
-X-Google-Smtp-Source: APXvYqy2MGn1Ku2hW9/ADj9wkfT6F3sGWHPjub0aWtj/eqxycREWUwqdPl+DGtvldVl/FuD7c7c4+g==
-X-Received: by 2002:a63:4820:: with SMTP id v32mr40593010pga.89.1557879835950;
-        Tue, 14 May 2019 17:23:55 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:fd66:a9bc:7c2c:636a])
-        by smtp.googlemail.com with ESMTPSA id n35sm275804pgl.44.2019.05.14.17.23.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 17:23:55 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jerome Brunet <jbrunet@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] arm64: dts: meson: g12a: add mmc B and C
-In-Reply-To: <20190514091611.15278-1-jbrunet@baylibre.com>
-References: <20190514091611.15278-1-jbrunet@baylibre.com>
-Date:   Tue, 14 May 2019 17:23:54 -0700
-Message-ID: <7hd0kkd0px.fsf@baylibre.com>
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xbEZhhiTM5wPNpwedpHvuoXmY8IRI4IkCvFgEMZLO20=;
+        b=qZAP8MEJPmsS/NVsnB10MnLhzBVLCXJi0o+6ArdtsmFMKnMlMkVPtpchJ12pilaQTX
+         A5wiuTADWdBNWKp4ZECy2BsF82l3K31yabBwSKxCg34AubcUuXV79qw4sF1X1cjwsAL/
+         cb9lRI45+RTdoJcCMCdi6x9QoPMJAedLInYOYOPsfTX0WtMJF7Nd+ersbHRoLMWRPfTf
+         da5kJHNqrcarMUQFzLZVHhrKa7t8xbYg5HllnetbqDygC2cp1+rA5XxbRfJEZ1Phtl4t
+         3LVrJoNeO0BP9Q23NZ///Meufg2WFSX5ApKnnR/XYjcUNErId0HRuwv8ZDFddoiFJP0a
+         fmKg==
+X-Gm-Message-State: APjAAAVJ9H1QjgjI48E5gSsIvm3UzyWu2wrmi839ism419vu4KKytWnm
+        ixk6g8NiUojVbSVErmkLMKs=
+X-Google-Smtp-Source: APXvYqzzMKfeoolE+f8xhkxIlnOD6q5hGrnd1zKle3OBintg9n870NCYQHDt8rsg0U/hV9MGZgUljQ==
+X-Received: by 2002:ac8:34b7:: with SMTP id w52mr32652097qtb.11.1557879959377;
+        Tue, 14 May 2019 17:25:59 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id l12sm398385qta.82.2019.05.14.17.25.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 17:25:58 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 14 May 2019 20:25:57 -0400
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Rob Landley <rob@landley.net>,
+        Arvind Sankar <niveditas98@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        initramfs@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+Message-ID: <20190515002556.GA88615@rani.riverdale.lan>
+References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
+ <20190512194322.GA71658@rani.riverdale.lan>
+ <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
+ <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
+ <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
+ <CALCETrV3b205L38xqPr6QqwGn6-vxQdPoJGUygJJpgM-JqqXfQ@mail.gmail.com>
+ <9357cb32-3803-2a7e-4949-f9e4554c1ee9@huawei.com>
+ <20190514165842.GC28266@kroah.com>
+ <f01ad775-54de-033f-d8cb-f27f36e92f0c@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f01ad775-54de-033f-d8cb-f27f36e92f0c@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+On Tue, May 14, 2019 at 07:20:15PM +0200, Roberto Sassu wrote:
+> On 5/14/2019 6:58 PM, Greg KH wrote:
+> > On Tue, May 14, 2019 at 06:33:29PM +0200, Roberto Sassu wrote:
+> >> Right, the measurement/signature verification of the kernel image is
+> >> sufficient.
+> >>
+> >> Now, assuming that we defer the IMA initialization until /init in the
+> >> embedded initramfs has been executed, the problem is how to handle
+> >> processes launched with the user mode helper or files directly read by
+> >> the kernel (if it can happen before /init is executed). If IMA is not
+> >> yet enabled, these operations will be performed without measurement and
+> >> signature verification.
+> > 
+> > If you really care about this, don't launch any user mode helper
+> > programs (hint, you have the kernel option to control this and funnel
+> > everything into one, or no, binaries).  And don't allow the kernel to
+> > read any files either, again, you have control over this.
+> > 
+> > Or start IMA earlier if you need/want/care about this.
+> 
+> Yes, this is how it works now. It couldn't start earlier than
+> late_initcall, as it has to wait until the TPM driver is initialized.
+> 
+> Anyway, it is enabled at the time /init is executed. And this would be
+> an issue because launching /init and reading xattrs from /.xattr-list
+> would be denied (the signature is missing).
+> 
+> And /.xattr-list won't have a signature, if initramfs is generated
+> locally.
+> 
+> Roberto
+> 
+> -- 
+> HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+> Managing Director: Bo PENG, Jian LI, Yanli SHI
 
-> This patchset adds the MMC controller B and C to the g12a SoC as well
-> as the u200 and sei510 boards.
->
-> MMC controller A has been left out on purpose. This controller is
-> special on this SoC family and will be added later on.
->
-> Notice the use of the pinconf DT property 'drive-strength-microamp'.
-> Support for this property is not yet merged in meson pinctrl driver but
-> the DT part as been acked by the DT maintainer [0] so it should be safe
-> to use.
->
-> [0]: https://lkml.kernel.org/r/20190513152451.GA25690@bogus
+The uevent and firmware loader user mode helpers are both obsolete I
+believe, so those shouldn't be an issue.
 
-Queued for v5.3 with tags from Neil and Martin,
-
-Kevin
+There is still the internal firmware loader (CONFIG_FW_LOADER). If this
+is built-in, there's probably no way to 100% stop it racing with /init if we
+depend on an embedded /init and a malicious external initramfs image
+contains /lib/firmware, but it can be built as an external module, in
+which case there should be no danger until the boot process actually loads it.
