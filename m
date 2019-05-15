@@ -2,79 +2,127 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44EFAC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF556C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC902084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 955AF2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:33:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FMxfbIWY"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="od0YKRz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727718AbfEONcf (ORCPT
+        id S1727773AbfEONdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 09:32:35 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:40111 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727057AbfEONce (ORCPT
+        Wed, 15 May 2019 09:33:00 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41259 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfEONdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 09:32:34 -0400
-Received: by mail-it1-f193.google.com with SMTP id g71so72480ita.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 06:32:33 -0700 (PDT)
+        Wed, 15 May 2019 09:33:00 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d12so2696186wrm.8
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 06:32:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ge6EYu+idJkuiSql+JEbZghal5x65pcJTMYe5g45ui0=;
-        b=FMxfbIWYpWTwgI22BmGs8Yiq8MAHLoEtv+5G7MRX86Ka/JQf4g7OTdAnYP1PGFAqyQ
-         uNK6W4sefjl9Rv/K95nmfN4QKCxF23slGuZUJRaxzJbpJYODaz9A4hCji7Ff6KkWOo2A
-         BB968g3ehKaYUYb3P5gxwlnmXavUJ0cnpCqxvxL6CHjg5fXWvhoIR3rwvMFTR8z4uiDD
-         2UwSK4XmSUx5QixaB3aNBAoOJ2oGDD85odPqgIxBH+BItzlmNUrpGUiy8Tc12RyTALGT
-         MHuRwgbbSntAbv/gazcAlTrFfgi7L2/bxoKfkixAJdTRzKIBO8bLKBHsrBNTAvBAR8BE
-         847Q==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=27IAE7Wks+dMK219yk2LbZVal7GDcc13jyTzLKW45iY=;
+        b=od0YKRz9Kouau/54+gp2YgD4pP+188LOMdYqpNdewsAMS4Lu38hKs+dpfwPMQkKmRM
+         YzHgSZZxi+ompodBvoXTkBdA8e7EWBQbrB+48V0HS6rGaQmh9n69PO7SmTz9YsYIyAJG
+         D7Lh+Z/1YLoyZE28v43yJvJXN4EfGXiJcE7IAwCBflbQSgNu4oLH8WStxw0//GCxuJTZ
+         aFx5j65IqQ4sgCxNECE1qfK/PNKziRY1wGHwB5/C22VhGDxQM/u2pY9eh3npayiYPTLO
+         1WJ+1qtbhDO/f3c0Au8WAjgo/M/5Hof44ISYjMv4sH7QTGU1JdmIlFCV+m5xSsbEM2Yi
+         n+dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ge6EYu+idJkuiSql+JEbZghal5x65pcJTMYe5g45ui0=;
-        b=mIZVagUdmvT9HcAZB6orMMHF+yDuMWIhw/Hez0EkuJMfyc/yLAEh9tebtaEdRWVwXo
-         PLFfupNEtG8xH0X/EftDfNsJ+SN9382V7pkRGzrFGXltyUfxp55cRjXd9OXT9aICdGr7
-         Pci3aouV1pb+iR5RNpGGWWYzhNZCXX7GXxtQEAlGHslH9L6Pss1l0sIChjS17qCUk7IU
-         Mmo8mICG1nArIpy187uO+cYXrt8qGigECZ8aTmfKNMBHmdKyrzO8fyL0fLIf09cR0ZMr
-         PW5+54SO6URPa0ajVrp7jTIJLCbsp3NOKiXz/8Wc1S8kCgGsOWlnV5eptnkjCzHBER3q
-         m7fg==
-X-Gm-Message-State: APjAAAVuWwJfqXIojyEwlCn+0P9aPRM9W4I6jt266OUOimcUYpAJsxOe
-        5Ly9aK3wjkLvyRaegi/fLuuPKGgVkCM=
-X-Google-Smtp-Source: APXvYqwIvHM6F1lUXVh8Y9vJVNajF38jzsuciqQS1yZ15j0SXKUvMHuSSNK59P486JV3CvYkAsnbrA==
-X-Received: by 2002:a05:660c:12ce:: with SMTP id k14mr7812071itd.149.1557927152234;
-        Wed, 15 May 2019 06:32:32 -0700 (PDT)
-Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.googlemail.com with ESMTPSA id z19sm676468iol.24.2019.05.15.06.32.30
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=27IAE7Wks+dMK219yk2LbZVal7GDcc13jyTzLKW45iY=;
+        b=W/0WAX49LMXpvM9C+sNeU0QFLhk9kkvuzZ6JUfjyAx5x9D/eMoG+dLz4lclOb+Y3+a
+         m3v+uEo2cQw2x3pZ0wwDLf2MXFmU6VO+8swW2rJZUB9GnLsT4O3N8YNNFbf5A3rgO+Ad
+         Fy5K8Ksv5YwPzJe5+f1xZvhXhN6MSDPcX4N80iQ8WXSXn1Lp0rDlfRB20ItOo1/R2r3b
+         beyEa2wHUg1yo+SrixXREyj4lxOJUalOQEjAdroiHYmTCt/gYlqAJl6EMYZeA4cXtdJm
+         XRh+h92oa3HsH+3CZ0ZbhBxg8VmBS7ihGp84g4+k0cDMpEf4ztthmtAGV9gmny4v2hic
+         JXLA==
+X-Gm-Message-State: APjAAAUPJkbbEqcg4gmjEXBpws7nioSWUgMqsciskrIhdkjLdzCWfZPT
+        vOy4V43GbZlQrYJDFYn2cVJ98exAhpdy1A==
+X-Google-Smtp-Source: APXvYqz8PVaiHUgy/dyloifcw/qXOIQZunCyVrCksmCSCuaOJOIbms/fIqh9n6kPm+D/b1tXWBZ1kg==
+X-Received: by 2002:adf:e8cf:: with SMTP id k15mr22781328wrn.185.1557927177346;
+        Wed, 15 May 2019 06:32:57 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id e8sm4468676wrc.34.2019.05.15.06.32.56
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 06:32:31 -0700 (PDT)
-Subject: Re: [PATCH 08/18] soc: qcom: ipa: the generic software interface
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        syadagir@codeaurora.org, mjavid@codeaurora.org,
-        evgreen@chromium.org, Ben Chan <benchan@google.com>,
-        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190512012508.10608-1-elder@linaro.org>
- <20190512012508.10608-9-elder@linaro.org>
- <CAK8P3a0r5rg-_Vet+aUUzq3S9g=TJHPz9-0yQ0sY21NGd+4J0w@mail.gmail.com>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <fc8ad575-9ad6-27ab-3255-ef0f41f5b1c5@linaro.org>
-Date:   Wed, 15 May 2019 08:32:30 -0500
+        Wed, 15 May 2019 06:32:56 -0700 (PDT)
+Subject: Re: [PATCH 0/5] ASoC: meson: add hdmitx glue support
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     devicetree@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190515131858.32130-1-jbrunet@baylibre.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ mQENBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAG0KE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT6JATsEEwEKACUC
+ GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
+ RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
+ NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
+ 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
+ ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
+ YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIW5AQ0ETVkGzwEIALyKDN/O
+ GURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYpQTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXM
+ coJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hi
+ SvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY4yG6xI99NIPEVE9lNBXBKIlewIyVlkOa
+ YvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoMMtsyw18YoX9BqMFInxqYQQ3j/HpVgTSv
+ mo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUXoUk33HEAEQEAAYkBHwQYAQIACQUCTVkG
+ zwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfnM7IbRuiSZS1unlySUVYu3SD6YBYnNi3G
+ 5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa33eDIHu/zr1HMKErm+2SD6PO9umRef8V8
+ 2o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCSKmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+
+ RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJ
+ C3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTTQbM0WUIBIcGmq38+OgUsMYu4NzLu7uZF
+ Acmp6h8guQINBFYnf6QBEADQ+wBYa+X2n/xIQz/RUoGHf84Jm+yTqRT43t7sO48/cBW9vAn9
+ GNwnJ3HRJWKATW0ZXrCr40ES/JqM1fUTfiFDB3VMdWpEfwOAT1zXS+0rX8yljgsWR1UvqyEP
+ 3xN0M/40Zk+rdmZKaZS8VQaXbveaiWMEmY7sBV3QvgOzB7UF2It1HwoCon5Y+PvyE3CguhBd
+ 9iq5iEampkMIkbA3FFCpQFI5Ai3BywkLzbA3ZtnMXR8Qt9gFZtyXvFQrB+/6hDzEPnBGZOOx
+ zkd/iIX59SxBuS38LMlhPPycbFNmtauOC0DNpXCv9ACgC9tFw3exER/xQgSpDVc4vrL2Cacr
+ wmQp1k9E0W+9pk/l8S1jcHx03hgCxPtQLOIyEu9iIJb27TjcXNjiInd7Uea195NldIrndD+x
+ 58/yU3X70qVY+eWbqzpdlwF1KRm6uV0ZOQhEhbi0FfKKgsYFgBIBchGqSOBsCbL35f9hK/JC
+ 6LnGDtSHeJs+jd9/qJj4WqF3x8i0sncQ/gszSajdhnWrxraG3b7/9ldMLpKo/OoihfLaCxtv
+ xYmtw8TGhlMaiOxjDrohmY1z7f3rf6njskoIXUO0nabun1nPAiV1dpjleg60s3OmVQeEpr3a
+ K7gR1ljkemJzM9NUoRROPaT7nMlNYQL+IwuthJd6XQqwzp1jRTGG26J97wARAQABiQM+BBgB
+ AgAJBQJWJ3+kAhsCAikJEBaat7Gkz/iuwV0gBBkBAgAGBQJWJ3+kAAoJEHfc29rIyEnRk6MQ
+ AJDo0nxsadLpYB26FALZsWlN74rnFXth5dQVQ7SkipmyFWZhFL8fQ9OiIoxWhM6rSg9+C1w+
+ n45eByMg2b8H3mmQmyWztdI95OxSREKwbaXVapCcZnv52JRjlc3DoiiHqTZML5x1Z7lQ1T3F
+ 8o9sKrbFO1WQw1+Nc91+MU0MGN0jtfZ0Tvn/ouEZrSXCE4K3oDGtj3AdC764yZVq6CPigCgs
+ 6Ex80k6QlzCdVP3RKsnPO2xQXXPgyJPJlpD8bHHHW7OLfoR9DaBNympfcbQJeekQrTvyoASw
+ EOTPKE6CVWrcQIztUp0WFTdRGgMK0cZB3Xfe6sOp24PQTHAKGtjTHNP/THomkH24Fum9K3iM
+ /4Wh4V2eqGEgpdeSp5K+LdaNyNgaqzMOtt4HYk86LYLSHfFXywdlbGrY9+TqiJ+ZVW4trmui
+ NIJCOku8SYansq34QzYM0x3UFRwff+45zNBEVzctSnremg1mVgrzOfXU8rt+4N1b2MxorPF8
+ 619aCwVP7U16qNSBaqiAJr4e5SNEnoAq18+1Gp8QsFG0ARY8xp+qaKBByWES7lRi3QbqAKZf
+ yOHS6gmYo9gBmuAhc65/VtHMJtxwjpUeN4Bcs9HUpDMDVHdfeRa73wM+wY5potfQ5zkSp0Jp
+ bxnv/cRBH6+c43stTffprd//4Hgz+nJcCgZKtCYIAPkUxABC85ID2CidzbraErVACmRoizhT
+ KR2OiqSLW2x4xdmSiFNcIWkWJB6Qdri0Fzs2dHe8etD1HYaht1ZhZ810s7QOL7JwypO8dscN
+ KTEkyoTGn6cWj0CX+PeP4xp8AR8ot4d0BhtUY34UPzjE1/xyrQFAdnLd0PP4wXxdIUuRs0+n
+ WLY9Aou/vC1LAdlaGsoTVzJ2gX4fkKQIWhX0WVk41BSFeDKQ3RQ2pnuzwedLO94Bf6X0G48O
+ VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <f7bafd16-1332-e124-79fb-7f045975aed9@baylibre.com>
+Date:   Wed, 15 May 2019 15:32:55 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a0r5rg-_Vet+aUUzq3S9g=TJHPz9-0yQ0sY21NGd+4J0w@mail.gmail.com>
+In-Reply-To: <20190515131858.32130-1-jbrunet@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -83,118 +131,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/15/19 5:47 AM, Arnd Bergmann wrote:
-> On Sun, May 12, 2019 at 3:25 AM Alex Elder <elder@linaro.org> wrote:
+On 15/05/2019 15:18, Jerome Brunet wrote:
+> On the Amlogic SoC, there is a glue between the SoC audio outputs and the
+> input of the embedded Synopsys HDMI controller.
 > 
-> The per-event interrupt handling seems to be more complex than
-> necessary:
-
-I just noticed this message.  I'll take another look at this
-whole interrupt control mechanism and will try to streamline
-it along the lines of what you describe.
-
-Thanks.
-
-					-Alex
-
+> On the g12a, this glue is mostly a couple of muxes to select the i2s and
+> spdif inputs of the hdmi controller. Each of these inputs may have
+> different hw_params and fmt which makes our life a little bit more
+> interesting, especially when switching between to active inputs.
 > 
->> +/* Enable or disable an event interrupt */
->> +static void
->> +_gsi_irq_control_event(struct gsi *gsi, u32 evt_ring_id, bool enable)
->> +{
->> +       u32 mask = BIT(evt_ring_id);
->> +       u32 val;
->> +
->> +       if (enable)
->> +               gsi->event_enable_bitmap |= mask;
->> +       else
->> +               gsi->event_enable_bitmap &= ~mask;
->> +
->> +       val = gsi->event_enable_bitmap;
->> +       iowrite32(val, gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET);
->> +}
->> +
->> +static void gsi_irq_enable_event(struct gsi *gsi, u32 evt_ring_id)
->> +{
->> +       _gsi_irq_control_event(gsi, evt_ring_id, true);
+> This glue is modeled as codec driver and uses codec-to-codec links to
+> connect to the Synopsys controller. This allows to use the regular
+> hdmi-codec driver (used by dw-hdmi i2s).
 > 
-> You maintain a bitmap here of the enabled-state, and have
-> to use a spinlock to ensure that the two are in sync.
+> To avoid glitches while switching input, the trick is to temporarily
+> force a disconnection of the mux output, which shutdowns the output dai
+> link. This also ensure that the stream parameters and fmt are updated
+> when the output is connected back.
 > 
->> +/* Returns true if the interrupt state (enabled or not) changed */
->> +static bool gsi_channel_intr(struct gsi_channel *channel, bool enable)
->> +{
->> +       u32 evt_ring_id = channel->evt_ring_id;
->> +       struct gsi *gsi = channel->gsi;
->> +       u32 mask = BIT(evt_ring_id);
->> +       unsigned long flags;
->> +       bool different;
->> +       u32 enabled;
->> +
->> +       spin_lock_irqsave(&gsi->spinlock, flags);
->> +
->> +       enabled = gsi->event_enable_bitmap & mask;
->> +       different = enable == !enabled;
->> +
->> +       if (different) {
->> +               if (enabled)
->> +                       gsi_irq_disable_event(channel->gsi, evt_ring_id);
->> +               else
->> +                       gsi_irq_enable_event(channel->gsi, evt_ring_id);
->> +       }
->> +
->> +       spin_unlock_irqrestore(&gsi->spinlock, flags);
->> +
->> +       return different;
->> +}
+> Jerome Brunet (5):
+>   ASoC: meson: axg-card: set link name based on link node name
+>   ASoC: dapm: allow muxes to force a disconnect
+>   ASoC: meson: add tohdmitx DT bindings
+>   ASoC: meson: axg-card: add basic codec-to-codec link support
+>   ASoC: meson: add g12a tohdmitx control
 > 
-> This gets called for each active channel, so you repeatedly
-> have to get the spinlock and read the irq-enabled state for it.
-> 
->> +static void gsi_isr_ieob(struct gsi *gsi)
->> +{
->> +       u32 evt_mask;
->> +
->> +       evt_mask = ioread32(gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_OFFSET);
->> +       evt_mask &= ioread32(gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET);
->> +       iowrite32(evt_mask, gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_CLR_OFFSET);
->> +
->> +       while (evt_mask) {
->> +               u32 evt_ring_id = __ffs(evt_mask);
->> +
->> +               evt_mask ^= BIT(evt_ring_id);
->> +
->> +               gsi_event_handle(gsi, evt_ring_id);
->> +       }
->> +}
-> 
-> However, you start out by clearing all bits here.
-> 
-> Why not skip the clearing and and leave the interrupts enabled,
-> while moving the GSI_CNTXT_SRC_IEOB_IRQ_CLR_OFFSET
-> write (for a single channel that was completed) to the end of
-> gsi_channel_poll()?
-> 
-> Something like
-> 
-> static void gsi_isr_ieob(struct gsi *gsi)
-> {
->       u32 evt_mask;
-> 
->       evt_mask = ioread32(gsi->virt + GSI_CNTXT_SRC_IEOB_IRQ_OFFSET);
->       while (evt_mask) {
->                u32 evt_ring_id = __ffs(evt_mask);
->                evt_mask ^= BIT(evt_ring_id);
-> 
->                napi_schedule(gsi->evt_ring[evt_ring_id].channel.napi);
->       }
-> }
-> 
-> I also removed the GSI_CNTXT_SRC_IEOB_IRQ_MSK_OFFSET
-> read here, as that is probably more expensive than calling napi_schedule()
-> for a channel that is already scheduled. Most of the time, I'd expect the
-> interrupt to only signal a single channel anyway.
-> 
->         Arnd
+>  .../bindings/sound/amlogic,g12a-tohdmitx.txt  |  55 +++
+>  .../dt-bindings/sound/meson-g12a-tohdmitx.h   |  13 +
+>  sound/soc/meson/Kconfig                       |   8 +
+>  sound/soc/meson/Makefile                      |   2 +
+>  sound/soc/meson/axg-card.c                    |  31 +-
+>  sound/soc/meson/g12a-tohdmitx.c               | 413 ++++++++++++++++++
+>  sound/soc/soc-dapm.c                          |   2 +-
+>  7 files changed, 518 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
+>  create mode 100644 include/dt-bindings/sound/meson-g12a-tohdmitx.h
+>  create mode 100644 sound/soc/meson/g12a-tohdmitx.c
 > 
 
+Tested-by: Neil Armstrong <narmstrong@baylibre.com>
