@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E30FC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08150C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1671420578
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A752053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920250;
-	bh=xSihnVmtY+9iC4up/Mcox0MkU/6kFtZPpELlpQf8rew=;
+	s=default; t=1557920258;
+	bh=nwtm9ZWmzDSxG7h7/BFWe85TLgDGFIA/dCFejYmg5e8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cPQJUqOozbxN8rawDrzAfZEnnSDwTy1LVJaniQzYw81E0E0T1jlLRJ9sJ2rqrKqxf
-	 NcchDmMGhjz7Rr8QidCDeqqYsbWM3za/MbKXG/sdJo7dmpsfqb8tTuEZ8J9jLPfZi6
-	 8uok4X1in/RLEpCtYjRY9x8nanhUUb0nbjQRC6iQ=
+	b=d7F3cUxyaZjms3W9CyNb2z4d+Q5TcDkckW2fN8G19waAWreKym+Hqrdl+eACS8vJi
+	 o0+//9Tlzq1zflUsD3SQkYjb5ieZu40KmGgeh+JYSmyH1HWD/aVuM8mviVEUvu7IVm
+	 jm/YNp6dqaR4+lWLR3awGFAQ8pHSh8uF0H36AGt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732991AbfEOLh3 (ORCPT
+        id S1733040AbfEOLhh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:37:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43776 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:37:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732950AbfEOLb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:31:58 -0400
+        id S1732926AbfEOLbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:31:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD8842084F;
-        Wed, 15 May 2019 11:31:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C81E2084F;
+        Wed, 15 May 2019 11:31:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919918;
-        bh=xSihnVmtY+9iC4up/Mcox0MkU/6kFtZPpELlpQf8rew=;
+        s=default; t=1557919907;
+        bh=nwtm9ZWmzDSxG7h7/BFWe85TLgDGFIA/dCFejYmg5e8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uk5btYLOy2kj30AvIg5Zr0d9R0bkKCDGC0uZR6lPp5Jme5v+PPEKDEhC3VsOmnEkP
-         m+yZsTiQUCDzWj/q9+dq0XeOpd1rufyErLyoPlVVIKacwcRg+m5kzQjtthgH4iFrKC
-         CuWFIEhs10atmdqI/RuahorjypR67RxsX3Sw+7l4=
+        b=gcuTpVYWo1OjwjptSNDUVg27WG/VZRUbUJ/t+WmJE3RJDzuCMR5Q5p1/xbXRXXEH1
+         45/keybPvXAhWH6v59CjIvfVMjIMNyQybwBVwFxROXm7hDRoKYM/kyeavQtFXhRuc/
+         ACns7V1ANNqZICaiTTfrcDwtRr4lqC7NLYToS1mc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Timur Tabi <timur@freescale.com>,
-        Mihai Caraman <mihai.caraman@freescale.com>,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.0 129/137] drivers/virt/fsl_hypervisor.c: prevent integer overflow in ioctl
-Date:   Wed, 15 May 2019 12:56:50 +0200
-Message-Id: <20190515090703.253516189@linuxfoundation.org>
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.0 125/137] net: phy: fix phy_validate_pause
+Date:   Wed, 15 May 2019 12:56:46 +0200
+Message-Id: <20190515090702.949753637@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -63,46 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-commit 6a024330650e24556b8a18cc654ad00cfecf6c6c upstream.
+[ Upstream commit b4010af981ac8cdf1f7f58eb6b131c482e5dee02 ]
 
-The "param.count" value is a u64 thatcomes from the user.  The code
-later in the function assumes that param.count is at least one and if
-it's not then it leads to an Oops when we dereference the ZERO_SIZE_PTR.
+We have valid scenarios where ETHTOOL_LINK_MODE_Pause_BIT doesn't
+need to be supported. Therefore extend the first check to check
+for rx_pause being set.
 
-Also the addition can have an integer overflow which would lead us to
-allocate a smaller "pages" array than required.  I can't immediately
-tell what the possible run times implications are, but it's safest to
-prevent the overflow.
+See also phy_set_asym_pause:
+rx=0 and tx=1: advertise asym pause only
+rx=0 and tx=0: stop advertising both pause modes
 
-Link: http://lkml.kernel.org/r/20181218082129.GE32567@kadam
-Fixes: 6db7199407ca ("drivers/virt: introduce Freescale hypervisor management driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Timur Tabi <timur@freescale.com>
-Cc: Mihai Caraman <mihai.caraman@freescale.com>
-Cc: Kumar Gala <galak@kernel.crashing.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+The fixed commit isn't wrong, it's just the one that introduced the
+linkmode bitmaps.
+
+Fixes: 3c1bcc8614db ("net: ethernet: Convert phydev advertize and supported from u32 to link mode")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/virt/fsl_hypervisor.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/phy/phy_device.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/virt/fsl_hypervisor.c
-+++ b/drivers/virt/fsl_hypervisor.c
-@@ -215,6 +215,9 @@ static long ioctl_memcpy(struct fsl_hv_i
- 	 * hypervisor.
- 	 */
- 	lb_offset = param.local_vaddr & (PAGE_SIZE - 1);
-+	if (param.count == 0 ||
-+	    param.count > U64_MAX - lb_offset - PAGE_SIZE + 1)
-+		return -EINVAL;
- 	num_pages = (param.count + lb_offset + PAGE_SIZE - 1) >> PAGE_SHIFT;
- 
- 	/* Allocate the buffers we need */
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -2083,11 +2083,14 @@ bool phy_validate_pause(struct phy_devic
+ 			struct ethtool_pauseparam *pp)
+ {
+ 	if (!linkmode_test_bit(ETHTOOL_LINK_MODE_Pause_BIT,
+-			       phydev->supported) ||
+-	    (!linkmode_test_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT,
+-				phydev->supported) &&
+-	     pp->rx_pause != pp->tx_pause))
++			       phydev->supported) && pp->rx_pause)
+ 		return false;
++
++	if (!linkmode_test_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT,
++			       phydev->supported) &&
++	    pp->rx_pause != pp->tx_pause)
++		return false;
++
+ 	return true;
+ }
+ EXPORT_SYMBOL(phy_validate_pause);
 
 
