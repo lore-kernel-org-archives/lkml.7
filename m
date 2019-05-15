@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3A6C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37744C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24C721473
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E93012166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:22:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919338;
-	bh=wQVpVG/mZYVPtS2LDuMuFwLefRgdyIWnn6izygGKQf8=;
+	s=default; t=1557919344;
+	bh=OvkSBB7K7hW8SJ8tMYZbKKhX0P9yKk386rOjr/OaGk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1vaXKcQja0VFZQLs6Nr0loP1EVyJAvK9uQVOzqlTRjVtRcRBuambgJzOtFLFriLFe
-	 eV4c9VsHMhiCT+K6KEKcSUbvEhOLYQ1j0XVLNEhsl9t24KXkFmPQ5GG3JzBqlireFj
-	 q3rDcPLpDGLXQtWibWzxmCZ0c0m3RCM2RaMzdo08=
+	b=hW5XcRgHIVpi4xyEnrs2WhZnyEL2ZAywFw5+fRXIuYEvfBTH9j/8zD0SspByo6ZvA
+	 kL+cwhPSScg5PVzoOZqzk1NHQb325mZfXz7PB3bA2loLr75VDcN/aDRpbuIh2XKkyh
+	 oQlaxs7dia68JR8BIH2AGSBOWP02ni+TPqDzEYgA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731435AbfEOLWS (ORCPT
+        id S1731438AbfEOLWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:22:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60424 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:22:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730989AbfEOLWO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:22:14 -0400
+        id S1730766AbfEOLWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:22:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FE342084F;
-        Wed, 15 May 2019 11:22:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A9F32084F;
+        Wed, 15 May 2019 11:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919333;
-        bh=wQVpVG/mZYVPtS2LDuMuFwLefRgdyIWnn6izygGKQf8=;
+        s=default; t=1557919335;
+        bh=OvkSBB7K7hW8SJ8tMYZbKKhX0P9yKk386rOjr/OaGk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LVDqVq12g3eQBAZSE6hubRFBPowf5R5iJ6Zbcbx1tp+22Fk6HxGsJaSkYrSPUjmjG
-         5Zr9hM62ufrBxzsrxClQrPKuZffyIekjMFcqecbHa/RM1+Ww0QzsqbCGd7fFChxNM3
-         /dQMD5wG1GGlplsomkKPmJfQmVP5k/sdCnaTlpHk=
+        b=mloF8jMLpzjQ0QSdswlehra5tZZS5QDiplVagyFZwo1h4RLyVgqatIU12tBlugQV6
+         g1/eLpGQ44a1+B/CuEcrfmu9lJcNQP6ncChTgMswfw0+hDIMnNwbxChhjJxS4iYHze
+         v5ng3Y1Yh/CV9bVBpIA5RCRAtD2y0puqsPkBGTBo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Francis <David.Francis@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Roman Li <Roman.Li@amd.com>,
-        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Bhawanpreet Lakha <BhawanpreetLakha@amd.com>
-Subject: [PATCH 4.19 034/113] drm/amd/display: If one stream full updates, full update all planes
-Date:   Wed, 15 May 2019 12:55:25 +0200
-Message-Id: <20190515090656.174093112@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Christian Rund <Christian.Rund@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 035/113] s390/pkey: add one more argument space for debug feature entry
+Date:   Wed, 15 May 2019 12:55:26 +0200
+Message-Id: <20190515090656.262044590@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -64,118 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c238bfe0be9ef7420f7669a69e27c8c8f4d8a568 ]
+[ Upstream commit 6b1f16ba730d4c0cda1247568c3a1bf4fa3a2f2f ]
 
-[Why]
-On some compositors, with two monitors attached, VT terminal
-switch can cause a graphical issue by the following means:
+The debug feature entries have been used with up to 5 arguents
+(including the pointer to the format string) but there was only
+space reserved for 4 arguemnts. So now the registration does
+reserve space for 5 times a long value.
 
-There are two streams, one for each monitor. Each stream has one
-plane
+This fixes a sometime appearing weired value as the last
+value of an debug feature entry like this:
 
-current state:
-	M1:S1->P1
-	M2:S2->P2
+... pkey_sec2protkey zcrypt_send_cprb (cardnr=10 domain=12)
+   failed with errno -2143346254
 
-The user calls for a terminal switch and a commit is made to
-change both planes to linear swizzle mode. In atomic check,
-a new dc_state is constructed with new planes on each stream
-
-new state:
-	M1:S1->P3
-	M2:S2->P4
-
-In commit tail, each stream is committed, one at a time. The first
-stream (S1) updates properly, triggerring a full update and replacing
-the state
-
-current state:
-	M1:S1->P3
-	M2:S2->P4
-
-The update for S2 comes in, but dc detects that there is no difference
-between the stream and plane in the new and current states, and so
-triggers a fast update. The fast update does not program swizzle,
-so the second monitor is corrupted
-
-[How]
-Add a flag to dc_plane_state that forces full updates
-
-When a stream undergoes a full update, set this flag on all changed
-planes, then clear it on the current stream
-
-Subsequent streams will get full updates as a result
-
-Signed-off-by: David Francis <David.Francis@amd.com>
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Roman Li <Roman.Li@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet Lakha@amd.com>
-Acked-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Reported-by: Christian Rund <Christian.Rund@de.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc.c | 19 +++++++++++++++++++
- drivers/gpu/drm/amd/display/dc/dc.h      |  3 +++
- 2 files changed, 22 insertions(+)
+ drivers/s390/crypto/pkey_api.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc.c b/drivers/gpu/drm/amd/display/dc/core/dc.c
-index bb0cda7276058..e3f5e5d6f0c18 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc.c
-@@ -1213,6 +1213,11 @@ static enum surface_update_type det_surface_update(const struct dc *dc,
- 		return UPDATE_TYPE_FULL;
- 	}
+diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
+index 1b4001e0285fe..b16344479959b 100644
+--- a/drivers/s390/crypto/pkey_api.c
++++ b/drivers/s390/crypto/pkey_api.c
+@@ -45,7 +45,8 @@ static debug_info_t *debug_info;
  
-+	if (u->surface->force_full_update) {
-+		update_flags->bits.full_update = 1;
-+		return UPDATE_TYPE_FULL;
-+	}
-+
- 	type = get_plane_info_update_type(u);
- 	elevate_update_type(&overall_type, type);
- 
-@@ -1467,6 +1472,14 @@ void dc_commit_updates_for_stream(struct dc *dc,
- 		}
- 
- 		dc_resource_state_copy_construct(state, context);
-+
-+		for (i = 0; i < dc->res_pool->pipe_count; i++) {
-+			struct pipe_ctx *new_pipe = &context->res_ctx.pipe_ctx[i];
-+			struct pipe_ctx *old_pipe = &dc->current_state->res_ctx.pipe_ctx[i];
-+
-+			if (new_pipe->plane_state && new_pipe->plane_state != old_pipe->plane_state)
-+				new_pipe->plane_state->force_full_update = true;
-+		}
- 	}
- 
- 
-@@ -1510,6 +1523,12 @@ void dc_commit_updates_for_stream(struct dc *dc,
- 		dc->current_state = context;
- 		dc_release_state(old);
- 
-+		for (i = 0; i < dc->res_pool->pipe_count; i++) {
-+			struct pipe_ctx *pipe_ctx = &context->res_ctx.pipe_ctx[i];
-+
-+			if (pipe_ctx->plane_state && pipe_ctx->stream == stream)
-+				pipe_ctx->plane_state->force_full_update = false;
-+		}
- 	}
- 	/*let's use current_state to update watermark etc*/
- 	if (update_type >= UPDATE_TYPE_FULL)
-diff --git a/drivers/gpu/drm/amd/display/dc/dc.h b/drivers/gpu/drm/amd/display/dc/dc.h
-index 6c9990bef267e..4094b4f501117 100644
---- a/drivers/gpu/drm/amd/display/dc/dc.h
-+++ b/drivers/gpu/drm/amd/display/dc/dc.h
-@@ -505,6 +505,9 @@ struct dc_plane_state {
- 	struct dc_plane_status status;
- 	struct dc_context *ctx;
- 
-+	/* HACK: Workaround for forcing full reprogramming under some conditions */
-+	bool force_full_update;
-+
- 	/* private to dc_surface.c */
- 	enum dc_irq_source irq_source;
- 	struct kref refcount;
+ static void __init pkey_debug_init(void)
+ {
+-	debug_info = debug_register("pkey", 1, 1, 4 * sizeof(long));
++	/* 5 arguments per dbf entry (including the format string ptr) */
++	debug_info = debug_register("pkey", 1, 1, 5 * sizeof(long));
+ 	debug_register_view(debug_info, &debug_sprintf_view);
+ 	debug_set_level(debug_info, 3);
+ }
 -- 
 2.20.1
 
