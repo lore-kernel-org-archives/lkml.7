@@ -2,211 +2,149 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32890C04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8125C04AB4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0052E2084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D2920881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:52:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RFv0sQvm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RE5vOH8q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfEOAt1 (ORCPT
+        id S1726473AbfEOAw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:49:27 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37113 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfEOAt1 (ORCPT
+        Tue, 14 May 2019 20:52:26 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40846 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfEOAwZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:49:27 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r10so674978otd.4
-        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 17:49:26 -0700 (PDT)
+        Tue, 14 May 2019 20:52:25 -0400
+Received: by mail-qk1-f196.google.com with SMTP id w20so467265qka.7;
+        Tue, 14 May 2019 17:52:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/1dfnZvzmXyrAvmLqG8QuEKEEuBLjYOpAGmByOmcw20=;
-        b=RFv0sQvmISAFd9Ve2FjMlX11/QOSAOV+YV9EFixhjjqagkW5Rl16XKucfQ8FEimzrw
-         zWNCH83bLqJ/pEKJDdQLEIygK45lIH4oR1RpCJOyQKYEocfjkblbEkcjFckiHU43oBFo
-         EMRq00C5bYAGzoV7CuJKL2kwribUEJikiHcaiO7oGamTgweIULopvfimyI6ECAj9+jij
-         E/M5KYjQYi1BcFCnTNsyUTNkGFoll8OdhkkLklO0c2FANIBK+XfMozRecxy6mime+RrI
-         B3ssMGSNcSWJXxJmuC+kJ18q40m3lqe24nIAuygz1JeFtXv60+dZPI1NOpbPLViGRhDA
-         7/mA==
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ScHfmcJD4/tiD1yWNARuDpSWm84x56nhOvRPeWX0Pac=;
+        b=RE5vOH8q2j6sZkvi9q3ALUYWYoj7fhjjNp+T4u1ATVdKakqOo+eKSYJzlOAfPevhk4
+         kB8DktLEujLyAHXg4ut6hAPLUkYkhjWhNc8LKgPkIxkxGKzCwF3ypdspUaHtzyAMak23
+         ybmYMb/Masi5u/V+Pi8fgid54e0piAyfN4PE3xPx/j7uBP9+7WDQsEQT2DCuqxCgHpCJ
+         xv0cQfu904EE5DCnAQKE0hB6XtYtmXauHWdRFghAdGMBSHQ3E2VZCs0ZNPetCiTA84WP
+         BGcGJI9UE8eKwrz0Hye0oFI8susZ5tgmZF5bbfHjkOozkonv12EkR734BWHme5+Nuneb
+         YwaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/1dfnZvzmXyrAvmLqG8QuEKEEuBLjYOpAGmByOmcw20=;
-        b=i+oANJ5hXGk3BJeus4LJwmvzn56mWTo14+FveIG9izEdyvGqV2WPiASXM2yC1DsGqM
-         kD4W5TESld4ba6a+XW9xTAyfpiox3nYO8DYJ9jhHq65PREwv0plbWvt+sRnnvO9GwuAi
-         AdzyTY0PUBa5tzmegvv0RuYIAD7Rvn/hb8EovChqXPLugLG8YUR5y+0ru0TDa6hvvFzk
-         JZdBohJHFiCQ1s0y37RZXhhZ5VCaJLtuXfwIySSmrcdGKq6nROj6JSl9Zxxa6EymLM0M
-         TOZYxygOwe/LEWNMU2nZsiFfHVl25TU49pJSh6vc0IWz3wff2YtcH95iiurtVNnjtKUi
-         pzrQ==
-X-Gm-Message-State: APjAAAXH4SbnUSZ+RFCWx3bibN+qJX9GAs0OvwbgdGe5JWdvc8eA5xv0
-        UK+eyOT5aAtcoE2mjt85CCmql2CfLeFjv8t5FXs=
-X-Google-Smtp-Source: APXvYqzk7v2yFXq2EBQuAvscQ5ewNjVlUAKstnHwHAVlx48z8B9NF1ZYHulrWQGeJcLpHj6vQIs3i5xIW3NdLJvc4I4=
-X-Received: by 2002:a9d:458c:: with SMTP id x12mr3117938ote.211.1557881365991;
- Tue, 14 May 2019 17:49:25 -0700 (PDT)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ScHfmcJD4/tiD1yWNARuDpSWm84x56nhOvRPeWX0Pac=;
+        b=OaLc2LDzwRGVHGqQ/YOZNeeR1QUx+N3nUaG8KSBXUZMNsCJuGLjj/pt0dBLPE8DodC
+         by8lQNfMZRShBxbz/b7g6Ucip6tc6ZEER5hdvBNbYSngD9dsW4TcDj57/Xa6GD3gybzY
+         ikmk+eNXt2kVOrgqe/bI271C7OKu+yW70K7aQmhmrYCe6cjk+eDirqu0QNuWmDDK5iwt
+         3DNxCzfgKpjHzSA6ebRzSLqP2zBXRo3FD+S2BmaCeCH/wrn0Wuv/8Rs8NKsIialt/pye
+         rclRsdhZfIs8uV6gnk14glTI/KUIuvubMPCQXx9H7AAN4XAe8yPSNwCElfUALQBgJtDL
+         QtZA==
+X-Gm-Message-State: APjAAAXEaewv6453baAAFOGY+hxFXOpdfSL6xQFmBND2x7Q/S+M0hx4c
+        IVjf+DztfeUfeSFysu7LInE=
+X-Google-Smtp-Source: APXvYqy+lJCZ3qCQuUUmxdLtqfJWWr25OuFBlul7Pw96SpViBsTZD5tNPBhepdQwaBlcXeHdYp0rfQ==
+X-Received: by 2002:a37:c24a:: with SMTP id j10mr30446233qkm.140.1557881543695;
+        Tue, 14 May 2019 17:52:23 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id 76sm227943qke.46.2019.05.14.17.52.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 17:52:23 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 14 May 2019 20:52:21 -0400
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>
+Cc:     Rob Landley <rob@landley.net>, Andy Lutomirski <luto@kernel.org>,
+        Arvind Sankar <niveditas98@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        initramfs@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+Message-ID: <20190515005221.GB88615@rani.riverdale.lan>
+References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
+ <20190512194322.GA71658@rani.riverdale.lan>
+ <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
+ <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
+ <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
+ <CALCETrV3b205L38xqPr6QqwGn6-vxQdPoJGUygJJpgM-JqqXfQ@mail.gmail.com>
+ <1557861511.3378.19.camel@HansenPartnership.com>
+ <4da3dbda-bb76-5d71-d5c5-c03d98350ab0@landley.net>
+ <1557878052.2873.6.camel@HansenPartnership.com>
 MIME-Version: 1.0
-References: <20190514131654.25463-1-oleksandr@redhat.com> <20190514131654.25463-4-oleksandr@redhat.com>
- <20190514132249.h233crdsz3b7akys@atomlin.usersys.com>
-In-Reply-To: <20190514132249.h233crdsz3b7akys@atomlin.usersys.com>
-From:   Timofey Titovets <nefelim4ag@gmail.com>
-Date:   Wed, 15 May 2019 03:48:50 +0300
-Message-ID: <CAGqmi77dtid9M8fZuWimeiWMw8r9Awu579mo8UsaVGTECwxRwA@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 3/4] mm/ksm: introduce force_madvise knob
-To:     Aaron Tomlin <atomlin@redhat.com>
-Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Grzegorz Halat <ghalat@redhat.com>, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1557878052.2873.6.camel@HansenPartnership.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LGTM
+On Tue, May 14, 2019 at 04:54:12PM -0700, James Bottomley wrote:
+> On Tue, 2019-05-14 at 18:39 -0500, Rob Landley wrote:
+> > On 5/14/19 2:18 PM, James Bottomley wrote:
+> > > > I think Rob is right here.  If /init was statically built into
+> > > > the kernel image, it has no more ability to compromise the kernel
+> > > > than anything else in the kernel.  What's the problem here?
+> > > 
+> > > The specific problem is that unless you own the kernel signing key,
+> > > which is really untrue for most distribution consumers because the
+> > > distro owns the key, you cannot build the initrd statically into
+> > > the kernel.  You can take the distro signed kernel, link it with
+> > > the initrd then resign the combination with your key, provided you
+> > > insert your key into the MoK variables as a trusted secure boot
+> > > key, but the distros have been unhappy recommending this as
+> > > standard practice.
+> > > 
+> > > If our model for security is going to be to link the kernel and the
+> > > initrd statically to give signature protection over the aggregate
+> > > then we need to figure out how to execute this via the distros.  If
+> > > we accept that the split model, where the distro owns and signs the
+> > > kernel but the machine owner builds and is responsible for the
+> > > initrd, then we need to explore split security models like this
+> > > proposal.
+> > 
+> > You can have a built-in and an external initrd? The second extracts
+> > over the first? (I know because once upon a time conflicting files
+> > would append. It sounds like the desired behavior here is O_EXCL fail
+> > and move on.)
+> 
+> Technically yes, because the first initrd could find the second by some
+> predefined means, extract it to a temporary directory and do a
+> pivot_root() and then the second would do some stuff, find the real
+> root and do a pivot_root() again.  However, while possible, wouldn't it
+> just add to the rendezvous complexity without adding any benefits? even
+> if the first initrd is built and signed by the distro and the second is
+> built by you, the first has to verify the second somehow.  I suppose
+> the second could be tar extracted, which would add xattrs, if that's
+> the goal?
+> 
+> James
+> 
+You can specify multiple initrd's to the boot loader, and they get
+loaded in sequence into memory and parsed by the kernel before /init is
+launched. Currently I believe later ones will overwrite the earlier
+ones, which is why we've been talking about adding an option to prevent
+that. You don't have to mess with manually finding/parsing initramfs's
+which wouldn't even be feasible since you may not have the drivers
+loaded yet to access the device/filesystem on which they live.
 
-Reviewed-by: Timofey Titovets <nefelim4ag@gmail.com>
+Once that's done, the embedded /init is just going to do in userspace
+wht the current patch does in the kernel. So all the files in the
+external initramfs(es) would need to have IMA signatures via the special
+xattr file.
 
-=D0=B2=D1=82, 14 =D0=BC=D0=B0=D1=8F 2019 =D0=B3. =D0=B2 16:22, Aaron Tomlin=
- <atomlin@redhat.com>:
->
-> On Tue 2019-05-14 15:16 +0200, Oleksandr Natalenko wrote:
-> > Present a new sysfs knob to mark task's anonymous memory as mergeable.
-> >
-> > To force merging task's VMAs, its PID is echoed in a write-only file:
-> >
-> >    # echo PID > /sys/kernel/mm/ksm/force_madvise
-> >
-> > Force unmerging is done similarly, but with "minus" sign:
-> >
-> >    # echo -PID > /sys/kernel/mm/ksm/force_madvise
-> >
-> > "0" or "-0" can be used to control the current task.
-> >
-> > To achieve this, previously introduced ksm_enter()/ksm_leave() helpers
-> > are used in the "store" handler.
-> >
-> > Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
-> > ---
-> >  mm/ksm.c | 68 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 68 insertions(+)
-> >
-> > diff --git a/mm/ksm.c b/mm/ksm.c
-> > index e9f3901168bb..22c59fb03d3a 100644
-> > --- a/mm/ksm.c
-> > +++ b/mm/ksm.c
-> > @@ -2879,10 +2879,77 @@ static void wait_while_offlining(void)
-> >
-> >  #define KSM_ATTR_RO(_name) \
-> >       static struct kobj_attribute _name##_attr =3D __ATTR_RO(_name)
-> > +#define KSM_ATTR_WO(_name) \
-> > +     static struct kobj_attribute _name##_attr =3D __ATTR_WO(_name)
-> >  #define KSM_ATTR(_name) \
-> >       static struct kobj_attribute _name##_attr =3D \
-> >               __ATTR(_name, 0644, _name##_show, _name##_store)
-> >
-> > +static ssize_t force_madvise_store(struct kobject *kobj,
-> > +                                  struct kobj_attribute *attr,
-> > +                                  const char *buf, size_t count)
-> > +{
-> > +     int err;
-> > +     pid_t pid;
-> > +     bool merge =3D true;
-> > +     struct task_struct *tsk;
-> > +     struct mm_struct *mm;
-> > +     struct vm_area_struct *vma;
-> > +
-> > +     err =3D kstrtoint(buf, 10, &pid);
-> > +     if (err)
-> > +             return -EINVAL;
-> > +
-> > +     if (pid < 0) {
-> > +             pid =3D abs(pid);
-> > +             merge =3D false;
-> > +     }
-> > +
-> > +     if (!pid && *buf =3D=3D '-')
-> > +             merge =3D false;
-> > +
-> > +     rcu_read_lock();
-> > +     if (pid) {
-> > +             tsk =3D find_task_by_vpid(pid);
-> > +             if (!tsk) {
-> > +                     err =3D -ESRCH;
-> > +                     rcu_read_unlock();
-> > +                     goto out;
-> > +             }
-> > +     } else {
-> > +             tsk =3D current;
-> > +     }
-> > +
-> > +     tsk =3D tsk->group_leader;
-> > +
-> > +     get_task_struct(tsk);
-> > +     rcu_read_unlock();
-> > +
-> > +     mm =3D get_task_mm(tsk);
-> > +     if (!mm) {
-> > +             err =3D -EINVAL;
-> > +             goto out_put_task_struct;
-> > +     }
-> > +     down_write(&mm->mmap_sem);
-> > +     vma =3D mm->mmap;
-> > +     while (vma) {
-> > +             if (merge)
-> > +                     ksm_enter(vma->vm_mm, vma, &vma->vm_flags);
-> > +             else
-> > +                     ksm_leave(vma, vma->vm_start, vma->vm_end, &vma->=
-vm_flags);
-> > +             vma =3D vma->vm_next;
-> > +     }
-> > +     up_write(&mm->mmap_sem);
-> > +     mmput(mm);
-> > +
-> > +out_put_task_struct:
-> > +     put_task_struct(tsk);
-> > +
-> > +out:
-> > +     return err ? err : count;
-> > +}
-> > +KSM_ATTR_WO(force_madvise);
-> > +
-> >  static ssize_t sleep_millisecs_show(struct kobject *kobj,
-> >                                   struct kobj_attribute *attr, char *bu=
-f)
-> >  {
-> > @@ -3185,6 +3252,7 @@ static ssize_t full_scans_show(struct kobject *ko=
-bj,
-> >  KSM_ATTR_RO(full_scans);
-> >
-> >  static struct attribute *ksm_attrs[] =3D {
-> > +     &force_madvise_attr.attr,
-> >       &sleep_millisecs_attr.attr,
-> >       &pages_to_scan_attr.attr,
-> >       &run_attr.attr,
->
-> Looks fine to me.
->
-> Reviewed-by: Aaron Tomlin <atomlin@redhat.com>
->
-> --
-> Aaron Tomlin
-
-
-
---=20
-Have a nice day,
-Timofey.
+Note that if you want the flexibility to be able to load one or both of
+two external initramfs's, the current in-kernel proposal wouldn't be
+enough -- the xattr specification would have to be more flexible (eg
+reading .xattr-list* to allow each initramfs to specifiy its own
+xattrs. This sort of enhancement would be much easier to handle with the
+userspace variant.
