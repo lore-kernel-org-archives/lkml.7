@@ -2,100 +2,187 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB18C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39432C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE5420862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:59:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051892082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:59:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UcSpGx1M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OfNL6Tz4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbfEOM7y (ORCPT
+        id S1727275AbfEOM76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:59:54 -0400
-Received: from mail-eopbgr60065.outbound.protection.outlook.com ([40.107.6.65]:10702
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725977AbfEOM7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 08:59:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YYIOyoQvsGi1rTW4VytLfFUdSZgKechJQIZAz1twH5o=;
- b=UcSpGx1MR+m6iSHR4DhJ/4BgndAFbfpYgv0Dc8PbgGFGcDCcJKkzclS7XWG+7VP1teMN3unYJuJoEsD8ueiZ3E/qipsLn1eR56j/1Qvc+q44nQjgWbKWUNTuClh27go0kxhJBR5fQ+rL3URA5ReRuTo4xpfukEs4/EliFoikpFA=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3424.eurprd04.prod.outlook.com (52.134.3.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Wed, 15 May 2019 12:59:50 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::dd3c:969d:89b9:f422]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::dd3c:969d:89b9:f422%4]) with mapi id 15.20.1878.024; Wed, 15 May 2019
- 12:59:50 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Iuliana Prodan <iuliana.prodan@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v2 2/2] crypto: caam - strip input without changing crypto
- request
-Thread-Topic: [PATCH v2 2/2] crypto: caam - strip input without changing
- crypto request
-Thread-Index: AQHVCxD1jRNmo1IFzU+WL1DE3FYP4A==
-Date:   Wed, 15 May 2019 12:59:49 +0000
-Message-ID: <VI1PR0402MB348547115B62EB41C7DC2D8798090@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <1557919546-360-1-git-send-email-iuliana.prodan@nxp.com>
- <1557919546-360-2-git-send-email-iuliana.prodan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b775a9b5-b92e-4016-cc54-08d6d9353714
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0402MB3424;
-x-ms-traffictypediagnostic: VI1PR0402MB3424:
-x-microsoft-antispam-prvs: <VI1PR0402MB3424F035E5B044CAA42BB42898090@VI1PR0402MB3424.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:747;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(396003)(136003)(39860400002)(189003)(199004)(4326008)(71200400001)(6436002)(71190400001)(102836004)(76116006)(53936002)(25786009)(81156014)(86362001)(5660300002)(4744005)(6116002)(6636002)(44832011)(81166006)(14444005)(256004)(3846002)(33656002)(8936002)(7696005)(66066001)(229853002)(8676002)(446003)(110136005)(476003)(486006)(478600001)(68736007)(74316002)(52536014)(7736002)(305945005)(316002)(2906002)(99286004)(9686003)(53546011)(6506007)(66446008)(64756008)(66556008)(66476007)(66946007)(73956011)(55016002)(186003)(26005)(6246003)(14454004)(76176011)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3424;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: plYG3jG2CPSm+ij9wGdqnc4NvBwRGlQe7jatUsV6Mg+W9L4SLyNB2ywDFTolrCx3AM1M8w6uFZsZb0Et607D5lUDzkydrusJzR5jdBsmYLCognUkcUio+Pbfe9u18gaM3jG43fj6YULyRi1B311R5l2bG2sUogwE+B/oZDakH3J6F2OSoTEDbXn5+MgRUUx+LmT1bqIzXveqOkOz/RPugfIOLFzCFk26vL7qsuKluJT+n0hH/i5fYY69NuFIKBzjg2+1Es8ATjAwrcKQTM7XX0h7ST4IYL/7LZP4wmPEALC3xrmXrqu1QplvaonwU+ChBYpXKAq4UDFDxL92086F39rHVnCWnGDIfRRsUA3lxTbCuiyR2HikQW6W9x+KaJMeI6K50fabwNNvE2iZLA0Gw8chDDRt4HP78vlPxFmn6ls=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 15 May 2019 08:59:58 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36665 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725977AbfEOM74 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 08:59:56 -0400
+Received: by mail-qt1-f195.google.com with SMTP id a17so3119528qth.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 05:59:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=H7vWHPEOfUWQDCdRb9nMH9UJg5JpATd6V9Ekx6lEzJQ=;
+        b=OfNL6Tz4S173yaERsPtxIRkuP3qnpflx3fAgjuqvozsEId6hV8JT8ns91A9XcqH2WX
+         OdRr+KyJ+uydSlWhK/EcxzWEJ2tzJ/jNRqR5pl+uQUD5gC9GvSlw3FDte5SEZWRLr1OD
+         dpfBMUlI9ZjELTNXt6Jy6xW9A7n/UhUDK72TG+MeXlGOCdQA3pVyjeo6hnSVTTkRMMKM
+         nPbs3eEPMpHs6QO5x1f5hddH6SpEBDX4013C1x+MbRQfM3+zHu13TyUJXTXrx8IYLFXX
+         54kUpqZOfTcPr1xqeEMkka24OptqXvqDYtxhqeTkabnKQcL9fHbv/eBCRhUMfPLAwR+Q
+         xN5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=H7vWHPEOfUWQDCdRb9nMH9UJg5JpATd6V9Ekx6lEzJQ=;
+        b=X0AL+on/cx1o+P7zUeu3Iwv1yq6+FH7WBiuS0SYclZGj6yNgdGgmbPoYYQcvGTT7QV
+         JT1w/Ckhk7URU4xicYpvSV9sm+RlxbztV3ClV1WxuLvvDr7rtJZMc6xvWe+L31M20CW8
+         hvc+k9Baae7IyjEXxeBxzC1yt5OVtjDNWnc9umehcWWHA/4IL3dZo+JPOFZsh6SX8ran
+         XnuutF/pj8bWKh8GkRpMy/cNRgOIwcmNycDexyv+3cM/rgmFMZjzn6ZxWZIWOV9rOLBs
+         ssmGi7IBfmmtkFtUxZST+KVKSFUnq1aeI7W0yW2kmHT6GGuRouqzxE4ocNTt634soSiw
+         utNw==
+X-Gm-Message-State: APjAAAU+LYOWfvxR70a9i8kNpBmnJ2pYcH1vw0A7fClDOl4Qdx4LM+Tw
+        XN9WhUJBIEF8QLd+pU+/h+Y=
+X-Google-Smtp-Source: APXvYqzmZMY7HN3qlpWZSA9DoxeCytGwyW5AmeTv5Pe8fBohxkuuJq/X6MkvWFKWA4kzroJYjq9CuA==
+X-Received: by 2002:ac8:6887:: with SMTP id m7mr16787450qtq.309.1557925194378;
+        Wed, 15 May 2019 05:59:54 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.35.11])
+        by smtp.gmail.com with ESMTPSA id b1sm1043604qti.50.2019.05.15.05.59.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 May 2019 05:59:53 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2FF16404A1; Wed, 15 May 2019 09:59:51 -0300 (-03)
+Date:   Wed, 15 May 2019 09:59:51 -0300
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 09/12] perf record: implement
+ -z,--compression_level[=<n>] option
+Message-ID: <20190515123802.GA23162@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b775a9b5-b92e-4016-cc54-08d6d9353714
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 12:59:49.8846
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3424
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/15/2019 2:25 PM, Iuliana Prodan wrote:=0A=
-> For rsa/pkcs1pad(rsa-caam, sha256), CAAM expects an input of modulus size=
-.=0A=
-Only for sha256?=0A=
-=0A=
-> For this we strip the leading zeros in case the size is more than modulus=
-.=0A=
-> This commit avoids modifying the crypto request while striping zeros from=
-=0A=
-                                                        ^^^ stripping=0A=
-=0A=
-Horia=0A=
+Em Wed, May 15, 2019 at 11:43:30AM +0300, Alexey Budankov escreveu:
+> On 15.05.2019 0:46, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, May 14, 2019 at 05:20:41PM -0300, Arnaldo Carvalho de Melo escreveu:
+> >> Em Mon, Mar 18, 2019 at 08:44:42PM +0300, Alexey Budankov escreveu:
+
+> >>> Implemented -z,--compression_level[=<n>] option that enables compression
+> >>> of mmaped kernel data buffers content in runtime during perf record
+> >>> mode collection. Default option value is 1 (fastest compression).
+
+> > <SNIP>
+
+> >> [root@quaco ~]# perf record -z2
+> >> ^C[ perf record: Woken up 1 times to write data ]
+> >> 0x1746e0 [0x76]: failed to process type: 81 [Invalid argument]
+> >> [ perf record: Captured and wrote 1.568 MB perf.data, compressed (original 0.452 MB, ratio is 3.995) ]
+
+> >> [root@quaco ~]#
+
+> > So, its the buildid processing at the end, so we can't do build-id
+> > processing when using PERF_RECORD_COMPRESSED, otherwise we'd have to
+> > uncompress at the end to find the PERF_RECORD_FORK/PERF_RECORD_MMAP,
+> > etc.
+
+> > [root@quaco ~]# perf record -z2  --no-buildid sleep 1
+> > [ perf record: Woken up 1 times to write data ]
+> > [ perf record: Captured and wrote 0.020 MB perf.data, compressed (original 0.001 MB, ratio is 2.153) ]
+> > [root@quaco ~]# perf report -D | grep PERF_RECORD_COMP
+> > 0x4f40 [0x195]: failed to process type: 81 [Invalid argument]
+> > Error:
+> > failed to process sample
+> > 0 0x4f40 [0x195]: PERF_RECORD_COMPRESSED
+> > [root@quaco ~]#
+
+> > I'll play with it tomorrow.
+
+> Applied the whole patch set on top of the current perf/core 
+> and the whole thing functions as expected.
+
+It doesn't, see the reported error above, these three lines, that
+shouldn't be there:
+
+0x4f40 [0x195]: failed to process type: 81 [Invalid argument]
+Error:
+failed to process sample
+
+That is because at this point in the patch series a record was
+introduced that is not being handled by the build id processing done, by
+default, at the end of the 'perf record' session, and, as explained
+above, needs fixing so that when we do 'git bisect' looking for a non
+expected "failed to process type: 81" kind of error, this doesn't
+appear.
+
+I added the changes below to this cset and will continue from there:
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index d84a4885e341..f8d21991f94c 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -2284,6 +2284,12 @@ int cmd_record(int argc, const char **argv)
+ 			"cgroup monitoring only available in system-wide mode");
+ 
+ 	}
++
++	if (rec->opts.comp_level != 0) {
++		pr_debug("Compression enabled, disabling build id collection at the end of the session\n");
++		rec->no_buildid = true;
++	}
++
+ 	if (rec->opts.record_switch_events &&
+ 	    !perf_can_record_switch_events()) {
+ 		ui__error("kernel does not support recording context switch events\n");
+
+---------------------------------------------------------------------------
+
+[acme@quaco perf]$ perf record -z2 sleep 1
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.001 MB perf.data, compressed (original 0.001 MB, ratio is 2.292) ]
+[acme@quaco perf]$ perf record -v -z2 sleep 1
+Compression enabled, disabling build id collection at the end of the session
+Using CPUID GenuineIntel-6-8E-A
+nr_cblocks: 0
+affinity: SYS
+mmap flush: 1
+comp level: 2
+mmap size 528384B
+Couldn't start the BPF side band thread:
+BPF programs starting from now on won't be annotatable
+perf_event__synthesize_bpf_events: can't get next program: Operation not permitted
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.001 MB perf.data, compressed (original 0.001 MB, ratio is 2.305) ]
+[acme@quaco perf]$
+
+Will check if its possible to get rid of the following in this patch, to
+keep bisection working for this case as well:
+
+[acme@quaco perf]$ perf report -D | grep COMPRESS
+0x1b8 [0x169]: failed to process type: 81 [Invalid argument]
+Error:
+failed to process sample
+0 0x1b8 [0x169]: PERF_RECORD_COMPRESSED
+[acme@quaco perf]$
+
+- Arnaldo
