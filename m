@@ -2,94 +2,153 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E07C0C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 332AAC04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B23512168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rD3y0QGh"
+	by mail.kernel.org (Postfix) with ESMTP id 0372E2168B
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:13:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557918803;
+	bh=vjMXqldEtMNW5Aj8p1f78bX1/Wj52pVAgbrfgMluPlQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UNjaAsymmBmn8PPOjHXmVXj1qxS3g4DTK7y80XUlx+BMiZD/Gik0TtdNgrJkzz5Yd
+	 lhJFH7Tynlmy9g0BljrXQ6iTUf7s17FLKOV5de/PehlZeCYXYXGOXde+j9QTjnbB+D
+	 ptzXZOZq92GoST13dTHNa8Qev6GuIGGmiYibbQ44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729949AbfEOLNR (ORCPT
+        id S1729956AbfEOLNV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:13:17 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:56526 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729655AbfEOLNL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:13:11 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4FBD9OR058630;
-        Wed, 15 May 2019 06:13:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1557918789;
-        bh=1EvbyRlsOqqU6Qy/FHZ8ilhfbNaV4fjqsgFD0Yxvf2A=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rD3y0QGhw60LU1XY/6XAij8GRBUZDJy42D2GvTRWThdPSiq6tIanINLhC9EIz5GTm
-         o7D9TlkFevQqwpKkjDriajzd9spp5YQ83urcdlqL8ESFasPJzYwjhVzzzGJYTh/K82
-         /T1QtgqD9z0JULaRfuzEzddPxPFlXDABnecu8SIQ=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4FBD9tk040276
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 May 2019 06:13:09 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 15
- May 2019 06:13:09 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 15 May 2019 06:13:09 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4FBD6dI110173;
-        Wed, 15 May 2019 06:13:07 -0500
-Subject: Re: [PATCH 3/3] regulator: lp87565: Add 4-phase lp87561 regulator
- support
-To:     Mark Brown <broonie@kernel.org>
-CC:     <lee.jones@linaro.org>, <robh+dt@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <t-kristo@ti.com>
-References: <20190515100848.19560-1-j-keerthy@ti.com>
- <20190515100848.19560-4-j-keerthy@ti.com>
- <20190515110851.GD5613@sirena.org.uk>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <82581f9a-5aaa-b56c-f9d5-4188b60b3e6b@ti.com>
-Date:   Wed, 15 May 2019 16:43:39 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 15 May 2019 07:13:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729688AbfEOLNQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:13:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C78E20644;
+        Wed, 15 May 2019 11:13:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557918796;
+        bh=vjMXqldEtMNW5Aj8p1f78bX1/Wj52pVAgbrfgMluPlQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qylOTg/ufRh9T7hHpHlP8yWkVPpLjfi/xv4vgNl+wf1MkIbFCqPFu9VG9fAqgNrUJ
+         GJXLs8nCuYL3m+LBVAHOL/x/0HzeibHNZ+UsOd9DYImDot9Evx0hgl44T9K9azoDYf
+         EC9j6Ip3uhFjlq/hlZruIY6Gu6iY1ynbDe2L0y2Y=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Johan Hovold <johan@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 254/266] USB: serial: use variable for status
+Date:   Wed, 15 May 2019 12:56:01 +0200
+Message-Id: <20190515090731.606066184@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
+References: <20190515090722.696531131@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190515110851.GD5613@sirena.org.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[ Upstream commit 3161da970d38cd6ed2ba8cadec93874d1d06e11e ]
+
+This patch turns status in a variable read once from the URB.
+The long term plan is to deliver status to the callback.
+In addition it makes the code a bit more elegant.
+
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/serial/generic.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/usb/serial/generic.c b/drivers/usb/serial/generic.c
+index 54e170dd3dad0..101051dce60c7 100644
+--- a/drivers/usb/serial/generic.c
++++ b/drivers/usb/serial/generic.c
+@@ -350,6 +350,7 @@ void usb_serial_generic_read_bulk_callback(struct urb *urb)
+ 	struct usb_serial_port *port = urb->context;
+ 	unsigned char *data = urb->transfer_buffer;
+ 	unsigned long flags;
++	int status = urb->status;
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(port->read_urbs); ++i) {
+@@ -360,22 +361,22 @@ void usb_serial_generic_read_bulk_callback(struct urb *urb)
+ 
+ 	dev_dbg(&port->dev, "%s - urb %d, len %d\n", __func__, i,
+ 							urb->actual_length);
+-	switch (urb->status) {
++	switch (status) {
+ 	case 0:
+ 		break;
+ 	case -ENOENT:
+ 	case -ECONNRESET:
+ 	case -ESHUTDOWN:
+ 		dev_dbg(&port->dev, "%s - urb stopped: %d\n",
+-							__func__, urb->status);
++							__func__, status);
+ 		return;
+ 	case -EPIPE:
+ 		dev_err(&port->dev, "%s - urb stopped: %d\n",
+-							__func__, urb->status);
++							__func__, status);
+ 		return;
+ 	default:
+ 		dev_dbg(&port->dev, "%s - nonzero urb status: %d\n",
+-							__func__, urb->status);
++							__func__, status);
+ 		goto resubmit;
+ 	}
+ 
+@@ -399,6 +400,7 @@ void usb_serial_generic_write_bulk_callback(struct urb *urb)
+ {
+ 	unsigned long flags;
+ 	struct usb_serial_port *port = urb->context;
++	int status = urb->status;
+ 	int i;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(port->write_urbs); ++i) {
+@@ -410,22 +412,22 @@ void usb_serial_generic_write_bulk_callback(struct urb *urb)
+ 	set_bit(i, &port->write_urbs_free);
+ 	spin_unlock_irqrestore(&port->lock, flags);
+ 
+-	switch (urb->status) {
++	switch (status) {
+ 	case 0:
+ 		break;
+ 	case -ENOENT:
+ 	case -ECONNRESET:
+ 	case -ESHUTDOWN:
+ 		dev_dbg(&port->dev, "%s - urb stopped: %d\n",
+-							__func__, urb->status);
++							__func__, status);
+ 		return;
+ 	case -EPIPE:
+ 		dev_err_console(port, "%s - urb stopped: %d\n",
+-							__func__, urb->status);
++							__func__, status);
+ 		return;
+ 	default:
+ 		dev_err_console(port, "%s - nonzero urb status: %d\n",
+-							__func__, urb->status);
++							__func__, status);
+ 		goto resubmit;
+ 	}
+ 
+-- 
+2.20.1
 
 
-On 15/05/19 4:38 PM, Mark Brown wrote:
-> On Wed, May 15, 2019 at 03:38:48PM +0530, Keerthy wrote:
-> 
->> @@ -172,6 +178,9 @@ static int lp87565_regulator_probe(struct platform_device *pdev)
->>   	if (lp87565->dev_type == LP87565_DEVICE_TYPE_LP87565_Q1) {
->>   		min_idx = LP87565_BUCK_10;
->>   		max_idx = LP87565_BUCK_23;
->> +	} else if (lp87565->dev_type == LP87565_DEVICE_TYPE_LP87561_Q1) {
->> +		min_idx = LP87565_BUCK_3210;
->> +		max_idx = LP87565_BUCK_3210;
-> 
-> This if/else chain should be a switch statement.
 
-Okay. I will convert that in v2.
-
-Thanks,
-Keerthy
-
-> 
