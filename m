@@ -2,121 +2,186 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25E6C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12484C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A06A62084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB63A2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:43:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="TDOw0JqG"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ITAdYKE1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfEOSmv (ORCPT
+        id S1727145AbfEOSnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 14:42:51 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41414 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfEOSmu (ORCPT
+        Wed, 15 May 2019 14:43:19 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:43826 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfEOSnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 14:42:50 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y22so879356qtn.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 11:42:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1reD9us9N5mO/PuTxFUyMzUfJf88hZBU0BFrHnbD0Bo=;
-        b=TDOw0JqG4MjKV/6oPistcSMXTCPQKhxSgzGJ/dexYJdSGe/daqrONJ1A9P2mr4N9vE
-         LNAL0hfNzpBNmX2d16ydeNQrlLloRhFKn763PhLvoNiPF0YpYM3ij0yYm+5NNLBjVUOn
-         ygtIVMAFfXUxICL4Geq/Pm0Dg+Cg4ZmOop6JOMf0GkEe+byYEQYqN3SWvLSXOqCrQshi
-         P4lgu+IZ/vH/7qZg3HYwntrYlEyu2dHKA1yELq4rFLP36JN7QwfkaKh7fUt4Rf2RC1ju
-         5jJvgI9D30JfE4j3f8KNHKrbV3P/j6dM7gdz5yw++DQd5s7tncpv42Se5FAZf3DByu81
-         rfPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1reD9us9N5mO/PuTxFUyMzUfJf88hZBU0BFrHnbD0Bo=;
-        b=fYg4DCSc9lT4eBY1OOTtOrJK8ezwzOpYjxcSf4HlLRrBRMnZA5sE3u6Gu4WB1h4Bhi
-         qC8io8zgjOLj+D50shq4e9e83aRvpf692qjTaq5bklNxj/jSCHNyjIcaWPXKxdrdZ0RA
-         A3KrrQGDRbeXfYc9dM8wieoj4u0nztzzMxOAzuBY0j4vY2BfFjhQ9Nthke0hbgZLbhHV
-         oFUBmKB7TF/9Zgk4WQXpSZDe2S8xpaGUaMbSpvh744Arw/Hi7f8TAl8hu1NfO100JFD+
-         Jqrs7CKEy49YI2Wv3EOtxtTedhO32yOAu7ExUI2EYvPmoG+w+fD9ScN9sfPKr8dPYmbB
-         fROQ==
-X-Gm-Message-State: APjAAAUcrE2gWVCohDnixK6vuzrET5j0SA8FTidvUK9Zy/asUPtJIXHL
-        LlSZlRPUuYpw9NIDW/h3IWmG/g==
-X-Google-Smtp-Source: APXvYqxrY8c666Igwg1R0i0REY1OJW1Ih3Ad8v+ZlbR2LUupNFnSbQkoVPBYFdyzfysek+egkkA9dA==
-X-Received: by 2002:aed:2a85:: with SMTP id t5mr8551891qtd.264.1557945769970;
-        Wed, 15 May 2019 11:42:49 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id t63sm1274466qka.33.2019.05.15.11.42.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 May 2019 11:42:49 -0700 (PDT)
-Date:   Wed, 15 May 2019 14:42:49 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Sean Paul <sean@poorly.run>, Heiko Stuebner <heiko@sntech.de>,
-        Sandy Huang <hjc@rock-chips.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
+        Wed, 15 May 2019 14:43:19 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4FIdRhN007966;
+        Wed, 15 May 2019 18:42:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=otXXOszYdsBjfduSwJUQZMWPrfd3KE8B1WDi+bhrywk=;
+ b=ITAdYKE1B/U0xNlismRf6Qdi+fFFUhlE60wD5BkDOFle1E4oerlFWH5BN4cn+Oq3NaSL
+ UixopBNoYqtHSys4Lcf4By4RPyZP7a1oQuEKag2VubVoE9YiwWIx1o1DCh5nDbR3LkqL
+ Cw72lo/JDO5YdQWUANbGRuPM/QdAovfkJ5Yhp4Xdu757pmJOktPivaNlAhYERbX/w6uZ
+ 3NBc5goakeLwFMJ+hoBzs1u0XOxVhYAh6yVfQEofs/X8z4wfOOg8QYB3NmwSqsC1gk4B
+ iltYLhrKJkmVadl5MvuYw0zZaK+uWrITUL+0s9tYPP1VBzBhvp1k9hRVFnkcyyX6Y7WU bQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2sdq1qpr5b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 May 2019 18:42:42 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4FIgE9p104332;
+        Wed, 15 May 2019 18:42:42 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2sgkx3n23q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 May 2019 18:42:42 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4FIgf6k002096;
+        Wed, 15 May 2019 18:42:41 GMT
+Received: from [10.156.75.204] (/10.156.75.204)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 May 2019 18:42:40 +0000
+Subject: Re: [PATCH] sched: introduce configurable delay before entering idle
+To:     Marcelo Tosatti <mtosatti@redhat.com>,
+        Wanpeng Li <kernellwp@gmail.com>
+Cc:     kvm-devel <kvm@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH 2/5] drm/bridge/synopsys: dw-hdmi: Add "unwedge" for ddc
- bus
-Message-ID: <20190515184249.GA17077@art_vandelay>
-References: <20190502225336.206885-1-dianders@chromium.org>
- <20190502225336.206885-2-dianders@chromium.org>
- <20190515182038.GV17077@art_vandelay>
- <CAD=FV=WP-rFDAR28oZg+9DcrXbaYPjFCAD-dV1VR3-3_XDs-3A@mail.gmail.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Bandan Das <bsd@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <20190507185647.GA29409@amt.cnet>
+ <CANRm+Cx8zCDG6Oz1m9eukkmx_uVFYcQOdMwZrHwsQcbLm_kuPA@mail.gmail.com>
+ <20190514135022.GD4392@amt.cnet>
+From:   Ankur Arora <ankur.a.arora@oracle.com>
+Message-ID: <7e390fef-e0df-963f-4e18-e44ac2766be3@oracle.com>
+Date:   Wed, 15 May 2019 11:42:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=WP-rFDAR28oZg+9DcrXbaYPjFCAD-dV1VR3-3_XDs-3A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190514135022.GD4392@amt.cnet>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9257 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905150112
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9257 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905150113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 11:36:33AM -0700, Doug Anderson wrote:
-> Hi,
+On 5/14/19 6:50 AM, Marcelo Tosatti wrote:
+> On Mon, May 13, 2019 at 05:20:37PM +0800, Wanpeng Li wrote:
+>> On Wed, 8 May 2019 at 02:57, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+>>>
+>>>
+>>> Certain workloads perform poorly on KVM compared to baremetal
+>>> due to baremetal's ability to perform mwait on NEED_RESCHED
+>>> bit of task flags (therefore skipping the IPI).
+>>
+>> KVM supports expose mwait to the guest, if it can solve this?
+>>
+>> Regards,
+>> Wanpeng Li
 > 
-> On Wed, May 15, 2019 at 11:20 AM Sean Paul <sean@poorly.run> wrote:
-> 
-> > > +                     if (IS_ERR(hdmi->default_state) &&
-> > > +                         !IS_ERR(hdmi->unwedge_state)) {
-> > > +                             dev_warn(dev,
-> > > +                                      "Unwedge requires default pinctrl\n");
-> >
-> > Can you downgrade this message to info or dbg? Given how rare this issue is, we
-> > probably don't want to spam everyone who is happily using dw-hdmi.
-> 
-> I don't think it will spam anyone, will it?  It will only spam if you
-> _do_ specify an unwedge state and you _don't_ specify a default state.
-> This seems like something you'd want a pretty serious warning about
-> because it meant that you wanted to use unwedge but you didn't specify
-> it properly.
-> 
+> Unfortunately mwait in guest is not feasible (uncompatible with multiple
+> guests). Checking whether a paravirt solution is possible.
 
-That'll teach me for skimming, you're right on, thanks for the correction!
+Hi Marcelo,
 
-> 
-> > Reviewed-by: Sean Paul <sean@poorly.run>
-> 
-> Thanks!
-> 
-> -Doug
+I was also looking at making MWAIT available to guests in a safe manner:
+whether through emulation or a PV-MWAIT. My (unsolicited) thoughts
+follow.
 
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+We basically want to handle this sequence:
+
+     monitor(monitor_address);
+     if (*monitor_address == base_value)
+          mwaitx(max_delay);
+
+Emulation seems problematic because, AFAICS this would happen:
+
+     guest                                   hypervisor
+     =====                                   ====
+
+     monitor(monitor_address);
+         vmexit  ===>                        monitor(monitor_address)
+     if (*monitor_address == base_value)
+          mwait();
+               vmexit    ====>               mwait()
+
+There's a context switch back to the guest in this sequence which seems
+problematic. Both the AMD and Intel specs list system calls and
+far calls as events which would lead to the MWAIT being woken up: 
+"Voluntary transitions due to fast system call and far calls (occurring 
+prior to issuing MWAIT but after setting the monitor)".
+
+
+We could do this instead:
+
+     guest                                   hypervisor
+     =====                                   ====
+
+     monitor(monitor_address);
+         vmexit  ===>                        cache monitor_address
+     if (*monitor_address == base_value)
+          mwait();
+               vmexit    ====>              monitor(monitor_address)
+                                            mwait()
+
+But, this would miss the "if (*monitor_address == base_value)" check in
+the host which is problematic if *monitor_address changed simultaneously
+when monitor was executed.
+(Similar problem if we cache both the monitor_address and
+*monitor_address.)
+
+
+So, AFAICS, the only thing that would work is the guest offloading the
+whole PV-MWAIT operation.
+
+AFAICS, that could be a paravirt operation which needs three parameters:
+(monitor_address, base_value, max_delay.)
+
+This would allow the guest to offload this whole operation to
+the host:
+     monitor(monitor_address);
+     if (*monitor_address == base_value)
+          mwaitx(max_delay);
+
+I'm guessing you are thinking on similar lines?
+
+
+High level semantics: If the CPU doesn't have any runnable threads, then
+we actually do this version of PV-MWAIT -- arming a timer if necessary
+so we only sleep until the time-slice expires or the MWAIT max_delay does.
+
+If the CPU has any runnable threads then this could still finish its 
+time-quanta or we could just do a schedule-out.
+
+
+So the semantics guaranteed to the host would be that PV-MWAIT returns 
+after >= max_delay OR with the *monitor_address changed.
+
+
+
+Ankur
