@@ -2,54 +2,55 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5698C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C6FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B422A206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AB2E20818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919824;
-	bh=65IKoUZNXVPF67/475Vnhey3/pmbGHM3rpBodDdc3BY=;
+	s=default; t=1557919827;
+	bh=LxcjEKip1v8N/ANBHPxLhn8/Pw2YaorBIk4I7k7IVPI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JD3bTato0pw5t2gJqE1YqO2+TC2qiB2h/ann4ylGYl724aq/057zii8FtRRug/JHx
-	 kY7keQSMNfkTFJx98bAqOmjwjmiM9KieSH75sUaX8RyOzpX5shnqfDViStR8tDi7aM
-	 A/96Q251qA6z4Vz3SOWDEIMPzA/ErS7U4MAcMaQU=
+	b=Y2Ym7NaaRGePYl7jhCKIhvabB6W8mIRV1ZxtRwJKGEYvMl4mzYoNgXSWv7yv/v0Ex
+	 MjoJ+rU//Wt3ideYvukPLbaFvfC2ED+7C631NLCFbFAAlw2Yul4e8N2UTIwRRp4XWa
+	 e0OxxOSk3wLtF9TLLbCVCLT/11CvjK80RuN30JOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732716AbfEOLaW (ORCPT
+        id S1732723AbfEOLa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:30:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41756 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:30:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731730AbfEOLaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:30:16 -0400
+        id S1732034AbfEOLaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:30:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDEAB20843;
-        Wed, 15 May 2019 11:30:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2635D20818;
+        Wed, 15 May 2019 11:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919815;
-        bh=65IKoUZNXVPF67/475Vnhey3/pmbGHM3rpBodDdc3BY=;
+        s=default; t=1557919820;
+        bh=LxcjEKip1v8N/ANBHPxLhn8/Pw2YaorBIk4I7k7IVPI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VqQr+gTJ0VVkLoVKA6dDDXSqFS5xCS2tq+9Hw7yOGOtDgI07OXrZ6LXDo4HRikThs
-         y+Rra0eeP6/h1h8HeNIFbIpwloERwnUEcZ7klNmwuVXIjxGiJEHUvXVxZ8r5Nb7tYu
-         3E2T4op6Waoc3WTSfpVraXWm55FqMCeol1bhe5I0=
+        b=qXgH3Wv2bK7wn49xtsV1GSqxYV4ASkBOyijWItvF5bvkJSG5XuQrPJFK6dxHJZO/K
+         vP5MwhESldBHXWR+iFwFzz93FwQVdLkwxHzLDd8Ssh/k0oABQYa94sTMaLRlpgddtq
+         MeVF+FRAJPlcA9d6E2nol3PViihyN+A3aypsq1rQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Michal Soltys <soltys@ziu.info>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 077/137] netfilter: never get/set skb->tstamp
-Date:   Wed, 15 May 2019 12:55:58 +0200
-Message-Id: <20190515090659.027066676@linuxfoundation.org>
+        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jarod Wilson <jarod@redhat.com>,
+        Jay Vosburgh <jay.vosburgh@canonical.com>
+Subject: [PATCH 5.0 105/137] bonding: fix arp_validate toggling in active-backup mode
+Date:   Wed, 15 May 2019 12:56:26 +0200
+Message-Id: <20190515090701.174042490@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -62,121 +63,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 916f6efae62305796e012e7c3a7884a267cbacbf ]
+From: Jarod Wilson <jarod@redhat.com>
 
-setting net.netfilter.nf_conntrack_timestamp=1 breaks xmit with fq
-scheduler.  skb->tstamp might be "refreshed" using ktime_get_real(),
-but fq expects CLOCK_MONOTONIC.
+[ Upstream commit a9b8a2b39ce65df45687cf9ef648885c2a99fe75 ]
 
-This patch removes all places in netfilter that check/set skb->tstamp:
+There's currently a problem with toggling arp_validate on and off with an
+active-backup bond. At the moment, you can start up a bond, like so:
 
-1. To fix the bogus "start" time seen with conntrack timestamping for
-   outgoing packets, never use skb->tstamp and always use current time.
-2. In nfqueue and nflog, only use skb->tstamp for incoming packets,
-   as determined by current hook (prerouting, input, forward).
-3. xt_time has to use system clock as well rather than skb->tstamp.
-   We could still use skb->tstamp for prerouting/input/foward, but
-   I see no advantage to make this conditional.
+modprobe bonding mode=1 arp_interval=100 arp_validate=0 arp_ip_targets=192.168.1.1
+ip link set bond0 down
+echo "ens4f0" > /sys/class/net/bond0/bonding/slaves
+echo "ens4f1" > /sys/class/net/bond0/bonding/slaves
+ip link set bond0 up
+ip addr add 192.168.1.2/24 dev bond0
 
-Fixes: fb420d5d91c1 ("tcp/fq: move back to CLOCK_MONOTONIC")
-Cc: Eric Dumazet <edumazet@google.com>
-Reported-by: Michal Soltys <soltys@ziu.info>
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Acked-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Pings to 192.168.1.1 work just fine. Now turn on arp_validate:
+
+echo 1 > /sys/class/net/bond0/bonding/arp_validate
+
+Pings to 192.168.1.1 continue to work just fine. Now when you go to turn
+arp_validate off again, the link falls flat on it's face:
+
+echo 0 > /sys/class/net/bond0/bonding/arp_validate
+dmesg
+...
+[133191.911987] bond0: Setting arp_validate to none (0)
+[133194.257793] bond0: bond_should_notify_peers: slave ens4f0
+[133194.258031] bond0: link status definitely down for interface ens4f0, disabling it
+[133194.259000] bond0: making interface ens4f1 the new active one
+[133197.330130] bond0: link status definitely down for interface ens4f1, disabling it
+[133197.331191] bond0: now running without any active interface!
+
+The problem lies in bond_options.c, where passing in arp_validate=0
+results in bond->recv_probe getting set to NULL. This flies directly in
+the face of commit 3fe68df97c7f, which says we need to set recv_probe =
+bond_arp_recv, even if we're not using arp_validate. Said commit fixed
+this in bond_option_arp_interval_set, but missed that we can get to that
+same state in bond_option_arp_validate_set as well.
+
+One solution would be to universally set recv_probe = bond_arp_recv here
+as well, but I don't think bond_option_arp_validate_set has any business
+touching recv_probe at all, and that should be left to the arp_interval
+code, so we can just make things much tidier here.
+
+Fixes: 3fe68df97c7f ("bonding: always set recv_probe to bond_arp_rcv in arp monitor")
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
+Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/netfilter/nf_conntrack_core.c |  7 ++-----
- net/netfilter/nfnetlink_log.c     |  2 +-
- net/netfilter/nfnetlink_queue.c   |  2 +-
- net/netfilter/xt_time.c           | 23 ++++++++++++++---------
- 4 files changed, 18 insertions(+), 16 deletions(-)
+ drivers/net/bonding/bond_options.c |    7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index 1982faf21ebb5..d7ac2f82bb6d8 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -983,12 +983,9 @@ __nf_conntrack_confirm(struct sk_buff *skb)
- 
- 	/* set conntrack timestamp, if enabled. */
- 	tstamp = nf_conn_tstamp_find(ct);
--	if (tstamp) {
--		if (skb->tstamp == 0)
--			__net_timestamp(skb);
-+	if (tstamp)
-+		tstamp->start = ktime_get_real_ns();
- 
--		tstamp->start = ktime_to_ns(skb->tstamp);
--	}
- 	/* Since the lookup is lockless, hash insertion must be done after
- 	 * starting the timer and setting the CONFIRMED bit. The RCU barriers
- 	 * guarantee that no other CPU can find the conntrack before the above
-diff --git a/net/netfilter/nfnetlink_log.c b/net/netfilter/nfnetlink_log.c
-index b1f9c5303f026..0b3347570265c 100644
---- a/net/netfilter/nfnetlink_log.c
-+++ b/net/netfilter/nfnetlink_log.c
-@@ -540,7 +540,7 @@ __build_packet_message(struct nfnl_log_net *log,
- 			goto nla_put_failure;
- 	}
- 
--	if (skb->tstamp) {
-+	if (hooknum <= NF_INET_FORWARD && skb->tstamp) {
- 		struct nfulnl_msg_packet_timestamp ts;
- 		struct timespec64 kts = ktime_to_timespec64(skb->tstamp);
- 		ts.sec = cpu_to_be64(kts.tv_sec);
-diff --git a/net/netfilter/nfnetlink_queue.c b/net/netfilter/nfnetlink_queue.c
-index 0dcc3592d053f..e057b2961d313 100644
---- a/net/netfilter/nfnetlink_queue.c
-+++ b/net/netfilter/nfnetlink_queue.c
-@@ -582,7 +582,7 @@ nfqnl_build_packet_message(struct net *net, struct nfqnl_instance *queue,
- 	if (nfqnl_put_bridge(entry, skb) < 0)
- 		goto nla_put_failure;
- 
--	if (entskb->tstamp) {
-+	if (entry->state.hook <= NF_INET_FORWARD && entskb->tstamp) {
- 		struct nfqnl_msg_packet_timestamp ts;
- 		struct timespec64 kts = ktime_to_timespec64(entskb->tstamp);
- 
-diff --git a/net/netfilter/xt_time.c b/net/netfilter/xt_time.c
-index c13bcd0ab4913..8dbb4d48f2ed5 100644
---- a/net/netfilter/xt_time.c
-+++ b/net/netfilter/xt_time.c
-@@ -163,19 +163,24 @@ time_mt(const struct sk_buff *skb, struct xt_action_param *par)
- 	s64 stamp;
- 
- 	/*
--	 * We cannot use get_seconds() instead of __net_timestamp() here.
-+	 * We need real time here, but we can neither use skb->tstamp
-+	 * nor __net_timestamp().
-+	 *
-+	 * skb->tstamp and skb->skb_mstamp_ns overlap, however, they
-+	 * use different clock types (real vs monotonic).
-+	 *
- 	 * Suppose you have two rules:
--	 * 	1. match before 13:00
--	 * 	2. match after 13:00
-+	 *	1. match before 13:00
-+	 *	2. match after 13:00
-+	 *
- 	 * If you match against processing time (get_seconds) it
- 	 * may happen that the same packet matches both rules if
--	 * it arrived at the right moment before 13:00.
-+	 * it arrived at the right moment before 13:00, so it would be
-+	 * better to check skb->tstamp and set it via __net_timestamp()
-+	 * if needed.  This however breaks outgoing packets tx timestamp,
-+	 * and causes them to get delayed forever by fq packet scheduler.
- 	 */
--	if (skb->tstamp == 0)
--		__net_timestamp((struct sk_buff *)skb);
+--- a/drivers/net/bonding/bond_options.c
++++ b/drivers/net/bonding/bond_options.c
+@@ -1098,13 +1098,6 @@ static int bond_option_arp_validate_set(
+ {
+ 	netdev_dbg(bond->dev, "Setting arp_validate to %s (%llu)\n",
+ 		   newval->string, newval->value);
 -
--	stamp = ktime_to_ns(skb->tstamp);
--	stamp = div_s64(stamp, NSEC_PER_SEC);
-+	stamp = get_seconds();
+-	if (bond->dev->flags & IFF_UP) {
+-		if (!newval->value)
+-			bond->recv_probe = NULL;
+-		else if (bond->params.arp_interval)
+-			bond->recv_probe = bond_arp_rcv;
+-	}
+ 	bond->params.arp_validate = newval->value;
  
- 	if (info->flags & XT_TIME_LOCAL_TZ)
- 		/* Adjust for local timezone */
--- 
-2.20.1
-
+ 	return 0;
 
 
