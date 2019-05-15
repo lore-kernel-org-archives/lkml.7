@@ -2,58 +2,58 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B15C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E2FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 460972084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E51FC2084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:34:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920056;
-	bh=XEBQsgEMtGwqV0S4Aabkcag4Y+CbX6J+lt0ONluxREA=;
+	s=default; t=1557920060;
+	bh=G1gKMeTX9JbVl501Usv3mK5qUwAQA8ljIadRchKIreU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eOd4KK/95rHoJlklT6v2jlQYicNICGeDRF4IpF1d3HDpSRSH7lcqhkQvuIJ5w1PTE
-	 tCj2K15STDe2QF1sUQGFAT36cgg/mWW9g+JCfROS1i//WmO+CFxyPJuHEJKkRrdpaV
-	 EpCTcDiiDCShluKXmFQgEpiu950GxDojkXik7AWo=
+	b=o8nsbJuldySKCRFrC4ZhTrvbT8mv2/CyrW4kM0VgfQ+f0OApIQN40xRf6e+Tsx9AV
+	 Q0HCuvh4DaYkTCXn+7asjnUCbzOn1GNAChI9UHq7zseoSJauLLNKEh+WjzOIEVXIcl
+	 EV8jGkZwg4gzElgQbIIkl/pTf/+1SndynZWbQ93Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387429AbfEOLeP (ORCPT
+        id S2387440AbfEOLeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:34:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46252 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:34:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387418AbfEOLeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:34:13 -0400
+        id S1732485AbfEOLeR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:34:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EA6D2053B;
-        Wed, 15 May 2019 11:34:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9E0B2053B;
+        Wed, 15 May 2019 11:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557920052;
-        bh=XEBQsgEMtGwqV0S4Aabkcag4Y+CbX6J+lt0ONluxREA=;
+        s=default; t=1557920057;
+        bh=G1gKMeTX9JbVl501Usv3mK5qUwAQA8ljIadRchKIreU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w6+PvVRlRW2B0AzMoBg4yB3TbfvMzDajSilrxAtk3UHSD0RTjysh/G3MYDSBLcDMz
-         ar47TvGrNfHxVOX6ozs6FZRUdbhNNG/DqVUjfdqV/6ZiOO+LtYv731DzY9WOAUrSo1
-         /0R17p9gCLsPSd7yxBiRDE7yl638WnB7o2bl1NPE=
+        b=XgPmMlLMnipSyJinvFqw1y5eEQ7Qrajoyn9LfqpHBmbt5K/90XkOkYYbKSBXqwXuc
+         4exwrqcC5WJeouLFG0bzi+6DdOlO7yWLD6yIlnzldl7N7SbojNmAGEFBXbZOIjKQEw
+         BIQrwAOQ4LCWSAb8bGUR/V+vPau1c/Qa5Uw5SCC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "weiyongjun (A)" <weiyongjun1@huawei.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 33/46] tuntap: synchronize through tfiles array instead of tun->numqueues
-Date:   Wed, 15 May 2019 12:56:57 +0200
-Message-Id: <20190515090626.755482094@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Frank Pavlic <f.pavlic@kunbus.de>,
+        Stephen Boyd <sboyd@codeaurora.org>,
+        Nishanth Menon <nm@ti.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 4.4 097/266] net: ks8851: Reassert reset pin if chip ID check fails
+Date:   Wed, 15 May 2019 12:53:24 +0200
+Message-Id: <20190515090725.730795185@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
-References: <20190515090616.670410738@linuxfoundation.org>
+In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
+References: <20190515090722.696531131@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,70 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+[ Upstream commit 761cfa979a0c177d6c2d93ef5585cd79ae49a7d5 ]
 
-[ Upstream commit 9871a9e47a2646fe30ae7fd2e67668a8d30912f6 ]
+Commit 73fdeb82e963 ("net: ks8851: Add optional vdd_io regulator and
+reset gpio") amended the ks8851 driver to briefly assert the chip's
+reset pin on probe. It also amended the probe routine's error path to
+reassert the reset pin if a subsequent initialization step fails.
 
-When a queue(tfile) is detached through __tun_detach(), we move the
-last enabled tfile to the position where detached one sit but don't
-NULL out last position. We expect to synchronize the datapath through
-tun->numqueues. Unfortunately, this won't work since we're lacking
-sufficient mechanism to order or synchronize the access to
-tun->numqueues.
+However the commit misplaced reassertion of the reset pin in the error
+path such that it is not performed if the check of the Chip ID and
+Enable Register (CIDER) fails. The error path is therefore slightly
+asymmetrical to the probe routine's body. Fix it.
 
-To fix this, NULL out the last position during detaching and check
-RCU protected tfile against NULL instead of checking tun->numqueues in
-datapath.
-
-Cc: YueHaibing <yuehaibing@huawei.com>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: weiyongjun (A) <weiyongjun1@huawei.com>
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Fixes: c8d68e6be1c3b ("tuntap: multiqueue support")
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Reviewed-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: Frank Pavlic <f.pavlic@kunbus.de>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Nishanth Menon <nm@ti.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/tun.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/micrel/ks8851.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -705,6 +705,8 @@ static void __tun_detach(struct tun_file
- 				   tun->tfiles[tun->numqueues - 1]);
- 		ntfile = rtnl_dereference(tun->tfiles[index]);
- 		ntfile->queue_index = index;
-+		rcu_assign_pointer(tun->tfiles[tun->numqueues - 1],
-+				   NULL);
+diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
+index 247a3377b951..a8c5641ff955 100644
+--- a/drivers/net/ethernet/micrel/ks8851.c
++++ b/drivers/net/ethernet/micrel/ks8851.c
+@@ -1567,9 +1567,9 @@ static int ks8851_probe(struct spi_device *spi)
+ 	free_irq(ndev->irq, ks);
  
- 		--tun->numqueues;
- 		if (clean) {
-@@ -1087,7 +1089,7 @@ static netdev_tx_t tun_net_xmit(struct s
- 	tfile = rcu_dereference(tun->tfiles[txq]);
- 
- 	/* Drop packet if interface is not attached */
--	if (txq >= tun->numqueues)
-+	if (!tfile)
- 		goto drop;
- 
- 	if (!rcu_dereference(tun->steering_prog))
-@@ -1310,6 +1312,7 @@ static int tun_xdp_xmit(struct net_devic
- 
- 	rcu_read_lock();
- 
-+resample:
- 	numqueues = READ_ONCE(tun->numqueues);
- 	if (!numqueues) {
- 		rcu_read_unlock();
-@@ -1318,6 +1321,8 @@ static int tun_xdp_xmit(struct net_devic
- 
- 	tfile = rcu_dereference(tun->tfiles[smp_processor_id() %
- 					    numqueues]);
-+	if (unlikely(!tfile))
-+		goto resample;
- 
- 	spin_lock(&tfile->tx_ring.producer_lock);
- 	for (i = 0; i < n; i++) {
+ err_irq:
++err_id:
+ 	if (gpio_is_valid(gpio))
+ 		gpio_set_value(gpio, 0);
+-err_id:
+ 	regulator_disable(ks->vdd_reg);
+ err_reg:
+ 	regulator_disable(ks->vdd_io);
+-- 
+2.19.1
+
 
 
