@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7842C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB92C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B921B20881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF8E82084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918746;
-	bh=bvmCFZAcCNHnBodtaxWi016DoRHs+DDGWr67rN5v8I8=;
+	s=default; t=1557918749;
+	bh=cXkUWaJKFNGT0UDCgndx8rzLPOQvubfRIOTueJoC8eU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=riI810N3ALHevfwkP5J9gLFqKccfz2FDUKsPOPzmt11fnDe/yCTOBfo4AMZaEYga1
-	 txYd7ghPxQszB52+skMHLYLM0T9KGy1F7Ln7H9MwqycwCZBYTuznSIp3hgHUoxU6eg
-	 h3cNWDQMhzpID4gOYWtKkADiHzs5GSLddgaDn6k8=
+	b=dbyvcb43qSepKpAj+ElHopNy85P6G/bpzxdUVXnuCwhal6Ofp3KinN4GaMCcKDkxu
+	 ylw1Aed/vPl0qF6XqGYGoOqSOkLdulKSIY59xz8cXF5OOukJuLaRmEHphTPlpFQtnn
+	 SL3m6hjGQB8bCrPAQeAdbEOjwb7TQz4M3kuFF4MA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729766AbfEOLMZ (ORCPT
+        id S1729778AbfEOLM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:12:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47296 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:12:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729744AbfEOLMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:12:18 -0400
+        id S1729740AbfEOLMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:12:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1080D2166E;
-        Wed, 15 May 2019 11:12:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99BA22084E;
+        Wed, 15 May 2019 11:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918737;
-        bh=bvmCFZAcCNHnBodtaxWi016DoRHs+DDGWr67rN5v8I8=;
+        s=default; t=1557918740;
+        bh=cXkUWaJKFNGT0UDCgndx8rzLPOQvubfRIOTueJoC8eU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N5FwYXV9HZT3aSYUPgQuFeYtULg0xt7uGX3We3boCLOBrf3+w2DpD72buaPS0tiyn
-         UK+kOvb2C5z9fHaUqHQZGqw+PIz4vH7HrCfpvuWGLSXf2Kl+0LiHaZdA5BUPzQyXBV
-         jxBJ8ViuZwUL2uyi923PVGz11cvCtq16hWY3jY2g=
+        b=Y/HmI9G8fsBMMMcqTq2DwDPofahND40EbptZGcpYpanjVcitbiNDwMhD04Jf9FPNG
+         1SSlzEDqyBt4w40DbsBbfp34MTWo75GPB0uF+et1arl5XTHvkNHAhH7kRXQzCCbp1Y
+         cmBdcHltcGxcxEXBzyXaVAvRMlIGwVd24YPLGw8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>,
+        stable@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: [PATCH 4.4 209/266] sched: Add sched_smt_active()
-Date:   Wed, 15 May 2019 12:55:16 +0200
-Message-Id: <20190515090730.037812794@linuxfoundation.org>
+        Tyler Hicks <tyhicks@canonical.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 245/266] x86/speculation/mds: Fix comment
+Date:   Wed, 15 May 2019 12:55:52 +0200
+Message-Id: <20190515090731.296093965@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -62,113 +64,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-Add the sched_smt_active() function needed for some x86 speculation
-mitigations.  This was introduced upstream by commits 1b568f0aabf2
-"sched/core: Optimize SCHED_SMT", ba2591a5993e "sched/smt: Update
-sched_smt_present at runtime", c5511d03ec09 "sched/smt: Make
-sched_smt_present track topology", and 321a874a7ef8 "sched/smt: Expose
-sched_smt_present static key".  The upstream implementation uses the
-static_key_{disable,enable}_cpuslocked() functions, which aren't
-practical to backport.
+commit cae5ec342645746d617dd420d206e1588d47768a upstream.
 
+s/L1TF/MDS/
+
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+[bwh: Backported to 4.4: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/sched/smt.h |   18 ++++++++++++++++++
- kernel/sched/core.c       |   24 ++++++++++++++++++++++++
- kernel/sched/sched.h      |    1 +
- 3 files changed, 43 insertions(+)
- create mode 100644 include/linux/sched/smt.h
+ arch/x86/kernel/cpu/bugs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- /dev/null
-+++ b/include/linux/sched/smt.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_SCHED_SMT_H
-+#define _LINUX_SCHED_SMT_H
-+
-+#include <linux/atomic.h>
-+
-+#ifdef CONFIG_SCHED_SMT
-+extern atomic_t sched_smt_present;
-+
-+static __always_inline bool sched_smt_active(void)
-+{
-+	return atomic_read(&sched_smt_present);
-+}
-+#else
-+static inline bool sched_smt_active(void) { return false; }
-+#endif
-+
-+#endif
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5610,6 +5610,10 @@ static void set_cpu_rq_start_time(void)
- 	rq->age_stamp = sched_clock_cpu(cpu);
- }
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -210,7 +210,7 @@ static void x86_amd_ssb_disable(void)
+ #undef pr_fmt
+ #define pr_fmt(fmt)	"MDS: " fmt
  
-+#ifdef CONFIG_SCHED_SMT
-+atomic_t sched_smt_present = ATOMIC_INIT(0);
-+#endif
-+
- static int sched_cpu_active(struct notifier_block *nfb,
- 				      unsigned long action, void *hcpu)
- {
-@@ -5626,11 +5630,23 @@ static int sched_cpu_active(struct notif
- 		 * set_cpu_online(). But it might not yet have marked itself
- 		 * as active, which is essential from here on.
- 		 */
-+#ifdef CONFIG_SCHED_SMT
-+		/*
-+		 * When going up, increment the number of cores with SMT present.
-+		 */
-+		if (cpumask_weight(cpu_smt_mask(cpu)) == 2)
-+			atomic_inc(&sched_smt_present);
-+#endif
- 		set_cpu_active(cpu, true);
- 		stop_machine_unpark(cpu);
- 		return NOTIFY_OK;
+-/* Default mitigation for L1TF-affected CPUs */
++/* Default mitigation for MDS-affected CPUs */
+ static enum mds_mitigations mds_mitigation = MDS_MITIGATION_FULL;
  
- 	case CPU_DOWN_FAILED:
-+#ifdef CONFIG_SCHED_SMT
-+		/* Same as for CPU_ONLINE */
-+		if (cpumask_weight(cpu_smt_mask(cpu)) == 2)
-+			atomic_inc(&sched_smt_present);
-+#endif
- 		set_cpu_active(cpu, true);
- 		return NOTIFY_OK;
- 
-@@ -5645,7 +5661,15 @@ static int sched_cpu_inactive(struct not
- 	switch (action & ~CPU_TASKS_FROZEN) {
- 	case CPU_DOWN_PREPARE:
- 		set_cpu_active((long)hcpu, false);
-+#ifdef CONFIG_SCHED_SMT
-+		/*
-+		 * When going down, decrement the number of cores with SMT present.
-+		 */
-+		if (cpumask_weight(cpu_smt_mask((long)hcpu)) == 2)
-+			atomic_dec(&sched_smt_present);
-+#endif
- 		return NOTIFY_OK;
-+
- 	default:
- 		return NOTIFY_DONE;
- 	}
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -2,6 +2,7 @@
- #include <linux/sched.h>
- #include <linux/sched/sysctl.h>
- #include <linux/sched/rt.h>
-+#include <linux/sched/smt.h>
- #include <linux/sched/deadline.h>
- #include <linux/mutex.h>
- #include <linux/spinlock.h>
+ static const char * const mds_strings[] = {
 
 
