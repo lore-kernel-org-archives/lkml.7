@@ -4,58 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C233CC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E981AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 949092168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADFE02084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919012;
-	bh=53h/qjjxNcbShhTthqx19K0XQn9X+ml3ZCdPOFaCXBc=;
+	s=default; t=1557919015;
+	bh=ejtKFUHjE7MGl7daJ28LfLprtBgPwhT1Yw1lwNHy0cM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0dmTFgbXWuK4wgXCPgH+jm4psp5vlLSYEaS3c/tfLjqBQJaUSk3IKJEtWzpPphuFb
-	 8SkUN5MNWgE4hbz+I7E2J9X+piWgjvzNEPEW+zS25bmZWK7FpvL2RlWdSJKubSKw7d
-	 UUMcATercVAKMi05sTiDQ/n7FO4ggW3wa56AxaDo=
+	b=sFUXBEmxn9Lyu0WQuWwTkZvlPNlDWVKnPIh9E9rOc2rMxmEYAMMaMPgOER+yiJM1K
+	 G40g/lB/NViXCTnSKv06tdjqN5qJfUAboYho1Nt11ezXzCwNL8rxxplMsh7m6H79Jw
+	 LeT1k0kPopULWiEwLU4gRYb+8HUAkZfK23afYcTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730577AbfEOLQv (ORCPT
+        id S1730586AbfEOLQy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:16:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53662 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:16:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730551AbfEOLQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:16:47 -0400
+        id S1730576AbfEOLQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:16:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76B6620644;
-        Wed, 15 May 2019 11:16:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEE472084F;
+        Wed, 15 May 2019 11:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919005;
-        bh=53h/qjjxNcbShhTthqx19K0XQn9X+ml3ZCdPOFaCXBc=;
+        s=default; t=1557919011;
+        bh=ejtKFUHjE7MGl7daJ28LfLprtBgPwhT1Yw1lwNHy0cM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ri2hMsNOXeYS1dokmLvVbVQDw8doafIk808yAPLJ8S6ptceRbAdiPS8jMzJaekb7I
-         qdNzntAlPsMN3NnYohvZl1Z4kni/9vHrz6hq0sYkqbscS2XVzrklkM0SSjtxy7G/jM
-         JtQ48XI0VBSmLh1BKlnnb+xi9raIkqJt35om/Wqs=
+        b=ZNqgtxjZjCEwYJpl6RSrZdjopyNaaBzDjcQ8dQWyOVumgVSirbG0a1Tf8p71kfIQ4
+         puaqD5S0VG1Jtpl7KuAcd4uQykVCyUOw3wdnqvIdmBub3uBDMpyGWWJTzbN6iO3HLp
+         zSRZuGYRvp3nZ20S34ioHCxBBmFKnrEyWVDqaWls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kevin ldir Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
-        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
-        John Crispin <john@phrozen.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 031/115] MIPS: perf: ath79: Fix perfcount IRQ assignment
-Date:   Wed, 15 May 2019 12:55:11 +0200
-Message-Id: <20190515090701.626906351@linuxfoundation.org>
+Subject: [PATCH 4.14 033/115] drm/sun4i: Set device driver data at bind time for use in unbind
+Date:   Wed, 15 May 2019 12:55:13 +0200
+Message-Id: <20190515090701.819481286@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -68,113 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a1e8783db8e0d58891681bc1e6d9ada66eae8e20 ]
+[ Upstream commit 02b92adbe33e6dbd15dc6e32540b22f47c4ff0a2 ]
 
-Currently it's not possible to use perf on ath79 due to genirq flags
-mismatch happening on static virtual IRQ 13 which is used for
-performance counters hardware IRQ 5.
+Our sun4i_drv_unbind gets the drm device using dev_get_drvdata.
+However, that driver data is never set in sun4i_drv_bind.
 
-On TP-Link Archer C7v5:
+Set it there to avoid getting a NULL pointer at unbind time.
 
-           CPU0
-  2:          0      MIPS   2  ath9k
-  4:        318      MIPS   4  19000000.eth
-  7:      55034      MIPS   7  timer
-  8:       1236      MISC   3  ttyS0
- 12:          0      INTC   1  ehci_hcd:usb1
- 13:          0  gpio-ath79   2  keys
- 14:          0  gpio-ath79   5  keys
- 15:         31  AR724X PCI    1  ath10k_pci
-
- $ perf top
- genirq: Flags mismatch irq 13. 00014c83 (mips_perf_pmu) vs. 00002003 (keys)
-
-On TP-Link Archer C7v4:
-
-         CPU0
-  4:          0      MIPS   4  19000000.eth
-  5:       7135      MIPS   5  1a000000.eth
-  7:      98379      MIPS   7  timer
-  8:         30      MISC   3  ttyS0
- 12:      90028      INTC   0  ath9k
- 13:       5520      INTC   1  ehci_hcd:usb1
- 14:       4623      INTC   2  ehci_hcd:usb2
- 15:      32844  AR724X PCI    1  ath10k_pci
- 16:          0  gpio-ath79  16  keys
- 23:          0  gpio-ath79  23  keys
-
- $ perf top
- genirq: Flags mismatch irq 13. 00014c80 (mips_perf_pmu) vs. 00000080 (ehci_hcd:usb1)
-
-This problem is happening, because currently statically assigned virtual
-IRQ 13 for performance counters is not claimed during the initialization
-of MIPS PMU during the bootup, so the IRQ subsystem doesn't know, that
-this interrupt isn't available for further use.
-
-So this patch fixes the issue by simply booking hardware IRQ 5 for MIPS PMU.
-
-Tested-by: Kevin 'ldir' Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
-Signed-off-by: Petr Štetiar <ynezz@true.cz>
-Acked-by: John Crispin <john@phrozen.org>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Cc: linux-mips@vger.kernel.org
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
+Fixes: 9026e0d122ac ("drm: Add Allwinner A10 Display Engine support")
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190418132727.5128-3-paul.kocialkowski@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/ath79/setup.c          |  6 ------
- drivers/irqchip/irq-ath79-misc.c | 11 +++++++++++
- 2 files changed, 11 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_drv.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/mips/ath79/setup.c b/arch/mips/ath79/setup.c
-index 26a058d58d37b..c7c31e2148136 100644
---- a/arch/mips/ath79/setup.c
-+++ b/arch/mips/ath79/setup.c
-@@ -183,12 +183,6 @@ const char *get_system_type(void)
- 	return ath79_sys_type;
- }
- 
--int get_c0_perfcount_int(void)
--{
--	return ATH79_MISC_IRQ(5);
--}
--EXPORT_SYMBOL_GPL(get_c0_perfcount_int);
--
- unsigned int get_c0_compare_int(void)
- {
- 	return CP0_LEGACY_COMPARE_IRQ;
-diff --git a/drivers/irqchip/irq-ath79-misc.c b/drivers/irqchip/irq-ath79-misc.c
-index aa72907846360..0390603170b40 100644
---- a/drivers/irqchip/irq-ath79-misc.c
-+++ b/drivers/irqchip/irq-ath79-misc.c
-@@ -22,6 +22,15 @@
- #define AR71XX_RESET_REG_MISC_INT_ENABLE	4
- 
- #define ATH79_MISC_IRQ_COUNT			32
-+#define ATH79_MISC_PERF_IRQ			5
+diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+index 8d3c8070ed862..e09161cf312f7 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+@@ -96,6 +96,8 @@ static int sun4i_drv_bind(struct device *dev)
+ 		ret = -ENOMEM;
+ 		goto free_drm;
+ 	}
 +
-+static int ath79_perfcount_irq;
-+
-+int get_c0_perfcount_int(void)
-+{
-+	return ath79_perfcount_irq;
-+}
-+EXPORT_SYMBOL_GPL(get_c0_perfcount_int);
- 
- static void ath79_misc_irq_handler(struct irq_desc *desc)
- {
-@@ -113,6 +122,8 @@ static void __init ath79_misc_intc_domain_init(
- {
- 	void __iomem *base = domain->host_data;
- 
-+	ath79_perfcount_irq = irq_create_mapping(domain, ATH79_MISC_PERF_IRQ);
-+
- 	/* Disable and clear all interrupts */
- 	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_ENABLE);
- 	__raw_writel(0, base + AR71XX_RESET_REG_MISC_INT_STATUS);
++	dev_set_drvdata(dev, drm);
+ 	drm->dev_private = drv;
+ 	INIT_LIST_HEAD(&drv->engine_list);
+ 	INIT_LIST_HEAD(&drv->tcon_list);
 -- 
 2.20.1
 
