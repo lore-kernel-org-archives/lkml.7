@@ -2,140 +2,119 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 348CAC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8991CC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03EA42089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:14:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557908067;
-	bh=GRT/jLNPQVryXaf71VKkI7ShZUT/dxnCTpWIhHaxcmw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D2ex4YKLswH8rOjRVpmiX4iD5t1ugDG+YQHfScueJ+8h9ZENUitNh6JQwUZfOZ054
-	 S7zjVb3K6FkfM9/7pTnoaJEe1A5JjKmXoIXrS0S6LwrNPPYpFGK/q/8GLTV+Ki15Vk
-	 XKhW6+aKF58QjT/tEDR7tdx9jQ3zpxUtVe9RztvU=
+	by mail.kernel.org (Postfix) with ESMTP id 621B920862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:14:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfEOIOZ (ORCPT
+        id S1726529AbfEOIOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 04:14:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47628 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 04:14:51 -0400
+Received: from mga17.intel.com ([192.55.52.151]:42327 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbfEOIOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 04:14:25 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D218620862;
-        Wed, 15 May 2019 08:14:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557908064;
-        bh=GRT/jLNPQVryXaf71VKkI7ShZUT/dxnCTpWIhHaxcmw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A6UrR7LBqScO0/79+lSEsYyUVF1N2tuDZfT5Z5cO15m2/apXOPYWYZxZYzJwLxGEQ
-         tBF/TW96dblCBm4U6SkW1bf6s4BcSwobKmIKsDrIsj8ZayUYHqiJAhnGd7GS9qd1Rf
-         sogw6LyjkUf4HIK+hcuxFSnXo8AO5VaZIc0ryXi8=
-Date:   Wed, 15 May 2019 10:14:22 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sam Ravnborg <sam@ravnborg.org>, Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Kees Cook <keescook@chromium.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] kbuild: check uniqueness of basename of modules
-Message-ID: <20190515081422.GA22750@kroah.com>
-References: <20190515073818.22486-1-yamada.masahiro@socionext.com>
- <CAK8P3a1y7hxME0me_Zu-F8a8jU6n=T+c32mv83utOtsL-+gc0A@mail.gmail.com>
+        id S1725876AbfEOIOv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 04:14:51 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 01:14:50 -0700
+X-ExtLoop1: 1
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
+  by orsmga002.jf.intel.com with ESMTP; 15 May 2019 01:14:46 -0700
+Date:   Wed, 15 May 2019 11:14:55 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     peterhuewe@gmx.de, jgg@ziepe.ca, corbet@lwn.net,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@microsoft.com,
+        thiruan@microsoft.com, bryankel@microsoft.com
+Subject: Re: [PATCH v3 2/2] ftpm: add documentation for ftpm driver
+Message-ID: <20190515081455.GB7708@linux.intel.com>
+References: <20190415155636.32748-1-sashal@kernel.org>
+ <20190415155636.32748-3-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a1y7hxME0me_Zu-F8a8jU6n=T+c32mv83utOtsL-+gc0A@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190415155636.32748-3-sashal@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 10:08:12AM +0200, Arnd Bergmann wrote:
-> On Wed, May 15, 2019 at 9:39 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > In the recent build test of linux-next, Stephen saw a build error
-> > caused by a broken .tmp_versions/*.mod file:
-> >
-> >   https://lkml.org/lkml/2019/5/13/991
-> >
-> > drivers/net/phy/asix.ko and drivers/net/usb/asix.ko have the same
-> > basename, and there is a race in generating .tmp_versions/asix.mod
-> >
-> > Kbuild has not checked this before, and it occasionally shows up with
-> > obscure error message when this kind of race occurs.
-> >
-> > It is not trivial to catch this potential issue by eyes.
-> >
-> > Hence, this script.
-> >
-> > I compile-tested allmodconfig for the latest kernel as of writing,
-> > it detected the following:
-> >
-> > warning: same basename '88pm800.ko' if the following are built as modules:
-> >   drivers/regulator/88pm800.ko
-> >   drivers/mfd/88pm800.ko
-> > warning: same basename 'adv7511.ko' if the following are built as modules:
-> >   drivers/gpu/drm/bridge/adv7511/adv7511.ko
-> >   drivers/media/i2c/adv7511.ko
-> > warning: same basename 'asix.ko' if the following are built as modules:
-> >   drivers/net/phy/asix.ko
-> >   drivers/net/usb/asix.ko
-> > warning: same basename 'coda.ko' if the following are built as modules:
-> >   fs/coda/coda.ko
-> >   drivers/media/platform/coda/coda.ko
-> > warning: same basename 'realtek.ko' if the following are built as modules:
-> >   drivers/net/phy/realtek.ko
-> >   drivers/net/dsa/realtek.ko
-> >
-> > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+On Mon, Apr 15, 2019 at 11:56:36AM -0400, Sasha Levin wrote:
+> This patch adds basic documentation to describe the new fTPM driver.
 > 
-> That looks great!
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+> ---
+>  Documentation/security/tpm/index.rst        |  1 +
+>  Documentation/security/tpm/tpm_ftpm_tee.rst | 31 +++++++++++++++++++++
+>  2 files changed, 32 insertions(+)
+>  create mode 100644 Documentation/security/tpm/tpm_ftpm_tee.rst
 > 
-> > ---
-> >
-> >  [Alternative fix ? ]
-> >
-> > I do not know about the user experience of modprobe etc.
-> > when two different modules have the same name.
-> > It does not matter if this is correctly handled by modules.order?
-> >
-> > If this is just a problem of the build system, it is pretty easy to fix.
-> > For example, if we prepend the directory path, parallel build will
-> > never write to the same file simultanously.
-> >
-> >   asix.mod -> drivers/net/phy/asix.mod
-> >   asix.mod -> drivers/net/usb/asix.mod
+> diff --git a/Documentation/security/tpm/index.rst b/Documentation/security/tpm/index.rst
+> index af77a7bbb070..15783668644f 100644
+> --- a/Documentation/security/tpm/index.rst
+> +++ b/Documentation/security/tpm/index.rst
+> @@ -4,4 +4,5 @@ Trusted Platform Module documentation
+>  
+>  .. toctree::
+>  
+> +   tpm_ftpm_tee
+>     tpm_vtpm_proxy
+> diff --git a/Documentation/security/tpm/tpm_ftpm_tee.rst b/Documentation/security/tpm/tpm_ftpm_tee.rst
+> new file mode 100644
+> index 000000000000..29c2f8b5ed10
+> --- /dev/null
+> +++ b/Documentation/security/tpm/tpm_ftpm_tee.rst
+> @@ -0,0 +1,31 @@
+> +=============================================
+> +Firmware TPM Driver
+> +=============================================
+> +
+> +| Authors:
+> +| Thirupathaiah Annapureddy <thiruan@microsoft.com>
+> +| Sasha Levin <sashal@kernel.org>
+> +
+> +This document describes the firmware Trusted Platform Module (fTPM)
+> +device driver.
+> +
+> +Introduction
+> +============
+> +
+> +This driver is a shim for a firmware implemented in ARM's TrustZone
+> +environment. The driver allows programs to interact with the TPM in the same
+> +way the would interact with a hardware TPM.
+> +
+> +Design
+> +======
+> +
+> +The driver acts as a thin layer that passes commands to and from a TPM
+> +implemented in firmware. The driver itself doesn't contain much logic and is
+> +used more like a dumb pipe between firmware and kernel/userspace.
+> +
+> +The firmware itself is based on the following paper:
+> +https://www.microsoft.com/en-us/research/wp-content/uploads/2017/06/ftpm1.pdf
+> +
+> +When the driver is loaded it will expose ``/dev/tpmX`` character devices to
+> +userspace which will enable userspace to communicate with the firmware tpm
+> +through this device.
+> -- 
+> 2.19.1
 > 
-> non-unique module names cause all kinds of problems, and
-> modprobe can certainly not handle them correctly, and there
-> are issues with symbols exported from a module when another
-> one has the same name.
 
-/sys/modules/ will fall over when this happens as well.  I thought we
-had the "rule" that module names had to be unique, I guess it was only a
-matter of time before they started colliding :(
+Actually this would a better place at least with some words to describe
+what is TEE. I'm, for example, confused whether there is only single TEE
+in existence always used with TZ or is this some MS specific TEE.
 
-So warning is good, but forbidding this is better, as things will break.
+Otherwise, looks legit.
 
-Or we need to fix up the places where things will break.
-
-thanks,
-
-greg k-h
+/Jarkko
