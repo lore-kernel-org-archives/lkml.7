@@ -2,74 +2,66 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E80BC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B796AC04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9332084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:22:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 904622084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726168AbfEOJWt (ORCPT
+        id S1726254AbfEOJZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 05:22:49 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38912 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725871AbfEOJWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 05:22:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C126341;
-        Wed, 15 May 2019 02:22:48 -0700 (PDT)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBFCF3F703;
-        Wed, 15 May 2019 02:22:45 -0700 (PDT)
-Date:   Wed, 15 May 2019 10:22:44 +0100
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
-        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
-        will.deacon@arm.com, catalin.marinas@arm.com,
-        dietmar.eggemann@arm.com, ionela.voinescu@arm.com,
-        mka@chromium.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 1/3] arm64: defconfig: Enable CONFIG_ENERGY_MODEL
-Message-ID: <20190515092242.azcracudtdnruwnz@queper01-lin>
-References: <20190515082318.7993-1-quentin.perret@arm.com>
- <20190515082318.7993-2-quentin.perret@arm.com>
- <2f598ea3-752d-0f1d-fd33-f07cda3b7bd0@linaro.org>
+        Wed, 15 May 2019 05:25:23 -0400
+Received: from nbd.name ([46.4.11.11]:52580 "EHLO nbd.name"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725871AbfEOJZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 05:25:22 -0400
+Received: from p548c8a24.dip0.t-ipconnect.de ([84.140.138.36] helo=[192.168.178.20])
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <john@phrozen.org>)
+        id 1hQq9w-0006aH-TN; Wed, 15 May 2019 11:25:12 +0200
+Subject: Re: [PATCH] clk: Remove io.h from clk-provider.h
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>
+References: <20190514170931.56312-1-sboyd@kernel.org>
+From:   John Crispin <john@phrozen.org>
+Message-ID: <da02de1e-40cb-d76b-7742-9b3b7db8107c@phrozen.org>
+Date:   Wed, 15 May 2019 11:25:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2f598ea3-752d-0f1d-fd33-f07cda3b7bd0@linaro.org>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20190514170931.56312-1-sboyd@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 15 May 2019 at 10:46:09 (+0200), Daniel Lezcano wrote:
-> On 15/05/2019 10:23, Quentin Perret wrote:
-> > The recently introduced Energy Model (EM) framework manages power cost
-> > tables for the CPUs of the system. Its only user right now is the
-> > scheduler, in the context of Energy Aware Scheduling (EAS).
-> > 
-> > However, the EM framework also offers a generic infrastructure that
-> > could replace subsystem-specific implementations of the same concepts,
-> > as this is the case in the thermal framework.
-> > 
-> > So, in order to prepare the migration of the thermal subsystem to use
-> > the EM framework, enable it in the default arm64 defconfig, which is the
-> > most commonly used architecture for IPA. This will also compile-in all
-> > of the EAS code, although it won't be enabled by default -- EAS requires
-> > to use the 'schedutil' CPUFreq governor while arm64 defaults to
-> > 'performance'.
-> > 
-> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > Signed-off-by: Quentin Perret <quentin.perret@arm.com>
-> 
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Thanks !
-Quentin
+On 14/05/2019 19:09, Stephen Boyd wrote:
+> Now that we've gotten rid of clk_readl() we can remove io.h from the
+> clk-provider header and push out the io.h include to any code that isn't
+> already including the io.h header but using things like readl/writel,
+> etc.
+
+for arch/mips/ath79/*
+
+Acked-by: John Crispin <john@phrozen.org>
+
