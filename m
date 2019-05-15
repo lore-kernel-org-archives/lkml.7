@@ -2,56 +2,59 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A323DC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A79C4C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B8092168B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FCF120843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920225;
-	bh=0oV+JBh2Ho1YfNfpbz9I/rH9Sbuze7VYWAW0BTmi4js=;
+	s=default; t=1557920231;
+	bh=pL0hkTf2rl78dlcSOKzwSlb/2Hh1mO15LS8IoPCp9ww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hq4fFn9Mt3SHe0ZnbWtXuIzZGLPRBO/PgcYncsjkBDRKXLT/wFXLYpmJ6z1f5Jmoi
-	 UmX38DaIuxGtvaSzb4vhyZWhBDzHSWqPq34wHAS9Og0BDAdQIA75/ccpMBJDLOsQed
-	 2TxEU4MFDmmTBvcxlFOEJwusBe/BL4naqYMDUPNs=
+	b=0Jw6QdZyoXobrnQ/FIDCS75uARdst34ZDeuDNTeWunZNXdM1cz6fxu32A83ZN4Pyl
+	 C7eBp/dARWGK817de8JmMDb03pb7DXKp/meFECp9RdZcRNyt37ZzJ4Wvid5OZVH2TV
+	 oaFvzoS0WcJWi5koYeBvu/it7K+9Mlerl9/Csers=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732695AbfEOLhD (ORCPT
+        id S1732504AbfEOLcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:37:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48166 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:32:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731673AbfEOLg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:36:58 -0400
+        id S1732976AbfEOLcI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:32:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22ABE2053B;
-        Wed, 15 May 2019 11:36:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6DD3206BF;
+        Wed, 15 May 2019 11:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557920217;
-        bh=0oV+JBh2Ho1YfNfpbz9I/rH9Sbuze7VYWAW0BTmi4js=;
+        s=default; t=1557919926;
+        bh=pL0hkTf2rl78dlcSOKzwSlb/2Hh1mO15LS8IoPCp9ww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J6FKGYSUZ5rLlquJgq7ox3aFBTYJylE4cH+YO1c/oA6OrhRT0eIuKMGDFcH3mSow8
-         36kDA6FZN5Ve7tpwFv45XU3sPOmW7kwptpKC16mdS3ZPX8FamsrRxns2Q9n7PjdPAb
-         fnsMO+648kLBGx0iFFyUQn93Z6a3qY2RymehOohA=
+        b=u3NnG/gPuF1iQebiKEZXiKwrxoy+WUvkkYAqxM2BG9ERvSe7eT6NAG/qEM8fqicrI
+         gWIgpLVB6DY6efCEsO2SaYeSGmbfs7c1P9er4MygDLAzjzoroxFPBreBCfZ1VEm70m
+         mcZ9p1qJSDtKcGYbTO8s9IpyqqcywuD1HAapEqiI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "he, bo" <bo.he@intel.com>,
-        "Zhang, Jun" <jun.zhang@intel.com>, Jiri Kosina <jkosina@suse.cz>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 37/86] HID: debug: fix race condition with between rdesc_show() and device removal
-Date:   Wed, 15 May 2019 12:55:14 +0200
-Message-Id: <20190515090650.117386371@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.1 01/46] platform/x86: sony-laptop: Fix unintentional fall-through
+Date:   Wed, 15 May 2019 12:56:25 +0200
+Message-Id: <20190515090618.003500697@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
-References: <20190515090642.339346723@linuxfoundation.org>
+In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
+References: <20190515090616.670410738@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,60 +63,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cef0d4948cb0a02db37ebfdc320e127c77ab1637 ]
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-There is a race condition that could happen if hid_debug_rdesc_show()
-is running while hdev is in the process of going away (device removal,
-system suspend, etc) which could result in NULL pointer dereference:
+commit 1cbd7a64959d33e7a2a1fa2bf36a62b350a9fcbd upstream.
 
-	 BUG: unable to handle kernel paging request at 0000000783316040
-	 CPU: 1 PID: 1512 Comm: getevent Tainted: G     U     O 4.19.20-quilt-2e5dc0ac-00029-gc455a447dd55 #1
-	 RIP: 0010:hid_dump_device+0x9b/0x160
-	 Call Trace:
-	  hid_debug_rdesc_show+0x72/0x1d0
-	  seq_read+0xe0/0x410
-	  full_proxy_read+0x5f/0x90
-	  __vfs_read+0x3a/0x170
-	  vfs_read+0xa0/0x150
-	  ksys_read+0x58/0xc0
-	  __x64_sys_read+0x1a/0x20
-	  do_syscall_64+0x55/0x110
-	  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+It seems that the default case should return AE_CTRL_TERMINATE, instead
+of falling through to case ACPI_RESOURCE_TYPE_END_TAG and returning AE_OK;
+otherwise the line of code at the end of the function is unreachable and
+makes no sense:
 
-Grab driver_input_lock to make sure the input device exists throughout the
-whole process of dumping the rdesc.
+return AE_CTRL_TERMINATE;
 
-[jkosina@suse.cz: update changelog a bit]
-Signed-off-by: he, bo <bo.he@intel.com>
-Signed-off-by: "Zhang, Jun" <jun.zhang@intel.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This fix is based on the following thread of discussion:
+
+https://lore.kernel.org/patchwork/patch/959782/
+
+Fixes: 33a04454527e ("sony-laptop: Add SNY6001 device handling (sonypi reimplementation)")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/hid/hid-debug.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/platform/x86/sony-laptop.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/hid/hid-debug.c b/drivers/hid/hid-debug.c
-index e930627d0c76..71b069bd2a24 100644
---- a/drivers/hid/hid-debug.c
-+++ b/drivers/hid/hid-debug.c
-@@ -1057,10 +1057,15 @@ static int hid_debug_rdesc_show(struct seq_file *f, void *p)
- 	seq_printf(f, "\n\n");
- 
- 	/* dump parsed data and input mappings */
-+	if (down_interruptible(&hdev->driver_input_lock))
-+		return 0;
+--- a/drivers/platform/x86/sony-laptop.c
++++ b/drivers/platform/x86/sony-laptop.c
+@@ -4424,14 +4424,16 @@ sony_pic_read_possible_resource(struct a
+ 			}
+ 			return AE_OK;
+ 		}
 +
- 	hid_dump_device(hdev, f);
- 	seq_printf(f, "\n");
- 	hid_dump_input_mapping(hdev, f);
- 
-+	up(&hdev->driver_input_lock);
++	case ACPI_RESOURCE_TYPE_END_TAG:
++		return AE_OK;
 +
- 	return 0;
+ 	default:
+ 		dprintk("Resource %d isn't an IRQ nor an IO port\n",
+ 			resource->type);
++		return AE_CTRL_TERMINATE;
+ 
+-	case ACPI_RESOURCE_TYPE_END_TAG:
+-		return AE_OK;
+ 	}
+-	return AE_CTRL_TERMINATE;
  }
  
--- 
-2.20.1
-
+ static int sony_pic_possible_resources(struct acpi_device *device)
 
 
