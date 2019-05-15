@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E297DC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 166F2C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4A0420657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFC2620657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922113;
-	bh=0TjL81IqbnAkiwaGUHAMMPYNKAiIgC8Ggtg0x3pthj8=;
+	s=default; t=1557922126;
+	bh=m5v/VQDEu53kIn8smOqM7gN/gtLhfkr4W9EBM+BYU1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fvj5EqPy/Usa+dT/kvkyzuqOJ5hkSS3Y1yuEWz1WVyLX9Tek5jlEcucRJwXtH8lzY
-	 gJAz/VgQaH06wG+XCWZW5/JVFOhiPA0bF0YpM+ClSG6nkk8OtDYCoy6YTXdwnkpeUu
-	 C28f4o84pfJzjZq8fZ0VYfoUX6dRQY65UF6xvJTA=
+	b=jx1nN6nwxURMkN9Frg3Bd+Q7SEo+J9E/jTMxSo/uIyxdeG018KaQkM1GPLNU6JyZh
+	 3Lx8UbEGPfED7mOGKh3JkEuSzZLSMNN9gVM0Kg5VcNeAq/DEvY/gAnN08V76LmzB0K
+	 SvDNxuRUifWfjKLaJEG193eabDKr5YwJrxlNxzg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729441AbfEOMIc (ORCPT
+        id S1729483AbfEOMIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:08:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40970 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:08:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728684AbfEOLId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:08:33 -0400
+        id S1729081AbfEOLIU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:08:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BC3F2084F;
-        Wed, 15 May 2019 11:08:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 684D520881;
+        Wed, 15 May 2019 11:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918512;
-        bh=0TjL81IqbnAkiwaGUHAMMPYNKAiIgC8Ggtg0x3pthj8=;
+        s=default; t=1557918499;
+        bh=m5v/VQDEu53kIn8smOqM7gN/gtLhfkr4W9EBM+BYU1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UXmeDODyAQCfr9Kl+RnRJwzizBcKPVarlRH8OHnY1vkUEKzBvXZp228zcpXHKmDdy
-         IlqUdk5mO3O7Y6erAkrSAcHUGeEcy6vwEJ+T1zJPP0O5oi0C0h+pvfY3DwJS20vRQp
-         6jd3KqSMt1sPo+t45R7f21P+b63AJwvP8ewt9t7Y=
+        b=Ra0R6CAmKIL8vMS2F/7RFG2O7fkUl+CgaC3dASsXrdKIc6nSafkvPA1cJ/OsMal0+
+         5Zdds3HIxzODasEljUQpH9okFvP1qcKF+FtdDUy6Idm2gks3UyclaHYjC4sopWcxCE
+         TlQ/I70kVcMTwqUXz8K4KYBwLNCiqvzfyQoSDnuc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 158/266] timer/debug: Change /proc/timer_stats from 0644 to 0600
-Date:   Wed, 15 May 2019 12:54:25 +0200
-Message-Id: <20190515090728.259967946@linuxfoundation.org>
+        stable@vger.kernel.org, Young Xiao <YangX92@hotmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.4 153/266] Bluetooth: hidp: fix buffer overflow
+Date:   Wed, 15 May 2019 12:54:20 +0200
+Message-Id: <20190515090728.088629083@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -58,34 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Young Xiao <YangX92@hotmail.com>
 
-The timer_stats facility should filter and translate PIDs if opened
-from a non-initial PID namespace, to avoid leaking information about
-the wider system.  It should also not show kernel virtual addresses.
-Unfortunately it has now been removed upstream (as redundant)
-instead of being fixed.
+commit a1616a5ac99ede5d605047a9012481ce7ff18b16 upstream.
 
-For stable, fix the leak by restricting access to root only.  A
-similar change was already made for the /proc/timer_list file.
+Struct ca is copied from userspace. It is not checked whether the "name"
+field is NULL terminated, which allows local users to obtain potentially
+sensitive information from kernel stack memory, via a HIDPCONNADD command.
 
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+This vulnerability is similar to CVE-2011-1079.
+
+Signed-off-by: Young Xiao <YangX92@hotmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/time/timer_stats.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/bluetooth/hidp/sock.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/time/timer_stats.c
-+++ b/kernel/time/timer_stats.c
-@@ -417,7 +417,7 @@ static int __init init_tstats_procfs(voi
- {
- 	struct proc_dir_entry *pe;
+--- a/net/bluetooth/hidp/sock.c
++++ b/net/bluetooth/hidp/sock.c
+@@ -76,6 +76,7 @@ static int hidp_sock_ioctl(struct socket
+ 			sockfd_put(csock);
+ 			return err;
+ 		}
++		ca.name[sizeof(ca.name)-1] = 0;
  
--	pe = proc_create("timer_stats", 0644, NULL, &tstats_fops);
-+	pe = proc_create("timer_stats", 0600, NULL, &tstats_fops);
- 	if (!pe)
- 		return -ENOMEM;
- 	return 0;
+ 		err = hidp_connection_add(&ca, csock, isock);
+ 		if (!err && copy_to_user(argp, &ca, sizeof(ca)))
 
 
