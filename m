@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EF5C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 720B7C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155D420862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 421042084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919554;
-	bh=RgwmXrYQ83zdOZuHtIQ2WDfOT51GhqHrvZ5TTmhItSk=;
+	s=default; t=1557919557;
+	bh=l7/n2XgY1ZmonL/M/UKNWFycU9KwoYb8lUrCnxslxY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ljc/VM4Sg2JG3XgzGlr524PjmiRMpgUJ6giNeRmV2TWXqIMNrQUaKKgqhXshyuN+Z
-	 qVUTbkr0RQgc4wvy6dfrScRT9DTFB/xiOMyeExcidemqOJwrWsMIxihqDfExIbxuOJ
-	 YWYkfMbCDvATI6yYq4sSApUeOC/gsKmqBZn0Y30k=
+	b=Dbh5YQDqJBQayHZvWRLQggN2KgidIsCUJtlqK2hVwQJRbRyuhOrtP630/4RuiGyp3
+	 3uzGTklo3o1vIZMJnIIin3ydkfqwt0LDozN8/M+1AcWQVja0+w9tcYDMAlT6rM/rqg
+	 1iPli/I2tytvE+p1VFQ/PlDKezFNmzeSV7w+ESfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730360AbfEOLZw (ORCPT
+        id S1732077AbfEOLZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:25:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36622 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:25:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732049AbfEOLZu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:25:50 -0400
+        id S1732060AbfEOLZw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:25:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D284206BF;
-        Wed, 15 May 2019 11:25:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 327832084F;
+        Wed, 15 May 2019 11:25:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919549;
-        bh=RgwmXrYQ83zdOZuHtIQ2WDfOT51GhqHrvZ5TTmhItSk=;
+        s=default; t=1557919551;
+        bh=l7/n2XgY1ZmonL/M/UKNWFycU9KwoYb8lUrCnxslxY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o3vQonviCxucFC5HCUhszZJGsCC1DrFGCKgi+Ib+u2/m5qsCtXtTjcOZLATNMg3xl
-         jvr7V6vp4zvLTiFVzD3W5BSiXh8QGZbWXmY0sOvDaEF5JA9nhkjTj0d2D1m3gGhifJ
-         ITqa/3zoexvswdaYNZT2uwbExZGJ6BG/YzvYbVf4=
+        b=jOs1bejGnlhVr9M1/BU+LcmgGt9QeyYZNHEMYEjPvzrRttApj3CmPTxTYjo2XYoim
+         AtuHmf2BrGGG4JPUS9clzyz3DDjW2BWSAcXky9OKeCoNjJz2W3wkP+SGiy84JhUp2l
+         rJ5G2Z6t2t556Wq5QPMben9SVqB1zUSjore8i4fk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 092/113] ipv4: Fix raw socket lookup for local traffic
-Date:   Wed, 15 May 2019 12:56:23 +0200
-Message-Id: <20190515090700.606264137@linuxfoundation.org>
+Subject: [PATCH 4.19 093/113] net: dsa: Fix error cleanup path in dsa_init_module
+Date:   Wed, 15 May 2019 12:56:24 +0200
+Message-Id: <20190515090700.674787925@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -58,46 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Ahern <dsahern@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 19e4e768064a87b073a4b4c138b55db70e0cfb9f ]
+[ Upstream commit 68be930249d051fd54d3d99156b3dcadcb2a1f9b ]
 
-inet_iif should be used for the raw socket lookup. inet_iif considers
-rt_iif which handles the case of local traffic.
+BUG: unable to handle kernel paging request at ffffffffa01c5430
+PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bc5067 PTE 0
+Oops: 0000 [#1
+CPU: 0 PID: 6159 Comm: modprobe Not tainted 5.1.0+ #33
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:raw_notifier_chain_register+0x16/0x40
+Code: 63 f8 66 90 e9 5d ff ff ff 90 90 90 90 90 90 90 90 90 90 90 55 48 8b 07 48 89 e5 48 85 c0 74 1c 8b 56 10 3b 50 10 7e 07 eb 12 <39> 50 10 7c 0d 48 8d 78 08 48 8b 40 08 48 85 c0 75 ee 48 89 46 08
+RSP: 0018:ffffc90001c33c08 EFLAGS: 00010282
+RAX: ffffffffa01c5420 RBX: ffffffffa01db420 RCX: 4fcef45928070a8b
+RDX: 0000000000000000 RSI: ffffffffa01db420 RDI: ffffffffa01b0068
+RBP: ffffc90001c33c08 R08: 000000003e0a33d0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000094443661 R12: ffff88822c320700
+R13: ffff88823109be80 R14: 0000000000000000 R15: ffffc90001c33e78
+FS:  00007fab8bd08540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffa01c5430 CR3: 00000002297ea000 CR4: 00000000000006f0
+Call Trace:
+ register_netdevice_notifier+0x43/0x250
+ ? 0xffffffffa01e0000
+ dsa_slave_register_notifier+0x13/0x70 [dsa_core
+ ? 0xffffffffa01e0000
+ dsa_init_module+0x2e/0x1000 [dsa_core
+ do_one_initcall+0x6c/0x3cc
+ ? do_init_module+0x22/0x1f1
+ ? rcu_read_lock_sched_held+0x97/0xb0
+ ? kmem_cache_alloc_trace+0x325/0x3b0
+ do_init_module+0x5b/0x1f1
+ load_module+0x1db1/0x2690
+ ? m_show+0x1d0/0x1d0
+ __do_sys_finit_module+0xc5/0xd0
+ __x64_sys_finit_module+0x15/0x20
+ do_syscall_64+0x6b/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-As it stands, ping to a local address with the '-I <dev>' option fails
-ever since ping was changed to use SO_BINDTODEVICE instead of
-cmsg + IP_PKTINFO.
+Cleanup allocated resourses if there are errors,
+otherwise it will trgger memleak.
 
-IPv6 works fine.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: David Ahern <dsahern@gmail.com>
+Fixes: c9eb3e0f8701 ("net: dsa: Add support for learning FDB through notification")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/raw.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/dsa/dsa.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/net/ipv4/raw.c
-+++ b/net/ipv4/raw.c
-@@ -174,6 +174,7 @@ static int icmp_filter(const struct sock
- static int raw_v4_input(struct sk_buff *skb, const struct iphdr *iph, int hash)
- {
- 	int sdif = inet_sdif(skb);
-+	int dif = inet_iif(skb);
- 	struct sock *sk;
- 	struct hlist_head *head;
- 	int delivered = 0;
-@@ -186,8 +187,7 @@ static int raw_v4_input(struct sk_buff *
+--- a/net/dsa/dsa.c
++++ b/net/dsa/dsa.c
+@@ -293,15 +293,22 @@ static int __init dsa_init_module(void)
  
- 	net = dev_net(skb->dev);
- 	sk = __raw_v4_lookup(net, __sk_head(head), iph->protocol,
--			     iph->saddr, iph->daddr,
--			     skb->dev->ifindex, sdif);
-+			     iph->saddr, iph->daddr, dif, sdif);
+ 	rc = dsa_slave_register_notifier();
+ 	if (rc)
+-		return rc;
++		goto register_notifier_fail;
  
- 	while (sk) {
- 		delivered = 1;
+ 	rc = dsa_legacy_register();
+ 	if (rc)
+-		return rc;
++		goto legacy_register_fail;
+ 
+ 	dev_add_pack(&dsa_pack_type);
+ 
+ 	return 0;
++
++legacy_register_fail:
++	dsa_slave_unregister_notifier();
++register_notifier_fail:
++	destroy_workqueue(dsa_owq);
++
++	return rc;
+ }
+ module_init(dsa_init_module);
+ 
 
 
