@@ -2,131 +2,330 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1500AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A793DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAE3320843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:04:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Akbiq8u5"
+	by mail.kernel.org (Postfix) with ESMTP id 6FEFD20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557921908;
+	bh=ljqYy/Z9kslG+EL17A7e1VuFNCzcXOpz/hNK9vQqN4c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mm6sy+zdzpTfUNfVtzDHaigQRZZWVOOwuGnNX/RpSc/RcKiL6aslu4X6Gr5Otws0F
+	 Dr2WTtZNs4reYNihwwtEi4auAbfS7MXJLBV2bxDx1LnRUrsU28zD3+V0U5ZNbwZ4uo
+	 aiFJdxnY4f62X0L9Bss8x4KXxpxx5nq2pTNddvpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730096AbfEOME6 (ORCPT
+        id S1729525AbfEOMFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:04:58 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:52626 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729869AbfEOMEy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 08:04:54 -0400
-Received: by mail-it1-f194.google.com with SMTP id q65so2760167itg.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 05:04:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gWDGHQlINMY637LA0rkzmHJ184n+4lXL69Jz1SVmEeg=;
-        b=Akbiq8u5JFtbaEC1MDoNI4f4D7f7lBbSGAF9vRhIGnRTC+IrcgwYeCbvHl1DlPGrd/
-         uLlMVXOol3moj0DitDDLOTcdB/zL11V1ry4lDhtpBU7Ty72egPL9gLXZtr2KsD0pbt8Y
-         ujJG/oLEFjuMICLG2racJPZIDBjmUK0W9bsefTQLk9da9Pmn9iaJzeM23AcM7jyxogBv
-         GEFZTu8ZmJZs0XCtXOla1MzrFNArPIaD+Hq9XJ+vzb9BKZqK33+eub/o+xi8kpB605O0
-         XT2jezPKFug2wmK21/WeVXOZcEZpE+YO+pMJDbiTHM5EIiv80p+FXtvfl7CwLEaIc7bs
-         lgaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gWDGHQlINMY637LA0rkzmHJ184n+4lXL69Jz1SVmEeg=;
-        b=eLAXo4BZZa5dJsKs/6bT0I1O+Wh91/Qs9l5vuKkuQGhuzRO7QDiWSuC2Q/yIuPiwUQ
-         xUf93uJvmU6WROm9JAxbskRMT6uhEca5AFMeu3JRUBY+F6FTOib0Go0sqJJqRn390CGm
-         IxMzHuVHLHynJ9XVZrPYVSt9rMWXSKUS0eLDyCdToQL1FlgKmQy4W4ZbfGwt4D7ZKm2S
-         yaqBPdrfpv7pKiC3qOyLV1e1p6h7NfC7WZtNIYGgIHehnONNCR4tUw7dOoYsOS/b993e
-         KsNtJO7IKh5u4Pe6EwX1hf2yPve252rTpjGW1qgrN17+eHLZpxjUaJ6zh2uzjmYZ7bA7
-         wFrw==
-X-Gm-Message-State: APjAAAUZZ4XKOuhELwH0KNDpK/F/lMNWY/PVBrLA4yTqmuIHrSk1i13P
-        mqm6ayWCcTd3qekhK8a7oOb+rqztKno=
-X-Google-Smtp-Source: APXvYqztxRurLYFbNqlUSgw9PHMnGWQUtrrC+MpUHTY7IRcD8rWRKxZEIo9cIrTPKoHE1Nxs+Ou5wA==
-X-Received: by 2002:a24:5255:: with SMTP id d82mr8296250itb.104.1557921892588;
-        Wed, 15 May 2019 05:04:52 -0700 (PDT)
-Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.googlemail.com with ESMTPSA id x77sm41767ita.1.2019.05.15.05.04.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 05:04:51 -0700 (PDT)
-Subject: Re: [PATCH 03/18] dt-bindings: soc: qcom: add IPA bindings
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>, syadagir@codeaurora.org,
-        mjavid@codeaurora.org, evgreen@chromium.org, benchan@google.com,
-        ejcaruso@google.com, abhishek.esse@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190512012508.10608-1-elder@linaro.org>
- <20190512012508.10608-4-elder@linaro.org>
- <CAK8P3a3KLj5x-5VS5eUQfNVhPL101Dg_rezEzra4GFY5Dva2Cg@mail.gmail.com>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <fa75eb5e-90bc-b164-740f-4dbba8bccc46@linaro.org>
-Date:   Wed, 15 May 2019 07:04:50 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 15 May 2019 08:05:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729151AbfEOLLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:11:16 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 824F52084E;
+        Wed, 15 May 2019 11:11:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557918675;
+        bh=ljqYy/Z9kslG+EL17A7e1VuFNCzcXOpz/hNK9vQqN4c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0PZdUtnkGqwEn977jz/63jrBz2xpjDWAaAMcUGbRuPhUXY5MxDWqVGScsUm3LcvRS
+         hBb95l56JKl8lwgfLkhJtjYLCP5M+AsRZEqM09Aca+ovKgXUIvOatp1aXNgl30Fw/e
+         b8WgwFYq55JwKsRbUoTOVSYQ4lL3mUXJY2B58kJM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tim Chen <tim.c.chen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Casey Schaufler <casey.schaufler@intel.com>,
+        Asit Mallick <asit.k.mallick@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Jon Masters <jcm@redhat.com>,
+        Waiman Long <longman9394@gmail.com>,
+        Dave Stewart <david.c.stewart@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+Subject: [PATCH 4.4 223/266] x86/speculation: Add prctl() control for indirect branch speculation
+Date:   Wed, 15 May 2019 12:55:30 +0200
+Message-Id: <20190515090730.539243783@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
+References: <20190515090722.696531131@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a3KLj5x-5VS5eUQfNVhPL101Dg_rezEzra4GFY5Dva2Cg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/15/19 2:03 AM, Arnd Bergmann wrote:
-> On Sun, May 12, 2019 at 3:25 AM Alex Elder <elder@linaro.org> wrote:
->>
->> Add the binding definitions for the "qcom,ipa" device tree node.
->>
->> Signed-off-by: Alex Elder <elder@linaro.org>
->> ---
->>  .../devicetree/bindings/net/qcom,ipa.txt      | 164 ++++++++++++++++++
->>  1 file changed, 164 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/net/qcom,ipa.txt
->>
->> diff --git a/Documentation/devicetree/bindings/net/qcom,ipa.txt b/Documentation/devicetree/bindings/net/qcom,ipa.txt
->> new file mode 100644
->> index 000000000000..2705e198f12e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/qcom,ipa.txt
-> 
-> For new bindings, we should use the yaml format so we can verify the
-> device tree files against the binding.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-OK.  I didn't realize that was upstream yet.  I will convert.
+commit 9137bb27e60e554dab694eafa4cca241fa3a694f upstream.
 
->> +
->> +- reg:
->> +       Resources specifying the physical address spaces of the IPA and GSI.
->> +
->> +- reg-names:
->> +       The names of the two address space ranges defined by the "reg"
->> +       property.  Must be:
->> +               "ipa-reg"
->> +               "ipa-shared"
->> +               "gsi"
-> 
-> Those are three, not two ;-)
+Add the PR_SPEC_INDIRECT_BRANCH option for the PR_GET_SPECULATION_CTRL and
+PR_SET_SPECULATION_CTRL prctls to allow fine grained per task control of
+indirect branch speculation via STIBP and IBPB.
 
-Oops!  I added one recently and I guess I missed that.  Thanks
-for catching it.
+Invocations:
+ Check indirect branch speculation status with
+ - prctl(PR_GET_SPECULATION_CTRL, PR_SPEC_INDIRECT_BRANCH, 0, 0, 0);
 
-					-Alex
+ Enable indirect branch speculation with
+ - prctl(PR_SET_SPECULATION_CTRL, PR_SPEC_INDIRECT_BRANCH, PR_SPEC_ENABLE, 0, 0);
 
-> 
->         Arnd
-> 
+ Disable indirect branch speculation with
+ - prctl(PR_SET_SPECULATION_CTRL, PR_SPEC_INDIRECT_BRANCH, PR_SPEC_DISABLE, 0, 0);
+
+ Force disable indirect branch speculation with
+ - prctl(PR_SET_SPECULATION_CTRL, PR_SPEC_INDIRECT_BRANCH, PR_SPEC_FORCE_DISABLE, 0, 0);
+
+See Documentation/userspace-api/spec_ctrl.rst.
+
+Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Casey Schaufler <casey.schaufler@intel.com>
+Cc: Asit Mallick <asit.k.mallick@intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Waiman Long <longman9394@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Dave Stewart <david.c.stewart@intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20181125185005.866780996@linutronix.de
+[bwh: Backported to 4.4:
+ - Renumber the PFA flags
+ - Drop changes in tools/include/uapi/linux/prctl.h
+ - Adjust filename]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ Documentation/spec_ctrl.txt          |    9 ++++
+ arch/x86/include/asm/nospec-branch.h |    1 
+ arch/x86/kernel/cpu/bugs.c           |   67 +++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/process.c            |    5 ++
+ include/linux/sched.h                |    9 ++++
+ include/uapi/linux/prctl.h           |    1 
+ 6 files changed, 92 insertions(+)
+
+--- a/Documentation/spec_ctrl.txt
++++ b/Documentation/spec_ctrl.txt
+@@ -92,3 +92,12 @@ Speculation misfeature controls
+    * prctl(PR_SET_SPECULATION_CTRL, PR_SPEC_STORE_BYPASS, PR_SPEC_ENABLE, 0, 0);
+    * prctl(PR_SET_SPECULATION_CTRL, PR_SPEC_STORE_BYPASS, PR_SPEC_DISABLE, 0, 0);
+    * prctl(PR_SET_SPECULATION_CTRL, PR_SPEC_STORE_BYPASS, PR_SPEC_FORCE_DISABLE, 0, 0);
++
++- PR_SPEC_INDIR_BRANCH: Indirect Branch Speculation in User Processes
++                        (Mitigate Spectre V2 style attacks against user processes)
++
++  Invocations:
++   * prctl(PR_GET_SPECULATION_CTRL, PR_SPEC_INDIRECT_BRANCH, 0, 0, 0);
++   * prctl(PR_SET_SPECULATION_CTRL, PR_SPEC_INDIRECT_BRANCH, PR_SPEC_ENABLE, 0, 0);
++   * prctl(PR_SET_SPECULATION_CTRL, PR_SPEC_INDIRECT_BRANCH, PR_SPEC_DISABLE, 0, 0);
++   * prctl(PR_SET_SPECULATION_CTRL, PR_SPEC_INDIRECT_BRANCH, PR_SPEC_FORCE_DISABLE, 0, 0);
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -178,6 +178,7 @@ enum spectre_v2_mitigation {
+ enum spectre_v2_user_mitigation {
+ 	SPECTRE_V2_USER_NONE,
+ 	SPECTRE_V2_USER_STRICT,
++	SPECTRE_V2_USER_PRCTL,
+ };
+ 
+ /* The Speculative Store Bypass disable variants */
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -561,6 +561,8 @@ void arch_smt_update(void)
+ 	case SPECTRE_V2_USER_STRICT:
+ 		update_stibp_strict();
+ 		break;
++	case SPECTRE_V2_USER_PRCTL:
++		break;
+ 	}
+ 
+ 	mutex_unlock(&spec_ctrl_mutex);
+@@ -747,12 +749,50 @@ static int ssb_prctl_set(struct task_str
+ 	return 0;
+ }
+ 
++static int ib_prctl_set(struct task_struct *task, unsigned long ctrl)
++{
++	switch (ctrl) {
++	case PR_SPEC_ENABLE:
++		if (spectre_v2_user == SPECTRE_V2_USER_NONE)
++			return 0;
++		/*
++		 * Indirect branch speculation is always disabled in strict
++		 * mode.
++		 */
++		if (spectre_v2_user == SPECTRE_V2_USER_STRICT)
++			return -EPERM;
++		task_clear_spec_ib_disable(task);
++		task_update_spec_tif(task);
++		break;
++	case PR_SPEC_DISABLE:
++	case PR_SPEC_FORCE_DISABLE:
++		/*
++		 * Indirect branch speculation is always allowed when
++		 * mitigation is force disabled.
++		 */
++		if (spectre_v2_user == SPECTRE_V2_USER_NONE)
++			return -EPERM;
++		if (spectre_v2_user == SPECTRE_V2_USER_STRICT)
++			return 0;
++		task_set_spec_ib_disable(task);
++		if (ctrl == PR_SPEC_FORCE_DISABLE)
++			task_set_spec_ib_force_disable(task);
++		task_update_spec_tif(task);
++		break;
++	default:
++		return -ERANGE;
++	}
++	return 0;
++}
++
+ int arch_prctl_spec_ctrl_set(struct task_struct *task, unsigned long which,
+ 			     unsigned long ctrl)
+ {
+ 	switch (which) {
+ 	case PR_SPEC_STORE_BYPASS:
+ 		return ssb_prctl_set(task, ctrl);
++	case PR_SPEC_INDIRECT_BRANCH:
++		return ib_prctl_set(task, ctrl);
+ 	default:
+ 		return -ENODEV;
+ 	}
+@@ -785,11 +825,34 @@ static int ssb_prctl_get(struct task_str
+ 	}
+ }
+ 
++static int ib_prctl_get(struct task_struct *task)
++{
++	if (!boot_cpu_has_bug(X86_BUG_SPECTRE_V2))
++		return PR_SPEC_NOT_AFFECTED;
++
++	switch (spectre_v2_user) {
++	case SPECTRE_V2_USER_NONE:
++		return PR_SPEC_ENABLE;
++	case SPECTRE_V2_USER_PRCTL:
++		if (task_spec_ib_force_disable(task))
++			return PR_SPEC_PRCTL | PR_SPEC_FORCE_DISABLE;
++		if (task_spec_ib_disable(task))
++			return PR_SPEC_PRCTL | PR_SPEC_DISABLE;
++		return PR_SPEC_PRCTL | PR_SPEC_ENABLE;
++	case SPECTRE_V2_USER_STRICT:
++		return PR_SPEC_DISABLE;
++	default:
++		return PR_SPEC_NOT_AFFECTED;
++	}
++}
++
+ int arch_prctl_spec_ctrl_get(struct task_struct *task, unsigned long which)
+ {
+ 	switch (which) {
+ 	case PR_SPEC_STORE_BYPASS:
+ 		return ssb_prctl_get(task);
++	case PR_SPEC_INDIRECT_BRANCH:
++		return ib_prctl_get(task);
+ 	default:
+ 		return -ENODEV;
+ 	}
+@@ -886,6 +949,8 @@ static char *stibp_state(void)
+ 		return ", STIBP: disabled";
+ 	case SPECTRE_V2_USER_STRICT:
+ 		return ", STIBP: forced";
++	case SPECTRE_V2_USER_PRCTL:
++		return "";
+ 	}
+ 	return "";
+ }
+@@ -898,6 +963,8 @@ static char *ibpb_state(void)
+ 			return ", IBPB: disabled";
+ 		case SPECTRE_V2_USER_STRICT:
+ 			return ", IBPB: always-on";
++		case SPECTRE_V2_USER_PRCTL:
++			return "";
+ 		}
+ 	}
+ 	return "";
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -372,6 +372,11 @@ static unsigned long speculation_ctrl_up
+ 			set_tsk_thread_flag(tsk, TIF_SSBD);
+ 		else
+ 			clear_tsk_thread_flag(tsk, TIF_SSBD);
++
++		if (task_spec_ib_disable(tsk))
++			set_tsk_thread_flag(tsk, TIF_SPEC_IB);
++		else
++			clear_tsk_thread_flag(tsk, TIF_SPEC_IB);
+ 	}
+ 	/* Return the updated threadinfo flags*/
+ 	return task_thread_info(tsk)->flags;
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -2169,6 +2169,8 @@ static inline void memalloc_noio_restore
+ #define PFA_SPREAD_SLAB  2      /* Spread some slab caches over cpuset */
+ #define PFA_SPEC_SSB_DISABLE		4	/* Speculative Store Bypass disabled */
+ #define PFA_SPEC_SSB_FORCE_DISABLE	5	/* Speculative Store Bypass force disabled*/
++#define PFA_SPEC_IB_DISABLE		6	/* Indirect branch speculation restricted */
++#define PFA_SPEC_IB_FORCE_DISABLE	7	/* Indirect branch speculation permanently restricted */
+ 
+ 
+ #define TASK_PFA_TEST(name, func)					\
+@@ -2199,6 +2201,13 @@ TASK_PFA_CLEAR(SPEC_SSB_DISABLE, spec_ss
+ TASK_PFA_TEST(SPEC_SSB_FORCE_DISABLE, spec_ssb_force_disable)
+ TASK_PFA_SET(SPEC_SSB_FORCE_DISABLE, spec_ssb_force_disable)
+ 
++TASK_PFA_TEST(SPEC_IB_DISABLE, spec_ib_disable)
++TASK_PFA_SET(SPEC_IB_DISABLE, spec_ib_disable)
++TASK_PFA_CLEAR(SPEC_IB_DISABLE, spec_ib_disable)
++
++TASK_PFA_TEST(SPEC_IB_FORCE_DISABLE, spec_ib_force_disable)
++TASK_PFA_SET(SPEC_IB_FORCE_DISABLE, spec_ib_force_disable)
++
+ /*
+  * task->jobctl flags
+  */
+--- a/include/uapi/linux/prctl.h
++++ b/include/uapi/linux/prctl.h
+@@ -202,6 +202,7 @@ struct prctl_mm_map {
+ #define PR_SET_SPECULATION_CTRL		53
+ /* Speculation control variants */
+ # define PR_SPEC_STORE_BYPASS		0
++# define PR_SPEC_INDIRECT_BRANCH	1
+ /* Return and control values for PR_SET/GET_SPECULATION_CTRL */
+ # define PR_SPEC_NOT_AFFECTED		0
+ # define PR_SPEC_PRCTL			(1UL << 0)
+
 
