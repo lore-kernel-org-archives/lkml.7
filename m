@@ -2,83 +2,89 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8D0C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 150A8C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07C5A20843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E509520881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 08:23:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbfEOIXc (ORCPT
+        id S1726609AbfEOIXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 04:23:32 -0400
-Received: from foss.arm.com ([217.140.101.70]:37964 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725876AbfEOIXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 04:23:31 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49C5215AB;
-        Wed, 15 May 2019 01:23:31 -0700 (PDT)
-Received: from queper01-lin.cambridge.arm.com (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 99D743F703;
-        Wed, 15 May 2019 01:23:28 -0700 (PDT)
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
-        viresh.kumar@linaro.org, amit.kachhap@gmail.com, rjw@rjwysocki.net,
-        will.deacon@arm.com, catalin.marinas@arm.com
-Cc:     daniel.lezcano@linaro.org, dietmar.eggemann@arm.com,
-        ionela.voinescu@arm.com, mka@chromium.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, quentin.perret@arm.com
-Subject: [PATCH v4 1/3] arm64: defconfig: Enable CONFIG_ENERGY_MODEL
-Date:   Wed, 15 May 2019 09:23:16 +0100
-Message-Id: <20190515082318.7993-2-quentin.perret@arm.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515082318.7993-1-quentin.perret@arm.com>
-References: <20190515082318.7993-1-quentin.perret@arm.com>
+        Wed, 15 May 2019 04:23:35 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35916 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725876AbfEOIXd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 04:23:33 -0400
+Received: by mail-qt1-f194.google.com with SMTP id a17so2301513qth.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 01:23:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mP615H84n6IE6Q6FG1U3STZfOB3R7X3FbHAi0MN0jTk=;
+        b=GkjffArLH9p+1rrCmOme8YPTp4xbJb9PHREloGK58mD+3rD/PdSblsaqzryxkN3CHP
+         8ySdGj1iS19kZK3r2wdkcTsvETWBHqYK49O13mNuwuzivKBMXFF02Iw7PfuLxEODj1od
+         27/4nJDYalhRtxDEyJw6hj48cb4mqghNe1ScDvAN9gehE5IzPxkOGBf4SvQ0vUAdiHnv
+         /N061Pg6DaN1zDBoI/zO+SgToqM6wy36DhMold8PNLkpSfKUm/bJTHONMja/fBY0otxD
+         zFTgaLDzV8ExeuzkxPfPCFkagBs6gR2Zu7TwSl8Ji5UPBr+8llbtCwQDWNdYetJRFT56
+         I3aQ==
+X-Gm-Message-State: APjAAAWTX/WDu39DSDUEdPyNGjwRTeKtxiaUNK2YQHQ3WCxMPFmejid6
+        LryeHnKLjUjdSKOOz08/84z28kP4oknsRkoO8JA=
+X-Google-Smtp-Source: APXvYqyK2NypWZDZDuqy4iCQfrPIXC0KSagXHDpQjtsbfvdzRNiEUASPWZcKyvBfhFfSJq94bJ+87EODjf30UrRXJt4=
+X-Received: by 2002:ac8:390e:: with SMTP id s14mr11359780qtb.343.1557908612560;
+ Wed, 15 May 2019 01:23:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190512012508.10608-1-elder@linaro.org> <20190512012508.10608-19-elder@linaro.org>
+In-Reply-To: <20190512012508.10608-19-elder@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 15 May 2019 10:23:16 +0200
+Message-ID: <CAK8P3a3f++abVkXo3eEky5+xx+Jpp3ApFbWfwvh4rekQzpmepw@mail.gmail.com>
+Subject: Re: [PATCH 18/18] arm64: defconfig: enable build of IPA code
+To:     Alex Elder <elder@linaro.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Simon Horman <horms+renesas@verge.net.au>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        syadagir@codeaurora.org, mjavid@codeaurora.org,
+        evgreen@chromium.org, Ben Chan <benchan@google.com>,
+        Eric Caruso <ejcaruso@google.com>, abhishek.esse@gmail.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The recently introduced Energy Model (EM) framework manages power cost
-tables for the CPUs of the system. Its only user right now is the
-scheduler, in the context of Energy Aware Scheduling (EAS).
+On Sun, May 12, 2019 at 3:25 AM Alex Elder <elder@linaro.org> wrote:
 
-However, the EM framework also offers a generic infrastructure that
-could replace subsystem-specific implementations of the same concepts,
-as this is the case in the thermal framework.
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 2d9c39033c1a..4f4d803e563d 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -268,6 +268,7 @@ CONFIG_SMSC911X=y
+>  CONFIG_SNI_AVE=y
+>  CONFIG_SNI_NETSEC=y
+>  CONFIG_STMMAC_ETH=m
+> +CONFIG_IPA=y
+>  CONFIG_MDIO_BUS_MUX_MMIOREG=y
+>  CONFIG_AT803X_PHY=m
+>  CONFIG_MARVELL_PHY=m
 
-So, in order to prepare the migration of the thermal subsystem to use
-the EM framework, enable it in the default arm64 defconfig, which is the
-most commonly used architecture for IPA. This will also compile-in all
-of the EAS code, although it won't be enabled by default -- EAS requires
-to use the 'schedutil' CPUFreq governor while arm64 defaults to
-'performance'.
+Since the device is not needed for booting, please make this
+CONFIG_IPA=m instead to keep the kernel image a little smaller.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Signed-off-by: Quentin Perret <quentin.perret@arm.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 2d9c39033c1a..4881a752ab3f 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -97,6 +97,7 @@ CONFIG_XEN=y
- CONFIG_COMPAT=y
- CONFIG_HIBERNATION=y
- CONFIG_WQ_POWER_EFFICIENT_DEFAULT=y
-+CONFIG_ENERGY_MODEL=y
- CONFIG_ARM_CPUIDLE=y
- CONFIG_CPU_FREQ=y
- CONFIG_CPU_FREQ_STAT=y
--- 
-2.21.0
-
+     Arnd
