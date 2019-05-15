@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E402C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A29EC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F384C2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BD9720843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:36:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920172;
-	bh=ZqMG5L0+ZatJsxYrAh8Rw1P0KrbO2SXV10BRXd0BA4w=;
+	s=default; t=1557920182;
+	bh=w0GHWwAugBhRjsJKO18Xs7KdslOVfCTcVmSyA8o/OJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oh8mviyRLm7+bEsMzxvNyPiHuvIufHl5psGg04ZKoSdwVk/o8kO9uUg3OnC0njiGp
-	 7nx9volWraJA7hytkgNF6TJWtaF7InxvGT5ssxqUWf67mzRGoKxObOKUDnKDFyXpAW
-	 yhj5ErXIoxW3U3khNuJdWNyMTVvkS+jSs86GCPeI=
+	b=f3fs0evjcVZ9CotXzRVqbmrI5QfaQWJ/WxykBCKHyd+skv7XVxjZR3hq/yVqeqoMC
+	 yZmlFrBXhZ9gVwz1n0VLiaUR1mo82EWIjU+ZtGeaikC5kjAFOORXet0nbSpY6rAW9I
+	 yznay/Z88FIHdgqvj57KTgSugP05HiGo/VpUz0nI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732792AbfEOLc4 (ORCPT
+        id S1731224AbfEOLch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:32:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44748 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:32:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729882AbfEOLct (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:32:49 -0400
+        id S1733048AbfEOLcd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:32:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E1C72053B;
-        Wed, 15 May 2019 11:32:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 198082053B;
+        Wed, 15 May 2019 11:32:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919968;
-        bh=ZqMG5L0+ZatJsxYrAh8Rw1P0KrbO2SXV10BRXd0BA4w=;
+        s=default; t=1557919952;
+        bh=w0GHWwAugBhRjsJKO18Xs7KdslOVfCTcVmSyA8o/OJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vEi5ohyABC5oJgSzlDs4iQWzrmAxh1RmOv6Mji7bFoAwvdCa5m6LdwnE5kcg8mKBy
-         SFUR/ksKgwqYolfAWi+ekG4pDpvDULza8M7eu8yTyacC3Xm9nTcGThgb3WiUv5IFwT
-         /A/W29QRYzTFYDaPvdQs5IuKtCW5xrH5jvwr4keA=
+        b=gDMzeSxoRS6GXaORQ6rPYtaH2GDVLpx7hIARceRVbXJkViro4kv24JDqpj/VuWW3z
+         qK18b81F2keXnB9HHZSKK+u9XynftNfCemUKLj/oeVJet0Tt1AaOhVBi9CFL5Xr8tM
+         CTkidXq7GtvDYzX3jNyHITnYVmkPsp1oM3xWAGts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 24/46] packet: Fix error path in packet_init
-Date:   Wed, 15 May 2019 12:56:48 +0200
-Message-Id: <20190515090624.895030897@linuxfoundation.org>
+Subject: [PATCH 5.1 19/46] net: dsa: Fix error cleanup path in dsa_init_module
+Date:   Wed, 15 May 2019 12:56:43 +0200
+Message-Id: <20190515090623.607888279@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
 References: <20190515090616.670410738@linuxfoundation.org>
@@ -62,85 +63,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 36096f2f4fa05f7678bc87397665491700bae757 ]
+[ Upstream commit 68be930249d051fd54d3d99156b3dcadcb2a1f9b ]
 
-kernel BUG at lib/list_debug.c:47!
-invalid opcode: 0000 [#1
-CPU: 0 PID: 12914 Comm: rmmod Tainted: G        W         5.1.0+ #47
+BUG: unable to handle kernel paging request at ffffffffa01c5430
+PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bc5067 PTE 0
+Oops: 0000 [#1
+CPU: 0 PID: 6159 Comm: modprobe Not tainted 5.1.0+ #33
 Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:__list_del_entry_valid+0x53/0x90
-Code: 48 8b 32 48 39 fe 75 35 48 8b 50 08 48 39 f2 75 40 b8 01 00 00 00 5d c3 48
-89 fe 48 89 c2 48 c7 c7 18 75 fe 82 e8 cb 34 78 ff <0f> 0b 48 89 fe 48 c7 c7 50 75 fe 82 e8 ba 34 78 ff 0f 0b 48 89 f2
-RSP: 0018:ffffc90001c2fe40 EFLAGS: 00010286
-RAX: 000000000000004e RBX: ffffffffa0184000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffff888237a17788 RDI: 00000000ffffffff
-RBP: ffffc90001c2fe40 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffc90001c2fe10 R11: 0000000000000000 R12: 0000000000000000
-R13: ffffc90001c2fe50 R14: ffffffffa0184000 R15: 0000000000000000
-FS:  00007f3d83634540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+RIP: 0010:raw_notifier_chain_register+0x16/0x40
+Code: 63 f8 66 90 e9 5d ff ff ff 90 90 90 90 90 90 90 90 90 90 90 55 48 8b 07 48 89 e5 48 85 c0 74 1c 8b 56 10 3b 50 10 7e 07 eb 12 <39> 50 10 7c 0d 48 8d 78 08 48 8b 40 08 48 85 c0 75 ee 48 89 46 08
+RSP: 0018:ffffc90001c33c08 EFLAGS: 00010282
+RAX: ffffffffa01c5420 RBX: ffffffffa01db420 RCX: 4fcef45928070a8b
+RDX: 0000000000000000 RSI: ffffffffa01db420 RDI: ffffffffa01b0068
+RBP: ffffc90001c33c08 R08: 000000003e0a33d0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000094443661 R12: ffff88822c320700
+R13: ffff88823109be80 R14: 0000000000000000 R15: ffffc90001c33e78
+FS:  00007fab8bd08540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000555c350ea818 CR3: 0000000231677000 CR4: 00000000000006f0
+CR2: ffffffffa01c5430 CR3: 00000002297ea000 CR4: 00000000000006f0
 Call Trace:
- unregister_pernet_operations+0x34/0x120
- unregister_pernet_subsys+0x1c/0x30
- packet_exit+0x1c/0x369 [af_packet
- __x64_sys_delete_module+0x156/0x260
- ? lockdep_hardirqs_on+0x133/0x1b0
- ? do_syscall_64+0x12/0x1f0
- do_syscall_64+0x6e/0x1f0
+ register_netdevice_notifier+0x43/0x250
+ ? 0xffffffffa01e0000
+ dsa_slave_register_notifier+0x13/0x70 [dsa_core
+ ? 0xffffffffa01e0000
+ dsa_init_module+0x2e/0x1000 [dsa_core
+ do_one_initcall+0x6c/0x3cc
+ ? do_init_module+0x22/0x1f1
+ ? rcu_read_lock_sched_held+0x97/0xb0
+ ? kmem_cache_alloc_trace+0x325/0x3b0
+ do_init_module+0x5b/0x1f1
+ load_module+0x1db1/0x2690
+ ? m_show+0x1d0/0x1d0
+ __do_sys_finit_module+0xc5/0xd0
+ __x64_sys_finit_module+0x15/0x20
+ do_syscall_64+0x6b/0x1d0
  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-When modprobe af_packet, register_pernet_subsys
-fails and does a cleanup, ops->list is set to LIST_POISON1,
-but the module init is considered to success, then while rmmod it,
-BUG() is triggered in __list_del_entry_valid which is called from
-unregister_pernet_subsys. This patch fix error handing path in
-packet_init to avoid possilbe issue if some error occur.
+Cleanup allocated resourses if there are errors,
+otherwise it will trgger memleak.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: c9eb3e0f8701 ("net: dsa: Add support for learning FDB through notification")
 Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/packet/af_packet.c |   25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ net/dsa/dsa.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -4603,14 +4603,29 @@ static void __exit packet_exit(void)
+--- a/net/dsa/dsa.c
++++ b/net/dsa/dsa.c
+@@ -344,15 +344,22 @@ static int __init dsa_init_module(void)
  
- static int __init packet_init(void)
- {
--	int rc = proto_register(&packet_proto, 0);
-+	int rc;
+ 	rc = dsa_slave_register_notifier();
+ 	if (rc)
+-		return rc;
++		goto register_notifier_fail;
  
--	if (rc != 0)
-+	rc = proto_register(&packet_proto, 0);
-+	if (rc)
- 		goto out;
-+	rc = sock_register(&packet_family_ops);
-+	if (rc)
-+		goto out_proto;
-+	rc = register_pernet_subsys(&packet_net_ops);
-+	if (rc)
-+		goto out_sock;
-+	rc = register_netdevice_notifier(&packet_netdev_notifier);
-+	if (rc)
-+		goto out_pernet;
+ 	rc = dsa_legacy_register();
+ 	if (rc)
+-		return rc;
++		goto legacy_register_fail;
  
--	sock_register(&packet_family_ops);
--	register_pernet_subsys(&packet_net_ops);
--	register_netdevice_notifier(&packet_netdev_notifier);
-+	return 0;
+ 	dev_add_pack(&dsa_pack_type);
+ 
+ 	return 0;
 +
-+out_pernet:
-+	unregister_pernet_subsys(&packet_net_ops);
-+out_sock:
-+	sock_unregister(PF_PACKET);
-+out_proto:
-+	proto_unregister(&packet_proto);
- out:
- 	return rc;
++legacy_register_fail:
++	dsa_slave_unregister_notifier();
++register_notifier_fail:
++	destroy_workqueue(dsa_owq);
++
++	return rc;
  }
+ module_init(dsa_init_module);
+ 
 
 
