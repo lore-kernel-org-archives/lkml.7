@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE80C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 278E5C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1E3920881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEF292173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918283;
-	bh=ZHNIu92D+duYIu+4ZKulnTwetCt46wMcwo4U9uxghu8=;
+	s=default; t=1557918288;
+	bh=8bRBB0jgKPhGhKmechbQkP4XbKc74refvzJaTt8w4Rg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M3nCgYRHj1jh2VLspgqFlPKrjb6OkieamytU+E43VFp0a+XPPhkHkDXnTaIdXcHY9
-	 newsZdeUkOQpoZQvg3oLgWhBpPa5U6nP/DQx/SGdomM4WqkrkNJmLmBlc0sVA4ZlwT
-	 EBkidJC/dHm1+Dzl8PWkBNWNhgZPpCFj7Q+L0UGo=
+	b=zP78LzO7S+uLmb95wUaoUxHJvxWnLPFSQBgbvvX7WdgxMuHUQhoEYhZkZJJJycMcl
+	 Z5puBXGqecPa5POL4VwKRgxpImKKPgiipAAtYZ7SLQdfoupdKX7NMCDEgCTBrlROkm
+	 BL3r5NAlyudlbr2Kj0xWpPM7x/T4BGGBsU5PN3EQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfEOLEm (ORCPT
+        id S1728518AbfEOLEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:04:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34300 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:04:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728465AbfEOLEj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:04:39 -0400
+        id S1728501AbfEOLEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:04:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB62620644;
-        Wed, 15 May 2019 11:04:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7648520644;
+        Wed, 15 May 2019 11:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918279;
-        bh=ZHNIu92D+duYIu+4ZKulnTwetCt46wMcwo4U9uxghu8=;
+        s=default; t=1557918281;
+        bh=8bRBB0jgKPhGhKmechbQkP4XbKc74refvzJaTt8w4Rg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ktRMxApBAYJ9cdeUFWi2XReWU8j67cVxZ3eMxBdzdW7swYHMCgB4XLHUo/0/ww/Aj
-         9D18QPHkZwoYW6hK7xNC7/zZWvSgj4O2K5PQLZ5krC6NpIiykfwptv+Sdz20+Go3XJ
-         cirHwRYaHJIwMURa75jDZjXQpy/EqccIGO2H1nDA=
+        b=HJXhwlxz2Rt1B6YRwp6TSEqy0D9xlZkbqYT3LoJEPadP4togBrXlMleVWJ/31rkQi
+         2RSINxavzoaqfwFNpWIsDDbbcP/NEeJLkswJAaLtC19XRiCpwKEMXLIGzWl5Haqa+i
+         L8DQmd+1UyM9zk5Y3U8Fza+xa2Ppr785Mm39orME=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.4 032/266] powerpc/pseries: Fix clearing of security feature flags
-Date:   Wed, 15 May 2019 12:52:19 +0200
-Message-Id: <20190515090723.625034881@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 4.4 023/266] powerpc: Add security feature flags for Spectre/Meltdown
+Date:   Wed, 15 May 2019 12:52:10 +0200
+Message-Id: <20190515090723.366759612@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,78 +58,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 0f9bdfe3c77091e8704d2e510eb7c2c2c6cde524 upstream.
+commit 9a868f634349e62922c226834aa23e3d1329ae7f upstream.
 
-The H_CPU_BEHAV_* flags should be checked for in the 'behaviour' field
-of 'struct h_cpu_char_result' -- 'character' is for H_CPU_CHAR_*
-flags.
+This commit adds security feature flags to reflect the settings we
+receive from firmware regarding Spectre/Meltdown mitigations.
 
-Found by playing around with QEMU's implementation of the hypercall:
+The feature names reflect the names we are given by firmware on bare
+metal machines. See the hostboot source for details.
 
-  H_CPU_CHAR=0xf000000000000000
-  H_CPU_BEHAV=0x0000000000000000
+Arguably these could be firmware features, but that then requires them
+to be read early in boot so they're available prior to asm feature
+patching, but we don't actually want to use them for patching. We may
+also want to dynamically update them in future, which would be
+incompatible with the way firmware features work (at the moment at
+least). So for now just make them separate flags.
 
-  This clears H_CPU_BEHAV_FAVOUR_SECURITY and H_CPU_BEHAV_L1D_FLUSH_PR
-  so pseries_setup_rfi_flush() disables 'rfi_flush'; and it also
-  clears H_CPU_CHAR_L1D_THREAD_PRIV flag. So there is no RFI flush
-  mitigation at all for cpu_show_meltdown() to report; but currently
-  it does:
-
-  Original kernel:
-
-    # cat /sys/devices/system/cpu/vulnerabilities/meltdown
-    Mitigation: RFI Flush
-
-  Patched kernel:
-
-    # cat /sys/devices/system/cpu/vulnerabilities/meltdown
-    Not affected
-
-  H_CPU_CHAR=0x0000000000000000
-  H_CPU_BEHAV=0xf000000000000000
-
-  This sets H_CPU_BEHAV_BNDS_CHK_SPEC_BAR so cpu_show_spectre_v1() should
-  report vulnerable; but currently it doesn't:
-
-  Original kernel:
-
-    # cat /sys/devices/system/cpu/vulnerabilities/spectre_v1
-    Not affected
-
-  Patched kernel:
-
-    # cat /sys/devices/system/cpu/vulnerabilities/spectre_v1
-    Vulnerable
-
-Brown-paper-bag-by: Michael Ellerman <mpe@ellerman.id.au>
-Fixes: f636c14790ea ("powerpc/pseries: Set or clear security feature flags")
-Signed-off-by: Mauricio Faria de Oliveira <mauricfo@linux.vnet.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/platforms/pseries/setup.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/powerpc/include/asm/security_features.h |   65 +++++++++++++++++++++++++++
+ arch/powerpc/kernel/Makefile                 |    2 
+ arch/powerpc/kernel/security.c               |   15 ++++++
+ 3 files changed, 81 insertions(+), 1 deletion(-)
+ create mode 100644 arch/powerpc/include/asm/security_features.h
+ create mode 100644 arch/powerpc/kernel/security.c
 
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -524,13 +524,13 @@ static void init_cpu_char_feature_flags(
- 	 * The features below are enabled by default, so we instead look to see
- 	 * if firmware has *disabled* them, and clear them if so.
- 	 */
--	if (!(result->character & H_CPU_BEHAV_FAVOUR_SECURITY))
-+	if (!(result->behaviour & H_CPU_BEHAV_FAVOUR_SECURITY))
- 		security_ftr_clear(SEC_FTR_FAVOUR_SECURITY);
- 
--	if (!(result->character & H_CPU_BEHAV_L1D_FLUSH_PR))
-+	if (!(result->behaviour & H_CPU_BEHAV_L1D_FLUSH_PR))
- 		security_ftr_clear(SEC_FTR_L1D_FLUSH_PR);
- 
--	if (!(result->character & H_CPU_BEHAV_BNDS_CHK_SPEC_BAR))
-+	if (!(result->behaviour & H_CPU_BEHAV_BNDS_CHK_SPEC_BAR))
- 		security_ftr_clear(SEC_FTR_BNDS_CHK_SPEC_BAR);
- }
- 
+--- /dev/null
++++ b/arch/powerpc/include/asm/security_features.h
+@@ -0,0 +1,65 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Security related feature bit definitions.
++ *
++ * Copyright 2018, Michael Ellerman, IBM Corporation.
++ */
++
++#ifndef _ASM_POWERPC_SECURITY_FEATURES_H
++#define _ASM_POWERPC_SECURITY_FEATURES_H
++
++
++extern unsigned long powerpc_security_features;
++
++static inline void security_ftr_set(unsigned long feature)
++{
++	powerpc_security_features |= feature;
++}
++
++static inline void security_ftr_clear(unsigned long feature)
++{
++	powerpc_security_features &= ~feature;
++}
++
++static inline bool security_ftr_enabled(unsigned long feature)
++{
++	return !!(powerpc_security_features & feature);
++}
++
++
++// Features indicating support for Spectre/Meltdown mitigations
++
++// The L1-D cache can be flushed with ori r30,r30,0
++#define SEC_FTR_L1D_FLUSH_ORI30		0x0000000000000001ull
++
++// The L1-D cache can be flushed with mtspr 882,r0 (aka SPRN_TRIG2)
++#define SEC_FTR_L1D_FLUSH_TRIG2		0x0000000000000002ull
++
++// ori r31,r31,0 acts as a speculation barrier
++#define SEC_FTR_SPEC_BAR_ORI31		0x0000000000000004ull
++
++// Speculation past bctr is disabled
++#define SEC_FTR_BCCTRL_SERIALISED	0x0000000000000008ull
++
++// Entries in L1-D are private to a SMT thread
++#define SEC_FTR_L1D_THREAD_PRIV		0x0000000000000010ull
++
++// Indirect branch prediction cache disabled
++#define SEC_FTR_COUNT_CACHE_DISABLED	0x0000000000000020ull
++
++
++// Features indicating need for Spectre/Meltdown mitigations
++
++// The L1-D cache should be flushed on MSR[HV] 1->0 transition (hypervisor to guest)
++#define SEC_FTR_L1D_FLUSH_HV		0x0000000000000040ull
++
++// The L1-D cache should be flushed on MSR[PR] 0->1 transition (kernel to userspace)
++#define SEC_FTR_L1D_FLUSH_PR		0x0000000000000080ull
++
++// A speculation barrier should be used for bounds checks (Spectre variant 1)
++#define SEC_FTR_BNDS_CHK_SPEC_BAR	0x0000000000000100ull
++
++// Firmware configuration indicates user favours security over performance
++#define SEC_FTR_FAVOUR_SECURITY		0x0000000000000200ull
++
++#endif /* _ASM_POWERPC_SECURITY_FEATURES_H */
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -40,7 +40,7 @@ obj-$(CONFIG_PPC64)		+= setup_64.o sys_p
+ obj-$(CONFIG_VDSO32)		+= vdso32/
+ obj-$(CONFIG_HAVE_HW_BREAKPOINT)	+= hw_breakpoint.o
+ obj-$(CONFIG_PPC_BOOK3S_64)	+= cpu_setup_ppc970.o cpu_setup_pa6t.o
+-obj-$(CONFIG_PPC_BOOK3S_64)	+= cpu_setup_power.o
++obj-$(CONFIG_PPC_BOOK3S_64)	+= cpu_setup_power.o security.o
+ obj-$(CONFIG_PPC_BOOK3S_64)	+= mce.o mce_power.o
+ obj64-$(CONFIG_RELOCATABLE)	+= reloc_64.o
+ obj-$(CONFIG_PPC_BOOK3E_64)	+= exceptions-64e.o idle_book3e.o
+--- /dev/null
++++ b/arch/powerpc/kernel/security.c
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0+
++//
++// Security related flags and so on.
++//
++// Copyright 2018, Michael Ellerman, IBM Corporation.
++
++#include <linux/kernel.h>
++#include <asm/security_features.h>
++
++
++unsigned long powerpc_security_features __read_mostly = \
++	SEC_FTR_L1D_FLUSH_HV | \
++	SEC_FTR_L1D_FLUSH_PR | \
++	SEC_FTR_BNDS_CHK_SPEC_BAR | \
++	SEC_FTR_FAVOUR_SECURITY;
 
 
