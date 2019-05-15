@@ -2,90 +2,212 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 524E7C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC97C04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0262089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C05042089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 07:36:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbfEOHgM (ORCPT
+        id S1726584AbfEOHgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 03:36:12 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:47454 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726503AbfEOHgK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 03:36:10 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1007C1A00A1;
-        Wed, 15 May 2019 09:36:08 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 40EAB1A00D9;
-        Wed, 15 May 2019 09:35:59 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 3EDBE4030C;
-        Wed, 15 May 2019 15:35:48 +0800 (SGT)
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com,
-        lorenzo.pieralisi@arm.com, arnd@arndb.de,
-        gregkh@linuxfoundation.org, minghuan.Lian@nxp.com,
-        mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org,
-        pombredanne@nexb.com, shawn.lin@rock-chips.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCH 3/3] PCI: layerscape: Add LS1028a support
-Date:   Wed, 15 May 2019 15:27:47 +0800
-Message-Id: <20190515072747.39941-3-xiaowei.bao@nxp.com>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <20190515072747.39941-1-xiaowei.bao@nxp.com>
-References: <20190515072747.39941-1-xiaowei.bao@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 15 May 2019 03:36:36 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:54393 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfEOHgg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 03:36:36 -0400
+Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id x4F7aS9F078422;
+        Wed, 15 May 2019 15:36:28 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id EE36B97764010B1F89B8;
+        Wed, 15 May 2019 15:36:28 +0800 (CST)
+In-Reply-To: <20190512152328.49576a0f@xps13>
+References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw> <1555320234-15802-5-git-send-email-masonccyang@mxic.com.tw> <20190512152328.49576a0f@xps13>
+To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
+Cc:     bbrezillon@kernel.org, broonie@kernel.org,
+        christophe.kerello@st.com, computersforpeace@gmail.com,
+        devicetree@vger.kernel.org, dwmw2@infradead.org,
+        geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org,
+        liang.yang@amlogic.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        marcel.ziswiler@toradex.com, marek.vasut@gmail.com,
+        mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at,
+        robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
+Subject: Re: [PATCH v3 4/4] dt-bindings: mfd: Document Macronix MX25F0A controller
+ bindings
+MIME-Version: 1.0
+X-KeepSent: 0FD6EB50:C92AD6D4-482583FB:00285AB8;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF0FD6EB50.C92AD6D4-ON482583FB.00285AB8-482583FB.0029CAB7@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Wed, 15 May 2019 15:36:29 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/05/15 PM 03:36:28,
+        Serialize complete at 2019/05/15 PM 03:36:28
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com x4F7aS9F078422
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the LS1028a PCIe controller.
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
----
- drivers/pci/controller/dwc/pci-layerscape.c |    9 +++++++++
- 1 files changed, 9 insertions(+), 0 deletions(-)
+Hi Miquel,
 
-diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-index 3a5fa26..8c556e1 100644
---- a/drivers/pci/controller/dwc/pci-layerscape.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape.c
-@@ -236,6 +236,14 @@ static int ls_pcie_msi_host_init(struct pcie_port *pp)
- 	.dw_pcie_ops = &dw_ls_pcie_ops,
- };
+
+> > +Macronix MX25F0A MultiFunction Device Tree Bindings
+> > +----------------------------------------------------
+> > +
+> > +MX25F0A is a MultiFunction Device with SPI and raw NAND, which
+> > +supports either spi host controller or raw nand controller.
+> 
+> Acronyms in plain English should be in upper case.
+
+okay, will fix.
+
+> > +Example:
+> > +
+> > +   mxic: mx25f0a@43c30000 {
+> > +      compatible = "mxic,mx25f0a";
+> > +      reg = <0x43c30000 0x10000>, <0xa0000000 0x4000000>;
+> > +      reg-names = "regs", "dirmap";
+> > +
+> > +      /* spi */
+> > +      clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
+> > +      clock-names = "send_clk", "send_dly_clk", "ps_clk";
+> > +      #address-cells = <1>;
+> > +      #size-cells = <0>;
+> > +
+> > +      flash@0 {
+> > +         compatible = "jedec,spi-nor";
+> > +         reg = <0>;
+> > +         spi-max-frequency = <25000000>;
+> > +         spi-tx-bus-width = <4>;
+> > +         spi-rx-bus-width = <4>;
+> > +      };
+> > +
+> > +      /* nand */
+> > +      nand-ecc-mode = "soft";
+> > +      nand-ecc-algo = "bch";
+> > +      nand-ecc-step-size = <512>;
+> > +      nand-ecc-strength = <8>;
+> 
+> Any reason to enforce 512B/8b correction? Why not letting the core
+> choose for you depending on the NAND chip's requirements?
+> 
+
+I thought here is just a raw NAND DTS example. 
+Will remove it.
+
+> 
+> Anyway, I think you can have only one or the other (NAND or SPI), not
+> both, and you probably should have a compatible or a property to tell
+> the kernel which one you are using, right?
+> 
+
+yes, you are right.
+
+New DTS is bellow.
+-------------------------------------------------------------------------->
+
+Macronix Flash Memory Controller Device Tree Bindings
+-----------------------------------------------------
+
+Macronix Flash Memory Controller supports serial and raw Flash, including
+NOR and NAND Flash for high throughput and low pin count applications.
+It's a MultiFunction Device which supports either SPI host controller or
+raw NAND controller.
+
+Required properties:
+- compatible: should be "mxic,mfd"
+- reg: should contain 2 entries, one for the registers and one for the 
+direct
+       mapping area in SPI mode.
+- reg-names: should contain "regs" and "dirmap"
+- interrupts: interrupt line connected to this controller
+- SPI:
+        - #address-cells: should be 1
+        - #size-cells: should be 0
+        - clock-names: should contain "ps_clk", "send_clk" and
+                       "send_dly_clk"
+        - clocks: should contain 3 entries for the "ps_clk", "send_clk"
+                  and "send_dly_clk" clocks
+- Raw NAND:
+        - nand-ecc-mode = "soft";
+        - nand-ecc-algo = "bch";
+
+Example:
+- SPI mode:
+
+        mxic: mxic-mfd@43c30000 {
+                compatible = "mxic,mfd";
+                reg = <0x43c30000 0x10000>, <0xa0000000 0x4000000>;
+                reg-names = "regs", "dirmap";
+                clocks = <&clkwizard 0>, <&clkwizard 1>, <&clkc 15>;
+                clock-names = "send_clk", "send_dly_clk", "ps_clk";
+                #address-cells = <1>;
+                #size-cells = <0>;
+
+                flash@0 {
+                        compatible = "jedec,spi-nor";
+                        reg = <0>;
+                        spi-max-frequency = <25000000>;
+                        spi-tx-bus-width = <4>;
+                        spi-rx-bus-width = <4>;
+                };
+        };
  
-+static const struct ls_pcie_drvdata ls1028a_drvdata = {
-+	.lut_offset = 0x80000,
-+	.ltssm_shift = 0,
-+	.lut_dbg = 0x407fc,
-+	.ops = &ls_pcie_host_ops,
-+	.dw_pcie_ops = &dw_ls_pcie_ops,
-+};
-+
- static const struct ls_pcie_drvdata ls1046_drvdata = {
- 	.lut_offset = 0x80000,
- 	.ltssm_shift = 24,
-@@ -263,6 +271,7 @@ static int ls_pcie_msi_host_init(struct pcie_port *pp)
- static const struct of_device_id ls_pcie_of_match[] = {
- 	{ .compatible = "fsl,ls1012a-pcie", .data = &ls1046_drvdata },
- 	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
-+	{ .compatible = "fsl,ls1028a-pcie", .data = &ls1028a_drvdata },
- 	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
- 	{ .compatible = "fsl,ls1046a-pcie", .data = &ls1046_drvdata },
- 	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
--- 
-1.7.1
+- Raw NAND mode:
+
+        mxic: mxic-mfd@43c30000 {
+                compatible = "mxic,mfd";
+                reg = <0x43c30000 0x10000>, <0xa0000000 0x4000000>;
+                reg-names = "regs", "dirmap";
+
+                nand-ecc-mode = "soft";
+                nand-ecc-algo = "bch";
+        };  
+
+---------------------------------------------------------------------< 
+
+thanks for your review.
+
+best regards,
+Mason
+
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
