@@ -3,103 +3,155 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7B9C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D789C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 943B22084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436F82084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:29:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbfEOT3q (ORCPT
+        id S1728385AbfEOT3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:29:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51172 "EHLO mx1.redhat.com"
+        Wed, 15 May 2019 15:29:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58882 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727679AbfEOT1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727586AbfEOT1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 May 2019 15:27:34 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A70A3C05000D;
-        Wed, 15 May 2019 19:27:34 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id E0A353001A96;
+        Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C986060BF7;
-        Wed, 15 May 2019 19:27:29 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BCF8B1001E84;
+        Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 619CF2237E8; Wed, 15 May 2019 15:27:29 -0400 (EDT)
+        id EFC0522548A; Wed, 15 May 2019 15:27:29 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, linux-nvdimm@lists.01.org
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
         dgilbert@redhat.com, swhiteho@redhat.com
-Subject: [PATCH v2 02/30] fuse: Clear setuid bit even in cache=never path
-Date:   Wed, 15 May 2019 15:26:47 -0400
-Message-Id: <20190515192715.18000-3-vgoyal@redhat.com>
+Subject: [PATCH v2 22/30] fuse, dax: add DAX mmap support
+Date:   Wed, 15 May 2019 15:27:07 -0400
+Message-Id: <20190515192715.18000-23-vgoyal@redhat.com>
 In-Reply-To: <20190515192715.18000-1-vgoyal@redhat.com>
 References: <20190515192715.18000-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 15 May 2019 19:27:34 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If fuse daemon is started with cache=never, fuse falls back to direct IO.
-In that write path we don't call file_remove_privs() and that means setuid
-bit is not cleared if unpriviliged user writes to a file with setuid bit set.
+From: Stefan Hajnoczi <stefanha@redhat.com>
 
-pjdfstest chmod test 12.t tests this and fails.
+Add DAX mmap() support.
 
-Fix this by calling fuse_remove_privs() even for direct I/O path.
-
-I tested this as follows.
-
-- Run fuse example pasthrough fs.
-
-  $ passthrough_ll /mnt/pasthrough-mnt -o default_permissions,allow_other,cache=never
-  $ mkdir /mnt/pasthrough-mnt/testdir
-  $ cd /mnt/pasthrough-mnt/testdir
-  $ prove -rv pjdfstests/tests/chmod/12.t
-
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
 ---
- fs/fuse/file.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ fs/fuse/file.c | 64 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 63 insertions(+), 1 deletion(-)
 
 diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 06096b60f1df..5baf07fd2876 100644
+index edbb11ca735e..a053bcb9498d 100644
 --- a/fs/fuse/file.c
 +++ b/fs/fuse/file.c
-@@ -1456,14 +1456,18 @@ static ssize_t fuse_direct_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	/* Don't allow parallel writes to the same file */
- 	inode_lock(inode);
- 	res = generic_write_checks(iocb, from);
--	if (res > 0) {
--		if (!is_sync_kiocb(iocb) && iocb->ki_flags & IOCB_DIRECT) {
--			res = fuse_direct_IO(iocb, from);
--		} else {
--			res = fuse_direct_io(&io, from, &iocb->ki_pos,
--					     FUSE_DIO_WRITE);
--		}
-+	if (res <= 0)
-+		goto out;
+@@ -2576,10 +2576,15 @@ static const struct vm_operations_struct fuse_file_vm_ops = {
+ 	.page_mkwrite	= fuse_page_mkwrite,
+ };
+ 
++static int fuse_dax_mmap(struct file *file, struct vm_area_struct *vma);
+ static int fuse_file_mmap(struct file *file, struct vm_area_struct *vma)
+ {
+ 	struct fuse_file *ff = file->private_data;
+ 
++	/* DAX mmap is superior to direct_io mmap */
++	if (IS_DAX(file_inode(file)))
++		return fuse_dax_mmap(file, vma);
 +
-+	res = file_remove_privs(iocb->ki_filp);
-+	if (res)
-+		goto out;
-+	if (!is_sync_kiocb(iocb) && iocb->ki_flags & IOCB_DIRECT) {
-+		res = fuse_direct_IO(iocb, from);
-+	} else {
-+		res = fuse_direct_io(&io, from, &iocb->ki_pos, FUSE_DIO_WRITE);
- 	}
-+out:
- 	fuse_invalidate_attr(inode);
- 	if (res > 0)
- 		fuse_write_update_size(inode, iocb->ki_pos);
+ 	if (ff->open_flags & FOPEN_DIRECT_IO) {
+ 		/* Can't provide the coherency needed for MAP_SHARED */
+ 		if (vma->vm_flags & VM_MAYSHARE)
+@@ -2611,9 +2616,65 @@ static ssize_t fuse_file_splice_read(struct file *in, loff_t *ppos,
+ 
+ }
+ 
++static int __fuse_dax_fault(struct vm_fault *vmf, enum page_entry_size pe_size,
++			    bool write)
++{
++	vm_fault_t ret;
++	struct inode *inode = file_inode(vmf->vma->vm_file);
++	struct super_block *sb = inode->i_sb;
++	pfn_t pfn;
++
++	if (write)
++		sb_start_pagefault(sb);
++
++	/* TODO inode semaphore to protect faults vs truncate */
++
++	ret = dax_iomap_fault(vmf, pe_size, &pfn, NULL, &fuse_iomap_ops);
++
++	if (ret & VM_FAULT_NEEDDSYNC)
++		ret = dax_finish_sync_fault(vmf, pe_size, pfn);
++
++	if (write)
++		sb_end_pagefault(sb);
++
++	return ret;
++}
++
++static vm_fault_t fuse_dax_fault(struct vm_fault *vmf)
++{
++	return __fuse_dax_fault(vmf, PE_SIZE_PTE,
++				vmf->flags & FAULT_FLAG_WRITE);
++}
++
++static vm_fault_t fuse_dax_huge_fault(struct vm_fault *vmf,
++			       enum page_entry_size pe_size)
++{
++	return __fuse_dax_fault(vmf, pe_size, vmf->flags & FAULT_FLAG_WRITE);
++}
++
++static vm_fault_t fuse_dax_page_mkwrite(struct vm_fault *vmf)
++{
++	return __fuse_dax_fault(vmf, PE_SIZE_PTE, true);
++}
++
++static vm_fault_t fuse_dax_pfn_mkwrite(struct vm_fault *vmf)
++{
++	return __fuse_dax_fault(vmf, PE_SIZE_PTE, true);
++}
++
++static const struct vm_operations_struct fuse_dax_vm_ops = {
++	.fault		= fuse_dax_fault,
++	.huge_fault	= fuse_dax_huge_fault,
++	.page_mkwrite	= fuse_dax_page_mkwrite,
++	.pfn_mkwrite	= fuse_dax_pfn_mkwrite,
++};
++
+ static int fuse_dax_mmap(struct file *file, struct vm_area_struct *vma)
+ {
+-	return -EINVAL; /* TODO */
++	file_accessed(file);
++	vma->vm_ops = &fuse_dax_vm_ops;
++	vma->vm_flags |= VM_MIXEDMAP | VM_HUGEPAGE;
++	return 0;
+ }
+ 
+ static int convert_fuse_file_lock(struct fuse_conn *fc,
+@@ -3622,6 +3683,7 @@ static const struct file_operations fuse_file_operations = {
+ 	.release	= fuse_release,
+ 	.fsync		= fuse_fsync,
+ 	.lock		= fuse_file_lock,
++	.get_unmapped_area = thp_get_unmapped_area,
+ 	.flock		= fuse_file_flock,
+ 	.splice_read	= fuse_file_splice_read,
+ 	.splice_write	= iter_file_splice_write,
 -- 
 2.20.1
 
