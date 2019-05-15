@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB4AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC104C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB402084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5ABB2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:58:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557917885;
-	bh=4nYzT3hBUW6dJrK0dpt1StN4Zm2BHi/HabEiP2xWb/k=;
+	s=default; t=1557917888;
+	bh=mMQ1sGKdclurOfNKn9+ilN1BN8U4TOM6x/Llex0SXkM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Di5jAnp1CzMcxjDB+PilijGQw3rIqlBiPZEwZPRpSUHUkA350SUPiZ7BUuh48usxm
-	 wWLVyZ4kvSC32Yi0mO1hUBirQx2CbwR5F8ogIfstbQRJGrN6qnB89dJ3W10enAJ5R3
-	 tsjjZP8HK+sNIBjMK6gYjS5lHzgoi9BJrzgh35gY=
+	b=ptKXNfwsnhyol2K5QKv7SjXldfdXA7m5aH/rWLbBKGD6+oXWNhHJ5JzlJLC+fk7hh
+	 TvkxGS0Ww8cb4rXJ584grT14bjogKIuMaIuiud2hiE0Mzm017KOmYmQ1u7QJ4O+Ac6
+	 +fEefYfFFrEFX08Zw2IH3B5VXPhPac+y3uEry388=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726599AbfEOK6E (ORCPT
+        id S1726645AbfEOK6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:58:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54066 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 06:58:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726554AbfEOK6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:58:01 -0400
+        id S1726586AbfEOK6D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:58:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 653E92084F;
-        Wed, 15 May 2019 10:57:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02E8720881;
+        Wed, 15 May 2019 10:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557917879;
-        bh=4nYzT3hBUW6dJrK0dpt1StN4Zm2BHi/HabEiP2xWb/k=;
+        s=default; t=1557917882;
+        bh=mMQ1sGKdclurOfNKn9+ilN1BN8U4TOM6x/Llex0SXkM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZNnGy9wA6zJDpXr9Tsih6ynkUXcand5YtXLytikAZi+gHNEyRxuU+ikafd7Ce3KL2
-         wNzLIWK5P7Dij1ui3Ry+dmm7B6+rklLF/kMLWADELSE0eMK3Mk25XjvvAfIui3cEP/
-         A4alOHOuKBRA8mlpWpAzNu8YtpU8KDvmM/aTaW0E=
+        b=m5PpOop7nB658elRA2iCehi5wwh2OoHNrG1/OPyW2+NlD0eMSAIGObJl+1USihSk0
+         kNE+61bNUMi1aXmuvwx4SpD0SNoAw/hrBFxhxuYO2lf+vB3YgPRoPDtuAjXVPIR5p5
+         70eFfaO7S3RfGUYGTX2crcZWeO8ZFw3YKfgHqjhM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Salvatore Bonaccorso <carnil@debian.org>,
-        Jan Kara <jack@suse.cz>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 3.18 10/86] Revert "block/loop: Use global lock for ioctl() operation."
-Date:   Wed, 15 May 2019 12:54:47 +0200
-Message-Id: <20190515090644.528795270@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Stephen Suryaputra <ssuryaextr@gmail.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 3.18 11/86] ipv4: add sanity checks in ipv4_link_failure()
+Date:   Wed, 15 May 2019 12:54:48 +0200
+Message-Id: <20190515090644.755957440@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -61,194 +61,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Eric Dumazet <edumazet@google.com>
 
-This reverts commit a17189a0e107ee316b3fff61217f5a037357d65e which is
-commit 310ca162d779efee8a2dc3731439680f3e9c1e86 upstream.
+[ Upstream commit 20ff83f10f113c88d0bb74589389b05250994c16 ]
 
-Jan Kara has reported seeing problems with this patch applied, as has
-Salvatore Bonaccorso, so let's drop it for now.
+Before calling __ip_options_compile(), we need to ensure the network
+header is a an IPv4 one, and that it is already pulled in skb->head.
 
-Reported-by: Salvatore Bonaccorso <carnil@debian.org>
-Reported-by: Jan Kara <jack@suse.cz>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Jens Axboe <axboe@kernel.dk>
+RAW sockets going through a tunnel can end up calling ipv4_link_failure()
+with total garbage in the skb, or arbitrary lengthes.
+
+syzbot report :
+
+BUG: KASAN: stack-out-of-bounds in memcpy include/linux/string.h:355 [inline]
+BUG: KASAN: stack-out-of-bounds in __ip_options_echo+0x294/0x1120 net/ipv4/ip_options.c:123
+Write of size 69 at addr ffff888096abf068 by task syz-executor.4/9204
+
+CPU: 0 PID: 9204 Comm: syz-executor.4 Not tainted 5.1.0-rc5+ #77
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ print_address_description.cold+0x7c/0x20d mm/kasan/report.c:187
+ kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+ check_memory_region_inline mm/kasan/generic.c:185 [inline]
+ check_memory_region+0x123/0x190 mm/kasan/generic.c:191
+ memcpy+0x38/0x50 mm/kasan/common.c:133
+ memcpy include/linux/string.h:355 [inline]
+ __ip_options_echo+0x294/0x1120 net/ipv4/ip_options.c:123
+ __icmp_send+0x725/0x1400 net/ipv4/icmp.c:695
+ ipv4_link_failure+0x29f/0x550 net/ipv4/route.c:1204
+ dst_link_failure include/net/dst.h:427 [inline]
+ vti6_xmit net/ipv6/ip6_vti.c:514 [inline]
+ vti6_tnl_xmit+0x10d4/0x1c0c net/ipv6/ip6_vti.c:553
+ __netdev_start_xmit include/linux/netdevice.h:4414 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4423 [inline]
+ xmit_one net/core/dev.c:3292 [inline]
+ dev_hard_start_xmit+0x1b2/0x980 net/core/dev.c:3308
+ __dev_queue_xmit+0x271d/0x3060 net/core/dev.c:3878
+ dev_queue_xmit+0x18/0x20 net/core/dev.c:3911
+ neigh_direct_output+0x16/0x20 net/core/neighbour.c:1527
+ neigh_output include/net/neighbour.h:508 [inline]
+ ip_finish_output2+0x949/0x1740 net/ipv4/ip_output.c:229
+ ip_finish_output+0x73c/0xd50 net/ipv4/ip_output.c:317
+ NF_HOOK_COND include/linux/netfilter.h:278 [inline]
+ ip_output+0x21f/0x670 net/ipv4/ip_output.c:405
+ dst_output include/net/dst.h:444 [inline]
+ NF_HOOK include/linux/netfilter.h:289 [inline]
+ raw_send_hdrinc net/ipv4/raw.c:432 [inline]
+ raw_sendmsg+0x1d2b/0x2f20 net/ipv4/raw.c:663
+ inet_sendmsg+0x147/0x5d0 net/ipv4/af_inet.c:798
+ sock_sendmsg_nosec net/socket.c:651 [inline]
+ sock_sendmsg+0xdd/0x130 net/socket.c:661
+ sock_write_iter+0x27c/0x3e0 net/socket.c:988
+ call_write_iter include/linux/fs.h:1866 [inline]
+ new_sync_write+0x4c7/0x760 fs/read_write.c:474
+ __vfs_write+0xe4/0x110 fs/read_write.c:487
+ vfs_write+0x20c/0x580 fs/read_write.c:549
+ ksys_write+0x14f/0x2d0 fs/read_write.c:599
+ __do_sys_write fs/read_write.c:611 [inline]
+ __se_sys_write fs/read_write.c:608 [inline]
+ __x64_sys_write+0x73/0xb0 fs/read_write.c:608
+ do_syscall_64+0x103/0x610 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458c29
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f293b44bc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458c29
+RDX: 0000000000000014 RSI: 00000000200002c0 RDI: 0000000000000003
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f293b44c6d4
+R13: 00000000004c8623 R14: 00000000004ded68 R15: 00000000ffffffff
+
+The buggy address belongs to the page:
+page:ffffea00025aafc0 count:0 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0x1fffc0000000000()
+raw: 01fffc0000000000 0000000000000000 ffffffff025a0101 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888096abef80: 00 00 00 f2 f2 f2 f2 f2 00 00 00 00 00 00 00 f2
+ ffff888096abf000: f2 f2 f2 f2 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff888096abf080: 00 00 f3 f3 f3 f3 00 00 00 00 00 00 00 00 00 00
+                         ^
+ ffff888096abf100: 00 00 00 00 f1 f1 f1 f1 00 00 f3 f3 00 00 00 00
+ ffff888096abf180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+Fixes: ed0de45a1008 ("ipv4: recompile ip options in ipv4_link_failure")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Stephen Suryaputra <ssuryaextr@gmail.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/block/loop.c |   47 +++++++++++++++++++++++------------------------
- drivers/block/loop.h |    1 +
- 2 files changed, 24 insertions(+), 24 deletions(-)
+ net/ipv4/route.c |   34 ++++++++++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 10 deletions(-)
 
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -81,7 +81,6 @@
+--- a/net/ipv4/route.c
++++ b/net/ipv4/route.c
+@@ -1148,25 +1148,39 @@ static struct dst_entry *ipv4_dst_check(
+ 	return dst;
+ }
  
- static DEFINE_IDR(loop_index_idr);
- static DEFINE_MUTEX(loop_index_mutex);
--static DEFINE_MUTEX(loop_ctl_mutex);
- 
- static int max_part;
- static int part_shift;
-@@ -1013,7 +1012,7 @@ static int loop_clr_fd(struct loop_devic
- 	 */
- 	if (lo->lo_refcnt > 1) {
- 		lo->lo_flags |= LO_FLAGS_AUTOCLEAR;
--		mutex_unlock(&loop_ctl_mutex);
-+		mutex_unlock(&lo->lo_ctl_mutex);
- 		return 0;
- 	}
- 
-@@ -1062,12 +1061,12 @@ static int loop_clr_fd(struct loop_devic
- 	lo->lo_flags = 0;
- 	if (!part_shift)
- 		lo->lo_disk->flags |= GENHD_FL_NO_PART_SCAN;
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_ctl_mutex);
- 	/*
--	 * Need not hold loop_ctl_mutex to fput backing file.
--	 * Calling fput holding loop_ctl_mutex triggers a circular
-+	 * Need not hold lo_ctl_mutex to fput backing file.
-+	 * Calling fput holding lo_ctl_mutex triggers a circular
- 	 * lock dependency possibility warning as fput can take
--	 * bd_mutex which is usually taken before loop_ctl_mutex.
-+	 * bd_mutex which is usually taken before lo_ctl_mutex.
- 	 */
- 	fput(filp);
- 	return 0;
-@@ -1301,7 +1300,7 @@ static int lo_ioctl(struct block_device
- 	struct loop_device *lo = bdev->bd_disk->private_data;
- 	int err;
- 
--	mutex_lock_nested(&loop_ctl_mutex, 1);
-+	mutex_lock_nested(&lo->lo_ctl_mutex, 1);
- 	switch (cmd) {
- 	case LOOP_SET_FD:
- 		err = loop_set_fd(lo, mode, bdev, arg);
-@@ -1310,7 +1309,7 @@ static int lo_ioctl(struct block_device
- 		err = loop_change_fd(lo, bdev, arg);
- 		break;
- 	case LOOP_CLR_FD:
--		/* loop_clr_fd would have unlocked loop_ctl_mutex on success */
-+		/* loop_clr_fd would have unlocked lo_ctl_mutex on success */
- 		err = loop_clr_fd(lo);
- 		if (!err)
- 			goto out_unlocked;
-@@ -1341,7 +1340,7 @@ static int lo_ioctl(struct block_device
- 	default:
- 		err = lo->ioctl ? lo->ioctl(lo, cmd, arg) : -EINVAL;
- 	}
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_ctl_mutex);
- 
- out_unlocked:
- 	return err;
-@@ -1474,16 +1473,16 @@ static int lo_compat_ioctl(struct block_
- 
- 	switch(cmd) {
- 	case LOOP_SET_STATUS:
--		mutex_lock(&loop_ctl_mutex);
-+		mutex_lock(&lo->lo_ctl_mutex);
- 		err = loop_set_status_compat(
- 			lo, (const struct compat_loop_info __user *) arg);
--		mutex_unlock(&loop_ctl_mutex);
-+		mutex_unlock(&lo->lo_ctl_mutex);
- 		break;
- 	case LOOP_GET_STATUS:
--		mutex_lock(&loop_ctl_mutex);
-+		mutex_lock(&lo->lo_ctl_mutex);
- 		err = loop_get_status_compat(
- 			lo, (struct compat_loop_info __user *) arg);
--		mutex_unlock(&loop_ctl_mutex);
-+		mutex_unlock(&lo->lo_ctl_mutex);
- 		break;
- 	case LOOP_SET_CAPACITY:
- 	case LOOP_CLR_FD:
-@@ -1514,9 +1513,9 @@ static int lo_open(struct block_device *
- 		goto out;
- 	}
- 
--	mutex_lock(&loop_ctl_mutex);
-+	mutex_lock(&lo->lo_ctl_mutex);
- 	lo->lo_refcnt++;
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_ctl_mutex);
- out:
- 	mutex_unlock(&loop_index_mutex);
- 	return err;
-@@ -1526,7 +1525,7 @@ static void __lo_release(struct loop_dev
+-static void ipv4_link_failure(struct sk_buff *skb)
++static void ipv4_send_dest_unreach(struct sk_buff *skb)
  {
- 	int err;
+ 	struct ip_options opt;
+-	struct rtable *rt;
+ 	int res;
  
--	mutex_lock(&loop_ctl_mutex);
-+	mutex_lock(&lo->lo_ctl_mutex);
+ 	/* Recompile ip options since IPCB may not be valid anymore.
++	 * Also check we have a reasonable ipv4 header.
+ 	 */
+-	memset(&opt, 0, sizeof(opt));
+-	opt.optlen = ip_hdr(skb)->ihl*4 - sizeof(struct iphdr);
+-
+-	rcu_read_lock();
+-	res = __ip_options_compile(dev_net(skb->dev), &opt, skb, NULL);
+-	rcu_read_unlock();
+-
+-	if (res)
++	if (!pskb_network_may_pull(skb, sizeof(struct iphdr)) ||
++	    ip_hdr(skb)->version != 4 || ip_hdr(skb)->ihl < 5)
+ 		return;
  
- 	if (--lo->lo_refcnt)
- 		goto out;
-@@ -1548,7 +1547,7 @@ static void __lo_release(struct loop_dev
- 	}
++	memset(&opt, 0, sizeof(opt));
++	if (ip_hdr(skb)->ihl > 5) {
++		if (!pskb_network_may_pull(skb, ip_hdr(skb)->ihl * 4))
++			return;
++		opt.optlen = ip_hdr(skb)->ihl * 4 - sizeof(struct iphdr);
++
++		rcu_read_lock();
++		res = __ip_options_compile(dev_net(skb->dev), &opt, skb, NULL);
++		rcu_read_unlock();
++
++		if (res)
++			return;
++	}
+ 	__icmp_send(skb, ICMP_DEST_UNREACH, ICMP_HOST_UNREACH, 0, &opt);
++}
++
++static void ipv4_link_failure(struct sk_buff *skb)
++{
++	struct rtable *rt;
++
++	ipv4_send_dest_unreach(skb);
  
- out:
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_ctl_mutex);
- }
- 
- static void lo_release(struct gendisk *disk, fmode_t mode)
-@@ -1594,10 +1593,10 @@ static int unregister_transfer_cb(int id
- 	struct loop_device *lo = ptr;
- 	struct loop_func_table *xfer = data;
- 
--	mutex_lock(&loop_ctl_mutex);
-+	mutex_lock(&lo->lo_ctl_mutex);
- 	if (lo->lo_encryption == xfer)
- 		loop_release_xfer(lo);
--	mutex_unlock(&loop_ctl_mutex);
-+	mutex_unlock(&lo->lo_ctl_mutex);
- 	return 0;
- }
- 
-@@ -1678,7 +1677,7 @@ static int loop_add(struct loop_device *
- 	if (!part_shift)
- 		disk->flags |= GENHD_FL_NO_PART_SCAN;
- 	disk->flags |= GENHD_FL_EXT_DEVT;
--	mutex_init(&loop_ctl_mutex);
-+	mutex_init(&lo->lo_ctl_mutex);
- 	lo->lo_number		= i;
- 	lo->lo_thread		= NULL;
- 	init_waitqueue_head(&lo->lo_event);
-@@ -1790,19 +1789,19 @@ static long loop_control_ioctl(struct fi
- 		ret = loop_lookup(&lo, parm);
- 		if (ret < 0)
- 			break;
--		mutex_lock(&loop_ctl_mutex);
-+		mutex_lock(&lo->lo_ctl_mutex);
- 		if (lo->lo_state != Lo_unbound) {
- 			ret = -EBUSY;
--			mutex_unlock(&loop_ctl_mutex);
-+			mutex_unlock(&lo->lo_ctl_mutex);
- 			break;
- 		}
- 		if (lo->lo_refcnt > 0) {
- 			ret = -EBUSY;
--			mutex_unlock(&loop_ctl_mutex);
-+			mutex_unlock(&lo->lo_ctl_mutex);
- 			break;
- 		}
- 		lo->lo_disk->private_data = NULL;
--		mutex_unlock(&loop_ctl_mutex);
-+		mutex_unlock(&lo->lo_ctl_mutex);
- 		idr_remove(&loop_index_idr, lo->lo_number);
- 		loop_remove(lo);
- 		break;
---- a/drivers/block/loop.h
-+++ b/drivers/block/loop.h
-@@ -55,6 +55,7 @@ struct loop_device {
- 	struct bio_list		lo_bio_list;
- 	unsigned int		lo_bio_count;
- 	int			lo_state;
-+	struct mutex		lo_ctl_mutex;
- 	struct task_struct	*lo_thread;
- 	wait_queue_head_t	lo_event;
- 	/* wait queue for incoming requests */
+ 	rt = skb_rtable(skb);
+ 	if (rt)
 
 
