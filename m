@@ -6,47 +6,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB7AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E4DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D69972084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89CA82084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919840;
-	bh=kndu8SAtUtlE6O5XFX8Lvk1NrcXtcxLc7hvEAE7f7uk=;
+	s=default; t=1557919841;
+	bh=FbVYH8p85acccOz3zuFcc6oZMQvsRPlnhH0ItQSQmFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B7Re3qV1Z9ASTT3Nu8C+TGKrXTg/nPJ0bztD3HtfUKqrvKt3rQewmuyr3WjX0vOtp
-	 DaHVNDO4Vs2oF97jktAFdUo1NaCa7Ukm5Cr9QMQPKn2UwlccqzZ9WlczBRwSTPxD+T
-	 3yACGaAsH9+vxNsYzNPPro7dXQo7X1e7/mY/cUFA=
+	b=YRA0xDG9U0mX9UIDpYrEk4K9A6CE2cYjKFXDLz79iif3CNWbGDXOyu2tXM3hPtI7A
+	 1L90kRxs4ivYAPK1haiUv+u+0OcCcFO/0cZYtSDWydHg9tcPCA77T+K0H6lvVJnceK
+	 tCAiTBrfeoZoFIZ58xQWF6PHHmzctsdNPQrsxrcw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732751AbfEOLai (ORCPT
+        id S1732761AbfEOLak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:30:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42042 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:30:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732730AbfEOLa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:30:29 -0400
+        id S1732395AbfEOLae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:30:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1FCF92084A;
-        Wed, 15 May 2019 11:30:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73AA020843;
+        Wed, 15 May 2019 11:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919828;
-        bh=kndu8SAtUtlE6O5XFX8Lvk1NrcXtcxLc7hvEAE7f7uk=;
+        s=default; t=1557919833;
+        bh=FbVYH8p85acccOz3zuFcc6oZMQvsRPlnhH0ItQSQmFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aiUlz/Y0lVSpQts8FqofY6rb3OhjvAs18FMoDWpGhwN8nYb8CEtTovd6t5HnjbHro
-         ccMaROoMjaI7TsSgkEmaxvS9anewdNwK0UfXF4G5x2PnwyXbKTT57GMHQwhBjB+AMn
-         nPE6HLOAwa3xWl1ypzG43nd/U/+c4+r8FUbh2Eh4=
+        b=e6qT5dyRAajrg9NSz0fSgkoCEvbWkSaTVzerJKJ1rE5h3/ZKz8Gj7ZI2SteE//eSy
+         KN52Ur8ZV6d9+CDPL3q0goP3lrB4fopcmyFGFUYWSwrb1qId97BH1dsgtfr2RB0XKd
+         jiXsXwhFMUK8tBbsL5i4ITZEICxQvXfQrblD1niQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Haller <thaller@redhat.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 108/137] fib_rules: return 0 directly if an exactly same rule exists when NLM_F_EXCL not supplied
-Date:   Wed, 15 May 2019 12:56:29 +0200
-Message-Id: <20190515090701.414733828@linuxfoundation.org>
+Subject: [PATCH 5.0 110/137] net: dsa: Fix error cleanup path in dsa_init_module
+Date:   Wed, 15 May 2019 12:56:31 +0200
+Message-Id: <20190515090701.573497652@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -59,48 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit e9919a24d3022f72bcadc407e73a6ef17093a849 ]
+[ Upstream commit 68be930249d051fd54d3d99156b3dcadcb2a1f9b ]
 
-With commit 153380ec4b9 ("fib_rules: Added NLM_F_EXCL support to
-fib_nl_newrule") we now able to check if a rule already exists. But this
-only works with iproute2. For other tools like libnl, NetworkManager,
-it still could add duplicate rules with only NLM_F_CREATE flag, like
+BUG: unable to handle kernel paging request at ffffffffa01c5430
+PGD 3270067 P4D 3270067 PUD 3271063 PMD 230bc5067 PTE 0
+Oops: 0000 [#1
+CPU: 0 PID: 6159 Comm: modprobe Not tainted 5.1.0+ #33
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
+RIP: 0010:raw_notifier_chain_register+0x16/0x40
+Code: 63 f8 66 90 e9 5d ff ff ff 90 90 90 90 90 90 90 90 90 90 90 55 48 8b 07 48 89 e5 48 85 c0 74 1c 8b 56 10 3b 50 10 7e 07 eb 12 <39> 50 10 7c 0d 48 8d 78 08 48 8b 40 08 48 85 c0 75 ee 48 89 46 08
+RSP: 0018:ffffc90001c33c08 EFLAGS: 00010282
+RAX: ffffffffa01c5420 RBX: ffffffffa01db420 RCX: 4fcef45928070a8b
+RDX: 0000000000000000 RSI: ffffffffa01db420 RDI: ffffffffa01b0068
+RBP: ffffc90001c33c08 R08: 000000003e0a33d0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000094443661 R12: ffff88822c320700
+R13: ffff88823109be80 R14: 0000000000000000 R15: ffffc90001c33e78
+FS:  00007fab8bd08540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffa01c5430 CR3: 00000002297ea000 CR4: 00000000000006f0
+Call Trace:
+ register_netdevice_notifier+0x43/0x250
+ ? 0xffffffffa01e0000
+ dsa_slave_register_notifier+0x13/0x70 [dsa_core
+ ? 0xffffffffa01e0000
+ dsa_init_module+0x2e/0x1000 [dsa_core
+ do_one_initcall+0x6c/0x3cc
+ ? do_init_module+0x22/0x1f1
+ ? rcu_read_lock_sched_held+0x97/0xb0
+ ? kmem_cache_alloc_trace+0x325/0x3b0
+ do_init_module+0x5b/0x1f1
+ load_module+0x1db1/0x2690
+ ? m_show+0x1d0/0x1d0
+ __do_sys_finit_module+0xc5/0xd0
+ __x64_sys_finit_module+0x15/0x20
+ do_syscall_64+0x6b/0x1d0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-[localhost ~ ]# ip rule
-0:      from all lookup local
-32766:  from all lookup main
-32767:  from all lookup default
-100000: from 192.168.7.5 lookup 5
-100000: from 192.168.7.5 lookup 5
+Cleanup allocated resourses if there are errors,
+otherwise it will trgger memleak.
 
-As it doesn't make sense to create two duplicate rules, let's just return
-0 if the rule exists.
-
-Fixes: 153380ec4b9 ("fib_rules: Added NLM_F_EXCL support to fib_nl_newrule")
-Reported-by: Thomas Haller <thaller@redhat.com>
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Fixes: c9eb3e0f8701 ("net: dsa: Add support for learning FDB through notification")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/fib_rules.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/dsa/dsa.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -756,9 +756,9 @@ int fib_nl_newrule(struct sk_buff *skb,
- 	if (err)
- 		goto errout;
+--- a/net/dsa/dsa.c
++++ b/net/dsa/dsa.c
+@@ -342,15 +342,22 @@ static int __init dsa_init_module(void)
  
--	if ((nlh->nlmsg_flags & NLM_F_EXCL) &&
--	    rule_exists(ops, frh, tb, rule)) {
--		err = -EEXIST;
-+	if (rule_exists(ops, frh, tb, rule)) {
-+		if (nlh->nlmsg_flags & NLM_F_EXCL)
-+			err = -EEXIST;
- 		goto errout_free;
- 	}
+ 	rc = dsa_slave_register_notifier();
+ 	if (rc)
+-		return rc;
++		goto register_notifier_fail;
+ 
+ 	rc = dsa_legacy_register();
+ 	if (rc)
+-		return rc;
++		goto legacy_register_fail;
+ 
+ 	dev_add_pack(&dsa_pack_type);
+ 
+ 	return 0;
++
++legacy_register_fail:
++	dsa_slave_unregister_notifier();
++register_notifier_fail:
++	destroy_workqueue(dsa_owq);
++
++	return rc;
+ }
+ module_init(dsa_init_module);
  
 
 
