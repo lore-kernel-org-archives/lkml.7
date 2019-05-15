@@ -2,144 +2,162 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 556F6C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E3DC04E87
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D8F20881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD04420881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:12:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=javigon-com.20150623.gappssmtp.com header.i=@javigon-com.20150623.gappssmtp.com header.b="B0COwuh3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfEOJIr (ORCPT
+        id S1726146AbfEOJMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 05:08:47 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:38746 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbfEOJIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 05:08:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09FF6341;
-        Wed, 15 May 2019 02:08:46 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7370C3F703;
-        Wed, 15 May 2019 02:08:43 -0700 (PDT)
-Subject: Re: [PATCH v7 10/13] selftests/resctrl: Add vendor detection
- mechanism
-To:     =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaochen Shen <xiaochen.shen@intel.com>,
-        Arshiya Hayatkhan Pathan <arshiya.hayatkhan.pathan@intel.com>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>,
-        Babu Moger <babu.moger@amd.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <1549767042-95827-1-git-send-email-fenghua.yu@intel.com>
- <1549767042-95827-11-git-send-email-fenghua.yu@intel.com>
- <20190510183909.65732a67@donnerap.cambridge.arm.com>
- <5cc3b562-6e48-f64c-06dd-b1ee1059e33e@arm.com>
- <676ca766-fcd0-6b47-2961-92ef21ecf32e@arm.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <f40850cf-5e16-3e99-5ee4-bc4538b5c06d@arm.com>
-Date:   Wed, 15 May 2019 10:08:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <676ca766-fcd0-6b47-2961-92ef21ecf32e@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+        Wed, 15 May 2019 05:12:06 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:36506 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfEOJMG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 05:12:06 -0400
+Received: by mail-ed1-f68.google.com with SMTP id a8so3141062edx.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 02:12:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=javigon-com.20150623.gappssmtp.com; s=20150623;
+        h=from:message-id:mime-version:subject:date:in-reply-to:cc:to
+         :references;
+        bh=p+AzmpZG9ssvqNQdDvf61/wCHf9qPfT4ZDODShcElfo=;
+        b=B0COwuh3ZHw0nsC0/uwKs1dS/HiaSVLg6KZh0IeJmXsGf9E2c/iD7YWDIy4wWdmg02
+         4b7sGsLK0DSyXOfO3avjtUIX2z6DSRhrfdOoO3jKJxOM7G8Pr0loKXXB4h7R9+EdxmFT
+         o8omzibNtiXksmUIwsT+XccPJ1e5urjq6Sa33pl4wa1s8yrVQI4lgZ7SqD5/lIiqKwno
+         O7wLhnRBF8RRPKGTGxtYAbwCYh+g9galM50Q95/nCqrbV4zxeM2d2t3c/H8GIOzQ4dnw
+         MKoBtpPoTTaQzUnNkcQYBTYM82Lo+zvd+ggv9c5wIglAChHOJsoDN9Reuz8+ODRUoDl7
+         3PIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:message-id:mime-version:subject:date
+         :in-reply-to:cc:to:references;
+        bh=p+AzmpZG9ssvqNQdDvf61/wCHf9qPfT4ZDODShcElfo=;
+        b=Tgi0ajscSW/85E4EgfH54gor5E9pTO1qqH7P0bZ4o1GBJKrEZlk/hZDQ3TOF0bo9aB
+         pApR53XiLH/tEZuCrymMcRGh68jkEwPLqCpvMIqCCE1B2KkTshnhWaOZLnble5ncnJ36
+         /TFwGkt+cjAP2xcf+U0RoEIepybpcbaBCDkgySY+waBfTl92HKa6frjxNxSqxYNOwFPa
+         Vo3j7H+y2ARKZxR8AjtbzBJNQqG3aabnIlrKnFIdTji84BJMih7Y1SAz7hQRpOvZerxU
+         E3MJ7R91U/uk8cw11+EFfYWQ2A6LrNJkaaOYY13o2bXtfoybJ28qVFELJEnGDRz+kQx6
+         Xueg==
+X-Gm-Message-State: APjAAAXyQ99Vdrxfi43OGBuXGNzezlE4h9oea0o+LZ0AgVuq04I7i2pk
+        HKtiYeUZnp9jff6uHYH1aKptQw==
+X-Google-Smtp-Source: APXvYqwmaFIXyjvOsUyoDS9Kl1N0oXbHrzIy5YXs1l0SkgYMRu5EEIS7ue1RMLnJVaPAmD5JznhDrw==
+X-Received: by 2002:aa7:d6d3:: with SMTP id x19mr41615861edr.67.1557911524754;
+        Wed, 15 May 2019 02:12:04 -0700 (PDT)
+Received: from [192.168.1.119] (ip-5-186-122-168.cgn.fibianet.dk. [5.186.122.168])
+        by smtp.gmail.com with ESMTPSA id h44sm593809eda.3.2019.05.15.02.12.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 02:12:04 -0700 (PDT)
+From:   =?utf-8?Q?Javier_Gonz=C3=A1lez?= <javier@javigon.com>
+Message-Id: <C02560B2-DD7F-4B59-8E63-8A06E5DF2271@javigon.com>
+Content-Type: multipart/signed;
+        boundary="Apple-Mail=_E1065D95-62D8-4302-A47A-E458FE1A436F";
+        protocol="application/pgp-signature";
+        micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH] lightnvm: pblk: Fix freeing merged pages
+Date:   Wed, 15 May 2019 11:12:02 +0200
+In-Reply-To: <20190515003952.12541-1-hlitz@ucsc.edu>
+Cc:     =?utf-8?Q?Matias_Bj=C3=B8rling?= <mb@lightnvm.io>,
+        Hans Holmberg <hans.holmberg@cnexlabs.com>,
+        "Konopko, Igor J" <igor.j.konopko@intel.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Heiner Litz <hlitz@ucsc.edu>
+References: <20190515003952.12541-1-hlitz@ucsc.edu>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi André,
 
-On 14/05/2019 20:40, André Przywara wrote:
-> On 14/05/2019 18:20, James Morse wrote:
->> On 10/05/2019 18:39, Andre Przywara wrote:
->>> On Sat,  9 Feb 2019 18:50:39 -0800
->>> Fenghua Yu <fenghua.yu@intel.com> wrote:
->>>> From: Babu Moger <babu.moger@amd.com>
->>>>
->>>> RESCTRL feature is supported both on Intel and AMD now. Some features
->>>> are implemented differently. Add vendor detection mechanism. Use the vendor
->>>> check where there are differences.
->>>
->>> I don't think vendor detection is the right approach. The Linux userland
->>> interface should be even architecture agnostic, not to speak of different
->>> vendors.
->>>
->>> But even if we need this for some reason ...
+--Apple-Mail=_E1065D95-62D8-4302-A47A-E458FE1A436F
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
 
->> What do we need it for? Surely it indicates something is wrong with the kernel interface
->> if you need to know which flavour of CPU this is.
-> 
-> As you mentioned, we should not need it. I just couldn't find a better
-> way (yet) to differentiate between L3 cache ID and physical package ID
-> (see patch 11/13). So this is a kludge for now to not break this
-> particular code.
+> On 15 May 2019, at 02.39, Heiner Litz <hlitz@ucsc.edu> wrote:
+>=20
+> bio_add_pc_page() may merge pages when a bio is padded due to a flush.
+> Fix iteration over the bio to free the correct pages in case of a =
+merge.
+>=20
+> Signed-off-by: Heiner Litz <hlitz@ucsc.edu>
+> ---
+> drivers/lightnvm/pblk-core.c | 18 ++++++++++--------
+> 1 file changed, 10 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/lightnvm/pblk-core.c =
+b/drivers/lightnvm/pblk-core.c
+> index 773537804319..88d61b27a9ab 100644
+> --- a/drivers/lightnvm/pblk-core.c
+> +++ b/drivers/lightnvm/pblk-core.c
+> @@ -323,14 +323,16 @@ void pblk_free_rqd(struct pblk *pblk, struct =
+nvm_rq *rqd, int type)
+> void pblk_bio_free_pages(struct pblk *pblk, struct bio *bio, int off,
+> 			 int nr_pages)
+> {
+> -	struct bio_vec bv;
+> -	int i;
+> -
+> -	WARN_ON(off + nr_pages !=3D bio->bi_vcnt);
+> -
+> -	for (i =3D off; i < nr_pages + off; i++) {
+> -		bv =3D bio->bi_io_vec[i];
+> -		mempool_free(bv.bv_page, &pblk->page_bio_pool);
+> +	struct bio_vec *bv;
+> +	struct page *page;
+> +	int i,e, nbv =3D 0;
+> +
+> +	for (i =3D 0; i < bio->bi_vcnt; i++) {
+> +		bv =3D &bio->bi_io_vec[i];
+> +		page =3D bv->bv_page;
+> +		for (e =3D 0; e < bv->bv_len; e +=3D =
+PBLK_EXPOSED_PAGE_SIZE, nbv++)
+> +			if (nbv >=3D off)
+> +				mempool_free(page++, =
+&pblk->page_bio_pool);
+> 	}
+> }
+>=20
+> --
+> 2.17.1
 
-[0]? That's broken. It needs to take the 'cache/index?/id' field, and not hard-code '3',
-search each 'cache/index?/level' instead.
+Looks good to me.
 
-
-Documentation/x86/resctrl_ui.rst's "Cache IDs" section says:
-| On current generation systems there is one L3 cache per socket and L2
-| caches are generally just shared by the hyperthreads on a core, but this
-| isn't an architectural requirement.
-[...]
-| So instead of using "socket" or "core" to define the set of logical cpus
-| sharing a resource we use a "Cache ID"
-[...]
-| To find the ID for each logical CPU look in
-| /sys/devices/system/cpu/cpu*/cache/index*/id
-
-arch/x86/kernel/cpu/restrl/core.c:domain_add_cpu() pulls the domain-id out of struct
-cacheinfo:
-|	int id = get_cache_id(cpu, r->cache_level);
-
-drivers/base/cacheinfo.c has some macro-foliage that exports this same field via sysfs,
-and arch/x86/kernel/cpu/restrl/ctrlmondata.c:parse_line() matches that id against the
-value user-space provides in the schemata.
-
-(we've got some horrible code for arm64 to make this work without 'cache id' as a hardware
-property!)
-
-On x86 these numbers are of the order 0,1,2, so its very likely physical_package_id and
-cache_id alias, and you get away with it.
-
-
-> Out of curiosity: Is there any userland tool meant to control the
-> resources? I guess poking around in sysfs is not how admins are expected
-> to use this?
-
-I've come across:
-https://github.com/intel/intel-cmt-cat/
-
-but I've never even cloned it. The rdtset man page has:
-| With --iface-os (-I) parameter, rdtset uses resctrl filesystem (/sys/fs/resctrl)
-| instead of accessing MSRs directly.
+Reviewed-by: Javier Gonz=C3=A1lez <javier@javigon.com>
 
 
-> This tool would surely run into the same problems, which somewhat tell
-> me that the interface is not really right.
+--Apple-Mail=_E1065D95-62D8-4302-A47A-E458FE1A436F
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
 
-At the moment its not as-documented or as the kernel is using those numbers.
+-----BEGIN PGP SIGNATURE-----
 
-I assume this is something that changed in resctrl when it was merged, and this selftest
-tool just needs updating.
+iQIzBAEBCAAdFiEEU1dMZpvMIkj0jATvPEYBfS0leOAFAlzb1+IACgkQPEYBfS0l
+eOAdURAAvM/6R6qT4bUjMVc3udUQeeCPR+M/SqeEVr04vNMVhCK6JAEgBr8QZCeB
+KeAXltRDHq0hDDaD5Yyx7QcOZNczQdWojgKYsUt1xx210TII94TAP8JucgRtDQyn
+hRZSQa0lLqMvO8iZiqqVpehTCiMGYf7JgREi7kqnu8IFkwtl2VnXB2wcpQjPdh7P
+bgDtmKr47j8xqvyZRGqGtB4ZORxJKgOnmchtyVodknRe87vGoPX4Q14YXBz4toYd
+ZdhJoCfwiTaB3fsYOC2zc16w4S02QaAb+ntufAKZsayytw6nFTJmY0uzNX25G/ON
+fX6Kjk14Drs9hd9le8M6FKRL81ncEPObM9D3XMsByMvRNBSIjP2iem8PH0B+Ok75
+5gIy7b6KzPQMSmJQRmK/9E4vMu1/jX8nJXcnyHTDwh+joPsPc2oBd758frpDeEG8
+p8XroxRHa2ZUXrLo14pbDQQ+MzzJuC3G5KP8JI2WnEl9l78PcX+CPLxqku0sRXxF
+TEVTzb/VJPs51Bmou5VGXMPBAwHM4NcZa8tnATSruON9JQgpDLfzTZbmAmQBL6TL
+U0WVwVASmwtHRNcOYsVPUUSobCvPCpBXJMhixmrGOM7EE+0e0dz7KLH73+fkTMK1
+6WxnoW0joLqvWjkRs5p7nm+W4Fs360tiLOCmcQZlVBGDEEYZhWk=
+=Fqe8
+-----END PGP SIGNATURE-----
 
-
-Thanks,
-
-James
-
-[0] https://lkml.org/lkml/2019/2/9/384
+--Apple-Mail=_E1065D95-62D8-4302-A47A-E458FE1A436F--
