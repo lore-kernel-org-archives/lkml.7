@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF3AC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFAEC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A076220843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB37720818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919754;
-	bh=j61LhSmK9TMQDLxOBZSEwT2LYqrNx4PDVEZ88ReSy0Y=;
+	s=default; t=1557919756;
+	bh=Yx3WQak/aTWgcbpjeR3qw4nu2BfrfB+OfSk2eJbZTyk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0+rOqbp8yWO3R72usnpST5xvsiNuDQF8qO3i1jOUFpD+vs1WNq/N540rWGO20TZIG
-	 naXt16NX5AwVzQy+hYSMp1vDKRzVfmj54CzaC64F9ppyIu2vltrkafgtrGa69EQthI
-	 ID3f8w8Mg/hq1nF3DejXshkbqceUi1TonpzU/8Kk=
+	b=MUxi7MAJtcDNBB5NknXIC9fqhTCkalkcvA8Nx9okdFjfP4I7HO8hAanF2YA7WQEz0
+	 mO5+SnFDjlyh5gFFoVgOLV04DWPh4gFXkFmNQzswPB4qS96hpCIL1334fGliSrD4w1
+	 JAPsMvi8tm4eCl6fTxsk8F+Zjqt6BAaXmHTMXuBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732511AbfEOL3N (ORCPT
+        id S1732519AbfEOL3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:29:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40364 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:29:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732494AbfEOL3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:29:10 -0400
+        id S1731818AbfEOL3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:29:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08597206BF;
-        Wed, 15 May 2019 11:29:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94FBF20843;
+        Wed, 15 May 2019 11:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919749;
-        bh=j61LhSmK9TMQDLxOBZSEwT2LYqrNx4PDVEZ88ReSy0Y=;
+        s=default; t=1557919752;
+        bh=Yx3WQak/aTWgcbpjeR3qw4nu2BfrfB+OfSk2eJbZTyk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jy4pb13BbEP3oTyapBNSmNM3XO49ZYglXqdidICA/XBjWq6mdIbtRuxYRxqxB0Kj1
-         k+fc7TIK8y7Cc/lJbQkqUc8EmMCbiGzS99FiO3tmjKqyJCMgQ5QfVf3W4/TxN2D0SA
-         GZmZdbpQhl3T0M9vPlnLendDGlZEvw4Wu7paIcRE=
+        b=fIvCw+uOWc6xo9+naTPoOo0vpw/FWLoWsDbMb66BCK+fDVAM8cg/4oCEo9QesCmjX
+         vX6Tyxr0iHLMgsPAJ9wBMthOt3RupA5298sx9Qc894y1WkJyKQWfYZ3Bc6UzhDu9NS
+         ymQNbTga5GydX8mHGTo3sUc3lL4k5uJTnSw2WDts=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wentao Lou <Wentao.Lou@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 035/137] drm/amdgpu: shadow in shadow_list without tbo.mem.start cause page fault in sriov TDR
-Date:   Wed, 15 May 2019 12:55:16 +0200
-Message-Id: <20190515090655.911697440@linuxfoundation.org>
+Subject: [PATCH 5.0 036/137] mISDN: Check address length before reading address family
+Date:   Wed, 15 May 2019 12:55:17 +0200
+Message-Id: <20190515090655.987485141@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -61,34 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b575f10dbd6f84c2c8744ff1f486bfae1e4f6f38 ]
+[ Upstream commit 238ffdc49ef98b15819cfd5e3fb23194e3ea3d39 ]
 
-shadow was added into shadow_list by amdgpu_bo_create_shadow.
-meanwhile, shadow->tbo.mem was not fully configured.
-tbo.mem would be fully configured by amdgpu_vm_sdma_map_table until calling amdgpu_vm_clear_bo.
-If sriov TDR occurred between amdgpu_bo_create_shadow and amdgpu_vm_sdma_map_table,
-amdgpu_device_recover_vram would deal with shadow without tbo.mem.start.
+KMSAN will complain if valid address length passed to bind() is shorter
+than sizeof("struct sockaddr_mISDN"->family) bytes.
 
-Signed-off-by: Wentao Lou <Wentao.Lou@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/isdn/mISDN/socket.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index d55dd570a7023..27baac26d8e9c 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -3150,6 +3150,7 @@ static int amdgpu_device_recover_vram(struct amdgpu_device *adev)
+diff --git a/drivers/isdn/mISDN/socket.c b/drivers/isdn/mISDN/socket.c
+index 15d3ca37669a4..04da3a17cd950 100644
+--- a/drivers/isdn/mISDN/socket.c
++++ b/drivers/isdn/mISDN/socket.c
+@@ -710,10 +710,10 @@ base_sock_bind(struct socket *sock, struct sockaddr *addr, int addr_len)
+ 	struct sock *sk = sock->sk;
+ 	int err = 0;
  
- 		/* No need to recover an evicted BO */
- 		if (shadow->tbo.mem.mem_type != TTM_PL_TT ||
-+		    shadow->tbo.mem.start == AMDGPU_BO_INVALID_OFFSET ||
- 		    shadow->parent->tbo.mem.mem_type != TTM_PL_VRAM)
- 			continue;
+-	if (!maddr || maddr->family != AF_ISDN)
++	if (addr_len < sizeof(struct sockaddr_mISDN))
+ 		return -EINVAL;
  
+-	if (addr_len < sizeof(struct sockaddr_mISDN))
++	if (!maddr || maddr->family != AF_ISDN)
+ 		return -EINVAL;
+ 
+ 	lock_sock(sk);
 -- 
 2.20.1
 
