@@ -2,213 +2,128 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB6BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 01:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202AAC04AB7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 01:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1296120862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 01:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E769520879
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 01:29:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/bEER0p"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="azqV/TpW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726548AbfEOBUQ (ORCPT
+        id S1726467AbfEOB36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 21:20:16 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35361 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfEOBUP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 21:20:15 -0400
-Received: by mail-pg1-f195.google.com with SMTP id h1so455988pgs.2;
-        Tue, 14 May 2019 18:20:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=waTKL6Bu37eEJwdHVOOvDPh/YJJ+fJD/m3gwqPus+Yo=;
-        b=g/bEER0pbeLTxAe722+c8aeHM4c3JMw48iGb5c+p9hNDhd5tygISlhya9iswl7Nck9
-         E57mvk9dN2T5m6HeLCFU2r4qVrJBZxpF7CTBfpr02fFymEwXoyJiGkdd5ZOdMLY1LdOZ
-         EYiaE/o8eng65Y/JIIZPViGFK6/onOkwZGypjSObx92sUp/Kaz2K/gD7ShazGiutNv99
-         +ANbG5btuK6LSgKUcECt7pd/jj//uYRizr9RPmQxcNWvXw+8xKHyWdVJz6bFucZwcIb7
-         C8hbRai8qvHySHw/YqJACdm3NgNhILOY+zgTkFjbCcNqz3fvZX6Nx+1Ioaf0AmXQYjKE
-         FkDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=waTKL6Bu37eEJwdHVOOvDPh/YJJ+fJD/m3gwqPus+Yo=;
-        b=bSF9fDdH3pV/oC2u0n0t9xKsIepjj7Zh13ad8hChbObrpa7dx2INp+zUYlyY5cYpvE
-         s/Hpl85MsFDxd+p0nYGYwp0u7PBWQfYF/W1EdnLugQZFbnyLDlkQCjeV5JRR26dovqzu
-         oWowfGM84s62KMKZYABkAxc6GTGoXu35Hnk4KrLtyOndiQeH2dF3VL/GSg/pojwNa9Wm
-         eQFiZD8BZUk92xzT2A97gT4S33paxiJ1tjKgShyDq5Lc+3ddnTyT69qMBX960XUxjOj9
-         /8OnV1g7EWpALJ85H/CB15l2WvoHxt2fBuUMAALKBkR62M4F5RjmtRFpkCC04D6PGuzY
-         45Pw==
-X-Gm-Message-State: APjAAAXk6ecf5iFSNEiEybRN2Yj7zvB9FW28FQnaychannNMnaYqYrfK
-        DEQptejPq5l6oUnr6cmYgejeZRG/
-X-Google-Smtp-Source: APXvYqyTRbvAaHuSsKDln2/BVVrviPlcjY9NO7vlda9jJtqY7Q6Xa0OS4gnQqRjiMj/gquDPZE5lKw==
-X-Received: by 2002:a62:ea04:: with SMTP id t4mr43400612pfh.47.1557883214597;
-        Tue, 14 May 2019 18:20:14 -0700 (PDT)
-Received: from ?IPv6:2402:f000:4:72:808::6f28? ([2402:f000:4:72:808::6f28])
-        by smtp.gmail.com with ESMTPSA id s6sm418612pfb.128.2019.05.14.18.20.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 18:20:13 -0700 (PDT)
-Subject: Re: [BUG] rtlwifi: a crash in error handling code of rtl_pci_probe()
-To:     Larry Finger <Larry.Finger@lwfinger.net>, pkshih@realtek.com,
-        Kalle Valo <kvalo@codeaurora.org>,
-        David Miller <davem@davemloft.net>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-References: <4627da7a-c56c-5d88-62ae-ea2be9430f6f@gmail.com>
- <12810ae7-ff10-42be-7887-19b68331980c@lwfinger.net>
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-Message-ID: <e7f9e9d3-1eac-0d09-104e-209210c3e39c@gmail.com>
-Date:   Wed, 15 May 2019 09:20:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <12810ae7-ff10-42be-7887-19b68331980c@lwfinger.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Tue, 14 May 2019 21:29:58 -0400
+Received: from mail-eopbgr150058.outbound.protection.outlook.com ([40.107.15.58]:16423
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726174AbfEOB35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 May 2019 21:29:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4diZ8hrGb10riGKPDuQbxvNoJYPZSCRXCYI/nNHoRAE=;
+ b=azqV/TpWFUqbx4qEu9e9mZskusB2O+xAS+hMhMBmqLrjWRWpCOWdZmzEUe8lxmBK2meK57lt88ODofxVQaQyNtrLKLIZZj1DgQFjIQPxUv3ITP72fg2Ti0fOD3E7pJFb00JcnAUnIEz2XLJJOwo0UE2ccf1B0Z/H3Rr62+iS7tc=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3724.eurprd04.prod.outlook.com (52.134.66.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Wed, 15 May 2019 01:29:53 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d035:3bd0:a56a:189d]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d035:3bd0:a56a:189d%2]) with mapi id 15.20.1900.010; Wed, 15 May 2019
+ 01:29:53 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: [PATCH 1/3] dt-bindings: clock: imx8mm: Add SNVS clock
+Thread-Topic: [PATCH 1/3] dt-bindings: clock: imx8mm: Add SNVS clock
+Thread-Index: AQHVCr2yrHCSJQGcuE+Cdq63vYctyw==
+Date:   Wed, 15 May 2019 01:29:53 +0000
+Message-ID: <1557883490-22360-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK2PR03CA0056.apcprd03.prod.outlook.com
+ (2603:1096:202:17::26) To DB3PR0402MB3916.eurprd04.prod.outlook.com
+ (2603:10a6:8:10::18)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c1b78dd3-d84c-4fc3-5974-08d6d8d4d449
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3724;
+x-ms-traffictypediagnostic: DB3PR0402MB3724:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DB3PR0402MB37243CEFA96016C41131A691F5090@DB3PR0402MB3724.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3044;
+x-forefront-prvs: 0038DE95A2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(136003)(346002)(396003)(376002)(199004)(189003)(316002)(256004)(50226002)(81166006)(14444005)(4326008)(6512007)(8936002)(71190400001)(6306002)(5660300002)(110136005)(71200400001)(52116002)(2906002)(86362001)(6506007)(386003)(68736007)(81156014)(25786009)(99286004)(102836004)(4744005)(36756003)(186003)(6116002)(3846002)(476003)(486006)(26005)(2201001)(2616005)(53936002)(64756008)(73956011)(66446008)(66476007)(66556008)(66946007)(2501003)(478600001)(966005)(14454004)(6436002)(305945005)(66066001)(7736002)(6486002)(8676002)(7416002)(921003)(32563001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3724;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: pseOtm2w+0z5Ld0IrG/QGQqRFJk54VNDvOki4f15d8VC6Cz2bXiCRntJjM9Iq4BjMG9CyKvfcfkhnxom1RXNHiTqfnAJuWPTDp7YNUSpABRqWtoYPNLOd7NpkmQPf0daVVtk1RM77EiH1/0YjugCdMr36PHx36vv3M+GQ/OmMagpruJYpd3C0RGAh5TMe+Qo8hqRRCidM8X1GDiEbEcTc7OpYMuIyqxKXfDJ4f+z3Oaps+XPUr7lWecMMesO/OMBGWEWMQOcmJ3B2RhG4XbsFJbhj1eQSAMTLRZ4bQetIzlwSVqNglnPlDIguP7HaA54m4e8ebCtkr4fEU71GDuzAvlPN4TgWjFmwXvAd3dde1Jc7BMejKC47k7GasiBL+IeMPB6d2vPXUq0jNpo4OJcQmCWAgtbDM7NJHC42976KNw=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <0B56FF142FDB6246A7385E3330CB0D7A@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1b78dd3-d84c-4fc3-5974-08d6d8d4d449
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 01:29:53.0370
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3724
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add macro for the SNVS clock of the i.MX8MM.
 
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+This patch is based on patch: https://patchwork.kernel.org/patch/10939997/
+---
+ include/dt-bindings/clock/imx8mm-clock.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-On 2019/5/15 9:08, Larry Finger wrote:
-> On 5/14/19 8:07 AM, Jia-Ju Bai wrote:
->> In rtl_pci_probe(), when request_irq() in rtl_pci_intr_mode_legacy() 
->> in rtl_pci_intr_mode_decide() fails, a crash occurs.
->> The crash information is as follows:
->>
->> [  108.271155] kasan: CONFIG_KASAN_INLINE enabled
->> [  108.271163] kasan: GPF could be caused by NULL-ptr deref or user 
->> memory access
->> ......
->> [  108.271193] RIP: 0010:cfg80211_get_drvinfo+0xce/0x3b0 [cfg80211]
->> ......
->> [  108.271235] Call Trace:
->> [  108.271245]  ethtool_get_drvinfo+0x110/0x640
->> [  108.271255]  ? cfg80211_get_chan_state+0x7e0/0x7e0 [cfg80211]
->> [  108.271261]  ? ethtool_get_settings+0x340/0x340
->> [  108.271268]  ? __read_once_size_nocheck.constprop.7+0x20/0x20
->> [  108.271279]  ? kasan_check_write+0x14/0x20
->> [  108.271284]  dev_ethtool+0x272d/0x4c20
->> [  108.271290]  ? unwind_get_return_address+0x66/0xb0
->> [  108.271299]  ? __save_stack_trace+0x92/0x100
->> [  108.271307]  ? ethtool_get_rxnfc+0x3f0/0x3f0
->> [  108.271316]  ? save_stack+0xa3/0xd0
->> [  108.271323]  ? save_stack+0x43/0xd0
->> [  108.271331]  ? ftrace_graph_ret_addr+0x2d/0x170
->> [  108.271338]  ? ftrace_graph_ret_addr+0x2d/0x170
->> [  108.271346]  ? ftrace_graph_ret_addr+0x2d/0x170
->> [  108.271354]  ? update_stack_state+0x3b2/0x670
->> [  108.271361]  ? update_stack_state+0x3b2/0x670
->> [  108.271370]  ? __read_once_size_nocheck.constprop.7+0x20/0x20
->> [  108.271379]  ? unwind_next_frame.part.5+0x19f/0xa60
->> [  108.271388]  ? bpf_prog_kallsyms_find+0x3e/0x270
->> [  108.271396]  ? is_bpf_text_address+0x1a/0x30
->> [  108.271408]  ? kernel_text_address+0x11d/0x130
->> [  108.271416]  ? __kernel_text_address+0x12/0x40
->> [  108.271423]  ? unwind_get_return_address+0x66/0xb0
->> [  108.271431]  ? __save_stack_trace+0x92/0x100
->> [  108.271440]  ? save_stack+0xa3/0xd0
->> [  108.271448]  ? udp_ioctl+0x35/0xe0
->> [  108.271457]  ? inet_ioctl+0x100/0x320
->> [  108.271466]  ? inet_stream_connect+0xb0/0xb0
->> [  108.271475]  ? alloc_file+0x60/0x480
->> [  108.271483]  ? alloc_file_pseudo+0x19d/0x270
->> [  108.271495]  ? sock_alloc_file+0x51/0x170
->> [  108.271502]  ? __sys_socket+0x12c/0x1f0
->> [  108.271510]  ? __x64_sys_socket+0x78/0xb0
->> [  108.271520]  ? do_syscall_64+0xb1/0x2e0
->> [  108.271529]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
->> [  108.271538]  ? kasan_check_read+0x11/0x20
->> [  108.271548]  ? mutex_lock+0x8f/0xe0
->> [  108.271557]  ? __mutex_lock_slowpath+0x20/0x20
->> [  108.271568]  dev_ioctl+0x1fb/0xae0
->> [  108.271576]  ? dev_ioctl+0x1fb/0xae0
->> [  108.271586]  ? _copy_from_user+0x71/0xd0
->> [  108.271594]  sock_do_ioctl+0x1e2/0x2f0
->> [  108.271602]  ? kmem_cache_alloc+0xf9/0x250
->> [  108.271611]  ? ___sys_recvmsg+0x5a0/0x5a0
->> [  108.271621]  ? apparmor_file_alloc_security+0x128/0x7e0
->> [  108.271630]  ? kasan_unpoison_shadow+0x35/0x50
->> [  108.271638]  ? kasan_kmalloc+0xad/0xe0
->> [  108.271652]  ? apparmor_file_alloc_security+0x128/0x7e0
->> [  108.271662]  ? apparmor_file_alloc_security+0x269/0x7e0
->> [  108.271670]  sock_ioctl+0x361/0x590
->> [  108.271678]  ? sock_ioctl+0x361/0x590
->> [  108.271686]  ? routing_ioctl+0x470/0x470
->> [  108.271695]  ? kasan_check_write+0x14/0x20
->> [  108.271703]  ? __mutex_init+0xba/0x130
->> [  108.271713]  ? percpu_counter_add_batch+0xc7/0x120
->> [  108.271722]  ? alloc_empty_file+0xae/0x150
->> [  108.271729]  ? routing_ioctl+0x470/0x470
->> [  108.271738]  do_vfs_ioctl+0x1ae/0xfe0
->> [  108.271745]  ? do_vfs_ioctl+0x1ae/0xfe0
->> [  108.271754]  ? alloc_file_pseudo+0x1ad/0x270
->> [  108.271762]  ? ioctl_preallocate+0x1e0/0x1e0
->> [  108.271770]  ? alloc_file+0x480/0x480
->> [  108.271778]  ? kasan_check_read+0x11/0x20
->> [  108.271786]  ? __fget+0x24d/0x320
->> [  108.271794]  ? iterate_fd+0x180/0x180
->> [  108.271802]  ? fd_install+0x52/0x60
->> [  108.271812]  ? security_file_ioctl+0x8c/0xb0
->> [  108.271820]  ksys_ioctl+0x99/0xb0
->> [  108.271829]  __x64_sys_ioctl+0x78/0xb0
->> [  108.271839]  do_syscall_64+0xb1/0x2e0
->> [  108.271857]  ? prepare_exit_to_usermode+0xc8/0x160
->> [  108.271871]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->> ......
->>
->> I checked the driver source code, but cannot find the reason, so I 
->> only report the crash...
->> Can somebody give an explanation about this crash?
->>
->> This crash is triggered by a runtime fuzzing tool named FIZZER 
->> written by us.
->
-> Your backtrace does not include any references to rtlwifi routines, 
-> and I have no idea what FIZZER does, thus it is not possible for me to 
-> debug this. If the error situation that you state happens, the code 
-> should end up at label "fail3" in routine rtl_pci_probe(). Insert 
-> printk statements after every line of the following, and report the 
-> last good point before the error. It is certainly possible that 
-> something is being torn down that was never erected. The likelihood of 
-> failure of both MSI and legacy interrupts is not very likely, and we 
-> probably have never hit those conditions.
->
-> fail3:
->         pci_set_drvdata(pdev, NULL);
->         rtl_deinit_core(hw);
->
-> fail2:
->         if (rtlpriv->io.pci_mem_start != 0)
->                 pci_iounmap(pdev, (void __iomem 
-> *)rtlpriv->io.pci_mem_start);
->
->         pci_release_regions(pdev);
->         complete(&rtlpriv->firmware_loading_complete);
->
-> fail1:
->         if (hw)
->                 ieee80211_free_hw(hw);
->         pci_disable_device(pdev);
->
->         return err;
+diff --git a/include/dt-bindings/clock/imx8mm-clock.h b/include/dt-bindings=
+/clock/imx8mm-clock.h
+index fe47798..83f6673 100644
+--- a/include/dt-bindings/clock/imx8mm-clock.h
++++ b/include/dt-bindings/clock/imx8mm-clock.h
+@@ -245,6 +245,8 @@
+ #define IMX8MM_CLK_GPIO4_ROOT			226
+ #define IMX8MM_CLK_GPIO5_ROOT			227
+=20
+-#define IMX8MM_CLK_END				228
++#define IMX8MM_CLK_SNVS_ROOT			228
++
++#define IMX8MM_CLK_END				229
+=20
+ #endif
+--=20
+2.7.4
 
-Thanks for the advice :)
-I will insert some printk statements to debug this problem.
-
-
-Best wishes,
-Jia-Ju Bai
