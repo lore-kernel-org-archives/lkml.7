@@ -2,104 +2,134 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1426EC04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AD5C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E44E62084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B423D20843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 13:30:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="jXfBaweh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727294AbfEONVt (ORCPT
+        id S1727533AbfEONaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 09:21:49 -0400
-Received: from mga12.intel.com ([192.55.52.136]:41535 "EHLO mga12.intel.com"
+        Wed, 15 May 2019 09:30:14 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:40866 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726407AbfEONVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 09:21:49 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 06:21:48 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by fmsmga004.fm.intel.com with ESMTP; 15 May 2019 06:21:47 -0700
-Date:   Wed, 15 May 2019 06:21:47 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v20 00/28] Intel SGX1 support
-Message-ID: <20190515132147.GA5875@linux.intel.com>
-References: <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
- <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
- <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
- <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com>
- <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190514204527.GC1977@linux.intel.com>
- <20190515103531.GB10917@linux.intel.com>
+        id S1725966AbfEONaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 09:30:14 -0400
+Received: from zn.tnic (p200300EC2F0A7C00329C23FFFEA6A903.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:7c00:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C0B741EC027A;
+        Wed, 15 May 2019 15:30:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1557927012;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=eJQC27+0zhQX1IOd45UbD4zUj0DPzTLcUpzDhuDznyY=;
+        b=jXfBawehjYo9AaBwkNiuEIZe+S3HFuoi1U2VjsDcUW8RRcPsH3fEJZncf8CmibjqtTSI/9
+        kJ3gpLFOhU01WXpUyQAVk/FWPs8HoSOhHlo7XubAACaboamrllSWwceEsh+trpNt7hDJ6B
+        8Pw0ocMH/h0aepvlkG2KWDDIlEn7Mac=
+Date:   Wed, 15 May 2019 15:30:06 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Lianbo Jiang <lijiang@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, akpm@linux-foundation.org,
+        x86@kernel.org, hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com,
+        Thomas.Lendacky@amd.com, brijesh.singh@amd.com
+Subject: Re: [PATCH 2/3 v3] x86/kexec: Set the C-bit in the identity map page
+ table when SEV is active
+Message-ID: <20190515133006.GG24212@zn.tnic>
+References: <20190430074421.7852-1-lijiang@redhat.com>
+ <20190430074421.7852-3-lijiang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190515103531.GB10917@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190430074421.7852-3-lijiang@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 01:35:31PM +0300, Jarkko Sakkinen wrote:
-> On Tue, May 14, 2019 at 01:45:27PM -0700, Sean Christopherson wrote:
-> > On Tue, May 14, 2019 at 08:13:36AM -0700, Andy Lutomirski wrote:
-> > > I think it's as simple as requiring that, if SECINFO.X is set, then
-> > > the src pointer points to the appropriate number of bytes of
-> > > executable memory.  (Unless there's some way for an enclave to change
-> > > SECINFO after the fact -- is there?)
-> > 
-> > Nit: SECINFO is just the struct passed to EADD, I think what you're really
-> > asking is "can the EPCM permissions be changed after the fact".
-> > 
-> > And the answer is, yes.
-> > 
-> > On SGX2 hardware, the enclave can extend the EPCM permissions at runtime
-> > via ENCLU[EMODPE], e.g. to make a page writable.
+On Tue, Apr 30, 2019 at 03:44:20PM +0800, Lianbo Jiang wrote:
+> When SEV is active, the second kernel image is loaded into the
+> encrypted memory. Lets make sure that when kexec builds the
+> identity mapping page table it adds the memory encryption mask(C-bit).
 > 
-> Small correction: it is EMODPR.
+> Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
+> Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+> ---
+>  arch/x86/kernel/machine_kexec_64.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+> index f60611531d17..11fe352f7344 100644
+> --- a/arch/x86/kernel/machine_kexec_64.c
+> +++ b/arch/x86/kernel/machine_kexec_64.c
+> @@ -56,6 +56,7 @@ static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
+>  	pte_t *pte;
+>  	unsigned long vaddr, paddr;
+>  	int result = -ENOMEM;
+> +	pgprot_t prot = PAGE_KERNEL_EXEC_NOENC;
+>  
+>  	vaddr = (unsigned long)relocate_kernel;
+>  	paddr = __pa(page_address(image->control_code_page)+PAGE_SIZE);
+> @@ -92,7 +93,11 @@ static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
+>  		set_pmd(pmd, __pmd(__pa(pte) | _KERNPG_TABLE));
+>  	}
+>  	pte = pte_offset_kernel(pmd, vaddr);
+> -	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, PAGE_KERNEL_EXEC_NOENC));
+> +
+> +	if (sev_active())
+> +		prot = PAGE_KERNEL_EXEC;
+> +
+> +	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, prot));
+>  	return 0;
+>  err:
+>  	return result;
+> @@ -129,6 +134,11 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
+>  	level4p = (pgd_t *)__va(start_pgtable);
+>  	clear_page(level4p);
+>  
+> +	if (sev_active()) {
+> +		info.page_flag |= _PAGE_ENC;
+> +		info.kernpg_flag = _KERNPG_TABLE;
 
-No, I'm referring to EMODPE, note the ENCLU classification.
+kernpg_flag above is initialized to _KERNPG_TABLE_NOENC so you can do here
 
-> Anyway, it is good to mention that these would require EACCEPT from the
-> enclave side. In order to take advantage of this is in a malicous
-> enclave, one would require SELinux/IMA/whatnot policy to have permitted
-> it in the first place.
+		info.kernpg_flag |= _PAGE_ENC;
 
-EMODPE doesn't require EACCEPT or any equivalent from the kernel.  As
-you alluded to, the page tables would still need to allow PROT_EXEC.  I
-was simply trying to answer Andy's question regarding SECINFO.
+too, to make it even more clear what this does, right?
 
-> Thus, it cannot be said that it breaks the security policy if this would
-> happen because policy has allowed to use the particular enclave.
+IOW:
+
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 783ce5184405..16c37fe489bc 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -135,8 +135,8 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
+        clear_page(level4p);
+ 
+        if (sev_active()) {
+-               info.page_flag |= _PAGE_ENC;
+-               info.kernpg_flag = _KERNPG_TABLE;
++               info.page_flag   |= _PAGE_ENC;
++               info.kernpg_flag |= _PAGE_ENC;
+        }
+ 
+        if (direct_gbpages)
+
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
