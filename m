@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5EEC04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8CFC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8C921473
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B3220818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919775;
-	bh=QZMtasH51Y9A6IM0dWwB0QJC2iAoLYhoTFvxrndNLoU=;
+	s=default; t=1557919779;
+	bh=v8BRTtexhoVzCszqy58/ROLv4LafHU1CamMNCenkLbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ia7lcpTBJTZ5yOEfqUBJZLOUGcUHcWyKcKzS2kYhBEMyGWAxDtatLysLeWrRf6gmq
-	 LMeQ/9VD+gWTecDjTdIkcKtRGnmyfpCUikKGi7VWVu6/B1WEo5mWP23A0D5bJqp+sb
-	 rZr2wipAdpWiu7PDc4IEHXTRR1O7Civz5fNZdpxQ=
+	b=S6SKkOzcQS0L6YpRy1L279Qyj2rz7SG6uA6Vn6JYBKkjzI8gtY7wLEuL5MEbHlYhn
+	 Cu/MoqaK+J/M0G6OYizQNnMoewLFkFHi7HGowrJTgqPxcw9svfoXa+NFsy8NBXlmkb
+	 7eW/UJ2apQG+xdPsuClSGNw8wtl9fX55YMj/0WfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732593AbfEOL3e (ORCPT
+        id S1732599AbfEOL3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:29:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40802 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:29:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732580AbfEOL3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:29:31 -0400
+        id S1732589AbfEOL3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:29:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DF80206BF;
-        Wed, 15 May 2019 11:29:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB8532084F;
+        Wed, 15 May 2019 11:29:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919770;
-        bh=QZMtasH51Y9A6IM0dWwB0QJC2iAoLYhoTFvxrndNLoU=;
+        s=default; t=1557919773;
+        bh=v8BRTtexhoVzCszqy58/ROLv4LafHU1CamMNCenkLbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wpzmhviCqfUNeKLDHq5hacIyGGbq3DnIHsYDO784QOwhoXEwmQXnDi4oJJAZzazk1
-         Gv5vsGnxxYpBW0RUq5444odk+iS+jebFvOo6uGat65NJkSstLPJA4cGkXNyrJdCVVZ
-         5ZPYOirzvo9KXEDTE/IP0lbs5HKgWVeY7Yu2kxms=
+        b=QC3RyL28RPpMMFwl8gdt4jaDNyIezOlP15BXWBXSKP5O3X+H1nqz3CddggpIXyJcn
+         QcFKu6NVrZIAE6S+erqnycwIEFv+tWJUhk/w84himixw1VGCQv6QbFk/PDlWi3bdR0
+         jbYkAbZraqebvj82wnHObi/50KCT56C3n8Y6GE7U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Marc-Andr=C3=A9=20Lureau?= <marcandre.lureau@redhat.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 088/137] Revert "drm/virtio: drop prime import/export callbacks"
-Date:   Wed, 15 May 2019 12:56:09 +0200
-Message-Id: <20190515090659.915385938@linuxfoundation.org>
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 089/137] drm/sun4i: Unbind components before releasing DRM and memory
+Date:   Wed, 15 May 2019 12:56:10 +0200
+Message-Id: <20190515090659.985825905@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -61,93 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a0cecc23cfcbf2626497a8c8770856dd56b67917 ]
+[ Upstream commit e02bc29b2cfa7806830d6da8b2322cddd67e8dfe ]
 
-This patch does more harm than good, as it breaks both Xwayland and
-gnome-shell with X11.
+Our components may still be using the DRM device driver (if only to
+access our driver's private data), so make sure to unbind them before
+the final drm_dev_put.
 
-Xwayland requires DRI3 & DRI3 requires PRIME.
+Also release our reserved memory after component unbind instead of
+before to match reverse creation order.
 
-X11 crash for obscure double-free reason which are hard to debug
-(starting X11 by hand doesn't trigger the crash).
-
-I don't see an apparent problem implementing those stub prime
-functions, they may return an error at run-time, and it seems to be
-handled fine by GNOME at least.
-
-This reverts commit b318e3ff7ca065d6b107e424c85a63d7a6798a69.
-[airlied:
-This broke userspace for virtio-gpus, and regressed things from DRI3 to DRI2.
-
-This brings back the original problem, but it's better than regressions.]
-
-Fixes: b318e3ff7ca065d6b107e424c85a63d7a6798a ("drm/virtio: drop prime import/export callbacks")
-Signed-off-by: Marc-André Lureau <marcandre.lureau@redhat.com>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
+Fixes: f5a9ed867c83 ("drm/sun4i: Fix component unbinding and component master deletion")
+Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190424090413.6918-1-paul.kocialkowski@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/virtio/virtgpu_drv.c   |  4 ++++
- drivers/gpu/drm/virtio/virtgpu_drv.h   |  4 ++++
- drivers/gpu/drm/virtio/virtgpu_prime.c | 12 ++++++++++++
- 3 files changed, 20 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_drv.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
-index 2d1aaca491050..f7f32a885af79 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
-@@ -127,10 +127,14 @@ static struct drm_driver driver = {
- #if defined(CONFIG_DEBUG_FS)
- 	.debugfs_init = virtio_gpu_debugfs_init,
- #endif
-+	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
-+	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
- 	.gem_prime_export = drm_gem_prime_export,
- 	.gem_prime_import = drm_gem_prime_import,
- 	.gem_prime_pin = virtgpu_gem_prime_pin,
- 	.gem_prime_unpin = virtgpu_gem_prime_unpin,
-+	.gem_prime_get_sg_table = virtgpu_gem_prime_get_sg_table,
-+	.gem_prime_import_sg_table = virtgpu_gem_prime_import_sg_table,
- 	.gem_prime_vmap = virtgpu_gem_prime_vmap,
- 	.gem_prime_vunmap = virtgpu_gem_prime_vunmap,
- 	.gem_prime_mmap = virtgpu_gem_prime_mmap,
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index 0c15000f926eb..1deb41d42ea4d 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -372,6 +372,10 @@ int virtio_gpu_object_wait(struct virtio_gpu_object *bo, bool no_wait);
- /* virtgpu_prime.c */
- int virtgpu_gem_prime_pin(struct drm_gem_object *obj);
- void virtgpu_gem_prime_unpin(struct drm_gem_object *obj);
-+struct sg_table *virtgpu_gem_prime_get_sg_table(struct drm_gem_object *obj);
-+struct drm_gem_object *virtgpu_gem_prime_import_sg_table(
-+	struct drm_device *dev, struct dma_buf_attachment *attach,
-+	struct sg_table *sgt);
- void *virtgpu_gem_prime_vmap(struct drm_gem_object *obj);
- void virtgpu_gem_prime_vunmap(struct drm_gem_object *obj, void *vaddr);
- int virtgpu_gem_prime_mmap(struct drm_gem_object *obj,
-diff --git a/drivers/gpu/drm/virtio/virtgpu_prime.c b/drivers/gpu/drm/virtio/virtgpu_prime.c
-index c59ec34c80a5d..eb51a78e11991 100644
---- a/drivers/gpu/drm/virtio/virtgpu_prime.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_prime.c
-@@ -39,6 +39,18 @@ void virtgpu_gem_prime_unpin(struct drm_gem_object *obj)
- 	WARN_ONCE(1, "not implemented");
+diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+index 9a5713fa03b25..f8bf5bbec2df3 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+@@ -146,10 +146,11 @@ static void sun4i_drv_unbind(struct device *dev)
+ 	drm_dev_unregister(drm);
+ 	drm_kms_helper_poll_fini(drm);
+ 	drm_mode_config_cleanup(drm);
+-	of_reserved_mem_device_release(dev);
+-	drm_dev_put(drm);
+ 
+ 	component_unbind_all(dev, NULL);
++	of_reserved_mem_device_release(dev);
++
++	drm_dev_put(drm);
  }
  
-+struct sg_table *virtgpu_gem_prime_get_sg_table(struct drm_gem_object *obj)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
-+struct drm_gem_object *virtgpu_gem_prime_import_sg_table(
-+	struct drm_device *dev, struct dma_buf_attachment *attach,
-+	struct sg_table *table)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
- void *virtgpu_gem_prime_vmap(struct drm_gem_object *obj)
- {
- 	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
+ static const struct component_master_ops sun4i_drv_master_ops = {
 -- 
 2.20.1
 
