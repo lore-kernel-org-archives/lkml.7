@@ -2,109 +2,182 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFE3C04AA7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:04:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A75C04AA7
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:06:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0DF020862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:04:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="eQQHQU7z"
+	by mail.kernel.org (Postfix) with ESMTP id C53F020881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 05:06:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfEOFEd (ORCPT
+        id S1726440AbfEOFGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 01:04:33 -0400
-Received: from mail-eopbgr20086.outbound.protection.outlook.com ([40.107.2.86]:14917
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725933AbfEOFEd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 01:04:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WPJ4RUQyuQjEg8s5xyhpT7kr9Q29J99AqZRzISnb/Ak=;
- b=eQQHQU7zLRn1EFuc58KUl/fibBD7d54TvS5Vhd0fnGCT88moR2pr+GJ/GQa4ddnftifzlpx0oiYWQ6ZIBN9ZSYxbUF4eEzuslYuQ9s9S7P98DQBFe7sSB3hhEgmTu5Ca8d/EUl6LtPeJJPU8cZNA/DhEXzuW8MpMMgeHDU+/jRw=
-Received: from AM4PR05MB3137.eurprd05.prod.outlook.com (10.171.186.14) by
- AM4PR05MB3330.eurprd05.prod.outlook.com (10.171.191.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Wed, 15 May 2019 05:04:29 +0000
-Received: from AM4PR05MB3137.eurprd05.prod.outlook.com
- ([fe80::74f5:6663:e5fa:3d6a]) by AM4PR05MB3137.eurprd05.prod.outlook.com
- ([fe80::74f5:6663:e5fa:3d6a%5]) with mapi id 15.20.1878.024; Wed, 15 May 2019
- 05:04:29 +0000
-From:   Leon Romanovsky <leonro@mellanox.com>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     Nathan Chancellor <natechancellor@gmail.com>,
-        Ariel Levkovich <lariel@mellanox.com>,
-        Eli Cohen <eli@mellanox.com>, Mark Bloch <markb@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: undefined reference to `__aeabi_uldivmod' after 25c13324d03d
- ("IB/mlx5: Add steering SW ICM device memory type")
-Thread-Topic: undefined reference to `__aeabi_uldivmod' after 25c13324d03d
- ("IB/mlx5: Add steering SW ICM device memory type")
-Thread-Index: AQHVCo2O9TJIO+iNpUCG510W44rIF6ZrVqsAgABLkYA=
-Date:   Wed, 15 May 2019 05:04:29 +0000
-Message-ID: <20190515050427.GD5225@mtr-leonro.mtl.com>
-References: <20190514194510.GA15465@archlinux-i9>
- <20190515003355.GB14522@ziepe.ca>
-In-Reply-To: <20190515003355.GB14522@ziepe.ca>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM5PR06CA0022.eurprd06.prod.outlook.com
- (2603:10a6:206:2::35) To AM4PR05MB3137.eurprd05.prod.outlook.com
- (2603:10a6:205:3::14)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonro@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [37.142.3.125]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 693f653f-3161-4745-9bb0-08d6d8f2cf39
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM4PR05MB3330;
-x-ms-traffictypediagnostic: AM4PR05MB3330:
-x-microsoft-antispam-prvs: <AM4PR05MB33303D1390A217B12AE7CF7EB0090@AM4PR05MB3330.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1443;
-x-forefront-prvs: 0038DE95A2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(396003)(39860400002)(376002)(366004)(199004)(189003)(486006)(476003)(71190400001)(71200400001)(25786009)(11346002)(68736007)(316002)(446003)(4326008)(6246003)(256004)(6862004)(53936002)(5660300002)(2906002)(6636002)(186003)(26005)(4744005)(86362001)(6116002)(3846002)(1076003)(64756008)(66476007)(102836004)(66446008)(66946007)(73956011)(386003)(6506007)(52116002)(14454004)(99286004)(66066001)(54906003)(305945005)(6436002)(6512007)(9686003)(508600001)(6486002)(76176011)(8936002)(81166006)(81156014)(229853002)(33656002)(7736002)(66556008)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR05MB3330;H:AM4PR05MB3137.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ZjCbH+ASCGWnI/QztHblDmwFeHqnnsdNS1fwDpdpcI/v4H4mVdB8sw5WSu9XXKGlv+hYkk2Y28yQlG5q0L+XAyguJFGtM7yypNFSXvmUxn+rYu9BNWLwjXxV2SPOrhFIZctPEE93sspiTmMSH+LTbEudE/Zy/RKiNWOR06cYM3uwTVJnR7wB3Py6tCtJ0zJs/4Pe5s4GMwftMpKyvi4VtKQciJk5B6G9M/mlc3XAoHSy4+Q3j1U+0vFU1uxk+UcUCWLkHQGUM0kO949bkLg6rVdrSHYiCv4mBobV4DqsxVKJQYiGepOBA989zs+0dK4Qvjvm8pMePq37KvhNhZwLJTk+0frW6f9/9GB3BLmv990AqyYog9oXQ+pkAXK4mYPQAvEssEBvjgLyG0G2Q/0cNSJFIyCLqHTFpckO2Rl8qqU=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <EBC5629F291FC84888414FB7AA42AC27@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 15 May 2019 01:06:35 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45056 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725933AbfEOFGf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 01:06:35 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a5so699281pls.12
+        for <linux-kernel@vger.kernel.org>; Tue, 14 May 2019 22:06:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+qom0Qn6LwXg8UJkqiMrz8BQabBvoo+xpSl9SHnkWOY=;
+        b=ljd68WCoxWVJmJD0JXxV19e8UA91eoaQNKOzgb7oyhLicTb0os8tq/RvEYJZMS4ffg
+         /mBwhfR50qZ+1+F12A7yuQ42UWR1HKNZqBJ1HWbpLjH80kd7TGVR5lrsm2mee09uS31W
+         HgxyGqpiBODbvbTwdwL0TrqC1RO1g6OSxnzakd8lx7Oj889O0ma/RHla8oyT9aczAtQy
+         HYMr73WiHRZeGwfIMafqbWs383PmLw/QlkpcDELV4GKbJV/8L+533OLS2YPqqj9pjPTw
+         Yjhw0Yxdh8P0FYxXc8SJsydtX8SVfA/KveK0T5+1RuPHD4a7LtcEHao53bVVy9vR0Ere
+         Pz/w==
+X-Gm-Message-State: APjAAAXAsFKE4QPayvS7/7h/7xSetmhKYKDixTH4hwCi3ngbDrjCu9dG
+        QYnXDOUvE+LD6XC2IWSm5c1X/Q==
+X-Google-Smtp-Source: APXvYqydcRf68wup3tmXCJXop6KI1ZxTGUxdyH6wtMYn4HOqUMhx5MO0r5tKJnQQFTgrfoAnruhVow==
+X-Received: by 2002:a17:902:2e83:: with SMTP id r3mr26825633plb.139.1557896794167;
+        Tue, 14 May 2019 22:06:34 -0700 (PDT)
+Received: from localhost.localdomain ([106.215.121.117])
+        by smtp.gmail.com with ESMTPSA id v81sm1354825pfa.16.2019.05.14.22.06.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 May 2019 22:06:32 -0700 (PDT)
+Subject: Re: [PATCH 0/4] support reserving crashkernel above 4G on arm64 kdump
+To:     Chen Zhou <chenzhou10@huawei.com>, catalin.marinas@arm.com,
+        will.deacon@arm.com, akpm@linux-foundation.org,
+        ard.biesheuvel@linaro.org, rppt@linux.ibm.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com
+Cc:     wangkefeng.wang@huawei.com, linux-mm@kvack.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        takahiro.akashi@linaro.org, horms@verge.net.au,
+        linux-arm-kernel@lists.infradead.org,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        Bhupesh SHARMA <bhupesh.linux@gmail.com>
+References: <20190507035058.63992-1-chenzhou10@huawei.com>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Message-ID: <a9d017d0-82d3-3e5f-4af2-4c611393106d@redhat.com>
+Date:   Wed, 15 May 2019 10:36:24 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 693f653f-3161-4745-9bb0-08d6d8f2cf39
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 05:04:29.2776
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR05MB3330
+In-Reply-To: <20190507035058.63992-1-chenzhou10@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 12:34:00AM +0000, Jason Gunthorpe wrote:
-> On Tue, May 14, 2019 at 12:45:10PM -0700, Nathan Chancellor wrote:
-> > DIV_ROUND_UP is u64 / u32 in this case. I think DIV_ROUND_UP_ULL is
-> > needed but I am not sure if that has any unintended side effects so I
-> > didn't want to send a patch.
->
-> Hmm. Most likely those u64 length's should really be size_t.
++Cc kexec-list.
 
-Indeed, it should be size_t.
+Hi Chen,
 
->
-> Ariel?
->
-> Jason
+I think we are still in the quiet period of the merge cycle, but this is 
+a change which will be useful for systems like HPE Apollo where we are 
+looking at reserving crashkernel across a larger range.
+
+Some comments inline and in respective patch threads..
+
+On 05/07/2019 09:20 AM, Chen Zhou wrote:
+> This patch series enable reserving crashkernel on high memory in arm64.
+
+Please fix the patch subject, it should be v5.
+Also please Cc the kexec-list (kexec@lists.infradead.org) for future 
+versions to allow wider review of the patchset.
+
+> We use crashkernel=X to reserve crashkernel below 4G, which will fail
+> when there is no enough memory. Currently, crashkernel=Y@X can be used
+> to reserve crashkernel above 4G, in this case, if swiotlb or DMA buffers
+> are requierd, capture kernel will boot failure because of no low memory.
+
+... ^^ required
+
+s/capture kernel will boot failure because of no low memory./capture 
+kernel boot will fail because there is no low memory available for 
+allocation.
+
+> When crashkernel is reserved above 4G in memory, kernel should reserve
+> some amount of low memory for swiotlb and some DMA buffers. So there may
+> be two crash kernel regions, one is below 4G, the other is above 4G. Then
+> Crash dump kernel reads more than one crash kernel regions via a dtb
+> property under node /chosen,
+> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
+
+Please use consistent naming for the second kernel, better to use crash 
+dump kernel.
+
+I have tested this on my HPE Apollo machine and with 
+crashkernel=886M,high syntax, I can get the board to reserve a larger 
+memory range for the crashkernel (i.e. 886M):
+
+# dmesg | grep -i crash
+[    0.000000] kexec_core: Reserving 256MB of low memory at 3560MB for 
+crashkernel (System low RAM: 2029MB)
+[    0.000000] crashkernel reserved: 0x0000000bc5a00000 - 
+0x0000000bfd000000 (886 MB)
+
+kexec/kdump can also work also work fine on the board.
+
+So, with the changes suggested in this cover letter and individual 
+patches, please feel free to add:
+
+Reviewed-and-Tested-by: Bhupesh Sharma <bhsharma@redhat.com>
+
+Thanks,
+Bhupesh
+
+> Besides, we need to modify kexec-tools:
+>    arm64: support more than one crash kernel regions(see [1])
+> 
+> I post this patch series about one month ago. The previous changes and
+> discussions can be retrived from:
+> 
+> Changes since [v4]
+> - reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
+> 
+> Changes since [v3]
+> - Add memblock_cap_memory_ranges back for multiple ranges.
+> - Fix some compiling warnings.
+> 
+> Changes since [v2]
+> - Split patch "arm64: kdump: support reserving crashkernel above 4G" as
+>    two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
+>    patch.
+> 
+> Changes since [v1]:
+> - Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
+> - Remove memblock_cap_memory_ranges() i added in v1 and implement that
+>    in fdt_enforce_memory_region().
+>    There are at most two crash kernel regions, for two crash kernel regions
+>    case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
+>    and then remove the memory range in the middle.
+> 
+> [1]: http://lists.infradead.org/pipermail/kexec/2019-April/022792.html
+> [v1]: https://lkml.org/lkml/2019/4/2/1174
+> [v2]: https://lkml.org/lkml/2019/4/9/86
+> [v3]: https://lkml.org/lkml/2019/4/9/306
+> [v4]: https://lkml.org/lkml/2019/4/15/273
+> 
+> Chen Zhou (3):
+>    x86: kdump: move reserve_crashkernel_low() into kexec_core.c
+>    arm64: kdump: support reserving crashkernel above 4G
+>    kdump: update Documentation about crashkernel on arm64
+> 
+> Mike Rapoport (1):
+>    memblock: extend memblock_cap_memory_range to multiple ranges
+> 
+>   Documentation/admin-guide/kernel-parameters.txt |  6 +--
+>   arch/arm64/include/asm/kexec.h                  |  3 ++
+>   arch/arm64/kernel/setup.c                       |  3 ++
+>   arch/arm64/mm/init.c                            | 72 +++++++++++++++++++------
+>   arch/x86/include/asm/kexec.h                    |  3 ++
+>   arch/x86/kernel/setup.c                         | 66 +++--------------------
+>   include/linux/kexec.h                           |  5 ++
+>   include/linux/memblock.h                        |  2 +-
+>   kernel/kexec_core.c                             | 56 +++++++++++++++++++
+>   mm/memblock.c                                   | 44 +++++++--------
+>   10 files changed, 157 insertions(+), 103 deletions(-)
+> 
+
