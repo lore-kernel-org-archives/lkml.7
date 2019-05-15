@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6491C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CF7C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C90A2084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6E472084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919910;
-	bh=iajolfmDkExgkErxz/VgBj8MRe1bH0OyF4BKtvzNiw4=;
+	s=default; t=1557919916;
+	bh=ppDG6mfQthnYQOTjGBktELqcYo9OvuBX2RDhmW4fnsM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NV42Jd+TRza9apWzPm9UL+6VG3Fe9zABbdtP91lGdP59Npy0jpKaVo1R8IpEmTRAa
-	 8hGoQnsdpCgYVA6QKuFu12yKzZP0EN6qpWWj80xbzaYqrfh0JgWyhGIY1fpJJq0O6Q
-	 M9uxggFWqZDMDNHKWvOIERrY+Wi6LS3LoVhkuzjo=
+	b=WGTX0YC52LDkYR0hyttw5wTWPQ8lLlo4gjWY/O010vBeNxVrP7B+RljDAalEX+Hw7
+	 b6dkZ2TQ8mVMXdjR+ezvjDA+EsdsrLWhK3dR+shxhAczePPvKgYA5cmNbrACHsS2tO
+	 3myK+vl2WBqDuclEkP5E6FQxsBgzRzpbjYbKNhvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732937AbfEOLbt (ORCPT
+        id S1732944AbfEOLbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:31:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43494 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:31:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732904AbfEOLbn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:31:43 -0400
+        id S1732657AbfEOLbv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:31:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1BD92084A;
-        Wed, 15 May 2019 11:31:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBDAA20843;
+        Wed, 15 May 2019 11:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919902;
-        bh=iajolfmDkExgkErxz/VgBj8MRe1bH0OyF4BKtvzNiw4=;
+        s=default; t=1557919910;
+        bh=ppDG6mfQthnYQOTjGBktELqcYo9OvuBX2RDhmW4fnsM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1XB+UiEKYmYld7ROq3tGaHnxfwep3lfIwLwUieQ4D4NGRy5JRrdwXIQQzwlw/5UzP
-         nbbgPQFIZhF+SLckWl1SkYY6p5tl7/mnhWOBcvrgwNb7sY9Qe/rr9jBqXpxZ1Hhng4
-         f+a+gpOg+oJBsi3m0cM8m9KxS/GgxLbyFm1DLfX0=
+        b=UWblLjL1cmZT6S/t29uWO5SAj2iwd72mIpNqNQPS/fluxhqAA1YMmsus3FHT3g+Es
+         HUcHszjZKNnL0RXv800ivmQki4WN44bP5SdO2VUT/etwpdAXq/ur1lGVxK7WKlAc7I
+         g+qNjFoZtafw3lta0CcVoZykyekpcStrJGlPfj74=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Petar Penkov <ppenkov@google.com>,
+        Stanislav Fomichev <sdf@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.0 123/137] tuntap: fix dividing by zero in ebpf queue selection
-Date:   Wed, 15 May 2019 12:56:44 +0200
-Message-Id: <20190515090702.660420018@linuxfoundation.org>
+Subject: [PATCH 5.0 126/137] flow_dissector: disable preemption around BPF calls
+Date:   Wed, 15 May 2019 12:56:47 +0200
+Message-Id: <20190515090703.057029785@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -61,44 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit a35d310f03a692bf4798eb309a1950a06a150620 ]
+[ Upstream commit b1c17a9a353878602fd5bfe9103e4afe5e9a3f96 ]
 
-We need check if tun->numqueues is zero (e.g for the persist device)
-before trying to use it for modular arithmetic.
+Various things in eBPF really require us to disable preemption
+before running an eBPF program.
 
-Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
-Fixes: 96f84061620c6("tun: add eBPF based queue selection method")
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+syzbot reported :
+
+BUG: assuming atomic context at net/core/flow_dissector.c:737
+in_atomic(): 0, irqs_disabled(): 0, pid: 24710, name: syz-executor.3
+2 locks held by syz-executor.3/24710:
+ #0: 00000000e81a4bf1 (&tfile->napi_mutex){+.+.}, at: tun_get_user+0x168e/0x3ff0 drivers/net/tun.c:1850
+ #1: 00000000254afebd (rcu_read_lock){....}, at: __skb_flow_dissect+0x1e1/0x4bb0 net/core/flow_dissector.c:822
+CPU: 1 PID: 24710 Comm: syz-executor.3 Not tainted 5.1.0+ #6
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ __cant_sleep kernel/sched/core.c:6165 [inline]
+ __cant_sleep.cold+0xa3/0xbb kernel/sched/core.c:6142
+ bpf_flow_dissect+0xfe/0x390 net/core/flow_dissector.c:737
+ __skb_flow_dissect+0x362/0x4bb0 net/core/flow_dissector.c:853
+ skb_flow_dissect_flow_keys_basic include/linux/skbuff.h:1322 [inline]
+ skb_probe_transport_header include/linux/skbuff.h:2500 [inline]
+ skb_probe_transport_header include/linux/skbuff.h:2493 [inline]
+ tun_get_user+0x2cfe/0x3ff0 drivers/net/tun.c:1940
+ tun_chr_write_iter+0xbd/0x156 drivers/net/tun.c:2037
+ call_write_iter include/linux/fs.h:1872 [inline]
+ do_iter_readv_writev+0x5fd/0x900 fs/read_write.c:693
+ do_iter_write fs/read_write.c:970 [inline]
+ do_iter_write+0x184/0x610 fs/read_write.c:951
+ vfs_writev+0x1b3/0x2f0 fs/read_write.c:1015
+ do_writev+0x15b/0x330 fs/read_write.c:1058
+ __do_sys_writev fs/read_write.c:1131 [inline]
+ __se_sys_writev fs/read_write.c:1128 [inline]
+ __x64_sys_writev+0x75/0xb0 fs/read_write.c:1128
+ do_syscall_64+0x103/0x670 arch/x86/entry/common.c:298
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: d58e468b1112 ("flow_dissector: implements flow dissector BPF hook")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Petar Penkov <ppenkov@google.com>
+Cc: Stanislav Fomichev <sdf@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/tun.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ net/core/flow_dissector.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -596,13 +596,18 @@ static u16 tun_automq_select_queue(struc
- static u16 tun_ebpf_select_queue(struct tun_struct *tun, struct sk_buff *skb)
- {
- 	struct tun_prog *prog;
-+	u32 numqueues;
- 	u16 ret = 0;
+--- a/net/core/flow_dissector.c
++++ b/net/core/flow_dissector.c
+@@ -786,7 +786,10 @@ bool __skb_flow_dissect(const struct sk_
+ 		flow_keys.thoff = nhoff;
  
-+	numqueues = READ_ONCE(tun->numqueues);
-+	if (!numqueues)
-+		return 0;
+ 		bpf_compute_data_pointers((struct sk_buff *)skb);
 +
- 	prog = rcu_dereference(tun->steering_prog);
- 	if (prog)
- 		ret = bpf_prog_run_clear_cb(prog->prog, skb);
++		preempt_disable();
+ 		result = BPF_PROG_RUN(attached, skb);
++		preempt_enable();
  
--	return ret % tun->numqueues;
-+	return ret % numqueues;
- }
- 
- static u16 tun_select_queue(struct net_device *dev, struct sk_buff *skb,
+ 		/* Restore state */
+ 		memcpy(cb, &cb_saved, sizeof(cb_saved));
 
 
