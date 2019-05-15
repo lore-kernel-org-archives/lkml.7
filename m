@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A98C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAA0C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6068020843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B442B2084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:59:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921581;
-	bh=2G32cP8HtH00Rjv2anrTKi7M+acenD3LjABGwolUVdU=;
+	s=default; t=1557921598;
+	bh=BrGBuaBYFEbSew5mma2LdrWM9G9Zzz1MNTXJovmdlt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nb07bZWEUPlR65/r9ZK4i3sHhIlIqtKIQBBLUCpuYwRteQ9Q7SSmXPcFWme7C3mju
-	 fhhmI4ZxYG5BtEubBPCFSXg92/qS9OpU5D0b354kKHorDskrswuY4cGcrLyfSR0tiB
-	 gnG53BInPw1j4HS+6YOdGfqWEdDozF4Kzk+aptYY=
+	b=qFTqHlvLflTS6wbuwjUj1WDXe9d3L3VPDXb9/83qSN+TfF2/4wmZvXK/KCyxM0P86
+	 5McFZ0YqKCA9M4FNYDSl/HM4jgL5oeSwc1mCAIUAp9lPkmtWh6p2DdzY+ei6pl5rYB
+	 N1MjpM/7766qamrFt0DE+GfzV1Qc6QGm9rqPAe6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730712AbfEOL7k (ORCPT
+        id S1730599AbfEOL75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:59:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51820 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:59:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729400AbfEOLPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:15:21 -0400
+        id S1730013AbfEOLPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:15:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 157E52084F;
-        Wed, 15 May 2019 11:15:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB7EB20644;
+        Wed, 15 May 2019 11:15:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918920;
-        bh=2G32cP8HtH00Rjv2anrTKi7M+acenD3LjABGwolUVdU=;
+        s=default; t=1557918910;
+        bh=BrGBuaBYFEbSew5mma2LdrWM9G9Zzz1MNTXJovmdlt8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DJg/7NVhYHVVKAysf0wlGGh5476+XU5zUWFiqMw23omKjWQt/CQnAD8HFs1j2MYg/
-         sFQUWnCeQlUPusrxBzhKm5ppKRIHBhK5ITWMfsQ6nr6wrOhrcJtGz4JOdHLMuGDJqD
-         LnR6iCG1zUUHzv9GYQMTQRCo/iskY3/zS9/swuWY=
+        b=b8f4eRUoEBhKb98CWNCUs5R55rAJ92i77noHnGz7OkdG+yuRKlhmWyLKnLPPayXmW
+         50yzbk7vTgZwPG6T3A+/FEHO517vRCR+cR7MY/Hpuy++Gdj+4DNMxSibr5UFJKo7uf
+         J6dGszvzkz5ovgEr0WjXb5HqwftoIS1Dzn2dKdSs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.9 50/51] powerpc/lib: fix book3s/32 boot failure due to code patching
-Date:   Wed, 15 May 2019 12:56:25 +0200
-Message-Id: <20190515090629.871639485@linuxfoundation.org>
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 46/51] ipv4: Fix raw socket lookup for local traffic
+Date:   Wed, 15 May 2019 12:56:21 +0200
+Message-Id: <20190515090629.253646048@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
 References: <20190515090616.669619870@linuxfoundation.org>
@@ -59,42 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: David Ahern <dsahern@gmail.com>
 
-commit b45ba4a51cde29b2939365ef0c07ad34c8321789 upstream.
+[ Upstream commit 19e4e768064a87b073a4b4c138b55db70e0cfb9f ]
 
-Commit 51c3c62b58b3 ("powerpc: Avoid code patching freed init
-sections") accesses 'init_mem_is_free' flag too early, before the
-kernel is relocated. This provokes early boot failure (before the
-console is active).
+inet_iif should be used for the raw socket lookup. inet_iif considers
+rt_iif which handles the case of local traffic.
 
-As it is not necessary to do this verification that early, this
-patch moves the test into patch_instruction() instead of
-__patch_instruction().
+As it stands, ping to a local address with the '-I <dev>' option fails
+ever since ping was changed to use SO_BINDTODEVICE instead of
+cmsg + IP_PKTINFO.
 
-This modification also has the advantage of avoiding unnecessary
-remappings.
+IPv6 works fine.
 
-Fixes: 51c3c62b58b3 ("powerpc: Avoid code patching freed init sections")
-Cc: stable@vger.kernel.org # 4.13+
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/powerpc/lib/code-patching.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/raw.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/lib/code-patching.c
-+++ b/arch/powerpc/lib/code-patching.c
-@@ -23,7 +23,7 @@ int patch_instruction(unsigned int *addr
- 	int err;
+--- a/net/ipv4/raw.c
++++ b/net/ipv4/raw.c
+@@ -169,6 +169,7 @@ static int icmp_filter(const struct sock
+  */
+ static int raw_v4_input(struct sk_buff *skb, const struct iphdr *iph, int hash)
+ {
++	int dif = inet_iif(skb);
+ 	struct sock *sk;
+ 	struct hlist_head *head;
+ 	int delivered = 0;
+@@ -181,8 +182,7 @@ static int raw_v4_input(struct sk_buff *
  
- 	/* Make sure we aren't patching a freed init section */
--	if (init_mem_is_free && init_section_contains(addr, 4)) {
-+	if (*PTRRELOC(&init_mem_is_free) && init_section_contains(addr, 4)) {
- 		pr_debug("Skipping init section patching addr: 0x%px\n", addr);
- 		return 0;
- 	}
+ 	net = dev_net(skb->dev);
+ 	sk = __raw_v4_lookup(net, __sk_head(head), iph->protocol,
+-			     iph->saddr, iph->daddr,
+-			     skb->dev->ifindex);
++			     iph->saddr, iph->daddr, dif);
+ 
+ 	while (sk) {
+ 		delivered = 1;
 
 
