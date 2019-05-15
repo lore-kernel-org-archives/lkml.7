@@ -6,130 +6,172 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33569C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BCEC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01D8E2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CE0C2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 19:30:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbfEOTal (ORCPT
+        id S1728334AbfEOTan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 15:30:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35000 "EHLO mx1.redhat.com"
+        Wed, 15 May 2019 15:30:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34990 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727297AbfEOT1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727009AbfEOT1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 15 May 2019 15:27:33 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 80E0BC09AD11;
+        by mx1.redhat.com (Postfix) with ESMTPS id 56312C0624A1;
         Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C0D15D9CC;
-        Wed, 15 May 2019 19:27:33 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C759519C71;
+        Wed, 15 May 2019 19:27:32 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id CBD3F225484; Wed, 15 May 2019 15:27:29 -0400 (EDT)
+        id 9F35D22547E; Wed, 15 May 2019 15:27:29 -0400 (EDT)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, linux-nvdimm@lists.01.org
 Cc:     vgoyal@redhat.com, miklos@szeredi.hu, stefanha@redhat.com,
         dgilbert@redhat.com, swhiteho@redhat.com
-Subject: [PATCH v2 16/30] virtio: Implement get_shm_region for MMIO transport
-Date:   Wed, 15 May 2019 15:27:01 -0400
-Message-Id: <20190515192715.18000-17-vgoyal@redhat.com>
+Subject: [PATCH v2 10/30] fuse: Separate fuse device allocation and installation in fuse_conn
+Date:   Wed, 15 May 2019 15:26:55 -0400
+Message-Id: <20190515192715.18000-11-vgoyal@redhat.com>
 In-Reply-To: <20190515192715.18000-1-vgoyal@redhat.com>
 References: <20190515192715.18000-1-vgoyal@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 15 May 2019 19:27:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastien Boeuf <sebastien.boeuf@intel.com>
+As of now fuse_dev_alloc() both allocates a fuse device and installs it
+in fuse_conn list. fuse_dev_alloc() can fail if fuse_device allocation
+fails.
 
-On MMIO a new set of registers is defined for finding SHM
-regions.  Add their definitions and use them to find the region.
+virtio-fs needs to initialize multiple fuse devices (one per virtio
+queue). It initializes one fuse device as part of call to
+fuse_fill_super_common() and rest of the devices are allocated and
+installed after that.
 
-Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
+But, we can't affort to fail after calling fuse_fill_super_common() as
+we don't have a way to undo all the actions done by fuse_fill_super_common().
+So to avoid failures after the call to fuse_fill_super_common(),
+pre-allocate all fuse devices early and install them into fuse connection
+later.
+
+This patch provides two separate helpers for fuse device allocation and
+fuse device installation in fuse_conn.
+
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- drivers/virtio/virtio_mmio.c     | 32 ++++++++++++++++++++++++++++++++
- include/uapi/linux/virtio_mmio.h | 11 +++++++++++
- 2 files changed, 43 insertions(+)
+ fs/fuse/cuse.c   |  2 +-
+ fs/fuse/dev.c    |  2 +-
+ fs/fuse/fuse_i.h |  4 +++-
+ fs/fuse/inode.c  | 25 ++++++++++++++++++++-----
+ 4 files changed, 25 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
-index d9dd0f789279..ac42520abd86 100644
---- a/drivers/virtio/virtio_mmio.c
-+++ b/drivers/virtio/virtio_mmio.c
-@@ -499,6 +499,37 @@ static const char *vm_bus_name(struct virtio_device *vdev)
- 	return vm_dev->pdev->name;
+diff --git a/fs/fuse/cuse.c b/fs/fuse/cuse.c
+index a6ed7a036b50..a509747153a7 100644
+--- a/fs/fuse/cuse.c
++++ b/fs/fuse/cuse.c
+@@ -506,7 +506,7 @@ static int cuse_channel_open(struct inode *inode, struct file *file)
+ 	 */
+ 	fuse_conn_init(&cc->fc, file->f_cred->user_ns, &fuse_dev_fiq_ops, NULL);
+ 
+-	fud = fuse_dev_alloc(&cc->fc);
++	fud = fuse_dev_alloc_install(&cc->fc);
+ 	if (!fud) {
+ 		kfree(cc);
+ 		return -ENOMEM;
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index ef489beadf58..ee9dd38bc0f0 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -2318,7 +2318,7 @@ static int fuse_device_clone(struct fuse_conn *fc, struct file *new)
+ 	if (new->private_data)
+ 		return -EINVAL;
+ 
+-	fud = fuse_dev_alloc(fc);
++	fud = fuse_dev_alloc_install(fc);
+ 	if (!fud)
+ 		return -ENOMEM;
+ 
+diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
+index 0b578e07156d..4008ed65a48d 100644
+--- a/fs/fuse/fuse_i.h
++++ b/fs/fuse/fuse_i.h
+@@ -1050,7 +1050,9 @@ void fuse_conn_init(struct fuse_conn *fc, struct user_namespace *user_ns,
+  */
+ void fuse_conn_put(struct fuse_conn *fc);
+ 
+-struct fuse_dev *fuse_dev_alloc(struct fuse_conn *fc);
++struct fuse_dev *fuse_dev_alloc_install(struct fuse_conn *fc);
++struct fuse_dev *fuse_dev_alloc(void);
++void fuse_dev_install(struct fuse_dev *fud, struct fuse_conn *fc);
+ void fuse_dev_free(struct fuse_dev *fud);
+ void fuse_send_init(struct fuse_conn *fc, struct fuse_req *req);
+ 
+diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+index 126e77854dac..9b0114437a14 100644
+--- a/fs/fuse/inode.c
++++ b/fs/fuse/inode.c
+@@ -1027,8 +1027,7 @@ static int fuse_bdi_init(struct fuse_conn *fc, struct super_block *sb)
+ 	return 0;
  }
  
-+static bool vm_get_shm_region(struct virtio_device *vdev,
-+			      struct virtio_shm_region *region, u8 id)
-+{
-+	struct virtio_mmio_device *vm_dev = to_virtio_mmio_device(vdev);
-+	u64 len, addr;
-+
-+	/* Select the region we're interested in */
-+	writel(id, vm_dev->base + VIRTIO_MMIO_SHM_SEL);
-+
-+	/* Read the region size */
-+	len = (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_LEN_LOW);
-+	len |= (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_LEN_HIGH) << 32;
-+
-+	region->len = len;
-+
-+	/* Check if region length is -1. If that's the case, the shared memory
-+	 * region does not exist and there is no need to proceed further.
-+	 */
-+	if (len == ~(u64)0) {
-+		return false;
-+	}
-+
-+	/* Read the region base address */
-+	addr = (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_BASE_LOW);
-+	addr |= (u64) readl(vm_dev->base + VIRTIO_MMIO_SHM_BASE_HIGH) << 32;
-+
-+	region->addr = addr;
-+
-+	return true;
+-struct fuse_dev *fuse_dev_alloc(struct fuse_conn *fc)
+-{
++struct fuse_dev *fuse_dev_alloc(void) {
+ 	struct fuse_dev *fud;
+ 	struct list_head *pq;
+ 
+@@ -1043,16 +1042,32 @@ struct fuse_dev *fuse_dev_alloc(struct fuse_conn *fc)
+ 	}
+ 
+ 	fud->pq.processing = pq;
+-	fud->fc = fuse_conn_get(fc);
+ 	fuse_pqueue_init(&fud->pq);
+ 
++	return fud;
 +}
++EXPORT_SYMBOL_GPL(fuse_dev_alloc);
 +
- static const struct virtio_config_ops virtio_mmio_config_ops = {
- 	.get		= vm_get,
- 	.set		= vm_set,
-@@ -511,6 +542,7 @@ static const struct virtio_config_ops virtio_mmio_config_ops = {
- 	.get_features	= vm_get_features,
- 	.finalize_features = vm_finalize_features,
- 	.bus_name	= vm_bus_name,
-+	.get_shm_region = vm_get_shm_region,
- };
++void fuse_dev_install(struct fuse_dev *fud, struct fuse_conn *fc) {
++	fud->fc = fuse_conn_get(fc);
+ 	spin_lock(&fc->lock);
+ 	list_add_tail(&fud->entry, &fc->devices);
+ 	spin_unlock(&fc->lock);
++}
++EXPORT_SYMBOL_GPL(fuse_dev_install);
  
++struct fuse_dev *fuse_dev_alloc_install(struct fuse_conn *fc)
++{
++	struct fuse_dev *fud;
++
++	fud = fuse_dev_alloc();
++	if (!fud)
++		return NULL;
++
++	fuse_dev_install(fud, fc);
+ 	return fud;
+ }
+-EXPORT_SYMBOL_GPL(fuse_dev_alloc);
++EXPORT_SYMBOL_GPL(fuse_dev_alloc_install);
  
-diff --git a/include/uapi/linux/virtio_mmio.h b/include/uapi/linux/virtio_mmio.h
-index c4b09689ab64..0650f91bea6c 100644
---- a/include/uapi/linux/virtio_mmio.h
-+++ b/include/uapi/linux/virtio_mmio.h
-@@ -122,6 +122,17 @@
- #define VIRTIO_MMIO_QUEUE_USED_LOW	0x0a0
- #define VIRTIO_MMIO_QUEUE_USED_HIGH	0x0a4
+ void fuse_dev_free(struct fuse_dev *fud)
+ {
+@@ -1122,7 +1137,7 @@ int fuse_fill_super_common(struct super_block *sb,
+ 		       mount_data->fiq_priv);
+ 	fc->release = fuse_free_conn;
  
-+/* Shared memory region id */
-+#define VIRTIO_MMIO_SHM_SEL             0x0ac
-+
-+/* Shared memory region length, 64 bits in two halves */
-+#define VIRTIO_MMIO_SHM_LEN_LOW         0x0b0
-+#define VIRTIO_MMIO_SHM_LEN_HIGH        0x0b4
-+
-+/* Shared memory region base address, 64 bits in two halves */
-+#define VIRTIO_MMIO_SHM_BASE_LOW        0x0b8
-+#define VIRTIO_MMIO_SHM_BASE_HIGH       0x0bc
-+
- /* Configuration atomicity value */
- #define VIRTIO_MMIO_CONFIG_GENERATION	0x0fc
+-	fud = fuse_dev_alloc(fc);
++	fud = fuse_dev_alloc_install(fc);
+ 	if (!fud)
+ 		goto err_put_conn;
  
 -- 
 2.20.1
