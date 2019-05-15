@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04CF4C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A95C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE1C6206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DEE620843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919610;
-	bh=uOm5BvuEI4DDXppf2ixzVjQaw/JN4hbVR5wVHhA3v+M=;
+	s=default; t=1557919613;
+	bh=XdBZfExrQaGrAdoM+O6YjnIhVvug8FBLlDpS7/BCRi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uPW5mCr2l1Ht1AejlP9lzmd5yxbw/CIhDhb/nzKkvhGqOJ0fkbmDwlF99j+ro9/ix
-	 X7aQzqjWzPuaY6dZaDGMVMX19xgkzqyhE7IOye/XByZPWTVwWSTm2rO013DVcvT85R
-	 GdRk7Kd03jEjoldLPPUkH2RAcZ8peINugBQMUzjE=
+	b=R0WgqVckaklp7lbUlP549Z/q6L318yZSJDtCkdnfG84DB+JlXkZ6zAwikFJjd9CKM
+	 2xSfW3Be0LPNsyPkbmBYiztuGs7kkeWZVLjHxm3Vg7bsPcDnpABWRga4ouQbpA5yhc
+	 eGw1wZRCmXJ2a1Ntdp4XNt5alMjQMuysbwcBVDsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730226AbfEOL0u (ORCPT
+        id S1730923AbfEOL0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:26:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37670 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:26:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729763AbfEOL0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:26:48 -0400
+        id S1729874AbfEOL0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:26:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A77DC206BF;
-        Wed, 15 May 2019 11:26:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF1A6206BF;
+        Wed, 15 May 2019 11:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919607;
-        bh=uOm5BvuEI4DDXppf2ixzVjQaw/JN4hbVR5wVHhA3v+M=;
+        s=default; t=1557919604;
+        bh=XdBZfExrQaGrAdoM+O6YjnIhVvug8FBLlDpS7/BCRi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JVA+x4vGXy9pT6+m1RHd31ZlWyda0hnTpxBDeuJSnOLUKSHUv5lSt0/Cj6WfzccDH
-         t4LsKfuxozTLtSjREvmqsPR0YPcd5XkeL4XKqqlxKrigB/TFhX+dJQszfHi6nl0Nsh
-         bScWfvc/ernyjSKbLypd9CeTb0z2sU4JVBAF+7uw=
+        b=NGs+VdpLTI+hmnFeY7y1/1fmEjTxpqfxJQh6Xz8KbNHZrOAVsMDVU8nsdlM1c87ZR
+         oaw/qaI8PHVs2q9T8bgO4mQ641s5oJZX3o8MKkoSGkXfnV7Vnwrg87iM433zWJqGr+
+         8enPbtnQnpHgm6TErwFX8jPCBFQIyU03a9I8U490=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sunil Dutt <usdutt@codeaurora.org>,
+        stable@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
         Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 025/137] nl80211: Add NL80211_FLAG_CLEAR_SKB flag for other NL commands
-Date:   Wed, 15 May 2019 12:55:06 +0200
-Message-Id: <20190515090655.104251473@linuxfoundation.org>
+Subject: [PATCH 5.0 024/137] mac80211: fix memory accounting with A-MSDU aggregation
+Date:   Wed, 15 May 2019 12:55:05 +0200
+Message-Id: <20190515090655.028786660@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -60,86 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d6db02a88a4aaa1cd7105137c67ddec7f3bdbc05 ]
+[ Upstream commit eb9b64e3a9f8483e6e54f4e03b2ae14ae5db2690 ]
 
-This commit adds NL80211_FLAG_CLEAR_SKB flag to other NL commands
-that carry key data to ensure they do not stick around on heap
-after the SKB is freed.
+skb->truesize can change due to memory reallocation or when adding extra
+fragments. Adjust fq->memory_usage accordingly
 
-Also introduced this flag for NL80211_CMD_VENDOR as there are sub
-commands which configure the keys.
-
-Signed-off-by: Sunil Dutt <usdutt@codeaurora.org>
+Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/wireless/nl80211.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ net/mac80211/tx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index d91a408db113e..156ce708b5330 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -13596,7 +13596,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_UNS_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_DEAUTHENTICATE,
-@@ -13647,7 +13648,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_UNS_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_UPDATE_CONNECT_PARAMS,
-@@ -13655,7 +13657,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_DISCONNECT,
-@@ -13684,7 +13687,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_UNS_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_DEL_PMKSA,
-@@ -14036,7 +14040,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.policy = nl80211_policy,
- 		.flags = GENL_UNS_ADMIN_PERM,
- 		.internal_flags = NL80211_FLAG_NEED_WIPHY |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_SET_QOS_MAP,
-@@ -14091,7 +14096,8 @@ static const struct genl_ops nl80211_ops[] = {
- 		.doit = nl80211_set_pmk,
- 		.policy = nl80211_policy,
- 		.internal_flags = NL80211_FLAG_NEED_NETDEV_UP |
--				  NL80211_FLAG_NEED_RTNL,
-+				  NL80211_FLAG_NEED_RTNL |
-+				  NL80211_FLAG_CLEAR_SKB,
- 	},
- 	{
- 		.cmd = NL80211_CMD_DEL_PMK,
+diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
+index 928f13a208b05..714d80e48a102 100644
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -3214,6 +3214,7 @@ static bool ieee80211_amsdu_aggregate(struct ieee80211_sub_if_data *sdata,
+ 	u8 max_subframes = sta->sta.max_amsdu_subframes;
+ 	int max_frags = local->hw.max_tx_fragments;
+ 	int max_amsdu_len = sta->sta.max_amsdu_len;
++	int orig_truesize;
+ 	__be16 len;
+ 	void *data;
+ 	bool ret = false;
+@@ -3254,6 +3255,7 @@ static bool ieee80211_amsdu_aggregate(struct ieee80211_sub_if_data *sdata,
+ 	if (!head || skb_is_gso(head))
+ 		goto out;
+ 
++	orig_truesize = head->truesize;
+ 	orig_len = head->len;
+ 
+ 	if (skb->len + head->len > max_amsdu_len)
+@@ -3311,6 +3313,7 @@ static bool ieee80211_amsdu_aggregate(struct ieee80211_sub_if_data *sdata,
+ 	*frag_tail = skb;
+ 
+ out_recalc:
++	fq->memory_usage += head->truesize - orig_truesize;
+ 	if (head->len != orig_len) {
+ 		flow->backlog += head->len - orig_len;
+ 		tin->backlog_bytes += head->len - orig_len;
 -- 
 2.20.1
 
