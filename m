@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F57C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B421C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A1D52089E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DCB220862
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919565;
-	bh=cEn349Xsxel2wfBlimOLS4U8SJc/7A97xjsUvky5aHQ=;
+	s=default; t=1557919570;
+	bh=U+cZlY8muUchaepQ07mFSd7U+l0+CHSxVPLR5nRyDus=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HhB6X1Mt1+8KjQfR8moyymU2b/PaDTF/lTRy4a6VhpRjoB5C85XLqqeAxw1hyUSXg
-	 MmNIQSTz64H78WO2teNTow/tsA6Opmy6iN/LNmub0jiPyHmAze8B12QU0HkBZIIo8/
-	 uAaHr00RzfJzWMYAvWUKzJAsShffYt65Sh8wWA0I=
+	b=1O7ZoJXFPRPwgsbOFFDmQaj8qgN38SsS8ywf1IYDNN7kHzWNpuZZFEug3kh3m5vHe
+	 NDCeHvtH1YplWtDd7AEry+xydYM5Eb+WhUkRYWOYFSg7vGI4lQxHbk9QbDCxvPwpJS
+	 rZFMY8cGmUV1Yg/GyXTPMcIS8MMFriXEl5j7IlHQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732114AbfEOL0E (ORCPT
+        id S1732123AbfEOL0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:26:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36824 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:26:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732090AbfEOL0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:26:00 -0400
+        id S1732090AbfEOL0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:26:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A51920818;
-        Wed, 15 May 2019 11:25:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 508DC2084F;
+        Wed, 15 May 2019 11:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919559;
-        bh=cEn349Xsxel2wfBlimOLS4U8SJc/7A97xjsUvky5aHQ=;
+        s=default; t=1557919564;
+        bh=U+cZlY8muUchaepQ07mFSd7U+l0+CHSxVPLR5nRyDus=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I/9kxMfib06aY2/wWeA7VpNgD9DCg+1DvVFHkJC/ykb0QEI+5VRr7hBb8D4NrA/7c
-         9LI4OAQzLXrDARQ+OS9J7hhnqP3IYxs0jgh3um3hjy318oy9P75D34uCn5tLUmEKFv
-         QQLhE16LWitDFkbsnWG2QUZllOjot1GeQrfRmKQs=
+        b=UmSMhJg+xFJXJX+wIigHyPv8XdC0bzc9ovBmdTgKWVZmUNi7st/dLVf5Mn3ClhyJg
+         qjboin6SF9lXIIbiiYv1aqi0NiehIEi/yyu1V0aGhbZtCCFnBrFQw4PWTRltYqEhhe
+         Vuf6F8EPgHTOxPAMuDtwfOk2STJtk23PplQHuuQ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ritesh Raj Sarraf <rrs@researchut.com>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 4.19 086/113] um: Dont hardcode path as it is architecture dependent
-Date:   Wed, 15 May 2019 12:56:17 +0200
-Message-Id: <20190515090700.188199892@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.0 010/137] USB: serial: fix unthrottle races
+Date:   Wed, 15 May 2019 12:54:51 +0200
+Message-Id: <20190515090653.977981480@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
-References: <20190515090652.640988966@linuxfoundation.org>
+In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
+References: <20190515090651.633556783@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,31 +58,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ritesh Raj Sarraf <rrs@debian.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit 9ca19a3a3e2482916c475b90f3d7fa2a03d8e5ed upstream.
+commit 3f5edd58d040bfa4b74fb89bc02f0bc6b9cd06ab upstream.
 
-The current code fails to run on amd64 because of hardcoded reference to
-i386
+Fix two long-standing bugs which could potentially lead to memory
+corruption or leave the port throttled until it is reopened (on weakly
+ordered systems), respectively, when read-URB completion races with
+unthrottle().
 
-Signed-off-by: Ritesh Raj Sarraf <rrs@researchut.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+First, the URB must not be marked as free before processing is complete
+to prevent it from being submitted by unthrottle() on another CPU.
+
+	CPU 1				CPU 2
+	================		================
+	complete()			unthrottle()
+	  process_urb();
+	  smp_mb__before_atomic();
+	  set_bit(i, free);		  if (test_and_clear_bit(i, free))
+	  					  submit_urb();
+
+Second, the URB must be marked as free before checking the throttled
+flag to prevent unthrottle() on another CPU from failing to observe that
+the URB needs to be submitted if complete() sees that the throttled flag
+is set.
+
+	CPU 1				CPU 2
+	================		================
+	complete()			unthrottle()
+	  set_bit(i, free);		  throttled = 0;
+	  smp_mb__after_atomic();	  smp_mb();
+	  if (throttled)		  if (test_and_clear_bit(i, free))
+	  	  return;			  submit_urb();
+
+Note that test_and_clear_bit() only implies barriers when the test is
+successful. To handle the case where the URB is still in use an explicit
+barrier needs to be added to unthrottle() for the second race condition.
+
+Fixes: d83b405383c9 ("USB: serial: add support for multiple read urbs")
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/um/drivers/port_user.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/serial/generic.c |   39 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 32 insertions(+), 7 deletions(-)
 
---- a/arch/um/drivers/port_user.c
-+++ b/arch/um/drivers/port_user.c
-@@ -168,7 +168,7 @@ int port_connection(int fd, int *socket,
- {
- 	int new, err;
- 	char *argv[] = { "/usr/sbin/in.telnetd", "-L",
--			 "/usr/lib/uml/port-helper", NULL };
-+			 OS_LIB_PATH "/uml/port-helper", NULL };
- 	struct port_pre_exec_data data;
+--- a/drivers/usb/serial/generic.c
++++ b/drivers/usb/serial/generic.c
+@@ -376,6 +376,7 @@ void usb_serial_generic_read_bulk_callba
+ 	struct usb_serial_port *port = urb->context;
+ 	unsigned char *data = urb->transfer_buffer;
+ 	unsigned long flags;
++	bool stopped = false;
+ 	int status = urb->status;
+ 	int i;
  
- 	new = accept(fd, NULL, 0);
+@@ -383,33 +384,51 @@ void usb_serial_generic_read_bulk_callba
+ 		if (urb == port->read_urbs[i])
+ 			break;
+ 	}
+-	set_bit(i, &port->read_urbs_free);
+ 
+ 	dev_dbg(&port->dev, "%s - urb %d, len %d\n", __func__, i,
+ 							urb->actual_length);
+ 	switch (status) {
+ 	case 0:
++		usb_serial_debug_data(&port->dev, __func__, urb->actual_length,
++							data);
++		port->serial->type->process_read_urb(urb);
+ 		break;
+ 	case -ENOENT:
+ 	case -ECONNRESET:
+ 	case -ESHUTDOWN:
+ 		dev_dbg(&port->dev, "%s - urb stopped: %d\n",
+ 							__func__, status);
+-		return;
++		stopped = true;
++		break;
+ 	case -EPIPE:
+ 		dev_err(&port->dev, "%s - urb stopped: %d\n",
+ 							__func__, status);
+-		return;
++		stopped = true;
++		break;
+ 	default:
+ 		dev_dbg(&port->dev, "%s - nonzero urb status: %d\n",
+ 							__func__, status);
+-		goto resubmit;
++		break;
+ 	}
+ 
+-	usb_serial_debug_data(&port->dev, __func__, urb->actual_length, data);
+-	port->serial->type->process_read_urb(urb);
++	/*
++	 * Make sure URB processing is done before marking as free to avoid
++	 * racing with unthrottle() on another CPU. Matches the barriers
++	 * implied by the test_and_clear_bit() in
++	 * usb_serial_generic_submit_read_urb().
++	 */
++	smp_mb__before_atomic();
++	set_bit(i, &port->read_urbs_free);
++	/*
++	 * Make sure URB is marked as free before checking the throttled flag
++	 * to avoid racing with unthrottle() on another CPU. Matches the
++	 * smp_mb() in unthrottle().
++	 */
++	smp_mb__after_atomic();
++
++	if (stopped)
++		return;
+ 
+-resubmit:
+ 	/* Throttle the device if requested by tty */
+ 	spin_lock_irqsave(&port->lock, flags);
+ 	port->throttled = port->throttle_req;
+@@ -484,6 +503,12 @@ void usb_serial_generic_unthrottle(struc
+ 	port->throttled = port->throttle_req = 0;
+ 	spin_unlock_irq(&port->lock);
+ 
++	/*
++	 * Matches the smp_mb__after_atomic() in
++	 * usb_serial_generic_read_bulk_callback().
++	 */
++	smp_mb();
++
+ 	if (was_throttled)
+ 		usb_serial_generic_submit_read_urbs(port, GFP_KERNEL);
+ }
 
 
