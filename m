@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AA6C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 427FAC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C338320843
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148E020818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919133;
-	bh=oe99d7vc85xmRQGK6bO7FO1KcDpjQDJBJgR0TSKQnkg=;
+	s=default; t=1557919136;
+	bh=ytNF6xKI+l+Ujvw5o99E9RlODx9tEh/MtVIcw+U3ptI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wf8e5/Q7lELQxXypbzlxPYKc7WvXJUoztu4/kWu0cp3NeVXoVOqFjXpc/C7AVzE4s
-	 jADuo5cOCD/yG2qZzdfat5zJ5G/gU/hZbkjjeDxKkoTa7gsqksRnDRTNrTmoQupwmg
-	 55+226aK9yglq1o+FcR0faPvySjGJArX8CK4c07E=
+	b=sCir25oOP2FZzIcX+Jp6ZfGKG/YBx7qNZBa63A3tx8zA7w4QDBCn3GweLtGoCdtMT
+	 VaCBitXpJQARg8pf6xgejVHVMlq+f6VmfEdUWobabCtuJfdYkrY6GpJ1/8p3vnfYew
+	 RAcsK/VK6qGQ00bXhtmwbfKn5K0NexooGekZ8tBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730844AbfEOLSw (ORCPT
+        id S1730852AbfEOLSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:18:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56264 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:18:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729422AbfEOLSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:18:45 -0400
+        id S1730450AbfEOLSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:18:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13EB020818;
-        Wed, 15 May 2019 11:18:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E16C1206BF;
+        Wed, 15 May 2019 11:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919124;
-        bh=oe99d7vc85xmRQGK6bO7FO1KcDpjQDJBJgR0TSKQnkg=;
+        s=default; t=1557919127;
+        bh=ytNF6xKI+l+Ujvw5o99E9RlODx9tEh/MtVIcw+U3ptI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NXBZaqfE296ii74nLUQHVRpF+Ijw7/FWaCpN4lB0s/OO2wJq9y5xA0BExDoKqrXLC
-         F8PcZU9zw2epRdHaecFEk4h70uGFhfXYDCslBXgUHMFFYI1Oayw/i6Ivlup+17cJ+S
-         hcJkNhVGUZpUKsi5+VrhSHQIa1QDyg11MxpqLEj0=
+        b=xaMuoR+SXwqOqASXqedbx2Niuynyx2fmXPNnmSNjmX2FCHuntKKXtZCyMY8TlpPOj
+         TqZOxBPTlWAi6dO84n4sUkw/+bx81MbehUBoOkmeYxAudT/fKjbpfd3XmnE2VdeYrE
+         kKfv57hmez1nRLIRlTcymoGShNjjqPTpokI1Q0T8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 076/115] net_sched: fix two more memory leaks in cls_tcindex
-Date:   Wed, 15 May 2019 12:55:56 +0200
-Message-Id: <20190515090704.931641411@linuxfoundation.org>
+Subject: [PATCH 4.14 077/115] gtp: change NET_UDP_TUNNEL dependency to select
+Date:   Wed, 15 May 2019 12:55:57 +0200
+Message-Id: <20190515090704.995704200@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -62,94 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1db817e75f5b9387b8db11e37d5f0624eb9223e0 ]
+[ Upstream commit c22da36688d6298f2e546dcc43fdc1ad35036467 ]
 
-struct tcindex_filter_result contains two parts:
-struct tcf_exts and struct tcf_result.
+Similarly to commit a7603ac1fc8c ("geneve: change NET_UDP_TUNNEL
+dependency to select"), GTP has a dependency on NET_UDP_TUNNEL which
+makes impossible to compile it if no other protocol depending on
+NET_UDP_TUNNEL is selected.
 
-For the local variable 'cr', its exts part is never used but
-initialized without being released properly on success path. So
-just completely remove the exts part to fix this leak.
+Fix this by changing the depends to a select, and drop NET_IP_TUNNEL from
+the select list, as it already depends on NET_UDP_TUNNEL.
 
-For the local variable 'new_filter_result', it is never properly
-released if not used by 'r' on success path.
-
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- net/sched/cls_tcindex.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ drivers/net/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/sched/cls_tcindex.c b/net/sched/cls_tcindex.c
-index 52829fdc280b3..75c7c7cc74999 100644
---- a/net/sched/cls_tcindex.c
-+++ b/net/sched/cls_tcindex.c
-@@ -322,9 +322,9 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
- 		  struct nlattr *est, bool ovr)
- {
- 	struct tcindex_filter_result new_filter_result, *old_r = r;
--	struct tcindex_filter_result cr;
- 	struct tcindex_data *cp = NULL, *oldp;
- 	struct tcindex_filter *f = NULL; /* make gcc behave */
-+	struct tcf_result cr = {};
- 	int err, balloc = 0;
- 	struct tcf_exts e;
+diff --git a/drivers/net/Kconfig b/drivers/net/Kconfig
+index aba0d652095b0..f3357091e9d18 100644
+--- a/drivers/net/Kconfig
++++ b/drivers/net/Kconfig
+@@ -212,8 +212,8 @@ config GENEVE
  
-@@ -363,13 +363,10 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
- 	cp->h = p->h;
- 
- 	err = tcindex_filter_result_init(&new_filter_result);
--	if (err < 0)
--		goto errout1;
--	err = tcindex_filter_result_init(&cr);
- 	if (err < 0)
- 		goto errout1;
- 	if (old_r)
--		cr.res = r->res;
-+		cr = r->res;
- 
- 	if (tb[TCA_TCINDEX_HASH])
- 		cp->hash = nla_get_u32(tb[TCA_TCINDEX_HASH]);
-@@ -460,8 +457,8 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
- 	}
- 
- 	if (tb[TCA_TCINDEX_CLASSID]) {
--		cr.res.classid = nla_get_u32(tb[TCA_TCINDEX_CLASSID]);
--		tcf_bind_filter(tp, &cr.res, base);
-+		cr.classid = nla_get_u32(tb[TCA_TCINDEX_CLASSID]);
-+		tcf_bind_filter(tp, &cr, base);
- 	}
- 
- 	if (old_r && old_r != r) {
-@@ -473,7 +470,7 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
- 	}
- 
- 	oldp = p;
--	r->res = cr.res;
-+	r->res = cr;
- 	tcf_exts_change(&r->exts, &e);
- 
- 	rcu_assign_pointer(tp->root, cp);
-@@ -492,6 +489,8 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
- 				; /* nothing */
- 
- 		rcu_assign_pointer(*fp, f);
-+	} else {
-+		tcf_exts_destroy(&new_filter_result.exts);
- 	}
- 
- 	if (oldp)
-@@ -504,7 +503,6 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
- 	else if (balloc == 2)
- 		kfree(cp->h);
- errout1:
--	tcf_exts_destroy(&cr.exts);
- 	tcf_exts_destroy(&new_filter_result.exts);
- errout:
- 	kfree(cp);
+ config GTP
+ 	tristate "GPRS Tunneling Protocol datapath (GTP-U)"
+-	depends on INET && NET_UDP_TUNNEL
+-	select NET_IP_TUNNEL
++	depends on INET
++	select NET_UDP_TUNNEL
+ 	---help---
+ 	  This allows one to create gtp virtual interfaces that provide
+ 	  the GPRS Tunneling Protocol datapath (GTP-U). This tunneling protocol
 -- 
 2.20.1
 
