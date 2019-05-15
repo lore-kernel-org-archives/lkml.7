@@ -2,54 +2,51 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44831C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17262C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B52B20644
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB59020644
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918519;
-	bh=LIYgNYNv2eyMZXeeFi8wApcEq8udlDEgf1ECSst24xs=;
+	s=default; t=1557918523;
+	bh=t6XqQ5W6vDKWzQnyXBsUGUHjDExrqttRGOGAM7qmR7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qnutL5xe6HFC5EFfbkBOO8SpxAGKp57zaa1sg7FBqNSLsCrlr1Okk9mSvELsq4fD1
-	 53MuTpFzfFtQjYhx65Rxe3loXK+ORBww3hZmP9MjmE8lIuiLbnr7qWWunnF0X2BVub
-	 JdgBEiUrw0v87ItKgR4ELu+jTAO+gjJO7tn90d6I=
+	b=L7xxDFf8qsCs4TUl8BXk66dSeztqBqz6T382SJHnnJiMBzpj7X/k/oGei25uNsmki
+	 N7eYIFkK2TVaQIv/jCjex6UCIkhXOrgZXSWsF88hTwgiVc6x9SKjMev1YcFJs0UYLU
+	 t7k+5Or2ALCfn/suAh9MS64K9dPp5VGe1Gmcnbt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbfEOLIi (ORCPT
+        id S1729148AbfEOLIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:08:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41020 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:08:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727574AbfEOLIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:08:36 -0400
+        id S1729136AbfEOLIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:08:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA92D20644;
-        Wed, 15 May 2019 11:08:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E099520644;
+        Wed, 15 May 2019 11:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918515;
-        bh=LIYgNYNv2eyMZXeeFi8wApcEq8udlDEgf1ECSst24xs=;
+        s=default; t=1557918520;
+        bh=t6XqQ5W6vDKWzQnyXBsUGUHjDExrqttRGOGAM7qmR7k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EcpIZJad6sz1+k+eEP9yXLzz2RpKDIz5fFK2nzZcIPvFR3Ry477xrAq3tJB1kAbSR
-         15/4ZRdnlR2sfwiEZ2YX9deA+jrX8/OQ5i0U1O/eM7HSHqBxDbpN+ZIgLPDM5n1vDz
-         r/yFlFgIlkLV27u2b9TbHDotXFmJWKlTRdrqkX/w=
+        b=MOvuJZS3NzDjvrLNPrGOQbSu7Ze11CnhtQQHoFpJz9jZQ+bYdZ68RJiKP0GWu36n8
+         Ud17Za+d6Gv3lCrTWT+Ab9iExtYyOK3aIKS3i5TJ3n91k0im1IxvCNBtWuuKcROLpH
+         aH1cTWUh4jW9fnNAeaerdtRGJbero4iKsio94J4Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Francesco Ruggeri <fruggeri@arista.com>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Zubin Mithra <zsm@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 159/266] netfilter: compat: initialize all fields in xt_init
-Date:   Wed, 15 May 2019 12:54:26 +0200
-Message-Id: <20190515090728.294492949@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+7634edaea4d0b341c625@syzkaller.appspotmail.com
+Subject: [PATCH 4.4 119/266] USB: core: Fix bug caused by duplicate interface PM usage counter
+Date:   Wed, 15 May 2019 12:53:46 +0200
+Message-Id: <20190515090726.484905633@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -62,70 +59,212 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 8d29d16d21342a0c86405d46de0c4ac5daf1760f upstream
+From: Alan Stern <stern@rowland.harvard.edu>
 
-If a non zero value happens to be in xt[NFPROTO_BRIDGE].cur at init
-time, the following panic can be caused by running
+commit c2b71462d294cf517a0bc6e4fd6424d7cee5596f upstream.
 
-% ebtables -t broute -F BROUTING
+The syzkaller fuzzer reported a bug in the USB hub driver which turned
+out to be caused by a negative runtime-PM usage counter.  This allowed
+a hub to be runtime suspended at a time when the driver did not expect
+it.  The symptom is a WARNING issued because the hub's status URB is
+submitted while it is already active:
 
-from a 32-bit user level on a 64-bit kernel. This patch replaces
-kmalloc_array with kcalloc when allocating xt.
+	URB 0000000031fb463e submitted while active
+	WARNING: CPU: 0 PID: 2917 at drivers/usb/core/urb.c:363
 
-[  474.680846] BUG: unable to handle kernel paging request at 0000000009600920
-[  474.687869] PGD 2037006067 P4D 2037006067 PUD 2038938067 PMD 0
-[  474.693838] Oops: 0000 [#1] SMP
-[  474.697055] CPU: 9 PID: 4662 Comm: ebtables Kdump: loaded Not tainted 4.19.17-11302235.AroraKernelnext.fc18.x86_64 #1
-[  474.707721] Hardware name: Supermicro X9DRT/X9DRT, BIOS 3.0 06/28/2013
-[  474.714313] RIP: 0010:xt_compat_calc_jump+0x2f/0x63 [x_tables]
-[  474.720201] Code: 40 0f b6 ff 55 31 c0 48 6b ff 70 48 03 3d dc 45 00 00 48 89 e5 8b 4f 6c 4c 8b 47 60 ff c9 39 c8 7f 2f 8d 14 08 d1 fa 48 63 fa <41> 39 34 f8 4c 8d 0c fd 00 00 00 00 73 05 8d 42 01 eb e1 76 05 8d
-[  474.739023] RSP: 0018:ffffc9000943fc58 EFLAGS: 00010207
-[  474.744296] RAX: 0000000000000000 RBX: ffffc90006465000 RCX: 0000000002580249
-[  474.751485] RDX: 00000000012c0124 RSI: fffffffff7be17e9 RDI: 00000000012c0124
-[  474.758670] RBP: ffffc9000943fc58 R08: 0000000000000000 R09: ffffffff8117cf8f
-[  474.765855] R10: ffffc90006477000 R11: 0000000000000000 R12: 0000000000000001
-[  474.773048] R13: 0000000000000000 R14: ffffc9000943fcb8 R15: ffffc9000943fcb8
-[  474.780234] FS:  0000000000000000(0000) GS:ffff88a03f840000(0063) knlGS:00000000f7ac7700
-[  474.788612] CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-[  474.794632] CR2: 0000000009600920 CR3: 0000002037422006 CR4: 00000000000606e0
-[  474.802052] Call Trace:
-[  474.804789]  compat_do_replace+0x1fb/0x2a3 [ebtables]
-[  474.810105]  compat_do_ebt_set_ctl+0x69/0xe6 [ebtables]
-[  474.815605]  ? try_module_get+0x37/0x42
-[  474.819716]  compat_nf_setsockopt+0x4f/0x6d
-[  474.824172]  compat_ip_setsockopt+0x7e/0x8c
-[  474.828641]  compat_raw_setsockopt+0x16/0x3a
-[  474.833220]  compat_sock_common_setsockopt+0x1d/0x24
-[  474.838458]  __compat_sys_setsockopt+0x17e/0x1b1
-[  474.843343]  ? __check_object_size+0x76/0x19a
-[  474.847960]  __ia32_compat_sys_socketcall+0x1cb/0x25b
-[  474.853276]  do_fast_syscall_32+0xaf/0xf6
-[  474.857548]  entry_SYSENTER_compat+0x6b/0x7a
+The negative runtime-PM usage count was caused by an unfortunate
+design decision made when runtime PM was first implemented for USB.
+At that time, USB class drivers were allowed to unbind from their
+interfaces without balancing the usage counter (i.e., leaving it with
+a positive count).  The core code would take care of setting the
+counter back to 0 before allowing another driver to bind to the
+interface.
 
-Signed-off-by: Francesco Ruggeri <fruggeri@arista.com>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Zubin Mithra <zsm@chromium.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Later on when runtime PM was implemented for the entire kernel, the
+opposite decision was made: Drivers were required to balance their
+runtime-PM get and put calls.  In order to maintain backward
+compatibility, however, the USB subsystem adapted to the new
+implementation by keeping an independent usage counter for each
+interface and using it to automatically adjust the normal usage
+counter back to 0 whenever a driver was unbound.
+
+This approach involves duplicating information, but what is worse, it
+doesn't work properly in cases where a USB class driver delays
+decrementing the usage counter until after the driver's disconnect()
+routine has returned and the counter has been adjusted back to 0.
+Doing so would cause the usage counter to become negative.  There's
+even a warning about this in the USB power management documentation!
+
+As it happens, this is exactly what the hub driver does.  The
+kick_hub_wq() routine increments the runtime-PM usage counter, and the
+corresponding decrement is carried out by hub_event() in the context
+of the hub_wq work-queue thread.  This work routine may sometimes run
+after the driver has been unbound from its interface, and when it does
+it causes the usage counter to go negative.
+
+It is not possible for hub_disconnect() to wait for a pending
+hub_event() call to finish, because hub_disconnect() is called with
+the device lock held and hub_event() acquires that lock.  The only
+feasible fix is to reverse the original design decision: remove the
+duplicate interface-specific usage counter and require USB drivers to
+balance their runtime PM gets and puts.  As far as I know, all
+existing drivers currently do this.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Reported-and-tested-by: syzbot+7634edaea4d0b341c625@syzkaller.appspotmail.com
+CC: <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/netfilter/x_tables.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/usb/power-management.txt |   14 +++++++++-----
+ drivers/usb/core/driver.c              |   13 -------------
+ drivers/usb/storage/realtek_cr.c       |   13 +++++--------
+ include/linux/usb.h                    |    2 --
+ 4 files changed, 14 insertions(+), 28 deletions(-)
 
-diff --git a/net/netfilter/x_tables.c b/net/netfilter/x_tables.c
-index b6e72af152379..cdafbd38a456b 100644
---- a/net/netfilter/x_tables.c
-+++ b/net/netfilter/x_tables.c
-@@ -1699,7 +1699,7 @@ static int __init xt_init(void)
- 		seqcount_init(&per_cpu(xt_recseq, i));
- 	}
+--- a/Documentation/usb/power-management.txt
++++ b/Documentation/usb/power-management.txt
+@@ -365,11 +365,15 @@ autosuspend the interface's device.  Whe
+ then the interface is considered to be idle, and the kernel may
+ autosuspend the device.
  
--	xt = kmalloc(sizeof(struct xt_af) * NFPROTO_NUMPROTO, GFP_KERNEL);
-+	xt = kcalloc(NFPROTO_NUMPROTO, sizeof(struct xt_af), GFP_KERNEL);
- 	if (!xt)
- 		return -ENOMEM;
+-Drivers need not be concerned about balancing changes to the usage
+-counter; the USB core will undo any remaining "get"s when a driver
+-is unbound from its interface.  As a corollary, drivers must not call
+-any of the usb_autopm_* functions after their disconnect() routine has
+-returned.
++Drivers must be careful to balance their overall changes to the usage
++counter.  Unbalanced "get"s will remain in effect when a driver is
++unbound from its interface, preventing the device from going into
++runtime suspend should the interface be bound to a driver again.  On
++the other hand, drivers are allowed to achieve this balance by calling
++the ``usb_autopm_*`` functions even after their ``disconnect`` routine
++has returned -- say from within a work-queue routine -- provided they
++retain an active reference to the interface (via ``usb_get_intf`` and
++``usb_put_intf``).
  
--- 
-2.20.1
-
+ Drivers using the async routines are responsible for their own
+ synchronization and mutual exclusion.
+--- a/drivers/usb/core/driver.c
++++ b/drivers/usb/core/driver.c
+@@ -470,11 +470,6 @@ static int usb_unbind_interface(struct d
+ 		pm_runtime_disable(dev);
+ 	pm_runtime_set_suspended(dev);
+ 
+-	/* Undo any residual pm_autopm_get_interface_* calls */
+-	for (r = atomic_read(&intf->pm_usage_cnt); r > 0; --r)
+-		usb_autopm_put_interface_no_suspend(intf);
+-	atomic_set(&intf->pm_usage_cnt, 0);
+-
+ 	if (!error)
+ 		usb_autosuspend_device(udev);
+ 
+@@ -1625,7 +1620,6 @@ void usb_autopm_put_interface(struct usb
+ 	int			status;
+ 
+ 	usb_mark_last_busy(udev);
+-	atomic_dec(&intf->pm_usage_cnt);
+ 	status = pm_runtime_put_sync(&intf->dev);
+ 	dev_vdbg(&intf->dev, "%s: cnt %d -> %d\n",
+ 			__func__, atomic_read(&intf->dev.power.usage_count),
+@@ -1654,7 +1648,6 @@ void usb_autopm_put_interface_async(stru
+ 	int			status;
+ 
+ 	usb_mark_last_busy(udev);
+-	atomic_dec(&intf->pm_usage_cnt);
+ 	status = pm_runtime_put(&intf->dev);
+ 	dev_vdbg(&intf->dev, "%s: cnt %d -> %d\n",
+ 			__func__, atomic_read(&intf->dev.power.usage_count),
+@@ -1676,7 +1669,6 @@ void usb_autopm_put_interface_no_suspend
+ 	struct usb_device	*udev = interface_to_usbdev(intf);
+ 
+ 	usb_mark_last_busy(udev);
+-	atomic_dec(&intf->pm_usage_cnt);
+ 	pm_runtime_put_noidle(&intf->dev);
+ }
+ EXPORT_SYMBOL_GPL(usb_autopm_put_interface_no_suspend);
+@@ -1707,8 +1699,6 @@ int usb_autopm_get_interface(struct usb_
+ 	status = pm_runtime_get_sync(&intf->dev);
+ 	if (status < 0)
+ 		pm_runtime_put_sync(&intf->dev);
+-	else
+-		atomic_inc(&intf->pm_usage_cnt);
+ 	dev_vdbg(&intf->dev, "%s: cnt %d -> %d\n",
+ 			__func__, atomic_read(&intf->dev.power.usage_count),
+ 			status);
+@@ -1742,8 +1732,6 @@ int usb_autopm_get_interface_async(struc
+ 	status = pm_runtime_get(&intf->dev);
+ 	if (status < 0 && status != -EINPROGRESS)
+ 		pm_runtime_put_noidle(&intf->dev);
+-	else
+-		atomic_inc(&intf->pm_usage_cnt);
+ 	dev_vdbg(&intf->dev, "%s: cnt %d -> %d\n",
+ 			__func__, atomic_read(&intf->dev.power.usage_count),
+ 			status);
+@@ -1767,7 +1755,6 @@ void usb_autopm_get_interface_no_resume(
+ 	struct usb_device	*udev = interface_to_usbdev(intf);
+ 
+ 	usb_mark_last_busy(udev);
+-	atomic_inc(&intf->pm_usage_cnt);
+ 	pm_runtime_get_noresume(&intf->dev);
+ }
+ EXPORT_SYMBOL_GPL(usb_autopm_get_interface_no_resume);
+--- a/drivers/usb/storage/realtek_cr.c
++++ b/drivers/usb/storage/realtek_cr.c
+@@ -772,18 +772,16 @@ static void rts51x_suspend_timer_fn(unsi
+ 		break;
+ 	case RTS51X_STAT_IDLE:
+ 	case RTS51X_STAT_SS:
+-		usb_stor_dbg(us, "RTS51X_STAT_SS, intf->pm_usage_cnt:%d, power.usage:%d\n",
+-			     atomic_read(&us->pusb_intf->pm_usage_cnt),
++		usb_stor_dbg(us, "RTS51X_STAT_SS, power.usage:%d\n",
+ 			     atomic_read(&us->pusb_intf->dev.power.usage_count));
+ 
+-		if (atomic_read(&us->pusb_intf->pm_usage_cnt) > 0) {
++		if (atomic_read(&us->pusb_intf->dev.power.usage_count) > 0) {
+ 			usb_stor_dbg(us, "Ready to enter SS state\n");
+ 			rts51x_set_stat(chip, RTS51X_STAT_SS);
+ 			/* ignore mass storage interface's children */
+ 			pm_suspend_ignore_children(&us->pusb_intf->dev, true);
+ 			usb_autopm_put_interface_async(us->pusb_intf);
+-			usb_stor_dbg(us, "RTS51X_STAT_SS 01, intf->pm_usage_cnt:%d, power.usage:%d\n",
+-				     atomic_read(&us->pusb_intf->pm_usage_cnt),
++			usb_stor_dbg(us, "RTS51X_STAT_SS 01, power.usage:%d\n",
+ 				     atomic_read(&us->pusb_intf->dev.power.usage_count));
+ 		}
+ 		break;
+@@ -816,11 +814,10 @@ static void rts51x_invoke_transport(stru
+ 	int ret;
+ 
+ 	if (working_scsi(srb)) {
+-		usb_stor_dbg(us, "working scsi, intf->pm_usage_cnt:%d, power.usage:%d\n",
+-			     atomic_read(&us->pusb_intf->pm_usage_cnt),
++		usb_stor_dbg(us, "working scsi, power.usage:%d\n",
+ 			     atomic_read(&us->pusb_intf->dev.power.usage_count));
+ 
+-		if (atomic_read(&us->pusb_intf->pm_usage_cnt) <= 0) {
++		if (atomic_read(&us->pusb_intf->dev.power.usage_count) <= 0) {
+ 			ret = usb_autopm_get_interface(us->pusb_intf);
+ 			usb_stor_dbg(us, "working scsi, ret=%d\n", ret);
+ 		}
+--- a/include/linux/usb.h
++++ b/include/linux/usb.h
+@@ -127,7 +127,6 @@ enum usb_interface_condition {
+  * @dev: driver model's view of this device
+  * @usb_dev: if an interface is bound to the USB major, this will point
+  *	to the sysfs representation for that device.
+- * @pm_usage_cnt: PM usage counter for this interface
+  * @reset_ws: Used for scheduling resets from atomic context.
+  * @resetting_device: USB core reset the device, so use alt setting 0 as
+  *	current; needs bandwidth alloc after reset.
+@@ -184,7 +183,6 @@ struct usb_interface {
+ 
+ 	struct device dev;		/* interface specific device info */
+ 	struct device *usb_dev;
+-	atomic_t pm_usage_cnt;		/* usage counter for autosuspend */
+ 	struct work_struct reset_ws;	/* for resets in atomic context */
+ };
+ #define	to_usb_interface(d) container_of(d, struct usb_interface, dev)
 
 
