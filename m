@@ -2,135 +2,122 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED8DC04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EE3C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 595AD2084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D8C82084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:37:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="isrOFz0w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726486AbfEOKfb (ORCPT
+        id S1726515AbfEOKhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:35:31 -0400
-Received: from mga06.intel.com ([134.134.136.31]:5980 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfEOKfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:35:30 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 03:35:29 -0700
-X-ExtLoop1: 1
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
-  by fmsmga008.fm.intel.com with ESMTP; 15 May 2019 03:35:23 -0700
-Date:   Wed, 15 May 2019 13:35:31 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v20 00/28] Intel SGX1 support
-Message-ID: <20190515103531.GB10917@linux.intel.com>
-References: <979615a8-fd03-e3fd-fbdb-65c1e51afd93@fortanix.com>
- <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
- <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com>
- <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
- <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
- <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com>
- <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190514204527.GC1977@linux.intel.com>
+        Wed, 15 May 2019 06:37:09 -0400
+Received: from mail-eopbgr70041.outbound.protection.outlook.com ([40.107.7.41]:35229
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725974AbfEOKhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 06:37:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CgEZWhMTW3/nSQoTLLLG9IA6TYU3ODHNRVGE7B1JvHk=;
+ b=isrOFz0w5pPxPN0u529j79tbTqXqSN6gSIHiF+vhd7BHrrvdCnCJj5cl31i6YZ6LLFg4q+35Ail3v4cIgr+3HUMfIysgmyZGe05iveo3dxVNhSaOah41pkqtpHnD/ubXuop86xKc0FMYGFYls8DfaU7ZbbvCNjSdUiojYECfinQ=
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com (20.177.50.159) by
+ VI1PR04MB4432.eurprd04.prod.outlook.com (20.177.55.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.17; Wed, 15 May 2019 10:37:04 +0000
+Received: from VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::8942:6d16:631:413]) by VI1PR04MB5134.eurprd04.prod.outlook.com
+ ([fe80::8942:6d16:631:413%4]) with mapi id 15.20.1878.024; Wed, 15 May 2019
+ 10:37:04 +0000
+From:   Laurentiu Tudor <laurentiu.tudor@nxp.com>
+To:     Fredrik Noring <noring@nocrew.org>,
+        Robin Murphy <robin.murphy@arm.com>
+CC:     "hch@lst.de" <hch@lst.de>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "marex@denx.de" <marex@denx.de>,
+        "JuergenUrban@gmx.de" <JuergenUrban@gmx.de>,
+        Leo Li <leoyang.li@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v2 0/3] prerequisites for device reserved local mem
+ rework
+Thread-Topic: [RFC PATCH v2 0/3] prerequisites for device reserved local mem
+ rework
+Thread-Index: AQHVCmKoDp6AVawLEEugEGZuSLgHU6Zqu4uAgAA1oICAAQ5TAA==
+Date:   Wed, 15 May 2019 10:37:03 +0000
+Message-ID: <0e5f3b86-7a80-eec7-691b-34a123194208@nxp.com>
+References: <20190514143807.7745-1-laurentiu.tudor@nxp.com>
+ <9d34015d-c219-179b-3141-4b0de3530ac3@arm.com> <20190514182931.GA2559@sx9>
+In-Reply-To: <20190514182931.GA2559@sx9>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=laurentiu.tudor@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0bd2ba5d-f397-483d-1f8e-08d6d921456e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4432;
+x-ms-traffictypediagnostic: VI1PR04MB4432:
+x-ms-exchange-purlcount: 3
+x-microsoft-antispam-prvs: <VI1PR04MB4432A8177BD4C198B60DD258EC090@VI1PR04MB4432.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0038DE95A2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(39860400002)(396003)(136003)(51444003)(189003)(199004)(5660300002)(36756003)(53936002)(4326008)(6246003)(478600001)(71190400001)(14454004)(966005)(86362001)(14444005)(256004)(31696002)(31686004)(71200400001)(305945005)(7736002)(316002)(486006)(8936002)(6116002)(3846002)(99286004)(26005)(66556008)(66946007)(66476007)(66446008)(64756008)(2616005)(6436002)(476003)(446003)(11346002)(68736007)(76116006)(91956017)(73956011)(6512007)(6306002)(44832011)(2906002)(110136005)(54906003)(53546011)(186003)(25786009)(6506007)(102836004)(66066001)(76176011)(81166006)(81156014)(8676002)(6486002)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4432;H:VI1PR04MB5134.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1lYAzg1OgQhwXRd83xL8J5clfNFl1ZmNjrnC+7QNITDAKYUKVl/nJGmA/Fk99Dft5uG+K3bnnISxJ29mkl4NGCbMcvbwl1kNTnxS/gPDGg3MMki1BICxWvp/RvJ45Qrpf3/5nnHMZZ0E0Hj1LNbKiArnT8G8FXijgS28x9Sm3H9O1ri5c+jeIc8kg6DqO2pbuIQba6/l7xg/yZHNUGNLYVmUUt9Ph2OfM33pJlqT+455Sc0UvOJ9WNNFPQfyYYb7FNhdwm30qmeuNkR/H6tvPZL3uxOVPkGUQQGc0MBma2Tpp52fJkW1vTCjZ+nvOVTWPAU+98Fdg/B94hPkwUhKFIZal0FWuK1wG9g2dB8S+Pfze296q2cyxva0uEcrwdEkhv6ocXqQgOAijxudVUt8lt7re8EKE6Miu3l9P7Gwaq4=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <810E4835CD66544F8E9EFAAC25DE090A@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514204527.GC1977@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0bd2ba5d-f397-483d-1f8e-08d6d921456e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2019 10:37:03.9745
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4432
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 01:45:27PM -0700, Sean Christopherson wrote:
-> On Tue, May 14, 2019 at 08:13:36AM -0700, Andy Lutomirski wrote:
-> > On Tue, May 14, 2019 at 3:43 AM Jarkko Sakkinen
-> > <jarkko.sakkinen@linux.intel.com> wrote:
-> > >
-> > > On Mon, May 13, 2019 at 01:29:26PM +0300, Jarkko Sakkinen wrote:
-> > > > I did study through SDK's file format and realized that it does not
-> > > > does make sense after all to embed one.
-> > > >
-> > > > To implement it properly you would probably need a new syscall (lets say
-> > > > sgx_load_enclave) and also that enclaves are not just executables
-> > > > binaries. It is hard to find a generic format for them as applications
-> > > > range from simply protecting part of an application to running a
-> > > > containter inside enclave.
-> > >
-> > > I'm still puzzling what kind of changes you were discussing considering
-> > > SGX_IOC_ENCLAVE_ADD_PAGE.
-> > 
-> > I think it's as simple as requiring that, if SECINFO.X is set, then
-> > the src pointer points to the appropriate number of bytes of
-> > executable memory.  (Unless there's some way for an enclave to change
-> > SECINFO after the fact -- is there?)
-> 
-> Nit: SECINFO is just the struct passed to EADD, I think what you're really
-> asking is "can the EPCM permissions be changed after the fact".
-> 
-> And the answer is, yes.
-> 
-> On SGX2 hardware, the enclave can extend the EPCM permissions at runtime
-> via ENCLU[EMODPE], e.g. to make a page writable.
-
-Small correction: it is EMODPR.
-
-Anyway, it is good to mention that these would require EACCEPT from the
-enclave side. In order to take advantage of this is in a malicous
-enclave, one would require SELinux/IMA/whatnot policy to have permitted
-it in the first place.
-
-Thus, it cannot be said that it breaks the security policy if this would
-happen because policy has allowed to use the particular enclave.
-
-> Hardware also doesn't prevent doing EADD to the same virtual address
-> multiple times, e.g. an enclave could EADD a RX page, and then EADD a
-> RW page at the same virtual address with different data.  The second EADD
-> will affect MRENCLAVE, but so long as it's accounted for by the enclave's
-> signer, it's "legal".  SGX_IOC_ENCLAVE_ADD_PAGE *does* prevent adding the
-> "same" page to an enclave multiple times, so effectively this scenario is
-> blocked by the current implementation, but it's more of a side effect (of
-> a sane implementation) as opposed to deliberately preventing shenanigans.
-
-If the security policy can define who can create legit SIGSTRUCT files,
-this should not be a problem. Neither should be how EEXTEND is used.
-
-This brings me to an open question in Andy's model: lets say that we
-change the source for SIGSTRUCT from memory address to fd. How can the
-policy prevent the use not creating a file containing a SIGSTRUCT and
-passing fd of that to the EINIT ioctl?
-
-If we can sort this question out, then SIGSTRUCT-centered way to control
-enclave would actually be robust.
-
-/Jarkko
+SGVsbG8sDQoNCk9uIDE0LjA1LjIwMTkgMjE6MjksIEZyZWRyaWsgTm9yaW5nIHdyb3RlOg0KPiBU
+aGFua3MgUm9iaW4hDQo+IA0KPj4+IEZvciBIQ3MgdGhhdCBoYXZlIGxvY2FsIG1lbW9yeSwgcmVw
+bGFjZSB0aGUgY3VycmVudCBETUEgQVBJIHVzYWdlDQo+Pj4gd2l0aCBhIGdlbmFsbG9jIGdlbmVy
+aWMgYWxsb2NhdG9yIHRvIG1hbmFnZSB0aGUgbWFwcGluZ3MgZm9yIHRoZXNlDQo+Pj4gZGV2aWNl
+cy4NCj4+PiBUaGlzIGlzIGluIHByZXBhcmF0aW9uIGZvciBkcm9wcGluZyB0aGUgZXhpc3Rpbmcg
+ImNvaGVyZW50IiBkbWENCj4+PiBtZW0gZGVjbGFyYXRpb24gQVBJcy4gQ3VycmVudCBpbXBsZW1l
+bnRhdGlvbiB3YXMgcmVseWluZyBvbiBhIHNob3J0DQo+Pj4gY2lyY3VpdCBpbiB0aGUgRE1BIEFQ
+SSB0aGF0IGluIHRoZSBlbmQsIHdhcyBhY3RpbmcgYXMgYW4gYWxsb2NhdG9yDQo+Pj4gZm9yIHRo
+ZXNlIHR5cGUgb2YgZGV2aWNlcy4NCj4+Pg0KPj4+IE9ubHkgY29tcGlsZWQgdGVzdGVkLCBzbyBh
+bnkgdm9sdW50ZWVycyB3aWxsaW5nIHRvIHRlc3QgYXJlIG1vc3Qgd2VsY29tZS4NCj4+DQo+PiBJ
+IHJlY2FsbCBhbiBvdXQtb2YtdHJlZSBQbGF5U3RhdGlvbiAyIE9IQ0kgZHJpdmVyIGJlaW5nIGFu
+b3RoZXINCj4+IEhDRF9MT0NBTF9NRU0gdXNlciAtIGlmIEZyZWRyaWsgYW5kIEp1ZXJnZW4gYXJl
+IHN0aWxsIGFjdGl2ZSBvbiB0aGF0LA0KPj4gaG9wZWZ1bGx5IHRoZXkgbWlnaHQgYmUgYWJsZSB0
+byBjb21tZW50IG9uIHdoZXRoZXIgdGhpcyBhcHByb2FjaCBjYW4NCj4+IHdvcmsgZm9yIHRoZW0g
+dG9vLiBQYXRjaHdvcmsgbGluayBqdXN0IGluIGNhc2U6DQo+PiBodHRwczovL3BhdGNod29yay5r
+ZXJuZWwub3JnL3Byb2plY3QvbGludXgtdXNiL2xpc3QvP3Nlcmllcz0xMTc0MzMNCj4gDQo+IFRy
+dWUuIEluIGZhY3QgSSdtIHByZXBhcmluZyBhIHBhdGNoIHN1Ym1pc3Npb24gZm9yIHRoaXMgUFMy
+IE9IQ0kgZHJpdmVyLA0KPiBhbG9uZyB3aXRoIGFib3V0IGEgaHVuZHJlZCBvdGhlciBwYXRjaGVz
+ICh1bnJlbGF0ZWQgdG8gdGhlIFVTQiBzdWJzeXN0ZW0pLg0KPiBIb3BlZnVsbHkgaW4gYSBmZXcg
+d2Vla3MuIE15IHBhdGNoZXMgYXJlIGN1cnJlbnRseSBvbiB0b3Agb2YgdjUuMC4gV2hhdA0KPiBi
+cmFuY2gvdmVyc2lvbiBpcyByZWNvbW1lbmRlZCB0byB0cnkgdGhpcyBETUEgdXBkYXRlPw0KDQpJ
+IHRoaW5rIHRoYXQgYW55IHJlY2VudCBrZXJuZWwgd2lsbCBkbywgc28gSSdkIHNheSB5b3VyIGN1
+cnJlbnQgYnJhbmNoIA0Kc2hvdWxkIGJlIGZpbmUuDQoNCj4gSGVyZSBpcyB0aGUgdjUuMC4xMSBQ
+UzIgT0hDSSBkcml2ZXIsIGZvciByZWZlcmVuY2U6DQo+IA0KPiBodHRwczovL2dpdGh1Yi5jb20v
+ZnJubzcvbGludXgvYmxvYi9wczItdjUuMC4xMS9kcml2ZXJzL3VzYi9ob3N0L29oY2ktcHMyLmMN
+ClBsZWFzZSBub3RlIHRoYXQgdGhlIGRyaXZlciB3aWxsIG5lZWQgdG8gYmUgdXBkYXRlZCwgc2Vl
+IGhlcmUgZm9yIGFuIA0KZXhhbXBsZToNCg0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
+YXRjaC8xMDk0MzEwNS8NCg0KLS0tDQpCZXN0IFJlZ2FyZHMsIExhdXJldG5pdQ==
