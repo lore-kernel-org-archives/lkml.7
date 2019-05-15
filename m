@@ -2,100 +2,129 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A10BCC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8DE7C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5E12084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AC062084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 10:52:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HtoY5G3/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K2uR2Hju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfEOKv2 (ORCPT
+        id S1726562AbfEOKwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 06:51:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44530 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbfEOKv2 (ORCPT
+        Wed, 15 May 2019 06:52:01 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51356 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726124AbfEOKwB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 06:51:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=zCCfi2VVHEha3dpNjP34AHH7pIAgmLH8/4Yn0qNp2cA=; b=HtoY5G3/FWVdXgniTqYpme5Ka
-        DcSIU+uWGaLpCYVUM7c9mv+Ww1N1vheD0mYXA19Lq6fuTtcxy3CjNlFnWb66dLd8erhV0f4GMQ81C
-        24H9VBJC6Rn1pPW59PN0JcJcnjE79H9wW0TFzVJbGTps8twV3/8P2lcMWwoUCeA1QTMgA9WC7sT2B
-        6AcV4/lX31mw8rZlvFSuM7zhsmgUQ+Ro0hyUcWmnPE62ChDRO2ulzVAacGe1VnHxBkR2PplrvVbRX
-        y6u81NQw7QR0yhwNxAu7zS/0SThlMxBB82B1ZLF/miNpgO+qkxByS1bZwH1Yq8i6wB3wgRMua5rv1
-        n3lMlB4/w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hQrVO-0005HH-A0; Wed, 15 May 2019 10:51:26 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id ACBAF2029F888; Wed, 15 May 2019 12:51:24 +0200 (CEST)
-Date:   Wed, 15 May 2019 12:51:24 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Yabin Cui <yabinc@google.com>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/ring_buffer: Fix exposing a temporarily decreased
- data_head.
-Message-ID: <20190515105124.GE2623@hirez.programming.kicks-ass.net>
-References: <20190515003059.23920-1-yabinc@google.com>
- <87ef50xlb8.fsf@ashishki-desk.ger.corp.intel.com>
- <20190515094352.GC2623@hirez.programming.kicks-ass.net>
- <87bm04xcdb.fsf@ashishki-desk.ger.corp.intel.com>
+        Wed, 15 May 2019 06:52:01 -0400
+Received: by mail-wm1-f68.google.com with SMTP id o189so2165475wmb.1
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 03:52:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IY0nzwi9vKnpYmNvcMep+bJnSeq0GrA/o59QaEDPfVQ=;
+        b=K2uR2Hju4uVhWUovulzfQOZU2sVFJxpNv9FmCPIwXXyr2OfVIG8MmyjhceWV5Qcgwc
+         m/6Oie/dGfo/vulbf6FK7clXnTUuHqH3HmdEQDkPMbH+FWOYiSBzAeBrBpgs8RFhLFt3
+         I6nQbdna/eXio9Em1jQnzxl9jBTf0Cj38IBW5kQDc0QXS4ehFL+iKKP7MVR4gQU8jnoa
+         grpahXWuL73Jw6za1/HUgCW/4HKMq7mEW4Q2EelfNaUTf7RJneR/o/BbpQ9V3OudxzsY
+         X3vt87hz8kGlqdhIj0R9F18XwKuvKvZddF7io6HzFP+Ywxmlw4d5cJWgf0IvKyBo/L4a
+         c1Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IY0nzwi9vKnpYmNvcMep+bJnSeq0GrA/o59QaEDPfVQ=;
+        b=FZ5g+tvjimuKQ3qQPZcXPNN883NpGiAdyv18lfebmTQBabzhbejju69o9HbJ6zH++i
+         noZkKotW7MRORgTy9agJXF2OrpZww5DWTe0uxHwpLCswTRaNPSpJekJQOcmPfVspn7V3
+         bQfnZ+tsR2Xom2B2t1rGQftMurrU3QE/rxUr1mwlSHWafL5r3CL8Srs2TTWQQCNZoBEf
+         narTiet1B6XUE3mT8QagIC5nBvufDyGLNOe+FH8iwqbctCtcGJ42d7dj/synlT34czid
+         zyJlYWo/+BVMhzfKdo3FhypbLLvWHVL51oiUzSRJHBFBQbIi0+Ihg3Jn7Bv64hULWKek
+         Dx2A==
+X-Gm-Message-State: APjAAAUAOGq/T9nQ6Dl+lVON9UlHsLFc64whba1oFS9dcivSeZ9bFtdb
+        VEsK7Vq6CZMD2EqwiJDdU4G+YQ==
+X-Google-Smtp-Source: APXvYqwa5QWMFUDmftHE7rA4C0Yvc38krvWgUpgyt9+ZE5+St4UDo8Ytls1Q4BoTcgwZtiLaO+iAWg==
+X-Received: by 2002:a1c:eb07:: with SMTP id j7mr22011249wmh.138.1557917519110;
+        Wed, 15 May 2019 03:51:59 -0700 (PDT)
+Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
+        by smtp.googlemail.com with ESMTPSA id y184sm2071278wmg.7.2019.05.15.03.51.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 03:51:58 -0700 (PDT)
+Subject: Re: [PATCH v4 2/3] PM / EM: Expose perf domain struct
+To:     Quentin Perret <quentin.perret@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     edubezval@gmail.com, rui.zhang@intel.com, javi.merino@kernel.org,
+        amit.kachhap@gmail.com, rjw@rjwysocki.net, will.deacon@arm.com,
+        catalin.marinas@arm.com, dietmar.eggemann@arm.com,
+        ionela.voinescu@arm.com, mka@chromium.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190515082318.7993-1-quentin.perret@arm.com>
+ <20190515082318.7993-3-quentin.perret@arm.com>
+ <0ced18eb-e424-fe6b-b11e-165a3c108170@linaro.org>
+ <20190515091658.sbpg6qiovhtblqyr@queper01-lin>
+ <698400c0-e0a4-4a86-b9df-cdb9bd683c0f@linaro.org>
+ <20190515100748.q3t4kt72h2akdpcs@queper01-lin>
+ <cf1474cb-7e31-7070-b988-a0c4d3f6f081@linaro.org>
+ <20190515102200.s6uq63qnwea6xtpl@vireshk-i7>
+ <20190515104043.vogspxgkapp6qsny@queper01-lin>
+ <20190515104651.tv5odug7ce4zlupc@queper01-lin>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <5b55e432-f8b0-91ae-a7de-fe02e0cad322@linaro.org>
+Date:   Wed, 15 May 2019 12:51:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87bm04xcdb.fsf@ashishki-desk.ger.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190515104651.tv5odug7ce4zlupc@queper01-lin>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 01:04:16PM +0300, Alexander Shishkin wrote:
-> Peter Zijlstra <peterz@infradead.org> writes:
-> 
-> > On Wed, May 15, 2019 at 09:51:07AM +0300, Alexander Shishkin wrote:
-> >> Yabin Cui <yabinc@google.com> writes:
-> >> 
-> >> > diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-> >> > index 674b35383491..0b9aefe13b04 100644
-> >> > --- a/kernel/events/ring_buffer.c
-> >> > +++ b/kernel/events/ring_buffer.c
-> >> > @@ -54,8 +54,10 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
-> >> >  	 * IRQ/NMI can happen here, which means we can miss a head update.
-> >> >  	 */
-> >> >  
-> >> > -	if (!local_dec_and_test(&rb->nest))
-> >> > +	if (local_read(&rb->nest) > 1) {
-> >> > +		local_dec(&rb->nest);
-> >> 
-> >> What stops rb->nest changing between local_read() and local_dec()?
-> >
-> > Nothing, however it must remain the same :-)
-> >
-> > That is the cryptic way of saying that since these buffers are strictly
-> > per-cpu, the only change can come from interrupts, and they must have a
-> > net 0 change. Or rather, an equal amount of decrements to increments.
-> >
-> > So if it changes, it must also change back to where it was.
-> 
-> Ah that's true. So the whole ->nest thing can be done with
-> READ_ONCE()/WRITE_ONCE() instead?
-> Because the use of local_dec_and_test() creates an impression that we
-> rely on atomicity of it, which in actuality we don't.
+On 15/05/2019 12:46, Quentin Perret wrote:
+> On Wednesday 15 May 2019 at 11:40:44 (+0100), Quentin Perret wrote:
 
-Yes, I think we can get away with that. And that might be a worth-while
-optimization for !x86.
+[ ... ]
+
+>> +#ifdef CONFIG_THERMAL_GOV_POWER_ALLOCATOR
+>>         if (capacitance) {
+>>                 ret = update_freq_table(cpufreq_cdev, capacitance);
+>>                 if (ret) {
+>>                         cdev = ERR_PTR(ret);
+>>                         goto remove_ida;
+>>                 }
+>> -
+>> -               cooling_ops = &cpufreq_power_cooling_ops;
+>> -       } else {
+>> -               cooling_ops = &cpufreq_cooling_ops;
+>>         }
+>> +#endif
+>> +       cooling_ops = &cpufreq_cooling_ops;
+> 
+> Argh, that is actually broken with !capacitance and
+> THERMAL_GOV_POWER_ALLOCATOR=y ... Perhaps it's best to keep the two
+> thermal_cooling_device_ops struct separated in the end.
+
+Or alternatively you can keep one structure but instead of filling the
+state2power,power2state and getrequestedpower fields in the declaration,
+you fill them in the if (capacitance) block, no?
+
+
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
