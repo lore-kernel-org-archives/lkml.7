@@ -2,52 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299C7C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3C3C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBDD82166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F74B20644
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918495;
-	bh=1Yv1ulet7f2zq3P9OmBjNYT9ff7UGG0qetTzwfVZDXc=;
+	s=default; t=1557918499;
+	bh=SZ0h49qTYTAVRiMKbU4JLmNPY26ZDaX+92rxPpki5Dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h0Gzg5QQP44gn0BNKS2n94SPnaV37BoqActjyNeUxxsfC6HGH5XWILLYkDn2wKz7Y
-	 cWI1sM7XK/w22L1iX2MetkrBFt+KauDSDr5WubrrzXUrJ1f4d1c9PSzQbF3UhhTu8U
-	 DTsPfNdlr6lvDG7CnMFP7W3p3jLxxxcpq0WbHgbU=
+	b=a5FPAnM/ChV5nf1ypv1MFeBcOklFlsB6YmFmdlvbsnPeqjKANT1s3fWx6aQxMR+Wb
+	 OzS5RNlg4Com2/3BsMqlo0KtEjx/k2DmCX/Nnwnx9mrZfDvXZSLmQTs2dIdzy0L8uz
+	 +F/9nSI/9li4cOIlH0prUQugUkU0n9hoqGdPKj2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbfEOLIO (ORCPT
+        id S1729072AbfEOLIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:08:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40330 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:08:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727206AbfEOLIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:08:10 -0400
+        id S1727206AbfEOLIP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:08:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07A2920644;
-        Wed, 15 May 2019 11:08:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36A8E20862;
+        Wed, 15 May 2019 11:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918489;
-        bh=1Yv1ulet7f2zq3P9OmBjNYT9ff7UGG0qetTzwfVZDXc=;
+        s=default; t=1557918494;
+        bh=SZ0h49qTYTAVRiMKbU4JLmNPY26ZDaX+92rxPpki5Dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FCmauftSDRL0rzQlPHinJAJ9qN/i7x5gm6uEqF9EaMezcBKT904iqBFrAekDRL76L
-         YyIy60Xss4M9fXaJXSP+ZHG9uNR64WMDRtR/Ld9na5s1LWs+DYMN8hljlNj0FHY8j3
-         z21a23CvfKhwsZYEpa+aC1Xu2TqHU0aYN4hfZlCw=
+        b=uSG4HNzna8HPTnGfkmi7F5/kLP2yac8BcTrpzxTnkp/iheVIt/pw/sm5XptfogcpN
+         jOJEk2pF/8lMo9XtYEi2a2UjpLFqX5AhbCm7rbdTE7Ev0DaKtwHU0V31lwq6fOdmHP
+         Kh/6n/+W0IIVAyhBz4L8qHBplvI8oebap1HvMFGQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prasad Sodagudi <psodagud@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>, marc.zyngier@arm.com,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 150/266] genirq: Prevent use-after-free and work list corruption
-Date:   Wed, 15 May 2019 12:54:17 +0200
-Message-Id: <20190515090727.987765802@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Vasquez <andrewv@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.4 152/266] scsi: qla2xxx: Fix incorrect region-size setting in optrom SYSFS routines
+Date:   Wed, 15 May 2019 12:54:19 +0200
+Message-Id: <20190515090728.054433517@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,43 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 59c39840f5abf4a71e1810a8da71aaccd6c17d26 ]
+From: Andrew Vasquez <andrewv@marvell.com>
 
-When irq_set_affinity_notifier() replaces the notifier, then the
-reference count on the old notifier is dropped which causes it to be
-freed. But nothing ensures that the old notifier is not longer queued
-in the work list. If it is queued this results in a use after free and
-possibly in work list corruption.
+commit 5cbdae10bf11f96e30b4d14de7b08c8b490e903c upstream.
 
-Ensure that the work is canceled before the reference is dropped.
+Commit e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs
+code") incorrectly set 'optrom_region_size' to 'start+size', which can
+overflow option-rom boundaries when 'start' is non-zero.  Continue setting
+optrom_region_size to the proper adjusted value of 'size'.
 
-Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: marc.zyngier@arm.com
-Link: https://lkml.kernel.org/r/1553439424-6529-1-git-send-email-psodagud@codeaurora.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: e6f77540c067 ("scsi: qla2xxx: Fix an integer overflow in sysfs code")
+Cc: stable@vger.kernel.org
+Signed-off-by: Andrew Vasquez <andrewv@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/irq/manage.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/scsi/qla2xxx/qla_attr.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
-index 83cea913983c5..92c7eb1aeded9 100644
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -319,8 +319,10 @@ irq_set_affinity_notifier(unsigned int irq, struct irq_affinity_notify *notify)
- 	desc->affinity_notify = notify;
- 	raw_spin_unlock_irqrestore(&desc->lock, flags);
+--- a/drivers/scsi/qla2xxx/qla_attr.c
++++ b/drivers/scsi/qla2xxx/qla_attr.c
+@@ -431,7 +431,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
+ 		}
  
--	if (old_notify)
-+	if (old_notify) {
-+		cancel_work_sync(&old_notify->work);
- 		kref_put(&old_notify->kref, old_notify->release);
-+	}
+ 		ha->optrom_region_start = start;
+-		ha->optrom_region_size = start + size;
++		ha->optrom_region_size = size;
  
- 	return 0;
- }
--- 
-2.20.1
-
+ 		ha->optrom_state = QLA_SREADING;
+ 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
+@@ -504,7 +504,7 @@ qla2x00_sysfs_write_optrom_ctl(struct fi
+ 		}
+ 
+ 		ha->optrom_region_start = start;
+-		ha->optrom_region_size = start + size;
++		ha->optrom_region_size = size;
+ 
+ 		ha->optrom_state = QLA_SWRITING;
+ 		ha->optrom_buffer = vmalloc(ha->optrom_region_size);
 
 
