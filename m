@@ -7,50 +7,54 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5B2C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9913AC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADD7206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B25D206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557922748;
-	bh=JbHLyllfUeGtE6rI0Gy2Js2R5FpNhknPATPb1VufyeU=;
+	s=default; t=1557922751;
+	bh=Py9I6eQV1WsszAm3z4cf6ZYKS+uIuYiVEL4igMOc+eQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tnt5XzDGgzaagcwbVdkrblKsI8SYpC1G9GXI8QYyVVldYlI03EPtKREmM3yTYb0yq
-	 TmCchuq3xy7fnZy2KUMmt8rpaJPzPfk8DKdZjsNWpE/hC9x2QAqKUmoGw7nvBEC1U9
-	 FALkqQeqJX0FkGF3C3ZA4u2UkYa5NWFzKMRtmPsw=
+	b=h4Oydodw8DlPsPyzIgmuYGj/FIVYaOUY+cqIwaSvGf1oB/SQ93D8brIhwdfRzdILt
+	 xd09zs2tIay6QCYPhP5vKkVifrZl+vPlT889Zmit4LJ/ff4MXe78TyQS5voavfdFf7
+	 8VLGLaXuJk4QoNA7TAZmNc2GKWRzckblIJxbjbq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbfEOLAw (ORCPT
+        id S1727537AbfEOLAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:00:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57646 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:00:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727516AbfEOLAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:00:45 -0400
+        id S1727487AbfEOLAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:00:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D53FC216FD;
-        Wed, 15 May 2019 11:00:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40EA320881;
+        Wed, 15 May 2019 11:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918045;
-        bh=JbHLyllfUeGtE6rI0Gy2Js2R5FpNhknPATPb1VufyeU=;
+        s=default; t=1557918042;
+        bh=Py9I6eQV1WsszAm3z4cf6ZYKS+uIuYiVEL4igMOc+eQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0mnocl7hp+H4585BIOnubS8Rb4hr1c83zygAbiLoxD50gobGS+LSMvKre6CfiNkFH
-         9CiEx8KBrGa77SJXnbcH05A8SF8zRBCqJ8xx3+GX54FH8lCpIS+sTaVUKGRHujoyoi
-         GHE78eGlhckXYX/yQq59YHWJ3U6ldG46lGzT10bo=
+        b=Vkpv7EDuzlGo7x8UVNOl3MOGzl4Lg9EI+nBpLJCsN5KtiGfmsyT/OHglSEkcTBSAO
+         u9rngvH9kvKOMszfVsfhDaAUWr7P8CDm1zoZ2mSaCdp3mk9fIAGm9iKexmuyMa48A2
+         Lq5efS6efJCx2ussIubtJO2fYkNyNplTSIChAoTc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Guenter Roeck <groeck@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Russell King <rmk@armlinux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 3.18 72/86] s390: ctcm: fix ctcm_new_device error return code
-Date:   Wed, 15 May 2019 12:55:49 +0200
-Message-Id: <20190515090655.137062236@linuxfoundation.org>
+Subject: [PATCH 3.18 71/86] init: initialize jump labels before command line option parsing
+Date:   Wed, 15 May 2019 12:55:48 +0200
+Message-Id: <20190515090655.063670192@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
 References: <20190515090642.339346723@linuxfoundation.org>
@@ -63,51 +67,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 27b141fc234a3670d21bd742c35d7205d03cbb3a ]
+[ Upstream commit 6041186a32585fc7a1d0f6cfe2f138b05fdc3c82 ]
 
-clang points out that the return code from this function is
-undefined for one of the error paths:
+When a module option, or core kernel argument, toggles a static-key it
+requires jump labels to be initialized early.  While x86, PowerPC, and
+ARM64 arrange for jump_label_init() to be called before parse_args(),
+ARM does not.
 
-../drivers/s390/net/ctcm_main.c:1595:7: warning: variable 'result' is used uninitialized whenever 'if' condition is true
-      [-Wsometimes-uninitialized]
-                if (priv->channel[direction] == NULL) {
-                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-../drivers/s390/net/ctcm_main.c:1638:9: note: uninitialized use occurs here
-        return result;
-               ^~~~~~
-../drivers/s390/net/ctcm_main.c:1595:3: note: remove the 'if' if its condition is always false
-                if (priv->channel[direction] == NULL) {
-                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-../drivers/s390/net/ctcm_main.c:1539:12: note: initialize the variable 'result' to silence this warning
-        int result;
-                  ^
+  Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1 console=ttyAMA0,115200 page_alloc.shuffle=1
+  ------------[ cut here ]------------
+  WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
+  page_alloc_shuffle+0x12c/0x1ac
+  static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
+  before call to jump_label_init()
+  Modules linked in:
+  CPU: 0 PID: 0 Comm: swapper Not tainted
+  5.1.0-rc4-next-20190410-00003-g3367c36ce744 #1
+  Hardware name: ARM Integrator/CP (Device Tree)
+  [<c0011c68>] (unwind_backtrace) from [<c000ec48>] (show_stack+0x10/0x18)
+  [<c000ec48>] (show_stack) from [<c07e9710>] (dump_stack+0x18/0x24)
+  [<c07e9710>] (dump_stack) from [<c001bb1c>] (__warn+0xe0/0x108)
+  [<c001bb1c>] (__warn) from [<c001bb88>] (warn_slowpath_fmt+0x44/0x6c)
+  [<c001bb88>] (warn_slowpath_fmt) from [<c0b0c4a8>]
+  (page_alloc_shuffle+0x12c/0x1ac)
+  [<c0b0c4a8>] (page_alloc_shuffle) from [<c0b0c550>] (shuffle_store+0x28/0x48)
+  [<c0b0c550>] (shuffle_store) from [<c003e6a0>] (parse_args+0x1f4/0x350)
+  [<c003e6a0>] (parse_args) from [<c0ac3c00>] (start_kernel+0x1c0/0x488)
 
-Make it return -ENODEV here, as in the related failure cases.
-gcc has a known bug in underreporting some of these warnings
-when it has already eliminated the assignment of the return code
-based on some earlier optimization step.
+Move the fallback call to jump_label_init() to occur before
+parse_args().
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The redundant calls to jump_label_init() in other archs are left intact
+in case they have static key toggling use cases that are even earlier
+than option parsing.
+
+Link: http://lkml.kernel.org/r/155544804466.1032396.13418949511615676665.stgit@dwillia2-desk3.amr.corp.intel.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reported-by: Guenter Roeck <groeck@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Russell King <rmk@armlinux.org.uk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/ctcm_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ init/main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/net/ctcm_main.c b/drivers/s390/net/ctcm_main.c
-index e056dd4fe44d1..5526388f905ec 100644
---- a/drivers/s390/net/ctcm_main.c
-+++ b/drivers/s390/net/ctcm_main.c
-@@ -1595,6 +1595,7 @@ static int ctcm_new_device(struct ccwgroup_device *cgdev)
- 		if (priv->channel[direction] == NULL) {
- 			if (direction == CTCM_WRITE)
- 				channel_free(priv->channel[CTCM_READ]);
-+			result = -ENODEV;
- 			goto out_dev;
- 		}
- 		priv->channel[direction]->netdev = dev;
+diff --git a/init/main.c b/init/main.c
+index 32940a68ea484..6235c0bed3da2 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -539,6 +539,8 @@ asmlinkage __visible void __init start_kernel(void)
+ 	page_alloc_init();
+ 
+ 	pr_notice("Kernel command line: %s\n", boot_command_line);
++	/* parameters may set static keys */
++	jump_label_init();
+ 	parse_early_param();
+ 	after_dashes = parse_args("Booting kernel",
+ 				  static_command_line, __start___param,
+@@ -548,8 +550,6 @@ asmlinkage __visible void __init start_kernel(void)
+ 		parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
+ 			   set_init_arg);
+ 
+-	jump_label_init();
+-
+ 	/*
+ 	 * These use large bootmem allocations and must precede
+ 	 * kmem_cache_init()
 -- 
 2.20.1
 
