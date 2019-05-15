@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3FAC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91443C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1102084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59BA3206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919900;
-	bh=FojP+nXiRvBcWpMCM3FS04aD2Od+btT7ex4k/BSAnjA=;
+	s=default; t=1557919903;
+	bh=5+tZVK5k6ZBOA+SFlbpZWDP69vDwGPROBIcoj7L1uPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ngVheQzdqJA4WXH3+QjqbjVVXaM3OUDwz5DaQWvOlpbQrqIe6afRNqB0qaJpoqkMc
-	 i5m9DbosCFjkX48ixQuPu1x6Cfviv3jzI0lOL3Kb/1+UB/4cZokd50FDse3VphBcy5
-	 D600wYk9jcjm/7xJcBzlzX0ZdgawPEzD1K2nnibI=
+	b=DjVMlRhfEY7rdYGJNX3O+t0lDqxoylgJyTjAxfHXw2zUjmz0N1Wiu3tDSy7N1Dt9f
+	 yli6XLj6lUh9zb+D5/KSOOYCFEVsz+0Gc3u0CIGxHOwzY6oYPGgM1RFdno3KU5Jovt
+	 P+ScKVe0rO4krVEQ1Ebr9lz/5k0ImEaLJAyN95Jo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732909AbfEOLbj (ORCPT
+        id S1732921AbfEOLbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:31:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43344 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:31:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732904AbfEOLbf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:31:35 -0400
+        id S1732904AbfEOLbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:31:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 127F92084A;
-        Wed, 15 May 2019 11:31:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64B8D206BF;
+        Wed, 15 May 2019 11:31:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919894;
-        bh=FojP+nXiRvBcWpMCM3FS04aD2Od+btT7ex4k/BSAnjA=;
+        s=default; t=1557919899;
+        bh=5+tZVK5k6ZBOA+SFlbpZWDP69vDwGPROBIcoj7L1uPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O2OIbU2gaJDoBt06Hcl7LaKQkWJH2EeA1nS2wvnHYTqtbUg7AS+2Ae0QMufp4cO5x
-         R/26sownMIBjTMdsLm4r95zf471hEH2tla62CUT/U6FM6LN+QsCrq7szzdMEML9JlC
-         nbmkNjc0u5Wa6roqYyQunjAQTj70LcS3+ZAlKBBQ=
+        b=BOyysHrT9XjdLyW4MfSUFWbLGsUJwDf5BY3mFzFNiJAKYMs5N/iZrCnF949AKZLbC
+         V/QUiIW09vWpN2xcw95Sz2QOcGZiqoWE27cHDFmVF9bKoQ05Zsga/AhSU95VoQdsSZ
+         kR7D8pgi01f6P4mu/KXyFdnObzTaLLjL/AKUu0O8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-Subject: [PATCH 5.0 135/137] PCI: hv: Add hv_pci_remove_slots() when we unload the driver
-Date:   Wed, 15 May 2019 12:56:56 +0200
-Message-Id: <20190515090703.665227215@linuxfoundation.org>
+        stable@vger.kernel.org, Damien Le Moal <damien.lemoal@wdc.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 5.0 137/137] f2fs: Fix use of number of devices
+Date:   Wed, 15 May 2019 12:56:58 +0200
+Message-Id: <20190515090703.797875513@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -61,78 +59,186 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com>
+From: Damien Le Moal <damien.lemoal@wdc.com>
 
-commit 15becc2b56c6eda3d9bf5ae993bafd5661c1fad1 upstream.
+commit 0916878da355650d7e77104a7ac0fa1784eca852 upstream.
 
-When we unload the pci-hyperv host controller driver, the host does not
-send us a PCI_EJECT message.
+For a single device mount using a zoned block device, the zone
+information for the device is stored in the sbi->devs single entry
+array and sbi->s_ndevs is set to 1. This differs from a single device
+mount using a regular block device which does not allocate sbi->devs
+and sets sbi->s_ndevs to 0.
 
-In this case we also need to make sure the sysfs PCI slot directory is
-removed, otherwise a command on a slot file eg:
+However, sbi->s_devs == 0 condition is used throughout the code to
+differentiate a single device mount from a multi-device mount where
+sbi->s_ndevs is always larger than 1. This results in problems with
+single zoned block device volumes as these are treated as multi-device
+mounts but do not have the start_blk and end_blk information set. One
+of the problem observed is skipping of zone discard issuing resulting in
+write commands being issued to full zones or unaligned to a zone write
+pointer.
 
-"cat /sys/bus/pci/slots/2/address"
+Fix this problem by simply treating the cases sbi->s_ndevs == 0 (single
+regular block device mount) and sbi->s_ndevs == 1 (single zoned block
+device mount) in the same manner. This is done by introducing the
+helper function f2fs_is_multi_device() and using this helper in place
+of direct tests of sbi->s_ndevs value, improving code readability.
 
-will trigger a
-
-"BUG: unable to handle kernel paging request"
-
-and, if we unload/reload the driver several times we would end up with
-stale slot entries in PCI slot directories in /sys/bus/pci/slots/
-
-root@localhost:~# ls -rtl  /sys/bus/pci/slots/
-total 0
-drwxr-xr-x 2 root root 0 Feb  7 10:49 2
-drwxr-xr-x 2 root root 0 Feb  7 10:49 2-1
-drwxr-xr-x 2 root root 0 Feb  7 10:51 2-2
-
-Add the missing code to remove the PCI slot and fix the current
-behaviour.
-
-Fixes: a15f2c08c708 ("PCI: hv: support reporting serial number as slot information")
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
-[lorenzo.pieralisi@arm.com: reformatted the log]
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Stephen Hemminger <sthemmin@microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Cc: stable@vger.kernel.org
+Fixes: 7bb3a371d199 ("f2fs: Fix zoned block device support")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/controller/pci-hyperv.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ fs/f2fs/data.c    |   17 +++++++++++------
+ fs/f2fs/f2fs.h    |   13 ++++++++++++-
+ fs/f2fs/file.c    |    2 +-
+ fs/f2fs/gc.c      |    2 +-
+ fs/f2fs/segment.c |   13 +++++++------
+ 5 files changed, 32 insertions(+), 15 deletions(-)
 
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1491,6 +1491,21 @@ static void hv_pci_assign_slots(struct h
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -218,12 +218,14 @@ struct block_device *f2fs_target_device(
+ 	struct block_device *bdev = sbi->sb->s_bdev;
+ 	int i;
+ 
+-	for (i = 0; i < sbi->s_ndevs; i++) {
+-		if (FDEV(i).start_blk <= blk_addr &&
+-					FDEV(i).end_blk >= blk_addr) {
+-			blk_addr -= FDEV(i).start_blk;
+-			bdev = FDEV(i).bdev;
+-			break;
++	if (f2fs_is_multi_device(sbi)) {
++		for (i = 0; i < sbi->s_ndevs; i++) {
++			if (FDEV(i).start_blk <= blk_addr &&
++			    FDEV(i).end_blk >= blk_addr) {
++				blk_addr -= FDEV(i).start_blk;
++				bdev = FDEV(i).bdev;
++				break;
++			}
+ 		}
  	}
+ 	if (bio) {
+@@ -237,6 +239,9 @@ int f2fs_target_device_index(struct f2fs
+ {
+ 	int i;
+ 
++	if (!f2fs_is_multi_device(sbi))
++		return 0;
++
+ 	for (i = 0; i < sbi->s_ndevs; i++)
+ 		if (FDEV(i).start_blk <= blkaddr && FDEV(i).end_blk >= blkaddr)
+ 			return i;
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1364,6 +1364,17 @@ static inline bool time_to_inject(struct
  }
+ #endif
  
 +/*
-+ * Remove entries in sysfs pci slot directory.
++ * Test if the mounted volume is a multi-device volume.
++ *   - For a single regular disk volume, sbi->s_ndevs is 0.
++ *   - For a single zoned disk volume, sbi->s_ndevs is 1.
++ *   - For a multi-device volume, sbi->s_ndevs is always 2 or more.
 + */
-+static void hv_pci_remove_slots(struct hv_pcibus_device *hbus)
++static inline bool f2fs_is_multi_device(struct f2fs_sb_info *sbi)
 +{
-+	struct hv_pci_dev *hpdev;
-+
-+	list_for_each_entry(hpdev, &hbus->children, list_entry) {
-+		if (!hpdev->pci_slot)
-+			continue;
-+		pci_destroy_slot(hpdev->pci_slot);
-+		hpdev->pci_slot = NULL;
-+	}
++	return sbi->s_ndevs > 1;
 +}
 +
- /**
-  * create_root_hv_pci_bus() - Expose a new root PCI bus
-  * @hbus:	Root PCI bus, as understood by this driver
-@@ -2685,6 +2700,7 @@ static int hv_pci_remove(struct hv_devic
- 		pci_lock_rescan_remove();
- 		pci_stop_root_bus(hbus->pci_bus);
- 		pci_remove_root_bus(hbus->pci_bus);
-+		hv_pci_remove_slots(hbus);
- 		pci_unlock_rescan_remove();
- 		hbus->state = hv_pcibus_removed;
+ /* For write statistics. Suppose sector size is 512 bytes,
+  * and the return value is in kbytes. s is of struct f2fs_sb_info.
+  */
+@@ -3612,7 +3623,7 @@ static inline bool f2fs_force_buffered_i
+ 
+ 	if (f2fs_post_read_required(inode))
+ 		return true;
+-	if (sbi->s_ndevs)
++	if (f2fs_is_multi_device(sbi))
+ 		return true;
+ 	/*
+ 	 * for blkzoned device, fallback direct IO to buffered IO, so
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -2570,7 +2570,7 @@ static int f2fs_ioc_flush_device(struct
+ 							sizeof(range)))
+ 		return -EFAULT;
+ 
+-	if (sbi->s_ndevs <= 1 || sbi->s_ndevs - 1 <= range.dev_num ||
++	if (!f2fs_is_multi_device(sbi) || sbi->s_ndevs - 1 <= range.dev_num ||
+ 			__is_large_section(sbi)) {
+ 		f2fs_msg(sbi->sb, KERN_WARNING,
+ 			"Can't flush %u in %d for segs_per_sec %u != 1\n",
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1346,7 +1346,7 @@ void f2fs_build_gc_manager(struct f2fs_s
+ 	sbi->gc_pin_file_threshold = DEF_GC_FAILED_PINNED_FILES;
+ 
+ 	/* give warm/cold data area from slower device */
+-	if (sbi->s_ndevs && !__is_large_section(sbi))
++	if (f2fs_is_multi_device(sbi) && !__is_large_section(sbi))
+ 		SIT_I(sbi)->last_victim[ALLOC_NEXT] =
+ 				GET_SEGNO(sbi, FDEV(0).end_blk) + 1;
+ }
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -576,7 +576,7 @@ static int submit_flush_wait(struct f2fs
+ 	int ret = 0;
+ 	int i;
+ 
+-	if (!sbi->s_ndevs)
++	if (!f2fs_is_multi_device(sbi))
+ 		return __submit_flush_wait(sbi, sbi->sb->s_bdev);
+ 
+ 	for (i = 0; i < sbi->s_ndevs; i++) {
+@@ -644,7 +644,8 @@ int f2fs_issue_flush(struct f2fs_sb_info
+ 		return ret;
  	}
+ 
+-	if (atomic_inc_return(&fcc->queued_flush) == 1 || sbi->s_ndevs > 1) {
++	if (atomic_inc_return(&fcc->queued_flush) == 1 ||
++	    f2fs_is_multi_device(sbi)) {
+ 		ret = submit_flush_wait(sbi, ino);
+ 		atomic_dec(&fcc->queued_flush);
+ 
+@@ -750,7 +751,7 @@ int f2fs_flush_device_cache(struct f2fs_
+ {
+ 	int ret = 0, i;
+ 
+-	if (!sbi->s_ndevs)
++	if (!f2fs_is_multi_device(sbi))
+ 		return 0;
+ 
+ 	for (i = 1; i < sbi->s_ndevs; i++) {
+@@ -1359,7 +1360,7 @@ static int __queue_discard_cmd(struct f2
+ 
+ 	trace_f2fs_queue_discard(bdev, blkstart, blklen);
+ 
+-	if (sbi->s_ndevs) {
++	if (f2fs_is_multi_device(sbi)) {
+ 		int devi = f2fs_target_device_index(sbi, blkstart);
+ 
+ 		blkstart -= FDEV(devi).start_blk;
+@@ -1714,7 +1715,7 @@ static int __f2fs_issue_discard_zone(str
+ 	block_t lblkstart = blkstart;
+ 	int devi = 0;
+ 
+-	if (sbi->s_ndevs) {
++	if (f2fs_is_multi_device(sbi)) {
+ 		devi = f2fs_target_device_index(sbi, blkstart);
+ 		blkstart -= FDEV(devi).start_blk;
+ 	}
+@@ -3071,7 +3072,7 @@ static void update_device_state(struct f
+ 	struct f2fs_sb_info *sbi = fio->sbi;
+ 	unsigned int devidx;
+ 
+-	if (!sbi->s_ndevs)
++	if (!f2fs_is_multi_device(sbi))
+ 		return;
+ 
+ 	devidx = f2fs_target_device_index(sbi, fio->new_blkaddr);
 
 
