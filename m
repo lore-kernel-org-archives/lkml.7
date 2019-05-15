@@ -4,50 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5ECC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38520C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B09BC20881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0335120881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919667;
-	bh=H6azeWqaXn/9Ns2I5Q8zq4Mn9LwbK0F++CDUADHRd+Q=;
+	s=default; t=1557919674;
+	bh=WP8nx96AyUwtzheXvIEkzb0woVh6i/h8Y4boJ+lHJWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n76GBSL7ytMJxyaOA5fZdP0q1lf86x5LfNyMfFqcmisoEWZQM3hUKgp4uKzwPy/Ix
-	 /t+YGhZEUL31SjPNPj1GFL1x8KPeMK6u5Ye9IKcEEa+4aGOSsqYD7PvKVvA6/Vf3cD
-	 w5SUug/F6weP/mpvrgdsYXJfzN8ZP9AsDZeY0miI=
+	b=QhNfFW8yYzYNBGn/BJ711gwB/BiWOEjCQO7MCYBmtRrZ8CPDsE8xp4Us8NWsSXBQz
+	 i5v5t40TBzZxY1PV3RPfIiOoLY+4NqwR2QNLnWqjd1i+W5CSS3i1/6V2OQwJgTXCZo
+	 r4A1UyFhKpuQfD6CChRbUJrxqqdA3/tqkbkmWDec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732282AbfEOL1q (ORCPT
+        id S1732303AbfEOL1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:27:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38622 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:27:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732261AbfEOL1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:27:44 -0400
+        id S1731569AbfEOL1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:27:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 000CC206BF;
-        Wed, 15 May 2019 11:27:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A531206BF;
+        Wed, 15 May 2019 11:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919662;
-        bh=H6azeWqaXn/9Ns2I5Q8zq4Mn9LwbK0F++CDUADHRd+Q=;
+        s=default; t=1557919667;
+        bh=WP8nx96AyUwtzheXvIEkzb0woVh6i/h8Y4boJ+lHJWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wzArK11b/tiPusN4wLAdq4zAzkpdb6gHR6gme4u5FD2tKMr+gMWM1Y74GpO8nrq9h
-         ctIoTWO65aaBVwMx0l/TOEiG1rnWo2VEJPPlhm8kp8BjYDI/XyHkuiOifjRjcXsz5r
-         u0z6ezo9NQT+BklfNpEveLaloz5b+b8L94PHS1n0=
+        b=zkKSWTWxB4yIsvoPyiak/pcfgYMqWRnFUbe4GAqDqd1IuGkHQ+63FjUv3CAzWMFk8
+         2r8WlJrnn6oVRsl0SpzgUJIDqQtoHUTfCEyBx5IqUvT6It+9aKb7H0hgxJxZ0zdOkg
+         uQd7hKFDMSBTOlpsesNdEYJrjYpwbyMpFJbhXRzk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 029/137] s390/3270: fix lockdep false positive on view->lock
-Date:   Wed, 15 May 2019 12:55:10 +0200
-Message-Id: <20190515090655.409063728@linuxfoundation.org>
+        Xose Vazquez Perez <xose.vazquez@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.0 048/137] x86/mm: Prevent bogus warnings with "noexec=off"
+Date:   Wed, 15 May 2019 12:55:29 +0200
+Message-Id: <20190515090656.954493420@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -60,120 +68,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5712f3301a12c0c3de9cc423484496b0464f2faf ]
+[ Upstream commit 510bb96fe5b3480b4b22d815786377e54cb701e7 ]
 
-The spinlock in the raw3270_view structure is used by con3270, tty3270
-and fs3270 in different ways. For con3270 the lock can be acquired in
-irq context, for tty3270 and fs3270 the highest context is bh.
+Xose Vazquez Perez reported boot warnings when NX is disabled on the kernel command line.
 
-Lockdep sees the view->lock as a single class and if the 3270 driver
-is used for the console the following message is generated:
+__early_set_fixmap() triggers this warning:
 
-WARNING: inconsistent lock state
-5.1.0-rc3-05157-g5c168033979d #12 Not tainted
---------------------------------
-inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
-swapper/0/1 [HC0[0]:SC1[1]:HE1:SE0] takes:
-(____ptrval____) (&(&view->lock)->rlock){?.-.}, at: tty3270_update+0x7c/0x330
+  attempted to set unsupported pgprot:    8000000000000163
+			       bits:      8000000000000000
+			       supported: 7fffffffffffffff
 
-Introduce a lockdep subclass for the view lock to distinguish bh from
-irq locks.
+  WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/pgtable.h:537
+			    __early_set_fixmap+0xa2/0xff
 
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+because it uses __default_kernel_pte_mask to mask out unsupported bits.
 
+Use __supported_pte_mask instead.
+
+Disabling NX on the command line also triggers the NX warning in the page
+table mapping check:
+
+  WARNING: CPU: 1 PID: 1 at arch/x86/mm/dump_pagetables.c:262 note_page+0x2ae/0x650
+  ....
+
+Make the warning depend on NX set in __supported_pte_mask.
+
+Reported-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
+Tested-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Link: http://lkml.kernel.org/r/alpine.DEB.2.21.1904151037530.1729@nanos.tec.linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/char/con3270.c | 2 +-
- drivers/s390/char/fs3270.c  | 3 ++-
- drivers/s390/char/raw3270.c | 3 ++-
- drivers/s390/char/raw3270.h | 4 +++-
- drivers/s390/char/tty3270.c | 3 ++-
- 5 files changed, 10 insertions(+), 5 deletions(-)
+ arch/x86/mm/dump_pagetables.c | 3 ++-
+ arch/x86/mm/ioremap.c         | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/char/con3270.c b/drivers/s390/char/con3270.c
-index fd2146bcc0add..e17364e13d2f7 100644
---- a/drivers/s390/char/con3270.c
-+++ b/drivers/s390/char/con3270.c
-@@ -629,7 +629,7 @@ con3270_init(void)
- 		     (void (*)(unsigned long)) con3270_read_tasklet,
- 		     (unsigned long) condev->read);
+diff --git a/arch/x86/mm/dump_pagetables.c b/arch/x86/mm/dump_pagetables.c
+index e3cdc85ce5b6e..84304626b1cb8 100644
+--- a/arch/x86/mm/dump_pagetables.c
++++ b/arch/x86/mm/dump_pagetables.c
+@@ -259,7 +259,8 @@ static void note_wx(struct pg_state *st)
+ #endif
+ 	/* Account the WX pages */
+ 	st->wx_pages += npages;
+-	WARN_ONCE(1, "x86/mm: Found insecure W+X mapping at address %pS\n",
++	WARN_ONCE(__supported_pte_mask & _PAGE_NX,
++		  "x86/mm: Found insecure W+X mapping at address %pS\n",
+ 		  (void *)st->start_address);
+ }
  
--	raw3270_add_view(&condev->view, &con3270_fn, 1);
-+	raw3270_add_view(&condev->view, &con3270_fn, 1, RAW3270_VIEW_LOCK_IRQ);
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 5378d10f1d31d..3b76fe954978c 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -825,7 +825,7 @@ void __init __early_set_fixmap(enum fixed_addresses idx,
+ 	pte = early_ioremap_pte(addr);
  
- 	INIT_LIST_HEAD(&condev->freemem);
- 	for (i = 0; i < CON3270_STRING_PAGES; i++) {
-diff --git a/drivers/s390/char/fs3270.c b/drivers/s390/char/fs3270.c
-index 8f3a2eeb28dca..8b48ba9c598ec 100644
---- a/drivers/s390/char/fs3270.c
-+++ b/drivers/s390/char/fs3270.c
-@@ -463,7 +463,8 @@ fs3270_open(struct inode *inode, struct file *filp)
+ 	/* Sanitize 'prot' against any unsupported bits: */
+-	pgprot_val(flags) &= __default_kernel_pte_mask;
++	pgprot_val(flags) &= __supported_pte_mask;
  
- 	init_waitqueue_head(&fp->wait);
- 	fp->fs_pid = get_pid(task_pid(current));
--	rc = raw3270_add_view(&fp->view, &fs3270_fn, minor);
-+	rc = raw3270_add_view(&fp->view, &fs3270_fn, minor,
-+			      RAW3270_VIEW_LOCK_BH);
- 	if (rc) {
- 		fs3270_free_view(&fp->view);
- 		goto out;
-diff --git a/drivers/s390/char/raw3270.c b/drivers/s390/char/raw3270.c
-index f8cd2935fbfd4..63a41b1687610 100644
---- a/drivers/s390/char/raw3270.c
-+++ b/drivers/s390/char/raw3270.c
-@@ -920,7 +920,7 @@ raw3270_deactivate_view(struct raw3270_view *view)
-  * Add view to device with minor "minor".
-  */
- int
--raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor)
-+raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor, int subclass)
- {
- 	unsigned long flags;
- 	struct raw3270 *rp;
-@@ -942,6 +942,7 @@ raw3270_add_view(struct raw3270_view *view, struct raw3270_fn *fn, int minor)
- 		view->cols = rp->cols;
- 		view->ascebc = rp->ascebc;
- 		spin_lock_init(&view->lock);
-+		lockdep_set_subclass(&view->lock, subclass);
- 		list_add(&view->list, &rp->view_list);
- 		rc = 0;
- 		spin_unlock_irqrestore(get_ccwdev_lock(rp->cdev), flags);
-diff --git a/drivers/s390/char/raw3270.h b/drivers/s390/char/raw3270.h
-index 114ca7cbf8897..3afaa35f73513 100644
---- a/drivers/s390/char/raw3270.h
-+++ b/drivers/s390/char/raw3270.h
-@@ -150,6 +150,8 @@ struct raw3270_fn {
- struct raw3270_view {
- 	struct list_head list;
- 	spinlock_t lock;
-+#define RAW3270_VIEW_LOCK_IRQ	0
-+#define RAW3270_VIEW_LOCK_BH	1
- 	atomic_t ref_count;
- 	struct raw3270 *dev;
- 	struct raw3270_fn *fn;
-@@ -158,7 +160,7 @@ struct raw3270_view {
- 	unsigned char *ascebc;		/* ascii -> ebcdic table */
- };
- 
--int raw3270_add_view(struct raw3270_view *, struct raw3270_fn *, int);
-+int raw3270_add_view(struct raw3270_view *, struct raw3270_fn *, int, int);
- int raw3270_activate_view(struct raw3270_view *);
- void raw3270_del_view(struct raw3270_view *);
- void raw3270_deactivate_view(struct raw3270_view *);
-diff --git a/drivers/s390/char/tty3270.c b/drivers/s390/char/tty3270.c
-index 2b0c36c2c5688..98d7fc152e32f 100644
---- a/drivers/s390/char/tty3270.c
-+++ b/drivers/s390/char/tty3270.c
-@@ -980,7 +980,8 @@ static int tty3270_install(struct tty_driver *driver, struct tty_struct *tty)
- 		return PTR_ERR(tp);
- 
- 	rc = raw3270_add_view(&tp->view, &tty3270_fn,
--			      tty->index + RAW3270_FIRSTMINOR);
-+			      tty->index + RAW3270_FIRSTMINOR,
-+			      RAW3270_VIEW_LOCK_BH);
- 	if (rc) {
- 		tty3270_free_view(tp);
- 		return rc;
+ 	if (pgprot_val(flags))
+ 		set_pte(pte, pfn_pte(phys >> PAGE_SHIFT, flags));
 -- 
 2.20.1
 
