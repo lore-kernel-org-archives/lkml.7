@@ -7,56 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAA1C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38700C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D3822166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0162420881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:09:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918556;
-	bh=fDb8Pd2ekjLHk9Ji1vb+hzOw5NNcIKC2Kac4G6EHDN8=;
+	s=default; t=1557918559;
+	bh=423qx8iQkZ+vVAvBzaXWv0lUweCOgXbgLNXcZqm9p+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GBCtjn5EzY4ih8zEhGK8H3sIcOim2bMFalnHOX4bhUUlEv/Mw9AzCR4rC0o5zp8RA
-	 tbSDFaZxLcf+NUyPc2wqlc7JI8xhtZ0Lmuhi7l58NO4PZBaR4LPBhNRTeekgJ6Sshq
-	 q+HE5mbFx9a1egGM+wAitKyVhJzx433p9x3eKuSw=
+	b=F3XLZRb4DXbk5ysoEEm0UkF0Z5arm2G0wB868/Esh0iT6R/vuJLsn0fQblJTSx3+n
+	 jqLB+4ewL9GzfXmm9JxMoc3t/QHhG3SL8W1xH2Nuq3laiprAwhX1RssoKGWg5xWMzq
+	 093q79uJt3815byWJgYHX1OxrK+bKp/Q7NgygruI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbfEOLJO (ORCPT
+        id S1729234AbfEOLJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:09:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41906 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:09:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729205AbfEOLJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:09:11 -0400
+        id S1729220AbfEOLJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:09:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00F0820644;
-        Wed, 15 May 2019 11:09:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC51C2084F;
+        Wed, 15 May 2019 11:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918550;
-        bh=fDb8Pd2ekjLHk9Ji1vb+hzOw5NNcIKC2Kac4G6EHDN8=;
+        s=default; t=1557918553;
+        bh=423qx8iQkZ+vVAvBzaXWv0lUweCOgXbgLNXcZqm9p+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PO/1Ldm0CrVFTvGUuKOqdwG/IX7F2NKEvKVVP/q5gtMnZLIHaowqcV14YMUfTB1Zi
-         6mr356aeyX/elWJKqy/dcSsBxMSYVLDRFBCzHLjcsjOYxNYx/FSggl+2VrtmsMZdIa
-         HWhS3fofJDi47YrZ3q+jselBziM/fbfOjv4VCrBs=
+        b=pxY87N9Oj/0J2mfq1gxOe9no9KEjWL4rZUc9ptzm/v3cCw1lFP1MUg6m67ODQedyy
+         SxrIYv3yQJacKKag/+Txqyd1tDAlVmLoclOiH/d7sI6H+dS2OoLnUlfZnI0aQmQF/s
+         wvNIsCa84XcRu+PQIsjqRuOf4IWSGn7O2PyHfnEg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
-        Carlos ODonell <carlos@redhat.com>,
-        "H. J. Lu" <hjl.tools@gmail.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Borislav Petkov <bp@suse.de>,
-        Laura Abbott <labbott@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        kernel-team@android.com, Thomas Gleixner <tglx@linutronix.de>,
-        X86 ML <x86@kernel.org>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
-Subject: [PATCH 4.4 176/266] x86/vdso: Pass --eh-frame-hdr to the linker
-Date:   Wed, 15 May 2019 12:54:43 +0200
-Message-Id: <20190515090728.876646676@linuxfoundation.org>
+        stable@vger.kernel.org, Xiao Ni <xni@redhat.com>,
+        David Jeffery <djeffery@redhat.com>,
+        Nigel Croxon <ncroxon@redhat.com>,
+        Song Liu <songliubraving@fb.com>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.4 177/266] Dont jump to compute_result state from check_result state
+Date:   Wed, 15 May 2019 12:54:44 +0200
+Message-Id: <20190515090728.911312243@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -69,67 +61,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alistair Strachan <astrachan@google.com>
+From: Nigel Croxon <ncroxon@redhat.com>
 
-commit cd01544a268ad8ee5b1dfe42c4393f1095f86879 upstream.
+commit 4f4fd7c5798bbdd5a03a60f6269cf1177fbd11ef upstream.
 
-Commit
+Changing state from check_state_check_result to
+check_state_compute_result not only is unsafe but also doesn't
+appear to serve a valid purpose.  A raid6 check should only be
+pushing out extra writes if doing repair and a mis-match occurs.
+The stripe dev management will already try and do repair writes
+for failing sectors.
 
-  379d98ddf413 ("x86: vdso: Use $LD instead of $CC to link")
+This patch makes the raid6 check_state_check_result handling
+work more like raid5's.  If somehow too many failures for a
+check, just quit the check operation for the stripe.  When any
+checks pass, don't try and use check_state_compute_result for
+a purpose it isn't needed for and is unsafe for.  Just mark the
+stripe as in sync for passing its parity checks and let the
+stripe dev read/write code and the bad blocks list do their
+job handling I/O errors.
 
-accidentally broke unwinding from userspace, because ld would strip the
-.eh_frame sections when linking.
+Repro steps from Xiao:
 
-Originally, the compiler would implicitly add --eh-frame-hdr when
-invoking the linker, but when this Makefile was converted from invoking
-ld via the compiler, to invoking it directly (like vmlinux does),
-the flag was missed. (The EH_FRAME section is important for the VDSO
-shared libraries, but not for vmlinux.)
+These are the steps to reproduce this problem:
+1. redefined OPT_MEDIUM_ERR_ADDR to 12000 in scsi_debug.c
+2. insmod scsi_debug.ko dev_size_mb=11000  max_luns=1 num_tgts=1
+3. mdadm --create /dev/md127 --level=6 --raid-devices=5 /dev/sde1 /dev/sde2 /dev/sde3 /dev/sde5 /dev/sde6
+sde is the disk created by scsi_debug
+4. echo "2" >/sys/module/scsi_debug/parameters/opts
+5. raid-check
 
-Fix the problem by explicitly specifying --eh-frame-hdr, which restores
-parity with the old method.
+It panic:
+[ 4854.730899] md: data-check of RAID array md127
+[ 4854.857455] sd 5:0:0:0: [sdr] tag#80 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
+[ 4854.859246] sd 5:0:0:0: [sdr] tag#80 Sense Key : Medium Error [current]
+[ 4854.860694] sd 5:0:0:0: [sdr] tag#80 Add. Sense: Unrecovered read error
+[ 4854.862207] sd 5:0:0:0: [sdr] tag#80 CDB: Read(10) 28 00 00 00 2d 88 00 04 00 00
+[ 4854.864196] print_req_error: critical medium error, dev sdr, sector 11656 flags 0
+[ 4854.867409] sd 5:0:0:0: [sdr] tag#100 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
+[ 4854.869469] sd 5:0:0:0: [sdr] tag#100 Sense Key : Medium Error [current]
+[ 4854.871206] sd 5:0:0:0: [sdr] tag#100 Add. Sense: Unrecovered read error
+[ 4854.872858] sd 5:0:0:0: [sdr] tag#100 CDB: Read(10) 28 00 00 00 2e e0 00 00 08 00
+[ 4854.874587] print_req_error: critical medium error, dev sdr, sector 12000 flags 4000
+[ 4854.876456] sd 5:0:0:0: [sdr] tag#101 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
+[ 4854.878552] sd 5:0:0:0: [sdr] tag#101 Sense Key : Medium Error [current]
+[ 4854.880278] sd 5:0:0:0: [sdr] tag#101 Add. Sense: Unrecovered read error
+[ 4854.881846] sd 5:0:0:0: [sdr] tag#101 CDB: Read(10) 28 00 00 00 2e e8 00 00 08 00
+[ 4854.883691] print_req_error: critical medium error, dev sdr, sector 12008 flags 4000
+[ 4854.893927] sd 5:0:0:0: [sdr] tag#166 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
+[ 4854.896002] sd 5:0:0:0: [sdr] tag#166 Sense Key : Medium Error [current]
+[ 4854.897561] sd 5:0:0:0: [sdr] tag#166 Add. Sense: Unrecovered read error
+[ 4854.899110] sd 5:0:0:0: [sdr] tag#166 CDB: Read(10) 28 00 00 00 2e e0 00 00 10 00
+[ 4854.900989] print_req_error: critical medium error, dev sdr, sector 12000 flags 0
+[ 4854.902757] md/raid:md127: read error NOT corrected!! (sector 9952 on sdr1).
+[ 4854.904375] md/raid:md127: read error NOT corrected!! (sector 9960 on sdr1).
+[ 4854.906201] ------------[ cut here ]------------
+[ 4854.907341] kernel BUG at drivers/md/raid5.c:4190!
 
-See relevant bug reports for additional info:
+raid5.c:4190 above is this BUG_ON:
 
-  https://bugzilla.kernel.org/show_bug.cgi?id=201741
-  https://bugzilla.redhat.com/show_bug.cgi?id=1659295
+    handle_parity_checks6()
+        ...
+        BUG_ON(s->uptodate < disks - 1); /* We don't need Q to recover */
 
-Fixes: 379d98ddf413 ("x86: vdso: Use $LD instead of $CC to link")
-Reported-by: Florian Weimer <fweimer@redhat.com>
-Reported-by: Carlos O'Donell <carlos@redhat.com>
-Reported-by: "H. J. Lu" <hjl.tools@gmail.com>
-Signed-off-by: Alistair Strachan <astrachan@google.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Laura Abbott <labbott@redhat.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Carlos O'Donell <carlos@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Joel Fernandes <joel@joelfernandes.org>
-Cc: kernel-team@android.com
-Cc: Laura Abbott <labbott@redhat.com>
-Cc: stable <stable@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: X86 ML <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20181214223637.35954-1-astrachan@google.com
-Signed-off-by: Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>
+Cc: <stable@vger.kernel.org> # v3.16+
+OriginalAuthor: David Jeffery <djeffery@redhat.com>
+Cc: Xiao Ni <xni@redhat.com>
+Tested-by: David Jeffery <djeffery@redhat.com>
+Signed-off-by: David Jeffy <djeffery@redhat.com>
+Signed-off-by: Nigel Croxon <ncroxon@redhat.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/entry/vdso/Makefile |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/md/raid5.c |   19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
 
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -159,7 +159,8 @@ quiet_cmd_vdso = VDSO    $@
- 		 sh $(srctree)/$(src)/checkundef.sh '$(NM)' '$@'
+--- a/drivers/md/raid5.c
++++ b/drivers/md/raid5.c
+@@ -3897,26 +3897,15 @@ static void handle_parity_checks6(struct
+ 	case check_state_check_result:
+ 		sh->check_state = check_state_idle;
  
- VDSO_LDFLAGS = -shared $(call ld-option, --hash-style=both) \
--	$(call ld-option, --build-id) -Bsymbolic
-+	$(call ld-option, --build-id) $(call ld-option, --eh-frame-hdr) \
-+	-Bsymbolic
- GCOV_PROFILE := n
- 
- #
++		if (s->failed > 1)
++			break;
+ 		/* handle a successful check operation, if parity is correct
+ 		 * we are done.  Otherwise update the mismatch count and repair
+ 		 * parity if !MD_RECOVERY_CHECK
+ 		 */
+ 		if (sh->ops.zero_sum_result == 0) {
+-			/* both parities are correct */
+-			if (!s->failed)
+-				set_bit(STRIPE_INSYNC, &sh->state);
+-			else {
+-				/* in contrast to the raid5 case we can validate
+-				 * parity, but still have a failure to write
+-				 * back
+-				 */
+-				sh->check_state = check_state_compute_result;
+-				/* Returning at this point means that we may go
+-				 * off and bring p and/or q uptodate again so
+-				 * we make sure to check zero_sum_result again
+-				 * to verify if p or q need writeback
+-				 */
+-			}
++			/* Any parity checked was correct */
++			set_bit(STRIPE_INSYNC, &sh->state);
+ 		} else {
+ 			atomic64_add(STRIPE_SECTORS, &conf->mddev->resync_mismatches);
+ 			if (test_bit(MD_RECOVERY_CHECK, &conf->mddev->recovery))
 
 
