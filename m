@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57644C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657BCC46460
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA2720862
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36ABD2084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918709;
-	bh=MImSsXvWpLoPg86zZhy9nBvmMuJY3uBgGLoSEpjiewo=;
+	s=default; t=1557918711;
+	bh=FTEsq0Izl/156k72JmWu9fo5PR4FGCZvEiY5YIAEHuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CJmM/BUFfsbfh5BAB6gs6RL8T49mBaS4ygZB3SObJCSQAjV3gaVJqEOxlQQAkKlHn
-	 DpfjSPyQhtTkGiG4Vonmm93CaR15Yo1q/tWX6j0cZxF2reKCbqPnmS596DuwJ+ztv5
-	 65b04GTgfLMrOew0HS4aR2yptpp6VjD5vFIUcjjc=
+	b=v/tHoAMPGolRLM7HjSoAOQiUtWdjq0q6FLok/GrbFyIcyy0Ow25ahtga22gZuQDhN
+	 YKVc4Y2P0IuJSOQlp2A8+Xm/ca95e3djlRgJmla3eHaFf5Yup9N5/wdOY8MMyMfI7y
+	 JFYdZO4Ew5flS1I3/7FbDznu3VWTy2cfjCdj7iLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbfEOLLq (ORCPT
+        id S1729644AbfEOLLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:11:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46388 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:11:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729414AbfEOLLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:11:41 -0400
+        id S1729414AbfEOLLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:11:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FB8B2084F;
-        Wed, 15 May 2019 11:11:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87DBC20843;
+        Wed, 15 May 2019 11:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918700;
-        bh=MImSsXvWpLoPg86zZhy9nBvmMuJY3uBgGLoSEpjiewo=;
+        s=default; t=1557918706;
+        bh=FTEsq0Izl/156k72JmWu9fo5PR4FGCZvEiY5YIAEHuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nKQbjYPYcVQA/zdt239AkmF2wayhffzSipSeA1gQzrdGBILJVPpeV/P+3NbafrIWj
-         hhtdyO/bn2ab5f6oWoaEfKBcut2aiJeYINZF4Iv20FHwsjBvNK+KhlQoQgOFBkdXgh
-         hmpPq7DtvamFtlOEbaK/dCpuNdd3X8NFenmpH/qw=
+        b=NiNE72SpCcZnRsaOS1X4EN7nNM4XZrMMnTwoMtoBoGNfYHblNW7NsXBnIxADmK55A
+         trcElUgGdjEnanqaJ4Q+xjoot01HRj6avf8CK+MONSqc2FKMFfaj6o2zSfpNDE47Pz
+         ASyj0D0rOTFdQe7Sv+cY2Cl66RQAkHfvGEzgh7Y4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
         Borislav Petkov <bp@suse.de>,
         Frederic Weisbecker <frederic@kernel.org>,
         Jon Masters <jcm@redhat.com>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 232/266] x86/kvm: Expose X86_FEATURE_MD_CLEAR to guests
-Date:   Wed, 15 May 2019 12:55:39 +0200
-Message-Id: <20190515090730.851971386@linuxfoundation.org>
+Subject: [PATCH 4.4 234/266] x86/speculation/mds: Clear CPU buffers on exit to user
+Date:   Wed, 15 May 2019 12:55:41 +0200
+Message-Id: <20190515090730.918029836@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -63,25 +62,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 6c4dbbd14730c43f4ed808a9c42ca41625925c22 upstream.
+commit 04dcbdb8057827b043b3c71aa397c4c63e67d086 upstream.
 
-X86_FEATURE_MD_CLEAR is a new CPUID bit which is set when microcode
-provides the mechanism to invoke a flush of various exploitable CPU buffers
-by invoking the VERW instruction.
+Add a static key which controls the invocation of the CPU buffer clear
+mechanism on exit to user space and add the call into
+prepare_exit_to_usermode() and do_nmi() right before actually returning.
 
-Hand it through to guests so they can adjust their mitigations.
+Add documentation which kernel to user space transition this covers and
+explain why some corner cases are not mitigated.
 
-This also requires corresponding qemu changes, which are available
-separately.
-
-[ tglx: Massaged changelog ]
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Borislav Petkov <bp@suse.de>
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Borislav Petkov <bp@suse.de>
 Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
 Reviewed-by: Jon Masters <jcm@redhat.com>
 Tested-by: Jon Masters <jcm@redhat.com>
@@ -89,19 +83,175 @@ Tested-by: Jon Masters <jcm@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kvm/cpuid.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/x86/mds.rst            |   52 +++++++++++++++++++++++++++++++++++
+ arch/x86/entry/common.c              |    3 ++
+ arch/x86/include/asm/nospec-branch.h |   13 ++++++++
+ arch/x86/kernel/cpu/bugs.c           |    3 ++
+ arch/x86/kernel/nmi.c                |    4 ++
+ arch/x86/kernel/traps.c              |    8 +++++
+ 6 files changed, 83 insertions(+)
 
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -366,7 +366,7 @@ static inline int __do_cpuid_ent(struct
- 	/* cpuid 7.0.edx*/
- 	const u32 kvm_cpuid_7_0_edx_x86_features =
- 		F(SPEC_CTRL) | F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) |
--		F(INTEL_STIBP);
-+		F(INTEL_STIBP) | F(MD_CLEAR);
+--- a/Documentation/x86/mds.rst
++++ b/Documentation/x86/mds.rst
+@@ -97,3 +97,55 @@ According to current knowledge additiona
+ itself are not required because the necessary gadgets to expose the leaked
+ data cannot be controlled in a way which allows exploitation from malicious
+ user space or VM guests.
++
++Mitigation points
++-----------------
++
++1. Return to user space
++^^^^^^^^^^^^^^^^^^^^^^^
++
++   When transitioning from kernel to user space the CPU buffers are flushed
++   on affected CPUs when the mitigation is not disabled on the kernel
++   command line. The migitation is enabled through the static key
++   mds_user_clear.
++
++   The mitigation is invoked in prepare_exit_to_usermode() which covers
++   most of the kernel to user space transitions. There are a few exceptions
++   which are not invoking prepare_exit_to_usermode() on return to user
++   space. These exceptions use the paranoid exit code.
++
++   - Non Maskable Interrupt (NMI):
++
++     Access to sensible data like keys, credentials in the NMI context is
++     mostly theoretical: The CPU can do prefetching or execute a
++     misspeculated code path and thereby fetching data which might end up
++     leaking through a buffer.
++
++     But for mounting other attacks the kernel stack address of the task is
++     already valuable information. So in full mitigation mode, the NMI is
++     mitigated on the return from do_nmi() to provide almost complete
++     coverage.
++
++   - Double fault (#DF):
++
++     A double fault is usually fatal, but the ESPFIX workaround, which can
++     be triggered from user space through modify_ldt(2) is a recoverable
++     double fault. #DF uses the paranoid exit path, so explicit mitigation
++     in the double fault handler is required.
++
++   - Machine Check Exception (#MC):
++
++     Another corner case is a #MC which hits between the CPU buffer clear
++     invocation and the actual return to user. As this still is in kernel
++     space it takes the paranoid exit path which does not clear the CPU
++     buffers. So the #MC handler repopulates the buffers to some
++     extent. Machine checks are not reliably controllable and the window is
++     extremly small so mitigation would just tick a checkbox that this
++     theoretical corner case is covered. To keep the amount of special
++     cases small, ignore #MC.
++
++   - Debug Exception (#DB):
++
++     This takes the paranoid exit path only when the INT1 breakpoint is in
++     kernel space. #DB on a user space address takes the regular exit path,
++     so no extra mitigation required.
+--- a/arch/x86/entry/common.c
++++ b/arch/x86/entry/common.c
+@@ -28,6 +28,7 @@
+ #include <asm/vdso.h>
+ #include <asm/uaccess.h>
+ #include <asm/cpufeature.h>
++#include <asm/nospec-branch.h>
  
- 	/* all calls to cpuid_count() should be made on the same cpu */
- 	get_cpu();
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/syscalls.h>
+@@ -295,6 +296,8 @@ __visible inline void prepare_exit_to_us
+ #endif
+ 
+ 	user_enter();
++
++	mds_user_clear_cpu_buffers();
+ }
+ 
+ #define SYSCALL_EXIT_WORK_FLAGS				\
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -262,6 +262,8 @@ DECLARE_STATIC_KEY_FALSE(switch_to_cond_
+ DECLARE_STATIC_KEY_FALSE(switch_mm_cond_ibpb);
+ DECLARE_STATIC_KEY_FALSE(switch_mm_always_ibpb);
+ 
++DECLARE_STATIC_KEY_FALSE(mds_user_clear);
++
+ #include <asm/segment.h>
+ 
+ /**
+@@ -287,6 +289,17 @@ static inline void mds_clear_cpu_buffers
+ 	asm volatile("verw %[ds]" : : [ds] "m" (ds) : "cc");
+ }
+ 
++/**
++ * mds_user_clear_cpu_buffers - Mitigation for MDS vulnerability
++ *
++ * Clear CPU buffers if the corresponding static key is enabled
++ */
++static inline void mds_user_clear_cpu_buffers(void)
++{
++	if (static_branch_likely(&mds_user_clear))
++		mds_clear_cpu_buffers();
++}
++
+ #endif /* __ASSEMBLY__ */
+ 
+ /*
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -58,6 +58,9 @@ DEFINE_STATIC_KEY_FALSE(switch_mm_cond_i
+ /* Control unconditional IBPB in switch_mm() */
+ DEFINE_STATIC_KEY_FALSE(switch_mm_always_ibpb);
+ 
++/* Control MDS CPU buffer clear before returning to user space */
++DEFINE_STATIC_KEY_FALSE(mds_user_clear);
++
+ void __init check_bugs(void)
+ {
+ 	identify_boot_cpu();
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -29,6 +29,7 @@
+ #include <asm/mach_traps.h>
+ #include <asm/nmi.h>
+ #include <asm/x86_init.h>
++#include <asm/nospec-branch.h>
+ 
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/nmi.h>
+@@ -522,6 +523,9 @@ nmi_restart:
+ 		write_cr2(this_cpu_read(nmi_cr2));
+ 	if (this_cpu_dec_return(nmi_state))
+ 		goto nmi_restart;
++
++	if (user_mode(regs))
++		mds_user_clear_cpu_buffers();
+ }
+ NOKPROBE_SYMBOL(do_nmi);
+ 
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -61,6 +61,7 @@
+ #include <asm/alternative.h>
+ #include <asm/fpu/xstate.h>
+ #include <asm/trace/mpx.h>
++#include <asm/nospec-branch.h>
+ #include <asm/mpx.h>
+ #include <asm/vm86.h>
+ 
+@@ -337,6 +338,13 @@ dotraplinkage void do_double_fault(struc
+ 		regs->ip = (unsigned long)general_protection;
+ 		regs->sp = (unsigned long)&normal_regs->orig_ax;
+ 
++		/*
++		 * This situation can be triggered by userspace via
++		 * modify_ldt(2) and the return does not take the regular
++		 * user space exit, so a CPU buffer clear is required when
++		 * MDS mitigation is enabled.
++		 */
++		mds_user_clear_cpu_buffers();
+ 		return;
+ 	}
+ #endif
 
 
