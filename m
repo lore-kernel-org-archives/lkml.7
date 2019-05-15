@@ -2,147 +2,136 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA08C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27636C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53AA120873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:13:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557962012;
-	bh=oXIRUhaHoitttMrIPB2rv0mrXlZVPITnJpfkP2WGxVA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ETxEweuCUvAyxbOkxxagz7HVaq5q0+j8EmZo6mmgvhTm+VeE2LEWi2c0II+zj45fX
-	 oDFbYJuinxYUtQjEWhX1n9XCv3uw0psDDw5zzOGYxEFheXnqCcswrW8RoC8c42hFbs
-	 9GLc6709UiyODjUoxVdQSTxJcD7/IfOfquvy9m7I=
+	by mail.kernel.org (Postfix) with ESMTP id E9FEE2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 23:15:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BIFAr/kE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726461AbfEOXNb (ORCPT
+        id S1726511AbfEOXPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 19:13:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726389AbfEOXNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 19:13:30 -0400
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F04FE21773
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 23:13:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557962009;
-        bh=oXIRUhaHoitttMrIPB2rv0mrXlZVPITnJpfkP2WGxVA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VbF8Ip5K02eLqRuNtSS6WygUsSTTLfyAYn9NcN3u9GKSyhtm3+BN8zkh35/Dq8Ekl
-         BLooL6ayE6/H0fEyV9VadrhQFqHsDyCMtDszV2imLL0hKb1Cba9BH4ZcIchASyFnVv
-         uYGJFISNfE49xSl0pLPqhJzxWUFndnszyL6u0ULw=
-Received: by mail-wr1-f53.google.com with SMTP id l2so1214346wrb.9
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 16:13:28 -0700 (PDT)
-X-Gm-Message-State: APjAAAWxJbfhZWSjkUYeYgr2VlnBYl/LpgF7g2HlZadDRAt9RkbgELTn
-        ZEvZmr69MNlXRQ558Ai6oZIhIW0oKrw//EHkXwMDhw==
-X-Google-Smtp-Source: APXvYqx8WK5Hi6FoJcSd9VsW2VbRkOOSjlnlo07tWriqsFOxSCmdirUQKhI03vZN1Sh8qXdY8fD30ruPZx0us0bAMz4=
-X-Received: by 2002:adf:fb4a:: with SMTP id c10mr26918322wrs.309.1557962007443;
- Wed, 15 May 2019 16:13:27 -0700 (PDT)
+        Wed, 15 May 2019 19:15:22 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40217 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbfEOXPW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 19:15:22 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u17so755015pfn.7;
+        Wed, 15 May 2019 16:15:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XJZhWh1SMqVbnfDN/H36cTG2oQhVsmiYdQ8OcDDR5lI=;
+        b=BIFAr/kEEO0si6HtLJyKiKMMV3w8VLMwFao6/qhPQ6w4QDOIbe1da9Re6egqkQCMiI
+         0w9C3AtUxqSozmTNb82mv/nS4+oMRvcmhgUTsk+yebxr4lBAqwjc1HmuqutCuLqMJMWC
+         3gfLGOORTeIkO+J9fCVCpFv1nyzwbSBTBG+NTCr9owgbfIVG5mMXBbJpV0g0q3pj3sm2
+         JDdZi6oVe+U4JElzuJe3up90h+vJXC9077/MGFbit1y7M+wTf9RL3QzX+DGJAignXg3t
+         02WpVhfC+jaskoQsxHWxFPOl3u2I4yW7Z13T6Cp7vK4ntnmBje8xUrIzZL87fKqkpnSg
+         6I6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XJZhWh1SMqVbnfDN/H36cTG2oQhVsmiYdQ8OcDDR5lI=;
+        b=eZgCq9aeKr83m6uoW0I2MhdQ58msY4mSWB8jYbPCa407IWr6WCcJ92n0pjUF2bUhfC
+         KgeOstlw+fOTC2ErUDNMMNXtu/GPb11FqE4yMrD1pGthD8zrVsqQl6+fHiA13fyoImX3
+         T/2Xobjj8iSPRak/kO+Bj/804YsB5u1RjlRyrsCdN2wkWAg3EZFF3t2XrVmixW/IQKNZ
+         v4QifK1kLMpQ0UKpnWUa8vDjGvOwK2aE3Z4D9nP3N73aJLJj7LWAao0r/MXmqtZ5qlcn
+         +2mL3sbpQGxnrIrsF8bHaQ3EUOMKiuXqZye3f1Ga3sH7Lurkfga2z/BIdNHxHDvuemKb
+         TUzA==
+X-Gm-Message-State: APjAAAVkn54r5+FHziAI9AginbBiX4C9xRDNBWh7QHcum2N5DcEdw0id
+        exsurxW+x57IWt2vH5ulLxV8c6zX
+X-Google-Smtp-Source: APXvYqzqDK5MSA3hl87Zw8ORnfoHa+i4OuTZkZbi3ZC12aTOAib81nLkfG6+V953lMGFxfE/JWIr/A==
+X-Received: by 2002:aa7:864e:: with SMTP id a14mr39140447pfo.132.1557962121374;
+        Wed, 15 May 2019 16:15:21 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id y10sm4807757pfm.27.2019.05.15.16.15.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 May 2019 16:15:20 -0700 (PDT)
+Date:   Wed, 15 May 2019 16:15:19 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Ravi Chandra Sadineni <ravisadineni@chromium.org>
+Cc:     =?utf-8?B?5buW5bSH5qau?= <kt.liao@emc.com.tw>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Abhishek Bhardwaj <abhishekbh@google.com>,
+        Todd Broch <tbroch@google.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Subject: Re: [PATCH V1] elan_i2c: Increment wakeup count if wake source.
+Message-ID: <20190515231519.GA134544@dtor-ws>
+References: <20190513220610.177489-1-ravisadineni@chromium.org>
+ <CAKdAkRQ_J6QWxtWpoRQnNWKcJpXox6xVDZWcWYOXkBhPSn99Rw@mail.gmail.com>
+ <CAEZbON4Z5GKYvMZJ8ojko_f1xzv2rf4uR6cDz2LMxu+XvzTzog@mail.gmail.com>
 MIME-Version: 1.0
-References: <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
- <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com> <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
- <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com> <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com> <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190514204527.GC1977@linux.intel.com> <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
- <20190515013031.GF1977@linux.intel.com> <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
- <alpine.LRH.2.21.1905160543070.19802@namei.org> <CALCETrX_Q6qwNRNF0TL2tgfm1j6DKLX7NVHHmWbMFtk3WnHDKw@mail.gmail.com>
- <alpine.LRH.2.21.1905160844130.29250@namei.org>
-In-Reply-To: <alpine.LRH.2.21.1905160844130.29250@namei.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 15 May 2019 16:13:15 -0700
-X-Gmail-Original-Message-ID: <CALCETrX2ovRx3Rre+1_xC-q6CiybyLjQ-gmB4FZF_qCZ-Qd+4A@mail.gmail.com>
-Message-ID: <CALCETrX2ovRx3Rre+1_xC-q6CiybyLjQ-gmB4FZF_qCZ-Qd+4A@mail.gmail.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-To:     James Morris <jmorris@namei.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEZbON4Z5GKYvMZJ8ojko_f1xzv2rf4uR6cDz2LMxu+XvzTzog@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 3:46 PM James Morris <jmorris@namei.org> wrote:
->
-> On Wed, 15 May 2019, Andy Lutomirski wrote:
->
-> > > Why not just use an xattr, like security.sgx ?
+On Wed, May 15, 2019 at 09:17:59AM -0700, Ravi Chandra Sadineni wrote:
+> Hi Dmitry,
+> 
+> On Mon, May 13, 2019 at 4:29 PM Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
 > >
-> > Wouldn't this make it so that only someone with CAP_MAC_ADMIN could
-> > install an enclave?  I think that this decision should be left up the
-> > administrator, and it should be easy to set up a loose policy where
-> > anyone can load whatever enclave they want.  That's what would happen
-> > in my proposal if there was no LSM loaded or of the LSM policy didn't
-> > restrict what .sigstruct files were acceptable.
+> > Hi Ravi,
 > >
->
-> You could try user.sigstruct, which does not require any privs.
->
+> > On Mon, May 13, 2019 at 3:06 PM Ravi Chandra Sadineni
+> > <ravisadineni@chromium.org> wrote:
+> > >
+> > > Notify the PM core that this dev is the wake source. This helps
+> > > userspace daemon tracking the wake source to identify the origin of the
+> > > wake.
+> >
+> > I wonder if we could do that form the i2c core instead of individual drivers?
+> I am sorry, I don't see a way how this could be done.
 
-I don't think I understand your proposal.  What file would this
-attribute be on?  What would consume it?
+Sorry, brain fart on my part. Applied, thank you.
 
-I'm imagining that there's some enclave in a file
-crypto_thingy.enclave.  There's also a file crypto_thingy.sigstruct.
-crypto_thingy.enclave has type lib_t or similar so that it's
-executable.  crypto_thingy.sigstruct has type sgx_sigstruct_t.  The
-enclave loader does, in effect:
+> >
+> > >
+> > > Signed-off-by: Ravi Chandra Sadineni <ravisadineni@chromium.org>
+> > > ---
+> > >  drivers/input/mouse/elan_i2c_core.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+> > > index f9525d6f0bfe..2c0561e20b7f 100644
+> > > --- a/drivers/input/mouse/elan_i2c_core.c
+> > > +++ b/drivers/input/mouse/elan_i2c_core.c
+> > > @@ -981,6 +981,8 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
+> > >         if (error)
+> > >                 goto out;
+> > >
+> > > +       pm_wakeup_event(dev, 0);
+> > > +
+> > >         switch (report[ETP_REPORT_ID_OFFSET]) {
+> > >         case ETP_REPORT_ID:
+> > >                 elan_report_absolute(data, report);
+> > > --
+> > > 2.20.1
+> > >
+> >
+> > Thanks.
+> >
+> > --
+> > Dmitry
+> 
+> Thanks,
+> Ravi
 
-void *source_data = mmap(crypto_thingy.enclave, PROT_READ | PROT_EXEC, ...);
-int sigstruct_fd = open("crypto_thingy.sigstruct", O_RDONLY);
-int enclave_fd = open("/dev/sgx/enclave", O_RDWR);
-
-ioctl(enclave_fd, SGX_IOC_ADD_SOME_DATA, source_data + source_offset,
-enclave_offset, len, ...);
-ioctl(enclave_fd, SGX_IOC_ADD_SOME_DATA, source_data + source_offset2,
-enclave_offset2, len, ...);
-etc.
-
-/* Here's where LSMs get to check that the sigstruct is acceptable.
-The CPU will check that the sigstruct matches the enclave. */
-ioctl(enclave_fd, SGX_INIT_THE_ENCLAVE, sigstruct_fd);
-
-/* Actually map the thing */
-mmap(enclave_fd RO section, PROT_READ, ...);
-mmap(enclave_fd RW section, PROT_READ | PROT_WRITE, ...);
-mmap(enclave_fd RX section, PROT_READ | PROT_EXEC, ...);
-
-/* This should fail unless EXECMOD is available, I think */
-mmap(enclave_fd RWX section, PROT_READ | PROT_WRITE | PROT_EXEC);
-
-And the idea here is that, if the .enclave file isn't mapped
-PROT_EXEC, then mmapping the RX section will also require EXECMEM or
-EXECMOD.
+-- 
+Dmitry
