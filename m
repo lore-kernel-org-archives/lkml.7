@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68839C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E89DC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6C220881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D605820818
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919501;
-	bh=Q/CLjt7feT+ZdTMH8kb5Tanjx7cBjlDBsWMvqGIoQ60=;
+	s=default; t=1557919504;
+	bh=HsE/PVs5oxByEtR7DJrXCuySZSGpF0FiEXOJmXGVDlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kReTABD2/OFF6DoYsHjI+kbvQH6PAbeg3OUqS63jWOUld/vZyva0QJCX7k5htMU66
-	 rnu/R57UaagbRe2Qq/ijGX+Vv+V6zLn7TYEW6V//Zft8SRG0I8S2ryeuhgo7fplfWB
-	 os04WK4hL0kuLM4BW5Qn6+QiO9vd2MVooHSoAFNI=
+	b=SGE+B6ux0ek+xpuuldPT7zUBpmIOCV4o/a8lkl3DHQx1iAiAENrgmc+fTi2gvOL+S
+	 TEE28N7fKgxQd8AQXPbJci+yHLGWQFGfLiLEBQdwLuRVLqvrmGHW6pzj/nTYRckaIA
+	 rhqhZdGIswu1ws7FYiKqW/LTTjBHdCChrze7iork=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731910AbfEOLZA (ORCPT
+        id S1731920AbfEOLZD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:25:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35588 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:25:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731902AbfEOLY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:24:57 -0400
+        id S1731902AbfEOLZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:25:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E41F320818;
-        Wed, 15 May 2019 11:24:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27D6E20843;
+        Wed, 15 May 2019 11:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919496;
-        bh=Q/CLjt7feT+ZdTMH8kb5Tanjx7cBjlDBsWMvqGIoQ60=;
+        s=default; t=1557919501;
+        bh=HsE/PVs5oxByEtR7DJrXCuySZSGpF0FiEXOJmXGVDlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ya0eMGPYGMPzPlZvKLyJpt3aoWxBDoIKBsc19f6OuSRi+VxZAguIW0CW5Yjq4TZD7
-         185omVIiF2PM5MoNFzDcw7HWmasDCD9MWheyFBdeZPIE6uzJijk0nedDwsvQpmj3Zz
-         FH/vSC3IKuyin+XMtKFVLlKj5PmrpAiZ1Am6q3v8=
+        b=V1h2MFJ4rOnBBL7huOhKJKEcQDwGNeAN/PLaRA+/tPpzwBOYZebmG9zSK9t1LYdkh
+         NbXoAlwA3TG3JJiyt6ue0wsoPkY96KEFE5RTv8x266o8V/fvznpLlBq1lPCtNF/gos
+         RDkNnzNdNv59KNfynNCqdJmKDknZGZ3lef2yuqdY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Richard Cochran <richardcochran@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 098/113] packet: Fix error path in packet_init
-Date:   Wed, 15 May 2019 12:56:29 +0200
-Message-Id: <20190515090701.044735997@linuxfoundation.org>
+Subject: [PATCH 4.19 100/113] vlan: disable SIOCSHWTSTAMP in container
+Date:   Wed, 15 May 2019 12:56:31 +0200
+Message-Id: <20190515090701.224197776@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
 References: <20190515090652.640988966@linuxfoundation.org>
@@ -60,87 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 36096f2f4fa05f7678bc87397665491700bae757 ]
+[ Upstream commit 873017af778439f2f8e3d87f28ddb1fcaf244a76 ]
 
-kernel BUG at lib/list_debug.c:47!
-invalid opcode: 0000 [#1
-CPU: 0 PID: 12914 Comm: rmmod Tainted: G        W         5.1.0+ #47
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.9.3-0-ge2fc41e-prebuilt.qemu-project.org 04/01/2014
-RIP: 0010:__list_del_entry_valid+0x53/0x90
-Code: 48 8b 32 48 39 fe 75 35 48 8b 50 08 48 39 f2 75 40 b8 01 00 00 00 5d c3 48
-89 fe 48 89 c2 48 c7 c7 18 75 fe 82 e8 cb 34 78 ff <0f> 0b 48 89 fe 48 c7 c7 50 75 fe 82 e8 ba 34 78 ff 0f 0b 48 89 f2
-RSP: 0018:ffffc90001c2fe40 EFLAGS: 00010286
-RAX: 000000000000004e RBX: ffffffffa0184000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffff888237a17788 RDI: 00000000ffffffff
-RBP: ffffc90001c2fe40 R08: 0000000000000000 R09: 0000000000000000
-R10: ffffc90001c2fe10 R11: 0000000000000000 R12: 0000000000000000
-R13: ffffc90001c2fe50 R14: ffffffffa0184000 R15: 0000000000000000
-FS:  00007f3d83634540(0000) GS:ffff888237a00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000555c350ea818 CR3: 0000000231677000 CR4: 00000000000006f0
-Call Trace:
- unregister_pernet_operations+0x34/0x120
- unregister_pernet_subsys+0x1c/0x30
- packet_exit+0x1c/0x369 [af_packet
- __x64_sys_delete_module+0x156/0x260
- ? lockdep_hardirqs_on+0x133/0x1b0
- ? do_syscall_64+0x12/0x1f0
- do_syscall_64+0x6e/0x1f0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+With NET_ADMIN enabled in container, a normal user could be mapped to
+root and is able to change the real device's rx filter via ioctl on
+vlan, which would affect the other ptp process on host. Fix it by
+disabling SIOCSHWTSTAMP in container.
 
-When modprobe af_packet, register_pernet_subsys
-fails and does a cleanup, ops->list is set to LIST_POISON1,
-but the module init is considered to success, then while rmmod it,
-BUG() is triggered in __list_del_entry_valid which is called from
-unregister_pernet_subsys. This patch fix error handing path in
-packet_init to avoid possilbe issue if some error occur.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: a6111d3c93d0 ("vlan: Pass SIOC[SG]HWTSTAMP ioctls to real device")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/packet/af_packet.c |   25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ net/8021q/vlan_dev.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/packet/af_packet.c
-+++ b/net/packet/af_packet.c
-@@ -4578,14 +4578,29 @@ static void __exit packet_exit(void)
+--- a/net/8021q/vlan_dev.c
++++ b/net/8021q/vlan_dev.c
+@@ -368,10 +368,12 @@ static int vlan_dev_ioctl(struct net_dev
+ 	ifrr.ifr_ifru = ifr->ifr_ifru;
  
- static int __init packet_init(void)
- {
--	int rc = proto_register(&packet_proto, 0);
-+	int rc;
- 
--	if (rc != 0)
-+	rc = proto_register(&packet_proto, 0);
-+	if (rc)
- 		goto out;
-+	rc = sock_register(&packet_family_ops);
-+	if (rc)
-+		goto out_proto;
-+	rc = register_pernet_subsys(&packet_net_ops);
-+	if (rc)
-+		goto out_sock;
-+	rc = register_netdevice_notifier(&packet_netdev_notifier);
-+	if (rc)
-+		goto out_pernet;
- 
--	sock_register(&packet_family_ops);
--	register_pernet_subsys(&packet_net_ops);
--	register_netdevice_notifier(&packet_netdev_notifier);
-+	return 0;
-+
-+out_pernet:
-+	unregister_pernet_subsys(&packet_net_ops);
-+out_sock:
-+	sock_unregister(PF_PACKET);
-+out_proto:
-+	proto_unregister(&packet_proto);
- out:
- 	return rc;
- }
+ 	switch (cmd) {
++	case SIOCSHWTSTAMP:
++		if (!net_eq(dev_net(dev), &init_net))
++			break;
+ 	case SIOCGMIIPHY:
+ 	case SIOCGMIIREG:
+ 	case SIOCSMIIREG:
+-	case SIOCSHWTSTAMP:
+ 	case SIOCGHWTSTAMP:
+ 		if (netif_device_present(real_dev) && ops->ndo_do_ioctl)
+ 			err = ops->ndo_do_ioctl(real_dev, &ifrr, cmd);
 
 
