@@ -2,52 +2,52 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA67C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40ACEC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8C7206A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D3992084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:07:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918442;
-	bh=Uf0AHVJu6yPNntVN2NijqXaa7UTWJ8gYvQmPSYC/pTw=;
+	s=default; t=1557918446;
+	bh=/8t7sR6yshO0rm6d8GV/7qh4yOkTDpZvtfJVpBiEOFE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nQVhIYuSPI2yQJ53gz/3hmDFG9PmcA0W4s1/uwsDXcaf7ahmYsDB8bOgvs4pEsxkL
-	 6I1feSAXDbDaiG7xbo88k5Xms37KBC9ROgGvRoSwNTSVjIJDWWqD3ryIl8aUwmUv5v
-	 XrWiXj6QXWMPLUf143a9yzViYX3ow5dEUp6IWIFw=
+	b=KP8p0ODbnvOluW4E9+FzZ/S80o/MkFzGXanquxJGhcstwJXo0cw7jN6UdIm214iko
+	 H02NcAlfY9rzZWYOQXrq6VBx8cIvevfjNj1tNR5kcKtR4V3wnwRDT7+zMsDHlrCgNX
+	 z6FPrDhbnJn0ZTKXlHB0sKhONSwQHM4rQewCyy8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbfEOLHV (ORCPT
+        id S1728913AbfEOLHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:07:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38740 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:07:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728868AbfEOLHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:07:19 -0400
+        id S1728902AbfEOLHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:07:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80B882084F;
-        Wed, 15 May 2019 11:07:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1948520881;
+        Wed, 15 May 2019 11:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918438;
-        bh=Uf0AHVJu6yPNntVN2NijqXaa7UTWJ8gYvQmPSYC/pTw=;
+        s=default; t=1557918440;
+        bh=/8t7sR6yshO0rm6d8GV/7qh4yOkTDpZvtfJVpBiEOFE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jZcND5iUdo73loyzqerSv9KslIY4YmL32IhdN5mipCcyNBoTZd6BdGWT9ByBDP0kl
-         xE9DO67RxRbNu5QWXcGRBdkBxk3qYgHHpaZdeCxOpjPO4tMP1ac66ztg7ZMXOYpxU6
-         ez/erbxRv/jLL2ssku6jczrhzUk5ULrmwm8Hj6Sc=
+        b=L31j9cbAjsElzBo77pOvI8Mag0doPwwOjjp7sNci3HTcGZJsNLa8kmRxTwc0MOG8c
+         xVmUwX3BzNCf1u6SS8GoXJTnWLfKi7Fa8oYpVYZN00PbXeOwTpKKTGfFqdZ1y3f3C7
+         FGs7k6SMANh6qvWPfIA5ATQa06c1QA7AuSYRigEU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 132/266] xsysace: Fix error handling in ace_setup
-Date:   Wed, 15 May 2019 12:53:59 +0200
-Message-Id: <20190515090727.416812720@linuxfoundation.org>
+        stable@vger.kernel.org, David Laight <David.Laight@aculab.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 115/266] packet: validate msg_namelen in send directly
+Date:   Wed, 15 May 2019 12:53:42 +0200
+Message-Id: <20190515090726.348855449@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,85 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 47b16820c490149c2923e8474048f2c6e7557cab ]
+From: Willem de Bruijn <willemb@google.com>
 
-If xace hardware reports a bad version number, the error handling code
-in ace_setup() calls put_disk(), followed by queue cleanup. However, since
-the disk data structure has the queue pointer set, put_disk() also
-cleans and releases the queue. This results in blk_cleanup_queue()
-accessing an already released data structure, which in turn may result
-in a crash such as the following.
+[ Upstream commit 486efdc8f6ce802b27e15921d2353cc740c55451 ]
 
-[   10.681671] BUG: Kernel NULL pointer dereference at 0x00000040
-[   10.681826] Faulting instruction address: 0xc0431480
-[   10.682072] Oops: Kernel access of bad area, sig: 11 [#1]
-[   10.682251] BE PAGE_SIZE=4K PREEMPT Xilinx Virtex440
-[   10.682387] Modules linked in:
-[   10.682528] CPU: 0 PID: 1 Comm: swapper Tainted: G        W         5.0.0-rc6-next-20190218+ #2
-[   10.682733] NIP:  c0431480 LR: c043147c CTR: c0422ad8
-[   10.682863] REGS: cf82fbe0 TRAP: 0300   Tainted: G        W          (5.0.0-rc6-next-20190218+)
-[   10.683065] MSR:  00029000 <CE,EE,ME>  CR: 22000222  XER: 00000000
-[   10.683236] DEAR: 00000040 ESR: 00000000
-[   10.683236] GPR00: c043147c cf82fc90 cf82ccc0 00000000 00000000 00000000 00000002 00000000
-[   10.683236] GPR08: 00000000 00000000 c04310bc 00000000 22000222 00000000 c0002c54 00000000
-[   10.683236] GPR16: 00000000 00000001 c09aa39c c09021b0 c09021dc 00000007 c0a68c08 00000000
-[   10.683236] GPR24: 00000001 ced6d400 ced6dcf0 c0815d9c 00000000 00000000 00000000 cedf0800
-[   10.684331] NIP [c0431480] blk_mq_run_hw_queue+0x28/0x114
-[   10.684473] LR [c043147c] blk_mq_run_hw_queue+0x24/0x114
-[   10.684602] Call Trace:
-[   10.684671] [cf82fc90] [c043147c] blk_mq_run_hw_queue+0x24/0x114 (unreliable)
-[   10.684854] [cf82fcc0] [c04315bc] blk_mq_run_hw_queues+0x50/0x7c
-[   10.685002] [cf82fce0] [c0422b24] blk_set_queue_dying+0x30/0x68
-[   10.685154] [cf82fcf0] [c0423ec0] blk_cleanup_queue+0x34/0x14c
-[   10.685306] [cf82fd10] [c054d73c] ace_probe+0x3dc/0x508
-[   10.685445] [cf82fd50] [c052d740] platform_drv_probe+0x4c/0xb8
-[   10.685592] [cf82fd70] [c052abb0] really_probe+0x20c/0x32c
-[   10.685728] [cf82fda0] [c052ae58] driver_probe_device+0x68/0x464
-[   10.685877] [cf82fdc0] [c052b500] device_driver_attach+0xb4/0xe4
-[   10.686024] [cf82fde0] [c052b5dc] __driver_attach+0xac/0xfc
-[   10.686161] [cf82fe00] [c0528428] bus_for_each_dev+0x80/0xc0
-[   10.686314] [cf82fe30] [c0529b3c] bus_add_driver+0x144/0x234
-[   10.686457] [cf82fe50] [c052c46c] driver_register+0x88/0x15c
-[   10.686610] [cf82fe60] [c09de288] ace_init+0x4c/0xac
-[   10.686742] [cf82fe80] [c0002730] do_one_initcall+0xac/0x330
-[   10.686888] [cf82fee0] [c09aafd0] kernel_init_freeable+0x34c/0x478
-[   10.687043] [cf82ff30] [c0002c6c] kernel_init+0x18/0x114
-[   10.687188] [cf82ff40] [c000f2f0] ret_from_kernel_thread+0x14/0x1c
-[   10.687349] Instruction dump:
-[   10.687435] 3863ffd4 4bfffd70 9421ffd0 7c0802a6 93c10028 7c9e2378 93e1002c 38810008
-[   10.687637] 7c7f1b78 90010034 4bfffc25 813f008c <81290040> 75290100 4182002c 80810008
-[   10.688056] ---[ end trace 13c9ff51d41b9d40 ]---
+Packet sockets in datagram mode take a destination address. Verify its
+length before passing to dev_hard_header.
 
-Fix the problem by setting the disk queue pointer to NULL before calling
-put_disk(). A more comprehensive fix might be to rearrange the code
-to check the hardware version before initializing data structures,
-but I don't know if this would have undesirable side effects, and
-it would increase the complexity of backporting the fix to older kernels.
+Prior to 2.6.14-rc3, the send code ignored sll_halen. This is
+established behavior. Directly compare msg_namelen to dev->addr_len.
 
-Fixes: 74489a91dd43a ("Add support for Xilinx SystemACE CompactFlash interface")
-Acked-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Change v1->v2: initialize addr in all paths
+
+Fixes: 6b8d95f1795c4 ("packet: validate address length if non-zero")
+Suggested-by: David Laight <David.Laight@aculab.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/block/xsysace.c | 2 ++
- 1 file changed, 2 insertions(+)
+ net/packet/af_packet.c |   23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/block/xsysace.c b/drivers/block/xsysace.c
-index c4328d9d9981..f838119d12b2 100644
---- a/drivers/block/xsysace.c
-+++ b/drivers/block/xsysace.c
-@@ -1062,6 +1062,8 @@ static int ace_setup(struct ace_device *ace)
- 	return 0;
+--- a/net/packet/af_packet.c
++++ b/net/packet/af_packet.c
+@@ -2490,8 +2490,8 @@ static int tpacket_snd(struct packet_soc
+ 	void *ph;
+ 	DECLARE_SOCKADDR(struct sockaddr_ll *, saddr, msg->msg_name);
+ 	bool need_wait = !(msg->msg_flags & MSG_DONTWAIT);
++	unsigned char *addr = NULL;
+ 	int tp_len, size_max;
+-	unsigned char *addr;
+ 	int len_sum = 0;
+ 	int status = TP_STATUS_AVAILABLE;
+ 	int hlen, tlen;
+@@ -2511,10 +2511,13 @@ static int tpacket_snd(struct packet_soc
+ 						sll_addr)))
+ 			goto out;
+ 		proto	= saddr->sll_protocol;
+-		addr	= saddr->sll_halen ? saddr->sll_addr : NULL;
+ 		dev = dev_get_by_index(sock_net(&po->sk), saddr->sll_ifindex);
+-		if (addr && dev && saddr->sll_halen < dev->addr_len)
+-			goto out_put;
++		if (po->sk.sk_socket->type == SOCK_DGRAM) {
++			if (dev && msg->msg_namelen < dev->addr_len +
++				   offsetof(struct sockaddr_ll, sll_addr))
++				goto out_put;
++			addr = saddr->sll_addr;
++		}
+ 	}
  
- err_read:
-+	/* prevent double queue cleanup */
-+	ace->gd->queue = NULL;
- 	put_disk(ace->gd);
- err_alloc_disk:
- 	blk_cleanup_queue(ace->queue);
--- 
-2.20.1
-
+ 	err = -ENXIO;
+@@ -2652,7 +2655,7 @@ static int packet_snd(struct socket *soc
+ 	struct sk_buff *skb;
+ 	struct net_device *dev;
+ 	__be16 proto;
+-	unsigned char *addr;
++	unsigned char *addr = NULL;
+ 	int err, reserve = 0;
+ 	struct sockcm_cookie sockc;
+ 	struct virtio_net_hdr vnet_hdr = { 0 };
+@@ -2672,7 +2675,6 @@ static int packet_snd(struct socket *soc
+ 	if (likely(saddr == NULL)) {
+ 		dev	= packet_cached_dev_get(po);
+ 		proto	= po->num;
+-		addr	= NULL;
+ 	} else {
+ 		err = -EINVAL;
+ 		if (msg->msg_namelen < sizeof(struct sockaddr_ll))
+@@ -2680,10 +2682,13 @@ static int packet_snd(struct socket *soc
+ 		if (msg->msg_namelen < (saddr->sll_halen + offsetof(struct sockaddr_ll, sll_addr)))
+ 			goto out;
+ 		proto	= saddr->sll_protocol;
+-		addr	= saddr->sll_halen ? saddr->sll_addr : NULL;
+ 		dev = dev_get_by_index(sock_net(sk), saddr->sll_ifindex);
+-		if (addr && dev && saddr->sll_halen < dev->addr_len)
+-			goto out_unlock;
++		if (sock->type == SOCK_DGRAM) {
++			if (dev && msg->msg_namelen < dev->addr_len +
++				   offsetof(struct sockaddr_ll, sll_addr))
++				goto out_unlock;
++			addr = saddr->sll_addr;
++		}
+ 	}
+ 
+ 	err = -ENXIO;
 
 
