@@ -2,109 +2,134 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4ACDC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4629EC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8877920881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 113C420881
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 09:32:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="c4JFbjzR"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QxKz7pdr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfEOJ0K (ORCPT
+        id S1726260AbfEOJcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 05:26:10 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:47568 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725871AbfEOJ0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 05:26:09 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 453q1C1rtYz9vDc8;
-        Wed, 15 May 2019 11:26:07 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=c4JFbjzR; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 1Uv3Awwze50y; Wed, 15 May 2019 11:26:07 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 453q1C0TlNz9vDc7;
-        Wed, 15 May 2019 11:26:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1557912367; bh=3qRNFOXkrkponxLfzGmEjoSRxN5kc1zj/UiLZP1QB8Q=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=c4JFbjzRxT7TGL7+nB5rqpyUQRiyXqf/27PlDer9jVEZnqqGKWqvy49aA7/bWJcNy
-         58RDcE9gRAImFqhpJvA2pjjE7c11hb3wx8OxM5aLCys2ozH1BIFJFazMgXgeQINwVU
-         U8uooYdTdm7qVGbyGgLGLIlxo+e8C6QIlM4aSd+o=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2E6BF8B8F9;
-        Wed, 15 May 2019 11:26:08 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id RCvOx4aCNG0I; Wed, 15 May 2019 11:26:08 +0200 (CEST)
-Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.231.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DD35F8B8F7;
-        Wed, 15 May 2019 11:26:07 +0200 (CEST)
-Subject: Re: [PATCH] powerpc: Remove double free
-To:     "Tobin C. Harding" <tobin@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190515090750.30647-1-tobin@kernel.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <aa001c3b-f96e-2078-0861-315613ec33a0@c-s.fr>
-Date:   Wed, 15 May 2019 11:26:03 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 15 May 2019 05:32:04 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:41294 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfEOJcD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 05:32:03 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4F9Oka8107637;
+        Wed, 15 May 2019 09:31:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2018-07-02;
+ bh=hSu1AVv1i5MwGTlZX96Y2ojOopFKVDPdwp7odcEtjSU=;
+ b=QxKz7pdrvgFAsizbgDOzDRwgYaxCVVOCZKxT6V2UQ5YrwlWM7dnYddmmQKgH52xwsiyF
+ yDDDPg8rcWPTiSRhLHcrfOWh85hHiUa09rekpc6c9sHJ+lkRMXfYq2DRBrwFMBzJMrmL
+ Y2vBL5aZCUseBkHAt9O1AGsDRf/hOnHL54ANFoej5iUdPo31j0lRklAWgJNzt1/0BJVx
+ hIQ4pDwXPVxYnhQIfgbbYz4wOAEwQhednYjrmtjracQG/RdLKozlYNDNg4j8yZlrn9/Q
+ xt3n+qqTSnvriClxUItv5X4b1emGDhmSzilE3u2FbxHgB4z21FJsZStgbjbbsBpuaqNC QQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2sdq1qkgaa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 May 2019 09:31:53 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4F9Vdrw093333;
+        Wed, 15 May 2019 09:31:52 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2sdnqk433v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 May 2019 09:31:52 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x4F9VoVH001813;
+        Wed, 15 May 2019 09:31:50 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 15 May 2019 02:31:49 -0700
+Date:   Wed, 15 May 2019 12:31:41 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Amelie Delaunay <amelie.delaunay@st.com>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] mfd: stmfx: Uninitialized variable in stmfx_irq_handler()
+Message-ID: <20190515093141.GA3409@mwanda>
 MIME-Version: 1.0
-In-Reply-To: <20190515090750.30647-1-tobin@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9257 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905150061
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9257 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905150061
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kobject_put() released index_dir->kobj
+The problem is that on 64bit systems then we don't clear the higher
+bits of the "pending" variable.  So when we do:
 
-but who will release 'index' ?
+	ack = pending & ~BIT(STMFX_REG_IRQ_SRC_EN_GPIO);
+	if (ack) {
 
-Christophe
+the if (ack) condition relies on uninitialized data.  The fix it that
+I've changed "pending" from an unsigned long to a u32.  I changed "n" as
+well, because that's a number in the 0-10 range and it fits easily
+inside an int.  We do need to add a cast to "pending" when we use it in
+the for_each_set_bit() loop, but that doesn't cause a proble, it's
+fine.
 
-Le 15/05/2019 à 11:07, Tobin C. Harding a écrit :
-> kfree() after kobject_put().  Who ever wrote this was on crack.
-> 
-> Fixes: 7e8039795a80 ("powerpc/cacheinfo: Fix kobject memleak")
-> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> ---
-> 
-> FTR
-> 
-> git log --pretty=format:"%h%x09%an%x09%ad%x09%s" | grep 7e8039795a80
-> 7e8039795a80	Tobin C. Harding	Tue Apr 30 11:09:23 2019 +1000	powerpc/cacheinfo: Fix kobject memleak
-> 
->   arch/powerpc/kernel/cacheinfo.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/kernel/cacheinfo.c b/arch/powerpc/kernel/cacheinfo.c
-> index f2ed3ef4b129..862e2890bd3d 100644
-> --- a/arch/powerpc/kernel/cacheinfo.c
-> +++ b/arch/powerpc/kernel/cacheinfo.c
-> @@ -767,7 +767,6 @@ static void cacheinfo_create_index_dir(struct cache *cache, int index,
->   				  cache_dir->kobj, "index%d", index);
->   	if (rc) {
->   		kobject_put(&index_dir->kobj);
-> -		kfree(index_dir);
->   		return;
->   	}
->   
-> 
+Fixes: 06252ade9156 ("mfd: Add ST Multi-Function eXpander (STMFX) core driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/mfd/stmfx.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/mfd/stmfx.c b/drivers/mfd/stmfx.c
+index fe8efba2d45f..fee75b5d098e 100644
+--- a/drivers/mfd/stmfx.c
++++ b/drivers/mfd/stmfx.c
+@@ -204,12 +204,12 @@ static struct irq_chip stmfx_irq_chip = {
+ static irqreturn_t stmfx_irq_handler(int irq, void *data)
+ {
+ 	struct stmfx *stmfx = data;
+-	unsigned long n, pending;
++	u32 pending;
+ 	u32 ack;
++	int n;
+ 	int ret;
+ 
+-	ret = regmap_read(stmfx->map, STMFX_REG_IRQ_PENDING,
+-			  (u32 *)&pending);
++	ret = regmap_read(stmfx->map, STMFX_REG_IRQ_PENDING, &pending);
+ 	if (ret)
+ 		return IRQ_NONE;
+ 
+@@ -224,7 +224,7 @@ static irqreturn_t stmfx_irq_handler(int irq, void *data)
+ 			return IRQ_NONE;
+ 	}
+ 
+-	for_each_set_bit(n, &pending, STMFX_REG_IRQ_SRC_MAX)
++	for_each_set_bit(n, (unsigned long *)&pending, STMFX_REG_IRQ_SRC_MAX)
+ 		handle_nested_irq(irq_find_mapping(stmfx->irq_domain, n));
+ 
+ 	return IRQ_HANDLED;
+-- 
+2.20.1
+
