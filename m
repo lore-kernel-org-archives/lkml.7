@@ -4,57 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC13C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEBFC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 224FF2084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:58:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 967C820843
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:58:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921492;
-	bh=JgBM/wCgs/2NqfkScBOeU3yDhKLS3px3A4CeR1lsOek=;
+	s=default; t=1557921499;
+	bh=LbQpxIztwr/8bF5oi72p2pDfyuGFhwEhoZpWbI683ug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RsDEFhKQb1HudXdwNr4CqlLwZFrcnEGaExjitX1RFxNGNlJZSjw2ggaaZoUieduy2
-	 8zxkJdVb04ZhAlCIon4vvu4a1KPOFOvWTVBIqUhhaQWteZ3rRwCQSNTO/02G9yEoeM
-	 aIkhYyAgUyXhPwDyUg70aM6fykf2DffLl8h+UmEk=
+	b=dGy/qDQmRF2nxhm7LHK6ecWOd84JIHspeGo8lp233yA/F23YpGr8pUI6ythb3rpI+
+	 VDKhzqT/QFmTRctiLOWajkS+k2X70xnFfCh8uG62TL7IMxH4Pfjs97BLl0eZazlixe
+	 XJpRfX4mst0S3VvXpECZQF6PwURnAVNbgBsqQUqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730488AbfEOLQ0 (ORCPT
+        id S1730482AbfEOL6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:16:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53082 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:58:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730473AbfEOLQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:16:20 -0400
+        id S1727222AbfEOLQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:16:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C0E120843;
-        Wed, 15 May 2019 11:16:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B50322084E;
+        Wed, 15 May 2019 11:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918979;
-        bh=JgBM/wCgs/2NqfkScBOeU3yDhKLS3px3A4CeR1lsOek=;
+        s=default; t=1557918982;
+        bh=LbQpxIztwr/8bF5oi72p2pDfyuGFhwEhoZpWbI683ug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j+n52R4PWFaweeSXLwcGWaUGDu4wWGuoA2vjHc7cc1MiyCD5kt0057H3lPqdbUazZ
-         rQMQGK43VQG/NPC8Sj6DP2jZAJfhTk35Ce8hoZW7kSeUSyh6nCM3ofJRB92QuKE5TN
-         OANxWPVDV8ZtZJykco1Fn5gDWIXAlB1hXB2n+00M=
+        b=BDGprfq+oSk24K1mHAQozDGSr4LoJ/ncBVC0lkpZTIfzLo/DivvpwGNJHVlnxuAAe
+         pHmufL7m6F/IISNTCJJ7ms1bLbcXbDMbPgkskoJkkCq0u2JPEijECQYJLsJfJm0sHJ
+         6BodQDQrO7CXyjTJUhrpmJmDvORCkPtEN+/cVD0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
-        Daniel Drake <drake@endlessm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, linux@endlessm.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 022/115] x86/reboot, efi: Use EFI reboot for Acer TravelMate X514-51T
-Date:   Wed, 15 May 2019 12:55:02 +0200
-Message-Id: <20190515090700.904928784@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 023/115] KVM: fix spectrev1 gadgets
+Date:   Wed, 15 May 2019 12:55:03 +0200
+Message-Id: <20190515090700.957801365@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -67,100 +59,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0082517fa4bce073e7cf542633439f26538a14cc ]
+[ Upstream commit 1d487e9bf8ba66a7174c56a0029c54b1eca8f99c ]
 
-Upon reboot, the Acer TravelMate X514-51T laptop appears to complete the
-shutdown process, but then it hangs in BIOS POST with a black screen.
+These were found with smatch, and then generalized when applicable.
 
-The problem is intermittent - at some points it has appeared related to
-Secure Boot settings or different kernel builds, but ultimately we have
-not been able to identify the exact conditions that trigger the issue to
-come and go.
-
-Besides, the EFI mode cannot be disabled in the BIOS of this model.
-
-However, after extensive testing, we observe that using the EFI reboot
-method reliably avoids the issue in all cases.
-
-So add a boot time quirk to use EFI reboot on such systems.
-
-Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=203119
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Cc: linux@endlessm.com
-Link: http://lkml.kernel.org/r/20190412080152.3718-1-jian-hong@endlessm.com
-[ Fix !CONFIG_EFI build failure, clarify the code and the changelog a bit. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/reboot.c | 21 +++++++++++++++++++++
- include/linux/efi.h      |  7 ++++++-
- 2 files changed, 27 insertions(+), 1 deletion(-)
+ arch/x86/kvm/lapic.c     |  4 +++-
+ include/linux/kvm_host.h | 10 ++++++----
+ virt/kvm/irqchip.c       |  5 +++--
+ virt/kvm/kvm_main.c      |  6 ++++--
+ 4 files changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 2126b9d27c340..c663d5fcff2ee 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -81,6 +81,19 @@ static int __init set_bios_reboot(const struct dmi_system_id *d)
- 	return 0;
- }
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index f7c34184342a5..053e4937af0cb 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -133,6 +133,7 @@ static inline bool kvm_apic_map_get_logical_dest(struct kvm_apic_map *map,
+ 		if (offset <= max_apic_id) {
+ 			u8 cluster_size = min(max_apic_id - offset + 1, 16U);
  
-+/*
-+ * Some machines don't handle the default ACPI reboot method and
-+ * require the EFI reboot method:
-+ */
-+static int __init set_efi_reboot(const struct dmi_system_id *d)
-+{
-+	if (reboot_type != BOOT_EFI && !efi_runtime_disabled()) {
-+		reboot_type = BOOT_EFI;
-+		pr_info("%s series board detected. Selecting EFI-method for reboot.\n", d->ident);
-+	}
-+	return 0;
-+}
-+
- void __noreturn machine_real_restart(unsigned int type)
++			offset = array_index_nospec(offset, map->max_apic_id + 1);
+ 			*cluster = &map->phys_map[offset];
+ 			*mask = dest_id & (0xffff >> (16 - cluster_size));
+ 		} else {
+@@ -829,7 +830,8 @@ static inline bool kvm_apic_map_get_dest_lapic(struct kvm *kvm,
+ 		if (irq->dest_id > map->max_apic_id) {
+ 			*bitmap = 0;
+ 		} else {
+-			*dst = &map->phys_map[irq->dest_id];
++			u32 dest_id = array_index_nospec(irq->dest_id, map->max_apic_id + 1);
++			*dst = &map->phys_map[dest_id];
+ 			*bitmap = 1;
+ 		}
+ 		return true;
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 753c16633bac5..026615e242d8e 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -27,6 +27,7 @@
+ #include <linux/irqbypass.h>
+ #include <linux/swait.h>
+ #include <linux/refcount.h>
++#include <linux/nospec.h>
+ #include <asm/signal.h>
+ 
+ #include <linux/kvm.h>
+@@ -483,10 +484,10 @@ static inline struct kvm_io_bus *kvm_get_bus(struct kvm *kvm, enum kvm_bus idx)
+ 
+ static inline struct kvm_vcpu *kvm_get_vcpu(struct kvm *kvm, int i)
  {
- 	local_irq_disable();
-@@ -166,6 +179,14 @@ static const struct dmi_system_id reboot_dmi_table[] __initconst = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "AOA110"),
- 		},
- 	},
-+	{	/* Handle reboot issue on Acer TravelMate X514-51T */
-+		.callback = set_efi_reboot,
-+		.ident = "Acer TravelMate X514-51T",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate X514-51T"),
-+		},
-+	},
- 
- 	/* Apple */
- 	{	/* Handle problems with rebooting on Apple MacBook5 */
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index b68b7d199feea..2dab158b74c45 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1518,7 +1518,12 @@ efi_status_t efi_setup_gop(efi_system_table_t *sys_table_arg,
- 			   struct screen_info *si, efi_guid_t *proto,
- 			   unsigned long size);
- 
--bool efi_runtime_disabled(void);
-+#ifdef CONFIG_EFI
-+extern bool efi_runtime_disabled(void);
-+#else
-+static inline bool efi_runtime_disabled(void) { return true; }
-+#endif
+-	/* Pairs with smp_wmb() in kvm_vm_ioctl_create_vcpu, in case
+-	 * the caller has read kvm->online_vcpus before (as is the case
+-	 * for kvm_for_each_vcpu, for example).
+-	 */
++	int num_vcpus = atomic_read(&kvm->online_vcpus);
++	i = array_index_nospec(i, num_vcpus);
 +
- extern void efi_call_virt_check_flags(unsigned long flags, const char *call);
++	/* Pairs with smp_wmb() in kvm_vm_ioctl_create_vcpu.  */
+ 	smp_rmb();
+ 	return kvm->vcpus[i];
+ }
+@@ -570,6 +571,7 @@ void kvm_put_kvm(struct kvm *kvm);
  
- enum efi_secureboot_mode {
+ static inline struct kvm_memslots *__kvm_memslots(struct kvm *kvm, int as_id)
+ {
++	as_id = array_index_nospec(as_id, KVM_ADDRESS_SPACE_NUM);
+ 	return srcu_dereference_check(kvm->memslots[as_id], &kvm->srcu,
+ 			lockdep_is_held(&kvm->slots_lock) ||
+ 			!refcount_read(&kvm->users_count));
+diff --git a/virt/kvm/irqchip.c b/virt/kvm/irqchip.c
+index b1286c4e07122..0bd0683640bdf 100644
+--- a/virt/kvm/irqchip.c
++++ b/virt/kvm/irqchip.c
+@@ -144,18 +144,19 @@ static int setup_routing_entry(struct kvm *kvm,
+ {
+ 	struct kvm_kernel_irq_routing_entry *ei;
+ 	int r;
++	u32 gsi = array_index_nospec(ue->gsi, KVM_MAX_IRQ_ROUTES);
+ 
+ 	/*
+ 	 * Do not allow GSI to be mapped to the same irqchip more than once.
+ 	 * Allow only one to one mapping between GSI and non-irqchip routing.
+ 	 */
+-	hlist_for_each_entry(ei, &rt->map[ue->gsi], link)
++	hlist_for_each_entry(ei, &rt->map[gsi], link)
+ 		if (ei->type != KVM_IRQ_ROUTING_IRQCHIP ||
+ 		    ue->type != KVM_IRQ_ROUTING_IRQCHIP ||
+ 		    ue->u.irqchip.irqchip == ei->irqchip.irqchip)
+ 			return -EINVAL;
+ 
+-	e->gsi = ue->gsi;
++	e->gsi = gsi;
+ 	e->type = ue->type;
+ 	r = kvm_set_routing_entry(kvm, e, ue);
+ 	if (r)
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index a373c60ef1c06..b91716b1b428e 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2886,12 +2886,14 @@ static int kvm_ioctl_create_device(struct kvm *kvm,
+ 	struct kvm_device_ops *ops = NULL;
+ 	struct kvm_device *dev;
+ 	bool test = cd->flags & KVM_CREATE_DEVICE_TEST;
++	int type;
+ 	int ret;
+ 
+ 	if (cd->type >= ARRAY_SIZE(kvm_device_ops_table))
+ 		return -ENODEV;
+ 
+-	ops = kvm_device_ops_table[cd->type];
++	type = array_index_nospec(cd->type, ARRAY_SIZE(kvm_device_ops_table));
++	ops = kvm_device_ops_table[type];
+ 	if (ops == NULL)
+ 		return -ENODEV;
+ 
+@@ -2906,7 +2908,7 @@ static int kvm_ioctl_create_device(struct kvm *kvm,
+ 	dev->kvm = kvm;
+ 
+ 	mutex_lock(&kvm->lock);
+-	ret = ops->create(dev, cd->type);
++	ret = ops->create(dev, type);
+ 	if (ret < 0) {
+ 		mutex_unlock(&kvm->lock);
+ 		kfree(dev);
 -- 
 2.20.1
 
