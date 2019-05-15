@@ -2,135 +2,137 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BC0C04AB7
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCB2C04AB4
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B90B52084F
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E582084F
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 00:26:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n8yIZHng"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IuVZ2l4O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726286AbfEOA0B (ORCPT
+        id S1726370AbfEOA0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 May 2019 20:26:01 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:44890 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfEOA0A (ORCPT
+        Tue, 14 May 2019 20:26:52 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46665 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfEOA0v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 May 2019 20:26:00 -0400
-Received: by mail-qt1-f194.google.com with SMTP id f24so1265195qtk.11;
-        Tue, 14 May 2019 17:25:59 -0700 (PDT)
+        Tue, 14 May 2019 20:26:51 -0400
+Received: by mail-pg1-f194.google.com with SMTP id t187so373972pgb.13;
+        Tue, 14 May 2019 17:26:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xbEZhhiTM5wPNpwedpHvuoXmY8IRI4IkCvFgEMZLO20=;
-        b=n8yIZHnglVsiT8HXDCM669WIA0nw/n9iXppL/q3GzyAOYP9Y4q7SzKD4rxVRcCTqcJ
-         CZK+uGoT1Dt2X04VI/OkFE1HiFZUVbrQDK7lZBrx7SZ0kG6FfxdH5SYNqBEu7/LCVAg5
-         +wnmct38kudlNt8EOeaiJB1ihdceeI5u5UKfjcdTjKr7WjAVWrhjfgGpDkBoEDPlPNxP
-         nN3hCl5OPu60Nm1KkdBCo5oIw9KNmw5juEsTFnZjLRfWoAYOO+Cqjeg0DvN6J8Sdzruc
-         CeSKNPwMYtjTsDMu73uP2YdKS5s+gjziyao3h2D+c3MenoM8YaQuJdHIJizEMifYAvq3
-         qTfw==
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=ypDVsaFFOykr6yuKVx2k2XaJyOr+u5tERYjVpiOjyiw=;
+        b=IuVZ2l4O+MIDyXpYgUM5qQQYoX7Y/sJsvGPvmvehKAC4lwwIGDudhzngFBjnRWN5ci
+         k8JCzwMxo0FPATgnUf4u2R2YAGB3ucoMe6dvaUUgS8cW7nlEYr0d+QFwmikIyWdOae9X
+         BS5/vwSRCViiC8xY3hAHYh4bpV2zhvnq0blTNTPWsFb+XmhdfxM+Bo2jZReJurV/GrST
+         8fIBxa0ZCqTTyE7l8H4cMfsveUZmMSCHTxDv7jz/q6pmMaZ1VAUfFLnS/1mPPZOC7zye
+         iSrgkJ/pxklMI6fKQALs4Yf/9f1VNfTv8Na0CM/+Hu116UCn5U7KYQb+xYIHEY5zeGUw
+         h+Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xbEZhhiTM5wPNpwedpHvuoXmY8IRI4IkCvFgEMZLO20=;
-        b=qZAP8MEJPmsS/NVsnB10MnLhzBVLCXJi0o+6ArdtsmFMKnMlMkVPtpchJ12pilaQTX
-         A5wiuTADWdBNWKp4ZECy2BsF82l3K31yabBwSKxCg34AubcUuXV79qw4sF1X1cjwsAL/
-         cb9lRI45+RTdoJcCMCdi6x9QoPMJAedLInYOYOPsfTX0WtMJF7Nd+ersbHRoLMWRPfTf
-         da5kJHNqrcarMUQFzLZVHhrKa7t8xbYg5HllnetbqDygC2cp1+rA5XxbRfJEZ1Phtl4t
-         3LVrJoNeO0BP9Q23NZ///Meufg2WFSX5ApKnnR/XYjcUNErId0HRuwv8ZDFddoiFJP0a
-         fmKg==
-X-Gm-Message-State: APjAAAVJ9H1QjgjI48E5gSsIvm3UzyWu2wrmi839ism419vu4KKytWnm
-        ixk6g8NiUojVbSVErmkLMKs=
-X-Google-Smtp-Source: APXvYqzzMKfeoolE+f8xhkxIlnOD6q5hGrnd1zKle3OBintg9n870NCYQHDt8rsg0U/hV9MGZgUljQ==
-X-Received: by 2002:ac8:34b7:: with SMTP id w52mr32652097qtb.11.1557879959377;
-        Tue, 14 May 2019 17:25:59 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id l12sm398385qta.82.2019.05.14.17.25.58
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ypDVsaFFOykr6yuKVx2k2XaJyOr+u5tERYjVpiOjyiw=;
+        b=iQR7l5pOdgVGnOOJlA6UfjzqYdnCtYavCRWYyLCYh4WuCrfOzgwVSunqaVMVQP5awI
+         XPp4wEDBfbr8QuorF1wvIVnU7xuiaMZvGzMvytWecPjY0f/ELcqXa071GGt9IChyb6Dm
+         aMBbvTMZmgtE60t4ClxzvzznT6iaCWQF9i2pDKf4QjJZ+GCVV6UA2GHoQ5cAkWdx39Qu
+         iN6Q41vFaXXeUiSWdjnUN+Qww8M/L65MkYrrdx6FI7qR8my95sw+9WuXegpFHMWSduQm
+         NZ+PBx8cUY6JcsdV60U0JCjv+FYayaXWnsqodSx+khREb3gmiq+1PnK1whjVZUHOGYDC
+         H2UQ==
+X-Gm-Message-State: APjAAAUpTYV5EDFF+0n4DWRmQDrWqECSRUv9+63sqw/Z1eTCkLSTQvl7
+        xyhhqye/YdoAmeXJOXiNiUs=
+X-Google-Smtp-Source: APXvYqzd3JNtsP3FkyXRtoQpQjmSxi6gP+3fyLytxrHZq7D+o9iT6N45YBj70jF10Gduz840x4f9ig==
+X-Received: by 2002:a63:1c4:: with SMTP id 187mr13725679pgb.317.1557880010775;
+        Tue, 14 May 2019 17:26:50 -0700 (PDT)
+Received: from [192.168.1.70] (c-24-6-192-50.hsd1.ca.comcast.net. [24.6.192.50])
+        by smtp.gmail.com with ESMTPSA id 204sm272559pgh.50.2019.05.14.17.26.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 14 May 2019 17:25:58 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 14 May 2019 20:25:57 -0400
-To:     Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Rob Landley <rob@landley.net>,
-        Arvind Sankar <niveditas98@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        initramfs@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
- ram disk
-Message-ID: <20190515002556.GA88615@rani.riverdale.lan>
-References: <dca50ee1-62d8-2256-6fdb-9a786e6cea5a@landley.net>
- <20190512194322.GA71658@rani.riverdale.lan>
- <3fe0e74b-19ca-6081-3afe-e05921b1bfe6@huawei.com>
- <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
- <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
- <CALCETrV3b205L38xqPr6QqwGn6-vxQdPoJGUygJJpgM-JqqXfQ@mail.gmail.com>
- <9357cb32-3803-2a7e-4949-f9e4554c1ee9@huawei.com>
- <20190514165842.GC28266@kroah.com>
- <f01ad775-54de-033f-d8cb-f27f36e92f0c@huawei.com>
+        Tue, 14 May 2019 17:26:50 -0700 (PDT)
+Subject: Re: [PATCH v2 00/17] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+To:     Theodore Ts'o <tytso@mit.edu>, Tim.Bird@sony.com,
+        knut.omang@oracle.com, gregkh@linuxfoundation.org,
+        brendanhiggins@google.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        robh@kernel.org, sboyd@kernel.org, shuah@kernel.org,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, amir73il@gmail.com,
+        dan.carpenter@oracle.com, dan.j.williams@intel.com,
+        daniel@ffwll.ch, jdike@addtoit.com, joel@jms.id.au,
+        julia.lawall@lip6.fr, khilman@baylibre.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, richard@nod.at,
+        rientjes@google.com, rostedt@goodmis.org, wfg@linux.intel.com
+References: <a09a7e0e-9894-8c1a-34eb-fc482b1759d0@gmail.com>
+ <20190509015856.GB7031@mit.edu>
+ <580e092f-fa4e-eedc-9e9a-a57dd085f0a6@gmail.com>
+ <20190509032017.GA29703@mit.edu>
+ <7fd35df81c06f6eb319223a22e7b93f29926edb9.camel@oracle.com>
+ <20190509133551.GD29703@mit.edu>
+ <ECADFF3FD767C149AD96A924E7EA6EAF9770D591@USCULXMSG01.am.sony.com>
+ <875c546d-9713-bb59-47e4-77a1d2c69a6d@gmail.com>
+ <20190509214233.GA20877@mit.edu>
+ <80c72e64-2665-bd51-f78c-97f50f9a53ba@gmail.com>
+ <20190511173344.GA8507@mit.edu>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <a305c732-9953-8724-b4a4-25aa50c89365@gmail.com>
+Date:   Tue, 14 May 2019 17:26:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190511173344.GA8507@mit.edu>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f01ad775-54de-033f-d8cb-f27f36e92f0c@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 07:20:15PM +0200, Roberto Sassu wrote:
-> On 5/14/2019 6:58 PM, Greg KH wrote:
-> > On Tue, May 14, 2019 at 06:33:29PM +0200, Roberto Sassu wrote:
-> >> Right, the measurement/signature verification of the kernel image is
-> >> sufficient.
-> >>
-> >> Now, assuming that we defer the IMA initialization until /init in the
-> >> embedded initramfs has been executed, the problem is how to handle
-> >> processes launched with the user mode helper or files directly read by
-> >> the kernel (if it can happen before /init is executed). If IMA is not
-> >> yet enabled, these operations will be performed without measurement and
-> >> signature verification.
-> > 
-> > If you really care about this, don't launch any user mode helper
-> > programs (hint, you have the kernel option to control this and funnel
-> > everything into one, or no, binaries).  And don't allow the kernel to
-> > read any files either, again, you have control over this.
-> > 
-> > Or start IMA earlier if you need/want/care about this.
+On 5/11/19 10:33 AM, Theodore Ts'o wrote:
+> On Fri, May 10, 2019 at 02:12:40PM -0700, Frank Rowand wrote:
+>> However, the reply is incorrect.  Kselftest in-kernel tests (which
+>> is the context here) can be configured as built in instead of as
+>> a module, and built in a UML kernel.  The UML kernel can boot,
+>> running the in-kernel tests before UML attempts to invoke the
+>> init process.
 > 
-> Yes, this is how it works now. It couldn't start earlier than
-> late_initcall, as it has to wait until the TPM driver is initialized.
-> 
-> Anyway, it is enabled at the time /init is executed. And this would be
-> an issue because launching /init and reading xattrs from /.xattr-list
-> would be denied (the signature is missing).
-> 
-> And /.xattr-list won't have a signature, if initramfs is generated
-> locally.
-> 
-> Roberto
-> 
-> -- 
-> HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-> Managing Director: Bo PENG, Jian LI, Yanli SHI
+> Um, Citation needed?
 
-The uevent and firmware loader user mode helpers are both obsolete I
-believe, so those shouldn't be an issue.
+The paragraph that you quoted tells you exactly how to run a kselftest
+in-kernel test in a UML kernel.  Just to what that paragraph says.
 
-There is still the internal firmware loader (CONFIG_FW_LOADER). If this
-is built-in, there's probably no way to 100% stop it racing with /init if we
-depend on an embedded /init and a malicious external initramfs image
-contains /lib/firmware, but it can be built as an external module, in
-which case there should be no danger until the boot process actually loads it.
+
+> 
+> I don't see any evidence for this in the kselftest documentation, nor
+> do I see any evidence of this in the kselftest Makefiles.
+> 
+> There exists test modules in the kernel that run before the init
+> scripts run --- but that's not strictly speaking part of kselftests,
+> and do not have any kind of infrastructure.  As noted, the
+> kselftests_harness header file fundamentally assumes that you are
+> running test code in userspace.
+
+You are ignoring the kselftest in-kernel tests.
+
+We are talking in circles.  I'm done with this thread.
+
+-Frank
+
+> 
+> 				- Ted
+> .
+> 
+
