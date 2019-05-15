@@ -2,128 +2,131 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BECC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10346C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7C22082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8EB62082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 21:48:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="0ZXSezWe"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A0HkQWrQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbfEOVqD (ORCPT
+        id S1727144AbfEOVsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 17:46:03 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:37198 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbfEOVqD (ORCPT
+        Wed, 15 May 2019 17:48:01 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36277 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbfEOVsB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 17:46:03 -0400
-Received: by mail-qt1-f195.google.com with SMTP id o7so1572702qtp.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 14:46:02 -0700 (PDT)
+        Wed, 15 May 2019 17:48:01 -0400
+Received: by mail-io1-f65.google.com with SMTP id e19so879041iob.3
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 14:48:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=CxvbzMmpFZKCZQrQpPZlOyX2uSYjnK1WHB0Mu1JYc0M=;
-        b=0ZXSezWejE0cywXdKuYQCQ11X7PsPCAx37NYYV2CfX9/p5x7b9UB57iSnNK1b3xDpg
-         aOMWrEYIeVccVgnt9YFUzD5ro2w+lrKcXnxzJy2EmPc5AWTgAM5LuGmK0NK6XPPL9rXv
-         Ae4dCSIPn/Bufb3raRFMcAjqsHa6YM1Are8URdyjB7PuglCJraDNoag82GWBSpwx9sgp
-         nU0gB58HZ5KJ5BOwYPW8LEwtqvldpOZ26jFM+37wkBlBRePAkCVLqAZznd36k+tKM070
-         YipiZDGA0ut4o/yy0/PS0Rbe/9357kAo0+6x2cRpff1dM8YFTlgkfaOoNIY4cRs542eH
-         vK/w==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=sWbpZHBe6YpRVe1pQMe2dJ3Y9vgwQ34ZV5GLEWuVB0U=;
+        b=A0HkQWrQJKaLnNmrfgjL/E9/qPkQ5KNszllhY23b3Pf7LUv30duqOeqydt2saWLPj2
+         5cmD3znaPpqshHiIWvtIn+5m9v5HZsPoVO5T0FXibljEZ1/7Us+Pd+VZQF1Rzjzdu4iu
+         uUBiTlXqo+RQIYOCi+GZNkubLOExpLqSVQ5hA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=CxvbzMmpFZKCZQrQpPZlOyX2uSYjnK1WHB0Mu1JYc0M=;
-        b=fGL7uRy7mTi9nkxIvnZeqy7MCT//TLPWKVuzoDE2qDSsFYtyGscKYAsCglr04kdtXG
-         ENsQGHzLK/zCQZsUSYG2Mih9oOdMUjQxejf2a+wU1g+BS9PkjI2LLQ6XELzp+uKAtYBJ
-         xhclVvk+MBcAl39hK7i591jnZ1/w3wPJrQHRw3YGR/SV3dlMZyYiQbf0oLn0eOOZuG04
-         wrtJeXOL4Q50bsisNl8qRZex7VN2UiVEQ07eno1kD0JknMwQCirmtNrzB9b3LH3TmOV/
-         pshvPtIzyPH2heA0VnVPY+76m6QPTPm4YRvLoOxplHR2z/Mx5UIuIjbzxZn7h0j+1UEC
-         EW6A==
-X-Gm-Message-State: APjAAAUK6h/4DNXOSwkedpHom0pSjm/4G2Ps75GF021zid8Lz0aQpuze
-        fOh+8dlGOzfgFr2mPhxWET82YA==
-X-Google-Smtp-Source: APXvYqw8CWhpLfaEMuaBeEoKwDffLp9ZpXjQCPPNhUlQ6xYspR4xI7Yyd1yexfhCdgMhGZvdpTJnAw==
-X-Received: by 2002:ac8:1205:: with SMTP id x5mr21766241qti.284.1557956762150;
-        Wed, 15 May 2019 14:46:02 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id p8sm2228633qta.24.2019.05.15.14.46.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 15 May 2019 14:46:02 -0700 (PDT)
-Date:   Wed, 15 May 2019 14:45:37 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Krzesimir Nowak <krzesimir@kinvolk.io>
-Cc:     bpf@vger.kernel.org, iago@kinvolk.io, alban@kinvolk.io,
-        Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrey Ignatov <rdna@fb.com>, linux-kselftest@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf v1 2/3] selftests/bpf: Print a message when tester
- could not run a program
-Message-ID: <20190515144537.57f559e7@cakuba.netronome.com>
-In-Reply-To: <20190515134731.12611-3-krzesimir@kinvolk.io>
-References: <20190515134731.12611-1-krzesimir@kinvolk.io>
-        <20190515134731.12611-3-krzesimir@kinvolk.io>
-Organization: Netronome Systems, Ltd.
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=sWbpZHBe6YpRVe1pQMe2dJ3Y9vgwQ34ZV5GLEWuVB0U=;
+        b=tj2uWsLIO62TJk9K5dyYpXNCMeEZeCSJuR1O3Sqi1YePnzQSxZ/v7PPBiVuy6qTSTs
+         y3jAR9e43yVZnhtzV1p4Q72RRnYGqXc4F/8h5mJTcuM+7JuRKAib5VJXLEKgwwJsRXOI
+         bwFcupGl68wY17sTqO693CiypHPSrEudW5tgpPxTv7+w8Tu+RsdjUOTz4PMC4RW37Bsg
+         6nV8/gAxuwEbunACc1w0iqIK+Qt0Qy5Bto9jtq5zb7RVjpPH+Lbp8VpLijzjEEWnsEY8
+         ujVsoUZs62zCF/XRYJCQAfY8WXbc5jsNnuGOzmBazvqr85/fJ4GeXOkpApVBQCP0GBhW
+         4eWA==
+X-Gm-Message-State: APjAAAVRjKYsRT2Qzuazjy5M+cY9aQ+xldNXfGHwopjpkX/49BEfut9K
+        69TEvBF4EwW/HocUEGPN0UxvNMkbLZE=
+X-Google-Smtp-Source: APXvYqy6zgaN1FSUR13WOZV+36r1jayIO6EfLBjhuM3DJf4NRj+SG1E4CLAkVBleShYTPo7hLzcRmQ==
+X-Received: by 2002:a6b:e20d:: with SMTP id z13mr24726706ioc.92.1557956880412;
+        Wed, 15 May 2019 14:48:00 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id 1sm702105ity.9.2019.05.15.14.47.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 May 2019 14:47:59 -0700 (PDT)
+Date:   Wed, 15 May 2019 14:47:59 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] ARM: dts: raise GPU trip point temperature for
+ speedy to 80 degC
+Message-ID: <20190515214759.GF40515@google.com>
+References: <20190515153127.24626-1-mka@chromium.org>
+ <20190515153127.24626-2-mka@chromium.org>
+ <CAD=FV=XgoG5hiT=vAhNtUF4iVj1-Lmj7S5tvk86ehxB1uUZyxw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=XgoG5hiT=vAhNtUF4iVj1-Lmj7S5tvk86ehxB1uUZyxw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 May 2019 15:47:27 +0200, Krzesimir Nowak wrote:
-> This prints a message when the error is about program type being not
-> supported by the test runner or because of permissions problem. This
-> is to see if the program we expected to run was actually executed.
+On Wed, May 15, 2019 at 11:30:12AM -0700, Doug Anderson wrote:
+> Hi,
 > 
-> The messages are open-coded because strerror(ENOTSUPP) returns
-> "Unknown error 524".
+> On Wed, May 15, 2019 at 8:31 AM Matthias Kaehlcke <mka@chromium.org> wrote:
 > 
-> Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
-> ---
->  tools/testing/selftests/bpf/test_verifier.c | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
+> > Raise the temperature of the GPU thermal trip point for speedy
+> > to 80°C. This is the value used by the downstream Chrome OS 3.14
+> > kernel, the 'official' kernel for speedy.
+> >
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> >  arch/arm/boot/dts/rk3288-veyron-speedy.dts | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+> > index 2ac8748a3a0c..394a9648faee 100644
+> > --- a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+> > +++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+> > @@ -64,6 +64,10 @@
+> >         temperature = <70000>;
+> >  };
+> >
+> > +&gpu_alert0 {
+> > +       temperature = <80000>;
+> > +};
+> > +
+> >  &edp {
 > 
-> diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testing/selftests/bpf/test_verifier.c
-> index ccd896b98cac..bf0da03f593b 100644
-> --- a/tools/testing/selftests/bpf/test_verifier.c
-> +++ b/tools/testing/selftests/bpf/test_verifier.c
-> @@ -825,11 +825,20 @@ static int do_prog_test_run(int fd_prog, bool unpriv, uint32_t expected_val,
->  				tmp, &size_tmp, &retval, NULL);
->  	if (unpriv)
->  		set_admin(false);
-> -	if (err && errno != 524/*ENOTSUPP*/ && errno != EPERM) {
-> -		printf("Unexpected bpf_prog_test_run error ");
-> -		return err;
-> +	if (err) {
-> +		switch (errno) {
-> +		case 524/*ENOTSUPP*/:
-> +			printf("Did not run the program (not supported) ");
-> +			return 0;
-> +		case EPERM:
-> +			printf("Did not run the program (no permission) ");
-> +			return 0;
+> Similar comments to patch set #1 about sort ordering.
 
-Perhaps use strerror(errno)?
+ack
 
-> +		default:
-> +			printf("Unexpected bpf_prog_test_run error ");
-> +			return err;
-> +		}
->  	}
-> -	if (!err && retval != expected_val &&
-> +	if (retval != expected_val &&
->  	    expected_val != POINTER_VALUE) {
->  		printf("FAIL retval %d != %d ", retval, expected_val);
->  		return 1;
+> ...I'll also notice that if we do end up setting the "critical" to 100
+> C for most of veyron then I guess we'll have to switch it back to 90 C
+> here for speedy to match downstream?
 
+yes
+
+> Maybe that's an argument for doing it in this patchset so we don't
+> forget?
+
+sounds good to me
+
+> I'm somewhat amazed that downstream has only 10 C between "alert"
+> and 'critical" for GPU for speedy, but I guess it's OK?
+
+In tests on other veyron devices I observed gradual temperature
+in response to CPU or GPU load, so unless there's a sudden spike in
+the ambient temperature I think the 10°C delta should be fine with the
+current polling interval of 100ms.
