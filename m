@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04940C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B18FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9B4A2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F088A2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918733;
-	bh=B7kKelVcZ26aftuVABM5ZbQ9DN2Zj+hKM8yNq3a3RRA=;
+	s=default; t=1557918737;
+	bh=raMUrnqaIQbYt5v0mwOlRvH5vlYwvORIdiVZAI4jgjQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ihw6u0K6rOwcO7OmYqVte9PkA8BMhLcpb34qmUKoCx3nSWtxARvHxfzp738AFsvKQ
-	 6UD0tU1adQzokSnioZTsqxB8VnAA19QQOM8m4d3TXINPCI6Edwmy7P+FQDdOk7BUEP
-	 WXhgFHWb97Gzze3CYwqdaaNpwZo5B+QlYWspdxGw=
+	b=p3q4H44ZT1Ydufqfdfn0J4jZsIsrU0gdcFPUAnTT2Lx2cjGFXp8IdgR1JLm+N8FKA
+	 dYXMNG+r0pZmtVh0E6Sp3KsDKp8QngIEjyc00aG6Eel8WP2EyLyTs0Svb0UeDpy9XR
+	 yJF7Uw3EPkmE9y5TwksoeDtxiJZJ8NaQEV1Yzfas=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729734AbfEOLMM (ORCPT
+        id S1729742AbfEOLMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:12:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47100 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:12:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729716AbfEOLMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:12:10 -0400
+        id S1729732AbfEOLMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:12:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 074952166E;
-        Wed, 15 May 2019 11:12:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD70B2168B;
+        Wed, 15 May 2019 11:12:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918729;
-        bh=B7kKelVcZ26aftuVABM5ZbQ9DN2Zj+hKM8yNq3a3RRA=;
+        s=default; t=1557918732;
+        bh=raMUrnqaIQbYt5v0mwOlRvH5vlYwvORIdiVZAI4jgjQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n5nMIk4gDhmdBlrz9IRpbnhKrJGELbcbH7lhy3kY4tGJJLYD734oRuOcpv7IsB7xQ
-         JvQ/uUUSHKIR276RD7wJEYo35/l7BswXRRwov1qNtQUnvwBR55gJOQKbyu2JWlfLCx
-         1jLfHJXbYK6tw1e7kZ77Rb+nMVJpS6zLfrGg2THM=
+        b=lZRRxYZCzzs7x7Q5gQ+//wRRfijXZwiPxlerdjrdhLyM7PJZeww92vLdaCnbi3eBi
+         ng5oITlMhg+Hj/YV54w2VQe6UmWHJUHo9AuPdxbvwh0q5WUwSEFkc/OC5TBoQwiOWD
+         ZXFGWXQ5spMZ3Th0TMIOvM/jeuXtZaoq6F2nh6ZU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        stable@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Jiri Kosina <jkosina@suse.cz>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 242/266] x86/cpu/bugs: Use __initconst for const init data
-Date:   Wed, 15 May 2019 12:55:49 +0200
-Message-Id: <20190515090731.191538406@linuxfoundation.org>
+Subject: [PATCH 4.4 243/266] x86/speculation: Move arch_smt_update() call to after mitigation decisions
+Date:   Wed, 15 May 2019 12:55:50 +0200
+Message-Id: <20190515090731.225475037@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -60,53 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit 1de7edbb59c8f1b46071f66c5c97b8a59569eb51 upstream.
+commit 7c3658b20194a5b3209a143f63bc9c643c6a3ae2 upstream.
 
-Some of the recently added const tables use __initdata which causes section
-attribute conflicts.
+arch_smt_update() now has a dependency on both Spectre v2 and MDS
+mitigations.  Move its initial call to after all the mitigation decisions
+have been made.
 
-Use __initconst instead.
-
-Fixes: fa1202ef2243 ("x86/speculation: Add command line control")
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190330004743.29541-9-andi@firstfloor.org
+Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
+Acked-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/cpu/bugs.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/bugs.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -315,7 +315,7 @@ static const struct {
- 	const char			*option;
- 	enum spectre_v2_user_cmd	cmd;
- 	bool				secure;
--} v2_user_options[] __initdata = {
-+} v2_user_options[] __initconst = {
- 	{ "auto",		SPECTRE_V2_USER_CMD_AUTO,		false },
- 	{ "off",		SPECTRE_V2_USER_CMD_NONE,		false },
- 	{ "on",			SPECTRE_V2_USER_CMD_FORCE,		true  },
-@@ -451,7 +451,7 @@ static const struct {
- 	const char *option;
- 	enum spectre_v2_mitigation_cmd cmd;
- 	bool secure;
--} mitigation_options[] __initdata = {
-+} mitigation_options[] __initconst = {
- 	{ "off",		SPECTRE_V2_CMD_NONE,		  false },
- 	{ "on",			SPECTRE_V2_CMD_FORCE,		  true  },
- 	{ "retpoline",		SPECTRE_V2_CMD_RETPOLINE,	  false },
-@@ -723,7 +723,7 @@ static const char * const ssb_strings[]
- static const struct {
- 	const char *option;
- 	enum ssb_mitigation_cmd cmd;
--} ssb_mitigation_options[]  __initdata = {
-+} ssb_mitigation_options[]  __initconst = {
- 	{ "auto",	SPEC_STORE_BYPASS_CMD_AUTO },    /* Platform decides */
- 	{ "on",		SPEC_STORE_BYPASS_CMD_ON },      /* Disable Speculative Store Bypass */
- 	{ "off",	SPEC_STORE_BYPASS_CMD_NONE },    /* Don't touch Speculative Store Bypass */
+@@ -100,6 +100,8 @@ void __init check_bugs(void)
+ 
+ 	mds_select_mitigation();
+ 
++	arch_smt_update();
++
+ #ifdef CONFIG_X86_32
+ 	/*
+ 	 * Check whether we are able to run this kernel safely on SMP.
+@@ -611,9 +613,6 @@ specv2_set_mode:
+ 
+ 	/* Set up IBPB and STIBP depending on the general spectre V2 command */
+ 	spectre_v2_user_select_mitigation(cmd);
+-
+-	/* Enable STIBP if appropriate */
+-	arch_smt_update();
+ }
+ 
+ static void update_stibp_msr(void * __unused)
 
 
