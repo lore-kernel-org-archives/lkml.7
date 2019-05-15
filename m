@@ -7,49 +7,54 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96554C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FEEC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6851D20657
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:01:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E982F2084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557921687;
-	bh=Y87KmI3co308UEE0i8ML6W4v7reqTLE/52R1lrcrR1M=;
+	s=default; t=1557921695;
+	bh=EjGdWzC78v/tPe7/TXnVS+KJPS4UOC1N3+oDzI1GkZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c4zvI35cuYekZHgz83AvOBPs6JHJdhvs5GhjBgD6Dd9jtatbbgDWOeRBfmy5C5BRO
-	 y7UfF1SiSYh9rFAIWbVcFmotyZHOZGsOkIyyvtFQOIvhP2xkZs+qjt5rZUONMnrWte
-	 xXuahJU9oN4SeD5a/kFvywxW1lsyGBi54uugkJ3I=
+	b=c5XvtNqHdl7mbZK6k/PdqCG/oW/AaPTdEVo4YwuHgW/vFMNK+jYQz8flTVrQMnXh/
+	 1evQv60APjURgjjWzbIMM8CJtWDmI7k60uPMU/O8Q6EyaRc9uwhzk6FYaQiH5X6waK
+	 LyoHbfwRSd7jV9y7EocB8ZKpd+5NFSgthLhcBVkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbfEOLOE (ORCPT
+        id S1729413AbfEOMBe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:14:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49920 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 08:01:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729601AbfEOLOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:14:00 -0400
+        id S1729612AbfEOLN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:13:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 870C720843;
-        Wed, 15 May 2019 11:13:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0F5520862;
+        Wed, 15 May 2019 11:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918840;
-        bh=Y87KmI3co308UEE0i8ML6W4v7reqTLE/52R1lrcrR1M=;
+        s=default; t=1557918837;
+        bh=EjGdWzC78v/tPe7/TXnVS+KJPS4UOC1N3+oDzI1GkZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M0efntzK2z5PekJqfQVUJNgoIcC6gWbuUgwtOtHEwvoHdVJacROQQEeCJokIa5fSD
-         ZLRYOyC6+cN313xwDXlKcrHgi8Oic8P2WRD8zZRmO1j6HP31COg0Er00FwNvceLnFI
-         9UAZrsvJACYzNPhgUCnLeemVtom7YzXpk97Hd0B4=
+        b=f3G6ax/duQ9JC/oeXnBlMvebw3QSDVtr57kJPlcZJ5m7+O1B+J98hzsliRaWvZueZ
+         yl9mSJPGQy/OhhECeWZxsrdDKoptzus3F22WG8KUqH1d1UOdBq2uXHeD8cAJUaceR5
+         9M5YAVqpvNzWYkoYQ22GrQMBUSHSEqdfmYe7r6Pw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Perry <jonperry@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Chenbo Feng <fengc@google.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 02/51] bpf: fix struct htab_elem layout
-Date:   Wed, 15 May 2019 12:55:37 +0200
-Message-Id: <20190515090618.200974773@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        Guenter Roeck <groeck@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Russell King <rmk@armlinux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 19/51] init: initialize jump labels before command line option parsing
+Date:   Wed, 15 May 2019 12:55:54 +0200
+Message-Id: <20190515090623.160610879@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
 References: <20190515090616.669619870@linuxfoundation.org>
@@ -62,86 +67,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 9f691549f76d488a0c74397b3e51e943865ea01f upstream.
+[ Upstream commit 6041186a32585fc7a1d0f6cfe2f138b05fdc3c82 ]
 
-when htab_elem is removed from the bucket list the htab_elem.hash_node.next
-field should not be overridden too early otherwise we have a tiny race window
-between lookup and delete.
-The bug was discovered by manual code analysis and reproducible
-only with explicit udelay() in lookup_elem_raw().
+When a module option, or core kernel argument, toggles a static-key it
+requires jump labels to be initialized early.  While x86, PowerPC, and
+ARM64 arrange for jump_label_init() to be called before parse_args(),
+ARM does not.
 
-Fixes: 6c9059817432 ("bpf: pre-allocate hash map elements")
-Reported-by: Jonathan Perry <jonperry@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Chenbo Feng <fengc@google.com>
+  Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1 console=ttyAMA0,115200 page_alloc.shuffle=1
+  ------------[ cut here ]------------
+  WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
+  page_alloc_shuffle+0x12c/0x1ac
+  static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
+  before call to jump_label_init()
+  Modules linked in:
+  CPU: 0 PID: 0 Comm: swapper Not tainted
+  5.1.0-rc4-next-20190410-00003-g3367c36ce744 #1
+  Hardware name: ARM Integrator/CP (Device Tree)
+  [<c0011c68>] (unwind_backtrace) from [<c000ec48>] (show_stack+0x10/0x18)
+  [<c000ec48>] (show_stack) from [<c07e9710>] (dump_stack+0x18/0x24)
+  [<c07e9710>] (dump_stack) from [<c001bb1c>] (__warn+0xe0/0x108)
+  [<c001bb1c>] (__warn) from [<c001bb88>] (warn_slowpath_fmt+0x44/0x6c)
+  [<c001bb88>] (warn_slowpath_fmt) from [<c0b0c4a8>]
+  (page_alloc_shuffle+0x12c/0x1ac)
+  [<c0b0c4a8>] (page_alloc_shuffle) from [<c0b0c550>] (shuffle_store+0x28/0x48)
+  [<c0b0c550>] (shuffle_store) from [<c003e6a0>] (parse_args+0x1f4/0x350)
+  [<c003e6a0>] (parse_args) from [<c0ac3c00>] (start_kernel+0x1c0/0x488)
+
+Move the fallback call to jump_label_init() to occur before
+parse_args().
+
+The redundant calls to jump_label_init() in other archs are left intact
+in case they have static key toggling use cases that are even earlier
+than option parsing.
+
+Link: http://lkml.kernel.org/r/155544804466.1032396.13418949511615676665.stgit@dwillia2-desk3.amr.corp.intel.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reported-by: Guenter Roeck <groeck@google.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Russell King <rmk@armlinux.org.uk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/hashtab.c | 28 ++++++++++++++++++++++------
- 1 file changed, 22 insertions(+), 6 deletions(-)
+ init/main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/bpf/hashtab.c b/kernel/bpf/hashtab.c
-index a36a532c056df..f9d53ac57f640 100644
---- a/kernel/bpf/hashtab.c
-+++ b/kernel/bpf/hashtab.c
-@@ -41,8 +41,13 @@ enum extra_elem_state {
- struct htab_elem {
- 	union {
- 		struct hlist_node hash_node;
--		struct bpf_htab *htab;
--		struct pcpu_freelist_node fnode;
-+		struct {
-+			void *padding;
-+			union {
-+				struct bpf_htab *htab;
-+				struct pcpu_freelist_node fnode;
-+			};
-+		};
- 	};
- 	union {
- 		struct rcu_head rcu;
-@@ -114,8 +119,10 @@ static int prealloc_elems_and_freelist(struct bpf_htab *htab)
- 	if (err)
- 		goto free_elems;
+diff --git a/init/main.c b/init/main.c
+index 3c7f71d8e7046..148843e627a06 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -516,6 +516,8 @@ asmlinkage __visible void __init start_kernel(void)
+ 	page_alloc_init();
  
--	pcpu_freelist_populate(&htab->freelist, htab->elems, htab->elem_size,
--			       htab->map.max_entries);
-+	pcpu_freelist_populate(&htab->freelist,
-+			       htab->elems + offsetof(struct htab_elem, fnode),
-+			       htab->elem_size, htab->map.max_entries);
-+
- 	return 0;
+ 	pr_notice("Kernel command line: %s\n", boot_command_line);
++	/* parameters may set static keys */
++	jump_label_init();
+ 	parse_early_param();
+ 	after_dashes = parse_args("Booting kernel",
+ 				  static_command_line, __start___param,
+@@ -525,8 +527,6 @@ asmlinkage __visible void __init start_kernel(void)
+ 		parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
+ 			   NULL, set_init_arg);
  
- free_elems:
-@@ -148,6 +155,11 @@ static struct bpf_map *htab_map_alloc(union bpf_attr *attr)
- 	int err, i;
- 	u64 cost;
- 
-+	BUILD_BUG_ON(offsetof(struct htab_elem, htab) !=
-+		     offsetof(struct htab_elem, hash_node.pprev));
-+	BUILD_BUG_ON(offsetof(struct htab_elem, fnode.next) !=
-+		     offsetof(struct htab_elem, hash_node.pprev));
-+
- 	if (attr->map_flags & ~BPF_F_NO_PREALLOC)
- 		/* reserved bits should not be used */
- 		return ERR_PTR(-EINVAL);
-@@ -429,9 +441,13 @@ static struct htab_elem *alloc_htab_elem(struct bpf_htab *htab, void *key,
- 	int err = 0;
- 
- 	if (prealloc) {
--		l_new = (struct htab_elem *)pcpu_freelist_pop(&htab->freelist);
--		if (!l_new)
-+		struct pcpu_freelist_node *l;
-+
-+		l = pcpu_freelist_pop(&htab->freelist);
-+		if (!l)
- 			err = -E2BIG;
-+		else
-+			l_new = container_of(l, struct htab_elem, fnode);
- 	} else {
- 		if (atomic_inc_return(&htab->count) > htab->map.max_entries) {
- 			atomic_dec(&htab->count);
+-	jump_label_init();
+-
+ 	/*
+ 	 * These use large bootmem allocations and must precede
+ 	 * kmem_cache_init()
 -- 
 2.20.1
 
