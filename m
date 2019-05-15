@@ -2,88 +2,160 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D909C04E87
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1A3C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B8A320675
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE76E20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 12:10:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557922235;
+	bh=rOhB0iVl5j0A4N9ZI4Xf+SAtHIu5CsGGxQMFo/CAeVk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TUHIiU5A0cChE3x1sqTBR6LK/pa4wUV3T2USFz9vVmjg6mwEuZiKRwJwI66DvTWA3
+	 CS0lmUHLT7isrvQqwnj1zRRVVtT2AW6QvKiai63nV7upxRvFCoGkkgfC+1iuluuVMO
+	 3RlQyhhxgRDg1xyQKS6e2+7Mg4qTCAZtjQzCThLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbfEOMKS (ORCPT
+        id S1728246AbfEOLHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 08:10:18 -0400
-Received: from foss.arm.com ([217.140.101.70]:43106 "EHLO foss.arm.com"
+        Wed, 15 May 2019 07:07:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728921AbfEOMKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 08:10:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 178DA80D;
-        Wed, 15 May 2019 05:10:14 -0700 (PDT)
-Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3CD2A3F71E;
-        Wed, 15 May 2019 05:10:11 -0700 (PDT)
-Subject: Re: [PATCH v7 04/23] iommu: Introduce attach/detach_pasid_table API
-To:     Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, joro@8bytes.org,
-        alex.williamson@redhat.com, jacob.jun.pan@linux.intel.com,
-        yi.l.liu@intel.com, will.deacon@arm.com, robin.murphy@arm.com
-Cc:     peter.maydell@linaro.org, kevin.tian@intel.com,
-        vincent.stehle@arm.com, ashok.raj@intel.com, marc.zyngier@arm.com,
-        christoffer.dall@arm.com
-References: <20190408121911.24103-1-eric.auger@redhat.com>
- <20190408121911.24103-5-eric.auger@redhat.com>
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Message-ID: <21bfdab4-846c-1dc7-6dff-62a46cc9c829@arm.com>
-Date:   Wed, 15 May 2019 13:09:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1728575AbfEOLHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:07:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67F7B2084F;
+        Wed, 15 May 2019 11:07:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557918432;
+        bh=rOhB0iVl5j0A4N9ZI4Xf+SAtHIu5CsGGxQMFo/CAeVk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iso2xEX45V0Q5NpbN9pL3sd2MuJlXbtf98ozqDji6Gks+eghCHbfi9ve0eKATnlWc
+         zMee9SgFmCz7yXCuXiN8KLuPpXbpV1hAItvjseFy2bRek/zSnyIa2qxkCNwEi2lRdx
+         ZegiFD/6XIkcp3S5STTGpNxVx0cPEsjdCVd6Ctgk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 130/266] net: hns: Fix WARNING when remove HNS driver with SMMU enabled
+Date:   Wed, 15 May 2019 12:53:57 +0200
+Message-Id: <20190515090727.361219169@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
+References: <20190515090722.696531131@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190408121911.24103-5-eric.auger@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/2019 13:18, Eric Auger wrote:
-> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-> index edcc0dda7993..532a64075f23 100644
-> --- a/include/uapi/linux/iommu.h
-> +++ b/include/uapi/linux/iommu.h
-> @@ -112,4 +112,51 @@ struct iommu_fault {
->  		struct iommu_fault_page_request prm;
->  	};
->  };
-> +
-> +/**
-> + * SMMUv3 Stream Table Entry stage 1 related information
-> + * The PASID table is referred to as the context descriptor (CD) table.
-> + *
-> + * @s1fmt: STE s1fmt (format of the CD table: single CD, linear table
-> +   or 2-level table)
+[ Upstream commit 8601a99d7c0256b7a7fdd1ab14cf6c1f1dfcadc6 ]
 
-Running "scripts/kernel-doc -v -none" on this header produces some
-warnings. Not sure if we want to get rid of all of them, but we should
-at least fix the coding style for this comment (line must start with
-" * "). I'm fixing it up on my sva/api branch
+When enable SMMU, remove HNS driver will cause a WARNING:
 
-Thanks,
-Jean
+[  141.924177] WARNING: CPU: 36 PID: 2708 at drivers/iommu/dma-iommu.c:443 __iommu_dma_unmap+0xc0/0xc8
+[  141.954673] Modules linked in: hns_enet_drv(-)
+[  141.963615] CPU: 36 PID: 2708 Comm: rmmod Tainted: G        W         5.0.0-rc1-28723-gb729c57de95c-dirty #32
+[  141.983593] Hardware name: Huawei D05/D05, BIOS Hisilicon D05 UEFI Nemo 1.8 RC0 08/31/2017
+[  142.000244] pstate: 60000005 (nZCv daif -PAN -UAO)
+[  142.009886] pc : __iommu_dma_unmap+0xc0/0xc8
+[  142.018476] lr : __iommu_dma_unmap+0xc0/0xc8
+[  142.027066] sp : ffff000013533b90
+[  142.033728] x29: ffff000013533b90 x28: ffff8013e6983600
+[  142.044420] x27: 0000000000000000 x26: 0000000000000000
+[  142.055113] x25: 0000000056000000 x24: 0000000000000015
+[  142.065806] x23: 0000000000000028 x22: ffff8013e66eee68
+[  142.076499] x21: ffff8013db919800 x20: 0000ffffefbff000
+[  142.087192] x19: 0000000000001000 x18: 0000000000000007
+[  142.097885] x17: 000000000000000e x16: 0000000000000001
+[  142.108578] x15: 0000000000000019 x14: 363139343a70616d
+[  142.119270] x13: 6e75656761705f67 x12: 0000000000000000
+[  142.129963] x11: 00000000ffffffff x10: 0000000000000006
+[  142.140656] x9 : 1346c1aa88093500 x8 : ffff0000114de4e0
+[  142.151349] x7 : 6662666578303d72 x6 : ffff0000105ffec8
+[  142.162042] x5 : 0000000000000000 x4 : 0000000000000000
+[  142.172734] x3 : 00000000ffffffff x2 : ffff0000114de500
+[  142.183427] x1 : 0000000000000000 x0 : 0000000000000035
+[  142.194120] Call trace:
+[  142.199030]  __iommu_dma_unmap+0xc0/0xc8
+[  142.206920]  iommu_dma_unmap_page+0x20/0x28
+[  142.215335]  __iommu_unmap_page+0x40/0x60
+[  142.223399]  hnae_unmap_buffer+0x110/0x134
+[  142.231639]  hnae_free_desc+0x6c/0x10c
+[  142.239177]  hnae_fini_ring+0x14/0x34
+[  142.246540]  hnae_fini_queue+0x2c/0x40
+[  142.254080]  hnae_put_handle+0x38/0xcc
+[  142.261619]  hns_nic_dev_remove+0x54/0xfc [hns_enet_drv]
+[  142.272312]  platform_drv_remove+0x24/0x64
+[  142.280552]  device_release_driver_internal+0x17c/0x20c
+[  142.291070]  driver_detach+0x4c/0x90
+[  142.298259]  bus_remove_driver+0x5c/0xd8
+[  142.306148]  driver_unregister+0x2c/0x54
+[  142.314037]  platform_driver_unregister+0x10/0x18
+[  142.323505]  hns_nic_dev_driver_exit+0x14/0xf0c [hns_enet_drv]
+[  142.335248]  __arm64_sys_delete_module+0x214/0x25c
+[  142.344891]  el0_svc_common+0xb0/0x10c
+[  142.352430]  el0_svc_handler+0x24/0x80
+[  142.359968]  el0_svc+0x8/0x7c0
+[  142.366104] ---[ end trace 60ad1cd58e63c407 ]---
 
-> + * @s1dss: STE s1dss (specifies the behavior when pasid_bits != 0
-> +   and no pasid is passed along with the incoming transaction)
-> + * Please refer to the smmu 3.x spec (ARM IHI 0070A) for full details
-> + */
-> +struct iommu_pasid_smmuv3 {
-> +#define PASID_TABLE_SMMUV3_CFG_VERSION_1 1
-> +	__u32	version;
-> +	__u8 s1fmt;
-> +	__u8 s1dss;
-> +	__u8 padding[2];
-> +};
+The tx ring buffer map when xmit and unmap when xmit done. So in
+hnae_init_ring() did not map tx ring buffer, but in hnae_fini_ring()
+have a unmap operation for tx ring buffer, which is already unmapped
+when xmit done, than cause this WARNING.
+
+The hnae_alloc_buffers() is called in hnae_init_ring(),
+so the hnae_free_buffers() should be in hnae_fini_ring(), not in
+hnae_free_desc().
+
+In hnae_fini_ring(), adds a check is_rx_ring() as in hnae_init_ring().
+When the ring buffer is tx ring, adds a piece of code to ensure that
+the tx ring is unmap.
+
+Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/hisilicon/hns/hnae.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/hisilicon/hns/hnae.c b/drivers/net/ethernet/hisilicon/hns/hnae.c
+index b3645297477e..3ce41efe8a94 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hnae.c
++++ b/drivers/net/ethernet/hisilicon/hns/hnae.c
+@@ -144,7 +144,6 @@ static int hnae_alloc_buffers(struct hnae_ring *ring)
+ /* free desc along with its attached buffer */
+ static void hnae_free_desc(struct hnae_ring *ring)
+ {
+-	hnae_free_buffers(ring);
+ 	dma_unmap_single(ring_to_dev(ring), ring->desc_dma_addr,
+ 			 ring->desc_num * sizeof(ring->desc[0]),
+ 			 ring_to_dma_dir(ring));
+@@ -177,6 +176,9 @@ static int hnae_alloc_desc(struct hnae_ring *ring)
+ /* fini ring, also free the buffer for the ring */
+ static void hnae_fini_ring(struct hnae_ring *ring)
+ {
++	if (is_rx_ring(ring))
++		hnae_free_buffers(ring);
++
+ 	hnae_free_desc(ring);
+ 	kfree(ring->desc_cb);
+ 	ring->desc_cb = NULL;
+-- 
+2.20.1
+
+
+
