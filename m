@@ -7,55 +7,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C221CC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32E9C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90547206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94B582089E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919801;
-	bh=4qey7BEirvvuZtcb0Q9zTx7XfYJvoEad57AKvq0X7uA=;
+	s=default; t=1557919804;
+	bh=ZXfI5rOLK+JAyxi0GMFDARkhQbo+4KCbdDkLOuPMubI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LonFZHTngcWYQijUeEgxRC7vs4EmC1D2qtRfEO+rbqzdngLllrgfBo4C1wxjjEeus
-	 cWlAZr9JFKF9cCdr0vb9LGCRDPp7T7oUqpOqF26qCu4Joj/QWDFq+xbxhdXN1O5L/d
-	 xdGvKOvxFeUOs5xx+3p1FkTxu9qvIglABe19Qklo=
+	b=YKSBVek9MIhRt16kttFhpOuQ0Dn5hmlywhRA/De8IOJlmDxef84Jr7QZGSOUe6mof
+	 0VN8JVJQngVwjfWmSf73c9U/gi3jMxJb1uxGUA11h4xnWQJsKe7Xcex//iS7lr4Koa
+	 M7jzhsRsX9EAgubZ767SrtP1b4cXgvQmF/U3kmQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732647AbfEOLaA (ORCPT
+        id S1732666AbfEOLaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:30:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41252 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:30:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732170AbfEOL3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:29:52 -0400
+        id S1732166AbfEOL35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:29:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 109A72089E;
-        Wed, 15 May 2019 11:29:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 763FB20881;
+        Wed, 15 May 2019 11:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919791;
-        bh=4qey7BEirvvuZtcb0Q9zTx7XfYJvoEad57AKvq0X7uA=;
+        s=default; t=1557919796;
+        bh=ZXfI5rOLK+JAyxi0GMFDARkhQbo+4KCbdDkLOuPMubI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pbj9TE7rkz4MFzvr82qW61VUrHWhAjAVyjCq1tsiXLLdMp27bcVXa6zz+p+qnGgA0
-         g8XvZ9dRQpMqbzXFxE+nDyOvxuzbYWn77SBQtFp+jPLdvpwwm4ZTmtpy8Jzhn9YrQ1
-         oAXQvi3UAQDEtyAk9yAEKqZDCODQIIrVysbGfjP0=
+        b=aw1dyJjv57zo79um3izrNAt5cqdy+vvDE8x8lW45zfU/dHVAOOAzoTMpJwGBdTf2K
+         qjl2vUOMSjDJnN8IfBDbVuqk8QUZ8QjidjFM9iCAXiC/5Ixc61y49rBksJNA5TjJT6
+         LyfyCI1UKXhxPn85xLdoleQIB9cFMxshxweJjwj0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Qian Cai <cai@lca.pw>, Arun KS <arunks@codeaurora.org>,
-        Mathieu Malaterre <malat@debian.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 095/137] mm/memory_hotplug.c: drop memory device reference after find_memory_block()
-Date:   Wed, 15 May 2019 12:56:16 +0200
-Message-Id: <20190515090700.430914342@linuxfoundation.org>
+        stable@vger.kernel.org, Willem de Bruijn <willemb@google.com>,
+        Yonghong Song <yhs@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <alexander.levin@microsoft.com>
+Subject: [PATCH 5.0 097/137] bpf: only test gso type on gso packets
+Date:   Wed, 15 May 2019 12:56:18 +0200
+Message-Id: <20190515090700.580924077@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -68,46 +61,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 89c02e69fc5245f8a2f34b58b42d43a737af1a5e ]
+[ Upstream commit 4c3024debf62de4c6ac6d3cb4c0063be21d4f652 ]
 
-Right now we are using find_memory_block() to get the node id for the
-pfn range to online.  We are missing to drop a reference to the memory
-block device.  While the device still gets unregistered via
-device_unregister(), resulting in no user visible problem, the device is
-never released via device_release(), resulting in a memory leak.  Fix
-that by properly using a put_device().
+BPF can adjust gso only for tcp bytestreams. Fail on other gso types.
 
-Link: http://lkml.kernel.org/r/20190411110955.1430-1-david@redhat.com
-Fixes: d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug")
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
-Reviewed-by: Wei Yang <richard.weiyang@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Pankaj Gupta <pagupta@redhat.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Arun KS <arunks@codeaurora.org>
-Cc: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+But only on gso packets. It does not touch this field if !gso_size.
+
+Fixes: b90efd225874 ("bpf: only adjust gso_size on bytestream protocols")
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Acked-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- mm/memory_hotplug.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/skbuff.h | 4 ++--
+ net/core/filter.c      | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 11593a03c051f..7493f50ee8800 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -858,6 +858,7 @@ int __ref online_pages(unsigned long pfn, unsigned long nr_pages, int online_typ
- 	 */
- 	mem = find_memory_block(__pfn_to_section(pfn));
- 	nid = mem->nid;
-+	put_device(&mem->dev);
+diff --git a/include/linux/skbuff.h b/include/linux/skbuff.h
+index bdb9563c64a01..b8679dcba96f8 100644
+--- a/include/linux/skbuff.h
++++ b/include/linux/skbuff.h
+@@ -4212,10 +4212,10 @@ static inline bool skb_is_gso_sctp(const struct sk_buff *skb)
+ 	return skb_shinfo(skb)->gso_type & SKB_GSO_SCTP;
+ }
  
- 	/* associate pfn range with the zone */
- 	zone = move_pfn_range(online_type, nid, pfn, nr_pages);
++/* Note: Should be called only if skb_is_gso(skb) is true */
+ static inline bool skb_is_gso_tcp(const struct sk_buff *skb)
+ {
+-	return skb_is_gso(skb) &&
+-	       skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6);
++	return skb_shinfo(skb)->gso_type & (SKB_GSO_TCPV4 | SKB_GSO_TCPV6);
+ }
+ 
+ static inline void skb_gso_reset(struct sk_buff *skb)
+diff --git a/net/core/filter.c b/net/core/filter.c
+index f7d0004fc1609..ff07996515f2d 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -2789,7 +2789,7 @@ static int bpf_skb_proto_4_to_6(struct sk_buff *skb)
+ 	u32 off = skb_mac_header_len(skb);
+ 	int ret;
+ 
+-	if (!skb_is_gso_tcp(skb))
++	if (skb_is_gso(skb) && !skb_is_gso_tcp(skb))
+ 		return -ENOTSUPP;
+ 
+ 	ret = skb_cow(skb, len_diff);
+@@ -2830,7 +2830,7 @@ static int bpf_skb_proto_6_to_4(struct sk_buff *skb)
+ 	u32 off = skb_mac_header_len(skb);
+ 	int ret;
+ 
+-	if (!skb_is_gso_tcp(skb))
++	if (skb_is_gso(skb) && !skb_is_gso_tcp(skb))
+ 		return -ENOTSUPP;
+ 
+ 	ret = skb_unclone(skb, GFP_ATOMIC);
+@@ -2955,7 +2955,7 @@ static int bpf_skb_net_grow(struct sk_buff *skb, u32 len_diff)
+ 	u32 off = skb_mac_header_len(skb) + bpf_skb_net_base_len(skb);
+ 	int ret;
+ 
+-	if (!skb_is_gso_tcp(skb))
++	if (skb_is_gso(skb) && !skb_is_gso_tcp(skb))
+ 		return -ENOTSUPP;
+ 
+ 	ret = skb_cow(skb, len_diff);
+@@ -2984,7 +2984,7 @@ static int bpf_skb_net_shrink(struct sk_buff *skb, u32 len_diff)
+ 	u32 off = skb_mac_header_len(skb) + bpf_skb_net_base_len(skb);
+ 	int ret;
+ 
+-	if (!skb_is_gso_tcp(skb))
++	if (skb_is_gso(skb) && !skb_is_gso_tcp(skb))
+ 		return -ENOTSUPP;
+ 
+ 	ret = skb_unclone(skb, GFP_ATOMIC);
 -- 
 2.20.1
 
