@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEFB7C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62652C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC1621734
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:06:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3494421773
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918363;
-	bh=D/64HTEq5TJyB4qOEq58aXDKxa6owfviGOt17SJA/X4=;
+	s=default; t=1557918366;
+	bh=Xu3mLlaCcGWBnsMZislL85Ey76Ysj2T/+dXF7TEF1jo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oH82LvS3dmNfue75KcUN7F1dZZxicpNC8hfH37CbxV5O/k1Xkzx+kR2jxaDOmpc/D
-	 7Zsx8w88IK3W67NupuVIXufhY6lP+tR2Wjd3FWBAkM/uFNx+ASTRSs1awPv3vNYScU
-	 aQkYsLPIdL3IfsIITSSmHkweHrKa8pBpi3AcaXgs=
+	b=JfYKrBd2EVcISRUsrOr5PhCjpgtikC0R/XbjK0ipDqNVD+VL+puBKq020Pde2fwHn
+	 pozMFSJdcSuZMvL/cGWLTkqiB1Fh7/SZgAAFgI3Yl3gs0HxGrYURhb2kvlTniis8pR
+	 ARSZJxjPrgzutabV67OtArgs910DdiV5yVhjPELo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728690AbfEOLGC (ORCPT
+        id S1728201AbfEOLGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:06:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36400 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:06:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725966AbfEOLF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:05:58 -0400
+        id S1728641AbfEOLFf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:05:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 768EE216FD;
-        Wed, 15 May 2019 11:05:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3ABAF21744;
+        Wed, 15 May 2019 11:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918358;
-        bh=D/64HTEq5TJyB4qOEq58aXDKxa6owfviGOt17SJA/X4=;
+        s=default; t=1557918334;
+        bh=Xu3mLlaCcGWBnsMZislL85Ey76Ysj2T/+dXF7TEF1jo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eqTX5BZTkvsZr0MpVl2ZmMTFgClgfZw/5kfwNd7ezgMNJPTNueoeWO6F1tbvKINUz
-         QULlVDcJqaHY761D4rehb9zRxEgvmQSrL7L1dA4IadzJvMaEJVK5h7kSS/h9vFU7dn
-         tvJD/zRK9wRw4sTMePYmeudkuRwy0PFTeBz0erfI=
+        b=puR44IMn2bPn5TYLoija48jp5J+AZ7DrtJLbamD0CiR2tsOssqP7fI8FPm9muWXmy
+         +P5km8FeO0BpJFbRe0Kn/btxjhHleX7WnhRLZIn1d0go1pp+UQiFPtnS5n1jUp4hXC
+         y/ueY4TRmRYUsoIDSFiK/iYnlc4A5tDdDlqC2Ssk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Frank Pavlic <f.pavlic@kunbus.de>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Tristram Ha <Tristram.Ha@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Guido Kiener <guido.kiener@rohde-schwarz.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
         "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.4 099/266] net: ks8851: Set initial carrier state to down
-Date:   Wed, 15 May 2019 12:53:26 +0200
-Message-Id: <20190515090725.799106874@linuxfoundation.org>
+Subject: [PATCH 4.4 094/266] usb: gadget: net2272: Fix net2272_dequeue()
+Date:   Wed, 15 May 2019 12:53:21 +0200
+Message-Id: <20190515090725.628353842@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -63,52 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9624bafa5f6418b9ca5b3f66d1f6a6a2e8bf6d4c ]
+[ Upstream commit 091dacc3cc10979ab0422f0a9f7fcc27eee97e69 ]
 
-The ks8851 chip's initial carrier state is down. A Link Change Interrupt
-is signaled once interrupts are enabled if the carrier is up.
+Restore the status of ep->stopped in function net2272_dequeue().
 
-The ks8851 driver has it backwards by assuming that the initial carrier
-state is up. The state is therefore misrepresented if the interface is
-opened with no cable attached. Fix it.
+When the given request is not found in the endpoint queue
+the function returns -EINVAL without restoring the state of
+ep->stopped. Thus the endpoint keeps blocked and does not transfer
+any data anymore.
 
-The Link Change interrupt is sometimes not signaled unless the P1MBSR
-register (which contains the Link Status bit) is read on ->ndo_open().
-This might be a hardware erratum. Read the register by calling
-mii_check_link(), which has the desirable side effect of setting the
-carrier state to down if the cable was detached while the interface was
-closed.
+This fix is only compile-tested, since we do not have a
+corresponding hardware. An analogous fix was tested in the sibling
+driver. See "usb: gadget: net2280: Fix net2280_dequeue()"
 
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Frank Pavlic <f.pavlic@kunbus.de>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Tristram Ha <Tristram.Ha@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Guido Kiener <guido.kiener@rohde-schwarz.com>
+Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/gadget/udc/net2272.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851.c b/drivers/net/ethernet/micrel/ks8851.c
-index ff6cab4f6343..7377dca6eb57 100644
---- a/drivers/net/ethernet/micrel/ks8851.c
-+++ b/drivers/net/ethernet/micrel/ks8851.c
-@@ -870,6 +870,7 @@ static int ks8851_net_open(struct net_device *dev)
- 	netif_dbg(ks, ifup, ks->netdev, "network device up\n");
- 
- 	mutex_unlock(&ks->lock);
-+	mii_check_link(&ks->mii);
- 	return 0;
- }
- 
-@@ -1527,6 +1528,7 @@ static int ks8851_probe(struct spi_device *spi)
- 
- 	spi_set_drvdata(spi, ks);
- 
-+	netif_carrier_off(ks->netdev);
- 	ndev->if_port = IF_PORT_100BASET;
- 	ndev->netdev_ops = &ks8851_netdev_ops;
- 	ndev->irq = spi->irq;
+diff --git a/drivers/usb/gadget/udc/net2272.c b/drivers/usb/gadget/udc/net2272.c
+index 3b6e34fc032b..553922c3be85 100644
+--- a/drivers/usb/gadget/udc/net2272.c
++++ b/drivers/usb/gadget/udc/net2272.c
+@@ -962,6 +962,7 @@ net2272_dequeue(struct usb_ep *_ep, struct usb_request *_req)
+ 			break;
+ 	}
+ 	if (&req->req != _req) {
++		ep->stopped = stopped;
+ 		spin_unlock_irqrestore(&ep->dev->lock, flags);
+ 		return -EINVAL;
+ 	}
 -- 
 2.19.1
 
