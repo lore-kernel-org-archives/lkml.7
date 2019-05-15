@@ -2,229 +2,136 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2860C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D40E5C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E1062087E
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557944840;
-	bh=eyCci4NNHW/Zb8xOIWX1uiuQImd0sVgqVJNMBUtSyzo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rc0XG+4jkyAUyCEX+cbUf1pUJtZKZWGphRdgy2gsL621zAPUDMq58Js80F5aZ+ZSQ
-	 op+1WGx7l3JA263FlLeGqB/PTNBdGPxBbDfvCFy66m5zWxmRhNZ7l1q+59tC+RA1eu
-	 0+qAjqktXxnpd8EO0yfyVbvf4oBb+6L1ltI7Fq6E=
+	by mail.kernel.org (Postfix) with ESMTP id A1BD02082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 18:27:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="W26Ml9HI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbfEOS1T (ORCPT
+        id S1727024AbfEOS1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 14:27:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34170 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726467AbfEOS1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 14:27:19 -0400
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29F1621473
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 18:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557944837;
-        bh=eyCci4NNHW/Zb8xOIWX1uiuQImd0sVgqVJNMBUtSyzo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=l+ze3bM9Xdq86BlYng6FD78FmBq7OVBDoDLIvX6TPDXdbjyb53Eyyr3Gmo9FBNwB0
-         VrEqBdvsYZznlPOWMqDeTQUbWDUQTB005XXgyHcaKsKlEvQjgebrHzPDQQRDk3LPvN
-         ZIXgbS7QZBNVKlbDrXxccBz6lOFRTKcRFQInOmbw=
-Received: by mail-wr1-f47.google.com with SMTP id b18so521694wrq.12
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 11:27:17 -0700 (PDT)
-X-Gm-Message-State: APjAAAV0Dxii8DoLofDRvWjV4b0acfNTBgz7ASmGumcKdUmzO04Zde9o
-        1MXaPec0EeccFWIYSgvOLCGcanQgQWzSDfnGOPXBhw==
-X-Google-Smtp-Source: APXvYqy1pLyH4lK8J6UTt9LHYCA38HWu3si0XcCqLyKwswu7vOKZJZQHgx27uHEnWm6r8QGqq5mTnXm8Ea9kev7zK7A=
-X-Received: by 2002:a5d:4907:: with SMTP id x7mr14732988wrq.199.1557944835683;
- Wed, 15 May 2019 11:27:15 -0700 (PDT)
+        Wed, 15 May 2019 14:27:49 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39826 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfEOS1t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 14:27:49 -0400
+Received: by mail-wm1-f65.google.com with SMTP id n25so628122wmk.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 11:27:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=28QOsUrkOtQ3+F3AZF6tvz0XZ0x3E0XcKQguFdoMZBs=;
+        b=W26Ml9HIpacgp0bgPVcY17gxP8xNSnXCf+QlN5vEgiUdbU5UWU4xwSipKVCXC1l67u
+         f4X/GH2Z1ktU+q04rxjtyjlIjMa9x85/L1heKfYjDqzcmbawbowHu9tFzNApVWyNi81i
+         5A6lZM7wdGXQNBmDGGMJxQFsyMx8N7mILxU30mpbel/DSVFydPOso1bmD05004BksxZ6
+         K95e71l0J2wrM+5DZgcxxu34CoUgvsS2gf19ctr3/hxO0XdZwaAmdtgI/YadBjNcYt0i
+         5zlhcWGOs5ogl9+97EWHIz+AM/uzNK6xb9GR9jq4kWUeC7pf1Jxjoo8XzGQxEWqNWwHD
+         Zq5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=28QOsUrkOtQ3+F3AZF6tvz0XZ0x3E0XcKQguFdoMZBs=;
+        b=ncxw/8Ylfjf7L4R1AQ4ozXxhiMaJ65aIVI5kFJKxPprKWSThf9qez3/9rE9+mSAYTN
+         //Vp69QVVkORnwxx55PDxKoStWEXHB1svy7n6XlPOJUM6l8/v8I5w7IWKizLmzvTdIye
+         n/ZW/VenlI+s15MGHZiTNk9nK/smQHSjqQTKXmaeozjhryn7GCSVTEs3hBLQCKlkJJew
+         mZWyuH2aBntYRuQ8AIZKvTv+JHHRuHP9a0VfxmXu1I5MibNbdbmitnCA0+A88ZvtCf2O
+         zRxCPexOSXuKoCTTq9xHo8vR1tp8NJGOLEivK8YAlBGAir9kBuqQ1Op3IA+xCPRGFEY5
+         cecw==
+X-Gm-Message-State: APjAAAWuwS/9+lirUki+ULX+FfFGTBduB9zmz+r2gd/kS+n3xeFoTRl2
+        MOiegzSwG5Na4eX6ZXf8ZgPcgZapLaXRdA==
+X-Google-Smtp-Source: APXvYqyOwGKXoVHywbP2QgQPeYcfGt1mh8KczoQzAuOcR5M63NiPGuTCtgaNYm+yxC21Hg4fT5wpnw==
+X-Received: by 2002:a1c:2c89:: with SMTP id s131mr23814243wms.142.1557944867290;
+        Wed, 15 May 2019 11:27:47 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id d9sm3648814wro.26.2019.05.15.11.27.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 11:27:46 -0700 (PDT)
+Message-ID: <5cdc5a22.1c69fb81.b2944.58c9@mx.google.com>
+Date:   Wed, 15 May 2019 11:27:46 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
- <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com> <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
- <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com> <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com> <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190514204527.GC1977@linux.intel.com> <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
- <20190515013031.GF1977@linux.intel.com>
-In-Reply-To: <20190515013031.GF1977@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 15 May 2019 11:27:04 -0700
-X-Gmail-Original-Message-ID: <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
-Message-ID: <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
-Subject: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Branch: linux-4.9.y
+X-Kernelci-Kernel: v4.9.176-52-g2647f24152a7
+In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
+References: <20190515090616.669619870@linuxfoundation.org>
+Subject: Re: [PATCH 4.9 00/51] 4.9.177-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, LSM and SELinux people-
+stable-rc/linux-4.9.y boot: 112 boots: 0 failed, 106 passed with 3 offline,=
+ 1 untried/unknown, 2 conflicts (v4.9.176-52-g2647f24152a7)
 
-We're trying to figure out how SGX fits in with LSMs.  For background,
-an SGX library is functionally a bit like a DSO, except that it's
-nominally resistant to attack from outside and the process of loading
-it is complicated.  To load an enclave, a program can open
-/dev/sgx/enclave, do some ioctls to load the code and data segments
-into the enclave, call a special ioctl to "initialize" the enclave,
-and then call into the enclave (using special CPU instructions).
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.9.y/kernel/v4.9.176-52-g2647f24152a7/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
+/kernel/v4.9.176-52-g2647f24152a7/
 
-One nastiness is that there is not actually a universally agreed upon,
-documented file format for enclaves.  Windows has an undocumented
-format, and there are probably a few others out there.  No one really
-wants to teach the kernel to parse enclave files.
+Tree: stable-rc
+Branch: linux-4.9.y
+Git Describe: v4.9.176-52-g2647f24152a7
+Git Commit: 2647f24152a78a686e9e2c8382f5b292cc31b99a
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 52 unique boards, 22 SoC families, 15 builds out of 197
 
-There are two issues with how this interacts with LSMs:
+Boot Regressions Detected:
 
-1) LSMs might want to be able to whitelist, blacklist, or otherwise
-restrict what enclaves can run at all.  The current proposal that
-everyone seems to dislike the least is to have a .sigstruct file on
-disk that contains a hash and signature of the enclave in a
-CPU-defined format.  To initialize an enclave, a program will pass an
-fd to this file, and a new LSM hook can be called to allow or disallow
-the operation.  In a SELinux context, the idea is that policy could
-require the .sigstruct file to be labeled with a type like
-sgx_sigstruct_t, and only enclaves that have a matching .sigstruct
-with such a label could run.
+arm:
 
-2) Just like any other DSO, there are potential issues with how
-enclaves deal with writable vs executable memory.  This takes two
-forms.  First, a task should probably require EXECMEM, EXECMOD, or
-similar permission to run an enclave that can modify its own text.
-Second, it would be nice if a task that did *not* have EXECMEM,
-EXECMOD, or similar could still run the enclave if it had EXECUTE
-permission on the file containing the enclave.
+    omap2plus_defconfig:
+        gcc-8:
+          omap4-panda:
+              lab-baylibre: new failure (last pass: v4.9.176-35-g6194f35e77=
+9b)
 
-Currently, this all works because DSOs are run by mmapping the file to
-create multiple VMAs, some of which are executable, non-writable, and
-non-CoWed, and some of which are writable but not executable.  With
-SGX, there's only really one inode per enclave (the anon_inode that
-comes form /dev/sgx/enclave), and it can only be sensibly mapped
-MAP_SHARED.
+Offline Platforms:
 
-With the current version of the SGX driver, to run an enclave, I think
-you'll need either EXECUTE rights to /dev/sgx/enclave or EXECMOD or
-similar, all of which more or less mean that you can run any modified
-code you want, and none of which is useful to prevent enclaves from
-contain RWX segments.
+arm:
 
-So my question is: what, if anything, should change to make this work bette=
-r?
+    tegra_defconfig:
+        gcc-8
+            tegra20-iris-512: 1 offline lab
 
-Here's a very vague proposal that's kind of like what I've been
-thinking over the past few days.  The SGX inode could track, for each
-page, a "safe-to-execute" bit.  When you first open /dev/sgx/enclave,
-you get a blank enclave and all pages are safe-to-execute.  When you
-do the ioctl to load context (which could be code, data, or anything
-else), the kernel will check whether the *source* VMA is executable
-and, if not, mark the page of the enclave being loaded as unsafe.
-Once the enclave is initialized, the driver will clear the
-safe-to-execute bit for any page that is successfully mapped writably.
+    multi_v7_defconfig:
+        gcc-8
+            stih410-b2120: 1 offline lab
+            tegra20-iris-512: 1 offline lab
 
-The intent is that a page of the enclave is safe-to-execute if that
-page was populated from executable memory and not modified since then.
-LSMs could then enforce a policy that you can map an enclave page RX
-if the page is safe-to-execute, you can map any page you want for
-write if there are no executable mappings, and you can only map a page
-for write and execute simultaneously if you can EXECMOD permission.
-This should allow an enclave to be loaded by userspace from a file
-with EXECUTE rights.
+Conflicting Boot Failures Detected: (These likely are not failures as other=
+ labs are reporting PASS. Needs review.)
 
-So here are my questions:
+arm:
+    omap2plus_defconfig:
+        omap4-panda:
+            lab-baylibre: FAIL (gcc-8)
+            lab-baylibre-seattle: PASS (gcc-8)
 
-Are the goals I mentioned reasonable?
+    davinci_all_defconfig:
+        da850-lcdk:
+            lab-baylibre: PASS (gcc-8)
+            lab-baylibre-seattle: FAIL (gcc-8)
 
-Is the design I just outlined reasonable?  Would SELinux support this?
-
-Is there a better solution that works well enough?
-
-Thanks, all!
-
-> On May 14, 2019, at 6:30 PM, Sean Christopherson <sean.j.christopherson@i=
-ntel.com> wrote:
->
->
->> But thinking this all through, it's a bit more complicated than any of
->> this.  Looking at the SELinux code for inspiration, there are quite a
->> few paths, but they boil down to two cases: EXECUTE is the right to
->> map an unmodified file executably, and EXECMOD/EXECMEM (the
->> distinction seems mostly irrelevant) is the right to create (via mmap
->> or mprotect) a modified anonymous file mapping or a non-file-backed
->> mapping that is executable.  So, if we do nothing, then mapping an
->> enclave with execute permission will require either EXECUTE on the
->> enclave inode or EXECMOD/EXECMEM, depending on exactly how this gets
->> set up.
->
-> If we do literally nothing, then I'm pretty sure mapping an enclave will
-> require PROCESS__EXECMEM.  The mmap() for the actual enclave is done
-> using an anon inode, e.g. from /dev/sgx/enclave.  Anon inodes are marked
-> private, which means inode_has_perm() will always return "success".  The
-> only effective check is in file_map_prot_check() when default_noexec is
-> true, in which case requesting PROT_EXEC on private inodes requires
-> PROCESS__EXECMEM.
->
->> So all is well, sort of.  The problem is that I expect there will be
->> people who want enclaves to work in a process that does not have these
->> rights.  To make this work, we probably need do some surgery on
->> SELinux.  ISTM the act of copying (via the EADD ioctl) data from a
->> PROT_EXEC mapping to an enclave should not be construed as "modifying"
->> the enclave for SELinux purposes.  Actually doing this could be
->> awkward, since the same inode will have executable parts and
->> non-executable parts, and SELinux can't really tell the difference.
->
-> Rather the do surgery on SELinux, why not go with Cedric's original
-> proposal and propagate the permissions from the source VMA to the EPC
-> VMA?
-
-Which EPC VMA?  Users can map the enclave fd again after EADD,
-resulting in a new VMA.  And any realistic enclave will presumably
-have RO, RW, and RX pages.
-
->  The enclave mmap() from userspace could then be done with RO
-> permissions so as to not run afoul of LSMs.  Adding PROT_EXEC after
-> EADD would require PROCESS__EXECMEM, but that's in line with mprotect()
-> on regular memory.
-
-How does this help anything?  The driver currently only works with
-EXECMEM and, with this change, it still needs EXECMEM.
-
-I think that, if we=E2=80=99re going to make changes along these lines, the
-goal should be that you can have an enclave serialized in a file on
-disk such that you have EXECUTE on the file, and you should be able to
-load and run the enclave without needing EXECMEM.  (Unless the enclave
-is self-modifying, of course.)
+---
+For more info write to <info@kernelci.org>
