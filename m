@@ -2,202 +2,96 @@ Return-Path: <SRS0=FrXW=TP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85C5C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E63C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC1E520873
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF09F20815
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 17:30:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DnyOqQkx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ICW+Ax1H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbfEOR32 (ORCPT
+        id S1727158AbfEORau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 13:29:28 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40051 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725974AbfEOR32 (ORCPT
+        Wed, 15 May 2019 13:30:50 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:49314 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725974AbfEORat (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 13:29:28 -0400
-Received: by mail-wm1-f68.google.com with SMTP id h11so815045wmb.5;
-        Wed, 15 May 2019 10:29:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Sf803I4SA3JX3Pgek3tMwi+IRlPrJZxRDuXTa88rrUY=;
-        b=DnyOqQkxQIwZ/WAS4mXcFGsIp4mCMKvXCRPaefVzp8GXB8fBCID4v4MFFUnNGgqnA9
-         cvF2IOmnOTKaRupcYuKKCCsOOfrkSJh8DjouBJ8AKbBunotXnIEzHHy7tU2ED4kCOXl7
-         to1bSHy2Fs3FQYKClxT87YLmgek3s9UBpWi0AvA55zfSYZq2YYAPP3dNDMvYbEdIv05j
-         Lodnyku8NidsRDPl4diqyw8krPWgVs3q9/wn2h94JDl0s+erdy4NM5P9G6ZkO7cxVgFR
-         8tXUuWXeh6xvv9Y6Zil6Mn5gklJ4LZrZp35KywddCAjF+ieDnhyJgjfuiRsYmoT7v1h0
-         /PpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Sf803I4SA3JX3Pgek3tMwi+IRlPrJZxRDuXTa88rrUY=;
-        b=XPb7+wR+rK0EHfvb7+avNZv6T//A1QvLwlSQ0ycjF20nYsfjaWc9gQC009bfPOE4VE
-         T5M0UTfee+ndo5WQTrIqmxOF2/J2NyWTtlB7lPZUlEvt5wz6KWgXg53oBHSsV+o0CUjX
-         K1lamCcnkau5rZfWzb6sSg8usdRgNCOj+DOkqiT7SUWVafkuLXZ3vA0sXhLw8wufklFU
-         gVeR/dXWDQIwnXBINJ1wmV6ZhbkHawcOYwx0BbsKPSkFLoFVPIDXtSf92U6VL9WnmWTm
-         Uw+t+zooi7gSASrHPqPumzskzYGr0jpV3vPSCU9OrHjRZ1M1jiYFyiPTOftaRuraPEUb
-         /VDw==
-X-Gm-Message-State: APjAAAXZNHCWkOp+3d3AYeFfxZXNxOYXXAoT0pWt5HC39enucdZzRl8z
-        0BrM1rP43S/nTzRpshtHguk8rcNG
-X-Google-Smtp-Source: APXvYqzELxUsCNR308UfKXQUGIGcPvHhjGXhQrURCJixLkgTm7P3Ueek1U9VhfJW+w1xqCFo9rMPUw==
-X-Received: by 2002:a1c:494:: with SMTP id 142mr25121736wme.115.1557941365627;
-        Wed, 15 May 2019 10:29:25 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id u17sm1778872wmj.1.2019.05.15.10.29.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 10:29:24 -0700 (PDT)
-Date:   Wed, 15 May 2019 19:29:22 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [RFC net-next v2 00/14] net: stmmac: Selftests
-Message-ID: <20190515172922.GA30321@Red>
-References: <cover.1557848472.git.joabreu@synopsys.com>
+        Wed, 15 May 2019 13:30:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=y0H7KCJgDLLoNPgDXA06COEEWIlwjcNmqU20oeqEVdM=; b=ICW+Ax1Hnls1D1ma43OjC5/22
+        cyieKb+MpGX6+WTDjd7th2EhOYEBpYmB89o960nPHxEcCgSHew+YrPdliQ6e3O+v7BxhtEC+L2rch
+        YLhUYeprRZChm3rX/U0tewaacWC10VE02CAB34K3yZuTGcyZn8M+CE8iUqG/BgTraK5ZkgXzd8+Em
+        QZvbV5rVLZhpF7SLe8d4LRJV0vSXR+0NcTt3Sg0tujDpe2TQMu18CXfN/aada14hsB6yCEnp2aSBq
+        5hXYKTsAqMPeh/EZvUsdbFu/2DbcmgDS8DAWjQJGFvVzbA8MFpDTiJR7kBcSa/XyeR9Dw14e8BHAc
+        siF9yhZgA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hQxjq-0001mI-FF; Wed, 15 May 2019 17:30:46 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C4DB720297D49; Wed, 15 May 2019 19:30:43 +0200 (CEST)
+Date:   Wed, 15 May 2019 19:30:43 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/15] Add wait_var_event_interruptible()
+Message-ID: <20190515173043.GA2589@hirez.programming.kicks-ass.net>
+References: <155793753724.31671.7034451837854752319.stgit@warthog.procyon.org.uk>
+ <155793758837.31671.13765813674309502991.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1557848472.git.joabreu@synopsys.com>
+In-Reply-To: <155793758837.31671.13765813674309502991.stgit@warthog.procyon.org.uk>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 05:45:22PM +0200, Jose Abreu wrote:
-> [ Submitting with net-next closed for proper review and testing. ]
+On Wed, May 15, 2019 at 05:26:28PM +0100, David Howells wrote:
+> Add wait_var_event_interruptible() to allow interruptible waits for events.
 > 
-> This introduces selftests support in stmmac driver. We add 9 basic sanity
-> checks and MAC loopback support for all cores within the driver. This way
-> more tests can easily be added in the future and can be run in virtually
-> any MAC/GMAC/QoS/XGMAC platform.
-> 
-> Having this we can find regressions and missing features in the driver
-> while at the same time we can check if the IP is correctly working.
-> 
-> We have been using this for some time now and I do have more tests to
-> submit in the feature. My experience is that although writing the tests
-> adds more development time, the gain results are obvious.
-> 
-> I let this feature optional within the driver under a Kconfig option.
-> 
-> Cc: Joao Pinto <jpinto@synopsys.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: Corentin Labbe <clabbe.montjoie@gmail.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> 
-> Corentin Labbe (1):
->   net: ethernet: stmmac: dwmac-sun8i: Enable control of loopback
-> 
-> Jose Abreu (13):
->   net: stmmac: Add MAC loopback callback to HWIF
->   net: stmmac: dwmac100: Add MAC loopback support
->   net: stmmac: dwmac1000: Add MAC loopback support
->   net: stmmac: dwmac4/5: Add MAC loopback support
->   net: stmmac: dwxgmac2: Add MAC loopback support
->   net: stmmac: Switch MMC functions to HWIF callbacks
->   net: stmmac: dwmac1000: Also pass control frames while in promisc mode
->   net: stmmac: dwmac4/5: Also pass control frames while in promisc mode
->   net: stmmac: dwxgmac2: Also pass control frames while in promisc mode
->   net: stmmac: Introduce selftests support
->   net: stmmac: dwmac1000: Fix Hash Filter
->   net: stmmac: dwmac1000: Clear unused address entries
->   net: stmmac: dwmac4/5: Fix Hash Filter
-> 
->  drivers/net/ethernet/stmicro/stmmac/Kconfig        |   9 +
->  drivers/net/ethernet/stmicro/stmmac/Makefile       |   2 +
->  drivers/net/ethernet/stmicro/stmmac/common.h       |   1 +
->  drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c  |  13 +
->  drivers/net/ethernet/stmicro/stmmac/dwmac1000.h    |   1 +
->  .../net/ethernet/stmicro/stmmac/dwmac1000_core.c   |  22 +-
->  .../net/ethernet/stmicro/stmmac/dwmac100_core.c    |  13 +
->  drivers/net/ethernet/stmicro/stmmac/dwmac4.h       |   3 +
->  drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |  19 +-
->  drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |   2 +
->  .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    |  15 +-
->  drivers/net/ethernet/stmicro/stmmac/hwif.c         |   9 +
->  drivers/net/ethernet/stmicro/stmmac/hwif.h         |  21 +
->  drivers/net/ethernet/stmicro/stmmac/mmc.h          |   4 -
->  drivers/net/ethernet/stmicro/stmmac/mmc_core.c     |  13 +-
->  drivers/net/ethernet/stmicro/stmmac/stmmac.h       |  22 +
->  .../net/ethernet/stmicro/stmmac/stmmac_ethtool.c   |   8 +-
->  drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |   4 +-
->  .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 846 +++++++++++++++++++++
->  19 files changed, 1014 insertions(+), 13 deletions(-)
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-> 
-> -- 
-> 2.7.4
-> 
+> Signed-off-by: David Howells <dhowells@redhat.com>
 
-Tested-by: Corentin LABBE <clabbe.montjoie@gmail.com>
-Tested-on: sun7i-a20-cubieboard2
-Tested-on: sun50i-a64-bananapi-m64
-Tested-on: meson-gxl-s905x-libretech-cc
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-For information the output is:
-On sun50i-a64-bananapi-m64
-ethtool --test eth0 offline
-The test result is PASS
-The test extra info:
- 1. MAC Loopback         	 0
- 2. PHY Loopback         	 -95
- 3. MMC Counters         	 -95
- 4. EEE                  	 -95
- 5. Hash Filter MC       	 0
- 6. Perfect Filter UC    	 0
- 7. MC Filter            	 0
- 8. UC Filter            	 0
- 9. Flow Control         	 -95
-with onine I got
-dwmac-sun8i 1c30000.ethernet eth0: Only offline tests are supported
-
-on sun7i-a20-cubieboard2:
-ethtool --test eth0 offline
-The test result is PASS
-The test extra info:
- 1. MAC Loopback         	 0
- 2. PHY Loopback         	 -95
- 3. MMC Counters         	 -95
- 4. EEE                  	 -95
- 5. Hash Filter MC       	 0
- 6. Perfect Filter UC    	 0
- 7. MC Filter            	 0
- 8. UC Filter            	 0
- 9. Flow Control         	 -95
-With online I got:
-sun7i-dwmac 1c50000.ethernet eth0: Only offline tests are supported
-
-on meson-gxl-s905x-libretech-cc:
-ethtool --test eth0 offline
-The test result is FAIL
-The test extra info:
- 1. MAC Loopback         	 0
- 2. PHY Loopback         	 -95
- 3. MMC Counters         	 -1
- 4. EEE                  	 -95
- 5. Hash Filter MC       	 0
- 6. Perfect Filter UC    	 0
- 7. MC Filter            	 0
- 8. UC Filter            	 0
- 9. Flow Control         	 -95
-with onine I got
-meson8b-dwmac c9410000.ethernet eth0: Only offline tests are supported
-
-I will try to investigate the MMC failure. Does -1 (vs other -EXXXX) is the right error code to return from the driver ?
+> ---
+> 
+>  include/linux/wait_bit.h |   13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/include/linux/wait_bit.h b/include/linux/wait_bit.h
+> index 2b0072fa5e92..7dec36aecbd9 100644
+> --- a/include/linux/wait_bit.h
+> +++ b/include/linux/wait_bit.h
+> @@ -305,6 +305,19 @@ do {									\
+>  	__ret;								\
+>  })
+>  
+> +#define __wait_var_event_interruptible(var, condition)			\
+> +	___wait_var_event(var, condition, TASK_INTERRUPTIBLE, 0, 0,	\
+> +			  schedule())
+> +
+> +#define wait_var_event_interruptible(var, condition)			\
+> +({									\
+> +	int __ret = 0;							\
+> +	might_sleep();							\
+> +	if (!(condition))						\
+> +		__ret = __wait_var_event_interruptible(var, condition);	\
+> +	__ret;								\
+> +})
+> +
+>  /**
+>   * clear_and_wake_up_bit - clear a bit and wake up anyone waiting on that bit
+>   *
+> 
