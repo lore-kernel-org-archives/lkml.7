@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F21DC04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D40BFC04E84
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 217F020881
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68E5206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557919159;
-	bh=POM2K4kZcnAcbgwQlbFlVZjcYoOsydeLxkdZxyviRk0=;
+	s=default; t=1557919161;
+	bh=YX4BlBRiJhszkZGRb7Q3IYdtGSIKac4i7nObQijVEZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GgNo3kS5g0zZ3SMBEU2+3qJfDFihpueuXRWPa0hT0NSYLIhh5TTYKzWbXR0ZohSSe
-	 zEn4Myck5fEi7KuRG6wM9EziOf7r+IoA9p9SFfeuymXe0pOlU7BbahR2yeQjnhhVFQ
-	 DDpq927B+icgou62ZUJ3VT2Uuy05+hVtW2kBFV54=
+	b=t4wBNYBtj++aWsPukmXgjTCxdq0S8KCR7AUbBeNEyWECekCOtXf5JyeaSLm2UDmT1
+	 nI9infJTwQoIvFWcRlyX9bYpgaoxHQLjH+SVZB8zkQGbDb8ZGGXgkKF83CffoswoEX
+	 46ZcCuTDWm77CVP0I7PqcdxoodFiD8y4l35eqc8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730536AbfEOLTQ (ORCPT
+        id S1730944AbfEOLTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:19:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56816 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:19:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730906AbfEOLTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:19:11 -0400
+        id S1730925AbfEOLTR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:19:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88A7B2084F;
-        Wed, 15 May 2019 11:19:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D61FC20843;
+        Wed, 15 May 2019 11:19:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919151;
-        bh=POM2K4kZcnAcbgwQlbFlVZjcYoOsydeLxkdZxyviRk0=;
+        s=default; t=1557919156;
+        bh=YX4BlBRiJhszkZGRb7Q3IYdtGSIKac4i7nObQijVEZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xdarh2S6a+SqJjJy0zfu5q8CGtYI9AecV8/MAsQ2VLqhEnMVtfPqWmiKZn8Dggg0x
-         NmArX5uNLhHYma3+zIbkpM5oq19bIP7yxatMdPSjqCXBPaVgoAJz8ptpi+crJRHYVw
-         bg1T/6YiZrX80FnmzW/24n4IDFUvOWAuy3dvdh6w=
+        b=Vf0TZ9w36FIwKiIAcQykieMjQl/1mwhbGNdj87zD//AOaKO16qnUUy1BsTFH18How
+         XGLnF8F0AS1Rn9wayr1QH5ajTV7gWYaFlxaknvA9iouKt5GUJup9qduuJdr1TJZGau
+         Iq8uMFLhXE7HMgv9izWpxqcWm5QoR0gVigFs5Mvk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Chandan Rajendra <chandan@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Alex Kushnarov <alexanderk@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <alexander.levin@microsoft.com>
-Subject: [PATCH 4.14 085/115] mm/memory.c: fix modifying of page protection by insert_pfn()
-Date:   Wed, 15 May 2019 12:56:05 +0200
-Message-Id: <20190515090705.499391044@linuxfoundation.org>
+Subject: [PATCH 4.14 087/115] mlxsw: spectrum_switchdev: Add MDB entries in prepare phase
+Date:   Wed, 15 May 2019 12:56:07 +0200
+Message-Id: <20190515090705.633799089@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090659.123121100@linuxfoundation.org>
 References: <20190515090659.123121100@linuxfoundation.org>
@@ -64,77 +62,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cae85cb8add35f678cf487139d05e083ce2f570a ]
+[ Upstream commit d4d0e40977ac450f32f2db5e4d8e23c9d2578899 ]
 
-Aneesh has reported that PPC triggers the following warning when
-excercising DAX code:
+The driver cannot guarantee in the prepare phase that it will be able to
+write an MDB entry to the device. In case the driver returned success
+during the prepare phase, but then failed to add the entry in the commit
+phase, a WARNING [1] will be generated by the switchdev core.
 
-  IP set_pte_at+0x3c/0x190
-  LR insert_pfn+0x208/0x280
-  Call Trace:
-     insert_pfn+0x68/0x280
-     dax_iomap_pte_fault.isra.7+0x734/0xa40
-     __xfs_filemap_fault+0x280/0x2d0
-     do_wp_page+0x48c/0xa40
-     __handle_mm_fault+0x8d0/0x1fd0
-     handle_mm_fault+0x140/0x250
-     __do_page_fault+0x300/0xd60
-     handle_page_fault+0x18
+Fix this by doing the work in the prepare phase instead.
 
-Now that is WARN_ON in set_pte_at which is
+[1]
+[  358.544486] swp12s0: Commit of object (id=2) failed.
+[  358.550061] WARNING: CPU: 0 PID: 30 at net/switchdev/switchdev.c:281 switchdev_port_obj_add_now+0x9b/0xe0
+[  358.560754] CPU: 0 PID: 30 Comm: kworker/0:1 Not tainted 5.0.0-custom-13382-gf2449babf221 #1350
+[  358.570472] Hardware name: Mellanox Technologies Ltd. MSN2100-CB2FO/SA001017, BIOS 5.6.5 06/07/2016
+[  358.580582] Workqueue: events switchdev_deferred_process_work
+[  358.587001] RIP: 0010:switchdev_port_obj_add_now+0x9b/0xe0
+...
+[  358.614109] RSP: 0018:ffffa6b900d6fe18 EFLAGS: 00010286
+[  358.619943] RAX: 0000000000000000 RBX: ffff8b00797ff000 RCX: 0000000000000000
+[  358.627912] RDX: ffff8b00b7a1d4c0 RSI: ffff8b00b7a152e8 RDI: ffff8b00b7a152e8
+[  358.635881] RBP: ffff8b005c3f5bc0 R08: 000000000000022b R09: 0000000000000000
+[  358.643850] R10: 0000000000000000 R11: ffffa6b900d6fcc8 R12: 0000000000000000
+[  358.651819] R13: dead000000000100 R14: ffff8b00b65a23c0 R15: 0ffff8b00b7a2200
+[  358.659790] FS:  0000000000000000(0000) GS:ffff8b00b7a00000(0000) knlGS:0000000000000000
+[  358.668820] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  358.675228] CR2: 00007f00aad90de0 CR3: 00000001ca80d000 CR4: 00000000001006f0
+[  358.683188] Call Trace:
+[  358.685918]  switchdev_port_obj_add_deferred+0x13/0x60
+[  358.691655]  switchdev_deferred_process+0x6b/0xf0
+[  358.696907]  switchdev_deferred_process_work+0xa/0x10
+[  358.702548]  process_one_work+0x1f5/0x3f0
+[  358.707022]  worker_thread+0x28/0x3c0
+[  358.711099]  ? process_one_work+0x3f0/0x3f0
+[  358.715768]  kthread+0x10d/0x130
+[  358.719369]  ? __kthread_create_on_node+0x180/0x180
+[  358.724815]  ret_from_fork+0x35/0x40
 
-        VM_WARN_ON(pte_hw_valid(*ptep) && !pte_protnone(*ptep));
-
-The problem is that on some architectures set_pte_at() cannot cope with
-a situation where there is already some (different) valid entry present.
-
-Use ptep_set_access_flags() instead to modify the pfn which is built to
-deal with modifying existing PTE.
-
-Link: http://lkml.kernel.org/r/20190311084537.16029-1-jack@suse.cz
-Fixes: b2770da64254 "mm: add vm_insert_mixed_mkwrite()"
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reported-by: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Acked-by: Dan Williams <dan.j.williams@intel.com>
-Cc: Chandan Rajendra <chandan@linux.ibm.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 3a49b4fde2a1 ("mlxsw: Adding layer 2 multicast support")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reported-by: Alex Kushnarov <alexanderk@mellanox.com>
+Tested-by: Alex Kushnarov <alexanderk@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 ---
- mm/memory.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/memory.c b/mm/memory.c
-index f99b64ca13031..e9bce27bc18c3 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -1813,10 +1813,12 @@ static int insert_pfn(struct vm_area_struct *vma, unsigned long addr,
- 				WARN_ON_ONCE(!is_zero_pfn(pte_pfn(*pte)));
- 				goto out_unlock;
- 			}
--			entry = *pte;
--			goto out_mkwrite;
--		} else
--			goto out_unlock;
-+			entry = pte_mkyoung(*pte);
-+			entry = maybe_mkwrite(pte_mkdirty(entry), vma);
-+			if (ptep_set_access_flags(vma, addr, pte, entry, 1))
-+				update_mmu_cache(vma, addr, pte);
-+		}
-+		goto out_unlock;
- 	}
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
+index 3ba9f2c079b2a..8a1788108f52a 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c
+@@ -1320,7 +1320,7 @@ static int mlxsw_sp_port_mdb_add(struct mlxsw_sp_port *mlxsw_sp_port,
+ 	u16 fid_index;
+ 	int err = 0;
  
- 	/* Ok, finally just insert the thing.. */
-@@ -1825,7 +1827,6 @@ static int insert_pfn(struct vm_area_struct *vma, unsigned long addr,
- 	else
- 		entry = pte_mkspecial(pfn_t_pte(pfn, prot));
+-	if (switchdev_trans_ph_prepare(trans))
++	if (switchdev_trans_ph_commit(trans))
+ 		return 0;
  
--out_mkwrite:
- 	if (mkwrite) {
- 		entry = pte_mkyoung(entry);
- 		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+ 	bridge_port = mlxsw_sp_bridge_port_find(mlxsw_sp->bridge, orig_dev);
 -- 
 2.20.1
 
