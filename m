@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37253C04E53
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F302FC04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED8DB206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3BE5206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:43:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557920629;
-	bh=lAnVIE2rFubJvZXnSv7OSBrBPq7+//NgU8j8AUFJ6Ek=;
+	s=default; t=1557920635;
+	bh=vVfQY6gZu/OlDcM6tuuouwA74XHWGJMpGlcOZoThUis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=erigzCo1TNc7XIgfmrv52ngsvOaAoV5SXNnGlzt+msg2tjTbQPkhhE06Xm6CrzvbI
-	 iYWNGey3rU1AHkj9CC3i/vH56eRO9Yq+YG2uKZCaNUWRiVd8RxbITapagCouB0RXI8
-	 QA0H3P4824dCvicWABLTDx2X2SvPegOkv8QFCBKU=
+	b=Yvkb9MZ7Oh5zZ87l5bMQnF31xaX/aFqf1gwZ1PFyVGYCr65MEHHSk+TX3FKLnNZAX
+	 Oz9SMUkcBu4goaB/sZX6LFuxCxOQdAaGfdNk0DE6XGP/4+jB4eTQ/KPsk3p5lwxasO
+	 2kJYkqophq6xPe4w8faWgLXUxDuvIrQZQ7pajvCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732010AbfEOL1J (ORCPT
+        id S1732349AbfEOLny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:27:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37938 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:43:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732167AbfEOL1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:27:04 -0400
+        id S1731294AbfEOL1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:27:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DBD120862;
-        Wed, 15 May 2019 11:27:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B4CA20862;
+        Wed, 15 May 2019 11:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557919623;
-        bh=lAnVIE2rFubJvZXnSv7OSBrBPq7+//NgU8j8AUFJ6Ek=;
+        s=default; t=1557919625;
+        bh=vVfQY6gZu/OlDcM6tuuouwA74XHWGJMpGlcOZoThUis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OQ5O4vkFprl3SJ1zdDvKdNXSWr4XPxYcfe49S59zjDAGj1CPZtlNCDIHj2dmtFCn5
-         0Ozsose4XQjQ6v+4DcJ8NpuBrSycVr0bZ73Z3GN62q5ukzaR234WiNBafhd7eBbAM8
-         6/RQPpdjKcy5drwp2cywycrb1fQPIQw7xM3WpU4M=
+        b=gqoFVGP7NORUzlFoXlprtjs6Fy1Uqi7iA0eByrEItMC+YsHiEWB7WWBrZ39atPEfj
+         EEK+QAG5jHyYqWRguiuPMsjMhhIFusI/Xxt5czMEBBDdWSpRjf/EL2pYyf0O1CntjJ
+         zX1JsH6mhSq8rhBqjJnBb6vM/B3bfJ59MBE0c/Zk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH 5.0 007/137] selftests/seccomp: Handle namespace failures gracefully
-Date:   Wed, 15 May 2019 12:54:48 +0200
-Message-Id: <20190515090653.285092544@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Tejun Heo <tj@kernel.org>
+Subject: [PATCH 5.0 008/137] kernfs: fix barrier usage in __kernfs_new_node()
+Date:   Wed, 15 May 2019 12:54:49 +0200
+Message-Id: <20190515090653.432205540@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
 References: <20190515090651.633556783@linuxfoundation.org>
@@ -61,189 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Andrea Parri <andrea.parri@amarulasolutions.com>
 
-commit 9dd3fcb0ab73cb1e00b8562ef027a38521aaff87 upstream.
+commit 998267900cee901c5d1dfa029a6304d00acbc29f upstream.
 
-When running without USERNS or PIDNS the seccomp test would hang since
-it was waiting forever for the child to trigger the user notification
-since it seems the glibc() abort handler makes a call to getpid(),
-which would trap again. This changes the getpid filter to getppid, and
-makes sure ASSERTs execute to stop from spawning the listener.
+smp_mb__before_atomic() can not be applied to atomic_set().  Remove the
+barrier and rely on RELEASE synchronization.
 
-Reported-by: Shuah Khan <shuah@kernel.org>
-Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
-Cc: stable@vger.kernel.org # > 5.0
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: Tycho Andersen <tycho@tycho.ws>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: ba16b2846a8c6 ("kernfs: add an API to get kernfs node from inode number")
+Cc: stable@vger.kernel.org
+Signed-off-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Acked-by: Tejun Heo <tj@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/seccomp/seccomp_bpf.c |   43 +++++++++++++-------------
- 1 file changed, 23 insertions(+), 20 deletions(-)
+ fs/kernfs/dir.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -3089,9 +3089,9 @@ TEST(user_notification_basic)
+--- a/fs/kernfs/dir.c
++++ b/fs/kernfs/dir.c
+@@ -650,11 +650,10 @@ static struct kernfs_node *__kernfs_new_
+ 	kn->id.generation = gen;
  
- 	/* Check that we get -ENOSYS with no listener attached */
- 	if (pid == 0) {
--		if (user_trap_syscall(__NR_getpid, 0) < 0)
-+		if (user_trap_syscall(__NR_getppid, 0) < 0)
- 			exit(1);
--		ret = syscall(__NR_getpid);
-+		ret = syscall(__NR_getppid);
- 		exit(ret >= 0 || errno != ENOSYS);
- 	}
+ 	/*
+-	 * set ino first. This barrier is paired with atomic_inc_not_zero in
++	 * set ino first. This RELEASE is paired with atomic_inc_not_zero in
+ 	 * kernfs_find_and_get_node_by_ino
+ 	 */
+-	smp_mb__before_atomic();
+-	atomic_set(&kn->count, 1);
++	atomic_set_release(&kn->count, 1);
+ 	atomic_set(&kn->active, KN_DEACTIVATED_BIAS);
+ 	RB_CLEAR_NODE(&kn->rb);
  
-@@ -3106,12 +3106,12 @@ TEST(user_notification_basic)
- 	EXPECT_EQ(seccomp(SECCOMP_SET_MODE_FILTER, 0, &prog), 0);
- 
- 	/* Check that the basic notification machinery works */
--	listener = user_trap_syscall(__NR_getpid,
-+	listener = user_trap_syscall(__NR_getppid,
- 				     SECCOMP_FILTER_FLAG_NEW_LISTENER);
- 	ASSERT_GE(listener, 0);
- 
- 	/* Installing a second listener in the chain should EBUSY */
--	EXPECT_EQ(user_trap_syscall(__NR_getpid,
-+	EXPECT_EQ(user_trap_syscall(__NR_getppid,
- 				    SECCOMP_FILTER_FLAG_NEW_LISTENER),
- 		  -1);
- 	EXPECT_EQ(errno, EBUSY);
-@@ -3120,7 +3120,7 @@ TEST(user_notification_basic)
- 	ASSERT_GE(pid, 0);
- 
- 	if (pid == 0) {
--		ret = syscall(__NR_getpid);
-+		ret = syscall(__NR_getppid);
- 		exit(ret != USER_NOTIF_MAGIC);
- 	}
- 
-@@ -3138,7 +3138,7 @@ TEST(user_notification_basic)
- 	EXPECT_GT(poll(&pollfd, 1, -1), 0);
- 	EXPECT_EQ(pollfd.revents, POLLOUT);
- 
--	EXPECT_EQ(req.data.nr,  __NR_getpid);
-+	EXPECT_EQ(req.data.nr,  __NR_getppid);
- 
- 	resp.id = req.id;
- 	resp.error = 0;
-@@ -3165,7 +3165,7 @@ TEST(user_notification_kill_in_middle)
- 	struct seccomp_notif req = {};
- 	struct seccomp_notif_resp resp = {};
- 
--	listener = user_trap_syscall(__NR_getpid,
-+	listener = user_trap_syscall(__NR_getppid,
- 				     SECCOMP_FILTER_FLAG_NEW_LISTENER);
- 	ASSERT_GE(listener, 0);
- 
-@@ -3177,7 +3177,7 @@ TEST(user_notification_kill_in_middle)
- 	ASSERT_GE(pid, 0);
- 
- 	if (pid == 0) {
--		ret = syscall(__NR_getpid);
-+		ret = syscall(__NR_getppid);
- 		exit(ret != USER_NOTIF_MAGIC);
- 	}
- 
-@@ -3277,7 +3277,7 @@ TEST(user_notification_closed_listener)
- 	long ret;
- 	int status, listener;
- 
--	listener = user_trap_syscall(__NR_getpid,
-+	listener = user_trap_syscall(__NR_getppid,
- 				     SECCOMP_FILTER_FLAG_NEW_LISTENER);
- 	ASSERT_GE(listener, 0);
- 
-@@ -3288,7 +3288,7 @@ TEST(user_notification_closed_listener)
- 	ASSERT_GE(pid, 0);
- 	if (pid == 0) {
- 		close(listener);
--		ret = syscall(__NR_getpid);
-+		ret = syscall(__NR_getppid);
- 		exit(ret != -1 && errno != ENOSYS);
- 	}
- 
-@@ -3311,14 +3311,15 @@ TEST(user_notification_child_pid_ns)
- 
- 	ASSERT_EQ(unshare(CLONE_NEWPID), 0);
- 
--	listener = user_trap_syscall(__NR_getpid, SECCOMP_FILTER_FLAG_NEW_LISTENER);
-+	listener = user_trap_syscall(__NR_getppid,
-+				     SECCOMP_FILTER_FLAG_NEW_LISTENER);
- 	ASSERT_GE(listener, 0);
- 
- 	pid = fork();
- 	ASSERT_GE(pid, 0);
- 
- 	if (pid == 0)
--		exit(syscall(__NR_getpid) != USER_NOTIF_MAGIC);
-+		exit(syscall(__NR_getppid) != USER_NOTIF_MAGIC);
- 
- 	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, &req), 0);
- 	EXPECT_EQ(req.pid, pid);
-@@ -3346,7 +3347,8 @@ TEST(user_notification_sibling_pid_ns)
- 	struct seccomp_notif req = {};
- 	struct seccomp_notif_resp resp = {};
- 
--	listener = user_trap_syscall(__NR_getpid, SECCOMP_FILTER_FLAG_NEW_LISTENER);
-+	listener = user_trap_syscall(__NR_getppid,
-+				     SECCOMP_FILTER_FLAG_NEW_LISTENER);
- 	ASSERT_GE(listener, 0);
- 
- 	pid = fork();
-@@ -3359,7 +3361,7 @@ TEST(user_notification_sibling_pid_ns)
- 		ASSERT_GE(pid2, 0);
- 
- 		if (pid2 == 0)
--			exit(syscall(__NR_getpid) != USER_NOTIF_MAGIC);
-+			exit(syscall(__NR_getppid) != USER_NOTIF_MAGIC);
- 
- 		EXPECT_EQ(waitpid(pid2, &status, 0), pid2);
- 		EXPECT_EQ(true, WIFEXITED(status));
-@@ -3368,11 +3370,11 @@ TEST(user_notification_sibling_pid_ns)
- 	}
- 
- 	/* Create the sibling ns, and sibling in it. */
--	EXPECT_EQ(unshare(CLONE_NEWPID), 0);
--	EXPECT_EQ(errno, 0);
-+	ASSERT_EQ(unshare(CLONE_NEWPID), 0);
-+	ASSERT_EQ(errno, 0);
- 
- 	pid2 = fork();
--	EXPECT_GE(pid2, 0);
-+	ASSERT_GE(pid2, 0);
- 
- 	if (pid2 == 0) {
- 		ASSERT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, &req), 0);
-@@ -3380,7 +3382,7 @@ TEST(user_notification_sibling_pid_ns)
- 		 * The pid should be 0, i.e. the task is in some namespace that
- 		 * we can't "see".
- 		 */
--		ASSERT_EQ(req.pid, 0);
-+		EXPECT_EQ(req.pid, 0);
- 
- 		resp.id = req.id;
- 		resp.error = 0;
-@@ -3408,14 +3410,15 @@ TEST(user_notification_fault_recv)
- 	struct seccomp_notif req = {};
- 	struct seccomp_notif_resp resp = {};
- 
--	listener = user_trap_syscall(__NR_getpid, SECCOMP_FILTER_FLAG_NEW_LISTENER);
-+	listener = user_trap_syscall(__NR_getppid,
-+				     SECCOMP_FILTER_FLAG_NEW_LISTENER);
- 	ASSERT_GE(listener, 0);
- 
- 	pid = fork();
- 	ASSERT_GE(pid, 0);
- 
- 	if (pid == 0)
--		exit(syscall(__NR_getpid) != USER_NOTIF_MAGIC);
-+		exit(syscall(__NR_getppid) != USER_NOTIF_MAGIC);
- 
- 	/* Do a bad recv() */
- 	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, NULL), -1);
 
 
