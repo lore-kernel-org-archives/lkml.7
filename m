@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5834C04E84
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E87C04E53
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F63217D8
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82FDB217F5
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 May 2019 11:12:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557918760;
-	bh=BUFWqae0B2UvoVLdJ7nyOW2ut10wFrOqz/EbSaTFfqM=;
+	s=default; t=1557918762;
+	bh=XsmRuaVSuXz3ZV2ZKFt8qydn1JZ6+/JIQ9dbv+67QQo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MZk2hLscz27C8jnMfCG9bn/VchgQiqaghEQRDNyNR9XiQIlF5HMkCcdjvBz7qq4pk
-	 nq6+VasRXbhv5nmxPKYIzHZvSV1UikAADj1jh/sK3qdTkXo04yRVapZzfdvlZS1dlJ
-	 SWLujco3HieYnt/ZbFQ8cHGS6LwUxw9H/pWT3qew=
+	b=JC4P1YlEsgCvWKaDqWLBW66fDDGPm0XtbO3+0jzeDHtx2gCgt1aIVkmB5NRzizdip
+	 i7Yim/YRFbxsEDKEMaef4wTKQwRFFEbvESZAivJU102FNjbde94MUWgU/EBzC1xRe1
+	 s8wDQ8BvfRzO7oy8CKVtJqEz0rH8acWbmC8EFbdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729837AbfEOLMk (ORCPT
+        id S1729850AbfEOLMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 07:12:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47886 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 07:12:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729818AbfEOLMg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 07:12:36 -0400
+        id S1729805AbfEOLMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 07:12:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9DCF20843;
-        Wed, 15 May 2019 11:12:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40D7421734;
+        Wed, 15 May 2019 11:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557918755;
-        bh=BUFWqae0B2UvoVLdJ7nyOW2ut10wFrOqz/EbSaTFfqM=;
+        s=default; t=1557918757;
+        bh=XsmRuaVSuXz3ZV2ZKFt8qydn1JZ6+/JIQ9dbv+67QQo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2oUJxmoHEEZT38xMwtHfgW21gcOiSIpgsfOh8Op5yjnk5y37qQ+WZKFi4z+sxMzPn
-         P6F0RdUAbMKYrr7IdEuv896E7F/6gHSDxQUO/MRSAUB5sbVRUKOK8DhP8vmqk63OXJ
-         DHfjIx/RKO2+fPgpNFqB35E7UqRKOyFwAKi5emOc=
+        b=1q4b2LbbYrtC28c1mBpeLrQNujx67iIdCm11nKLr04vsKj8AJae3xijUa3JjQse9q
+         zPpOxqLvuWH1vMZrDXjjSADyWqg67JR+MlgGxnB/7oON0X0oP4mvQoMAkzWUa4fCrf
+         jsWvY5Cp2EoJY6CKaF7IT5rUsRjqBdsrEnAGewD0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -63,9 +63,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Dave Stewart <david.c.stewart@intel.com>,
         Kees Cook <keescook@chromium.org>,
         Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 212/266] x86/speculation: Mark string arrays const correctly
-Date:   Wed, 15 May 2019 12:55:19 +0200
-Message-Id: <20190515090730.143470380@linuxfoundation.org>
+Subject: [PATCH 4.4 213/266] x86/speculataion: Mark command line parser data __initdata
+Date:   Wed, 15 May 2019 12:55:20 +0200
+Message-Id: <20190515090730.179562208@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190515090722.696531131@linuxfoundation.org>
 References: <20190515090722.696531131@linuxfoundation.org>
@@ -80,12 +80,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 8770709f411763884535662744a3786a1806afd3 upstream.
+commit 30ba72a990f5096ae08f284de17986461efcc408 upstream.
 
-checkpatch.pl muttered when reshuffling the code:
- WARNING: static const char * array should probably be static const char * const
-
-Fix up all the string arrays.
+No point to keep that around.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
@@ -108,8 +105,7 @@ Cc: Waiman Long <longman9394@gmail.com>
 Cc: Greg KH <gregkh@linuxfoundation.org>
 Cc: Dave Stewart <david.c.stewart@intel.com>
 Cc: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20181125185004.800018931@linutronix.de
-[bwh: Backported to 4.4: drop the part for KVM mitigation modes]
+Link: https://lkml.kernel.org/r/20181125185004.893886356@linutronix.de
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
@@ -118,23 +114,23 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -227,7 +227,7 @@ enum spectre_v2_mitigation_cmd {
- 	SPECTRE_V2_CMD_RETPOLINE_AMD,
- };
- 
--static const char *spectre_v2_strings[] = {
-+static const char * const spectre_v2_strings[] = {
- 	[SPECTRE_V2_NONE]			= "Vulnerable",
- 	[SPECTRE_V2_RETPOLINE_MINIMAL]		= "Vulnerable: Minimal generic ASM retpoline",
- 	[SPECTRE_V2_RETPOLINE_MINIMAL_AMD]	= "Vulnerable: Minimal AMD ASM retpoline",
-@@ -473,7 +473,7 @@ enum ssb_mitigation_cmd {
- 	SPEC_STORE_BYPASS_CMD_SECCOMP,
- };
- 
--static const char *ssb_strings[] = {
-+static const char * const ssb_strings[] = {
- 	[SPEC_STORE_BYPASS_NONE]	= "Vulnerable",
- 	[SPEC_STORE_BYPASS_DISABLE]	= "Mitigation: Speculative Store Bypass disabled",
- 	[SPEC_STORE_BYPASS_PRCTL]	= "Mitigation: Speculative Store Bypass disabled via prctl",
+@@ -240,7 +240,7 @@ static const struct {
+ 	const char *option;
+ 	enum spectre_v2_mitigation_cmd cmd;
+ 	bool secure;
+-} mitigation_options[] = {
++} mitigation_options[] __initdata = {
+ 	{ "off",		SPECTRE_V2_CMD_NONE,		  false },
+ 	{ "on",			SPECTRE_V2_CMD_FORCE,		  true  },
+ 	{ "retpoline",		SPECTRE_V2_CMD_RETPOLINE,	  false },
+@@ -483,7 +483,7 @@ static const char * const ssb_strings[]
+ static const struct {
+ 	const char *option;
+ 	enum ssb_mitigation_cmd cmd;
+-} ssb_mitigation_options[] = {
++} ssb_mitigation_options[]  __initdata = {
+ 	{ "auto",	SPEC_STORE_BYPASS_CMD_AUTO },    /* Platform decides */
+ 	{ "on",		SPEC_STORE_BYPASS_CMD_ON },      /* Disable Speculative Store Bypass */
+ 	{ "off",	SPEC_STORE_BYPASS_CMD_NONE },    /* Don't touch Speculative Store Bypass */
 
 
