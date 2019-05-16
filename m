@@ -2,152 +2,179 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C739C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9312BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E055420848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:23:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558027388;
-	bh=6i6MPECpNXJPnwb09ARQIza0kLkNRQCQlTKntAm2Dj8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wLOMOcHFkfM06iWU2RM4B5Kf7mpYASHMjAmq8+PVEjq7joXbo0Mz2Xx5doEb/F0OR
-	 kqgmz8bOSlQ1zDOASQI4PSdJFqH0EgOnsoJDGFgyct7EGk3qzUTCWYcyWZvSlSsSX9
-	 FTgSlxjhLGj5pgq0q27aj6d2curmTKejWDES1PAI=
+	by mail.kernel.org (Postfix) with ESMTP id 6060320833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfEPRXH (ORCPT
+        id S1727464AbfEPRXc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 13:23:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50424 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 13:23:32 -0400
+Received: from foss.arm.com ([217.140.101.70]:52678 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726519AbfEPRXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 13:23:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A87B2082E;
-        Thu, 16 May 2019 17:23:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558027385;
-        bh=6i6MPECpNXJPnwb09ARQIza0kLkNRQCQlTKntAm2Dj8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cJPhNQ4hHf8nqPSoq6sLOcNLL46YmtIOzMHOamJlt5YWzNWzfPbrz6b7AkOB77JJm
-         UjqILb46AI9S3KDFBxiUHoQc3J6XpJzeHDZVa9QiHUnWG2IvzyQa+U5WNM3ca/F19f
-         im0Jr6m2xt3A+yawkBu3MO1EiuoCSNSfznIUUnB4=
-Date:   Thu, 16 May 2019 19:23:03 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Tobin C. Harding" <me@tobin.cc>
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] kobject: Clean up allocated memory on failure
-Message-ID: <20190516172303.GA32608@kroah.com>
-References: <20190516000716.24249-1-tobin@kernel.org>
- <20190516064029.GA17068@kroah.com>
- <20190516120123.GA25202@eros.localdomain>
+        id S1726472AbfEPRXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 13:23:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58FBC1715;
+        Thu, 16 May 2019 10:23:31 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 94F513F5AF;
+        Thu, 16 May 2019 10:23:28 -0700 (PDT)
+Subject: Re: [PATCH v3 6/7] iommu: Introduce IOMMU_RESV_DIRECT_RELAXABLE
+ reserved memory regions
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        Auger Eric <eric.auger@redhat.com>
+Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        iommu@lists.linux-foundation.org, sudeep.holla@arm.com,
+        dwmw2@infradead.org, eric.auger.pro@gmail.com
+References: <20190516100817.12076-1-eric.auger@redhat.com>
+ <20190516100817.12076-7-eric.auger@redhat.com>
+ <3e21e370-135e-2eab-dd99-50e19cd53b86@arm.com>
+ <403897e7-2af9-3fa9-2264-f66dfeda6fd7@redhat.com>
+ <214a20d2-9cb5-c23d-ad38-8a0dea729e00@arm.com>
+ <342a4aad-3abd-f9a8-05fd-e8e260bbb69d@redhat.com>
+ <20190516110621.1359c650@x1.home>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <4a0842de-b622-b8f4-630d-7b72bcb2799c@arm.com>
+Date:   Thu, 16 May 2019 18:23:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516120123.GA25202@eros.localdomain>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190516110621.1359c650@x1.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 10:01:23PM +1000, Tobin C. Harding wrote:
-> On Thu, May 16, 2019 at 08:40:29AM +0200, Greg Kroah-Hartman wrote:
-> > On Thu, May 16, 2019 at 10:07:16AM +1000, Tobin C. Harding wrote:
-> > > Currently kobject_add_varg() calls kobject_set_name_vargs() then returns
-> > > the return value of kobject_add_internal().  kobject_set_name_vargs()
-> > > allocates memory for the name string.  When kobject_add_varg() returns
-> > > an error we do not know if memory was allocated or not.  If we check the
-> > > return value of kobject_add_internal() instead of returning it directly
-> > > we can free the allocated memory if kobject_add_internal() fails.  Doing
-> > > this means that we now know that if kobject_add_varg() fails we do not
-> > > have to do any clean up, this benefit goes back up the call chain
-> > > meaning that we now do not need to do any cleanup if kobject_del()
-> > > fails.  Moving further back (in a theoretical kobject user callchain)
-> > > this means we now no longer need to call kobject_put() after calling
-> > > kobject_init_and_add(), we can just call kfree() on the enclosing
-> > > structure.  This makes the kobject API better follow the principle of
-> > > least surprise.
-> > > 
-> > > Check return value of kobject_add_internal() and free previously
-> > > allocated memory on failure.
-> > > 
-> > > Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> > > ---
-> > > 
-> > > Hi Greg,
-> > > 
-> > > Pretty excited by this one, if this is correct it means that kobject
-> > > initialisation code, in the error path, can now use either kobject_put()
-> > > (to trigger the release method) OR kfree().  This means most of the
-> > > call sites of kobject_init_and_add() will get fixed for free!
-> > > 
-> > > I've been wrong before so I'll state here that this is based on the
-> > > assumption that kobject_init() does nothing that causes leaked memory.
-> > > This is _not_ what the function docs in kobject.c say but it _is_ what
-> > > the code seems to say since kobject_init() does nothing except
-> > > initialise kobject data member values?  Or have I got the dog by the
-> > > tail?
-> > 
-> > I think you are correct here.  In looking at the code paths, all should
-> > be good and safe.
-> > 
-> > But, if you use your patch, then you have to call kfree, and you can not
-> > call kobject_put(), otherwise kfree_const() will be called twice on the
-> > same pointer, right?  So you will have to audit the kernel and change
-> > everything again :)
+On 16/05/2019 18:06, Alex Williamson wrote:
+> On Thu, 16 May 2019 14:58:08 +0200
+> Auger Eric <eric.auger@redhat.com> wrote:
 > 
-> Oh my bad, I got so excited by this I read the 'if (name) {' in kobject
-> to be guarding the double call to kfree_const(), which clearly it doesn't.
+>> Hi Jean-Philippe,
+>>
+>> On 5/16/19 2:43 PM, Jean-Philippe Brucker wrote:
+>>> On 16/05/2019 12:45, Auger Eric wrote:
+>>>> Hi Jean-Philippe,
+>>>>
+>>>> On 5/16/19 1:16 PM, Jean-Philippe Brucker wrote:
+>>>>> On 16/05/2019 11:08, Eric Auger wrote:
+>>>>>> Note: At the moment the sysfs ABI is not changed. However I wonder
+>>>>>> whether it wouldn't be preferable to report the direct region as
+>>>>>> "direct_relaxed" there. At the moment, in case the same direct
+>>>>>> region is used by 2 devices, one USB/GFX and another not belonging
+>>>>>> to the previous categories, the direct region will be output twice
+>>>>>> with "direct" type.
+>>>>>>
+>>>>>> This would unblock Shameer's series:
+>>>>>> [PATCH v6 0/7] vfio/type1: Add support for valid iova list management
+>>>>>> https://patchwork.kernel.org/patch/10425309/
+>>>>>
+>>>>> Thanks for doing this!
+>>>>>   
+>>>>>> which failed to get pulled for 4.18 merge window due to IGD
+>>>>>> device assignment regression.
+>>>>>>
+>>>>>> v2 -> v3:
+>>>>>> - fix direct type check
+>>>>>> ---
+>>>>>>   drivers/iommu/iommu.c | 12 +++++++-----
+>>>>>>   include/linux/iommu.h |  6 ++++++
+>>>>>>   2 files changed, 13 insertions(+), 5 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>>>>>> index ae4ea5c0e6f9..28c3d6351832 100644
+>>>>>> --- a/drivers/iommu/iommu.c
+>>>>>> +++ b/drivers/iommu/iommu.c
+>>>>>> @@ -73,10 +73,11 @@ struct iommu_group_attribute {
+>>>>>>   };
+>>>>>>   
+>>>>>>   static const char * const iommu_group_resv_type_string[] = {
+>>>>>> -	[IOMMU_RESV_DIRECT]	= "direct",
+>>>>>> -	[IOMMU_RESV_RESERVED]	= "reserved",
+>>>>>> -	[IOMMU_RESV_MSI]	= "msi",
+>>>>>> -	[IOMMU_RESV_SW_MSI]	= "msi",
+>>>>>> +	[IOMMU_RESV_DIRECT]			= "direct",
+>>>>>> +	[IOMMU_RESV_DIRECT_RELAXABLE]		= "direct",
+>>>>>> +	[IOMMU_RESV_RESERVED]			= "reserved",
+>>>>>> +	[IOMMU_RESV_MSI]			= "msi",
+>>>>>> +	[IOMMU_RESV_SW_MSI]			= "msi",
+>>>>>>   };
+>>>>>>   
+>>>>>>   #define IOMMU_GROUP_ATTR(_name, _mode, _show, _store)		\
+>>>>>> @@ -573,7 +574,8 @@ static int iommu_group_create_direct_mappings(struct iommu_group *group,
+>>>>>>   		start = ALIGN(entry->start, pg_size);
+>>>>>>   		end   = ALIGN(entry->start + entry->length, pg_size);
+>>>>>>   
+>>>>>> -		if (entry->type != IOMMU_RESV_DIRECT)
+>>>>>> +		if (entry->type != IOMMU_RESV_DIRECT &&
+>>>>>> +		    entry->type != IOMMU_RESV_DIRECT_RELAXABLE)
+>>>>>
+>>>>> I'm trying to understand why you need to create direct mappings at all
+>>>>> for these relaxable regions. In the host the region is needed for legacy
+>>>>> device features, which are disabled (and cannot be re-enabled) when
+>>>>> assigning the device to a guest?
+>>>> This follows Kevin's comment in the thread below:
+>>>> https://patchwork.kernel.org/patch/10449103/#21957279
+>>>>
+>>>> In normal DMA API host path, those regions need to be 1-1 mapped. They
+>>>> are likely to be accessed by the driver or FW at early boot phase or
+>>>> even during execution, depending on features being used.
+>>>>
+>>>> That's the reason, according to Kevin we couldn't hide them.
+>>>>
+>>>> We just know that, in general, they are not used anymore when assigning
+>>>> the device or if accesses are attempted this generally does not block
+>>>> the assignment use case. For example, it is said in
+>>>> https://github.com/qemu/qemu/blob/master/docs/igd-assign.txt that in
+>>>> legacy IGD assignment use case, there may be "a small numbers of DMAR
+>>>> faults when initially assigned".
+>>>
+>>> Hmm, fair enough. That doesn't sound too good, if the device might
+>>> perform arbitrary writes into guest memory once new IOMMU mappings are
+>>> in place. I was wondering if we could report some IOVA ranges as
+>>> "available but avoid if possible".
+>> In Shameer's series we currently reject any vfio dma_map that would fall
+>> into an RMRR (hence the regression on existing USB/GFX use case). With
+>> the relaxable RMRR info we could imagine to let the userspace choose
+>> whether we want to proceed with the dma_map despite the risk or
+>> introduce a vfio_iommu_type1 module option (turned off by default for
+>> not regressing existing USB/GFX passthrough) that would forbid dma_map
+>> on relaxable RMRR regions.
 > 
-> > Or, maybe this patch would prevent that:
-> > 
-> > 
-> > diff --git a/lib/kobject.c b/lib/kobject.c
-> > index f2ccdbac8ed9..03cdec1d450a 100644
-> > --- a/lib/kobject.c
-> > +++ b/lib/kobject.c
-> > @@ -387,7 +387,14 @@ static __printf(3, 0) int kobject_add_varg(struct kobject *kobj,
-> >  		return retval;
-> >  	}
-> >  	kobj->parent = parent;
-> > -	return kobject_add_internal(kobj);
-> > +
-> > +	retval = kobject_add_internal(kobj);
-> > +	if (retval && !is_kernel_rodata((unsigned long)(kobj->name))) {
-> > +		kfree_const(kobj->name);
-> > +		kobj->name = NULL;
-> > +	}
-> > +
-> > +	return retval;
-> >  }
-> >
-> >  /**
-> > 
-> > 
-> > But that feels like a huge hack to me.
+> Yep, the risk that Jean-Philippe mentions is real, the IGD device has
+> the stolen memory addresses latched into the hardware and we're unable
+> to change that.  What we try to do now is trap page table writes to the
+> device and translate them to a VM allocated stolen memory range, which
+> is sufficient for getting a BIOS splash screen, but we really want to
+> assume that the OS level driver just doesn't use the stolen memory
+> range.  There was a time when it seemed like we could assume the Intel
+> drivers were heading in that direction, but it seems that's no longer
+> an actual goal.  To fully support IGD assignment in a way that isn't as
+> fragile as it is today, we'd want to re-export the RMRR out to
+> userspace so that QEMU could identity map it into the VM address
+> space.  That's not trivial, it's only one of several issues around
+> IGD assignment, and we've got GVT-g (Intel vGPUs) now that don't impose
+> these requirements, so motivation to tackle the issue is somewhat
+> reduced.
 > 
-> I agree, does the job but too ugly.
-> 
-> > I think, to be safe, we should
-> > keep the existing lifetime rules, as it mirrors what happens with
-> > 'struct device', and that is what people _should_ be using, not "raw"
-> > kobjects if at all possible.
-> 
-> Oh, I wasn't seeing this through the eyes of a driver developer, perhaps
-> I should have started in drivers/ not in fs/ 
+> With the changes here, we might want vfio to issue a warning when one
+> of these relaxed reserved regions is ignored and we'd probably want a
+> module option to opt-in to strict enforcement, where downstreams that
+> don't claim to support IGD assignment might enforce this by default.
 
-That's next on your list :)
+OK, I guess that resolves my thoughts about "boot" reservations .vs 
+"relaxable" ones - clearly they are distinct things, we will ultimately 
+want both, and only the former can be hidden from userspace (and ignored 
+by VFIO). I'm happy with that; we can come back to boot regions at a 
+later date :)
 
-Keep up the great work,
-
-greg k-h
+Robin.
