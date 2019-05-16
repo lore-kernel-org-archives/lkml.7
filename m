@@ -2,134 +2,98 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A4CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE8BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FB0520818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E9E220848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:07:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUMog77P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfEPJDZ (ORCPT
+        id S1726979AbfEPJHi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 05:03:25 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:27879 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727076AbfEPJCn (ORCPT
+        Thu, 16 May 2019 05:07:38 -0400
+Received: from mail-pl1-f174.google.com ([209.85.214.174]:44110 "EHLO
+        mail-pl1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbfEPJHh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 05:02:43 -0400
-X-UUID: b8aeb1d05ac041f29e28b16461b6fda9-20190516
-X-UUID: b8aeb1d05ac041f29e28b16461b6fda9-20190516
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <bibby.hsieh@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1235993187; Thu, 16 May 2019 17:02:28 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 16 May 2019 17:02:27 +0800
-Received: from mtkslt302.mediatek.inc (10.21.14.115) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 16 May 2019 17:02:27 +0800
-From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
-CC:     Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        YT Shen <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Dennis-YC Hsieh 
-        <dennis-yc.hsimediatek/mtkcam/drv/fdvt/4.0/cam_fdvt_v4l2.cppeh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <ginny.chen@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v6 05/12] mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
-Date:   Thu, 16 May 2019 17:02:17 +0800
-Message-ID: <20190516090224.59070-6-bibby.hsieh@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
-References: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
+        Thu, 16 May 2019 05:07:37 -0400
+Received: by mail-pl1-f174.google.com with SMTP id c5so1289418pll.11
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 02:07:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Rk6cbGmXGHINFsklqOv+u5I1Z/NYxwRIua/RNgDjwj8=;
+        b=bUMog77PzyVOMEq1iqZb9z/ph7bE5eMjxAIeFGsnhcgIa0X7FAEpb7FklFo3o3BqEU
+         BlsaXgmOhYib+56AySD74oqLmgV6fBvnje2ewWuZFX1YV8okcOaGzL14tdK7PPvJk5rX
+         MbD+0eiPSficoyGcuv/kN118EeFDJvYJv28+UucN/lY39+A/MO40MMGdTQg6bzh8rL1N
+         vX0A/Tw13cPXakTjJ91Sfhe3nBxCFBDzViNLexx7JpQuoRu8fsqQ4FrH5llW/W+y/KJj
+         Dmj+vRHAeGntnswynfhyrAiGzU2byS4AEmaKEWEBTsYUS/die+7JxNxxhtvi2np98MrK
+         2xyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Rk6cbGmXGHINFsklqOv+u5I1Z/NYxwRIua/RNgDjwj8=;
+        b=CXdZEEON5DqmcqneclEjcf5//jQy19k0bZbkBeSqOGAtuyNKg02Z8Uex38d33jsLVV
+         96Q/fLvJ11djJp3rOt9AwvHXM+P4zIF5tZNYjJfY+3/VFg3GqUVq9rAQtl8KjkTJfG3f
+         04HFNadl41+aKDUeAniQXpF8hpkw/+cvkEBTR4bN4G0ccOz0W7sZpLvauagfwCklpDrj
+         LrD3+zMXKt1a8ujXsh3z7l90YzQ4KYxOOMf/09EVYDpw8KsdPopnLhfoqtKTfCyoyK7C
+         wsU2Lej8F0sX3D1u9cA5WoMpWi+XpJJx4PdjAjsfLy00k6CIjbH3ndWJ2iYEHOY1NGcQ
+         X6uA==
+X-Gm-Message-State: APjAAAXG/TbtUwIid57U/yhINiMmqye1B+33ajeG8n0B6+TFOQfoy6+T
+        7WRe1uTuLo+F1hE9ZqvbpiKh2f6R/Bk=
+X-Google-Smtp-Source: APXvYqxP1d84j80Uj3hDqtTgasnJPEoeA+RZpgdQL9//twbA7wHzOGA+/AKIEcbySQOne6QrjXu5TA==
+X-Received: by 2002:a17:902:163:: with SMTP id 90mr49879566plb.212.1557997657302;
+        Thu, 16 May 2019 02:07:37 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id e5sm6660050pgh.35.2019.05.16.02.07.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 May 2019 02:07:36 -0700 (PDT)
+Date:   Thu, 16 May 2019 17:07:26 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vt: Fix a missing-check bug in drivers/tty/vt/vt.c file
+ of Linux 5.0.14
+Message-ID: <20190516090726.GA3283@zhanggen-UX430UQ>
+References: <CAAie0ao_O0hcUOuUf67oog+dSswdQRpAtX8NyQvDAr_XQr=xQg@mail.gmail.com>
+ <20190510151206.GA31186@kroah.com>
+ <CAAie0arnSxFvkNE1KSxD1a19_PQy03Q4RSiLZo9t7C9LeKkA9w@mail.gmail.com>
+ <20190511060741.GC18755@kroah.com>
+ <20190512032719.GA16296@zhanggen-UX430UQ>
+ <20190512062009.GA25153@kroah.com>
+ <20190512084916.GA4615@zhanggen-UX430UQ>
+ <20190513073619.GA5580@kroah.com>
+ <20190513093730.GA4487@zhanggen-UX430UQ>
+ <20190513095809.GA4588@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190513095809.GA4588@kroah.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The interrupt mask and thread number has positive correlation,
-so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
-it by thread number.
-
-Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
----
- drivers/mailbox/mtk-cmdq-mailbox.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 22811784dc7d..87617dc7504d 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -17,7 +17,6 @@
- #include <linux/of_device.h>
- 
- #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
--#define CMDQ_IRQ_MASK			0xffff
- #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
- 
- #define CMDQ_CURR_IRQ_STATUS		0x10
-@@ -71,6 +70,7 @@ struct cmdq {
- 	void __iomem		*base;
- 	u32			irq;
- 	u32			thread_nr;
-+	u32			irq_mask;
- 	struct cmdq_thread	*thread;
- 	struct clk		*clock;
- 	bool			suspended;
-@@ -284,11 +284,11 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
- 	unsigned long irq_status, flags = 0L;
- 	int bit;
- 
--	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
--	if (!(irq_status ^ CMDQ_IRQ_MASK))
-+	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
-+	if (!(irq_status ^ cmdq->irq_mask))
- 		return IRQ_NONE;
- 
--	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
-+	for_each_clear_bit(bit, &irq_status, cmdq->thread_nr) {
- 		struct cmdq_thread *thread = &cmdq->thread[bit];
- 
- 		spin_lock_irqsave(&thread->chan->lock, flags);
-@@ -472,6 +472,9 @@ static int cmdq_probe(struct platform_device *pdev)
- 		dev_err(dev, "failed to get irq\n");
- 		return -EINVAL;
- 	}
-+
-+	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
-+	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
- 	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
- 			       "mtk_cmdq", cmdq);
- 	if (err < 0) {
-@@ -488,7 +491,6 @@ static int cmdq_probe(struct platform_device *pdev)
- 		return PTR_ERR(cmdq->clock);
- 	}
- 
--	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
- 	cmdq->mbox.dev = dev;
- 	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
- 					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
--- 
-2.18.0
-
+On Mon, May 13, 2019 at 11:58:09AM +0200, Greg KH wrote:
+> qemu should work just fine, I don't know what else to suggest.  Run it
+> on "real hardware" with a kmalloc function modified to fail this
+> allocation?
+> 
+> good luck!
+> 
+> greg k-h
+I don't think we need to unwind the loop. The loop condition 
+MIN_NR_CONSOLES is defined as 1 in include/uapi/linux/vt.h. In this
+situation, should we free other memory except vc_cons[currcons].d, vc
+and vc->vc_screenbuf?
+Thanks
+Gen
