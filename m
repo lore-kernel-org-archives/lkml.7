@@ -2,115 +2,74 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D09C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E080C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC5522087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558001998;
-	bh=GNeZk44iUjZpvezqnuLxWMKIOov7x5+FAxK5yoRztyA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HwtbdO4pRa8P7yQ7pteISmMJ63iI7l2FAb9hig1Uu162JLOBkhz02ktzXXRHsgXWI
-	 gU9TyGtzi2NF/mmuVu5a/lUdK/26bA9Zqr450bFglpSQdBUIIRzN0LXvwaSnK/LYKK
-	 TP7wa1Bb5mFiivMfdbBKNRcK0s4BY8jvHEs+1w/A=
+	by mail.kernel.org (Postfix) with ESMTP id 3A243205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbfEPKT5 (ORCPT
+        id S1726834AbfEPKUx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 06:19:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbfEPKT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 06:19:56 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A2E1205ED;
-        Thu, 16 May 2019 10:19:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558001996;
-        bh=GNeZk44iUjZpvezqnuLxWMKIOov7x5+FAxK5yoRztyA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cvujyhHb+Shb0guDQ9USF9pVhy8GIqVvT7ze92sQe7HWnl+yu6cTJorhjB3Kf6xpa
-         qz0hoxpAOIvy3Y2rRf/DThinRBTO9QC+fWrTauvjXL0yGC88V9UmxWlZ7eC0mXwgkB
-         /klQUdWkURbxFEXBkb5GYhprJW+AnaEvPeLRQXPw=
-Date:   Thu, 16 May 2019 12:19:53 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-Cc:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        Forest Bond <forest@alittletooquiet.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] staging: vt6656: remove unused variable
-Message-ID: <20190516101953.GA22358@kroah.com>
-References: <20190516093046.1400-1-quentin.deslandes@itdev.co.uk>
- <20190516093951.GA19798@kroah.com>
- <20190516095035.GA1692@qd-ubuntu>
+        Thu, 16 May 2019 06:20:53 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51606 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726336AbfEPKUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 06:20:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id ACBE0AC2C;
+        Thu, 16 May 2019 10:20:51 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516095035.GA1692@qd-ubuntu>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 16 May 2019 12:20:50 +0200
+From:   Roman Penyaev <rpenyaev@suse.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Azat Khuzhin <azat@libevent.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 13/13] epoll: implement epoll_create2() syscall
+In-Reply-To: <CAK8P3a2-fN_BHEnEHvf4X9Ysy4t0_SnJetQLvFU1kFa3OtM0fQ@mail.gmail.com>
+References: <20190516085810.31077-1-rpenyaev@suse.de>
+ <20190516085810.31077-14-rpenyaev@suse.de>
+ <CAK8P3a2-fN_BHEnEHvf4X9Ysy4t0_SnJetQLvFU1kFa3OtM0fQ@mail.gmail.com>
+Message-ID: <41b847c48ccbe0c406bd54c16fbc1bf0@suse.de>
+X-Sender: rpenyaev@suse.de
+User-Agent: Roundcube Webmail
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 09:50:38AM +0000, Quentin Deslandes wrote:
-> On Thu, May 16, 2019 at 11:39:51AM +0200, Greg Kroah-Hartman wrote:
-> > On Thu, May 16, 2019 at 09:31:05AM +0000, Quentin Deslandes wrote:
-> > > Fixed 'set but not used' warning message on a status variable. The
-> > > called function returning the status code 'vnt_start_interrupt_urb()'
-> > > clean up after itself and the caller function
-> > > 'vnt_int_start_interrupt()' does not returns any value.
-> > > 
-> > > Signed-off-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-> > > ---
-> > >  drivers/staging/vt6656/int.c | 3 +--
-> > >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/staging/vt6656/int.c b/drivers/staging/vt6656/int.c
-> > > index 504424b19fcf..ac30ce72db5a 100644
-> > > --- a/drivers/staging/vt6656/int.c
-> > > +++ b/drivers/staging/vt6656/int.c
-> > > @@ -42,13 +42,12 @@ static const u8 fallback_rate1[5][5] = {
-> > >  void vnt_int_start_interrupt(struct vnt_private *priv)
-> > >  {
-> > >  	unsigned long flags;
-> > > -	int status;
-> > >  
-> > >  	dev_dbg(&priv->usb->dev, "---->Interrupt Polling Thread\n");
-> > >  
-> > >  	spin_lock_irqsave(&priv->lock, flags);
-> > >  
-> > > -	status = vnt_start_interrupt_urb(priv);
-> > > +	vnt_start_interrupt_urb(priv);
-> > 
-> > Shouldn't you fix this by erroring out if this fails?  Why ignore the
-> > errors?
-> > 
-> > thanks,
-> > 
-> > greg k-h
+On 2019-05-16 12:03, Arnd Bergmann wrote:
+> On Thu, May 16, 2019 at 10:59 AM Roman Penyaev <rpenyaev@suse.de> 
+> wrote:
+>> 
+>> epoll_create2() is needed to accept EPOLL_USERPOLL flags
+>> and size, i.e. this patch wires up polling from userspace.
 > 
-> I could, however 'vnt_start_interrupt_urb()' already call 'dev_dbg()' if
-> it fails. Nothing is done after this debug call except returning an
-> error code.
+> Could you add the system call to all syscall*.tbl files at the same 
+> time here?
 
-Returning an error code is fine for that function.  But then you have to
-do something with that error.
+For all other archs, you mean?  Sure.  But what is the rule of thumb?
+Sometimes people tend to add to the most common x86 and other tables
+are left untouched, but then you commit the rest, e.g.
 
-> 'vnt_int_start_interrupt()' should, IMHO, return a status code, but the
-> original developer may have good reasons not to do so.
+commit 39036cd2727395c3369b1051005da74059a85317
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Thu Feb 28 13:59:19 2019 +0100
 
-I think that is the real problem that needs to be fixed here, don't
-paper over the issue by ignoring the return value.
+     arch: add pidfd and io_uring syscalls everywhere
 
-thanks,
 
-greg k-h
+
+--
+Roman
