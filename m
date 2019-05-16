@@ -2,92 +2,103 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B3CC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77987C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA4920833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:38:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4170A20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:39:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hM1AiciC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfEPQiM (ORCPT
+        id S1727725AbfEPQjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:38:12 -0400
-Received: from anholt.net ([50.246.234.109]:40204 "EHLO anholt.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727402AbfEPQiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:38:12 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id A081410A350A;
-        Thu, 16 May 2019 09:38:11 -0700 (PDT)
-X-Virus-Scanned: Debian amavisd-new at anholt.net
-Received: from anholt.net ([127.0.0.1])
-        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id VhfMX84sJkmL; Thu, 16 May 2019 09:38:06 -0700 (PDT)
-Received: from eliezer.anholt.net (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id 4CAAF10A2E28;
-        Thu, 16 May 2019 09:38:06 -0700 (PDT)
-Received: by eliezer.anholt.net (Postfix, from userid 1000)
-        id CDEFB2FE3AAE; Thu, 16 May 2019 11:38:05 -0500 (CDT)
-From:   Eric Anholt <eric@anholt.net>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     dri-devel@lists.freedesktop.org, Dave Airlie <airlied@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2 v2] drm/doc: Allow new UAPI to be used once it's in drm-next/drm-misc-next.
-In-Reply-To: <20190425063321.GX9857@phenom.ffwll.local>
-References: <CAPM=9tw59Z7FRM-7-_VChOO__1+ahNhSs6=AceV7biasHjWKqg@mail.gmail.com> <20190424220638.16222-1-eric@anholt.net> <20190425063321.GX9857@phenom.ffwll.local>
-User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/26.1 (x86_64-pc-linux-gnu)
-Date:   Thu, 16 May 2019 09:38:05 -0700
-Message-ID: <87a7fmbbiq.fsf@anholt.net>
+        Thu, 16 May 2019 12:39:33 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40204 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbfEPQjc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 12:39:32 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h4so4138468wre.7
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:39:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=+cXLOi+8ABA7BGrxU3vUXmn2m+alrWUU3E1Q8nvV1CE=;
+        b=hM1AiciCPdeN92B0g/CQZQHRvJ35jT0diBinaBf8JPtnfPYksAWCu/5RKgq7PgfmZx
+         A0lK3rieYyiPaXsN1hr5ouS1CTaR9lZfj/KIL2cwmfK+njxSHpH2jajyfqYIP71nPDnK
+         7eNGxMWSXkMN85MQ0jrSHZVha2VbIObLJCZbTlxM2lGUOepAzu7LXIEKiESQyl37FEvQ
+         +r7kbeVg9CaaRy6hM+ct3rpZAVCCXa/3F1+tWmjadHXkB2JizI9J6hIS8e9+t9eR/Bpc
+         urW6QyTR8W0uHdIC0ZDcDQQb+tLK28zrJ2EdtkUYB8r67V/MZEhdNj2zYTjOF539aUL4
+         BgkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=+cXLOi+8ABA7BGrxU3vUXmn2m+alrWUU3E1Q8nvV1CE=;
+        b=lEX9XkmPhZ/ZLCc9BqDgCF6C1RXfl60SQfx9thK0JzIREc3hEyWkjZfsSkMYZqlswZ
+         FalIswpllw0EwWhjXS3zVuR0Sm5JHOBIULBNZvtgPMK/AKHxobEe3kQOcIbYwhirVHjL
+         YLf0jCKOj8dhNFqq8pD51WsYZE3XauEtdyZ/mLc++An20Yw/0m5PhMRia3w3GIyEuc+t
+         vpUwSIZoV7qE0ww17cGrIkpKki33BCT9HXJCmOIQfHM6pkXgg3M7cLV2ivI794hXVRlq
+         TYkj4GsRlYTzJSG1b9j6SMGlao9/mb6n/xJWUWNTOEiT2MQ9VT+kw3QlGUuWvL8sSG9p
+         xlPg==
+X-Gm-Message-State: APjAAAWoxkH0kn6t0I5WhuRQUOpiOHR1HcySFttD0IK+7dVqyyKd3Ab/
+        yTBUWnaKqJfCd++GIzYlHJLHJw==
+X-Google-Smtp-Source: APXvYqzujauFHDoLc/in9LTN+7HLQ5/SBKHCrzZMBpDZ3qyrEmaS3kuc9igghD1by4HMoa1ZJUNzQA==
+X-Received: by 2002:a5d:618b:: with SMTP id j11mr31799601wru.36.1558024771576;
+        Thu, 16 May 2019 09:39:31 -0700 (PDT)
+Received: from localhost ([2620:10d:c092:180::1:e504])
+        by smtp.gmail.com with ESMTPSA id z14sm3818382wrq.22.2019.05.16.09.39.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 May 2019 09:39:30 -0700 (PDT)
+From:   Loys Ollivier <lollivier@baylibre.com>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [RESEND PATCH] gnss: get serial speed from subdrivers
+In-Reply-To: <20190508155341.GA1605@Red>
+References: <1557322788-10403-1-git-send-email-lollivier@baylibre.com> <20190508155341.GA1605@Red>
+Date:   Thu, 16 May 2019 18:39:24 +0200
+Message-ID: <86y336l5fn.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Daniel Vetter <daniel@ffwll.ch> writes:
-
-> On Wed, Apr 24, 2019 at 03:06:38PM -0700, Eric Anholt wrote:
->> I was trying to figure out if it was permissible to merge the Mesa
->> side of V3D's CSD support yet while it's in drm-misc-next but not
->> drm-next, and developers on #dri-devel IRC had differing opinions of
->> what the requirement was.
->>=20
->> v2: Restrict to just drm-next or drm-misc-next on airlied's request.
+On Wed 08 May 2019 at 17:53, Corentin Labbe <clabbe.montjoie@gmail.com> wrote:
+>> -/*
+>> - * FIXME: need to provide subdriver defaults or separate dt parsing from
+>> - * allocation.
+>> - */
+>>  static int gnss_serial_parse_dt(struct serdev_device *serdev)
+>>  {
+>>  	struct gnss_serial *gserial = serdev_device_get_drvdata(serdev);
+>>  	struct device_node *node = serdev->dev.of_node;
+>> -	u32 speed = 4800;
+>> +	uint speed;
+>>  
+>> -	of_property_read_u32(node, "current-speed", &speed);
+>> +	of_property_read_u32(node, "default-speed", &speed);
 >
-> Personally I think that's a bit too strict (if people want to screw up,
-> they will be able to anyway). But since I'm all for clearer rules where
-> possible, this has my support too.
+> Hello
 >
-> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> of_property_read_u32 use u32, so no reason to use uint instead.
+>
+> Regards
 
-Pushed to drm-misc-next now.
+Hello Corentin,
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Thank you for your review. A v2 has been sent:
+https://lore.kernel.org/lkml/1558024626-19395-1-git-send-email-lollivier@baylibre.com/
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlzdke0ACgkQtdYpNtH8
-nugh7w/+IyOEhis/Dfl16n2fKwUlAI1I3r3DkieaEiz4V67J5fTEES10zML0NyrQ
-GeyxPI6J02dTH4MPTNmwdYMfh82Bz1lBT+e9gcOKH4PkGkNpFKjPG+IgIcf+8caD
-UFnBiG40Cc+SbY7mEklfDzDk5cPqe6QJ0qrddqmikhppwdePcIDzGYq40u36eKDG
-g+3YfRrUoCNk4FtpvH+bSGThM7WF6QnCAYPjl5BP3l9xpjpIbsbexxf8wCjQhjgF
-B5gnV+wF5f9c0xp8d4pu1zRk9TnWl0MWmD1C4eVgkZBIKZdRXTkCit9k7BJP2LQg
-TGpCGT7mofT6WEYdYbiI4T09KQJ8zaA10QUg6o+26O4KTq2jr2nb76msR/h4Ohsw
-9mkEScezW0ryFSDLP2tVgIUfT/pN5uv+ypzUTF6Qj9YhXLmQ6jxRGoXcICEadRyT
-E7MYJ5mFvmnqAjpWYYuw7SMrPWoaiCVyxO0gO8zwynJqPFCzTdHcpq3SPYAhXMW7
-L1ZHfzDXFuzfxhCKlLZC0OGrhqViX/vJk1MevBGvp38yqabfQJ2MtJLqns4KaG/C
-DyIQjhiRiMksX8TkhymV6ZNe6SN41sffw78SHV2dcrQlHBNPrBmTmPfO+LQ8h2JU
-F+/LmjbjuIdrTjlurpm2LXtjkvwQb/5hrkaHJwqL9SIu0QrZveY=
-=DceZ
------END PGP SIGNATURE-----
---=-=-=--
+Cheers,
+Loys
