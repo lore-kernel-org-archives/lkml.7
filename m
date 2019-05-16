@@ -2,36 +2,37 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1AE7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A4CC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B88C020818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:03:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FB0520818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:03:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbfEPJDS (ORCPT
+        id S1727329AbfEPJDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 05:03:18 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:16135 "EHLO
+        Thu, 16 May 2019 05:03:25 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:27879 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727127AbfEPJCo (ORCPT
+        with ESMTP id S1727076AbfEPJCn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 05:02:44 -0400
-X-UUID: 7538b31cf1944fd98a27aa3b589da681-20190516
-X-UUID: 7538b31cf1944fd98a27aa3b589da681-20190516
+        Thu, 16 May 2019 05:02:43 -0400
+X-UUID: b8aeb1d05ac041f29e28b16461b6fda9-20190516
+X-UUID: b8aeb1d05ac041f29e28b16461b6fda9-20190516
 Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
         (envelope-from <bibby.hsieh@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1723984176; Thu, 16 May 2019 17:02:28 +0800
+        with ESMTP id 1235993187; Thu, 16 May 2019 17:02:28 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 16 May 2019 17:02:26 +0800
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 16 May 2019 17:02:27 +0800
 Received: from mtkslt302.mediatek.inc (10.21.14.115) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 16 May 2019 17:02:26 +0800
+ Transport; Thu, 16 May 2019 17:02:27 +0800
 From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
 To:     Jassi Brar <jassisinghbrar@gmail.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -52,10 +53,12 @@ CC:     Daniel Kurtz <djkurtz@chromium.org>,
         <dennis-yc.hsimediatek/mtkcam/drv/fdvt/4.0/cam_fdvt_v4l2.cppeh@mediatek.com>,
         Houlong Wei <houlong.wei@mediatek.com>,
         <ginny.chen@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v6 00/12] support gce on mt8183 platform
-Date:   Thu, 16 May 2019 17:02:12 +0800
-Message-ID: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
+Subject: [PATCH v6 05/12] mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
+Date:   Thu, 16 May 2019 17:02:17 +0800
+Message-ID: <20190516090224.59070-6-bibby.hsieh@mediatek.com>
 X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
+References: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MTK:  N
@@ -64,75 +67,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes since v5:
- - fix typo
- - remove gce-event-name form the dt-binding
- - add reasons in commit message
+The interrupt mask and thread number has positive correlation,
+so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
+it by thread number.
 
-Changes since v4:
- - refine the architecture of the packet encoder function
- - refine the gce enevt property
- - change the patch's title
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+---
+ drivers/mailbox/mtk-cmdq-mailbox.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-Changes since v3:
- - fix a typo in dt-binding and dtsi
- - cast the return value to right format
-
-Changes since v2:
- - according to CK's review comment, change the property name and
-   refine the parameter
- - change the patch's title
- - remove unused property from dt-binding and dts
-
-Changes since v1:
- - add prefix "cmdq" in the commit subject
- - add dt-binding document for get event and subsys function
- - add fix up tag in fixup patch
- - fix up some coding style (alignment)
-
-MTK will support gce function on mt8183 platform.
-  dt-binding: gce: add gce header file for mt8183
-  mailbox: mediatek: cmdq: support mt8183 gce function
-  arm64: dts: add gce node for mt8183
-
-Besides above patches, we refine gce driver on those patches.
-  mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
-  soc: mediatek: cmdq: clear the event in cmdq initial flow
-
-In order to enhance the convenience of gce usage, we add new helper
-functions and refine the method of instruction combining.
-  dt-binding: gce: remove thread-num property
-  dt-binding: gce: add binding for gce subsys property
-  dt-binding: gce: add binding for gce event property
-  soc: mediatek: cmdq: define the instruction struct
-  soc: mediatek: cmdq: add polling function
-  soc: mediatek: cmdq: add cmdq_dev_get_subsys function
-  soc: mediatek: cmdq: add cmdq_dev_get_event function
-
-Bibby Hsieh (12):
-  dt-binding: gce: remove thread-num property
-  dt-binding: gce: add gce header file for mt8183
-  dt-binding: gce: add binding for gce subsys property
-  dt-binding: gce: add binding for gce event property
-  mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
-  mailbox: mediatek: cmdq: support mt8183 gce function
-  soc: mediatek: cmdq: clear the event in cmdq initial flow
-  soc: mediatek: cmdq: define the instruction struct
-  soc: mediatek: cmdq: add polling function
-  soc: mediatek: cmdq: add cmdq_dev_get_subsys function
-  soc: mediatek: cmdq: add cmdq_dev_get_event function
-  arm64: dts: add gce node for mt8183
-
- .../devicetree/bindings/mailbox/mtk-gce.txt   |  28 ++-
- arch/arm64/boot/dts/mediatek/mt8183.dtsi      |  11 ++
- drivers/mailbox/mtk-cmdq-mailbox.c            |  18 +-
- drivers/soc/mediatek/mtk-cmdq-helper.c        | 184 ++++++++++++++----
- include/dt-bindings/gce/mt8183-gce.h          | 177 +++++++++++++++++
- include/linux/mailbox/mtk-cmdq-mailbox.h      |   5 +
- include/linux/soc/mediatek/mtk-cmdq.h         |  62 +++++-
- 7 files changed, 423 insertions(+), 62 deletions(-)
- create mode 100644 include/dt-bindings/gce/mt8183-gce.h
-
+diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+index 22811784dc7d..87617dc7504d 100644
+--- a/drivers/mailbox/mtk-cmdq-mailbox.c
++++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+@@ -17,7 +17,6 @@
+ #include <linux/of_device.h>
+ 
+ #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
+-#define CMDQ_IRQ_MASK			0xffff
+ #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
+ 
+ #define CMDQ_CURR_IRQ_STATUS		0x10
+@@ -71,6 +70,7 @@ struct cmdq {
+ 	void __iomem		*base;
+ 	u32			irq;
+ 	u32			thread_nr;
++	u32			irq_mask;
+ 	struct cmdq_thread	*thread;
+ 	struct clk		*clock;
+ 	bool			suspended;
+@@ -284,11 +284,11 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
+ 	unsigned long irq_status, flags = 0L;
+ 	int bit;
+ 
+-	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
+-	if (!(irq_status ^ CMDQ_IRQ_MASK))
++	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
++	if (!(irq_status ^ cmdq->irq_mask))
+ 		return IRQ_NONE;
+ 
+-	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
++	for_each_clear_bit(bit, &irq_status, cmdq->thread_nr) {
+ 		struct cmdq_thread *thread = &cmdq->thread[bit];
+ 
+ 		spin_lock_irqsave(&thread->chan->lock, flags);
+@@ -472,6 +472,9 @@ static int cmdq_probe(struct platform_device *pdev)
+ 		dev_err(dev, "failed to get irq\n");
+ 		return -EINVAL;
+ 	}
++
++	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
++	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
+ 	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
+ 			       "mtk_cmdq", cmdq);
+ 	if (err < 0) {
+@@ -488,7 +491,6 @@ static int cmdq_probe(struct platform_device *pdev)
+ 		return PTR_ERR(cmdq->clock);
+ 	}
+ 
+-	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
+ 	cmdq->mbox.dev = dev;
+ 	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
+ 					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
 -- 
 2.18.0
 
