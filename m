@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42021C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C89C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A7820833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A4CD20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:43:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558007020;
-	bh=u7/+Ij92klFHuluyBxJc07tZPOljCHxST/RA3dFm3vg=;
+	s=default; t=1558007025;
+	bh=ihcwEP6BgAxKA2U/BGy2ac0JfOpSfRJPo+O1Y/JzM2c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LhL5FGPDeTeFzAeWeROOk0snPqUvddbpWqU28TQ8ihLCLBLnix8L471skxzOYumj6
-	 eGDTZe8hTGnmI5e20VEwClMTx4YOlGZ2tAxpHLNQVGw3FiIXeCn0uIKnNP5FVehxpE
-	 6Y3ClWXYuHidK9ZqONTV4dlrsb6sWmNzYIIKXKrE=
+	b=gV0MIxAKCjwmbonzXvhE6zmP0xGc8Oyak5ync6OdVnvn1/OdHSYQ2yuXCfcIelrC/
+	 X+3GD+SbgPEfHVCi73rT4MX7e2hkzNnuf0N1ntAvUtQhl3CuOyRntxjJ4J977I3LIk
+	 VuhvHydB9oh/i5eG2nFCauHlYOa7HKJeUg/VAKr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbfEPLnj (ORCPT
+        id S1728571AbfEPLno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:43:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50446 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:43:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727539AbfEPLlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:41:42 -0400
+        id S1728262AbfEPLlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:41:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04CA520881;
-        Thu, 16 May 2019 11:41:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8F592087E;
+        Thu, 16 May 2019 11:41:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006901;
-        bh=u7/+Ij92klFHuluyBxJc07tZPOljCHxST/RA3dFm3vg=;
+        s=default; t=1558006899;
+        bh=ihcwEP6BgAxKA2U/BGy2ac0JfOpSfRJPo+O1Y/JzM2c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oH/ZhkSs+wuQ8XnDnj/V6luV2cF8eBth1APuquPNsZ4yAg2nt+9ssKye/d5A+kTze
-         UIRsCZBIvkQetpjkEFwUV+gvSwbe+pCkgyqfQ+MYZGvIwNfU/ARpIxlm/y2BVDn57k
-         Cx6E+/pmo4CWKqZT37MUZE8kVQUAlRa/teSD8Axk=
+        b=ICWdDFJh+yynghQ+52I6zE9pnPGMq5l17BGmg6jByS73UHhal1jvNfGBnRerTqYmD
+         zG+dnC+iaRPNgOtEbiz3PolA4SRh/PPejnMUinGxLoTG+AhZUT+jwTehqMMmlxYP9y
+         EYEXp2+h85wCzw12UJ3eeNrZlsn4ER0kVvCK8Ez0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrew Jones <drjones@redhat.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
-Subject: [PATCH AUTOSEL 4.9 6/9] KVM: arm/arm64: Ensure vcpu target is unset on reset failure
-Date:   Thu, 16 May 2019 07:41:30 -0400
-Message-Id: <20190516114134.9146-6-sashal@kernel.org>
+Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 4/9] xfrm4: Fix uninitialized memory read in _decode_session4
+Date:   Thu, 16 May 2019 07:41:28 -0400
+Message-Id: <20190516114134.9146-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516114134.9146-1-sashal@kernel.org>
 References: <20190516114134.9146-1-sashal@kernel.org>
@@ -59,55 +58,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Jones <drjones@redhat.com>
+From: Steffen Klassert <steffen.klassert@secunet.com>
 
-[ Upstream commit 811328fc3222f7b55846de0cd0404339e2e1e6d7 ]
+[ Upstream commit 8742dc86d0c7a9628117a989c11f04a9b6b898f3 ]
 
-A failed KVM_ARM_VCPU_INIT should not set the vcpu target,
-as the vcpu target is used by kvm_vcpu_initialized() to
-determine if other vcpu ioctls may proceed. We need to set
-the target before calling kvm_reset_vcpu(), but if that call
-fails, we should then unset it and clear the feature bitmap
-while we're at it.
+We currently don't reload pointers pointing into skb header
+after doing pskb_may_pull() in _decode_session4(). So in case
+pskb_may_pull() changed the pointers, we read from random
+memory. Fix this by putting all the needed infos on the
+stack, so that we don't need to access the header pointers
+after doing pskb_may_pull().
 
-Signed-off-by: Andrew Jones <drjones@redhat.com>
-[maz: Simplified patch, completed commit message]
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kvm/arm.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ net/ipv4/xfrm4_policy.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/kvm/arm.c b/arch/arm/kvm/arm.c
-index a670c70f4def9..dfc00a5bdc10d 100644
---- a/arch/arm/kvm/arm.c
-+++ b/arch/arm/kvm/arm.c
-@@ -801,7 +801,7 @@ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_level,
- static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
- 			       const struct kvm_vcpu_init *init)
+diff --git a/net/ipv4/xfrm4_policy.c b/net/ipv4/xfrm4_policy.c
+index 622e158a6fc40..1805413cd2251 100644
+--- a/net/ipv4/xfrm4_policy.c
++++ b/net/ipv4/xfrm4_policy.c
+@@ -108,7 +108,8 @@ static void
+ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
  {
--	unsigned int i;
-+	unsigned int i, ret;
- 	int phys_target = kvm_target_cpu();
+ 	const struct iphdr *iph = ip_hdr(skb);
+-	u8 *xprth = skb_network_header(skb) + iph->ihl * 4;
++	int ihl = iph->ihl;
++	u8 *xprth = skb_network_header(skb) + ihl * 4;
+ 	struct flowi4 *fl4 = &fl->u.ip4;
+ 	int oif = 0;
  
- 	if (init->target != phys_target)
-@@ -836,9 +836,14 @@ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
- 	vcpu->arch.target = phys_target;
+@@ -119,6 +120,11 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 	fl4->flowi4_mark = skb->mark;
+ 	fl4->flowi4_oif = reverse ? skb->skb_iif : oif;
  
- 	/* Now we know what it is, we can reset it. */
--	return kvm_reset_vcpu(vcpu);
--}
-+	ret = kvm_reset_vcpu(vcpu);
-+	if (ret) {
-+		vcpu->arch.target = -1;
-+		bitmap_zero(vcpu->arch.features, KVM_VCPU_MAX_FEATURES);
-+	}
++	fl4->flowi4_proto = iph->protocol;
++	fl4->daddr = reverse ? iph->saddr : iph->daddr;
++	fl4->saddr = reverse ? iph->daddr : iph->saddr;
++	fl4->flowi4_tos = iph->tos;
++
+ 	if (!ip_is_fragment(iph)) {
+ 		switch (iph->protocol) {
+ 		case IPPROTO_UDP:
+@@ -130,7 +136,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be16 *ports;
  
-+	return ret;
-+}
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ports = (__be16 *)xprth;
  
- static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
- 					 struct kvm_vcpu_init *init)
+ 				fl4->fl4_sport = ports[!!reverse];
+@@ -143,7 +149,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 2 - skb->data)) {
+ 				u8 *icmp;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				icmp = xprth;
+ 
+ 				fl4->fl4_icmp_type = icmp[0];
+@@ -156,7 +162,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be32 *ehdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ehdr = (__be32 *)xprth;
+ 
+ 				fl4->fl4_ipsec_spi = ehdr[0];
+@@ -168,7 +174,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 8 - skb->data)) {
+ 				__be32 *ah_hdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ah_hdr = (__be32 *)xprth;
+ 
+ 				fl4->fl4_ipsec_spi = ah_hdr[1];
+@@ -180,7 +186,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
+ 				__be16 *ipcomp_hdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				ipcomp_hdr = (__be16 *)xprth;
+ 
+ 				fl4->fl4_ipsec_spi = htonl(ntohs(ipcomp_hdr[1]));
+@@ -193,7 +199,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 				__be16 *greflags;
+ 				__be32 *gre_hdr;
+ 
+-				xprth = skb_network_header(skb) + iph->ihl * 4;
++				xprth = skb_network_header(skb) + ihl * 4;
+ 				greflags = (__be16 *)xprth;
+ 				gre_hdr = (__be32 *)xprth;
+ 
+@@ -210,10 +216,6 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+ 			break;
+ 		}
+ 	}
+-	fl4->flowi4_proto = iph->protocol;
+-	fl4->daddr = reverse ? iph->saddr : iph->daddr;
+-	fl4->saddr = reverse ? iph->daddr : iph->saddr;
+-	fl4->flowi4_tos = iph->tos;
+ }
+ 
+ static inline int xfrm4_garbage_collect(struct dst_ops *ops)
 -- 
 2.20.1
 
