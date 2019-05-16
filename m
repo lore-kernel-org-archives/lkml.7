@@ -2,55 +2,59 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCCCC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D19C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EADBC2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:42:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08D3C21726
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558006921;
-	bh=GihUZHHOUvUd205m/aDQTZ+c7w93ExmPloBlqKXwQF4=;
+	s=default; t=1558006925;
+	bh=yRkLOFR3h40g7f+vwHCiXT4JQc/3J7QKLamA3qGjGS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LuMC5NHNF+UaABWDpM50KF0pTjWwrxbfiIDfxmpHtub6ipO1EfrPs92nE0HCoBVmU
-	 77tabWu365PRn8uilA0KWeQrpcJtj7ymjTd9Y1lx1z3Uyh864pqLEzz+6V+DL0NhxQ
-	 9N7GYDmIrqkmC1axZ4vydbMUKbyxzzsXi8xdLUdQ=
+	b=oXwVCLSJFBHoWJinNMdBQP4JRfU9jdD2WdC3pm5/q77kvOju4HeZ1gc/3pGqoSXBv
+	 bFvmmLX8j+vKuoOplw4coLPxrCZVMOWjRqS1CpCoHgljPOKp9RmIcVnnyULe4fqfEf
+	 ddE/FgE2xbBBP16DWZqc+Dz6vcYZuk1XDd8Od/Fo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbfEPLmA (ORCPT
+        id S1728445AbfEPLmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:42:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50726 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:42:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728388AbfEPLlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:41:53 -0400
+        id S1727637AbfEPLl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:41:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 861DB21726;
-        Thu, 16 May 2019 11:41:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4527A2087E;
+        Thu, 16 May 2019 11:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006913;
-        bh=GihUZHHOUvUd205m/aDQTZ+c7w93ExmPloBlqKXwQF4=;
+        s=default; t=1558006919;
+        bh=yRkLOFR3h40g7f+vwHCiXT4JQc/3J7QKLamA3qGjGS8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PJoBTdER2z9o3otIenOO9urX27DKzpteQMSCuDEzDVDJK9Wq6Y4kOupsjDGFAZxj4
-         0zf/YlXRvFF9/WE6HAduZoQrxb8P43Ryc40Ztkmpxtszg29IVJoR0Uyqjbt5zIsxCW
-         sBgzki/QKQMyE2M49lqFuezj9ekh03IrNkiE2AfU=
+        b=YiRgkkz0opXITm9IFcbMiGC0HJkvpAdM+ol4kEOKbAq9LwmHO1yMHAHZLRNjRhwk8
+         C6qyn2nxOH6x/AmOLooVgp5i/1zKW+5mx4z+J+Wt5XirhtPnOIVhvVqvJ9nnaWTbFU
+         8yycqsysckj5m6yL8/zxkoK8todyQ1lCTD9QnmHA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrew Jones <drjones@redhat.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
-Subject: [PATCH AUTOSEL 4.4 5/8] KVM: arm/arm64: Ensure vcpu target is unset on reset failure
-Date:   Thu, 16 May 2019 07:41:43 -0400
-Message-Id: <20190516114146.9267-5-sashal@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>,
+        linux-snps-arc@lists.infradead.org,
+        Namhyung Kim <namhyung@kernel.org>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 8/8] perf bench numa: Add define for RUSAGE_THREAD if not present
+Date:   Thu, 16 May 2019 07:41:46 -0400
+Message-Id: <20190516114146.9267-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516114146.9267-1-sashal@kernel.org>
 References: <20190516114146.9267-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,55 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Jones <drjones@redhat.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 811328fc3222f7b55846de0cd0404339e2e1e6d7 ]
+[ Upstream commit bf561d3c13423fc54daa19b5d49dc15fafdb7acc ]
 
-A failed KVM_ARM_VCPU_INIT should not set the vcpu target,
-as the vcpu target is used by kvm_vcpu_initialized() to
-determine if other vcpu ioctls may proceed. We need to set
-the target before calling kvm_reset_vcpu(), but if that call
-fails, we should then unset it and clear the feature bitmap
-while we're at it.
+While cross building perf to the ARC architecture on a fedora 30 host,
+we were failing with:
 
-Signed-off-by: Andrew Jones <drjones@redhat.com>
-[maz: Simplified patch, completed commit message]
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+      CC       /tmp/build/perf/bench/numa.o
+  bench/numa.c: In function ‘worker_thread’:
+  bench/numa.c:1261:12: error: ‘RUSAGE_THREAD’ undeclared (first use in this function); did you mean ‘SIGEV_THREAD’?
+    getrusage(RUSAGE_THREAD, &rusage);
+              ^~~~~~~~~~~~~
+              SIGEV_THREAD
+  bench/numa.c:1261:12: note: each undeclared identifier is reported only once for each function it appears in
+
+[perfbuilder@60d5802468f6 perf]$ /arc_gnu_2019.03-rc1_prebuilt_uclibc_le_archs_linux_install/bin/arc-linux-gcc --version | head -1
+arc-linux-gcc (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1) 8.3.1 20190225
+[perfbuilder@60d5802468f6 perf]$
+
+Trying to reproduce a report by Vineet, I noticed that, with just
+cross-built zlib and numactl libraries, I ended up with the above
+failure.
+
+So, since RUSAGE_THREAD is available as a define, check for that and
+numactl libraries, I ended up with the above failure.
+
+So, since RUSAGE_THREAD is available as a define in the system headers,
+check if it is defined in the 'perf bench numa' sources and define it if
+not.
+
+Now it builds and I have to figure out if the problem reported by Vineet
+only takes place if we have libelf or some other library available.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: linux-snps-arc@lists.infradead.org
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Link: https://lkml.kernel.org/n/tip-2wb4r1gir9xrevbpq7qp0amk@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kvm/arm.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ tools/perf/bench/numa.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/kvm/arm.c b/arch/arm/kvm/arm.c
-index d7bef2144760c..e96ddc599c303 100644
---- a/arch/arm/kvm/arm.c
-+++ b/arch/arm/kvm/arm.c
-@@ -744,7 +744,7 @@ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_level,
- static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
- 			       const struct kvm_vcpu_init *init)
- {
--	unsigned int i;
-+	unsigned int i, ret;
- 	int phys_target = kvm_target_cpu();
+diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+index 73d192f57dc34..df41deed0320e 100644
+--- a/tools/perf/bench/numa.c
++++ b/tools/perf/bench/numa.c
+@@ -32,6 +32,10 @@
+ #include <numa.h>
+ #include <numaif.h>
  
- 	if (init->target != phys_target)
-@@ -779,9 +779,14 @@ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
- 	vcpu->arch.target = phys_target;
- 
- 	/* Now we know what it is, we can reset it. */
--	return kvm_reset_vcpu(vcpu);
--}
-+	ret = kvm_reset_vcpu(vcpu);
-+	if (ret) {
-+		vcpu->arch.target = -1;
-+		bitmap_zero(vcpu->arch.features, KVM_VCPU_MAX_FEATURES);
-+	}
- 
-+	return ret;
-+}
- 
- static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
- 					 struct kvm_vcpu_init *init)
++#ifndef RUSAGE_THREAD
++# define RUSAGE_THREAD 1
++#endif
++
+ /*
+  * Regular printout to the terminal, supressed if -q is specified:
+  */
 -- 
 2.20.1
 
