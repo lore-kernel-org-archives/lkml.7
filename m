@@ -2,172 +2,150 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1072DC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD4FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C71A821726
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558001856;
-	bh=XTzDg/39U+nVeOQ6DEHRUOO0eBkHJGFYsh6RZp/pY7w=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=1tV0iHjV/Kf9QLFKa/m2U2hPo1OvmZRZ28Hu90dHN35tKR/CFokHPg0DjCgTNEBvS
-	 fWv9hu2qjejSgfmCNfeMRJJieg6uf6cQnSpWxNir6rVJhd42KQPHU0JjeTQLh889Q7
-	 HVAYGUc5OcQ2y69JbTZsWdLgWXIy9OS6bCVKJu1Q=
+	by mail.kernel.org (Postfix) with ESMTP id 1DAEE205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:18:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="liOxQDvX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfEPKRf (ORCPT
+        id S1726758AbfEPKSS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 06:17:35 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53458 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfEPKRf (ORCPT
+        Thu, 16 May 2019 06:18:18 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:55422 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfEPKSS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 06:17:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=dw4n1CRUmr0TOcqF8BkUbKvooQyZdTTXk/zrQRua+xU=; b=mYKTtYOBVMxt
-        ++UfUygP9UnJ7Ioz3qu5TQ173UlSDEZzN6A+/8t2BL4R1cSUIcD1ev3Zlf7/Zq/LIKkHoSfXTwZMq
-        CuYthRbo+7VofzKNje1MeaFu7PWvqeW9jyjbafzp1mvWayz8S7tmujZdR/ZmGL3Li+fZZ1kBNHA3y
-        tM+5c=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hRDS3-00062P-Ix; Thu, 16 May 2019 10:17:27 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 291021126D45; Thu, 16 May 2019 11:17:22 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     albeu@free.fr, axel.lin@ingics.com, broonie@kernel.org,
-        Hulk Robot <hulkci@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, lorenzo.bianconi@redhat.com,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: bitbang: Fix NULL pointer dereference in spi_unregister_master" to the spi tree
-In-Reply-To: <20190516075656.25880-1-yuehaibing@huawei.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190516101722.291021126D45@debutante.sirena.org.uk>
-Date:   Thu, 16 May 2019 11:17:22 +0100 (BST)
+        Thu, 16 May 2019 06:18:18 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 11F4B320;
+        Thu, 16 May 2019 12:18:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1558001896;
+        bh=kzLY4Yw2M9JQvyUjiZQ70U/NxQtmDWpBcjhnf9P1Tyc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=liOxQDvXOnnTBSiSw2xxDatXOTMuu8pX37BIJKL1PfVVk2x/0PWXU4b9oAVqte0y6
+         l48Kevcm2NYFt2uNwQviKin+IhnczEkkVGqQ3AZPJ2avZwof0/QGI22M4qRTPZThlL
+         aHWKaw5JNxLhhk1gBiI9qSRBCfCOlDqqpk9iH7as=
+Date:   Thu, 16 May 2019 13:18:00 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        linux-rockchip@lists.infradead.org,
+        Neil Armstrong <narmstrong@baylibre.com>, mka@chromium.org,
+        Sean Paul <seanpaul@chromium.org>,
+        Zheng Yang <zhengyang@rock-chips.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 1/2] drm: bridge: dw-hdmi: Add hooks for suspend/resume
+Message-ID: <20190516101800.GE4995@pendragon.ideasonboard.com>
+References: <20190502223808.185180-1-dianders@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190502223808.185180-1-dianders@chromium.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Hi Douglas,
 
-   spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
+Thank you for the patch.
 
-has been applied to the spi tree at
+On Thu, May 02, 2019 at 03:38:07PM -0700, Douglas Anderson wrote:
+> On Rockchip rk3288-based Chromebooks when you do a suspend/resume
+> cycle:
+> 
+> 1. You lose the ability to detect an HDMI device being plugged in.
+> 
+> 2. If you're using the i2c bus built in to dw_hdmi then it stops
+> working.
+> 
+> Let's add a hook to the core dw-hdmi driver so that we can call it in
+> dw_hdmi-rockchip in the next commit.
+> 
+> NOTE: the exact set of steps I've done here in resume come from
+> looking at the normal dw_hdmi init sequence in upstream Linux plus the
+> sequence that we did in downstream Chrome OS 3.14.  Testing show that
+> it seems to work, but if an extra step is needed or something here is
+> not needed we could improve it.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 21 +++++++++++++++++++++
+>  include/drm/bridge/dw_hdmi.h              |  3 +++
+>  2 files changed, 24 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index db761329a1e3..4b38bfd43e59 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -2780,6 +2780,27 @@ void dw_hdmi_unbind(struct dw_hdmi *hdmi)
+>  }
+>  EXPORT_SYMBOL_GPL(dw_hdmi_unbind);
+>  
+> +int dw_hdmi_suspend(struct dw_hdmi *hdmi)
+> +{
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(dw_hdmi_suspend);
+> +
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.2
+As this is empty, should we leave it out ? It adds a bit of bloat to the
+kernel for no real reason, and we can add it later if required.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> +int dw_hdmi_resume(struct dw_hdmi *hdmi)
+> +{
+> +	initialize_hdmi_ih_mutes(hdmi);
+> +
+> +	dw_hdmi_setup_i2c(hdmi);
+> +	if (hdmi->i2c)
+> +		dw_hdmi_i2c_init(hdmi);
+> +
+> +	if (hdmi->phy.ops->setup_hpd)
+> +		hdmi->phy.ops->setup_hpd(hdmi, hdmi->phy.data);
+> +
+> +	return 0;
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+How about refactoring the probe function to extract hardware
+initialisation to a separate function, and calling it from here ?
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> +}
+> +EXPORT_SYMBOL_GPL(dw_hdmi_resume);
+> +
+>  MODULE_AUTHOR("Sascha Hauer <s.hauer@pengutronix.de>");
+>  MODULE_AUTHOR("Andy Yan <andy.yan@rock-chips.com>");
+>  MODULE_AUTHOR("Yakir Yang <ykk@rock-chips.com>");
+> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
+> index 66e70770cce5..c4132e9a5ae3 100644
+> --- a/include/drm/bridge/dw_hdmi.h
+> +++ b/include/drm/bridge/dw_hdmi.h
+> @@ -154,6 +154,9 @@ struct dw_hdmi *dw_hdmi_bind(struct platform_device *pdev,
+>  			     struct drm_encoder *encoder,
+>  			     const struct dw_hdmi_plat_data *plat_data);
+>  
+> +int dw_hdmi_suspend(struct dw_hdmi *hdmi);
+> +int dw_hdmi_resume(struct dw_hdmi *hdmi);
+> +
+>  void dw_hdmi_setup_rx_sense(struct dw_hdmi *hdmi, bool hpd, bool rx_sense);
+>  
+>  void dw_hdmi_set_sample_rate(struct dw_hdmi *hdmi, unsigned int rate);
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 5caaf29af5ca82d5da8bc1d0ad07d9e664ccf1d8 Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Thu, 16 May 2019 15:56:56 +0800
-Subject: [PATCH] spi: bitbang: Fix NULL pointer dereference in
- spi_unregister_master
-
-If spi_register_master fails in spi_bitbang_start
-because device_add failure, We should return the
-error code other than 0, otherwise calling
-spi_bitbang_stop may trigger NULL pointer dereference
-like this:
-
-BUG: KASAN: null-ptr-deref in __list_del_entry_valid+0x45/0xd0
-Read of size 8 at addr 0000000000000000 by task syz-executor.0/3661
-
-CPU: 0 PID: 3661 Comm: syz-executor.0 Not tainted 5.1.0+ #28
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- dump_stack+0xa9/0x10e
- ? __list_del_entry_valid+0x45/0xd0
- ? __list_del_entry_valid+0x45/0xd0
- __kasan_report+0x171/0x18d
- ? __list_del_entry_valid+0x45/0xd0
- kasan_report+0xe/0x20
- __list_del_entry_valid+0x45/0xd0
- spi_unregister_controller+0x99/0x1b0
- spi_lm70llp_attach+0x3ae/0x4b0 [spi_lm70llp]
- ? 0xffffffffc1128000
- ? klist_next+0x131/0x1e0
- ? driver_detach+0x40/0x40 [parport]
- port_check+0x3b/0x50 [parport]
- bus_for_each_dev+0x115/0x180
- ? subsys_dev_iter_exit+0x20/0x20
- __parport_register_driver+0x1f0/0x210 [parport]
- ? 0xffffffffc1150000
- do_one_initcall+0xb9/0x3b5
- ? perf_trace_initcall_level+0x270/0x270
- ? kasan_unpoison_shadow+0x30/0x40
- ? kasan_unpoison_shadow+0x30/0x40
- do_init_module+0xe0/0x330
- load_module+0x38eb/0x4270
- ? module_frob_arch_sections+0x20/0x20
- ? kernel_read_file+0x188/0x3f0
- ? find_held_lock+0x6d/0xd0
- ? fput_many+0x1a/0xe0
- ? __do_sys_finit_module+0x162/0x190
- __do_sys_finit_module+0x162/0x190
- ? __ia32_sys_init_module+0x40/0x40
- ? __mutex_unlock_slowpath+0xb4/0x3f0
- ? wait_for_completion+0x240/0x240
- ? vfs_write+0x160/0x2a0
- ? lockdep_hardirqs_off+0xb5/0x100
- ? mark_held_locks+0x1a/0x90
- ? do_syscall_64+0x14/0x2a0
- do_syscall_64+0x72/0x2a0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 702a4879ec33 ("spi: bitbang: Let spi_bitbang_start() take a reference to master")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Axel Lin <axel.lin@ingics.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-bitbang.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-bitbang.c b/drivers/spi/spi-bitbang.c
-index 4243e53f9f7b..e8fd95276315 100644
---- a/drivers/spi/spi-bitbang.c
-+++ b/drivers/spi/spi-bitbang.c
-@@ -415,7 +415,7 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
- 	if (ret)
- 		spi_master_put(master);
- 
--	return 0;
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(spi_bitbang_start);
- 
 -- 
-2.20.1
+Regards,
 
+Laurent Pinchart
