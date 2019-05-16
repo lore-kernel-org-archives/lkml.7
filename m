@@ -2,174 +2,80 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEE9C46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 830AAC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCFA920848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54BFE20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:44:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558003457;
+	bh=MMm8uPF//vVPLRrXiv6SfiCHjYvlbj/weEMRQZ3g3Dk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l6JKZ6Y1zOEhOcjs1ZBWetrAjFkwxNBiMPQmywtEyuaPTV66wkWmp6E8Zimq9nS33
+	 xvF1JxmRp6UvLuGYhie0lR+XFH4dCC38US+ya5XZZczIOPJSyg9x/CuTs3xjdCeOzk
+	 NHoklgIsSYeuI4Q5KoffVtVO5VbcG95/oqIuQDhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbfEPKnX (ORCPT
+        id S1727198AbfEPKoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 06:43:23 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:43358 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfEPKnW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 06:43:22 -0400
-Received: from 79.184.255.148.ipv4.supernova.orange.pl (79.184.255.148) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id df73ffdb44497ac9; Thu, 16 May 2019 12:43:20 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: [PATCH] ACPI: PM: Call pm_set_suspend_via_firmware() during hibernation
-Date:   Thu, 16 May 2019 12:43:19 +0200
-Message-ID: <3247013.1dn1YOOxyY@kreacher>
+        Thu, 16 May 2019 06:44:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55612 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726778AbfEPKoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 06:44:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 98DF2ACC1;
+        Thu, 16 May 2019 10:44:14 +0000 (UTC)
+Date:   Thu, 16 May 2019 12:44:12 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Hugh Dickins <hughd@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Greg KH <greg@kroah.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Timofey Titovets <nefelim4ag@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Grzegorz Halat <ghalat@redhat.com>, linux-mm@kvack.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH RFC 0/5] mm/ksm, proc: introduce remote madvise
+Message-ID: <20190516104412.GN16651@dhcp22.suse.cz>
+References: <20190516094234.9116-1-oleksandr@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190516094234.9116-1-oleksandr@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Thu 16-05-19 11:42:29, Oleksandr Natalenko wrote:
+[...]
+> * to mark all the eligible VMAs as mergeable, use:
+> 
+>    # echo merge > /proc/<pid>/madvise
+> 
+> * to unmerge all the VMAs, use:
+> 
+>    # echo unmerge > /proc/<pid>/madvise
 
-On systems with ACPI platform firmware the last stage of hibernation
-is analogous to system suspend to S3 (suspend-to-RAM), so it should
-be handled analogously.  In particular, pm_suspend_via_firmware()
-should return 'true' in that stage to let the callers of it know that
-control will be passed to the platform firmware going forward, so
-pm_set_suspend_via_firmware() needs to be called then in analogy with
-acpi_suspend_begin().
+Please do not open a new thread until a previous one reaches some
+conclusion. I have outlined some ways to go forward in
+http://lkml.kernel.org/r/20190515145151.GG16651@dhcp22.suse.cz.
+I haven't heard any feedback on that, yet you open a 3rd way in a
+different thread. This will not help to move on with the discussion.
 
-However, the platform hibernation ->begin() callback is invoked
-during the "freeze" transition (before creating a snapshot image of
-system memory) as well as during the "hibernate" transition which is
-the last stage of it and pm_set_suspend_via_firmware() should be
-invoked by that callback in the latter stage only.
-
-In order to implement that redefine the hibernation ->begin()
-callback to take a pm_message_t argument to indicate which stage
-of hibernation is taking place and rework acpi_hibernation_begin()
-and acpi_hibernation_begin_old() to take it into account as needed.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/sleep.c     |   39 ++++++++++++++++++++++++---------------
- include/linux/suspend.h  |    2 +-
- kernel/power/hibernate.c |    4 ++--
- 3 files changed, 27 insertions(+), 18 deletions(-)
-
-Index: linux-pm/include/linux/suspend.h
-===================================================================
---- linux-pm.orig/include/linux/suspend.h
-+++ linux-pm/include/linux/suspend.h
-@@ -359,7 +359,7 @@ extern void mark_free_pages(struct zone
-  *	platforms which require special recovery actions in that situation.
-  */
- struct platform_hibernation_ops {
--	int (*begin)(void);
-+	int (*begin)(pm_message_t stage);
- 	void (*end)(void);
- 	int (*pre_snapshot)(void);
- 	void (*finish)(void);
-Index: linux-pm/kernel/power/hibernate.c
-===================================================================
---- linux-pm.orig/kernel/power/hibernate.c
-+++ linux-pm/kernel/power/hibernate.c
-@@ -129,7 +129,7 @@ static int hibernation_test(int level) {
- static int platform_begin(int platform_mode)
- {
- 	return (platform_mode && hibernation_ops) ?
--		hibernation_ops->begin() : 0;
-+		hibernation_ops->begin(PMSG_FREEZE) : 0;
- }
- 
- /**
-@@ -542,7 +542,7 @@ int hibernation_platform_enter(void)
- 	 * hibernation_ops->finish() before saving the image, so we should let
- 	 * the firmware know that we're going to enter the sleep state after all
- 	 */
--	error = hibernation_ops->begin();
-+	error = hibernation_ops->begin(PMSG_HIBERNATE);
- 	if (error)
- 		goto Close;
- 
-Index: linux-pm/drivers/acpi/sleep.c
-===================================================================
---- linux-pm.orig/drivers/acpi/sleep.c
-+++ linux-pm/drivers/acpi/sleep.c
-@@ -1128,15 +1128,19 @@ void __init acpi_no_s4_hw_signature(void
- 	nosigcheck = true;
- }
- 
--static int acpi_hibernation_begin(void)
-+static int acpi_hibernation_begin(pm_message_t stage)
- {
--	int error;
-+	if (!nvs_nosave) {
-+		int error = suspend_nvs_alloc();
-+		if (error)
-+			return error;
-+	}
- 
--	error = nvs_nosave ? 0 : suspend_nvs_alloc();
--	if (!error)
--		acpi_pm_start(ACPI_STATE_S4);
-+	if (stage.event == PM_EVENT_HIBERNATE)
-+		pm_set_suspend_via_firmware();
- 
--	return error;
-+	acpi_pm_start(ACPI_STATE_S4);
-+	return 0;
- }
- 
- static int acpi_hibernation_enter(void)
-@@ -1196,7 +1200,7 @@ static const struct platform_hibernation
-  *		function is used if the pre-ACPI 2.0 suspend ordering has been
-  *		requested.
-  */
--static int acpi_hibernation_begin_old(void)
-+static int acpi_hibernation_begin_old(pm_message_t stage)
- {
- 	int error;
- 	/*
-@@ -1207,16 +1211,21 @@ static int acpi_hibernation_begin_old(vo
- 	acpi_sleep_tts_switch(ACPI_STATE_S4);
- 
- 	error = acpi_sleep_prepare(ACPI_STATE_S4);
-+	if (error)
-+		return error;
- 
--	if (!error) {
--		if (!nvs_nosave)
--			error = suspend_nvs_alloc();
--		if (!error) {
--			acpi_target_sleep_state = ACPI_STATE_S4;
--			acpi_scan_lock_acquire();
--		}
-+	if (!nvs_nosave) {
-+		error = suspend_nvs_alloc();
-+		if (error)
-+			return error;
- 	}
--	return error;
-+
-+	if (stage.event == PM_EVENT_HIBERNATE)
-+		pm_set_suspend_via_firmware();
-+
-+	acpi_target_sleep_state = ACPI_STATE_S4;
-+	acpi_scan_lock_acquire();
-+	return 0;
- }
- 
- /*
-
-
-
+Please follow up on that thread.
+-- 
+Michal Hocko
+SUSE Labs
