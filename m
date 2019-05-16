@@ -2,140 +2,107 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B05C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB0FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 606F120657
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEAF620657
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:26:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IDAE0MkQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbfEPPZj (ORCPT
+        id S1727745AbfEPP0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:25:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49597 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726692AbfEPPZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:25:39 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 71315306641B;
-        Thu, 16 May 2019 15:25:38 +0000 (UTC)
-Received: from localhost (ovpn-117-183.ams2.redhat.com [10.36.117.183])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 23C4D60851;
-        Thu, 16 May 2019 15:25:34 +0000 (UTC)
-Date:   Thu, 16 May 2019 16:25:33 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Stefano Garzarella <sgarzare@redhat.com>
-Cc:     netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>
-Subject: Re: [PATCH v2 1/8] vsock/virtio: limit the memory used per-socket
-Message-ID: <20190516152533.GB29808@stefanha-x1.localdomain>
-References: <20190510125843.95587-1-sgarzare@redhat.com>
- <20190510125843.95587-2-sgarzare@redhat.com>
+        Thu, 16 May 2019 11:26:03 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36833 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727564AbfEPP0C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 11:26:02 -0400
+Received: by mail-pg1-f193.google.com with SMTP id a3so1740957pgb.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 08:26:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:date:from:to:cc:subject:mime-version:content-disposition
+         :user-agent;
+        bh=vIQF8u3sZo2Bokqjd92RxldddXdBrsm+Bpa1o3oiahw=;
+        b=IDAE0MkQ0jC55/yjj5oRUaa00DdXxU/xZUKnuZxDdjqQjUPFhuKUUtbsbJHIHMhJG3
+         5ZQhvJovZWRnZvPp+R24lXk2ZchxecmHuTkVB7fr2awQn3teq1kTTxteEDhoYp/v72cO
+         cM/qSdG808ffBbxz1gs6FV9ofuYpEZhGoRxvx8PhPdnJ79zMklDGNkiVWoZIdBzZC1kg
+         KR0aphYsg8QYpaAH7SxcFohmatmUUmaAWTdQHK5ZSa9R4pnGzrJSM121skkGNfuNbeyx
+         RgkFNTe4ooMHNYTP6may6kxgjQT0JgGRNi7QpUm3KHGK74oz7YOXGLQ8DqZHp10YQpNa
+         QBXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:subject:mime-version
+         :content-disposition:user-agent;
+        bh=vIQF8u3sZo2Bokqjd92RxldddXdBrsm+Bpa1o3oiahw=;
+        b=LdQ807wONFjB9ZdLLt07KLm54nuX9WChzAjbGyhplSCeaTEs+DkGqwQO9VacjJWfEd
+         TAqLZX258kYqop7xiEOYuWe6CKpnplu3QFpdQFl/qaASQAxraGuI2/bQuUkMOwlvp0yu
+         AibIITB/LCUm41J0dT7bIT1XOoUYsAteGXO+XHHqyJ04p/d90EvE1K4Uyoh6u++4vwXd
+         EB4+k9AowNjVF6JmOdG+tYm0KhTcDH0WGiS4oKzH3MCpM7TNp270K+JeJ75plSvQbEpU
+         mmZqqWtQEv6BgCC+kH8DPd1nEzddVexX+atWlJ6kQHBDiQVRhIVHtHWDOvCmiWzcx3Uj
+         ECfw==
+X-Gm-Message-State: APjAAAVSpQ/aRjhUOpKPWqF0LtjenH9QSjvZwMhLWFi07Eo3EOOMzlqw
+        nuJF+Tzy3GaQTddywgRatgEFlz9d
+X-Google-Smtp-Source: APXvYqz72dew1ToMOg5F8RliET5tFWucXwzWX7IAcySJmTaous3XrKM27Vpe+r64itfI0uYjOFs1Zw==
+X-Received: by 2002:a63:e43:: with SMTP id 3mr8094389pgo.253.1558020361972;
+        Thu, 16 May 2019 08:26:01 -0700 (PDT)
+Received: from sabyasachi ([2405:205:6486:db74:e0d2:7d60:25b1:4824])
+        by smtp.gmail.com with ESMTPSA id 79sm10944464pfz.144.2019.05.16.08.26.00
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 16 May 2019 08:26:01 -0700 (PDT)
+Message-ID: <5cdd8109.1c69fb81.6e003.b84b@mx.google.com>
+X-Google-Original-Message-ID: <20190516152556.GA10079@sabyasachi.linux@gmail.com>
+Date:   Thu, 16 May 2019 20:55:56 +0530
+From:   Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+To:     architt@codeaurora.org, a.hajda@samsung.com,
+        Laurent.pinchart@ideasonboard.com, airlied@linux.ie
+Cc:     jrdr.linux@gmail.com, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] drm/bridge: Remove duplicate header
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qcHopEYAB45HaUaB"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190510125843.95587-2-sgarzare@redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 16 May 2019 15:25:38 +0000 (UTC)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Remove duplicate header which is included twice
 
---qcHopEYAB45HaUaB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+---
+v2: rebased the code against drm -next and arranged the headers alphabetically
 
-On Fri, May 10, 2019 at 02:58:36PM +0200, Stefano Garzarella wrote:
-> +struct virtio_vsock_buf {
+ drivers/gpu/drm/bridge/panel.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Please add a comment describing the purpose of this struct and to
-differentiate its use from struct virtio_vsock_pkt.
+diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+index 38eeaf8..000ba7c 100644
+--- a/drivers/gpu/drm/bridge/panel.c
++++ b/drivers/gpu/drm/bridge/panel.c
+@@ -9,13 +9,12 @@
+  */
+ 
+ #include <drm/drmP.h>
+-#include <drm/drm_panel.h>
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_connector.h>
+ #include <drm/drm_encoder.h>
+ #include <drm/drm_modeset_helper_vtables.h>
+-#include <drm/drm_probe_helper.h>
+ #include <drm/drm_panel.h>
++#include <drm/drm_probe_helper.h>
+ 
+ struct panel_bridge {
+ 	struct drm_bridge bridge;
+-- 
+2.7.4
 
-> +static struct virtio_vsock_buf *
-> +virtio_transport_alloc_buf(struct virtio_vsock_pkt *pkt, bool zero_copy)
-> +{
-> +	struct virtio_vsock_buf *buf;
-> +
-> +	if (pkt->len =3D=3D 0)
-> +		return NULL;
-> +
-> +	buf =3D kzalloc(sizeof(*buf), GFP_KERNEL);
-> +	if (!buf)
-> +		return NULL;
-> +
-> +	/* If the buffer in the virtio_vsock_pkt is full, we can move it to
-> +	 * the new virtio_vsock_buf avoiding the copy, because we are sure that
-> +	 * we are not use more memory than that counted by the credit mechanism.
-> +	 */
-> +	if (zero_copy && pkt->len =3D=3D pkt->buf_len) {
-> +		buf->addr =3D pkt->buf;
-> +		pkt->buf =3D NULL;
-> +	} else {
-> +		buf->addr =3D kmalloc(pkt->len, GFP_KERNEL);
-
-buf and buf->addr could be allocated in a single call, though I'm not
-sure how big an optimization this is.
-
-> @@ -841,20 +882,24 @@ virtio_transport_recv_connected(struct sock *sk,
->  {
->  	struct vsock_sock *vsk =3D vsock_sk(sk);
->  	struct virtio_vsock_sock *vvs =3D vsk->trans;
-> +	struct virtio_vsock_buf *buf;
->  	int err =3D 0;
-> =20
->  	switch (le16_to_cpu(pkt->hdr.op)) {
->  	case VIRTIO_VSOCK_OP_RW:
->  		pkt->len =3D le32_to_cpu(pkt->hdr.len);
-> -		pkt->off =3D 0;
-> +		buf =3D virtio_transport_alloc_buf(pkt, true);
-> =20
-> -		spin_lock_bh(&vvs->rx_lock);
-> -		virtio_transport_inc_rx_pkt(vvs, pkt);
-> -		list_add_tail(&pkt->list, &vvs->rx_queue);
-> -		spin_unlock_bh(&vvs->rx_lock);
-> +		if (buf) {
-> +			spin_lock_bh(&vvs->rx_lock);
-> +			virtio_transport_inc_rx_pkt(vvs, pkt->len);
-> +			list_add_tail(&buf->list, &vvs->rx_queue);
-> +			spin_unlock_bh(&vvs->rx_lock);
-> =20
-> -		sk->sk_data_ready(sk);
-> -		return err;
-> +			sk->sk_data_ready(sk);
-> +		}
-
-The return value of this function isn't used but the code still makes an
-effort to return errors.  Please return -ENOMEM when buf =3D=3D NULL.
-
-If you'd like to remove the return value that's fine too, but please do
-it for the whole function to be consistent.
-
---qcHopEYAB45HaUaB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAlzdgO0ACgkQnKSrs4Gr
-c8i2BQf/SKch1qy6NDC+HDYgEJxI8sLacx7MgcaTqQGmvc29mZInkaMMDj88G6T/
-LGW/vJZ1x1ZPrLx+fKiNOs82ZIiiHhLy8HGEjuu8eMW+YYk0y8QPu7QPsxRV2IaG
-u7gSGPxdUKUvGVejNWyqo5/mW2kZOLaMg0Z5zTghUhZ9hLyBQAU5UwvdqVICnedh
-1IYkF86rZrfKQFZCv/X5Q7IwRvg1lHZyYjTyqUBomc2z1tAk4t1NrMT3LDhLD1XZ
-dnUdBc5bBVspwArnAl9P4Uag0Gjh8yjEp0S7ITrZI58G6tilDb3cncv9w+nRvQks
-EY4F99igT+SAp97NrMrIW0E/MZjnOw==
-=gdG0
------END PGP SIGNATURE-----
-
---qcHopEYAB45HaUaB--
