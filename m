@@ -2,161 +2,156 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51396C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CB1C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2076B20848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A17220848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfEPKh6 (ORCPT
+        id S1727172AbfEPKiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 06:37:58 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40810 "EHLO
+        Thu, 16 May 2019 06:38:03 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40822 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726943AbfEPKh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 06:37:57 -0400
+        id S1726876AbfEPKiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 06:38:02 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CD2419BF;
-        Thu, 16 May 2019 03:37:57 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3196019F6;
+        Thu, 16 May 2019 03:38:02 -0700 (PDT)
 Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.108])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C4E5B3F703;
-        Thu, 16 May 2019 03:37:55 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A9E883F703;
+        Thu, 16 May 2019 03:38:00 -0700 (PDT)
 From:   Raphael Gault <raphael.gault@arm.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     jpoimboe@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
         will.deacon@arm.com, julien.thierry@arm.com,
         Raphael Gault <raphael.gault@arm.com>
-Subject: [RFC V2 00/16] objtool: Add support for Arm64
-Date:   Thu, 16 May 2019 11:36:39 +0100
-Message-Id: <20190516103655.5509-1-raphael.gault@arm.com>
+Subject: [RFC 01/16] objtool: Add abstraction for computation of symbols offsets
+Date:   Thu, 16 May 2019 11:36:40 +0100
+Message-Id: <20190516103655.5509-2-raphael.gault@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190516103655.5509-1-raphael.gault@arm.com>
+References: <20190516103655.5509-1-raphael.gault@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As of now, objtool only supports the x86_64 architecture but the
-groundwork has already been done in order to add support for other
-architectures without too much effort.
+The jump destination and relocation offset used previously are only
+reliable on x86_64 architecture. We abstract these computations by calling
+arch-dependent implementations.
 
-This series of patches adds support for the arm64 architecture
-based on the Armv8.5 Architecture Reference Manual.
+Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+---
+ tools/objtool/arch.h            |  6 ++++++
+ tools/objtool/arch/x86/decode.c | 11 +++++++++++
+ tools/objtool/check.c           | 15 ++++++++++-----
+ 3 files changed, 27 insertions(+), 5 deletions(-)
 
-Objtool will be a valuable tool to progress and provide more guarentees
-on live patching which is a work in progress for arm64.
-
-Once we have the base of objtool working the next steps will be to
-port Peter Z's uaccess validation for arm64.
-
-RFC: In order to differentiate the different uses of the `brk`
-instruction on arm64 I intended to use the
-`include/generated/asm-offsets.h` header file (copying it to
-tools/include/generated/asm-offsets.h). However since in is
-generated later than objtool in the build process I wasn't able to do
-it. I wanted to use it to have access to the info about the
-`struct alt_instr` and `struct bug_entry`.
-
-Noteworthy points:
-* I still haven't figured out how to detect switch-tables on arm64. I
-have a better understanding of them but still haven't implemented checks
-as it doesn't look trivial at all.
-* I still use the `arch_is_sibling_call` function to differentiate the
-use cases of the `br` instruction on arm64. Even though I updated the
-checks, it is still based on going back in the instruction stream, which
-as Peter Z. pointed out is not safe. I shall work on an alternative
-solution.
-
-Changes from V2:
-* Rebase on the -tip tree (which contains the latest objtool features)
-* Split into more precise patches in order to highlight the changes
-that were made.
-* Correct patches coding style to comply with linux's style.
-* Refactor some code to avoid generating a fake instruction when
-decoding load/store of pairs of registers.
-* Make more elegant checks for arch-dependent features (switch-tables,
-special sections)
-* Include some patches to add exceptions in the kernel to prevent
-objtool from checking/warning in particular cases.
-* Introduce a new instruction type (INSN_UNKNOWN) to handle the cases
-when some data is stored inside a section marked as containing
-executable instructions.
-
-
-Raphael Gault (16):
-  objtool: Add abstraction for computation of symbols offsets
-  objtool: orc: Refactor ORC API for other architectures to implement.
-  objtool: Move registers and control flow to arch-dependent code
-  objtool: arm64: Add required implementation for supporting the aarch64
-    architecture in objtool.
-  objtool: arm64: Handle hypercalls as nops
-  arm64: alternative: Mark .altinstr_replacement as containing
-    executable instructions
-  objtool: special: Adapt special section handling
-  objtool: arm64: Adapt the stack frame checks for arm architecture
-  arm64: assembler: Add macro to annotate asm function having non
-    standard stack-frame.
-  arm64: sleep: Prevent stack frame warnings from objtool
-  objtool: arm64: Enable stack validation for arm64
-  arm64: kvm: Annotate non-standard stack frame functions
-  arm64: kernel: Add exception on kuser32 to prevent stack analysis
-  arm64: crypto: Add exceptions for crypto object to prevent stack
-    analysis
-  objtool: Introduce INSN_UNKNOWN type
-  arm64: kernel: Annotate non-standard stack frame functions
-
- arch/arm64/Kconfig                            |    1 +
- arch/arm64/crypto/Makefile                    |    3 +
- arch/arm64/include/asm/alternative.h          |    2 +-
- arch/arm64/include/asm/assembler.h            |   13 +
- arch/arm64/kernel/Makefile                    |    3 +
- arch/arm64/kernel/hyp-stub.S                  |    2 +
- arch/arm64/kernel/sleep.S                     |    4 +
- arch/arm64/kvm/hyp-init.S                     |    2 +
- arch/arm64/kvm/hyp/entry.S                    |    2 +
- tools/objtool/Build                           |    2 -
- tools/objtool/arch.h                          |   21 +-
- tools/objtool/arch/arm64/Build                |    8 +
- tools/objtool/arch/arm64/bit_operations.c     |   67 +
- tools/objtool/arch/arm64/decode.c             | 2809 +++++++++++++++++
- .../objtool/arch/arm64/include/arch_special.h |   42 +
- .../arch/arm64/include/asm/orc_types.h        |   96 +
- .../arch/arm64/include/bit_operations.h       |   24 +
- tools/objtool/arch/arm64/include/cfi.h        |   74 +
- .../objtool/arch/arm64/include/insn_decode.h  |  211 ++
- tools/objtool/arch/arm64/orc_dump.c           |   26 +
- tools/objtool/arch/arm64/orc_gen.c            |   40 +
- tools/objtool/arch/x86/Build                  |    3 +
- tools/objtool/arch/x86/decode.c               |   16 +
- tools/objtool/arch/x86/include/arch_special.h |   45 +
- tools/objtool/{ => arch/x86/include}/cfi.h    |    0
- tools/objtool/{ => arch/x86}/orc_dump.c       |    4 +-
- tools/objtool/{ => arch/x86}/orc_gen.c        |  104 +-
- tools/objtool/check.c                         |  239 +-
- tools/objtool/check.h                         |    1 +
- tools/objtool/elf.c                           |    3 +-
- tools/objtool/orc.h                           |    4 +-
- tools/objtool/special.c                       |   28 +-
- tools/objtool/special.h                       |    3 +
- 33 files changed, 3753 insertions(+), 149 deletions(-)
- create mode 100644 tools/objtool/arch/arm64/Build
- create mode 100644 tools/objtool/arch/arm64/bit_operations.c
- create mode 100644 tools/objtool/arch/arm64/decode.c
- create mode 100644 tools/objtool/arch/arm64/include/arch_special.h
- create mode 100644 tools/objtool/arch/arm64/include/asm/orc_types.h
- create mode 100644 tools/objtool/arch/arm64/include/bit_operations.h
- create mode 100644 tools/objtool/arch/arm64/include/cfi.h
- create mode 100644 tools/objtool/arch/arm64/include/insn_decode.h
- create mode 100644 tools/objtool/arch/arm64/orc_dump.c
- create mode 100644 tools/objtool/arch/arm64/orc_gen.c
- create mode 100644 tools/objtool/arch/x86/include/arch_special.h
- rename tools/objtool/{ => arch/x86/include}/cfi.h (100%)
- rename tools/objtool/{ => arch/x86}/orc_dump.c (98%)
- rename tools/objtool/{ => arch/x86}/orc_gen.c (69%)
-
+diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
+index 7a111a77b7aa..9897f9f94b29 100644
+--- a/tools/objtool/arch.h
++++ b/tools/objtool/arch.h
+@@ -76,6 +76,8 @@ struct stack_op {
+ 	struct op_src src;
+ };
+ 
++struct instruction;
++
+ void arch_initial_func_cfi_state(struct cfi_state *state);
+ 
+ int arch_decode_instruction(struct elf *elf, struct section *sec,
+@@ -85,4 +87,8 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
+ 
+ bool arch_callee_saved_reg(unsigned char reg);
+ 
++unsigned long arch_jump_destination(struct instruction *insn);
++
++unsigned long arch_dest_rela_offset(int addend);
++
+ #endif /* _ARCH_H */
+diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
+index 472e991f6512..c1b95ea447c0 100644
+--- a/tools/objtool/arch/x86/decode.c
++++ b/tools/objtool/arch/x86/decode.c
+@@ -23,6 +23,7 @@
+ #include "lib/inat.c"
+ #include "lib/insn.c"
+ 
++#include "../../check.h"
+ #include "../../elf.h"
+ #include "../../arch.h"
+ #include "../../warn.h"
+@@ -78,6 +79,11 @@ bool arch_callee_saved_reg(unsigned char reg)
+ 	}
+ }
+ 
++unsigned long arch_dest_rela_offset(int addend)
++{
++	return addend + 4;
++}
++
+ int arch_decode_instruction(struct elf *elf, struct section *sec,
+ 			    unsigned long offset, unsigned int maxlen,
+ 			    unsigned int *len, unsigned char *type,
+@@ -509,3 +515,8 @@ void arch_initial_func_cfi_state(struct cfi_state *state)
+ 	state->regs[16].base = CFI_CFA;
+ 	state->regs[16].offset = -8;
+ }
++
++unsigned long arch_jump_destination(struct instruction *insn)
++{
++	return insn->offset + insn->len + insn->immediate;
++}
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 38b0517dc49e..2a803ab4d5b7 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -574,7 +574,7 @@ static int add_jump_destinations(struct objtool_file *file)
+ 					       insn->len);
+ 		if (!rela) {
+ 			dest_sec = insn->sec;
+-			dest_off = insn->offset + insn->len + insn->immediate;
++			dest_off = arch_jump_destination(insn);
+ 		} else if (rela->sym->type == STT_SECTION) {
+ 			dest_sec = rela->sym->sec;
+ 			dest_off = rela->addend + 4;
+@@ -668,7 +668,7 @@ static int add_call_destinations(struct objtool_file *file)
+ 		rela = find_rela_by_dest_range(insn->sec, insn->offset,
+ 					       insn->len);
+ 		if (!rela) {
+-			dest_off = insn->offset + insn->len + insn->immediate;
++			dest_off = arch_jump_destination(insn);
+ 			insn->call_dest = find_symbol_by_offset(insn->sec,
+ 								dest_off);
+ 
+@@ -681,14 +681,19 @@ static int add_call_destinations(struct objtool_file *file)
+ 			}
+ 
+ 		} else if (rela->sym->type == STT_SECTION) {
++			/*
++			 * the original x86_64 code adds 4 to the rela->addend
++			 * which is not needed on arm64 architecture.
++			 */
++			dest_off = arch_dest_rela_offset(rela->addend);
+ 			insn->call_dest = find_symbol_by_offset(rela->sym->sec,
+-								rela->addend+4);
++								dest_off);
+ 			if (!insn->call_dest ||
+ 			    insn->call_dest->type != STT_FUNC) {
+-				WARN_FUNC("can't find call dest symbol at %s+0x%x",
++				WARN_FUNC("can't find call dest symbol at %s+0x%lx",
+ 					  insn->sec, insn->offset,
+ 					  rela->sym->sec->name,
+-					  rela->addend + 4);
++					  dest_off);
+ 				return -1;
+ 			}
+ 		} else
 -- 
 2.17.1
 
