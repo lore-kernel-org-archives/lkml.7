@@ -2,212 +2,263 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2D2C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8212FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BB5520818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 473702082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:19:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfEPITT (ORCPT
+        id S1726764AbfEPIT0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 04:19:19 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:37624 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfEPITT (ORCPT
+        Thu, 16 May 2019 04:19:26 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:52004 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfEPITZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 04:19:19 -0400
-Received: by mail-it1-f193.google.com with SMTP id m140so4786968itg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:19:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s68yQo+QQvCZajbWc1oevyw/oT7lrvS4cXS+T8Bmo2M=;
-        b=EwphtlJ63VR9Yn8Ov0HSG/7H1y1l97MkP6vXNWnzJiuPCaIE2FkVZVjDYnoozd0IaM
-         Fg6/PHMKy2T4d4D4F0lTywdb2S4BHDk9aaifwJoW8TwZ7oL6N2i8Juf+bOrmw4eHGXYf
-         PmQQlJG854i1FWeCaHZ7QQFahHzvxp4bDqDgm5MipZ3onnJoeib6jfJg+E4oMcw6a74K
-         UXHNRUFYC/6nhayqnDk4tK3ej3kBdbiWNkrJeyCJPyVTH5aqbIOSCCgpKCkXauLxLAmu
-         yq0G8LqZtpyyM2DZFmIGKuIdSMXUkbPBvkCzI9kCzP2ukvN1iCDQdnH3OBRRfJB+9sz8
-         6pew==
-X-Gm-Message-State: APjAAAXGDvTcpYZLyKFrdOS2HMyZ48eUaQZ5oGNu8UZ69q2e6c7q4nhK
-        6zFVO7doD2LBrqoZyjzrbBvplisRu5vKc1zX3pKlSw==
-X-Google-Smtp-Source: APXvYqxE7uRnSXhpRjc6utJg1hkfIvguX4bu4Q62XoHeKtFLtbDbP5ywW+siT+0KWV1MRstAncfRoFq49aUQmT8mCfY=
-X-Received: by 2002:a02:37d7:: with SMTP id r206mr32206828jar.127.1557994757853;
- Thu, 16 May 2019 01:19:17 -0700 (PDT)
+        Thu, 16 May 2019 04:19:25 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 2BBC53C013A;
+        Thu, 16 May 2019 10:19:23 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Uu1cCZtkaWvY; Thu, 16 May 2019 10:19:16 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 08F2D3C00D1;
+        Thu, 16 May 2019 10:19:16 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com ([fe80::69bf:8148:2f13:f289]) by
+ HI2EXCH01.adit-jv.com ([fe80::69bf:8148:2f13:f289%12]) with mapi id
+ 14.03.0439.000; Thu, 16 May 2019 10:19:15 +0200
+From:   "Rodin, Michael (Ferchau; ADITG/ESM1)" <mrodin@de.adit-jv.com>
+To:     "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+CC:     "Friedrich, Eugen (ADITG/ESM1)" <efriedrich@de.adit-jv.com>,
+        "Rosca, Eugeniu (ADITG/ESM1)" <erosca@de.adit-jv.com>,
+        "slongerbeam@gmail.com" <slongerbeam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: Questions regarding Documentation/media/uapi/v4l/field-order.rst
+Thread-Topic: Questions regarding
+ Documentation/media/uapi/v4l/field-order.rst
+Thread-Index: AdT0SL9o51JIskG9TEewiVl3rOlV0gFhA90ABHsrheA=
+Date:   Thu, 16 May 2019 08:19:15 +0000
+Message-ID: <AC35D0CFBC66A84AAA9DF4334B52828D13617E17@HI2EXCH01.adit-jv.com>
+References: <AC35D0CFBC66A84AAA9DF4334B52828D13614162@HI2EXCH01.adit-jv.com>
+ <187c237b-6b75-f408-ae41-6065baf5cd7f@xs4all.nl>
+In-Reply-To: <187c237b-6b75-f408-ae41-6065baf5cd7f@xs4all.nl>
+Accept-Language: en-US, de-DE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.72.92.112]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20190510102051.25647-1-kasong@redhat.com> <4f453ec6-67a6-2c8f-2aab-acb54ae55645@redhat.com>
-In-Reply-To: <4f453ec6-67a6-2c8f-2aab-acb54ae55645@redhat.com>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Thu, 16 May 2019 16:19:06 +0800
-Message-ID: <CACPcB9d-h75MEMrjREe7sMvjRqvxBhGxaeR3_k7An2-BDsDy4Q@mail.gmail.com>
-Subject: Re: [RFC PATCH] vmcore: Add a kernel cmdline device_dump_limit
-To:     Bhupesh Sharma <bhsharma@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Young <dyoung@redhat.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Ganesh Goudar <ganeshgr@chelsio.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 10, 2019 at 7:17 PM Bhupesh Sharma <bhsharma@redhat.com> wrote:
->
-> Hi Kairui,
->
-> Thanks for the patch. Please see my comments in-line:
->
-> On 05/10/2019 03:50 PM, Kairui Song wrote:
-> > Device dump allow drivers to add device related dump data to vmcore as
-> > they want. This have a potential issue, the data is stored in memory,
-> > drivers may append too much data and use too much memory. The vmcore is
-> > typically used in a kdump kernel which runs in a pre-reserved small
-> > chunk of memory. So as a result it will make kdump unusable at all due
-> > to OOM issues.
+> On 4/16/19 3:54 PM, Rodin, Michael (Ferchau; ADITG/ESM1) wrote:
+> > Hi,
 > >
-> > So introduce new device_dump_limit= kernel parameter, and set the
-> > default limit to 0, so device dump is not enabled unless user specify
-> > the accetable maxiam
->
->        ^^^^ acceptable maximum
-
-Will fix this typo.
-
->
-> > memory usage for device dump data. In this way user
-> > will also have the chance to adjust the kdump reserved memory
-> > accordingly.
->
-> Hmmm., this doesn't give much confidence with the
-> PROC_VMCORE_DEVICE_DUMP feature in its current shape. Rather shouldn't
-> we be enabling config PROC_VMCORE_DEVICE_DUMP only under EXPERT mode for
-> now, considering that this feature needs further thrashing and testing
-> with real setups including platforms where drivers append large amounts
-> of data to vmcore:
-
-I think no need to move it to expert mode, just leave it disabled by
-default should be better, that should be enough to make sure driver
-won't append that much memory and cause OOM, while it could still be
-enabled without changing the kernel, so this feature won't bring extra
-risk, and could be enabled anytime easily.
-
->
-> diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
-> index 817c02b13b1d..c47a12cf7fc0 100644
-> --- a/fs/proc/Kconfig
-> +++ b/fs/proc/Kconfig
-> @@ -45,7 +45,7 @@ config PROC_VMCORE
->           Exports the dump image of crashed kernel in ELF format.
->
->   config PROC_VMCORE_DEVICE_DUMP
-> -       bool "Device Hardware/Firmware Log Collection"
-> +       bool "Device Hardware/Firmware Log Collection" if EXPERT
->          depends on PROC_VMCORE
->          default n
->          help
-> @@ -59,6 +59,12 @@ config PROC_VMCORE_DEVICE_DUMP
->            If you say Y here, the collected device dumps will be added
->            as ELF notes to /proc/vmcore.
->
-> +         Considering that there can be device drivers which append
-> +         large amounts of data to vmcore, you should say N here unless
-> +         you are reserving a large chunk of memory for crashdump
-> +         kernel, because otherwise the crashdump kernel might become
-> +         unusable due to OOM issues.
-> +
->
-> May be you can add a 'Fixes:' tag here.
-
-Problem is previous commit seems not broken, just bring extra memory
-stress. Is "Fixes:" tag suitable for this commit?
-
->
-> > Signed-off-by: Kairui Song <kasong@redhat.com>
-> > ---
-> >   fs/proc/vmcore.c | 20 ++++++++++++++++++++
-> >   1 file changed, 20 insertions(+)
+> > I would like to ask several questions regarding the documentation of the
+> enum "v4l2_field" [1].
+> > These questions came up during my investigations of issues with
+> > interaction between the gstreamer plugin v4l2src and the rcar video input
+> driver [2].
 > >
-> > diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> > index 3fe90443c1bb..e28695ef2439 100644
-> > --- a/fs/proc/vmcore.c
-> > +++ b/fs/proc/vmcore.c
-> > @@ -53,6 +53,9 @@ static struct proc_dir_entry *proc_vmcore;
-> >   /* Device Dump list and mutex to synchronize access to list */
-> >   static LIST_HEAD(vmcoredd_list);
-> >   static DEFINE_MUTEX(vmcoredd_mutex);
-> > +
-> > +/* Device Dump Limit */
-> > +static size_t vmcoredd_limit;
-> >   #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+> > The documentation [1] specifies that:
+> > "All video capture and output devices must report the current field order.
+> > Some drivers may permit the selection of a different order, to this
+> > end applications initialize the field field of struct v4l2_pix_format
+> > before calling the VIDIOC_S_FMT ioctl. If this is not desired it
+> > should have the value V4L2_FIELD_ANY (0)."
 > >
-> >   /* Device Dump Size */
-> > @@ -1465,6 +1468,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
-> >       data_size = roundup(sizeof(struct vmcoredd_header) + data->size,
-> >                           PAGE_SIZE);
+> > If I have understood these lines correctly, this means that if
+> > userspace sets "field" member of the struct "v4l2_pix_format" to
+> > V4L2_FIELD_ANY and uses this as parameter for the VIDIOC_S_FMT ioctl,
+> > then a driver should select/report the field order, which was
+> > previously set by media-ctl utility in the next subdevice, which is
+> > connected
+> to the /dev/videoX node (From my understanding this would be equivalent to
+> the "current field order").
 > >
-> > +     if (vmcoredd_orig_sz + data_size >= vmcoredd_limit) {
-> > +             ret = -ENOMEM;
+> > If the described behavior is correct, then the description in the table
+> > row for
+> V4L2_FIELD_ANY in [1] is incomplete:
+> > "Applications request this field order when any one of the
+> V4L2_FIELD_NONE, V4L2_FIELD_TOP, V4L2_FIELD_BOTTOM, or
+> V4L2_FIELD_INTERLACED formats is acceptable."
+> > What if V4L2_FIELD_ALTERNATE or V4L2_FIELD_SEQ_TB or
+> V4L2_FIELD_SEQ_BT are also acceptable for the application?
+> > I think that the specification is either unprecise or my understanding of
+> > the
+> specification is wrong.
 >
-> Should we be adding a WARN() here to let the user know that the device
-> dump data will not be available in vmcore?
+> The spec is a bit out of date: those missing field values were probably
+> added
+> after this text was written. I'll make a patch fixing this.
 
-Yes, that could be very helpful. How about pr_err_once? WARN is too
-noise, just give a hint to the user that device dump is disabled
-should be enough, so user will know why device dump data is not
-present and will just enable it.
+Thank you for the patch! I think, the sentence "Drivers choose depending on
+hardware capabilities..." in the description of V4L2_FIELD_ANY is also
+unprecise,
+because when media-ctl is used, the format is chosen by the userspace and
+not by the driver. So if I choose "interlaced" for the connected subdevice
+by using media-ctl (which calls VIDIOC_SUBDEV_S_FMT) and it is successfully
+set, then V4L2_FIELD_ANY will definitely return V4L2_FIELD_INTERLACED
+and nothing else is possible.
 
->
-> > +             goto out_err;
-> > +     }
-> > +
-> >       /* Allocate buffer for driver's to write their dumps */
-> >       buf = vmcore_alloc_buf(data_size);
-> >       if (!buf) {
-> > @@ -1502,6 +1510,18 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
-> >       return ret;
-> >   }
-> >   EXPORT_SYMBOL(vmcore_add_device_dump);
-> > +
-> > +static int __init parse_vmcoredd_limit(char *arg)
-> > +{
-> > +     char *end;
-> > +
-> > +     if (!arg)
-> > +             return -EINVAL;
-> > +     vmcoredd_limit = memparse(arg, &end);
-> > +     return end > arg ? 0 : -EINVAL;
-> > +
-> > +}
-> > +__setup("device_dump_limit=", parse_vmcoredd_limit);
->
-> We should be adding this boot argument and its description to
-> 'Documentation/admin-guide/kernel-parameters.txt'
-
-Good suggestion, will update the document.
-
->
-> >   #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
 > >
-> >   /* Free all dumps in vmcore device dump list */
-> >
+> > Another potential issue, which I found in this documentation is that
+> > it does not distinguish between multiple contexts in which enum v4l2_field
+> can be used. I can think of at least two different contexts:
+> > - When used to select the field order with VIDIOC_S_FMT ioctl.
+> > - When used to report the field order in a buffer: for example application
+> sets V4L2_FIELD_ALTERNATE in VIDIOC_S_FMT ioctl and then gets buffers,
+> which have V4L2_FIELD_TOP/BOTTOM set.
 >
-> Thanks,
-> Bhupesh
+> IMHO the text is reasonably clear on that. But if you have suggestions to
+> improve it, then make a proposal.
+>
+> > Now with this in mind, when I read the description of V4L2_FIELD_NONE:
+> > "The driver may also indicate this order when it cannot distinguish
+> > between
+> V4L2_FIELD_TOP and V4L2_FIELD_BOTTOM."
+>
+> Whoops, that makes no sense. There are no drivers that do this. I'll remove
+> this line. If a driver can't tell the difference, then it should just pick
+> FIELD_TOP
+> or BOTTOM.
 
-Thanks for the review!
+Thank you! So this means that drivers should return FIELD_ALTERNATE in S_FMT,
+even if they can not distinguish between FIELD_TOP and FIELD_BOTTOM.
+Would it make sense to add your last sentence "If a driver can't tell the
+difference,
+then it should just pick FIELD_TOP or BOTTOM." to the description of
+V4L2_FIELD_ALTERNATE (or better just FIELD_TOP so it is easier for userspace
+to check whether there is no field detection), so this case is documented
+after
+removing of "The driver may also indicate this order when it cannot
+distinguish
+between V4L2_FIELD_TOP and V4L2_FIELD_BOTTOM."?
 
+> > I see two possible meanings/interpretations:
+> > - If application sets V4L2_FIELD_ALTERNATE in VIDIOC_S_FMT ioctl, report
+> V4L2_FIELD_NONE back
+> >    so the application knows that the driver can not provide any TOP/BOTTOM
+> metadata in the buffers
+> >    (which may be necessary for the application for example for
+> > deinterlacing)
+> before it has got any buffer.
+> > - If application sets V4L2_FIELD_ALTERNATE in VIDIOC_S_FMT ioctl, driver
+> reports V4L2_FIELD_ALTERNATE back,
+> >    even if it can not distinguish between TOP/BOTTOM. But when the
+> application starts to read buffers,
+> >    they have V4L2_FIELD_NONE set if it's not possible to distinguish
+> > between
+> TOP/BOTTOM.
+>
+> Actually, drivers cannot ever return NONE for a top or bottom field.
+> FIELD_NONE indicates that a full frame has arrived, and doing something else
+> would break userspace.
+>
+> >
+> > Also there is another ambiguity in the description of V4L2_FIELD_NONE:
+> > "Images are in progressive format, not interlaced."
+> > What does "interlaced" mean in this case? Does it mean the other possible
+> enum values or just the V4L2_FIELD_INTERLACED?
+>
+> It means that the source video transmitted full frames, not top and bottom
+> fields. I clarified the text a bit.
 
+Thanks for the clarification! So just to avoid misunderstanding, 
+V4L2_FIELD_INTERLACED and V4L2_FIELD_SEQ_BT/TB
+are "interlaced" in this context, because they contain fields (and are "field-based")?
 
---
-Best Regards,
-Kairui Song
+> > If this just means V4L2_FIELD_INTERLACED, then it would imply that for
+> > example V4L2_FIELD_SEQ_TB and V4L2_FIELD_ALTERNATE are progressive
+> formats, which is obviously not true.
+> > And also generally, in which of described contexts should be
+> V4L2_FIELD_NONE set or reported (buffer or VIDIOC_S_FMT ioctl)?
+>
+> For video capture (that's what we are talking about here) it is returned by
+> the
+> driver in v4l2_buffer, never by userspace. Userspace can try to request a
+> specific field value when calling S_FMT, but the driver can overwrite it.
+
+Sorry, what do you mean by "returned by userspace" here?
+
+> The possible field values that a driver can support are dependent on the
+> video
+> source (i.e. sensors are always FIELD_NONE) and the hardware capabilities.
+>
+> > Another point is that V4L2_FIELD_INTERLACED is also used by v4l2src to
+> > tell rcar-vin driver to combine the fields before giving them to
+> > application, so
+> basically it requests progressive signal. So the meanings of
+> V4L2_FIELD_INTERLACED and V4L2_FIELD_NONE are basically the same in this
+> case.
+>
+> Certainly not. FIELD_INTERLACED combines two fields into a single buffer,
+> but
+> the odd and even lines in the frame were captured at different times.
+> Whereas for FIELD_NONE all lines were captured at the same time.
+>
+> So a FIELD_INTERLACED buffer may need to undergo additional deinterlacing.
+>
+> If the hardware already does high-quality deinterlacing then that might be a
+> reason for the driver to return FIELD_NONE to avoid additional deinterlacing
+> in userspace.
+>
+> In practice there are three main categories in the way the field is handled:
+>
+> 1) The video source is a webcam: field is always FIELD_NONE, set by the
+> driver.
+>
+> 2) The video source is HDMI: if the video is progressive, then the field is
+> always
+>    FIELD_NONE. If the video is interlaced, then the field is always
+> FIELD_ALTERNATE
+>    in v4l2_format and alternating FIELD_TOP and BOTTOM in v4l2_buffer.
+>
+> 3) The video source is SDTV (i.e. S-Video or composite): the video is always
+>    interlaced, and it depends on the hardware which field values are
+> supported,
+>    except for FIELD_NONE, which is never returned as far as I am aware.
+>
+> Regards,
+>
+> 	Hans
+>
+> >
+> > Thank you in advance and sorry for the long mail!
+> >
+> > [1] Documentation/media/uapi/v4l/field-order.rst
+> > [2] drivers/media/platform/rcar-vin
+> >
+> > Best regards
+> >
+> > Michael Rodin
+> >
+> > Advanced Driver Information Technology GmbH Engineering Software
+> > Multimedia 1 (ADITG/ESM1) Robert-Bosch-Str. 200
+> > 31139 Hildesheim
+> > Germany
+> >
+> > Tel. +49 5121 49 6936
+> > Fax +49 5121 49 6999
+> > mrodin@de.adit-jv.com
+> > Web: www.adit-jv.com
+> >
+> > ADIT is a joint venture company of Robert Bosch GmbH/Robert Bosch Car
+> > Multimedia GmbH and DENSO Corporation
+> > Sitz: Hildesheim, Registergericht: Amtsgericht Hildesheim HRB 3438
+> > Geschaeftsfuehrung: Wilhelm Grabow, Ken Yaguchi
+> >
+
