@@ -2,68 +2,68 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4296C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF254C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9665420818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:09:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF7DF2087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:09:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="JMBjAjqj"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="lCT8NThG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbfEPFJc (ORCPT
+        id S1726598AbfEPFJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 01:09:32 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44307 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbfEPFJb (ORCPT
+        Thu, 16 May 2019 01:09:39 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44722 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726374AbfEPFJi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 01:09:31 -0400
-Received: by mail-pg1-f193.google.com with SMTP id z16so921474pgv.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 22:09:31 -0700 (PDT)
+        Thu, 16 May 2019 01:09:38 -0400
+Received: by mail-pf1-f195.google.com with SMTP id g9so1166496pfo.11
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 22:09:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=bw14u18P9i//6PFBBpNeMD35DBcnBuJpaE6hMWzLBZ0=;
-        b=JMBjAjqj9Bt/mtPeNVVFnwrG6sxggttpsGf3yrrSUASc87Irj9E9jhvOrZ6OxSc4pm
-         3oweA6sqM0iqogIExq9o+Er5Wtj62ppqTiDzoyWk95Ebb4+W5do0a66GqvVBiL6cNBFL
-         2OkBNVSw3s+rYw7I92PJ9orjWwAsPwsq0GPBRAqP1uhxgPUIIqbi+wqRsSxiBhrnkEax
-         b2gLSylHqEuhL3gzcj5Jt5t1XEE7luk6bwfSx9J6nOtyU6y0TMiBtG5r1R8FzkL0b6D3
-         qj4K7GsCIs9w3K+ZDiz3Tv3At8nVqFuTHKCo0hltnNFFBDX/F+BP0LISx4mPRlEtLmC7
-         /sDg==
+        bh=4KK0MRvh5MgzBUDrn06tdDHg6h6KtmoqvmbKK6rVaok=;
+        b=lCT8NThGdj/CZVbU3O1mllDstxzU6H3DmbI36AAMAJgIy0GB1HSZ0v8w4a2DRF468Y
+         DeG7kvpHvvTSR4SxEiSV0++dI79XONMqjE2Ps+J1QNvB5iib3wmn5e8nSaZG68kMS+AN
+         hgu+cq0zdUPUyN5qOAsb9IgVmxIzfqCVSGFPqIljut4NuezCSblMIYw9pQCEfGw2eheQ
+         el+zFMF3+U8WkFjYO9FV0AbBXmIzN8/EBHji7txCweH/5/fD/co3YFPsBXUbzC1ZhZLv
+         u8hqsC7IBacwHqbh0v8cV2GTcV3OPGr8KDzz28zQTRkLjQcZ0zIvpsnO5dK7PMoh614f
+         TcCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references;
-        bh=bw14u18P9i//6PFBBpNeMD35DBcnBuJpaE6hMWzLBZ0=;
-        b=ZmwFsx8UtP2FUO5TX0PjjX6VLqJ27HfBHoVQqhp/TkmKDoOgAr4lpIQYHY6RaG0yuy
-         Qy6ZONFs8OkvZWAQvpAmjDIiVMY6r8ScZtfPH7zI7gHySa4c5ArLwwVdeuWPILKK9sr6
-         eKu09/SlvvJwTB/LiayxCfLEukfR9+wcmas7SyQaf9iw2LWC0TGNdLmTMnePiOX0cbo0
-         ZcLl1Ugq0lJruzeJEU51O8SWNavcwQeumjnmHgkhZnp0SOFnQj1/lo/TUw9Cekak2l2B
-         WfpRpdkkmw1wpGC9P2dxaa5uT5iYm2qFBSOQgkhmdXVDDkoS17eiqFYR9rOaLUfof3Dh
-         Zbxg==
-X-Gm-Message-State: APjAAAXV2j/iVf3NgB8PYwUqPOn/DRscQgeI1aSDc88lFFHuHE6xGzxr
-        Zbj6jior+npHLpxGi+zfRJuCow==
-X-Google-Smtp-Source: APXvYqyY6RdF/VL9iKR+Dn640qMh2T+dCAVMBAhbWxEWLJANF3ujtebGYHqiEGcZX5ca2hsGtxbCWg==
-X-Received: by 2002:a62:e718:: with SMTP id s24mr51969126pfh.247.1557983371371;
-        Wed, 15 May 2019 22:09:31 -0700 (PDT)
+        bh=4KK0MRvh5MgzBUDrn06tdDHg6h6KtmoqvmbKK6rVaok=;
+        b=rrr7ENiKMu4zOW+dMM6SmpzsyDd7LWSVh7Vxn6wpRrXbqwyVmj5Y4OMt0eELHTGyA5
+         kdsHGJHvmwsj2REzICmBIprT2xIfWZ18alNpjkTwuh3coaew4Nf7v6rzY7WbEOJ/6n2m
+         R85/YZpty+MrB4ftcsq8dxAX/mX1VQK3mKa37fA+dT0LBWJFVwiFiRts7vXuH97HvFA/
+         fNfKte4CV0KBs1AoqAqNRc62vg6HTR3+4B9ScGch8OhUttC86npKNC1ZIDW3nGUGJJg7
+         KdVFChC9ec+cCbppKCi1soYUd8/3PeE90B6SvJ+gNGQgcnu2uE7dAWcP+C8w98Jbgkuq
+         7Dgw==
+X-Gm-Message-State: APjAAAWMZqw2PLjSgrh+TdPWRGp6GQduSOvP3XXO6D1yUxpCco/005ru
+        yOf8J9ZKvx8Jyc6ktLIEriKNBQ==
+X-Google-Smtp-Source: APXvYqzyrM198VsHH3arYEHVm5+5CB+0pWo6NzSLosqF9cg2Y4ZM98S/rohCuz5MMvRCx0Dqtxav7w==
+X-Received: by 2002:a63:234c:: with SMTP id u12mr49894719pgm.264.1557983378110;
+        Wed, 15 May 2019 22:09:38 -0700 (PDT)
 Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id u6sm5929531pfa.1.2019.05.15.22.09.27
+        by smtp.googlemail.com with ESMTPSA id u6sm5929531pfa.1.2019.05.15.22.09.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 15 May 2019 22:09:30 -0700 (PDT)
+        Wed, 15 May 2019 22:09:37 -0700 (PDT)
 From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 To:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
         andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com,
         sagar.kadam@sifive.com, linux-i2c@vger.kernel.org,
         devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/3] dt-bindings: i2c: extend existing opencore bindings.
-Date:   Thu, 16 May 2019 10:38:38 +0530
-Message-Id: <1557983320-14461-2-git-send-email-sagar.kadam@sifive.com>
+Subject: [PATCH v3 2/3] i2c-ocore: sifive: add support for i2c device on FU540-c000 SoC.
+Date:   Thu, 16 May 2019 10:38:39 +0530
+Message-Id: <1557983320-14461-3-git-send-email-sagar.kadam@sifive.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1557983320-14461-1-git-send-email-sagar.kadam@sifive.com>
 References: <1557983320-14461-1-git-send-email-sagar.kadam@sifive.com>
@@ -72,48 +72,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add FU540-C000 specific device tree bindings to already
-available i2-ocores file. This device is available on
-HiFive Unleashed Rev A00 board. Move interrupt and interrupt
-parents under optional property list as these can be optional.
+Update device id table for Opencore's I2C master based re-implementation
+used in FU540-c000 chipset on HiFive Unleashed platform.
 
-The FU540-C000 SoC from sifive, has an Opencore's I2C block
-reimplementation.
-
-The DT compatibility string for this IP is present in HDL and available at.
-https://github.com/sifive/sifive-blocks/blob/master/src/main/scala/devices/i2c/I2C.scala#L73
+Device ID's include Sifive, soc-specific device for chip specific tweaks
+and sifive IP block specific device for generic programming model.
 
 Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
 ---
- Documentation/devicetree/bindings/i2c/i2c-ocores.txt | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-ocores.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-index 17bef9a..b73960e 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-ocores.txt
-@@ -2,8 +2,11 @@ Device tree configuration for i2c-ocores
+diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+index 4e1a077..aee1d86 100644
+--- a/drivers/i2c/busses/i2c-ocores.c
++++ b/drivers/i2c/busses/i2c-ocores.c
+@@ -85,6 +85,7 @@ struct ocores_i2c {
  
- Required properties:
- - compatible      : "opencores,i2c-ocores" or "aeroflexgaisler,i2cmst"
-+                    "sifive,fu540-c000-i2c" or "sifive,i2c0".
-+		    for Opencore based I2C IP block reimplemented in
-+		    FU540-C000 SoC.Please refer sifive-blocks-ip-versioning.txt
-+		    for additional details.
- - reg             : bus address start and address range size of device
--- interrupts      : interrupt number
- - clocks          : handle to the controller clock; see the note below.
-                     Mutually exclusive with opencores,ip-clock-frequency
- - opencores,ip-clock-frequency: frequency of the controller clock in Hz;
-@@ -12,6 +15,8 @@ Required properties:
- - #size-cells     : should be <0>
+ #define TYPE_OCORES		0
+ #define TYPE_GRLIB		1
++#define TYPE_SIFIVE_REV0	2
  
- Optional properties:
-+- interrupt-parent: handle to interrupt controller.
-+- interrupts      : interrupt number.
- - clock-frequency : frequency of bus clock in Hz; see the note below.
-                     Defaults to 100 KHz when the property is not specified
- - reg-shift       : device register offsets are shifted by this value
+ static void oc_setreg_8(struct ocores_i2c *i2c, int reg, u8 value)
+ {
+@@ -468,6 +469,14 @@ static u32 ocores_func(struct i2c_adapter *adap)
+ 		.compatible = "aeroflexgaisler,i2cmst",
+ 		.data = (void *)TYPE_GRLIB,
+ 	},
++	{
++		.compatible = "sifive,fu540-c000-i2c",
++		.data = (void *)TYPE_SIFIVE_REV0,
++	},
++	{
++		.compatible = "sifive,i2c0",
++		.data = (void *)TYPE_SIFIVE_REV0,
++	},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, ocores_i2c_match);
 -- 
 1.9.1
 
