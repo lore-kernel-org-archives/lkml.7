@@ -3,179 +3,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A416C04E87
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364BCC04E53
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D64F620881
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09BC020881
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCQOndVd"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="l0NedCdb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbfEPBrL (ORCPT
+        id S1727799AbfEPBrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 21:47:11 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35697 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbfEPBGN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 21:06:13 -0400
-Received: by mail-ot1-f68.google.com with SMTP id n14so1883481otk.2;
-        Wed, 15 May 2019 18:06:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J6f1GZ8vCMw819yikh69VjuQxUpy7OYmJvnY0pJldzc=;
-        b=VCQOndVdDPVpCcmRB4XI4mPyBaz8hFP/tZZ+OrKuD/J0xM/ZN9hbmJne51MgjHXpsc
-         mSclLtRVpK8X/6tfslh8J5RQQoR3HciSPXP9Iup6nZdYzKEkaIK4RW1YUDJybCZy9BTQ
-         Rd8KH/9Lu/TYSmVYnyp7BfMk0xO9NuHm9MIwG9ic5Kud59FrMya2LROAt06ksGGwef+8
-         jCtGhkqbq6tGS3szt6Y1Y3SbSEnWLIneuWvC8XbsLEqoYRKPwj2NM+2pl217TGYJZyEh
-         odBvDMneEHV4RABX+U9+HECmzcx4/BX7BNXbD0El0Ll68ZbxCLj4G+LX1bmuDZ9CMc8w
-         mvIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J6f1GZ8vCMw819yikh69VjuQxUpy7OYmJvnY0pJldzc=;
-        b=nPF0OkWvklQVe4YjDAA++qQoyAFMOWKhEGRIqKgswNbSuBgcVY1l7f4ovYesQnUMHz
-         Pis7vA4lx3WJei5IVINIjui6GivwqByZ/HwK6YKiU80P2PwUODetFHRaQyBkU/KsAvNR
-         SHj9RP1l5tIQYbI2r3SvXVqIAGxtYr/1zC3UCjRG3tKIuGxFxeGGbyReT7jyxafGPWZ3
-         f04ldeKwtH+ttz+nR6hG0fKfkDdTmgcul7KmFYA5bv/jf82A1Jt9cLuwPme0Hk4ETsRV
-         E70UWCrqctuZB5cbajfdQvpXzzbNITDaQmw2D6Jvi7CET/3Qd8u/Gmm0pgm9JivlAYoz
-         Mvkg==
-X-Gm-Message-State: APjAAAX+abP34F0S+TLCcL6NSNQBKFO4x3jJpwr7CXhywxlqSmyVGisc
-        TxS/YJB/h5z2h3WcsG6VilyhI7AauSweBCdBZKs=
-X-Google-Smtp-Source: APXvYqyUghYepUxVunBrQJsSOb/EkGSL/LU3bonenux+W/r6y1N76kWBBLy2tg3qyc1ZMcipE5G908BUMvPkPl9jC14=
-X-Received: by 2002:a05:6830:1356:: with SMTP id r22mr5792502otq.191.1557968772119;
- Wed, 15 May 2019 18:06:12 -0700 (PDT)
+        Wed, 15 May 2019 21:47:10 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:38075 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726899AbfEPBFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 21:05:51 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 454CsS4CYZz9s3q;
+        Thu, 16 May 2019 11:05:48 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1557968748;
+        bh=fZnwa8ubjzk25IayGtARl7gwjK8HMk9Y1XfVQcO7Gl8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=l0NedCdbaOyLaWawUcBKlg+heKEbiG3cwoB2QTX3hi9XdS2RKdh7YA4QUyOdF5l0H
+         YSlqbd+DjbhAoUg4vthOsyvIxWZUV6PtsuWadcgeD4nFh6/OPFVxEKN+DkHjOFptFo
+         S6/2UaSDwuN8IRKc4/amzo8/OUFkeAIL3gBuv8ZZj+y6+F69u9UgC68PSDBmmCxI6y
+         jV8+JWLyfV2ulBitlfLi4cPatmbujkenjCpwTXKOLHWlv+R9+NKNS+1L7AgzpDbsKF
+         1Rr1N3lk01HIleZ05WJPZqP1jwWCVSZ3tbNm6oOFhqY5+mEq3s2HM9BqH+NdcTXpYi
+         MytGEJY1Y2o2w==
+Date:   Thu, 16 May 2019 11:05:48 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: linux-next: manual merge of the ftrace tree with Linus' tree
+Message-ID: <20190516110548.0d22d048@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190507185647.GA29409@amt.cnet> <CANRm+Cx8zCDG6Oz1m9eukkmx_uVFYcQOdMwZrHwsQcbLm_kuPA@mail.gmail.com>
- <20190514135022.GD4392@amt.cnet> <7e390fef-e0df-963f-4e18-e44ac2766be3@oracle.com>
-In-Reply-To: <7e390fef-e0df-963f-4e18-e44ac2766be3@oracle.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 16 May 2019 09:07:32 +0800
-Message-ID: <CANRm+CyrLneGkOXzEmGyB-Sr+DOqqDAF4eNB1YBpbhm3Edo3Gw@mail.gmail.com>
-Subject: Re: [PATCH] sched: introduce configurable delay before entering idle
-To:     Ankur Arora <ankur.a.arora@oracle.com>
-Cc:     Marcelo Tosatti <mtosatti@redhat.com>,
-        kvm-devel <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Bandan Das <bsd@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/yioRfzKsOHL0l_nK0l1RyO1"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 May 2019 at 02:42, Ankur Arora <ankur.a.arora@oracle.com> wrote:
->
-> On 5/14/19 6:50 AM, Marcelo Tosatti wrote:
-> > On Mon, May 13, 2019 at 05:20:37PM +0800, Wanpeng Li wrote:
-> >> On Wed, 8 May 2019 at 02:57, Marcelo Tosatti <mtosatti@redhat.com> wrote:
-> >>>
-> >>>
-> >>> Certain workloads perform poorly on KVM compared to baremetal
-> >>> due to baremetal's ability to perform mwait on NEED_RESCHED
-> >>> bit of task flags (therefore skipping the IPI).
-> >>
-> >> KVM supports expose mwait to the guest, if it can solve this?
-> >>
-> >> Regards,
-> >> Wanpeng Li
-> >
-> > Unfortunately mwait in guest is not feasible (uncompatible with multiple
-> > guests). Checking whether a paravirt solution is possible.
->
-> Hi Marcelo,
->
-> I was also looking at making MWAIT available to guests in a safe manner:
-> whether through emulation or a PV-MWAIT. My (unsolicited) thoughts
+--Sig_/yioRfzKsOHL0l_nK0l1RyO1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-MWAIT emulation is not simple, here is a research
-https://www.contrib.andrew.cmu.edu/~somlo/OSXKVM/mwait.html
+Hi all,
 
-Regards,
-Wanpeng Li
+Today's linux-next merge of the ftrace tree got a conflict in:
 
-> follow.
->
-> We basically want to handle this sequence:
->
->      monitor(monitor_address);
->      if (*monitor_address == base_value)
->           mwaitx(max_delay);
->
-> Emulation seems problematic because, AFAICS this would happen:
->
->      guest                                   hypervisor
->      =====                                   ====
->
->      monitor(monitor_address);
->          vmexit  ===>                        monitor(monitor_address)
->      if (*monitor_address == base_value)
->           mwait();
->                vmexit    ====>               mwait()
->
-> There's a context switch back to the guest in this sequence which seems
-> problematic. Both the AMD and Intel specs list system calls and
-> far calls as events which would lead to the MWAIT being woken up:
-> "Voluntary transitions due to fast system call and far calls (occurring
-> prior to issuing MWAIT but after setting the monitor)".
->
->
-> We could do this instead:
->
->      guest                                   hypervisor
->      =====                                   ====
->
->      monitor(monitor_address);
->          vmexit  ===>                        cache monitor_address
->      if (*monitor_address == base_value)
->           mwait();
->                vmexit    ====>              monitor(monitor_address)
->                                             mwait()
->
-> But, this would miss the "if (*monitor_address == base_value)" check in
-> the host which is problematic if *monitor_address changed simultaneously
-> when monitor was executed.
-> (Similar problem if we cache both the monitor_address and
-> *monitor_address.)
->
->
-> So, AFAICS, the only thing that would work is the guest offloading the
-> whole PV-MWAIT operation.
->
-> AFAICS, that could be a paravirt operation which needs three parameters:
-> (monitor_address, base_value, max_delay.)
->
-> This would allow the guest to offload this whole operation to
-> the host:
->      monitor(monitor_address);
->      if (*monitor_address == base_value)
->           mwaitx(max_delay);
->
-> I'm guessing you are thinking on similar lines?
->
->
-> High level semantics: If the CPU doesn't have any runnable threads, then
-> we actually do this version of PV-MWAIT -- arming a timer if necessary
-> so we only sleep until the time-slice expires or the MWAIT max_delay does.
->
-> If the CPU has any runnable threads then this could still finish its
-> time-quanta or we could just do a schedule-out.
->
->
-> So the semantics guaranteed to the host would be that PV-MWAIT returns
-> after >= max_delay OR with the *monitor_address changed.
->
->
->
-> Ankur
+  include/linux/compiler.h
+
+between commit:
+
+  37686b1353cf ("tracing: Improve "if" macro code generation")
+
+from Linus' tree and commit:
+
+  a15fd609ad53 ("tracing: Simplify "if" macro code")
+
+from the ftrace tree.
+
+I fixed it up (I just used the latter version) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/yioRfzKsOHL0l_nK0l1RyO1
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzct2wACgkQAVBC80lX
+0GwsFQgAifeawbCBdogc3+jkuvMkWdmndy76L6kGaUXr2LMVeJf4mBShwbBhB8FF
+LMy+QQC6UFvs4sp1fZSfoZnNyKaYcnm/anmtAv5XgcNs5oOeQj8FR38hngsUHrQE
+39Q4PkjV0xZUMR4BCDCEkB3mFKmzruXw5AE3pFgI1wBDlP4T9GaSR7D/KdFgBPc7
+L0V8Pg3PnsiumgUpTEdS41iElgB/AQr69vHs+REZoO/jqFUX5PROGByKUetaKMdt
+SBbs6hu3It5HX7uCIyTqLICN0Kpy+Xxp1DzrFio+JUTLAKx9j/aMHOvgxaNRctJy
+Ns/A7sC30AReyfCGJzFT55HFcGgLPg==
+=cqH5
+-----END PGP SIGNATURE-----
+
+--Sig_/yioRfzKsOHL0l_nK0l1RyO1--
