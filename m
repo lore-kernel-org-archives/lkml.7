@@ -2,130 +2,177 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8275EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 23:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE55C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 23:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 532AA20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 23:00:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IrWnxdle"
+	by mail.kernel.org (Postfix) with ESMTP id C68122084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 23:00:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727160AbfEPXAN (ORCPT
+        id S1727195AbfEPXAe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 19:00:13 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35439 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726978AbfEPXAE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 19:00:04 -0400
-Received: by mail-pg1-f195.google.com with SMTP id t1so858014pgc.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 16:00:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lvg93XkWk/IauY18P9MzBBlRGinky/ZsfgSfGtfzvWE=;
-        b=IrWnxdlePeHzk4plSAn4SitSypwJhfMhyVRFzVajRhwefK/vTtfDyVbKcueIKno2Ov
-         jT6zbh26BxuIW4pNBvtfSUcEVz8djCazhjKU2cYWODdnIiwcJETXjueu1AdTY2Vy4UaH
-         9FEwUwnG58TWdJ+b6VXxLxHhJE5mCkwSbNT+w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lvg93XkWk/IauY18P9MzBBlRGinky/ZsfgSfGtfzvWE=;
-        b=pTgpEAGU0kZzx2JYC2HFuQvlGCvbl9t8Ga0NfNER60M1aLFV+oc0Gj41PJZowwEyAy
-         oGZ34IUQeTI8cEU1hu2oI/GR+l3rRkjPmGFe+ezYsLO3juDCKssAaWgiDaqo5N7a0KZU
-         WiRkJQdnTOXlO2D2AFG/LJt9TIp3bB5+pMdOfHfvFxJ2CGAeHYz2Odny0pz2TShiHY8V
-         feLh32Z8N+RXazoIhnhS+5MrZC5zzkPQMQeVZT++vIB8Tn5++1AygGVZUIELflgxm46V
-         0FeYAyMau3buDpxobTuUnA7BAHKSDJUwHE+vEqDR+CP0L//8Lre6HzYFbwR1XxAxqOEK
-         Wh7w==
-X-Gm-Message-State: APjAAAVxkMSRVw2osceQTgZrOZ+PZBxc2k6ANxz4Q/B+CKeLlPFIz9Bh
-        J30bvB8MJ49sKdRP6iMuq4GIIg==
-X-Google-Smtp-Source: APXvYqyXmrMlXwbThNdH5OYzM2uXETKw3ITSWk1x8137xR6JOng1E+DtlSZxRvtpsu174gwuzPC5Dw==
-X-Received: by 2002:aa7:8acb:: with SMTP id b11mr57008369pfd.115.1558047603560;
-        Thu, 16 May 2019 16:00:03 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id j64sm1769506pfb.126.2019.05.16.16.00.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 16:00:02 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Minas Harutyunyan <hminas@synopsys.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>, heiko@sntech.de
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        Artur Petrosyan <Arthur.Petrosyan@synopsys.com>,
-        amstan@chromium.org, linux-rockchip@lists.infradead.org,
-        William Wu <william.wu@rock-chips.com>,
-        linux-usb@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>,
-        Randy Li <ayaka@soulik.info>, zyw@rock-chips.com,
-        mka@chromium.org, ryandcase@chromium.org,
-        Amelie Delaunay <amelie.delaunay@st.com>, jwerner@chromium.org,
-        dinguyen@opensource.altera.com,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [REPOST PATCH v2 3/3] ARM: dts: rockchip: Allow wakeup from rk3288-veyron's dwc2 USB ports
-Date:   Thu, 16 May 2019 15:59:41 -0700
-Message-Id: <20190516225941.170355-4-dianders@chromium.org>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-In-Reply-To: <20190516225941.170355-1-dianders@chromium.org>
-References: <20190516225941.170355-1-dianders@chromium.org>
+        Thu, 16 May 2019 19:00:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34624 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726920AbfEPXAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 19:00:34 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 71D033082E46;
+        Thu, 16 May 2019 23:00:28 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C18A95E1A2;
+        Thu, 16 May 2019 23:00:22 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     Marc Dionne <marc.dionne@auristor.com>,
+        Jonathan Billings <jsbillings@jsbillings.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Joe Perches <joe@perches.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] afs: Miscellaneous fixes
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <14410.1558047621.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Fri, 17 May 2019 00:00:21 +0100
+Message-ID: <14411.1558047621@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 16 May 2019 23:00:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We want to be able to wake from USB if a device is plugged in that
-wants remote wakeup.  Enable it on both dwc2 controllers.
+Hi Linus,
 
-NOTE: this is added specifically to veyron and not to rk3288 in
-general since it's not known whether all rk3288 boards are designed to
-support USB wakeup.  It is plausible that some boards could shut down
-important rails in S3.
+Could you pull this series please?  It fixes a set of miscellaneous issues
+in the afs filesystem, including:
 
-Also note that currently wakeup doesn't seem to happen unless you use
-the "deep" suspend mode (where SDRAM is turned off).  Presumably the
-shallow suspend mode is gating some sort of clock that's important but
-I couldn't easily figure out how to get it working.
+ (1) Leak of keys on file close.
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+ (2) Broken error handling in xattr functions.
+
+ (3) Missing locking when updating VL server list.
+
+ (4) Volume location server DNS lookup whereby preloaded cells may not ever
+     get a lookup and regular DNS lookups to maintain server lists consume
+     power unnecessarily.
+
+ (5) Incorrect error propagation and handling in the fileserver iteration
+     code causes operations to sometimes apparently succeed.
+
+ (6) Interruption of server record check/update side op during fileserver
+     iteration causes uninterruptible main operations to fail unexpectedly.
+
+ (7) Callback promise expiry time miscalculation.
+
+ (8) Over invalidation of the callback promise on directories.
+
+ (9) Double locking on callback break waking up file locking waiters.
+
+(10) Double increment of the vnode callback break counter.
+
+Note that it makes some changes outside of the afs code, including:
+
+ (A) Adding an extra parameter to dns_query() to allow the dns_resolver key
+     just accessed to be immediately invalidated.  AFS is caching the
+     results itself, so the key can be discarded.
+
+ (B) Adding an interruptible version of wait_var_event().
+
+ (C) Adding an rxrpc function to allow the maximum lifespan to be set on a
+     call.
+
+ (D) Adding a way for an rxrpc call to be marked as non-interruptible.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+Tested-by: Marc Dionne <marc.dionne@auristor.com>
 ---
+The following changes since commit 80f232121b69cc69a31ccb2b38c1665d770b0710:
 
-Changes in v2:
-- rk3288-veyron dts patch new for v2.
+  Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next (2019-05-07 22:03:58 -0700)
 
- arch/arm/boot/dts/rk3288-veyron.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+are available in the Git repository at:
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 1252522392c7..1d8bfed7830c 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -424,6 +424,7 @@
- 
- &usb_host1 {
- 	status = "okay";
-+	snps,need-phy-for-wake;
- };
- 
- &usb_otg {
-@@ -432,6 +433,7 @@
- 	assigned-clocks = <&cru SCLK_USBPHY480M_SRC>;
- 	assigned-clock-parents = <&usbphy0>;
- 	dr_mode = "host";
-+	snps,need-phy-for-wake;
- };
- 
- &vopb {
--- 
-2.21.0.1020.gf2820cf01a-goog
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/afs-fixes-20190516
+
+for you to fetch changes up to fd711586bb7d63f257da5eff234e68c446ac35ea:
+
+  afs: Fix double inc of vnode->cb_break (2019-05-16 16:25:21 +0100)
+
+----------------------------------------------------------------
+AFS fixes
+
+----------------------------------------------------------------
+David Howells (19):
+      afs: Fix key leak in afs_release() and afs_evict_inode()
+      afs: Fix incorrect error handling in afs_xattr_get_acl()
+      afs: Fix afs_xattr_get_yfs() to not try freeing an error value
+      afs: Fix missing lock when replacing VL server list
+      afs: Fix afs_cell records to always have a VL server list record
+      dns_resolver: Allow used keys to be invalidated
+      Add wait_var_event_interruptible()
+      afs: Fix cell DNS lookup
+      afs: Fix "kAFS: AFS vnode with undefined type 0"
+      rxrpc: Provide kernel interface to set max lifespan on a call
+      afs: Fix the maximum lifespan of VL and probe calls
+      afs: Fix error propagation from server record check/update
+      rxrpc: Allow the kernel to mark a call as being non-interruptible
+      afs: Make some RPC operations non-interruptible
+      afs: Make dynamic root population wait uninterruptibly for proc_cells_lock
+      afs: Fix calculation of callback expiry time
+      afs: Don't invalidate callback if AFS_VNODE_DIR_VALID not set
+      afs: Fix lock-wait/callback-break double locking
+      afs: Fix double inc of vnode->cb_break
+
+ Documentation/networking/rxrpc.txt |  21 ++++-
+ fs/afs/addr_list.c                 |   2 +-
+ fs/afs/afs.h                       |   3 +
+ fs/afs/callback.c                  |   8 +-
+ fs/afs/cell.c                      | 187 ++++++++++++++++++++++---------------
+ fs/afs/dir.c                       |  18 ++--
+ fs/afs/dir_silly.c                 |   4 +-
+ fs/afs/dynroot.c                   |   5 +-
+ fs/afs/file.c                      |   9 +-
+ fs/afs/flock.c                     |   9 +-
+ fs/afs/fsclient.c                  |  77 +++++++++------
+ fs/afs/inode.c                     |  12 +--
+ fs/afs/internal.h                  |  22 +++--
+ fs/afs/proc.c                      |   8 +-
+ fs/afs/rotate.c                    |  29 ++++--
+ fs/afs/rxrpc.c                     |   7 +-
+ fs/afs/security.c                  |   4 +-
+ fs/afs/server.c                    |  17 +++-
+ fs/afs/super.c                     |   2 +-
+ fs/afs/vl_list.c                   |  20 ++--
+ fs/afs/vl_rotate.c                 |  28 +++++-
+ fs/afs/vlclient.c                  |   4 +
+ fs/afs/write.c                     |   2 +-
+ fs/afs/xattr.c                     | 103 ++++++++++----------
+ fs/afs/yfsclient.c                 |  98 +++++++++----------
+ fs/cifs/dns_resolve.c              |   2 +-
+ fs/nfs/dns_resolve.c               |   2 +-
+ include/linux/dns_resolver.h       |   3 +-
+ include/linux/wait_bit.h           |  13 +++
+ include/net/af_rxrpc.h             |   3 +
+ net/ceph/messenger.c               |   2 +-
+ net/dns_resolver/dns_query.c       |   6 +-
+ net/rxrpc/af_rxrpc.c               |  28 ++++++
+ net/rxrpc/ar-internal.h            |   2 +
+ net/rxrpc/call_object.c            |   2 +
+ net/rxrpc/conn_client.c            |   8 +-
+ net/rxrpc/sendmsg.c                |   4 +-
+ 37 files changed, 478 insertions(+), 296 deletions(-)
 
