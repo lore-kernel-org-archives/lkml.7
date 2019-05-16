@@ -2,117 +2,93 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93410C04E87
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:50:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F98C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BA79205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:50:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="Nq8HVBde"
+	by mail.kernel.org (Postfix) with ESMTP id 36EB520818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:53:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbfEPIui (ORCPT
+        id S1726774AbfEPIxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 04:50:38 -0400
-Received: from onstation.org ([52.200.56.107]:48980 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbfEPIui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 04:50:38 -0400
-Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 48B4B44970;
-        Thu, 16 May 2019 08:50:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1557996637;
-        bh=wEQftk2jOPZqULmeEi922a5nskVGytsJ4NrXuV4OdsQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Nq8HVBdeZBixholiz4yvFgIcO4TlljymySnnautZ7mcb11sYw8pMckY4suhwvisj0
-         ZLkROqf4B/vFCqC2TT11KompG5s8GLJuQWAOMqKNNQfdciP784ggQ2L34DHyv4wY8H
-         jU9tE0CoEbDkKNZIOHyzyO3IyI2l0nHf8omoYW2U=
-From:   Brian Masney <masneyb@onstation.org>
-To:     agross@kernel.org, david.brown@linaro.org
-Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND] ARM: dts: qcom: msm8974-hammerhead: add device tree bindings for vibrator
-Date:   Thu, 16 May 2019 04:50:18 -0400
-Message-Id: <20190516085018.2207-1-masneyb@onstation.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 16 May 2019 04:53:05 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:41107 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726352AbfEPIxF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 04:53:05 -0400
+X-Originating-IP: 80.215.246.107
+Received: from localhost (unknown [80.215.246.107])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 377AD4000E;
+        Thu, 16 May 2019 08:52:57 +0000 (UTC)
+Date:   Thu, 16 May 2019 10:52:57 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v2] arm64: dts: allwinner: a64: orangepi-win: Add wifi
+ and bluetooth nodes
+Message-ID: <20190516085257.tbli227f7mm3daac@flea>
+References: <20190514205445.11591-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="5iqdhuknfkakdubp"
+Content-Disposition: inline
+In-Reply-To: <20190514205445.11591-1-jernej.skrabec@siol.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds device device tree bindings for the vibrator found on
-the LG Nexus 5 (hammerhead) phone.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
-This is a resend of the following patch that has missed the last two
-merge windows:
+--5iqdhuknfkakdubp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-https://lore.kernel.org/lkml/20190206013329.18195-4-masneyb@onstation.org/
+On Tue, May 14, 2019 at 10:54:45PM +0200, Jernej Skrabec wrote:
+> The AP6212 is based on the Broadcom BCM43430 or BCM43438. The WiFi side
+> identifies as BCM43430, while the Bluetooth side identifies as BCM43438.
+>
+> WiFi is connected to mmc1 and the Bluetooth side is connected to UART1
+> in a 4 wire configuration. Same as the WiFi side, due to being the same
+> chip and package, DLDO2 provides overall power via VBAT, and DLDO4
+> provides I/O power via VDDIO. The RTC clock output provides the LPO low
+> power clock at 32.768 kHz.
+>
+> This patch enables WiFi and Bluetooth on OrangePi Win boards and adds
+> missing LPO clock on the WiFi side. PCM connection also exists for
+> Bluetooth audio, but it's not used here.
+>
+> Bluetooth UART speed is set to 1.5 MBaud in order to be able transmit
+> audio. While module supports even higher speeds, currently sunxi clock
+> driver doesn't support higher speed.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
- .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 31 +++++++++++++++++++
- 1 file changed, 31 insertions(+)
+Queued for 5.3, thanks
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-index b3b04736a159..1fd9f429f34a 100644
---- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-@@ -5,6 +5,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include <dt-bindings/clock/qcom,mmcc-msm8974.h>
- 
- / {
- 	model = "LGE MSM 8974 HAMMERHEAD";
-@@ -306,6 +307,36 @@
- 				input-enable;
- 			};
- 		};
-+
-+		vibrator_pin: vibrator {
-+			pwm {
-+				pins = "gpio27";
-+				function = "gp1_clk";
-+
-+				drive-strength = <6>;
-+				bias-disable;
-+			};
-+
-+			enable {
-+				pins = "gpio60";
-+				function = "gpio";
-+			};
-+		};
-+	};
-+
-+	vibrator@fd8c3450 {
-+		compatible = "qcom,msm8974-vibrator";
-+		reg = <0xfd8c3450 0x400>;
-+
-+		vcc-supply = <&pm8941_l19>;
-+
-+		clocks = <&mmcc CAMSS_GP1_CLK>;
-+		clock-names = "pwm";
-+
-+		enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vibrator_pin>;
- 	};
- 
- 	sdhci@f9824900 {
--- 
-2.17.2
+Maxime
 
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--5iqdhuknfkakdubp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXN0k6QAKCRDj7w1vZxhR
+xcpbAP94oL8fh1mlEB3a33RqRRsd7gvpgLccANADmt8VCZXoqwD/e406SIQCBsZn
+wQUuZCMJTyAcG0gQw7aYdlXTEqtpaAg=
+=3MUP
+-----END PGP SIGNATURE-----
+
+--5iqdhuknfkakdubp--
