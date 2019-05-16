@@ -2,175 +2,108 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6ACC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15ECC04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D9220815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A7F205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:09:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="cXDvwoP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfEPRGk (ORCPT
+        id S1727264AbfEPRJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 13:06:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44430 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726406AbfEPRGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 13:06:40 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 749E03004155;
-        Thu, 16 May 2019 17:06:27 +0000 (UTC)
-Received: from x1.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 386EF5C70A;
-        Thu, 16 May 2019 17:06:22 +0000 (UTC)
-Date:   Thu, 16 May 2019 11:06:21 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        eric.auger.pro@gmail.com, joro@8bytes.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        dwmw2@infradead.org, lorenzo.pieralisi@arm.com,
-        robin.murphy@arm.com, will.deacon@arm.com, hanjun.guo@linaro.org,
-        sudeep.holla@arm.com
-Subject: Re: [PATCH v3 6/7] iommu: Introduce IOMMU_RESV_DIRECT_RELAXABLE
- reserved memory regions
-Message-ID: <20190516110621.1359c650@x1.home>
-In-Reply-To: <342a4aad-3abd-f9a8-05fd-e8e260bbb69d@redhat.com>
-References: <20190516100817.12076-1-eric.auger@redhat.com>
-        <20190516100817.12076-7-eric.auger@redhat.com>
-        <3e21e370-135e-2eab-dd99-50e19cd53b86@arm.com>
-        <403897e7-2af9-3fa9-2264-f66dfeda6fd7@redhat.com>
-        <214a20d2-9cb5-c23d-ad38-8a0dea729e00@arm.com>
-        <342a4aad-3abd-f9a8-05fd-e8e260bbb69d@redhat.com>
-Organization: Red Hat
+        Thu, 16 May 2019 13:09:15 -0400
+Received: from mail-eopbgr720051.outbound.protection.outlook.com ([40.107.72.51]:15529
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726891AbfEPRJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 13:09:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M3ya700rpjPkTv7AegvmK80EMTZuoqHzqSMl1zysNqc=;
+ b=cXDvwoP5mKy5EXwMv77ZbCCpCS8of06vXC+9uwwziS2Xx8pdBuAkdtDqei3N94+9Deej/7Ve/Rx8TANyCCN2cAGtq7n5dzvM04je68n+qZQL+WSLKVLMrD2NmWJiOJjpQ4y09rHUyA0rgFOsZONQDgEjw9QrnCgAASYhLPbDNgU=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2751.namprd12.prod.outlook.com (52.135.107.31) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Thu, 16 May 2019 17:09:11 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82%3]) with mapi id 15.20.1900.010; Thu, 16 May 2019
+ 17:09:11 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "Luck, Tony" <tony.luck@intel.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: RE: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Thread-Topic: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Thread-Index: AQHU/5PPbonhoiIaT0+tpMBUt0fOpKZt/3MAgAAEtbCAAA1jAIAAAELg
+Date:   Thu, 16 May 2019 17:09:11 +0000
+Message-ID: <SN6PR12MB26392B440ED735C26AA2C678F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+References: <20190430203206.104163-1-Yazen.Ghannam@amd.com>
+ <20190430203206.104163-6-Yazen.Ghannam@amd.com>
+ <20190516155202.GA11517@agluck-desk>
+ <SN6PR12MB26397B30A120E3426184727FF80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516165648.GB21857@zn.tnic>
+In-Reply-To: <20190516165648.GB21857@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-originating-ip: [208.54.70.211]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9c0e6d1d-7341-4a72-ff8c-08d6da21377e
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2751;
+x-ms-traffictypediagnostic: SN6PR12MB2751:
+x-microsoft-antispam-prvs: <SN6PR12MB2751E8C5F839EBBBC1C88A2DF80A0@SN6PR12MB2751.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0039C6E5C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(366004)(346002)(396003)(376002)(13464003)(199004)(189003)(6246003)(256004)(71190400001)(68736007)(4326008)(55016002)(6506007)(8936002)(86362001)(74316002)(54906003)(5660300002)(316002)(7696005)(81156014)(33656002)(2906002)(81166006)(52536014)(4744005)(71200400001)(9686003)(102836004)(25786009)(99286004)(53546011)(186003)(3846002)(6116002)(446003)(486006)(11346002)(26005)(476003)(76116006)(53936002)(66446008)(64756008)(66556008)(66946007)(73956011)(8676002)(76176011)(478600001)(229853002)(14454004)(6436002)(305945005)(66476007)(6916009)(7736002)(66066001)(72206003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2751;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 2Z+OvbUAvdE3dXrfraLzyoP9NCobp3B30BW6bTR2WIK8ibfYZRH3HPLcGElGa2H08WKVhTshhcZW9KAv2MrRGcJUXCTFAO4iGD3rtQKGZYHtW9umHcAl87tVv6fxx8DjxTz8jXNYobx1aiyqUeT/5cAeFkrXpHEA8JlKgyJkRTztZdfu8BWeeEcy9kWL0qgE8h8FqVsqzQ2vB+e/7iO1wza8K7DUY3DfVNdyk8qX5T+sBzoqzlgZNwugGC1HZF27HhOyzv7g0xaE09mdEioBxz8is0laX1HIfJoIpAvEdnGGo1fY9SuArDD4TTV2AMc9BE73jbN3v6biEmO3iHRYswGFwhhVMqQ8MsRj/5YOGfHoOZU8t5raUqpqI32UfOdILV171FobI0IrzSwJ3o1Mw0/16mZaUUQNsOdRhwDA53I=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 16 May 2019 17:06:39 +0000 (UTC)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c0e6d1d-7341-4a72-ff8c-08d6da21377e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 17:09:11.8839
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2751
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 May 2019 14:58:08 +0200
-Auger Eric <eric.auger@redhat.com> wrote:
-
-> Hi Jean-Philippe,
-> 
-> On 5/16/19 2:43 PM, Jean-Philippe Brucker wrote:
-> > On 16/05/2019 12:45, Auger Eric wrote:  
-> >> Hi Jean-Philippe,
-> >>
-> >> On 5/16/19 1:16 PM, Jean-Philippe Brucker wrote:  
-> >>> On 16/05/2019 11:08, Eric Auger wrote:  
-> >>>> Note: At the moment the sysfs ABI is not changed. However I wonder
-> >>>> whether it wouldn't be preferable to report the direct region as
-> >>>> "direct_relaxed" there. At the moment, in case the same direct
-> >>>> region is used by 2 devices, one USB/GFX and another not belonging
-> >>>> to the previous categories, the direct region will be output twice
-> >>>> with "direct" type.
-> >>>>
-> >>>> This would unblock Shameer's series:
-> >>>> [PATCH v6 0/7] vfio/type1: Add support for valid iova list management
-> >>>> https://patchwork.kernel.org/patch/10425309/  
-> >>>
-> >>> Thanks for doing this!
-> >>>  
-> >>>> which failed to get pulled for 4.18 merge window due to IGD
-> >>>> device assignment regression.
-> >>>>
-> >>>> v2 -> v3:
-> >>>> - fix direct type check
-> >>>> ---
-> >>>>  drivers/iommu/iommu.c | 12 +++++++-----
-> >>>>  include/linux/iommu.h |  6 ++++++
-> >>>>  2 files changed, 13 insertions(+), 5 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> >>>> index ae4ea5c0e6f9..28c3d6351832 100644
-> >>>> --- a/drivers/iommu/iommu.c
-> >>>> +++ b/drivers/iommu/iommu.c
-> >>>> @@ -73,10 +73,11 @@ struct iommu_group_attribute {
-> >>>>  };
-> >>>>  
-> >>>>  static const char * const iommu_group_resv_type_string[] = {
-> >>>> -	[IOMMU_RESV_DIRECT]	= "direct",
-> >>>> -	[IOMMU_RESV_RESERVED]	= "reserved",
-> >>>> -	[IOMMU_RESV_MSI]	= "msi",
-> >>>> -	[IOMMU_RESV_SW_MSI]	= "msi",
-> >>>> +	[IOMMU_RESV_DIRECT]			= "direct",
-> >>>> +	[IOMMU_RESV_DIRECT_RELAXABLE]		= "direct",
-> >>>> +	[IOMMU_RESV_RESERVED]			= "reserved",
-> >>>> +	[IOMMU_RESV_MSI]			= "msi",
-> >>>> +	[IOMMU_RESV_SW_MSI]			= "msi",
-> >>>>  };
-> >>>>  
-> >>>>  #define IOMMU_GROUP_ATTR(_name, _mode, _show, _store)		\
-> >>>> @@ -573,7 +574,8 @@ static int iommu_group_create_direct_mappings(struct iommu_group *group,
-> >>>>  		start = ALIGN(entry->start, pg_size);
-> >>>>  		end   = ALIGN(entry->start + entry->length, pg_size);
-> >>>>  
-> >>>> -		if (entry->type != IOMMU_RESV_DIRECT)
-> >>>> +		if (entry->type != IOMMU_RESV_DIRECT &&
-> >>>> +		    entry->type != IOMMU_RESV_DIRECT_RELAXABLE)  
-> >>>
-> >>> I'm trying to understand why you need to create direct mappings at all
-> >>> for these relaxable regions. In the host the region is needed for legacy
-> >>> device features, which are disabled (and cannot be re-enabled) when
-> >>> assigning the device to a guest?  
-> >> This follows Kevin's comment in the thread below:
-> >> https://patchwork.kernel.org/patch/10449103/#21957279
-> >>
-> >> In normal DMA API host path, those regions need to be 1-1 mapped. They
-> >> are likely to be accessed by the driver or FW at early boot phase or
-> >> even during execution, depending on features being used.
-> >>
-> >> That's the reason, according to Kevin we couldn't hide them.
-> >>
-> >> We just know that, in general, they are not used anymore when assigning
-> >> the device or if accesses are attempted this generally does not block
-> >> the assignment use case. For example, it is said in
-> >> https://github.com/qemu/qemu/blob/master/docs/igd-assign.txt that in
-> >> legacy IGD assignment use case, there may be "a small numbers of DMAR
-> >> faults when initially assigned".  
-> > 
-> > Hmm, fair enough. That doesn't sound too good, if the device might
-> > perform arbitrary writes into guest memory once new IOMMU mappings are
-> > in place. I was wondering if we could report some IOVA ranges as
-> > "available but avoid if possible".  
-> In Shameer's series we currently reject any vfio dma_map that would fall
-> into an RMRR (hence the regression on existing USB/GFX use case). With
-> the relaxable RMRR info we could imagine to let the userspace choose
-> whether we want to proceed with the dma_map despite the risk or
-> introduce a vfio_iommu_type1 module option (turned off by default for
-> not regressing existing USB/GFX passthrough) that would forbid dma_map
-> on relaxable RMRR regions.
-
-Yep, the risk that Jean-Philippe mentions is real, the IGD device has
-the stolen memory addresses latched into the hardware and we're unable
-to change that.  What we try to do now is trap page table writes to the
-device and translate them to a VM allocated stolen memory range, which
-is sufficient for getting a BIOS splash screen, but we really want to
-assume that the OS level driver just doesn't use the stolen memory
-range.  There was a time when it seemed like we could assume the Intel
-drivers were heading in that direction, but it seems that's no longer
-an actual goal.  To fully support IGD assignment in a way that isn't as
-fragile as it is today, we'd want to re-export the RMRR out to
-userspace so that QEMU could identity map it into the VM address
-space.  That's not trivial, it's only one of several issues around
-IGD assignment, and we've got GVT-g (Intel vGPUs) now that don't impose
-these requirements, so motivation to tackle the issue is somewhat
-reduced.
-
-With the changes here, we might want vfio to issue a warning when one
-of these relaxed reserved regions is ignored and we'd probably want a
-module option to opt-in to strict enforcement, where downstreams that
-don't claim to support IGD assignment might enforce this by default.
-Thanks,
-
-Alex
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1lZGFjLW93bmVyQHZn
+ZXIua2VybmVsLm9yZyA8bGludXgtZWRhYy1vd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFs
+ZiBPZiBCb3Jpc2xhdiBQZXRrb3YNCj4gU2VudDogVGh1cnNkYXksIE1heSAxNiwgMjAxOSAxMTo1
+NyBBTQ0KPiBUbzogR2hhbm5hbSwgWWF6ZW4gPFlhemVuLkdoYW5uYW1AYW1kLmNvbT4NCj4gQ2M6
+IEx1Y2ssIFRvbnkgPHRvbnkubHVja0BpbnRlbC5jb20+OyBsaW51eC1lZGFjQHZnZXIua2VybmVs
+Lm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgeDg2QGtlcm5lbC5vcmcNCj4gU3Vi
+amVjdDogUmU6IFtQQVRDSCB2MyA1LzZdIHg4Ni9NQ0U6IFNhdmUgTUNBIGNvbnRyb2wgYml0cyB0
+aGF0IGdldCBzZXQgaW4gaGFyZHdhcmUNCj4gDQo+IA0KPiBPbiBUaHUsIE1heSAxNiwgMjAxOSBh
+dCAwNDoxNDoxNFBNICswMDAwLCBHaGFubmFtLCBZYXplbiB3cm90ZToNCj4gPiBJIGNhbiBwdXQg
+YSB2ZW5kb3IgY2hlY2sgb24gdGhlIHJlYWQuIElzIHRoYXQgc3VmZmljaWVudD8NCj4gDQo+IE9y
+IHdlIGNhbiBkcm9wIHRoaXMgcGF0Y2guIFJlbWluZCBtZSBhZ2FpbiBwbHMgd2h5IGRvIHdlIG5l
+ZWQgaXQ/DQo+IA0KDQpTbyB0aGF0IHRoZSBzeXNmcyBmaWxlcyBzaG93IHRoZSBjb250cm9sIHZh
+bHVlcyB0aGF0IGFyZSBzZXQgaW4gdGhlIGhhcmR3YXJlLiBJdCBzZWVtZWQgbGlrZSB0aGlzIHdv
+dWxkIGJlIG1vcmUgaGVscGZ1bCB0aGFuIHNob3dpbmcgYWxsIDB4RidzLg0KDQpCdXQgSSdtIG9r
+YXkgd2l0aCBkcm9wcGluZyB0aGlzIHBhdGNoLiBQYXRjaCA2IGluIHRoaXMgc2V0IGRlcGVuZHMg
+b24gdGhpcywgc28gaXQnbGwgbmVlZCB0byBiZSBkcm9wcGVkIGFsc28uDQoNClNob3VsZCBJIHNl
+bmQgb3V0IGFub3RoZXIgdmVyc2lvbiBvZiB0aGlzIHNldD8NCg0KVGhhbmtzLA0KWWF6ZW4NCg==
