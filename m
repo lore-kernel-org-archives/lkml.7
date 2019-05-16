@@ -2,149 +2,161 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CE6C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51396C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0BE1206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2076B20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfEPKgG (ORCPT
+        id S1727090AbfEPKh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 06:36:06 -0400
-Received: from mail-it1-f200.google.com ([209.85.166.200]:50789 "EHLO
-        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726707AbfEPKgG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 06:36:06 -0400
-Received: by mail-it1-f200.google.com with SMTP id o128so2823788ita.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 03:36:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=LhHN0tU3zu6mk7XLekNQ7/scnTfIHU53ESCR4APT9Tc=;
-        b=ufHJa2qwaklB1xbuHCshc7fuZsNFIOsZmguA+bePNt6/BljqONOgpGs3ATlqngxzUp
-         NB9BA8+viI+Ww/46tmXS9hIBx5hdzpfoGMF12DZksfHAaGqBfAa8KFuoJM8Hp56lllIk
-         qc01/14qT/YJ5tSoRl7g+ij3u9BxaPEQtMt5UWfbyayyYkAUsqQsGp/im5+siYQeVRBP
-         bQlZptr4enPTY/MV+c6P+ZVpd/Y8hnyj9Z9GSMPHEvoSHZA/NVlHzwLgjzMIF7EiA3+h
-         7KnO32Eui+8i2P3Ic1/NxmeIte2VCWaoIJ3TMmESWeNL8DSslmMUCae2PAg0NRUOIQFr
-         1y0A==
-X-Gm-Message-State: APjAAAWb+1ySB8PM6/Az3j2fG8y1qWMDknYm+NU/zGSgBJ0xtP+x2x2r
-        ZQHCgRJRbbOmg3WiYfsUu/e/VDq661pBbJeVy0491Ug95HQT
-X-Google-Smtp-Source: APXvYqx3DvWTZV2v7GJqFMItdXJAUV8cfNX06DA2vdw7io8PcJ2XGvpgY4ZPjptBtISwge9fkB+MAHbi1T8oJaOHpzHL8FK7xViS
-MIME-Version: 1.0
-X-Received: by 2002:a24:320c:: with SMTP id j12mr11144698ita.131.1558002965245;
- Thu, 16 May 2019 03:36:05 -0700 (PDT)
-Date:   Thu, 16 May 2019 03:36:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004d7a870588fed573@google.com>
-Subject: general protection fault in ext4_mb_initialize_context
-From:   syzbot <syzbot+629b913164cba57e45ae@syzkaller.appspotmail.com>
-To:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Thu, 16 May 2019 06:37:58 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40810 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726943AbfEPKh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 06:37:57 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CD2419BF;
+        Thu, 16 May 2019 03:37:57 -0700 (PDT)
+Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.108])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C4E5B3F703;
+        Thu, 16 May 2019 03:37:55 -0700 (PDT)
+From:   Raphael Gault <raphael.gault@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     jpoimboe@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, julien.thierry@arm.com,
+        Raphael Gault <raphael.gault@arm.com>
+Subject: [RFC V2 00/16] objtool: Add support for Arm64
+Date:   Thu, 16 May 2019 11:36:39 +0100
+Message-Id: <20190516103655.5509-1-raphael.gault@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+As of now, objtool only supports the x86_64 architecture but the
+groundwork has already been done in order to add support for other
+architectures without too much effort.
 
-syzbot found the following crash on:
+This series of patches adds support for the arm64 architecture
+based on the Armv8.5 Architecture Reference Manual.
 
-HEAD commit:    8834f560 Linux 5.0-rc5
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14c8021f400000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8f00801d7b7c4fe6
-dashboard link: https://syzkaller.appspot.com/bug?extid=629b913164cba57e45ae
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Objtool will be a valuable tool to progress and provide more guarentees
+on live patching which is a work in progress for arm64.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Once we have the base of objtool working the next steps will be to
+port Peter Z's uaccess validation for arm64.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+629b913164cba57e45ae@syzkaller.appspotmail.com
+RFC: In order to differentiate the different uses of the `brk`
+instruction on arm64 I intended to use the
+`include/generated/asm-offsets.h` header file (copying it to
+tools/include/generated/asm-offsets.h). However since in is
+generated later than objtool in the build process I wasn't able to do
+it. I wanted to use it to have access to the info about the
+`struct alt_instr` and `struct bug_entry`.
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 7 Comm: kworker/u4:0 Not tainted 5.0.0-rc5 #59
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: writeback wb_workfn (flush-8:0)
-RIP: 0010:mutex_can_spin_on_owner kernel/locking/mutex.c:578 [inline]
-RIP: 0010:mutex_optimistic_spin kernel/locking/mutex.c:622 [inline]
-RIP: 0010:__mutex_lock_common kernel/locking/mutex.c:928 [inline]
-RIP: 0010:__mutex_lock+0x207/0x1310 kernel/locking/mutex.c:1072
-Code: 00 0f 85 bf 0f 00 00 49 8b 45 00 48 83 e0 f8 0f 84 88 09 00 00 48 8d  
-78 38 48 ba 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 <0f> b6 14 11 84  
-d2 74 09 80 fa 03 0f 8e 8b 10 00 00 8b 58 38 85 db
-kobject: 'loop1' (00000000ab6ceb2c): kobject_uevent_env
-RSP: 0018:ffff8880a986eec0 EFLAGS: 00010206
-kobject: 'loop1' (00000000ab6ceb2c): fill_kobj_path: path  
-= '/devices/virtual/block/loop1'
-RAX: 0000000000000fc0 RBX: ffff8880a98601c0 RCX: 00000000000001ff
-RDX: dffffc0000000000 RSI: 0000000000000008 RDI: 0000000000000ff8
-RBP: ffff8880a986f030 R08: 1ffffd1ffff85995 R09: fffff91ffff85996
-R10: fffff91ffff85995 R11: ffffe8ffffc2ccaf R12: fffffbfff14aad54
-R13: ffffe8ffffc2cca8 R14: ffff8880a98601c0 R15: 0000000000000fc0
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fd7fe09cdb8 CR3: 00000000a57b2000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000037568535 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
-  ext4_mb_group_or_file fs/ext4/mballoc.c:4210 [inline]
-  ext4_mb_initialize_context+0x7e6/0xbc0 fs/ext4/mballoc.c:4253
-  ext4_mb_new_blocks+0x5c4/0x3c70 fs/ext4/mballoc.c:4526
-  ext4_ext_map_blocks+0x3094/0x4e50 fs/ext4/extents.c:4404
-  ext4_map_blocks+0x8ec/0x1a20 fs/ext4/inode.c:636
-  mpage_map_one_extent fs/ext4/inode.c:2480 [inline]
-  mpage_map_and_submit_extent fs/ext4/inode.c:2533 [inline]
-  ext4_writepages+0x1e00/0x3540 fs/ext4/inode.c:2885
-  do_writepages+0xfc/0x2a0 mm/page-writeback.c:2335
-  __writeback_single_inode+0x11d/0x12f0 fs/fs-writeback.c:1349
-  writeback_sb_inodes+0x596/0xed0 fs/fs-writeback.c:1613
-  __writeback_inodes_wb+0xc3/0x260 fs/fs-writeback.c:1682
-  wb_writeback+0x87f/0xd00 fs/fs-writeback.c:1791
-  wb_check_start_all fs/fs-writeback.c:1915 [inline]
-  wb_do_writeback fs/fs-writeback.c:1941 [inline]
-  wb_workfn+0xae5/0x1190 fs/fs-writeback.c:1975
-  process_one_work+0x98e/0x1790 kernel/workqueue.c:2173
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2319
-  kthread+0x357/0x430 kernel/kthread.c:246
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
-Modules linked in:
----[ end trace 88f5eb75df3cc65e ]---
-RIP: 0010:mutex_can_spin_on_owner kernel/locking/mutex.c:578 [inline]
-RIP: 0010:mutex_optimistic_spin kernel/locking/mutex.c:622 [inline]
-RIP: 0010:__mutex_lock_common kernel/locking/mutex.c:928 [inline]
-RIP: 0010:__mutex_lock+0x207/0x1310 kernel/locking/mutex.c:1072
-Code: 00 0f 85 bf 0f 00 00 49 8b 45 00 48 83 e0 f8 0f 84 88 09 00 00 48 8d  
-78 38 48 ba 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 <0f> b6 14 11 84  
-d2 74 09 80 fa 03 0f 8e 8b 10 00 00 8b 58 38 85 db
-RSP: 0018:ffff8880a986eec0 EFLAGS: 00010206
-RAX: 0000000000000fc0 RBX: ffff8880a98601c0 RCX: 00000000000001ff
-RDX: dffffc0000000000 RSI: 0000000000000008 RDI: 0000000000000ff8
-RBP: ffff8880a986f030 R08: 1ffffd1ffff85995 R09: fffff91ffff85996
-R10: fffff91ffff85995 R11: ffffe8ffffc2ccaf R12: fffffbfff14aad54
-R13: ffffe8ffffc2cca8 R14: ffff8880a98601c0 R15: 0000000000000fc0
-FS:  0000000000000000(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fd7fe09cdb8 CR3: 0000000008871000 CR4: 00000000001426f0
-DR0: 0000000000000000 DR1: 0000000037568535 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Noteworthy points:
+* I still haven't figured out how to detect switch-tables on arm64. I
+have a better understanding of them but still haven't implemented checks
+as it doesn't look trivial at all.
+* I still use the `arch_is_sibling_call` function to differentiate the
+use cases of the `br` instruction on arm64. Even though I updated the
+checks, it is still based on going back in the instruction stream, which
+as Peter Z. pointed out is not safe. I shall work on an alternative
+solution.
+
+Changes from V2:
+* Rebase on the -tip tree (which contains the latest objtool features)
+* Split into more precise patches in order to highlight the changes
+that were made.
+* Correct patches coding style to comply with linux's style.
+* Refactor some code to avoid generating a fake instruction when
+decoding load/store of pairs of registers.
+* Make more elegant checks for arch-dependent features (switch-tables,
+special sections)
+* Include some patches to add exceptions in the kernel to prevent
+objtool from checking/warning in particular cases.
+* Introduce a new instruction type (INSN_UNKNOWN) to handle the cases
+when some data is stored inside a section marked as containing
+executable instructions.
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Raphael Gault (16):
+  objtool: Add abstraction for computation of symbols offsets
+  objtool: orc: Refactor ORC API for other architectures to implement.
+  objtool: Move registers and control flow to arch-dependent code
+  objtool: arm64: Add required implementation for supporting the aarch64
+    architecture in objtool.
+  objtool: arm64: Handle hypercalls as nops
+  arm64: alternative: Mark .altinstr_replacement as containing
+    executable instructions
+  objtool: special: Adapt special section handling
+  objtool: arm64: Adapt the stack frame checks for arm architecture
+  arm64: assembler: Add macro to annotate asm function having non
+    standard stack-frame.
+  arm64: sleep: Prevent stack frame warnings from objtool
+  objtool: arm64: Enable stack validation for arm64
+  arm64: kvm: Annotate non-standard stack frame functions
+  arm64: kernel: Add exception on kuser32 to prevent stack analysis
+  arm64: crypto: Add exceptions for crypto object to prevent stack
+    analysis
+  objtool: Introduce INSN_UNKNOWN type
+  arm64: kernel: Annotate non-standard stack frame functions
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ arch/arm64/Kconfig                            |    1 +
+ arch/arm64/crypto/Makefile                    |    3 +
+ arch/arm64/include/asm/alternative.h          |    2 +-
+ arch/arm64/include/asm/assembler.h            |   13 +
+ arch/arm64/kernel/Makefile                    |    3 +
+ arch/arm64/kernel/hyp-stub.S                  |    2 +
+ arch/arm64/kernel/sleep.S                     |    4 +
+ arch/arm64/kvm/hyp-init.S                     |    2 +
+ arch/arm64/kvm/hyp/entry.S                    |    2 +
+ tools/objtool/Build                           |    2 -
+ tools/objtool/arch.h                          |   21 +-
+ tools/objtool/arch/arm64/Build                |    8 +
+ tools/objtool/arch/arm64/bit_operations.c     |   67 +
+ tools/objtool/arch/arm64/decode.c             | 2809 +++++++++++++++++
+ .../objtool/arch/arm64/include/arch_special.h |   42 +
+ .../arch/arm64/include/asm/orc_types.h        |   96 +
+ .../arch/arm64/include/bit_operations.h       |   24 +
+ tools/objtool/arch/arm64/include/cfi.h        |   74 +
+ .../objtool/arch/arm64/include/insn_decode.h  |  211 ++
+ tools/objtool/arch/arm64/orc_dump.c           |   26 +
+ tools/objtool/arch/arm64/orc_gen.c            |   40 +
+ tools/objtool/arch/x86/Build                  |    3 +
+ tools/objtool/arch/x86/decode.c               |   16 +
+ tools/objtool/arch/x86/include/arch_special.h |   45 +
+ tools/objtool/{ => arch/x86/include}/cfi.h    |    0
+ tools/objtool/{ => arch/x86}/orc_dump.c       |    4 +-
+ tools/objtool/{ => arch/x86}/orc_gen.c        |  104 +-
+ tools/objtool/check.c                         |  239 +-
+ tools/objtool/check.h                         |    1 +
+ tools/objtool/elf.c                           |    3 +-
+ tools/objtool/orc.h                           |    4 +-
+ tools/objtool/special.c                       |   28 +-
+ tools/objtool/special.h                       |    3 +
+ 33 files changed, 3753 insertions(+), 149 deletions(-)
+ create mode 100644 tools/objtool/arch/arm64/Build
+ create mode 100644 tools/objtool/arch/arm64/bit_operations.c
+ create mode 100644 tools/objtool/arch/arm64/decode.c
+ create mode 100644 tools/objtool/arch/arm64/include/arch_special.h
+ create mode 100644 tools/objtool/arch/arm64/include/asm/orc_types.h
+ create mode 100644 tools/objtool/arch/arm64/include/bit_operations.h
+ create mode 100644 tools/objtool/arch/arm64/include/cfi.h
+ create mode 100644 tools/objtool/arch/arm64/include/insn_decode.h
+ create mode 100644 tools/objtool/arch/arm64/orc_dump.c
+ create mode 100644 tools/objtool/arch/arm64/orc_gen.c
+ create mode 100644 tools/objtool/arch/x86/include/arch_special.h
+ rename tools/objtool/{ => arch/x86/include}/cfi.h (100%)
+ rename tools/objtool/{ => arch/x86}/orc_dump.c (98%)
+ rename tools/objtool/{ => arch/x86}/orc_gen.c (69%)
+
+-- 
+2.17.1
+
