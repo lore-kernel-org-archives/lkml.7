@@ -2,114 +2,122 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24596C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95557C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2CAC20881
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2882070D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:47:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nh/TXYLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728726AbfEPWpx (ORCPT
+        id S1727958AbfEPWr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 18:45:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33388 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726920AbfEPWpx (ORCPT
+        Thu, 16 May 2019 18:47:28 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41528 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726685AbfEPWr2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 18:45:53 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4GMdFJe054368
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 18:45:52 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2shecwwbg5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 18:45:52 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Thu, 16 May 2019 23:45:49 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 16 May 2019 23:45:46 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4GMjj6D54460446
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 May 2019 22:45:45 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B87FF4CBD6;
-        Thu, 16 May 2019 22:45:45 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C43BC4CBD3;
-        Thu, 16 May 2019 22:45:44 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.80.98])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 16 May 2019 22:45:44 +0000 (GMT)
-Subject: Re: [PATCH 0/2] public key: IMA signer logging: Log public key of
- IMA Signature signer in IMA log
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi <nramas@linux.microsoft.com>,
-        Linux Integrity <linux-integrity@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Cc:     Balaji Balasubramanyan <balajib@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva@linux.microsoft.com>
-Date:   Thu, 16 May 2019 18:45:34 -0400
-In-Reply-To: <715a9b39-0cde-1ce0-2d01-68d4fc0f5333@linux.microsoft.com>
-References: <6b69f115-96cf-890a-c92b-0b2b05798357@linux.microsoft.com>
-         <1557854992.4139.69.camel@linux.ibm.com>
-         <715a9b39-0cde-1ce0-2d01-68d4fc0f5333@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19051622-0016-0000-0000-0000027C8816
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051622-0017-0000-0000-000032D9616B
-Message-Id: <1558046734.4507.28.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_18:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905160137
+        Thu, 16 May 2019 18:47:28 -0400
+Received: by mail-pg1-f194.google.com with SMTP id z3so2259818pgp.8
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 15:47:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=ClyRR3xF+6k+e4O73jcWzYdi+cDXlpCTB+70QdFxP5E=;
+        b=nh/TXYLZxXR8swyGizL/Ubk9TntErZ/LuRKKRmi3y9Xlf5f9WyYiRPn7DNX82aXjPi
+         dNLBdZJcHhZkCTol2lPAa2O41Vsu+ODryei4G+WmxolBrJAq3YZnGvuXlb9oLvQ8Xbsl
+         dl4YhD+Kb1oX/kZVi0UZloj7wJR50qv+uQLOyZN8K4JATr2TJsqvy2LHP4qae3eFM+3L
+         GhcMsanqX/Pqq1LMduxRz5buN0smq5NoQBmtpYCS9Moo8ZPCBFb/pXmxKBO5IgEWQjWT
+         ZobaPC7J5BbDl+uR+jPEbVbXy/Ijq/gU3aOe7exQUIW7HZSg4ZkZ5mDa5oAwtjuS8KsE
+         trjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=ClyRR3xF+6k+e4O73jcWzYdi+cDXlpCTB+70QdFxP5E=;
+        b=t4zqlieZhHt8h7ZIRt3kMRzF630A4qqoLOYKdRiY5rwbPp1MenGEFHUKSNN/Goqccn
+         cU1041wFBoKBKqTHEpkDpyb1+S0pEDRWH0aOzkdRjJ+4W0yAN9TjX0RFbSrg+Kipnn9q
+         nBwl2kBlaQbABK3b9Jvnlu391IiHtTZf2f/4vgr95fZspXOcWojKEpcLeA5pXXTQ3EE7
+         ZyakL/N0dokq5WgymLQUH93AzRgGoarp4HoCKM2MXknIUY2lN7yatrfnvEPrWKVqv6S/
+         ift0xjLCaC8coBUCcWWkUEJ9I8SAUb5hbtdrouBNGy631ghy0zhaHyoPMrkZwuv1BGqA
+         Xe1g==
+X-Gm-Message-State: APjAAAVIsunKdBCUtDv9cEyJmf21BN5DKTwIFjLbLyHPM+A+8w3LvSHl
+        qDUPnLCjIjCF7Yoys6J70tl3zw==
+X-Google-Smtp-Source: APXvYqwsB54b3xfi7QnhOhG/Zxm3b28yU+b7dCUTMJNmc6Tx+8DkJ6jZn/TKl+2/5FxbAZrXcF8IXQ==
+X-Received: by 2002:a63:903:: with SMTP id 3mr40813537pgj.400.1558046847139;
+        Thu, 16 May 2019 15:47:27 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:20fc:89b:acbc:4e17])
+        by smtp.googlemail.com with ESMTPSA id h26sm5863566pgh.26.2019.05.16.15.47.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 May 2019 15:47:26 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "kernelci.org bot" <bot@kernelci.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.4 000/266] 4.4.180-stable review
+In-Reply-To: <20190515151307.GA23599@kroah.com>
+References: <20190515090722.696531131@linuxfoundation.org> <5cdc2691.1c69fb81.bd8d8.7247@mx.google.com> <20190515151307.GA23599@kroah.com>
+Date:   Thu, 16 May 2019 15:47:25 -0700
+Message-ID: <7h1s0y9fuq.fsf@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-05-15 at 11:17 -0700, Lakshmi wrote:
-> Hi Mimi,
-> 
-> I would like to make sure I understood your feedback.
-> 
-> > 
-> > Why duplicate the certificate info on each record in the measurement
-> > list?  Why not add the certificate info once, as the key is loaded
-> > onto the .ima and .platform keyrings?
-> > 
-> 
-> key_create_or_update function in security/keys/key.c is called to 
-> add\update a key to a keyring. Are you suggesting that an IMA function 
-> be called from here to add the certificate info to the IMA log?
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-There's an existing LSM hook in alloc_key(), but the keyring isn't
-being passed.  Again a decision would need to be made as to whether
-this needs to be an LSM or IMA hook.
+> On Wed, May 15, 2019 at 07:47:45AM -0700, kernelci.org bot wrote:
+>> stable-rc/linux-4.4.y boot: 98 boots: 1 failed, 92 passed with 3 offline, 1 untried/unknown, 1 conflict (v4.4.179-267-gbe756dada5b7)
+>> 
+>> Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux-4.4.y/kernel/v4.4.179-267-gbe756dada5b7/
+>> Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.4.y/kernel/v4.4.179-267-gbe756dada5b7/
+>> 
+>> Tree: stable-rc
+>> Branch: linux-4.4.y
+>> Git Describe: v4.4.179-267-gbe756dada5b7
+>> Git Commit: be756dada5b771fe51be37a77ad0bdfba543fdae
+>> Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+>> Tested: 44 unique boards, 21 SoC families, 14 builds out of 190
+>> 
+>> Boot Regressions Detected:
+>> 
+>> arm:
+>> 
+>>     omap2plus_defconfig:
+>>         gcc-8:
+>>           omap4-panda:
+>>               lab-baylibre: new failure (last pass: v4.4.179-254-gce69be0d452a)
+>
+> Odd, is this specific to this release?
 
-> 
-> Our requirement is that the key information is available in the IMA log 
-> which is TPM backed.
-> 
+No, looks like a lab-specific hiccup.
 
-There's some confusion as to why adding the keys to the measurement
-list is needed.  Could you respond to Ken's questions please?
+A little bit further down in the original report (I know, not a useful
+place for it) was this:
 
-Mimi
+> Conflicting Boot Failure Detected: (These likely are not failures as other labs are reporting PASS. Needs review.)
+>  
+> arm:
+>     omap2plus_defconfig:
+> 	omap4-panda:
+> 	    lab-baylibre: FAIL (gcc-8)
+>	    lab-baylibre-seattle: PASS (gcc-8)
 
+which means the same board passed in one lab, but not the other,
+suggesting something.
+
+This is a bug in our email reports.  Regressions should not be reported
+whene there are conflicting results from labs.
+
+Kevin
