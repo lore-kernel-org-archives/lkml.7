@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A747C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3542CC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46BD720815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A9220815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:22:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbfEPNWb (ORCPT
+        id S1727675AbfEPNWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 16 May 2019 09:22:36 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45592 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726623AbfEPNWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 May 2019 09:22:31 -0400
-Received: from foss.arm.com ([217.140.101.70]:45580 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727604AbfEPNW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:22:29 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5DEC1715;
-        Thu, 16 May 2019 06:22:28 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E88219F6;
+        Thu, 16 May 2019 06:22:30 -0700 (PDT)
 Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.108])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 180383F703;
-        Thu, 16 May 2019 06:22:26 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 009623F703;
+        Thu, 16 May 2019 06:22:28 -0700 (PDT)
 From:   Raphael Gault <raphael.gault@arm.com>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
         will.deacon@arm.com, acme@kernel.org, mark.rutland@arm.com,
         Raphael Gault <raphael.gault@arm.com>
-Subject: [PATCH 3/6] arm64: pmu: Add function implementation to update event index in userpage.
-Date:   Thu, 16 May 2019 14:21:45 +0100
-Message-Id: <20190516132148.10085-4-raphael.gault@arm.com>
+Subject: [PATCH 4/6] arm64: pmu: Add hook to handle pmu-related undefined instructions
+Date:   Thu, 16 May 2019 14:21:46 +0100
+Message-Id: <20190516132148.10085-5-raphael.gault@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190516132148.10085-1-raphael.gault@arm.com>
 References: <20190516132148.10085-1-raphael.gault@arm.com>
@@ -41,81 +41,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to be able to access the counter directly for userspace,
-we need to provide the index of the counter using the userpage.
-We thus need to override the event_idx function to retrieve and
-convert the perf_event index to armv8 hardware index.
+In order to prevent the userspace processes which are trying to access
+the registers from the pmu registers on a big.LITTLE environment we
+introduce a hook to handle undefined instructions.
+
+The goal here is to prevent the process to be interrupted by a signal
+when the error is caused by the task being scheduled while accessing
+a counter, causing the counter access to be invalid. As we are not able
+to know efficiently the number of counters available physically on both
+pmu in that context we consider that any faulting access to a counter
+which is architecturally correct should not cause a SIGILL signal if
+the permissions are set accordingly.
 
 Signed-off-by: Raphael Gault <raphael.gault@arm.com>
 ---
- arch/arm64/kernel/perf_event.c |  4 ++++
- drivers/perf/arm_pmu.c         | 10 ++++++++++
- include/linux/perf/arm_pmu.h   |  2 ++
- 3 files changed, 16 insertions(+)
+ arch/arm64/kernel/perf_event.c | 68 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
 
 diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index 6164d389eed6..e6316f99f66b 100644
+index e6316f99f66b..760c947b58dd 100644
 --- a/arch/arm64/kernel/perf_event.c
 +++ b/arch/arm64/kernel/perf_event.c
-@@ -890,6 +890,8 @@ static int __armv8_pmuv3_map_event(struct perf_event *event,
- 	if (armv8pmu_event_is_64bit(event))
- 		event->hw.flags |= ARMPMU_EVT_64BIT;
+@@ -19,9 +19,11 @@
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
  
-+	event->hw.flags |= ARMPMU_EL0_RD_CNTR;
-+
- 	/* Only expose micro/arch events supported by this PMU */
- 	if ((hw_event_id > 0) && (hw_event_id < ARMV8_PMUV3_MAX_COMMON_EVENTS)
- 	    && test_bit(hw_event_id, armpmu->pmceid_bitmap)) {
-@@ -1188,6 +1190,8 @@ void arch_perf_update_userpage(struct perf_event *event,
- 	 */
- 	freq = arch_timer_get_rate();
- 	userpg->cap_user_time = 1;
-+	userpg->cap_user_rdpmc =
-+		!!(event->hw.flags & ARMPMU_EL0_RD_CNTR);
++#include <asm/cpu.h>
+ #include <asm/irq_regs.h>
+ #include <asm/perf_event.h>
+ #include <asm/sysreg.h>
++#include <asm/traps.h>
+ #include <asm/virt.h>
  
- 	clocks_calc_mult_shift(&userpg->time_mult, &shift, freq,
- 			NSEC_PER_SEC, 0);
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index eec75b97e7ea..3f4c2ec7ff89 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -777,6 +777,15 @@ static void cpu_pmu_destroy(struct arm_pmu *cpu_pmu)
- 					    &cpu_pmu->node);
+ #include <linux/acpi.h>
+@@ -993,6 +995,72 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+ 	return probe.present ? 0 : -ENODEV;
  }
  
-+
-+static int armpmu_event_idx(struct perf_event *event)
++static bool is_evcntr(u32 sys_reg)
 +{
-+	if (!(event->hw.flags & ARMPMU_EL0_RD_CNTR))
-+		return 0;
++	u32 CRn, Op0, Op1, CRm;
 +
-+	return event->hw.idx;
++	CRn = sys_reg_CRn(sys_reg);
++	CRm = sys_reg_CRm(sys_reg);
++	Op0 = sys_reg_Op0(sys_reg);
++	Op1 = sys_reg_Op1(sys_reg);
++
++	return (CRn == 0xE &&
++		(CRm & 0xc) == 0x8 &&
++		Op1 == 0x3 &&
++		Op0 == 0x3);
 +}
 +
- static struct arm_pmu *__armpmu_alloc(gfp_t flags)
++static int emulate_pmu(struct pt_regs *regs, u32 insn)
++{
++	u32 sys_reg, rt;
++	u32 pmuserenr;
++
++	sys_reg = (u32)aarch64_insn_decode_immediate(AARCH64_INSN_IMM_16, insn) << 5;
++	rt = aarch64_insn_decode_register(AARCH64_INSN_REGTYPE_RT, insn);
++	pmuserenr = read_sysreg(pmuserenr_el0);
++
++	if ((pmuserenr & (ARMV8_PMU_USERENR_ER|ARMV8_PMU_USERENR_CR)) !=
++	    (ARMV8_PMU_USERENR_ER|ARMV8_PMU_USERENR_CR))
++		return -EINVAL;
++
++	if (sys_reg != SYS_PMXEVCNTR_EL0 &&
++	    !is_evcntr(sys_reg))
++		return -EINVAL;
++
++	/*
++	 * We put 0 in the target register if we
++	 * are reading from pmu register. If we are
++	 * writing, we do nothing.
++	 */
++	if ((insn & 0xfff00000) == 0xd5300000)
++		pt_regs_write_reg(regs, rt, 0);
++	else if (sys_reg != SYS_PMSELR_EL0)
++		return -EINVAL;
++
++	arm64_skip_faulting_instruction(regs, 4);
++	return 0;
++}
++
++/*
++ * This hook will only be triggered by mrs
++ * instructions on PMU registers. This is mandatory
++ * in order to have a consistent behaviour even on
++ * big.LITTLE systems.
++ */
++static struct undef_hook pmu_hook = {
++	.instr_mask = 0xffff8800,
++	.instr_val  = 0xd53b8800,
++	.fn = emulate_pmu,
++};
++
++static int __init enable_pmu_emulation(void)
++{
++	register_undef_hook(&pmu_hook);
++	return 0;
++}
++
++core_initcall(enable_pmu_emulation);
++
+ static int armv8_pmu_init(struct arm_pmu *cpu_pmu)
  {
- 	struct arm_pmu *pmu;
-@@ -803,6 +812,7 @@ static struct arm_pmu *__armpmu_alloc(gfp_t flags)
- 		.start		= armpmu_start,
- 		.stop		= armpmu_stop,
- 		.read		= armpmu_read,
-+		.event_idx	= armpmu_event_idx,
- 		.filter_match	= armpmu_filter_match,
- 		.attr_groups	= pmu->attr_groups,
- 		/*
-diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-index 4641e850b204..3bef390c1069 100644
---- a/include/linux/perf/arm_pmu.h
-+++ b/include/linux/perf/arm_pmu.h
-@@ -30,6 +30,8 @@
-  */
- /* Event uses a 64bit counter */
- #define ARMPMU_EVT_64BIT		1
-+/* Allow access to hardware counter from userspace */
-+#define ARMPMU_EL0_RD_CNTR		2
- 
- #define HW_OP_UNSUPPORTED		0xFFFF
- #define C(_x)				PERF_COUNT_HW_CACHE_##_x
+ 	int ret = armv8pmu_probe_pmu(cpu_pmu);
 -- 
 2.17.1
 
