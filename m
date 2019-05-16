@@ -2,154 +2,94 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0749BC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA34CC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:05:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE55020862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:05:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="MhjOHc+1"
+	by mail.kernel.org (Postfix) with ESMTP id A4B2E20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:05:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbfEPOFO (ORCPT
+        id S1727738AbfEPOFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:05:14 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40998 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727651AbfEPOFN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:05:13 -0400
-Received: by mail-ed1-f65.google.com with SMTP id m4so5436770edd.8
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 07:05:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bYyJnADr9ubhW5oaXdh9WlhTHjyzAGu0DQI2eQ+pHaE=;
-        b=MhjOHc+12NO1kjqTg26hcfpFarWJK6UO4uKen3mnBZiVvgNz65ljzXS/ZRyK+jjEzc
-         /JF15wWLnH7LRgIqtY0MD+nIanFGFyFhIksGgTJWi2bGoTMD18BMjjca67gxxRvxi8+0
-         yQTTRxRIh7g2VDxBQ0zKZz1vXg1chuW2SN2qbepgb4FeuGMxhGooqxVI7+7FHAOj9N1M
-         FHodeukkhZGpge8teMzG2zc9TJCjzMji+6KCaGF81DZdV6StlcqORhINQ4uQjbmc8vco
-         TjK91z8PkXrFbRk1vdkCD5WKK6krFwmTdVA0wTPdFmhQ9BFoHPYiofHEVgNBJZi0CYJz
-         Lvrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bYyJnADr9ubhW5oaXdh9WlhTHjyzAGu0DQI2eQ+pHaE=;
-        b=PfD0/MvC0xitazkL56yZmFt41Ok5LlmEDqeBpCWTUC5yBmIBgMI4Ok5EwF+LJx5ENj
-         eEEImsp2FV/4XIcabdTR3NiWxWyh1pifjUwTn/Sj5+fxDmOcCNa+CFd1rKFPvVotOWWL
-         +QFx4GKwZ73fYFh+h9F6aCM13k+GdK+/GN0NX0bw2m/t1W3NQuVlmetZ0GQpd1F50f5K
-         0fcdWUuwzU5HVDw9JfsEaf4Je/U4lpMYIiHqeOQbfHG37eaHnp7PLeyxfY9rZqYkV39d
-         s/quipI7PULclaqkfLLkj2FrkRHzd79oWIavuVBIZoQPF9RAmza1wFgn81UANB6C61oz
-         sWfA==
-X-Gm-Message-State: APjAAAV6MnuIfywdRWv8g3t/KYr9th1cysT5hW/FtSOcdpWnAe8VPdJb
-        HF0VR61vbDpAAXccbWVZ/mRvNA==
-X-Google-Smtp-Source: APXvYqy/zkegU6awCybVYKMai3zZjnS7ZHStCqrWAP9elvrkEbm/ZCiD/6p0jcTly9aqPNEwI1KvNw==
-X-Received: by 2002:a17:906:65d2:: with SMTP id z18mr20105763ejn.68.1558015510995;
-        Thu, 16 May 2019 07:05:10 -0700 (PDT)
-Received: from brauner.io ([193.96.224.243])
-        by smtp.gmail.com with ESMTPSA id b53sm1120044edd.89.2019.05.16.07.05.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 16 May 2019 07:05:10 -0700 (PDT)
-Date:   Thu, 16 May 2019 16:05:08 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Jann Horn <jannh@google.com>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
+        Thu, 16 May 2019 10:05:34 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46916 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727570AbfEPOFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 10:05:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EEDAF1715;
+        Thu, 16 May 2019 07:05:33 -0700 (PDT)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B71163F5AF;
+        Thu, 16 May 2019 07:05:32 -0700 (PDT)
+Subject: Re: Bad virt_to_phys since commit 54c7a8916a887f35
+To:     Mark Rutland <mark.rutland@arm.com>, Christoph Hellwig <hch@lst.de>
+Cc:     linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 1/2] pid: add pidfd_open()
-Message-ID: <20190516140507.75crjbaulasw6mj6@brauner.io>
-References: <20190515100400.3450-1-christian@brauner.io>
- <CAKOZuesPF+ftwqsNDMBy1LpwJgWTNuQm9-E=C90sSTBYEEsDww@mail.gmail.com>
- <20190516130813.i66ujfzftbgpqhnh@brauner.io>
- <CAG48ez05OtBi_yX+071TrrfK3zKOn9h1kFyPr5rttiqQAZ0sEA@mail.gmail.com>
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+References: <20190516133820.GA43059@lakrids.cambridge.arm.com>
+ <20190516134105.GB43059@lakrids.cambridge.arm.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <e70ead93-2fe9-faf9-9e77-9df15809bad6@arm.com>
+Date:   Thu, 16 May 2019 15:05:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190516134105.GB43059@lakrids.cambridge.arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAG48ez05OtBi_yX+071TrrfK3zKOn9h1kFyPr5rttiqQAZ0sEA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 04:03:27PM +0200, Jann Horn wrote:
-> On Thu, May 16, 2019 at 3:08 PM Christian Brauner <christian@brauner.io> wrote:
-> > On Wed, May 15, 2019 at 10:45:06AM -0700, Daniel Colascione wrote:
-> > > On Wed, May 15, 2019 at 3:04 AM Christian Brauner <christian@brauner.io> wrote:
-> > > >
-> > > > This adds the pidfd_open() syscall. It allows a caller to retrieve pollable
-> > > > pidfds for a process which did not get created via CLONE_PIDFD, i.e. for a
-> > > > process that is created via traditional fork()/clone() calls that is only
-> > > > referenced by a PID:
-> [...]
-> > > > +/**
-> > > > + * pidfd_open() - Open new pid file descriptor.
-> > > > + *
-> > > > + * @pid:   pid for which to retrieve a pidfd
-> > > > + * @flags: flags to pass
-> > > > + *
-> > > > + * This creates a new pid file descriptor with the O_CLOEXEC flag set for
-> > > > + * the process identified by @pid. Currently, the process identified by
-> > > > + * @pid must be a thread-group leader. This restriction currently exists
-> > > > + * for all aspects of pidfds including pidfd creation (CLONE_PIDFD cannot
-> > > > + * be used with CLONE_THREAD) and pidfd polling (only supports thread group
-> > > > + * leaders).
-> > > > + *
-> > > > + * Return: On success, a cloexec pidfd is returned.
-> > > > + *         On error, a negative errno number will be returned.
-> > > > + */
-> > > > +SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
-> > > > +{
-> [...]
-> > > > +       if (pid <= 0)
-> > > > +               return -EINVAL;
-> > >
-> > > WDYT of defining pid == 0 to mean "open myself"?
-> >
-> > I'm torn. It be a nice shortcut of course but pid being 0 is usually an
-> > indicator for child processes. So unless the getpid() before
-> > pidfd_open() is an issue I'd say let's leave it as is. If you really
-> > want the shortcut might -1 be better?
+On 16/05/2019 14:41, Mark Rutland wrote:
+> On Thu, May 16, 2019 at 02:38:20PM +0100, Mark Rutland wrote:
+>> Hi,
+>>
+>> Since commit:
+>>
+>>   54c7a8916a887f35 ("initramfs: free initrd memory if opening /initrd.image fails")
 > 
-> Joining the bikeshed painting club: Please don't allow either 0 or -1
-> as shortcut for "self". James Forshaw found an Android security bug a
-> while back (https://bugs.chromium.org/p/project-zero/issues/detail?id=727)
-> that passed a PID to getpidcon(), except that the PID was 0
-> (placeholder for oneway binder transactions), and then the service
-> thought it was talking to itself. You could pick some other number and
-> provide a #define for that, but I think pidfd_open(getpid(), ...)
-> makes more sense.
+> Ugh, I dropped a paragarph here.
+> 
+> Since that commit, I'm seeing a boot-time splat on arm64 when using
+> CONFIG_DEBUG_VIRTUAL. I'm running an arm64 syzkaller instance, and this
+> kills the VM, preventing further testing, which is unfortunate.
+> 
+> Mark.
+> 
+>> IIUC prior to that commit, we'd only attempt to free an intird if we had
+>> one, whereas now we do so unconditionally. AFAICT, in this case
+>> initrd_start has not been initialized (I'm not using an initrd or
+>> initramfs on my system), so we end up trying virt_to_phys() on a bogus
+>> VA in free_initrd_mem().
+>>
+>> Any ideas on the right way to fix this?
 
-Yes, I agree. I left it as is for v1, i.e. no shortcut; getpid() should
-do.
+Your analysis looks right to me. In my review I'd managed to spot the
+change in behaviour when CONFIG_INITRAMFS_FORCE is set (the initrd is
+freed), but I'd overlooked what happens if initrd_start == 0 (the
+non-existent initrd is attempted to be freed).
 
-Christian
+I suspect the following is sufficient to fix the problem:
+
+----8<-----
+diff --git a/init/initramfs.c b/init/initramfs.c
+index 435a428c2af1..178130fd61c2 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -669,7 +669,7 @@ static int __init populate_rootfs(void)
+ 	 * If the initrd region is overlapped with crashkernel reserved region,
+ 	 * free only memory that is not part of crashkernel region.
+ 	 */
+-	if (!do_retain_initrd && !kexec_free_initrd())
++	if (!do_retain_initrd && initrd_start && !kexec_free_initrd())
+ 		free_initrd_mem(initrd_start, initrd_end);
+ 	initrd_start = 0;
+ 	initrd_end = 0;
