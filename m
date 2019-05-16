@@ -2,130 +2,112 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC304C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F5EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5A620848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:14:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="iLghvfw7"
+	by mail.kernel.org (Postfix) with ESMTP id E638320657
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfEPPOY (ORCPT
+        id S1727366AbfEPPP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:14:24 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:20354 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727109AbfEPPOY (ORCPT
+        Thu, 16 May 2019 11:15:57 -0400
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:25841 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726790AbfEPPP4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:14:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1558019662; x=1589555662;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:mime-version:
-   content-transfer-encoding;
-  bh=aig0jPNztAGTfLrveYmFoH55ckuO8R7q/yjW4HU7drI=;
-  b=iLghvfw7DmDA9oQ8+pD3fZJ8tfQBAcqoTsSof03pQz5NQtxfIF5gZNze
-   77VeFBmdUtotNCjrQa0lMLfgbEp/m1BkHc2jKKfHt8pyY0T+/84schARa
-   7RNr3cdBwry6M0njpPMlqe1BxVLxXLmBvLAi/oQPqpwUiET3aCQynh8x0
-   o=;
-X-IronPort-AV: E=Sophos;i="5.60,477,1549929600"; 
-   d="scan'208";a="800025988"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 16 May 2019 15:14:18 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x4GFEEo0036922
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Thu, 16 May 2019 15:14:18 GMT
-Received: from EX13D02EUC003.ant.amazon.com (10.43.164.10) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 16 May 2019 15:14:17 +0000
-Received: from EX13D02EUC001.ant.amazon.com (10.43.164.92) by
- EX13D02EUC003.ant.amazon.com (10.43.164.10) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 16 May 2019 15:14:16 +0000
-Received: from EX13D02EUC001.ant.amazon.com ([10.43.164.92]) by
- EX13D02EUC001.ant.amazon.com ([10.43.164.92]) with mapi id 15.00.1367.000;
- Thu, 16 May 2019 15:14:16 +0000
-From:   "Sironi, Filippo" <sironi@amazon.de>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-CC:     "Graf, Alexander" <graf@amazon.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-Subject: Re: [Xen-devel] [PATCH v2 1/2] KVM: Start populating /sys/hypervisor
- with KVM entries
-Thread-Topic: [Xen-devel] [PATCH v2 1/2] KVM: Start populating /sys/hypervisor
- with KVM entries
-Thread-Index: AQHVCmguTMwTmVyYP0+tMrT8Z/dQMaZtx8qAgAADQgCAAAG8gIAADxmAgAADWQA=
-Date:   Thu, 16 May 2019 15:14:16 +0000
-Message-ID: <649AEBAC-8408-4BC0-AA22-F721CC23648D@amazon.de>
-References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
- <1557847002-23519-1-git-send-email-sironi@amazon.de>
- <1557847002-23519-2-git-send-email-sironi@amazon.de>
- <e976f31b-2ccd-29ba-6a32-2edde49f867f@amazon.com>
- <7aae3e49-5b1c-96d1-466e-5b061305dc9d@citrix.com>
- <22fadfb1-e48d-ccb6-0e42-c105b7335d7a@amazon.com>
- <92f2f186-2e29-d798-84bd-7209e874f103@oracle.com>
-In-Reply-To: <92f2f186-2e29-d798-84bd-7209e874f103@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.165.224]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <6E2A8B9BB2A14F4E92BDE4A9FB721974@amazon.com>
+        Thu, 16 May 2019 11:15:56 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 308A33F7BB;
+        Thu, 16 May 2019 17:15:49 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id rg8RyAX5x_3t; Thu, 16 May 2019 17:15:48 +0200 (CEST)
+Received: from localhost (h-41-252.A163.priv.bahnhof.se [46.59.41.252])
+        (Authenticated sender: mb547485)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 7DC0A3F5A0;
+        Thu, 16 May 2019 17:15:48 +0200 (CEST)
+Date:   Thu, 16 May 2019 17:15:48 +0200
+From:   Fredrik Noring <noring@nocrew.org>
+To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>, "hch@lst.de" <hch@lst.de>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "marex@denx.de" <marex@denx.de>,
+        "JuergenUrban@gmx.de" <JuergenUrban@gmx.de>,
+        Leo Li <leoyang.li@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v2 0/3] prerequisites for device reserved local mem
+ rework
+Message-ID: <20190516151548.GB53952@sx9>
+References: <20190514143807.7745-1-laurentiu.tudor@nxp.com>
+ <9d34015d-c219-179b-3141-4b0de3530ac3@arm.com>
+ <20190514182931.GA2559@sx9>
+ <0e5f3b86-7a80-eec7-691b-34a123194208@nxp.com>
+ <20190515162858.GB17162@sx9>
+ <ed63c117-610c-ea49-f45e-727be220745f@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ed63c117-610c-ea49-f45e-727be220745f@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Laurentiu,
 
-> On 16. May 2019, at 17:02, Boris Ostrovsky <boris.ostrovsky@oracle.com> w=
-rote:
-> =
+> I took your code, added the missing mapping and placed it in a patch. 
+> Please see attached (compile tested only).
 
-> On 5/16/19 10:08 AM, Alexander Graf wrote:
->> =
+Thanks! Unfortunately, the OHCI fails with errors such as
 
->> My point is mostly that we should be as common
->> as possible when it comes to /sys/hypervisor, so that tools don't have
->> to care about the HV they're working against.
-> =
+	usb 1-1: device descriptor read/64, error -12
 
-> It might make sense to have a common sys-hypervisor.c file
-> (drivers/hypervisor/sys-hypervisor.c or some such), with
-> hypervisor-specific ops/callbacks/etc.
-> =
+that I tracked down to the calls
 
-> -boris
+	   hub_port_init
+	-> usb_control_msg
+	-> usb_internal_control_msg
+	-> usb_start_wait_urb
+	-> usb_submit_urb
+	-> usb_hcd_submit_urb
+	-> hcd->driver->urb_enqueue
+	-> ohci_urb_enqueue
+	-> ed_get
+	-> ed_alloc
+	-> dma_pool_zalloc
+	-> dma_pool_alloc
+	-> pool_alloc_page,
 
+which returns NULL. Then I noticed
 
-Yes, it definitely does. I would follow up with future patches to make it
-happen.
+	/* pool_alloc_page() might sleep, so temporarily drop &pool->lock */
 
-Filippo
+that might be a problem considering that the HCD handles pool memory in
+IRQ handlers, for instance:
 
+	   do_IRQ
+	-> generic_handle_irq
+	-> handle_level_irq
+	-> handle_irq_event
+	-> handle_irq_event_percpu
+	-> __handle_irq_event_percpu
+	-> usb_hcd_irq
+	-> ohci_irq
+	-> ohci_work
+	-> finish_urb
+	-> __usb_hcd_giveback_urb
+	-> usb_hcd_unmap_urb_for_dma
+	-> hcd_buffer_free
 
+Also, DMA_BUFFER_SIZE in ohci-ps2.c is only 256 KiB in total. Is the new
+pool implementation at least as efficient as the previous one?
 
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrer: Christian Schlaeger, Ralf Herbrich
-Ust-ID: DE 289 237 879
-Eingetragen am Amtsgericht Charlottenburg HRB 149173 B
-
-
+Fredrik
