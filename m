@@ -2,87 +2,97 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AE6C04E53
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95F33C072B1
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2647A20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 692E72087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:48:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="j9nGNhyM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbfEPBqi (ORCPT
+        id S1726761AbfEPBqf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 21:46:38 -0400
-Received: from mga18.intel.com ([134.134.136.126]:48771 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726314AbfEPAZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 20:25:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 17:25:19 -0700
-X-ExtLoop1: 1
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by fmsmga005.fm.intel.com with ESMTP; 15 May 2019 17:25:19 -0700
-Received: from fmsmsx114.amr.corp.intel.com (10.18.116.8) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 15 May 2019 17:25:18 -0700
-Received: from fmsmsx113.amr.corp.intel.com ([169.254.13.118]) by
- FMSMSX114.amr.corp.intel.com ([169.254.6.54]) with mapi id 14.03.0415.000;
- Wed, 15 May 2019 17:25:18 -0700
-From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
-To:     "Williams, Dan J" <dan.j.williams@intel.com>,
-        "cai@lca.pw" <cai@lca.pw>
-CC:     "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Weiny, Ira" <ira.weiny@intel.com>
-Subject: Re: [RESEND PATCH] nvdimm: fix some compilation warnings
-Thread-Topic: [RESEND PATCH] nvdimm: fix some compilation warnings
-Thread-Index: AQHVCmbrIPMA4NdLGku6pgbfwA21dKZtS3IAgAAQxYA=
-Date:   Thu, 16 May 2019 00:25:18 +0000
-Message-ID: <7ba8164b60be4e41707559ed6623f9462c942735.camel@intel.com>
-References: <20190514150735.39625-1-cai@lca.pw>
-         <CAPcyv4gGwyPf0j4rXRM3JjsjGSHB6bGdZfwg+v2y8NQ6hNVK8g@mail.gmail.com>
-In-Reply-To: <CAPcyv4gGwyPf0j4rXRM3JjsjGSHB6bGdZfwg+v2y8NQ6hNVK8g@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-x-originating-ip: [10.232.112.185]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A65C713145B05845999BB3A6BC695874@intel.com>
-Content-Transfer-Encoding: base64
+        Wed, 15 May 2019 21:46:35 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:39376 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726733AbfEPAWD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 20:22:03 -0400
+Received: by mail-oi1-f195.google.com with SMTP id v2so1200024oie.6
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 17:22:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bobcIcGI2hoSe5dAxap34CNUn9LKnTkS03oUmV7h0q4=;
+        b=j9nGNhyMsOaTVud6KO3dskijFfmT2ZQWGqLP7vYr40RYrbZpP2ISfBY4/jbvgTXbHD
+         PBNLGCVvSGEIW+pkvZWIknWRx7irtf13DgdR99Ie6/6xDxy1VgUpVBlwuK3ybEJWLqgW
+         utTN/SrtWzEr/dIFr8r1RtV1Jsh3YspspkZIMQzCSJBi0BrKaoBFZs55FZ0kUQ+CSg3y
+         cLNlzpERm8qRNJFebCDsd3GPaloqk3nhEzbkU4ir0yewDOVvjZvhY9NZ9QQfKgfHgQw3
+         Jf1vLci6RuObHmAw9PyVKzRBRDvCgYO0flvWfgK5uIBS1CIRxOGoy2HsIk/r+YmH4QgG
+         GIkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bobcIcGI2hoSe5dAxap34CNUn9LKnTkS03oUmV7h0q4=;
+        b=frxFidJUinNjz807bwzJlpH2vhIP8enY0nxAQuz8GnySw7uppZrgiv+YjmveIVT0Uh
+         NLbFTIhwBZ1WpH+vbjb7YISdMysXogiG8jk7cX3OrkCwohZ6eZb625TArLAQDu9YjZn/
+         rSYmquQF13dqUePPnfqHftAXXdu/XJlpm8j3TFOfH46vrMdW98PGrj7DxTIe1wDYx1We
+         fl8iFN0WvuElSIAI0JPnDtCFqi5ICjntSZg03qwHuddVB+kFvDDoiFuZgOhmfcFSiJnY
+         54aqQqR7bpfwNHjW5rkzwmREqxcE8gR8yKBo64mqmhehWWv2Xkh2XaBPAbLxeIlH74DS
+         k9AQ==
+X-Gm-Message-State: APjAAAXg0T34AEoGIMVdGfBFqacogAZrr40UripYi+ExVeMH3Yo9KFUQ
+        YXN9r/7AoyTS7LaHkNkNHUxrlyiwW+KGQTkRyi2BQA==
+X-Google-Smtp-Source: APXvYqzDrmQi77dAWBNc07ndDu3T5pa6iN0pcVHtAZNxLtfjwvQPS0Zb7sMkMpyK1B3ioBtGGZnPjQ/C8y0NssMQmSA=
+X-Received: by 2002:aca:b641:: with SMTP id g62mr5885998oif.149.1557966122846;
+ Wed, 15 May 2019 17:22:02 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190515192715.18000-1-vgoyal@redhat.com> <20190515192715.18000-13-vgoyal@redhat.com>
+In-Reply-To: <20190515192715.18000-13-vgoyal@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 15 May 2019 17:21:51 -0700
+Message-ID: <CAPcyv4i_-ri=w0jYJ4WjK4QD9E8pMzkGQNdMbt9H_nawDqYD3A@mail.gmail.com>
+Subject: Re: [PATCH v2 12/30] dax: remove block device dependencies
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA1LTE1IGF0IDE2OjI1IC0wNzAwLCBEYW4gV2lsbGlhbXMgd3JvdGU6DQo+
-IA0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL252ZGltbS9idHQuYyBiL2RyaXZlcnMvbnZkaW1t
-L2J0dC5jDQo+ID4gaW5kZXggNDY3MTc3NmY1NjIzLi45ZjAyYTk5Y2ZhYzAgMTAwNjQ0DQo+ID4g
-LS0tIGEvZHJpdmVycy9udmRpbW0vYnR0LmMNCj4gPiArKysgYi9kcml2ZXJzL252ZGltbS9idHQu
-Yw0KPiA+IEBAIC0xMjY5LDExICsxMjY5LDkgQEAgc3RhdGljIGludCBidHRfcmVhZF9wZyhzdHJ1
-Y3QgYnR0ICpidHQsIHN0cnVjdCBiaW9faW50ZWdyaXR5X3BheWxvYWQgKmJpcCwNCj4gPiANCj4g
-PiAgICAgICAgICAgICAgICAgcmV0ID0gYnR0X2RhdGFfcmVhZChhcmVuYSwgcGFnZSwgb2ZmLCBw
-b3N0bWFwLCBjdXJfbGVuKTsNCj4gPiAgICAgICAgICAgICAgICAgaWYgKHJldCkgew0KPiA+IC0g
-ICAgICAgICAgICAgICAgICAgICAgIGludCByYzsNCj4gPiAtDQo+ID4gICAgICAgICAgICAgICAg
-ICAgICAgICAgLyogTWVkaWEgZXJyb3IgLSBzZXQgdGhlIGVfZmxhZyAqLw0KPiA+IC0gICAgICAg
-ICAgICAgICAgICAgICAgIHJjID0gYnR0X21hcF93cml0ZShhcmVuYSwgcHJlbWFwLCBwb3N0bWFw
-LCAwLCAxLA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTlZESU1NX0lPX0FU
-T01JQyk7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYnR0X21hcF93cml0ZShhcmVuYSwg
-cHJlbWFwLCBwb3N0bWFwLCAwLCAxLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgTlZESU1NX0lPX0FUT01JQyk7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAg
-Z290byBvdXRfcnR0Ow0KPiANCj4gVGhpcyBkb2Vzbid0IGxvb2sgY29ycmVjdCB0byBtZSwgc2hv
-dWxkbid0IHdlIGF0IGxlYXN0IGJlIGxvZ2dpbmcgdGhhdA0KPiB0aGUgYmFkLWJsb2NrIGZhaWxl
-ZCB0byBiZSBwZXJzaXN0ZW50bHkgdHJhY2tlZD8NCg0KWWVzIGxvZ2dpbmcgaXQgc291bmRzIGdv
-b2QgdG8gbWUuIFFpYW4sIGNhbiB5b3UgaW5jbHVkZSB0aGlzIGluIHlvdXINCnJlc3BpbiBvciBz
-aGFsbCBJIHNlbmQgYSBmaXggZm9yIGl0IHNlcGFyYXRlbHkgKHNpbmNlIHdlIHdlcmUgYWx3YXlz
-DQppZ25vcmluZyB0aGUgZmFpbHVyZSBoZXJlIHJlZ2FyZGxlc3Mgb2YgdGhpcyBwYXRjaCk/DQoN
-Cg0K
+On Wed, May 15, 2019 at 12:28 PM Vivek Goyal <vgoyal@redhat.com> wrote:
+>
+> From: Stefan Hajnoczi <stefanha@redhat.com>
+>
+> Although struct dax_device itself is not tied to a block device, some
+> DAX code assumes there is a block device.  Make block devices optional
+> by allowing bdev to be NULL in commonly used DAX APIs.
+>
+> When there is no block device:
+>  * Skip the partition offset calculation in bdev_dax_pgoff()
+>  * Skip the blkdev_issue_zeroout() optimization
+>
+> Note that more block device assumptions remain but I haven't reach those
+> code paths yet.
+>
+
+Is there a generic object that non-block-based filesystems reference
+for physical storage as a bdev stand-in? I assume "sector_t" is still
+the common type for addressing filesystem capacity?
+
+It just seems to me that we should stop pretending that the
+filesystem-dax facility requires block devices and try to move this
+functionality to generically use a dax device across all interfaces.
