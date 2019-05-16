@@ -2,151 +2,89 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6E2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7A2C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C39E20833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:50:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WcewTOwA"
+	by mail.kernel.org (Postfix) with ESMTP id 81B212087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:53:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558014788;
+	bh=M/c+yYRX+0rot4S6x7CSSsHxUC8TWuladOOIMr9/RgY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wi3SkWwi4QlgzMvynrq9DHPSA9FoTiCAidrPya7Ux8tRsTd8fWXoFXaFT6AM6hsXA
+	 Gewlijl2UjNgyrQREmjB8T/XBTFhHtO9ufSDPBJyyv/+NZnlXsK56a3bAyhVvE0lYo
+	 3Ta3PjnPD72mlM5xeb7S3bsKRMdbTrMdK/tEkIMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbfEPNu2 (ORCPT
+        id S1727227AbfEPNxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:50:28 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:23312 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfEPNu2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:50:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1558014627; x=1589550627;
-  h=subject:to:references:from:message-id:date:mime-version:
-   in-reply-to:content-transfer-encoding;
-  bh=JOuNpojcOraO39wt6wtg3pPIWv2HnVSSFGiVGtHt9l8=;
-  b=WcewTOwALML73elL0hc9mJgtCi2I90JhH85yN4DCcBjPZDtn//38zjRt
-   q2HG0320gSL0awkSFG/ce0etAE5PB60dM83h53ZYUrm/3GBJnq8HvjzCi
-   arr7x/GCZyAHyDUZbtGJ2K+tcFNNka5VuQyWc8YNxykOx3XpOiO8pg9GZ
-   g=;
-X-IronPort-AV: E=Sophos;i="5.60,476,1549929600"; 
-   d="scan'208";a="800005507"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 16 May 2019 13:50:25 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x4GDoOfG043830
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Thu, 16 May 2019 13:50:24 GMT
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 16 May 2019 13:50:23 +0000
-Received: from macbook-2.local (10.43.161.34) by EX13D20UWC001.ant.amazon.com
- (10.43.162.244) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 16 May
- 2019 13:50:23 +0000
-Subject: Re: [PATCH v2 1/2] KVM: Start populating /sys/hypervisor with KVM
- entries
-To:     Filippo Sironi <sironi@amazon.de>, <linux-kernel@vger.kernel.org>,
-        <kvm@vger.kernel.org>, <borntraeger@de.ibm.com>,
-        <boris.ostrovsky@oracle.com>, <cohuck@redhat.com>,
-        <konrad.wilk@oracle.com>, <xen-devel@lists.xenproject.org>,
-        <vasu.srinivasan@oracle.com>
-References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
- <1557847002-23519-1-git-send-email-sironi@amazon.de>
- <1557847002-23519-2-git-send-email-sironi@amazon.de>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <e976f31b-2ccd-29ba-6a32-2edde49f867f@amazon.com>
-Date:   Thu, 16 May 2019 06:50:21 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Thu, 16 May 2019 09:53:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34858 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726692AbfEPNxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:53:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 06CCAAED7;
+        Thu, 16 May 2019 13:53:05 +0000 (UTC)
+Date:   Thu, 16 May 2019 15:52:59 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
+        keith.busch@intel.com, kirill.shutemov@linux.intel.com,
+        pasha.tatashin@oracle.com, alexander.h.duyck@linux.intel.com,
+        ira.weiny@intel.com, andreyknvl@google.com, arunks@codeaurora.org,
+        vbabka@suse.cz, cl@linux.com, riel@surriel.com,
+        keescook@chromium.org, hannes@cmpxchg.org, npiggin@gmail.com,
+        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
+        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
+        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH RFC 0/5] mm: process_vm_mmap() -- syscall for duplication
+ a process mapping
+Message-ID: <20190516135259.GU16651@dhcp22.suse.cz>
+References: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
+ <20190516133034.GT16651@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <1557847002-23519-2-git-send-email-sironi@amazon.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.43.161.34]
-X-ClientProxiedBy: EX13D06UWC002.ant.amazon.com (10.43.162.205) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190516133034.GT16651@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.05.19 08:16, Filippo Sironi wrote:
-> Start populating /sys/hypervisor with KVM entries when we're running on
-> KVM. This is to replicate functionality that's available when we're
-> running on Xen.
+On Thu 16-05-19 15:30:34, Michal Hocko wrote:
+> [You are defining a new user visible API, please always add linux-api
+>  mailing list - now done]
 > 
-> Start with /sys/hypervisor/uuid, which users prefer over
-> /sys/devices/virtual/dmi/id/product_uuid as a way to recognize a virtual
-> machine, since it's also available when running on Xen HVM and on Xen PV
-> and, on top of that doesn't require root privileges by default.
-> Let's create arch-specific hooks so that different architectures can
-> provide different implementations.
-> 
-> Signed-off-by: Filippo Sironi <sironi@amazon.de>
-
-I think this needs something akin to
-
-  https://www.kernel.org/doc/Documentation/ABI/stable/sysfs-hypervisor-xen
-
-to document which files are available.
-
-> ---
-> v2:
-> * move the retrieval of the VM UUID out of uuid_show and into
->   kvm_para_get_uuid, which is a weak function that can be overwritten
-> 
->  drivers/Kconfig              |  2 ++
->  drivers/Makefile             |  2 ++
->  drivers/kvm/Kconfig          | 14 ++++++++++++++
->  drivers/kvm/Makefile         |  1 +
->  drivers/kvm/sys-hypervisor.c | 30 ++++++++++++++++++++++++++++++
->  5 files changed, 49 insertions(+)
->  create mode 100644 drivers/kvm/Kconfig
->  create mode 100644 drivers/kvm/Makefile
->  create mode 100644 drivers/kvm/sys-hypervisor.c
-> 
-
+> On Wed 15-05-19 18:11:15, Kirill Tkhai wrote:
 [...]
+> > The proposed syscall aims to introduce an interface, which
+> > supplements currently existing process_vm_writev() and
+> > process_vm_readv(), and allows to solve the problem with
+> > anonymous memory transfer. The above example may be rewritten as:
+> > 
+> > 	void *buf;
+> > 
+> > 	buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
+> > 		   MAP_PRIVATE|MAP_ANONYMOUS, ...);
+> > 	recv(sock, buf, n * PAGE_SIZE, 0);
+> > 
+> > 	/* Sign of @pid is direction: "from @pid task to current" or vice versa. */
+> > 	process_vm_mmap(-pid, buf, n * PAGE_SIZE, remote_addr, PVMMAP_FIXED);
+> > 	munmap(buf, n * PAGE_SIZE);
 
-> +
-> +__weak const char *kvm_para_get_uuid(void)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static ssize_t uuid_show(struct kobject *obj,
-> +			 struct kobj_attribute *attr,
-> +			 char *buf)
-> +{
-> +	const char *uuid = kvm_para_get_uuid();
-> +	return sprintf(buf, "%s\n", uuid);
-
-The usual return value for the Xen /sys/hypervisor interface is
-"<denied>". Wouldn't it make sense to follow that pattern for the KVM
-one too? Currently, if we can not determine the UUID this will just
-return (null).
-
-Otherwise, looks good to me. Are you aware of any other files we should
-provide? Also, is there any reason not to implement ARM as well while at it?
-
-Alex
-
-> +}
-> +
-> +static struct kobj_attribute uuid = __ATTR_RO(uuid);
-> +
-> +static int __init uuid_init(void)
-> +{
-> +	if (!kvm_para_available())
-> +		return 0;
-> +	return sysfs_create_file(hypervisor_kobj, &uuid.attr);
-> +}
-> +
-> +device_initcall(uuid_init);
-> 
-
+AFAIU this means that you actually want to do an mmap of an anonymous
+memory with a COW semantic to the remote process right? How does the
+remote process find out where and what has been mmaped? What if the
+range collides? This sounds quite scary to me TBH. Why cannot you simply
+use shared memory for that?
+-- 
+Michal Hocko
+SUSE Labs
