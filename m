@@ -2,85 +2,87 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1BDC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9FF4C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 760152082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A3E72082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbfEPIZY (ORCPT
+        id S1726736AbfEPI0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 04:25:24 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:36199 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfEPIZX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 04:25:23 -0400
-Received: by mail-vs1-f66.google.com with SMTP id l20so1778738vsp.3;
-        Thu, 16 May 2019 01:25:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kom7CYU+qZNtW2jhA/vUJyPJXygJervJGsEuV/SOp60=;
-        b=iuMcoLFRmGqCnoME87YxWMHfyLCUC+TKrE+vv6libXqIBnyoGZ6IbsvKwvOKa9FVlc
-         P7AWl7nqQN8ZKQr2KOWY7UtdMe25ui1Hq6NU20z1rf6JvmMLvg899FZ5irb/SIXBhI1W
-         VCTXfF9HUEyKA33cG9rxCavhm8Oy3MAl+pyNZDCTY7HR/PtRjWx5U+mRQMYE0tc71bu6
-         2azFS5w2Pi24ELZVx0GTM9x89nXy3fIqZ1Z4tUnzNlQvZmDejYxPAyj2mLy9loYBXmUc
-         XJIQvOjpyJ4OtJn0gn0ndEf1AaTVo+p1m3kVp5nQtw+B7GTKlFFbkWZOACC086cqqeBt
-         x08g==
-X-Gm-Message-State: APjAAAUGcwLAjT3wqhM3Y6Emu2G5NKIc+6FbphsXRiR47Vye4P63MFzc
-        l4d/2ACUUaIrN6oU/9n66sYVsIJEb7zxskWXlIQ=
-X-Google-Smtp-Source: APXvYqz8A+UKfZ2oOCYzeXseCIyYZ4wWUIDb6b9Gxt8lpJxZNlnNHTRGzBSCc2MdFNDG5Jw0r3bbHv8IOqodaorNY/Q=
-X-Received: by 2002:a67:fdd4:: with SMTP id l20mr18322924vsq.63.1557995122611;
- Thu, 16 May 2019 01:25:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190516075656.25880-1-yuehaibing@huawei.com>
-In-Reply-To: <20190516075656.25880-1-yuehaibing@huawei.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 16 May 2019 10:25:11 +0200
-Message-ID: <CAMuHMdUMBg9HL8PQvkHvppP+qJ6fWjs0ZbFTX=8x0A1_AVUJqw@mail.gmail.com>
-Subject: Re: [PATCH] spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Mark Brown <broonie@kernel.org>, Axel Lin <axel.lin@ingics.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>, albeu@free.fr,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 May 2019 04:26:37 -0400
+Received: from mga11.intel.com ([192.55.52.93]:22098 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726279AbfEPI0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 04:26:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 01:26:36 -0700
+X-ExtLoop1: 1
+Received: from skl-s2.bj.intel.com ([10.240.192.102])
+  by orsmga005.jf.intel.com with ESMTP; 16 May 2019 01:26:34 -0700
+From:   Luwei Kang <luwei.kang@intel.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, pbonzini@redhat.com, rkrcmar@redhat.com,
+        Luwei Kang <luwei.kang@intel.com>
+Subject: [PATCH v1 0/6] KVM: VMX: Intel PT configuration switch using XSAVES/XRSTORS on VM-Entry/Exit
+Date:   Thu, 16 May 2019 16:25:08 +0800
+Message-Id: <1557995114-21629-1-git-send-email-luwei.kang@intel.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 9:57 AM YueHaibing <yuehaibing@huawei.com> wrote:
-> If spi_register_master fails in spi_bitbang_start
-> because device_add failure, We should return the
-> error code other than 0, otherwise calling
-> spi_bitbang_stop may trigger NULL pointer dereference
-> like this:
->
-> BUG: KASAN: null-ptr-deref in __list_del_entry_valid+0x45/0xd0
-> Read of size 8 at addr 0000000000000000 by task syz-executor.0/3661
+This patch set is mainly used for reduce the overhead of switch
+Intel PT configuation contex on VM-Entry/Exit by XSAVES/XRSTORS
+instructions.
 
-[...]
+I measured the cycles number of context witch on Manual and
+XSAVES/XRSTORES by rdtsc, and the data as below:
 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 702a4879ec33 ("spi: bitbang: Let spi_bitbang_start() take a reference to master")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Manual save(rdmsr):     ~334  cycles
+Manual restore(wrmsr):  ~1668 cycles
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+XSAVES insturction:     ~124  cycles
+XRSTORS instruction:    ~378  cycles
 
-Gr{oetje,eeting}s,
+Manual: Switch the configuration by rdmsr and wrmsr instruction,
+        and there have 8 registers need to be saved or restore.
+        They are IA32_RTIT_OUTPUT_BASE, *_OUTPUT_MASK_PTRS,
+        *_STATUS, *_CR3_MATCH, *_ADDR0_A, *_ADDR0_B,
+        *_ADDR1_A, *_ADDR1_B.
+XSAVES/XRSTORS: Switch the configuration context by XSAVES/XRSTORS
+        instructions. This patch set will allocate separate
+        "struct fpu" structure to save host and guest PT state.
+        Only a small portion of this structure will be used because
+        we only save/restore PT state (not save AVX, AVX-512, MPX,
+        PKRU and so on).
 
-                        Geert
+This patch set also do some code clean e.g. patch 2 will reuse
+the fpu pt_state to save the PT configuration contex and
+patch 3 will dymamic allocate Intel PT configuration state.
+
+Luwei Kang (6):
+  x86/fpu: Introduce new fpu state for Intel processor trace
+  KVM: VMX: Reuse the pt_state structure for PT context
+  KVM: VMX: Dymamic allocate Intel PT configuration state
+  KVM: VMX: Allocate XSAVE area for Intel PT configuration
+  KVM: VMX: Intel PT configration context switch using XSAVES/XRSTORS
+  KVM: VMX: Get PT state from xsave area to variables
+
+ arch/x86/include/asm/fpu/types.h |  13 ++
+ arch/x86/kvm/vmx/nested.c        |   2 +-
+ arch/x86/kvm/vmx/vmx.c           | 338 ++++++++++++++++++++++++++-------------
+ arch/x86/kvm/vmx/vmx.h           |  21 +--
+ 4 files changed, 243 insertions(+), 131 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+1.8.3.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
