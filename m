@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A645C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D77C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14843216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C0C20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558006885;
-	bh=MC2s3zbRA8iOQPyUGePe0AyGmsVxC+FJgNnwH10foAk=;
+	s=default; t=1558006889;
+	bh=CaOX8HMPFwv8yZnzHXXt2cK0AbeaTHQTOz1dQJgJDJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vEXf1EdZ3nJZhQlE/mNknelRXlSo95oqnxWUIgopo/ALJTA2fBss08PnQ4JqqJDFC
-	 huKGkgxkHjP7med66PzCi2Tr8hr/IQHKZM5ZVWx+dNDain7/3CxpnovQYS6qwoc/IF
-	 Ck4WWJMS3nECCaQaTqSvXngL8un39Xv/p0MZTv9s=
+	b=JTZhJhq0QGOVaUIjsWCYXrHwwSS2s/21CdsG+NC+3TyaWFBDxFuRQiV0VR2u9FKW2
+	 tpHOpSQJ5SHV9haL+ZAVlRGrl7NeGzu+EoHlAR1MJh2dIpfcDhzoTSJzNjFJqFvdaO
+	 xlZZklk+cU7LGXcQbtuL1WA+zdaqGji/X/5FUQEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbfEPLlY (ORCPT
+        id S1728192AbfEPLl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:41:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50016 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:41:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728109AbfEPLlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:41:19 -0400
+        id S1728167AbfEPLlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:41:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9ED6520848;
-        Thu, 16 May 2019 11:41:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A116D20848;
+        Thu, 16 May 2019 11:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006879;
-        bh=MC2s3zbRA8iOQPyUGePe0AyGmsVxC+FJgNnwH10foAk=;
+        s=default; t=1558006884;
+        bh=CaOX8HMPFwv8yZnzHXXt2cK0AbeaTHQTOz1dQJgJDJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=07umikDFeoAfnmAjcfDjCuS8X/dnh012/6/mFXsKUVtpW8YB/1rYGML/s7U2MSWOL
-         Nb4kBsq9241QOPYAr9yPnV2oY7+6/NLzLCW2iC6y1Q4cbKo5OKqd2JL90eFJP9+qC6
-         eYwizZyHJ7u/TvNANTFfGaPgQh3QUewaA7ryF2SE=
+        b=JxS0y/OwZWXYLTdQtX0iMDzF2FAcalOWWWKs0Ncr8pZkKSP24pXetnqdHBldBAq4x
+         j6qiFdusMYv9Pz7f/2gKfFCDluZGLkpPFzj12AeLDIFyxR2HRng1sYwmfPKE/84YJW
+         A1/ffi1AYTknbv7cpC0LM3TpUDtSgGxmbSNtl8HY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrew Jones <drjones@redhat.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
-Subject: [PATCH AUTOSEL 4.14 10/16] KVM: arm/arm64: Ensure vcpu target is unset on reset failure
-Date:   Thu, 16 May 2019 07:41:01 -0400
-Message-Id: <20190516114107.8963-10-sashal@kernel.org>
+Cc:     "Tobin C. Harding" <tobin@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 13/16] sched/cpufreq: Fix kobject memleak
+Date:   Thu, 16 May 2019 07:41:04 -0400
+Message-Id: <20190516114107.8963-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516114107.8963-1-sashal@kernel.org>
 References: <20190516114107.8963-1-sashal@kernel.org>
@@ -59,55 +65,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Jones <drjones@redhat.com>
+From: "Tobin C. Harding" <tobin@kernel.org>
 
-[ Upstream commit 811328fc3222f7b55846de0cd0404339e2e1e6d7 ]
+[ Upstream commit 9a4f26cc98d81b67ecc23b890c28e2df324e29f3 ]
 
-A failed KVM_ARM_VCPU_INIT should not set the vcpu target,
-as the vcpu target is used by kvm_vcpu_initialized() to
-determine if other vcpu ioctls may proceed. We need to set
-the target before calling kvm_reset_vcpu(), but if that call
-fails, we should then unset it and clear the feature bitmap
-while we're at it.
+Currently the error return path from kobject_init_and_add() is not
+followed by a call to kobject_put() - which means we are leaking
+the kobject.
 
-Signed-off-by: Andrew Jones <drjones@redhat.com>
-[maz: Simplified patch, completed commit message]
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Fix it by adding a call to kobject_put() in the error path of
+kobject_init_and_add().
+
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tobin C. Harding <tobin@kernel.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Link: http://lkml.kernel.org/r/20190430001144.24890-1-tobin@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- virt/kvm/arm/arm.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ kernel/sched/cpufreq_schedutil.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-index 32aa88c19b8d5..4154f98b337c5 100644
---- a/virt/kvm/arm/arm.c
-+++ b/virt/kvm/arm/arm.c
-@@ -856,7 +856,7 @@ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_level,
- static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
- 			       const struct kvm_vcpu_init *init)
- {
--	unsigned int i;
-+	unsigned int i, ret;
- 	int phys_target = kvm_target_cpu();
+diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+index b314c9eaa71d3..f8c45d30ec6d0 100644
+--- a/kernel/sched/cpufreq_schedutil.c
++++ b/kernel/sched/cpufreq_schedutil.c
+@@ -600,6 +600,7 @@ static int sugov_init(struct cpufreq_policy *policy)
+ 	return 0;
  
- 	if (init->target != phys_target)
-@@ -891,9 +891,14 @@ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
- 	vcpu->arch.target = phys_target;
+ fail:
++	kobject_put(&tunables->attr_set.kobj);
+ 	policy->governor_data = NULL;
+ 	sugov_tunables_free(tunables);
  
- 	/* Now we know what it is, we can reset it. */
--	return kvm_reset_vcpu(vcpu);
--}
-+	ret = kvm_reset_vcpu(vcpu);
-+	if (ret) {
-+		vcpu->arch.target = -1;
-+		bitmap_zero(vcpu->arch.features, KVM_VCPU_MAX_FEATURES);
-+	}
- 
-+	return ret;
-+}
- 
- static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
- 					 struct kvm_vcpu_init *init)
 -- 
 2.20.1
 
