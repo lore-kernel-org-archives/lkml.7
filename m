@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A177C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AF4C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45D7320833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E8ED20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbfEPP67 (ORCPT
+        id S1727249AbfEPP6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:58:59 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42420 "EHLO
+        Thu, 16 May 2019 11:58:53 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42362 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726677AbfEPP6m (ORCPT
+        by vger.kernel.org with ESMTP id S1726523AbfEPP6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:58:42 -0400
+        Thu, 16 May 2019 11:58:41 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImD-0006yr-5r; Thu, 16 May 2019 16:58:37 +0100
+        id 1hRImE-0006zQ-7d; Thu, 16 May 2019 16:58:38 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImC-0001NF-Oe; Thu, 16 May 2019 16:58:36 +0100
+        id 1hRImD-0001Ob-BZ; Thu, 16 May 2019 16:58:37 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
+        bp@suse.de, "Thomas Gleixner" <tglx@linutronix.de>,
+        konrad.wilk@oracle.com,
+        "Dominik Brodowski" <linux@dominikbrodowski.net>
 Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.802319170@decadent.org.uk>
+Message-ID: <lsq.1558022133.174232137@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 12/86] jump_label, locking/static_keys: Rename
- JUMP_LABEL_TYPE_* and related helpers to the static_key* pattern
+Subject: [PATCH 3.16 28/86] x86/speculation: Simplify the CPU bug
+ detection logic
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,141 +57,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Dominik Brodowski <linux@dominikbrodowski.net>
 
-commit a1efb01feca597b2abbc89873b40ef8ec6690168 upstream.
+commit 8ecc4979b1bd9c94168e6fc92960033b7a951336 upstream.
 
-Rename the JUMP_LABEL_TYPE_* macros to be JUMP_TYPE_* and move the
-inline helpers into kernel/jump_label.c, since that's the only place
-they're ever used.
+Only CPUs which speculate can speculate. Therefore, it seems prudent
+to test for cpu_no_speculation first and only then determine whether
+a specific speculating CPU is susceptible to store bypass speculation.
+This is underlined by all CPUs currently listed in cpu_no_speculation
+were present in cpu_no_spec_store_bypass as well.
 
-Also rename the helpers where it's all about static keys.
-
-This is the second step in removing the naming confusion that has led to
-a stream of avoidable bugs such as:
-
-  a833581e372a ("x86, perf: Fix static_key bug in load_mm_cr4()")
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Dominik Brodowski <linux@dominikbrodowski.net>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@suse.de
+Cc: konrad.wilk@oracle.com
+Link: https://lkml.kernel.org/r/20180522090539.GA24668@light.dominikbrodowski.net
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/linux/jump_label.h | 25 +++++--------------------
- kernel/jump_label.c        | 25 ++++++++++++++++---------
- 2 files changed, 21 insertions(+), 29 deletions(-)
+ arch/x86/kernel/cpu/common.c | 22 +++++++---------------
+ 1 file changed, 7 insertions(+), 15 deletions(-)
 
---- a/include/linux/jump_label.h
-+++ b/include/linux/jump_label.h
-@@ -101,24 +101,9 @@ static inline int static_key_count(struc
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -825,12 +825,8 @@ static const __initconst struct x86_cpu_
+ 	{}
+ };
  
- #ifdef HAVE_JUMP_LABEL
++/* Only list CPUs which speculate but are non susceptible to SSB */
+ static const __initconst struct x86_cpu_id cpu_no_spec_store_bypass[] = {
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_PINEVIEW	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_LINCROFT	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_PENWELL		},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_CLOVERVIEW	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_CEDARVIEW	},
+ 	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT1	},
+ 	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_AIRMONT		},
+ 	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT2	},
+@@ -838,14 +834,10 @@ static const __initconst struct x86_cpu_
+ 	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_CORE_YONAH		},
+ 	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNL		},
+ 	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNM		},
+-	{ X86_VENDOR_CENTAUR,	5,					},
+-	{ X86_VENDOR_INTEL,	5,					},
+-	{ X86_VENDOR_NSC,	5,					},
+ 	{ X86_VENDOR_AMD,	0x12,					},
+ 	{ X86_VENDOR_AMD,	0x11,					},
+ 	{ X86_VENDOR_AMD,	0x10,					},
+ 	{ X86_VENDOR_AMD,	0xf,					},
+-	{ X86_VENDOR_ANY,	4,					},
+ 	{}
+ };
  
--#define JUMP_LABEL_TYPE_FALSE_BRANCH	0UL
--#define JUMP_LABEL_TYPE_TRUE_BRANCH	1UL
--#define JUMP_LABEL_TYPE_MASK		1UL
--
--static
--inline struct jump_entry *jump_label_get_entries(struct static_key *key)
--{
--	return (struct jump_entry *)((unsigned long)key->entries
--						& ~JUMP_LABEL_TYPE_MASK);
--}
--
--static inline bool jump_label_get_branch_default(struct static_key *key)
--{
--	if (((unsigned long)key->entries & JUMP_LABEL_TYPE_MASK) ==
--	    JUMP_LABEL_TYPE_TRUE_BRANCH)
--		return true;
--	return false;
--}
-+#define JUMP_TYPE_FALSE	0UL
-+#define JUMP_TYPE_TRUE	1UL
-+#define JUMP_TYPE_MASK	1UL
- 
- static __always_inline bool static_key_false(struct static_key *key)
+@@ -868,6 +860,12 @@ static void __init cpu_set_bug_bits(stru
  {
-@@ -147,10 +132,10 @@ extern void jump_label_apply_nops(struct
+ 	u64 ia32_cap = 0;
  
- #define STATIC_KEY_INIT_TRUE ((struct static_key)		\
- 	{ .enabled = ATOMIC_INIT(1),				\
--	  .entries = (void *)JUMP_LABEL_TYPE_TRUE_BRANCH })
-+	  .entries = (void *)JUMP_TYPE_TRUE })
- #define STATIC_KEY_INIT_FALSE ((struct static_key)		\
- 	{ .enabled = ATOMIC_INIT(0),				\
--	  .entries = (void *)JUMP_LABEL_TYPE_FALSE_BRANCH })
-+	  .entries = (void *)JUMP_TYPE_FALSE })
- 
- #else  /* !HAVE_JUMP_LABEL */
- 
---- a/kernel/jump_label.c
-+++ b/kernel/jump_label.c
-@@ -56,6 +56,11 @@ jump_label_sort_entries(struct jump_entr
- 
- static void jump_label_update(struct static_key *key, int enable);
- 
-+static inline bool static_key_type(struct static_key *key)
-+{
-+	return (unsigned long)key->entries & JUMP_TYPE_MASK;
-+}
++	if (x86_match_cpu(cpu_no_speculation))
++		return;
 +
- void static_key_slow_inc(struct static_key *key)
- {
- 	STATIC_KEY_CHECK_USE();
-@@ -64,7 +69,7 @@ void static_key_slow_inc(struct static_k
++	setup_force_cpu_bug(X86_BUG_SPECTRE_V1);
++	setup_force_cpu_bug(X86_BUG_SPECTRE_V2);
++
+ 	if (cpu_has(c, X86_FEATURE_ARCH_CAPABILITIES))
+ 		rdmsrl(MSR_IA32_ARCH_CAPABILITIES, ia32_cap);
  
- 	jump_label_lock();
- 	if (atomic_read(&key->enabled) == 0) {
--		if (!jump_label_get_branch_default(key))
-+		if (!static_key_type(key))
- 			jump_label_update(key, JUMP_LABEL_JMP);
- 		else
- 			jump_label_update(key, JUMP_LABEL_NOP);
-@@ -87,7 +92,7 @@ static void __static_key_slow_dec(struct
- 		atomic_inc(&key->enabled);
- 		schedule_delayed_work(work, rate_limit);
- 	} else {
--		if (!jump_label_get_branch_default(key))
-+		if (!static_key_type(key))
- 			jump_label_update(key, JUMP_LABEL_NOP);
- 		else
- 			jump_label_update(key, JUMP_LABEL_JMP);
-@@ -185,15 +190,17 @@ static void __jump_label_update(struct s
- 	}
- }
+@@ -876,12 +874,6 @@ static void __init cpu_set_bug_bits(stru
+ 	   !cpu_has(c, X86_FEATURE_AMD_SSB_NO))
+ 		setup_force_cpu_bug(X86_BUG_SPEC_STORE_BYPASS);
  
--static enum jump_label_type jump_label_type(struct static_key *key)
-+static inline struct jump_entry *static_key_entries(struct static_key *key)
- {
--	bool true_branch = jump_label_get_branch_default(key);
--	bool state = static_key_enabled(key);
-+	return (struct jump_entry *)((unsigned long)key->entries & ~JUMP_TYPE_MASK);
-+}
- 
--	if ((!true_branch && state) || (true_branch && !state))
--		return JUMP_LABEL_JMP;
-+static enum jump_label_type jump_label_type(struct static_key *key)
-+{
-+	bool enabled = static_key_enabled(key);
-+	bool type = static_key_type(key);
- 
--	return JUMP_LABEL_NOP;
-+	return enabled ^ type;
- }
- 
- void __init jump_label_init(void)
-@@ -449,7 +456,7 @@ int jump_label_text_reserved(void *start
- static void jump_label_update(struct static_key *key, int enable)
- {
- 	struct jump_entry *stop = __stop___jump_table;
--	struct jump_entry *entry = jump_label_get_entries(key);
-+	struct jump_entry *entry = static_key_entries(key);
- #ifdef CONFIG_MODULES
- 	struct module *mod;
+-	if (x86_match_cpu(cpu_no_speculation))
+-		return;
+-
+-	setup_force_cpu_bug(X86_BUG_SPECTRE_V1);
+-	setup_force_cpu_bug(X86_BUG_SPECTRE_V2);
+-
+ 	if (ia32_cap & ARCH_CAP_IBRS_ALL)
+ 		setup_force_cpu_cap(X86_FEATURE_IBRS_ENHANCED);
  
 
