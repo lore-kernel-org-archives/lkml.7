@@ -2,125 +2,92 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D167AC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14557C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA7420657
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE7EF20657
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:13:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="O6FAMfy1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727602AbfEPPMc (ORCPT
+        id S1727338AbfEPPNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:12:32 -0400
-Received: from mx1.mailbox.org ([80.241.60.212]:64364 "EHLO mx1.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727227AbfEPPMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:12:31 -0400
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx1.mailbox.org (Postfix) with ESMTPS id EE3654ECCC;
-        Thu, 16 May 2019 17:12:25 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
-        with ESMTP id XV0bnWpzQT6y; Thu, 16 May 2019 17:12:21 +0200 (CEST)
-Date:   Fri, 17 May 2019 01:12:02 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Christian Brauner <christian@brauner.io>, jannh@google.com,
-        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, arnd@arndb.de,
-        akpm@linux-foundation.org, dhowells@redhat.com,
-        ebiederm@xmission.com, elena.reshetova@intel.com,
-        keescook@chromium.org, luto@amacapital.net, luto@kernel.org,
-        tglx@linutronix.de, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, joel@joelfernandes.org,
-        dancol@google.com, serge@hallyn.com,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v1 1/2] pid: add pidfd_open()
-Message-ID: <20190516151202.hrawrx7hxllmz2di@yavin>
-References: <20190516135944.7205-1-christian@brauner.io>
- <20190516142659.GB22564@redhat.com>
- <20190516145607.j43xyj26k6l5vmbd@yavin>
- <20190516150611.GC22564@redhat.com>
+        Thu, 16 May 2019 11:13:48 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53078 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbfEPPNr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 11:13:47 -0400
+Received: by mail-wm1-f66.google.com with SMTP id y3so4043538wmm.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 08:13:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=izMGsuKh4OaKNtMmoPYzsuIZrqZf/ZhwaQ2KkK7m38Q=;
+        b=O6FAMfy1E00D7rfyyVnNT++z7+nbL/ykgXcd19bJdjprVpRdB+G16c25hH3CCNc6W+
+         2f/MiIs1l2FbyNBVpXESCwpqR7qXnF6Kym2i22WwkpehytRXPXfHRU9iREWYujFsUk5R
+         NMgcqnF0fMSrxSQWVrZc+u3ysgPSoEQD1VwH8EmPByCrBRrT7tydB1KD6BtZR2OMmp+q
+         e6NG1Bm3RXcnqejR21Uexr4xM8Kipef10MfzC2z1cS5HwnfN+wRMEzRFNv6VxsCYFQPi
+         rFknz5FMBYzuuegBU3qlaGwwmro6WEVkPjtQRe/DntnM8H4pdBoLobalW+Y0CBRAhLIp
+         ck9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=izMGsuKh4OaKNtMmoPYzsuIZrqZf/ZhwaQ2KkK7m38Q=;
+        b=XNwCjesr5jYf/XBxPNsz/WogPW//a2yQALPKtLT5wYEQJZ1sIMN93g8gxRDsRDOkkU
+         6QVQ1gohPe8HRrQzeWk9v/PCazokcD8UULRccIK3Di6VHZLmkNM7bkho+evqGJcquPtg
+         nh+hVqQbz5+Cw6gGekcbNj/ZpQCcfvm6lfqImv4SNL0pxI6uui4WnchLoVo1yQQ7bbmR
+         UeEWeHumCwaHjH6nMbno3U+PnE0pKU+a9IDB8q2vl6peLNAkgeMoYhoQSY/NpsxlLMOG
+         emf/HRL4FaZQUbYhlTgmvA0AsEdL8NfHbm2af3PhM0loIwEOkdD7abYyIuQFbfaZLaYy
+         Tj9g==
+X-Gm-Message-State: APjAAAVL37BNhSZ0UQMJGT4xuzj/xnGuFs8O+NmTVyneikVK0yrGfoFA
+        S+yisjvRKz2rJpBl5LYGzVeWog==
+X-Google-Smtp-Source: APXvYqwDQ8utDUGlwEyZtxj0oqgawoWJGWIrLrB1I0n5YfrN5JX8T21Fx+9+r0xjGOfXvlvWk6uSow==
+X-Received: by 2002:a1c:7a0d:: with SMTP id v13mr15628758wmc.44.1558019625939;
+        Thu, 16 May 2019 08:13:45 -0700 (PDT)
+Received: from boomer.lan (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.googlemail.com with ESMTPSA id 17sm6968126wrk.91.2019.05.16.08.13.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 May 2019 08:13:45 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] pinctrl: meson: pinconf output support
+Date:   Thu, 16 May 2019 17:13:37 +0200
+Message-Id: <20190516151339.25846-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ndso2fpbrge26y3v"
-Content-Disposition: inline
-In-Reply-To: <20190516150611.GC22564@redhat.com>
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset adds output support in the amlogic pinctrl driver.
 
---ndso2fpbrge26y3v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Linus, this patchset is based on the drive strength series from Guillaume
+which you just applied [0]
 
-On 2019-05-16, Oleg Nesterov <oleg@redhat.com> wrote:
-> On 05/17, Aleksa Sarai wrote:
-> > On 2019-05-16, Oleg Nesterov <oleg@redhat.com> wrote:
-> > > On 05/16, Christian Brauner wrote:
-> > > > With the introduction of pidfds through CLONE_PIDFD it is possible =
-to
-> > > > created pidfds at process creation time.
-> > >
-> > > Now I am wondering why do we need CLONE_PIDFD, you can just do
-> > >
-> > > 	pid =3D fork();
-> > > 	pidfd_open(pid);
-> >
-> > While the race window would be exceptionally short, there is the
-> > possibility that the child will die
->=20
-> Yes,
->=20
-> > and their pid will be recycled
-> > before you do pidfd_open().
->=20
-> No.
->=20
-> Unless the caller's sub-thread does wait() before pidfd_open(), of course.
-> Or unless you do signal(SIGCHILD, SIG_IGN).
+[0]: https://lkml.kernel.org/r/CACRpkdZ+p-J5Em3rzZcUwpA-a+CVOY91CgLqoRm_QVZP6E4Osw@mail.gmail.com
 
-What about CLONE_PARENT?
+Jerome Brunet (2):
+  dt-bindings: pinctrl: meson: add output support in pinconf
+  pinctrl: meson: add output support in pinconf
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+ .../bindings/pinctrl/meson,pinctrl.txt        |  12 +-
+ drivers/pinctrl/meson/pinctrl-meson.c         | 182 ++++++++++++------
+ 2 files changed, 136 insertions(+), 58 deletions(-)
 
---ndso2fpbrge26y3v
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.20.1
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlzdfcIACgkQSnvnv3De
-m5+LBg//TwYfNfdVTd12qfs8hOPFa2sx2DG90Wu3gEQ0F/cxogi+efP+RY/o+vPT
-i0FYUiX+aGQ5bpWOfMVytL5PElsRY03f8GZSbweGW0m2y7Kb2cH+wx6qxe2s4RKI
-JiNQ6UEIZcAHybLLKlbSaiIYMO1xmZxALchF/Nopq4lVDxpEKhOd8tJaZ5MWTQpi
-WCGuVct2Mq+z2FVkdRZl0CXoSf4usXm/bGe/3P1Z/6ZllIwheasZP5whVSybpQa/
-oDYZPJOHaPtKJ1DrXO3Qx5j17hltS97pT4DPWi/ad3AqMgHTdFoeuJOSLJzYZ3/d
-XFiu4svN/b+dzLj75k+ki4HwbUln+Zz0mnHkgLRYUWC9a7j3bOf2qBxx3eWCIhbz
-rRnc+kSy0Qu44pli5inNmPJF66MxVgMkvJtq1fmderaaywkBDjcgrsc7M9ScxUbW
-CfPKBIhSZgmfUYqG+NCGXcgJEv4iI3xkFwWfOXGnCjYSoQkgIcJvszd3cVwacLX9
-KImzTDjcb50CuNFbYtL5nOHjXl5cHDtsvASzSFZ1FIBZAwiXXnqQE2/byust72VY
-WpysP1WuZmkwYLs13DebotUCbSQsvFvyZO6DXuY7JgYXz+rSCdTF4+vG7mjqg3Uo
-UZk1XcunD1in53UE3nG2qfE9ayfhvwq6wQ+iSDdyfhDa9ocBjg8=
-=utbj
------END PGP SIGNATURE-----
-
---ndso2fpbrge26y3v--
