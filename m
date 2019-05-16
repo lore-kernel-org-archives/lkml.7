@@ -2,285 +2,95 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E61C3C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D203C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D4CB20818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9AB820818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:08:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="GRxeUQMC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2v0e0U1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbfEPNIV (ORCPT
+        id S1727470AbfEPNIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:08:21 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40368 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727015AbfEPNIU (ORCPT
+        Thu, 16 May 2019 09:08:42 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44290 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727310AbfEPNIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:08:20 -0400
-Received: by mail-ed1-f68.google.com with SMTP id j12so5178210eds.7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 06:08:19 -0700 (PDT)
+        Thu, 16 May 2019 09:08:42 -0400
+Received: by mail-pf1-f196.google.com with SMTP id g9so1821635pfo.11;
+        Thu, 16 May 2019 06:08:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jBAUBEgS9CTwipSrc6xzDmW1RVItxpv28CPVuXdSXxE=;
-        b=GRxeUQMCXOVh37t5Sw740ly8qtZPRUCCCuv9QrOvbPCErQEesLGEm7EKrXAe0Q9KJ8
-         Z2g505Ms1qmYsjpb12060y9byTSC8XMgPPOX3qoYUm7Wuo3GhPqSLBaepdYgRwIARNNw
-         f1qSmJlbONGpkHQJTh3piORC/JZieb0S9j9mqhLIuQMSaQYY9Fp7KshgDzX51htGan8m
-         Sxk2kN6la3ME1D8bVbdzuQqjT/ou0n6uk27GXJB7sFHnw9j78I+U5Nev2p4rx/U1wEC7
-         4Ntaz4NKM/S52nOQZW29Gzd4zoFa1reEayvlgt/ir0RYr/yiXPYA0rELPDQMlq2mdu1F
-         tVNw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=TpUJh8xmWCZIn3ut3vYXKe3CVBgzC6r7GRy49zcEzg4=;
+        b=g2v0e0U1HpV1wTsbSjaH9o502+3Bqtnzyy5tHc3jPNtzKGVEIEdwq/GWyak3paNVV9
+         2Ntx767VlInd3vqKrKOUvM7V1HGhZAUcAPspHSsCYamEPWtu2fuW8T7nJndnybYaoCBJ
+         QGQorTOVf6PNgZ2CA43U+7RO6hd7gbgwdDvFuTbTj0w2ZN9Ho5zMK+1hdyVAhZY6YFSq
+         gS3odjLplXN5NCTxuJQhSd+scbwY4sF4s3xP22HL8WE9c+SBYirpBBWrXCSRfcbFDgjL
+         7JMla4f+WLoLP+RFUp4UovyiqXBbiDKlXugyyL3ICgxoMvh7Xn6XUhO6tlWOgOOzFvj6
+         A3Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jBAUBEgS9CTwipSrc6xzDmW1RVItxpv28CPVuXdSXxE=;
-        b=Ek0qSCO7JHTiQTgeDkbGycpnSUi3jnTZbA3a0A/YNOmIUGzU1LJQxdU5fLbY1Edq54
-         pzdzLVPdm9b3AHBbiEuhfUja1XdG6BfGK4eCoJnii5HggxLUSWLJ1gSsEu7zyL5KcGb+
-         jRuBZhMwsF2i1r/wQ8ne9sJjp2f71+cfc6lafNaV6Lyg9MgoPzLKC/G8RmRWx6+bkyzp
-         pgBsOGkaEJ0z5/KofZuXsymrV3y4GZtX5bZCBfo6r0L115h61a3fqtYRHqCAlsd785ET
-         vKnMyD54j62/97FSELx+P7OxbjN916ynIVYdv5cUmNlfiqAu2qngpDIualKLUXaQeasr
-         mbbw==
-X-Gm-Message-State: APjAAAUqpNlN5THmEphbAFhwSeewkkTFeYm8NRiETPeS4NbpNk2MoZBt
-        DQYLD5R9BJ4CnjzRi3hbABWzjJ/8u0t4lQ==
-X-Google-Smtp-Source: APXvYqw6MgzOGs4eZ9bDhdi4eCkaorExR9i5a/NKq40xlcfMO66JmZJGeYkhHm/1LjUeLbq94zzeIA==
-X-Received: by 2002:a50:89bb:: with SMTP id g56mr49862849edg.124.1558012098308;
-        Thu, 16 May 2019 06:08:18 -0700 (PDT)
-Received: from brauner.io ([193.96.224.243])
-        by smtp.gmail.com with ESMTPSA id p17sm1815197edr.94.2019.05.16.06.08.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 16 May 2019 06:08:17 -0700 (PDT)
-Date:   Thu, 16 May 2019 15:08:15 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        elena.reshetova@intel.com, Kees Cook <keescook@chromium.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH 1/2] pid: add pidfd_open()
-Message-ID: <20190516130813.i66ujfzftbgpqhnh@brauner.io>
-References: <20190515100400.3450-1-christian@brauner.io>
- <CAKOZuesPF+ftwqsNDMBy1LpwJgWTNuQm9-E=C90sSTBYEEsDww@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKOZuesPF+ftwqsNDMBy1LpwJgWTNuQm9-E=C90sSTBYEEsDww@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TpUJh8xmWCZIn3ut3vYXKe3CVBgzC6r7GRy49zcEzg4=;
+        b=I+HNFmDujtFLaKeYxLkskOIniVG4hUnFvax9mfdBv9ZO5nCYb9A7C1IcpD8E+UuG0f
+         f779Ad3qV4ZxFWCE0+KiYMDVv3WVDEcJszx9EnN/jnoPi/THOMbMOJ5/TWDsKoqEahfv
+         AdwBHC5xUYOb2RIQxqq1HQ+4T1byPG0P7E8Dk82hq37t+6ndRzd/mtFQXXxRWnwr+IRJ
+         kqoDL5Q32Zw8WKsdUDjRyqd6aA9sfLkQKBny86XgaDqEN5VJ3tUTibla+Cpw/QE8JOkH
+         xSDWd/70VTJT4uWObz1dnGKpnCgs334E2oadqp/+2w4VspqIdM067bdgSfVqznAvFYg1
+         ZvJw==
+X-Gm-Message-State: APjAAAVw6cM9CUEmJIshRlIlGI/iLHgPywrt7qol3Ru2CNoWeHC+gHjy
+        PtbtgmMaTf5xtbTeTFeF0HY=
+X-Google-Smtp-Source: APXvYqyyLxju7G7/XX696dUrXPvqym+Z43/tS74KS05kbMPbTAzOS0igaTQ1mEPLz8KIpI5ElyKY7g==
+X-Received: by 2002:a63:17:: with SMTP id 23mr49640161pga.206.1558012121388;
+        Thu, 16 May 2019 06:08:41 -0700 (PDT)
+Received: from hydra-Latitude-E5440.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id b4sm6453216pfd.120.2019.05.16.06.08.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 May 2019 06:08:40 -0700 (PDT)
+From:   parna.naveenkumar@gmail.com
+To:     johan@kernel.org, gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Naveen Kumar Parna <parna.naveenkumar@gmail.com>
+Subject: [PATCH] USB: serial: mos7840: Prefer 'unsigned int' to bare use of 'unsigned'
+Date:   Thu, 16 May 2019 18:37:59 +0530
+Message-Id: <20190516130759.12996-1-parna.naveenkumar@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 10:45:06AM -0700, Daniel Colascione wrote:
-> On Wed, May 15, 2019 at 3:04 AM Christian Brauner <christian@brauner.io> wrote:
-> >
-> > This adds the pidfd_open() syscall. It allows a caller to retrieve pollable
-> > pidfds for a process which did not get created via CLONE_PIDFD, i.e. for a
-> > process that is created via traditional fork()/clone() calls that is only
-> > referenced by a PID:
-> 
-> Thanks for doing this work. I'm really looking forward to this new
-> approach to process management.
+From: Naveen Kumar Parna <parna.naveenkumar@gmail.com>
 
-Thanks! Glad to hear!
+This fixes checkpatch.pl warning "WARNING: Prefer 'unsigned int' to
+bare use of 'unsigned'".
 
-> 
-> > int pidfd = pidfd_open(1234, 0);
-> > ret = pidfd_send_signal(pidfd, SIGSTOP, NULL, 0);
-> >
-> > With the introduction of pidfds through CLONE_PIDFD it is possible to
-> > created pidfds at process creation time.
-> > However, a lot of processes get created with traditional PID-based calls
-> > such as fork() or clone() (without CLONE_PIDFD). For these processes a
-> > caller can currently not create a pollable pidfd. This is a huge problem
-> > for Android's low memory killer (LMK) and service managers such as systemd.
-> > Both are examples of tools that want to make use of pidfds to get reliable
-> > notification of process exit for non-parents (pidfd polling) and race-free
-> > signal sending (pidfd_send_signal()). They intend to switch to this API for
-> > process supervision/management as soon as possible. Having no way to get
-> > pollable pidfds from PID-only processes is one of the biggest blockers for
-> > them in adopting this api. With pidfd_open() making it possible to retrieve
-> > pidfd for PID-based processes we enable them to adopt this api.
-> >
-> > In line with Arnd's recent changes to consolidate syscall numbers across
-> > architectures, I have added the pidfd_open() syscall to all architectures
-> > at the same time.
-> 
-> I'm glad it's easier now.
-> 
-> >  arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
-> >  arch/arm64/include/asm/unistd32.h           |  2 +
-> >  arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
-> >  arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
-> >  arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
-> >  arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
-> >  arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
-> >  arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
-> >  arch/s390/kernel/syscalls/syscall.tbl       |  1 +
-> >  arch/sh/kernel/syscalls/syscall.tbl         |  1 +
-> >  arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
-> >  arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
-> >  arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
-> >  arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
-> 
-> It'd be nice to arrange the system call tables so that we need to
-> change only one file when adding a new system call.
-> 
-> [Snip system call wiring]
-> 
-> > --- a/include/linux/pid.h
-> > +++ b/include/linux/pid.h
-> > @@ -67,6 +67,7 @@ struct pid
-> >  extern struct pid init_struct_pid;
-> >
-> >  extern const struct file_operations pidfd_fops;
-> > +extern int pidfd_create(struct pid *pid);
-> >
-> >  static inline struct pid *get_pid(struct pid *pid)
-> >  {
-> > diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-> > index e2870fe1be5b..989055e0b501 100644
-> > --- a/include/linux/syscalls.h
-> > +++ b/include/linux/syscalls.h
-> > @@ -929,6 +929,7 @@ asmlinkage long sys_clock_adjtime32(clockid_t which_clock,
-> >                                 struct old_timex32 __user *tx);
-> >  asmlinkage long sys_syncfs(int fd);
-> >  asmlinkage long sys_setns(int fd, int nstype);
-> > +asmlinkage long sys_pidfd_open(pid_t pid, unsigned int flags);
-> >  asmlinkage long sys_sendmmsg(int fd, struct mmsghdr __user *msg,
-> >                              unsigned int vlen, unsigned flags);
-> >  asmlinkage long sys_process_vm_readv(pid_t pid,
-> > diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-> > index dee7292e1df6..94a257a93d20 100644
-> > --- a/include/uapi/asm-generic/unistd.h
-> > +++ b/include/uapi/asm-generic/unistd.h
-> > @@ -832,9 +832,11 @@ __SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
-> >  __SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
-> >  #define __NR_io_uring_register 427
-> >  __SYSCALL(__NR_io_uring_register, sys_io_uring_register)
-> > +#define __NR_pidfd_open 428
-> > +__SYSCALL(__NR_pidfd_open, sys_pidfd_open)
-> >
-> >  #undef __NR_syscalls
-> > -#define __NR_syscalls 428
-> > +#define __NR_syscalls 429
-> >
-> >  /*
-> >   * 32 bit systems traditionally used different
-> > diff --git a/kernel/fork.c b/kernel/fork.c
-> > index 737db1828437..980cc1d2b8d4 100644
-> > --- a/kernel/fork.c
-> > +++ b/kernel/fork.c
-> > @@ -1714,7 +1714,7 @@ const struct file_operations pidfd_fops = {
-> >   * Return: On success, a cloexec pidfd is returned.
-> >   *         On error, a negative errno number will be returned.
-> >   */
-> > -static int pidfd_create(struct pid *pid)
-> > +int pidfd_create(struct pid *pid)
-> >  {
-> >         int fd;
-> >
-> > diff --git a/kernel/pid.c b/kernel/pid.c
-> > index 20881598bdfa..237d18d6ecb8 100644
-> > --- a/kernel/pid.c
-> > +++ b/kernel/pid.c
-> > @@ -38,6 +38,7 @@
-> >  #include <linux/syscalls.h>
-> >  #include <linux/proc_ns.h>
-> >  #include <linux/proc_fs.h>
-> > +#include <linux/sched/signal.h>
-> >  #include <linux/sched/task.h>
-> >  #include <linux/idr.h>
-> >
-> > @@ -451,6 +452,53 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
-> >         return idr_get_next(&ns->idr, &nr);
-> >  }
-> >
-> > +/**
-> > + * pidfd_open() - Open new pid file descriptor.
-> > + *
-> > + * @pid:   pid for which to retrieve a pidfd
-> > + * @flags: flags to pass
-> > + *
-> > + * This creates a new pid file descriptor with the O_CLOEXEC flag set for
-> > + * the process identified by @pid. Currently, the process identified by
-> > + * @pid must be a thread-group leader. This restriction currently exists
-> > + * for all aspects of pidfds including pidfd creation (CLONE_PIDFD cannot
-> > + * be used with CLONE_THREAD) and pidfd polling (only supports thread group
-> > + * leaders).
-> > + *
-> > + * Return: On success, a cloexec pidfd is returned.
-> > + *         On error, a negative errno number will be returned.
-> > + */
-> > +SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
-> > +{
-> > +       int fd, ret;
-> > +       struct pid *p;
-> > +       struct task_struct *tsk;
-> > +
-> > +       if (flags)
-> > +               return -EINVAL;
-> 
-> If we support blocking operations on pidfds, we'll want to be able to
-> put them in non-blocking mode. Does it make sense to accept and ignore
-> O_NONBLOCK here now?
+Signed-off-by: Naveen Kumar Parna <parna.naveenkumar@gmail.com>
+---
+ drivers/usb/serial/mos7840.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hm, is there a race condition you see that would prevent you from using
-fcntl()? If you're ok with using fcntl() I would argue we should hold on
-tight to every bit we have for flags.
+diff --git a/drivers/usb/serial/mos7840.c b/drivers/usb/serial/mos7840.c
+index a698d46ba773..a610af4dea3f 100644
+--- a/drivers/usb/serial/mos7840.c
++++ b/drivers/usb/serial/mos7840.c
+@@ -1682,7 +1682,7 @@ static void mos7840_change_port_settings(struct tty_struct *tty,
+ 	struct moschip_port *mos7840_port, struct ktermios *old_termios)
+ {
+ 	int baud;
+-	unsigned cflag;
++	unsigned int cflag;
+ 	__u8 lData;
+ 	__u8 lParity;
+ 	__u8 lStop;
+-- 
+2.17.1
 
-> 
-> > +       if (pid <= 0)
-> > +               return -EINVAL;
-> 
-> WDYT of defining pid == 0 to mean "open myself"?
-
-I'm torn. It be a nice shortcut of course but pid being 0 is usually an
-indicator for child processes. So unless the getpid() before
-pidfd_open() is an issue I'd say let's leave it as is. If you really
-want the shortcut might -1 be better?
-
-> 
-> > +       p = find_get_pid(pid);
-> > +       if (!p)
-> > +               return -ESRCH;
-> > +
-> > +       rcu_read_lock();
-> > +       tsk = pid_task(p, PIDTYPE_PID);
-> > +       if (!tsk)
-> > +               ret = -ESRCH;
-> > +       else if (unlikely(!thread_group_leader(tsk)))
-> > +               ret = -EINVAL;
-> > +       else
-> > +               ret = 0;
-> > +       rcu_read_unlock();
-> > +
-> > +       fd = ret ?: pidfd_create(p);
-> > +       put_pid(p);
-> > +       return fd;
-> > +}
