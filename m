@@ -2,95 +2,121 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BD6C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541BEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351E520657
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:53:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558029220;
-	bh=em+LcIMo1nRKWU1S98ETA5A+61nFWT/rVEqPPgyWRiU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=yrW44hGG6IrGGxYNFBUdwbJdJwt7C+IbJ50DSdA4LkYnbRJrR5fSQZFkvfdWmvCGN
-	 tGoQzOx14JNe7OaqrA5y/2LHH6/7jRct6Q0bsxPAmXbsynDsIWs56rMs/KUKGzJjKq
-	 F9kfjUUID75XXUHaynMOUF3bU7qRvktFGTQ30K1A=
+	by mail.kernel.org (Postfix) with ESMTP id 2E76C20657
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:53:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbfEPRxj (ORCPT
+        id S1728959AbfEPRxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 13:53:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58088 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 13:53:54 -0400
+Received: from foss.arm.com ([217.140.101.70]:53524 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbfEPRxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 13:53:39 -0400
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03B3E20848;
-        Thu, 16 May 2019 17:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558029218;
-        bh=em+LcIMo1nRKWU1S98ETA5A+61nFWT/rVEqPPgyWRiU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NhEpJ5aRPKlU2+vcItCuQ8MNSjEIf4KpFA3ceVt7flBA7xug2UpluYPEZ6FDWggwG
-         DjBbNdY72lyEO2yBKmxvU4HPKi4VATQGp7L8K3vCLiz3S9n/6BdiJrVKJweH8dTQBX
-         A986OZaI98o6L3m4e2KcDS1gkp4wo1snU/wmfNFY=
-Received: by mail-ed1-f52.google.com with SMTP id m4so6438192edd.8;
-        Thu, 16 May 2019 10:53:37 -0700 (PDT)
-X-Gm-Message-State: APjAAAVeUij85gT822mBByHlhDUaq4jnh+OXcsp0gvgR6XnhHmNW8boj
-        KtFo6gtJ2indAv6jNayXEwx76hvWWJ8W1f1KzVk=
-X-Google-Smtp-Source: APXvYqytAu9VOj9PXAicNz313TptckgI5vyn3h4G51H3J9ziOL/EH2rkUdRE/4sTfwdgBiGqBTGyFk7WL2gjXkm+ODw=
-X-Received: by 2002:a50:b854:: with SMTP id k20mr51604420ede.224.1558029216606;
- Thu, 16 May 2019 10:53:36 -0700 (PDT)
+        id S1726441AbfEPRxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 13:53:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E15119BF;
+        Thu, 16 May 2019 10:53:53 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AE6B3F5AF;
+        Thu, 16 May 2019 10:53:50 -0700 (PDT)
+Subject: Re: [PATCH v3 6/7] iommu: Introduce IOMMU_RESV_DIRECT_RELAXABLE
+ reserved memory regions
+To:     Auger Eric <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
+        joro@8bytes.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, dwmw2@infradead.org,
+        lorenzo.pieralisi@arm.com, will.deacon@arm.com,
+        hanjun.guo@linaro.org, sudeep.holla@arm.com
+Cc:     alex.williamson@redhat.com, shameerali.kolothum.thodi@huawei.com
+References: <20190516100817.12076-1-eric.auger@redhat.com>
+ <20190516100817.12076-7-eric.auger@redhat.com>
+ <ad8a99fa-b98a-14d3-12be-74df0e6eb8f8@arm.com>
+ <57db1955-9d19-7c0b-eca3-37cc0d7d745b@redhat.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <fb9cd4ef-d91e-e526-fc6f-6cee43e70bb7@arm.com>
+Date:   Thu, 16 May 2019 18:53:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1556528151-17221-1-git-send-email-hao.wu@intel.com>
- <1556528151-17221-6-git-send-email-hao.wu@intel.com> <CANk1AXQSL8k=FOLv4_rLfRHBqOi=CW=yP3O8ch4VEa25cj9+Cw@mail.gmail.com>
-In-Reply-To: <CANk1AXQSL8k=FOLv4_rLfRHBqOi=CW=yP3O8ch4VEa25cj9+Cw@mail.gmail.com>
-From:   Alan Tull <atull@kernel.org>
-Date:   Thu, 16 May 2019 12:53:00 -0500
-X-Gmail-Original-Message-ID: <CANk1AXQCp2ozUQDWz__MuiUeDLvGvrfqj3KUYmBa5Z34oxG8NQ@mail.gmail.com>
-Message-ID: <CANk1AXQCp2ozUQDWz__MuiUeDLvGvrfqj3KUYmBa5Z34oxG8NQ@mail.gmail.com>
-Subject: Re: [PATCH v2 05/18] Documentation: fpga: dfl: add descriptions for
- virtualization and new interfaces.
-To:     Wu Hao <hao.wu@intel.com>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Xu Yilun <yilun.xu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <57db1955-9d19-7c0b-eca3-37cc0d7d745b@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 12:36 PM Alan Tull <atull@kernel.org> wrote:
->
-> On Mon, Apr 29, 2019 at 4:12 AM Wu Hao <hao.wu@intel.com> wrote:
+On 16/05/2019 14:23, Auger Eric wrote:
+> Hi Robin,
+> On 5/16/19 2:46 PM, Robin Murphy wrote:
+>> On 16/05/2019 11:08, Eric Auger wrote:
+>>> Introduce a new type for reserved region. This corresponds
+>>> to directly mapped regions which are known to be relaxable
+>>> in some specific conditions, such as device assignment use
+>>> case. Well known examples are those used by USB controllers
+>>> providing PS/2 keyboard emulation for pre-boot BIOS and
+>>> early BOOT or RMRRs associated to IGD working in legacy mode.
+>>>
+>>> Since commit c875d2c1b808 ("iommu/vt-d: Exclude devices using RMRRs
+>>> from IOMMU API domains") and commit 18436afdc11a ("iommu/vt-d: Allow
+>>> RMRR on graphics devices too"), those regions are currently
+>>> considered "safe" with respect to device assignment use case
+>>> which requires a non direct mapping at IOMMU physical level
+>>> (RAM GPA -> HPA mapping).
+>>>
+>>> Those RMRRs currently exist and sometimes the device is
+>>> attempting to access it but this has not been considered
+>>> an issue until now.
+>>>
+>>> However at the moment, iommu_get_group_resv_regions() is
+>>> not able to make any difference between directly mapped
+>>> regions: those which must be absolutely enforced and those
+>>> like above ones which are known as relaxable.
+>>>
+>>> This is a blocker for reporting severe conflicts between
+>>> non relaxable RMRRs (like MSI doorbells) and guest GPA space.
+>>>
+>>> With this new reserved region type we will be able to use
+>>> iommu_get_group_resv_regions() to enumerate the IOVA space
+>>> that is usable through the IOMMU API without introducing
+>>> regressions with respect to existing device assignment
+>>> use cases (USB and IGD).
+>>>
+>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>>>
+>>> ---
+>>>
+>>> Note: At the moment the sysfs ABI is not changed. However I wonder
+>>> whether it wouldn't be preferable to report the direct region as
+>>> "direct_relaxed" there. At the moment, in case the same direct
+>>> region is used by 2 devices, one USB/GFX and another not belonging
+>>> to the previous categories, the direct region will be output twice
+>>> with "direct" type.
+>>
+>> Hmm, that sounds a bit off - if we have overlapping regions within the
+>> same domain, then we need to do some additional pre-processing to adjust
+>> them anyway, since any part of a relaxable region which overlaps a
+>> non-relaxable region cannot actually be relaxed, and so really should
+>> never be described as such.
+> In iommu_insert_resv_region(), we are overlapping regions of the same
+> type. So iommu_get_group_resv_regions() should return both the relaxable
+> region and non relaxable one. I should test this again using a hacked
+> kernel though.
 
-Hi Hao,
+We should still consider relaxable regions as being able to merge back 
+in to regular direct regions to a degree - If a relaxable region falls 
+entirely within a direct one then there's no point exposing it because 
+the direct region *has* to take precedence and be enforced. If there is 
+an incomplete overlap then we could possibly just trust consumers to see 
+it and give the direct region precedence themselves, but since the 
+relaxable region is our own in-kernel invention rather than firmware 
+gospel I think it would be safer to truncate it to just its 
+non-overlapping part.
 
-Most of this patchset looks ready to go upstream or nearly so with
-pretty straightforward changes .  Patches 17 and 18 need minor changes
-and please change the scnprintf in the other patches.  The patches
-that had nontrivial changes are the power and thermal ones involving
-hwmon.  I'm hoping to send up the patchset minus the hwmon patches in
-the next version if there's no unforseen issues.  If the hwmon patches
-are ready then also, that's great, but otherwise those patches don't
-need to hold up all the rest of the patchset.  How's that sound?
-
-Alan
-
-> >
-> > This patch adds virtualization support description for DFL based
-> > FPGA devices (based on PCIe SRIOV), and introductions to new
-> > interfaces added by new dfl private feature drivers.
-> >
-> > Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> > Signed-off-by: Wu Hao <hao.wu@intel.com>
->
-> Acked-by: Alan Tull <atull@kernel.org>
->
-> Thanks,
-> Alan
+Robin.
