@@ -2,130 +2,72 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D046AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FDDC04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAD9D20833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9690F20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:17:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfEPMJ0 (ORCPT
+        id S1727264AbfEPMRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 08:09:26 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:33554 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbfEPMJ0 (ORCPT
+        Thu, 16 May 2019 08:17:53 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:54496 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726513AbfEPMRw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 08:09:26 -0400
-Received: by mail-qt1-f194.google.com with SMTP id m32so3577305qtf.0;
-        Thu, 16 May 2019 05:09:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=sbCp/GCfPLOrsqUDUZupXIkiqQehtjofpHZjd/C2f6o=;
-        b=phelwJK8avCLBE9VXGx5pnGXWN+omtK2q31jJBTwyrHn6SIWbRzgZWNUmQsg7/Wh4M
-         UPT6h5jDQjL23AW88V5OUxw22yZ9AIi2/e7wbEMdK5F4dGzzJYDBpkE4yVpis5H2mM8f
-         Yf6Q3soyczKNloj/9CP7uWUcsaunrZGwqr/nl7druhIps1+mtGN/dG5AxJfsVsnqbyi8
-         Tk5A/LVPO/c5QB7WDMld5ZaxXxJo+jnrCJtESfnLOGfBg8bIzuKSWC7T7lbzQo1HLah8
-         BmiACIkEf6Y1NJCTmTPP3g8HfBBiuAxgymFuD48Du0VpeZ99rIOkE//lB/yN/yIXXtUm
-         9Ttg==
-X-Gm-Message-State: APjAAAUbO+TkT6LE8GgO7P14eEHD1eA4tko693Xr4fWkEKco47qyqnnW
-        vZv9ifVaM55YUScaZnl9wU3o0Lzs6NiaWdhl6vp2uDFMXjkCxg==
-X-Google-Smtp-Source: APXvYqzpzoVn5D71fCLV7vftzgJjrpvGFK62g44SGJIS0A8jQiFvVPdcRTVpTxMHZpVzhMI2xYLwhWxRYcibR4GNA+Q=
-X-Received: by 2002:ac8:1c53:: with SMTP id j19mr41777461qtk.152.1558008564993;
- Thu, 16 May 2019 05:09:24 -0700 (PDT)
+        Thu, 16 May 2019 08:17:52 -0400
+Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4GCHI2r077140;
+        Thu, 16 May 2019 21:17:18 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp);
+ Thu, 16 May 2019 21:17:18 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4GCHBWG076893
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Thu, 16 May 2019 21:17:18 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: INFO: task hung in __get_super
+To:     Jan Kara <jack@suse.cz>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        syzbot <syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com>,
+        dvyukov@google.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        linux-block@vger.kernel.org
+References: <0000000000002cd22305879b22c4@google.com>
+ <201905150102.x4F12b6o009249@www262.sakura.ne.jp>
+ <20190515102133.GA16193@quack2.suse.cz>
+ <024bba2a-4d2f-1861-bfd9-819511bdf6eb@i-love.sakura.ne.jp>
+ <20190515130730.GA9526@quack2.suse.cz>
+ <20190516114817.GD13274@quack2.suse.cz>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <ca1e5916-73ee-6fc4-1d78-428691f7fc64@i-love.sakura.ne.jp>
+Date:   Thu, 16 May 2019 21:17:14 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 16 May 2019 14:09:08 +0200
-Message-ID: <CAK8P3a2+RHAReOZdo8nEvqDeC1EPj83L2Ug4JuVRiUh943AuNw@mail.gmail.com>
-Subject: [GIT PULL] asm-generic: kill <asm/segment.h> and improve nommu
- generic uaccess helpers
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190516114817.GD13274@quack2.suse.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[back from vacation now, sorry for the late pull request for this merge window]
+On 2019/05/16 20:48, Jan Kara wrote:
+> OK, so non-racy fix was a bit more involved and I've ended up just
+> upgrading the file reference to an exclusive one in loop_set_fd() instead
+> of trying to hand-craft some locking solution. The result is attached and
+> it passes blktests.
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
-
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git
-tags/asm-generic-nommu
-
-for you to fetch changes up to 6edd1dbace0e8529ed167e8a5f9da63c0cc763cc:
-
-  asm-generic: optimize generic uaccess for 8-byte loads and stores
-(2019-04-23 21:51:41 +0200)
-
-----------------------------------------------------------------
-asm-generic: kill <asm/segment.h> and improve nommu generic uaccess helpers
-
-Christoph Hellwig writes:
-
-  This is a series doing two somewhat interwinded things.  It improves
-  the asm-generic nommu uaccess helper to optionally be entirely generic
-  and not require any arch helpers for the actual uaccess.  For the
-  generic uaccess.h to actually be generically useful I also had to kill
-  off the mess we made of <asm/segment.h>, which really shouldn't exist
-  on most architectures.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-----------------------------------------------------------------
-Christoph Hellwig (4):
-      asm-generic: don't include <asm/segment.h> from <asm/uaccess.h>
-      arch: mostly remove <asm/segment.h>
-      asm-generic: provide entirely generic nommu uaccess
-      asm-generic: optimize generic uaccess for 8-byte loads and stores
-
- arch/alpha/include/asm/segment.h   |  6 ----
- arch/alpha/kernel/smc37c669.c      |  1 -
- arch/alpha/kernel/smc37c93x.c      |  1 -
- arch/arc/include/asm/uaccess.h     |  1 +
- arch/arm/include/asm/Kbuild        |  1 -
- arch/arm64/include/asm/Kbuild      |  1 -
- arch/c6x/include/asm/Kbuild        |  1 -
- arch/h8300/Kconfig                 |  1 +
- arch/h8300/include/asm/Kbuild      |  1 +
- arch/h8300/include/asm/uaccess.h   | 55 ------------------------------------
- arch/hexagon/include/asm/Kbuild    |  1 -
- arch/hexagon/include/asm/uaccess.h |  1 -
- arch/ia64/include/asm/segment.h    |  6 ----
- arch/mips/include/asm/Kbuild       |  1 -
- arch/nds32/include/asm/Kbuild      |  1 -
- arch/nios2/include/asm/Kbuild      |  1 -
- arch/openrisc/include/asm/Kbuild   |  1 -
- arch/openrisc/kernel/ptrace.c      |  1 -
- arch/openrisc/kernel/setup.c       |  1 -
- arch/openrisc/kernel/traps.c       |  1 -
- arch/openrisc/mm/init.c            |  1 -
- arch/openrisc/mm/tlb.c             |  1 -
- arch/parisc/include/asm/Kbuild     |  1 -
- arch/s390/include/asm/segment.h    |  5 ----
- arch/s390/kernel/ptrace.c          |  1 -
- arch/unicore32/include/asm/Kbuild  |  1 -
- arch/xtensa/include/asm/segment.h  | 16 -----------
- include/asm-generic/segment.h      |  9 ------
- include/asm-generic/uaccess.h      | 58 +++++++++++++++++++++++++++++++++++++-
- lib/Kconfig                        |  4 +++
- 30 files changed, 64 insertions(+), 117 deletions(-)
- delete mode 100644 arch/alpha/include/asm/segment.h
- delete mode 100644 arch/h8300/include/asm/uaccess.h
- delete mode 100644 arch/ia64/include/asm/segment.h
- delete mode 100644 arch/s390/include/asm/segment.h
- delete mode 100644 arch/xtensa/include/asm/segment.h
- delete mode 100644 include/asm-generic/segment.h
+blkdev_get() has corresponding blkdev_put().
+bdgrab() does not have corresponding bdput() ?
