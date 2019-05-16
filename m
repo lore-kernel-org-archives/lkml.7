@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EE8C04E87
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37487C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:42:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3BD12089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:42:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155BB2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:42:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbfEPJmt (ORCPT
+        id S1727224AbfEPJmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 05:42:49 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53935 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727179AbfEPJmr (ORCPT
+        Thu, 16 May 2019 05:42:50 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34161 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727159AbfEPJmp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 05:42:47 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 198so2878079wme.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 02:42:45 -0700 (PDT)
+        Thu, 16 May 2019 05:42:45 -0400
+Received: by mail-wm1-f66.google.com with SMTP id j187so6615739wma.1
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 02:42:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=I6Qf9WePQnjM1qP5GnvXQ6iGQgDn7ErWaVxKlruplAs=;
-        b=aakeEEMBdRn3zuLuopJRfhSbvE3+fo2f5/w26VGEteexomB6EjhoJ1RustBwrbduFn
-         kUJ2NGrESzVxI+DpwrLcIoulX5VQlMAIYGG5e88gEt5Jk/LYY5lIQmm6lF/hkywQ7qmL
-         eMLlUfhfFwHwo3B0AdwoRYFC7yYiNlP4Ng+p98qBT2c6HYMOTlNb8MQA/Ss2UGOZrsjp
-         QKGWJFyNGmJ4Sxk3ZeHKQdEIu71Bm9iUGJ1ICGwckUhp0LEaWQoyp8rpXkssvLc69a0g
-         Ip5dPlmk4ti+X3ZCardFN3R16T/586Bdya0qDoVLzvRzcLf59IVYXerOUKLoRLSfKF82
-         qhGA==
-X-Gm-Message-State: APjAAAWid0yEX3H2ydKz1fXH9F1a+nO1Wm1B6EEBpmdRoH2jRD92+mY6
-        ZGuTt+rvhWgfqeFsoqETcVd1KOmdoWQ+IA==
-X-Google-Smtp-Source: APXvYqwocKMkkFgpDNBPx7AOMP66gc9e2eLJvBHtDID7H77ayfvD2k23YyAA2hs51SHVNKxVSScv4w==
-X-Received: by 2002:a1c:a695:: with SMTP id p143mr27260709wme.128.1557999764844;
-        Thu, 16 May 2019 02:42:44 -0700 (PDT)
+        bh=ZZGnY1AeO4vEIRNllzlClW+UmlSDLeAarYqLIOTY4ZI=;
+        b=T4SumkTlMDJ3SSjFW8XB2Bt9lpn7ZUkT3MyJq8RNL9OneIMNtjcfT1B+/ufEP7eD4E
+         oRb3aae/cqfetFFl0BB47kWmPg+FRFckyjsU47aU1ELf9Mz2ao+0DcSoz4e3Elr2Kdqv
+         8N+HTOrk4Gs0GFT67wVvXpiNWTcUm8AoLUAtF/0e8IZYmPKE0yBBoNgcXYMCxBvZ7cHd
+         zYDhp27jrSGe0eJfSFDkJQicaMA9BwZPQCEmGajcwSa808EvUdZcUE62Dw+DXiSG4qi0
+         c+I2IW5DsZiviThGnlKHbieXsuvMRwwBOxrqQXDGsvwqYs0Z8aX2P4di/TMV3SPEpDFk
+         2D+Q==
+X-Gm-Message-State: APjAAAWTXB1/5syQ29wDZ0V0FttnEnqvaTkiDe//tJYjwTuShdwuzvMw
+        EVPFX7Mb/+r54lqB7ebMXdOiqAdUULNyag==
+X-Google-Smtp-Source: APXvYqzGCZsfZTLnp32ZXX+p/N913HP7wOvaTxVvqZVz8kRuhkb2Lox0z5g/+tp8DehjQ+5iLc3ZLg==
+X-Received: by 2002:a7b:c8d1:: with SMTP id f17mr14149157wml.45.1557999763188;
+        Thu, 16 May 2019 02:42:43 -0700 (PDT)
 Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id t15sm4635388wmt.2.2019.05.16.02.42.43
+        by smtp.gmail.com with ESMTPSA id s18sm4074000wmc.41.2019.05.16.02.42.42
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 May 2019 02:42:44 -0700 (PDT)
+        Thu, 16 May 2019 02:42:42 -0700 (PDT)
 From:   Oleksandr Natalenko <oleksandr@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
@@ -58,9 +58,9 @@ Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
         Aaron Tomlin <atomlin@redhat.com>,
         Grzegorz Halat <ghalat@redhat.com>, linux-mm@kvack.org,
         linux-api@vger.kernel.org
-Subject: [PATCH RFC 5/5] mm/ksm, proc: add remote madvise documentation
-Date:   Thu, 16 May 2019 11:42:34 +0200
-Message-Id: <20190516094234.9116-6-oleksandr@redhat.com>
+Subject: [PATCH RFC 4/5] mm/ksm, proc: introduce remote merge
+Date:   Thu, 16 May 2019 11:42:33 +0200
+Message-Id: <20190516094234.9116-5-oleksandr@redhat.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190516094234.9116-1-oleksandr@redhat.com>
 References: <20190516094234.9116-1-oleksandr@redhat.com>
@@ -71,44 +71,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document respective /proc/<pid>/madvise knob.
+Use previously introduced remote madvise knob to mark task's
+anonymous memory as mergeable.
+
+To force merging task's VMAs, "merge" hint is used:
+
+   # echo merge > /proc/<pid>/madvise
+
+Force unmerging is done similarly:
+
+   # echo unmerge > /proc/<pid>/madvise
+
+To achieve this, previously introduced ksm_madvise_*() helpers
+are used.
 
 Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
 ---
- Documentation/filesystems/proc.txt | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ fs/proc/base.c | 52 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 51 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-index 66cad5c86171..17106e435bba 100644
---- a/Documentation/filesystems/proc.txt
-+++ b/Documentation/filesystems/proc.txt
-@@ -45,6 +45,7 @@ Table of Contents
-   3.9   /proc/<pid>/map_files - Information about memory mapped files
-   3.10  /proc/<pid>/timerslack_ns - Task timerslack value
-   3.11	/proc/<pid>/patch_state - Livepatch patch operation state
-+  3.12  /proc/<pid>/madvise - Remote madvise
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index f69532d6b74f..6677580080ed 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -94,6 +94,8 @@
+ #include <linux/sched/debug.h>
+ #include <linux/sched/stat.h>
+ #include <linux/posix-timers.h>
++#include <linux/mman.h>
++#include <linux/ksm.h>
+ #include <trace/events/oom.h>
+ #include "internal.h"
+ #include "fd.h"
+@@ -2960,15 +2962,63 @@ static int proc_stack_depth(struct seq_file *m, struct pid_namespace *ns,
+ static ssize_t madvise_write(struct file *file, const char __user *buf,
+ 		size_t count, loff_t *ppos)
+ {
++	/* For now, only KSM hints are implemented */
++#ifdef CONFIG_KSM
++	char buffer[PROC_NUMBUF];
++	int behaviour;
+ 	struct task_struct *task;
++	struct mm_struct *mm;
++	int err = 0;
++	struct vm_area_struct *vma;
++
++	memset(buffer, 0, sizeof(buffer));
++	if (count > sizeof(buffer) - 1)
++		count = sizeof(buffer) - 1;
++	if (copy_from_user(buffer, buf, count))
++		return -EFAULT;
++
++	if (!memcmp("merge", buffer, min(sizeof("merge")-1, count)))
++		behaviour = MADV_MERGEABLE;
++	else if (!memcmp("unmerge", buffer, min(sizeof("unmerge")-1, count)))
++		behaviour = MADV_UNMERGEABLE;
++	else
++		return -EINVAL;
  
-   4	Configuring procfs
-   4.1	Mount options
-@@ -1948,6 +1949,18 @@ patched.  If the patch is being enabled, then the task has already been
- patched.  If the patch is being disabled, then the task hasn't been
- unpatched yet.
+ 	task = get_proc_task(file_inode(file));
+ 	if (!task)
+ 		return -ESRCH;
  
-+3.12    /proc/<pid>/madvise - Remote madvise
-+--------------------------------------------
-+This write-only file allows executing madvise operation for another task.
++	mm = get_task_mm(task);
++	if (!mm) {
++		err = -EINVAL;
++		goto out_put_task_struct;
++	}
 +
-+If CONFIG_KSM is enabled, the following actions are available:
++	down_write(&mm->mmap_sem);
++	switch (behaviour) {
++	case MADV_MERGEABLE:
++	case MADV_UNMERGEABLE:
++		vma = mm->mmap;
++		while (vma) {
++			if (behaviour == MADV_MERGEABLE)
++				ksm_madvise_merge(vma->vm_mm, vma, &vma->vm_flags);
++			else
++				ksm_madvise_unmerge(vma, vma->vm_start, vma->vm_end, &vma->vm_flags);
++			vma = vma->vm_next;
++		}
++		break;
++	}
++	up_write(&mm->mmap_sem);
 +
-+  * marking task's memory as mergeable:
-+    # echo merge > /proc/<pid>/madvise
++	mmput(mm);
 +
-+  * unmerging all the task's memory:
-+    # echo unmerge > /proc/<pid>/madvise
-+
++out_put_task_struct:
+ 	put_task_struct(task);
  
- ------------------------------------------------------------------------------
- Configuring procfs
+-	return count;
++	return err ? err : count;
++#else
++	return -EINVAL;
++#endif /* CONFIG_KSM */
+ }
+ 
+ static const struct file_operations proc_madvise_operations = {
 -- 
 2.21.0
 
