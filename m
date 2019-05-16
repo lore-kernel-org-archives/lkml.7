@@ -2,93 +2,74 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EAEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A061C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35BF720862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:31:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2FkCg+QJ"
+	by mail.kernel.org (Postfix) with ESMTP id 6B2882087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:32:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfEPMbd (ORCPT
+        id S1727344AbfEPMcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 08:31:33 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:37204 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726955AbfEPMbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 08:31:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=8xq/AtLnhhHzaEV7B7DQtMaLbospcYCiDyDYIDbl+EM=; b=2FkCg+QJQNemfvntMoY/Sg2hMR
-        Es9XwCnKNwndQo+A6WrRG5rz/xlK+Qsws4mgav7Mjtd6IqnpBtwer1SzXie7pUP3pIl9icMIJRfM4
-        rjVfOUlzl6zwAErRc6zFfEeUB3JWyORiOyLHCnNeLrMqPtFZMAFuEqcrxOXG2F5eZ22A=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hRFXc-0002lz-VF; Thu, 16 May 2019 14:31:21 +0200
-Date:   Thu, 16 May 2019 14:31:20 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
-        palmer@sifive.com, paul.walmsley@sifive.com,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] i2c-ocores: sifive: add polling mode workaround
- for FU540-C000 SoC
-Message-ID: <20190516123120.GB14298@lunn.ch>
-References: <1557983320-14461-1-git-send-email-sagar.kadam@sifive.com>
- <1557983320-14461-4-git-send-email-sagar.kadam@sifive.com>
+        Thu, 16 May 2019 08:32:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46880 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726742AbfEPMcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 08:32:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D2229AFBE;
+        Thu, 16 May 2019 12:32:01 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 879F81E3ED6; Thu, 16 May 2019 14:32:01 +0200 (CEST)
+Date:   Thu, 16 May 2019 14:32:01 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Jan Kara <jack@suse.cz>, Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        syzbot <syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com>,
+        dvyukov@google.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        linux-block@vger.kernel.org
+Subject: Re: INFO: task hung in __get_super
+Message-ID: <20190516123201.GG13274@quack2.suse.cz>
+References: <0000000000002cd22305879b22c4@google.com>
+ <201905150102.x4F12b6o009249@www262.sakura.ne.jp>
+ <20190515102133.GA16193@quack2.suse.cz>
+ <024bba2a-4d2f-1861-bfd9-819511bdf6eb@i-love.sakura.ne.jp>
+ <20190515130730.GA9526@quack2.suse.cz>
+ <20190516114817.GD13274@quack2.suse.cz>
+ <ca1e5916-73ee-6fc4-1d78-428691f7fc64@i-love.sakura.ne.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1557983320-14461-4-git-send-email-sagar.kadam@sifive.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <ca1e5916-73ee-6fc4-1d78-428691f7fc64@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -682,13 +693,24 @@ static int ocores_i2c_probe(struct platform_device *pdev)
->  
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq == -ENXIO) {
-> -		i2c->flags |= OCORES_FLAG_POLL;
-> +		/*
-> +		 * Set a OCORES_FLAG_BROKEN_IRQ to enable workaround for
-> +		 * FU540-C000 SoC in polling mode interface of i2c-ocore driver.
-> +		 * Else enable default polling mode interface for SIFIVE/OCORE
-> +		 * device types.
-> +		 */
-> +		match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
-> +		if (match && (long)match->data ==
-> +				(TYPE_SIFIVE_REV0 | OCORES_FLAG_BROKEN_IRQ))
+On Thu 16-05-19 21:17:14, Tetsuo Handa wrote:
+> On 2019/05/16 20:48, Jan Kara wrote:
+> > OK, so non-racy fix was a bit more involved and I've ended up just
+> > upgrading the file reference to an exclusive one in loop_set_fd() instead
+> > of trying to hand-craft some locking solution. The result is attached and
+> > it passes blktests.
+> 
+> blkdev_get() has corresponding blkdev_put().
+> bdgrab() does not have corresponding bdput() ?
 
-This looks wrong. You added:
+Yes, and that's hidden inside blkdev_put() (or failing blkdev_get()). Don't
+get me started on calling conventions of these functions... I've wasted half
+an hour trying to figure out where I'm leaking inode references in my patch
+;).
 
-+       {
-+               .compatible = "sifive,fu540-c000-i2c",
-+               .data = (void *)TYPE_SIFIVE_REV0,
-+       },
-+       {
-+               .compatible = "sifive,i2c0",
-+               .data = (void *)TYPE_SIFIVE_REV0,
-+       },
+								Honza
 
-So match->data just has TYPE_SIFIVE_REV0.
-
-> +			i2c->flags |= OCORES_FLAG_BROKEN_IRQ;
-> +		else
-> +			i2c->flags |= OCORES_FLAG_POLL;
-
-These two don't need to be exclusive. It makes more sense to say
-SIFIVE needs to poll and it its IRQ is broken. A lot of your other
-changes then go away.
-
-       Andrew
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
