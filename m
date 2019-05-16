@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55614C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 966FAC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C56F20833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:00:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68B522087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:00:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbfEPQAB (ORCPT
+        id S1726339AbfEPQAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:00:01 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43400 "EHLO
+        Thu, 16 May 2019 12:00:03 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43326 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727167AbfEPP6v (ORCPT
+        by vger.kernel.org with ESMTP id S1727158AbfEPP6u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:58:51 -0400
+        Thu, 16 May 2019 11:58:50 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImM-0006zL-RO; Thu, 16 May 2019 16:58:47 +0100
+        id 1hRImM-0006zU-QJ; Thu, 16 May 2019 16:58:47 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImD-0001PX-Nz; Thu, 16 May 2019 16:58:37 +0100
+        id 1hRImD-0001Pl-QI; Thu, 16 May 2019 16:58:37 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,33 +35,32 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Andrea Arcangeli" <aarcange@redhat.com>,
-        "Arjan van de Ven" <arjan@linux.intel.com>,
-        "Waiman Long" <longman9394@gmail.com>,
-        "Dave Stewart" <david.c.stewart@intel.com>,
-        "Jon Masters" <jcm@redhat.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Tim Chen" <tim.c.chen@linux.intel.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        "Casey Schaufler" <casey.schaufler@intel.com>,
-        "Greg KH" <gregkh@linuxfoundation.org>,
-        "Tom Lendacky" <thomas.lendacky@amd.com>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Jiri Kosina" <jkosina@suse.cz>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Kees Cook" <keescook@chromium.org>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        "Andi Kleen" <ak@linux.intel.com>,
+        "Ingo Molnar" <mingo@kernel.org>,
         "Asit Mallick" <asit.k.mallick@intel.com>,
         "David Woodhouse" <dwmw@amazon.co.uk>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Andi Kleen" <ak@linux.intel.com>,
-        "Dave Hansen" <dave.hansen@intel.com>
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Jiri Kosina" <jkosina@suse.cz>,
+        "Josh Poimboeuf" <jpoimboe@redhat.com>,
+        "Tom Lendacky" <thomas.lendacky@amd.com>,
+        "Greg KH" <gregkh@linuxfoundation.org>,
+        "Casey Schaufler" <casey.schaufler@intel.com>,
+        "Tim Chen" <tim.c.chen@linux.intel.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Dave Stewart" <david.c.stewart@intel.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Jon Masters" <jcm@redhat.com>,
+        "Waiman Long" <longman9394@gmail.com>,
+        "Arjan van de Ven" <arjan@linux.intel.com>,
+        "Andrea Arcangeli" <aarcange@redhat.com>
 Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.405536839@decadent.org.uk>
+Message-ID: <lsq.1558022133.249528149@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 40/86] x86/speculation: Reorganize speculation
- control MSRs update
+Subject: [PATCH 3.16 43/86] x86/speculation: Rework SMT state change
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -75,22 +74,20 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tim Chen <tim.c.chen@linux.intel.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 01daf56875ee0cd50ed496a09b20eb369b45dfa5 upstream.
+commit a74cfffb03b73d41e08f84c2e5c87dec0ce3db9f upstream.
 
-The logic to detect whether there's a change in the previous and next
-task's flag relevant to update speculation control MSRs is spread out
-across multiple functions.
+arch_smt_update() is only called when the sysfs SMT control knob is
+changed. This means that when SMT is enabled in the sysfs control knob the
+system is considered to have SMT active even if all siblings are offline.
 
-Consolidate all checks needed for updating speculation control MSRs into
-the new __speculation_ctrl_update() helper function.
+To allow finegrained control of the speculation mitigations, the actual SMT
+state is more interesting than the fact that siblings could be enabled.
 
-This makes it easy to pick the right speculation control MSR and the bits
-in MSR_IA32_SPEC_CTRL that need updating based on TIF flags changes.
+Rework the code, so arch_smt_update() is invoked from each individual CPU
+hotplug function, and simplify the update function while at it.
 
-Originally-by: Thomas Lendacky <Thomas.Lendacky@amd.com>
-Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Reviewed-by: Ingo Molnar <mingo@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
@@ -101,6 +98,7 @@ Cc: Tom Lendacky <thomas.lendacky@amd.com>
 Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Andrea Arcangeli <aarcange@redhat.com>
 Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Dave Hansen <dave.hansen@intel.com>
 Cc: Casey Schaufler <casey.schaufler@intel.com>
@@ -111,76 +109,93 @@ Cc: Waiman Long <longman9394@gmail.com>
 Cc: Greg KH <gregkh@linuxfoundation.org>
 Cc: Dave Stewart <david.c.stewart@intel.com>
 Cc: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20181125185004.151077005@linutronix.de
+Link: https://lkml.kernel.org/r/20181125185004.521974984@linutronix.de
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/process.c | 46 ++++++++++++++++++++++++---------------
- 1 file changed, 29 insertions(+), 17 deletions(-)
+ arch/x86/kernel/cpu/bugs.c | 11 +++++------
+ include/linux/sched/smt.h  |  2 ++
+ kernel/cpu.c               | 15 +++++++++------
+ 3 files changed, 16 insertions(+), 12 deletions(-)
 
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -335,27 +335,40 @@ static __always_inline void amd_set_ssb_
- 	wrmsrl(MSR_AMD64_VIRT_SPEC_CTRL, ssbd_tif_to_spec_ctrl(tifn));
- }
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -13,6 +13,7 @@
+ #include <linux/module.h>
+ #include <linux/nospec.h>
+ #include <linux/prctl.h>
++#include <linux/sched/smt.h>
  
--static __always_inline void spec_ctrl_update_msr(unsigned long tifn)
-+/*
-+ * Update the MSRs managing speculation control, during context switch.
-+ *
-+ * tifp: Previous task's thread flags
-+ * tifn: Next task's thread flags
-+ */
-+static __always_inline void __speculation_ctrl_update(unsigned long tifp,
-+						      unsigned long tifn)
- {
--	u64 msr = x86_spec_ctrl_base | ssbd_tif_to_spec_ctrl(tifn);
-+	u64 msr = x86_spec_ctrl_base;
-+	bool updmsr = false;
+ #include <asm/spec-ctrl.h>
+ #include <asm/cmdline.h>
+@@ -403,16 +404,14 @@ void arch_smt_update(void)
+ 		return;
  
--	wrmsrl(MSR_IA32_SPEC_CTRL, msr);
--}
-+	/* If TIF_SSBD is different, select the proper mitigation method */
-+	if ((tifp ^ tifn) & _TIF_SSBD) {
-+		if (static_cpu_has(X86_FEATURE_VIRT_SSBD)) {
-+			amd_set_ssb_virt_state(tifn);
-+		} else if (static_cpu_has(X86_FEATURE_LS_CFG_SSBD)) {
-+			amd_set_core_ssb_state(tifn);
-+		} else if (static_cpu_has(X86_FEATURE_SPEC_CTRL_SSBD) ||
-+			   static_cpu_has(X86_FEATURE_AMD_SSBD)) {
-+			msr |= ssbd_tif_to_spec_ctrl(tifn);
-+			updmsr  = true;
-+		}
-+	}
- 
--static __always_inline void __speculation_ctrl_update(unsigned long tifn)
--{
--	if (static_cpu_has(X86_FEATURE_VIRT_SSBD))
--		amd_set_ssb_virt_state(tifn);
--	else if (static_cpu_has(X86_FEATURE_LS_CFG_SSBD))
--		amd_set_core_ssb_state(tifn);
+ 	mutex_lock(&spec_ctrl_mutex);
+-	mask = x86_spec_ctrl_base;
+-	if (IS_ENABLED(CONFIG_X86_HT))
++
++	mask = x86_spec_ctrl_base & ~SPEC_CTRL_STIBP;
++	if (sched_smt_active())
+ 		mask |= SPEC_CTRL_STIBP;
 -	else
--		spec_ctrl_update_msr(tifn);
-+	if (updmsr)
-+		wrmsrl(MSR_IA32_SPEC_CTRL, msr);
- }
+-		mask &= ~SPEC_CTRL_STIBP;
  
- void speculation_ctrl_update(unsigned long tif)
- {
-+	/* Forced update. Make sure all relevant TIF flags are different */
- 	preempt_disable();
--	__speculation_ctrl_update(tif);
-+	__speculation_ctrl_update(~tif, tif);
- 	preempt_enable();
- }
- 
-@@ -392,8 +405,7 @@ void __switch_to_xtra(struct task_struct
- 			hard_enable_TSC();
+ 	if (mask != x86_spec_ctrl_base) {
+ 		pr_info("Spectre v2 cross-process SMT mitigation: %s STIBP\n",
+-				IS_ENABLED(CONFIG_X86_HT) ?
+-				"Enabling" : "Disabling");
++			mask & SPEC_CTRL_STIBP ? "Enabling" : "Disabling");
+ 		x86_spec_ctrl_base = mask;
+ 		on_each_cpu(update_stibp_msr, NULL, 1);
  	}
+--- a/include/linux/sched/smt.h
++++ b/include/linux/sched/smt.h
+@@ -15,4 +15,6 @@ static __always_inline bool sched_smt_ac
+ static inline bool sched_smt_active(void) { return false; }
+ #endif
  
--	if ((tifp ^ tifn) & _TIF_SSBD)
--		__speculation_ctrl_update(tifn);
-+	__speculation_ctrl_update(tifp, tifn);
++void arch_smt_update(void);
++
+ #endif
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -8,6 +8,7 @@
+ #include <linux/init.h>
+ #include <linux/notifier.h>
+ #include <linux/sched.h>
++#include <linux/sched/smt.h>
+ #include <linux/unistd.h>
+ #include <linux/cpu.h>
+ #include <linux/oom.h>
+@@ -179,6 +180,12 @@ void cpu_hotplug_enable(void)
+ 
+ #endif	/* CONFIG_HOTPLUG_CPU */
+ 
++/*
++ * Architectures that need SMT-specific errata handling during SMT hotplug
++ * should override this.
++ */
++void __weak arch_smt_update(void) { }
++
+ /* Need to know about CPUs going up/down? */
+ int __ref register_cpu_notifier(struct notifier_block *nb)
+ {
+@@ -394,6 +401,7 @@ out_release:
+ 	cpu_hotplug_done();
+ 	if (!err)
+ 		cpu_notify_nofail(CPU_POST_DEAD | mod, hcpu);
++	arch_smt_update();
+ 	return err;
  }
  
- /*
+@@ -495,7 +503,7 @@ out_notify:
+ 		__cpu_notify(CPU_UP_CANCELED | mod, hcpu, nr_calls, NULL);
+ out:
+ 	cpu_hotplug_done();
+-
++	arch_smt_update();
+ 	return ret;
+ }
+ 
 
