@@ -2,116 +2,98 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 040ABC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6E4C04E87
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5C2C2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:28:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k49M8IvV"
+	by mail.kernel.org (Postfix) with ESMTP id 21DEB20881
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:29:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfEPH2D (ORCPT
+        id S1726792AbfEPH3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 03:28:03 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37390 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfEPH2C (ORCPT
+        Thu, 16 May 2019 03:29:11 -0400
+Received: from regular1.263xmail.com ([211.150.70.205]:59638 "EHLO
+        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726702AbfEPH3K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 03:28:02 -0400
-Received: by mail-pl1-f194.google.com with SMTP id p15so1178965pll.4;
-        Thu, 16 May 2019 00:28:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XGByJB50qhjOEW1MHuUufGyQ+1XNyLAS4RXXQtspXjY=;
-        b=k49M8IvVTT17Qi7G3qbTV82EJr5KBMjNovfVRYiNhVskivzffuKIdnYSspF0YwakAO
-         K2doCcizrxg6kmFm4kcNm0qjMbI1mdPGymttMv/Y86L0U6Bljgjn5KUkw43xSj7M5tOW
-         jlitQQQ6r7NmZUbowmAKp9IC2Zdfp9MJ3W65xK6nDHjOXh3gfPp5ZJgn03U8njHUFW+x
-         YIl5l9W5qaduplsJg30z6HoUZR3FVTyBBOz1x6m8kg0DYzLg6AQPvfkMnTZqk3Hxm4L0
-         TuxVYoTUGSh1mGuInMQZTxmovfQShZXnv31DIaPkFRbJzjaNTMxiOJKExsJDvijjo4jM
-         nryw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XGByJB50qhjOEW1MHuUufGyQ+1XNyLAS4RXXQtspXjY=;
-        b=bQrp/WW/KbhPvrSQrTtL5Is1wO0Ih+ipFRTKx73E/WUjk7ty0xnioT8iG+Eh2mbp9a
-         JlR7dG/dbj9nUa8Q5jjhnFe0DzJuWHkIl5VKvXF2yuk6omApoa4nmNC2MzBIr1SzVf3N
-         FEj3DhIYNTvJyz/MiDtyvXd6REJsoLMsvlmaIYsv7VOWiPOss2VZtOby0lZybbHMVt9x
-         xeIM7ZNz9YV+XlR9HFh2tXqtMexRo6Xpo3VWzKKwzdsy+FThChaf6mr5uNoATtCc3DqB
-         XOPKpA5PFHs8zS8H3PaL9mgOEXHaF2CL+/PBBCNf5bojruJZdSm0Dd6dhawkDxILlbt9
-         qQOg==
-X-Gm-Message-State: APjAAAW4+MXDg4vUOqLUTGulHLMwh8hjVjnPJpxQfQ0HFJBiszaC9BEP
-        GWlHtSQLdHb2ajTFN3Vtva3PXxtDwXI=
-X-Google-Smtp-Source: APXvYqyEpyV0Gam6SpbSKLLk8Ct8g546tevJNXeRBvS//cl1+2pV9XcXmytOEY5JLMkIPbo42tG4Yw==
-X-Received: by 2002:a17:902:7783:: with SMTP id o3mr11955428pll.21.1557991681457;
-        Thu, 16 May 2019 00:28:01 -0700 (PDT)
-Received: from localhost.localdomain ([107.151.139.128])
-        by smtp.gmail.com with ESMTPSA id f5sm5099124pfn.161.2019.05.16.00.27.59
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 May 2019 00:28:00 -0700 (PDT)
-From:   Chuanhong Guo <gch981213@gmail.com>
-To:     devicetree@vger.kernel.org
-Cc:     Chuanhong Guo <gch981213@gmail.com>,
-        Weijie Gao <hackpascal@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] MIPS: ralink: add mt7621-clk.h for device tree binding
-Date:   Thu, 16 May 2019 15:25:51 +0800
-Message-Id: <20190516072731.21957-1-gch981213@gmail.com>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 16 May 2019 03:29:10 -0400
+Received: from zhangqing?rock-chips.com (unknown [192.168.167.227])
+        by regular1.263xmail.com (Postfix) with ESMTP id A0EE847C;
+        Thu, 16 May 2019 15:28:58 +0800 (CST)
+X-263anti-spam: KSV:0;BIG:0;
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-KSVirus-check: 0
+X-ADDR-CHECKED4: 1
+X-ABS-CHECKED: 1
+X-SKE-CHECKED: 1
+X-ANTISPAM-LEVEL: 2
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P7747T139724561819392S1557991736066321_;
+        Thu, 16 May 2019 15:28:58 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <e97b00e870e3be5f6951bfbdbadcb8a3>
+X-RL-SENDER: zhangqing@rock-chips.com
+X-SENDER: zhangqing@rock-chips.com
+X-LOGIN-NAME: zhangqing@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+From:   Elaine Zhang <zhangqing@rock-chips.com>
+To:     heiko@sntech.de
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com,
+        Elaine Zhang <zhangqing@rock-chips.com>
+Subject: [PATCH v2 0/6] clk: rockchip: Support for some new features
+Date:   Thu, 16 May 2019 15:28:50 +0800
+Message-Id: <1557991736-13580-1-git-send-email-zhangqing@rock-chips.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds dt binding header for mediatek,mt7621-pll which
-was added in:
-commit e6046b5e69a0 ("MIPS: ralink: fix cpu clock of mt7621 and add dt clk devices")
+1. Support for some new features
+2. fix up some error
 
-Signed-off-by: Weijie Gao <hackpascal@gmail.com>
-Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
----
+Chang in V2:
+[PATCH v2 5/6] : fix up the Register error, and add delay.
 
-checkpatch.pl shows a warning that the line referencing old commit
-is over 75 chars but if I shink it down anyhow it gave me an error
-saying I should use a proper style for commits. So I chose to ignore
-the warning and fix the error.
 
- include/dt-bindings/clock/mt7621-clk.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
- create mode 100644 include/dt-bindings/clock/mt7621-clk.h
+Elaine Zhang (4):
+  clk: rockchip: fix up the frac clk get rate error
+  clk: rockchip: add a clock-type for muxes based in the pmugrf
+  clk: rockchip: add pll up and down when change pll freq
+  clk: rockchip: support pll setting by auto
 
-diff --git a/include/dt-bindings/clock/mt7621-clk.h b/include/dt-bindings/clock/mt7621-clk.h
-new file mode 100644
-index 000000000000..a29e14ee2efe
---- /dev/null
-+++ b/include/dt-bindings/clock/mt7621-clk.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2018 Weijie Gao <hackpascal@gmail.com>
-+ */
-+
-+#ifndef __DT_BINDINGS_MT7621_CLK_H
-+#define __DT_BINDINGS_MT7621_CLK_H
-+
-+#define MT7621_CLK_CPU		0
-+#define MT7621_CLK_BUS		1
-+
-+#define MT7621_CLK_MAX		2
-+
-+#endif /* __DT_BINDINGS_MT7621_CLK_H */
+Finley Xiao (2):
+  clk: rockchip: Add supprot to limit input rate for fractional divider
+  clk: rockchip: add a COMPOSITE_DIV_OFFSET clock-type
+
+ drivers/clk/rockchip/clk-pll.c    | 236 +++++++++++++++++++++++++++++++++++---
+ drivers/clk/rockchip/clk-px30.c   |  29 ++---
+ drivers/clk/rockchip/clk-rk3036.c |  13 ++-
+ drivers/clk/rockchip/clk-rk3128.c |  15 ++-
+ drivers/clk/rockchip/clk-rk3188.c |  24 ++--
+ drivers/clk/rockchip/clk-rk3228.c |  18 +--
+ drivers/clk/rockchip/clk-rk3288.c |  19 +--
+ drivers/clk/rockchip/clk-rk3328.c |  17 +--
+ drivers/clk/rockchip/clk-rk3368.c |  17 +--
+ drivers/clk/rockchip/clk-rk3399.c |  32 +++---
+ drivers/clk/rockchip/clk-rv1108.c |  14 ++-
+ drivers/clk/rockchip/clk.c        |  48 ++++++--
+ drivers/clk/rockchip/clk.h        |  50 +++++++-
+ include/linux/clk-provider.h      |   2 +
+ 14 files changed, 425 insertions(+), 109 deletions(-)
+
 -- 
-2.21.0
+1.9.1
+
+
 
