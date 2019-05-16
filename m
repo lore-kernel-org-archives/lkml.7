@@ -2,54 +2,53 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F03EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E14C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA7520862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 636652087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558006935;
-	bh=1RiErlNn61ROnzQSqJNhjijxZ5GP+7NWKAJRQ/+eMwM=;
+	s=default; t=1558006938;
+	bh=eUxnrEwnF6bF+JSc7wVkPo6Dm7nzqZov0fVqkNqdy7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ua9PwQzlZVHKqMSgXoc/utjG+UOE84pHBvrtxwYLixOU/1EYVyiQ841j6NcJdpX75
-	 UAQuK27MRntOWg+9dRpIAa0bzc18CG26TuDUBB5ANPZDDif4M3Q28yOZp3Ir1sOIde
-	 r6VgTKS/fVzD+fSK8S4ncAMqFT+m0TfQI1QGKOSg=
+	b=VgnUyklKFO0OcUuqn1cNIJ53yxgsvRbMrQ3dj5RxAF9pjsp7sTSB1p+I9wQEWjK3w
+	 PX4ZbvdwUv6soQfxz8+37zGz2bH7chfNJ51aXtUL/l3XMIEH4pBqFOZlfQSzcX7V5p
+	 c93dVNS+9s5nax3slqULml/CcbwwSvv7lvVEcGs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbfEPLmO (ORCPT
+        id S1728482AbfEPLmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:42:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51064 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:42:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728488AbfEPLmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:42:09 -0400
+        id S1728455AbfEPLmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:42:06 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE60E2087E;
-        Thu, 16 May 2019 11:42:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77F362166E;
+        Thu, 16 May 2019 11:42:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006928;
-        bh=1RiErlNn61ROnzQSqJNhjijxZ5GP+7NWKAJRQ/+eMwM=;
+        s=default; t=1558006925;
+        bh=eUxnrEwnF6bF+JSc7wVkPo6Dm7nzqZov0fVqkNqdy7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U6HeR2kSfHgwdIaPtObzNkiaOF4dCae68U2NM/G4NNLN0R0MSavq53ldSn2kosfDS
-         umjhO3dr7+yMUBD2SQ+3QevTWgprayeyzjQ+Tzb2J/xS0T0BPeejMAHHOVF4TGlKzt
-         AhiFSHUWw7ZI619K6unwebZf2xdGcgXaRBG/wL0g=
+        b=we+d9JFSXBaaH2Bs+ScBL5zNye7S6Jdr9VeBo6Fidfx8wDHV126mqhrPfWsnDqoeP
+         CughMp+CZo8zyvw26e3wUUD6/r3f9ysnByxJkKasqrThYKOoEbaGvNzST6VBqtmoVZ
+         IDnxXAjP5c7zsCol/q83KERNAf6DXMBzEWDNdV0s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>,
-        linux-snps-arc@lists.infradead.org,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 6/6] perf bench numa: Add define for RUSAGE_THREAD if not present
-Date:   Thu, 16 May 2019 07:41:59 -0400
-Message-Id: <20190516114159.9382-6-sashal@kernel.org>
+Cc:     Bhagavathi Perumal S <bperumal@codeaurora.org>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 4/6] mac80211: Fix kernel panic due to use of txq after free
+Date:   Thu, 16 May 2019 07:41:57 -0400
+Message-Id: <20190516114159.9382-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516114159.9382-1-sashal@kernel.org>
 References: <20190516114159.9382-1-sashal@kernel.org>
@@ -63,66 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Bhagavathi Perumal S <bperumal@codeaurora.org>
 
-[ Upstream commit bf561d3c13423fc54daa19b5d49dc15fafdb7acc ]
+[ Upstream commit f1267cf3c01b12e0f843fb6a7450a7f0b2efab8a ]
 
-While cross building perf to the ARC architecture on a fedora 30 host,
-we were failing with:
+The txq of vif is added to active_txqs list for ATF TXQ scheduling
+in the function ieee80211_queue_skb(), but it was not properly removed
+before freeing the txq object. It was causing use after free of the txq
+objects from the active_txqs list, result was kernel panic
+due to invalid memory access.
 
-      CC       /tmp/build/perf/bench/numa.o
-  bench/numa.c: In function ‘worker_thread’:
-  bench/numa.c:1261:12: error: ‘RUSAGE_THREAD’ undeclared (first use in this function); did you mean ‘SIGEV_THREAD’?
-    getrusage(RUSAGE_THREAD, &rusage);
-              ^~~~~~~~~~~~~
-              SIGEV_THREAD
-  bench/numa.c:1261:12: note: each undeclared identifier is reported only once for each function it appears in
+Fix kernel invalid memory access by properly removing txq object
+from active_txqs list before free the object.
 
-[perfbuilder@60d5802468f6 perf]$ /arc_gnu_2019.03-rc1_prebuilt_uclibc_le_archs_linux_install/bin/arc-linux-gcc --version | head -1
-arc-linux-gcc (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1) 8.3.1 20190225
-[perfbuilder@60d5802468f6 perf]$
-
-Trying to reproduce a report by Vineet, I noticed that, with just
-cross-built zlib and numactl libraries, I ended up with the above
-failure.
-
-So, since RUSAGE_THREAD is available as a define, check for that and
-numactl libraries, I ended up with the above failure.
-
-So, since RUSAGE_THREAD is available as a define in the system headers,
-check if it is defined in the 'perf bench numa' sources and define it if
-not.
-
-Now it builds and I have to figure out if the problem reported by Vineet
-only takes place if we have libelf or some other library available.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: linux-snps-arc@lists.infradead.org
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Link: https://lkml.kernel.org/n/tip-2wb4r1gir9xrevbpq7qp0amk@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Bhagavathi Perumal S <bperumal@codeaurora.org>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/bench/numa.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/mac80211/iface.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index 90d416ba76475..c00919df69172 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -30,6 +30,10 @@
- #include <numa.h>
- #include <numaif.h>
+diff --git a/net/mac80211/iface.c b/net/mac80211/iface.c
+index f4ce34670fa83..e052c11d8900a 100644
+--- a/net/mac80211/iface.c
++++ b/net/mac80211/iface.c
+@@ -1764,6 +1764,9 @@ void ieee80211_if_remove(struct ieee80211_sub_if_data *sdata)
+ 	list_del_rcu(&sdata->list);
+ 	mutex_unlock(&sdata->local->iflist_mtx);
  
-+#ifndef RUSAGE_THREAD
-+# define RUSAGE_THREAD 1
-+#endif
++	if (sdata->vif.txq)
++		ieee80211_txq_purge(sdata->local, to_txq_info(sdata->vif.txq));
 +
- /*
-  * Regular printout to the terminal, supressed if -q is specified:
-  */
+ 	synchronize_rcu();
+ 
+ 	if (sdata->dev) {
 -- 
 2.20.1
 
