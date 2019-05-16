@@ -2,176 +2,121 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B219C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C16C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 597B920848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B9D20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:56:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="k2B77y/v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727668AbfEPN4H (ORCPT
+        id S1727694AbfEPN4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:56:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51804 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbfEPN4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:56:06 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1626C37EEB;
-        Thu, 16 May 2019 13:56:06 +0000 (UTC)
-Received: from amt.cnet (ovpn-112-4.gru2.redhat.com [10.97.112.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 796B160BE0;
-        Thu, 16 May 2019 13:55:58 +0000 (UTC)
-Received: from amt.cnet (localhost [127.0.0.1])
-        by amt.cnet (Postfix) with ESMTP id 753F0105183;
-        Wed, 15 May 2019 17:44:03 -0300 (BRT)
-Received: (from marcelo@localhost)
-        by amt.cnet (8.14.7/8.14.7/Submit) id x4FKhx2W011002;
-        Wed, 15 May 2019 17:43:59 -0300
-Date:   Wed, 15 May 2019 17:43:59 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Ankur Arora <ankur.a.arora@oracle.com>
-Cc:     Wanpeng Li <kernellwp@gmail.com>, kvm-devel <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Bandan Das <bsd@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH] sched: introduce configurable delay before entering idle
-Message-ID: <20190515204356.GB31128@amt.cnet>
-References: <20190507185647.GA29409@amt.cnet>
- <CANRm+Cx8zCDG6Oz1m9eukkmx_uVFYcQOdMwZrHwsQcbLm_kuPA@mail.gmail.com>
- <20190514135022.GD4392@amt.cnet>
- <7e390fef-e0df-963f-4e18-e44ac2766be3@oracle.com>
+        Thu, 16 May 2019 09:56:12 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:64141 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727575AbfEPN4M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:56:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1558014971; x=1589550971;
+  h=subject:to:references:from:message-id:date:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=d3tF05X6+IMz0z3pdmsgwMoJMbbYKYQyJW/W5t9SFtI=;
+  b=k2B77y/v8CaQC0rGb6Xqbv96CORAbw7wm1ve0QiujIWZVQYmLpybVI5I
+   Mq/5fFi63ZZIFN139tHLU3bXfgQvYLHu4CABqsoGFY4oxPEG73vNm9ZHV
+   GqOTaFdTro8T1PZoiQjEcrpVjl+Qxfxo8CBZNZ5J516YOM9QYd/EeJ5nT
+   o=;
+X-IronPort-AV: E=Sophos;i="5.60,476,1549929600"; 
+   d="scan'208";a="402404736"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 16 May 2019 13:56:04 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-2a-d0be17ee.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x4GDu3Lg022882
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Thu, 16 May 2019 13:56:04 GMT
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 16 May 2019 13:56:03 +0000
+Received: from macbook-2.local (10.43.161.34) by EX13D20UWC001.ant.amazon.com
+ (10.43.162.244) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 16 May
+ 2019 13:56:02 +0000
+Subject: Re: [PATCH v2 2/2] KVM: x86: Implement the arch-specific hook to
+ report the VM UUID
+To:     Filippo Sironi <sironi@amazon.de>, <linux-kernel@vger.kernel.org>,
+        <kvm@vger.kernel.org>, <borntraeger@de.ibm.com>,
+        <boris.ostrovsky@oracle.com>, <cohuck@redhat.com>,
+        <konrad.wilk@oracle.com>, <xen-devel@lists.xenproject.org>,
+        <vasu.srinivasan@oracle.com>
+References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-3-git-send-email-sironi@amazon.de>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <f51a6a84-b21c-ab75-7e30-bfbe2ac6b98b@amazon.com>
+Date:   Thu, 16 May 2019 06:56:01 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e390fef-e0df-963f-4e18-e44ac2766be3@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 16 May 2019 13:56:06 +0000 (UTC)
+In-Reply-To: <1557847002-23519-3-git-send-email-sironi@amazon.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.161.34]
+X-ClientProxiedBy: EX13D12UWC002.ant.amazon.com (10.43.162.253) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 11:42:56AM -0700, Ankur Arora wrote:
-> On 5/14/19 6:50 AM, Marcelo Tosatti wrote:
-> >On Mon, May 13, 2019 at 05:20:37PM +0800, Wanpeng Li wrote:
-> >>On Wed, 8 May 2019 at 02:57, Marcelo Tosatti <mtosatti@redhat.com> wrote:
-> >>>
-> >>>
-> >>>Certain workloads perform poorly on KVM compared to baremetal
-> >>>due to baremetal's ability to perform mwait on NEED_RESCHED
-> >>>bit of task flags (therefore skipping the IPI).
-> >>
-> >>KVM supports expose mwait to the guest, if it can solve this?
-> >>
-> >>Regards,
-> >>Wanpeng Li
-> >
-> >Unfortunately mwait in guest is not feasible (uncompatible with multiple
-> >guests). Checking whether a paravirt solution is possible.
+On 14.05.19 08:16, Filippo Sironi wrote:
+> On x86, we report the UUID in DMI System Information (i.e., DMI Type 1)
+> as VM UUID.
+> 
+> Signed-off-by: Filippo Sironi <sironi@amazon.de>
+> ---
+>  arch/x86/kernel/kvm.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index 5c93a65ee1e5..441cab08a09d 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/kvm_para.h>
+>  #include <linux/cpu.h>
+> +#include <linux/dmi.h>
+>  #include <linux/mm.h>
+>  #include <linux/highmem.h>
+>  #include <linux/hardirq.h>
+> @@ -694,6 +695,12 @@ bool kvm_para_available(void)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_para_available);
+>  
+> +const char *kvm_para_get_uuid(void)
+> +{
+> +	return dmi_get_system_info(DMI_PRODUCT_UUID);
 
-Hi Ankur,
+This adds a new dependency on CONFIG_DMI. Probably best to guard it with
+an #if IS_ENABLED(CONFIG_DMI).
 
-> 
-> Hi Marcelo,
-> 
-> I was also looking at making MWAIT available to guests in a safe manner:
-> whether through emulation or a PV-MWAIT. My (unsolicited) thoughts
+The concept seems sound though.
 
-What use-case are you interested in? 
 
-> 
-> We basically want to handle this sequence:
-> 
->     monitor(monitor_address);
->     if (*monitor_address == base_value)
->          mwaitx(max_delay);
-> 
-> Emulation seems problematic because, AFAICS this would happen:
-> 
->     guest                                   hypervisor
->     =====                                   ====
-> 
->     monitor(monitor_address);
->         vmexit  ===>                        monitor(monitor_address)
->     if (*monitor_address == base_value)
->          mwait();
->               vmexit    ====>               mwait()
-> 
-> There's a context switch back to the guest in this sequence which seems
-> problematic. Both the AMD and Intel specs list system calls and
-> far calls as events which would lead to the MWAIT being woken up:
-> "Voluntary transitions due to fast system call and far calls
-> (occurring prior to issuing MWAIT but after setting the monitor)".
-> 
-> 
-> We could do this instead:
-> 
->     guest                                   hypervisor
->     =====                                   ====
-> 
->     monitor(monitor_address);
->         vmexit  ===>                        cache monitor_address
->     if (*monitor_address == base_value)
->          mwait();
->               vmexit    ====>              monitor(monitor_address)
->                                            mwait()
-> 
-> But, this would miss the "if (*monitor_address == base_value)" check in
-> the host which is problematic if *monitor_address changed simultaneously
-> when monitor was executed.
-> (Similar problem if we cache both the monitor_address and
-> *monitor_address.)
-> 
-> 
-> So, AFAICS, the only thing that would work is the guest offloading the
-> whole PV-MWAIT operation.
-> 
-> AFAICS, that could be a paravirt operation which needs three parameters:
-> (monitor_address, base_value, max_delay.)
-> 
-> This would allow the guest to offload this whole operation to
-> the host:
->     monitor(monitor_address);
->     if (*monitor_address == base_value)
->          mwaitx(max_delay);
-> 
-> I'm guessing you are thinking on similar lines?
+Alex
 
-Sort of: only trying to avoid the IPI to wake a remote vCPU.
+> +}
+> +EXPORT_SYMBOL_GPL(kvm_para_get_uuid);
+> +
+>  unsigned int kvm_arch_para_features(void)
+>  {
+>  	return cpuid_eax(kvm_cpuid_base() | KVM_CPUID_FEATURES);
+> 
 
-Problem is that MWAIT works only on a contiguous range 
-of bits in memory (512 bits max on current CPUs).
-
-So if you execute mwait on the host on behalf of the guest,
-the region of memory monitored must include both host
-and guest bits.
-
-> 
-> 
-> High level semantics: If the CPU doesn't have any runnable threads, then
-> we actually do this version of PV-MWAIT -- arming a timer if necessary
-> so we only sleep until the time-slice expires or the MWAIT max_delay does.
-
-That would kill the sched_wake_idle_without_ipi optimization for the
-host.
-
-> If the CPU has any runnable threads then this could still finish its
-> time-quanta or we could just do a schedule-out.
-> 
-> 
-> So the semantics guaranteed to the host would be that PV-MWAIT
-> returns after >= max_delay OR with the *monitor_address changed.
-> 
-> 
-> 
-> Ankur
