@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE53C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7DFC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2DD820815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25E7C20815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:03:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbfEPQDO (ORCPT
+        id S1727940AbfEPQDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:03:14 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42668 "EHLO
+        Thu, 16 May 2019 12:03:34 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42578 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726449AbfEPP6o (ORCPT
+        by vger.kernel.org with ESMTP id S1726775AbfEPP6n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:58:44 -0400
+        Thu, 16 May 2019 11:58:43 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImH-0006zk-7R; Thu, 16 May 2019 16:58:41 +0100
+        id 1hRImH-0006zc-3h; Thu, 16 May 2019 16:58:41 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImE-0001Rf-JS; Thu, 16 May 2019 16:58:38 +0100
+        id 1hRImE-0001RI-EW; Thu, 16 May 2019 16:58:38 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Frederic Weisbecker" <frederic@kernel.org>,
+        "Borislav Petkov" <bp@suse.de>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
         "Jon Masters" <jcm@redhat.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Borislav Petkov" <bp@suse.de>
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Frederic Weisbecker" <frederic@kernel.org>
 Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.658934389@decadent.org.uk>
+Message-ID: <lsq.1558022133.767838303@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 66/86] x86/speculation/mds: Add mds_clear_cpu_buffers()
+Subject: [PATCH 3.16 62/86] x86/speculation: Consolidate CPU whitelists
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -60,174 +61,166 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 6a9e529272517755904b7afa639f6db59ddb793e upstream.
+commit 36ad35131adacc29b328b9c8b6277a8bf0d6fd5d upstream.
 
-The Microarchitectural Data Sampling (MDS) vulernabilities are mitigated by
-clearing the affected CPU buffers. The mechanism for clearing the buffers
-uses the unused and obsolete VERW instruction in combination with a
-microcode update which triggers a CPU buffer clear when VERW is executed.
+The CPU vulnerability whitelists have some overlap and there are more
+whitelists coming along.
 
-Provide a inline function with the assembly magic. The argument of the VERW
-instruction must be a memory operand as documented:
+Use the driver_data field in the x86_cpu_id struct to denote the
+whitelisted vulnerabilities and combine all whitelists into one.
 
-  "MD_CLEAR enumerates that the memory-operand variant of VERW (for
-   example, VERW m16) has been extended to also overwrite buffers affected
-   by MDS. This buffer overwriting functionality is not guaranteed for the
-   register operand variant of VERW."
-
-Documentation also recommends to use a writable data segment selector:
-
-  "The buffer overwriting occurs regardless of the result of the VERW
-   permission check, as well as when the selector is null or causes a
-   descriptor load segment violation. However, for lowest latency we
-   recommend using a selector that indicates a valid writable data
-   segment."
-
-Add x86 specific documentation about MDS and the internal workings of the
-mitigation.
-
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Borislav Petkov <bp@suse.de>
 Reviewed-by: Jon Masters <jcm@redhat.com>
 Tested-by: Jon Masters <jcm@redhat.com>
-[bwh: Backported to 3.16: drop changes to doc index and configuration]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- /dev/null
-+++ b/Documentation/x86/mds.rst
-@@ -0,0 +1,99 @@
-+Microarchitectural Data Sampling (MDS) mitigation
-+=================================================
-+
-+.. _mds:
-+
-+Overview
-+--------
-+
-+Microarchitectural Data Sampling (MDS) is a family of side channel attacks
-+on internal buffers in Intel CPUs. The variants are:
-+
-+ - Microarchitectural Store Buffer Data Sampling (MSBDS) (CVE-2018-12126)
-+ - Microarchitectural Fill Buffer Data Sampling (MFBDS) (CVE-2018-12130)
-+ - Microarchitectural Load Port Data Sampling (MLPDS) (CVE-2018-12127)
-+
-+MSBDS leaks Store Buffer Entries which can be speculatively forwarded to a
-+dependent load (store-to-load forwarding) as an optimization. The forward
-+can also happen to a faulting or assisting load operation for a different
-+memory address, which can be exploited under certain conditions. Store
-+buffers are partitioned between Hyper-Threads so cross thread forwarding is
-+not possible. But if a thread enters or exits a sleep state the store
-+buffer is repartitioned which can expose data from one thread to the other.
-+
-+MFBDS leaks Fill Buffer Entries. Fill buffers are used internally to manage
-+L1 miss situations and to hold data which is returned or sent in response
-+to a memory or I/O operation. Fill buffers can forward data to a load
-+operation and also write data to the cache. When the fill buffer is
-+deallocated it can retain the stale data of the preceding operations which
-+can then be forwarded to a faulting or assisting load operation, which can
-+be exploited under certain conditions. Fill buffers are shared between
-+Hyper-Threads so cross thread leakage is possible.
-+
-+MLPDS leaks Load Port Data. Load ports are used to perform load operations
-+from memory or I/O. The received data is then forwarded to the register
-+file or a subsequent operation. In some implementations the Load Port can
-+contain stale data from a previous operation which can be forwarded to
-+faulting or assisting loads under certain conditions, which again can be
-+exploited eventually. Load ports are shared between Hyper-Threads so cross
-+thread leakage is possible.
-+
-+
-+Exposure assumptions
-+--------------------
-+
-+It is assumed that attack code resides in user space or in a guest with one
-+exception. The rationale behind this assumption is that the code construct
-+needed for exploiting MDS requires:
-+
-+ - to control the load to trigger a fault or assist
-+
-+ - to have a disclosure gadget which exposes the speculatively accessed
-+   data for consumption through a side channel.
-+
-+ - to control the pointer through which the disclosure gadget exposes the
-+   data
-+
-+The existence of such a construct in the kernel cannot be excluded with
-+100% certainty, but the complexity involved makes it extremly unlikely.
-+
-+There is one exception, which is untrusted BPF. The functionality of
-+untrusted BPF is limited, but it needs to be thoroughly investigated
-+whether it can be used to create such a construct.
-+
-+
-+Mitigation strategy
-+-------------------
-+
-+All variants have the same mitigation strategy at least for the single CPU
-+thread case (SMT off): Force the CPU to clear the affected buffers.
-+
-+This is achieved by using the otherwise unused and obsolete VERW
-+instruction in combination with a microcode update. The microcode clears
-+the affected CPU buffers when the VERW instruction is executed.
-+
-+For virtualization there are two ways to achieve CPU buffer
-+clearing. Either the modified VERW instruction or via the L1D Flush
-+command. The latter is issued when L1TF mitigation is enabled so the extra
-+VERW can be avoided. If the CPU is not affected by L1TF then VERW needs to
-+be issued.
-+
-+If the VERW instruction with the supplied segment selector argument is
-+executed on a CPU without the microcode update there is no side effect
-+other than a small number of pointlessly wasted CPU cycles.
-+
-+This does not protect against cross Hyper-Thread attacks except for MSBDS
-+which is only exploitable cross Hyper-thread when one of the Hyper-Threads
-+enters a C-state.
-+
-+The kernel provides a function to invoke the buffer clearing:
-+
-+    mds_clear_cpu_buffers()
-+
-+The mitigation is invoked on kernel/userspace, hypervisor/guest and C-state
-+(idle) transitions.
-+
-+According to current knowledge additional mitigations inside the kernel
-+itself are not required because the necessary gadgets to expose the leaked
-+data cannot be controlled in a way which allows exploitation from malicious
-+user space or VM guests.
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -262,5 +262,30 @@ DECLARE_STATIC_KEY_FALSE(switch_to_cond_
- DECLARE_STATIC_KEY_FALSE(switch_mm_cond_ibpb);
- DECLARE_STATIC_KEY_FALSE(switch_mm_always_ibpb);
+ arch/x86/kernel/cpu/common.c | 105 +++++++++++++++++++----------------
+ 1 file changed, 56 insertions(+), 49 deletions(-)
+
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -807,60 +807,68 @@ static void identify_cpu_without_cpuid(s
+ #endif
+ }
  
-+#include <asm/segment.h>
+-static const __initconst struct x86_cpu_id cpu_no_speculation[] = {
+-	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_SALTWELL,	X86_FEATURE_ANY },
+-	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_SALTWELL_TABLET,	X86_FEATURE_ANY },
+-	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_BONNELL_MID,	X86_FEATURE_ANY },
+-	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_SALTWELL_MID,	X86_FEATURE_ANY },
+-	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_BONNELL,	X86_FEATURE_ANY },
+-	{ X86_VENDOR_CENTAUR,	5 },
+-	{ X86_VENDOR_INTEL,	5 },
+-	{ X86_VENDOR_NSC,	5 },
+-	{ X86_VENDOR_ANY,	4 },
+-	{}
+-};
++#define NO_SPECULATION	BIT(0)
++#define NO_MELTDOWN	BIT(1)
++#define NO_SSB		BIT(2)
++#define NO_L1TF		BIT(3)
 +
-+/**
-+ * mds_clear_cpu_buffers - Mitigation for MDS vulnerability
-+ *
-+ * This uses the otherwise unused and obsolete VERW instruction in
-+ * combination with microcode which triggers a CPU buffer flush when the
-+ * instruction is executed.
-+ */
-+static inline void mds_clear_cpu_buffers(void)
++#define VULNWL(_vendor, _family, _model, _whitelist)	\
++	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
++
++#define VULNWL_INTEL(model, whitelist)		\
++	VULNWL(INTEL, 6, INTEL_FAM6_##model, whitelist)
++
++#define VULNWL_AMD(family, whitelist)		\
++	VULNWL(AMD, family, X86_MODEL_ANY, whitelist)
++
++static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
++	VULNWL(ANY,	4, X86_MODEL_ANY,	NO_SPECULATION),
++	VULNWL(CENTAUR,	5, X86_MODEL_ANY,	NO_SPECULATION),
++	VULNWL(INTEL,	5, X86_MODEL_ANY,	NO_SPECULATION),
++	VULNWL(NSC,	5, X86_MODEL_ANY,	NO_SPECULATION),
++
++	VULNWL_INTEL(ATOM_SALTWELL,		NO_SPECULATION),
++	VULNWL_INTEL(ATOM_SALTWELL_TABLET,	NO_SPECULATION),
++	VULNWL_INTEL(ATOM_SALTWELL_MID,		NO_SPECULATION),
++	VULNWL_INTEL(ATOM_BONNELL,		NO_SPECULATION),
++	VULNWL_INTEL(ATOM_BONNELL_MID,		NO_SPECULATION),
++
++	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF),
++	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF),
++	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF),
++	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF),
++	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF),
++	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF),
++
++	VULNWL_INTEL(CORE_YONAH,		NO_SSB),
++
++	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF),
++	VULNWL_INTEL(ATOM_GOLDMONT,		NO_L1TF),
++	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_L1TF),
++	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_L1TF),
++
++	VULNWL_AMD(0x0f,		NO_MELTDOWN | NO_SSB | NO_L1TF),
++	VULNWL_AMD(0x10,		NO_MELTDOWN | NO_SSB | NO_L1TF),
++	VULNWL_AMD(0x11,		NO_MELTDOWN | NO_SSB | NO_L1TF),
++	VULNWL_AMD(0x12,		NO_MELTDOWN | NO_SSB | NO_L1TF),
+ 
+-static const __initconst struct x86_cpu_id cpu_no_meltdown[] = {
+-	{ X86_VENDOR_AMD },
++	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
++	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF),
+ 	{}
+ };
+ 
+-/* Only list CPUs which speculate but are non susceptible to SSB */
+-static const __initconst struct x86_cpu_id cpu_no_spec_store_bypass[] = {
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_AIRMONT		},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT_X	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT_MID	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_CORE_YONAH		},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNL		},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNM		},
+-	{ X86_VENDOR_AMD,	0x12,					},
+-	{ X86_VENDOR_AMD,	0x11,					},
+-	{ X86_VENDOR_AMD,	0x10,					},
+-	{ X86_VENDOR_AMD,	0xf,					},
+-	{}
+-};
++static bool __init cpu_matches(unsigned long which)
 +{
-+	static const u16 ds = __KERNEL_DS;
-+
-+	/*
-+	 * Has to be the memory-operand variant because only that
-+	 * guarantees the CPU buffer flush functionality according to
-+	 * documentation. The register-operand variant does not.
-+	 * Works with any segment selector, but a valid writable
-+	 * data segment is the fastest variant.
-+	 *
-+	 * "cc" clobber is required because VERW modifies ZF.
-+	 */
-+	asm volatile("verw %[ds]" : : [ds] "m" (ds) : "cc");
++	const struct x86_cpu_id *m = x86_match_cpu(cpu_vuln_whitelist);
+ 
+-static const __initconst struct x86_cpu_id cpu_no_l1tf[] = {
+-	/* in addition to cpu_no_speculation */
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT_X	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_AIRMONT		},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT_MID	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_AIRMONT_MID	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_GOLDMONT	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_GOLDMONT_X	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_GOLDMONT_PLUS	},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNL		},
+-	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNM		},
+-	{}
+-};
++	return m && !!(m->driver_data & which);
 +}
-+
- #endif /* __ASSEMBLY__ */
- #endif /* _ASM_X86_NOSPEC_BRANCH_H_ */
+ 
+ static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
+ {
+ 	u64 ia32_cap = 0;
+ 
+-	if (x86_match_cpu(cpu_no_speculation))
++	if (cpu_matches(NO_SPECULATION))
+ 		return;
+ 
+ 	setup_force_cpu_bug(X86_BUG_SPECTRE_V1);
+@@ -869,15 +877,14 @@ static void __init cpu_set_bug_bits(stru
+ 	if (cpu_has(c, X86_FEATURE_ARCH_CAPABILITIES))
+ 		rdmsrl(MSR_IA32_ARCH_CAPABILITIES, ia32_cap);
+ 
+-	if (!x86_match_cpu(cpu_no_spec_store_bypass) &&
+-	   !(ia32_cap & ARCH_CAP_SSB_NO) &&
++	if (!cpu_matches(NO_SSB) && !(ia32_cap & ARCH_CAP_SSB_NO) &&
+ 	   !cpu_has(c, X86_FEATURE_AMD_SSB_NO))
+ 		setup_force_cpu_bug(X86_BUG_SPEC_STORE_BYPASS);
+ 
+ 	if (ia32_cap & ARCH_CAP_IBRS_ALL)
+ 		setup_force_cpu_cap(X86_FEATURE_IBRS_ENHANCED);
+ 
+-	if (x86_match_cpu(cpu_no_meltdown))
++	if (cpu_matches(NO_MELTDOWN))
+ 		return;
+ 
+ 	/* Rogue Data Cache Load? No! */
+@@ -886,7 +893,7 @@ static void __init cpu_set_bug_bits(stru
+ 
+ 	setup_force_cpu_bug(X86_BUG_CPU_MELTDOWN);
+ 
+-	if (x86_match_cpu(cpu_no_l1tf))
++	if (cpu_matches(NO_L1TF))
+ 		return;
+ 
+ 	setup_force_cpu_bug(X86_BUG_L1TF);
 
