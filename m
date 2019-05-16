@@ -2,138 +2,133 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AADFDC04E87
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5F1C04E87
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE912087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:48:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ip+KhnSD";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="i8Skn8GM"
+	by mail.kernel.org (Postfix) with ESMTP id 78F752082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:51:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfEPGsL (ORCPT
+        id S1726589AbfEPGvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 02:48:11 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47326 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbfEPGsL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 02:48:11 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6DF9960A24; Thu, 16 May 2019 06:48:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557989290;
-        bh=ZG75f0lAOy1l5nnTA2W31hBIGHC2MtPKNbbEUIh5Wf0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ip+KhnSDwqQ6o84dfRIgliZ9j6YSTEa9vIzYvXc943S2AD3mA8aQ+Z0lkcoi/m49p
-         7aMiny8cvc23arEec0ailuT7eJKEu+iZqrEv3Uvhpfs7pXfdnVzTNs6zAzJA1zNZs0
-         NfoQDxOP6wNxrgjB0i1sbFBmV0CzKI9A98mS5vQo=
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 77F6A60A4E;
-        Thu, 16 May 2019 06:48:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557989287;
-        bh=ZG75f0lAOy1l5nnTA2W31hBIGHC2MtPKNbbEUIh5Wf0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=i8Skn8GMp5Ca9Xq4RekrA/tI7vqbQdhgnWOmKSuIrmQ1hdYfYfUDwAIyRZea+9d+G
-         WUE6mX2GhMtI+iPujURAFxvOvZfEuvFPjDKiHlJCif+q4kZ70YgN4D9tX1B83SWBW5
-         /EQyE2vOidCqzDcB15dYsgku1yKEywtYvDOrkzVU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 77F6A60A4E
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-Received: by mail-ed1-f51.google.com with SMTP id e24so3583229edq.6;
-        Wed, 15 May 2019 23:48:06 -0700 (PDT)
-X-Gm-Message-State: APjAAAWF5vvn2UJoMMUsPvWw7tehIchlyCxkEnVTie2JEx/RLX3BNBbC
-        5wi4w+pZ0NiSUJ3j+OGBCvNoEnqkWHKXDzkNUxc=
-X-Google-Smtp-Source: APXvYqwE4sv9OWAdotkgId+uAs3Ngm4nCDGeM/ygr0LbOzm5ahsK2cp4+ig58+Nr8zmvRko1JQyh3Xh0k05F1GQXZQg=
-X-Received: by 2002:a50:94db:: with SMTP id t27mr1721377eda.173.1557989284710;
- Wed, 15 May 2019 23:48:04 -0700 (PDT)
+        Thu, 16 May 2019 02:51:16 -0400
+Received: from mga14.intel.com ([192.55.52.115]:17679 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726221AbfEPGvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 02:51:16 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 23:51:15 -0700
+X-ExtLoop1: 1
+Received: from odonnabh-mobl.ger.corp.intel.com (HELO localhost) ([10.252.32.47])
+  by orsmga001.jf.intel.com with ESMTP; 15 May 2019 23:51:05 -0700
+Date:   Thu, 16 May 2019 09:51:03 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+Message-ID: <20190516065103.GA4642@linux.intel.com>
+References: <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
+ <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+ <20190513102926.GD8743@linux.intel.com>
+ <20190514104323.GA7591@linux.intel.com>
+ <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+ <20190514204527.GC1977@linux.intel.com>
+ <20190515103531.GB10917@linux.intel.com>
+ <20190515110005.GA14718@linux.intel.com>
+ <B1DF6DCD-C37D-4C87-AF32-F31785184482@amacapital.net>
+ <20190516050705.GB6388@linux.intel.com>
 MIME-Version: 1.0
-References: <20190515233234.22990-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20190515233234.22990-1-bjorn.andersson@linaro.org>
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-Date:   Thu, 16 May 2019 12:17:53 +0530
-X-Gmail-Original-Message-ID: <CAFp+6iEMQd1uAWdkLysYWt0et8eRojoivG6+e78y0DU+4=H+_g@mail.gmail.com>
-Message-ID: <CAFp+6iEMQd1uAWdkLysYWt0et8eRojoivG6+e78y0DU+4=H+_g@mail.gmail.com>
-Subject: Re: [PATCH] iommu: io-pgtable: Support non-coherent page tables
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Vivek Gautam <vgautam@qti.qualcomm.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190516050705.GB6388@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 5:03 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> Describe the memory related to page table walks as non-cachable for iommu
-> instances that are not DMA coherent.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  drivers/iommu/io-pgtable-arm.c | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-> index 4e21efbc4459..68ff22ffd2cb 100644
-> --- a/drivers/iommu/io-pgtable-arm.c
-> +++ b/drivers/iommu/io-pgtable-arm.c
-> @@ -803,9 +803,15 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg *cfg, void *cookie)
->                 return NULL;
->
->         /* TCR */
-> -       reg = (ARM_LPAE_TCR_SH_IS << ARM_LPAE_TCR_SH0_SHIFT) |
-> -             (ARM_LPAE_TCR_RGN_WBWA << ARM_LPAE_TCR_IRGN0_SHIFT) |
-> -             (ARM_LPAE_TCR_RGN_WBWA << ARM_LPAE_TCR_ORGN0_SHIFT);
-> +       if (cfg->quirks & IO_PGTABLE_QUIRK_NO_DMA) {
-> +               reg = (ARM_LPAE_TCR_SH_IS << ARM_LPAE_TCR_SH0_SHIFT) |
-> +                     (ARM_LPAE_TCR_RGN_WBWA << ARM_LPAE_TCR_IRGN0_SHIFT) |
-> +                     (ARM_LPAE_TCR_RGN_WBWA << ARM_LPAE_TCR_ORGN0_SHIFT);
-> +       } else {
-> +               reg = (ARM_LPAE_TCR_SH_IS << ARM_LPAE_TCR_SH0_SHIFT) |
-> +                     (ARM_LPAE_TCR_RGN_NC << ARM_LPAE_TCR_IRGN0_SHIFT) |
-> +                     (ARM_LPAE_TCR_RGN_NC << ARM_LPAE_TCR_ORGN0_SHIFT);
-> +       }
+On Thu, May 16, 2019 at 08:07:05AM +0300, Jarkko Sakkinen wrote:
+> On Wed, May 15, 2019 at 07:27:02AM -0700, Andy Lutomirski wrote:
+> > 
+> > > On May 15, 2019, at 4:00 AM, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+> > > 
+> > >> On Wed, May 15, 2019 at 01:35:31PM +0300, Jarkko Sakkinen wrote:
+> > >> This brings me to an open question in Andy's model: lets say that we
+> > >> change the source for SIGSTRUCT from memory address to fd. How can the
+> > >> policy prevent the use not creating a file containing a SIGSTRUCT and
+> > >> passing fd of that to the EINIT ioctl?
+> > > 
+> > 
+> > The policy will presumably check the label on the file that the fd points to.
+> 
+> Right (checked SELinux documentation).
+> 
+> Got one idea from this. Right now creation and initialization does not
+> require any VMAs to be created (since v20). Requiring to map a VMA for
+> copying the data would bring in my opinion a glitch to this model that
+> we have done effort to build up.
+> 
+> What if we similarly change EADD ioctl in a way that it'd take an fd
+> and an offset? This way we can enforce policy to the source where the
+> enclave data is loaded from. On the other hand, loading SIGSTRUCT from
+> fd enforces a legit structure for the enclave.
+> 
+> This would still allow to construct enclaves in VMA independent way.
 
-This looks okay to me based on the discussion that we had on a similar
-patch that I
-posted. So,
-Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+The API would turn into this:
 
-[1] https://lore.kernel.org/patchwork/patch/1032939/
-
-Thanks & regards
-Vivek
-
->
->         switch (ARM_LPAE_GRANULE(data)) {
->         case SZ_4K:
-> --
-> 2.18.0
->
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+/**
+ * struct sgx_enclave_add_page - parameter structure for the
+ *                               %SGX_IOC_ENCLAVE_ADD_PAGE ioctl
+ * @fd:		file containing the page data
+ * @offset:	offset in the file containing the page data
+ * @secinfo:	address for the SECINFO data
+ * @mrmask:	bitmask for the measured 256 byte chunks
+ */
+struct sgx_enclave_add_page {
+	__u64	fd;
+	__u64	offset;
+	__u64	secinfo;
+	__u16	mrmask;
+} __attribute__((__packed__));
 
 
+/**
+ * struct sgx_enclave_init - parameter structure for the
+ *                           %SGX_IOC_ENCLAVE_INIT ioctl
+ * @fd:		file containing the sigstruct
+ * @offset:	offset in the file containing the sigstruct
+ */
+struct sgx_enclave_init {
+	__u64	fd;
+	__u64	offset;
+};
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+/Jarkko
