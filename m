@@ -2,173 +2,114 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2158BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB5CC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA82C20818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:51:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V3SH9UWT"
+	by mail.kernel.org (Postfix) with ESMTP id 46C272070D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:59:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558040382;
+	bh=6ar+VWes5x8vVhPkHDf0GVQM4+1UB4ble0K8wdXqY4U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KW7uGqCqpyWknOX1sseeGinonOaJ0k41SZadITDMzSZehGgC/dB4oQv88s6ZJgYz3
+	 WLMQ2S/BrtDs5pUHJ8VmE0XOCN7hEStByiM3kYrTRGp99DmInHVG7W+GCVPxfDBne6
+	 S7GPFy+bJ1/KYNb0tN3aS38qaHnZ0B3sKvJ6hL+c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728133AbfEPUvL (ORCPT
+        id S1728165AbfEPU7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 16:51:11 -0400
-Received: from mail-pf1-f201.google.com ([209.85.210.201]:50962 "EHLO
-        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbfEPUvL (ORCPT
+        Thu, 16 May 2019 16:59:41 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38694 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727951AbfEPU7l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 16:51:11 -0400
-Received: by mail-pf1-f201.google.com with SMTP id u7so2945025pfh.17
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 13:51:10 -0700 (PDT)
+        Thu, 16 May 2019 16:59:41 -0400
+Received: by mail-lf1-f66.google.com with SMTP id y19so3716537lfy.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 13:59:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=O0A3Y6O8QZ1jZo/IAcyQwbrOJctQs0ZeB/K1vYWmuBI=;
-        b=V3SH9UWTXhecnBvY9y5BQamRei5+qE2Sfjc4eidha3qPpIUKiFC2Za/3ErpPsnlN8W
-         2+YfB6DRHUxK86SVsJQ6HjeCgq/V+ywqPMuLW2kErg8FmTPzKnWZu3K3jboTADUzrV+/
-         zJHSv1CG9E1NrqB6ZtXofWvgyI/BMJDpbHgRgfXupGEBoOI6rca9n+8JFme6U3Z9NyOf
-         sil6q/xnC5ZppxoSW1dAZmXM51G91MNKXOu/ApqMaUGTEpL7g+Qw9gm8nm9uYsS0SrzG
-         WOp24BXJeHc9i1WyrUKHdAnHDB8xbzO44RPj+JlDVuyfvKCTZDppOjyT6w8dy5JqtqQe
-         uo/Q==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6oAPPlUpIkCtQ/levc8RsxEk+htcahssCA/GznIL0Us=;
+        b=YZ8c/cm5aMA7k3clC9oPBSrTRPSLiXxoGN+/rRTEEZuA1eKzCtY+bAPltIYlKN4zli
+         WJVE0BF2AxNUuBeHaqBEKA6z6gR46laXsGrUbQXk6EdimWFAv+u89zWsDjZL7k1NccgW
+         DlnxbLwfAWIL+QPoKXeDP9PbQ4U0PizyusWaY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=O0A3Y6O8QZ1jZo/IAcyQwbrOJctQs0ZeB/K1vYWmuBI=;
-        b=HFdDv1xqWz/wEx4M4Qdo1Fn8FCtVX0DxcU6pgJeteOMs4SrClNJ08K0MHe5r4Xz/tk
-         mVgLEH5i5akaR5c5osPXHZD96cx47IxIvH6fAzkx7qB1Z5FGVYDSEDhrUQkdvcOX99rH
-         BGjc+lCvy9a/pZmhrrFrequX92uCruc+n1PNtY7+mPsrvW24EUF9/CzAIkZP2scLLOQe
-         KdMzWBhXWcvP0nwunSwbYRiLXu8trVYpUPT44s3B8qN9WlKRyG4HBIQNScOW4pB4WmBD
-         eXTTKOn++kREHZCQ6R5wF1KEeO6pPILT1hKUYZTzzlnCOY+bP31gRSsyPBe8KhI7IgqR
-         inqQ==
-X-Gm-Message-State: APjAAAWEJ1jdndFPVhGqyO763SZ9tzrHxpIuxw6sVFOnxt1cuHJRPHl1
-        VDIOqOTov50UIB6uyt6zKxaFu9Zjl3nl7G/LPYO/A+NA07eg0I7xudO1EzwNueN3WS0kYM7X5DJ
-        ZfylX3fgUMmjSh7hv0QymtqDGf71SsEf6pZeywDD4ATb4amDU/i3iNUkb/taWbBqcEhtGXt54as
-        Owng==
-X-Google-Smtp-Source: APXvYqwf41flQIat3KOIsyjjpw5N63ZvcHDik9EhfhYXCkBPgjXrtlDQs2OKDmjNAjHU9uyT/bCBM5OoUqnw6s4=
-X-Received: by 2002:a63:7552:: with SMTP id f18mr49259106pgn.234.1558039869914;
- Thu, 16 May 2019 13:51:09 -0700 (PDT)
-Date:   Thu, 16 May 2019 13:51:07 -0700
-Message-Id: <20190516205107.222003-1-jemoreira@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: [PATCH RESEND] vsock/virtio: Initialize core virtio vsock before
- registering the driver
-From:   "Jorge E. Moreira" <jemoreira@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        kernel-team@android.com, stable@vger.kernel.org
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6oAPPlUpIkCtQ/levc8RsxEk+htcahssCA/GznIL0Us=;
+        b=Z36st/xgmNGUnHRx3IbXhsVxu38e4xATVLGKMTkQ6pcYGy+lIqHlUdFpzXYWu2KVxO
+         2H9DPGI996anVgvzBL06i2YuTs1vvfxHYIPKvqqVInkyviXOM7UMyHBCKW9XA6XOFC+7
+         3F4kgOUz9XthEfpZqX67iCLwutEUiG4I/iYVzjenYaA3GwdVD34Jd8tKFji7JcA/Ed0z
+         ToPx4Dez9/GYb8m7ohmQS0GZ9cpj2wwcG7CDLZk4pKvsR2/ZR2yLsoe3DiK7yXB/0yUY
+         u6VZYRZB9OKEcSgdvnxMpeR96NgFug8JpFwngxA7Mt7iVk2NcGmVbQrVzjA0H11MLGfo
+         9lDw==
+X-Gm-Message-State: APjAAAXFJTB50Q2XGbDTUjwciXVje/dgAsciRMh9W9b6BnMxCMZY2TZW
+        +xJJeKpS2EhRd3QM8vVwOK1qvbcM72g=
+X-Google-Smtp-Source: APXvYqyaCCEKPGcnE5+Go3ommoloTxrcCrNi6H79bpACYDJ9AqYSGftaHC9PCiaLslU+D1jkiNsx3A==
+X-Received: by 2002:a19:ec12:: with SMTP id b18mr24967968lfa.149.1558040378644;
+        Thu, 16 May 2019 13:59:38 -0700 (PDT)
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
+        by smtp.gmail.com with ESMTPSA id h11sm1167352lfh.8.2019.05.16.13.59.38
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 May 2019 13:59:38 -0700 (PDT)
+Received: by mail-lf1-f42.google.com with SMTP id y19so3716475lfy.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 13:59:38 -0700 (PDT)
+X-Received: by 2002:ac2:510b:: with SMTP id q11mr23412586lfb.11.1558040376948;
+ Thu, 16 May 2019 13:59:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAK8P3a2+RHAReOZdo8nEvqDeC1EPj83L2Ug4JuVRiUh943AuNw@mail.gmail.com>
+ <CAHk-=wgiv5ftb+dq7N8cN4n2YX3VkyzeQccywn07Xu9xhOLTSw@mail.gmail.com> <CAK8P3a2EEuxh3uhsqauEC_vROZ7tQHhFwxgiLUnrgtpMdb3kuA@mail.gmail.com>
+In-Reply-To: <CAK8P3a2EEuxh3uhsqauEC_vROZ7tQHhFwxgiLUnrgtpMdb3kuA@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 16 May 2019 13:59:21 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiH=vGjsW9MdWFGsgto2W+71sA4XJ7CSubpXkbpC_bGKA@mail.gmail.com>
+Message-ID: <CAHk-=wiH=vGjsW9MdWFGsgto2W+71sA4XJ7CSubpXkbpC_bGKA@mail.gmail.com>
+Subject: Re: [GIT PULL] asm-generic: kill <asm/segment.h> and improve nommu
+ generic uaccess helpers
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Avoid a race in which static variables in net/vmw_vsock/af_vsock.c are
-accessed (while handling interrupts) before they are initialized.
+On Thu, May 16, 2019 at 1:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+>
+> I have reconfigured it locally now and pushed an identical tag with a
+> new signature. Can you see if that gives you the same warning if you
+> try to pull that?
 
-[    4.201410] BUG: unable to handle kernel paging request at ffffffffffffffe8
-[    4.207829] IP: vsock_addr_equals_addr+0x3/0x20
-[    4.211379] PGD 28210067 P4D 28210067 PUD 28212067 PMD 0
-[    4.211379] Oops: 0000 [#1] PREEMPT SMP PTI
-[    4.211379] Modules linked in:
-[    4.211379] CPU: 1 PID: 30 Comm: kworker/1:1 Not tainted 4.14.106-419297-gd7e28cc1f241 #1
-[    4.211379] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
-[    4.211379] Workqueue: virtio_vsock virtio_transport_rx_work
-[    4.211379] task: ffffa3273d175280 task.stack: ffffaea1800e8000
-[    4.211379] RIP: 0010:vsock_addr_equals_addr+0x3/0x20
-[    4.211379] RSP: 0000:ffffaea1800ebd28 EFLAGS: 00010286
-[    4.211379] RAX: 0000000000000002 RBX: 0000000000000000 RCX: ffffffffb94e42f0
-[    4.211379] RDX: 0000000000000400 RSI: ffffffffffffffe0 RDI: ffffaea1800ebdd0
-[    4.211379] RBP: ffffaea1800ebd58 R08: 0000000000000001 R09: 0000000000000001
-[    4.211379] R10: 0000000000000000 R11: ffffffffb89d5d60 R12: ffffaea1800ebdd0
-[    4.211379] R13: 00000000828cbfbf R14: 0000000000000000 R15: ffffaea1800ebdc0
-[    4.211379] FS:  0000000000000000(0000) GS:ffffa3273fd00000(0000) knlGS:0000000000000000
-[    4.211379] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    4.211379] CR2: ffffffffffffffe8 CR3: 000000002820e001 CR4: 00000000001606e0
-[    4.211379] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[    4.211379] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[    4.211379] Call Trace:
-[    4.211379]  ? vsock_find_connected_socket+0x6c/0xe0
-[    4.211379]  virtio_transport_recv_pkt+0x15f/0x740
-[    4.211379]  ? detach_buf+0x1b5/0x210
-[    4.211379]  virtio_transport_rx_work+0xb7/0x140
-[    4.211379]  process_one_work+0x1ef/0x480
-[    4.211379]  worker_thread+0x312/0x460
-[    4.211379]  kthread+0x132/0x140
-[    4.211379]  ? process_one_work+0x480/0x480
-[    4.211379]  ? kthread_destroy_worker+0xd0/0xd0
-[    4.211379]  ret_from_fork+0x35/0x40
-[    4.211379] Code: c7 47 08 00 00 00 00 66 c7 07 28 00 c7 47 08 ff ff ff ff c7 47 04 ff ff ff ff c3 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 8b 47 08 <3b> 46 08 75 0a 8b 47 04 3b 46 04 0f 94 c0 c3 31 c0 c3 90 66 2e
-[    4.211379] RIP: vsock_addr_equals_addr+0x3/0x20 RSP: ffffaea1800ebd28
-[    4.211379] CR2: ffffffffffffffe8
-[    4.211379] ---[ end trace f31cc4a2e6df3689 ]---
-[    4.211379] Kernel panic - not syncing: Fatal exception in interrupt
-[    4.211379] Kernel Offset: 0x37000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-[    4.211379] Rebooting in 5 seconds..
+No, same issue:
 
-Fixes: 22b5c0b63f32 ("vsock/virtio: fix kernel panic after device hot-unplug")
-Cc: Stefan Hajnoczi <stefanha@redhat.com>
-Cc: Stefano Garzarella <sgarzare@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: kvm@vger.kernel.org
-Cc: virtualization@lists.linux-foundation.org
-Cc: netdev@vger.kernel.org
-Cc: kernel-team@android.com
-Cc: stable@vger.kernel.org [4.9+]
-Signed-off-by: Jorge E. Moreira <jemoreira@google.com>
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
----
- net/vmw_vsock/virtio_transport.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+   [torvalds@i7 linux]$ git fetch
+git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic
+tags/asm-generic-nommu
+   From ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic
+    * tag                         asm-generic-nommu -> FETCH_HEAD
+   [torvalds@i7 linux]$ git verify-tag FETCH_HEAD
+   gpg: Signature made Thu 16 May 2019 01:28:54 PM PDT
+   gpg:                using RSA key 60AB47FFC9095227
+   gpg: bad data signature from key 60AB47FFC9095227: Wrong key usage
+(0x00, 0x4)
+   gpg: Can't check signature: Wrong key usage
 
-diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
-index 15eb5d3d4750..96ab344f17bb 100644
---- a/net/vmw_vsock/virtio_transport.c
-+++ b/net/vmw_vsock/virtio_transport.c
-@@ -702,28 +702,27 @@ static int __init virtio_vsock_init(void)
- 	if (!virtio_vsock_workqueue)
- 		return -ENOMEM;
- 
--	ret = register_virtio_driver(&virtio_vsock_driver);
-+	ret = vsock_core_init(&virtio_transport.transport);
- 	if (ret)
- 		goto out_wq;
- 
--	ret = vsock_core_init(&virtio_transport.transport);
-+	ret = register_virtio_driver(&virtio_vsock_driver);
- 	if (ret)
--		goto out_vdr;
-+		goto out_vci;
- 
- 	return 0;
- 
--out_vdr:
--	unregister_virtio_driver(&virtio_vsock_driver);
-+out_vci:
-+	vsock_core_exit();
- out_wq:
- 	destroy_workqueue(virtio_vsock_workqueue);
- 	return ret;
--
- }
- 
- static void __exit virtio_vsock_exit(void)
- {
--	vsock_core_exit();
- 	unregister_virtio_driver(&virtio_vsock_driver);
-+	vsock_core_exit();
- 	destroy_workqueue(virtio_vsock_workqueue);
- }
- 
--- 
-2.21.0.1020.gf2820cf01a-goog
+That's the same key you used previously.
 
+I think you have to do some gpg edit-key magic or something, and then
+the key need to be refreshed.
+
+But I really despise the usability of gpg, so what do I know?
+
+              Linus
