@@ -2,126 +2,133 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52785C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F212C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B3022087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C8020818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:00:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJ02SC2+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfEPI7a (ORCPT
+        id S1727044AbfEPJAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 04:59:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34916 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726448AbfEPI6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 04:58:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id ACB83AF50;
-        Thu, 16 May 2019 08:58:24 +0000 (UTC)
-From:   Roman Penyaev <rpenyaev@suse.de>
-Cc:     Azat Khuzhin <azat@libevent.org>, Roman Penyaev <rpenyaev@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 02/13] epoll: introduce user structures for polling from userspace
-Date:   Thu, 16 May 2019 10:57:59 +0200
-Message-Id: <20190516085810.31077-3-rpenyaev@suse.de>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190516085810.31077-1-rpenyaev@suse.de>
-References: <20190516085810.31077-1-rpenyaev@suse.de>
+        Thu, 16 May 2019 05:00:08 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35026 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfEPJAI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 05:00:08 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g5so1302283plt.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 02:00:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tsRvQ0ICVvL80K/llewLglNoh6LkE76YZlYz4k786T4=;
+        b=bJ02SC2+DLGQFnjhjfGLXa0GpC6fzBI58qPoOXXDddWPbG2SYKa3VWR2sGKswVGv/C
+         OMYvH8o89GaE/aEBZsZE8HnAGTfFQBK9Uff1LpPXT5gHEwDVZMc6ngYN7kDUQlHet9oY
+         KvAvLbR576fs+ZA48EcuSvfLsft3KPi1iqdrhSVMz6bqFKjOlhphsizoNZrCkfHR0F6A
+         TXYLhWw2D065WMf5QTI0Z4uGLCYwuUvPccDajFuDmTRIpLsie6cQAfsS412YqyQ0NHxg
+         Nxe/jJ7cuJWEfeTIlNQc5iQuC5tUJzt2ETtnGLufdPdg9DKah2Fe7tp+ZZlQ8OzE/T/j
+         99jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tsRvQ0ICVvL80K/llewLglNoh6LkE76YZlYz4k786T4=;
+        b=Nhg84c8KYeaXpfflBXEJop2uWN9p2YkvMBR8MoommqpfJFZtzAm8dathrriWfWrOZ0
+         Chi0hOpfw+3NgJlD2H0GeUmrEAJ6iyU6wWOzLRmRfyjT9Auc4w9zVj2QQOWyLPmgxjGT
+         pE4L1ZUkajGeNdDfz03SSS7ZkZZqwNR/h+S4k9AUetSpL9xuGe88N2CTsCZWoMaBeX9G
+         3i7btjRVBkOxjuuW70mmNxM45yFDVLQQEotKB3reveVzuTNU2o9HJAZ7rZX3slABJUpp
+         DPbfZz9DoTdi3yEhhrAcPRhcqZiEYx+IMjOVeYbDT/PTz32SLkgnw/kbISSFOb7ve7ql
+         s4rA==
+X-Gm-Message-State: APjAAAX+Ev+hVs4u7Q1x/rUtyWi1yaT5z1e9XMRo7reUALZLutehqmkT
+        KrfFYeLVPoA53OoWOPyI8UUqVXpHDwM=
+X-Google-Smtp-Source: APXvYqy7mWZPcvgEGfnai2/0Oe+KXnlLgoRS/IZIOMQhPkTBeu6DMSVcU51P9P+JPqTv+diaT86JZQ==
+X-Received: by 2002:a17:902:a988:: with SMTP id bh8mr48808665plb.243.1557997207431;
+        Thu, 16 May 2019 02:00:07 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id u76sm5917793pgc.84.2019.05.16.02.00.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 May 2019 02:00:07 -0700 (PDT)
+Date:   Thu, 16 May 2019 16:59:57 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [Patch] hdac_sysfs: Fix a memory leaking bug in
+ sound/hda/hdac_sysfs.c file of Linux 5.1
+Message-ID: <20190516085957.GA3107@zhanggen-UX430UQ>
+References: <20190516084003.GA20821@zhanggen-UX430UQ>
+ <s5hzhnmn5qw.wl-tiwai@suse.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <s5hzhnmn5qw.wl-tiwai@suse.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This one introduces structures of user items array:
-
-struct epoll_uheader -
-    describes inserted epoll items.
-
-struct epoll_uitem -
-    single epoll item visible to userspace.
-
-Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 2cc183e86a29..f598442512f3 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -9,6 +9,8 @@
-  *
-  *  Davide Libenzi <davidel@xmailserver.org>
-  *
-+ *  Polling from userspace support by Roman Penyaev <rpenyaev@suse.de>
-+ *  (C) Copyright 2019 SUSE, All Rights Reserved
-  */
- 
- #include <linux/init.h>
-@@ -109,6 +111,13 @@
- 
- #define EP_ITEM_COST (sizeof(struct epitem) + sizeof(struct eppoll_entry))
- 
-+/*
-+ * That is around 1.3mb of allocated memory for one epfd.  What is more
-+ * important is ->index_length, which should be ^2, so do not increase
-+ * max items number to avoid size doubling of user index.
-+ */
-+#define EP_USERPOLL_MAX_ITEMS_NR 65536
-+
- struct epoll_filefd {
- 	struct file *file;
- 	int fd;
-diff --git a/include/uapi/linux/eventpoll.h b/include/uapi/linux/eventpoll.h
-index 39dfc29f0f52..161dfcbcf3b5 100644
---- a/include/uapi/linux/eventpoll.h
-+++ b/include/uapi/linux/eventpoll.h
-@@ -79,4 +79,32 @@ struct epoll_event {
- 	__u64 data;
- } EPOLL_PACKED;
- 
-+#define EPOLL_USERPOLL_HEADER_MAGIC 0xeb01eb01
-+#define EPOLL_USERPOLL_HEADER_SIZE  128
-+
-+/*
-+ * Item, shared with userspace.  Unfortunately we can't embed epoll_event
-+ * structure, because it is badly aligned on all 64-bit archs, except
-+ * x86-64 (see EPOLL_PACKED).  sizeof(epoll_uitem) == 16
-+ */
-+struct epoll_uitem {
-+	__poll_t ready_events;
-+	__poll_t events;
-+	__u64 data;
-+};
-+
-+/*
-+ * Header, shared with userspace. sizeof(epoll_uheader) == 128
-+ */
-+struct epoll_uheader {
-+	u32 magic;          /* epoll user header magic */
-+	u32 header_length;  /* length of the header + items */
-+	u32 index_length;   /* length of the index ring, always pow2 */
-+	u32 max_items_nr;   /* max number of items */
-+	u32 head;           /* updated by userland */
-+	u32 tail;           /* updated by kernel */
-+
-+	struct epoll_uitem items[] __aligned(EPOLL_USERPOLL_HEADER_SIZE);
-+};
-+
- #endif /* _UAPI_LINUX_EVENTPOLL_H */
--- 
-2.21.0
-
+On Thu, May 16, 2019 at 10:49:43AM +0200, Takashi Iwai wrote:
+> On Thu, 16 May 2019 10:40:03 +0200,
+> Gen Zhang wrote:
+> > 
+> > tree->root and tree->nodes are allocated by memory allocation 
+> > functions. And tree is also an allocated memory. When allocation of 
+> > tree->root and tree->nodes fails, not freeing tree will leak memory. 
+> > Thus we should free tree in this situation.
+> 
+> No, the leftover is freed in the caller side by calling
+> widget_tree_free().
+> 
+> 
+> thanks,
+> 
+> Takashi
+> 
+> > 
+> > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> > 
+> > ---
+> > diff --git a/sound/hda/hdac_sysfs.c b/sound/hda/hdac_sysfs.c
+> > index fb2aa34..5d8a939 100644
+> > --- a/sound/hda/hdac_sysfs.c
+> > +++ b/sound/hda/hdac_sysfs.c
+> > @@ -370,12 +370,12 @@ static int widget_tree_create(struct hdac_device *codec)
+> >  
+> >  	tree->root = kobject_create_and_add("widgets", &codec->dev.kobj);
+> >  	if (!tree->root)
+> > -		return -ENOMEM;
+> > +		goto free_tree;
+> >  
+> >  	tree->nodes = kcalloc(codec->num_nodes + 1, sizeof(*tree->nodes),
+> >  			      GFP_KERNEL);
+> >  	if (!tree->nodes)
+> > -		return -ENOMEM;
+> > +		goto free_tree;
+> >  
+> >  	for (i = 0, nid = codec->start_nid; i < codec->num_nodes; i++, nid++) {
+> >  		err = add_widget_node(tree->root, nid, &widget_node_group,
+> > @@ -393,6 +393,9 @@ static int widget_tree_create(struct hdac_device *codec)
+> >  
+> >  	kobject_uevent(tree->root, KOBJ_CHANGE);
+> >  	return 0;
+> > +free_tree:
+> > +	kfree(tree);
+> > +	return -ENOMEM;
+> >  }
+> >  
+> >  int hda_widget_sysfs_init(struct hdac_device *codec)
+> > ---
+> > 
+It is freed in the caller site :)
+But it is really a rare free usage.
+Thanks
+Gen
