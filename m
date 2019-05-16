@@ -3,43 +3,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7442DC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A877C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5134A20848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5609B20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbfEPQDD (ORCPT
+        id S1728063AbfEPQDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:03:03 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42702 "EHLO
+        Thu, 16 May 2019 12:03:16 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42570 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726894AbfEPP6o (ORCPT
+        by vger.kernel.org with ESMTP id S1726757AbfEPP6o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 May 2019 11:58:44 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImH-0006zr-EN; Thu, 16 May 2019 16:58:41 +0100
+        id 1hRImD-0006yn-6T; Thu, 16 May 2019 16:58:37 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImE-0001Rz-OO; Thu, 16 May 2019 16:58:38 +0100
+        id 1hRImC-0001My-Ht; Thu, 16 May 2019 16:58:36 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.353868316@decadent.org.uk>
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        mgorman@suse.de, mpe@ellerman.id.au,
+        "Ingo Molnar" <mingo@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>, catalin.marinas@arm.com,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>, paulus@samba.org,
+        benh@kernel.crashing.org, "Anton Blanchard" <anton@samba.org>,
+        will.deacon@arm.com, davem@davemloft.net, mmarek@suse.cz,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        jbaron@akamai.com, linux@arm.linux.org.uk, ralf@linux-mips.org,
+        schwidefsky@de.ibm.com, rostedt@goodmis.org,
+        linuxppc-dev@lists.ozlabs.org, heiko.carstens@de.ibm.com,
+        liuj97@gmail.com
+Date:   Thu, 16 May 2019 16:55:32 +0100
+Message-ID: <lsq.1558022132.722723753@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 70/86] x86/speculation/l1tf: Document l1tf in sysfs
+Subject: [PATCH 3.16 08/86] jump_label: Allow asm/jump_label.h to be
+ included in assembly
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -53,26 +66,208 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Anton Blanchard <anton@samba.org>
 
-The vulnerabilties/l1tf attribute was added by commit 17dbca119312
-"x86/speculation/l1tf: Add sysfs reporting for l1tf", which has
-already been backported to 3.16, but only documented in commit
-d90a7a0ec83f "x86/bugs, kvm: Introduce boot-time control of L1TF
-mitigations", which has not and probbaly won't be.
+commit 55dd0df781e58ec23d218376ea4a676e7362a98c upstream.
 
-Add just that line of documentation for now.
+Wrap asm/jump_label.h for all archs with #ifndef __ASSEMBLY__.
+Since these are kernel only headers, we don't need #ifdef
+__KERNEL__ so can simplify things a bit.
 
+If an architecture wants to use jump labels in assembly, it
+will still need to define a macro to create the __jump_table
+entries (see ARCH_STATIC_BRANCH in the powerpc asm/jump_label.h
+for an example).
+
+Signed-off-by: Anton Blanchard <anton@samba.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: benh@kernel.crashing.org
+Cc: catalin.marinas@arm.com
+Cc: davem@davemloft.net
+Cc: heiko.carstens@de.ibm.com
+Cc: jbaron@akamai.com
+Cc: linux@arm.linux.org.uk
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: liuj97@gmail.com
+Cc: mgorman@suse.de
+Cc: mmarek@suse.cz
+Cc: mpe@ellerman.id.au
+Cc: paulus@samba.org
+Cc: ralf@linux-mips.org
+Cc: rostedt@goodmis.org
+Cc: schwidefsky@de.ibm.com
+Cc: will.deacon@arm.com
+Link: http://lkml.kernel.org/r/1428551492-21977-1-git-send-email-anton@samba.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/Documentation/ABI/testing/sysfs-devices-system-cpu
-+++ b/Documentation/ABI/testing/sysfs-devices-system-cpu
-@@ -230,6 +230,7 @@ What:		/sys/devices/system/cpu/vulnerabi
- 		/sys/devices/system/cpu/vulnerabilities/spectre_v1
- 		/sys/devices/system/cpu/vulnerabilities/spectre_v2
- 		/sys/devices/system/cpu/vulnerabilities/spec_store_bypass
-+		/sys/devices/system/cpu/vulnerabilities/l1tf
- Date:		January 2018
- Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
- Description:	Information about CPU vulnerabilities
+ arch/arm/include/asm/jump_label.h   | 5 ++---
+ arch/arm64/include/asm/jump_label.h | 8 ++++----
+ arch/mips/include/asm/jump_label.h  | 7 +++----
+ arch/s390/include/asm/jump_label.h  | 3 +++
+ arch/sparc/include/asm/jump_label.h | 5 ++---
+ arch/x86/include/asm/jump_label.h   | 5 ++---
+ 6 files changed, 16 insertions(+), 17 deletions(-)
+
+--- a/arch/arm/include/asm/jump_label.h
++++ b/arch/arm/include/asm/jump_label.h
+@@ -1,7 +1,7 @@
+ #ifndef _ASM_ARM_JUMP_LABEL_H
+ #define _ASM_ARM_JUMP_LABEL_H
+ 
+-#ifdef __KERNEL__
++#ifndef __ASSEMBLY__
+ 
+ #include <linux/types.h>
+ 
+@@ -27,8 +27,6 @@ l_yes:
+ 	return true;
+ }
+ 
+-#endif /* __KERNEL__ */
+-
+ typedef u32 jump_label_t;
+ 
+ struct jump_entry {
+@@ -37,4 +35,5 @@ struct jump_entry {
+ 	jump_label_t key;
+ };
+ 
++#endif  /* __ASSEMBLY__ */
+ #endif
+--- a/arch/arm64/include/asm/jump_label.h
++++ b/arch/arm64/include/asm/jump_label.h
+@@ -18,11 +18,12 @@
+  */
+ #ifndef __ASM_JUMP_LABEL_H
+ #define __ASM_JUMP_LABEL_H
++
++#ifndef __ASSEMBLY__
++
+ #include <linux/types.h>
+ #include <asm/insn.h>
+ 
+-#ifdef __KERNEL__
+-
+ #define JUMP_LABEL_NOP_SIZE		AARCH64_INSN_SIZE
+ 
+ static __always_inline bool arch_static_branch(struct static_key *key)
+@@ -39,8 +40,6 @@ l_yes:
+ 	return true;
+ }
+ 
+-#endif /* __KERNEL__ */
+-
+ typedef u64 jump_label_t;
+ 
+ struct jump_entry {
+@@ -49,4 +48,5 @@ struct jump_entry {
+ 	jump_label_t key;
+ };
+ 
++#endif  /* __ASSEMBLY__ */
+ #endif	/* __ASM_JUMP_LABEL_H */
+--- a/arch/mips/include/asm/jump_label.h
++++ b/arch/mips/include/asm/jump_label.h
+@@ -8,9 +8,9 @@
+ #ifndef _ASM_MIPS_JUMP_LABEL_H
+ #define _ASM_MIPS_JUMP_LABEL_H
+ 
+-#include <linux/types.h>
++#ifndef __ASSEMBLY__
+ 
+-#ifdef __KERNEL__
++#include <linux/types.h>
+ 
+ #define JUMP_LABEL_NOP_SIZE 4
+ 
+@@ -39,8 +39,6 @@ l_yes:
+ 	return true;
+ }
+ 
+-#endif /* __KERNEL__ */
+-
+ #ifdef CONFIG_64BIT
+ typedef u64 jump_label_t;
+ #else
+@@ -53,4 +51,5 @@ struct jump_entry {
+ 	jump_label_t key;
+ };
+ 
++#endif  /* __ASSEMBLY__ */
+ #endif /* _ASM_MIPS_JUMP_LABEL_H */
+--- a/arch/s390/include/asm/jump_label.h
++++ b/arch/s390/include/asm/jump_label.h
+@@ -1,6 +1,8 @@
+ #ifndef _ASM_S390_JUMP_LABEL_H
+ #define _ASM_S390_JUMP_LABEL_H
+ 
++#ifndef __ASSEMBLY__
++
+ #include <linux/types.h>
+ 
+ #define JUMP_LABEL_NOP_SIZE 6
+@@ -39,4 +41,5 @@ struct jump_entry {
+ 	jump_label_t key;
+ };
+ 
++#endif  /* __ASSEMBLY__ */
+ #endif
+--- a/arch/sparc/include/asm/jump_label.h
++++ b/arch/sparc/include/asm/jump_label.h
+@@ -1,7 +1,7 @@
+ #ifndef _ASM_SPARC_JUMP_LABEL_H
+ #define _ASM_SPARC_JUMP_LABEL_H
+ 
+-#ifdef __KERNEL__
++#ifndef __ASSEMBLY__
+ 
+ #include <linux/types.h>
+ 
+@@ -22,8 +22,6 @@ l_yes:
+ 	return true;
+ }
+ 
+-#endif /* __KERNEL__ */
+-
+ typedef u32 jump_label_t;
+ 
+ struct jump_entry {
+@@ -32,4 +30,5 @@ struct jump_entry {
+ 	jump_label_t key;
+ };
+ 
++#endif  /* __ASSEMBLY__ */
+ #endif
+--- a/arch/x86/include/asm/jump_label.h
++++ b/arch/x86/include/asm/jump_label.h
+@@ -1,7 +1,7 @@
+ #ifndef _ASM_X86_JUMP_LABEL_H
+ #define _ASM_X86_JUMP_LABEL_H
+ 
+-#ifdef __KERNEL__
++#ifndef __ASSEMBLY__
+ 
+ #include <linux/stringify.h>
+ #include <linux/types.h>
+@@ -30,8 +30,6 @@ l_yes:
+ 	return true;
+ }
+ 
+-#endif /* __KERNEL__ */
+-
+ #ifdef CONFIG_X86_64
+ typedef u64 jump_label_t;
+ #else
+@@ -44,4 +42,5 @@ struct jump_entry {
+ 	jump_label_t key;
+ };
+ 
++#endif  /* __ASSEMBLY__ */
+ #endif
 
