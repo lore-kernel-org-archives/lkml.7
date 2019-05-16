@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 073F7C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:53:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A8FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:53:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDDD920645
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:53:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B972F2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:53:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="e6vF/0Ts"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PNbWyAEe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbfEPLxg (ORCPT
+        id S1727763AbfEPLxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:53:36 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:7054 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726723AbfEPLxf (ORCPT
+        Thu, 16 May 2019 07:53:43 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:5482 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbfEPLxm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:53:35 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cdd4f3a0000>; Thu, 16 May 2019 04:53:30 -0700
+        Thu, 16 May 2019 07:53:42 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cdd4f1c0000>; Thu, 16 May 2019 04:53:00 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 16 May 2019 04:53:34 -0700
+  Thu, 16 May 2019 04:53:41 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 16 May 2019 04:53:34 -0700
-Received: from HQMAIL102.nvidia.com (172.18.146.10) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 May
- 2019 11:53:34 +0000
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL102.nvidia.com
+        by hqpgpgate101.nvidia.com on Thu, 16 May 2019 04:53:41 -0700
+Received: from HQMAIL102.nvidia.com (172.18.146.10) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 May
+ 2019 11:53:41 +0000
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL102.nvidia.com
  (172.18.146.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 May
- 2019 11:53:33 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 16 May 2019 11:53:33 +0000
+ 2019 11:53:41 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 16 May 2019 11:53:41 +0000
 Received: from kyarlagadda-linux.nvidia.com (Not Verified[10.19.64.169]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cdd4f3a0002>; Thu, 16 May 2019 04:53:33 -0700
+        id <B5cdd4f410000>; Thu, 16 May 2019 04:53:40 -0700
 From:   Krishna Yarlagadda <kyarlagadda@nvidia.com>
 To:     <linus.walleij@linaro.org>, <thierry.reding@gmail.com>,
         <jonathanh@nvidia.com>, <linux-kernel@vger.kernel.org>,
@@ -49,9 +49,9 @@ To:     <linus.walleij@linaro.org>, <thierry.reding@gmail.com>,
 CC:     <pdeschrijver@nvidia.com>, <josephl@nvidia.com>,
         <smangipudi@nvidia.com>, <ldewangan@nvidia.com>,
         <vidyas@nvidia.com>, Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Subject: [PATCH V3 2/4] pinctrl: tegra: Support 32 bit register access
-Date:   Thu, 16 May 2019 17:23:12 +0530
-Message-ID: <1558007594-14824-2-git-send-email-kyarlagadda@nvidia.com>
+Subject: [PATCH V3 4/4] soc/tegra: select pinctrl for Tegra194
+Date:   Thu, 16 May 2019 17:23:14 +0530
+Message-ID: <1558007594-14824-4-git-send-email-kyarlagadda@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1558007594-14824-1-git-send-email-kyarlagadda@nvidia.com>
 References: <1558007594-14824-1-git-send-email-kyarlagadda@nvidia.com>
@@ -59,91 +59,41 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1558007610; bh=9yMa0MdESN+pqf3yySouNjMJ8Zwp0P/OmYwg+K6jF8I=;
+        t=1558007580; bh=vZPeMulyG2M0BcsrWsBCmVEo9iVP+aStJoSJsHmSI2c=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=e6vF/0TsFdqP/JSFvMk4xs2PpIwHmMnGfoPbJ6G9McEhduYoXuDWGTdAIl1ShVXNx
-         6HEMhTSuL2jBvRE3AgZS6iUJ76RkwpTHkG5bILnmCXeQpoN/BGqYsEqgtQoV256eXp
-         xTSJOFTB8ypZmLmXure685LacEsSXKO+DHZF/ZZohrfywe7hqdaMkrbCjIbZgASiXR
-         H8F+lniCLWD1fKV3TC2Ffs9KFaV8jSmWiZRr152uBCBGUbZBYpr5U+azFIgqiTD0+e
-         lg1wEfQ4WFlaFfm1OGASqkfQj8+xnTz0Fru91/gdcWvAqVJn8XRrGPMMXXmYBtUZUv
-         Zx5UDmuQMbD1g==
+        b=PNbWyAEeisbyjVMCYtuazXdblAx7XORpWgWubPZoQO1Wx+tas05as+i1uY45GAdby
+         EJXdyVZKh4kgzbRzkwN5lhSgSgLV0FI8vENB3d7M+2pBHNzqSWJcICzQevPCkEHvXp
+         pVPZvUSpSFBm6oI7HXKXezFhAZofowe4yvDHEEEH5dHp6UEld90/ChunLn6oQqkqPl
+         32hf1FgdyBYUeOzZ+7BG94NJdHm2SGwsOEh/H8Kt431QrcddcHYjew4U6HG3SCFfYm
+         ZeOUIpW/jBt1fn3WZsO28MEFzP54xkVxcBDPh21Y8a664rtNfJoZSpJb617glwxRd6
+         0Bkejr8q/2KKg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra194 chip has 32 bit pinctrl registers. Existing register defines in
-header are only 16 bit.
-Modified common pinctrl-tegra driver to support 32 bit registers of
-Tegra 194 and later chips.
+Select PINCTRL_TEGRA194 by default for Tegra194 SOC needed
+for dynamically controlling PCIe pins
 
 Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
 ---
- drivers/pinctrl/tegra/pinctrl-tegra.c | 8 ++++----
- drivers/pinctrl/tegra/pinctrl-tegra.h | 8 ++++----
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/soc/tegra/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
-index a5008c0..76e88c4 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-@@ -292,7 +292,7 @@ static int tegra_pinconf_reg(struct tegra_pmx *pmx,
- 			     const struct tegra_pingroup *g,
- 			     enum tegra_pinconf_param param,
- 			     bool report_err,
--			     s8 *bank, s16 *reg, s8 *bit, s8 *width)
-+			     s8 *bank, s32 *reg, s8 *bit, s8 *width)
- {
- 	switch (param) {
- 	case TEGRA_PINCONF_PARAM_PULL:
-@@ -451,7 +451,7 @@ static int tegra_pinconf_group_get(struct pinctrl_dev *pctldev,
- 	const struct tegra_pingroup *g;
- 	int ret;
- 	s8 bank, bit, width;
--	s16 reg;
-+	s32 reg;
- 	u32 val, mask;
- 
- 	g = &pmx->soc->groups[group];
-@@ -480,7 +480,7 @@ static int tegra_pinconf_group_set(struct pinctrl_dev *pctldev,
- 	const struct tegra_pingroup *g;
- 	int ret, i;
- 	s8 bank, bit, width;
--	s16 reg;
-+	s32 reg;
- 	u32 val, mask;
- 
- 	g = &pmx->soc->groups[group];
-@@ -548,7 +548,7 @@ static void tegra_pinconf_group_dbg_show(struct pinctrl_dev *pctldev,
- 	const struct tegra_pingroup *g;
- 	int i, ret;
- 	s8 bank, bit, width;
--	s16 reg;
-+	s32 reg;
- 	u32 val;
- 
- 	g = &pmx->soc->groups[group];
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/tegra/pinctrl-tegra.h
-index 44c7194..82cd947 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra.h
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
-@@ -143,10 +143,10 @@ struct tegra_pingroup {
- 	const unsigned *pins;
- 	u8 npins;
- 	u8 funcs[4];
--	s16 mux_reg;
--	s16 pupd_reg;
--	s16 tri_reg;
--	s16 drv_reg;
-+	s32 mux_reg;
-+	s32 pupd_reg;
-+	s32 tri_reg;
-+	s32 drv_reg;
- 	u32 mux_bank:2;
- 	u32 pupd_bank:2;
- 	u32 tri_bank:2;
+diff --git a/drivers/soc/tegra/Kconfig b/drivers/soc/tegra/Kconfig
+index a0b0344..6f0df55 100644
+--- a/drivers/soc/tegra/Kconfig
++++ b/drivers/soc/tegra/Kconfig
+@@ -108,6 +108,7 @@ config ARCH_TEGRA_186_SOC
+ config ARCH_TEGRA_194_SOC
+ 	bool "NVIDIA Tegra194 SoC"
+ 	select MAILBOX
++	select PINCTRL_TEGRA194
+ 	select TEGRA_BPMP
+ 	select TEGRA_HSP_MBOX
+ 	select TEGRA_IVC
 -- 
 2.7.4
 
