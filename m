@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B79C46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 493EFC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1B4820881
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27B6720818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:03:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727278AbfEPJDI (ORCPT
+        id S1727297AbfEPJDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 05:03:08 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:34448 "EHLO
+        Thu, 16 May 2019 05:03:14 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:27879 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727126AbfEPJCp (ORCPT
+        with ESMTP id S1727135AbfEPJCo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 05:02:45 -0400
-X-UUID: d99f3eaff14d4b96be97f6344ca94ded-20190516
-X-UUID: d99f3eaff14d4b96be97f6344ca94ded-20190516
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        Thu, 16 May 2019 05:02:44 -0400
+X-UUID: c02074bb4fd841eb84fa4aed5f22d6a7-20190516
+X-UUID: c02074bb4fd841eb84fa4aed5f22d6a7-20190516
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
         (envelope-from <bibby.hsieh@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 208217076; Thu, 16 May 2019 17:02:30 +0800
+        with ESMTP id 952354481; Thu, 16 May 2019 17:02:28 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
  15.0.1395.4; Thu, 16 May 2019 17:02:28 +0800
 Received: from mtkslt302.mediatek.inc (10.21.14.115) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
@@ -53,82 +53,107 @@ CC:     Daniel Kurtz <djkurtz@chromium.org>,
         <dennis-yc.hsimediatek/mtkcam/drv/fdvt/4.0/cam_fdvt_v4l2.cppeh@mediatek.com>,
         Houlong Wei <houlong.wei@mediatek.com>,
         <ginny.chen@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v6 11/12] soc: mediatek: cmdq: add cmdq_dev_get_event function
-Date:   Thu, 16 May 2019 17:02:23 +0800
-Message-ID: <20190516090224.59070-12-bibby.hsieh@mediatek.com>
+Subject: [PATCH v6 09/12] soc: mediatek: cmdq: add polling function
+Date:   Thu, 16 May 2019 17:02:21 +0800
+Message-ID: <20190516090224.59070-10-bibby.hsieh@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
 References: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 9A2755B4FB78B57F33B478C63B99A519E16E32D62B0FFB64A4A767084979C0582000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When client ask gce to clear or wait for event,
-client need to pass event number to the API.
-We suggest client store the event information in device node,
-so we provide an API for client parse the event property.
+add polling function in cmdq helper functions
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-cmdq-helper.c | 18 ++++++++++++++++++
- include/linux/soc/mediatek/mtk-cmdq.h  | 12 ++++++++++++
- 2 files changed, 30 insertions(+)
+ drivers/soc/mediatek/mtk-cmdq-helper.c   | 28 ++++++++++++++++++++++++
+ include/linux/mailbox/mtk-cmdq-mailbox.h |  1 +
+ include/linux/soc/mediatek/mtk-cmdq.h    | 15 +++++++++++++
+ 3 files changed, 44 insertions(+)
 
 diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index a64060a34e01..e9658063c3d4 100644
+index 17ee8196fb3d..a53cdd71cfc2 100644
 --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
 +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -52,6 +52,24 @@ struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx)
+@@ -220,6 +220,34 @@ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event)
  }
- EXPORT_SYMBOL(cmdq_dev_get_subsys);
+ EXPORT_SYMBOL(cmdq_pkt_clear_event);
  
-+s32 cmdq_dev_get_event(struct device *dev, int index)
++int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
++		  u16 offset, u32 value, u32 mask)
 +{
-+	s32 result;
++	struct cmdq_instruction *inst;
 +
-+	if (!dev)
-+		return -EINVAL;
++	if (mask != 0xffffffff) {
++		inst = cmdq_pkt_append_command(pkt);
++		if (!inst)
++			return -ENOMEM;
 +
-+	if (of_property_read_u32_index(dev->of_node, "mediatek,gce-events",
-+				       index, &result)) {
-+		dev_err(dev, "can't parse gce-events property");
-+
-+		return -ENODEV;
++		inst->op = CMDQ_CODE_MASK;
++		inst->value = ~mask;
++		offset = offset | 0x1;
 +	}
 +
-+	return result;
-+}
-+EXPORT_SYMBOL(cmdq_dev_get_event);
++	inst = cmdq_pkt_append_command(pkt);
++	if (!inst)
++		return -ENOMEM;
 +
- static void cmdq_client_timeout(struct timer_list *t)
++	inst->op = CMDQ_CODE_POLL;
++	inst->value = value;
++	inst->offset = offset;
++	inst->subsys = subsys;
++
++	return 0;
++}
++EXPORT_SYMBOL(cmdq_pkt_poll);
++
+ static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
  {
- 	struct cmdq_client *client = from_timer(client, t, timer);
+ 	struct cmdq_instruction *inst;
+diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+index f21801d32a3a..1dfd5ed5c8c5 100644
+--- a/include/linux/mailbox/mtk-cmdq-mailbox.h
++++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+@@ -46,6 +46,7 @@
+ enum cmdq_code {
+ 	CMDQ_CODE_MASK = 0x02,
+ 	CMDQ_CODE_WRITE = 0x04,
++	CMDQ_CODE_POLL = 0x08,
+ 	CMDQ_CODE_JUMP = 0x10,
+ 	CMDQ_CODE_WFE = 0x20,
+ 	CMDQ_CODE_EOC = 0x40,
 diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 574006c5cd76..525713bf79b5 100644
+index 52f69c8db8de..0651a0bffa54 100644
 --- a/include/linux/soc/mediatek/mtk-cmdq.h
 +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -160,4 +160,16 @@ int cmdq_pkt_flush(struct cmdq_pkt *pkt);
+@@ -99,6 +99,21 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
   */
- struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx);
+ int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
  
 +/**
-+ * cmdq_dev_get_event() - parse event from the device node of CMDQ client
-+ * @dev:	device of CMDQ mailbox client
-+ * @index:	the index of desired event
++ * cmdq_pkt_poll() - Append polling command to the CMDQ packet, ask GCE to
++ *		     execute an instruction that wait for a specified hardware
++ *		     register to check for the value. All GCE hardware
++ *		     threads will be blocked by this instruction.
++ * @pkt:	the CMDQ packet
++ * @subsys:	the CMDQ sub system code
++ * @offset:	register offset from CMDQ sub system
++ * @value:	the specified target register value
++ * @mask:	the specified target register mask
 + *
-+ * Return: CMDQ event number
-+ *
-+ * Help CMDQ client pasing the event number
-+ * from the device node of CMDQ client.
++ * Return: 0 for success; else the error code is returned
 + */
-+s32 cmdq_dev_get_event(struct device *dev, int index);
-+
- #endif	/* __MTK_CMDQ_H__ */
++int cmdq_pkt_poll(struct cmdq_pkt *pkt, u8 subsys,
++		  u16 offset, u32 value, u32 mask);
+ /**
+  * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
+  *                          packet and call back at the end of done packet
 -- 
 2.18.0
 
