@@ -2,118 +2,53 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5052DC46470
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 02:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C273C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 02:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23F0E2087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 02:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557973856;
-	bh=wM9TNClsZacWcRgk7xTDNK0BYza1+wzkgKUWbX29yrM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=g6TuHohiuG903QMPAOmmMpN6SvnZJVPmGBnVhvXX0/32lKSviyN8oW8rqk9RvCL5o
-	 /RoQf1T7Dya9HgNaGmcV83gNLqLbncK72T0sd5dVowE8GhRQZSLhjjkKtssfUl757n
-	 W/M39IhQmoLnmA8zqtLSFmNNXiS3xcv4GbW5ncgk=
+	by mail.kernel.org (Postfix) with ESMTP id F3C4E20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 02:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbfEPCaz (ORCPT
+        id S1726389AbfEPCnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 22:30:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725974AbfEPCay (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 22:30:54 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACA6720843;
-        Thu, 16 May 2019 02:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557973853;
-        bh=wM9TNClsZacWcRgk7xTDNK0BYza1+wzkgKUWbX29yrM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MxuvneykuaKmPMU593+C93QcL9NYo0U3hIQ3jPbZUw9YVhW3okQwsdkSF23jGw6Vs
-         E47HWjp4V2AI4tkf9BtC9jDKrM3vOeIuB5S4G1NQveQFaD7L9HQKfCIvLEr7cqAVpo
-         Sa9VmLheapfklWiIY0Pu9I17VSa/syzd6uR1jgC8=
-Date:   Wed, 15 May 2019 19:30:52 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Horia Geanta <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH] crypto: talitos - fix skcipher failure due to wrong
- output IV
-Message-ID: <20190516023050.GA23200@sol.localdomain>
-References: <a5b0d31d8fc9fc9bc2b69baa5330466090825a39.1557923113.git.christophe.leroy@c-s.fr>
- <VI1PR0402MB34858D80A15D4B55F64570E398090@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <29db3f20-f931-efc6-02a8-fe160ab8b484@c-s.fr>
+        Wed, 15 May 2019 22:43:15 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8201 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726229AbfEPCnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 22:43:15 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 0D01E583B023829992BA;
+        Thu, 16 May 2019 10:43:13 +0800 (CST)
+Received: from [127.0.0.1] (10.177.249.165) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Thu, 16 May 2019
+ 10:43:05 +0800
+From:   "wencongyang (A)" <wencongyang2@huawei.com>
+Subject: Question about MDS mitigation
+To:     <linux-kernel@vger.kernel.org>, <kvm@vger.kernel.org>
+CC:     Huangzhichao <huangzhichao@huawei.com>,
+        guijianfeng <guijianfeng@huawei.com>,
+        gaowanlong <gaowanlong@huawei.com>,
+        "Chentao (Boby)" <boby.chen@huawei.com>,
+        "Liujinsong (Paul)" <liu.jinsong@huawei.com>
+Message-ID: <f513e534-2c7b-f32b-7346-1a64edf0db73@huawei.com>
+Date:   Thu, 16 May 2019 10:42:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <29db3f20-f931-efc6-02a8-fe160ab8b484@c-s.fr>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.249.165]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 08:49:48PM +0200, Christophe Leroy wrote:
-> 
-> 
-> Le 15/05/2019 à 16:05, Horia Geanta a écrit :
-> > On 5/15/2019 3:29 PM, Christophe Leroy wrote:
-> > > Selftests report the following:
-> > > 
-> > > [    2.984845] alg: skcipher: cbc-aes-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-> > > [    2.995377] 00000000: 3d af ba 42 9d 9e b4 30 b4 22 da 80 2c 9f ac 41
-> > > [    3.032673] alg: skcipher: cbc-des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-> > > [    3.043185] 00000000: fe dc ba 98 76 54 32 10
-> > > [    3.063238] alg: skcipher: cbc-3des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
-> > > [    3.073818] 00000000: 7d 33 88 93 0f 93 b2 42
-> > > 
-> > > This above dumps show that the actual output IV is indeed the input IV.
-> > > This is due to the IV not being copied back into the request.
-> > > 
-> > > This patch fixes that.
-> > > 
-> > > Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> > Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
-> 
-> It's missing a Fixes: tag and a Cc: to stable.
-> 
-> I'll resend tomorrow.
-> 
-> > 
-> > While here, could you please check ecb mode (which by definition does not have
-> > an IV) is behaving correctly?
-> > Looking in driver_algs[] list of crypto algorithms supported by talitos,
-> > ecb(aes,des,3des) are declared with ivsize != 0.
-> 
-> According to /proc/crypto, test are passed for ecb.
-> 
+Hi all
 
-Did you try enabling CONFIG_CRYPTO_MANAGER_EXTRA_TESTS?  There is now a check
-that the driver's ivsize matches the generic implementation's:
+Fill buffers, load ports are shared between threads on the same physical core.
+We need to run more than one vm on the same physical core.
+Is there any complete mitigation for environments utilizing SMT?
 
-        if (ivsize != crypto_skcipher_ivsize(generic_tfm)) {
-                pr_err("alg: skcipher: ivsize for %s (%u) doesn't match generic impl (%u)\n",
-                       driver, ivsize, crypto_skcipher_ivsize(generic_tfm));
-                err = -EINVAL;
-                goto out;
-        }
-
-For ECB that means the ivsize must be 0.
-
-AFAICS the talitos driver even accesses the IV for ECB, which is wrong; and the
-only reason this isn't crashing the self-tests already is that they are confused
-by the declared ivsize being nonzero so they don't pass NULL as they should.
-
-- Eric
