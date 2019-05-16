@@ -2,107 +2,93 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6D1C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EAEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A365E20833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35BF720862
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Bv91VW9m"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="2FkCg+QJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbfEPMU2 (ORCPT
+        id S1726864AbfEPMbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 08:20:28 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39316 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfEPMU2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 08:20:28 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a10so2892865ljf.6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 05:20:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wr0yrITWiDgpTtW7hOhkZTXIfJ4eLHxYShx+ors7rts=;
-        b=Bv91VW9mbA/lrzvFPX4j+c3OhgAcDSfRzunT5DviBFTgoDJy1VXoMb6bjYHNgUba0h
-         iuTJ56lTMab3DfGAa800XyxOtYrQoW8W+8EZbMNrgx70FPAS9gni/Y2QEkyJ6/9BnwYp
-         yNUsXm6uUi0yhdWmLNPugsYACmutqAYkFzD9RfSo5KUe5LUPCq/Vhx+TyrMa7W33rvMk
-         rZATdE02XuJ52GYiOqe4BTvCu5RjHyY11uH3t9I9vZF3tdLAosTkiHu/nT2AEvCZ3Ujf
-         /F3Aaq8LpWQIPPDQcsweXzRUnoz1dtZBnIB1u6Q76qpmC6twBOf7G42QJ9M/M58eEga2
-         q4mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wr0yrITWiDgpTtW7hOhkZTXIfJ4eLHxYShx+ors7rts=;
-        b=tfMh0/WVYvT/nFoLUypGqQ9WFW+4HexD6weal+4w79olDGKqdOW1VDCtWyr6Iwxkey
-         MktxbpMeiBtf0A2oIT6M2H55jX7SZY4Qth6igaMARcTPCf4X+BUUhfXbKKT3UWCRG6ZZ
-         o8DyC+d0XK9RbhD859nQmV1B8oLqy0Hify6/WFLFASJYVgufLHyqZTUxUzPwZWY5mBkN
-         NDj/pFwbvnwDtBYBIEwt/Tit0AlR/v7oe4ulj19ckvDYUrX9NuzQpHR/WQ+GJ7iqfjwW
-         h+NbTbzX4KZDO3hnUQvppGVsOn14K6IN0RtsaTsDm3io4YNaVohM7QEwaNG8kuQY52+Z
-         Nn+w==
-X-Gm-Message-State: APjAAAVjEYXE53mTnEN4Rj2/Z4Mr434f0VhxObTP1Be1m6raPlsvch6J
-        MtFZl8CFHmPZO/UkTPZAlV70Fwa49CSRRsUmqSt7Yg==
-X-Google-Smtp-Source: APXvYqz3tKAivV8Dh7JbLsHVm95JkncbNhNajSVq3rYNN6TMvN6O2ZDg675uuDTUoVEOcB135K7WzRtiYKDdXgotPBY=
-X-Received: by 2002:a2e:8741:: with SMTP id q1mr2126359ljj.97.1558009226473;
- Thu, 16 May 2019 05:20:26 -0700 (PDT)
+        Thu, 16 May 2019 08:31:33 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:37204 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726955AbfEPMbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 08:31:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=8xq/AtLnhhHzaEV7B7DQtMaLbospcYCiDyDYIDbl+EM=; b=2FkCg+QJQNemfvntMoY/Sg2hMR
+        Es9XwCnKNwndQo+A6WrRG5rz/xlK+Qsws4mgav7Mjtd6IqnpBtwer1SzXie7pUP3pIl9icMIJRfM4
+        rjVfOUlzl6zwAErRc6zFfEeUB3JWyORiOyLHCnNeLrMqPtFZMAFuEqcrxOXG2F5eZ22A=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hRFXc-0002lz-VF; Thu, 16 May 2019 14:31:21 +0200
+Date:   Thu, 16 May 2019 14:31:20 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        palmer@sifive.com, paul.walmsley@sifive.com,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC
+Message-ID: <20190516123120.GB14298@lunn.ch>
+References: <1557983320-14461-1-git-send-email-sagar.kadam@sifive.com>
+ <1557983320-14461-4-git-send-email-sagar.kadam@sifive.com>
 MIME-Version: 1.0
-References: <20190424081802.GV2654@lahna.fi.intel.com> <5a28f22c-22f7-760a-d076-68ff19800d44@siemens.com>
- <20190424084259.GW2654@lahna.fi.intel.com> <7e328b7e-f4f0-851a-4152-a9ffd058201c@siemens.com>
- <20190424094506.GA2654@lahna.fi.intel.com> <292e6eff-82cc-6e4d-925b-77a60399e2e0@siemens.com>
- <20190424100130.GB2654@lahna.fi.intel.com> <1200464b-f969-ebc2-ae82-1f8ca98aaca1@siemens.com>
- <20190424103306.GC2654@lahna.fi.intel.com> <9377620b-d74a-04d9-a51e-8590400b1c0f@siemens.com>
- <20190426130615.GT9224@smile.fi.intel.com> <bd5453e1-0279-02ab-3304-edc6ebf509dc@siemens.com>
- <bc856e19-470d-7655-5680-a031831ab513@metux.net> <2f3da791-4a10-c2c4-dc5a-22ad16ed7be6@siemens.com>
- <ea29ee73-705b-7d13-0084-11274db02394@metux.net>
-In-Reply-To: <ea29ee73-705b-7d13-0084-11274db02394@metux.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 May 2019 14:20:14 +0200
-Message-ID: <CACRpkdZJSYFYuJYtubUHyPhSkiHi0eUX_hmbmmXqO2XPg6rJcw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: sch: Add interrupt support
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557983320-14461-4-git-send-email-sagar.kadam@sifive.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi folks,
+> @@ -682,13 +693,24 @@ static int ocores_i2c_probe(struct platform_device *pdev)
+>  
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq == -ENXIO) {
+> -		i2c->flags |= OCORES_FLAG_POLL;
+> +		/*
+> +		 * Set a OCORES_FLAG_BROKEN_IRQ to enable workaround for
+> +		 * FU540-C000 SoC in polling mode interface of i2c-ocore driver.
+> +		 * Else enable default polling mode interface for SIFIVE/OCORE
+> +		 * device types.
+> +		 */
+> +		match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
+> +		if (match && (long)match->data ==
+> +				(TYPE_SIFIVE_REV0 | OCORES_FLAG_BROKEN_IRQ))
 
-this became an interesting thread and Manivannan made some nice
-changes to MRAA as a result.
+This looks wrong. You added:
 
-It appears the Raspberry Pi has become a victim of its own success
-and went from hobbyist toy system to a foundation for random industrial
-control hacks. I'm a bit scared about that for electronic reasons but when
-it comes to the software that is a board that get things right after
-we added line-names to everything on its connectors.
++       {
++               .compatible = "sifive,fu540-c000-i2c",
++               .data = (void *)TYPE_SIFIVE_REV0,
++       },
++       {
++               .compatible = "sifive,i2c0",
++               .data = (void *)TYPE_SIFIVE_REV0,
++       },
 
-What I can add is that when designing the character device I tried to get some
-input from inductrial control (PLC) vendors and asked on the mailing list,
-and mailed directly to ABB at one point, I am sorry for not finding the right
-contact at Siemens (would have helped for sure).
+So match->data just has TYPE_SIFIVE_REV0.
 
-I have tried to talk to Liebherr in related matters but can't seem to find the
-right contact.
+> +			i2c->flags |= OCORES_FLAG_BROKEN_IRQ;
+> +		else
+> +			i2c->flags |= OCORES_FLAG_POLL;
 
-We really want to do things right with industrial control boards because
-these seem to have very long life cycles and stay around forever in the
-kernel for that reason.
+These two don't need to be exclusive. It makes more sense to say
+SIFIVE needs to poll and it its IRQ is broken. A lot of your other
+changes then go away.
 
-Yours,
-Linus Walleij
+       Andrew
