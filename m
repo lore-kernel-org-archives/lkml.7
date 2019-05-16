@@ -2,95 +2,89 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4D9C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAF6C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D5CE20818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C3B20818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:51:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NUHjLNzv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728704AbfEPRur (ORCPT
+        id S1727991AbfEPRvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 13:50:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36262 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbfEPRur (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 13:50:47 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 28AB6308425C;
-        Thu, 16 May 2019 17:50:47 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-120-91.rdu2.redhat.com [10.10.120.91])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 54CB5341E8;
-        Thu, 16 May 2019 17:50:46 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Mukesh Ojha <mojha@codeaurora.org>
-Subject: [PATCH] objtool: Allow AR to be overridden with HOSTAR
-Date:   Thu, 16 May 2019 12:49:42 -0500
-Message-Id: <80822a9353926c38fd7a152991c6292491a9d0e8.1558028966.git.jpoimboe@redhat.com>
+        Thu, 16 May 2019 13:51:13 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44991 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfEPRvN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 13:51:13 -0400
+Received: by mail-pl1-f195.google.com with SMTP id c5so1966720pll.11
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 10:51:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=3MehJCeTwhon04Mi3jlr6XP1VZlknSXqvgatwZv6jJw=;
+        b=NUHjLNzvryP7eUCB/OheR8fl9HVzx4+e5yOzozH6wnP784DMzcpOrywTxRsNm7Op4Z
+         Xv/SxoQPGv25NdYi85H4zZcmws0GndiOKk3SFFMKcRiZmWg5SGt1kauGU96iRPp7S0ed
+         EX7zM7LpO8TRujsXVYJpnKQhF0Pl0jtTdwQGc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3MehJCeTwhon04Mi3jlr6XP1VZlknSXqvgatwZv6jJw=;
+        b=gRcdHCkam10Y+eNNJAX+oo6ux0G89r8U7PoY9xusoKslKBzxU0D+wTQYPll4jsfLqC
+         j4CpjBvPDMoI1DSvW61TgmkSYN/VINZ6zW08I5yP+XdvH+olri7fxc2LXElAtwS29HzT
+         SbzC8kmuBnAFttYgpVMAT57ZpSHYAjyLhYeVGzLe9dTw1bqVhRvCqTGb44h8yAguWCT6
+         5xHGLLgbggNwVKrdTQ4bC6mey1kAiV1vSuunesnDg0vRZYBLYWIRIdLIZUfOetmAFyI2
+         gLZfvOBQSZLWmrbYTpG3I8mDqLE/kBDvyWzdyRNQCedIzIvvVAReavB0GBKsndDTvH8a
+         GCkA==
+X-Gm-Message-State: APjAAAV3q0RWl4boZ1KwFGaMcxuYLk09Zqhq9eJ7nT+AV5BxQnKwMhpd
+        DKQ2vjnRvIBpLDMuF2bCTi2ukA==
+X-Google-Smtp-Source: APXvYqwhBIWPRqZhsA9f77AUcheg/JhpgCM+kD/qRifj7nuwbRLzTzHv/Uh7FXrybqS4V06uT3v2Wg==
+X-Received: by 2002:a17:902:2947:: with SMTP id g65mr32624739plb.115.1558029072975;
+        Thu, 16 May 2019 10:51:12 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k63sm9704031pfb.108.2019.05.16.10.51.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 May 2019 10:51:12 -0700 (PDT)
+Date:   Thu, 16 May 2019 10:51:11 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Johannes Hirte <johannes.hirte@datenkhaos.de>
+Cc:     Borislav Petkov <bp@suse.de>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] x86/build: Move _etext to actual end of .text
+Message-ID: <201905161050.4B81082@keescook>
+References: <20190423183827.GA4012@beast>
+ <20190514120416.GA11736@probook>
+ <201905140842.21066115C5@keescook>
+ <20190514161051.GA21695@probook>
+ <201905151151.D4EA0FF7@keescook>
+ <20190516135606.GA25602@probook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 16 May 2019 17:50:47 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190516135606.GA25602@probook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+On Thu, May 16, 2019 at 03:56:07PM +0200, Johannes Hirte wrote:
+> On 2019 Mai 15, Kees Cook wrote:
+> > Various stupid questions: did you wipe the whole bulid tree and start
+> > clean? 
+> 
+> No I didn't. And this fixed it now. After a distclean I'm unable to
+> reproduce it. So sorry for the noise.
 
-Currently, this Makefile hardcodes GNU ar, meaning that if it is not
-available, there is no way to supply a different one and the build will
-fail.
+Okay, whew! Thanks for double-checking. No worries about the noise:
+it wouldn't have been the first time I broke some corner case. :)
 
-  $ make AR=llvm-ar CC=clang LD=ld.lld HOSTAR=llvm-ar HOSTCC=clang \
-         HOSTLD=ld.lld HOSTLDFLAGS=-fuse-ld=lld defconfig modules_prepare
-  ...
-    AR       /out/tools/objtool/libsubcmd.a
-  /bin/sh: 1: ar: not found
-  ...
-
-Follow the logic of HOST{CC,LD} and allow the user to specify a
-different ar tool via HOSTAR (which is used elsewhere in other
-tools/ Makefiles).
-
-Link: https://github.com/ClangBuiltLinux/linux/issues/481
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- tools/objtool/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index 53f8be0f4a1f..88158239622b 100644
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -7,11 +7,12 @@ ARCH := x86
- endif
- 
- # always use the host compiler
-+HOSTAR	?= ar
- HOSTCC	?= gcc
- HOSTLD	?= ld
-+AR	 = $(HOSTAR)
- CC	 = $(HOSTCC)
- LD	 = $(HOSTLD)
--AR	 = ar
- 
- ifeq ($(srctree),)
- srctree := $(patsubst %/,%,$(dir $(CURDIR)))
 -- 
-2.20.1
-
+Kees Cook
