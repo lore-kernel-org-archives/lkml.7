@@ -2,59 +2,56 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D19C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11172C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08D3C21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF1D92087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:42:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558006925;
-	bh=yRkLOFR3h40g7f+vwHCiXT4JQc/3J7QKLamA3qGjGS8=;
+	s=default; t=1558006926;
+	bh=5QHq0NPx/pf/I7hk4JXiWuDDQ4q1QHLuvyeWrpEjm/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oXwVCLSJFBHoWJinNMdBQP4JRfU9jdD2WdC3pm5/q77kvOju4HeZ1gc/3pGqoSXBv
-	 bFvmmLX8j+vKuoOplw4coLPxrCZVMOWjRqS1CpCoHgljPOKp9RmIcVnnyULe4fqfEf
-	 ddE/FgE2xbBBP16DWZqc+Dz6vcYZuk1XDd8Od/Fo=
+	b=lIITZzZpU3L6/O/o6lFWZXJk29HLZSRKliTT5VSsgRbHJrn4daGFFTN3IFe3xEn2+
+	 K1K+eK1uhaWNNf2FPZQT8ml4gBXS8BTDRQ9ev0822w1dDOkoGLGbuVxIq1UwUqv/PS
+	 Dt2+oaGxTCjiA9Fb8duYz7oWIPQIrn1ARMldjJHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728445AbfEPLmE (ORCPT
+        id S1728459AbfEPLmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:42:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50846 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:42:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727637AbfEPLl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:41:59 -0400
+        id S1728428AbfEPLmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:42:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4527A2087E;
-        Thu, 16 May 2019 11:41:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 329E52168B;
+        Thu, 16 May 2019 11:42:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006919;
-        bh=yRkLOFR3h40g7f+vwHCiXT4JQc/3J7QKLamA3qGjGS8=;
+        s=default; t=1558006923;
+        bh=5QHq0NPx/pf/I7hk4JXiWuDDQ4q1QHLuvyeWrpEjm/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YiRgkkz0opXITm9IFcbMiGC0HJkvpAdM+ol4kEOKbAq9LwmHO1yMHAHZLRNjRhwk8
-         C6qyn2nxOH6x/AmOLooVgp5i/1zKW+5mx4z+J+Wt5XirhtPnOIVhvVqvJ9nnaWTbFU
-         8yycqsysckj5m6yL8/zxkoK8todyQ1lCTD9QnmHA=
+        b=UHU/rGnGW5LHkUhkSZeTTd/+T6pmM9/aXAUF4bFPFoeHniQ53QCM8iqFvu6btmYw3
+         oZGVbtRrRt3bYSzLCkJVYX+jN/NhQ5ZvOVtzuhs5q/ke1h9Y6xIVcP3T1E1dqwcOGJ
+         J56j0oajZ2wfwr6E+0aEbTG+TVNr7C02XSqPTnVs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>,
-        linux-snps-arc@lists.infradead.org,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 8/8] perf bench numa: Add define for RUSAGE_THREAD if not present
-Date:   Thu, 16 May 2019 07:41:46 -0400
-Message-Id: <20190516114146.9267-8-sashal@kernel.org>
+Cc:     Su Yanjun <suyj.fnst@cn.fujitsu.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 3.18 2/6] xfrm6_tunnel: Fix potential panic when unloading xfrm6_tunnel module
+Date:   Thu, 16 May 2019 07:41:55 -0400
+Message-Id: <20190516114159.9382-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190516114146.9267-1-sashal@kernel.org>
-References: <20190516114146.9267-1-sashal@kernel.org>
+In-Reply-To: <20190516114159.9382-1-sashal@kernel.org>
+References: <20190516114159.9382-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,66 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Su Yanjun <suyj.fnst@cn.fujitsu.com>
 
-[ Upstream commit bf561d3c13423fc54daa19b5d49dc15fafdb7acc ]
+[ Upstream commit 6ee02a54ef990a71bf542b6f0a4e3321de9d9c66 ]
 
-While cross building perf to the ARC architecture on a fedora 30 host,
-we were failing with:
+When unloading xfrm6_tunnel module, xfrm6_tunnel_fini directly
+frees the xfrm6_tunnel_spi_kmem. Maybe someone has gotten the
+xfrm6_tunnel_spi, so need to wait it.
 
-      CC       /tmp/build/perf/bench/numa.o
-  bench/numa.c: In function ‘worker_thread’:
-  bench/numa.c:1261:12: error: ‘RUSAGE_THREAD’ undeclared (first use in this function); did you mean ‘SIGEV_THREAD’?
-    getrusage(RUSAGE_THREAD, &rusage);
-              ^~~~~~~~~~~~~
-              SIGEV_THREAD
-  bench/numa.c:1261:12: note: each undeclared identifier is reported only once for each function it appears in
-
-[perfbuilder@60d5802468f6 perf]$ /arc_gnu_2019.03-rc1_prebuilt_uclibc_le_archs_linux_install/bin/arc-linux-gcc --version | head -1
-arc-linux-gcc (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1) 8.3.1 20190225
-[perfbuilder@60d5802468f6 perf]$
-
-Trying to reproduce a report by Vineet, I noticed that, with just
-cross-built zlib and numactl libraries, I ended up with the above
-failure.
-
-So, since RUSAGE_THREAD is available as a define, check for that and
-numactl libraries, I ended up with the above failure.
-
-So, since RUSAGE_THREAD is available as a define in the system headers,
-check if it is defined in the 'perf bench numa' sources and define it if
-not.
-
-Now it builds and I have to figure out if the problem reported by Vineet
-only takes place if we have libelf or some other library available.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: linux-snps-arc@lists.infradead.org
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Link: https://lkml.kernel.org/n/tip-2wb4r1gir9xrevbpq7qp0amk@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 91cc3bb0b04ff("xfrm6_tunnel: RCU conversion")
+Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/bench/numa.c | 4 ++++
+ net/ipv6/xfrm6_tunnel.c | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index 73d192f57dc34..df41deed0320e 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -32,6 +32,10 @@
- #include <numa.h>
- #include <numaif.h>
+diff --git a/net/ipv6/xfrm6_tunnel.c b/net/ipv6/xfrm6_tunnel.c
+index 56b72cada346f..f9d493c59d6c1 100644
+--- a/net/ipv6/xfrm6_tunnel.c
++++ b/net/ipv6/xfrm6_tunnel.c
+@@ -391,6 +391,10 @@ static void __exit xfrm6_tunnel_fini(void)
+ 	xfrm6_tunnel_deregister(&xfrm6_tunnel_handler, AF_INET6);
+ 	xfrm_unregister_type(&xfrm6_tunnel_type, AF_INET6);
+ 	unregister_pernet_subsys(&xfrm6_tunnel_net_ops);
++	/* Someone maybe has gotten the xfrm6_tunnel_spi.
++	 * So need to wait it.
++	 */
++	rcu_barrier();
+ 	kmem_cache_destroy(xfrm6_tunnel_spi_kmem);
+ }
  
-+#ifndef RUSAGE_THREAD
-+# define RUSAGE_THREAD 1
-+#endif
-+
- /*
-  * Regular printout to the terminal, supressed if -q is specified:
-  */
 -- 
 2.20.1
 
