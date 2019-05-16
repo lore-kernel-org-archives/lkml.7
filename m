@@ -2,137 +2,89 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FB9C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF0FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D50F2070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA882070D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="C2mEaCV5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eB3u/4N9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbfEPVkx (ORCPT
+        id S1728795AbfEPVm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 17:40:53 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40200 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726732AbfEPVkv (ORCPT
+        Thu, 16 May 2019 17:42:29 -0400
+Received: from mail-oi1-f201.google.com ([209.85.167.201]:55371 "EHLO
+        mail-oi1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726732AbfEPVm2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 17:40:51 -0400
-Received: by mail-pf1-f194.google.com with SMTP id u17so2518112pfn.7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 14:40:50 -0700 (PDT)
+        Thu, 16 May 2019 17:42:28 -0400
+Received: by mail-oi1-f201.google.com with SMTP id c64so2028895oia.22
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 14:42:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=hVv4kB5Ecy4Nzot5JSmd+w2kmDQzag6YdAwhTawAS+o=;
-        b=C2mEaCV5q7RRlPDkTl+jNc69GKmHQGbUzwdCXb4uJuIQRqjiwjE8vEVrEuUybINuD1
-         CaXvTTgS7AqB5rKqV9O2SfHGsVPYh/UdIAMeuPT128yOp4EI0fA8af3ZBM+HxlhYaScP
-         IQMWJsOKUNzn9FS7aX/h9q0stQ3lFpm6IpUEk=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=bCifeYOTD3ZRMR+f0DJzC8Jsulb5gaAzagPHZLEhx8E=;
+        b=eB3u/4N9Lqf1dpOkY9UM43yqpeZDopx8/soQCcOB2zamnS3shAPt6eJYcUjtwZ68aN
+         54eUKlps4CZWJTRsXL5V2YpQgv3Ck8tGgZQ8VLWpucd6LkJHBsNaIqOw9gAdbwMA7old
+         W0P0pDzR/Nmr+Ivj0q5UG/63CCRxK+iwccajCg4qF8mOs+Qvo8wrikc+rDwnPQ7PdNmY
+         sspwXzouTux0Y/5Bg0xxiy5L0ebt8zvxEx4O9M7FKN1+sHpXbRg0I7d0+fRrjZAWGrc3
+         DyXwJmdvqYDva/ZbQUHx1aTKWkgX+/wLP2keuESnXg8vHpK7Iswkjlpks48QPQoNjWg9
+         9sWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hVv4kB5Ecy4Nzot5JSmd+w2kmDQzag6YdAwhTawAS+o=;
-        b=GqCI32F0GUBYonbGdijdBoRe6S0HW7enUZZKv+y1diQyaNty0KwRsMkzpwQJPzCe49
-         wqyaJYnjCSGp4xI2rkdcwCFIbNtKCtmIBd/PE5n99DomUE8NbNND4+6hIZCES9b150NL
-         CT0gjYWyB6LEUb7IlXIKPu1ilsse70pYSvWDFliPJVDjuZDCpxEZNBnKYdynr2Z/4NFd
-         29UgkkG2QW4Cetwf9hj6o9quEXKVm80KT3byMnqQaRDdlzR+AxE6VX+cBh8TXJ++c2ln
-         ZGoF/sMqzlVRcWL4CcKl/v2ZZVkh6gzKwjQJWHBh/cHM8XHuPH+nxRPSnAD+/RNCat7h
-         0Vdw==
-X-Gm-Message-State: APjAAAV9Tx0fFmmBraVBDvbumLGtTtu1GdUe3/uOk0of26MY5umRw4zo
-        m7cBjyzCmoGR9Jrpmw43SDasww==
-X-Google-Smtp-Source: APXvYqyP0E6DNadrM+r5JhT3uOu5deldF8xqqkH34aEOJ4KlNc8FJkCV2ERtDfIFBJk2wFdQq4Is2w==
-X-Received: by 2002:a63:d343:: with SMTP id u3mr53012185pgi.285.1558042850353;
-        Thu, 16 May 2019 14:40:50 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id v4sm13127252pff.45.2019.05.16.14.40.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 14:40:49 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc:     linux-rockchip@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>, mka@chromium.org,
-        Sean Paul <seanpaul@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        David Airlie <airlied@linux.ie>,
-        linux-arm-kernel@lists.infradead.org,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH v2 2/2] drm/rockchip: dw_hdmi: Handle suspend/resume
-Date:   Thu, 16 May 2019 14:40:22 -0700
-Message-Id: <20190516214022.65220-2-dianders@chromium.org>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=bCifeYOTD3ZRMR+f0DJzC8Jsulb5gaAzagPHZLEhx8E=;
+        b=KBAZtV78T3h9Hl5c3fmxFXwDusHi/x3W6/M/MPbSwJ8a3rrmKzk37J1QN5uz+bpLQL
+         j3Ckakb8oDuIiQfG4ydx7C3QCkuxonKtMp7mF5xfMioXkNNZrssdQFOJcN+SRHoaHeE4
+         xLPvQyZufqIHBa5iyl1lyiVStoRNPjtM7sA5Q0omDBTTDFXMe+i330BO6GaN9lzkJ1l/
+         feu7apgviVzryFb6DUN/lpPry6thugzmjWOAqbDGpx7vpJ+xgK1v16HJlM5D731DnVjt
+         470fVRu1kWhN/AeDS+mxMK7qBJvsLbIRItiOYGd403TFCKVKoR65cdHzr7jCIfW6EpTO
+         p9BQ==
+X-Gm-Message-State: APjAAAVPVefcCs9RoTK4P4cK90qnnUsUH1cgmg7qbLbwAXVQMcGxB+G8
+        CXhBaxeh2csrVnIjDDKYG43tvaFgtQ==
+X-Google-Smtp-Source: APXvYqymfc3zRs8o+jSc39kXwo0wB9flMCq+k1ZIVTCxqqf0oZhBmiZLWGcuX/yjgG0+8sd0WZgjf/2hhg==
+X-Received: by 2002:a9d:7347:: with SMTP id l7mr511806otk.183.1558042947824;
+ Thu, 16 May 2019 14:42:27 -0700 (PDT)
+Date:   Thu, 16 May 2019 14:42:07 -0700
+Message-Id: <20190516214209.139726-1-kunyi@google.com>
+Mime-Version: 1.0
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-In-Reply-To: <20190516214022.65220-1-dianders@chromium.org>
-References: <20190516214022.65220-1-dianders@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH 0/2] Fix LED GPIO trigger behavior
+From:   Kun Yi <kunyi@google.com>
+To:     linux-leds@vger.kernel.org
+Cc:     Kun Yi <kunyi@google.com>, jacek.anaszewski@gmail.com,
+        pavel@ucw.cz, dmurphy@ti.com, u.kleine-koenig@pengutronix.de,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Rockchip rk3288-based Chromebooks when you do a suspend/resume
-cycle:
+*** BLURB HERE ***
+Hello there,
 
-1. You lose the ability to detect an HDMI device being plugged in.
+I recently tested ledtrig-gpio on an embedded controller and one of the
+issues I had involve not requesting the user input pin as GPIO.
 
-2. If you're using the i2c bus built in to dw_hdmi then it stops
-working.
+In many embedded systems, a pin could be muxed as several functions, and
+requesting the pin as GPIO is necessary to let pinmux select the pin as
+a GPIO instead of, say an I2C pin. I'd like to learn whether it is appropriate
+to assume user of ledtrig-gpio really intends to use GPIOs and not some
+weird pins that are used as other functions.
 
-Let's call the core dw-hdmi's suspend/resume functions to restore
-things.
+Kun Yi (2):
+  ledtrig-gpio: Request user input pin as GPIO
+  ledtrig-gpio: 0 is a valid GPIO number
 
-NOTE: in downstream Chrome OS (based on kernel 3.14) we used the
-"late/early" versions of suspend/resume because we found that the VOP
-was sometimes resuming before dw_hdmi and then calling into us before
-we were fully resumed.  For now I have gone back to the normal
-suspend/resume because I can't reproduce the problems.
+ drivers/leds/trigger/ledtrig-gpio.c | 35 ++++++++++++++++++++---------
+ 1 file changed, 24 insertions(+), 11 deletions(-)
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
-Changes in v2:
-- Add forgotten static (Laurent)
-- No empty stub for suspend (Laurent)
-
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-index 4cdc9f86c2e5..beffe44c248a 100644
---- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-@@ -542,11 +542,23 @@ static int dw_hdmi_rockchip_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static int __maybe_unused dw_hdmi_rockchip_resume(struct device *dev)
-+{
-+	struct rockchip_hdmi *hdmi = dev_get_drvdata(dev);
-+
-+	return dw_hdmi_resume(hdmi->hdmi);
-+}
-+
-+static const struct dev_pm_ops dw_hdmi_rockchip_pm = {
-+	SET_SYSTEM_SLEEP_PM_OPS(NULL, dw_hdmi_rockchip_resume)
-+};
-+
- struct platform_driver dw_hdmi_rockchip_pltfm_driver = {
- 	.probe  = dw_hdmi_rockchip_probe,
- 	.remove = dw_hdmi_rockchip_remove,
- 	.driver = {
- 		.name = "dwhdmi-rockchip",
-+		.pm = &dw_hdmi_rockchip_pm,
- 		.of_match_table = dw_hdmi_rockchip_dt_ids,
- 	},
- };
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
