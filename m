@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A843C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA75C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0912D20881
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942752087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:01:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dTU2Gci3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fq/q7l8t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfEPIAy (ORCPT
+        id S1726985AbfEPIA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 04:00:54 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36346 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfEPIAw (ORCPT
+        Thu, 16 May 2019 04:00:59 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42705 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfEPIA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 04:00:52 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d21so1229384plr.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:00:52 -0700 (PDT)
+        Thu, 16 May 2019 04:00:56 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 145so1150245pgg.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:00:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=8aoX0MhCXhDfp6r6BP2v4yLB8VnqTXCe1YaS9DQuIKs=;
-        b=dTU2Gci3gWjB3WvLP9vPSZY3iwB4x3oSAG25cZzhHofzc8KwcnG9FAv9LrkqA3zxrB
-         Vnr1ArHjz+RlfKeGqS3ul4B/Q2c4AE3Hqp51F2cP6m9/dcWSQRRxlFXoYk1v/0Lds4Yg
-         F0AgcZ8qyZPO7UM4VKNtYasR+es3VY8iWJnL4GZEdIgJ/GmmCNxvZqEenLskv4Tkhhgp
-         dshhdimJhxL/A/yaYFO+toTrlBUpzsYOmVXuiZoO3h4L6H8novYkKeTvZDJ2uQl78Z/M
-         qc0b1hEnpvYA+pEYIobylKtMYZUl0wGaJOEsosWGA3xS34Wl8wSEmc8hD5xIbeEuIRb8
-         Q6mg==
+        bh=AaKDsv43boINjs1bPKErBXZMYRaGI638p9LN6KhRPVM=;
+        b=fq/q7l8tRuXWjvfR4sfXjdwXzdeSBknipBzLudleGw3lDEKiQNMJcRLmKi9gpqVsJL
+         MuJESeMW6jBdxVajNC9D4dPK6i+HJQFAzSLf9itCFUkEkES3ue2wWHZVOLQhqbXmfJKp
+         mj/1ZS1BZu5d0KfXZ9WjvjGcJfm2lQsNreo/f+6o1hhcvaVCwCQC5NRD/eTksIQBk0ep
+         oROYSofbVSXteoEw+FNJkpPTY6T+jfYbeHb8Ns9iiQFnwOmH/EtKQvg2c2IxAUz21oNP
+         NMVYWux+Kc2D9UE029naJmsEGYYLlODwgQtuakxG1cqeUP2sxnfIdjTaaWnsjdM51gXW
+         Oc/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8aoX0MhCXhDfp6r6BP2v4yLB8VnqTXCe1YaS9DQuIKs=;
-        b=WOhys2636hbdUP3L6sgsSsv9ZmYkdgoXIAgOwMtlmKWfMXbrFa8ZF3XYw0iCAUhvzv
-         GiWS1klbgsjAhcEuDpF51zxLxkLRy0Ga2BIe/sFVfQwymx/5PV/I4yfA2KmbfmR3RhLR
-         ZtpCcn+DCuzdookI1uz0FWgw8qHwXV9yGKBIlBYkSj6Jy1sdwJPQ9swYVHZaXxBcxSY0
-         Awsa7q66Oqg9R6nVpgahn3rR6T3B0G0kUzCXC/PY+8ErMgg6AHkrcclFB+f9FYWVGOSM
-         E1Dsy8e29Q3qkSvSMCyPpOOMpvhdd4WtAgC6suRzMSKc48G79CWHMcxx11nSDBnz+hvg
-         yRuA==
-X-Gm-Message-State: APjAAAUx+fnad94a16GSYdZR7ZooycATYGbfX3RuKmWAFVi20EY8fDhh
-        JX3Jx69QUS3zipPR0Xwn/mY=
-X-Google-Smtp-Source: APXvYqyjHi8TouKQGRdHZNa2onE0WeuSATcGJPttrwA8s5sGGN/9Wn1Fx6pfhU+FihWVsFBgTzsyHg==
-X-Received: by 2002:a17:902:be0e:: with SMTP id r14mr31362163pls.152.1557993652408;
-        Thu, 16 May 2019 01:00:52 -0700 (PDT)
+        bh=AaKDsv43boINjs1bPKErBXZMYRaGI638p9LN6KhRPVM=;
+        b=iz6YvZNyh0CjR8uAUPJzeMgc402x6Tnm8I7zXWWJ/1kpa+g4ZVsah/bOUNN0Wz9CM6
+         7DKKD9q296HXudKJQcZZvZ7eOYlwbWMBZUG2J78IAvYphU74ErrsZqfgyH4HlFMGjnv/
+         FU5lxgR34xT1+6bZx+aESSXkk/bhByyMTaOs66+LpvAaMeDBxKSzEYxD1AndQr4Y8yOG
+         VYfBbXv7RpQNKoaidcoIieC7vyby4ndsf+iBYydlxBB2j08qdUqR7MHF2DHiW3aKOC41
+         GMYR/bZ3GwU571OwWTE0RDWAxYBcMK60buuOHowKADhRmnXOTXphh5gpgP/31/YYOY2f
+         hZcQ==
+X-Gm-Message-State: APjAAAUwofOyJGprze9xuLIbPk2iNLb0NzASw3UrHrgslSYCR8OK/Dro
+        fX94YsipD+/waTg8HuqCrjw=
+X-Google-Smtp-Source: APXvYqzWRfv0Gfs+evVdyN5YWPIKPnbWm11S0Y6ADOpVdnkvRCwoP4pe9qI7xEpu//1ru8v5TLZ5nA==
+X-Received: by 2002:a62:3381:: with SMTP id z123mr54131503pfz.42.1557993655593;
+        Thu, 16 May 2019 01:00:55 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id p7sm2051471pgb.92.2019.05.16.01.00.49
+        by smtp.gmail.com with ESMTPSA id p7sm2051471pgb.92.2019.05.16.01.00.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 01:00:51 -0700 (PDT)
+        Thu, 16 May 2019 01:00:55 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
         tglx@linutronix.de, boqun.feng@gmail.com, paulmck@linux.ibm.com,
         linux-kernel@vger.kernel.org, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v2 08/17] locking/lockdep: Introduce chain_hlocks_type for held lock's read-write type
-Date:   Thu, 16 May 2019 16:00:06 +0800
-Message-Id: <20190516080015.16033-9-duyuyang@gmail.com>
+Subject: [PATCH v2 09/17] locking/lockdep: Hash held lock's read-write type into chain key
+Date:   Thu, 16 May 2019 16:00:07 +0800
+Message-Id: <20190516080015.16033-10-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20190516080015.16033-1-duyuyang@gmail.com>
 References: <20190516080015.16033-1-duyuyang@gmail.com>
@@ -75,71 +75,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lock chain needs to include information about the read-write lock type. To
-that end, introduce:
+When computing a chain's hash key, we need to consider a held lock's type,
+so the additional data to use Jenkins hash algorithm is a composite of the
+new held lock's lock class index (lower 16 bits) and its read-write type
+(higher 16 bits) as opposed to just class index before:
 
-	chain_hlocks_type[MAX_LOCKDEP_CHAIN_HLOCKS]
-
-in addition to:
-
-	chain_hlocks[MAX_LOCKDEP_CHAIN_HLOCKS]
+        held lock type (u16) : lock class index (u16)
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ kernel/locking/lockdep.c | 46 ++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 32 insertions(+), 14 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 617c0f4..f11d018d 100644
+index f11d018d..019099e 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -861,6 +861,7 @@ static bool class_lock_list_valid(struct lock_class *c, struct list_head *h)
- 
- #ifdef CONFIG_PROVE_LOCKING
- static u16 chain_hlocks[MAX_LOCKDEP_CHAIN_HLOCKS];
-+static u16 chain_hlocks_type[MAX_LOCKDEP_CHAIN_HLOCKS];
- #endif
- 
- static bool check_lock_chain_key(struct lock_chain *chain)
-@@ -2668,6 +2669,7 @@ static inline void inc_chains(void)
- static DECLARE_BITMAP(lock_chains_in_use, MAX_LOCKDEP_CHAINS);
- int nr_chain_hlocks;
- static u16 chain_hlocks[MAX_LOCKDEP_CHAIN_HLOCKS];
-+static u16 chain_hlocks_type[MAX_LOCKDEP_CHAIN_HLOCKS];
- 
- struct lock_class *lock_chain_get_class(struct lock_chain *chain, int i)
+@@ -359,11 +359,19 @@ struct pending_free {
+  * it's a hash of all locks taken up to that lock, including that lock.
+  * It's a 64-bit hash, because it's important for the keys to be
+  * unique.
++ *
++ * The additional u32 data to hash is a composite of the new held lock's
++ * lock class index (lower 16 bits) and its read-write type (higher 16
++ * bits):
++ *
++ *     hlock type (u16) : lock class index (u16)
+  */
+-static inline u64 iterate_chain_key(u64 key, u32 idx)
++static inline u64 iterate_chain_key(u64 key, u32 idx, u16 hlock_type)
  {
-@@ -2872,9 +2874,12 @@ static inline int add_chain_cache(struct task_struct *curr,
- 		chain->base = nr_chain_hlocks;
- 		for (j = 0; j < chain->depth - 1; j++, i++) {
- 			int lock_id = curr->held_locks[i].class_idx;
-+			int lock_type = curr->held_locks[i].read;
- 			chain_hlocks[chain->base + j] = lock_id;
-+			chain_hlocks_type[chain->base + j] = lock_type;
+ 	u32 k0 = key, k1 = key >> 32;
+ 
++	idx += hlock_type << LOCK_TYPE_BITS;
++
+ 	__jhash_mix(idx, k0, k1); /* Macro that modifies arguments! */
+ 
+ 	return k0 | (u64)k1 << 32;
+@@ -871,7 +879,8 @@ static bool check_lock_chain_key(struct lock_chain *chain)
+ 	int i;
+ 
+ 	for (i = chain->base; i < chain->base + chain->depth; i++)
+-		chain_key = iterate_chain_key(chain_key, chain_hlocks[i]);
++		chain_key = iterate_chain_key(chain_key, chain_hlocks[i],
++					      chain_hlocks_type[i]);
+ 	/*
+ 	 * The 'unsigned long long' casts avoid that a compiler warning
+ 	 * is reported when building tools/lib/lockdep.
+@@ -2699,9 +2708,9 @@ static inline int get_first_held_lock(struct task_struct *curr,
+ /*
+  * Returns the next chain_key iteration
+  */
+-static u64 print_chain_key_iteration(int class_idx, u64 chain_key)
++static u64 print_chain_key_iteration(int class_idx, u64 chain_key, int lock_type)
+ {
+-	u64 new_chain_key = iterate_chain_key(chain_key, class_idx);
++	u64 new_chain_key = iterate_chain_key(chain_key, class_idx, lock_type);
+ 
+ 	printk(" class_idx:%d -> chain_key:%016Lx",
+ 		class_idx,
+@@ -2721,12 +2730,15 @@ static u64 print_chain_key_iteration(int class_idx, u64 chain_key)
+ 		hlock_next->irq_context);
+ 	for (; i < depth; i++) {
+ 		hlock = curr->held_locks + i;
+-		chain_key = print_chain_key_iteration(hlock->class_idx, chain_key);
++		chain_key = print_chain_key_iteration(hlock->class_idx,
++						      chain_key,
++						      hlock->read);
+ 
+ 		print_lock(hlock);
+ 	}
+ 
+-	print_chain_key_iteration(hlock_next->class_idx, chain_key);
++	print_chain_key_iteration(hlock_next->class_idx, chain_key,
++				  hlock_next->read);
+ 	print_lock(hlock_next);
+ }
+ 
+@@ -2734,12 +2746,14 @@ static void print_chain_keys_chain(struct lock_chain *chain)
+ {
+ 	int i;
+ 	u64 chain_key = INITIAL_CHAIN_KEY;
+-	int class_id;
++	int class_id, lock_type;
+ 
+ 	printk("depth: %u\n", chain->depth);
+ 	for (i = 0; i < chain->depth; i++) {
+ 		class_id = chain_hlocks[chain->base + i];
+-		chain_key = print_chain_key_iteration(class_id, chain_key);
++		lock_type = chain_hlocks_type[chain->base + i];
++		chain_key = print_chain_key_iteration(class_id, chain_key,
++						      lock_type);
+ 
+ 		print_lock_name(lock_classes + class_id);
+ 		printk("\n");
+@@ -2780,7 +2794,7 @@ static int check_no_collision(struct task_struct *curr,
+ 			struct lock_chain *chain)
+ {
+ #ifdef CONFIG_DEBUG_LOCKDEP
+-	int i, j, id;
++	int i, j, id, type;
+ 
+ 	i = get_first_held_lock(curr, hlock);
+ 
+@@ -2789,10 +2803,12 @@ static int check_no_collision(struct task_struct *curr,
+ 		return 0;
+ 	}
+ 
+-	for (j = 0; j < chain->depth - 1; j++, i++) {
++	for (j = chain->base; j < chain->base + chain->depth - 1; j++, i++) {
+ 		id = curr->held_locks[i].class_idx;
++		type = curr->held_locks[i].read;
+ 
+-		if (DEBUG_LOCKS_WARN_ON(chain_hlocks[chain->base + j] != id)) {
++		if (DEBUG_LOCKS_WARN_ON((chain_hlocks[j] != id) ||
++					(chain_hlocks_type[j] != type))) {
+ 			print_collision(curr, hlock, chain);
+ 			return 0;
  		}
- 		chain_hlocks[chain->base + j] = class - lock_classes;
-+		chain_hlocks_type[chain->base + j] = hlock->read;
- 		nr_chain_hlocks += chain->depth;
- 	} else {
- 		if (!debug_locks_off_graph_unlock())
-@@ -4824,6 +4829,9 @@ static void remove_class_from_lock_chain(struct pending_free *pf,
- 			memmove(&chain_hlocks[i], &chain_hlocks[i + 1],
- 				(chain->base + chain->depth - i) *
- 				sizeof(chain_hlocks[0]));
-+			memmove(&chain_hlocks_type[i], &chain_hlocks_type[i + 1],
-+				(chain->base + chain->depth - i) *
-+				sizeof(chain_hlocks_type[0]));
- 		}
- 		/*
- 		 * Each lock class occurs at most once in a lock chain so once
-@@ -5268,6 +5276,7 @@ void __init lockdep_init(void)
- 		+ sizeof(lock_chains)
- 		+ sizeof(lock_chains_in_use)
- 		+ sizeof(chain_hlocks)
-+		+ sizeof(chain_hlocks_type)
- #endif
- 		) / 1024
- 		);
+@@ -3078,7 +3094,8 @@ static void check_chain_key(struct task_struct *curr)
+ 		if (prev_hlock && (prev_hlock->irq_context !=
+ 							hlock->irq_context))
+ 			chain_key = INITIAL_CHAIN_KEY;
+-		chain_key = iterate_chain_key(chain_key, hlock->class_idx);
++		chain_key = iterate_chain_key(chain_key, hlock->class_idx,
++					      hlock->read);
+ 		prev_hlock = hlock;
+ 	}
+ 	if (chain_key != curr->curr_chain_key) {
+@@ -4001,7 +4018,7 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
+ 		chain_key = INITIAL_CHAIN_KEY;
+ 		chain_head = 1;
+ 	}
+-	chain_key = iterate_chain_key(chain_key, class_idx);
++	chain_key = iterate_chain_key(chain_key, class_idx, read);
+ 
+ 	if (nest_lock && !__lock_is_held(nest_lock, -1)) {
+ 		print_lock_nested_lock_not_held(curr, hlock, ip);
+@@ -4845,7 +4862,8 @@ static void remove_class_from_lock_chain(struct pending_free *pf,
+ recalc:
+ 	chain_key = INITIAL_CHAIN_KEY;
+ 	for (i = chain->base; i < chain->base + chain->depth; i++)
+-		chain_key = iterate_chain_key(chain_key, chain_hlocks[i]);
++		chain_key = iterate_chain_key(chain_key, chain_hlocks[i],
++					      chain_hlocks_type[i]);
+ 	if (chain->depth && chain->chain_key == chain_key)
+ 		return;
+ 	/* Overwrite the chain key for concurrent RCU readers. */
 -- 
 1.8.3.1
 
