@@ -2,231 +2,106 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 066CCC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28885C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3342206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:23:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r0BHnDF8"
+	by mail.kernel.org (Postfix) with ESMTP id E5CFF206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:23:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbfEPLXf (ORCPT
+        id S1727355AbfEPLXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:23:35 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44419 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726597AbfEPLXe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:23:34 -0400
-Received: by mail-ed1-f68.google.com with SMTP id b8so4678716edm.11;
-        Thu, 16 May 2019 04:23:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LV1CkEaEqDI0sBIvJmZERS53kRl0OTlvTtScZy5Ad/M=;
-        b=r0BHnDF87+z9s+FxD0fWmVXlzNhHZfMGNjy9XQ4m3Cne8SdI+1y22gen05yZdoHX40
-         JnVLCZ/NFRZ5yvASCZPsjDPko9keQ7mV/OqDITHdaFVnkuKh4ISSzGRZd6VCh/VSrOkQ
-         7B7elPESfOzvEV00cRJLidAgr+FAJbph4gPct2TCHSL40gd8MEn2O3/vLDyPE2z5/p6h
-         EClUt2XeKdg7QlYPIbCN2EKUep20Hplc0eZqvDaRYEjdp3EK9cKf62Rz7aB4VimujdOb
-         L6Yofly2DtndxTk33EYEvaXn5Gp+0Ev/tps9NAx36755l92iFp0EjquV86wYUzVNbWNR
-         pmSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LV1CkEaEqDI0sBIvJmZERS53kRl0OTlvTtScZy5Ad/M=;
-        b=qqo00OJBG7kWETULm0jMMtzW3853NmPpg80DEDys1AIt4Zu43ReSLzlgbjl+4m98fx
-         byXvTsGsPsO8nhSvQfNwLK0HikEgXgVb5xrdnxidFEHqy6ofAf16QGcImgon/4Mwgojh
-         fTjw4H+pHv5CG0eCPgYC1ykMERNRfn1waJyvZTH8Tp0FLgDj29kWrVF9aJefiQdHjZU4
-         c3w3en1WGr439y9+meJErZqfIlyCETkrqnjFpE7LKcxLD937PD+dzHuuPSRaSxlUIdi2
-         c01CXUetxmBtE95Rhb9dDkHAFsvlne1LXULrd5YQ91nQ0OIgtlFywMeDcF7EcypUhsSW
-         YO5A==
-X-Gm-Message-State: APjAAAUOqOUjQRbYfuSPDLYowI5qGU3Ap8SqSswWGvdchlfNKbY7CH8L
-        OtVWwM0l+QHCTcIhlCNZzOtjPHdp
-X-Google-Smtp-Source: APXvYqwTd2yfrjCLq+03LWLkIiHcUb3QKno+8Q0ZZsvoqd99/Kmo5mybs3u1pwAK0551NvZ1yC7yfw==
-X-Received: by 2002:a17:906:2482:: with SMTP id e2mr38405804ejb.289.1558005812033;
-        Thu, 16 May 2019 04:23:32 -0700 (PDT)
-Received: from geeko ([191.249.67.249])
-        by smtp.gmail.com with ESMTPSA id d19sm1040239ejb.89.2019.05.16.04.23.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 May 2019 04:23:31 -0700 (PDT)
-Date:   Thu, 16 May 2019 08:23:19 -0300
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     neilb@suse.com, Shaohua Li <shli@kernel.org>,
-        "open list:SOFTWARE RAID (Multiple Disks) SUPPORT" 
-        <linux-raid@vger.kernel.org>
-Subject: Re: [PATCH] drivers: md: Unify common definitions of raid1 and raid10
-Message-ID: <20190516112317.GA8611@geeko>
-References: <20190509111849.22927-1-marcos.souza.org@gmail.com>
+        Thu, 16 May 2019 07:23:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52684 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726597AbfEPLXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:23:38 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1FABA3082A9A;
+        Thu, 16 May 2019 11:23:38 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 705A86C329;
+        Thu, 16 May 2019 11:23:36 +0000 (UTC)
+Subject: [PATCH 0/4] uapi, vfs: Change the mount API UAPI
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
+Cc:     Christian Brauner <christian@brauner.io>,
+        Arnd Bergmann <arnd@arndb.de>, dhowells@redhat.com,
+        christian@brauner.io, arnd@arndb.de, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 16 May 2019 12:23:35 +0100
+Message-ID: <155800581545.26930.2167325198332902897.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190509111849.22927-1-marcos.souza.org@gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 16 May 2019 11:23:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping.
 
-On Thu, May 09, 2019 at 08:18:49AM -0300, Marcos Paulo de Souza wrote:
-> These definitions are being moved to raid1-10.c.
-> 
-> Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-> ---
->  drivers/md/raid1-10.c | 25 +++++++++++++++++++++++++
->  drivers/md/raid1.c    | 29 ++---------------------------
->  drivers/md/raid10.c   | 27 +--------------------------
->  3 files changed, 28 insertions(+), 53 deletions(-)
-> 
-> diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
-> index 400001b815db..7d968bf08e54 100644
-> --- a/drivers/md/raid1-10.c
-> +++ b/drivers/md/raid1-10.c
-> @@ -3,6 +3,31 @@
->  #define RESYNC_BLOCK_SIZE (64*1024)
->  #define RESYNC_PAGES ((RESYNC_BLOCK_SIZE + PAGE_SIZE-1) / PAGE_SIZE)
->  
-> +/*
-> + * Number of guaranteed raid bios in case of extreme VM load:
-> + */
-> +#define	NR_RAID_BIOS 256
-> +
-> +/* when we get a read error on a read-only array, we redirect to another
-> + * device without failing the first device, or trying to over-write to
-> + * correct the read error.  To keep track of bad blocks on a per-bio
-> + * level, we store IO_BLOCKED in the appropriate 'bios' pointer
-> + */
-> +#define IO_BLOCKED ((struct bio *)1)
-> +/* When we successfully write to a known bad-block, we need to remove the
-> + * bad-block marking which must be done from process context.  So we record
-> + * the success by setting devs[n].bio to IO_MADE_GOOD
-> + */
-> +#define IO_MADE_GOOD ((struct bio *)2)
-> +
-> +#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
-> +
-> +/* When there are this many requests queue to be written by
-> + * the raid thread, we become 'congested' to provide back-pressure
-> + * for writeback.
-> + */
-> +static int max_queued_requests = 1024;
-> +
->  /* for managing resync I/O pages */
->  struct resync_pages {
->  	void		*raid_bio;
-> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-> index 0c8a098d220e..bb052c35bf29 100644
-> --- a/drivers/md/raid1.c
-> +++ b/drivers/md/raid1.c
-> @@ -50,31 +50,6 @@
->  	 (1L << MD_HAS_PPL) |		\
->  	 (1L << MD_HAS_MULTIPLE_PPLS))
->  
-> -/*
-> - * Number of guaranteed r1bios in case of extreme VM load:
-> - */
-> -#define	NR_RAID1_BIOS 256
-> -
-> -/* when we get a read error on a read-only array, we redirect to another
-> - * device without failing the first device, or trying to over-write to
-> - * correct the read error.  To keep track of bad blocks on a per-bio
-> - * level, we store IO_BLOCKED in the appropriate 'bios' pointer
-> - */
-> -#define IO_BLOCKED ((struct bio *)1)
-> -/* When we successfully write to a known bad-block, we need to remove the
-> - * bad-block marking which must be done from process context.  So we record
-> - * the success by setting devs[n].bio to IO_MADE_GOOD
-> - */
-> -#define IO_MADE_GOOD ((struct bio *)2)
-> -
-> -#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
-> -
-> -/* When there are this many requests queue to be written by
-> - * the raid1 thread, we become 'congested' to provide back-pressure
-> - * for writeback.
-> - */
-> -static int max_queued_requests = 1024;
-> -
->  static void allow_barrier(struct r1conf *conf, sector_t sector_nr);
->  static void lower_barrier(struct r1conf *conf, sector_t sector_nr);
->  
-> @@ -2955,7 +2930,7 @@ static struct r1conf *setup_conf(struct mddev *mddev)
->  	if (!conf->poolinfo)
->  		goto abort;
->  	conf->poolinfo->raid_disks = mddev->raid_disks * 2;
-> -	err = mempool_init(&conf->r1bio_pool, NR_RAID1_BIOS, r1bio_pool_alloc,
-> +	err = mempool_init(&conf->r1bio_pool, NR_RAID_BIOS, r1bio_pool_alloc,
->  			   r1bio_pool_free, conf->poolinfo);
->  	if (err)
->  		goto abort;
-> @@ -3240,7 +3215,7 @@ static int raid1_reshape(struct mddev *mddev)
->  	newpoolinfo->mddev = mddev;
->  	newpoolinfo->raid_disks = raid_disks * 2;
->  
-> -	ret = mempool_init(&newpool, NR_RAID1_BIOS, r1bio_pool_alloc,
-> +	ret = mempool_init(&newpool, NR_RAID_BIOS, r1bio_pool_alloc,
->  			   r1bio_pool_free, newpoolinfo);
->  	if (ret) {
->  		kfree(newpoolinfo);
-> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> index 3b6880dd648d..24cb116d950f 100644
-> --- a/drivers/md/raid10.c
-> +++ b/drivers/md/raid10.c
-> @@ -73,31 +73,6 @@
->   *    [B A] [D C]    [B A] [E C D]
->   */
->  
-> -/*
-> - * Number of guaranteed r10bios in case of extreme VM load:
-> - */
-> -#define	NR_RAID10_BIOS 256
-> -
-> -/* when we get a read error on a read-only array, we redirect to another
-> - * device without failing the first device, or trying to over-write to
-> - * correct the read error.  To keep track of bad blocks on a per-bio
-> - * level, we store IO_BLOCKED in the appropriate 'bios' pointer
-> - */
-> -#define IO_BLOCKED ((struct bio *)1)
-> -/* When we successfully write to a known bad-block, we need to remove the
-> - * bad-block marking which must be done from process context.  So we record
-> - * the success by setting devs[n].bio to IO_MADE_GOOD
-> - */
-> -#define IO_MADE_GOOD ((struct bio *)2)
-> -
-> -#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
-> -
-> -/* When there are this many requests queued to be written by
-> - * the raid10 thread, we become 'congested' to provide back-pressure
-> - * for writeback.
-> - */
-> -static int max_queued_requests = 1024;
-> -
->  static void allow_barrier(struct r10conf *conf);
->  static void lower_barrier(struct r10conf *conf);
->  static int _enough(struct r10conf *conf, int previous, int ignore);
-> @@ -3684,7 +3659,7 @@ static struct r10conf *setup_conf(struct mddev *mddev)
->  
->  	conf->geo = geo;
->  	conf->copies = copies;
-> -	err = mempool_init(&conf->r10bio_pool, NR_RAID10_BIOS, r10bio_pool_alloc,
-> +	err = mempool_init(&conf->r10bio_pool, NR_RAID_BIOS, r10bio_pool_alloc,
->  			   r10bio_pool_free, conf);
->  	if (err)
->  		goto out;
-> -- 
-> 2.21.0
-> 
+Hi Linus, Al,
 
--- 
+Here are some patches that make changes to the mount API UAPI and two of
+them really need applying, before -rc1 - if they're going to be applied at
+all.
+
+The following changes are made:
+
+ (1) Make the file descriptors returned by open_tree(), fsopen(), fspick()
+     and fsmount() O_CLOEXEC by default and remove the flags that allow
+     this to be specified from the UAPI, shuffling other flags down as
+     appropriate.  fcntl() can still be used to change the flag.
+
+ (2) Make the name of the anon inode object "[fscontext]" with square
+     brackets to match other users.
+
+ (3) Fix the numbering of the mount API syscalls to be in the common space
+     rather than in the arch-specific space.
+
+ (4) Wire up the mount API syscalls on all arches (it's only on x86
+     currently).
+
 Thanks,
-Marcos
+David
+---
+Christian Brauner (2):
+      uapi, fs: make all new mount api fds cloexec by default
+      uapi, fsopen: use square brackets around "fscontext"
+
+David Howells (2):
+      uapi, x86: Fix the syscall numbering of the mount API syscalls
+      uapi: Wire up the mount API syscalls on non-x86 arches
+
+
+ arch/alpha/kernel/syscalls/syscall.tbl      |    6 ++++++
+ arch/arm/tools/syscall.tbl                  |    6 ++++++
+ arch/arm64/include/asm/unistd32.h           |   12 ++++++++++++
+ arch/ia64/kernel/syscalls/syscall.tbl       |    6 ++++++
+ arch/m68k/kernel/syscalls/syscall.tbl       |    6 ++++++
+ arch/microblaze/kernel/syscalls/syscall.tbl |    6 ++++++
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |    6 ++++++
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |    6 ++++++
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |    6 ++++++
+ arch/parisc/kernel/syscalls/syscall.tbl     |    6 ++++++
+ arch/powerpc/kernel/syscalls/syscall.tbl    |    6 ++++++
+ arch/s390/kernel/syscalls/syscall.tbl       |    6 ++++++
+ arch/sh/kernel/syscalls/syscall.tbl         |    6 ++++++
+ arch/sparc/kernel/syscalls/syscall.tbl      |    6 ++++++
+ arch/x86/entry/syscalls/syscall_32.tbl      |   12 ++++++------
+ arch/x86/entry/syscalls/syscall_64.tbl      |   12 ++++++------
+ arch/xtensa/kernel/syscalls/syscall.tbl     |    6 ++++++
+ fs/fsopen.c                                 |   15 +++++++--------
+ fs/namespace.c                              |   11 ++++-------
+ include/uapi/asm-generic/unistd.h           |   14 +++++++++++++-
+ include/uapi/linux/mount.h                  |   18 +++---------------
+ 21 files changed, 135 insertions(+), 43 deletions(-)
+
