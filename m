@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7DFC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40593C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25E7C20815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1441A20815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:03:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfEPQDe (ORCPT
+        id S1727942AbfEPQDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:03:34 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42578 "EHLO
+        Thu, 16 May 2019 12:03:33 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42590 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726775AbfEPP6n (ORCPT
+        by vger.kernel.org with ESMTP id S1726779AbfEPP6n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 May 2019 11:58:43 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImH-0006zc-3h; Thu, 16 May 2019 16:58:41 +0100
+        id 1hRImG-0006zD-HR; Thu, 16 May 2019 16:58:40 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImE-0001RI-EW; Thu, 16 May 2019 16:58:38 +0100
+        id 1hRImD-0001QE-VQ; Thu, 16 May 2019 16:58:37 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,33 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Borislav Petkov" <bp@suse.de>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Jon Masters" <jcm@redhat.com>,
+        "Casey Schaufler" <casey.schaufler@intel.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Tim Chen" <tim.c.chen@linux.intel.com>,
         "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Frederic Weisbecker" <frederic@kernel.org>
+        "Jon Masters" <jcm@redhat.com>,
+        "Dave Stewart" <david.c.stewart@intel.com>,
+        "Waiman Long" <longman9394@gmail.com>,
+        "Josh Poimboeuf" <jpoimboe@redhat.com>,
+        "Tom Lendacky" <thomas.lendacky@amd.com>,
+        "Greg KH" <gregkh@linuxfoundation.org>,
+        "Arjan van de Ven" <arjan@linux.intel.com>,
+        "Andrea Arcangeli" <aarcange@redhat.com>,
+        "Andi Kleen" <ak@linux.intel.com>,
+        "Ingo Molnar" <mingo@kernel.org>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        "Jiri Kosina" <jkosina@suse.cz>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        "Asit Mallick" <asit.k.mallick@intel.com>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>
 Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.767838303@decadent.org.uk>
+Message-ID: <lsq.1558022133.800806849@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 62/86] x86/speculation: Consolidate CPU whitelists
+Subject: [PATCH 3.16 49/86] x86/speculation: Prepare for per task indirect
+ branch speculation control
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,168 +75,189 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Tim Chen <tim.c.chen@linux.intel.com>
 
-commit 36ad35131adacc29b328b9c8b6277a8bf0d6fd5d upstream.
+commit 5bfbe3ad5840d941b89bcac54b821ba14f50a0ba upstream.
 
-The CPU vulnerability whitelists have some overlap and there are more
-whitelists coming along.
+To avoid the overhead of STIBP always on, it's necessary to allow per task
+control of STIBP.
 
-Use the driver_data field in the x86_cpu_id struct to denote the
-whitelisted vulnerabilities and combine all whitelists into one.
+Add a new task flag TIF_SPEC_IB and evaluate it during context switch if
+SMT is active and flag evaluation is enabled by the speculation control
+code. Add the conditional evaluation to x86_virt_spec_ctrl() as well so the
+guest/host switch works properly.
 
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+This has no effect because TIF_SPEC_IB cannot be set yet and the static key
+which controls evaluation is off. Preparatory patch for adding the control
+code.
+
+[ tglx: Simplify the context switch logic and make the TIF evaluation
+  	depend on SMP=y and on the static key controlling the conditional
+  	update. Rename it to TIF_SPEC_IB because it controls both STIBP and
+  	IBPB ]
+
+Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Jon Masters <jcm@redhat.com>
-Tested-by: Jon Masters <jcm@redhat.com>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Casey Schaufler <casey.schaufler@intel.com>
+Cc: Asit Mallick <asit.k.mallick@intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Waiman Long <longman9394@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Dave Stewart <david.c.stewart@intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20181125185005.176917199@linutronix.de
+[bwh: Backported to 3.16:
+ - Exclude _TIF_SPEC_IB from _TIF_WORK_MASK and _TIF_ALLWORK_MASK
+ - Adjust filename, context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/cpu/common.c | 105 +++++++++++++++++++----------------
- 1 file changed, 56 insertions(+), 49 deletions(-)
-
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -807,60 +807,68 @@ static void identify_cpu_without_cpuid(s
- #endif
+--- a/arch/x86/include/asm/spec-ctrl.h
++++ b/arch/x86/include/asm/spec-ctrl.h
+@@ -53,12 +53,24 @@ static inline u64 ssbd_tif_to_spec_ctrl(
+ 	return (tifn & _TIF_SSBD) >> (TIF_SSBD - SPEC_CTRL_SSBD_SHIFT);
  }
  
--static const __initconst struct x86_cpu_id cpu_no_speculation[] = {
--	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_SALTWELL,	X86_FEATURE_ANY },
--	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_SALTWELL_TABLET,	X86_FEATURE_ANY },
--	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_BONNELL_MID,	X86_FEATURE_ANY },
--	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_SALTWELL_MID,	X86_FEATURE_ANY },
--	{ X86_VENDOR_INTEL,	6, INTEL_FAM6_ATOM_BONNELL,	X86_FEATURE_ANY },
--	{ X86_VENDOR_CENTAUR,	5 },
--	{ X86_VENDOR_INTEL,	5 },
--	{ X86_VENDOR_NSC,	5 },
--	{ X86_VENDOR_ANY,	4 },
--	{}
--};
-+#define NO_SPECULATION	BIT(0)
-+#define NO_MELTDOWN	BIT(1)
-+#define NO_SSB		BIT(2)
-+#define NO_L1TF		BIT(3)
-+
-+#define VULNWL(_vendor, _family, _model, _whitelist)	\
-+	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
-+
-+#define VULNWL_INTEL(model, whitelist)		\
-+	VULNWL(INTEL, 6, INTEL_FAM6_##model, whitelist)
-+
-+#define VULNWL_AMD(family, whitelist)		\
-+	VULNWL(AMD, family, X86_MODEL_ANY, whitelist)
-+
-+static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
-+	VULNWL(ANY,	4, X86_MODEL_ANY,	NO_SPECULATION),
-+	VULNWL(CENTAUR,	5, X86_MODEL_ANY,	NO_SPECULATION),
-+	VULNWL(INTEL,	5, X86_MODEL_ANY,	NO_SPECULATION),
-+	VULNWL(NSC,	5, X86_MODEL_ANY,	NO_SPECULATION),
-+
-+	VULNWL_INTEL(ATOM_SALTWELL,		NO_SPECULATION),
-+	VULNWL_INTEL(ATOM_SALTWELL_TABLET,	NO_SPECULATION),
-+	VULNWL_INTEL(ATOM_SALTWELL_MID,		NO_SPECULATION),
-+	VULNWL_INTEL(ATOM_BONNELL,		NO_SPECULATION),
-+	VULNWL_INTEL(ATOM_BONNELL_MID,		NO_SPECULATION),
-+
-+	VULNWL_INTEL(ATOM_SILVERMONT,		NO_SSB | NO_L1TF),
-+	VULNWL_INTEL(ATOM_SILVERMONT_X,		NO_SSB | NO_L1TF),
-+	VULNWL_INTEL(ATOM_SILVERMONT_MID,	NO_SSB | NO_L1TF),
-+	VULNWL_INTEL(ATOM_AIRMONT,		NO_SSB | NO_L1TF),
-+	VULNWL_INTEL(XEON_PHI_KNL,		NO_SSB | NO_L1TF),
-+	VULNWL_INTEL(XEON_PHI_KNM,		NO_SSB | NO_L1TF),
-+
-+	VULNWL_INTEL(CORE_YONAH,		NO_SSB),
-+
-+	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF),
-+	VULNWL_INTEL(ATOM_GOLDMONT,		NO_L1TF),
-+	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_L1TF),
-+	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_L1TF),
-+
-+	VULNWL_AMD(0x0f,		NO_MELTDOWN | NO_SSB | NO_L1TF),
-+	VULNWL_AMD(0x10,		NO_MELTDOWN | NO_SSB | NO_L1TF),
-+	VULNWL_AMD(0x11,		NO_MELTDOWN | NO_SSB | NO_L1TF),
-+	VULNWL_AMD(0x12,		NO_MELTDOWN | NO_SSB | NO_L1TF),
- 
--static const __initconst struct x86_cpu_id cpu_no_meltdown[] = {
--	{ X86_VENDOR_AMD },
-+	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
-+	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF),
- 	{}
- };
- 
--/* Only list CPUs which speculate but are non susceptible to SSB */
--static const __initconst struct x86_cpu_id cpu_no_spec_store_bypass[] = {
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_AIRMONT		},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT_X	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT_MID	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_CORE_YONAH		},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNL		},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNM		},
--	{ X86_VENDOR_AMD,	0x12,					},
--	{ X86_VENDOR_AMD,	0x11,					},
--	{ X86_VENDOR_AMD,	0x10,					},
--	{ X86_VENDOR_AMD,	0xf,					},
--	{}
--};
-+static bool __init cpu_matches(unsigned long which)
++static inline u64 stibp_tif_to_spec_ctrl(u64 tifn)
 +{
-+	const struct x86_cpu_id *m = x86_match_cpu(cpu_vuln_whitelist);
- 
--static const __initconst struct x86_cpu_id cpu_no_l1tf[] = {
--	/* in addition to cpu_no_speculation */
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT_X	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_AIRMONT		},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_SILVERMONT_MID	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_AIRMONT_MID	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_GOLDMONT	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_GOLDMONT_X	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_ATOM_GOLDMONT_PLUS	},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNL		},
--	{ X86_VENDOR_INTEL,	6,	INTEL_FAM6_XEON_PHI_KNM		},
--	{}
--};
-+	return m && !!(m->driver_data & which);
++	BUILD_BUG_ON(TIF_SPEC_IB < SPEC_CTRL_STIBP_SHIFT);
++	return (tifn & _TIF_SPEC_IB) >> (TIF_SPEC_IB - SPEC_CTRL_STIBP_SHIFT);
 +}
- 
- static void __init cpu_set_bug_bits(struct cpuinfo_x86 *c)
++
+ static inline unsigned long ssbd_spec_ctrl_to_tif(u64 spec_ctrl)
  {
- 	u64 ia32_cap = 0;
+ 	BUILD_BUG_ON(TIF_SSBD < SPEC_CTRL_SSBD_SHIFT);
+ 	return (spec_ctrl & SPEC_CTRL_SSBD) << (TIF_SSBD - SPEC_CTRL_SSBD_SHIFT);
+ }
  
--	if (x86_match_cpu(cpu_no_speculation))
-+	if (cpu_matches(NO_SPECULATION))
- 		return;
++static inline unsigned long stibp_spec_ctrl_to_tif(u64 spec_ctrl)
++{
++	BUILD_BUG_ON(TIF_SPEC_IB < SPEC_CTRL_STIBP_SHIFT);
++	return (spec_ctrl & SPEC_CTRL_STIBP) << (TIF_SPEC_IB - SPEC_CTRL_STIBP_SHIFT);
++}
++
+ static inline u64 ssbd_tif_to_amd_ls_cfg(u64 tifn)
+ {
+ 	return (tifn & _TIF_SSBD) ? x86_amd_ls_cfg_ssbd_mask : 0ULL;
+--- a/arch/x86/include/asm/thread_info.h
++++ b/arch/x86/include/asm/thread_info.h
+@@ -76,6 +76,7 @@ struct thread_info {
+ #define TIF_SYSCALL_EMU		6	/* syscall emulation active */
+ #define TIF_SYSCALL_AUDIT	7	/* syscall auditing active */
+ #define TIF_SECCOMP		8	/* secure computing */
++#define TIF_SPEC_IB		9	/* Indirect branch speculation mitigation */
+ #define TIF_MCE_NOTIFY		10	/* notify userspace of an MCE */
+ #define TIF_USER_RETURN_NOTIFY	11	/* notify kernel of userspace return */
+ #define TIF_UPROBE		12	/* breakpointed or singlestepping */
+@@ -102,6 +103,7 @@ struct thread_info {
+ #define _TIF_SYSCALL_EMU	(1 << TIF_SYSCALL_EMU)
+ #define _TIF_SYSCALL_AUDIT	(1 << TIF_SYSCALL_AUDIT)
+ #define _TIF_SECCOMP		(1 << TIF_SECCOMP)
++#define _TIF_SPEC_IB		(1 << TIF_SPEC_IB)
+ #define _TIF_MCE_NOTIFY		(1 << TIF_MCE_NOTIFY)
+ #define _TIF_USER_RETURN_NOTIFY	(1 << TIF_USER_RETURN_NOTIFY)
+ #define _TIF_UPROBE		(1 << TIF_UPROBE)
+@@ -133,11 +135,12 @@ struct thread_info {
+ #define _TIF_WORK_MASK							\
+ 	(0x0000FFFF &							\
+ 	 ~(_TIF_SYSCALL_TRACE|_TIF_SYSCALL_AUDIT|			\
+-	   _TIF_SINGLESTEP|_TIF_SSBD|_TIF_SECCOMP|_TIF_SYSCALL_EMU))
++	   _TIF_SINGLESTEP|_TIF_SSBD|_TIF_SECCOMP|_TIF_SYSCALL_EMU|	\
++	   _TIF_SPEC_IB))
  
- 	setup_force_cpu_bug(X86_BUG_SPECTRE_V1);
-@@ -869,15 +877,14 @@ static void __init cpu_set_bug_bits(stru
- 	if (cpu_has(c, X86_FEATURE_ARCH_CAPABILITIES))
- 		rdmsrl(MSR_IA32_ARCH_CAPABILITIES, ia32_cap);
+ /* work to do on any return to user space */
+ #define _TIF_ALLWORK_MASK						\
+-	((0x0000FFFF & ~(_TIF_SSBD | _TIF_SECCOMP)) |			\
++	((0x0000FFFF & ~(_TIF_SSBD | _TIF_SECCOMP | _TIF_SPEC_IB)) |	\
+ 	 _TIF_SYSCALL_TRACEPOINT | _TIF_NOHZ)
  
--	if (!x86_match_cpu(cpu_no_spec_store_bypass) &&
--	   !(ia32_cap & ARCH_CAP_SSB_NO) &&
-+	if (!cpu_matches(NO_SSB) && !(ia32_cap & ARCH_CAP_SSB_NO) &&
- 	   !cpu_has(c, X86_FEATURE_AMD_SSB_NO))
- 		setup_force_cpu_bug(X86_BUG_SPEC_STORE_BYPASS);
+ /* Only used for 64 bit */
+@@ -147,7 +150,8 @@ struct thread_info {
  
- 	if (ia32_cap & ARCH_CAP_IBRS_ALL)
- 		setup_force_cpu_cap(X86_FEATURE_IBRS_ENHANCED);
+ /* flags to check in __switch_to() */
+ #define _TIF_WORK_CTXSW							\
+-	(_TIF_IO_BITMAP|_TIF_NOTSC|_TIF_BLOCKSTEP|_TIF_SSBD)
++	(_TIF_IO_BITMAP|_TIF_NOTSC|_TIF_BLOCKSTEP|			\
++	 _TIF_SSBD|_TIF_SPEC_IB)
  
--	if (x86_match_cpu(cpu_no_meltdown))
-+	if (cpu_matches(NO_MELTDOWN))
- 		return;
+ #define _TIF_WORK_CTXSW_PREV (_TIF_WORK_CTXSW|_TIF_USER_RETURN_NOTIFY)
+ #define _TIF_WORK_CTXSW_NEXT (_TIF_WORK_CTXSW)
+--- a/arch/x86/include/uapi/asm/msr-index.h
++++ b/arch/x86/include/uapi/asm/msr-index.h
+@@ -34,9 +34,10 @@
+ /* Intel MSRs. Some also available on other CPUs */
+ #define MSR_IA32_SPEC_CTRL		0x00000048 /* Speculation Control */
+ #define SPEC_CTRL_IBRS			(1 << 0)   /* Indirect Branch Restricted Speculation */
+-#define SPEC_CTRL_STIBP			(1 << 1)   /* Single Thread Indirect Branch Predictors */
++#define SPEC_CTRL_STIBP_SHIFT		1	   /* Single Thread Indirect Branch Predictor (STIBP) bit */
++#define SPEC_CTRL_STIBP			(1 << SPEC_CTRL_STIBP_SHIFT)	/* STIBP mask */
+ #define SPEC_CTRL_SSBD_SHIFT		2	   /* Speculative Store Bypass Disable bit */
+-#define SPEC_CTRL_SSBD			(1 << SPEC_CTRL_SSBD_SHIFT)   /* Speculative Store Bypass Disable */
++#define SPEC_CTRL_SSBD			(1 << SPEC_CTRL_SSBD_SHIFT)	/* Speculative Store Bypass Disable */
  
- 	/* Rogue Data Cache Load? No! */
-@@ -886,7 +893,7 @@ static void __init cpu_set_bug_bits(stru
+ #define MSR_IA32_PRED_CMD		0x00000049 /* Prediction Command */
+ #define PRED_CMD_IBPB			(1 << 0)   /* Indirect Branch Prediction Barrier */
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -202,6 +202,10 @@ x86_virt_spec_ctrl(u64 guest_spec_ctrl,
+ 		    static_cpu_has(X86_FEATURE_AMD_SSBD))
+ 			hostval |= ssbd_tif_to_spec_ctrl(ti->flags);
  
- 	setup_force_cpu_bug(X86_BUG_CPU_MELTDOWN);
++		/* Conditional STIBP enabled? */
++		if (static_branch_unlikely(&switch_to_cond_stibp))
++			hostval |= stibp_tif_to_spec_ctrl(ti->flags);
++
+ 		if (hostval != guestval) {
+ 			msrval = setguest ? guestval : hostval;
+ 			wrmsrl(MSR_IA32_SPEC_CTRL, msrval);
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -344,11 +344,17 @@ static __always_inline void amd_set_ssb_
+ static __always_inline void __speculation_ctrl_update(unsigned long tifp,
+ 						      unsigned long tifn)
+ {
++	unsigned long tif_diff = tifp ^ tifn;
+ 	u64 msr = x86_spec_ctrl_base;
+ 	bool updmsr = false;
  
--	if (x86_match_cpu(cpu_no_l1tf))
-+	if (cpu_matches(NO_L1TF))
- 		return;
+-	/* If TIF_SSBD is different, select the proper mitigation method */
+-	if ((tifp ^ tifn) & _TIF_SSBD) {
++	/*
++	 * If TIF_SSBD is different, select the proper mitigation
++	 * method. Note that if SSBD mitigation is disabled or permanentely
++	 * enabled this branch can't be taken because nothing can set
++	 * TIF_SSBD.
++	 */
++	if (tif_diff & _TIF_SSBD) {
+ 		if (static_cpu_has(X86_FEATURE_VIRT_SSBD)) {
+ 			amd_set_ssb_virt_state(tifn);
+ 		} else if (static_cpu_has(X86_FEATURE_LS_CFG_SSBD)) {
+@@ -360,6 +366,16 @@ static __always_inline void __speculatio
+ 		}
+ 	}
  
- 	setup_force_cpu_bug(X86_BUG_L1TF);
++	/*
++	 * Only evaluate TIF_SPEC_IB if conditional STIBP is enabled,
++	 * otherwise avoid the MSR write.
++	 */
++	if (IS_ENABLED(CONFIG_SMP) &&
++	    static_branch_unlikely(&switch_to_cond_stibp)) {
++		updmsr |= !!(tif_diff & _TIF_SPEC_IB);
++		msr |= stibp_tif_to_spec_ctrl(tifn);
++	}
++
+ 	if (updmsr)
+ 		wrmsrl(MSR_IA32_SPEC_CTRL, msr);
+ }
 
