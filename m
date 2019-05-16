@@ -2,66 +2,98 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC046C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200E8C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EB3620833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:03:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CELJ9w/b"
+	by mail.kernel.org (Postfix) with ESMTP id F132520862
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfEPNDA (ORCPT
+        id S1727152AbfEPNDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:03:00 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:37237 "EHLO vps0.lunn.ch"
+        Thu, 16 May 2019 09:03:04 -0400
+Received: from relay.sw.ru ([185.231.240.75]:51894 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbfEPNC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:02:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=TxWIdfV2hL7/iT51c08JGwX3nJjgTJ/fYPgEs9gxoGM=; b=CELJ9w/bLskERYh1DvzhJgdlGf
-        54lADYLraF3PDZwmFVt7Jnk2lWkPZpPAlv2ET94JJQda86DYoESF1Z3Kxq10+xtoh00lzdSpnjRSt
-        N/ZSXMHaqMtIVUFndc/fMyAUKNfwcU0f9pBLoSSTxWYgcNz6qj+LombOlFDZrCDT21zg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hRG26-0003He-KB; Thu, 16 May 2019 15:02:50 +0200
-Date:   Thu, 16 May 2019 15:02:50 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Sagar Kadam <sagar.kadam@sifive.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] i2c-ocores: sifive: add polling mode workaround
- for FU540-C000 SoC
-Message-ID: <20190516130250.GD14298@lunn.ch>
-References: <1557983320-14461-1-git-send-email-sagar.kadam@sifive.com>
- <1557983320-14461-4-git-send-email-sagar.kadam@sifive.com>
- <20190516123120.GB14298@lunn.ch>
- <CAARK3H=L2AFtog6wdJGU7rKi7yk-AzDgFdjcjktZgkqdDwnOZQ@mail.gmail.com>
+        id S1727469AbfEPNDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:03:03 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hRG2D-0006j8-2v; Thu, 16 May 2019 16:02:57 +0300
+Subject: Re: [PATCH RFC 0/5] mm: process_vm_mmap() -- syscall for duplication
+ a process mapping
+To:     Jann Horn <jannh@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@suse.com>, keith.busch@intel.com,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        pasha.tatashin@oracle.com,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        ira.weiny@intel.com, Andrey Konovalov <andreyknvl@google.com>,
+        arunks@codeaurora.org, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Rik van Riel <riel@surriel.com>,
+        Kees Cook <keescook@chromium.org>, hannes@cmpxchg.org,
+        npiggin@gmail.com,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        shakeelb@google.com, Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        daniel.m.jordan@oracle.com,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+References: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
+ <CAG48ez20Nu76Q8Tye9Hd3HGCmvfUYH+Ubp2EWbnhLp+J6wqRvw@mail.gmail.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <456c7367-0656-933b-986d-febdcc5ab98e@virtuozzo.com>
+Date:   Thu, 16 May 2019 16:02:55 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAARK3H=L2AFtog6wdJGU7rKi7yk-AzDgFdjcjktZgkqdDwnOZQ@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAG48ez20Nu76Q8Tye9Hd3HGCmvfUYH+Ubp2EWbnhLp+J6wqRvw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Other SiFive chip's with Ocore based I2C re-implementation might not
-> need the broken IRQ workaround.
+Hi, Jann,
 
-They then get a different compatible string, because they are not bug
-compatible.
+On 15.05.2019 21:46, Jann Horn wrote:
+> On Wed, May 15, 2019 at 5:11 PM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>> This patchset adds a new syscall, which makes possible
+>> to clone a mapping from a process to another process.
+>> The syscall supplements the functionality provided
+>> by process_vm_writev() and process_vm_readv() syscalls,
+>> and it may be useful in many situation.
+>>
+>> For example, it allows to make a zero copy of data,
+>> when process_vm_writev() was previously used:
+> [...]
+>> This syscall may be used for page servers like in example
+>> above, for migration (I assume, even virtual machines may
+>> want something like this), for zero-copy desiring users
+>> of process_vm_writev() and process_vm_readv(), for debug
+>> purposes, etc. It requires the same permittions like
+>> existing proc_vm_xxx() syscalls have.
+> 
+> Have you considered using userfaultfd instead? userfaultfd has
+> interfaces (UFFDIO_COPY and UFFDIO_ZERO) for directly shoving pages
+> into the VMAs of other processes. This works without the churn of
+> creating and merging VMAs all the time. userfaultfd is the interface
+> that was written to support virtual machine migration (and it supports
+> live migration, too).
 
-	Andrew
+I know about userfaultfd, but it does solve the discussed problem.
+It allocates new pages to make UFFDIO_COPY (see mcopy_atomic_pte()),
+and it accumulates all the disadvantages, the example from [0/5]
+message has.
+
+Kirill
