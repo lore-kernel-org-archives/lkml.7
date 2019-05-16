@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B20C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025C1C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ADC920848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D33782177B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:02:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfEPQCl (ORCPT
+        id S1727725AbfEPQCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:02:41 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42828 "EHLO
+        Thu, 16 May 2019 12:02:44 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42834 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726956AbfEPP6q (ORCPT
+        by vger.kernel.org with ESMTP id S1726968AbfEPP6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 May 2019 11:58:46 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImD-0006zL-Vm; Thu, 16 May 2019 16:58:38 +0100
+        id 1hRImE-0006zx-P0; Thu, 16 May 2019 16:58:38 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImD-0001OO-7g; Thu, 16 May 2019 16:58:37 +0100
+        id 1hRImD-0001Pc-Oj; Thu, 16 May 2019 16:58:37 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,18 +35,32 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Tony Luck" <tony.luck@intel.com>,
+        "Arjan van de Ven" <arjan@linux.intel.com>,
+        "Andrea Arcangeli" <aarcange@redhat.com>,
+        "Tim Chen" <tim.c.chen@linux.intel.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Casey Schaufler" <casey.schaufler@intel.com>,
+        "Waiman Long" <longman9394@gmail.com>,
+        "Dave Stewart" <david.c.stewart@intel.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Jon Masters" <jcm@redhat.com>,
+        "Josh Poimboeuf" <jpoimboe@redhat.com>,
+        "Greg KH" <gregkh@linuxfoundation.org>,
+        "Tom Lendacky" <thomas.lendacky@amd.com>,
         "Peter Zijlstra" <peterz@infradead.org>,
+        "Jiri Kosina" <jkosina@suse.cz>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        "Asit Mallick" <asit.k.mallick@intel.com>,
+        "Kees Cook" <keescook@chromium.org>,
         "Thomas Gleixner" <tglx@linutronix.de>,
-        "Borislav Petkov" <bp@suse.de>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>
+        "Ingo Molnar" <mingo@kernel.org>,
+        "Andi Kleen" <ak@linux.intel.com>,
+        "Dave Hansen" <dave.hansen@intel.com>
 Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.141157802@decadent.org.uk>
+Message-ID: <lsq.1558022133.87742119@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 26/86] locking/static_keys: Provide DECLARE and well
- as DEFINE macros
+Subject: [PATCH 3.16 41/86] x86/Kconfig: Select SCHED_SMT if SMP enabled
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -60,41 +74,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tony Luck <tony.luck@intel.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit b8fb03785d4de097507d0cf45873525e0ac4d2b2 upstream.
+commit dbe733642e01dd108f71436aaea7b328cb28fd87 upstream.
 
-We will need to provide declarations of static keys in header
-files. Provide DECLARE_STATIC_KEY_{TRUE,FALSE} macros.
+CONFIG_SCHED_SMT is enabled by all distros, so there is not a real point to
+have it configurable. The runtime overhead in the core scheduler code is
+minimal because the actual SMT scheduling parts are conditional on a static
+key.
 
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Acked-by: Borislav Petkov <bp@suse.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: http://lkml.kernel.org/r/816881cf85bd3cf13385d212882618f38a3b5d33.1472754711.git.tony.luck@intel.com
+This allows to expose the scheduler's SMT state static key to the
+speculation control code. Alternatively the scheduler's static key could be
+made always available when CONFIG_SMP is enabled, but that's just adding an
+unused static key to every other architecture for nothing.
+
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Casey Schaufler <casey.schaufler@intel.com>
+Cc: Asit Mallick <asit.k.mallick@intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Waiman Long <longman9394@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Dave Stewart <david.c.stewart@intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20181125185004.337452245@linutronix.de
+[bwh: Backported to 3.16: CONFIG_SCHED_SMT depended on CONFG_X86_HT, but that
+ also follows CONFIG_SMP]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/linux/jump_label.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/Kconfig | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
---- a/include/linux/jump_label.h
-+++ b/include/linux/jump_label.h
-@@ -267,9 +267,15 @@ struct static_key_false {
- #define DEFINE_STATIC_KEY_TRUE(name)	\
- 	struct static_key_true name = STATIC_KEY_TRUE_INIT
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -798,13 +798,7 @@ config NR_CPUS
+ 	  approximately eight kilobytes to the kernel image.
  
-+#define DECLARE_STATIC_KEY_TRUE(name)	\
-+	extern struct static_key_true name
-+
- #define DEFINE_STATIC_KEY_FALSE(name)	\
- 	struct static_key_false name = STATIC_KEY_FALSE_INIT
+ config SCHED_SMT
+-	bool "SMT (Hyperthreading) scheduler support"
+-	depends on X86_HT
+-	---help---
+-	  SMT scheduler support improves the CPU scheduler's decision making
+-	  when dealing with Intel Pentium 4 chips with HyperThreading at a
+-	  cost of slightly increased overhead in some places. If unsure say
+-	  N here.
++	def_bool y if SMP
  
-+#define DECLARE_STATIC_KEY_FALSE(name)	\
-+	extern struct static_key_false name
-+
- extern bool ____wrong_branch_error(void);
- 
- #define static_key_enabled(x)							\
+ config SCHED_MC
+ 	def_bool y
 
