@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51E8C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A645C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3C620881
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14843216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558006881;
-	bh=IMJiCZPSYS+y4kCm9xDnxJHtTTXzXjnfjEhhpmvOUww=;
+	s=default; t=1558006885;
+	bh=MC2s3zbRA8iOQPyUGePe0AyGmsVxC+FJgNnwH10foAk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gZo5syD7t4gV2lL7670kHBsSFjNLprPBc5ww/xoKCrVZr09fbQ8krDNBxqIrbXO7l
-	 Edueta+YwDWMJ9A/Wl/C7G9BFbFBhL4CtGfOzTrVTLuygxIJd3C1smG/jbDMMVW0ug
-	 NP/RNfTycA4dZcziWPUCUznDH5nX1jBN4ur/BYhk=
+	b=vEXf1EdZ3nJZhQlE/mNknelRXlSo95oqnxWUIgopo/ALJTA2fBss08PnQ4JqqJDFC
+	 huKGkgxkHjP7med66PzCi2Tr8hr/IQHKZM5ZVWx+dNDain7/3CxpnovQYS6qwoc/IF
+	 Ck4WWJMS3nECCaQaTqSvXngL8un39Xv/p0MZTv9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfEPLlU (ORCPT
+        id S1728147AbfEPLlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:41:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49948 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:41:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727432AbfEPLlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:41:16 -0400
+        id S1728109AbfEPLlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:41:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F4E0216F4;
-        Thu, 16 May 2019 11:41:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9ED6520848;
+        Thu, 16 May 2019 11:41:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006876;
-        bh=IMJiCZPSYS+y4kCm9xDnxJHtTTXzXjnfjEhhpmvOUww=;
+        s=default; t=1558006879;
+        bh=MC2s3zbRA8iOQPyUGePe0AyGmsVxC+FJgNnwH10foAk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wJbGsCUo50qXQUPbFGkuOzS79HG+LdsGWegXTYznk0vef0yhgMAFxDkXehYppYPvX
-         KaOUcQYMiuhs95G3vxtDb90y4CyRd2rLOzbEQ93bIUac4s0in/1ObJZ3hfgoGWs9a8
-         0j6a87C2GmYlU0tK68KGkFrN7FiYO5H4wL4wM7S8=
+        b=07umikDFeoAfnmAjcfDjCuS8X/dnh012/6/mFXsKUVtpW8YB/1rYGML/s7U2MSWOL
+         Nb4kBsq9241QOPYAr9yPnV2oY7+6/NLzLCW2iC6y1Q4cbKo5OKqd2JL90eFJP9+qC6
+         eYwizZyHJ7u/TvNANTFfGaPgQh3QUewaA7ryF2SE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 07/16] securityfs: fix use-after-free on symlink traversal
-Date:   Thu, 16 May 2019 07:40:58 -0400
-Message-Id: <20190516114107.8963-7-sashal@kernel.org>
+Cc:     Andrew Jones <drjones@redhat.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
+Subject: [PATCH AUTOSEL 4.14 10/16] KVM: arm/arm64: Ensure vcpu target is unset on reset failure
+Date:   Thu, 16 May 2019 07:41:01 -0400
+Message-Id: <20190516114107.8963-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516114107.8963-1-sashal@kernel.org>
 References: <20190516114107.8963-1-sashal@kernel.org>
@@ -58,51 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Andrew Jones <drjones@redhat.com>
 
-[ Upstream commit 46c874419652bbefdfed17420fd6e88d8a31d9ec ]
+[ Upstream commit 811328fc3222f7b55846de0cd0404339e2e1e6d7 ]
 
-symlink body shouldn't be freed without an RCU delay.  Switch securityfs
-to ->destroy_inode() and use of call_rcu(); free both the inode and symlink
-body in the callback.
+A failed KVM_ARM_VCPU_INIT should not set the vcpu target,
+as the vcpu target is used by kvm_vcpu_initialized() to
+determine if other vcpu ioctls may proceed. We need to set
+the target before calling kvm_reset_vcpu(), but if that call
+fails, we should then unset it and clear the feature bitmap
+while we're at it.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Andrew Jones <drjones@redhat.com>
+[maz: Simplified patch, completed commit message]
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/inode.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ virt/kvm/arm/arm.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/security/inode.c b/security/inode.c
-index 8dd9ca8848e43..829f15672e01f 100644
---- a/security/inode.c
-+++ b/security/inode.c
-@@ -26,17 +26,22 @@
- static struct vfsmount *mount;
- static int mount_count;
- 
--static void securityfs_evict_inode(struct inode *inode)
-+static void securityfs_i_callback(struct rcu_head *head)
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index 32aa88c19b8d5..4154f98b337c5 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -856,7 +856,7 @@ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_level,
+ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
+ 			       const struct kvm_vcpu_init *init)
  {
--	truncate_inode_pages_final(&inode->i_data);
--	clear_inode(inode);
-+	struct inode *inode = container_of(head, struct inode, i_rcu);
- 	if (S_ISLNK(inode->i_mode))
- 		kfree(inode->i_link);
-+	free_inode_nonrcu(inode);
+-	unsigned int i;
++	unsigned int i, ret;
+ 	int phys_target = kvm_target_cpu();
+ 
+ 	if (init->target != phys_target)
+@@ -891,9 +891,14 @@ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
+ 	vcpu->arch.target = phys_target;
+ 
+ 	/* Now we know what it is, we can reset it. */
+-	return kvm_reset_vcpu(vcpu);
+-}
++	ret = kvm_reset_vcpu(vcpu);
++	if (ret) {
++		vcpu->arch.target = -1;
++		bitmap_zero(vcpu->arch.features, KVM_VCPU_MAX_FEATURES);
++	}
+ 
++	return ret;
 +}
-+
-+static void securityfs_destroy_inode(struct inode *inode)
-+{
-+	call_rcu(&inode->i_rcu, securityfs_i_callback);
- }
  
- static const struct super_operations securityfs_super_operations = {
- 	.statfs		= simple_statfs,
--	.evict_inode	= securityfs_evict_inode,
-+	.destroy_inode	= securityfs_destroy_inode,
- };
- 
- static int fill_super(struct super_block *sb, void *data, int silent)
+ static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
+ 					 struct kvm_vcpu_init *init)
 -- 
 2.20.1
 
