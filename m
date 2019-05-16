@@ -2,201 +2,138 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E02C04E53
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE889C04E53
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A643620873
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:50:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF4D920843
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:51:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="2wWriTKa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbfEPBuo (ORCPT
+        id S1726409AbfEPBv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 21:50:44 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35262 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbfEPBnA (ORCPT
+        Wed, 15 May 2019 21:51:58 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:39724 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfEPBv6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 21:43:00 -0400
-Received: by mail-pg1-f196.google.com with SMTP id h1so713627pgs.2
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 18:43:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=7SwtIFTytRUIEDGWEwu6hti01P2GNQFISvzzuEXab0g=;
-        b=kQ2DZgvONIgdolYC3b5sB1tVVSV7OwixWx0vCTFzfOKJ/9gYGVb5Xgbq7Goe1or94s
-         ffEuR1+XNidlTudE87ImcF+lEOW7H6vHYkDmmwXBxbkgkipilEPtvw0uy2UolzuXn5uW
-         OM1F522lTBd6D7xk3SK8DIlf5TBHBTXlF/y6sH44r8zIQ7t2OQAHQwjKNmYTWgh9gYyl
-         u/NgeXZ8+fiTrMiGUrSU4Up/kT2BqJNaX5HldNP3TGks4ngUqcG0OcXQNqhIGjDL26j+
-         N1lUJjfgaobgaYAxm6oAO6JYafDi1/EYFvNeEURlKPbIcQz9H1ngE0mYwycmnx8tCtET
-         eRBA==
-X-Gm-Message-State: APjAAAU5B7l6zEs7IdvaIegq5ZX0Utpj0N7BUJSs37UST9MMDvRHkAt9
-        4XexBuYUAXsmfGiUIf+aUK9wig==
-X-Google-Smtp-Source: APXvYqwuTsPktTTpaeES4T1KVD834+oVs1m82p0wEi8Msv0ip/VofHEk1XIvtOloFudhqitu6gsEeQ==
-X-Received: by 2002:a63:465b:: with SMTP id v27mr47809999pgk.38.1557970979636;
-        Wed, 15 May 2019 18:42:59 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id n27sm8066642pfb.129.2019.05.15.18.42.58
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 May 2019 18:42:59 -0700 (PDT)
-Date:   Wed, 15 May 2019 18:42:59 -0700 (PDT)
-X-Google-Original-Date: Wed, 15 May 2019 18:42:40 PDT (-0700)
-Subject:     Re: [GIT PULL] RISC-V Patches for the 5.2 Merge Window, Part 1
-In-Reply-To: <21598eb7-8ff0-2b6b-4cab-c0d1295fd46e@wdc.com>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     atish.patra@wdc.com
-Message-ID: <mhng-54fad465-30c1-426c-84c1-99fd4ac827b0@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 15 May 2019 21:51:58 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4G1ivkU105807;
+        Thu, 16 May 2019 01:51:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=HYO9ezbu2Dl+8sVygsMDRAKrRIRpqkGBLrL69Eo8bes=;
+ b=2wWriTKaTn3ytF35CvZTgtwBxK9VcMSbmLgHTFya+BZl9Pi1peferkYHzD+qEklrZOr7
+ SFHpzlivDV0eDdJU6xRoe9jx8D0oQpHLrjrWgNF1LfVWLwVKfAyeSlpk4lCxy9BybfGx
+ zsDBra4IEEQpat6QxGNS5B0erj4LwFAoilOeOWEkYHkQGjrnDk2MQYpB/pHuYVPLUixz
+ 9Ln8XJB9ryBfoxq9hj0Wl0cNrbRroAoaqk6GFtljuLvVxD3NCP9Ny7gZ29gEyWUmoUYG
+ gUIEUsl/bkKLitLGoSr2AmZMvQqe0Ra4rzp38o6EuOs7Q1VNuUQEgpWJVcN0NsTvNgNK bQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2sdntu0b96-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 May 2019 01:51:26 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4G1pNd9062910;
+        Thu, 16 May 2019 01:51:26 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2sgp32q8x3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 May 2019 01:51:26 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4G1pPYb015103;
+        Thu, 16 May 2019 01:51:25 GMT
+Received: from dhcp-10-159-244-171.vpn.oracle.com (/10.159.244.171)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 May 2019 01:51:24 +0000
+Subject: Re: [PATCH] tracing: Kernel access to Ftrace instances
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Joe Jin <joe.jin@oracle.com>
+References: <1553106531-3281-1-git-send-email-divya.indi@oracle.com>
+ <1553106531-3281-2-git-send-email-divya.indi@oracle.com>
+ <20190516090942.75f3a957ceed20201edc91a6@kernel.org>
+From:   Divya Indi <divya.indi@oracle.com>
+Message-ID: <a96e884d-534f-65ef-8f82-85cd52953695@oracle.com>
+Date:   Wed, 15 May 2019 18:51:23 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190516090942.75f3a957ceed20201edc91a6@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9258 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905160011
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9258 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905160011
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 May 2019 12:08:36 PDT (-0700), atish.patra@wdc.com wrote:
-> On 5/15/19 10:40 AM, Palmer Dabbelt wrote:
->> The following changes since commit 085b7755808aa11f78ab9377257e1dad2e6fa4bb:
->>
->>    Linux 5.1-rc6 (2019-04-21 10:45:57 -0700)
->>
->> are available in the Git repository at:
->>
->>    git://git.kernel.org/pub/scm/linux/kernel/git/palmer/riscv-linux.git tags/riscv-for-linus-5.2-mw0
->>
->> for you to fetch changes up to e23fc917f04ffac8c156fdb4ee8b56f3867fa50b:
->>
->>    RISC-V: Avoid using invalid intermediate translations (2019-05-08 15:06:18 -0700)
->>
->> ----------------------------------------------------------------
->> RISC-V Patches for the 5.2 Merge Window, Part 1
->>
->> This patch set contains an assortment of RISC-V related patches that I'd
->> like to target for the 5.2 merge window.  Most of the patches are
->> cleanups, but there are a handful of user-visible changes:
->>
->> * The nosmp and nr_cpus command-line arguments are now supported, which
->>    work like normal.
->> * The SBI console no longer installs itself as a preferred console, we
->>    rely on standard mechanisms (/chosen, command-line, hueristics)
->>    instead.
->> * sfence_remove_sfence_vma{,_asid} now pass their arguments along to the
->>    SBI call.
->> * Modules now support BUG().
->> * A missing sfence.vma during boot has been added.  This bug only
->>    manifests during boot.
->>
->> I've only tested this on QEMU again, as I didn't have time to get things
->> running on the Unleashed.  The latest master from this morning merges in
->> cleanly and passes the tests as well.
->>
->> ----------------------------------------------------------------
->> Anup Patel (4):
->>        RISC-V: Use tabs to align macro values in asm/csr.h
->>        RISC-V: Add interrupt related SCAUSE defines in asm/csr.h
->>        RISC-V: Access CSRs using CSR numbers
->>        tty: Don't force RISCV SBI console as preferred console
->>
->> Atish Patra (4):
->>        RISC-V: Add RISC-V specific arch_match_cpu_phys_id
->>        RISC-V: Implement nosmp commandline option.
->>        RISC-V: Support nr_cpus command line option.
->>        RISC-V: Fix minor checkpatch issues.
->>
->> Christoph Hellwig (11):
->>        riscv: use asm-generic/extable.h
->>        riscv: turn mm_segment_t into a struct
->>        riscv: remove unreachable big endian code
->>        riscv: remove CONFIG_RISCV_ISA_A
->>        riscv: clear all pending interrupts when booting
->>        riscv: simplify the stack pointer setup in head.S
->>        riscv: cleanup the parse_dtb calling conventions
->>        riscv: remove unreachable !HAVE_FUNCTION_GRAPH_RET_ADDR_PTR code
->>        riscv: remove duplicate macros from ptrace.h
->>        riscv: print the unexpected interrupt cause
->>        riscv: call pm_power_off from machine_halt / machine_power_off
->>
->> Gary Guo (3):
->>        riscv: move flush_icache_{all,mm} to cacheflush.c
->>        riscv: move switch_mm to its own file
->>        riscv: fix sbi_remote_sfence_vma{,_asid}.
->>
->> Guo Ren (1):
->>        riscv/signal: Fixup additional syscall restarting
->>
->> Nick Desaulniers (1):
->>        riscv: vdso: drop unnecessary cc-ldoption
->>
->> Palmer Dabbelt (1):
->>        RISC-V: Avoid using invalid intermediate translations
->>
->> Vincent Chen (3):
->>        riscv: support trap-based WARN()
->>        riscv: Add the support for c.ebreak check in is_valid_bugaddr()
->>        riscv: Support BUG() in kernel module
->>
->>   arch/riscv/Kconfig                   |   6 +-
->>   arch/riscv/Makefile                  |   5 +-
->>   arch/riscv/include/asm/Kbuild        |   1 +
->>   arch/riscv/include/asm/bug.h         |  35 ++++++----
->>   arch/riscv/include/asm/cacheflush.h  |   2 +-
->>   arch/riscv/include/asm/csr.h         | 123 ++++++++++++++++++++++-------------
->>   arch/riscv/include/asm/elf.h         |   6 --
->>   arch/riscv/include/asm/futex.h       |  13 ----
->>   arch/riscv/include/asm/irqflags.h    |  10 +--
->>   arch/riscv/include/asm/mmu_context.h |  59 +----------------
->>   arch/riscv/include/asm/ptrace.h      |  21 ++----
->>   arch/riscv/include/asm/sbi.h         |  19 ++++--
->>   arch/riscv/include/asm/thread_info.h |   4 +-
->>   arch/riscv/include/asm/uaccess.h     |  28 +++-----
->>   arch/riscv/kernel/asm-offsets.c      |   3 -
->>   arch/riscv/kernel/cpu.c              |   3 +-
->>   arch/riscv/kernel/entry.S            |  22 +++----
->>   arch/riscv/kernel/head.S             |  33 ++++++----
->>   arch/riscv/kernel/irq.c              |  19 ++----
->>   arch/riscv/kernel/perf_event.c       |   4 +-
->>   arch/riscv/kernel/reset.c            |  15 +++--
->>   arch/riscv/kernel/setup.c            |   6 +-
->>   arch/riscv/kernel/signal.c           |   6 ++
->>   arch/riscv/kernel/smp.c              |  61 +++--------------
->>   arch/riscv/kernel/smpboot.           |   0
->>   arch/riscv/kernel/smpboot.c          |  22 ++++++-
->>   arch/riscv/kernel/stacktrace.c       |  14 ++--
->>   arch/riscv/kernel/traps.c            |  30 ++++++---
->>   arch/riscv/kernel/vdso/Makefile      |   2 +-
->>   arch/riscv/mm/Makefile               |   1 +
->>   arch/riscv/mm/cacheflush.c           |  61 +++++++++++++++++
->>   arch/riscv/mm/context.c              |  69 ++++++++++++++++++++
->>   arch/riscv/mm/fault.c                |   6 +-
->>   drivers/tty/hvc/hvc_riscv_sbi.c      |   1 -
->>   34 files changed, 390 insertions(+), 320 deletions(-)
->>   create mode 100644 arch/riscv/kernel/smpboot.
->
-> I think "smpboot." got added as a typo because of commit (RISC-V:
-> Support nr_cpus command line option.).
->
-> Can you please update the PR directly or should I send a fixup patch?
+Hi Masami,
 
-OK.  It looks like I dropped the L2 patches, which I was going to submit as
-another PR.  Since I have to do that anyway, I think it's best to just drop
-this one.
+Thanks for pointing it out.
 
-Linus: I'm not sure how to tag this PR as a mistake, so I'm going to just send
-another one.  If this gets merged then I'll handle the follow-on.
+Yes, it should not be static.
+
+On 5/15/19 5:09 PM, Masami Hiramatsu wrote:
+> HI Divya,
+>
+> On Wed, 20 Mar 2019 11:28:51 -0700
+> Divya Indi <divya.indi@oracle.com> wrote:
+>
+>> Ftrace provides the feature “instances” that provides the capability to
+>> create multiple Ftrace ring buffers. However, currently these buffers
+>> are created/accessed via userspace only. The kernel APIs providing these
+>> features are not exported, hence cannot be used by other kernel
+>> components.
+>>
+>> This patch aims to extend this infrastructure to provide the
+>> flexibility to create/log/remove/ enable-disable existing trace events
+>> to these buffers from within the kernel.
+>>
+>> Signed-off-by: Divya Indi <divya.indi@oracle.com>
+>> Reviewed-by: Joe Jin <joe.jin@oracle.com>
+> Would you tested these APIs with your module? Since,
+> [...]
+>> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+>> index 5b3b0c3..81c038e 100644
+>> --- a/kernel/trace/trace_events.c
+>> +++ b/kernel/trace/trace_events.c
+>> @@ -832,6 +832,7 @@ static int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
+>>   
+>>   	return ret;
+>>   }
+>> +EXPORT_SYMBOL_GPL(ftrace_set_clr_event);
+> I found this exports a static function to module. Did it work?
+
+I had tested the changes with my module. This change to static was added 
+in the test patch, but somehow missed it in the final patch that was 
+sent out.
+
+Will send a new patch along with a few additional ones to add some NULL 
+checks to ensure safe usage by modules and add the APIs to a header file 
+that can be used by the modules.
+
+Thanks,
+
+Divya
 
 >
-> Regards,
-> Atish
->>   create mode 100644 arch/riscv/mm/context.c
->>
->> _______________________________________________
->> linux-riscv mailing list
->> linux-riscv@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-riscv
->>
+> Thank you,
+>
