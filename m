@@ -2,112 +2,114 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BFCC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8265EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:08:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 833802087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:07:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EE752087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:08:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfEPKHk (ORCPT
+        id S1727146AbfEPKI1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 06:07:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43660 "EHLO mx1.redhat.com"
+        Thu, 16 May 2019 06:08:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40636 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbfEPKHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 06:07:40 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        id S1726336AbfEPKI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 06:08:27 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1662190C87;
-        Thu, 16 May 2019 10:07:40 +0000 (UTC)
-Received: from localhost (ovpn-117-183.ams2.redhat.com [10.36.117.183])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 371376031D;
-        Thu, 16 May 2019 10:07:39 +0000 (UTC)
-Date:   Thu, 16 May 2019 11:07:37 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Vivek Goyal <vgoyal@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Subject: Re: [PATCH v2 12/30] dax: remove block device dependencies
-Message-ID: <20190516100737.GT29507@stefanha-x1.localdomain>
-References: <20190515192715.18000-1-vgoyal@redhat.com>
- <20190515192715.18000-13-vgoyal@redhat.com>
- <CAPcyv4i_-ri=w0jYJ4WjK4QD9E8pMzkGQNdMbt9H_nawDqYD3A@mail.gmail.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id CC666C057F3B;
+        Thu, 16 May 2019 10:08:26 +0000 (UTC)
+Received: from laptop.redhat.com (ovpn-116-17.ams2.redhat.com [10.36.116.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6EF4F5D6A9;
+        Thu, 16 May 2019 10:08:19 +0000 (UTC)
+From:   Eric Auger <eric.auger@redhat.com>
+To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        dwmw2@infradead.org, lorenzo.pieralisi@arm.com,
+        robin.murphy@arm.com, will.deacon@arm.com, hanjun.guo@linaro.org,
+        sudeep.holla@arm.com
+Cc:     alex.williamson@redhat.com, shameerali.kolothum.thodi@huawei.com
+Subject: [PATCH v3 0/7] RMRR related fixes and enhancements
+Date:   Thu, 16 May 2019 12:08:10 +0200
+Message-Id: <20190516100817.12076-1-eric.auger@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="flpRHSNNLnUanxKW"
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4i_-ri=w0jYJ4WjK4QD9E8pMzkGQNdMbt9H_nawDqYD3A@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 16 May 2019 10:07:40 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 16 May 2019 10:08:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently the Intel reserved region is attached to the
+RMRR unit and when building the list of RMRR seen by a device
+we link this unique reserved region without taking care of
+potential multiple usage of this reserved region by several devices.
 
---flpRHSNNLnUanxKW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Also while reading the vtd spec it is unclear to me whether
+the RMRR device scope referenced by an RMRR ACPI struct could
+be a PCI-PCI bridge, in which case I think we also need to
+check the device belongs to the PCI sub-hierarchy of the device
+referenced in the scope. This would be true for device_has_rmrr()
+and intel_iommu_get_resv_regions().
 
-On Wed, May 15, 2019 at 05:21:51PM -0700, Dan Williams wrote:
-> On Wed, May 15, 2019 at 12:28 PM Vivek Goyal <vgoyal@redhat.com> wrote:
-> >
-> > From: Stefan Hajnoczi <stefanha@redhat.com>
-> >
-> > Although struct dax_device itself is not tied to a block device, some
-> > DAX code assumes there is a block device.  Make block devices optional
-> > by allowing bdev to be NULL in commonly used DAX APIs.
-> >
-> > When there is no block device:
-> >  * Skip the partition offset calculation in bdev_dax_pgoff()
-> >  * Skip the blkdev_issue_zeroout() optimization
-> >
-> > Note that more block device assumptions remain but I haven't reach those
-> > code paths yet.
-> >
->=20
-> Is there a generic object that non-block-based filesystems reference
-> for physical storage as a bdev stand-in? I assume "sector_t" is still
-> the common type for addressing filesystem capacity?
->=20
-> It just seems to me that we should stop pretending that the
-> filesystem-dax facility requires block devices and try to move this
-> functionality to generically use a dax device across all interfaces.
+Last, the VFIO subsystem would need to compute the usable IOVA range
+by querying the iommu_get_group_resv_regions() API. This would allow,
+for instance, to report potential conflicts between the guest physical
+address space and host reserved regions.
+  
+However iommu_get_group_resv_regions() currently fails to differentiate
+RMRRs that are known safe for device assignment and RMRRs that must be
+enforced. So we introduce a new reserved memory region type (relaxable),
+reported when associated to an USB or GFX device. The last 2 patches aim
+at unblocking [1] which is stuck since 4.18.
 
-virtio-fs uses a PCI BAR called the DAX Window to access data.  This
-object is internal to the virtio_fs.ko driver, not really a generic
-object that DAX code can reference.
+[1-5] are fixes
+[6-7] are enhancements
 
-But does the DAX code need to reference any object at all?  It seems
-like block device users just want callbacks for the partition offset
-calculation and blkdev_issue_zeroout().
+The two parts can be considered separately if needed.
 
---flpRHSNNLnUanxKW
-Content-Type: application/pgp-signature; name="signature.asc"
+References:
+[1] [PATCH v6 0/7] vfio/type1: Add support for valid iova list management
+    https://patchwork.kernel.org/patch/10425309/
 
------BEGIN PGP SIGNATURE-----
+Branch: This series is available at:
+https://github.com/eauger/linux/tree/v5.1-rmrr-v3
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAlzdNmkACgkQnKSrs4Gr
-c8hlhwf/ZCSwXpZNQdt/OCUHk7Hmm4JUkkwbqJjArJ+4xdT38FYyvgvQRx48CaHc
-j4Nk4DMd4zRI3u8A95ycomu+EEM8lelihD7TZHrPwgfz2lSbIxZoWyimDwwVtV3e
-wW1CKnQjdPd0cRLUfj77Ob3JlBLoBXXpX4twezwP4IWKAk8Y1Roe2e3CCSVqbonV
-2MKgECxGzqozQBS80h775/sQ3kwGrfR59KP3RyVAtpUgnkW3KQPHBF4psTviVd7j
-uqJsUq0NsDX7TaUHVsR0H9o2k1S7RcYHf3yyCBvmCJwYwLrCwQFFBjM+qWRdfx/2
-K8WG0G/Hq/TRCkuVc6+0hpyQDsKtDg==
-=Y/FU
------END PGP SIGNATURE-----
+History:
 
---flpRHSNNLnUanxKW--
+v2 -> v3:
+s/||/&& in iommu_group_create_direct_mappings
+
+v1 -> v2:
+- introduce is_downstream_to_pci_bridge() in a separate patch, change param
+  names and add kerneldoc comment
+- add 6,7
+
+Eric Auger (7):
+  iommu: Pass a GFP flag parameter to iommu_alloc_resv_region()
+  iommu/vt-d: Duplicate iommu_resv_region objects per device list
+  iommu/vt-d: Introduce is_downstream_to_pci_bridge helper
+  iommu/vt-d: Handle RMRR with PCI bridge device scopes
+  iommu/vt-d: Handle PCI bridge RMRR device scopes in
+    intel_iommu_get_resv_regions
+  iommu: Introduce IOMMU_RESV_DIRECT_RELAXABLE reserved memory regions
+  iommu/vt-d: Differentiate relaxable and non relaxable RMRRs
+
+ drivers/acpi/arm64/iort.c   |  3 +-
+ drivers/iommu/amd_iommu.c   |  7 ++--
+ drivers/iommu/arm-smmu-v3.c |  2 +-
+ drivers/iommu/arm-smmu.c    |  2 +-
+ drivers/iommu/intel-iommu.c | 82 +++++++++++++++++++++++++------------
+ drivers/iommu/iommu.c       | 19 +++++----
+ include/linux/iommu.h       |  8 +++-
+ 7 files changed, 82 insertions(+), 41 deletions(-)
+
+-- 
+2.20.1
+
