@@ -2,150 +2,115 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD4FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D09C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DAEE205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:18:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="liOxQDvX"
+	by mail.kernel.org (Postfix) with ESMTP id EC5522087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558001998;
+	bh=GNeZk44iUjZpvezqnuLxWMKIOov7x5+FAxK5yoRztyA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HwtbdO4pRa8P7yQ7pteISmMJ63iI7l2FAb9hig1Uu162JLOBkhz02ktzXXRHsgXWI
+	 gU9TyGtzi2NF/mmuVu5a/lUdK/26bA9Zqr450bFglpSQdBUIIRzN0LXvwaSnK/LYKK
+	 TP7wa1Bb5mFiivMfdbBKNRcK0s4BY8jvHEs+1w/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726758AbfEPKSS (ORCPT
+        id S1726801AbfEPKT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 06:18:18 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:55422 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfEPKSS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 06:18:18 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 11F4B320;
-        Thu, 16 May 2019 12:18:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1558001896;
-        bh=kzLY4Yw2M9JQvyUjiZQ70U/NxQtmDWpBcjhnf9P1Tyc=;
+        Thu, 16 May 2019 06:19:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44808 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726363AbfEPKT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 06:19:56 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A2E1205ED;
+        Thu, 16 May 2019 10:19:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558001996;
+        bh=GNeZk44iUjZpvezqnuLxWMKIOov7x5+FAxK5yoRztyA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=liOxQDvXOnnTBSiSw2xxDatXOTMuu8pX37BIJKL1PfVVk2x/0PWXU4b9oAVqte0y6
-         l48Kevcm2NYFt2uNwQviKin+IhnczEkkVGqQ3AZPJ2avZwof0/QGI22M4qRTPZThlL
-         aHWKaw5JNxLhhk1gBiI9qSRBCfCOlDqqpk9iH7as=
-Date:   Thu, 16 May 2019 13:18:00 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        linux-rockchip@lists.infradead.org,
-        Neil Armstrong <narmstrong@baylibre.com>, mka@chromium.org,
-        Sean Paul <seanpaul@chromium.org>,
-        Zheng Yang <zhengyang@rock-chips.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 1/2] drm: bridge: dw-hdmi: Add hooks for suspend/resume
-Message-ID: <20190516101800.GE4995@pendragon.ideasonboard.com>
-References: <20190502223808.185180-1-dianders@chromium.org>
+        b=cvujyhHb+Shb0guDQ9USF9pVhy8GIqVvT7ze92sQe7HWnl+yu6cTJorhjB3Kf6xpa
+         qz0hoxpAOIvy3Y2rRf/DThinRBTO9QC+fWrTauvjXL0yGC88V9UmxWlZ7eC0mXwgkB
+         /klQUdWkURbxFEXBkb5GYhprJW+AnaEvPeLRQXPw=
+Date:   Thu, 16 May 2019 12:19:53 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+Cc:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Forest Bond <forest@alittletooquiet.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] staging: vt6656: remove unused variable
+Message-ID: <20190516101953.GA22358@kroah.com>
+References: <20190516093046.1400-1-quentin.deslandes@itdev.co.uk>
+ <20190516093951.GA19798@kroah.com>
+ <20190516095035.GA1692@qd-ubuntu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190502223808.185180-1-dianders@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190516095035.GA1692@qd-ubuntu>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Douglas,
-
-Thank you for the patch.
-
-On Thu, May 02, 2019 at 03:38:07PM -0700, Douglas Anderson wrote:
-> On Rockchip rk3288-based Chromebooks when you do a suspend/resume
-> cycle:
+On Thu, May 16, 2019 at 09:50:38AM +0000, Quentin Deslandes wrote:
+> On Thu, May 16, 2019 at 11:39:51AM +0200, Greg Kroah-Hartman wrote:
+> > On Thu, May 16, 2019 at 09:31:05AM +0000, Quentin Deslandes wrote:
+> > > Fixed 'set but not used' warning message on a status variable. The
+> > > called function returning the status code 'vnt_start_interrupt_urb()'
+> > > clean up after itself and the caller function
+> > > 'vnt_int_start_interrupt()' does not returns any value.
+> > > 
+> > > Signed-off-by: Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+> > > ---
+> > >  drivers/staging/vt6656/int.c | 3 +--
+> > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/staging/vt6656/int.c b/drivers/staging/vt6656/int.c
+> > > index 504424b19fcf..ac30ce72db5a 100644
+> > > --- a/drivers/staging/vt6656/int.c
+> > > +++ b/drivers/staging/vt6656/int.c
+> > > @@ -42,13 +42,12 @@ static const u8 fallback_rate1[5][5] = {
+> > >  void vnt_int_start_interrupt(struct vnt_private *priv)
+> > >  {
+> > >  	unsigned long flags;
+> > > -	int status;
+> > >  
+> > >  	dev_dbg(&priv->usb->dev, "---->Interrupt Polling Thread\n");
+> > >  
+> > >  	spin_lock_irqsave(&priv->lock, flags);
+> > >  
+> > > -	status = vnt_start_interrupt_urb(priv);
+> > > +	vnt_start_interrupt_urb(priv);
+> > 
+> > Shouldn't you fix this by erroring out if this fails?  Why ignore the
+> > errors?
+> > 
+> > thanks,
+> > 
+> > greg k-h
 > 
-> 1. You lose the ability to detect an HDMI device being plugged in.
-> 
-> 2. If you're using the i2c bus built in to dw_hdmi then it stops
-> working.
-> 
-> Let's add a hook to the core dw-hdmi driver so that we can call it in
-> dw_hdmi-rockchip in the next commit.
-> 
-> NOTE: the exact set of steps I've done here in resume come from
-> looking at the normal dw_hdmi init sequence in upstream Linux plus the
-> sequence that we did in downstream Chrome OS 3.14.  Testing show that
-> it seems to work, but if an extra step is needed or something here is
-> not needed we could improve it.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 21 +++++++++++++++++++++
->  include/drm/bridge/dw_hdmi.h              |  3 +++
->  2 files changed, 24 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> index db761329a1e3..4b38bfd43e59 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-> @@ -2780,6 +2780,27 @@ void dw_hdmi_unbind(struct dw_hdmi *hdmi)
->  }
->  EXPORT_SYMBOL_GPL(dw_hdmi_unbind);
->  
-> +int dw_hdmi_suspend(struct dw_hdmi *hdmi)
-> +{
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(dw_hdmi_suspend);
-> +
+> I could, however 'vnt_start_interrupt_urb()' already call 'dev_dbg()' if
+> it fails. Nothing is done after this debug call except returning an
+> error code.
 
-As this is empty, should we leave it out ? It adds a bit of bloat to the
-kernel for no real reason, and we can add it later if required.
+Returning an error code is fine for that function.  But then you have to
+do something with that error.
 
-> +int dw_hdmi_resume(struct dw_hdmi *hdmi)
-> +{
-> +	initialize_hdmi_ih_mutes(hdmi);
-> +
-> +	dw_hdmi_setup_i2c(hdmi);
-> +	if (hdmi->i2c)
-> +		dw_hdmi_i2c_init(hdmi);
-> +
-> +	if (hdmi->phy.ops->setup_hpd)
-> +		hdmi->phy.ops->setup_hpd(hdmi, hdmi->phy.data);
-> +
-> +	return 0;
+> 'vnt_int_start_interrupt()' should, IMHO, return a status code, but the
+> original developer may have good reasons not to do so.
 
-How about refactoring the probe function to extract hardware
-initialisation to a separate function, and calling it from here ?
+I think that is the real problem that needs to be fixed here, don't
+paper over the issue by ignoring the return value.
 
-> +}
-> +EXPORT_SYMBOL_GPL(dw_hdmi_resume);
-> +
->  MODULE_AUTHOR("Sascha Hauer <s.hauer@pengutronix.de>");
->  MODULE_AUTHOR("Andy Yan <andy.yan@rock-chips.com>");
->  MODULE_AUTHOR("Yakir Yang <ykk@rock-chips.com>");
-> diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-> index 66e70770cce5..c4132e9a5ae3 100644
-> --- a/include/drm/bridge/dw_hdmi.h
-> +++ b/include/drm/bridge/dw_hdmi.h
-> @@ -154,6 +154,9 @@ struct dw_hdmi *dw_hdmi_bind(struct platform_device *pdev,
->  			     struct drm_encoder *encoder,
->  			     const struct dw_hdmi_plat_data *plat_data);
->  
-> +int dw_hdmi_suspend(struct dw_hdmi *hdmi);
-> +int dw_hdmi_resume(struct dw_hdmi *hdmi);
-> +
->  void dw_hdmi_setup_rx_sense(struct dw_hdmi *hdmi, bool hpd, bool rx_sense);
->  
->  void dw_hdmi_set_sample_rate(struct dw_hdmi *hdmi, unsigned int rate);
+thanks,
 
--- 
-Regards,
-
-Laurent Pinchart
+greg k-h
