@@ -3,134 +3,128 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5498FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 499BFC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BBF720848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:32:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 160C220818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:33:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r+7o95at"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kQKmujFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbfEPVc0 (ORCPT
+        id S1728696AbfEPVdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 17:32:26 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53248 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727793AbfEPVcY (ORCPT
+        Thu, 16 May 2019 17:33:47 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43782 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbfEPVdq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 17:32:24 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 198so5003830wme.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 14:32:24 -0700 (PDT)
+        Thu, 16 May 2019 17:33:46 -0400
+Received: by mail-ot1-f67.google.com with SMTP id i8so4819525oth.10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 14:33:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=u8GkOq3mFgmT114W9q0A9mveOj1yfbx4rAlQUC/tkPc=;
-        b=r+7o95atwX8dZuEaXrHT3RNs2JbAxvK0UioLsku9KT5XxUcL/dUY4XAvA33SYj1rQt
-         lv3ZhZejg+q39JWKLjynNLqayrtND0Dse1BayIx+h5gxRhk/UvoAteBiyWaSw92w8x4j
-         NKUEd+pWdmhjZqslPcN6t4ZJe6vpy4TyHzUQEJpOqqa1HebJfu6qwCpImeJ3ftlhb+en
-         bYMfZ7mlvE6Zui2nqnn7qH/x89TfcUOD3gavYtX3xQA/cyapCDpyTFidNvgGPWudNl9Q
-         6AnoPOKE7h6QnPaq9IuIWhGd6OAtXYloglkuWCz9LiPvyh0Ylec4U3OIQ5pu/LmxvGmK
-         6GaA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=RLsybBG6sLbUggVAi7bXCzaTyEG1llzt4l8NvXBkWD0=;
+        b=kQKmujFhtAo72AB0snHcaDCif3+naULFQoilmAIC6cMGnoXGg8ewZ21JUB4lOVYrqn
+         ziRwjT6PsQTzua7xc3imb9UZ4NgeYhIEclPb/biFpQyoDbDFAidppg+ZW3qHPFUXx0ze
+         5IfccJ4XP9KqRDLcfeOaEywCQOBdZZYgC0GDrZWN+2m3m3f856Op6UdFGfgCGpOJ6QAl
+         XXlLDRMeCUo3PgBP/hzld3xTl1ISadWuhZWoCvRqCNp1Qkc85SGbOHdmYMnoRrFT0++7
+         rMqZUYKbrckThZrps3MkJEXsX5U4dRBUE5FB9eYeCVbeOysRMEsHfr2+3ePDXRIYTIjy
+         zJoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=u8GkOq3mFgmT114W9q0A9mveOj1yfbx4rAlQUC/tkPc=;
-        b=aLW6S/MmYjLAPBik5wyqrdwxtuZh3PXgdGmfghOi/ewpGsl7sIsPC5HZNVFpJwJEoh
-         TFGt2gMiwgqLL73GX/LEc1ratu7J4QNHJIQgB+obDOnKOYsq7ebCtlT0CRk1PGflyxti
-         EL+bb7tw1L0nZypFro0zquAtPELc95qwqO+mDJ2seRibaZZZNKhd0a6O0xhCjUbJ+PV2
-         eq+tLHSUy3e3ueOmrTTQnYVPcFzFtiiKfU1ux817ETfZmF+RmaH8dMW23Z7BhzHQ3dXG
-         LR9lmfhf4WmV7FYfoZJuxxgLzFfTCgiFmWSkZxvGn6b2KsjZkGwFZdb+FxdxKiklj73z
-         rtZQ==
-X-Gm-Message-State: APjAAAWxoronDJV9V2CpPzhahQrc3si7gqAy42rqH4eSy61ghHZICblb
-        RYFSY7bWxrEMQyoU+l0mvpZMqA==
-X-Google-Smtp-Source: APXvYqyodnUXX+qnMYtwnRikj3XwNk4wh2PhFd949xag5qsz/UDhXHRfrGb9RwVRtwN9lKCOpTJQqg==
-X-Received: by 2002:a05:600c:22c9:: with SMTP id 9mr11058445wmg.4.1558042343288;
-        Thu, 16 May 2019 14:32:23 -0700 (PDT)
-Received: from sudo.home ([2a01:cb1d:112:6f00:55a9:76bd:5bf2:be83])
-        by smtp.gmail.com with ESMTPSA id e12sm6756988wrs.8.2019.05.16.14.32.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 14:32:22 -0700 (PDT)
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=RLsybBG6sLbUggVAi7bXCzaTyEG1llzt4l8NvXBkWD0=;
+        b=gLeE93IzZHs5M92UagAJiw8DXP9WxfjfQApMVqrxSWZT54dA17UPtYOfO5bK2JRMAa
+         T4LYS4SvndmqpQRZ9aZnf/oI4kknLofG405UL1kpq748t1QjBqdpjlIzQTPqXOhzj5sp
+         JN5sugvL72wlin78sE+b0l0B7V6U9We+JzW2Qp3zLv/7g063PZaoVzqgcRgf/uXjgM2t
+         Aw+p2+XbN5u2UVHYwFDYlm59QEfKGdA1tze22goT/xknb6pAdPHuwt9mSPXjG5HtpWUv
+         13DLUCCcmmQCqfDdPrdPoB8vrOu43urBsww0mNeu5RE6M0NvZkL9j4F8cl/CqyQ3OHbv
+         LMog==
+X-Gm-Message-State: APjAAAVlLEBSH0lECjQxss1mBsEAJgf6rnzWGTHpuW0c/NKZvTkF0Coc
+        cTf/LvY9aaXpakAPIfoPgHA=
+X-Google-Smtp-Source: APXvYqw0GRwZ6MwUBRMhC/o2jF6nAxZtFpTyzX3MJ5sppTLWqV91vvWY1S8vKT1erdagGfEuy/oJcg==
+X-Received: by 2002:a9d:7154:: with SMTP id y20mr7131771otj.369.1558042425977;
+        Thu, 16 May 2019 14:33:45 -0700 (PDT)
+Received: from madhuleo ([2605:6000:1023:606d:10b5:228a:3958:f004])
+        by smtp.gmail.com with ESMTPSA id 69sm2282544oty.46.2019.05.16.14.33.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 May 2019 14:33:44 -0700 (PDT)
+From:   Madhumitha Prabakaran <madhumithabiw@gmail.com>
+To:     eric@anholt.net, stefan.wahren@i2se.com,
+        gregkh@linuxfoundation.org, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] fbdev/efifb: ignore framebuffer memmap entries that lack any memory types
-Date:   Thu, 16 May 2019 23:31:59 +0200
-Message-Id: <20190516213159.3530-2-ard.biesheuvel@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190516213159.3530-1-ard.biesheuvel@linaro.org>
-References: <20190516213159.3530-1-ard.biesheuvel@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Cc:     Madhumitha Prabakaran <madhumithabiw@gmail.com>
+Subject: [PATCH v2] Staging: bcm2835-camera: Prefer kernel types
+Date:   Thu, 16 May 2019 16:33:40 -0500
+Message-Id: <20190516213340.9311-1-madhumithabiw@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 38ac0287b7f4
+Fix the warning issued by checkpatch
+Prefer kernel type 'u32' over 'uint32_t'.
+Along with that include a blank line after a declaration
+to maintain Linux kernel coding style.
 
-  ("fbdev/efifb: Honour UEFI memory map attributes when mapping the FB")
+Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
 
-updated the EFI framebuffer code to use memory mappings for the linear
-framebuffer that are permitted by the memory attributes described by the
-EFI memory map for the particular region, if the framebuffer happens to
-be covered by the EFI memory map (which is typically only the case for
-framebuffers in shared memory). This is required since non-X86 systems
-may require cacheable attributes for memory mappings that are shared
-with other masters (such as GPUs), and this information cannot be
-described by the Graphics Output Protocol (GOP) EFI protocol itself,
-and so we rely on the EFI memory map for this.
-
-As reported by James, this breaks some x86 systems:
-
-  [ 1.173368] efifb: probing for efifb
-  [ 1.173386] efifb: abort, cannot remap video memory 0x1d5000 @ 0xcf800000
-  [ 1.173395] Trying to free nonexistent resource <00000000cf800000-00000000cf9d4bff>
-  [ 1.173413] efi-framebuffer: probe of efi-framebuffer.0 failed with error -5
-
-The problem turns out to be that the memory map entry that describes the
-framebuffer has no memory attributes listed at all, and so we end up with
-a mem_flags value of 0x0.
-
-So work around this by ensuring that the memory map entry's attribute field
-has a sane value before using it to mask the set of usable attributes.
-
-Fixes: 38ac0287b7f4 ("fbdev/efifb: Honour UEFI memory map attributes when ...")
-Cc: <stable@vger.kernel.org> # v4.19+
-Cc: Peter Jones <pjones@redhat.com>
-Reported-by: James Hilliard <james.hilliard1@gmail.com>
-Tested-by: James Hilliard <james.hilliard1@gmail.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 ---
- drivers/video/fbdev/efifb.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Changes in v2:
+- Modified subject line
+- Included one more change in control.c
+---
+ drivers/staging/vc04_services/bcm2835-camera/controls.c | 3 ++-
+ drivers/staging/vc04_services/bcm2835-camera/mmal-msg.h | 4 ++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
-index 9e529cc2b4ff..9f39f0c360e0 100644
---- a/drivers/video/fbdev/efifb.c
-+++ b/drivers/video/fbdev/efifb.c
-@@ -477,8 +477,12 @@ static int efifb_probe(struct platform_device *dev)
- 		 * If the UEFI memory map covers the efifb region, we may only
- 		 * remap it using the attributes the memory map prescribes.
- 		 */
--		mem_flags |= EFI_MEMORY_WT | EFI_MEMORY_WB;
--		mem_flags &= md.attribute;
-+		md.attribute &= EFI_MEMORY_UC | EFI_MEMORY_WC |
-+				EFI_MEMORY_WT | EFI_MEMORY_WB;
-+		if (md.attribute) {
-+			mem_flags |= EFI_MEMORY_WT | EFI_MEMORY_WB;
-+			mem_flags &= md.attribute;
-+		}
- 	}
- 	if (mem_flags & EFI_MEMORY_WC)
- 		info->screen_base = ioremap_wc(efifb_fix.smem_start,
+diff --git a/drivers/staging/vc04_services/bcm2835-camera/controls.c b/drivers/staging/vc04_services/bcm2835-camera/controls.c
+index 74410fedffad..5ad957e23895 100644
+--- a/drivers/staging/vc04_services/bcm2835-camera/controls.c
++++ b/drivers/staging/vc04_services/bcm2835-camera/controls.c
+@@ -52,7 +52,8 @@ static const s64 ev_bias_qmenu[] = {
+ static const s64 iso_qmenu[] = {
+ 	0, 100000, 200000, 400000, 800000,
+ };
+-static const uint32_t iso_values[] = {
++
++static const u32 iso_values[] = {
+ 	0, 100, 200, 400, 800,
+ };
+ 
+diff --git a/drivers/staging/vc04_services/bcm2835-camera/mmal-msg.h b/drivers/staging/vc04_services/bcm2835-camera/mmal-msg.h
+index d1c57edbe2b8..90793c9f9a0f 100644
+--- a/drivers/staging/vc04_services/bcm2835-camera/mmal-msg.h
++++ b/drivers/staging/vc04_services/bcm2835-camera/mmal-msg.h
+@@ -309,7 +309,7 @@ struct mmal_msg_port_parameter_set {
+ 	u32 port_handle;      /* port */
+ 	u32 id;     /* Parameter ID  */
+ 	u32 size;      /* Parameter size */
+-	uint32_t value[MMAL_WORKER_PORT_PARAMETER_SPACE];
++	u32 value[MMAL_WORKER_PORT_PARAMETER_SPACE];
+ };
+ 
+ struct mmal_msg_port_parameter_set_reply {
+@@ -331,7 +331,7 @@ struct mmal_msg_port_parameter_get_reply {
+ 	u32 status;           /* Status of mmal_port_parameter_get call */
+ 	u32 id;     /* Parameter ID  */
+ 	u32 size;      /* Parameter size */
+-	uint32_t value[MMAL_WORKER_PORT_PARAMETER_SPACE];
++	u32 value[MMAL_WORKER_PORT_PARAMETER_SPACE];
+ };
+ 
+ /* event messages */
 -- 
-2.20.1
+2.17.1
 
