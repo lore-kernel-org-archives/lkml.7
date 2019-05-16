@@ -2,129 +2,87 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E85C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1DB7C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE0E320833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:27:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B80D20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:27:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558016878;
+	bh=BJtnyMXUmLAigNFJ6gGr4B9MNzUQokm2xobo1aVjRXU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=IL7ZGyA/WfgDF+/AI9sx63cgB4ujwmfiWgiOmZY+wiHH91U63sCaUgFjz7DfGUjMQ
+	 uUARLXjWsQ3vvlyxKp618NpstKsTECpoTf1xVSXulnMsr3LTpv/SSPXZWqd6z5dRAA
+	 nRHCXJE5KYr20TLeYTMpEZHdo97RgeAwx6ttA5GQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbfEPO1Q (ORCPT
+        id S1727454AbfEPO15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:27:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37447 "EHLO mx1.redhat.com"
+        Thu, 16 May 2019 10:27:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727021AbfEPO1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:27:15 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726696AbfEPO15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 10:27:57 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7E7E388E5D;
-        Thu, 16 May 2019 14:27:11 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 144FC341E2;
-        Thu, 16 May 2019 14:27:01 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 16 May 2019 16:27:10 +0200 (CEST)
-Date:   Thu, 16 May 2019 16:27:00 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     jannh@google.com, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de, akpm@linux-foundation.org, cyphar@cyphar.com,
-        dhowells@redhat.com, ebiederm@xmission.com,
-        elena.reshetova@intel.com, keescook@chromium.org,
-        luto@amacapital.net, luto@kernel.org, tglx@linutronix.de,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        joel@joelfernandes.org, dancol@google.com, serge@hallyn.com,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v1 1/2] pid: add pidfd_open()
-Message-ID: <20190516142659.GB22564@redhat.com>
-References: <20190516135944.7205-1-christian@brauner.io>
+        by mail.kernel.org (Postfix) with ESMTPSA id 24D1F20833;
+        Thu, 16 May 2019 14:27:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558016876;
+        bh=BJtnyMXUmLAigNFJ6gGr4B9MNzUQokm2xobo1aVjRXU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=og9TgQYerl4BUC+ng49ZG32MFyNdpMhomkxl203YJFteVEilwu4ByiuZFllCnrVsH
+         n7OQrrbCoz1fwgitz5HJs++KnnvupJwreSyrfsLALg2my85CvZw5/ob4nol6PHJNH2
+         MZM1/x1Bj5ZCwHUw0K1fPQPH2aJRewFJE8H2Naag=
+Subject: Re: [PATCH 3.18 00/86] 3.18.140-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190515090642.339346723@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <f2a05600-e302-9a06-80a1-421cae299287@kernel.org>
+Date:   Thu, 16 May 2019 08:27:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516135944.7205-1-christian@brauner.io>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 16 May 2019 14:27:14 +0000 (UTC)
+In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/16, Christian Brauner wrote:
->
-> With the introduction of pidfds through CLONE_PIDFD it is possible to
-> created pidfds at process creation time.
+On 5/15/19 4:54 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 3.18.140 release.
+> There are 86 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 17 May 2019 09:04:45 AM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v3.x/stable-review/patch-3.18.140-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-3.18.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Now I am wondering why do we need CLONE_PIDFD, you can just do
+Compiled and booted on my test system. No dmesg regressions.
 
-	pid = fork();
-	pidfd_open(pid);
-
-> +SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
-> +{
-> +	int fd, ret;
-> +	struct pid *p;
-> +	struct task_struct *tsk;
-> +
-> +	if (flags)
-> +		return -EINVAL;
-> +
-> +	if (pid <= 0)
-> +		return -EINVAL;
-> +
-> +	p = find_get_pid(pid);
-> +	if (!p)
-> +		return -ESRCH;
-> +
-> +	ret = 0;
-> +	rcu_read_lock();
-> +	/*
-> +	 * If this returns non-NULL the pid was used as a thread-group
-> +	 * leader. Note, we race with exec here: If it changes the
-> +	 * thread-group leader we might return the old leader.
-> +	 */
-> +	tsk = pid_task(p, PIDTYPE_TGID);
-> +	if (!tsk)
-> +		ret = -ESRCH;
-> +	rcu_read_unlock();
-> +
-> +	fd = ret ?: pidfd_create(p);
-> +	put_pid(p);
-> +	return fd;
-> +}
-
-Looks correct, feel free to add Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-
-But why do we need task_struct *tsk?
-
-	rcu_read_lock();
-	if (!pid_task(PIDTYPE_TGID))
-		ret = -ESRCH;
-	rcu_read_unlock();
-
-and in fact we do not even need rcu_read_lock(), we could do
-
-	// shut up rcu_dereference_check()
-	rcu_lock_acquire(&rcu_lock_map);
-	if (!pid_task(PIDTYPE_TGID))
-		ret = -ESRCH;
-	rcu_lock_release(&rcu_lock_map);
-
-Well... I won't insist, but the comment about the race with exec looks a bit
-confusing to me. It is true, but we do not care at all, we are not going to
-use the task_struct returned by pid_task().
-
-Oleg.
+thanks,
+-- Shuah
 
