@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF78C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C22C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 474AE20833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A3320833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfEPQEX (ORCPT
+        id S1728023AbfEPQEP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:04:23 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42468 "EHLO
+        Thu, 16 May 2019 12:04:15 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42454 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726706AbfEPP6m (ORCPT
+        by vger.kernel.org with ESMTP id S1726699AbfEPP6m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 May 2019 11:58:42 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImE-0006zm-Ex; Thu, 16 May 2019 16:58:38 +0100
+        id 1hRImE-0006zk-HI; Thu, 16 May 2019 16:58:38 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImD-0001PI-KH; Thu, 16 May 2019 16:58:37 +0100
+        id 1hRImD-0001P9-Hh; Thu, 16 May 2019 16:58:37 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,33 +35,32 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        "Andi Kleen" <ak@linux.intel.com>,
+        "Ingo Molnar" <mingo@kernel.org>,
+        "Asit Mallick" <asit.k.mallick@intel.com>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Kees Cook" <keescook@chromium.org>,
         "Jiri Kosina" <jkosina@suse.cz>,
         "Peter Zijlstra" <peterz@infradead.org>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        "Asit Mallick" <asit.k.mallick@intel.com>,
-        "Kees Cook" <keescook@chromium.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Andi Kleen" <ak@linux.intel.com>,
-        "Dave Hansen" <dave.hansen@intel.com>,
-        "Arjan van de Ven" <arjan@linux.intel.com>,
-        "Andrea Arcangeli" <aarcange@redhat.com>,
-        "Tim Chen" <tim.c.chen@linux.intel.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
+        "Josh Poimboeuf" <jpoimboe@redhat.com>,
+        "Tom Lendacky" <thomas.lendacky@amd.com>,
+        "Greg KH" <gregkh@linuxfoundation.org>,
         "Casey Schaufler" <casey.schaufler@intel.com>,
-        "Waiman Long" <longman9394@gmail.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Tim Chen" <tim.c.chen@linux.intel.com>,
         "Linus Torvalds" <torvalds@linux-foundation.org>,
         "Jon Masters" <jcm@redhat.com>,
         "Dave Stewart" <david.c.stewart@intel.com>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>,
-        "Greg KH" <gregkh@linuxfoundation.org>,
-        "Tom Lendacky" <thomas.lendacky@amd.com>
+        "Waiman Long" <longman9394@gmail.com>,
+        "Arjan van de Ven" <arjan@linux.intel.com>,
+        "Andrea Arcangeli" <aarcange@redhat.com>
 Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.952042263@decadent.org.uk>
+Message-ID: <lsq.1558022133.547613@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 37/86] x86/speculation: Move STIPB/IBPB string
- conditionals out of cpu_show_common()
+Subject: [PATCH 3.16 35/86] x86/speculation: Clean up spectre_v2_parse_cmdline()
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -77,15 +76,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tim Chen <tim.c.chen@linux.intel.com>
 
-commit a8f76ae41cd633ac00be1b3019b1eb4741be3828 upstream.
+commit 24848509aa55eac39d524b587b051f4e86df3c12 upstream.
 
-The Spectre V2 printout in cpu_show_common() handles conditionals for the
-various mitigation methods directly in the sprintf() argument list. That's
-hard to read and will become unreadable if more complex decisions need to
-be made for a particular method.
-
-Move the conditionals for STIBP and IBPB string selection into helper
-functions, so they can be extended later on.
+Remove the unnecessary 'else' statement in spectre_v2_parse_cmdline()
+to save an indentation level.
 
 Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
@@ -108,47 +102,48 @@ Cc: Waiman Long <longman9394@gmail.com>
 Cc: Greg KH <gregkh@linuxfoundation.org>
 Cc: Dave Stewart <david.c.stewart@intel.com>
 Cc: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20181125185003.874479208@linutronix.de
+Link: https://lkml.kernel.org/r/20181125185003.688010903@linutronix.de
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/cpu/bugs.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/bugs.c | 27 +++++++++++++--------------
+ 1 file changed, 13 insertions(+), 14 deletions(-)
 
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -821,6 +821,22 @@ static void __init l1tf_select_mitigatio
+@@ -336,22 +336,21 @@ static enum spectre_v2_mitigation_cmd __
  
- #ifdef CONFIG_SYSFS
+ 	if (cmdline_find_option_bool(boot_command_line, "nospectre_v2"))
+ 		return SPECTRE_V2_CMD_NONE;
+-	else {
+-		ret = cmdline_find_option(boot_command_line, "spectre_v2", arg, sizeof(arg));
+-		if (ret < 0)
+-			return SPECTRE_V2_CMD_AUTO;
  
-+static char *stibp_state(void)
-+{
-+	if (x86_spec_ctrl_base & SPEC_CTRL_STIBP)
-+		return ", STIBP";
-+	else
-+		return "";
-+}
+-		for (i = 0; i < ARRAY_SIZE(mitigation_options); i++) {
+-			if (!match_option(arg, ret, mitigation_options[i].option))
+-				continue;
+-			cmd = mitigation_options[i].cmd;
+-			break;
+-		}
++	ret = cmdline_find_option(boot_command_line, "spectre_v2", arg, sizeof(arg));
++	if (ret < 0)
++		return SPECTRE_V2_CMD_AUTO;
+ 
+-		if (i >= ARRAY_SIZE(mitigation_options)) {
+-			pr_err("unknown option (%s). Switching to AUTO select\n", arg);
+-			return SPECTRE_V2_CMD_AUTO;
+-		}
++	for (i = 0; i < ARRAY_SIZE(mitigation_options); i++) {
++		if (!match_option(arg, ret, mitigation_options[i].option))
++			continue;
++		cmd = mitigation_options[i].cmd;
++		break;
++	}
 +
-+static char *ibpb_state(void)
-+{
-+	if (boot_cpu_has(X86_FEATURE_USE_IBPB))
-+		return ", IBPB";
-+	else
-+		return "";
-+}
-+
- static ssize_t cpu_show_common(struct device *dev, struct device_attribute *attr,
- 			       char *buf, unsigned int bug)
- {
-@@ -839,9 +855,9 @@ static ssize_t cpu_show_common(struct de
++	if (i >= ARRAY_SIZE(mitigation_options)) {
++		pr_err("unknown option (%s). Switching to AUTO select\n", arg);
++		return SPECTRE_V2_CMD_AUTO;
+ 	}
  
- 	case X86_BUG_SPECTRE_V2:
- 		return sprintf(buf, "%s%s%s%s%s%s\n", spectre_v2_strings[spectre_v2_enabled],
--			       boot_cpu_has(X86_FEATURE_USE_IBPB) ? ", IBPB" : "",
-+			       ibpb_state(),
- 			       boot_cpu_has(X86_FEATURE_USE_IBRS_FW) ? ", IBRS_FW" : "",
--			       (x86_spec_ctrl_base & SPEC_CTRL_STIBP) ? ", STIBP" : "",
-+			       stibp_state(),
- 			       boot_cpu_has(X86_FEATURE_RSB_CTXSW) ? ", RSB filling" : "",
- 			       spectre_v2_module_string());
- 
+ 	if ((cmd == SPECTRE_V2_CMD_RETPOLINE ||
 
