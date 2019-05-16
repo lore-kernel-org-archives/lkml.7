@@ -2,117 +2,127 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5278FC04E53
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C6EC04E53
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25E9F20843
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38BF420843
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="VPAqTble"
+	dkim=pass (2048-bit key) header.d=russell.cc header.i=@russell.cc header.b="DH5hEGWu";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kxm/GIBH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbfEPBqx (ORCPT
+        id S1727724AbfEPBrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 21:46:53 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46152 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfEPAeW (ORCPT
+        Wed, 15 May 2019 21:47:02 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:34789 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726834AbfEPAva (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 20:34:22 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z19so1881969qtz.13
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 17:34:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=ScXaFeR9V6kuvpwBg/U8HCbHPSnAvCsxxSit7yP9Jc8=;
-        b=VPAqTble6hRyhsj3VGsjmxvb/J600GeROXMLfbdJ6vJcB2QKVPQa4totwCIhVpAi0n
-         fN/2i4xmqUU2K3TkH6isLjLJWlQD30QnMNLx8EUdVTEeWVFZvh/vKoY1nb5krg2tHLCS
-         Fub3F2MxHS9blqY/JPQ6blDIYMbCWD0iZTBf3fBxRQFxKqrAD3LbAXUOp4cf1ahMj5mg
-         IfS3mvd2iAFmLvH5NZnPLrV+7UsTHdP5gMb058Qqqz20YZd/Hs+TPC9AHHmAkTecNF2H
-         MsjLMEBD8xE8AEmL8feaD27CqUASJ7om3ksk/ydwDkv9n/7EMizkt6HnwSCwiQs02cii
-         YXZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=ScXaFeR9V6kuvpwBg/U8HCbHPSnAvCsxxSit7yP9Jc8=;
-        b=FbKwH6rKh+RttCTcpGbmGE5Niso7hSzS8H2wYDLXVx9xfKUlW+UYuhjYP8CUgX3FN3
-         pdZnTUNGa3yAER3kvPM4XRV4/rPSTri6Pq1zDlxk9eUtPaZYlQrsezUdOdyhQN54Xaqb
-         ZKVVQAtxckkiDhJCLLiLXd9Y+EBne83jiP5SkbVD64kHwnZMFjhE2pl/sKJh7Ki1M0vz
-         8aKR1itvhNRXpCTTDqtI5H6SqTYf9P/ou6I8a+Z+pthxlOBosl5IvSn4xUV2Og8bVKzS
-         qQxZeCF5BWVc0pBEUD+FprpZ5Xt6AqMRWkUQ8Ixq4ZkBvmphsHqqQFHMIX1hbfCrW60I
-         L8Xg==
-X-Gm-Message-State: APjAAAXP1fAY3n9NL/u4cE2yk/6RJ+Q6shFsVuiVDL1L4si6vZEfDeE8
-        wkVun3Y4U9dYkohPiSj6T+daMA==
-X-Google-Smtp-Source: APXvYqxhnAL2MaTuSVRizp2xd9h/At7dau6miw7VR54nxw0WijrnCLeY+lfrVIB7bfiMVF28SDOghw==
-X-Received: by 2002:aed:20c4:: with SMTP id 62mr39762062qtb.256.1557966861491;
-        Wed, 15 May 2019 17:34:21 -0700 (PDT)
-Received: from qians-mbp.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id b22sm2287417qtc.37.2019.05.15.17.34.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 17:34:20 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [RESEND PATCH] nvdimm: fix some compilation warnings
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <CAPcyv4gGwyPf0j4rXRM3JjsjGSHB6bGdZfwg+v2y8NQ6hNVK8g@mail.gmail.com>
-Date:   Wed, 15 May 2019 20:34:19 -0400
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <7BCECDBE-EC7B-47C6-AF7F-15C67AAA1D6F@lca.pw>
-References: <20190514150735.39625-1-cai@lca.pw>
- <CAPcyv4gGwyPf0j4rXRM3JjsjGSHB6bGdZfwg+v2y8NQ6hNVK8g@mail.gmail.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Wed, 15 May 2019 20:51:30 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 73D132594C;
+        Wed, 15 May 2019 20:51:27 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Wed, 15 May 2019 20:51:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=russell.cc; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm1; bh=
+        nUOGfNEnELr84sH3+7udhSvC4Y5B7HeBJX0EF2z10NM=; b=DH5hEGWuH0jMg6U1
+        i0HbodrJ73e/pr2QYlw71DvEn+DTQ1G414t6ePtG4xKeV3SGYQnFRsK2EthVCp6g
+        VV0HZe2ZwvUWMKT+mf5m7FH0LaFv7uN9FH/CrKnUK4GAAPUxV8UXL/ySWlfzBAv3
+        2NV96R+xAvMUlTd8FGu0ByIG6cgGUpbzMSf9J+zphP26TM8FSxJUBOgbUPARfXOz
+        QazFE9Ql2vJ65iTPRFnwrjAk9fFWQFkCyVPxQtQa4F4idVz8FG8LiHwUyvUo7oqU
+        bO/zZyRjybWANu3iPvhZsmiTHhP1mEW1Ouwe1KnUospcQZExrfUeCj0jaGYy5Mnq
+        0/oWLg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=nUOGfNEnELr84sH3+7udhSvC4Y5B7HeBJX0EF2z10
+        NM=; b=kxm/GIBHNoPzxvJKF8QX5U8RjAkX+c263J9E4knrwl1udQc2kGcHajExa
+        dolzp1ILCvwPnLB6Mmfoco5p+XkcNlptKi8+VVZNgz+TqdYMXTbxYLc3Nn6O2lz8
+        AYboYsFMrH5o1W4rWiTcJypEqIariOrygRdk5yURm0i5vOoU9wlKKx1fARR3ZJbW
+        KKz96JWWNY41F/gTq6jJkVEkns1lG5xMBluDMllWzI0nbGKFaMDszvRfqt1iBUd4
+        n0F/E6BnJDvF016BhG/igE4rjlffmYunh8HPwQm1Mxd3mHzf5MrD5dkAuPE9BPbD
+        5JcKQ6jpXRBA5bSsTeZQaxnlhVxiQ==
+X-ME-Sender: <xms:DrTcXAgQ4m75SDKbO5CVXT9_lWhqxE_D-_307BIrqJZ9ZdvBdimZYQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrleelgdefkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenfg
+    hrlhcuvffnffculdduhedmnecujfgurhepkffuhffvffgjfhgtfggggfesthejredttder
+    jeenucfhrhhomheptfhushhsvghllhcuvehurhhrvgihuceorhhushgtuhhrsehruhhssh
+    gvlhhlrdgttgeqnecukfhppeduvddvrdelledrkedvrddutdenucfrrghrrghmpehmrghi
+    lhhfrhhomheprhhushgtuhhrsehruhhsshgvlhhlrdgttgenucevlhhushhtvghrufhiii
+    gvpedt
+X-ME-Proxy: <xmx:DrTcXHcAy9u05Kd0lwjr6MbA0zcFEwL1uh1umEBaFSuVVnK_HSNuoA>
+    <xmx:DrTcXK2nQ7QNeJLUBqSo_ZKXME8XADboRrZMDuGkfVvpkJfItgUEUA>
+    <xmx:DrTcXGGYZnryUejGP9zo8njexRK9j94cB4OWX2ZYCCdMSHsHmwVAdQ>
+    <xmx:D7TcXLAMv8H_wTmaVOOIYrZ-GPpl0Vjwz7vXFJKL3lnCkNVKBCDdYQ>
+Received: from crackle.ozlabs.ibm.com (unknown [122.99.82.10])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3524A80066;
+        Wed, 15 May 2019 20:51:23 -0400 (EDT)
+Message-ID: <2467361d57af7b9322e91b885b048eb014a6fe2d.camel@russell.cc>
+Subject: Re: [RFC PATCH] powerpc/mm: Implement STRICT_MODULE_RWX
+From:   Russell Currey <ruscur@russell.cc>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu, 16 May 2019 10:51:20 +1000
+In-Reply-To: <df502ffe07caa38c46b0144fc824fff447f4105b.1557901092.git.christophe.leroy@c-s.fr>
+References: <df502ffe07caa38c46b0144fc824fff447f4105b.1557901092.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2019-05-15 at 06:20 +0000, Christophe Leroy wrote:
+> Strict module RWX is just like strict kernel RWX, but for modules -
+> so
+> loadable modules aren't marked both writable and executable at the
+> same
+> time.  This is handled by the generic code in kernel/module.c, and
+> simply requires the architecture to implement the set_memory() set of
+> functions, declared with ARCH_HAS_SET_MEMORY.
+> 
+> There's nothing other than these functions required to turn
+> ARCH_HAS_STRICT_MODULE_RWX on, so turn that on too.
+> 
+> With STRICT_MODULE_RWX enabled, there are as many W+X pages at
+> runtime
+> as there are with CONFIG_MODULES=n (none), so in Russel's testing it
+> works
+> well on both Hash and Radix book3s64.
+> 
+> There's a TODO in the code for also applying the page permission
+> changes
+> to the backing pages in the linear mapping: this is pretty simple for
+> Radix and (seemingly) a lot harder for Hash, so I've left it for now
+> since there's still a notable security benefit for the patch as-is.
+> 
+> Technically can be enabled without STRICT_KERNEL_RWX, but
+> that doesn't gets you a whole lot, so we should leave it off by
+> default
+> until we can get STRICT_KERNEL_RWX to the point where it's enabled by
+> default.
+> 
+> Signed-off-by: Russell Currey <ruscur@russell.cc>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+
+Thanks for this, I figured you'd know how to make this work on 32bit
+too.  I'll test on my end today.
+
+Note that there are two Ls in my name!  To quote the great Rusty, "This
+Russel disease must be stamped out before it becomes widespread".
 
 
-> On May 15, 2019, at 7:25 PM, Dan Williams <dan.j.williams@intel.com> =
-wrote:
->=20
-> On Tue, May 14, 2019 at 8:08 AM Qian Cai <cai@lca.pw> wrote:
->>=20
->> Several places (dimm_devs.c, core.c etc) include label.h but only
->> label.c uses NSINDEX_SIGNATURE, so move its definition to label.c
->> instead.
->> In file included from drivers/nvdimm/dimm_devs.c:23:
->> drivers/nvdimm/label.h:41:19: warning: 'NSINDEX_SIGNATURE' defined =
-but
->> not used [-Wunused-const-variable=3D]
->>=20
->> The commit d9b83c756953 ("libnvdimm, btt: rework error clearing") =
-left
->> an unused variable.
->> drivers/nvdimm/btt.c: In function 'btt_read_pg':
->> drivers/nvdimm/btt.c:1272:8: warning: variable 'rc' set but not used
->> [-Wunused-but-set-variable]
->>=20
->> Last, some places abuse "/**" which is only reserved for the =
-kernel-doc.
->> drivers/nvdimm/bus.c:648: warning: cannot understand function =
-prototype:
->> 'struct attribute_group nd_device_attribute_group =3D '
->> drivers/nvdimm/bus.c:677: warning: cannot understand function =
-prototype:
->> 'struct attribute_group nd_numa_attribute_group =3D '
->=20
-> Can you include the compiler where these errors start appearing, since
-> I don't see these warnings with gcc-8.3.1
-
-This can be reproduced by performing extra compiler checks, i.e, "make =
-W=3Dn=E2=80=9D.=
