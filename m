@@ -2,104 +2,107 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A309C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59378C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F06982089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:50:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="axwfrku8"
+	by mail.kernel.org (Postfix) with ESMTP id 34D7320833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbfEPLul (ORCPT
+        id S1727342AbfEPLwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:50:41 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44998 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfEPLuk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:50:40 -0400
-Received: by mail-lj1-f193.google.com with SMTP id e13so2776909ljl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 04:50:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZfZWKHa7k32vSF2Rgion0TnHTAjuA1aCE2qsRonqXP0=;
-        b=axwfrku8av26C74Qcnj8NMFl8LQW3ytVsyxJwHyHrABKFSul4eTIQRAgniBSpRNR2T
-         SUCKllbRVUhjH9a5M8vQ2ZctPU2aRCPW2zzHfrExJfmGQGGJKj+UZ8gMQKIIKMCg8q+W
-         d71EwYTR3Nq/rACyFL4CAxYsp4QgSeBRv2U7Q+fNBUsAFO7pdw4soy6W9pOYAyCeXSbD
-         CqdAcuzevt6wp/8joMtEkxOTMm36jy27fYgJD0kUVC1x24NqeVW7JvAfFlnUf7AVqtb0
-         wSTH5rhMPlygfwvgCPaK4TGfEgwd4+eSNjsCqRVenL0HNST+g99Optp097VsBxKhX9Dm
-         4j2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZfZWKHa7k32vSF2Rgion0TnHTAjuA1aCE2qsRonqXP0=;
-        b=qwfm5GkHBIUQPS6NPEeHYSyt850neH38+1e7fRlIoYRxl+OfoSHJm5Z5611YuKGPfi
-         S1VJhw58QQxXBTE2eFShwSqKP3C1ewxQ9c877cgVdS9OSV7VxTLP8hzAmBS5cLAOJgyX
-         qf6/3HD5qLvfNTNyrkun40FNmvVvphDYgSea4MZf++ZfJi8CmteuZ1eJ0izi7clhL+gY
-         /D/qq3NnmXy+24TT6Vii2lqVfpCxlptgtP5Fp4ZvtyIDPmvskznjkkERlN/O28joYFxO
-         bDqmgDzymOHvX/p9wsmrN62VOayZTUxeWTXZAV49D41WQ8YZ4Hp9gRVK5PxfTqmzFmeI
-         plGQ==
-X-Gm-Message-State: APjAAAUY0ddMPKxDNvbj2ZgGdWyAiit9nrzwRPXs0PAE77XS6gT2AQHD
-        rCWyewK77q8hXMB8jLo9uxcjNdgBhf4UiN5JHsBm6g==
-X-Google-Smtp-Source: APXvYqwaxRjeq7pjR9npAXmwgyhZKdqhC73PwgIVTdnHjqNpDaNtDJResi7MGSU8C3U2sKn8oJY/87TKdcHLFfT0UHI=
-X-Received: by 2002:a2e:60a:: with SMTP id 10mr3127929ljg.126.1558007438447;
- Thu, 16 May 2019 04:50:38 -0700 (PDT)
+        Thu, 16 May 2019 07:52:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36202 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726383AbfEPLwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:52:06 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 85A0AD77F2;
+        Thu, 16 May 2019 11:52:06 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1EF92100203C;
+        Thu, 16 May 2019 11:52:04 +0000 (UTC)
+Subject: [PATCH 0/4] uapi, vfs: Change the mount API UAPI [ver #2]
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
+Cc:     Christian Brauner <christian@brauner.io>,
+        Arnd Bergmann <arnd@arndb.de>, dhowells@redhat.com,
+        christian@brauner.io, arnd@arndb.de, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 16 May 2019 12:52:04 +0100
+Message-ID: <155800752418.4037.9567789434648701032.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-References: <cover.1553828158.git.vilhelm.gray@gmail.com> <1cc8b30bb3954ca2a0961ffb0a2eed8a005ed670.1553828158.git.vilhelm.gray@gmail.com>
-In-Reply-To: <1cc8b30bb3954ca2a0961ffb0a2eed8a005ed670.1553828158.git.vilhelm.gray@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 May 2019 13:50:26 +0200
-Message-ID: <CACRpkdbCt1PAJ1rBvKvZ2ydLgJmKXuLN4mRtSU8CaW=U7EcFbQ@mail.gmail.com>
-Subject: Re: [PATCH v14 01/11] bitops: Introduce the for_each_set_clump8 macro
-To:     William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arch@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Phil Reid <preid@electromag.com.au>,
-        Lukas Wunner <lukas@wunner.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 16 May 2019 11:52:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 4:03 AM William Breathitt Gray
-<vilhelm.gray@gmail.com> wrote:
 
-> This macro iterates for each 8-bit group of bits (clump) with set bits,
-> within a bitmap memory region. For each iteration, "start" is set to the
-> bit offset of the found clump, while the respective clump value is
-> stored to the location pointed by "clump". Additionally, the
-> bitmap_get_value8 and bitmap_set_value8 functions are introduced to
-> respectively get and set an 8-bit value in a bitmap memory region.
->
-> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> Suggested-by: Lukas Wunner <lukas@wunner.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+Hi Linus, Al,
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Here are some patches that make changes to the mount API UAPI and two of
+them really need applying, before -rc1 - if they're going to be applied at
+all.
 
-Yours,
-Linus Walleij
+The following changes are made:
+
+ (1) Make the file descriptors returned by open_tree(), fsopen(), fspick()
+     and fsmount() O_CLOEXEC by default and remove the flags that allow
+     this to be specified from the UAPI, shuffling other flags down as
+     appropriate.  fcntl() can still be used to change the flag.
+
+ (2) Make the name of the anon inode object "[fscontext]" with square
+     brackets to match other users.
+
+ (3) Fix the numbering of the mount API syscalls to be in the common space
+     rather than in the arch-specific space.
+
+ (4) Wire up the mount API syscalls on all arches (it's only on x86
+     currently).
+
+Thanks,
+David
+---
+Christian Brauner (2):
+      uapi, fs: make all new mount api fds cloexec by default
+      uapi, fsopen: use square brackets around "fscontext"
+
+David Howells (2):
+      uapi, x86: Fix the syscall numbering of the mount API syscalls
+      uapi: Wire up the mount API syscalls on non-x86 arches
+
+
+ arch/alpha/kernel/syscalls/syscall.tbl      |    6 ++++++
+ arch/arm/tools/syscall.tbl                  |    6 ++++++
+ arch/arm64/include/asm/unistd.h             |    2 +-
+ arch/arm64/include/asm/unistd32.h           |   12 ++++++++++++
+ arch/ia64/kernel/syscalls/syscall.tbl       |    6 ++++++
+ arch/m68k/kernel/syscalls/syscall.tbl       |    6 ++++++
+ arch/microblaze/kernel/syscalls/syscall.tbl |    6 ++++++
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |    6 ++++++
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |    6 ++++++
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |    6 ++++++
+ arch/parisc/kernel/syscalls/syscall.tbl     |    6 ++++++
+ arch/powerpc/kernel/syscalls/syscall.tbl    |    6 ++++++
+ arch/s390/kernel/syscalls/syscall.tbl       |    6 ++++++
+ arch/sh/kernel/syscalls/syscall.tbl         |    6 ++++++
+ arch/sparc/kernel/syscalls/syscall.tbl      |    6 ++++++
+ arch/x86/entry/syscalls/syscall_32.tbl      |   12 ++++++------
+ arch/x86/entry/syscalls/syscall_64.tbl      |   12 ++++++------
+ arch/xtensa/kernel/syscalls/syscall.tbl     |    6 ++++++
+ fs/fsopen.c                                 |   15 +++++++--------
+ fs/namespace.c                              |   11 ++++-------
+ include/uapi/asm-generic/unistd.h           |   14 +++++++++++++-
+ include/uapi/linux/mount.h                  |   18 +++---------------
+ 22 files changed, 136 insertions(+), 44 deletions(-)
+
