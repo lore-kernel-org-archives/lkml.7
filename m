@@ -2,89 +2,89 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7A2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE0CC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81B212087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:53:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558014788;
-	bh=M/c+yYRX+0rot4S6x7CSSsHxUC8TWuladOOIMr9/RgY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wi3SkWwi4QlgzMvynrq9DHPSA9FoTiCAidrPya7Ux8tRsTd8fWXoFXaFT6AM6hsXA
-	 Gewlijl2UjNgyrQREmjB8T/XBTFhHtO9ufSDPBJyyv/+NZnlXsK56a3bAyhVvE0lYo
-	 3Ta3PjnPD72mlM5xeb7S3bsKRMdbTrMdK/tEkIMY=
+	by mail.kernel.org (Postfix) with ESMTP id 9479C20657
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:54:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v9VjY2+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfEPNxI (ORCPT
+        id S1727507AbfEPNyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:53:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34858 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726692AbfEPNxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:53:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 06CCAAED7;
-        Thu, 16 May 2019 13:53:05 +0000 (UTC)
-Date:   Thu, 16 May 2019 15:52:59 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
-        keith.busch@intel.com, kirill.shutemov@linux.intel.com,
-        pasha.tatashin@oracle.com, alexander.h.duyck@linux.intel.com,
-        ira.weiny@intel.com, andreyknvl@google.com, arunks@codeaurora.org,
-        vbabka@suse.cz, cl@linux.com, riel@surriel.com,
-        keescook@chromium.org, hannes@cmpxchg.org, npiggin@gmail.com,
-        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
-        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
-        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH RFC 0/5] mm: process_vm_mmap() -- syscall for duplication
- a process mapping
-Message-ID: <20190516135259.GU16651@dhcp22.suse.cz>
-References: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
- <20190516133034.GT16651@dhcp22.suse.cz>
+        Thu, 16 May 2019 09:54:20 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60350 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfEPNyU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:54:20 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4GDsI1B101931;
+        Thu, 16 May 2019 08:54:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1558014858;
+        bh=PXmqsDgOHC1zgJUNXKBZ/4xKuKk2v9nWZpRfx6nu53w=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=v9VjY2+XiIcwuFCCkFM6ejYKHcZuG3UV+6wl57FdsxQdSWaTEhl0nwCcZ8IAt7yZe
+         +EzpBE55c8DJxiN4YBhwsluZNzXvr3YkM7jC4zBlLi07LsypmHEBHM3oTSqmGUC9lS
+         yE95P8QoHeSQ5xidrtIgME4B8Z2tluMnhooHOOjM=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4GDsIKq101262
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 May 2019 08:54:18 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 16
+ May 2019 08:54:17 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 16 May 2019 08:54:17 -0500
+Received: from [172.24.190.172] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4GDsFbt069321;
+        Thu, 16 May 2019 08:54:16 -0500
+Subject: Re: [PATCH RFT] regulator: tps6507x: Fix boot regression due to
+ testing wrong init_data pointer
+To:     Axel Lin <axel.lin@ingics.com>, Mark Brown <broonie@kernel.org>
+CC:     Liam Girdwood <lgirdwood@gmail.com>,
+        <linux-kernel@vger.kernel.org>, Adam Ford <aford173@gmail.com>
+References: <20190516124808.3335-1-axel.lin@ingics.com>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <1d73f4fe-c343-ef57-757d-ff535e1b76c0@ti.com>
+Date:   Thu, 16 May 2019 19:24:14 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516133034.GT16651@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190516124808.3335-1-axel.lin@ingics.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 16-05-19 15:30:34, Michal Hocko wrote:
-> [You are defining a new user visible API, please always add linux-api
->  mailing list - now done]
+On 16/05/19 6:18 PM, Axel Lin wrote:
+> A NULL init_data once incremented will lead to oops, fix it.
 > 
-> On Wed 15-05-19 18:11:15, Kirill Tkhai wrote:
-[...]
-> > The proposed syscall aims to introduce an interface, which
-> > supplements currently existing process_vm_writev() and
-> > process_vm_readv(), and allows to solve the problem with
-> > anonymous memory transfer. The above example may be rewritten as:
-> > 
-> > 	void *buf;
-> > 
-> > 	buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
-> > 		   MAP_PRIVATE|MAP_ANONYMOUS, ...);
-> > 	recv(sock, buf, n * PAGE_SIZE, 0);
-> > 
-> > 	/* Sign of @pid is direction: "from @pid task to current" or vice versa. */
-> > 	process_vm_mmap(-pid, buf, n * PAGE_SIZE, remote_addr, PVMMAP_FIXED);
-> > 	munmap(buf, n * PAGE_SIZE);
+> Fixes: f979c08f7624 ("regulator: tps6507x: Convert to regulator core's simplified DT parsing code")
+> Reported-by: Sekhar Nori <nsekhar@ti.com>
+> Signed-off-by: Axel Lin <axel.lin@ingics.com>
+> ---
+> Hi Sekhar,
+> Please check if this patch works, thanks.
+> Axel
 
-AFAIU this means that you actually want to do an mmap of an anonymous
-memory with a COW semantic to the remote process right? How does the
-remote process find out where and what has been mmaped? What if the
-range collides? This sounds quite scary to me TBH. Why cannot you simply
-use shared memory for that?
--- 
-Michal Hocko
-SUSE Labs
+Boot is fine now and PMIC regulator rail microvolts readings from sysfs
+are correct as well. I did not try to change the voltages though.
+
+Tested-by: Sekhar Nori <nsekhar@ti.com>
+
+Thanks,
+Sekhar
