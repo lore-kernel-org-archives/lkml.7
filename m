@@ -2,119 +2,105 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F8DC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9E2BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4220205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA5EE205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:58:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mi5DJ22/";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cv5k4QM0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726660AbfEPH5W (ORCPT
+        id S1726722AbfEPH64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 03:57:22 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7655 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726363AbfEPH5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 03:57:21 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 191AD6544DF4DFBF316D;
-        Thu, 16 May 2019 15:57:19 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
- (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 16 May 2019
- 15:57:12 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <broonie@kernel.org>, <axel.lin@ingics.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <albeu@free.fr>, <lorenzo.bianconi@redhat.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
-Date:   Thu, 16 May 2019 15:56:56 +0800
-Message-ID: <20190516075656.25880-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Thu, 16 May 2019 03:58:56 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:59944 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726393AbfEPH64 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 03:58:56 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6698F6030E; Thu, 16 May 2019 07:58:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557993535;
+        bh=QT8q5Z4MoVm6vzoPng3HVqefya1GCaZkTFqKfaIzjGI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=mi5DJ22/p80wrXEGco9iXj/IrVaQSZ/8MQNUZcTxEIAarrqQYLVUU1B7HBIKaDpnT
+         PxizZaM/hXCSSBsXAYKNWI5AVE3zAndTg/pbDz4QbUwNFwgGdH7wgAT5eNomJxasbD
+         j1FW6LqeW9eLwBSvzFtHu6E1EltDgx9n2sriXi0M=
+Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D1E2E6076A;
+        Thu, 16 May 2019 07:58:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1557993534;
+        bh=QT8q5Z4MoVm6vzoPng3HVqefya1GCaZkTFqKfaIzjGI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=cv5k4QM0UsszKFCj3vXH5cK4MYuC6/1MEC+Tfu1OBtjdXs2Yh/3o9D9iHw5ymBru9
+         3mFjHl58He96toOyBGRsTub3KLKzB6OfHSW+qzLW4Z2XP2kEiWW2WpOro0QKOMyOTF
+         cNNfOXeZeW2rMrlrnDUj58vSe6FYXyYwq+HMCkzo=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D1E2E6076A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH v3 1/1] bsr: do not use assignment in if condition
+To:     parna.naveenkumar@gmail.com, arnd@arndb.de,
+        gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20190515161746.29034-1-parna.naveenkumar@gmail.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <8f969496-c895-088f-eef2-ec6a70e19505@codeaurora.org>
+Date:   Thu, 16 May 2019 13:28:50 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190515161746.29034-1-parna.naveenkumar@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If spi_register_master fails in spi_bitbang_start
-because device_add failure, We should return the
-error code other than 0, otherwise calling
-spi_bitbang_stop may trigger NULL pointer dereference
-like this:
 
-BUG: KASAN: null-ptr-deref in __list_del_entry_valid+0x45/0xd0
-Read of size 8 at addr 0000000000000000 by task syz-executor.0/3661
+On 5/15/2019 9:47 PM, parna.naveenkumar@gmail.com wrote:
+> From: Naveen Kumar Parna <parna.naveenkumar@gmail.com>
+>
+> checkpatch.pl does not like assignment in if condition
+>
+> Signed-off-by: Naveen Kumar Parna <parna.naveenkumar@gmail.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-CPU: 0 PID: 3661 Comm: syz-executor.0 Not tainted 5.1.0+ #28
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- dump_stack+0xa9/0x10e
- ? __list_del_entry_valid+0x45/0xd0
- ? __list_del_entry_valid+0x45/0xd0
- __kasan_report+0x171/0x18d
- ? __list_del_entry_valid+0x45/0xd0
- kasan_report+0xe/0x20
- __list_del_entry_valid+0x45/0xd0
- spi_unregister_controller+0x99/0x1b0
- spi_lm70llp_attach+0x3ae/0x4b0 [spi_lm70llp]
- ? 0xffffffffc1128000
- ? klist_next+0x131/0x1e0
- ? driver_detach+0x40/0x40 [parport]
- port_check+0x3b/0x50 [parport]
- bus_for_each_dev+0x115/0x180
- ? subsys_dev_iter_exit+0x20/0x20
- __parport_register_driver+0x1f0/0x210 [parport]
- ? 0xffffffffc1150000
- do_one_initcall+0xb9/0x3b5
- ? perf_trace_initcall_level+0x270/0x270
- ? kasan_unpoison_shadow+0x30/0x40
- ? kasan_unpoison_shadow+0x30/0x40
- do_init_module+0xe0/0x330
- load_module+0x38eb/0x4270
- ? module_frob_arch_sections+0x20/0x20
- ? kernel_read_file+0x188/0x3f0
- ? find_held_lock+0x6d/0xd0
- ? fput_many+0x1a/0xe0
- ? __do_sys_finit_module+0x162/0x190
- __do_sys_finit_module+0x162/0x190
- ? __ia32_sys_init_module+0x40/0x40
- ? __mutex_unlock_slowpath+0xb4/0x3f0
- ? wait_for_completion+0x240/0x240
- ? vfs_write+0x160/0x2a0
- ? lockdep_hardirqs_off+0xb5/0x100
- ? mark_held_locks+0x1a/0x90
- ? do_syscall_64+0x14/0x2a0
- do_syscall_64+0x72/0x2a0
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Cheers,
+-Mukesh
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 702a4879ec33 ("spi: bitbang: Let spi_bitbang_start() take a reference to master")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/spi/spi-bitbang.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-bitbang.c b/drivers/spi/spi-bitbang.c
-index dd9a8c54..be95be4 100644
---- a/drivers/spi/spi-bitbang.c
-+++ b/drivers/spi/spi-bitbang.c
-@@ -403,7 +403,7 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
- 	if (ret)
- 		spi_master_put(master);
- 
--	return 0;
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(spi_bitbang_start);
- 
--- 
-1.8.3.1
-
-
+> ---
+> Changes in v3:
+> The first patch has an extra space in if statement, so fixed it in v2 but
+> forgot add what changed from the previous version. In v3 added the
+> complete change history.
+>
+>   drivers/char/bsr.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/char/bsr.c b/drivers/char/bsr.c
+> index a6cef548e01e..70de334554a8 100644
+> --- a/drivers/char/bsr.c
+> +++ b/drivers/char/bsr.c
+> @@ -322,7 +322,8 @@ static int __init bsr_init(void)
+>   		goto out_err_2;
+>   	}
+>   
+> -	if ((ret = bsr_create_devs(np)) < 0) {
+> +	ret = bsr_create_devs(np);
+> +	if (ret < 0) {
+>   		np = NULL;
+>   		goto out_err_3;
+>   	}
