@@ -6,47 +6,48 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03988C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BABC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB4832087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B90020645
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558024826;
-	bh=diPG/wYZRblNeco845yvy3MdskkEV1mrEDjxhZdWF/Q=;
+	s=default; t=1558024829;
+	bh=HSbXc+dslqbRehQvNmd6HvHCAtZzf9jaMx5NK/KADaE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=upYXchzlKfr8fuA4H4yCedqg9rwy3YpLfPiT5YW7kisUQXPiOt5VoIobBz0iSJRwk
-	 OEtjd+8bmmI0IVQRO5tIQ0TL38Tw7o9tk4QYSVUbJkR7bw4mWLlyqnmfbqUqRwC4Mr
-	 Vl7z+IDR5ymAcTQtZuxdeyAJ/Y6GFbEryYQYOFII=
+	b=Mi1C/oSI+byAgmoraugDN4E/oW/01nj8Ykvb4yzNysWulv882wcUv8osqCYbqJInd
+	 HauNr3DbsX14F2oqXJiWFxzHmm5YsqhmMIzy53NEE29I75aPmLMvXlFICGmesWUPNI
+	 R8ocqfQ5r87yw9MUy11TWJKUHRGBj1/KBPuSS14c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbfEPQkZ (ORCPT
+        id S1727975AbfEPQk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:40:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37078 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 12:40:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727911AbfEPQkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:40:23 -0400
-Subject: Re: [GIT PULL 2/4] ARM: Device-tree updates
+        id S1727924AbfEPQkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 12:40:24 -0400
+Subject: Re: [GIT PULL 4/4] ARM: SoC defconfig updates
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558024822;
-        bh=diPG/wYZRblNeco845yvy3MdskkEV1mrEDjxhZdWF/Q=;
+        s=default; t=1558024824;
+        bh=HSbXc+dslqbRehQvNmd6HvHCAtZzf9jaMx5NK/KADaE=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=tTiHgOksxhTXhEyLcbkgZQ7+t3ho8NwUjxgVaPlbAxbZHgyP+Mj57nVRkfwgxJZ4c
-         /KNC5aZdfi/vqmIt1EKTRr/2Khxz3/QoK0Q1pPsblVDmzcAucfXfqseBm5/6ndeVne
-         GJRnlObpkrq1C7asVhj3neRc0UMHau7XwU+bMFVI=
+        b=wBswkt7Neh0jKdBkv9e7AMTs9m9373qrNw7FMNEJtwy3cfG02kKgVx/hMFyzIJ2+1
+         EJ2878m7YaxNyl8qVLS0evKn5DTjO2bCP5mxWvNuL2HFdk411aDmYQUM9B3h19V+AU
+         rxEcC9etJlQ2Mgi3dzDAhu8QHo7+pnMibZNICbLI=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190516064304.24057-3-olof@lixom.net>
+In-Reply-To: <20190516064304.24057-5-olof@lixom.net>
 References: <20190516064304.24057-1-olof@lixom.net>
- <20190516064304.24057-3-olof@lixom.net>
+ <20190516064304.24057-5-olof@lixom.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190516064304.24057-3-olof@lixom.net>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-dt
-X-PR-Tracked-Commit-Id: 6cbc4d88ad208d6f5b9567bac2fff038e1bbfa77
+X-PR-Tracked-Message-Id: <20190516064304.24057-5-olof@lixom.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git
+ tags/armsoc-defconfig
+X-PR-Tracked-Commit-Id: 85200317b324924be3bc72b7bfcce219020ced9c
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e8a1d70117116c8d96c266f0b99e931717670eaf
-Message-Id: <155802482286.32664.11718862132617630801.pr-tracker-bot@kernel.org>
-Date:   Thu, 16 May 2019 16:40:22 +0000
+X-PR-Merge-Commit-Id: ab02888e39212af2d1dddc565cd67192548b9fd8
+Message-Id: <155802482418.32664.15280046775737034960.pr-tracker-bot@kernel.org>
+Date:   Thu, 16 May 2019 16:40:24 +0000
 To:     Olof Johansson <olof@lixom.net>
 Cc:     torvalds@linux-foundation.org, arm@kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
@@ -56,12 +57,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 15 May 2019 23:43:02 -0700:
+The pull request you sent on Wed, 15 May 2019 23:43:04 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-dt
+> git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-defconfig
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e8a1d70117116c8d96c266f0b99e931717670eaf
+https://git.kernel.org/torvalds/c/ab02888e39212af2d1dddc565cd67192548b9fd8
 
 Thank you!
 
