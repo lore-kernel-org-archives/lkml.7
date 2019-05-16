@@ -2,143 +2,138 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E558CC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:37:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B22E8C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6CCD2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:37:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CFF52082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557988834;
+	bh=lDXJwF8L6Q3G9lM+UuPh8HMotl/xHXPZGZPwBCQSEQg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YcVESb/HIWiJAMsz1c7QUI3MCU1BQdmNF5ebSKJyW5UQYMj2ZdjdANfvXQROx0OtO
+	 ElmHKquFEil6A2Ez0MKWGV7Ug8Nq0Of2oWn9zoG0WVKjVlADb5fs9BRT6oQw1CiAUX
+	 +ZsRf/ZdQleJafikzds/JZQOzpAJcvkPCdy+gr0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfEPGhU (ORCPT
+        id S1726717AbfEPGke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 02:37:20 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2956 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726221AbfEPGhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 02:37:20 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 9EFC7766B2DB253AA9B5;
-        Thu, 16 May 2019 14:37:15 +0800 (CST)
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 16 May 2019 14:37:15 +0800
-Received: from szvp000201624.huawei.com (10.120.216.130) by
- dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Thu, 16 May 2019 14:37:14 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: fix to do sanity check on segment bitmap of LFS curseg
-Date:   Thu, 16 May 2019 14:36:53 +0800
-Message-ID: <20190516063653.14142-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Thu, 16 May 2019 02:40:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36542 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726674AbfEPGkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 02:40:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02C332082E;
+        Thu, 16 May 2019 06:40:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1557988831;
+        bh=lDXJwF8L6Q3G9lM+UuPh8HMotl/xHXPZGZPwBCQSEQg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hNIqYmstZpb+wXit7EojqiyIsSgJEunDeQWaq6Im3GG0QSpy4UF9UchyzUMGcfr75
+         OoURW/fXvIvahUMSzzbIdrMDWY5orpuWEZehhqKrbrDjtBZjBy7w8XdRlpF5/Spays
+         Fmtdqha8XUD4kOzSqoVZhdopv8p0dddBIdtF/elA=
+Date:   Thu, 16 May 2019 08:40:29 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     "Tobin C. Harding" <tobin@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] kobject: Clean up allocated memory on failure
+Message-ID: <20190516064029.GA17068@kroah.com>
+References: <20190516000716.24249-1-tobin@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-ClientProxiedBy: dggeme714-chm.china.huawei.com (10.1.199.110) To
- dggeme763-chm.china.huawei.com (10.3.19.109)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190516000716.24249-1-tobin@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Jungyeon Reported in bugzilla:
+On Thu, May 16, 2019 at 10:07:16AM +1000, Tobin C. Harding wrote:
+> Currently kobject_add_varg() calls kobject_set_name_vargs() then returns
+> the return value of kobject_add_internal().  kobject_set_name_vargs()
+> allocates memory for the name string.  When kobject_add_varg() returns
+> an error we do not know if memory was allocated or not.  If we check the
+> return value of kobject_add_internal() instead of returning it directly
+> we can free the allocated memory if kobject_add_internal() fails.  Doing
+> this means that we now know that if kobject_add_varg() fails we do not
+> have to do any clean up, this benefit goes back up the call chain
+> meaning that we now do not need to do any cleanup if kobject_del()
+> fails.  Moving further back (in a theoretical kobject user callchain)
+> this means we now no longer need to call kobject_put() after calling
+> kobject_init_and_add(), we can just call kfree() on the enclosing
+> structure.  This makes the kobject API better follow the principle of
+> least surprise.
+> 
+> Check return value of kobject_add_internal() and free previously
+> allocated memory on failure.
+> 
+> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+> ---
+> 
+> Hi Greg,
+> 
+> Pretty excited by this one, if this is correct it means that kobject
+> initialisation code, in the error path, can now use either kobject_put()
+> (to trigger the release method) OR kfree().  This means most of the
+> call sites of kobject_init_and_add() will get fixed for free!
+> 
+> I've been wrong before so I'll state here that this is based on the
+> assumption that kobject_init() does nothing that causes leaked memory.
+> This is _not_ what the function docs in kobject.c say but it _is_ what
+> the code seems to say since kobject_init() does nothing except
+> initialise kobject data member values?  Or have I got the dog by the
+> tail?
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203233
+I think you are correct here.  In looking at the code paths, all should
+be good and safe.
 
-- Reproduces
-gcc poc_13.c
-./run.sh f2fs
+But, if you use your patch, then you have to call kfree, and you can not
+call kobject_put(), otherwise kfree_const() will be called twice on the
+same pointer, right?  So you will have to audit the kernel and change
+everything again :)
 
-- Kernel messages
- F2FS-fs (sdb): Bitmap was wrongly set, blk:4608
- kernel BUG at fs/f2fs/segment.c:2133!
- RIP: 0010:update_sit_entry+0x35d/0x3e0
- Call Trace:
-  f2fs_allocate_data_block+0x16c/0x5a0
-  do_write_page+0x57/0x100
-  f2fs_do_write_node_page+0x33/0xa0
-  __write_node_page+0x270/0x4e0
-  f2fs_sync_node_pages+0x5df/0x670
-  f2fs_write_checkpoint+0x364/0x13a0
-  f2fs_sync_fs+0xa3/0x130
-  f2fs_do_sync_file+0x1a6/0x810
-  do_fsync+0x33/0x60
-  __x64_sys_fsync+0xb/0x10
-  do_syscall_64+0x43/0x110
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Or, maybe this patch would prevent that:
 
-The testcase fails because that, in fuzzed image, current segment was
-allocated with LFS type, its .next_blkoff should point to an unused
-block address, but actually, its bitmap shows it's not. So during
-allocation, f2fs crash when setting bitmap.
 
-Introducing sanity_check_curseg() to check such inconsistence of
-current in-used segment.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/segment.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
-
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 8dee063c833f..4a25fb12bdb1 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -4232,6 +4232,35 @@ static int build_dirty_segmap(struct f2fs_sb_info *sbi)
- 	return init_victim_secmap(sbi);
- }
- 
-+int sanity_check_curseg(struct f2fs_sb_info *sbi)
-+{
-+	int i, j;
+diff --git a/lib/kobject.c b/lib/kobject.c
+index f2ccdbac8ed9..03cdec1d450a 100644
+--- a/lib/kobject.c
++++ b/lib/kobject.c
+@@ -387,7 +387,14 @@ static __printf(3, 0) int kobject_add_varg(struct kobject *kobj,
+ 		return retval;
+ 	}
+ 	kobj->parent = parent;
+-	return kobject_add_internal(kobj);
 +
-+	/*
-+	 * In current segment with LFS allocation type, all space after
-+	 * .next_blkoff position should be all valid.
-+	 */
-+	for (i = 0; i < NO_CHECK_TYPE; i++) {
-+		struct curseg_info *curseg = CURSEG_I(sbi, i);
-+		struct seg_entry *se = get_seg_entry(sbi, curseg->segno);
-+
-+		if (curseg->alloc_type == SSR)
-+			continue;
-+
-+		for (j = curseg->next_blkoff; j < sbi->blocks_per_seg; j++) {
-+			if (!f2fs_test_bit(j, se->cur_valid_map))
-+				continue;
-+
-+			f2fs_msg(sbi->sb, KERN_ERR,
-+				"Current segment:%u, segno:%u, "
-+				"next_blkoff:%u, cur:%u",
-+				i, curseg->segno, curseg->next_blkoff, j);
-+			return -EINVAL;
-+		}
++	retval = kobject_add_internal(kobj);
++	if (retval && !is_kernel_rodata((unsigned long)(kobj->name))) {
++		kfree_const(kobj->name);
++		kobj->name = NULL;
 +	}
-+	return 0;
-+}
 +
- /*
-  * Update min, max modified time for cost-benefit GC algorithm
-  */
-@@ -4327,6 +4356,10 @@ int f2fs_build_segment_manager(struct f2fs_sb_info *sbi)
- 	if (err)
- 		return err;
- 
-+	err = sanity_check_curseg(sbi);
-+	if (err)
-+		return err;
-+
- 	init_min_max_mtime(sbi);
- 	return 0;
++	return retval;
  }
--- 
-2.18.0.rc1
+ 
+ /**
 
+
+But that feels like a huge hack to me.  I think, to be safe, we should
+keep the existing lifetime rules, as it mirrors what happens with
+'struct device', and that is what people _should_ be using, not "raw"
+kobjects if at all possible.
+
+Yeah, I know filesystems don't do that, my fault, I never thought a
+filesystem would care about sysfs all those years ago :)
+
+thanks,
+
+greg k-h
