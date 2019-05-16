@@ -2,112 +2,102 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FBCC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B66C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A758720848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E652D20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:46:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727210AbfEPKpT (ORCPT
+        id S1727136AbfEPKq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 06:45:19 -0400
-Received: from foss.arm.com ([217.140.101.70]:41372 "EHLO foss.arm.com"
+        Thu, 16 May 2019 06:46:26 -0400
+Received: from foss.arm.com ([217.140.101.70]:41402 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbfEPKpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 06:45:19 -0400
+        id S1726796AbfEPKqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 06:46:25 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E43D319BF;
-        Thu, 16 May 2019 03:45:18 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8F1D3F703;
-        Thu, 16 May 2019 03:45:17 -0700 (PDT)
-Subject: Re: [EXT] Re: [v1] drm/arm/mali-dp: Disable checking for required
- pixel clock rate
-To:     Wen He <wen.he_1@nxp.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "liviu.dudau@arm.com" <liviu.dudau@arm.com>
-Cc:     Leo Li <leoyang.li@nxp.com>
-References: <20190515024348.43642-1-wen.he_1@nxp.com>
- <3f87b2a7-c7e8-0597-2f62-d421aa6ccaa5@arm.com>
- <AM0PR04MB4865435E9FA2D61E2D9A238EE20A0@AM0PR04MB4865.eurprd04.prod.outlook.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <edd9dc6c-aba2-3881-3121-efee388b47cf@arm.com>
-Date:   Thu, 16 May 2019 11:45:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4AE9519BF;
+        Thu, 16 May 2019 03:46:25 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5EA4F3F703;
+        Thu, 16 May 2019 03:46:24 -0700 (PDT)
+Date:   Thu, 16 May 2019 11:46:19 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Laura Abbott <labbott@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] arm64: vdso: Explicitly add build-id option
+Message-ID: <20190516104619.GA29705@fuggles.cambridge.arm.com>
+References: <20190515194824.5641-1-labbott@redhat.com>
+ <CAK7LNASZnRrSsZSrnw41kintGfmpyj3iz-Vjduk7w3k9iSih-w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <AM0PR04MB4865435E9FA2D61E2D9A238EE20A0@AM0PR04MB4865.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNASZnRrSsZSrnw41kintGfmpyj3iz-Vjduk7w3k9iSih-w@mail.gmail.com>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/05/2019 10:42, Wen He wrote:
+On Thu, May 16, 2019 at 01:58:56PM +0900, Masahiro Yamada wrote:
+> On Thu, May 16, 2019 at 4:51 AM Laura Abbott <labbott@redhat.com> wrote:
+> >
+> > Commit 691efbedc60d ("arm64: vdso: use $(LD) instead of $(CC) to
+> > link VDSO") switched to using LD explicitly. The --build-id option
+> > needs to be passed explicitly, similar to x86. Add this option.
+> >
+> > Fixes: 691efbedc60d ("arm64: vdso: use $(LD) instead of $(CC) to link VDSO")
+> > Signed-off-by: Laura Abbott <labbott@redhat.com>
+> > ---
+> >  arch/arm64/kernel/vdso/Makefile | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
+> > index 744b9dbaba03..ca209103cd06 100644
+> > --- a/arch/arm64/kernel/vdso/Makefile
+> > +++ b/arch/arm64/kernel/vdso/Makefile
+> > @@ -13,6 +13,7 @@ targets := $(obj-vdso) vdso.so vdso.so.dbg
+> >  obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
+> >
+> >  ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 \
+> > +               $(call ld-option, --build-id) \
+> >                 $(call ld-option, --hash-style=sysv) -n -T
+> >
+> >  # Disable gcov profiling for VDSO code
 > 
 > 
->> -----Original Message-----
->> From: Robin Murphy [mailto:robin.murphy@arm.com]
->> Sent: 2019年5月16日 1:14
->> To: Wen He <wen.he_1@nxp.com>; dri-devel@lists.freedesktop.org;
->> linux-kernel@vger.kernel.org; liviu.dudau@arm.com
->> Cc: Leo Li <leoyang.li@nxp.com>
->> Subject: [EXT] Re: [v1] drm/arm/mali-dp: Disable checking for required pixel
->> clock rate
->>
->> Caution: EXT Email
->>
->> On 15/05/2019 03:42, Wen He wrote:
->>> Disable checking for required pixel clock rate if ARCH_LAYERSCPAE is
->>> enable.
->>>
->>> Signed-off-by: Alison Wang <alison.wang@nxp.com>
->>> Signed-off-by: Wen He <wen.he_1@nxp.com>
->>> ---
->>> change in description:
->>>        - This check that only supported one pixel clock required clock rate
->>>        compare with dts node value. but we have supports 4 pixel clock
->>>        for ls1028a board.
->>>    drivers/gpu/drm/arm/malidp_crtc.c | 2 ++
->>>    1 file changed, 2 insertions(+)
->>>
->>> diff --git a/drivers/gpu/drm/arm/malidp_crtc.c
->>> b/drivers/gpu/drm/arm/malidp_crtc.c
->>> index 56aad288666e..bb79223d9981 100644
->>> --- a/drivers/gpu/drm/arm/malidp_crtc.c
->>> +++ b/drivers/gpu/drm/arm/malidp_crtc.c
->>> @@ -36,11 +36,13 @@ static enum drm_mode_status
->>> malidp_crtc_mode_valid(struct drm_crtc *crtc,
->>>
->>>        if (req_rate) {
->>>                rate = clk_round_rate(hwdev->pxlclk, req_rate);
->>> +#ifndef CONFIG_ARCH_LAYERSCAPE
->>
->> What about multiplatform builds? The kernel config doesn't tell you what
->> hardware you're actually running on.
->>
+> I missed that. Sorry.
 > 
-> Hi Robin,
+> You can add  --build-id without $(call ld-option,...)
+> because it is supported by our minimal version of toolchain.
 > 
-> Thanks for your reply.
-> 
-> In fact, Only one platform integrates this IP when CONFIG_ARCH_LAYERSCAPE is set.
-> Although this are not good ways, but I think it won't be a problem under multiplatform builds.
+> See commit log of 1e0221374e for example.
 
-My point is that ARCH_LAYERSCAPE is going to be enabled in distribution 
-kernels along with everything else, so you're effectively removing this 
-check for all other vendors' Mali-DP implementations as well, which is 
-probably not OK.
+Ok, so I'm ok folding in the diff below on top?
 
-Furthermore, if LS1028A really only supports 4 specific modes as the BSP 
-documentation I found claims, then surely you'd want a *more* specific 
-check here, rather than no check at all?
+Will
 
-Robin.
+--->8
+
+diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
+index ca209103cd06..fa230ff09aa1 100644
+--- a/arch/arm64/kernel/vdso/Makefile
++++ b/arch/arm64/kernel/vdso/Makefile
+@@ -12,9 +12,8 @@ obj-vdso := gettimeofday.o note.o sigreturn.o
+ targets := $(obj-vdso) vdso.so vdso.so.dbg
+ obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
+ 
+-ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 \
+-		$(call ld-option, --build-id) \
+-		$(call ld-option, --hash-style=sysv) -n -T
++ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv \
++		--build-id -n -T
+ 
+ # Disable gcov profiling for VDSO code
+ GCOV_PROFILE := n
