@@ -2,95 +2,95 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD6CC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3D0C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF15820848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:56:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558014976;
-	bh=CMrAya67APClJ/68LrKlSJfxPmlq08xvMoQncjUiriQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MGgR6oUJ8RvDr5T79K7ESq8V2H3zRuCvt8s9IKzwmQOmwyai8yRiJlSCNveVLHZ4f
-	 vnnDexo3w6bnwoNaIaWIr4fABaUkDs8IeBMokf34jITWx8R0WtnlLVhegkxHM3UikC
-	 5csQ+2sSWxkiNLR+ckprxnpbFhQJEfpQJiq4s+ws=
+	by mail.kernel.org (Postfix) with ESMTP id 98EC920848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:56:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727726AbfEPN4P (ORCPT
+        id S1727743AbfEPN4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:56:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38702 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbfEPN4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:56:14 -0400
-Received: from localhost (unknown [193.47.165.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 16 May 2019 09:56:20 -0400
+Received: from freki.datenkhaos.de ([81.7.17.101]:44322 "EHLO
+        freki.datenkhaos.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727575AbfEPN4T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:56:19 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by freki.datenkhaos.de (Postfix) with ESMTP id 15E7C1304DF0;
+        Thu, 16 May 2019 15:56:17 +0200 (CEST)
+Received: from freki.datenkhaos.de ([127.0.0.1])
+        by localhost (freki.datenkhaos.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id L3mHx5NWz_9W; Thu, 16 May 2019 15:56:15 +0200 (CEST)
+Received: from probook (geri.datenkhaos.de [81.7.17.45])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14BE520657;
-        Thu, 16 May 2019 13:56:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558014973;
-        bh=CMrAya67APClJ/68LrKlSJfxPmlq08xvMoQncjUiriQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MKnhejlcoJIBtFe+BrgT0i+D7pC46ev8qFyn4Jx5fQUjqLHCHGjV39hcJqDZT7eoq
-         Le2XkGouGgX3HLOkgMGPo1jzXFjEXKffs3zcUT/krMPy1kiipvB1vZAgYJJmwy/lcK
-         tp/6Aw0P32V24zcDp8VTeNtKhT+jDEyj1TEdAUZU=
-Date:   Thu, 16 May 2019 16:56:10 +0300
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RDMA/nldev: add check for null return from call to
- nlmsg_put
-Message-ID: <20190516135610.GB6026@mtr-leonro.mtl.com>
-References: <20190516131215.20411-1-colin.king@canonical.com>
+        by freki.datenkhaos.de (Postfix) with ESMTPSA;
+        Thu, 16 May 2019 15:56:15 +0200 (CEST)
+Date:   Thu, 16 May 2019 15:56:07 +0200
+From:   Johannes Hirte <johannes.hirte@datenkhaos.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Borislav Petkov <bp@suse.de>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] x86/build: Move _etext to actual end of .text
+Message-ID: <20190516135606.GA25602@probook>
+References: <20190423183827.GA4012@beast>
+ <20190514120416.GA11736@probook>
+ <201905140842.21066115C5@keescook>
+ <20190514161051.GA21695@probook>
+ <201905151151.D4EA0FF7@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190516131215.20411-1-colin.king@canonical.com>
+In-Reply-To: <201905151151.D4EA0FF7@keescook>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 02:12:15PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> It is possible that nlmsg_put can return a null pointer, currently
-> this will lead to a null pointer dereference when passing a null
-> nlh pointer to nlmsg_end.  Fix this by adding a null pointer check.
->
-> Addresses-Coverity: ("Dereference null return value")
-> Fixes: cb7e0e130503 ("RDMA/core: Add interface to read device namespace sharing mode")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/infiniband/core/nldev.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/drivers/infiniband/core/nldev.c b/drivers/infiniband/core/nldev.c
-> index 69188cbbd99b..4dc43b6c5a28 100644
-> --- a/drivers/infiniband/core/nldev.c
-> +++ b/drivers/infiniband/core/nldev.c
-> @@ -1367,6 +1367,10 @@ static int nldev_sys_get_doit(struct sk_buff *skb, struct nlmsghdr *nlh,
->  			RDMA_NL_GET_TYPE(RDMA_NL_NLDEV,
->  					 RDMA_NLDEV_CMD_SYS_GET),
->  			0, 0);
+On 2019 Mai 15, Kees Cook wrote:
+> On Tue, May 14, 2019 at 06:10:55PM +0200, Johannes Hirte wrote:
+> > On 2019 Mai 14, Kees Cook wrote:
+> > > On Tue, May 14, 2019 at 02:04:21PM +0200, Johannes Hirte wrote:
+> > > > This breaks the build on my system:
+> > > > 
+> > > >   RELOCS  arch/x86/boot/compressed/vmlinux.relocs
+> > > >   CC      arch/x86/boot/compressed/early_serial_console.o
+> > > >   CC      arch/x86/boot/compressed/kaslr.o
+> > > >   AS      arch/x86/boot/compressed/mem_encrypt.o
+> > > >   CC      arch/x86/boot/compressed/kaslr_64.o
+> > > > Invalid absolute R_X86_64_32S relocation: _etext
+> > > > make[2]: *** [arch/x86/boot/compressed/Makefile:130: arch/x86/boot/compressed/vmlinux.relocs] Error 1
+> > > > make[2]: *** Deleting file 'arch/x86/boot/compressed/vmlinux.relocs'
+> > > > make[2]: *** Waiting for unfinished jobs....
+> > > > make[1]: *** [arch/x86/boot/Makefile:112: arch/x86/boot/compressed/vmlinux] Error 2
+> > > > make: *** [arch/x86/Makefile:283: bzImage] Error 2
+> > > 
+> > > Interesting! Can you send along your .config and compiler details?
+> > 
+> > Tested with gcc-8.3 and gcc-9.1, both the same result.
+> > [...]
+> > gcc version 8.3.0 (Gentoo 8.3.0-r1 p1.1)
+> 
+> Hm, I'm not able to reproduce this with any of the compilers I have
+> access to. The most recent I have is:
+> 
+> gcc (Ubuntu 20180425-1ubuntu1) 9.0.0 20180425 (experimental) [trunk revision 259645]
+> 
+> Various stupid questions: did you wipe the whole bulid tree and start
+> clean? 
 
-It is impossible situation due to "0" in payload field above.
+No I didn't. And this fixed it now. After a distclean I'm unable to
+reproduce it. So sorry for the noise.
 
-> +	if (!nlh) {
-> +		nlmsg_free(msg);
-> +		return -EMSGSIZE;
-> +	}
->
->  	err = nla_put_u8(msg, RDMA_NLDEV_SYS_ATTR_NETNS_MODE,
->  			 (u8)ib_devices_shared_netns);
-> --
-> 2.20.1
->
+-- 
+Regards,
+  Johannes
+
