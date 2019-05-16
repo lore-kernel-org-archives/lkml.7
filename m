@@ -2,86 +2,113 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5C5C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AC9C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F5920848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:54:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558043649;
-	bh=7/VPrBeDCtUB7U1B72xCKN6fY5VM8msYqQe9cjnuI/4=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=VPJDu8pTcY95AuYURzusySsdmzo3x5Qpvcp43axDF4henPq2tzujq3joFaHKNP4ne
-	 ROq8FJKTz0GbIwdjJHcqh2M0BtCS+L1R5jpi5qeYtr2SfjaTmbw5wjsWe0NOEF8xGA
-	 6J8nTs37CcFZpGvhPMeTO4tNIyc4ZhHDrGyKA5lY=
+	by mail.kernel.org (Postfix) with ESMTP id 093BC2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:56:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZHdDStIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728868AbfEPVyI (ORCPT
+        id S1728883AbfEPV4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 17:54:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43618 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726523AbfEPVyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 17:54:07 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75E5D2082E;
-        Thu, 16 May 2019 21:54:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558043646;
-        bh=7/VPrBeDCtUB7U1B72xCKN6fY5VM8msYqQe9cjnuI/4=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=ea7cvSFtUlBdy3juIFqqgBLtktCBOpnDrfQYYMnl7yji+Qq3nRa5PGMi88NO5NpBj
-         S0Zdd+p13+BoTJfuB7yWTvvrxIqjoxLe1xQsTnaVcL+OZ3TNLxxckOyEcASIXUJhdo
-         +MgNwoycoijodr3LLVBTOyHPcmlqf5uushk3bmSU=
-Content-Type: text/plain; charset="utf-8"
+        Thu, 16 May 2019 17:56:32 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39894 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726927AbfEPV4c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 17:56:32 -0400
+Received: by mail-io1-f68.google.com with SMTP id m7so3864731ioa.6
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 14:56:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=30hVVs4KstAY1Cm8mS0N7KHumN5n7CONcXPWGn5Ws6A=;
+        b=ZHdDStIn8Nh3/v0i1rIiUZbPlnHF/ZpK2u9nHuYkVHpfRygwqsqhfIeoWGjrGE6l81
+         e9RuOg5/DSBpaph108jInUozc+UCRLLZcpYq9Sddfxq/7nludItMO8M1kutE5gC7iNgo
+         3zGU6EgQvx17q0RPaG5GT7Y5RZnF3dxGDdbq8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=30hVVs4KstAY1Cm8mS0N7KHumN5n7CONcXPWGn5Ws6A=;
+        b=gO2+hokwha56z4D7nN9Zdrd2kRrf+meuFy3lwx+TMA+8CGuABG4w8qK+9Efwse0zvG
+         CQDM127Ox+8TTPK69X9srVvtUXLF6+6FebZsXmTY+CaNCSngifLA5lg95EK5GTsGwf92
+         38oKsp+rb8HPTWx1sZJGLFZ+Ei3QuFIj8L5Fi2T8i0CUoM/nWtOMTnJ2xMtmNIX7YdCy
+         JkqTAipJCoOwUrX9iiPYTqupmo7ogDIFDnUaw5L2yAhfvOwyUZXh16+ShP588S1cm17H
+         jhEdc0Ev8GxPx6iCITWZQDt4aWxOkfohEfPUqvkqb+zN2hai8q5a8euZvVV9bW5YxC2R
+         m1aQ==
+X-Gm-Message-State: APjAAAUuvyBZECtNlMl9Z1Vi1MRosTaUpk5HDizYGhRHh95ZBvgG0xJb
+        LhwqORlr9Bo6xXWThFBIMCbQowtuMqj4LA==
+X-Google-Smtp-Source: APXvYqy8uV4H/brx/EiboH8ZkZo8jxjBVfHbXkfySYBjdVZOOGXPooNYLRP97OO7C07dawOoLsTl2Q==
+X-Received: by 2002:a5d:8153:: with SMTP id f19mr7148987ioo.167.1558043791537;
+        Thu, 16 May 2019 14:56:31 -0700 (PDT)
+Received: from localhost ([2620:15c:183:200:2e1:1bad:9c62:dd74])
+        by smtp.gmail.com with ESMTPSA id h16sm2079282ioh.35.2019.05.16.14.56.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 May 2019 14:56:30 -0700 (PDT)
+From:   Mathew King <mathewk@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mathew King <mathewk@chromium.org>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org
+Subject: [PATCH] platform/x86: intel-vbtn: Report switch events when event wakes device
+Date:   Thu, 16 May 2019 15:56:15 -0600
+Message-Id: <20190516215615.261258-1-mathewk@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAMuHMdWPSyrhYx5Z5mgmKrR68cHL6owcRT=B3+DD3GhhxuG4zw@mail.gmail.com>
-References: <20190514153341.22540-1-chris.paterson2@renesas.com> <155786877257.14659.6751252865489860937@swboyd.mtv.corp.google.com> <CAMuHMdWPSyrhYx5Z5mgmKrR68cHL6owcRT=B3+DD3GhhxuG4zw@mail.gmail.com>
-Subject: Re: [PATCH] scripts/spelling.txt: Add spelling fix for prohibited
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Chris Paterson <chris.paterson2@renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-User-Agent: alot/0.8.1
-Date:   Thu, 16 May 2019 14:54:05 -0700
-Message-Id: <20190516215406.75E5D2082E@mail.kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Geert Uytterhoeven (2019-05-15 00:32:46)
-> On Tue, May 14, 2019 at 11:19 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> > Quoting Chris Paterson (2019-05-14 08:33:41)
-> > > Misspelling 'prohibited' is quite common in the real world, although
-> > > surprisingly not so much in the Linux Kernel. In addition to fixing t=
-he
-> > > typo we may as well add it to the spelling checker.
-> > >
-> > > Also adding the present participle (prohibiting).
-> > >
-> > > Fixes: 5bf2fbbef50c ("clk: renesas: cpg-mssr: Add r8a77470 support")
-> > >
-> > > Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
->=20
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->=20
-> > Acked-by: Stephen Boyd <sboyd@kernel.org>
->=20
-> Thanks!
->=20
-> So I guess I'll queue this in clk-renesas-for-v5.3?
->=20
+When a switch event, such as tablet mode/laptop mode or docked/undocked,
+wakes a device make sure that the value of the swich is reported.
+Without when a device is put in tablet mode from laptop mode when it is
+suspended or vice versa the device will wake up but mode will be
+incorrect.
 
-Guess so! Or Andrew does it.
+Tested by suspending a device in laptop mode and putting it in tablet
+mode, the device resumes and is in tablet mode. When suspending the
+device in tablet mode and putting it in laptop mode the device resumes
+and is in laptop mode.
+
+Signed-off-by: Mathew King <mathewk@chromium.org>
+---
+ drivers/platform/x86/intel-vbtn.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/platform/x86/intel-vbtn.c b/drivers/platform/x86/intel-vbtn.c
+index 06cd7e818ed5..990cc8c20872 100644
+--- a/drivers/platform/x86/intel-vbtn.c
++++ b/drivers/platform/x86/intel-vbtn.c
+@@ -76,12 +76,15 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+ 	struct platform_device *device = context;
+ 	struct intel_vbtn_priv *priv = dev_get_drvdata(&device->dev);
+ 	unsigned int val = !(event & 1); /* Even=press, Odd=release */
+-	const struct key_entry *ke_rel;
++	const struct key_entry *ke, *ke_rel;
+ 	bool autorelease;
+ 
+ 	if (priv->wakeup_mode) {
+-		if (sparse_keymap_entry_from_scancode(priv->input_dev, event)) {
++		ke = sparse_keymap_entry_from_scancode(priv->input_dev, event);
++		if (ke) {
+ 			pm_wakeup_hard_event(&device->dev);
++			if (ke->type == KE_SW)
++				sparse_keymap_report_event(priv->input_dev, event, val, 0);
+ 			return;
+ 		}
+ 		goto out_unknown;
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
