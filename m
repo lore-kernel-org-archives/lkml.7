@@ -2,129 +2,147 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B73FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E152C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0732320815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D46920815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="paTihldv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726853AbfEPQFc (ORCPT
+        id S1727844AbfEPQFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:05:32 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42348 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726515AbfEPP6k (ORCPT
+        Thu, 16 May 2019 12:05:44 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:36813 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726515AbfEPQFm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:58:40 -0400
-Received: from [167.98.27.226] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hRImC-0006yh-Uu; Thu, 16 May 2019 16:58:37 +0100
-Received: from ben by deadeye with local (Exim 4.92)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hRImC-0001MU-BJ; Thu, 16 May 2019 16:58:36 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Petr Mladek" <pmladek@suse.cz>,
-        "Rusty Russell" <rusty@rustcorp.com.au>
-Date:   Thu, 16 May 2019 16:55:32 +0100
-Message-ID: <lsq.1558022132.775903169@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 02/86] module: add within_module() function
-In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
-X-SA-Exim-Connect-IP: 167.98.27.226
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+        Thu, 16 May 2019 12:05:42 -0400
+Received: by mail-qk1-f194.google.com with SMTP id c14so2608753qke.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:05:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=zAUITjpKKLROuX37hMbdqPFlWmaHToD076fNZLb8xfM=;
+        b=paTihldvOejMhzU/pjmy6cxi8/gHfncg9BvJEgw2jZdu7GTTbC6dOi2N34C/kPD+Xe
+         llzWo0lUVN5/gH0xigfPAuVxfctO5acb6uM491mjwy+kalcRZrNptGYgtffAGrQm9xKD
+         z7cMdKXJJ63VeJ7S62XKUCWg+IJtnA/MuoC0yG1jQRxUMfjTvjsouU6GeU1UhoLOpUy4
+         O6jaxq5Vx3jRm2UgvJs0jhTxt1tfjYW5uy/RR5+JF5zvEl0wMsgK+PEzcCVYX5Ml6OgS
+         CWMiUYVZvGJpz30FdN/Uvc6ui0RhJyX+CoWvDh4wvgFBWaqBSYRetGUz7xlHg0r4k5NR
+         ODlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=zAUITjpKKLROuX37hMbdqPFlWmaHToD076fNZLb8xfM=;
+        b=iU1AxRTNLS5awPPldKB2w7/MpVzmkInwG42XQnmagAj9EP7so4seNYRkm8wsAntqsK
+         qdgNDfYDNpaCZtxSpqpVaeDCJaKMcMfANAvqOFjv6ciYt4ZD2DTopQpCXl/lwTRP9QGQ
+         0ecUdAgnijz29dwSxXqKH/jMCH/7JIgz6sMx+Jbv2R9LzRwAdy3ujVIVgDUvY4WdnXeZ
+         iUTSRK90RyZ1zMh1BlksrtvJKlJYWd/8NAga3dSGNFH3aKEPGeoZ0gh9/Z6jfBZHjlJ6
+         a99Lt6+ZTztKnvsPdnitW5Yc3UT/w54eE1BRyGEk8sl+WRFEWsKFIDdxAQNuzkqtUgR4
+         8X6w==
+X-Gm-Message-State: APjAAAVdodZcvHNcFtsAgG22wvDzkzBkctciL2BCe8IhAXjRpApvLWAQ
+        7FKLOiKHjmyB1GOQ2RaezheiCA==
+X-Google-Smtp-Source: APXvYqw/JHD28fUlPb8lI2g8to9VAAo+dI6jsWFcrAF1ACiFIBSxV5uVdFEIpYrHZwfcWMG0OgWwTw==
+X-Received: by 2002:a37:684a:: with SMTP id d71mr13791295qkc.25.1558022741627;
+        Thu, 16 May 2019 09:05:41 -0700 (PDT)
+Received: from qcai.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id z29sm2569186qkg.19.2019.05.16.09.05.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 May 2019 09:05:40 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     dan.j.williams@intel.com
+Cc:     akpm@linux-foundation.org, vishal.l.verma@intel.com,
+        dave.jiang@intel.com, keith.busch@intel.com, ira.weiny@intel.com,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] nvdimm: fix compilation warnings with W=1
+Date:   Thu, 16 May 2019 12:04:53 -0400
+Message-Id: <1558022693-9631-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.68-rc1 review patch.  If anyone has any objections, please let me know.
+Several places (dimm_devs.c, core.c etc) include label.h but only
+label.c uses NSINDEX_SIGNATURE, so move its definition to label.c
+instead.
 
-------------------
+In file included from drivers/nvdimm/dimm_devs.c:23:
+drivers/nvdimm/label.h:41:19: warning: 'NSINDEX_SIGNATURE' defined but
+not used [-Wunused-const-variable=]
 
-From: Petr Mladek <pmladek@suse.cz>
+Also, some places abuse "/**" which is only reserved for the kernel-doc.
 
-commit 9b20a352d78a7651aa68a9220f77ccb03009d892 upstream.
+drivers/nvdimm/bus.c:648: warning: cannot understand function prototype:
+'struct attribute_group nd_device_attribute_group = '
+drivers/nvdimm/bus.c:677: warning: cannot understand function prototype:
+'struct attribute_group nd_numa_attribute_group = '
 
-It is just a small optimization that allows to replace few
-occurrences of within_module_init() || within_module_core()
-with a single call.
+Those are just some member assignments for the "struct attribute_group"
+instances and it can't be expressed in the kernel-doc.
 
-Signed-off-by: Petr Mladek <pmladek@suse.cz>
-Signed-off-by: Rusty Russell <rusty@rustcorp.com.au>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- include/linux/module.h |  5 +++++
- kernel/module.c        | 12 ++++--------
- 2 files changed, 9 insertions(+), 8 deletions(-)
+ drivers/nvdimm/bus.c   | 4 ++--
+ drivers/nvdimm/label.c | 2 ++
+ drivers/nvdimm/label.h | 2 --
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -408,6 +408,11 @@ static inline int within_module_init(uns
- 	       addr < (unsigned long)mod->module_init + mod->init_size;
+diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+index 7ff684159f29..2eb6a6cfe9e4 100644
+--- a/drivers/nvdimm/bus.c
++++ b/drivers/nvdimm/bus.c
+@@ -642,7 +642,7 @@ static ssize_t devtype_show(struct device *dev, struct device_attribute *attr,
+ 	NULL,
+ };
+ 
+-/**
++/*
+  * nd_device_attribute_group - generic attributes for all devices on an nd bus
+  */
+ struct attribute_group nd_device_attribute_group = {
+@@ -671,7 +671,7 @@ static umode_t nd_numa_attr_visible(struct kobject *kobj, struct attribute *a,
+ 	return a->mode;
  }
  
-+static inline int within_module(unsigned long addr, const struct module *mod)
-+{
-+	return within_module_init(addr, mod) || within_module_core(addr, mod);
-+}
+-/**
++/*
+  * nd_numa_attribute_group - NUMA attributes for all devices on an nd bus
+  */
+ struct attribute_group nd_numa_attribute_group = {
+diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
+index 2030805aa216..edf278067e72 100644
+--- a/drivers/nvdimm/label.c
++++ b/drivers/nvdimm/label.c
+@@ -25,6 +25,8 @@
+ static guid_t nvdimm_pfn_guid;
+ static guid_t nvdimm_dax_guid;
+ 
++static const char NSINDEX_SIGNATURE[] = "NAMESPACE_INDEX\0";
 +
- /* Search for module by name: must hold module_mutex. */
- struct module *find_module(const char *name);
+ static u32 best_seq(u32 a, u32 b)
+ {
+ 	a &= NSINDEX_SEQ_MASK;
+diff --git a/drivers/nvdimm/label.h b/drivers/nvdimm/label.h
+index e9a2ad3c2150..4bb7add39580 100644
+--- a/drivers/nvdimm/label.h
++++ b/drivers/nvdimm/label.h
+@@ -38,8 +38,6 @@ enum {
+ 	ND_NSINDEX_INIT = 0x1,
+ };
  
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -3489,8 +3489,7 @@ const char *module_address_lookup(unsign
- 	list_for_each_entry_rcu(mod, &modules, list) {
- 		if (mod->state == MODULE_STATE_UNFORMED)
- 			continue;
--		if (within_module_init(addr, mod) ||
--		    within_module_core(addr, mod)) {
-+		if (within_module(addr, mod)) {
- 			if (modname)
- 				*modname = mod->name;
- 			ret = get_ksymbol(mod, addr, size, offset);
-@@ -3514,8 +3513,7 @@ int lookup_module_symbol_name(unsigned l
- 	list_for_each_entry_rcu(mod, &modules, list) {
- 		if (mod->state == MODULE_STATE_UNFORMED)
- 			continue;
--		if (within_module_init(addr, mod) ||
--		    within_module_core(addr, mod)) {
-+		if (within_module(addr, mod)) {
- 			const char *sym;
- 
- 			sym = get_ksymbol(mod, addr, NULL, NULL);
-@@ -3540,8 +3538,7 @@ int lookup_module_symbol_attrs(unsigned
- 	list_for_each_entry_rcu(mod, &modules, list) {
- 		if (mod->state == MODULE_STATE_UNFORMED)
- 			continue;
--		if (within_module_init(addr, mod) ||
--		    within_module_core(addr, mod)) {
-+		if (within_module(addr, mod)) {
- 			const char *sym;
- 
- 			sym = get_ksymbol(mod, addr, size, offset);
-@@ -3804,8 +3801,7 @@ struct module *__module_address(unsigned
- 	list_for_each_entry_rcu(mod, &modules, list) {
- 		if (mod->state == MODULE_STATE_UNFORMED)
- 			continue;
--		if (within_module_core(addr, mod)
--		    || within_module_init(addr, mod))
-+		if (within_module(addr, mod))
- 			return mod;
- 	}
- 	return NULL;
+-static const char NSINDEX_SIGNATURE[] = "NAMESPACE_INDEX\0";
+-
+ /**
+  * struct nd_namespace_index - label set superblock
+  * @sig: NAMESPACE_INDEX\0
+-- 
+1.8.3.1
 
