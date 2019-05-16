@@ -2,179 +2,100 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA564C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDCD7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65DAF2089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0BE82089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:01:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bSrlzhhM"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="49Giz7gV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfEPIBZ (ORCPT
+        id S1727050AbfEPIBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 04:01:25 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34486 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726537AbfEPIBY (ORCPT
+        Thu, 16 May 2019 04:01:12 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:40522 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbfEPIBK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 04:01:24 -0400
-Received: by mail-pg1-f194.google.com with SMTP id c13so1174243pgt.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:01:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Sq2YROOG33D+u2oBi0Lgr2XAulwfC9GYtiKatyA1xOs=;
-        b=bSrlzhhMwBpQBQXKjnZlbAg/vnr5pwaiYuEH8pV1TQZNY2YiptYkc4UTPWn/fo6jzb
-         b+or5p2NMw7B793zcbrKaL0IBpygyfctAYMA7wCEMNC3z2KKRvtdmqWdv9aYzAk9Wclr
-         HjMnX0hwdwGAteJiGeAvzgEhTpMnLF09sRQxFRStRTNYC8fciBGNTX0scVs9c898jcTd
-         ks8GoEk8V5EaJc7U9vxSbTcYl3YG3oI40aAlLmaD2v2aMNb3kblkfr5PjhAC8FGxSzvh
-         GRe3Fa7E5NMAUyD3hNZG7If3s2bIF/WdZ18KpXfwKa30Rx/YCttyfXOGVNA+SH88eiXI
-         IZJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Sq2YROOG33D+u2oBi0Lgr2XAulwfC9GYtiKatyA1xOs=;
-        b=BG+RXfdHjYgXs7vgwh+i6+7qHocSPinHzS95DlkTttnceKabbZGzjae1o/rcW+MHr6
-         RFPB8DxtiguGGXgunU1SnDEGGNE6Aav5sylzEud+Db+Dmzy6DOJCaV0Z5iUZS9NgWrGv
-         HpjLyl8LatcdV74ehgfNrl6mwnQ+HIDZwI3z8JQBWE9a11G+UF7uBktuFJ4iKvI24diq
-         yf9PEcyw9iHeMin5N33m+7cgdWiDSEynl7o3Rf2QSe273A68heEjXsRc6xrH2OOnOmbh
-         tg79bY8Ol/sWKjVdMLl6T66fJVL6vLzQVGLGRQt+ptpSZgGsNzZyOpu47I+9GJMMCeQm
-         WHng==
-X-Gm-Message-State: APjAAAUlofGHZwY+Ku2eBbUiS00FsXuTI7wyAuLks2ZT4lsbnldnNDTK
-        Mhu2Ynix9rBnkm5jZiYrCqM=
-X-Google-Smtp-Source: APXvYqzn+wmwK6je9NEpVlpTtVOb7EuTOcpZwZSK3MkffSWea6Mn3gSfhlw9lL6kbDSseFeX3bnI1w==
-X-Received: by 2002:aa7:8e0d:: with SMTP id c13mr53533990pfr.193.1557993683860;
-        Thu, 16 May 2019 01:01:23 -0700 (PDT)
-Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id p7sm2051471pgb.92.2019.05.16.01.01.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 01:01:23 -0700 (PDT)
-From:   Yuyang Du <duyuyang@gmail.com>
-To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
-Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
-        tglx@linutronix.de, boqun.feng@gmail.com, paulmck@linux.ibm.com,
-        linux-kernel@vger.kernel.org, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v2 17/17] locking/lockdep: Remove irq-safe to irq-unsafe read check
-Date:   Thu, 16 May 2019 16:00:15 +0800
-Message-Id: <20190516080015.16033-18-duyuyang@gmail.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
-In-Reply-To: <20190516080015.16033-1-duyuyang@gmail.com>
-References: <20190516080015.16033-1-duyuyang@gmail.com>
+        Thu, 16 May 2019 04:01:10 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4G7sZNd186504;
+        Thu, 16 May 2019 08:01:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=XjxXgAqaqUjsrzcHSUSublBDZN9GxzyE8r5lZWsNZpQ=;
+ b=49Giz7gVN20USfU7zLrTgt14zEz69jubVn/xf4Sntz+VLczeOCXM3llaHmEzBY1zIO+O
+ QGjfUNLLZMo6kkCzCFO7PjceYW9aUkulm4S8b2xG1ckHqnPrTVvfXv27zCkVhOgmhz6D
+ ZNBwhBxLHTpArGxIf/1DorxMLk2DoDley9tNJhlXGZNhNmpGr0/NPVPWosOc9r3sSdxz
+ pkh9LhabA6FSzvvFPvkWDj9s6KRRlHsuQNjUdwKLaYLTkAFUzLUTIMGC2FOdx81kopsn
+ MqMmtzToNz/0o/1RXEAMzD/UHYxmdq88TQ50kT089eXhvMwlEoHNeuTITPKcHFzuO8UW fQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2sdq1qsgh0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 May 2019 08:01:04 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4G7xqr1173721;
+        Thu, 16 May 2019 08:01:04 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2sggdt1snv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 May 2019 08:01:04 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4G813m4016960;
+        Thu, 16 May 2019 08:01:03 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 May 2019 01:01:02 -0700
+Date:   Thu, 16 May 2019 11:00:56 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hardik Singh Rathore <hardiksingh.k@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: rtl8723bs: core: rtw_recv: fix warning
+ Comparison to NULL
+Message-ID: <20190516080056.GH31203@kadam>
+References: <20190515174536.GA4965@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190515174536.GA4965@hari-Inspiron-1545>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9258 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905160054
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9258 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905160054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have a lockdep warning:
+On Wed, May 15, 2019 at 11:15:36PM +0530, Hariprasad Kelam wrote:
+> @@ -1042,7 +1042,7 @@ sint sta2ap_data_frame(
+>  		}
+>  
+>  		*psta = rtw_get_stainfo(pstapriv, pattrib->src);
+> -		if (*psta == NULL) {
+> +		if (!*psta == NULL) {
+                    ^^^^^^^^^^^^^^
+It's surprising that this didn't cause some kind of warning somewhere...
 
-  ========================================================
-  WARNING: possible irq lock inversion dependency detected
-  5.1.0-rc7+ #141 Not tainted
-  --------------------------------------------------------
-  kworker/8:2/328 just changed the state of lock:
-  0000000007f1a95b (&(&host->lock)->rlock){-...}, at: ata_bmdma_interrupt+0x27/0x1c0 [libata]
-  but this lock took another, HARDIRQ-READ-unsafe lock in the past:
-   (&trig->leddev_list_lock){.+.?}
+>  			RT_TRACE(_module_rtl871x_recv_c_, _drv_err_, ("can't get psta under AP_MODE; drop pkt\n"));
+>  			DBG_871X("issue_deauth to sta =" MAC_FMT " for the reason(7)\n", MAC_ARG(pattrib->src));
+>  
 
-and interrupts could create inverse lock ordering between them.
-
-other info that might help us debug this:
-   Possible interrupt unsafe locking scenario:
-
-         CPU0                    CPU1
-         ----                    ----
-    lock(&trig->leddev_list_lock);
-                                 local_irq_disable();
-                                 lock(&(&host->lock)->rlock);
-                                 lock(&trig->leddev_list_lock);
-    <Interrupt>
-      lock(&(&host->lock)->rlock);
-
- *** DEADLOCK ***
-
-This splat is a false positive, which is enabled by the addition of
-recursive read locks in the graph. Specifically, trig->leddev_list_lock is a
-rwlock_t type, which was not in the graph before recursive read lock support
-was added in lockdep.
-
-This false positve is caused by a "false-positive" check in IRQ usage check.
-
-In mark_lock_irq(), the following checks are currently performed:
-
-   ----------------------------------
-  |   ->      | unsafe | read unsafe |
-  |----------------------------------|
-  | safe      |  F  B  |    F* B*    |
-  |----------------------------------|
-  | read safe |  F* B* |      -      |
-   ----------------------------------
-
-Where:
-F: check_usage_forwards
-B: check_usage_backwards
-*: check enabled by STRICT_READ_CHECKS
-
-But actually the safe -> unsafe read dependency does not create a deadlock
-scenario.
-
-Fix this by simply removing those two checks, and since safe read -> unsafe
-is indeed a problem, these checks are not actually strict per se, so remove
-the macro STRICT_READ_CHECKS, and we have the following checks:
-
-   ----------------------------------
-  |   ->      | unsafe | read unsafe |
-  |----------------------------------|
-  | safe      |  F  B  |      -      |
-  |----------------------------------|
-  | read safe |  F  B  |      -      |
-   ----------------------------------
-
-Signed-off-by: Yuyang Du <duyuyang@gmail.com>
----
- kernel/locking/lockdep.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index cd1d515..bc36fbf 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -3450,8 +3450,6 @@ static int SOFTIRQ_verbose(struct lock_class *class)
- 	return 0;
- }
- 
--#define STRICT_READ_CHECKS	1
--
- static int (*state_verbose_f[])(struct lock_class *class) = {
- #define LOCKDEP_STATE(__STATE) \
- 	__STATE##_verbose,
-@@ -3497,7 +3495,7 @@ typedef int (*check_usage_f)(struct task_struct *, struct held_lock *,
- 	 * Validate that the lock dependencies don't have conflicting usage
- 	 * states.
- 	 */
--	if ((!read || STRICT_READ_CHECKS) &&
-+	if ((!read || !dir) &&
- 			!usage(curr, this, excl_bit, state_name(new_bit & ~LOCK_USAGE_READ_MASK)))
- 		return 0;
- 
-@@ -3508,7 +3506,7 @@ typedef int (*check_usage_f)(struct task_struct *, struct held_lock *,
- 		if (!valid_state(curr, this, new_bit, excl_bit + LOCK_USAGE_READ_MASK))
- 			return 0;
- 
--		if (STRICT_READ_CHECKS &&
-+		if (dir &&
- 			!usage(curr, this, excl_bit + LOCK_USAGE_READ_MASK,
- 				state_name(new_bit + LOCK_USAGE_READ_MASK)))
- 			return 0;
--- 
-1.8.3.1
-
+regards,
+dan carpenter
