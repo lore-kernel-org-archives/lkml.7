@@ -2,98 +2,138 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E5AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA8D1C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E92020657
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A9A920657
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:33:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="H1lmsrwU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbfEPPdP (ORCPT
+        id S1727856AbfEPPd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:33:15 -0400
-Received: from mslow2.mail.gandi.net ([217.70.178.242]:54556 "EHLO
-        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727375AbfEPPdO (ORCPT
+        Thu, 16 May 2019 11:33:56 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:12126 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfEPPd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:33:14 -0400
-Received: from relay12.mail.gandi.net (unknown [217.70.178.232])
-        by mslow2.mail.gandi.net (Postfix) with ESMTP id 009DE3AECE2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 14:55:59 +0000 (UTC)
-Received: from localhost.localdomain (aaubervilliers-681-1-43-46.w90-88.abo.wanadoo.fr [90.88.161.46])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id C8D2E200017;
-        Thu, 16 May 2019 14:55:50 +0000 (UTC)
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     Eric Anholt <eric@anholt.net>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Eben Upton <eben@raspberrypi.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH v9 0/4] drm/vc4: Binner BO management improvements
-Date:   Thu, 16 May 2019 16:55:40 +0200
-Message-Id: <20190516145544.29051-1-paul.kocialkowski@bootlin.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 16 May 2019 11:33:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1558020835; x=1589556835;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=P8jqjwkHko4C19ZuKeM0zN8et9BgjZaAAClqVK/GOOk=;
+  b=H1lmsrwUh1tWkTmrFz6U+gJF51GSk0O2t0xlIHfD0KGdBF7lTlTLbwvf
+   BujOms7kSLQ4kIlUqyb1zZyH7EUpaAi82UlcR+gbtvRMo/HcljxID1koa
+   Yp+yA9zpNs5LliE/V2t+eNswyjvrF8CVeRsvdkYCnms6hqPQbDaZF5qIv
+   E=;
+X-IronPort-AV: E=Sophos;i="5.60,477,1549929600"; 
+   d="scan'208";a="805029848"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 16 May 2019 15:33:53 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x4GFXq3O080775
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Thu, 16 May 2019 15:33:52 GMT
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 16 May 2019 15:33:51 +0000
+Received: from macbook-2.local (10.43.161.67) by EX13D20UWC001.ant.amazon.com
+ (10.43.162.244) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 16 May
+ 2019 15:33:50 +0000
+Subject: Re: [PATCH v2 2/2] KVM: x86: Implement the arch-specific hook to
+ report the VM UUID
+To:     "Sironi, Filippo" <sironi@amazon.de>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "vasu.srinivasan@oracle.com" <vasu.srinivasan@oracle.com>
+References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-3-git-send-email-sironi@amazon.de>
+ <f51a6a84-b21c-ab75-7e30-bfbe2ac6b98b@amazon.com>
+ <7395EFE9-0B38-4B61-81D4-E8450561AABE@amazon.de>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <8c6a2de2-f080-aad5-16af-c4a5eafb31af@amazon.com>
+Date:   Thu, 16 May 2019 08:33:49 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <7395EFE9-0B38-4B61-81D4-E8450561AABE@amazon.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.43.161.67]
+X-ClientProxiedBy: EX13P01UWB004.ant.amazon.com (10.43.161.213) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes sinve v8:
-* Added collected Reviewed-by;
-* Fixed up another problematic case as discussed on v8.
 
-Changes since v7:
-* Moved the used bool to vc4_v3d_bin_bo_get in order to check it locked and
-  avoid a possible race condition;
+On 16.05.19 08:25, Sironi, Filippo wrote:
+>> On 16. May 2019, at 15:56, Graf, Alexander <graf@amazon.com> wrote:
+>>
+>> On 14.05.19 08:16, Filippo Sironi wrote:
+>>> On x86, we report the UUID in DMI System Information (i.e., DMI Type 1)
+>>> as VM UUID.
+>>>
+>>> Signed-off-by: Filippo Sironi <sironi@amazon.de>
+>>> ---
+>>> arch/x86/kernel/kvm.c | 7 +++++++
+>>> 1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+>>> index 5c93a65ee1e5..441cab08a09d 100644
+>>> --- a/arch/x86/kernel/kvm.c
+>>> +++ b/arch/x86/kernel/kvm.c
+>>> @@ -25,6 +25,7 @@
+>>> #include <linux/kernel.h>
+>>> #include <linux/kvm_para.h>
+>>> #include <linux/cpu.h>
+>>> +#include <linux/dmi.h>
+>>> #include <linux/mm.h>
+>>> #include <linux/highmem.h>
+>>> #include <linux/hardirq.h>
+>>> @@ -694,6 +695,12 @@ bool kvm_para_available(void)
+>>> }
+>>> EXPORT_SYMBOL_GPL(kvm_para_available);
+>>>
+>>> +const char *kvm_para_get_uuid(void)
+>>> +{
+>>> +	return dmi_get_system_info(DMI_PRODUCT_UUID);
+>> This adds a new dependency on CONFIG_DMI. Probably best to guard it with
+>> an #if IS_ENABLED(CONFIG_DMI).
+>>
+>> The concept seems sound though.
+>>
+>> Alex
+> include/linux/dmi.h contains a dummy implementation of
+> dmi_get_system_info that returns NULL if CONFIG_DMI isn't defined.
 
-Changes since v6:
-* Removed vc4_v3d_bin_bo_put from error paths;
-* Added WARN_ON_ONCE when no bin BO at refcount release.
 
-Changes since v5:
-* Fix more locking mistakes;
-* Introduce get/put helpers;
-* Grabbed a reference when submitting an exec job with a binner slot.
-* Addressed misc comments.
+Oh, I missed that bit. Awesome! Less work :).
 
-Changes since v4:
-* Used a kref on the binner bo instead of firstopen/lastclose;
-* Added a mutex to prevent race conditions;
-* Took care of enabling the OOM interrupt when we have a binner BO allocated.
 
-Changes since v3:
-* Split changes into more commits when possible;
-* Reworked binner bo alloc condition as discussed.
+> This is enough unless we decide to return "<denied>" like in Xen.
+> If then, we can have the check in the generic code to turn NULL
+> into "<denied>".
 
-Changes since v2:
-* Removed deprecated sentence about fristopen;
-* Added collected Reviewed-By tags.
 
-Changes since v1:
-* Squashed the two final patches into one.
+Yes. Waiting for someone from Xen to answer this :)
 
-Paul Kocialkowski (4):
-  drm/vc4: Reformat and the binner bo allocation helper
-  drm/vc4: Check for V3D before binner bo alloc
-  drm/vc4: Check for the binner bo before handling OOM interrupt
-  drm/vc4: Allocate binner bo when starting to use the V3D
 
- drivers/gpu/drm/vc4/vc4_bo.c  | 31 ++++++++++++++-
- drivers/gpu/drm/vc4/vc4_drv.c |  6 +++
- drivers/gpu/drm/vc4/vc4_drv.h | 14 +++++++
- drivers/gpu/drm/vc4/vc4_gem.c | 11 ++++++
- drivers/gpu/drm/vc4/vc4_irq.c | 20 ++++++++--
- drivers/gpu/drm/vc4/vc4_v3d.c | 72 ++++++++++++++++++++++++++---------
- 6 files changed, 132 insertions(+), 22 deletions(-)
+Alex
 
--- 
-2.21.0
 
