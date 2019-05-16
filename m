@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A8FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C98C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60EB620815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3B3320815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728050AbfEPQEp (ORCPT
+        id S1726460AbfEPQEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:04:45 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42436 "EHLO
+        Thu, 16 May 2019 12:04:47 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42438 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726681AbfEPP6m (ORCPT
+        by vger.kernel.org with ESMTP id S1726665AbfEPP6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:58:42 -0400
+        Thu, 16 May 2019 11:58:41 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImD-0006yx-J0; Thu, 16 May 2019 16:58:37 +0100
+        id 1hRImD-0006yv-Dt; Thu, 16 May 2019 16:58:37 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImC-0001Nk-UQ; Thu, 16 May 2019 16:58:36 +0100
+        id 1hRImC-0001Nh-Sx; Thu, 16 May 2019 16:58:36 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,18 +35,18 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
         "Peter Zijlstra" <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        "Jason Baron" <jbaron@akamai.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
+        "Ingo Molnar" <mingo@kernel.org>,
         "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Jonathan Corbet" <corbet@lwn.net>
+        "H. Peter Anvin" <hpa@zytor.com>
 Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.223557237@decadent.org.uk>
+Message-ID: <lsq.1558022133.153636021@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 18/86] locking/static_keys: Fix a silly typo
+Subject: [PATCH 3.16 17/86] jump_label/x86: Work around asm build bug on
+ older/backported GCCs
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -60,51 +60,69 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jonathan Corbet <corbet@lwn.net>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit edcd591c77a48da753456f92daf8bb50fe9bac93 upstream.
+commit d420acd816c07c7be31bd19d09cbcb16e5572fa6 upstream.
 
-Commit:
+Boris reported that gcc version 4.4.4 20100503 (Red Hat
+4.4.4-2) fails to build linux-next kernels that have
+this fresh commit via the locking tree:
 
-  412758cb2670 ("jump label, locking/static_keys: Update docs")
+  11276d5306b8 ("locking/static_keys: Add a new static_key interface")
 
-introduced a typo that might as well get fixed.
+The problem appears to be that even though @key and @branch are
+compile time constants, it doesn't see the following expression
+as an immediate value:
 
-Signed-off-by: Jonathan Corbet <corbet@lwn.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jason Baron <jbaron@akamai.com>
+   &((char *)key)[branch]
+
+More recent GCCs don't appear to have this problem.
+
+In particular, Red Hat backported the 'asm goto' feature into 4.4,
+'normal' 4.4 compilers will not have this feature and thus not
+run into this asm.
+
+The workaround is to supply both values to the asm as immediates
+and do the addition in asm.
+
+Suggested-by: H. Peter Anvin <hpa@zytor.com>
+Reported-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Tested-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20150907131803.54c027e1@lwn.net
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- Documentation/static-keys.txt | 2 +-
- include/linux/jump_label.h    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/jump_label.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/Documentation/static-keys.txt
-+++ b/Documentation/static-keys.txt
-@@ -16,7 +16,7 @@ The updated API replacements are:
- DEFINE_STATIC_KEY_TRUE(key);
- DEFINE_STATIC_KEY_FALSE(key);
- static_key_likely()
--statick_key_unlikely()
-+static_key_unlikely()
+--- a/arch/x86/include/asm/jump_label.h
++++ b/arch/x86/include/asm/jump_label.h
+@@ -22,9 +22,9 @@ static __always_inline bool arch_static_
+ 		".byte " __stringify(STATIC_KEY_INIT_NOP) "\n\t"
+ 		".pushsection __jump_table,  \"aw\" \n\t"
+ 		_ASM_ALIGN "\n\t"
+-		_ASM_PTR "1b, %l[l_yes], %c0 \n\t"
++		_ASM_PTR "1b, %l[l_yes], %c0 + %c1 \n\t"
+ 		".popsection \n\t"
+-		: :  "i" (&((char *)key)[branch]) : : l_yes);
++		: :  "i" (key), "i" (branch) : : l_yes);
  
- 0) Abstract
+ 	return false;
+ l_yes:
+@@ -38,9 +38,9 @@ static __always_inline bool arch_static_
+ 		"2:\n\t"
+ 		".pushsection __jump_table,  \"aw\" \n\t"
+ 		_ASM_ALIGN "\n\t"
+-		_ASM_PTR "1b, %l[l_yes], %c0 \n\t"
++		_ASM_PTR "1b, %l[l_yes], %c0 + %c1 \n\t"
+ 		".popsection \n\t"
+-		: :  "i" (&((char *)key)[branch]) : : l_yes);
++		: :  "i" (key), "i" (branch) : : l_yes);
  
---- a/include/linux/jump_label.h
-+++ b/include/linux/jump_label.h
-@@ -22,7 +22,7 @@
-  * DEFINE_STATIC_KEY_TRUE(key);
-  * DEFINE_STATIC_KEY_FALSE(key);
-  * static_key_likely()
-- * statick_key_unlikely()
-+ * static_key_unlikely()
-  *
-  * Jump labels provide an interface to generate dynamic branches using
-  * self-modifying code. Assuming toolchain and architecture support, if we
+ 	return false;
+ l_yes:
 
