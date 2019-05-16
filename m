@@ -6,65 +6,57 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CACAC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D78BDC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C07520833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B294A2087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:23:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfEPOXp (ORCPT
+        id S1727279AbfEPOXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:23:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55898 "EHLO mx1.redhat.com"
+        Thu, 16 May 2019 10:23:52 -0400
+Received: from verein.lst.de ([213.95.11.211]:59774 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726692AbfEPOXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:23:45 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D2AD93083392;
-        Thu, 16 May 2019 14:23:44 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F70F5D6A9;
-        Thu, 16 May 2019 14:23:42 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 20E57220386; Thu, 16 May 2019 10:23:42 -0400 (EDT)
-Date:   Thu, 16 May 2019 10:23:42 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>
-Subject: Re: [PATCH v2 12/30] dax: remove block device dependencies
-Message-ID: <20190516142342.GA31638@redhat.com>
-References: <20190515192715.18000-1-vgoyal@redhat.com>
- <20190515192715.18000-13-vgoyal@redhat.com>
- <CAPcyv4i_-ri=w0jYJ4WjK4QD9E8pMzkGQNdMbt9H_nawDqYD3A@mail.gmail.com>
+        id S1726692AbfEPOXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 10:23:50 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id BB4EF68B02; Thu, 16 May 2019 16:23:27 +0200 (CEST)
+Date:   Thu, 16 May 2019 16:23:27 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>, Christoph Hellwig <hch@lst.de>,
+        linux-kernel@vger.kernel.org, Steven Price <steven.price@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: Bad virt_to_phys since commit 54c7a8916a887f35
+Message-ID: <20190516142327.GA23471@lst.de>
+References: <20190516133820.GA43059@lakrids.cambridge.arm.com> <20190516134105.GB43059@lakrids.cambridge.arm.com> <20190516141314.GF19122@rapoport-lnx> <20190516142119.GD43059@lakrids.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPcyv4i_-ri=w0jYJ4WjK4QD9E8pMzkGQNdMbt9H_nawDqYD3A@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 16 May 2019 14:23:45 +0000 (UTC)
+In-Reply-To: <20190516142119.GD43059@lakrids.cambridge.arm.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 05:21:51PM -0700, Dan Williams wrote:
+On Thu, May 16, 2019 at 03:21:19PM +0100, Mark Rutland wrote:
+> >  void __weak free_initrd_mem(unsigned long start, unsigned long end)
+> >  {
+> > +       if (!start)
+> > +               return;
+> > +
+> >         free_reserved_area((void *)start, (void *)end, POISON_FREE_INITMEM,
+> >                         "initrd");
+> >  }
+> 
+> I think this should work, given Steven's patch checks the same thing.
+> 
+> I don't have a preference as to which patch should be taken, so I'll
+> leave that to Christoph.
 
-[..]
-> It just seems to me that we should stop pretending that the
-> filesystem-dax facility requires block devices and try to move this
-> functionality to generically use a dax device across all interfaces.
-
-That sounds reasonable and will help with our use case where we don't
-have the block device at all.
-
-Vivek
+We still have plenty of architectures not using the generic
+free_initrd_mem, so checking it in the caller gives us better
+coverage.
