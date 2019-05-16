@@ -2,136 +2,81 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A379C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F1AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75A4320657
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD06F20657
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfEPNym (ORCPT
+        id S1727634AbfEPNyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:54:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57527 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727533AbfEPNym (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:54:42 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C4ED73082B22;
-        Thu, 16 May 2019 13:54:41 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id CF85D5D6A9;
-        Thu, 16 May 2019 13:54:37 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu, 16 May 2019 15:54:40 +0200 (CEST)
-Date:   Thu, 16 May 2019 15:54:36 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Daniel Colascione <dancol@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tim Murray <timmurray@google.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        linux-mm <linux-mm@kvack.org>,
-        kernel-team <kernel-team@android.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Kees Cook <keescook@chromium.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [RFC] simple_lmk: Introduce Simple Low Memory Killer for Android
-Message-ID: <20190516135435.GA22564@redhat.com>
-References: <20190320015249.GC129907@google.com>
- <20190507021622.GA27300@sultan-box.localdomain>
- <20190507153154.GA5750@redhat.com>
- <20190507163520.GA1131@sultan-box.localdomain>
- <20190509155646.GB24526@redhat.com>
- <20190509183353.GA13018@sultan-box.localdomain>
- <20190510151024.GA21421@redhat.com>
- <20190513164555.GA30128@sultan-box.localdomain>
- <20190515145831.GD18892@redhat.com>
- <20190515172728.GA14047@sultan-box.localdomain>
+        Thu, 16 May 2019 09:54:50 -0400
+Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:55164 "EHLO
+        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbfEPNyt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:54:49 -0400
+X-Greylist: delayed 441 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 May 2019 09:54:49 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 5EC873F38D;
+        Thu, 16 May 2019 15:47:27 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id JVcPQQ_ePVLB; Thu, 16 May 2019 15:47:27 +0200 (CEST)
+Received: from localhost (h-41-252.A163.priv.bahnhof.se [46.59.41.252])
+        (Authenticated sender: mb547485)
+        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 60D9F3F4C2;
+        Thu, 16 May 2019 15:47:26 +0200 (CEST)
+Date:   Thu, 16 May 2019 15:47:25 +0200
+From:   Fredrik Noring <noring@nocrew.org>
+To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>, "hch@lst.de" <hch@lst.de>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "marex@denx.de" <marex@denx.de>,
+        "JuergenUrban@gmx.de" <JuergenUrban@gmx.de>,
+        Leo Li <leoyang.li@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH v2 0/3] prerequisites for device reserved local mem
+ rework
+Message-ID: <20190516134725.GA53952@sx9>
+References: <20190514143807.7745-1-laurentiu.tudor@nxp.com>
+ <9d34015d-c219-179b-3141-4b0de3530ac3@arm.com>
+ <20190514182931.GA2559@sx9>
+ <0e5f3b86-7a80-eec7-691b-34a123194208@nxp.com>
+ <20190515162858.GB17162@sx9>
+ <0fea5fa7-e2b0-b34d-3bf8-976007df2dc2@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190515172728.GA14047@sultan-box.localdomain>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 16 May 2019 13:54:42 +0000 (UTC)
+In-Reply-To: <0fea5fa7-e2b0-b34d-3bf8-976007df2dc2@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/15, Sultan Alsawaf wrote:
->
-> On Wed, May 15, 2019 at 04:58:32PM +0200, Oleg Nesterov wrote:
-> > Could you explain in detail what exactly did you do and what do you see in dmesg?
-> >
-> > Just in case, lockdep complains only once, print_circular_bug() does debug_locks_off()
-> > so it it has already reported another false positive __lock_acquire() will simply
-> > return after that.
-> >
-> > Oleg.
->
-> This is what I did:
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> index 774ab79d3ec7..009e7d431a88 100644
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -3078,6 +3078,7 @@ static int __lock_acquire(struct lockdep_map *lock, unsigned int subclass,
->         int class_idx;
->         u64 chain_key;
->
-> +       BUG_ON(!debug_locks || !prove_locking);
->         if (unlikely(!debug_locks))
->                 return 0;
->
-> diff --git a/lib/debug_locks.c b/lib/debug_locks.c
-> index 124fdf238b3d..4003a18420fb 100644
-> --- a/lib/debug_locks.c
-> +++ b/lib/debug_locks.c
-> @@ -37,6 +37,7 @@ EXPORT_SYMBOL_GPL(debug_locks_silent);
->   */
->  int debug_locks_off(void)
->  {
-> +       return 0;
->         if (debug_locks && __debug_locks_off()) {
->                 if (!debug_locks_silent) {
->                         console_verbose();
+Hi Laurentiu,
 
-OK, this means that debug_locks_off() always returns 0, as if debug_locks was already
-cleared.
+> > The kernel oopses with "unable to handle kernel paging request at virtual
+> > address 000aba0b" in hcd_alloc_coherent via usb_hcd_map_urb_for_dma. 
+> 
+> By any chance, does this address looks like the dma_addr that the device 
+> should target?
 
-Thus print_deadlock_bug() will do nothing, it does
+Yes, that looks like a typical device address suitable for its DMA.
 
-	if (!debug_locks_off_graph_unlock() || debug_locks_silent)
-		return 0;
+> Actually, I think I'm misusing genalloc and also it appears that i need 
+> to add a mapping on the phys address. So my plan is to change the 
+> "unsigned long virt" to be the void * returned by the mapping operation 
+> and the phys_addr_t be the dma_addr_t. I'll return with a patch.
 
-iow this means that even if lockdep finds a problem, the problem won't be reported.
+Great, I'm happy to test your next patch revision.
 
-> [    1.492128] BUG: key 0000000000000000 not in .data!
-> [    1.492141] BUG: key 0000000000000000 not in .data!
-> [    1.492152] BUG: key 0000000000000000 not in .data!
-> [    1.492228] BUG: key 0000000000000000 not in .data!
-> [    1.492238] BUG: key 0000000000000000 not in .data!
-> [    1.492248] BUG: key 0000000000000000 not in .data!
-
-I guess this is lockdep_init_map() which does printk("BUG:") itself, but due to your
-change above it doesn't do WARN(1) and thus there is no call trace.
-
-Oleg.
-
+Fredrik
