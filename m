@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DD9C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8705C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5E8920815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54A720815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfEPQE7 (ORCPT
+        id S1726987AbfEPQE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:04:59 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42406 "EHLO
+        Thu, 16 May 2019 12:04:57 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42426 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726638AbfEPP6l (ORCPT
+        by vger.kernel.org with ESMTP id S1726666AbfEPP6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 May 2019 11:58:41 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImD-0006ys-63; Thu, 16 May 2019 16:58:37 +0100
+        id 1hRImD-0006zA-SW; Thu, 16 May 2019 16:58:37 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImC-0001NL-PG; Thu, 16 May 2019 16:58:36 +0100
+        id 1hRImD-0001O5-3H; Thu, 16 May 2019 16:58:37 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,23 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Brian Gerst" <brgerst@gmail.com>,
+        "Frederic Weisbecker" <fweisbec@gmail.com>,
         "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Andy Lutomirski" <luto@amacapital.net>,
+        "Denys Vlasenko" <dvlasenk@redhat.com>,
+        "Ingo Molnar" <mingo@kernel.org>,
         "Thomas Gleixner" <tglx@linutronix.de>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        "Ingo Molnar" <mingo@kernel.org>
+        "Borislav Petkov" <bp@alien8.de>,
+        "Peter Zijlstra" <peterz@infradead.org>
 Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.334738675@decadent.org.uk>
+Message-ID: <lsq.1558022133.193580430@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 13/86] jump_label: Add jump_entry_key() helper
+Subject: [PATCH 3.16 22/86] x86/asm: Add asm macros for static keys/jump
+ labels
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,69 +65,111 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Andy Lutomirski <luto@kernel.org>
 
-commit 7dcfd915bae51571bcc339d8e3dda027287880e5 upstream.
+commit 2671c3e4fe2a34bd9bf2eecdf5d1149d4b55dbdf upstream.
 
-Avoid some casting with a helper, also prepares the way for
-overloading the LSB of jump_entry::key.
+Unfortunately, we can only do this if HAVE_JUMP_LABEL.  In
+principle, we could do some serious surgery on the core jump
+label infrastructure to keep the patch infrastructure available
+on x86 on all builds, but that's probably not worth it.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
+Implementing the macros using a conditional branch as a fallback
+seems like a bad idea: we'd have to clobber flags.
+
+This limitation can't cause silent failures -- trying to include
+asm/jump_label.h at all on a non-HAVE_JUMP_LABEL kernel will
+error out.  The macro's users are responsible for handling this
+issue themselves.
+
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Denys Vlasenko <dvlasenk@redhat.com>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
+Link: http://lkml.kernel.org/r/63aa45c4b692e8469e1876d6ccbb5da707972990.1447361906.git.luto@kernel.org
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- kernel/jump_label.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/jump_label.h | 52 ++++++++++++++++++++++++++-----
+ 1 file changed, 44 insertions(+), 8 deletions(-)
 
---- a/kernel/jump_label.c
-+++ b/kernel/jump_label.c
-@@ -195,6 +195,11 @@ static inline struct jump_entry *static_
- 	return (struct jump_entry *)((unsigned long)key->entries & ~JUMP_TYPE_MASK);
- }
+--- a/arch/x86/include/asm/jump_label.h
++++ b/arch/x86/include/asm/jump_label.h
+@@ -14,13 +14,6 @@
+ #error asm/jump_label.h included on a non-jump-label kernel
+ #endif
  
-+static inline struct static_key *jump_entry_key(struct jump_entry *entry)
-+{
-+	return (struct static_key *)((unsigned long)entry->key);
-+}
+-#ifndef __ASSEMBLY__
+-
+-#include <linux/stringify.h>
+-#include <linux/types.h>
+-#include <asm/nops.h>
+-#include <asm/asm.h>
+-
+ #define JUMP_LABEL_NOP_SIZE 5
+ 
+ #ifdef CONFIG_X86_64
+@@ -29,6 +22,14 @@
+ # define STATIC_KEY_INIT_NOP GENERIC_NOP5_ATOMIC
+ #endif
+ 
++#include <asm/asm.h>
++#include <asm/nops.h>
 +
- static enum jump_label_type jump_label_type(struct static_key *key)
++#ifndef __ASSEMBLY__
++
++#include <linux/stringify.h>
++#include <linux/types.h>
++
+ static __always_inline bool arch_static_branch(struct static_key *key, bool branch)
  {
- 	bool enabled = static_key_enabled(key);
-@@ -216,7 +221,7 @@ void __init jump_label_init(void)
- 	for (iter = iter_start; iter < iter_stop; iter++) {
- 		struct static_key *iterk;
+ 	asm_volatile_goto("1:"
+@@ -72,5 +73,40 @@ struct jump_entry {
+ 	jump_label_t key;
+ };
  
--		iterk = (struct static_key *)(unsigned long)iter->key;
-+		iterk = jump_entry_key(iter);
- 		arch_jump_label_transform_static(iter, jump_label_type(iterk));
- 		if (iterk == key)
- 			continue;
-@@ -311,7 +316,7 @@ static int jump_label_add_module(struct
- 	for (iter = iter_start; iter < iter_stop; iter++) {
- 		struct static_key *iterk;
- 
--		iterk = (struct static_key *)(unsigned long)iter->key;
-+		iterk = jump_entry_key(iter);
- 		if (iterk == key)
- 			continue;
- 
-@@ -348,10 +353,10 @@ static void jump_label_del_module(struct
- 	struct static_key_mod *jlm, **prev;
- 
- 	for (iter = iter_start; iter < iter_stop; iter++) {
--		if (iter->key == (jump_label_t)(unsigned long)key)
-+		if (jump_entry_key(iter) == key)
- 			continue;
- 
--		key = (struct static_key *)(unsigned long)iter->key;
-+		key = jump_entry_key(iter);
- 
- 		if (within_module(iter->key, mod))
- 			continue;
+-#endif  /* __ASSEMBLY__ */
++#else	/* __ASSEMBLY__ */
++
++.macro STATIC_JUMP_IF_TRUE target, key, def
++.Lstatic_jump_\@:
++	.if \def
++	/* Equivalent to "jmp.d32 \target" */
++	.byte		0xe9
++	.long		\target - .Lstatic_jump_after_\@
++.Lstatic_jump_after_\@:
++	.else
++	.byte		STATIC_KEY_INIT_NOP
++	.endif
++	.pushsection __jump_table, "aw"
++	_ASM_ALIGN
++	_ASM_PTR	.Lstatic_jump_\@, \target, \key
++	.popsection
++.endm
++
++.macro STATIC_JUMP_IF_FALSE target, key, def
++.Lstatic_jump_\@:
++	.if \def
++	.byte		STATIC_KEY_INIT_NOP
++	.else
++	/* Equivalent to "jmp.d32 \target" */
++	.byte		0xe9
++	.long		\target - .Lstatic_jump_after_\@
++.Lstatic_jump_after_\@:
++	.endif
++	.pushsection __jump_table, "aw"
++	_ASM_ALIGN
++	_ASM_PTR	.Lstatic_jump_\@, \target, \key + 1
++	.popsection
++.endm
++
++#endif	/* __ASSEMBLY__ */
++
+ #endif
 
