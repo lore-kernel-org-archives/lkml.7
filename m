@@ -2,147 +2,136 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E152C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3407EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D46920815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="paTihldv"
+	by mail.kernel.org (Postfix) with ESMTP id 0FBC820815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727844AbfEPQFo (ORCPT
+        id S1728004AbfEPQFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:05:44 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36813 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbfEPQFm (ORCPT
+        Thu, 16 May 2019 12:05:46 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53342 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726961AbfEPQFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:05:42 -0400
-Received: by mail-qk1-f194.google.com with SMTP id c14so2608753qke.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:05:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=zAUITjpKKLROuX37hMbdqPFlWmaHToD076fNZLb8xfM=;
-        b=paTihldvOejMhzU/pjmy6cxi8/gHfncg9BvJEgw2jZdu7GTTbC6dOi2N34C/kPD+Xe
-         llzWo0lUVN5/gH0xigfPAuVxfctO5acb6uM491mjwy+kalcRZrNptGYgtffAGrQm9xKD
-         z7cMdKXJJ63VeJ7S62XKUCWg+IJtnA/MuoC0yG1jQRxUMfjTvjsouU6GeU1UhoLOpUy4
-         O6jaxq5Vx3jRm2UgvJs0jhTxt1tfjYW5uy/RR5+JF5zvEl0wMsgK+PEzcCVYX5Ml6OgS
-         CWMiUYVZvGJpz30FdN/Uvc6ui0RhJyX+CoWvDh4wvgFBWaqBSYRetGUz7xlHg0r4k5NR
-         ODlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=zAUITjpKKLROuX37hMbdqPFlWmaHToD076fNZLb8xfM=;
-        b=iU1AxRTNLS5awPPldKB2w7/MpVzmkInwG42XQnmagAj9EP7so4seNYRkm8wsAntqsK
-         qdgNDfYDNpaCZtxSpqpVaeDCJaKMcMfANAvqOFjv6ciYt4ZD2DTopQpCXl/lwTRP9QGQ
-         0ecUdAgnijz29dwSxXqKH/jMCH/7JIgz6sMx+Jbv2R9LzRwAdy3ujVIVgDUvY4WdnXeZ
-         iUTSRK90RyZ1zMh1BlksrtvJKlJYWd/8NAga3dSGNFH3aKEPGeoZ0gh9/Z6jfBZHjlJ6
-         a99Lt6+ZTztKnvsPdnitW5Yc3UT/w54eE1BRyGEk8sl+WRFEWsKFIDdxAQNuzkqtUgR4
-         8X6w==
-X-Gm-Message-State: APjAAAVdodZcvHNcFtsAgG22wvDzkzBkctciL2BCe8IhAXjRpApvLWAQ
-        7FKLOiKHjmyB1GOQ2RaezheiCA==
-X-Google-Smtp-Source: APXvYqw/JHD28fUlPb8lI2g8to9VAAo+dI6jsWFcrAF1ACiFIBSxV5uVdFEIpYrHZwfcWMG0OgWwTw==
-X-Received: by 2002:a37:684a:: with SMTP id d71mr13791295qkc.25.1558022741627;
-        Thu, 16 May 2019 09:05:41 -0700 (PDT)
-Received: from qcai.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id z29sm2569186qkg.19.2019.05.16.09.05.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 09:05:40 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     dan.j.williams@intel.com
-Cc:     akpm@linux-foundation.org, vishal.l.verma@intel.com,
-        dave.jiang@intel.com, keith.busch@intel.com, ira.weiny@intel.com,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] nvdimm: fix compilation warnings with W=1
-Date:   Thu, 16 May 2019 12:04:53 -0400
-Message-Id: <1558022693-9631-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 16 May 2019 12:05:44 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4GG51P7129531
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 12:05:43 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sha8bam3h-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 12:05:42 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Thu, 16 May 2019 17:05:38 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 16 May 2019 17:05:35 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4GG5Yv948365702
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 May 2019 16:05:34 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E85DB5204E;
+        Thu, 16 May 2019 16:05:33 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.91.88])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 0BEC65205A;
+        Thu, 16 May 2019 16:05:31 +0000 (GMT)
+Subject: Re: [RFCv2 0/6] TurboSched: A scheduler for sustaining Turbo
+ Frequencies for longer durations
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        mingo@redhat.com, dietmar.eggemann@arm.com, dsmythies@telus.net
+References: <20190515135322.19393-1-parth@linux.ibm.com>
+ <20190515164854.GZ2589@hirez.programming.kicks-ass.net>
+From:   Parth Shah <parth@linux.ibm.com>
+Date:   Thu, 16 May 2019 21:35:30 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.0
+MIME-Version: 1.0
+In-Reply-To: <20190515164854.GZ2589@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19051616-0012-0000-0000-0000031C671D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051616-0013-0000-0000-000021550957
+Message-Id: <82883320-fb98-ec7b-ad1a-0c4248a0225b@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905160102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Several places (dimm_devs.c, core.c etc) include label.h but only
-label.c uses NSINDEX_SIGNATURE, so move its definition to label.c
-instead.
 
-In file included from drivers/nvdimm/dimm_devs.c:23:
-drivers/nvdimm/label.h:41:19: warning: 'NSINDEX_SIGNATURE' defined but
-not used [-Wunused-const-variable=]
 
-Also, some places abuse "/**" which is only reserved for the kernel-doc.
+On 5/15/19 10:18 PM, Peter Zijlstra wrote:
+> On Wed, May 15, 2019 at 07:23:16PM +0530, Parth Shah wrote:
+>> Abstract
+>> ========
+>>
+>> The modern servers allows multiple cores to run at range of
+>> frequencies higher than rated range of frequencies. But the power budget
+>> of the system inhibits sustaining these higher frequencies for
+>> longer durations.
+>>
+>> However when certain cores are put to idle states, the power can be
+>> effectively channelled to other busy cores, allowing them to sustain
+>> the higher frequency.
+>>
+>> One way to achieve this is to pack tasks onto fewer cores keeping others idle,
+>> but it may lead to performance penalty for such tasks and sustaining higher
+>> frequencies proves to be of no benefit. But if one can identify unimportant low
+>> utilization tasks which can be packed on the already active cores then waking up
+>> of new cores can be avoided. Such tasks are short and/or bursty "jitter tasks"
+>> and waking up new core is expensive for such case.
+>>
+>> Current CFS algorithm in kernel scheduler is performance oriented and hence
+>> tries to assign any idle CPU first for the waking up of new tasks. This policy
+>> is perfect for major categories of the workload, but for jitter tasks, one
+>> can save energy by packing it onto active cores and allow other cores to run at
+>> higher frequencies.
+>>
+>> These patch-set tunes the task wake up logic in scheduler to pack exclusively
+>> classified jitter tasks onto busy cores. The work involves the use of additional
+>> attributes inside "cpu" cgroup controller to manually classify tasks as jitter. 
+> 
+> Why does this make sense? Don't these higher freq bins burn power like
+> stupid? That is, it makes sense to use turbo-bins for single threaded
+> workloads that are CPU-bound and need performance.
+> 
+> But why pack a bunch of 'crap' tasks onto a core and give it turbo;
+> that's just burning power without getting anything back for it.
+> 
 
-drivers/nvdimm/bus.c:648: warning: cannot understand function prototype:
-'struct attribute_group nd_device_attribute_group = '
-drivers/nvdimm/bus.c:677: warning: cannot understand function prototype:
-'struct attribute_group nd_numa_attribute_group = '
+Thanks for taking interest in my patch series.
+I will try my best to answer your question.
 
-Those are just some member assignments for the "struct attribute_group"
-instances and it can't be expressed in the kernel-doc.
+This patch series tries to pack jitter tasks on the busier cores to avoid waking
+up any idle core as long as possible. This approach is supposed to give more
+performance to the CPU bound tasks by sustaining Turbo for a longer duration.
 
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/nvdimm/bus.c   | 4 ++--
- drivers/nvdimm/label.c | 2 ++
- drivers/nvdimm/label.h | 2 --
- 3 files changed, 4 insertions(+), 4 deletions(-)
+Current implementation for task wake up is biased towards waking an idle CPU first,
+which in turn consumes power as the CPU leaves idle domain.
+For the system supporting Turbo frequencies, power budget is fixed and hence to
+maintain this budget the system may throttle the frequency.
 
-diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-index 7ff684159f29..2eb6a6cfe9e4 100644
---- a/drivers/nvdimm/bus.c
-+++ b/drivers/nvdimm/bus.c
-@@ -642,7 +642,7 @@ static ssize_t devtype_show(struct device *dev, struct device_attribute *attr,
- 	NULL,
- };
- 
--/**
-+/*
-  * nd_device_attribute_group - generic attributes for all devices on an nd bus
-  */
- struct attribute_group nd_device_attribute_group = {
-@@ -671,7 +671,7 @@ static umode_t nd_numa_attr_visible(struct kobject *kobj, struct attribute *a,
- 	return a->mode;
- }
- 
--/**
-+/*
-  * nd_numa_attribute_group - NUMA attributes for all devices on an nd bus
-  */
- struct attribute_group nd_numa_attribute_group = {
-diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
-index 2030805aa216..edf278067e72 100644
---- a/drivers/nvdimm/label.c
-+++ b/drivers/nvdimm/label.c
-@@ -25,6 +25,8 @@
- static guid_t nvdimm_pfn_guid;
- static guid_t nvdimm_dax_guid;
- 
-+static const char NSINDEX_SIGNATURE[] = "NAMESPACE_INDEX\0";
-+
- static u32 best_seq(u32 a, u32 b)
- {
- 	a &= NSINDEX_SEQ_MASK;
-diff --git a/drivers/nvdimm/label.h b/drivers/nvdimm/label.h
-index e9a2ad3c2150..4bb7add39580 100644
---- a/drivers/nvdimm/label.h
-+++ b/drivers/nvdimm/label.h
-@@ -38,8 +38,6 @@ enum {
- 	ND_NSINDEX_INIT = 0x1,
- };
- 
--static const char NSINDEX_SIGNATURE[] = "NAMESPACE_INDEX\0";
--
- /**
-  * struct nd_namespace_index - label set superblock
-  * @sig: NAMESPACE_INDEX\0
--- 
-1.8.3.1
+So the idea is, if we can pack the jitter tasks on already running cores, then we
+can avoid waking up new cores and save power thereby sustaining Turbo for longer
+duration.
 
