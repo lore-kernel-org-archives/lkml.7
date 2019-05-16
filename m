@@ -2,95 +2,136 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B543C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8901C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07541206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:12:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89BCE20815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:14:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="IRjHdStx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727110AbfEPQL7 (ORCPT
+        id S1726902AbfEPQOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:11:59 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:51275 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726464AbfEPQL6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:11:58 -0400
-Received: from [192.168.178.167] ([109.104.36.193]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1MiJhW-1gn2TT1ffC-00fP2t; Thu, 16 May 2019 18:11:33 +0200
-Subject: Re: [GIT PULL] Thermal-SoC management changes for v5.2-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Rui Zhang <rui.zhang@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190516044313.GA17751@localhost.localdomain>
- <CAHk-=wiaO_8SiEB9QM3vOTniiT67K6CBH0uHJ82-Dp_+6kxH3g@mail.gmail.com>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Message-ID: <4803994d-f519-a6b6-f5bb-a2f50d91ecd7@i2se.com>
-Date:   Thu, 16 May 2019 18:11:32 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiaO_8SiEB9QM3vOTniiT67K6CBH0uHJ82-Dp_+6kxH3g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Thu, 16 May 2019 12:14:18 -0400
+Received: from mail-eopbgr720086.outbound.protection.outlook.com ([40.107.72.86]:28951
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726464AbfEPQOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 12:14:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VLQwbxuVczunKXiyOo53v9WY/uaQkSZArir3h/1vwgY=;
+ b=IRjHdStxxsKsDTn7HYtnkppAcf3fcXXbGhOTZ01n7NUyRQnxCerZD6FQFMhgHbo7zvmSn/5twx4O1FY2fP05jEHTd+/yJAFqNK6iRAvxds+bmmkPwoHr1p+qazlU6xqRD1DjNvuTxmxE8EHDvwFmGKmopt1zM8RCpcQ1qoGUluA=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2701.namprd12.prod.outlook.com (52.135.103.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Thu, 16 May 2019 16:14:14 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82%3]) with mapi id 15.20.1900.010; Thu, 16 May 2019
+ 16:14:14 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     "Luck, Tony" <tony.luck@intel.com>
+CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bp@suse.de" <bp@suse.de>, "x86@kernel.org" <x86@kernel.org>
+Subject: RE: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Thread-Topic: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Thread-Index: AQHU/5PPbonhoiIaT0+tpMBUt0fOpKZt/3MAgAAEtbA=
+Date:   Thu, 16 May 2019 16:14:14 +0000
+Message-ID: <SN6PR12MB26397B30A120E3426184727FF80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+References: <20190430203206.104163-1-Yazen.Ghannam@amd.com>
+ <20190430203206.104163-6-Yazen.Ghannam@amd.com>
+ <20190516155202.GA11517@agluck-desk>
+In-Reply-To: <20190516155202.GA11517@agluck-desk>
+Accept-Language: en-US
 Content-Language: en-US
-X-Provags-ID: V03:K1:HfXg+VerHg3XpZ/wJRmyjEJyPoEOVangfVhRYd6re0+8tLoYnmn
- oW1tto1qS1QQOe7GOCE7EoevUdRqBEDQ///1l974DU6oDx8+IabIbaeHwU/cfjP4DjKA6Br
- iX868FUXz7c1nOxAIHoyQKpsGy9mRzS1My2eaC6up74sSVDaK/QmuAXrROr7bb8NTBl3wqX
- WwVEm4CNLpPMKwjYQor6A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xkwv5xkBN+U=:bwfz0IV+WlLUs6KTbOUP5F
- m86RxkHI2Kj0QzfcXKAjfZ5U5Tv7ptnKNtgLYdvqIaRk+mynEvOkxWqy/MzaMhk2DxJ8qmr1i
- FBBq9iBvmcz6A0jmH8HHgyLkeFMI4b1ivawHRk9zA+MuopGSHO7SdkTaytpD95zlyhTHG7ZDQ
- ucuLHN5pnxVV68A4Nmp9c0lUFiAVLgEK+i/F2C3PPpQ0XCvarGXzmUjPrxOHJqU2QX6PvWsGX
- 7Q9b4MC3s9hQr7h6v0tAOK3o6Rmu+Uhgbp2eEQrGQ8hdzl6K99Bznt7mBbvxE1z2aXy5hPFUb
- OV9sLFfI8Kx69V1noe0ltzTDcdPaH2a+ggeMHMgiSZZ9xquruK+FaGafE4VQTIudsJH48+EIl
- rSt1kfKbUf/shkzxbsBa/sbVRmRUl1D+AK66qqyVbU/BiLoaN6Qynfy/xLAcuVSILSJOY4dbR
- 7JdgG3YikQQCtVEL1l6/s9BDOO7LESCW0XUCY5LGG+iLrAm3N4R0kYfYfuwW78nhncv8jtp0m
- sr0lIxldMQxoJvNbROex1vVUYSmoQEQq79zvls/eFyz56tPHv1DY/EovlT4wMNQR251Wjy0dG
- T1UGNyfAZBE26//8UjJj16wsHH76ZeD17CE+X5ynrrYrtdL0Z6By2LMrwezH072eTf80EEZWU
- rBOygeHEXUARE33jk7VUERqnLNl4Jm54LKIwbG4Djr1MUF7bzT0Q+/QXFtbrCrW1zLGjwZy74
- f9Pte2LM5Iz96JyVVZepWzFQnZb4JJPFlHnxWCJVjG0cTnXW3KZNh+p2ZO8=
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-originating-ip: [208.54.70.211]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c5742ab5-cc7f-4260-db01-08d6da1989f6
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2701;
+x-ms-traffictypediagnostic: SN6PR12MB2701:
+x-microsoft-antispam-prvs: <SN6PR12MB27016400EEBADBF496575A6AF80A0@SN6PR12MB2701.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0039C6E5C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(136003)(346002)(376002)(396003)(199004)(189003)(13464003)(26005)(71190400001)(71200400001)(25786009)(478600001)(6246003)(66066001)(72206003)(33656002)(8936002)(52536014)(74316002)(5660300002)(6916009)(53936002)(68736007)(64756008)(66446008)(66556008)(66476007)(76116006)(73956011)(66946007)(256004)(76176011)(6116002)(81166006)(2906002)(6436002)(11346002)(446003)(476003)(53546011)(229853002)(86362001)(7696005)(3846002)(81156014)(7736002)(102836004)(6506007)(8676002)(99286004)(186003)(305945005)(9686003)(55016002)(316002)(486006)(54906003)(14454004)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2701;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: OG1htUxpCLE/QAYVg26VI89/3l1PTRWDElvzbpv4HuFu3o9WaVzal2cvn7SQ76BI5uxVUzsn7ZiXmufnhos4GxZi5e9U1qS+80Jv2qmMSwEttYsxUKmYkGxS3YvgZ//Dwhm853izsC+batlCLU/nS1TrnjBOWmPpucdFCO3ZLQCgCRwAwpD4JZ/yqv2iXLXgg/ppOscFh1iwTtJlhfQtkr/HIe3fw1FCNh1TBaSAY+nGPURuYohIIbv4Wg/PDpfGiFOML6VXw+D7OEXxri5GTHIv93O4cAbjM/AgXew0Tg62Zs/pubX9pZ9XOciAdCa5c2YhAwEcydYeoKajJBEGZ4PgAIN6/KccIfE3Zb/SeRX4y3PhTZI1RKJIlQ412tlavSTacKCWuEjLeOuv5eT82bBcWKWtIp7qBCF3xjHSj1w=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c5742ab5-cc7f-4260-db01-08d6da1989f6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 16:14:14.2578
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2701
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+> -----Original Message-----
+> From: Luck, Tony <tony.luck@intel.com>
+> Sent: Thursday, May 16, 2019 10:52 AM
+> To: Ghannam, Yazen <Yazen.Ghannam@amd.com>
+> Cc: linux-edac@vger.kernel.org; linux-kernel@vger.kernel.org; bp@suse.de;=
+ x86@kernel.org
+> Subject: Re: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set i=
+n hardware
+>=20
+>=20
+> On Tue, Apr 30, 2019 at 08:32:20PM +0000, Ghannam, Yazen wrote:
+> > diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/c=
+ore.c
+> > index 986de830f26e..551366c155ef 100644
+> > --- a/arch/x86/kernel/cpu/mce/core.c
+> > +++ b/arch/x86/kernel/cpu/mce/core.c
+> > @@ -1567,10 +1567,13 @@ static void __mcheck_cpu_init_clear_banks(void)
+> >       for (i =3D 0; i < this_cpu_read(mce_num_banks); i++) {
+> >               struct mce_bank *b =3D &mce_banks[i];
+> >
+> > -             if (!b->init)
+> > -                     continue;
+> > -             wrmsrl(msr_ops.ctl(i), b->ctl);
+> > -             wrmsrl(msr_ops.status(i), 0);
+> > +             if (b->init) {
+> > +                     wrmsrl(msr_ops.ctl(i), b->ctl);
+> > +                     wrmsrl(msr_ops.status(i), 0);
+> > +             }
+> > +
+> > +             /* Save bits set in hardware. */
+> > +             rdmsrl(msr_ops.ctl(i), b->ctl);
+> >       }
+> >  }
+>=20
+> This looks like it will be a problem for Intel CPUs. If
+> we take a CPU offline, and then bring it back again, we
+> ues "b->ctl" to reinitialize the register in mce_reenable_cpu().
+>=20
+> But Intel SDM says at the end of section "15.3.2.1 IA32_MCi_CTL_MSRs"
+>=20
+>         "P6 family processors only allow the writing of all 1s or all
+>         0s to the IA32_MCi_CTL MSR."
+>=20
 
-On 16.05.19 17:07, Linus Torvalds wrote:
-> On Wed, May 15, 2019 at 9:43 PM Eduardo Valentin <edubezval@gmail.com> wrote:
->> - thermal core has a new devm_* API for registering cooling devices, thanks to Guenter R.
->>   I took the entire series, that is why you see changes on drivers/hwmon in this pull.
-> This clashed badly with commit 6b1ec4789fb1 ("hwmon: (pwm-fan) Add RPM
-> support via external interrupt"), which added a timer to the pwm-fan
-> handling.
->
-> In particular, that timer now needed the same kind of cleanup changes,
-> and I'd like you guys (particularly Guenther, who was involved on both
-> sides) to double-check my merge.
->
-> The way I solved it was to just make the pwm_fan_pwm_disable()
-> callback do both the pwm_diable() _and_ the del_timer_sync() on the
-> new timer. That seemed to be the simplest solution that meshed with
-> the new devm cleanup model, but while I build-tested the result, I
-> obviously did no actual use testing. And maybe there's some reason why
-> that approach is flawed.
+I can put a vendor check on the read. Is that sufficient?
 
-i will try to test on our custom i.MX6 board. Unfortunately this take
-some time since it isn't mainline yet (at least until tomorrow).
-
-Stefan
-
->
-> Guenther?
->
->                     Linus
+Thanks,
+Yazen
