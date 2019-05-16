@@ -2,117 +2,86 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4841C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E5C5C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA7A82082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:53:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Ej9cKsPY";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="Ej9cKsPY"
+	by mail.kernel.org (Postfix) with ESMTP id D9F5920848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:54:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558043649;
+	bh=7/VPrBeDCtUB7U1B72xCKN6fY5VM8msYqQe9cjnuI/4=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=VPJDu8pTcY95AuYURzusySsdmzo3x5Qpvcp43axDF4henPq2tzujq3joFaHKNP4ne
+	 ROq8FJKTz0GbIwdjJHcqh2M0BtCS+L1R5jpi5qeYtr2SfjaTmbw5wjsWe0NOEF8xGA
+	 6J8nTs37CcFZpGvhPMeTO4tNIyc4ZhHDrGyKA5lY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbfEPVxq (ORCPT
+        id S1728868AbfEPVyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 17:53:46 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:38288 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726586AbfEPVxq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 17:53:46 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 89A8F8EE109;
-        Thu, 16 May 2019 14:53:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1558043625;
-        bh=jjQxK8gG30fC8ztphEl/+NchX6EWOkygL8i2PMuVq9U=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Ej9cKsPYRiVs3hKWegxKZYbVTyWhjFJDipWtVAXw++pT/OjiGnooSR170YcM1C3Iz
-         irU3Cw8B+qD/zqpfXRluw303d1dzUV6uSi3lTX61vTQE6bXvJQPFT2Tle/T2YDMksF
-         mqPFgSEU19WymQeFDf8Ozh3PxPh0zTcNc03cylqg=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id mfCEGp6lPT57; Thu, 16 May 2019 14:53:45 -0700 (PDT)
-Received: from [153.66.254.194] (unknown [50.35.68.20])
+        Thu, 16 May 2019 17:54:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43618 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726523AbfEPVyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 17:54:07 -0400
+Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id D48728EE062;
-        Thu, 16 May 2019 14:53:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1558043625;
-        bh=jjQxK8gG30fC8ztphEl/+NchX6EWOkygL8i2PMuVq9U=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Ej9cKsPYRiVs3hKWegxKZYbVTyWhjFJDipWtVAXw++pT/OjiGnooSR170YcM1C3Iz
-         irU3Cw8B+qD/zqpfXRluw303d1dzUV6uSi3lTX61vTQE6bXvJQPFT2Tle/T2YDMksF
-         mqPFgSEU19WymQeFDf8Ozh3PxPh0zTcNc03cylqg=
-Message-ID: <1558043623.29359.44.camel@HansenPartnership.com>
-Subject: Re: [GIT PULL] asm-generic: kill <asm/segment.h> and improve nommu
- generic uaccess helpers
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-riscv@lists.infradead.org
-Date:   Thu, 16 May 2019 14:53:43 -0700
-In-Reply-To: <CAHk-=wiH=vGjsW9MdWFGsgto2W+71sA4XJ7CSubpXkbpC_bGKA@mail.gmail.com>
-References: <CAK8P3a2+RHAReOZdo8nEvqDeC1EPj83L2Ug4JuVRiUh943AuNw@mail.gmail.com>
-         <CAHk-=wgiv5ftb+dq7N8cN4n2YX3VkyzeQccywn07Xu9xhOLTSw@mail.gmail.com>
-         <CAK8P3a2EEuxh3uhsqauEC_vROZ7tQHhFwxgiLUnrgtpMdb3kuA@mail.gmail.com>
-         <CAHk-=wiH=vGjsW9MdWFGsgto2W+71sA4XJ7CSubpXkbpC_bGKA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mail.kernel.org (Postfix) with ESMTPSA id 75E5D2082E;
+        Thu, 16 May 2019 21:54:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558043646;
+        bh=7/VPrBeDCtUB7U1B72xCKN6fY5VM8msYqQe9cjnuI/4=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=ea7cvSFtUlBdy3juIFqqgBLtktCBOpnDrfQYYMnl7yji+Qq3nRa5PGMi88NO5NpBj
+         S0Zdd+p13+BoTJfuB7yWTvvrxIqjoxLe1xQsTnaVcL+OZ3TNLxxckOyEcASIXUJhdo
+         +MgNwoycoijodr3LLVBTOyHPcmlqf5uushk3bmSU=
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAMuHMdWPSyrhYx5Z5mgmKrR68cHL6owcRT=B3+DD3GhhxuG4zw@mail.gmail.com>
+References: <20190514153341.22540-1-chris.paterson2@renesas.com> <155786877257.14659.6751252865489860937@swboyd.mtv.corp.google.com> <CAMuHMdWPSyrhYx5Z5mgmKrR68cHL6owcRT=B3+DD3GhhxuG4zw@mail.gmail.com>
+Subject: Re: [PATCH] scripts/spelling.txt: Add spelling fix for prohibited
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Chris Paterson <chris.paterson2@renesas.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Biju Das <biju.das@bp.renesas.com>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+User-Agent: alot/0.8.1
+Date:   Thu, 16 May 2019 14:54:05 -0700
+Message-Id: <20190516215406.75E5D2082E@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-05-16 at 13:59 -0700, Linus Torvalds wrote:
-> On Thu, May 16, 2019 at 1:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> > 
-> > 
-> > I have reconfigured it locally now and pushed an identical tag with
-> > a
-> > new signature. Can you see if that gives you the same warning if
-> > you
-> > try to pull that?
-> 
-> No, same issue:
+Quoting Geert Uytterhoeven (2019-05-15 00:32:46)
+> On Tue, May 14, 2019 at 11:19 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > Quoting Chris Paterson (2019-05-14 08:33:41)
+> > > Misspelling 'prohibited' is quite common in the real world, although
+> > > surprisingly not so much in the Linux Kernel. In addition to fixing t=
+he
+> > > typo we may as well add it to the spelling checker.
+> > >
+> > > Also adding the present participle (prohibiting).
+> > >
+> > > Fixes: 5bf2fbbef50c ("clk: renesas: cpg-mssr: Add r8a77470 support")
+> > >
+> > > Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+>=20
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>=20
+> > Acked-by: Stephen Boyd <sboyd@kernel.org>
+>=20
+> Thanks!
+>=20
+> So I guess I'll queue this in clk-renesas-for-v5.3?
+>=20
 
-The problem seems to be this:
-
-jejb@jarvis:~> gpg --list-keys 60AB47FFC9095227
-pub   rsa4096 2011-10-27 [C]
-      88AFCD206B1611957187F16B60AB47FFC9095227
-sub   rsa4096 2011-10-27 [E]
-
-Your key is a "Certification key" and you have an encryption subkey but
-no signing key at all.  Usually you either have a signing subkey or
-your master key is both certification and signing ([CS] flags). 
-Certification keys can only be used to certify other keys, they can't
-be used for signing, but I bet gpg is assuming that it can sign with
-the master key even if it doesn't possess the signing flag.
-
-You can make your master key a signing key by doing
-
-gpg --expert --edit-key 60AB47FFC9095227
-
-Then doing
-
-gpg> change-usage
-
-and selecting "toggle sign"
-
-Or you could just add a signing subkey.
-
-In either case you'll need to save and sign the changes and then push
-to a keyserver for the rest of us to see it.
-
-James
-
+Guess so! Or Andrew does it.
