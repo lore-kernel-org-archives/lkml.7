@@ -2,279 +2,129 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27417C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E85C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF0EC20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:26:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H3q5HrP0"
+	by mail.kernel.org (Postfix) with ESMTP id CE0E320833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:27:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbfEPO05 (ORCPT
+        id S1727443AbfEPO1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:26:57 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37790 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbfEPO04 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:26:56 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 7so3707604wmo.2;
-        Thu, 16 May 2019 07:26:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CGGFLE66NJIixGbJjpnk8Qt07MLG+TM53V4ysfcf/WE=;
-        b=H3q5HrP0JD2ZStccqlX87Zvpf6Lv6UhdXA0cuIiBi24Tu/Gt2Wg4s4AzS50KnfSMtH
-         EzWquI/xV2Z5cnr4LJiHP8XJN51qDELflhqEYvNbxnwvMjsEBdiy5NQ7b3YNckWEErpH
-         FdlG1mkyp5c4NeiLLYGoT7dNiHDJr3PCfcZeHDOiaHdvIvWakz1L1kJMH6SD7bjUbbcY
-         HfjiGGHy4QhkBtqUoBcv+dDCSrjHk/h0hOBf8TMr12tnC5kRYpH7uORvWeEhxljhZDyz
-         Aar9wMbZ5dqxuqSgEC5Ykw5EOiDUaUMKSVFP6Z5zHNc/KC367YVvbXW7MpngJ9XYENfN
-         vJvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CGGFLE66NJIixGbJjpnk8Qt07MLG+TM53V4ysfcf/WE=;
-        b=Xb/cquqWjVnrzG56jz1DXgkb5qBhh/VPrf57fVZa5/BL2VimunystRZxCnusLmZzgn
-         Rqj4J/ifq3yzS3w0We9EYtiYVtzVBLghiNVFrB4WSzz/L5YIV4dAWccN5EfwKHQ7BggB
-         SxQBSxLcFLz+L1aUGCF0URqY7xZ8JO0h6gFJDVNPcKwPV2SJ2so4pHUAUwG46V1yRRI6
-         sQnPCnT2xo9MQncqvM4vho8QVQIptJcldqfxZfmpUex/RF20JLZmAHCQXyHx7yRQhCHm
-         yEonruJdKsqy8HmAo/HtOUiCBf3Ye+5pvWFn21aPdwX/OlTW79avNJB36dIZaVnK5kN3
-         CNMw==
-X-Gm-Message-State: APjAAAVgIhvhr+q5Jn3po/HtmDUcVDmzznZIjjLyUTXac/DsB4QZ1Llg
-        lrKTtmEVPL60gZVAMRTzmh4ksyCYHYY=
-X-Google-Smtp-Source: APXvYqybcjsi4VHywLwqoNRjRjLc2nJSHdakupubuXHoceUxu+OIKpWsl8tQlZziHymhV1KNPVUrvw==
-X-Received: by 2002:a1c:e144:: with SMTP id y65mr27138625wmg.147.1558016812553;
-        Thu, 16 May 2019 07:26:52 -0700 (PDT)
-Received: from xws.fritz.box (pD9EA30D0.dip0.t-ipconnect.de. [217.234.48.208])
-        by smtp.gmail.com with ESMTPSA id q4sm4852427wrx.25.2019.05.16.07.26.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 07:26:52 -0700 (PDT)
-From:   Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>
-Subject: [RFC 2/2] input: soc_button_array for newer surface devices
-Date:   Thu, 16 May 2019 16:25:23 +0200
-Message-Id: <20190516142523.117978-3-luzmaximilian@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190516142523.117978-1-luzmaximilian@gmail.com>
-References: <20190516142523.117978-1-luzmaximilian@gmail.com>
+        Thu, 16 May 2019 10:27:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37447 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727021AbfEPO1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 10:27:15 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7E7E388E5D;
+        Thu, 16 May 2019 14:27:11 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 144FC341E2;
+        Thu, 16 May 2019 14:27:01 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu, 16 May 2019 16:27:10 +0200 (CEST)
+Date:   Thu, 16 May 2019 16:27:00 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     jannh@google.com, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de, akpm@linux-foundation.org, cyphar@cyphar.com,
+        dhowells@redhat.com, ebiederm@xmission.com,
+        elena.reshetova@intel.com, keescook@chromium.org,
+        luto@amacapital.net, luto@kernel.org, tglx@linutronix.de,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        joel@joelfernandes.org, dancol@google.com, serge@hallyn.com,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v1 1/2] pid: add pidfd_open()
+Message-ID: <20190516142659.GB22564@redhat.com>
+References: <20190516135944.7205-1-christian@brauner.io>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190516135944.7205-1-christian@brauner.io>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 16 May 2019 14:27:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Power and volume button support for 5th and 6th genration Microsoft
-Surface devices via soc_button_array.
+On 05/16, Christian Brauner wrote:
+>
+> With the introduction of pidfds through CLONE_PIDFD it is possible to
+> created pidfds at process creation time.
 
-Note that these devices use the same MSHW0040 device as on the Surface
-Pro 4, however the implementation is different (GPIOs vs. ACPI
-notifications). Thus some checking is required to ensure we only load
-this driver on the correct devices.
+Now I am wondering why do we need CLONE_PIDFD, you can just do
 
-Signed-off-by: Maximilian Luz <luzmaximilian@gmail.com>
----
- drivers/input/misc/soc_button_array.c | 134 +++++++++++++++++++++++---
- 1 file changed, 122 insertions(+), 12 deletions(-)
+	pid = fork();
+	pidfd_open(pid);
 
-diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
-index bb458beecb43..dd67753bbf6e 100644
---- a/drivers/input/misc/soc_button_array.c
-+++ b/drivers/input/misc/soc_button_array.c
-@@ -29,6 +29,17 @@ struct soc_button_info {
- 	bool wakeup;
- };
- 
-+/**
-+ * struct soc_device_data - driver data for different device types
-+ * @button_info: specifications of buttons, if NULL specification is assumed to
-+ *               be present in _DSD
-+ * @check: device-specific check (NULL means all will be accepted)
-+ */
-+struct soc_device_data {
-+	struct soc_button_info *button_info;
-+	int (*check)(struct device *dev);
-+};
-+
- /*
-  * Some of the buttons like volume up/down are auto repeat, while others
-  * are not. To support both, we register two platform devices, and put
-@@ -314,6 +325,7 @@ static int soc_button_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	const struct acpi_device_id *id;
-+	struct soc_device_data *device_data;
- 	struct soc_button_info *button_info;
- 	struct soc_button_data *priv;
- 	struct platform_device *pd;
-@@ -324,18 +336,20 @@ static int soc_button_probe(struct platform_device *pdev)
- 	if (!id)
- 		return -ENODEV;
- 
--	if (!id->driver_data) {
-+	device_data = (struct soc_device_data *)id->driver_data;
-+	if (device_data && device_data->check) {
-+		error = device_data->check(dev);
-+		if (error)
-+			return error;
-+	}
-+
-+	if (device_data && device_data->button_info) {
-+		button_info = (struct soc_button_info *)
-+				device_data->button_info;
-+	} else {
- 		button_info = soc_button_get_button_info(dev);
- 		if (IS_ERR(button_info))
- 			return PTR_ERR(button_info);
--	} else {
--		button_info = (struct soc_button_info *)id->driver_data;
--	}
--
--	error = gpiod_count(dev, NULL);
--	if (error < 0) {
--		dev_dbg(dev, "no GPIO attached, ignoring...\n");
--		return -ENODEV;
- 	}
- 
- 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-@@ -361,12 +375,32 @@ static int soc_button_probe(struct platform_device *pdev)
- 	if (!priv->children[0] && !priv->children[1])
- 		return -ENODEV;
- 
--	if (!id->driver_data)
-+	if (!device_data || !device_data->button_info)
- 		devm_kfree(dev, button_info);
- 
- 	return 0;
- }
- 
-+
-+static int soc_device_check_generic(struct device *dev)
-+{
-+	int gpios;
-+
-+	gpios = gpiod_count(dev, NULL);
-+	if (gpios < 0) {
-+		dev_dbg(dev, "no GPIO attached, ignoring...\n");
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct soc_device_data soc_device_ACPI0011 = {
-+	.button_info = NULL,
-+	.check = soc_device_check_generic,
-+};
-+
-+
- /*
-  * Definition of buttons on the tablet. The ACPI index of each button
-  * is defined in section 2.8.7.2 of "Windows ACPI Design Guide for SoC
-@@ -381,9 +415,85 @@ static struct soc_button_info soc_button_PNP0C40[] = {
- 	{ }
- };
- 
-+static struct soc_device_data soc_device_PNP0C40 = {
-+	.button_info = soc_button_PNP0C40,
-+	.check = soc_device_check_generic,
-+};
-+
-+
-+/*
-+ * Special device check for Surface Book 2 and Surface Pro (2017).
-+ * Both, the Surface Pro 4 (surfacepro3_button.c) and the above mentioned
-+ * devices use MSHW0040 for power and volume buttons, however the way they
-+ * have to be addressed differs. Make sure that we only load this drivers
-+ * for the correct devices by checking the OEM Platform Revision provided by
-+ * the _DSM method.
-+ */
-+#define MSHW0040_DSM_REVISION		0x01
-+#define MSHW0040_DSM_GET_OMPR		0x02	// get OEM Platform Revision
-+static const guid_t MSHW0040_DSM_UUID =
-+	GUID_INIT(0x6fd05c69, 0xcde3, 0x49f4, 0x95, 0xed, 0xab, 0x16, 0x65,
-+		  0x49, 0x80, 0x35);
-+
-+static int soc_device_check_MSHW0040(struct device *dev)
-+{
-+	acpi_handle handle = ACPI_HANDLE(dev);
-+	union acpi_object *result;
-+	u64 oem_platform_rev = 0;
-+	int gpios;
-+
-+	// get OEM platform revision
-+	result = acpi_evaluate_dsm_typed(handle, &MSHW0040_DSM_UUID,
-+					 MSHW0040_DSM_REVISION,
-+					 MSHW0040_DSM_GET_OMPR, NULL,
-+					 ACPI_TYPE_INTEGER);
-+
-+	if (result) {
-+		oem_platform_rev = result->integer.value;
-+		ACPI_FREE(result);
-+	}
-+
-+	if (oem_platform_rev == 0)
-+		return -ENODEV;
-+
-+	dev_dbg(dev, "OEM Platform Revision %llu\n", oem_platform_rev);
-+
-+	/*
-+	 * We are _really_ expecting GPIOs here. If we do not get any, this
-+	 * means the GPIO driver has not been loaded yet (which can happen).
-+	 * Try again later.
-+	 */
-+	gpios = gpiod_count(dev, NULL);
-+	if (gpios < 0)
-+		return -EAGAIN;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Button infos for Microsoft Surface Book 2 and Surface Pro (2017).
-+ * Obtained from DSDT/testing.
-+ */
-+static struct soc_button_info soc_button_MSHW0040[] = {
-+	{ "power", 0, EV_KEY, KEY_POWER, false, true },
-+	{ "volume_up", 2, EV_KEY, KEY_VOLUMEUP, true, false },
-+	{ "volume_down", 4, EV_KEY, KEY_VOLUMEDOWN, true, false },
-+	{ }
-+};
-+
-+static struct soc_device_data soc_device_MSHW0040 = {
-+	.button_info = soc_button_MSHW0040,
-+	.check = soc_device_check_MSHW0040,
-+};
-+
-+
- static const struct acpi_device_id soc_button_acpi_match[] = {
--	{ "PNP0C40", (unsigned long)soc_button_PNP0C40 },
--	{ "ACPI0011", 0 },
-+	{ "PNP0C40", (unsigned long)&soc_device_PNP0C40 },
-+	{ "ACPI0011", (unsigned long)&soc_device_ACPI0011 },
-+
-+	/* Microsoft Surface Devices (5th and 6th generation) */
-+	{ "MSHW0040", (unsigned long)&soc_device_MSHW0040 },
-+
- 	{ }
- };
- 
--- 
-2.21.0
+> +SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+> +{
+> +	int fd, ret;
+> +	struct pid *p;
+> +	struct task_struct *tsk;
+> +
+> +	if (flags)
+> +		return -EINVAL;
+> +
+> +	if (pid <= 0)
+> +		return -EINVAL;
+> +
+> +	p = find_get_pid(pid);
+> +	if (!p)
+> +		return -ESRCH;
+> +
+> +	ret = 0;
+> +	rcu_read_lock();
+> +	/*
+> +	 * If this returns non-NULL the pid was used as a thread-group
+> +	 * leader. Note, we race with exec here: If it changes the
+> +	 * thread-group leader we might return the old leader.
+> +	 */
+> +	tsk = pid_task(p, PIDTYPE_TGID);
+> +	if (!tsk)
+> +		ret = -ESRCH;
+> +	rcu_read_unlock();
+> +
+> +	fd = ret ?: pidfd_create(p);
+> +	put_pid(p);
+> +	return fd;
+> +}
+
+Looks correct, feel free to add Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+
+But why do we need task_struct *tsk?
+
+	rcu_read_lock();
+	if (!pid_task(PIDTYPE_TGID))
+		ret = -ESRCH;
+	rcu_read_unlock();
+
+and in fact we do not even need rcu_read_lock(), we could do
+
+	// shut up rcu_dereference_check()
+	rcu_lock_acquire(&rcu_lock_map);
+	if (!pid_task(PIDTYPE_TGID))
+		ret = -ESRCH;
+	rcu_lock_release(&rcu_lock_map);
+
+Well... I won't insist, but the comment about the race with exec looks a bit
+confusing to me. It is true, but we do not care at all, we are not going to
+use the task_struct returned by pid_task().
+
+Oleg.
 
