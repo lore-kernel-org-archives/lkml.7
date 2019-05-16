@@ -2,99 +2,201 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F34C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841ADC04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6158420818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:43:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558039424;
-	bh=gLQlhu/nIee7VpLHO+jNzMX7EzEWYbRmsgoyaEQ2kvk=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=H2nUEcu0r6RltO2qAXz/RyQCOLU2wrlmo+0QFHKFEvM12nwCpOqBJOOjSU5DQDF0W
-	 fusqmMXzc22aRLozaqQwjWyslniECRdYawHAu7PHEje58aNUt7e5LFCxKEJGakqEkq
-	 yTuYPdu3tB5H3KzHLn2Re9P8hl1bsEwhYmWxZJqI=
+	by mail.kernel.org (Postfix) with ESMTP id 4DD7120818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:44:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="PXFA17v1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfEPUnn (ORCPT
+        id S1727931AbfEPUoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 16:43:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726449AbfEPUnn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 16:43:43 -0400
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F7C420818;
-        Thu, 16 May 2019 20:43:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558039422;
-        bh=gLQlhu/nIee7VpLHO+jNzMX7EzEWYbRmsgoyaEQ2kvk=;
-        h=From:Date:Subject:To:Cc:From;
-        b=pLxNwrntTX7oaMn2J6/MDoK1Lmlw9T4zTvWmXWCXNlXV8W7etSl1vym+9tcr+/1Bg
-         WiaBKrVGmgAhxtMwfIFF3wieKSaHjL3yWYo93U6sqlzUXcOAY7co7f1RwbWI28+EjG
-         3dUB7rAwyWjTSdVcEhh6kb6X7A1Mm+WV3J7xkVjo=
-Received: by mail-qt1-f178.google.com with SMTP id h1so5647865qtp.1;
-        Thu, 16 May 2019 13:43:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAVKkLyd6gBOD/PnTKSefOUEOZ0Jh5zg7ZqBs8xE/XhWX+hb51IW
-        buPtDNae6w0Qnu87U4IoJ7oJJSvNkLNSP3Whdg==
-X-Google-Smtp-Source: APXvYqzuh0y5kOj/3go4aciCPP+1J/ri1ee1q4XSUHZQTrZLsJwcpD8HswNMNZPnAz50cBqLuoTLDXy07fuhNm+zcXc=
-X-Received: by 2002:aed:2471:: with SMTP id s46mr44714316qtc.144.1558039421577;
- Thu, 16 May 2019 13:43:41 -0700 (PDT)
+        Thu, 16 May 2019 16:44:23 -0400
+Received: from mail-lj1-f181.google.com ([209.85.208.181]:41917 "EHLO
+        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727617AbfEPUoX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 16:44:23 -0400
+Received: by mail-lj1-f181.google.com with SMTP id k8so4313486lja.8
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 13:44:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=O4YQlmZ5MIYdnldebqyOQVqr06qrs1qRMTeOLjMVWrs=;
+        b=PXFA17v1UFO6E+VdhuOqRYErH8oPXRe6yZhAFz6xU+dvsk37W7zAJAepdhybCiXqg4
+         Ac/eWro6GJUUuCjePX4pCeeXuVlAJPT/i+Huitoajymg5PIqTTxhjI8DvM4rk40k6g9j
+         ocCoPziobgGcwxDVLMVQsw7n/MFClTxWsZVvo0I6lbSnzcAUXOIEBOzhPedxbaxmyFho
+         /gex9coX7lmVF2SfyelL1Ov0fC2x3Dx9deZqxabENXabDjKgA7X18YXUSCoqGdIkgKUc
+         K5WKOGJOtXK20BBYB6d2JRIRkkEpzQZrUv4SkKM0Rl7qyb059GRq7VMQszRcRjA/Huk/
+         tnfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=O4YQlmZ5MIYdnldebqyOQVqr06qrs1qRMTeOLjMVWrs=;
+        b=ZXGLacKBJMflZtUI5+ywCpgfvW+3uFFBjkxRmDejcYTaJYkfCiDHLjsx/JsGHrvPJs
+         Eb4ilOBma1x0JSVIPBNQMSC8GyzqG74dVR9XYsKE7x2VY5BKKanajEY7r1ehfq9cPwqZ
+         baUH/sTq6GWNxrZICqxQFLer2f7IFYQl1ulVRjVrRbIjU0mmzDU6VrkiLWgor+4JtIsO
+         533/3wpDtcoUHeHPekTq3VymS/vLEXAXORRRgfshCSiXB/oJHpL2SQ+s59xLWyZqBbrf
+         AouIJ4UMvCkXzwFPVED3aA8Dl6+OJmj3bcC+9irQbxBr+0qvXYfZ8Z37h1bByNw0Jh3f
+         KUZQ==
+X-Gm-Message-State: APjAAAXNrb0KLzYxFgr9BB+dgDl8lPsuZxbl+vL/Z1+TnF4LJi5BElR+
+        MAI6vtN8n8+hzJ/Qjo9QvZnoSw==
+X-Google-Smtp-Source: APXvYqyVuLVySF5rnrnVsnLgnpGrCTm3hrpsqU2HjHmiL01Cn7/mJY0a3Tzg2KQnuTRCNbgPETjLHQ==
+X-Received: by 2002:a2e:8716:: with SMTP id m22mr10015439lji.128.1558039460458;
+        Thu, 16 May 2019 13:44:20 -0700 (PDT)
+Received: from localhost (89-233-230-99.cust.bredband2.com. [89.233.230.99])
+        by smtp.gmail.com with ESMTPSA id y25sm1147668lfy.59.2019.05.16.13.44.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 May 2019 13:44:19 -0700 (PDT)
+Date:   Thu, 16 May 2019 22:44:18 +0200
+From:   "niklas.soderlund@ragnatech.se" <niklas.soderlund@ragnatech.se>
+To:     "Rodin, Michael (Ferchau; ADITG/ESM1)" <mrodin@de.adit-jv.com>
+Cc:     "kieran.bingham@ideasonboard.com" <kieran.bingham@ideasonboard.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "michael@rodin.online" <michael@rodin.online>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH] media: i2c: adv748x: initialize bit 7 of
+ csi_tx_top_reg_1f
+Message-ID: <20190516204418.GF31788@bigcity.dyn.berto.se>
+References: <1557502240-16274-1-git-send-email-mrodin@de.adit-jv.com>
+ <26e001a0-298f-e23b-9e46-98e62a8399c2@ideasonboard.com>
+ <20190510190124.GE28561@bigcity.dyn.berto.se>
+ <AC35D0CFBC66A84AAA9DF4334B52828D136181C3@HI2EXCH01.adit-jv.com>
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 16 May 2019 15:43:27 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLtkGfSX5bdRWy7MXM+opAd-gWzhTorUoVXOpKktN8YKQ@mail.gmail.com>
-Message-ID: <CAL_JsqLtkGfSX5bdRWy7MXM+opAd-gWzhTorUoVXOpKktN8YKQ@mail.gmail.com>
-Subject: [GIT PULL] Devicetree vendor prefix schema for 5.2
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AC35D0CFBC66A84AAA9DF4334B52828D136181C3@HI2EXCH01.adit-jv.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Hi Rodin,
 
-Please pull this 1 additional commit for rc1. This had to wait for all
-the merge window changes to vendor-prefixes.txt to go in to regenerate
-it.
+On 2019-05-16 14:24:13 +0000, Rodin, Michael (Ferchau; ADITG/ESM1) wrote:
+> Hi Kieran and Niklas,
+> 
+> thank you for your responses!
+> 
+> > Hi Kieran and Michael,
+> >
+> > On 2019-05-10 17:25:24 +0100, Kieran Bingham wrote:
+> > <snip>
+> >
+> > >
+> > > Niklas, how does RCar-CSI determine the top/bottom sequence?
+> >
+> > That patch just got merged in the media tree a few days ago,
+> >
+> >     9f7983bdc4925ae2 ("media: rcar-csi2: Propagate the FLD signal for NTSC
+> > and PAL")
+> >
+> > >
+> > > Do we have field inversion currently? (or one which is perhaps swapped
+> > > somewhere along the pipeline in rcar-vin?)
+> > >
+> >
+> > I'm not sure which tree this patch is developed on but Steve Longerbeam
+> > posted a RFC which IMHO had the fields inverted, there was a discussion in
+> his
+> > thread [1] where I tried to get to the bottom of the issue. My conclusions
+> > there might be wrong due to the issues addressed in this patch.
+> >
+> > Michael: Did you have Steve's patch in your tree when testing this?
+> >
+> > 1. https://patchwork.kernel.org/patch/10904263/
+> >
+> > --
+> > Regards,
+> > Niklas Söderlund
+> 
+> I had another version of Steve's patch when testing, but the FLD_NUM
+> setting was still the opposite compared to 9f7983bdc4925ae2
+> ("media: rcar-csi2: Propagate the FLD signal for NTSC and PAL").
+> I could send all patches from the private pull request which Steve Longerbeam
+> has created for ADIT if you want to better understand my test results,
+> but probably they can not be applied to the current mainline development tree.
+> The patch for adv748x I used for testing looks a bit different as well,
+> so it can be applied to the tree used by ADIT. But the functionality
+> is the same (I can provide the patch as well if it is required.).
+> There are also concerns regarding VnMC.FOC bit (I tested V4L2_FIELD_INTERLACED mode 
+> and in my tests I figured out, that this bit does not exactly do
+> what the Renesas Hardware Manual describes and should be always set to 0
+> regardless whether NTSC or PAL are used. But I had only Raspberry Pi as
+> NTSC test source and no additional NTSC camera for verification,
+> so the results may be not reliable.).
 
-Rob
+Interesting, I will add VnMC.FOC to my list of things to look into.
 
+> 
+> 
+> Niklas, in [1] you mentioned that you could read the WC counter (which is in
+> fact the frame number in case of frame start packets) in the interrupt
+> INT_FSFE and it would start at 0. Could you please share the patch you used
+> for reading?
 
-The following changes since commit 01be377c62210a8d8fef35be906f9349591bb7cd:
+I'm sorry I no longer have that code. It was a small hack thrown 
+together quickly. Idea was to read the register from the interrupt 
+handler and printk() it. Not the best of methods but at the time it 
+confirmed my theory of how it should work. It might be that I have drawn 
+some premature conclusions.
 
-  Merge tag 'media/v5.2-1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
-(2019-05-16 11:57:16 -0700)
+> As Steve Longerbeam mentioned in [2], this would be a CSI spec 
+>violation, which he has cited in the commit message of his RFC 
+>patch[3]. It's important to mention that the violation would be on the 
+>side of the adv748x chip (adv7482 on my Salvator-X board), because it 
+>creates the Frame Start packets. And according to the description of 
+>the FRAMENUMBER_INTERLACED bit in [4] (page 193), adv7481 should always 
+>send the
+> "1,2,1,2..." CSI frame number sequence (I could  not find a generic document
+> valid for all adv748x but I doubt that it would be  different there.).
+> So starting with CSI frame number 0 would even violate specification in it's 
+> own data sheet. Another possibility could also be a silicon bug in rcar CSI interface,
+> which would decrement the WC value by one. 
 
-are available in the Git repository at:
+A more likely cause is that my way of testing was flawed ;-)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-for-5.2-part2
+I will add this to my growing pile of things to look into. I don't know 
+when I will find the time. If you got time and figure out a method to 
+verify the settings in rcar-csi2 together with a good video source 
+please post patches ;-) It would be great if this could be figured out 
+together with the VnMC.FOC issue mentioned above. If you should happen 
+to work on it you might be interested in the patches recently merged in 
+the media-tree which adds the interrupt handler to rcar-csi2 making 
+inspection hacks easier to add on top.
 
-for you to fetch changes up to 8122de54602e30f0a73228ab6459a3654e652b92:
+One idea I have is to use a programmable video source and "display" 
+frames for capture where one can distinguish top/bottom (different 
+colors for each line for example) fields on the capture side and somehow 
+automate regression testing. I have had this plan for some years now and 
+I still use a old video game system as my test rig so don't hold your 
+breath ;-)
 
-  dt-bindings: Convert vendor prefixes to json-schema (2019-05-16
-15:27:21 -0500)
+> 
+> 
+> [1] https://patchwork.kernel.org/patch/10904263/#22594157
+> [2] https://patchwork.kernel.org/patch/10904263/#22594563
+> [3] https://patchwork.kernel.org/patch/10904263
+> [4] https://www.analog.com/media/en/technical-documentation/user-guides/ADV7481_UG-747.pdf
+> 
+> Regards,
+> Michael
 
-----------------------------------------------------------------
-Conversion of vendor-prefixes.txt to json-schema
-
-----------------------------------------------------------------
-Rob Herring (1):
-      dt-bindings: Convert vendor prefixes to json-schema
-
- .../devicetree/bindings/vendor-prefixes.txt        | 476 ----------
- .../devicetree/bindings/vendor-prefixes.yaml       | 977 +++++++++++++++++++++
- 2 files changed, 977 insertions(+), 476 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/vendor-prefixes.txt
- create mode 100644 Documentation/devicetree/bindings/vendor-prefixes.yaml
+-- 
+Regards,
+Niklas Söderlund
