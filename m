@@ -2,152 +2,86 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E34C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C54C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAB8020818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:49:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="p7z8pf6l"
+	by mail.kernel.org (Postfix) with ESMTP id 967D12082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:49:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558028975;
+	bh=decCPVJq4sFXSSaGYODONKx6td/Up+NRhyNGO6otSDY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j1l1QMTtPbnl2bjAX3ypJkwlzbtrwWdP2g/M+p4m9DYkhvVzGBgnRpWlfPIAG8Gne
+	 +VbpicPnBFfu5hi4qDzkJjeEms5uoNTtauGz2oHoT2sdqCEz1pEjSqj9OA3q9uIpvK
+	 ceSCRbiqRgkUjMjKGM3b3rwoKQdokL8QKPIGzMtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbfEPRtN (ORCPT
+        id S1728934AbfEPRte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 13:49:13 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:50049 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfEPRtM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 13:49:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1558028951; x=1589564951;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=9nVrkLPFrKFzW5I8vXU9JV7oHZCN/SUECinSigxy+dM=;
-  b=p7z8pf6l5SM6L73FjEss9AbW6394rhnt4c0LO3Xj8gflXVAHYnExujUc
-   wORwvgp+AotEDFma/c0u3U8Ol8QblDW5GrCKu3pW656n2VwIUZdSzeRcZ
-   yU9tqkaRhZ0Npxf69pKyoT+QkdM4FC2moU+saeglRI5zmHBz37fGe6/ft
-   E=;
-X-IronPort-AV: E=Sophos;i="5.60,477,1549929600"; 
-   d="scan'208";a="674736306"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2b-baacba05.us-west-2.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 16 May 2019 17:49:07 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
-        by email-inbound-relay-2b-baacba05.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x4GHn6De107439
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Thu, 16 May 2019 17:49:07 GMT
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 16 May 2019 17:49:06 +0000
-Received: from macbook-2.local (10.43.160.4) by EX13D20UWC001.ant.amazon.com
- (10.43.162.244) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 16 May
- 2019 17:49:05 +0000
-Subject: Re: [PATCH v2 2/2] KVM: x86: Implement the arch-specific hook to
- report the VM UUID
-To:     "Sironi, Filippo" <sironi@amazon.de>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "vasu.srinivasan@oracle.com" <vasu.srinivasan@oracle.com>
-References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
- <1557847002-23519-1-git-send-email-sironi@amazon.de>
- <1557847002-23519-3-git-send-email-sironi@amazon.de>
- <f51a6a84-b21c-ab75-7e30-bfbe2ac6b98b@amazon.com>
- <7395EFE9-0B38-4B61-81D4-E8450561AABE@amazon.de>
- <8c6a2de2-f080-aad5-16af-c4a5eafb31af@amazon.com>
- <3a9762a2-24e8-a842-862d-fadae563361d@oracle.com>
- <DD0087B6-094D-4D07-9C85-827881E3DDD0@amazon.de>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <cb50c8a6-58e7-e123-feb9-d9dd2bc33b34@amazon.com>
-Date:   Thu, 16 May 2019 10:49:03 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.6.1
+        Thu, 16 May 2019 13:49:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56682 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726956AbfEPRte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 13:49:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 799A320818;
+        Thu, 16 May 2019 17:49:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558028973;
+        bh=decCPVJq4sFXSSaGYODONKx6td/Up+NRhyNGO6otSDY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OupcOnC/D5jcim3o1Js5A/ylBeqyLSB5YCMZMLvQPgOfgEF36+DetZPXqKgAuOfl9
+         5dXFEY8qgG8T+VHu6lK3IQanBgcoFA2mNzmeoC5sIi5yky8SwzihYXYW0JoCYvVcRa
+         9SMwfaaM7uUjxJKz1DnNH5zMNFSkrdTi/N0p6dbI=
+Date:   Thu, 16 May 2019 19:49:30 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Naveen Kumar Parna <parna.naveenkumar@gmail.com>
+Cc:     arnd@arndb.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] bsr: "foo * bar" should be "foo *bar"
+Message-ID: <20190516174930.GA28323@kroah.com>
+References: <20190515134310.27269-1-parna.naveenkumar@gmail.com>
+ <20190515151358.GD23599@kroah.com>
+ <CAKXhv7ew=956XWh0O=KFiKOM8XNKiZtNfjQEFunKaL_C9EPTFg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <DD0087B6-094D-4D07-9C85-827881E3DDD0@amazon.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.43.160.4]
-X-ClientProxiedBy: EX13D27UWB001.ant.amazon.com (10.43.161.169) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKXhv7ew=956XWh0O=KFiKOM8XNKiZtNfjQEFunKaL_C9EPTFg@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 16, 2019 at 11:11:21PM +0530, Naveen Kumar Parna wrote:
+> On Wed, 15 May, 2019, 8:44 PM Greg KH, <gregkh@linuxfoundation.org> wrote:
+> 
+> > On Wed, May 15, 2019 at 07:13:10PM +0530, parna.naveenkumar@gmail.com
+> > wrote:
+> > > From: Naveen Kumar Parna <parna.naveenkumar@gmail.com>
+> > >
+> > > Fixed the checkpatch error. Used "foo *bar" instead of "foo * bar"
+> > >
+> > > Signed-off-by: Naveen Kumar Parna <parna.naveenkumar@gmail.com>
+> > > ---
+> > >  drivers/char/bsr.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > Where is patch 1/2 of this series?
+> >
+> It does not has corresponding 1/2 patch. By mistake I used
+> wrong argument to 'git format-patch' command.
 
-On 16.05.19 10:41, Sironi, Filippo wrote:
->> On 16. May 2019, at 18:40, Boris Ostrovsky <boris.ostrovsky@oracle.com> wrote:
->>
->> On 5/16/19 11:33 AM, Alexander Graf wrote:
->>> On 16.05.19 08:25, Sironi, Filippo wrote:
->>>>> On 16. May 2019, at 15:56, Graf, Alexander <graf@amazon.com> wrote:
->>>>>
->>>>> On 14.05.19 08:16, Filippo Sironi wrote:
->>>>>> On x86, we report the UUID in DMI System Information (i.e., DMI Type 1)
->>>>>> as VM UUID.
->>>>>>
->>>>>> Signed-off-by: Filippo Sironi <sironi@amazon.de>
->>>>>> ---
->>>>>> arch/x86/kernel/kvm.c | 7 +++++++
->>>>>> 1 file changed, 7 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
->>>>>> index 5c93a65ee1e5..441cab08a09d 100644
->>>>>> --- a/arch/x86/kernel/kvm.c
->>>>>> +++ b/arch/x86/kernel/kvm.c
->>>>>> @@ -25,6 +25,7 @@
->>>>>> #include <linux/kernel.h>
->>>>>> #include <linux/kvm_para.h>
->>>>>> #include <linux/cpu.h>
->>>>>> +#include <linux/dmi.h>
->>>>>> #include <linux/mm.h>
->>>>>> #include <linux/highmem.h>
->>>>>> #include <linux/hardirq.h>
->>>>>> @@ -694,6 +695,12 @@ bool kvm_para_available(void)
->>>>>> }
->>>>>> EXPORT_SYMBOL_GPL(kvm_para_available);
->>>>>>
->>>>>> +const char *kvm_para_get_uuid(void)
->>>>>> +{
->>>>>> +	return dmi_get_system_info(DMI_PRODUCT_UUID);
->>>>> This adds a new dependency on CONFIG_DMI. Probably best to guard it with
->>>>> an #if IS_ENABLED(CONFIG_DMI).
->>>>>
->>>>> The concept seems sound though.
->>>>>
->>>>> Alex
->>>> include/linux/dmi.h contains a dummy implementation of
->>>> dmi_get_system_info that returns NULL if CONFIG_DMI isn't defined.
->>> Oh, I missed that bit. Awesome! Less work :).
->>>
->>>
->>>> This is enough unless we decide to return "<denied>" like in Xen.
->>>> If then, we can have the check in the generic code to turn NULL
->>>> into "<denied>".
->>> Yes. Waiting for someone from Xen to answer this :)
->> Not sure I am answering your question but on Xen we return UUID value
->> zero if access permissions are not sufficient. Not <denied>.
->>
->> http://xenbits.xen.org/gitweb/?p=xen.git;a=blob;f=xen/common/kernel.c;h=612575430f1ce7faf5bd66e7a99f1758c63fb3cb;hb=HEAD#l506
->>
->> -boris
-> Then, I believe that returning 00000000-0000-0000-0000-000000000000
-> instead of NULL in the weak implementation of 1/2 and translating
-> NULL into 00000000-0000-0000-0000-000000000000 is the better approach.
+Ok, thanks, now dropped.  Please fix up and resend properly.
 
+As I said before, the bar for cleanup patches outside of
+drivers/staging/ is much higher :)
 
-Just keep it at NULL in kvm_para_get_uuid() and convert to the canonical
-00000000-0000-0000-0000-000000000000 in uuid_show().
+thanks,
 
-Alex
-
+greg k-h
