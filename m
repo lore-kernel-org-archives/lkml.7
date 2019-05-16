@@ -2,135 +2,151 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0F4C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6E2C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84FCD20833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C39E20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:50:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="J4au0++M"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WcewTOwA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727424AbfEPNsy (ORCPT
+        id S1727539AbfEPNu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:48:54 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:17218 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfEPNsy (ORCPT
+        Thu, 16 May 2019 09:50:28 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:23312 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfEPNu2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:48:54 -0400
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x4GDmg9c011254
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 22:48:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x4GDmg9c011254
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558014522;
-        bh=X0frcOGR3psV+x7WGdjxWUl7hWweQjiB+M+DnkVeiMQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=J4au0++MIH43N4htFxGoX3FUWhZPH1Fz35ZI3VhdAJEXvAuwD3E4aOJjqMDtB4FBA
-         RBenJQeoH0bAYPWx6WWWrJaN5IMs/GZoKEnF1voWdwQDjB9a+coFGewuNRC3JMSZAA
-         mvRxHEQHdVvH6dgi2ljuQ0s+VWh2+FLochMicjMYtBof+dmKaIpXQ+0FYFm6EQsosZ
-         DwWYHP2ASUZT8LNMffM3XGkXL4LeZ8t64ZrbCmgZ7nYaiP3o0F+Blbb0JuW1DPMjGj
-         CQqfaCQrS+36V6rUW33TdDbXpcTEgu2uNFgyOyErdzIfPgZV92G4eYQpTuSKCzhUZ3
-         f2Iiny8+JYTwg==
-X-Nifty-SrcIP: [209.85.222.44]
-Received: by mail-ua1-f44.google.com with SMTP id e9so1299021uar.9
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 06:48:42 -0700 (PDT)
-X-Gm-Message-State: APjAAAW5XzlmR7J2pSi4ud83uHoce9WsVWsRzENlgh6OAp0NUJ+fmD3s
-        oHufNzeaeIaujZgf/UoECg/inYEOZrg6mBbs6vI=
-X-Google-Smtp-Source: APXvYqySVnD3fxjOiZxmSe2ykSqlWEPVQWZ6yLxADtqLjyOwi5GOjJRaPyCAfKg3sxUjS0eAdXUcdeymDecaWzWeY8A=
-X-Received: by 2002:a9f:3381:: with SMTP id p1mr60360uab.40.1558014521478;
- Thu, 16 May 2019 06:48:41 -0700 (PDT)
+        Thu, 16 May 2019 09:50:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1558014627; x=1589550627;
+  h=subject:to:references:from:message-id:date:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=JOuNpojcOraO39wt6wtg3pPIWv2HnVSSFGiVGtHt9l8=;
+  b=WcewTOwALML73elL0hc9mJgtCi2I90JhH85yN4DCcBjPZDtn//38zjRt
+   q2HG0320gSL0awkSFG/ce0etAE5PB60dM83h53ZYUrm/3GBJnq8HvjzCi
+   arr7x/GCZyAHyDUZbtGJ2K+tcFNNka5VuQyWc8YNxykOx3XpOiO8pg9GZ
+   g=;
+X-IronPort-AV: E=Sophos;i="5.60,476,1549929600"; 
+   d="scan'208";a="800005507"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2c-168cbb73.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 16 May 2019 13:50:25 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-2c-168cbb73.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x4GDoOfG043830
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Thu, 16 May 2019 13:50:24 GMT
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 16 May 2019 13:50:23 +0000
+Received: from macbook-2.local (10.43.161.34) by EX13D20UWC001.ant.amazon.com
+ (10.43.162.244) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 16 May
+ 2019 13:50:23 +0000
+Subject: Re: [PATCH v2 1/2] KVM: Start populating /sys/hypervisor with KVM
+ entries
+To:     Filippo Sironi <sironi@amazon.de>, <linux-kernel@vger.kernel.org>,
+        <kvm@vger.kernel.org>, <borntraeger@de.ibm.com>,
+        <boris.ostrovsky@oracle.com>, <cohuck@redhat.com>,
+        <konrad.wilk@oracle.com>, <xen-devel@lists.xenproject.org>,
+        <vasu.srinivasan@oracle.com>
+References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-2-git-send-email-sironi@amazon.de>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <e976f31b-2ccd-29ba-6a32-2edde49f867f@amazon.com>
+Date:   Thu, 16 May 2019 06:50:21 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190515194824.5641-1-labbott@redhat.com> <CAK7LNASZnRrSsZSrnw41kintGfmpyj3iz-Vjduk7w3k9iSih-w@mail.gmail.com>
- <20190516104619.GA29705@fuggles.cambridge.arm.com>
-In-Reply-To: <20190516104619.GA29705@fuggles.cambridge.arm.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 16 May 2019 22:48:05 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARn+mzQNaVrkFqsxOfJ4xeXB5dSnfNWGCjQ=AenVcT50A@mail.gmail.com>
-Message-ID: <CAK7LNARn+mzQNaVrkFqsxOfJ4xeXB5dSnfNWGCjQ=AenVcT50A@mail.gmail.com>
-Subject: Re: [PATCH] arm64: vdso: Explicitly add build-id option
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Laura Abbott <labbott@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1557847002-23519-2-git-send-email-sironi@amazon.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.43.161.34]
+X-ClientProxiedBy: EX13D06UWC002.ant.amazon.com (10.43.162.205) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 7:48 PM Will Deacon <will.deacon@arm.com> wrote:
->
-> On Thu, May 16, 2019 at 01:58:56PM +0900, Masahiro Yamada wrote:
-> > On Thu, May 16, 2019 at 4:51 AM Laura Abbott <labbott@redhat.com> wrote:
-> > >
-> > > Commit 691efbedc60d ("arm64: vdso: use $(LD) instead of $(CC) to
-> > > link VDSO") switched to using LD explicitly. The --build-id option
-> > > needs to be passed explicitly, similar to x86. Add this option.
-> > >
-> > > Fixes: 691efbedc60d ("arm64: vdso: use $(LD) instead of $(CC) to link VDSO")
-> > > Signed-off-by: Laura Abbott <labbott@redhat.com>
-> > > ---
-> > >  arch/arm64/kernel/vdso/Makefile | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
-> > > index 744b9dbaba03..ca209103cd06 100644
-> > > --- a/arch/arm64/kernel/vdso/Makefile
-> > > +++ b/arch/arm64/kernel/vdso/Makefile
-> > > @@ -13,6 +13,7 @@ targets := $(obj-vdso) vdso.so vdso.so.dbg
-> > >  obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
-> > >
-> > >  ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 \
-> > > +               $(call ld-option, --build-id) \
-> > >                 $(call ld-option, --hash-style=sysv) -n -T
-> > >
-> > >  # Disable gcov profiling for VDSO code
-> >
-> >
-> > I missed that. Sorry.
-> >
-> > You can add  --build-id without $(call ld-option,...)
-> > because it is supported by our minimal version of toolchain.
-> >
-> > See commit log of 1e0221374e for example.
->
-> Ok, so I'm ok folding in the diff below on top?
+On 14.05.19 08:16, Filippo Sironi wrote:
+> Start populating /sys/hypervisor with KVM entries when we're running on
+> KVM. This is to replicate functionality that's available when we're
+> running on Xen.
+> 
+> Start with /sys/hypervisor/uuid, which users prefer over
+> /sys/devices/virtual/dmi/id/product_uuid as a way to recognize a virtual
+> machine, since it's also available when running on Xen HVM and on Xen PV
+> and, on top of that doesn't require root privileges by default.
+> Let's create arch-specific hooks so that different architectures can
+> provide different implementations.
+> 
+> Signed-off-by: Filippo Sironi <sironi@amazon.de>
 
+I think this needs something akin to
 
-Looks good to me too.
+  https://www.kernel.org/doc/Documentation/ABI/stable/sysfs-hypervisor-xen
 
-Thanks.
+to document which files are available.
 
+> ---
+> v2:
+> * move the retrieval of the VM UUID out of uuid_show and into
+>   kvm_para_get_uuid, which is a weak function that can be overwritten
+> 
+>  drivers/Kconfig              |  2 ++
+>  drivers/Makefile             |  2 ++
+>  drivers/kvm/Kconfig          | 14 ++++++++++++++
+>  drivers/kvm/Makefile         |  1 +
+>  drivers/kvm/sys-hypervisor.c | 30 ++++++++++++++++++++++++++++++
+>  5 files changed, 49 insertions(+)
+>  create mode 100644 drivers/kvm/Kconfig
+>  create mode 100644 drivers/kvm/Makefile
+>  create mode 100644 drivers/kvm/sys-hypervisor.c
+> 
 
-> Will
->
-> --->8
->
-> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
-> index ca209103cd06..fa230ff09aa1 100644
-> --- a/arch/arm64/kernel/vdso/Makefile
-> +++ b/arch/arm64/kernel/vdso/Makefile
-> @@ -12,9 +12,8 @@ obj-vdso := gettimeofday.o note.o sigreturn.o
->  targets := $(obj-vdso) vdso.so vdso.so.dbg
->  obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
->
-> -ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 \
-> -               $(call ld-option, --build-id) \
-> -               $(call ld-option, --hash-style=sysv) -n -T
-> +ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv \
-> +               --build-id -n -T
->
->  # Disable gcov profiling for VDSO code
->  GCOV_PROFILE := n
+[...]
 
+> +
+> +__weak const char *kvm_para_get_uuid(void)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static ssize_t uuid_show(struct kobject *obj,
+> +			 struct kobj_attribute *attr,
+> +			 char *buf)
+> +{
+> +	const char *uuid = kvm_para_get_uuid();
+> +	return sprintf(buf, "%s\n", uuid);
 
+The usual return value for the Xen /sys/hypervisor interface is
+"<denied>". Wouldn't it make sense to follow that pattern for the KVM
+one too? Currently, if we can not determine the UUID this will just
+return (null).
 
--- 
-Best Regards
-Masahiro Yamada
+Otherwise, looks good to me. Are you aware of any other files we should
+provide? Also, is there any reason not to implement ARM as well while at it?
+
+Alex
+
+> +}
+> +
+> +static struct kobj_attribute uuid = __ATTR_RO(uuid);
+> +
+> +static int __init uuid_init(void)
+> +{
+> +	if (!kvm_para_available())
+> +		return 0;
+> +	return sysfs_create_file(hypervisor_kobj, &uuid.attr);
+> +}
+> +
+> +device_initcall(uuid_init);
+> 
+
