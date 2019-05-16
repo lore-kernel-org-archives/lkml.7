@@ -2,96 +2,112 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 712E2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CACC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:15:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FB4320818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4932087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:15:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I415BZmh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PesW0sD/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfEPNOz (ORCPT
+        id S1727546AbfEPNPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:14:55 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:43474 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfEPNOy (ORCPT
+        Thu, 16 May 2019 09:15:17 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37331 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726427AbfEPNPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:14:54 -0400
-Received: by mail-lf1-f65.google.com with SMTP id u27so2585766lfg.10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 06:14:53 -0700 (PDT)
+        Thu, 16 May 2019 09:15:17 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e6so1569693pgc.4
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 06:15:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Wh5JaYv97X/uxknn0B2RmMHAkSC5NRyR1TNumSEOFis=;
-        b=I415BZmhf8ErYu3yvbYjy/r5AJlIKN4Zsw34Q91GVCUq+LibJECyU4xCsyIFCWH7Pb
-         9rKrArLag217pZqhkK2gJLZcJ7mj29nV3BHLann1ycLke6SDAVlxkbR0MhRmyozqQoxO
-         SasoVZLxpMlKIfabbsEiuVqgg3HK+CoD8d+OH8FtnVFE/OcYEKQqhMKyg1HDiyLmANji
-         no8RPcfdGa/udJCAL7LopqbrttHHwcPwLf3wAZF2bDv3l5qusJFcuYTH/rkz1ACvcK9k
-         VYgYa+s/ob6mmXfei6WPEHCsmYS7vlnbjHd4nAGSMMMkIsuApTY4eGb0Vc0w+kJno7/0
-         sk1Q==
+        bh=AI8JZy9keS1o3wGiqH13yvNioRMPnmitZYzglqzVfaM=;
+        b=PesW0sD/ciOLThNvEJ5C/W678/gfkxLY7wHxWDXM4XUpjORA7GFmWmCdTTSvPA3Z/0
+         mRU2vzRtPQ8B9koGUI7hKssaUEBT9F4MR0ZH2GvgZy8EmQcnc09vQRlNg/gMzumatICh
+         IAX4WvXg1JAaX1ZUyhP7NrI++OVIlOUGFAWHcmIxxNLMrBqJR49DGSbUUaTN3nVIJPic
+         /+6NKGSPOtcHaLcBMAUOYaPUul/RGAKyJ/WJJfMUrYdkILEhf8MJvxTqjjvrCO0NFOFf
+         3q8zPRViuBCjVBhQ95qbQdcrb6rRjoLbtwsbi5mla3krW5q7Yw9WpaK5QadmNSDB2o2y
+         xh0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Wh5JaYv97X/uxknn0B2RmMHAkSC5NRyR1TNumSEOFis=;
-        b=NKtaluDkJLb1+NSwbJnyvOYcYVUzLH+TlbRHjnpR5YYx9UC+9F4iZGOgiJVxkZ3c8g
-         mtZ1gaa0e1y/c8N/FdCuuVv+NKrx9/WJw/LRfE4tjpzKDlF65gQMCn9OG3KugXHWIhiM
-         4VfxSjijvORsEkVlQVjmFgS10Sa03sNjT42ljbL3uVYcn7DYe9vmMh78gCxaPFIBdBEX
-         ZJK+gIe6ZBwFP9BGHlCWSzYDYMVPk0as0JxPtdgvcdi6UW/TsqDF+4MYTbjeViX3JQJz
-         /3pwDPHEntIQiogXX6UzueuHiTtsXGDM2bjF+7HRLqCGOaL1FGL4crxm20GNWo9zfQen
-         emwA==
-X-Gm-Message-State: APjAAAXfA/gpPAyyntTIuNvO2ZgdqEew/6y+Qmv1Qhse/6j+l4/A1SG+
-        TFeydJ40VM15t/ZY9aTBFxnNOUqtp0ArMw5c95U=
-X-Google-Smtp-Source: APXvYqxibpkmvr9pzW4mz+JKT7FFzpG9qkto6qjNjzt2jCqDdp/keibIZZlQFh/E5zE0FY7vNCJeXLrsf8rQZ1eqpAA=
-X-Received: by 2002:a05:6512:6c:: with SMTP id i12mr5428680lfo.130.1558012493028;
- Thu, 16 May 2019 06:14:53 -0700 (PDT)
+        bh=AI8JZy9keS1o3wGiqH13yvNioRMPnmitZYzglqzVfaM=;
+        b=NIA8mOQSoaSclay51XSL/QqFhBRdfnXCTADxrTFpQ34fZJey77q5kTKF6vLuxGiRAS
+         oREq4PbUKtaSCoRiw6Kt77nI+M02zR/cgxz7civwGcaOhpz5plOEI+YCDjr7t+urj34N
+         j1TZ7P7NS2yh3JGxoGA/EAUr1fl2uOD5mZ067VO9TbSIMLd7fuz0FrcHagKq4p8F+H5C
+         WY9pRcYrBD2A4+ESh+I2ggwZMQiS6qC/beSQE6f50B+wA/k7ZSe7jLdAHWMTzodDwN8Q
+         lE48XAfv+jHEh8WBurHyeK/aGBUiJdJVyvwXXtLv7q2qNC4eHlv7lwr6THfsIF4a+951
+         4NBA==
+X-Gm-Message-State: APjAAAUX8rZtT5RXPcvGxPzdYgveIdFnTpagDEP3l0VSxCybLkX3d2Bq
+        oCMRKZxwFaObaDDE4/eGNzrV9DCfGTJMEYE3ybs=
+X-Google-Smtp-Source: APXvYqzudyk1qALYh5US3Qa7TwBBWRQjv2nVATbz+op+71ojr+YahyEVhSZZYFuqUDeefV1vVymRSCmRg0vDR5v/Kjg=
+X-Received: by 2002:a63:fd4a:: with SMTP id m10mr51120343pgj.302.1558012515963;
+ Thu, 16 May 2019 06:15:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <1558011640-7864-1-git-send-email-viorel.suman@nxp.com>
-In-Reply-To: <1558011640-7864-1-git-send-email-viorel.suman@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 16 May 2019 10:14:42 -0300
-Message-ID: <CAOMZO5C1jm=7tiui221B-N+ptEknK_ZdHvrjvSHfvQ=W-K54Qw@mail.gmail.com>
-Subject: Re: [alsa-devel] [PATCH] ASoC: AK4458: add regulator for ak4458
-To:     Viorel Suman <viorel.suman@nxp.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Colin Ian King <colin.king@canonical.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Viorel Suman <viorel.suman@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>
+References: <5cda6ee2.1c69fb81.2949b.d3e7@mx.google.com> <20190514073542.GA4969@pendragon.ideasonboard.com>
+In-Reply-To: <20190514073542.GA4969@pendragon.ideasonboard.com>
+From:   Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+Date:   Thu, 16 May 2019 18:45:04 +0530
+Message-ID: <CAJr6mf0zy37MTuZQV2YLLQ7dY4a0r6LpSRTKByX0dBBfxuA4_g@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: Remove duplicate header
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     architt@codeaurora.org, a.hajda@samsung.com, airlied@linux.ie,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 10:02 AM Viorel Suman <viorel.suman@nxp.com> wrote:
-
-> +       for (i = 0; i < ARRAY_SIZE(ak4458->supplies); i++)
-> +               ak4458->supplies[i].supply = ak4458_supply_names[i];
-> +
-> +       ret = devm_regulator_bulk_get(ak4458->dev, ARRAY_SIZE(ak4458->supplies),
-> +                                     ak4458->supplies);
-> +       if (ret != 0) {
-> +               dev_err(ak4458->dev, "Failed to request supplies: %d\n", ret);
-> +               return ret;
-
-This would break existing users that do not pass the regulators in device tree.
-
-Ok, in this case there is no ak4458 user in any dts, so that would not
-be an issue.
-
-Please update the dt-bindings with the regulator entries.
+On Tue, May 14, 2019 at 1:05 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Sabyasachi,
+>
+> Thank you for the patch.
+>
+> On Tue, May 14, 2019 at 01:01:41PM +0530, Sabyasachi Gupta wrote:
+> > Remove drm/drm_panel.h which is included more than once
+> >
+> > Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
+> > ---
+> >  drivers/gpu/drm/bridge/panel.c | 1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
+> > index 7cbaba2..402b318 100644
+> > --- a/drivers/gpu/drm/bridge/panel.c
+> > +++ b/drivers/gpu/drm/bridge/panel.c
+> > @@ -15,7 +15,6 @@
+> >  #include <drm/drm_crtc_helper.h>
+> >  #include <drm/drm_encoder.h>
+> >  #include <drm/drm_modeset_helper_vtables.h>
+> > -#include <drm/drm_panel.h>
+>
+> Which tree is this against ? The patch applies on neither drm-next nor
+> drm-misc-next.
+>
+It is against linux-next tree
+> While at it, could you you reorder the other header alphabetically to
+> make this kind of issue easier to notice ?
+>
+It is already arranged in alphabetical order
+> >
+> >  struct panel_bridge {
+> >       struct drm_bridge bridge;
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
