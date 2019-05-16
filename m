@@ -3,167 +3,159 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC717C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 23:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AFDC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 23:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B3BF2070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 23:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A4620815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 23:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+GUx0x1"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="qYJkR7CO";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="gbRiMWP8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfEPXcl (ORCPT
+        id S1727480AbfEPXwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 19:32:41 -0400
-Received: from mail-it1-f176.google.com ([209.85.166.176]:50269 "EHLO
-        mail-it1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbfEPXck (ORCPT
+        Thu, 16 May 2019 19:52:13 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:44100 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726523AbfEPXwN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 19:32:40 -0400
-Received: by mail-it1-f176.google.com with SMTP id i10so9086052ite.0;
-        Thu, 16 May 2019 16:32:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EELhI/1e5V7Lj/m7+7oMKAGzKmAB6peQ8kc65u1SZho=;
-        b=I+GUx0x1iqM3SWzh79YpHAqXOd8eK4Y/94PYf5n/KVbRWuPKdsI6KCcA9FKK0nNTiZ
-         jalrCxeq7GM0htHcdDElsId5zkiOwVv2km4OkyOm7araqHoUXUjyH11jJKRrqFRjNH62
-         jfURmRwNxtATEzdXW/7wOHkNiq6GlfGwvzH4BebQAFtclP3HxUXFW8QXFTi+AGWsDcD9
-         3qCMiUBQ91xBxiHZU+LpKwHg3HJ6TUCrVxhV9yF2SvHjkm3Nj2h2TlAqSbkZs2lZG063
-         fC2S/YREoKkVXz0lZzsr0qvTcj9Xq/mPLW6arzvYrio5ht4LBDVK+5JbSCmGCzf4YaSW
-         rmsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EELhI/1e5V7Lj/m7+7oMKAGzKmAB6peQ8kc65u1SZho=;
-        b=T7DnpkUe0VnSpE6X8a9b6Abm8mD47z7zDBzGiTtNmYuc3brNsGr1Py9UQ4vIbIEHps
-         5Xp+mmzc5cls/AVsoCFlOfXPZkVFsSHTaQMiIntVyo/xzQjsGIbc1eGrevaFQIOcTl2y
-         E2a+QWgRDHkiihXp/zkLhWnb8uNsqGVjIfdLX0l27WlCw4p6xPGZks1LbujUjmfM12M9
-         kQADCAYqVZue1gVtrOGLFA1x+qigQt4qJ4XuNF5ST7gydsBSpOuxPs4gv2w6f3ODi11+
-         MOxu+vIudOBVOJopb45Qhq7DH3RANukvXXNZM87w3SN5s68t24HF7Io3lZCRszArA22b
-         ARAw==
-X-Gm-Message-State: APjAAAVYa/mJz4XuzgNJyAbXP5vaGgT6c2YseNDkvgagGChGt6N6KyZo
-        XBdNP2VH/bMSb0sOS07zXtGcBop9Jki7eo+OU1u/DAS4uHYoRg==
-X-Google-Smtp-Source: APXvYqwG2UjxVhphwUAgvvwQPHGBy5z6HV26Jg2b6dtNXBPHQODn2jj7toenETQH2vJlci2kX4c7LljoPaDjps61mNE=
-X-Received: by 2002:a24:d145:: with SMTP id w66mr258367itg.71.1558049559495;
- Thu, 16 May 2019 16:32:39 -0700 (PDT)
+        Thu, 16 May 2019 19:52:13 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x4GNgRSq030202;
+        Thu, 16 May 2019 16:51:58 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : content-type : content-id :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=KpK2qlgYpFNsxONJ17kK+Zs+kjfkCPZW7FB4LBExeZM=;
+ b=qYJkR7COGNhi4TrfNCYQMXxicsP+POJZhP2f/wblr8uRvHXkmTmy342UtozNQopHS+XO
+ +WW1Vjbj0GxkYcBrPkiEPIbflhi9FLn6VishKejWepgBmUnos68mPKnhNIVflvfxDOC9
+ Wh1z0b+VrT7D/tPk0Ryf04yFHR/vTG1PDKQ= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 2shh8qg3qy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Thu, 16 May 2019 16:51:58 -0700
+Received: from ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) by
+ ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 16 May 2019 16:51:57 -0700
+Received: from NAM04-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Thu, 16 May 2019 16:51:57 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KpK2qlgYpFNsxONJ17kK+Zs+kjfkCPZW7FB4LBExeZM=;
+ b=gbRiMWP8nHSw69tB1osNNN8A5EZK2DjMl+vA2n0Im8W/55WXu73/x1Vr9yqdsncfw3bNKsj7HlL8C6cty0eRyJE+nM615PyIB2ShxvugGoJj6LQEgy/C5wFKZhqKk/3HPsPg7Z+2Dn2W+mNyep8JJxeHa07/kUDry6arVgbp3DY=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
+ MWHPR15MB1150.namprd15.prod.outlook.com (10.175.2.16) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.17; Thu, 16 May 2019 23:51:56 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::85b5:614:bc49:8a15]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::85b5:614:bc49:8a15%11]) with mapi id 15.20.1900.010; Thu, 16 May 2019
+ 23:51:56 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     "kasong@redhat.com" <kasong@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Kernel Team <Kernel-team@fb.com>
+Subject: Getting empty callchain from perf_callchain_kernel() 
+Thread-Topic: Getting empty callchain from perf_callchain_kernel() 
+Thread-Index: AQHVDEJXYtrotGS6bU+cxwR7BKWjbA==
+Date:   Thu, 16 May 2019 23:51:55 +0000
+Message-ID: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.8)
+x-originating-ip: [2620:10d:c090:200::1:73ac]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7be8c581-a0c3-4204-3870-08d6da597a6c
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR15MB1150;
+x-ms-traffictypediagnostic: MWHPR15MB1150:
+x-microsoft-antispam-prvs: <MWHPR15MB11507358BA094A6619CCA2BFB30A0@MWHPR15MB1150.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2512;
+x-forefront-prvs: 0039C6E5C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(396003)(376002)(39860400002)(346002)(51874003)(199004)(189003)(66946007)(305945005)(73956011)(6486002)(5660300002)(36756003)(64756008)(2616005)(476003)(66556008)(66476007)(86362001)(7736002)(66446008)(33656002)(6436002)(82746002)(76116006)(478600001)(6512007)(486006)(6116002)(14454004)(14444005)(256004)(6506007)(57306001)(186003)(71200400001)(83716004)(71190400001)(8936002)(2906002)(68736007)(99286004)(2501003)(46003)(50226002)(4743002)(4326008)(110136005)(54906003)(316002)(102836004)(25786009)(81166006)(8676002)(81156014)(53936002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1150;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ZWCETRn1B/zffy4IQ0LQGAxoy7ufAGA30+4rBBDSNCg0YyneJ+Kloq4dNSYGTogZzlSlQlPiIYh2TSTBfZF4iIwuxyIouZPqLv/mzqFB8tXmEZNGW7HO4csRL9QbmF10JNI5EVftGYZjL/NlCsideHOVtotB/5UZCq3XRtS9eXX2a3Wx1s0q+3G5pDZYGwPA6Gry623bKBQyopRI59ykI2jYljRgVOpde+FJL2QFUnLaaXBIQa1cEJqjKWFxDFwH/ukK5vu3Hmyk8x/uoFOOpGBzoLWtoQ4wskddH/nv+d94MaSVEm7dc7TTgxEt5VyqytE8J9uUbls6nEIHlYqL3MbqvpucU4vhRiaRRGjMIZQK+idbv61C/pmSlZHoVyt5UvXd1JJ7YLNlObB+tRajcQJ+2p3FjMxUeA3xI2/o/wg=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <22E648044058D844ADB93EB37E311ECC@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190502185250.vlsainugtn6zjd6p@csclub.uwaterloo.ca>
- <CAKgT0Uc_YVzns+26-TL+hhmErqG4_w4evRqLCaa=7nME7Zq+Vg@mail.gmail.com>
- <20190503151421.akvmu77lghxcouni@csclub.uwaterloo.ca> <CAKgT0UcV2wCr6iUYktZ+Bju_GNpXKzR=M+NLfKhUsw4bsJSiyA@mail.gmail.com>
- <20190503205935.bg45rsso5jjj3gnx@csclub.uwaterloo.ca> <20190513165547.alkkgcsdelaznw6v@csclub.uwaterloo.ca>
- <CAKgT0Uf_nqZtCnHmC=-oDFz-3PuSM6=30BvJSDiAgzK062OY6w@mail.gmail.com>
- <20190514163443.glfjva3ofqcy7lbg@csclub.uwaterloo.ca> <CAKgT0UdPDyCBsShQVwwE5C8fBKkMcfS6_S5m3T7JP-So9fzVgA@mail.gmail.com>
- <20190516183407.qswotwyjwtjqfdqm@csclub.uwaterloo.ca> <20190516183705.e4zflbli7oujlbek@csclub.uwaterloo.ca>
-In-Reply-To: <20190516183705.e4zflbli7oujlbek@csclub.uwaterloo.ca>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 16 May 2019 16:32:28 -0700
-Message-ID: <CAKgT0UfSa-dM2+7xntK9tB7Zw5N8nDd3U1n4OSK0gbWbkNSKJQ@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec packets
-To:     Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7be8c581-a0c3-4204-3870-08d6da597a6c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 23:51:55.8579
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1150
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_19:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905160144
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 11:37 AM Lennart Sorensen
-<lsorense@csclub.uwaterloo.ca> wrote:
->
-> On Thu, May 16, 2019 at 02:34:08PM -0400, Lennart Sorensen wrote:
-> > Here is what I see:
-> >
-> > i40e: Intel(R) Ethernet Connection XL710 Network Driver - version 2.1.7-k
-> > i40e: Copyright (c) 2013 - 2014 Intel Corporation.
-> > i40e 0000:3d:00.0: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
-> > i40e 0000:3d:00.0: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
-> > i40e 0000:3d:00.0: MAC address: a4:bf:01:4e:0c:87
-> > i40e 0000:3d:00.0: flow_type: 63 input_mask:0x0000000000004000
-> > i40e 0000:3d:00.0: flow_type: 46 input_mask:0x0007fff800000000
-> > i40e 0000:3d:00.0: flow_type: 45 input_mask:0x0007fff800000000
-> > i40e 0000:3d:00.0: flow_type: 44 input_mask:0x0007ffff80000000
-> > i40e 0000:3d:00.0: flow_type: 43 input_mask:0x0007fffe00000000
-> > i40e 0000:3d:00.0: flow_type: 42 input_mask:0x0007fffe00000000
-> > i40e 0000:3d:00.0: flow_type: 41 input_mask:0x0007fffe00000000
-> > i40e 0000:3d:00.0: flow_type: 40 input_mask:0x0007fffe00000000
-> > i40e 0000:3d:00.0: flow_type: 39 input_mask:0x0007fffe00000000
-> > i40e 0000:3d:00.0: flow_type: 36 input_mask:0x0006060000000000
-> > i40e 0000:3d:00.0: flow_type: 35 input_mask:0x0006060000000000
-> > i40e 0000:3d:00.0: flow_type: 34 input_mask:0x0006060780000000
-> > i40e 0000:3d:00.0: flow_type: 33 input_mask:0x0006060600000000
-> > i40e 0000:3d:00.0: flow_type: 32 input_mask:0x0006060600000000
-> > i40e 0000:3d:00.0: flow_type: 31 input_mask:0x0006060600000000
-> > i40e 0000:3d:00.0: flow_type: 30 input_mask:0x0006060600000000
-> > i40e 0000:3d:00.0: flow_type: 29 input_mask:0x0006060600000000
-> > i40e 0000:3d:00.0: Features: PF-id[0] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
-> > i40e 0000:3d:00.1: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
-> > i40e 0000:3d:00.1: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
-> > i40e 0000:3d:00.1: MAC address: a4:bf:01:4e:0c:88
-> > i40e 0000:3d:00.1: flow_type: 63 input_mask:0x0000000000004000
-> > i40e 0000:3d:00.1: flow_type: 46 input_mask:0x0007fff800000000
-> > i40e 0000:3d:00.1: flow_type: 45 input_mask:0x0007fff800000000
-> > i40e 0000:3d:00.1: flow_type: 44 input_mask:0x0007ffff80000000
-> > i40e 0000:3d:00.1: flow_type: 43 input_mask:0x0007fffe00000000
-> > i40e 0000:3d:00.1: flow_type: 42 input_mask:0x0007fffe00000000
-> > i40e 0000:3d:00.1: flow_type: 41 input_mask:0x0007fffe00000000
-> > i40e 0000:3d:00.1: flow_type: 40 input_mask:0x0007fffe00000000
-> > i40e 0000:3d:00.1: flow_type: 39 input_mask:0x0007fffe00000000
-> > i40e 0000:3d:00.1: flow_type: 36 input_mask:0x0006060000000000
-> > i40e 0000:3d:00.1: flow_type: 35 input_mask:0x0006060000000000
-> > i40e 0000:3d:00.1: flow_type: 34 input_mask:0x0006060780000000
-> > i40e 0000:3d:00.1: flow_type: 33 input_mask:0x0006060600000000
-> > i40e 0000:3d:00.1: flow_type: 32 input_mask:0x0006060600000000
-> > i40e 0000:3d:00.1: flow_type: 31 input_mask:0x0006060600000000
-> > i40e 0000:3d:00.1: flow_type: 30 input_mask:0x0006060600000000
-> > i40e 0000:3d:00.1: flow_type: 29 input_mask:0x0006060600000000
-> > i40e 0000:3d:00.1: Features: PF-id[1] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
-> > i40e 0000:3d:00.1 eth2: NIC Link is Up, 1000 Mbps Full Duplex, Flow Control: None
-> > i40e_ioctl: power down: eth1
-> > i40e_ioctl: power down: eth2
->
-> Those last two lines is something I added, so ignore those.
+Hi,=20
 
-No problem.
+We found a failure with selftests/bpf/tests_prog in test_stacktrace_map (on=
+ bpf/master
+branch).=20
 
-So just looking at the data provided I am going to guess that IPv6 w/
-UDP likely works without any issues and it is just going to be IPv4
-that is the problem. When you compare the UDP setup from mine versus
-yours it looks like for some reason somebody swapped around the input
-bits for the L3 src and destination fields. I'm basing that on the
-input set masks in the i40e_txrx.h header:
-/* INPUT SET MASK for RSS, flow director, and flexible payload */
-#define I40E_L3_SRC_SHIFT               47
-#define I40E_L3_SRC_MASK                (0x3ULL << I40E_L3_SRC_SHIFT)
-#define I40E_L3_V6_SRC_SHIFT            43
-#define I40E_L3_V6_SRC_MASK             (0xFFULL << I40E_L3_V6_SRC_SHIFT)
-#define I40E_L3_DST_SHIFT               35
-#define I40E_L3_DST_MASK                (0x3ULL << I40E_L3_DST_SHIFT)
-#define I40E_L3_V6_DST_SHIFT            35
-#define I40E_L3_V6_DST_MASK             (0xFFULL << I40E_L3_V6_DST_SHIFT)
-#define I40E_L4_SRC_SHIFT               34
-#define I40E_L4_SRC_MASK                (0x1ULL << I40E_L4_SRC_SHIFT)
-#define I40E_L4_DST_SHIFT               33
-#define I40E_L4_DST_MASK                (0x1ULL << I40E_L4_DST_SHIFT)
-#define I40E_VERIFY_TAG_SHIFT           31
-#define I40E_VERIFY_TAG_MASK            (0x3ULL << I40E_VERIFY_TAG_SHIFT)
+After digging into the code, we found that perf_callchain_kernel() is givin=
+g empty
+callchain for tracepoint sched/sched_switch. And it seems related to commit
 
-The easiest way to verify would be to rewrite the registers for
-flow_type 29, 30, and 31 to match the value that I had shown earlier
-from my dump:
-[  294.687087] i40e 0000:81:00.1: flow_type: 31 input_mask:0x0001801e00000000
+d15d356887e770c5f2dcf963b52c7cb510c9e42d
+("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
 
-I will take a look at putting together a patch that can be tested to
-verify if this is actually the issue tomorrow.
+Before this commit, perf_callchain_kernel() returns callchain with regs->ip=
+. With
+this commit, regs->ip is not sent for !perf_hw_regs(regs) case.=20
 
-Thanks.
+I found the following change fixes the selftest. But I am not very sure, it=
+ is=20
+the best solution here.=20
 
-- Alex
+Please share comments and suggestions on this.=20
+
+Thanks in advance!
+
+Song
+
+
+diff --git i/arch/x86/events/core.c w/arch/x86/events/core.c
+index f315425d8468..7b8a9eb4d5fd 100644
+--- i/arch/x86/events/core.c
++++ w/arch/x86/events/core.c
+@@ -2402,9 +2402,9 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx=
+ *entry, struct pt_regs *re
+                return;
+        }
+
++       if (perf_callchain_store(entry, regs->ip))
++               return;
+        if (perf_hw_regs(regs)) {
+-               if (perf_callchain_store(entry, regs->ip))
+-                       return;
+                unwind_start(&state, current, regs, NULL);
+        } else {
+                unwind_start(&state, current, NULL, (void *)regs->sp);
+
+
+
