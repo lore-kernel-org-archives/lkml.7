@@ -6,60 +6,61 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1958DC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC86EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0B8220815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE61520815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:25:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UZ2HOcb7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GQmbJ3aV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbfEPNZP (ORCPT
+        id S1727555AbfEPNZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:25:15 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35043 "EHLO
+        Thu, 16 May 2019 09:25:50 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40354 "EHLO
         mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727069AbfEPNZO (ORCPT
+        with ESMTP id S1727496AbfEPNZt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:25:14 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h11so1736835ljb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 06:25:13 -0700 (PDT)
+        Thu, 16 May 2019 09:25:49 -0400
+Received: by mail-lj1-f193.google.com with SMTP id d15so3088396ljc.7
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 06:25:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=T7i74xwX9U5ncTUvzhWe57o2tW8tsCxNGT7kMEIaIPk=;
-        b=UZ2HOcb7CW2/11jSTnSPHfiHBasuAf7GrJd1OBF6+iXtAEPjKJR5dDzMbRtLzM4B0l
-         /VkhzqF8QqngYjEeMk13keD+R52PQsWlMoV5kTRyWfoAgz9X9IgjKR6nnUSsEwV0mlvq
-         y+2K3uxFvkCLSlgMAAxkNqa4ewh01JlutozwHyviQURNfG80lV2yU7d+3oyeWqBazhAI
-         kuHMJC9agm5hBYp4WmqgZDYo+Xp7/nQBxPU7o3rG/+09m1MHnx/mOwKZsbFpC+wr6c5S
-         sZFsWoZBbHj9rRsvLHsDi9DOijCG62RpIhgTZ5Oe6FQPq/y2Q6YEKijQk72SopivTngI
-         oXlA==
+        bh=YBQglN9y1UCEoiDsyDKmavv3pTw2avVwHy9wGSr4d+c=;
+        b=GQmbJ3aVkAkxYq4ebWu1xQr82AleFWY5CEch/sBznZ0n1N0TCZv7wWXuBmc5XP4gK9
+         0kz8teIQJnMwKDt4K3j18W4obgX85WUOBdEyFawJHemHKe/k3RiymhPVyQ15zn3EOflo
+         68z0GFwwNB0yuxgeOj4koQP5hlddq3mITwbdTJl1YABN4VIEGYhAAVYgj0LaHQ/e2/3f
+         igDW+NXWmbxv28jV6e2QnJqq+R+z1fq+bQEsXVh4pRMoJVxLNnB2ISHUhoqATTsEUlzq
+         MhKsuF+/P24J230PUDWXeuNC2ijNAiqOyXuNACqs8iMiQsma6XyJtItfunwihjMfiT5s
+         4i5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=T7i74xwX9U5ncTUvzhWe57o2tW8tsCxNGT7kMEIaIPk=;
-        b=uOE7Aq4mYJJVe1lGi/5yFXBl0CiyjYlKsmjjb55t5LawT05TVWyHmv+E50sYaUJh14
-         zxY8sqiJDHv40fob+zRE0Gh2XbnEmdXnuVIQ5pokHDmLEDW7uClMZQoDjpenG6Sls1Xw
-         j1bJIM5IaEzgkcQrj0JY6h703y9BTthY5Ef0QBcR2HExhAx1zLViU2y7PssJpVRSr31R
-         AGPv/wSkGy7hjlPzzb1Fphc3/9I+TC3DxE67DzX22Vbee9btlo0s23Z5p000QsKoxSLT
-         l8eiOyOfFkZmEZvZ+WNzWvSXZRHYndnXcxD05hyAq0TW3VubTLv5GZqPgQ9sh2F9QWK8
-         oPtA==
-X-Gm-Message-State: APjAAAXGFV2sD8eZWKSfAZTSkLIowpJBsLSvguealU1gdt2biMfvPOtk
-        JFn4KzTpfFcXZkizNR/Tg3N0sD04t/dLsOAX7EHxVQ==
-X-Google-Smtp-Source: APXvYqypGlrkwcWpkDZqIzkGCG+DJBLuflw6yusCBeidrQObvNv3EKCslo+yOFvLup20kJPOGzeawHtuUNUjQ5uzhwo=
-X-Received: by 2002:a2e:731a:: with SMTP id o26mr21535501ljc.105.1558013113062;
- Thu, 16 May 2019 06:25:13 -0700 (PDT)
+        bh=YBQglN9y1UCEoiDsyDKmavv3pTw2avVwHy9wGSr4d+c=;
+        b=PJxn5nxeA1sk9kxPXEDZOVQMx0N73wca38MUcG/y9GIfviR/Rnhvsnz93e+9V4LMbD
+         ++nrlmHgxjH5bSC61cJN6KT8yeAIYg/8HZHvBf5sSMUmQiyjBRJaTmZ33vg7BehQoI4I
+         d3Ijmy6tjn2ZbsFavSstioJBc1Di8KIKIj1UGS6x/X88BF8EBd9qjk/sefqwNdgGCsyy
+         QH3BrvR5a3OguHaRcxf0nxZ9Rjjr4VHADlnm++9Zvt+8sOPbV9GFV1xpWcsEVfJXvqGn
+         ApMCLDpD75WvpRLyvAh9CfHBx/d//l7/IXspnBdu92nLmvtYXDs60vp2WukfDig2/9I8
+         rxLg==
+X-Gm-Message-State: APjAAAXPB2Yiza2EbrA7dSlBtrNOY2/96/xUHlZsPhp5NbhmjZ7q5Jo3
+        gvejzLHiAriWx+NRht4zwGX/DIpWGxvQjcwntAHw8A==
+X-Google-Smtp-Source: APXvYqxyM8uKxGHNJAN6reja+yN/0m8IqjdmaVrInAyROSmFRr/vSpkDGQKVYugaZ4aLVYVtQpPVddOrXFdHM695bek=
+X-Received: by 2002:a2e:60a:: with SMTP id 10mr3406462ljg.126.1558013147786;
+ Thu, 16 May 2019 06:25:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190509205955.27842-1-f.fainelli@gmail.com> <20190509205955.27842-2-f.fainelli@gmail.com>
-In-Reply-To: <20190509205955.27842-2-f.fainelli@gmail.com>
+References: <20190509205955.27842-1-f.fainelli@gmail.com> <20190509205955.27842-3-f.fainelli@gmail.com>
+In-Reply-To: <20190509205955.27842-3-f.fainelli@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 May 2019 15:25:01 +0200
-Message-ID: <CACRpkdZqAi4bbpGO8sTBq573dDRF-VWg9gE8=uGVJ3Jv0MY5bg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: bcm2835-gpio: Document BCM7211 compatible
+Date:   Thu, 16 May 2019 15:25:36 +0200
+Message-ID: <CACRpkdYXp3LMXrSQrndUWWNq0eYb=P22FC9V0__j2AZPGCq0Jw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] pinctrl: bcm: Allow PINCTRL_BCM2835 for ARCH_BRCMSTB
 To:     Florian Fainelli <f.fainelli@gmail.com>
 Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Doug Berger <opendmb@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Ray Jui <rjui@broadcom.com>,
@@ -68,7 +69,6 @@ Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
         <bcm-kernel-feedback-list@broadcom.com>,
         Eric Anholt <eric@anholt.net>,
         Stefan Wahren <stefan.wahren@i2se.com>,
-        Doug Berger <opendmb@gmail.com>,
         Matheus Castello <matheus@castello.eng.br>,
         =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
         Lukas Wunner <lukas@wunner.de>,
@@ -88,12 +88,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Thu, May 9, 2019 at 11:01 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
 
-> BCM7211 has a slightly different block layout and some additional GPIO
-> registers that were added, document the compatible string.
+> From: Doug Berger <opendmb@gmail.com>
 >
+> ARCH_BRCMSTB needs to use the BCM2835 pin controller for chips
+> like BCM7211 which adopted that pin controller for GPIO. This
+> commit makes the option menu configurable with default enabled
+> for ARCH_BRCMSTB and ARCH_BCM2835.
+>
+> Signed-off-by: Doug Berger <opendmb@gmail.com>
 > Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Patch applied for v5.3 with ACKs.
+Patch applied for v5.3 with the ACKs.
 
 Yours,
 Linus Walleij
