@@ -2,148 +2,231 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7517BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 066CCC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30A05206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3342206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:23:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=itdevltd.onmicrosoft.com header.i=@itdevltd.onmicrosoft.com header.b="bkMTDLtY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r0BHnDF8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbfEPLXB (ORCPT
+        id S1727257AbfEPLXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:23:01 -0400
-Received: from mail-eopbgr80070.outbound.protection.outlook.com ([40.107.8.70]:17873
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726923AbfEPLXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:23:00 -0400
+        Thu, 16 May 2019 07:23:35 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44419 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbfEPLXe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:23:34 -0400
+Received: by mail-ed1-f68.google.com with SMTP id b8so4678716edm.11;
+        Thu, 16 May 2019 04:23:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=itdevltd.onmicrosoft.com; s=selector1-itdev-co-uk;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d3csnKADdSUAt8TSJkqhYZZl184/FTfPNTd73qCyDRI=;
- b=bkMTDLtYhMxqsHpiHNRY03ltmW5u6LL18YYzmdnaZRu47Ki2IhkruanLmuwfa9d29WNkFgVCt8AHtJ1PEIKMIKEVrND4BeOAU9mtkklQvakP/AoSTT4pBtLxg0jVQ1jKL1Ao2iApZkLqPBxlGGnVWgC7YHlYScbv+xHwN9ZyzoI=
-Received: from VI1PR08MB3168.eurprd08.prod.outlook.com (52.133.15.143) by
- VI1PR08MB0413.eurprd08.prod.outlook.com (10.162.12.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1856.11; Thu, 16 May 2019 11:22:56 +0000
-Received: from VI1PR08MB3168.eurprd08.prod.outlook.com
- ([fe80::8e9:9487:4f0a:fdaf]) by VI1PR08MB3168.eurprd08.prod.outlook.com
- ([fe80::8e9:9487:4f0a:fdaf%3]) with mapi id 15.20.1878.024; Thu, 16 May 2019
- 11:22:56 +0000
-From:   Quentin Deslandes <quentin.deslandes@itdev.co.uk>
-To:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-CC:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Ojaswin Mujoo <ojaswin25111998@gmail.com>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH] staging: vt6656: returns error code on
- vnt_int_start_interrupt fail
-Thread-Topic: [PATCH] staging: vt6656: returns error code on
- vnt_int_start_interrupt fail
-Thread-Index: AQHVC9m12V1LZttiK0yGWFHzOe/4XQ==
-Date:   Thu, 16 May 2019 11:22:56 +0000
-Message-ID: <20190516112243.14353-1-quentin.deslandes@itdev.co.uk>
-References: <20190516093046.1400-1-quentin.deslandes@itdev.co.uk>
-In-Reply-To: <20190516093046.1400-1-quentin.deslandes@itdev.co.uk>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM6P193CA0125.EURP193.PROD.OUTLOOK.COM
- (2603:10a6:209:85::30) To VI1PR08MB3168.eurprd08.prod.outlook.com
- (2603:10a6:803:47::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=quentin.deslandes@itdev.co.uk; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [89.21.227.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 66243a98-9af8-4616-a81d-08d6d9f0d80e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR08MB0413;
-x-ms-traffictypediagnostic: VI1PR08MB0413:
-x-microsoft-antispam-prvs: <VI1PR08MB0413B5FAF549F57948D1FD9CB30A0@VI1PR08MB0413.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:901;
-x-forefront-prvs: 0039C6E5C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39830400003)(366004)(346002)(136003)(396003)(376002)(189003)(199004)(316002)(7736002)(25786009)(36756003)(68736007)(76176011)(6486002)(6436002)(54906003)(52116002)(71190400001)(71200400001)(305945005)(99286004)(53936002)(2351001)(14454004)(256004)(14444005)(2501003)(8676002)(5640700003)(4326008)(74482002)(6512007)(44832011)(8936002)(73956011)(66476007)(66556008)(64756008)(66946007)(66446008)(102836004)(6916009)(26005)(186003)(386003)(6506007)(50226002)(1076003)(66066001)(3846002)(6116002)(2616005)(476003)(486006)(508600001)(86362001)(446003)(2906002)(5660300002)(81166006)(11346002)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB0413;H:VI1PR08MB3168.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: itdev.co.uk does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YeDv3Tab2e8vKhAvU1KZALvj777N+HfMYiqCv105+Tgum6ekfoBAztP07V+pzt8grZExBx5FJsNi/Iknn0YmiyU3YtjUgi1hecCH0GVmbacC1jK6KMfP7w0baCJ2bWK92awpUqdoPJz29QBHgNYYxlFVaHBRzBLqPcYWrKTCDwrIkyWWUHI9ParvstjeHeNYKiePzOOEImYVOC6anGWZAH4wd/V26gvGxCayyXEqbMzsyQW8rZq7SFs/fS28/m/ii1UolLZsenEluJLGAq5wdhpsPH1wqBiDMesHVeGk9SVDp2hSmJ3uEAMP977xIrAIZdWp4oZmOHYPW1cm68extgZzoeAuq+Uof0B/T3eyQ64OVGokn0XlC/u9zM8Z1aMquNQ6awOoGOn47b/wkld2DIvgh6w75TScqyNJVT8zjn4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LV1CkEaEqDI0sBIvJmZERS53kRl0OTlvTtScZy5Ad/M=;
+        b=r0BHnDF87+z9s+FxD0fWmVXlzNhHZfMGNjy9XQ4m3Cne8SdI+1y22gen05yZdoHX40
+         JnVLCZ/NFRZ5yvASCZPsjDPko9keQ7mV/OqDITHdaFVnkuKh4ISSzGRZd6VCh/VSrOkQ
+         7B7elPESfOzvEV00cRJLidAgr+FAJbph4gPct2TCHSL40gd8MEn2O3/vLDyPE2z5/p6h
+         EClUt2XeKdg7QlYPIbCN2EKUep20Hplc0eZqvDaRYEjdp3EK9cKf62Rz7aB4VimujdOb
+         L6Yofly2DtndxTk33EYEvaXn5Gp+0Ev/tps9NAx36755l92iFp0EjquV86wYUzVNbWNR
+         pmSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LV1CkEaEqDI0sBIvJmZERS53kRl0OTlvTtScZy5Ad/M=;
+        b=qqo00OJBG7kWETULm0jMMtzW3853NmPpg80DEDys1AIt4Zu43ReSLzlgbjl+4m98fx
+         byXvTsGsPsO8nhSvQfNwLK0HikEgXgVb5xrdnxidFEHqy6ofAf16QGcImgon/4Mwgojh
+         fTjw4H+pHv5CG0eCPgYC1ykMERNRfn1waJyvZTH8Tp0FLgDj29kWrVF9aJefiQdHjZU4
+         c3w3en1WGr439y9+meJErZqfIlyCETkrqnjFpE7LKcxLD937PD+dzHuuPSRaSxlUIdi2
+         c01CXUetxmBtE95Rhb9dDkHAFsvlne1LXULrd5YQ91nQ0OIgtlFywMeDcF7EcypUhsSW
+         YO5A==
+X-Gm-Message-State: APjAAAUOqOUjQRbYfuSPDLYowI5qGU3Ap8SqSswWGvdchlfNKbY7CH8L
+        OtVWwM0l+QHCTcIhlCNZzOtjPHdp
+X-Google-Smtp-Source: APXvYqwTd2yfrjCLq+03LWLkIiHcUb3QKno+8Q0ZZsvoqd99/Kmo5mybs3u1pwAK0551NvZ1yC7yfw==
+X-Received: by 2002:a17:906:2482:: with SMTP id e2mr38405804ejb.289.1558005812033;
+        Thu, 16 May 2019 04:23:32 -0700 (PDT)
+Received: from geeko ([191.249.67.249])
+        by smtp.gmail.com with ESMTPSA id d19sm1040239ejb.89.2019.05.16.04.23.29
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 May 2019 04:23:31 -0700 (PDT)
+Date:   Thu, 16 May 2019 08:23:19 -0300
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     neilb@suse.com, Shaohua Li <shli@kernel.org>,
+        "open list:SOFTWARE RAID (Multiple Disks) SUPPORT" 
+        <linux-raid@vger.kernel.org>
+Subject: Re: [PATCH] drivers: md: Unify common definitions of raid1 and raid10
+Message-ID: <20190516112317.GA8611@geeko>
+References: <20190509111849.22927-1-marcos.souza.org@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: itdev.co.uk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66243a98-9af8-4616-a81d-08d6d9f0d80e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 11:22:56.5145
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 2d2930c4-2251-45b4-ad79-3582c5f41740
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB0413
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509111849.22927-1-marcos.souza.org@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UmV0dXJucyBlcnJvciBjb2RlIGZyb20gJ3ZudF9pbnRfc3RhcnRfaW50ZXJydXB0KCknIHNvIHRo
-ZSBkZXZpY2UncyBwcml2YXRlDQpidWZmZXJzIHdpbGwgYmUgY29ycmVjdGx5IGZyZWVkIGFuZCAn
-c3RydWN0IGllZWU4MDIxMV9odycgc3RhcnQgZnVuY3Rpb24NCndpbGwgcmV0dXJuIGFuIGVycm9y
-IGNvZGUuDQoNClNpZ25lZC1vZmYtYnk6IFF1ZW50aW4gRGVzbGFuZGVzIDxxdWVudGluLmRlc2xh
-bmRlc0BpdGRldi5jby51az4NCi0tLQ0KdjI6IGluc3RlYWQgb2YgcmVtb3Zpbmcgc3RhdHVzIHZh
-cmlhYmxlLCByZXR1cm5zIGl0cyB2YWx1ZSB0byBjYWxsZXIgYW5kDQogICAgaGFuZGxlIGVycm9y
-IGluIGNhbGxlci4NCg0KIGRyaXZlcnMvc3RhZ2luZy92dDY2NTYvaW50LmMgICAgICB8ICA0ICsr
-Ky0NCiBkcml2ZXJzL3N0YWdpbmcvdnQ2NjU2L2ludC5oICAgICAgfCAgMiArLQ0KIGRyaXZlcnMv
-c3RhZ2luZy92dDY2NTYvbWFpbl91c2IuYyB8IDEyICsrKysrKysrKy0tLQ0KIDMgZmlsZXMgY2hh
-bmdlZCwgMTMgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvc3RhZ2luZy92dDY2NTYvaW50LmMgYi9kcml2ZXJzL3N0YWdpbmcvdnQ2NjU2L2ludC5j
-DQppbmRleCA1MDQ0MjRiMTlmY2YuLmYzZWUyMTk4ZTFiMyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMv
-c3RhZ2luZy92dDY2NTYvaW50LmMNCisrKyBiL2RyaXZlcnMvc3RhZ2luZy92dDY2NTYvaW50LmMN
-CkBAIC0zOSw3ICszOSw3IEBAIHN0YXRpYyBjb25zdCB1OCBmYWxsYmFja19yYXRlMVs1XVs1XSA9
-IHsNCiAJe1JBVEVfNTRNLCBSQVRFXzU0TSwgUkFURV8zNk0sIFJBVEVfMThNLCBSQVRFXzE4TX0N
-CiB9Ow0KIA0KLXZvaWQgdm50X2ludF9zdGFydF9pbnRlcnJ1cHQoc3RydWN0IHZudF9wcml2YXRl
-ICpwcml2KQ0KK2ludCB2bnRfaW50X3N0YXJ0X2ludGVycnVwdChzdHJ1Y3Qgdm50X3ByaXZhdGUg
-KnByaXYpDQogew0KIAl1bnNpZ25lZCBsb25nIGZsYWdzOw0KIAlpbnQgc3RhdHVzOw0KQEAgLTUx
-LDYgKzUxLDggQEAgdm9pZCB2bnRfaW50X3N0YXJ0X2ludGVycnVwdChzdHJ1Y3Qgdm50X3ByaXZh
-dGUgKnByaXYpDQogCXN0YXR1cyA9IHZudF9zdGFydF9pbnRlcnJ1cHRfdXJiKHByaXYpOw0KIA0K
-IAlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZwcml2LT5sb2NrLCBmbGFncyk7DQorDQorCXJldHVy
-biBzdGF0dXM7DQogfQ0KIA0KIHN0YXRpYyBpbnQgdm50X2ludF9yZXBvcnRfcmF0ZShzdHJ1Y3Qg
-dm50X3ByaXZhdGUgKnByaXYsIHU4IHBrdF9ubywgdTggdHNyKQ0KZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvc3RhZ2luZy92dDY2NTYvaW50LmggYi9kcml2ZXJzL3N0YWdpbmcvdnQ2NjU2L2ludC5oDQpp
-bmRleCA5ODdjNDU0ZTk5ZTkuLjhhNmQ2MDU2OWNlYiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvc3Rh
-Z2luZy92dDY2NTYvaW50LmgNCisrKyBiL2RyaXZlcnMvc3RhZ2luZy92dDY2NTYvaW50LmgNCkBA
-IC00MSw3ICs0MSw3IEBAIHN0cnVjdCB2bnRfaW50ZXJydXB0X2RhdGEgew0KIAl1OCBzd1syXTsN
-CiB9IF9fcGFja2VkOw0KIA0KLXZvaWQgdm50X2ludF9zdGFydF9pbnRlcnJ1cHQoc3RydWN0IHZu
-dF9wcml2YXRlICpwcml2KTsNCitpbnQgdm50X2ludF9zdGFydF9pbnRlcnJ1cHQoc3RydWN0IHZu
-dF9wcml2YXRlICpwcml2KTsNCiB2b2lkIHZudF9pbnRfcHJvY2Vzc19kYXRhKHN0cnVjdCB2bnRf
-cHJpdmF0ZSAqcHJpdik7DQogDQogI2VuZGlmIC8qIF9fSU5UX0hfXyAqLw0KZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvc3RhZ2luZy92dDY2NTYvbWFpbl91c2IuYyBiL2RyaXZlcnMvc3RhZ2luZy92dDY2
-NTYvbWFpbl91c2IuYw0KaW5kZXggY2NhZmNjMmM4N2FjLi43MWUxMGI5YWUyNTMgMTAwNjQ0DQot
-LS0gYS9kcml2ZXJzL3N0YWdpbmcvdnQ2NjU2L21haW5fdXNiLmMNCisrKyBiL2RyaXZlcnMvc3Rh
-Z2luZy92dDY2NTYvbWFpbl91c2IuYw0KQEAgLTQ4Myw2ICs0ODMsNyBAQCBzdGF0aWMgdm9pZCB2
-bnRfdHhfODAyMTEoc3RydWN0IGllZWU4MDIxMV9odyAqaHcsDQogDQogc3RhdGljIGludCB2bnRf
-c3RhcnQoc3RydWN0IGllZWU4MDIxMV9odyAqaHcpDQogew0KKwlpbnQgZXJyID0gMDsNCiAJc3Ry
-dWN0IHZudF9wcml2YXRlICpwcml2ID0gaHctPnByaXY7DQogDQogCXByaXYtPnJ4X2J1Zl9zeiA9
-IE1BWF9UT1RBTF9TSVpFX1dJVEhfQUxMX0hFQURFUlM7DQpAQCAtNDk2LDE1ICs0OTcsMjAgQEAg
-c3RhdGljIGludCB2bnRfc3RhcnQoc3RydWN0IGllZWU4MDIxMV9odyAqaHcpDQogDQogCWlmICh2
-bnRfaW5pdF9yZWdpc3RlcnMocHJpdikgPT0gZmFsc2UpIHsNCiAJCWRldl9kYmcoJnByaXYtPnVz
-Yi0+ZGV2LCAiIGluaXQgcmVnaXN0ZXIgZmFpbFxuIik7DQorCQllcnIgPSAtRU5PTUVNOw0KIAkJ
-Z290byBmcmVlX2FsbDsNCiAJfQ0KIA0KLQlpZiAodm50X2tleV9pbml0X3RhYmxlKHByaXYpKQ0K
-KwlpZiAodm50X2tleV9pbml0X3RhYmxlKHByaXYpKSB7DQorCQllcnIgPSAtRU5PTUVNOw0KIAkJ
-Z290byBmcmVlX2FsbDsNCisJfQ0KIA0KIAlwcml2LT5pbnRfaW50ZXJ2YWwgPSAxOyAgLyogYklu
-dGVydmFsIGlzIHNldCB0byAxICovDQogDQotCXZudF9pbnRfc3RhcnRfaW50ZXJydXB0KHByaXYp
-Ow0KKwllcnIgPSB2bnRfaW50X3N0YXJ0X2ludGVycnVwdChwcml2KTsNCisJaWYgKGVycikNCisJ
-CWdvdG8gZnJlZV9hbGw7DQogDQogCWllZWU4MDIxMV93YWtlX3F1ZXVlcyhodyk7DQogDQpAQCAt
-NTE4LDcgKzUyNCw3IEBAIHN0YXRpYyBpbnQgdm50X3N0YXJ0KHN0cnVjdCBpZWVlODAyMTFfaHcg
-Kmh3KQ0KIAl1c2Jfa2lsbF91cmIocHJpdi0+aW50ZXJydXB0X3VyYik7DQogCXVzYl9mcmVlX3Vy
-Yihwcml2LT5pbnRlcnJ1cHRfdXJiKTsNCiANCi0JcmV0dXJuIC1FTk9NRU07DQorCXJldHVybiBl
-cnI7DQogfQ0KIA0KIHN0YXRpYyB2b2lkIHZudF9zdG9wKHN0cnVjdCBpZWVlODAyMTFfaHcgKmh3
-KQ0KLS0gDQoyLjE3LjENCg0K
+ping.
+
+On Thu, May 09, 2019 at 08:18:49AM -0300, Marcos Paulo de Souza wrote:
+> These definitions are being moved to raid1-10.c.
+> 
+> Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+> ---
+>  drivers/md/raid1-10.c | 25 +++++++++++++++++++++++++
+>  drivers/md/raid1.c    | 29 ++---------------------------
+>  drivers/md/raid10.c   | 27 +--------------------------
+>  3 files changed, 28 insertions(+), 53 deletions(-)
+> 
+> diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
+> index 400001b815db..7d968bf08e54 100644
+> --- a/drivers/md/raid1-10.c
+> +++ b/drivers/md/raid1-10.c
+> @@ -3,6 +3,31 @@
+>  #define RESYNC_BLOCK_SIZE (64*1024)
+>  #define RESYNC_PAGES ((RESYNC_BLOCK_SIZE + PAGE_SIZE-1) / PAGE_SIZE)
+>  
+> +/*
+> + * Number of guaranteed raid bios in case of extreme VM load:
+> + */
+> +#define	NR_RAID_BIOS 256
+> +
+> +/* when we get a read error on a read-only array, we redirect to another
+> + * device without failing the first device, or trying to over-write to
+> + * correct the read error.  To keep track of bad blocks on a per-bio
+> + * level, we store IO_BLOCKED in the appropriate 'bios' pointer
+> + */
+> +#define IO_BLOCKED ((struct bio *)1)
+> +/* When we successfully write to a known bad-block, we need to remove the
+> + * bad-block marking which must be done from process context.  So we record
+> + * the success by setting devs[n].bio to IO_MADE_GOOD
+> + */
+> +#define IO_MADE_GOOD ((struct bio *)2)
+> +
+> +#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
+> +
+> +/* When there are this many requests queue to be written by
+> + * the raid thread, we become 'congested' to provide back-pressure
+> + * for writeback.
+> + */
+> +static int max_queued_requests = 1024;
+> +
+>  /* for managing resync I/O pages */
+>  struct resync_pages {
+>  	void		*raid_bio;
+> diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
+> index 0c8a098d220e..bb052c35bf29 100644
+> --- a/drivers/md/raid1.c
+> +++ b/drivers/md/raid1.c
+> @@ -50,31 +50,6 @@
+>  	 (1L << MD_HAS_PPL) |		\
+>  	 (1L << MD_HAS_MULTIPLE_PPLS))
+>  
+> -/*
+> - * Number of guaranteed r1bios in case of extreme VM load:
+> - */
+> -#define	NR_RAID1_BIOS 256
+> -
+> -/* when we get a read error on a read-only array, we redirect to another
+> - * device without failing the first device, or trying to over-write to
+> - * correct the read error.  To keep track of bad blocks on a per-bio
+> - * level, we store IO_BLOCKED in the appropriate 'bios' pointer
+> - */
+> -#define IO_BLOCKED ((struct bio *)1)
+> -/* When we successfully write to a known bad-block, we need to remove the
+> - * bad-block marking which must be done from process context.  So we record
+> - * the success by setting devs[n].bio to IO_MADE_GOOD
+> - */
+> -#define IO_MADE_GOOD ((struct bio *)2)
+> -
+> -#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
+> -
+> -/* When there are this many requests queue to be written by
+> - * the raid1 thread, we become 'congested' to provide back-pressure
+> - * for writeback.
+> - */
+> -static int max_queued_requests = 1024;
+> -
+>  static void allow_barrier(struct r1conf *conf, sector_t sector_nr);
+>  static void lower_barrier(struct r1conf *conf, sector_t sector_nr);
+>  
+> @@ -2955,7 +2930,7 @@ static struct r1conf *setup_conf(struct mddev *mddev)
+>  	if (!conf->poolinfo)
+>  		goto abort;
+>  	conf->poolinfo->raid_disks = mddev->raid_disks * 2;
+> -	err = mempool_init(&conf->r1bio_pool, NR_RAID1_BIOS, r1bio_pool_alloc,
+> +	err = mempool_init(&conf->r1bio_pool, NR_RAID_BIOS, r1bio_pool_alloc,
+>  			   r1bio_pool_free, conf->poolinfo);
+>  	if (err)
+>  		goto abort;
+> @@ -3240,7 +3215,7 @@ static int raid1_reshape(struct mddev *mddev)
+>  	newpoolinfo->mddev = mddev;
+>  	newpoolinfo->raid_disks = raid_disks * 2;
+>  
+> -	ret = mempool_init(&newpool, NR_RAID1_BIOS, r1bio_pool_alloc,
+> +	ret = mempool_init(&newpool, NR_RAID_BIOS, r1bio_pool_alloc,
+>  			   r1bio_pool_free, newpoolinfo);
+>  	if (ret) {
+>  		kfree(newpoolinfo);
+> diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
+> index 3b6880dd648d..24cb116d950f 100644
+> --- a/drivers/md/raid10.c
+> +++ b/drivers/md/raid10.c
+> @@ -73,31 +73,6 @@
+>   *    [B A] [D C]    [B A] [E C D]
+>   */
+>  
+> -/*
+> - * Number of guaranteed r10bios in case of extreme VM load:
+> - */
+> -#define	NR_RAID10_BIOS 256
+> -
+> -/* when we get a read error on a read-only array, we redirect to another
+> - * device without failing the first device, or trying to over-write to
+> - * correct the read error.  To keep track of bad blocks on a per-bio
+> - * level, we store IO_BLOCKED in the appropriate 'bios' pointer
+> - */
+> -#define IO_BLOCKED ((struct bio *)1)
+> -/* When we successfully write to a known bad-block, we need to remove the
+> - * bad-block marking which must be done from process context.  So we record
+> - * the success by setting devs[n].bio to IO_MADE_GOOD
+> - */
+> -#define IO_MADE_GOOD ((struct bio *)2)
+> -
+> -#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
+> -
+> -/* When there are this many requests queued to be written by
+> - * the raid10 thread, we become 'congested' to provide back-pressure
+> - * for writeback.
+> - */
+> -static int max_queued_requests = 1024;
+> -
+>  static void allow_barrier(struct r10conf *conf);
+>  static void lower_barrier(struct r10conf *conf);
+>  static int _enough(struct r10conf *conf, int previous, int ignore);
+> @@ -3684,7 +3659,7 @@ static struct r10conf *setup_conf(struct mddev *mddev)
+>  
+>  	conf->geo = geo;
+>  	conf->copies = copies;
+> -	err = mempool_init(&conf->r10bio_pool, NR_RAID10_BIOS, r10bio_pool_alloc,
+> +	err = mempool_init(&conf->r10bio_pool, NR_RAID_BIOS, r10bio_pool_alloc,
+>  			   r10bio_pool_free, conf);
+>  	if (err)
+>  		goto out;
+> -- 
+> 2.21.0
+> 
+
+-- 
+Thanks,
+Marcos
