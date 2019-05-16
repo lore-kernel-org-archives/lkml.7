@@ -2,151 +2,226 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E30C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2665CC04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE8020862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB83F20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbfEPJQm (ORCPT
+        id S1726856AbfEPJTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 05:16:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52918 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbfEPJQm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 05:16:42 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 50EE9792CD;
-        Thu, 16 May 2019 09:16:41 +0000 (UTC)
-Received: from localhost (ovpn-117-183.ams2.redhat.com [10.36.117.183])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D367019936;
-        Thu, 16 May 2019 09:16:40 +0000 (UTC)
-Date:   Thu, 16 May 2019 10:16:39 +0100
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        kernel-team@android.com, stable@vger.kernel.org,
-        "Jorge E. Moreira" <jemoreira@google.com>
-Subject: Re: [PATCH] vsock/virtio: Initialize core virtio vsock before
- registering the driver
-Message-ID: <20190516091639.GP29507@stefanha-x1.localdomain>
-References: <20190501003001.186239-1-jemoreira@google.com>
+        Thu, 16 May 2019 05:19:45 -0400
+Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:36913 "EHLO
+        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726336AbfEPJTp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 05:19:45 -0400
+Received: from [IPv6:2001:420:44c1:2579:5556:9d1d:75e4:9919] ([IPv6:2001:420:44c1:2579:5556:9d1d:75e4:9919])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id RCY5hnd4wsDWyRCY9hwYR6; Thu, 16 May 2019 11:19:42 +0200
+Subject: Re: Questions regarding Documentation/media/uapi/v4l/field-order.rst
+To:     "Rodin, Michael (Ferchau; ADITG/ESM1)" <mrodin@de.adit-jv.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Cc:     "Friedrich, Eugen (ADITG/ESM1)" <efriedrich@de.adit-jv.com>,
+        "Rosca, Eugeniu (ADITG/ESM1)" <erosca@de.adit-jv.com>,
+        "slongerbeam@gmail.com" <slongerbeam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <AC35D0CFBC66A84AAA9DF4334B52828D13614162@HI2EXCH01.adit-jv.com>
+ <187c237b-6b75-f408-ae41-6065baf5cd7f@xs4all.nl>
+ <AC35D0CFBC66A84AAA9DF4334B52828D13617E17@HI2EXCH01.adit-jv.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <3a241a5c-902e-ba53-748c-ab410513d1ad@xs4all.nl>
+Date:   Thu, 16 May 2019 11:19:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="l7GkBbkEatsaRqBf"
-Content-Disposition: inline
-In-Reply-To: <20190501003001.186239-1-jemoreira@google.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 16 May 2019 09:16:41 +0000 (UTC)
+In-Reply-To: <AC35D0CFBC66A84AAA9DF4334B52828D13617E17@HI2EXCH01.adit-jv.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfCmJvEgMkMWWLppOvtzi9Gxtr0EebmmVhtNHBnbhZsTl3QOQ4gtz/1cqkaS49zNsUxnLC2cnUCzd1rDI9488WBBe+gttnJ44Y3hBxuy/FUeMTBZwr56k
+ xJbn+J6sBlk6HnBWqXJ6e+y9ZkCp94HbMmSGI5+nmCT26T0J0jSk0K1P5On9eLQ8tPXxN02f6+70cc/ZrOd9BUHw7dgSaiekWsqPvA86nepMUcj/5CL7sBl4
+ 4zgiGrWvfRrlFnnSwVAuFcaQl6O+X6kF7P+itNZTzMrHvPWXgnOQhcMrLkU+0wb++wXpH2N58YlKfJIoIw1+kzvKExY4ZUp2KkXHYvpDrH1EbB+gmKAbSoXK
+ rY+/4ImcBIhZSKP9w04Uxfp7Eft5ApLjiqrWRZRKX7rul9in08GsNMVBOPu23JbaHjuXHoidyfnJWp6bEy92lL/Q+xm7E08bAx1OPxIgX4UAUg6NTzfsZnej
+ TPz2iavnL9YGmHq7RbUi1ZIoknEkrgwgTMOfLQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 5/16/19 10:19 AM, Rodin, Michael (Ferchau; ADITG/ESM1) wrote:
+>> On 4/16/19 3:54 PM, Rodin, Michael (Ferchau; ADITG/ESM1) wrote:
+>>> Hi,
+>>>
+>>> I would like to ask several questions regarding the documentation of the
+>> enum "v4l2_field" [1].
+>>> These questions came up during my investigations of issues with
+>>> interaction between the gstreamer plugin v4l2src and the rcar video input
+>> driver [2].
+>>>
+>>> The documentation [1] specifies that:
+>>> "All video capture and output devices must report the current field order.
+>>> Some drivers may permit the selection of a different order, to this
+>>> end applications initialize the field field of struct v4l2_pix_format
+>>> before calling the VIDIOC_S_FMT ioctl. If this is not desired it
+>>> should have the value V4L2_FIELD_ANY (0)."
+>>>
+>>> If I have understood these lines correctly, this means that if
+>>> userspace sets "field" member of the struct "v4l2_pix_format" to
+>>> V4L2_FIELD_ANY and uses this as parameter for the VIDIOC_S_FMT ioctl,
+>>> then a driver should select/report the field order, which was
+>>> previously set by media-ctl utility in the next subdevice, which is
+>>> connected
+>> to the /dev/videoX node (From my understanding this would be equivalent to
+>> the "current field order").
+>>>
+>>> If the described behavior is correct, then the description in the table
+>>> row for
+>> V4L2_FIELD_ANY in [1] is incomplete:
+>>> "Applications request this field order when any one of the
+>> V4L2_FIELD_NONE, V4L2_FIELD_TOP, V4L2_FIELD_BOTTOM, or
+>> V4L2_FIELD_INTERLACED formats is acceptable."
+>>> What if V4L2_FIELD_ALTERNATE or V4L2_FIELD_SEQ_TB or
+>> V4L2_FIELD_SEQ_BT are also acceptable for the application?
+>>> I think that the specification is either unprecise or my understanding of
+>>> the
+>> specification is wrong.
+>>
+>> The spec is a bit out of date: those missing field values were probably
+>> added
+>> after this text was written. I'll make a patch fixing this.
+> 
+> Thank you for the patch! I think, the sentence "Drivers choose depending on
+> hardware capabilities..." in the description of V4L2_FIELD_ANY is also
+> unprecise,
+> because when media-ctl is used, the format is chosen by the userspace and
+> not by the driver. So if I choose "interlaced" for the connected subdevice
+> by using media-ctl (which calls VIDIOC_SUBDEV_S_FMT) and it is successfully
+> set, then V4L2_FIELD_ANY will definitely return V4L2_FIELD_INTERLACED
+> and nothing else is possible.
 
---l7GkBbkEatsaRqBf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Actually, a subdev will have no knowledge of other subdevs. So using ANY will
+just cause the subdev driver to choose something based on the HW capabilities
+and existing pad formats. Using ANY with media-ctl is allowed, but generally
+is asking for problems.
 
-On Tue, Apr 30, 2019 at 05:30:01PM -0700, Jorge E. Moreira wrote:
-> Avoid a race in which static variables in net/vmw_vsock/af_vsock.c are
-> accessed (while handling interrupts) before they are initialized.
->=20
-> [    4.201410] BUG: unable to handle kernel paging request at fffffffffff=
-fffe8
-> [    4.207829] IP: vsock_addr_equals_addr+0x3/0x20
-> [    4.211379] PGD 28210067 P4D 28210067 PUD 28212067 PMD 0
-> [    4.211379] Oops: 0000 [#1] PREEMPT SMP PTI
-> [    4.211379] Modules linked in:
-> [    4.211379] CPU: 1 PID: 30 Comm: kworker/1:1 Not tainted 4.14.106-4192=
-97-gd7e28cc1f241 #1
-> [    4.211379] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIO=
-S 1.10.2-1 04/01/2014
-> [    4.211379] Workqueue: virtio_vsock virtio_transport_rx_work
-> [    4.211379] task: ffffa3273d175280 task.stack: ffffaea1800e8000
-> [    4.211379] RIP: 0010:vsock_addr_equals_addr+0x3/0x20
-> [    4.211379] RSP: 0000:ffffaea1800ebd28 EFLAGS: 00010286
-> [    4.211379] RAX: 0000000000000002 RBX: 0000000000000000 RCX: ffffffffb=
-94e42f0
-> [    4.211379] RDX: 0000000000000400 RSI: ffffffffffffffe0 RDI: ffffaea18=
-00ebdd0
-> [    4.211379] RBP: ffffaea1800ebd58 R08: 0000000000000001 R09: 000000000=
-0000001
-> [    4.211379] R10: 0000000000000000 R11: ffffffffb89d5d60 R12: ffffaea18=
-00ebdd0
-> [    4.211379] R13: 00000000828cbfbf R14: 0000000000000000 R15: ffffaea18=
-00ebdc0
-> [    4.211379] FS:  0000000000000000(0000) GS:ffffa3273fd00000(0000) knlG=
-S:0000000000000000
-> [    4.211379] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    4.211379] CR2: ffffffffffffffe8 CR3: 000000002820e001 CR4: 000000000=
-01606e0
-> [    4.211379] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 000000000=
-0000000
-> [    4.211379] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 000000000=
-0000400
-> [    4.211379] Call Trace:
-> [    4.211379]  ? vsock_find_connected_socket+0x6c/0xe0
-> [    4.211379]  virtio_transport_recv_pkt+0x15f/0x740
-> [    4.211379]  ? detach_buf+0x1b5/0x210
-> [    4.211379]  virtio_transport_rx_work+0xb7/0x140
-> [    4.211379]  process_one_work+0x1ef/0x480
-> [    4.211379]  worker_thread+0x312/0x460
-> [    4.211379]  kthread+0x132/0x140
-> [    4.211379]  ? process_one_work+0x480/0x480
-> [    4.211379]  ? kthread_destroy_worker+0xd0/0xd0
-> [    4.211379]  ret_from_fork+0x35/0x40
-> [    4.211379] Code: c7 47 08 00 00 00 00 66 c7 07 28 00 c7 47 08 ff ff f=
-f ff c7 47 04 ff ff ff ff c3 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 8b 47 0=
-8 <3b> 46 08 75 0a 8b 47 04 3b 46 04 0f 94 c0 c3 31 c0 c3 90 66 2e
-> [    4.211379] RIP: vsock_addr_equals_addr+0x3/0x20 RSP: ffffaea1800ebd28
-> [    4.211379] CR2: ffffffffffffffe8
-> [    4.211379] ---[ end trace f31cc4a2e6df3689 ]---
-> [    4.211379] Kernel panic - not syncing: Fatal exception in interrupt
-> [    4.211379] Kernel Offset: 0x37000000 from 0xffffffff81000000 (relocat=
-ion range: 0xffffffff80000000-0xffffffffbfffffff)
-> [    4.211379] Rebooting in 5 seconds..
->=20
-> Fixes: 22b5c0b63f32 ("vsock/virtio: fix kernel panic after device hot-unp=
-lug")
-> Cc: Stefan Hajnoczi <stefanha@redhat.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: kvm@vger.kernel.org
-> Cc: virtualization@lists.linux-foundation.org
-> Cc: netdev@vger.kernel.org
-> Cc: kernel-team@android.com
-> Cc: stable@vger.kernel.org [4.9+]
-> Signed-off-by: Jorge E. Moreira <jemoreira@google.com>
-> ---
->  net/vmw_vsock/virtio_transport.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
+So how ANY is mapped to a real field value by the driver is indeed undefined.
+As long as the result is valid, that's the only requirement.
 
-This patch is good to go, I've posted my R-b downthread.
+In most cases it is obvious what a driver will choose: NONE for camera pipelines,
+INTERLACED for SDTV interlaced formats, and for HDMI either NONE for progressive
+formats or ALTERNATE for interlaced formats.
 
-Stefan
+> 
+>>>
+>>> Another potential issue, which I found in this documentation is that
+>>> it does not distinguish between multiple contexts in which enum v4l2_field
+>> can be used. I can think of at least two different contexts:
+>>> - When used to select the field order with VIDIOC_S_FMT ioctl.
+>>> - When used to report the field order in a buffer: for example application
+>> sets V4L2_FIELD_ALTERNATE in VIDIOC_S_FMT ioctl and then gets buffers,
+>> which have V4L2_FIELD_TOP/BOTTOM set.
+>>
+>> IMHO the text is reasonably clear on that. But if you have suggestions to
+>> improve it, then make a proposal.
+>>
+>>> Now with this in mind, when I read the description of V4L2_FIELD_NONE:
+>>> "The driver may also indicate this order when it cannot distinguish
+>>> between
+>> V4L2_FIELD_TOP and V4L2_FIELD_BOTTOM."
+>>
+>> Whoops, that makes no sense. There are no drivers that do this. I'll remove
+>> this line. If a driver can't tell the difference, then it should just pick
+>> FIELD_TOP
+>> or BOTTOM.
+> 
+> Thank you! So this means that drivers should return FIELD_ALTERNATE in S_FMT,
+> even if they can not distinguish between FIELD_TOP and FIELD_BOTTOM.
 
---l7GkBbkEatsaRqBf
-Content-Type: application/pgp-signature; name="signature.asc"
+If you can't distinguish between FIELD_TOP and FIELD_BOTTOM then that effectively
+means that the HW cannot support FIELD_ALTERNATE. That mode relies on the HW
+being able to distinguish between top and bottom fields.
 
------BEGIN PGP SIGNATURE-----
+> Would it make sense to add your last sentence "If a driver can't tell the
+> difference,
+> then it should just pick FIELD_TOP or BOTTOM." to the description of
+> V4L2_FIELD_ALTERNATE (or better just FIELD_TOP so it is easier for userspace
+> to check whether there is no field detection), so this case is documented
+> after
+> removing of "The driver may also indicate this order when it cannot
+> distinguish
+> between V4L2_FIELD_TOP and V4L2_FIELD_BOTTOM."?
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAlzdKncACgkQnKSrs4Gr
-c8j9OwgAvc2/4f5xfLlbobymDJBg1CcNAUHQBHRVHoj4h+zCxvuHRO6TnZtDXtsl
-MJ5ORu5AKDYS5OLvtMScWDrSXC329Uv1cqDKYtyIG7efL56ofYqiJmrIiq+Ju16n
-Cec9A6+RMYwBDHNHK5iqzo7if6bh7m5BPeYlXO2YXj5x0IOlNPJxIhVzK1jEmo4O
-6jjzRSGuHKdqsfNX7qXC8+ibzUX3IwGw0A4dZHJe/gFY4zp36fH23L89WmKbwyv8
-6KgDGj1N6ByNkSeEUTIse8nxyI0KSgQcw12q61dS1wahgJJqePzwWP/gMxt3D5tM
-5MEnPpeSB1ovsKDGnxqzUOiB7S8z3A==
-=04Ga
------END PGP SIGNATURE-----
+No. If the HW cannot distinguish between top and bottom fields, then it
+shouldn't signal interlaced support at all. Without knowing what field
+is captured userspace cannot do anything with it. It just makes no sense.
 
---l7GkBbkEatsaRqBf--
+> 
+>>> I see two possible meanings/interpretations:
+>>> - If application sets V4L2_FIELD_ALTERNATE in VIDIOC_S_FMT ioctl, report
+>> V4L2_FIELD_NONE back
+>>>    so the application knows that the driver can not provide any TOP/BOTTOM
+>> metadata in the buffers
+>>>    (which may be necessary for the application for example for
+>>> deinterlacing)
+>> before it has got any buffer.
+>>> - If application sets V4L2_FIELD_ALTERNATE in VIDIOC_S_FMT ioctl, driver
+>> reports V4L2_FIELD_ALTERNATE back,
+>>>    even if it can not distinguish between TOP/BOTTOM. But when the
+>> application starts to read buffers,
+>>>    they have V4L2_FIELD_NONE set if it's not possible to distinguish
+>>> between
+>> TOP/BOTTOM.
+>>
+>> Actually, drivers cannot ever return NONE for a top or bottom field.
+>> FIELD_NONE indicates that a full frame has arrived, and doing something else
+>> would break userspace.
+>>
+>>>
+>>> Also there is another ambiguity in the description of V4L2_FIELD_NONE:
+>>> "Images are in progressive format, not interlaced."
+>>> What does "interlaced" mean in this case? Does it mean the other possible
+>> enum values or just the V4L2_FIELD_INTERLACED?
+>>
+>> It means that the source video transmitted full frames, not top and bottom
+>> fields. I clarified the text a bit.
+> 
+> Thanks for the clarification! So just to avoid misunderstanding, 
+> V4L2_FIELD_INTERLACED and V4L2_FIELD_SEQ_BT/TB
+> are "interlaced" in this context, because they contain fields (and are "field-based")?
+
+Yes.
+
+> 
+>>> If this just means V4L2_FIELD_INTERLACED, then it would imply that for
+>>> example V4L2_FIELD_SEQ_TB and V4L2_FIELD_ALTERNATE are progressive
+>> formats, which is obviously not true.
+>>> And also generally, in which of described contexts should be
+>> V4L2_FIELD_NONE set or reported (buffer or VIDIOC_S_FMT ioctl)?
+>>
+>> For video capture (that's what we are talking about here) it is returned by
+>> the
+>> driver in v4l2_buffer, never by userspace. Userspace can try to request a
+>> specific field value when calling S_FMT, but the driver can overwrite it.
+> 
+> Sorry, what do you mean by "returned by userspace" here?
+
+No idea :-)  Just ignore the ", never by userspace" bit in that sentence.
+
+Basically, userspace sets a format by calling VIDIOC_S_FMT. The driver returns
+the actual format it will use taking into account hardware limitations. The
+returned field value is what it will use for the video capture.
+
+While streaming, when you dequeue a buffer (VIDIOC_DQBUF) the field value in
+v4l2_buffer is normally identical to the field value from v4l2_format, except
+in the case where v4l2_format says FIELD_ALTERNATE: in that case the v4l2_buffer
+field value shall be either TOP or BOTTOM.
+
+Regards,
+
+	Hans
