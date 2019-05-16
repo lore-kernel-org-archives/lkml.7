@@ -6,99 +6,102 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF41C04E87
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA3EDC04E53
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5C520843
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDB4020843
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557971273;
-	bh=2v+hlEz/yrmGYADv91bHYZMB1uhZ4XHGf9OpJ+kHSJc=;
+	s=default; t=1557971275;
+	bh=sO7xZ8cfoy1kggXctOvv/jXsCa0XE2+Mn1JX3u1Ztrw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0SWNBdBv9oTxsj0B11Hh5AglKuSryjCXJAuxyFdcZBpzz6TE9kU+fB4T8YIlnU399
-	 tJ8V/KFvH2u9W6FAjIbBkcisX4L3svQY1vZDuQfhSHo40VgHmCX9PjCAxCE+8UlCFI
-	 jqhfI7TYQND2RNXYdhD3bIO3W1DfD2tc/e+VNBtI=
+	b=h/8dC+Zw+bvuadAGp2+Zvgvh0ocZ4W5RBT0nYxiSWymch64WWejLTAOuUq/EX8AFN
+	 gNw4lTtakLXZMrpFUemtwtossPmSuVNr//mQ09XXp4uN9MhCU5LD6ctHujYBm5NZvp
+	 qQlZ+Q9P58ZfQVJZP3nkZpg61Bg/+D+CqEA2TJMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727694AbfEPBq5 (ORCPT
+        id S1727681AbfEPBqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 21:46:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34478 "EHLO mail.kernel.org"
+        Wed, 15 May 2019 21:46:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbfEPAjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 20:39:17 -0400
+        id S1726464AbfEPAgv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 20:36:51 -0400
 Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AE5520862;
-        Thu, 16 May 2019 00:39:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8621520862;
+        Thu, 16 May 2019 00:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557967156;
-        bh=2v+hlEz/yrmGYADv91bHYZMB1uhZ4XHGf9OpJ+kHSJc=;
+        s=default; t=1557967010;
+        bh=sO7xZ8cfoy1kggXctOvv/jXsCa0XE2+Mn1JX3u1Ztrw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SbtJXvxEW5/VqzC0HtrSaKnuTfuPa/fPogImNgBG+dvzZyeuLYshz2VS46g8TFfX4
-         M7NSCTX+KskYow+a0t8vVqxHnZapUIFXEyVKsNUSs69jAGa01kzWonTi2XajvGcU6r
-         St3gobMd0Cdce3HqiqwXt56tofaSzL4szr/vOXbA=
-Date:   Wed, 15 May 2019 20:39:15 -0400
+        b=cuRIzmu0rw0Tu/fTcMJkOlnk7CR0jH9qhtc87WHL6D/1UlVBy6nW+OIkvmQkUed0s
+         RyezGH87LMjZFsD5FGjP9w8tdIOKip2Qg31PfJnCqTarbc0IevUtR3Iy5zZj3/087A
+         Sd+kuEhb9w+M+CzqyH/kFnLErk4Pz7jHZB2c15hg=
+Date:   Wed, 15 May 2019 20:36:49 -0400
 From:   Sasha Levin <sashal@kernel.org>
-To:     Tim Bird <tbird20d@gmail.com>
-Cc:     Veronika Kabatova <vkabatov@redhat.com>,
-        Dhaval Giani <dhaval.giani@gmail.com>,
+To:     shuah <shuah@kernel.org>
+Cc:     Dhaval Giani <dhaval.giani@gmail.com>,
         Sasha Levin <alexander.levin@microsoft.com>,
-        shuah <shuah@kernel.org>, Kevin Hilman <khilman@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Tim Bird <tbird20d@gmail.com>,
         LKML <linux-kernel@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>, willy@infradead.org,
-        gustavo padovan <gustavo.padovan@collabora.co.uk>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        knut omang <knut.omang@oracle.com>,
-        Eliska Slobodova <eslobodo@redhat.com>,
-        Tim Bird <tim.bird@sony.com>
+        "Carpenter,Dan" <dan.carpenter@oracle.com>, willy@infradead.org,
+        gustavo.padovan@collabora.co.uk,
+        Dmitry Vyukov <dvyukov@google.com>, knut.omang@oracle.com
 Subject: Re: Linux Testing Microconference at LPC
-Message-ID: <20190516003915.GT11972@sasha-vm>
+Message-ID: <20190516003649.GS11972@sasha-vm>
 References: <CAPhKKr_uVTFAzne0QkZFUGfb8RxQdVFx41G9kXRY7sFN-=pZ6w@mail.gmail.com>
- <199564879.15267174.1556199472004.JavaMail.zimbra@redhat.com>
- <CA+bK7J7tHOkz5KMVHpaV1x_dy6X6A7gtxcBYXJO8jj98qvWETw@mail.gmail.com>
+ <3c6c9405-7e90-fb03-aa1c-0ada13203980@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <CA+bK7J7tHOkz5KMVHpaV1x_dy6X6A7gtxcBYXJO8jj98qvWETw@mail.gmail.com>
+In-Reply-To: <3c6c9405-7e90-fb03-aa1c-0ada13203980@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 26, 2019 at 02:02:53PM -0700, Tim Bird wrote:
->I'm in the process now of planning Automated Testing Summit 2019,
->which is tentatively planned for Lyon, France on October 31.  This is
->the day after Embedded Linux Conference Europe and Open Source Summit
->Europe, in Lyon.  I've been working with the
->Linux Foundation event staff to set this up.
+On Wed, May 15, 2019 at 04:44:19PM -0600, shuah wrote:
+>Hi Sasha and Dhaval,
 >
->The focus of that event is test standards, including standards for
->test definition, results formats, lab and board management, and APIs
->between elements of the Automated Testing and CI stack.
+>On 4/11/19 11:37 AM, Dhaval Giani wrote:
+>>Hi Folks,
+>>
+>>This is a call for participation for the Linux Testing microconference
+>>at LPC this year.
+>>
+>>For those who were at LPC last year, as the closing panel mentioned,
+>>testing is probably the next big push needed to improve quality. From
+>>getting more selftests in, to regression testing to ensure we don't
+>>break realtime as more of PREEMPT_RT comes in, to more stable distros,
+>>we need more testing around the kernel.
+>>
+>>We have talked about different efforts around testing, such as fuzzing
+>>(using syzkaller and trinity), automating fuzzing with syzbot, 0day
+>>testing, test frameworks such as ktests, smatch to find bugs in the
+>>past. We want to push this discussion further this year and are
+>>interested in hearing from you what you want to talk about, and where
+>>kernel testing needs to go next.
+>>
+>>Please let us know what topics you believe should be a part of the
+>>micro conference this year.
+>>
+>>Thanks!
+>>Sasha and Dhaval
+>>
 >
->I think that the set of things to discuss is somewhat different
->between the Plumbers testing microconference and ATS.  But I hope that
->I'm not fragmenting the space too much.
+>A talk on KUnit from Brendan Higgins will be good addition to this
+>Micro-conference. I am cc'ing Brendan on this thread.
 >
->With regards to the Testing microconference at Plumbers, I would like
->to do a presentation on the current status of test standards and test
->framework interoperability.  We recently had some good meetings
->between the LAVA and Fuego people at Linaro Connect
->on this topic.
+>Please consider adding it.
 
-Hi Tim,
-
-Sorry for the delayed response, this mail got marked as read as a result
-of fat fingers :(
-
-I'd want to avoid having an 'overview' talk as part of the MC. We have
-quite a few discussion topics this year and in the spirit of LPC I'd
-prefer to avoid presentations.
-
-Maybe it's more appropriate for the refereed track?
+FWIW, the topic of unit tests is already on the schedule. There seems to
+be two different sub-topics here (kunit vs KTF) so there's a good
+discussion to be had here on many levels.
 
 --
 Thanks,
