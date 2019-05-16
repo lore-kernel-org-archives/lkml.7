@@ -2,144 +2,178 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C42C04E87
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0794AC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DED0C20818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB7892082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:38:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="MeZbAWvq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xv+GVhJf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbfEPEeb (ORCPT
+        id S1726462AbfEPEie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 00:34:31 -0400
-Received: from mail-eopbgr1310105.outbound.protection.outlook.com ([40.107.131.105]:33523
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726223AbfEPEea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 00:34:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=P4PjJApANutG2feoU2XfuE62+oi9LiaMnBNhrtcvXb6yoTY/QK54o/qR1oyDh37JoSeC3/FBRffOxRrnCMBVUs1orzW55SCZgYpfcmYAMOIS2iWVI8z0nAwqxVVyCLBxuhFSySCIvyVTwNJl7oERNDca3Fqml1Qxc4Q4APxc1Dw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gekgEer85PRnACe5n2c19L+ylZ38usHU2iUz6thQoWo=;
- b=GJbPsxDnZ7aGq99I6/jYupVC2JJqB8biP7L30D1QpLNd/hUG8DJqWOSB/m8BtntzAoy+/nl0HLQvjFqGMHNoqProXyql3NvtMyQwVp8cAr+SK9OdYnRFnB/+8UhKWZzG2ODkXKm8kai6gVSF2rHkB8zO1pzK8EHpIJ2Njz3oUOQ=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gekgEer85PRnACe5n2c19L+ylZ38usHU2iUz6thQoWo=;
- b=MeZbAWvq4D5uWCE8Qt7AiqspVr2kqNdpzWYNh2qs0EHneXp/kJv0RZAA1S24TXcHeQSrsXzBcUIx7cINT+HeCkHZ0euUVvgNDNfllxPtuDooZsI0WrcVEUIDbp4txdSSsZ1b70p4jwoJthEnF02eyIhQzO9rfbwZHf0ooP5QfWQ=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0121.APCP153.PROD.OUTLOOK.COM (10.170.188.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.4; Thu, 16 May 2019 04:34:22 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::dc7e:e62f:efc9:8564]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::dc7e:e62f:efc9:8564%4]) with mapi id 15.20.1922.002; Thu, 16 May 2019
- 04:34:22 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] hv_sock: Add support for delayed close
-Thread-Topic: [PATCH v2] hv_sock: Add support for delayed close
-Thread-Index: AdUKtaBXG33lHE0AQU2ynJ9GbZ74UwA3pTOg
-Date:   Thu, 16 May 2019 04:34:21 +0000
-Message-ID: <PU1P153MB01698261307593C5D58AAF4FBF0A0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <BN6PR21MB0465043C08E519774EE73E99C0090@BN6PR21MB0465.namprd21.prod.outlook.com>
-In-Reply-To: <BN6PR21MB0465043C08E519774EE73E99C0090@BN6PR21MB0465.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-16T04:34:19.9899242Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a52563af-82a7-4a5f-aed5-227da8f0af23;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:1760:3901:5c9:f1fc:42c6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 878d9d75-e326-4f7e-110d-08d6d9b7c4bb
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0121;
-x-ms-traffictypediagnostic: PU1P153MB0121:
-x-microsoft-antispam-prvs: <PU1P153MB012108AC43BD1EE0AA06E135BF0A0@PU1P153MB0121.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0039C6E5C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(136003)(346002)(396003)(39860400002)(189003)(199004)(54906003)(99286004)(476003)(110136005)(8676002)(7696005)(486006)(81156014)(8936002)(81166006)(76176011)(74316002)(55016002)(9686003)(10090500001)(305945005)(7736002)(14444005)(46003)(11346002)(256004)(229853002)(10290500003)(76116006)(446003)(8990500004)(5660300002)(53936002)(6246003)(25786009)(102836004)(186003)(6436002)(2906002)(52536014)(68736007)(73956011)(14454004)(66946007)(66476007)(33656002)(316002)(86612001)(6116002)(66556008)(64756008)(66446008)(71200400001)(71190400001)(4326008)(1511001)(6636002)(478600001)(6506007)(86362001)(22452003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0121;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: oqhACWNFxxZiYIW+nA8wLXX/zMq5cn/e1ZhI9G19K4BjR01siMhknvAYgxNNmI2Loc5KZpJhw0RxVNFrXrvAoTQ+k57ir3hOwTljPSD53fakYe5+MXfBt6T2e1HqVr6yI4+rlH+uUmjEc5uiZKHD4197ZY9ELMu8XJP8J1bam7OJ0d7OW94we7GQfJlcZo7PJdDesOcUi5w6ezXQeObx6TST5vFT9vIPyVxqL59E3L6QgJ9ltlum3bZTyoAVfI0Frf9PtAn0KkXJOQCAquEk3nWy6o1Kpab61lEln6jqhwLrXHLi6ZvYHibAem30+vKsamrIBH5T235IoKb4u4XzYYCpJFjwijzj6dPki5v3fzU4Rvevvo3Y6YPFiR748jwtGaBICdkNKAmcDP7/YBfyDbsrV0t9NH2NlfCKIlXw3HQ=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 16 May 2019 00:38:34 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38129 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfEPEid (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 00:38:33 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y19so1504678lfy.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 21:38:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gd4cUjFL8g4A06srBnrmSIZCQVAp7wLeyPycG806AQU=;
+        b=xv+GVhJfVR7J3tDJQbZMCt1MOFHKzALLMO/RCxVLj3oH0oQ4LqXRz7YLkHfIHO/5v+
+         tip85BW4WEX28G66QH/Itp1rmkRbHOGuhXjLush+IhgpMUw54cDhQ6yOiLwz94a4axCb
+         DNHaDjbncuLGG9EjHiWG/ON6k2eHRMspca4Z9dp/E9vSM6i5QVWQAKv2K60I+Zp2rHF3
+         pKDQeeJJLqwqatAX6rlHUyc7qAWGGrZ8pUbxAN8J47XfNDer8XGX/yYI/Xz/OjtP+tD9
+         WvGyEWtq1pJTAoXLMqStWA2+wL0ivfLlQ8VcGuiuqAy+xc4CJCFG7qdnoPEmOdGfJISB
+         RUUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gd4cUjFL8g4A06srBnrmSIZCQVAp7wLeyPycG806AQU=;
+        b=F7e7nY5iDyOhWTnOo69ifdUxIVm5crajJlPAN3t6Bv2uTe8nl9efExoEKICos+Gx1x
+         fIXiyIABNGGmq4/xRa9nWc92/cUiilwdDGLr3+At9IL29EF7bP+UewHpfjF39qYKgl1Z
+         LoTB6Bru4/CS5mzn6ni04JB0LVPPZg/oxvubxVjxnN3Vh+kmZvoiBn8lVwTEsvio7OJC
+         OtCrrHETP6pUk3adQQoJZ5WlvtuwtDiCjl7dzXaEwxWPZJnQsCKCcP5e+oWA8BzSuDQx
+         ph5EWMFBavmsS+SU+huubaHIQj/q21kmWV1Tx7vzGu55xyJKsLwx7ZIUIouObmL3x/Hh
+         6wPA==
+X-Gm-Message-State: APjAAAXVrdQtdkoq189LQqt8z9q2M8HiKlwgjCrih7fWXuOOG/WAiZWG
+        fZihg1kjA8X7GEKz+NKyDiVLEhaQ8MpfIfaTCyNW3g==
+X-Google-Smtp-Source: APXvYqzc5vYa/0xR+027E5QOa4Mb3lZt+lgg5KPHnDl6aEZCSqPhbClPo3HNRE1SwtBEBYiJxLN0RdWZJa3fhmgJ6tI=
+X-Received: by 2002:a05:6512:309:: with SMTP id t9mr22097210lfp.103.1557981511660;
+ Wed, 15 May 2019 21:38:31 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 878d9d75-e326-4f7e-110d-08d6d9b7c4bb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 04:34:21.8222
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0121
+References: <20190515090652.640988966@linuxfoundation.org>
+In-Reply-To: <20190515090652.640988966@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 16 May 2019 10:08:20 +0530
+Message-ID: <CA+G9fYv2=in-jo5jj7g8886mDx_aKOpQK7qFpB0J2dicCapvOw@mail.gmail.com>
+Subject: Re: [PATCH 4.19 000/113] 4.19.44-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Sunil Muthuswamy <sunilmut@microsoft.com>
-> Sent: Tuesday, May 14, 2019 5:56 PM
-> ...
-> +static bool hvs_close_lock_held(struct vsock_sock *vsk)
->  {
-> ...
-> +	schedule_delayed_work(&vsk->close_work, HVS_CLOSE_TIMEOUT);
+On Wed, 15 May 2019 at 16:53, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.44 release.
+> There are 113 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri 17 May 2019 09:04:35 AM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.44-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-The patch looks good to me. Thank you, Sunil!
+Summary
+------------------------------------------------------------------------
 
-Next, we're going to remove the "channel->rescind" check in=20
-vmbus_hvsock_device_unregister() -- when doing that, IMO we need to
-fix a potential race revealed by the schedule_delayed_work() in this
-patch:
+kernel: 4.19.44-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: b5001f5eab58fc1a2a3d5dfc90fa9bb513c73d8a
+git describe: v4.19.43-114-gb5001f5eab58
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.43-114-gb5001f5eab58
 
-When hvs_close_timeout() finishes, the "sk" struct has been freed, but
-vmbus_onoffer_rescind() -> channel->chn_rescind_callback(), i.e.=20
-hvs_close_connection(), may be still running and referencing the "chan"
-and "sk" structs (), which should no longer be referenced when=20
-hvs_close_timeout() finishes, i.e. "get_per_channel_state(chan)" is no
-longer safe. The problem is: currently there is no sync mechanism
-between vmbus_onoffer_rescind() and hvs_close_timeout().
 
-The race is a real issue only after we remove the "channel->rescind"
-in vmbus_hvsock_device_unregister().
+No regressions (compared to build v4.19.43)
 
-I guess we need to introduce a new single-threaded workqueue in the
-vmbus driver, and offload both vmbus_onoffer_rescind() and=20
-hvs_close_timeout() onto the new workqueue.
+No fixes (compared to build v4.19.43)
 
-Thanks,
--- Dexuan
 
+Ran 23449 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* libgpiod
+* libhugetlbfs
+* kselftest
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
