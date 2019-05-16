@@ -2,108 +2,88 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6F26C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 777B9C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB6D820657
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F5B120833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:38:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jUS0eLKx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729095AbfEPShJ (ORCPT
+        id S1729109AbfEPSiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 14:37:09 -0400
-Received: from caffeine.csclub.uwaterloo.ca ([129.97.134.17]:33179 "EHLO
-        caffeine.csclub.uwaterloo.ca" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727097AbfEPShI (ORCPT
+        Thu, 16 May 2019 14:38:02 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:49842 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfEPSiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 14:37:08 -0400
-Received: by caffeine.csclub.uwaterloo.ca (Postfix, from userid 20367)
-        id D08D646380B; Thu, 16 May 2019 14:37:05 -0400 (EDT)
-Date:   Thu, 16 May 2019 14:37:05 -0400
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
-Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec
- packets
-Message-ID: <20190516183705.e4zflbli7oujlbek@csclub.uwaterloo.ca>
-References: <20190502185250.vlsainugtn6zjd6p@csclub.uwaterloo.ca>
- <CAKgT0Uc_YVzns+26-TL+hhmErqG4_w4evRqLCaa=7nME7Zq+Vg@mail.gmail.com>
- <20190503151421.akvmu77lghxcouni@csclub.uwaterloo.ca>
- <CAKgT0UcV2wCr6iUYktZ+Bju_GNpXKzR=M+NLfKhUsw4bsJSiyA@mail.gmail.com>
- <20190503205935.bg45rsso5jjj3gnx@csclub.uwaterloo.ca>
- <20190513165547.alkkgcsdelaznw6v@csclub.uwaterloo.ca>
- <CAKgT0Uf_nqZtCnHmC=-oDFz-3PuSM6=30BvJSDiAgzK062OY6w@mail.gmail.com>
- <20190514163443.glfjva3ofqcy7lbg@csclub.uwaterloo.ca>
- <CAKgT0UdPDyCBsShQVwwE5C8fBKkMcfS6_S5m3T7JP-So9fzVgA@mail.gmail.com>
- <20190516183407.qswotwyjwtjqfdqm@csclub.uwaterloo.ca>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516183407.qswotwyjwtjqfdqm@csclub.uwaterloo.ca>
-User-Agent: NeoMutt/20170113 (1.7.2)
-From:   lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
+        Thu, 16 May 2019 14:38:01 -0400
+Received: by mail-pg1-f201.google.com with SMTP id e20so2656396pgm.16
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 11:38:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=3j/4tr8CrKpqGGvqHCEPSLn57jN1xeOSywr/5Ae9rTM=;
+        b=jUS0eLKxVhmfNjWiAtxwVyjVnsmrN2HNyKGU2ySEflldzKc3Gc9TTaoDCfyVzx6/0P
+         4m2criIXsk5HbgXDlNxoyaqLt63pNi4cK7jSx4WgxOunn2tjhE56CVMIfb5g9fpTxMo1
+         SNUypGqklImXvZv/7uG5xzKj3Vk6+eZFVOWG8lETNgsc9jewIY/oiFBa87mS0EicjXXG
+         nHUBpddZgJhNy/NhYVwE2l2yjU1P/97BhtVeVWWNyZYIKSGktrrds+MVJGJ7vAZaYyMN
+         rh6vYMf9LJptDdl6VfPb0k36yPMSqL6c7OM3JQmN3ACkGaTMZmG6DtKPjw+/qvMB3MVS
+         j1wQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=3j/4tr8CrKpqGGvqHCEPSLn57jN1xeOSywr/5Ae9rTM=;
+        b=MVhP1/nVMttdM6hlBURN5xf1tYuiD/PivdP7LrFNtY5uQgcVsHG7M5tq66MFQlPx92
+         XJ0m87cV79Uul1nCJdi6r3ovNilIQ3gkE/f5As8gtGrrpQ2c7piX7BVU+1aIMb3sOlL+
+         3SVAitiIDQH9HP4iZ5wVTviu7xoqZVX54/AUh9ubhlI5qHsP4/eyYZWMPmUDJ0c+VUcm
+         acRo3sbxLrMZ9ePowmGgmpdxDQkkOvS/e8hFiZLv0KMEr9iK7P26CPdgW/9hKv7Jeq5G
+         RT4Fr9DtfsPLSn4cgVL6Lw29Rrh/QKt00mO0Yby/WufCR6fj6j1cuNdVurIPBW7NT5ZK
+         TxPQ==
+X-Gm-Message-State: APjAAAVAY2is/vrzoK0Srk4elAsqvxcYguDsQJCWYaRmk5Vo7vSftlCi
+        l00znOhoA+q6+51VaZRnwroj7nudYw==
+X-Google-Smtp-Source: APXvYqyMwym9Xsow2mBymLy3/VC+EfHHl/uXbkBkH4AUrf9SOyEUTEF+6bTf/FVRxMCnszBMXDP6ncqUM98=
+X-Received: by 2002:a65:478a:: with SMTP id e10mr52135748pgs.310.1558031880782;
+ Thu, 16 May 2019 11:38:00 -0700 (PDT)
+Date:   Thu, 16 May 2019 11:37:47 -0700
+In-Reply-To: <20190515104824.GD2623@hirez.programming.kicks-ass.net>
+Message-Id: <20190516183747.166545-1-yabinc@google.com>
+Mime-Version: 1.0
+References: <20190515104824.GD2623@hirez.programming.kicks-ass.net>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: Re: [PATCH] perf/ring_buffer: Fix exposing a temporarily decreased data_head.
+From:   Yabin Cui <yabinc@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Yabin Cui <yabinc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 02:34:08PM -0400, Lennart Sorensen wrote:
-> Here is what I see:
-> 
-> i40e: Intel(R) Ethernet Connection XL710 Network Driver - version 2.1.7-k
-> i40e: Copyright (c) 2013 - 2014 Intel Corporation.
-> i40e 0000:3d:00.0: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
-> i40e 0000:3d:00.0: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
-> i40e 0000:3d:00.0: MAC address: a4:bf:01:4e:0c:87
-> i40e 0000:3d:00.0: flow_type: 63 input_mask:0x0000000000004000
-> i40e 0000:3d:00.0: flow_type: 46 input_mask:0x0007fff800000000
-> i40e 0000:3d:00.0: flow_type: 45 input_mask:0x0007fff800000000
-> i40e 0000:3d:00.0: flow_type: 44 input_mask:0x0007ffff80000000
-> i40e 0000:3d:00.0: flow_type: 43 input_mask:0x0007fffe00000000
-> i40e 0000:3d:00.0: flow_type: 42 input_mask:0x0007fffe00000000
-> i40e 0000:3d:00.0: flow_type: 41 input_mask:0x0007fffe00000000
-> i40e 0000:3d:00.0: flow_type: 40 input_mask:0x0007fffe00000000
-> i40e 0000:3d:00.0: flow_type: 39 input_mask:0x0007fffe00000000
-> i40e 0000:3d:00.0: flow_type: 36 input_mask:0x0006060000000000
-> i40e 0000:3d:00.0: flow_type: 35 input_mask:0x0006060000000000
-> i40e 0000:3d:00.0: flow_type: 34 input_mask:0x0006060780000000
-> i40e 0000:3d:00.0: flow_type: 33 input_mask:0x0006060600000000
-> i40e 0000:3d:00.0: flow_type: 32 input_mask:0x0006060600000000
-> i40e 0000:3d:00.0: flow_type: 31 input_mask:0x0006060600000000
-> i40e 0000:3d:00.0: flow_type: 30 input_mask:0x0006060600000000
-> i40e 0000:3d:00.0: flow_type: 29 input_mask:0x0006060600000000
-> i40e 0000:3d:00.0: Features: PF-id[0] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
-> i40e 0000:3d:00.1: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
-> i40e 0000:3d:00.1: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
-> i40e 0000:3d:00.1: MAC address: a4:bf:01:4e:0c:88
-> i40e 0000:3d:00.1: flow_type: 63 input_mask:0x0000000000004000
-> i40e 0000:3d:00.1: flow_type: 46 input_mask:0x0007fff800000000
-> i40e 0000:3d:00.1: flow_type: 45 input_mask:0x0007fff800000000
-> i40e 0000:3d:00.1: flow_type: 44 input_mask:0x0007ffff80000000
-> i40e 0000:3d:00.1: flow_type: 43 input_mask:0x0007fffe00000000
-> i40e 0000:3d:00.1: flow_type: 42 input_mask:0x0007fffe00000000
-> i40e 0000:3d:00.1: flow_type: 41 input_mask:0x0007fffe00000000
-> i40e 0000:3d:00.1: flow_type: 40 input_mask:0x0007fffe00000000
-> i40e 0000:3d:00.1: flow_type: 39 input_mask:0x0007fffe00000000
-> i40e 0000:3d:00.1: flow_type: 36 input_mask:0x0006060000000000
-> i40e 0000:3d:00.1: flow_type: 35 input_mask:0x0006060000000000
-> i40e 0000:3d:00.1: flow_type: 34 input_mask:0x0006060780000000
-> i40e 0000:3d:00.1: flow_type: 33 input_mask:0x0006060600000000
-> i40e 0000:3d:00.1: flow_type: 32 input_mask:0x0006060600000000
-> i40e 0000:3d:00.1: flow_type: 31 input_mask:0x0006060600000000
-> i40e 0000:3d:00.1: flow_type: 30 input_mask:0x0006060600000000
-> i40e 0000:3d:00.1: flow_type: 29 input_mask:0x0006060600000000
-> i40e 0000:3d:00.1: Features: PF-id[1] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
-> i40e 0000:3d:00.1 eth2: NIC Link is Up, 1000 Mbps Full Duplex, Flow Control: None
-> i40e_ioctl: power down: eth1
-> i40e_ioctl: power down: eth2
+>Indeed, good catch! Have you observed this, or is this patch due to code
+inspection?
 
-Those last two lines is something I added, so ignore those.
+I observed this. I was using perf_event_open instead of linux tools perf
+to monitor a process continuously forking new processes, generating a lot
+of mmap records. And a sample record happens while generating a mmap record.
 
--- 
-Len Sorensen
+For missing barriers, I thought local_xxx provided implied barriers. But
+I found atomic_ops.txt said not. Thanks for reminding! I will add them in
+path v2.
+
+I also think it's a good idea to use READ_ONCE/WRITE_ONCE for rb->nest. Will
+use it in patch v2.
+
