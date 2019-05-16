@@ -2,134 +2,113 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F984C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90519C46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1B421726
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EAA12082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:59:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbfEPL6D (ORCPT
+        id S1727419AbfEPL7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:58:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41254 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727117AbfEPL6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:58:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F3E65ACAA;
-        Thu, 16 May 2019 11:58:00 +0000 (UTC)
-Date:   Thu, 16 May 2019 13:57:58 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Liu Chuansheng <chuansheng.liu@intel.com>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] kernel/hung_task.c: Monitor killed tasks.
-Message-ID: <20190516115758.6v7oitg3vbkfhh5j@pathway.suse.cz>
-References: <1557745331-10367-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <20190515105540.vyzh6n62rqi5imqv@pathway.suse.cz>
- <ee7501c6-d996-1684-1652-f0f838ba69c3@i-love.sakura.ne.jp>
+        Thu, 16 May 2019 07:59:48 -0400
+Received: from mail.monom.org ([188.138.9.77]:44448 "EHLO mail.monom.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726618AbfEPL7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:59:48 -0400
+Received: from mail.monom.org (localhost [127.0.0.1])
+        by filter.mynetwork.local (Postfix) with ESMTP id 2871C5006D0;
+        Thu, 16 May 2019 13:59:45 +0200 (CEST)
+Received: from [127.0.0.1] (mail.monom.org [188.138.9.77])
+        by mail.monom.org (Postfix) with ESMTPSA id D82B250051C;
+        Thu, 16 May 2019 13:59:43 +0200 (CEST)
+Subject: Re: [PATCH 4.4 000/266] 4.4.180-stable review
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, linux-tegra <linux-tegra@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>
+References: <20190515090722.696531131@linuxfoundation.org>
+ <f32de22f-c928-2eaa-ee3f-d2b26c184dd4@nvidia.com>
+From:   Daniel Wagner <wagi@monom.org>
+Message-ID: <75c1f549-9098-933e-ab8b-4d0eeab87ddd@monom.org>
+Date:   Thu, 16 May 2019 13:59:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ee7501c6-d996-1684-1652-f0f838ba69c3@i-love.sakura.ne.jp>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <f32de22f-c928-2eaa-ee3f-d2b26c184dd4@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CCed Stephen to discuss linux-next related question at the bottom
-of the mail.
+Hi Jon,
 
-On Thu 2019-05-16 17:19:12, Tetsuo Handa wrote:
-> On 2019/05/15 19:55, Petr Mladek wrote:
-> >> +	if (!stamp) {
-> >> +		stamp = jiffies;
-> >> +		if (!stamp)
-> >> +			stamp++;
-> >> +		t->killed_time = stamp;
-> >> +		return;
-> >> +	}
-> > 
-> > I might be too dumb but the above code looks pretty tricky to me.
-> > It would deserve a comment. Or better, I would remove
-> > trick to handle overflow. If it happens, we would just
-> > lose one check period.
+> Boot regression detected for Tegra ...
 > 
-> We can use
+> Test results for stable-v4.4:
+>     6 builds:	6 pass, 0 fail
+>     15 boots:	6 pass, 9 fail
+>     8 tests:	8 pass, 0 fail
 > 
->   static inline unsigned long jiffies_nonzero(void)
->   {
->       const unsigned long stamp = jiffies;
+> Linux version:	4.4.180-rc1-gbe756da
+> Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+>                 tegra30-cardhu-a04
 > 
->       return stamp ? stamp : -1;
->   }
+> Bisect is point to the following commit ...
 > 
-> or even shortcut "jiffies | 1" because difference by one jiffie
-> is an measurement error for multiple HZ of timeout.
+> # first bad commit: [7849d64a1700ddae1963ff22a77292e9fb5c2983] mm, vmstat: make quiet_vmstat lighter
+> 
+> Reverting this on top v4.4.180-rc1 fixes the problem.  
 
-I would just ignore the overflow. We would just start measuring
-the timeout in the next check_hung_task() call. It is not
-a big deal and removes few lines of a tricky code.
+I guess the patch depends on another change. I'll try to figure out what
+is missing.
 
-> >> +	if (time_is_after_jiffies(stamp + timeout * HZ))
-> >> +		return;
-> >> +	trace_sched_process_hang(t);
-> >> +	if (sysctl_hung_task_panic) {
-> >> +		console_verbose();
-> >> +		hung_task_call_panic = true;
-> > 
-> > IMHO, the delayed task exit is much less fatal than sleeping
-> > in an uninterruptible state.
-> > 
-> > Anyway, the check is much less reliable. In case of hung_task,
-> > it is enough when the task gets scheduled. In the new check,
-> > the task has to do some amount of work until the signal
-> > gets handled and do_exit() is called.
-> > 
-> > The panic should either get enabled separately or we should
-> > never panic in this case.
+> Crash observed ...
 > 
-> OK, we should not share existing sysctl settings.
-> 
-> But in the context of syzbot's testing where there are only 2 CPUs
-> in the target VM (which means that only small number of threads and
-> not so much memory) and threads get SIGKILL after 5 seconds from fork(),
-> being unable to reach do_exit() within 10 seconds is likely a sign of
-> something went wrong. For example, 6 out of 7 trials of a reproducer for
-> https://syzkaller.appspot.com/bug?id=835a0b9e75b14b55112661cbc61ca8b8f0edf767
-> resulted in "no output from test machine" rather than "task hung".
-> This patch is revealing that such killed threads are failing to reach
-> do_exit() because they are trapped at unkillable retry loop due to a
-> race bug.
-> 
-> Therefore, I would like to try this patch in linux-next.git for feasibility
-> testing whether this patch helps finding more bugs and reproducers for such
-> bugs, by bringing "unable to terminate threads" reports out of "no output from
-> test machine" reports. We can add sysctl settings before sending to linux.git.
+> [   17.155812] ------------[ cut here ]------------
+> [   17.160431] kernel BUG at /home/jonathanh/workdir/tegra/mlt-linux_stable-4.4/kernel/mm/vmstat.c:1425!
+> [   17.169632] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP ARM
+> [   17.175450] Modules linked in: ttm
+> [   17.178859] CPU: 0 PID: 92 Comm: kworker/0:2 Not tainted 4.4.179-00160-g7849d64a1700 #8
+> [   17.186843] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
+> [   17.193100] Workqueue: vmstat vmstat_update
+> [   17.197279] task: ee14e700 ti: ee17a000 task.ti: ee17a000
+> [   17.202663] PC is at vmstat_update+0x9c/0xa4
+> [   17.206921] LR is at vmstat_update+0x94/0xa4
+> [   17.211179] pc : [<c00cdd80>]    lr : [<c00cdd78>]    psr: 20000113
+> [   17.211179] sp : ee17bef8  ip : 00000000  fp : eef91ac0
+> [   17.222629] r10: 00000008  r9 : 00000000  r8 : 00000000
+> [   17.227840] r7 : eef99900  r6 : eef91ac0  r5 : eef8f34c  r4 : ee13dc00
+> [   17.234350] r3 : 00000001  r2 : 0000000f  r1 : c0a885e0  r0 : 00000001
+> [   17.240861] Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+> [   17.247978] Control: 10c5387d  Table: ad02006a  DAC: 00000051
+> [   17.253708] Process kworker/0:2 (pid: 92, stack limit = 0xee17a210)
+> [   17.259957] Stack: (0xee17bef8 to 0xee17c000)
+> [   17.264301] bee0:                                                       ee13dc00 eef8f34c
+> [   17.272459] bf00: eef91ac0 c003b69c eef91ac0 ee17a038 c0a4ba60 eef91ac0 eef91ad4 ee17a038
+> [   17.280618] bf20: c0a4ba60 ee13dc18 ee13dc00 00000008 eef91ac0 c003b8f8 00000000 c09f6100
+> [   17.288778] bf40: c003b8b0 ee102a00 00000000 ee13dc00 c003b8b0 00000000 00000000 00000000
+> [   17.296937] bf60: 00000000 c0040ad0 00000000 00000000 00000000 ee13dc00 00000000 00000000
+> [   17.305094] bf80: ee17bf80 ee17bf80 00000000 00000000 ee17bf90 ee17bf90 ee17bfac ee102a00
+> [   17.313253] bfa0: c00409d0 00000000 00000000 c000f650 00000000 00000000 00000000 00000000
+> [   17.321412] bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> [   17.329570] bfe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
+> [   17.337733] [<c00cdd80>] (vmstat_update) from [<c003b69c>] (process_one_work+0x124/0x338)
+> [   17.345893] [<c003b69c>] (process_one_work) from [<c003b8f8>] (worker_thread+0x48/0x4c4)
+> [   17.353966] [<c003b8f8>] (worker_thread) from [<c0040ad0>] (kthread+0x100/0x118)
+> [   17.361348] [<c0040ad0>] (kthread) from [<c000f650>] (ret_from_fork+0x14/0x24)
+> [   17.368553] Code: e5930010 eb05c417 e3500000 08bd8070 (e7f001f2) 
+> [   17.374633] ---[ end trace 17cf004302766810 ]---
 
-In this case, the watchdog should get enabled on with
-CONFIG_DEBUG_AID_FOR_SYZBOT
-
-Also we should ask/inform Stephen about this. I am not sure
-if he is willing to resolve eventual conflicts for these
-syzboot-specific patches that are not upstream candidates.
-
-A solution might be to create sysbot-specific for-next branch
-that Stephen might simply ignore when there are conflicts.
-And you would be responsible for updating it.
-
-Best Regards,
-Petr
+Thanks,
+Daniel
