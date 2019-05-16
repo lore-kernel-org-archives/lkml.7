@@ -2,77 +2,150 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59304C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 02:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B17A5C072AD
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 02:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 275CA20848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 02:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AB720873
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 02:58:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LaQAxqZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726352AbfEPC4v (ORCPT
+        id S1726324AbfEPC65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 22:56:51 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:36638 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726084AbfEPC4u (ORCPT
+        Wed, 15 May 2019 22:58:57 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34648 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfEPC65 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 22:56:50 -0400
-Received: from callcc.thunk.org (168-215-239-3.static.ctl.one [168.215.239.3] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x4G2udBn009305
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 May 2019 22:56:42 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 1F19C420024; Wed, 15 May 2019 22:56:39 -0400 (EDT)
-Date:   Wed, 15 May 2019 22:56:39 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Arthur Marsh <arthur.marsh@internode.on.net>
-Cc:     Richard Weinberger <richard.weinberger@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-ext4@vger.kernel.org
-Subject: Re: ext3/ext4 filesystem corruption under post 5.1.0 kernels
-Message-ID: <20190516025639.GC5394@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Arthur Marsh <arthur.marsh@internode.on.net>,
-        Richard Weinberger <richard.weinberger@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>, linux-ext4@vger.kernel.org
-References: <48BA4A6E-5E2A-478E-A96E-A31FA959964C@internode.on.net>
- <CAFLxGvwnKKHOnM2w8i9hn7LTVYKh5PQP2zYMBmma2k9z7HBpzw@mail.gmail.com>
- <20190511220659.GB8507@mit.edu>
- <09D87554-6795-4AEA-B8D0-FEBCB45673A9@internode.on.net>
- <850EDDE2-5B82-4354-AF1C-A2D0B8571093@internode.on.net>
- <17C30FA3-1AB3-4DAD-9B86-9FA9088F11C9@internode.on.net>
- <20190515045717.GB5394@mit.edu>
- <C24BBE18-1665-4343-9C98-5AF64BACDCA3@internode.on.net>
+        Wed, 15 May 2019 22:58:57 -0400
+Received: by mail-pg1-f196.google.com with SMTP id c13so799211pgt.1;
+        Wed, 15 May 2019 19:58:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qVrC4Tuj5UyBfw+iLDxuy7o7a/GjCU+sQeQ56O5xCjQ=;
+        b=LaQAxqZCNGuGalss7W1xQlG5JefFBkrDN10HKyh2spwpNBgqTvOPZgNCAutAgDzpeM
+         +r+fmX3D+tXaLddhfWuPPtRA09IH5ammf47tHnMtSR3/V1MMiamRlU7VnG3hrIek4UTJ
+         P91rkzAmcBfWR2ENrcgMu+jRl4r6jM6Jdb+RETJV0ETbowdW+CiT8OLW+DRAJFs6ELps
+         sPx3nKjr8glEFVeYIldsdlF2Q/15kABE7VthyE5HA0Ba/r3JD9+2ZJaiQO6oWw2x4Li8
+         EKo63JGHqnV9uzl/L6DcZ3PNbNS/qJepGawZX35aZ1bcjdIuKjrYSljZYgbnnurhTG8B
+         LexA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qVrC4Tuj5UyBfw+iLDxuy7o7a/GjCU+sQeQ56O5xCjQ=;
+        b=agsPvwwR3ChaxYncPwZpkpUH3H90wNLb+5oOxizF0eXzeWgtKQ3Nkt6lxCqxzGPuVJ
+         +ix9zR0YDWTi9phgbmGk6bHPXWTWKKM+Sv6aucsePqlYTqjp4A33uKhy2GUFErBgpye1
+         ZASsAHGGSdrGQ+hASzA9VktIAJJE9Ja30xiJo1B2YCStOTR13/jzjOsLTQfJ7YFlkRqS
+         a4H9DduRbxhQUW/oeMLEzttB+qVrkEjz+mRvEJfrGDR6P0VHcBbmMtpHn4hGjuHppCqB
+         ta3BXuftcKOf/JV1Twkfx3TJIYyt/1Qxfhh+MZeJp1R0Ep/kNh3Z55z0vTAMwqXi8Yvg
+         Kyjw==
+X-Gm-Message-State: APjAAAV4jv0NPH6opOd3O8MyiJbKMEmGvFyu0OBraM1BV85o484mptYU
+        W3HCWeYx9Ip/QitP0PfEU0Vxf4B1Lm6U8cC5p5e4Gg==
+X-Google-Smtp-Source: APXvYqzPP45QfONTxLmhLPzzS3LwtQ71ySL5Eq03qCl6oEFiGgB5qLoAzHBjErCqOL6EepJAuG0ngUNuM8CQI5krZO8=
+X-Received: by 2002:a63:a55:: with SMTP id z21mr47828274pgk.440.1557975536152;
+ Wed, 15 May 2019 19:58:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <C24BBE18-1665-4343-9C98-5AF64BACDCA3@internode.on.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1557954545-17831-1-git-send-email-longli@linuxonhyperv.com> <1557954545-17831-2-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1557954545-17831-2-git-send-email-longli@linuxonhyperv.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Wed, 15 May 2019 21:58:44 -0500
+Message-ID: <CAH2r5muSfofEKamfz2GrL3gTrwiR7Ek-gT_f1YapOzsh7Tbb+w@mail.gmail.com>
+Subject: Re: [PATCH 2/2] cifs: Allocate memory for all iovs in smb2_ioctl
+To:     Long Li <longli@microsoft.com>
+Cc:     Steve French <sfrench@samba.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 09:42:11PM +0930, Arthur Marsh wrote:
-> I have built kernels with the attached patch applied and run git gc
-> on the patched kernels (both the 32 bit kernel on the Pentium-D and
-> the 64 bit kernel on the Athlon II X4 640).
-> 
-> There were a couple of warnings from other processes being blocked
-> while the git gc was taking place but no filesystem corruption
-> detected. (I ran forced fsck checks on the root filesystems after
-> the git gc runs to check for corruption).
-> 
-> Thanks for the patch!
+merged into cifs-2.6.git for-next
 
-Thanks for the bug report!  My apologies for the inconvenience; I'm
-going to take a look at improving my regression test configurations so
-I would have noticed this earlier.
+On Wed, May 15, 2019 at 4:10 PM <longli@linuxonhyperv.com> wrote:
+>
+> From: Long Li <longli@microsoft.com>
+>
+> An IOCTL uses up to 2 iovs. The 1st iov is the command itself, the 2nd iov is
+> optional data for that command. The 1st iov is always allocated on the heap
+> but the 2nd iov may point to a variable on the stack. This will trigger an
+> error when passing the 2nd iov for RDMA I/O.
+>
+> Fix this by allocating a buffer for the 2nd iov.
+>
+> Signed-off-by: Long Li <longli@microsoft.com>
+> ---
+>  fs/cifs/smb2pdu.c | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/cifs/smb2pdu.c b/fs/cifs/smb2pdu.c
+> index 29f011d8d8e2..710ceb875161 100644
+> --- a/fs/cifs/smb2pdu.c
+> +++ b/fs/cifs/smb2pdu.c
+> @@ -2538,11 +2538,25 @@ SMB2_ioctl_init(struct cifs_tcon *tcon, struct smb_rqst *rqst,
+>         struct kvec *iov = rqst->rq_iov;
+>         unsigned int total_len;
+>         int rc;
+> +       char *in_data_buf;
+>
+>         rc = smb2_plain_req_init(SMB2_IOCTL, tcon, (void **) &req, &total_len);
+>         if (rc)
+>                 return rc;
+>
+> +       if (indatalen) {
+> +               /*
+> +                * indatalen is usually small at a couple of bytes max, so
+> +                * just allocate through generic pool
+> +                */
+> +               in_data_buf = kmalloc(indatalen, GFP_NOFS);
+> +               if (!in_data_buf) {
+> +                       cifs_small_buf_release(req);
+> +                       return -ENOMEM;
+> +               }
+> +               memcpy(in_data_buf, in_data, indatalen);
+> +       }
+> +
+>         req->CtlCode = cpu_to_le32(opcode);
+>         req->PersistentFileId = persistent_fid;
+>         req->VolatileFileId = volatile_fid;
+> @@ -2563,7 +2577,7 @@ SMB2_ioctl_init(struct cifs_tcon *tcon, struct smb_rqst *rqst,
+>                        cpu_to_le32(offsetof(struct smb2_ioctl_req, Buffer));
+>                 rqst->rq_nvec = 2;
+>                 iov[0].iov_len = total_len - 1;
+> -               iov[1].iov_base = in_data;
+> +               iov[1].iov_base = in_data_buf;
+>                 iov[1].iov_len = indatalen;
+>         } else {
+>                 rqst->rq_nvec = 1;
+> @@ -2605,8 +2619,11 @@ SMB2_ioctl_init(struct cifs_tcon *tcon, struct smb_rqst *rqst,
+>  void
+>  SMB2_ioctl_free(struct smb_rqst *rqst)
+>  {
+> -       if (rqst && rqst->rq_iov)
+> +       if (rqst && rqst->rq_iov) {
+>                 cifs_small_buf_release(rqst->rq_iov[0].iov_base); /* request */
+> +               if (rqst->rq_iov[1].iov_len)
+> +                       kfree(rqst->rq_iov[1].iov_base);
+> +       }
+>  }
+>
+>
+> --
+> 2.17.1
+>
 
-Cheers,
 
-						- Ted
+-- 
+Thanks,
+
+Steve
