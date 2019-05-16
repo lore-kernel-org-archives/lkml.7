@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82877C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A83FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3932166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52FE82087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558006850;
-	bh=o+k7HPVzCEO5SfAAYq7jFgh6ErX8qzJSND4nK+VFqcg=;
+	s=default; t=1558006856;
+	bh=5PqpqsePIaUZFwMZ6QtcnVAgVczOlnG/PGID8A8lAE0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I12jt/aCUQU1y0h/EemKkhoiC3GzbsIU6IPUTL8/9mCeJbICM/iMpulI/Rj1NWmMI
-	 sTIULcIO8w6ACnGPkvHYEhk+mAUdaBSDzQJsOPbR6bxD8i7IQe9wBNe1J2MirZcWki
-	 Yg5MaxIU/K13Wrzh0kahac+lZyYOL9x5XPN7S+SU=
+	b=eKttFslwcNDrfzHufU5qJYZU/L12pVM5YyF0oTwJLXNLmoMiEoi7WmOVajFyYQMvR
+	 JArWQ2IKqWio1CEClUkECu6w3af5pMIsE1wM1qrekPSsfvW1A0FSLBO3xfE3GzsM8f
+	 1zfoCpcw7s0b6Ek8jQyyLgXpUgRGqy+/xHznhFdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbfEPLkt (ORCPT
+        id S1727948AbfEPLkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:40:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49114 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:40:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727845AbfEPLkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:40:42 -0400
+        id S1727899AbfEPLkv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:40:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A566C20862;
-        Thu, 16 May 2019 11:40:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2FC620833;
+        Thu, 16 May 2019 11:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006842;
-        bh=o+k7HPVzCEO5SfAAYq7jFgh6ErX8qzJSND4nK+VFqcg=;
+        s=default; t=1558006850;
+        bh=5PqpqsePIaUZFwMZ6QtcnVAgVczOlnG/PGID8A8lAE0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pACKADwzrn3MOpf+b0YhHHxxzJaeq8i+rT7EH/zTK6W/bdMvpgzHafmMRfaPBJ1LG
-         QAQQ9t5qo6zHroGgm8iZbnlXjEpfAFWAXEuNBfOO5zlu3YkH6NXNQlYAVibZDLmUOC
-         X8aj+kixuEpxWkM80mcE8IviA1BHuPOXmcrCAEaw=
+        b=AvYlxS2n01PEKLxtUeoCqVzpX6kjA/REt7O/Pa2CTSjgCkdmE7l/K5s4k/vuoJVg7
+         mF5CGWwtCLCmK6YIYh1XxgtefhO2asXKfgzVzPL7vVDdmzhNGiGkrCHpyG2ixTo/uM
+         MK5EXqaqwW7BPAUMpXbWp6DWUp64v+1HxXT/XM00=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 11/25] apparmorfs: fix use-after-free on symlink traversal
-Date:   Thu, 16 May 2019 07:40:14 -0400
-Message-Id: <20190516114029.8682-11-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 18/25] bpf: Fix preempt_enable_no_resched() abuse
+Date:   Thu, 16 May 2019 07:40:21 -0400
+Message-Id: <20190516114029.8682-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516114029.8682-1-sashal@kernel.org>
 References: <20190516114029.8682-1-sashal@kernel.org>
@@ -58,50 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit f51dcd0f621caac5380ce90fbbeafc32ce4517ae ]
+[ Upstream commit 0edd6b64d1939e9e9168ff27947995bb7751db5d ]
 
-symlink body shouldn't be freed without an RCU delay.  Switch apparmorfs
-to ->destroy_inode() and use of call_rcu(); free both the inode and symlink
-body in the callback.
+Unless the very next line is schedule(), or implies it, one must not use
+preempt_enable_no_resched(). It can cause a preemption to go missing and
+thereby cause arbitrary delays, breaking the PREEMPT=y invariant.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/apparmor/apparmorfs.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ include/linux/bpf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
-index e09fe4d7307cd..40e3a098f6fb5 100644
---- a/security/apparmor/apparmorfs.c
-+++ b/security/apparmor/apparmorfs.c
-@@ -123,17 +123,22 @@ static int aafs_show_path(struct seq_file *seq, struct dentry *dentry)
- 	return 0;
- }
- 
--static void aafs_evict_inode(struct inode *inode)
-+static void aafs_i_callback(struct rcu_head *head)
- {
--	truncate_inode_pages_final(&inode->i_data);
--	clear_inode(inode);
-+	struct inode *inode = container_of(head, struct inode, i_rcu);
- 	if (S_ISLNK(inode->i_mode))
- 		kfree(inode->i_link);
-+	free_inode_nonrcu(inode);
-+}
-+
-+static void aafs_destroy_inode(struct inode *inode)
-+{
-+	call_rcu(&inode->i_rcu, aafs_i_callback);
- }
- 
- static const struct super_operations aafs_super_ops = {
- 	.statfs = simple_statfs,
--	.evict_inode = aafs_evict_inode,
-+	.destroy_inode = aafs_destroy_inode,
- 	.show_path = aafs_show_path,
- };
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 523481a3471b5..fd95f2efe5f32 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -400,7 +400,7 @@ int bpf_prog_array_copy(struct bpf_prog_array __rcu *old_array,
+ 		}					\
+ _out:							\
+ 		rcu_read_unlock();			\
+-		preempt_enable_no_resched();		\
++		preempt_enable();			\
+ 		_ret;					\
+ 	 })
  
 -- 
 2.20.1
