@@ -2,231 +2,213 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A8EC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6AF3C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:37:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E330E2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82E7420818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:37:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=uwy.onmicrosoft.com header.i=@uwy.onmicrosoft.com header.b="nLi3s2C+"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="qi6MyDpz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfEPQfp (ORCPT
+        id S1727159AbfEPQhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:35:45 -0400
-Received: from mail-eopbgr760121.outbound.protection.outlook.com ([40.107.76.121]:19044
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726342AbfEPQfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:35:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uwy.onmicrosoft.com;
- s=selector1-uwy-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uwbbRoSh0N6ERr2bops38ZpOb7iYYwZhzpXKOLnrQ1A=;
- b=nLi3s2C+g3G42QJwwNg9M4sVR8OjB57PCrb4c5hCvGs8MtPW85UviDRf+X6MPlGsIizZrQCj0LM/7bl/yfLsn7QeIN6KkR9Di75SZDkFdSAeNAjs99MBluEBEWG0dvVuvbnn6JT0Rz0MnMgBGLzsvu1u8z7jzM9jbOs3bEVTQ6E=
-Received: from DM6PR05MB5259.namprd05.prod.outlook.com (20.177.223.223) by
- DM6PR05MB5500.namprd05.prod.outlook.com (20.176.122.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.13; Thu, 16 May 2019 16:35:40 +0000
-Received: from DM6PR05MB5259.namprd05.prod.outlook.com
- ([fe80::ec12:ed89:3597:ef2f]) by DM6PR05MB5259.namprd05.prod.outlook.com
- ([fe80::ec12:ed89:3597:ef2f%5]) with mapi id 15.20.1922.002; Thu, 16 May 2019
- 16:35:40 +0000
-From:   "Robert R. Howell" <RHowell@uwyo.edu>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ACPI / LPSS: Don't skip late system PM ops for hibernate
- on BYT/CHT
-Thread-Topic: [PATCH] ACPI / LPSS: Don't skip late system PM ops for hibernate
- on BYT/CHT
-Thread-Index: AQHU6eBClqunF/byekqefGejWfaC+aYqIfOAgAcThICAAL18AIAFeNOAgAp38wCAAktGAIAFVH4AgADH4wCAAL1BAIACLkCAgCCltACAAFskAA==
-Date:   Thu, 16 May 2019 16:35:40 +0000
-Message-ID: <7eef3905-9c74-7ed8-09e4-a255c8f7d959@uwyo.edu>
-References: <20190403054352.30120-1-kai.heng.feng@canonical.com>
- <CAJZ5v0jJEovXXiqs-tzPC7FsGjGL+qxfXCxbTrQZqAxSCv1oyQ@mail.gmail.com>
- <beab21cb-9f89-b934-e0a4-2fd85c69f4e6@uwyo.edu> <1588383.bXYZMuyLB9@kreacher>
-In-Reply-To: <1588383.bXYZMuyLB9@kreacher>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-x-originating-ip: [12.203.174.10]
-x-clientproxiedby: BYAPR07CA0030.namprd07.prod.outlook.com
- (2603:10b6:a02:bc::43) To DM6PR05MB5259.namprd05.prod.outlook.com
- (2603:10b6:5:7f::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=RHowell@uwyo.edu; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 41281787-43b1-4503-786c-08d6da1c886f
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM6PR05MB5500;
-x-ms-traffictypediagnostic: DM6PR05MB5500:
-x-microsoft-antispam-prvs: <DM6PR05MB5500EAC5A94D85E91586208ED30A0@DM6PR05MB5500.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0039C6E5C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(376002)(136003)(346002)(396003)(51914003)(189003)(199004)(316002)(6916009)(476003)(11346002)(2616005)(75432002)(6246003)(786003)(73956011)(81166006)(305945005)(68736007)(8676002)(81156014)(229853002)(66066001)(71200400001)(65806001)(53936002)(6512007)(80792005)(66946007)(66476007)(66446008)(66556008)(186003)(5660300002)(25786009)(31696002)(446003)(7736002)(26005)(64756008)(36756003)(71190400001)(65956001)(8936002)(86362001)(31686004)(486006)(6116002)(3846002)(6486002)(14444005)(99286004)(52116002)(72206003)(256004)(5024004)(4326008)(478600001)(54906003)(58126008)(65826007)(88552002)(14454004)(102836004)(53546011)(6436002)(2906002)(6506007)(64126003)(76176011)(386003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR05MB5500;H:DM6PR05MB5259.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: uwyo.edu does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gv/S4lztdzBtzLfhY7INCCa2jvMgyI/4UMAqFUB2Anqu2utQLgL9z73JzV+49oAXAqNAxKrw4D5QVoChhDo/y5tL4hCELMb4Ela6vKyhwwrHNcr+8jNkqmceQ/ybW3UHUwgAjinW2j3kNyRbSm5xDNKfV7vbn8vIgrqg604UYB4fth/zwBPheXvVt9imK/1TJ4QeA7jxUuDCHG/9bF++4AXs6yfygrqp9teT2NpbxPIs04u5E5DLvSrC9UaxJEQXUkkm9XvoVkk8loGnR6WJoDjawL3BaZLqk3LSGF19hMnaOlj+lXQcL0W3aA8801t9M/2Pr6isx1OUmZUieg/7adInPIU2/EeM3vp8Ph9tjlu5yLRK/oEEdSZpQvSB5TP5bHkFbwRwauYInrpyHrv3MaDiijbSyR5LI1B9wRI5az4=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <941E2A32C00C48459CC5F7985805571C@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: uwyo.edu
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41281787-43b1-4503-786c-08d6da1c886f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 16:35:40.5168
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f9cdd7ad-825d-4601-8e9c-a325e02d52da
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR05MB5500
+        Thu, 16 May 2019 12:37:15 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37546 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726342AbfEPQhP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 12:37:15 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 7so4154866wmo.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:37:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=ThsUgCnRiH2xV7RaQ5eyyKQF0jGHePi2XouhM2DCtVc=;
+        b=qi6MyDpzUBi/YhH3EIVRa9In2VP4i8/Rqo8r4u+l2ILm5g/G2aH1ZkO2/tkZJzAz+4
+         fP3htptmdBLOK1x23VJVUHtY2KnUbze/RsIZyaDFGvx7uSAOWifUSoQUrBeEOo6Z9JEx
+         UJBXkkffA169xraI5y96uDyl+P+i1AqTKrqfqcXDZeVKHP44f4+RfHrbVPDj2EzMhBij
+         bZCJ7Po/trm6o16eQHuuiwHfXslowAzpx7CsB1A1XWwMYZo348VaoFUGdTxC8RnlSsB+
+         /iCrhFXuRYx21k05rd3DgNt4GDVe4/Huxf5QAxwLlbuPQbm74I5EsNkyp3ap1yJF/89E
+         OY7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ThsUgCnRiH2xV7RaQ5eyyKQF0jGHePi2XouhM2DCtVc=;
+        b=c3AbYEBH8DMRXJIBAbqhmii8kPNGNAWpg+GevE90LTxVkxXyPNYJyAfvcF+6sMOtn5
+         4qtgwxG/mSZvIrFrREhi4tX1G1hGWiO+1+58kQX9JmhB4EBBf3MqcMObhXwYdVmdXo+9
+         1caY1D896Vphy6F14rrv8brB1/klxmqIbz99TFM66Ra5VqZkaQCergpHi3mweQGvpfeA
+         f/CDwBEkjSYGogRYPC65HN90qKgwHmJNh/OQG0PW1+0c+hz6ZRAlzYc+8bQ7khjiS2It
+         EzTYoqaQRcBEyKMhsg5LwJGvPkFgD7lNUOKy3rc9Bg6lHGb8YIzoW28DwYOBajAuvfbt
+         Yi+A==
+X-Gm-Message-State: APjAAAX0AE7Aq2cBdJxVTHd2PpMxWxq6rvY7ov6daFZrY04gNoO61AVB
+        kVr3P3on9jaTZujwrRIaKdTbzA==
+X-Google-Smtp-Source: APXvYqybn3Y6301Af98XjzaiHZSg4KGov0qU7mWWN97Wd731o4jzd/edN9W3fJ1YKaXz9qJGZniWPg==
+X-Received: by 2002:a1c:1f47:: with SMTP id f68mr18234178wmf.57.1558024632927;
+        Thu, 16 May 2019 09:37:12 -0700 (PDT)
+Received: from loys-ubuntu-BY1835A49200471.thefacebook.com ([2620:10d:c092:180::1:e504])
+        by smtp.googlemail.com with ESMTPSA id x68sm2112515wmf.13.2019.05.16.09.37.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 16 May 2019 09:37:12 -0700 (PDT)
+From:   Loys Ollivier <lollivier@baylibre.com>
+To:     Johan Hovold <johan@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Loys Ollivier <lollivier@baylibre.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        baylibre-upstreaming@groups.io
+Subject: [PATCH v2] gnss: get serial speed from subdrivers
+Date:   Thu, 16 May 2019 18:37:06 +0200
+Message-Id: <1558024626-19395-1-git-send-email-lollivier@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUmFmYWVsDQoNCg0KT24gNS8xNi8xOSA1OjExIEFNLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90
-ZToNCg0KPiBPbiBUaHVyc2RheSwgQXByaWwgMjUsIDIwMTkgNjozODozNCBQTSBDRVNUIFJvYmVy
-dCBSLiBIb3dlbGwgd3JvdGU6DQo+PiBPbiA0LzI0LzE5IDE6MjAgQU0sIFJhZmFlbCBKLiBXeXNv
-Y2tpIHdyb3RlOg0KPj4NCj4+PiBPbiBUdWUsIEFwciAyMywgMjAxOSBhdCAxMDowMyBQTSBSb2Jl
-cnQgUi4gSG93ZWxsIDxSSG93ZWxsQHV3eW8uZWR1PiB3cm90ZToNCj4+Pj4NCj4+Pj4gT24gNC8y
-My8xOSAyOjA3IEFNLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90ZToNCj4+Pj4+DQo+Pj4+PiBPbiBT
-YXQsIEFwciAyMCwgMjAxOSBhdCAxMjo0NCBBTSBSb2JlcnQgUi4gSG93ZWxsIDxSSG93ZWxsQHV3
-eW8uZWR1PiB3cm90ZToNCj4+Pj4+Pg0KPj4+Pj4+IE9uIDQvMTgvMTkgNTo0MiBBTSwgSGFucyBk
-ZSBHb2VkZSB3cm90ZToNCj4+Pj4+Pg0KPj4+Pj4+Pj4gT24gNC84LzE5IDI6MTYgQU0sIEhhbnMg
-ZGUgR29lZGUgd3JvdGU6Pg0KPj4+Pj4+Pj4+DQo+Pj4+Pj4+Pj4gSG1tLCBpbnRlcmVzdGluZyBz
-byB5b3UgaGF2ZSBoaWJlcm5hdGlvbiB3b3JraW5nIG9uIGEgVDEwMFRBDQo+Pj4+Pj4+Pj4gKHdp
-dGggNS4wICsgMDJlNDU2NDZkNTNiIHJldmVydGVkKSwgcmlnaHQgPw0KPj4+Pj4+Pj4+DQo+Pj4+
-Pj4NCj4+Pj4+Pg0KPj4+Pj4+IEkndmUgbWFuYWdlZCB0byBmaW5kIGEgd2F5IGFyb3VuZCB0aGUg
-aTJjX2Rlc2lnbndhcmUgdGltZW91dCBpc3N1ZXMNCj4+Pj4+PiBvbiB0aGUgVDEwMFRBJ3MuICBU
-aGUga2V5IGlzIHRvIE5PVCBzZXQgRFBNX0ZMQUdfU01BUlRfU1VTUEVORCwNCj4+Pj4+PiB3aGlj
-aCB3YXMgYWRkZWQgaW4gdGhlIDAyZTQ1NjQ2ZDUzYiBjb21taXQuDQo+Pj4+Pj4NCj4+Pj4+PiBU
-byB0ZXN0IHRoYXQgSSd2ZSBzdGFydGVkIHdpdGggYSA1LjEtcmM1IGtlcm5lbCwgYXBwbGllZCB5
-b3VyIHJlY2VudCBwYXRjaA0KPj4+Pj4+IHRvIGFjcGlfbHBzcy5jLCB0aGVuIGFwcGx5IHRoZSBm
-b2xsb3dpbmcgcGF0Y2ggb2YgbWluZSwgcmVtb3ZpbmcNCj4+Pj4+PiBEUE1fRkxBR19TTUFSVF9T
-VVNQRU5ELiAgKEZvciB0aGUgVDEwMCBoYXJkd2FyZSBJIG5lZWQgdG8gYXBwbHkgc29tZQ0KPj4+
-Pj4+IG90aGVyIHBhdGNoZXMgYXMgd2VsbCBidXQgdGhvc2UgYXJlIG5vdCByZWxhdGVkIHRvIHRo
-ZSBpMmMtZGVzaWdud2FyZSBvcg0KPj4+Pj4+IGFjcGkgaXNzdWVzIGFkZHJlc3NlZCBoZXJlLikN
-Cj4+Pj4+Pg0KPj4+Pj4+IE9uIGEgcmVzdW1lIGZyb20gaGliZXJuYXRpb24gSSBzdGlsbCBzZWUg
-b25lIGVycm9yOg0KPj4+Pj4+ICAgImkyY19kZXNpZ253YXJlIDgwODYwRjQxOjAwOiBFcnJvciBp
-MmNfZHdfeGZlciBjYWxsZWQgd2hpbGUgc3VzcGVuZGVkIg0KPj4+Pj4+IGJ1dCBJIG5vIGxvbmdl
-ciBnZXQgdGhlIGkyY19kZXNpZ253YXJlIHRpbWVvdXRzLCBhbmQgYXVkaW8gZG9lcyBub3cgd29y
-aw0KPj4+Pj4+IGFmdGVyIHRoZSByZXN1bWUuDQo+Pj4+Pj4NCj4+Pj4+PiBSZW1vdmluZyBEUE1f
-RkxBR19TTUFSVF9TVVNQRU5EIG1heSBub3QgYmUgd2hhdCB5b3Ugd2FudCBmb3Igb3RoZXINCj4+
-Pj4+PiBoYXJkd2FyZSwgYnV0IHBlcmhhcHMgdGhpcyB3aWxsIGdpdmUgeW91IGEgY2x1ZSBhcyB0
-byB3aGF0IGlzIGdvaW5nDQo+Pj4+Pj4gd3Jvbmcgd2l0aCBoaWJlcm5hdGUvcmVzdW1lIG9uIHRo
-ZSBUMTAwVEEncy4NCj4+Pj4+DQo+Pj4+PiBXaGF0IGlmIHlvdSBkcm9wIERQTV9GTEFHX0xFQVZF
-X1NVU1BFTkRFRCBhbG9uZSBpbnN0ZWFkPw0KPj4+Pj4NCj4+Pj4NCj4+Pj4gSSBkaWQgdHJ5IGRy
-b3BwaW5nIGp1c3QgRFBNX0ZMQUdfTEVBVkVfU1VTUEVOREVELCBkcm9wcGluZyBqdXN0DQo+Pj4+
-IERQTV9GTEFHX1NNQVJUX1NVU1BFTkQsIGFuZCBkcm9wcGluZyBib3RoIGZsYWdzLiAgV2hlbiBJ
-IGp1c3QgZHJvcA0KPj4+PiBEUE1fRkxBR19MRUFWRV9TVVNQRU5ERUQgSSBzdGlsbCBnZXQgdGhl
-IGkyY19kZXNpZ253YXJlIHRpbWVvdXRzDQo+Pj4+IGFmdGVyIHRoZSByZXN1bWUuICBJZiBJIGRy
-b3AganVzdCBEUE1fRkxBR19TTUFSVF9TVVNQRU5EIG9yIGRyb3AgYm90aCwNCj4+Pj4gdGhlbiB0
-aGUgdGltZW91dHMgZ28gYXdheS4NCj4+Pg0KPj4+IE9LLCB0aGFua3MhDQo+Pj4NCj4+PiBJcyBu
-b24taGliZXJuYXRpb24gc3lzdGVtIHN1c3BlbmQgYWZmZWN0ZWQgdG9vPw0KPj4NCj4+IEkganVz
-dCByYW4gc29tZSB0ZXN0cyBvbiBhIFQxMDBUQSwgdXNpbmcgdGhlIDUuMS1yYzUgY29kZSB3aXRo
-IEhhbnMnIHBhdGNoIGFwcGxpZWQNCj4+IGJ1dCB3aXRob3V0IGFueSBjaGFuZ2VzIHRvIGkyYy1k
-ZXNpZ253YXJlLXBsYXRkcnYuYywgc28gdGhlDQo+PiBEUE1fRkxBR19TTUFSVF9QUkVQQVJFLCBE
-UE1fRkxBR19TTUFSVF9TVVNQRU5ELCBhbmQgRFBNX0ZMQUdfTEVBVkVfU1VTUEVOREVEIGZsYWdz
-DQo+PiBhcmUgYWxsIHNldC4NCj4+DQo+PiBTdXNwZW5kIGRvZXMgd29yayBPSywgYW5kIGFmdGVy
-IHJlc3VtZSBJIGRvIE5PVCBnZXQgYW55IG9mIHRoZSBjcmlwcGxpbmcNCj4+IGkyY19kZXNpZ253
-YXJlIHRpbWVvdXQgZXJyb3JzIHdoaWNoIGNhdXNlIHNvdW5kIHRvIGZhaWwgYWZ0ZXIgaGliZXJu
-YXRlLiAgSSBETyBzZWUgb25lDQo+PiAgICJpMmNfZGVzaWdud2FyZSA4MDg2MEY0MTowMDogRXJy
-b3IgaTJjX2R3X3hmZXIgY2FsbCB3aGlsZSBzdXNwZW5kZWQiDQo+PiBlcnJvciBvbiByZXN1bWUs
-IGp1c3QgYXMgSSBkbyBvbiBoaWJlcm5hdGUuICBJJ3ZlIGF0dGFjaGVkIGEgcG9ydGlvbiBvZiBk
-bWVzZyBiZWxvdy4NCj4+IFRoZSAiYXN1c193bWk6ICBVbmtub3duIGtleSA3OSBwcmVzc2VkIiBl
-cnJvciBpcyBhIGdsaXRjaCB3aGljaCBvY2N1cnMNCj4+IGludGVybWl0dGVudGx5IG9uIHRoZXNl
-IG1hY2hpbmVzLCBidXQgZG9lc24ndCBzZWVtIHJlbGF0ZWQgdG8gdGhlIG90aGVyIGlzc3Vlcy4N
-Cj4+IEkgaGFkIG9uZSB0ZXN0IHJ1biB3aGVuIGl0IHdhcyBhYnNlbnQgYnV0IHRoZSByZXN0IG9m
-IHRoZSBtZXNzYWdlcyB3ZXJlIHRoZQ0KPj4gc2FtZSAtLSBidXQgdGhlbiBrZXB0IGdldHRpbmcg
-dGhhdCB1bmtub3duIGtleSBlcnJvciBvbiBhbGwgbXkgbGF0ZXIgdHJpZXMuDQo+Pg0KPj4gSSBk
-aWQgbm90aWNlIHRoZSAiMnNpZGxlIiBpbiB0aGUgZm9sbG93aW5nIHJhdGhlciB0aGFuICJzaGFs
-bG93IiBvciAiZGVlcCIuICBBDQo+PiBjYXQgb2YgL3N5cy9wb3dlci9zdGF0ZSBzaG93cyAiZnJl
-ZXplIG1lbSBkaXNrIiBidXQgYQ0KPj4gY2F0IG9mIC9zeXMvcG93ZXIvbWVtX3NsZWVwIiBzaG93
-cyBvbmx5ICJbczJpZGxlXSBzbyBpdCBsb29rcyBsaWtlIHNoYWxsb3cgYW5kIGRlZXANCj4+IGFy
-ZSBub3QgZW5hYmxlZCBmb3IgdGhpcyBzeXN0ZW0uICBJIGRpZCBjaGVjayB0aGUgaW5wdXQgcG93
-ZXIgKG9yIHJlYWxseSBjdXJyZW50KQ0KPj4gYXMgaXQgd2VudCBpbnRvIHN1c3BlbmQgYW5kIHRo
-ZSBtaWNyby11c2IgcG93ZXIgaW5wdXQgZHJvcHMgZnJvbSBhYm91dA0KPj4gMC41IGFtcHMgdG8g
-MC4wNSBhbXBzLiAgQnV0IGNsZWFybHkgYSBsb3Qgb2YgZGV2aWNlcyBhcmUgc3RpbGwgYWN0aXZl
-LCBhcyBtb3ZlbWVudA0KPj4gb2YgYSBibHVldG9vdGggbW91c2UgKHRoZSBNWCBBbnl3aGVyZSAy
-KSB3aWxsIHdha2UgaXQgZnJvbSBzdXNwZW5kLiAgVGhhdCBwcmVzdW1hYmx5IGlzDQo+PiB3aHkg
-c3VzcGVuZCBkb2Vzbid0IHRyaWdnZXIgdGhlIHNhbWUgaTJjX2Rlc2lnbndhcmUgcHJvYmxlbXMg
-YXMgaGliZXJuYXRlLg0KPj4NCj4+IExldCBtZSBrbm93IGlmIEkgY2FuIGRvIGFueSBvdGhlciB0
-ZXN0cy4NCj4gDQo+IENhbiB5b3UgcGxlYXNlIGNoZWNrIGlmIHRoZSBhcHBlbmRlZCBwYXRjaCBt
-YWtlcyB0aGUgaGliZXJuYXRlIGlzc3VlIGdvIGF3YXkgZm9yIHlvdSwgd2l0aG91dCBhbnkgb3Ro
-ZXIgY2hhbmdlcz8NCj4gDQo+IC0tLQ0KPiAgZHJpdmVycy9wY2kvcGNpLWRyaXZlci5jIHwgICAz
-NiArKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2Vk
-LCAxMCBpbnNlcnRpb25zKCspLCAyNiBkZWxldGlvbnMoLSkNCj4gDQo+IEluZGV4OiBsaW51eC1w
-bS9kcml2ZXJzL3BjaS9wY2ktZHJpdmVyLmMNCj4gPT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPiAtLS0gbGludXgtcG0u
-b3JpZy9kcml2ZXJzL3BjaS9wY2ktZHJpdmVyLmMNCj4gKysrIGxpbnV4LXBtL2RyaXZlcnMvcGNp
-L3BjaS1kcml2ZXIuYw0KPiBAQCAtOTU3LDE1ICs5NTcsMTQgQEAgc3RhdGljIGludCBwY2lfcG1f
-ZnJlZXplKHN0cnVjdCBkZXZpY2UgKg0KPiAgICAgICAgIH0NCj4gDQo+ICAgICAgICAgLyoNCj4g
-LSAgICAgICAgKiBUaGlzIHVzZWQgdG8gYmUgZG9uZSBpbiBwY2lfcG1fcHJlcGFyZSgpIGZvciBh
-bGwgZGV2aWNlcyBhbmQgc29tZQ0KPiAtICAgICAgICAqIGRyaXZlcnMgbWF5IGRlcGVuZCBvbiBp
-dCwgc28gZG8gaXQgaGVyZS4gIElkZWFsbHksIHJ1bnRpbWUtc3VzcGVuZGVkDQo+IC0gICAgICAg
-ICogZGV2aWNlcyBzaG91bGQgbm90IGJlIHRvdWNoZWQgZHVyaW5nIGZyZWV6ZS90aGF3IHRyYW5z
-aXRpb25zLA0KPiAtICAgICAgICAqIGhvd2V2ZXIuDQo+ICsgICAgICAgICogUmVzdW1lIGFsbCBy
-dW50aW1lLXN1c3BlbmRlZCBkZXZpY2VzIGJlZm9yZSBjcmVhdGluZyBhIHNuYXBzaG90DQo+ICsg
-ICAgICAgICogaW1hZ2Ugb2Ygc3lzdGVtIG1lbW9yeSwgYmVjYXVzZSB0aGUgcmVzdG9yZSBrZXJu
-ZWwgZ2VuZXJhbGx5IGNhbm5vdA0KPiArICAgICAgICAqIGJlIGV4cGVjdGVkIHRvIGFsd2F5cyBo
-YW5kbGUgdGhlbSBjb25zaXN0ZW50bHkgYW5kIHBjaV9wbV9yZXN0b3JlKCkNCj4gKyAgICAgICAg
-KiBhbHdheXMgbGVhdmVzIHRoZW0gYXMgImFjdGl2ZSIsIHNvIGVuc3VyZSB0aGF0IHRoZSBzdGF0
-ZSBzYXZlZCBpbiB0aGUNCj4gKyAgICAgICAgKiBpbWFnZSB3aWxsIGFsd2F5cyBiZSBjb25zaXN0
-ZW50IHdpdGggdGhhdC4NCj4gICAgICAgICAgKi8NCj4gLSAgICAgICBpZiAoIWRldl9wbV9zbWFy
-dF9zdXNwZW5kX2FuZF9zdXNwZW5kZWQoZGV2KSkgew0KPiAtICAgICAgICAgICAgICAgcG1fcnVu
-dGltZV9yZXN1bWUoZGV2KTsNCj4gLSAgICAgICAgICAgICAgIHBjaV9kZXYtPnN0YXRlX3NhdmVk
-ID0gZmFsc2U7DQo+IC0gICAgICAgfQ0KPiArICAgICAgIHBtX3J1bnRpbWVfcmVzdW1lKGRldik7
-DQo+ICsgICAgICAgcGNpX2Rldi0+c3RhdGVfc2F2ZWQgPSBmYWxzZTsNCj4gDQo+ICAgICAgICAg
-aWYgKHBtLT5mcmVlemUpIHsNCj4gICAgICAgICAgICAgICAgIGludCBlcnJvcjsNCj4gQEAgLTk5
-Miw5ICs5OTEsNiBAQCBzdGF0aWMgaW50IHBjaV9wbV9mcmVlemVfbm9pcnEoc3RydWN0IGRlDQo+
-ICAgICAgICAgc3RydWN0IHBjaV9kZXYgKnBjaV9kZXYgPSB0b19wY2lfZGV2KGRldik7DQo+ICAg
-ICAgICAgc3RydWN0IGRldmljZV9kcml2ZXIgKmRydiA9IGRldi0+ZHJpdmVyOw0KPiANCj4gLSAg
-ICAgICBpZiAoZGV2X3BtX3NtYXJ0X3N1c3BlbmRfYW5kX3N1c3BlbmRlZChkZXYpKQ0KPiAtICAg
-ICAgICAgICAgICAgcmV0dXJuIDA7DQo+IC0NCj4gICAgICAgICBpZiAocGNpX2hhc19sZWdhY3lf
-cG1fc3VwcG9ydChwY2lfZGV2KSkNCj4gICAgICAgICAgICAgICAgIHJldHVybiBwY2lfbGVnYWN5
-X3N1c3BlbmRfbGF0ZShkZXYsIFBNU0dfRlJFRVpFKTsNCj4gDQo+IEBAIC0xMDI0LDE2ICsxMDIw
-LDYgQEAgc3RhdGljIGludCBwY2lfcG1fdGhhd19ub2lycShzdHJ1Y3QgZGV2aQ0KPiAgICAgICAg
-IHN0cnVjdCBkZXZpY2VfZHJpdmVyICpkcnYgPSBkZXYtPmRyaXZlcjsNCj4gICAgICAgICBpbnQg
-ZXJyb3IgPSAwOw0KPiANCj4gLSAgICAgICAvKg0KPiAtICAgICAgICAqIElmIHRoZSBkZXZpY2Ug
-aXMgaW4gcnVudGltZSBzdXNwZW5kLCB0aGUgY29kZSBiZWxvdyBtYXkgbm90IHdvcmsNCj4gLSAg
-ICAgICAgKiBjb3JyZWN0bHkgd2l0aCBpdCwgc28gc2tpcCB0aGF0IGNvZGUgYW5kIG1ha2UgdGhl
-IFBNIGNvcmUgc2tpcCBhbGwgb2YNCj4gLSAgICAgICAgKiB0aGUgc3Vic2VxdWVudCAidGhhdyIg
-Y2FsbGJhY2tzIGZvciB0aGUgZGV2aWNlLg0KPiAtICAgICAgICAqLw0KPiAtICAgICAgIGlmIChk
-ZXZfcG1fc21hcnRfc3VzcGVuZF9hbmRfc3VzcGVuZGVkKGRldikpIHsNCj4gLSAgICAgICAgICAg
-ICAgIGRldl9wbV9za2lwX25leHRfcmVzdW1lX3BoYXNlcyhkZXYpOw0KPiAtICAgICAgICAgICAg
-ICAgcmV0dXJuIDA7DQo+IC0gICAgICAgfQ0KPiAtDQo+ICAgICAgICAgaWYgKHBjaWJpb3NfcG1f
-b3BzLnRoYXdfbm9pcnEpIHsNCj4gICAgICAgICAgICAgICAgIGVycm9yID0gcGNpYmlvc19wbV9v
-cHMudGhhd19ub2lycShkZXYpOw0KPiAgICAgICAgICAgICAgICAgaWYgKGVycm9yKQ0KPiBAQCAt
-MTA5Myw4ICsxMDc5LDEwIEBAIHN0YXRpYyBpbnQgcGNpX3BtX3Bvd2Vyb2ZmKHN0cnVjdCBkZXZp
-Y2UNCj4gDQo+ICAgICAgICAgLyogVGhlIHJlYXNvbiB0byBkbyB0aGF0IGlzIHRoZSBzYW1lIGFz
-IGluIHBjaV9wbV9zdXNwZW5kKCkuICovDQo+ICAgICAgICAgaWYgKCFkZXZfcG1fdGVzdF9kcml2
-ZXJfZmxhZ3MoZGV2LCBEUE1fRkxBR19TTUFSVF9TVVNQRU5EKSB8fA0KPiAtICAgICAgICAgICAh
-cGNpX2Rldl9rZWVwX3N1c3BlbmRlZChwY2lfZGV2KSkNCj4gKyAgICAgICAgICAgIXBjaV9kZXZf
-a2VlcF9zdXNwZW5kZWQocGNpX2RldikpIHsNCj4gICAgICAgICAgICAgICAgIHBtX3J1bnRpbWVf
-cmVzdW1lKGRldik7DQo+ICsgICAgICAgICAgICAgICBwY2lfZGV2LT5zdGF0ZV9zYXZlZCA9IGZh
-bHNlOw0KPiArICAgICAgIH0NCj4gDQo+ICAgICAgICAgcGNpX2Rldi0+c3RhdGVfc2F2ZWQgPSBm
-YWxzZTsNCj4gICAgICAgICBpZiAocG0tPnBvd2Vyb2ZmKSB7DQo+IEBAIC0xMTY4LDEwICsxMTU2
-LDYgQEAgc3RhdGljIGludCBwY2lfcG1fcmVzdG9yZV9ub2lycShzdHJ1Y3QgZA0KPiAgICAgICAg
-IHN0cnVjdCBkZXZpY2VfZHJpdmVyICpkcnYgPSBkZXYtPmRyaXZlcjsNCj4gICAgICAgICBpbnQg
-ZXJyb3IgPSAwOw0KPiANCj4gLSAgICAgICAvKiBUaGlzIGlzIGFuYWxvZ291cyB0byB0aGUgcGNp
-X3BtX3Jlc3VtZV9ub2lycSgpIGNhc2UuICovDQo+IC0gICAgICAgaWYgKGRldl9wbV9zbWFydF9z
-dXNwZW5kX2FuZF9zdXNwZW5kZWQoZGV2KSkNCj4gLSAgICAgICAgICAgICAgIHBtX3J1bnRpbWVf
-c2V0X2FjdGl2ZShkZXYpOw0KPiAtDQo+ICAgICAgICAgaWYgKHBjaWJpb3NfcG1fb3BzLnJlc3Rv
-cmVfbm9pcnEpIHsNCj4gICAgICAgICAgICAgICAgIGVycm9yID0gcGNpYmlvc19wbV9vcHMucmVz
-dG9yZV9ub2lycShkZXYpOw0KPiAgICAgICAgICAgICAgICAgaWYgKGVycm9yKQ0KPiANCj4gDQo+
-IA0KDQpUaGFua3MgZm9yIHRoZSBwYXRjaC4gIEknbSB0cmF2ZWxpbmcgcmlnaHQgbm93IHNvIEkn
-bSBhd2F5IGZyb20gdGhlIG1hY2hpbmVzIEkgbmVlZCB0byB0ZXN0IHRoaXMsIA0KYnV0IEknbGwg
-YmUgYmFjayBob21lIGJ5IHRoZSBlbmQgb2YgdGhlIHdlZWsgYW5kIHdpbGwgdGVzdCB0aGUgcGF0
-Y2ggdGhlbi4NCg0KQm9iIEhvd2VsbA0K
+The default serial speed was hardcoded in the code.
+Rename current-speed to default-speed.
+Add a function parameter that lets the subdrivers specify their
+default speed.
+If not specified fallback to the device-tree default-speed.
+
+Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
+---
+Hello,
+
+This patch moves the currently hardcoded, default serial speed
+to the subdrivers.
+If the default speed is not specified by the subdriver then it is read
+from the device tree.
+
+Changes since v1[0]
+- Use u32 data types instead of uint
+
+[0]: https://lore.kernel.org/lkml/1557322788-10403-1-git-send-email-lollivier@baylibre.com/
+
+Cheers,
+Loys
+
+ drivers/gnss/mtk.c    |  7 ++++++-
+ drivers/gnss/serial.c | 21 +++++++++++++--------
+ drivers/gnss/serial.h |  3 ++-
+ drivers/gnss/ubx.c    |  3 ++-
+ 4 files changed, 23 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gnss/mtk.c b/drivers/gnss/mtk.c
+index d1fc55560daf..1d35bcb52072 100644
+--- a/drivers/gnss/mtk.c
++++ b/drivers/gnss/mtk.c
+@@ -16,6 +16,10 @@
+ 
+ #include "serial.h"
+ 
++static uint serial_speed = 9600; /* Serial speed (baud rate) */
++module_param(serial_speed, uint, 0644);
++MODULE_PARM_DESC(serial_speed, "Serial baud rate (bit/s), (default = 9600)");
++
+ struct mtk_data {
+ 	struct regulator *vbackup;
+ 	struct regulator *vcc;
+@@ -69,7 +73,8 @@ static int mtk_probe(struct serdev_device *serdev)
+ 	struct mtk_data *data;
+ 	int ret;
+ 
+-	gserial = gnss_serial_allocate(serdev, sizeof(*data));
++	gserial = gnss_serial_allocate(serdev, sizeof(*data),
++				       (u32)serial_speed);
+ 	if (IS_ERR(gserial)) {
+ 		ret = PTR_ERR(gserial);
+ 		return ret;
+diff --git a/drivers/gnss/serial.c b/drivers/gnss/serial.c
+index def64b36d994..3be799702291 100644
+--- a/drivers/gnss/serial.c
++++ b/drivers/gnss/serial.c
+@@ -103,17 +103,13 @@ static int gnss_serial_set_power(struct gnss_serial *gserial,
+ 	return gserial->ops->set_power(gserial, state);
+ }
+ 
+-/*
+- * FIXME: need to provide subdriver defaults or separate dt parsing from
+- * allocation.
+- */
+ static int gnss_serial_parse_dt(struct serdev_device *serdev)
+ {
+ 	struct gnss_serial *gserial = serdev_device_get_drvdata(serdev);
+ 	struct device_node *node = serdev->dev.of_node;
+-	u32 speed = 4800;
++	u32 speed;
+ 
+-	of_property_read_u32(node, "current-speed", &speed);
++	of_property_read_u32(node, "default-speed", &speed);
+ 
+ 	gserial->speed = speed;
+ 
+@@ -121,7 +117,8 @@ static int gnss_serial_parse_dt(struct serdev_device *serdev)
+ }
+ 
+ struct gnss_serial *gnss_serial_allocate(struct serdev_device *serdev,
+-						size_t data_size)
++					 size_t data_size,
++					 u32 serial_speed)
+ {
+ 	struct gnss_serial *gserial;
+ 	struct gnss_device *gdev;
+@@ -146,10 +143,18 @@ struct gnss_serial *gnss_serial_allocate(struct serdev_device *serdev,
+ 	serdev_device_set_drvdata(serdev, gserial);
+ 	serdev_device_set_client_ops(serdev, &gnss_serial_serdev_ops);
+ 
+-	ret = gnss_serial_parse_dt(serdev);
++	/* Serial speed provided by subdriver takes precedence over dt*/
++	if (!serial_speed)
++		ret = gnss_serial_parse_dt(serdev);
++	else
++		gserial->speed = serial_speed;
++
+ 	if (ret)
+ 		goto err_put_device;
+ 
++	if (!gserial->speed)
++		return -EINVAL;
++
+ 	return gserial;
+ 
+ err_put_device:
+diff --git a/drivers/gnss/serial.h b/drivers/gnss/serial.h
+index 980ffdc86c2a..17df61e399e6 100644
+--- a/drivers/gnss/serial.h
++++ b/drivers/gnss/serial.h
+@@ -33,7 +33,8 @@ struct gnss_serial_ops {
+ extern const struct dev_pm_ops gnss_serial_pm_ops;
+ 
+ struct gnss_serial *gnss_serial_allocate(struct serdev_device *gserial,
+-						size_t data_size);
++					 size_t data_size,
++					 u32 serial_speed);
+ void gnss_serial_free(struct gnss_serial *gserial);
+ 
+ int gnss_serial_register(struct gnss_serial *gserial);
+diff --git a/drivers/gnss/ubx.c b/drivers/gnss/ubx.c
+index 7b05bc40532e..52ae6e4987e0 100644
+--- a/drivers/gnss/ubx.c
++++ b/drivers/gnss/ubx.c
+@@ -68,8 +68,9 @@ static int ubx_probe(struct serdev_device *serdev)
+ 	struct gnss_serial *gserial;
+ 	struct ubx_data *data;
+ 	int ret;
++	u32 speed = 4800;
+ 
+-	gserial = gnss_serial_allocate(serdev, sizeof(*data));
++	gserial = gnss_serial_allocate(serdev, sizeof(*data), speed);
+ 	if (IS_ERR(gserial)) {
+ 		ret = PTR_ERR(gserial);
+ 		return ret;
+-- 
+2.7.4
+
