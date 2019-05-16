@@ -2,158 +2,87 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 704A6C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16437C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 342BF20848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:58:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="OIHOP7ru"
+	by mail.kernel.org (Postfix) with ESMTP id CD72A20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:59:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558018763;
+	bh=pyqHeLwP0/o9bZkhKal+7TzHaVuEsQxVDwhcKhA9fIA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zW79y1Kcf5hPENpDXMj148icYKgXPMqeMJjN03urkea8V9mSwrdmoDAmezzCPGqMm
+	 QmEV3BUCBTa0k6Z1TU4GDMGMnhdSzQLSMkxP9nNIvOHnGVsU6ZPbCP+1kk20gkuziO
+	 xKKels6H9nuN9AcfRs7vniHMHNsEAHWYSQKiu4j4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbfEPO6Z (ORCPT
+        id S1726736AbfEPO7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:58:25 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44226 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727461AbfEPO6X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:58:23 -0400
-Received: by mail-ed1-f68.google.com with SMTP id b8so5649251edm.11
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 07:58:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xCVxcbycKijjP8G1i7Lu3aOPyQvDa5anPQzLbernNO4=;
-        b=OIHOP7rucDEqRTu8tvry5PPcTvGug7bBvZ3Sj3gEtUFrGnhyINnCk+I0zkqsLasUKZ
-         sDF9yMxrNz3GSuRfHnJ98dcv59fxALK1XZT/DdKM+RNStSEbUml+piQP0fMEz2cT77wZ
-         5fUSex8dhyXEU6EezdQo3iMv+/oWdqQP14elkHUkCpZkBvTW8oAW6AfrrmA20E9iIhVk
-         ZuAZmTbyIfWt5UMPyKY2uhM8QgCzF5SK4PrtHd7sRoTp6ulgh75hv6U20VbOqq0i/gZ+
-         98BZhaBZoAMvoCxu8vxG/vqn+9IOpy6tDLSn4KBXR2pI1aOzSqOO7bUDxsGPIuc1Dou9
-         GnZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xCVxcbycKijjP8G1i7Lu3aOPyQvDa5anPQzLbernNO4=;
-        b=nwx8Gcw4YeMWhPUNdfaAf/JDXMHorI7YWk080KUVUTf7oRVwq5IAMexsgI3VQrhMLg
-         eiRQvrT84+j7txOZe6tKHrI3ZHOoWveDHGK+QM6Vw/X4aREpiTV99SCgXr5BBqIjvIV6
-         9EEMvw+SdlEX69JK0EX0rrZgdpw+Nm/7WD255STUNXzBXfm72M8T+3XB67/m61E85MDI
-         VTLQeBSDSJ9hy5a4csejyNrURNBiVgYYwxr0Of6Oe4J9fdkZliXmloVzYciSWPwlkzU/
-         o6Js+GAIUurUO3PSKn22uPsXd6NLG6ftSnKX2FLjIHmEnF/EjeUJqH8MyNgxrNiTczg0
-         w4Sg==
-X-Gm-Message-State: APjAAAUZmwpW4Ez5/Xs6GzER03neU1Wt/PtABArTbqEpjICdMVpUylZb
-        /KaSOXKqCscaMBB3cfd0XJ2GAg==
-X-Google-Smtp-Source: APXvYqxgJ+X2Q+jweK2Am0efdrd0ewPSsOh9NTyeRf7XaOyCGLt/MTu5duHXcow8oFtMna8nvrnWUQ==
-X-Received: by 2002:a17:906:c391:: with SMTP id t17mr28473151ejz.242.1558018702012;
-        Thu, 16 May 2019 07:58:22 -0700 (PDT)
-Received: from brauner.io ([193.96.224.243])
-        by smtp.gmail.com with ESMTPSA id s15sm1924877edm.6.2019.05.16.07.58.20
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 16 May 2019 07:58:21 -0700 (PDT)
-Date:   Thu, 16 May 2019 16:58:19 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     David Howells <dhowells@redhat.com>, Jann Horn <jannh@google.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        elena.reshetova@intel.com, Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-xtensa@linux-xtensa.org, Kees Cook <keescook@chromium.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>, cyphar@cyphar.com,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v1 1/2] pid: add pidfd_open()
-Message-ID: <20190516145819.ofqkv6ozfpumhhuk@brauner.io>
-References: <20190516135944.7205-1-christian@brauner.io>
- <CAMuHMdVbUJ0+28Lc2wHPah8UUk8Ou9m81KzLvhrcMsJzz2bX2A@mail.gmail.com>
+        Thu, 16 May 2019 10:59:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726739AbfEPO7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 10:59:22 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AF392082E;
+        Thu, 16 May 2019 14:59:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558018762;
+        bh=pyqHeLwP0/o9bZkhKal+7TzHaVuEsQxVDwhcKhA9fIA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q2LAASp4DFsILEKi+SAR9UczNHo2R5cc3t23BYKuO1yGgAxlyaN/01WK3nokWL9Qf
+         t76QJQDnnzzn49ejYnpMdimyzRVWkj1irSlHUZHQ0r90Hm5ycL9pYZeLXV4hLhz9oY
+         NCLlb64+RUb/buooN5W9D9IpaKQ84T2QBY722CF8=
+Date:   Thu, 16 May 2019 16:59:19 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 3.18 00/86] 3.18.140-stable review
+Message-ID: <20190516145919.GA30606@kroah.com>
+References: <20190515090642.339346723@linuxfoundation.org>
+ <f2a05600-e302-9a06-80a1-421cae299287@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdVbUJ0+28Lc2wHPah8UUk8Ou9m81KzLvhrcMsJzz2bX2A@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <f2a05600-e302-9a06-80a1-421cae299287@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 04:56:08PM +0200, Geert Uytterhoeven wrote:
-> Hi Christian, David,
+On Thu, May 16, 2019 at 08:27:55AM -0600, shuah wrote:
+> On 5/15/19 4:54 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 3.18.140 release.
+> > There are 86 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Fri 17 May 2019 09:04:45 AM UTC.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v3.x/stable-review/patch-3.18.140-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-3.18.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
 > 
-> On Thu, May 16, 2019 at 4:00 PM Christian Brauner <christian@brauner.io> wrote:
-> > This adds the pidfd_open() syscall. It allows a caller to retrieve pollable
-> > pidfds for a process which did not get created via CLONE_PIDFD, i.e. for a
-> > process that is created via traditional fork()/clone() calls that is only
-> > referenced by a PID:
-> >
-> > int pidfd = pidfd_open(1234, 0);
-> > ret = pidfd_send_signal(pidfd, SIGSTOP, NULL, 0);
-> >
-> > With the introduction of pidfds through CLONE_PIDFD it is possible to
-> > created pidfds at process creation time.
-> > However, a lot of processes get created with traditional PID-based calls
-> > such as fork() or clone() (without CLONE_PIDFD). For these processes a
-> > caller can currently not create a pollable pidfd. This is a huge problem
-> > for Android's low memory killer (LMK) and service managers such as systemd.
-> > Both are examples of tools that want to make use of pidfds to get reliable
-> > notification of process exit for non-parents (pidfd polling) and race-free
-> > signal sending (pidfd_send_signal()). They intend to switch to this API for
-> > process supervision/management as soon as possible. Having no way to get
-> > pollable pidfds from PID-only processes is one of the biggest blockers for
-> > them in adopting this api. With pidfd_open() making it possible to retrieve
-> > pidfd for PID-based processes we enable them to adopt this api.
-> >
-> > In line with Arnd's recent changes to consolidate syscall numbers across
-> > architectures, I have added the pidfd_open() syscall to all architectures
-> > at the same time.
-> 
-> > +428    common  pidfd_open                      sys_pidfd_open
-> 
-> This number conflicts with "[PATCH 4/4] uapi: Wire up the mount API
-> syscalls on non-x86 arches", which is requested to be included before
-> rc1.
+> Compiled and booted on my test system. No dmesg regressions.
 
-Yep, already spotted this thanks to Arnd! Will change the syscall
-numbers.
+Wonderful, thanks!
 
-Thanks!
-Christian
-
-> 
-> Note that none of this is part of linux-next.
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+greg k-h
