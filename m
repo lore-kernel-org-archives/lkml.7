@@ -4,35 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C15C04E87
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4439FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7608B20818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2222320818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:58:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727033AbfEPI6e (ORCPT
+        id S1727061AbfEPI6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 04:58:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34950 "EHLO mx1.suse.de"
+        Thu, 16 May 2019 04:58:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35034 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726964AbfEPI6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726942AbfEPI6a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 May 2019 04:58:30 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AFA95AF68;
-        Thu, 16 May 2019 08:58:25 +0000 (UTC)
+        by mx1.suse.de (Postfix) with ESMTP id 01077AF96;
+        Thu, 16 May 2019 08:58:28 +0000 (UTC)
 From:   Roman Penyaev <rpenyaev@suse.de>
 Cc:     Azat Khuzhin <azat@libevent.org>, Roman Penyaev <rpenyaev@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 05/13] epoll: offload polling to a work in case of epfd polled from userspace
-Date:   Thu, 16 May 2019 10:58:02 +0200
-Message-Id: <20190516085810.31077-6-rpenyaev@suse.de>
+Subject: [PATCH v3 13/13] epoll: implement epoll_create2() syscall
+Date:   Thu, 16 May 2019 10:58:10 +0200
+Message-Id: <20190516085810.31077-14-rpenyaev@suse.de>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190516085810.31077-1-rpenyaev@suse.de>
 References: <20190516085810.31077-1-rpenyaev@suse.de>
@@ -44,11 +43,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Not every device reports pollflags on wake_up(), expecting that it will be
-polled later.  vfs_poll() can't be called from ep_poll_callback(), because
-ep_poll_callback() is called under the spinlock.  Obviously userspace can't
-call vfs_poll(), thus epoll has to offload vfs_poll() to a work and then to
-call ep_poll_callback() with pollflags in a hand.
+epoll_create2() is needed to accept EPOLL_USERPOLL flags
+and size, i.e. this patch wires up polling from userspace.
 
 Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
 Cc: Andrew Morton <akpm@linux-foundation.org>
@@ -57,195 +53,87 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: linux-fsdevel@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+index 4cd5f982b1e5..f0d271875f4e 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -438,3 +438,4 @@
+ 425	i386	io_uring_setup		sys_io_uring_setup		__ia32_sys_io_uring_setup
+ 426	i386	io_uring_enter		sys_io_uring_enter		__ia32_sys_io_uring_enter
+ 427	i386	io_uring_register	sys_io_uring_register		__ia32_sys_io_uring_register
++428	i386	epoll_create2		sys_epoll_create2		__ia32_sys_epoll_create2
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index 64ca0d06259a..5ee9bb31a552 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -355,6 +355,7 @@
+ 425	common	io_uring_setup		__x64_sys_io_uring_setup
+ 426	common	io_uring_enter		__x64_sys_io_uring_enter
+ 427	common	io_uring_register	__x64_sys_io_uring_register
++428	common	epoll_create2		__x64_sys_epoll_create2
+ 
+ #
+ # x32-specific system call numbers start at 512 to avoid cache impact
 diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index 81da4571f1e0..9d3905c0afbf 100644
+index 9ff666ce7cb5..b44c3a0c4ad0 100644
 --- a/fs/eventpoll.c
 +++ b/fs/eventpoll.c
-@@ -44,6 +44,7 @@
- #include <linux/seq_file.h>
- #include <linux/compat.h>
- #include <linux/rculist.h>
-+#include <linux/workqueue.h>
- #include <net/busy_poll.h>
+@@ -2614,6 +2614,14 @@ static int do_epoll_create(int flags, size_t size)
+ 	return error;
+ }
  
- /*
-@@ -185,6 +186,9 @@ struct epitem {
- 
- 	/* The structure that describe the interested events and the source fd */
- 	struct epoll_event event;
++SYSCALL_DEFINE2(epoll_create2, int, flags, size_t, size)
++{
++	if (size == 0)
++		return -EINVAL;
 +
-+	/* Work for offloading event callback */
-+	struct work_struct work;
- };
- 
- /*
-@@ -696,6 +700,14 @@ static void ep_unregister_pollwait(struct eventpoll *ep, struct epitem *epi)
- 		ep_remove_wait_queue(pwq);
- 		kmem_cache_free(pwq_cache, pwq);
- 	}
-+	if (ep_polled_by_user(ep)) {
-+		/*
-+		 * Events polled by user require offloading to a work,
-+		 * thus we have to be sure everything which was queued
-+		 * has run to a completion.
-+		 */
-+		flush_work(&epi->work);
-+	}
- }
- 
- /* call only when ep->mtx is held */
-@@ -1340,9 +1352,8 @@ static inline bool chain_epi_lockless(struct epitem *epi)
- }
- 
- /*
-- * This is the callback that is passed to the wait queue wakeup
-- * mechanism. It is called by the stored file descriptors when they
-- * have events to report.
-+ * This is the callback that is called directly from wake queue wakeup or
-+ * from a work.
-  *
-  * This callback takes a read lock in order not to content with concurrent
-  * events from another file descriptors, thus all modifications to ->rdllist
-@@ -1357,14 +1368,11 @@ static inline bool chain_epi_lockless(struct epitem *epi)
-  * queues are used should be detected accordingly.  This is detected using
-  * cmpxchg() operation.
-  */
--static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, void *key)
-+static int ep_poll_callback(struct epitem *epi, __poll_t pollflags)
++	return do_epoll_create(flags, size);
++}
++
+ SYSCALL_DEFINE1(epoll_create1, int, flags)
  {
--	int pwake = 0;
--	struct epitem *epi = ep_item_from_wait(wait);
- 	struct eventpoll *ep = epi->ep;
--	__poll_t pollflags = key_to_poll(key);
-+	int pwake = 0, ewake = 0;
- 	unsigned long flags;
--	int ewake = 0;
+ 	return do_epoll_create(flags, 0);
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index e2870fe1be5b..5049b0d16949 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -358,6 +358,7 @@ asmlinkage long sys_eventfd2(unsigned int count, int flags);
  
- 	read_lock_irqsave(&ep->lock, flags);
+ /* fs/eventpoll.c */
+ asmlinkage long sys_epoll_create1(int flags);
++asmlinkage long sys_epoll_create2(int flags, size_t size);
+ asmlinkage long sys_epoll_ctl(int epfd, int op, int fd,
+ 				struct epoll_event __user *event);
+ asmlinkage long sys_epoll_pwait(int epfd, struct epoll_event __user *events,
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+index dee7292e1df6..fccfaab366ee 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -832,9 +832,11 @@ __SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
+ __SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
+ #define __NR_io_uring_register 427
+ __SYSCALL(__NR_io_uring_register, sys_io_uring_register)
++#define __NR_epoll_create2 428
++__SYSCALL(__NR_epoll_create2, sys_epoll_create2)
  
-@@ -1382,8 +1390,9 @@ static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, v
- 	/*
- 	 * Check the events coming with the callback. At this stage, not
- 	 * every device reports the events in the "key" parameter of the
--	 * callback. We need to be able to handle both cases here, hence the
--	 * test for "key" != NULL before the event match test.
-+	 * callback (for ep_poll_callback() case special worker is used).
-+	 * We need to be able to handle both cases here, hence the test
-+	 * for "key" != NULL before the event match test.
- 	 */
- 	if (pollflags && !(pollflags & epi->event.events))
- 		goto out_unlock;
-@@ -1443,23 +1452,67 @@ static int ep_poll_callback(wait_queue_entry_t *wait, unsigned mode, int sync, v
- 	if (!(epi->event.events & EPOLLEXCLUSIVE))
- 		ewake = 1;
- 
--	if (pollflags & POLLFREE) {
--		/*
--		 * If we race with ep_remove_wait_queue() it can miss
--		 * ->whead = NULL and do another remove_wait_queue() after
--		 * us, so we can't use __remove_wait_queue().
--		 */
--		list_del_init(&wait->entry);
-+	return ewake;
-+}
-+
-+static void ep_poll_callback_work(struct work_struct *work)
-+{
-+	struct epitem *epi = container_of(work, typeof(*epi), work);
-+	__poll_t pollflags;
-+	poll_table pt;
-+
-+	WARN_ON(!ep_polled_by_user(epi->ep));
-+
-+	init_poll_funcptr(&pt, NULL);
-+	pollflags = ep_item_poll(epi, &pt, 1);
-+	if (pollflags)
-+		(void)ep_poll_callback(epi, pollflags);
-+}
-+
-+/*
-+ * This is the callback that is passed to the wait queue wakeup
-+ * mechanism. It is called by the stored file descriptors when they
-+ * have events to report.
-+ */
-+static int ep_poll_wakeup(wait_queue_entry_t *wait, unsigned int mode,
-+			  int sync, void *key)
-+{
-+
-+	struct epitem *epi = ep_item_from_wait(wait);
-+	struct eventpoll *ep = epi->ep;
-+	__poll_t pollflags = key_to_poll(key);
-+	int rc;
-+
-+	if (!ep_polled_by_user(ep) || pollflags) {
-+		rc = ep_poll_callback(epi, pollflags);
-+
-+		if (pollflags & POLLFREE) {
-+			/*
-+			 * If we race with ep_remove_wait_queue() it can miss
-+			 * ->whead = NULL and do another remove_wait_queue()
-+			 * after us, so we can't use __remove_wait_queue().
-+			 */
-+			list_del_init(&wait->entry);
-+			/*
-+			 * ->whead != NULL protects us from the race with
-+			 * ep_free() or ep_remove(), ep_remove_wait_queue()
-+			 * takes whead->lock held by the caller. Once we nullify
-+			 * it, nothing protects ep/epi or even wait.
-+			 */
-+			smp_store_release(&ep_pwq_from_wait(wait)->whead, NULL);
-+		}
-+	} else {
-+		schedule_work(&epi->work);
-+
- 		/*
--		 * ->whead != NULL protects us from the race with ep_free()
--		 * or ep_remove(), ep_remove_wait_queue() takes whead->lock
--		 * held by the caller. Once we nullify it, nothing protects
--		 * ep/epi or even wait.
-+		 * Here on this path we are absolutely sure that for file
-+		 * descriptors* which are pollable from userspace we do not
-+		 * support EPOLLEXCLUSIVE, so it is safe to return 1.
- 		 */
--		smp_store_release(&ep_pwq_from_wait(wait)->whead, NULL);
-+		rc = 1;
- 	}
- 
--	return ewake;
-+	return rc;
- }
+ #undef __NR_syscalls
+-#define __NR_syscalls 428
++#define __NR_syscalls 429
  
  /*
-@@ -1473,7 +1526,7 @@ static void ep_ptable_queue_proc(struct file *file, wait_queue_head_t *whead,
- 	struct eppoll_entry *pwq;
+  * 32 bit systems traditionally used different
+diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+index 4d9ae5ea6caf..665908b8a326 100644
+--- a/kernel/sys_ni.c
++++ b/kernel/sys_ni.c
+@@ -65,6 +65,7 @@ COND_SYSCALL(eventfd2);
  
- 	if (epi->nwait >= 0 && (pwq = kmem_cache_alloc(pwq_cache, GFP_KERNEL))) {
--		init_waitqueue_func_entry(&pwq->wait, ep_poll_callback);
-+		init_waitqueue_func_entry(&pwq->wait, ep_poll_wakeup);
- 		pwq->whead = whead;
- 		pwq->base = epi;
- 		if (epi->event.events & EPOLLEXCLUSIVE)
-@@ -1667,6 +1720,7 @@ static int ep_insert(struct eventpoll *ep, const struct epoll_event *event,
- 	INIT_LIST_HEAD(&epi->rdllink);
- 	INIT_LIST_HEAD(&epi->fllink);
- 	INIT_LIST_HEAD(&epi->pwqlist);
-+	INIT_WORK(&epi->work, ep_poll_callback_work);
- 	epi->ep = ep;
- 	ep_set_ffd(&epi->ffd, tfile, fd);
- 	epi->event = *event;
-@@ -2547,12 +2601,6 @@ static int __init eventpoll_init(void)
- 	ep_nested_calls_init(&poll_safewake_ncalls);
- #endif
- 
--	/*
--	 * We can have many thousands of epitems, so prevent this from
--	 * using an extra cache line on 64-bit (and smaller) CPUs
--	 */
--	BUILD_BUG_ON(sizeof(void *) <= 8 && sizeof(struct epitem) > 128);
--
- 	/* Allocates slab cache used to allocate "struct epitem" items */
- 	epi_cache = kmem_cache_create("eventpoll_epi", sizeof(struct epitem),
- 			0, SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT, NULL);
+ /* fs/eventfd.c */
+ COND_SYSCALL(epoll_create1);
++COND_SYSCALL(epoll_create2);
+ COND_SYSCALL(epoll_ctl);
+ COND_SYSCALL(epoll_pwait);
+ COND_SYSCALL_COMPAT(epoll_pwait);
 -- 
 2.21.0
 
