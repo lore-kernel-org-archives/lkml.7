@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73057C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA92BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4566220833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF42B20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558007203;
-	bh=OgAr9NnJOu4bo2BNM55+71cqwwgE6NUDDGHNnnfrFGU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=xDuWMUNQXCOk7pqVpxFRJ6cmIbqjGsyqfAdcu1u87mRUYZTYXSmXbDqpLPgD0wXfN
-	 9asCaVLVFjXFVlOhQCQXHcezMMbon0vo5iFFgJYEIQOUNG0Y2c/kyxSXb7h3rh+Fdw
-	 Bkmf+uoS2zahr+iwNOZ21T5xttiaKljKN4YPFY/w=
+	s=default; t=1558007208;
+	bh=Vv7OIPjGXH8iV14gTzRlXuyydsjwHX8Wip9Nj1L79eU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=J6Q/MSfdRiFXbtIpL4VLZLA8ulvfKiJqWMzMNXV6sC54pbcv2ouHnuvrMFy4U826u
+	 /SPxGc5UKwpgLKLxAVRobhz5IxxXeo3Ky8Ho7cb9kO3M+K5Vo+DHwfKdvw2sWf9KfZ
+	 GVUulx5hN5N4+wOTJvG1Wgva1YT5Aj5zkyfW+cFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfEPLkh (ORCPT
+        id S1728545AbfEPLqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:40:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48804 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:46:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727741AbfEPLkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:40:32 -0400
+        id S1727787AbfEPLkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:40:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 215D220833;
-        Thu, 16 May 2019 11:40:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F39221473;
+        Thu, 16 May 2019 11:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006831;
-        bh=OgAr9NnJOu4bo2BNM55+71cqwwgE6NUDDGHNnnfrFGU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FdwyFH8DBUr2A443w9H5aDnB+XmlzEOTwtQlu9pIOg7gO4eRk0r4e//AC1CTY3Ovp
-         do39YuCj6tdnHvDIqtdt2/csPKXDos98x0gt4O1sMBIqgZG1k94PswVfNIFZKvwwQG
-         jbdD1EGlz4fRIM0UtxVbgZWfK3h/wEciNYvSu0Cs=
+        s=default; t=1558006835;
+        bh=Vv7OIPjGXH8iV14gTzRlXuyydsjwHX8Wip9Nj1L79eU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=IKAk2/8niFS1d5ludKI/i1nXHRV8418DXpWNDdPgpCcg5hbc73n7kQldduuDDoxEH
+         uzOLxGjwmR+Anb1KdtLoqSY6vwrvTXPXbM/2coYcOj8k6eEJsdCnqv6CQVCxMuNs0+
+         RSBHhphULgUWyQw9bs4CvslOjJGOLoZ3FwsAfCMA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+Cc:     Sabrina Dubroca <sd@queasysnail.net>,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 01/25] xfrm: policy: Fix out-of-bound array accesses in __xfrm_policy_unlink
-Date:   Thu, 16 May 2019 07:40:04 -0400
-Message-Id: <20190516114029.8682-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 05/25] esp4: add length check for UDP encapsulation
+Date:   Thu, 16 May 2019 07:40:08 -0400
+Message-Id: <20190516114029.8682-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190516114029.8682-1-sashal@kernel.org>
+References: <20190516114029.8682-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,89 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Sabrina Dubroca <sd@queasysnail.net>
 
-[ Upstream commit b805d78d300bcf2c83d6df7da0c818b0fee41427 ]
+[ Upstream commit 8dfb4eba4100e7cdd161a8baef2d8d61b7a7e62e ]
 
-UBSAN report this:
+esp_output_udp_encap can produce a length that doesn't fit in the 16
+bits of a UDP header's length field. In that case, we'll send a
+fragmented packet whose length is larger than IP_MAX_MTU (resulting in
+"Oversized IP packet" warnings on receive) and with a bogus UDP
+length.
 
-UBSAN: Undefined behaviour in net/xfrm/xfrm_policy.c:1289:24
-index 6 is out of range for type 'unsigned int [6]'
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.4.162-514.55.6.9.x86_64+ #13
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
- 0000000000000000 1466cf39b41b23c9 ffff8801f6b07a58 ffffffff81cb35f4
- 0000000041b58ab3 ffffffff83230f9c ffffffff81cb34e0 ffff8801f6b07a80
- ffff8801f6b07a20 1466cf39b41b23c9 ffffffff851706e0 ffff8801f6b07ae8
-Call Trace:
- <IRQ>  [<ffffffff81cb35f4>] __dump_stack lib/dump_stack.c:15 [inline]
- <IRQ>  [<ffffffff81cb35f4>] dump_stack+0x114/0x1a0 lib/dump_stack.c:51
- [<ffffffff81d94225>] ubsan_epilogue+0x12/0x8f lib/ubsan.c:164
- [<ffffffff81d954db>] __ubsan_handle_out_of_bounds+0x16e/0x1b2 lib/ubsan.c:382
- [<ffffffff82a25acd>] __xfrm_policy_unlink+0x3dd/0x5b0 net/xfrm/xfrm_policy.c:1289
- [<ffffffff82a2e572>] xfrm_policy_delete+0x52/0xb0 net/xfrm/xfrm_policy.c:1309
- [<ffffffff82a3319b>] xfrm_policy_timer+0x30b/0x590 net/xfrm/xfrm_policy.c:243
- [<ffffffff813d3927>] call_timer_fn+0x237/0x990 kernel/time/timer.c:1144
- [<ffffffff813d8e7e>] __run_timers kernel/time/timer.c:1218 [inline]
- [<ffffffff813d8e7e>] run_timer_softirq+0x6ce/0xb80 kernel/time/timer.c:1401
- [<ffffffff8120d6f9>] __do_softirq+0x299/0xe10 kernel/softirq.c:273
- [<ffffffff8120e676>] invoke_softirq kernel/softirq.c:350 [inline]
- [<ffffffff8120e676>] irq_exit+0x216/0x2c0 kernel/softirq.c:391
- [<ffffffff82c5edab>] exiting_irq arch/x86/include/asm/apic.h:652 [inline]
- [<ffffffff82c5edab>] smp_apic_timer_interrupt+0x8b/0xc0 arch/x86/kernel/apic/apic.c:926
- [<ffffffff82c5c985>] apic_timer_interrupt+0xa5/0xb0 arch/x86/entry/entry_64.S:735
- <EOI>  [<ffffffff81188096>] ? native_safe_halt+0x6/0x10 arch/x86/include/asm/irqflags.h:52
- [<ffffffff810834d7>] arch_safe_halt arch/x86/include/asm/paravirt.h:111 [inline]
- [<ffffffff810834d7>] default_idle+0x27/0x430 arch/x86/kernel/process.c:446
- [<ffffffff81085f05>] arch_cpu_idle+0x15/0x20 arch/x86/kernel/process.c:437
- [<ffffffff8132abc3>] default_idle_call+0x53/0x90 kernel/sched/idle.c:92
- [<ffffffff8132b32d>] cpuidle_idle_call kernel/sched/idle.c:156 [inline]
- [<ffffffff8132b32d>] cpu_idle_loop kernel/sched/idle.c:251 [inline]
- [<ffffffff8132b32d>] cpu_startup_entry+0x60d/0x9a0 kernel/sched/idle.c:299
- [<ffffffff8113e119>] start_secondary+0x3c9/0x560 arch/x86/kernel/smpboot.c:245
+To prevent this, add a length check to esp_output_udp_encap and return
+ -EMSGSIZE on failure.
 
-The issue is triggered as this:
+This seems to be older than git history.
 
-xfrm_add_policy
-    -->verify_newpolicy_info  //check the index provided by user with XFRM_POLICY_MAX
-			      //In my case, the index is 0x6E6BB6, so it pass the check.
-    -->xfrm_policy_construct  //copy the user's policy and set xfrm_policy_timer
-    -->xfrm_policy_insert
-	--> __xfrm_policy_link //use the orgin dir, in my case is 2
-	--> xfrm_gen_index   //generate policy index, there is 0x6E6BB6
-
-then xfrm_policy_timer be fired
-
-xfrm_policy_timer
-   --> xfrm_policy_id2dir  //get dir from (policy index & 7), in my case is 6
-   --> xfrm_policy_delete
-      --> __xfrm_policy_unlink //access policy_count[dir], trigger out of range access
-
-Add xfrm_policy_id2dir check in verify_newpolicy_info, make sure the computed dir is
-valid, to fix the issue.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e682adf021be ("xfrm: Try to honor policy index if it's supplied by user")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_user.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/esp4.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index 7e4904b930041..060afc4ffd958 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -1424,7 +1424,7 @@ static int verify_newpolicy_info(struct xfrm_userpolicy_info *p)
- 	ret = verify_policy_dir(p->dir);
- 	if (ret)
- 		return ret;
--	if (p->index && ((p->index & XFRM_POLICY_MAX) != p->dir))
-+	if (p->index && (xfrm_policy_id2dir(p->index) != p->dir))
- 		return -EINVAL;
+diff --git a/net/ipv4/esp4.c b/net/ipv4/esp4.c
+index 12a43a5369a54..114f9def1ec54 100644
+--- a/net/ipv4/esp4.c
++++ b/net/ipv4/esp4.c
+@@ -223,7 +223,7 @@ static void esp_output_fill_trailer(u8 *tail, int tfclen, int plen, __u8 proto)
+ 	tail[plen - 1] = proto;
+ }
  
- 	return 0;
+-static void esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *esp)
++static int esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *esp)
+ {
+ 	int encap_type;
+ 	struct udphdr *uh;
+@@ -231,6 +231,7 @@ static void esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, stru
+ 	__be16 sport, dport;
+ 	struct xfrm_encap_tmpl *encap = x->encap;
+ 	struct ip_esp_hdr *esph = esp->esph;
++	unsigned int len;
+ 
+ 	spin_lock_bh(&x->lock);
+ 	sport = encap->encap_sport;
+@@ -238,11 +239,14 @@ static void esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, stru
+ 	encap_type = encap->encap_type;
+ 	spin_unlock_bh(&x->lock);
+ 
++	len = skb->len + esp->tailen - skb_transport_offset(skb);
++	if (len + sizeof(struct iphdr) >= IP_MAX_MTU)
++		return -EMSGSIZE;
++
+ 	uh = (struct udphdr *)esph;
+ 	uh->source = sport;
+ 	uh->dest = dport;
+-	uh->len = htons(skb->len + esp->tailen
+-		  - skb_transport_offset(skb));
++	uh->len = htons(len);
+ 	uh->check = 0;
+ 
+ 	switch (encap_type) {
+@@ -259,6 +263,8 @@ static void esp_output_udp_encap(struct xfrm_state *x, struct sk_buff *skb, stru
+ 
+ 	*skb_mac_header(skb) = IPPROTO_UDP;
+ 	esp->esph = esph;
++
++	return 0;
+ }
+ 
+ int esp_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *esp)
+@@ -272,8 +278,12 @@ int esp_output_head(struct xfrm_state *x, struct sk_buff *skb, struct esp_info *
+ 	int tailen = esp->tailen;
+ 
+ 	/* this is non-NULL only with UDP Encapsulation */
+-	if (x->encap)
+-		esp_output_udp_encap(x, skb, esp);
++	if (x->encap) {
++		int err = esp_output_udp_encap(x, skb, esp);
++
++		if (err < 0)
++			return err;
++	}
+ 
+ 	if (!skb_cloned(skb)) {
+ 		if (tailen <= skb_tailroom(skb)) {
 -- 
 2.20.1
 
