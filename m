@@ -2,92 +2,97 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FB0C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FFEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCAD4205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF4DF20815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:53:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728742AbfEPQu1 (ORCPT
+        id S1728574AbfEPQxs convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:50:27 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:59384 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726487AbfEPQu0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:50:26 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hRJaI-00043u-Bq; Thu, 16 May 2019 16:50:22 +0000
-Date:   Thu, 16 May 2019 17:50:22 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     David Howells <dhowells@redhat.com>, torvalds@linux-foundation.org,
-        Arnd Bergmann <arnd@arndb.de>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-abi@vger.kernel.org
-Subject: Re: [PATCH 0/4] uapi, vfs: Change the mount API UAPI [ver #2]
-Message-ID: <20190516165021.GD17978@ZenIV.linux.org.uk>
-References: <155800752418.4037.9567789434648701032.stgit@warthog.procyon.org.uk>
- <20190516162259.GB17978@ZenIV.linux.org.uk>
- <20190516163151.urrmrueugockxtdy@brauner.io>
+        Thu, 16 May 2019 12:53:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59990 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726357AbfEPQxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 12:53:48 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3CD1D309267B;
+        Thu, 16 May 2019 16:53:48 +0000 (UTC)
+Received: from x1.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 45FE760E39;
+        Thu, 16 May 2019 16:53:45 +0000 (UTC)
+Date:   Thu, 16 May 2019 10:53:44 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>, eric.auger.pro@gmail.com,
+        joro@8bytes.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, dwmw2@infradead.org,
+        lorenzo.pieralisi@arm.com, will.deacon@arm.com,
+        hanjun.guo@linaro.org, sudeep.holla@arm.com,
+        shameerali.kolothum.thodi@huawei.com
+Subject: Re: [PATCH v3 6/7] iommu: Introduce IOMMU_RESV_DIRECT_RELAXABLE
+ reserved memory regions
+Message-ID: <20190516105344.5add5520@x1.home>
+In-Reply-To: <57db1955-9d19-7c0b-eca3-37cc0d7d745b@redhat.com>
+References: <20190516100817.12076-1-eric.auger@redhat.com>
+        <20190516100817.12076-7-eric.auger@redhat.com>
+        <ad8a99fa-b98a-14d3-12be-74df0e6eb8f8@arm.com>
+        <57db1955-9d19-7c0b-eca3-37cc0d7d745b@redhat.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516163151.urrmrueugockxtdy@brauner.io>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 16 May 2019 16:53:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[linux-abi cc'd]
+On Thu, 16 May 2019 15:23:17 +0200
+Auger Eric <eric.auger@redhat.com> wrote:
 
-On Thu, May 16, 2019 at 06:31:52PM +0200, Christian Brauner wrote:
-> On Thu, May 16, 2019 at 05:22:59PM +0100, Al Viro wrote:
-> > On Thu, May 16, 2019 at 12:52:04PM +0100, David Howells wrote:
-> > > 
-> > > Hi Linus, Al,
-> > > 
-> > > Here are some patches that make changes to the mount API UAPI and two of
-> > > them really need applying, before -rc1 - if they're going to be applied at
-> > > all.
+> Hi Robin,
+> On 5/16/19 2:46 PM, Robin Murphy wrote:
+> >> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> >> index ba91666998fb..14a521f85f14 100644
+> >> --- a/include/linux/iommu.h
+> >> +++ b/include/linux/iommu.h
+> >> @@ -135,6 +135,12 @@ enum iommu_attr {
+> >>   enum iommu_resv_type {
+> >>       /* Memory regions which must be mapped 1:1 at all times */
+> >>       IOMMU_RESV_DIRECT,
+> >> +    /*
+> >> +     * Memory regions which are advertised to be 1:1 but are
+> >> +     * commonly considered relaxable in some conditions,
+> >> +     * for instance in device assignment use case (USB, Graphics)
+> >> +     */
+> >> +    IOMMU_RESV_DIRECT_RELAXABLE,  
 > > 
-> > I'm fine with 2--4, but I'm not convinced that cloexec-by-default crusade
-> > makes any sense.  Could somebody give coherent arguments in favour of
-> > abandoning the existing conventions?
-> 
-> So as I said in the commit message. From a userspace perspective it's
-> more of an issue if one accidently leaks an fd to a task during exec.
-> 
-> Also, most of the time one does not want to inherit an fd during an
-> exec. It is a hazzle to always have to specify an extra flag.
-> 
-> As Al pointed out to me open() semantics are not going anywhere. Sure,
-> no argument there at all.
-> But the idea of making fds cloexec by default is only targeted at fds
-> that come from separate syscalls. fsopen(), open_tree_clone(), etc. they
-> all return fds independent of open() so it's really easy to have them
-> cloexec by default without regressing anyone and we also remove the need
-> for a bunch of separate flags for each syscall to turn them into
-> cloexec-fds. I mean, those for syscalls came with 4 separate flags to be
-> able to specify that the returned fd should be made cloexec. The other
-> way around, cloexec by default, fcntl() to remove the cloexec bit is way
-> saner imho.
+> > What do you think of s/RELAXABLE/BOOT/ ? My understanding is that these
+> > regions are only considered relevant until Linux has taken full control
+> > of the endpoint, and having a slightly more well-defined scope than
+> > "some conditions" might be nice.  
+> That's not my current understanding. I think those RMRRs may be used
+> post-boot (especially the IGD stolen memory covered by RMRR). I
+> understand this depends on the video mode or FW in use by the IGD. But I
+> am definitively not an expert here.
 
-Re separate flags - it is, in principle, a valid argument.  OTOH, I'm not
-sure if they need to be separate - they all have the same value and
-I don't see any reason for that to change...
+Nor am I, but generally the distinction I'm trying to achieve is
+whether the reserved region is necessary for the device operation or
+for the system operation.  If we deny the IGD device its mapping to
+stolen memory, then maybe the IGD device doesn't work, no big deal.  If
+we deny USB its RMRR, then we assume we're only cutting off PS/2
+emulation that we expect isn't used at this point anyway.  Both of these
+are choices in how the driver wants to use the device.  On the other
+hand if we have a system where management firmware has backdoors to
+devices for system health monitoring, then declining to honor the RMRR
+has larger implications.  Thanks,
 
-Only tangentially related, but I wonder if something like close_range(from, to)
-would be a more useful approach...  That kind of open-coded loops is not
-rare in userland and kernel-side code can do them much cheaper.  Something
-like
-	/* that exec is sensitive */
-	unshare(CLONE_FILES);
-	/* we don't want anything past stderr here */
-	close_range(3, ~0U);
-	execve(....);
-on the userland side of thing.  Comments?
+Alex
