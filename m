@@ -2,295 +2,136 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BCADC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75F1C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B5720833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:54:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 965652087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:54:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VYoxyClJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727434AbfEPMy2 (ORCPT
+        id S1727495AbfEPMyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 08:54:28 -0400
-Received: from relay.sw.ru ([185.231.240.75]:51428 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726726AbfEPMy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 08:54:27 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hRFta-0006e6-T8; Thu, 16 May 2019 15:54:02 +0300
-Subject: Re: [PATCH RFC 5/5] mm: Add process_vm_mmap()
-To:     Kees Cook <keescook@chromium.org>
-Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
-        mhocko@suse.com, keith.busch@intel.com,
-        kirill.shutemov@linux.intel.com, pasha.tatashin@oracle.com,
-        alexander.h.duyck@linux.intel.com, ira.weiny@intel.com,
-        andreyknvl@google.com, arunks@codeaurora.org, vbabka@suse.cz,
-        cl@linux.com, riel@surriel.com, hannes@cmpxchg.org,
-        npiggin@gmail.com, mathieu.desnoyers@efficios.com,
-        shakeelb@google.com, guro@fb.com, aarcange@redhat.com,
-        hughd@google.com, jglisse@redhat.com, mgorman@techsingularity.net,
-        daniel.m.jordan@oracle.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Jann Horn <jannh@google.com>,
-        Matthew Wilcox <willy@infradead.org>
-References: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
- <155793310413.13922.4749810361688380807.stgit@localhost.localdomain>
- <201905151018.42009E4868@keescook>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <f1290283-1528-35da-367a-8c1c62d52354@virtuozzo.com>
-Date:   Thu, 16 May 2019 15:54:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 16 May 2019 08:54:44 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:36505 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727444AbfEPMyo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 08:54:44 -0400
+Received: by mail-vs1-f67.google.com with SMTP id l20so2252109vsp.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 05:54:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5JFKFzEG0xBUwD7HIYkZnnh9dqUah7E+Ib/gYxU2vLc=;
+        b=VYoxyClJ3IjCVsog1UOHY1j+te4vzK7Zn2KD34QyuMIWoFuDNp2DKcFQsGF7V5m1+7
+         9TjRCmfp8zPch4KoXHkfiEsy94k9AIuh7YLakWy4P/y4oXwuJlYONSjl0JX9V0ajbr6v
+         +0DcWGGJ63IhmWOGKLnbLaXwZa6K0t2YEfKHqwyZrkAIlahHSxIvEmiv8NjKLjsb/Z/s
+         BwwGWbUZWgcHXmcdk1Y858SQGg5Fa9I9UqDHVf2ZLb5pjWASAuLCnZazpDqjQUtKNmww
+         QdbHS9uJTFRRPv2+3ogrqq5IM09zMxLdUcwvpGgFIT/9DjcNWIAGPbYTEiMhAUhA9X4h
+         JNTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5JFKFzEG0xBUwD7HIYkZnnh9dqUah7E+Ib/gYxU2vLc=;
+        b=r52aBSk8A61xF3TUinLsh7yj4CtzK5c49MkoZKFTrRoRGlBs3aAt7x00BQZDM2X0dF
+         KcIfW6F1Sz2IOLhdpRsywGAcUR/7e9U7646gA1lGpJem2IdLyGRvXZe9HOGepE6k/eny
+         GjiswHQVDtBGHaNTx3nd8VQ9eZJqxdBX1PNmUGsQAhBH+M+J/NQnHVEkANRaWndBIRqy
+         Tpvg4kE0inj1HydOdJTj+Zpqd1Yktz14eeHPIA8LYgYy78X5bj6LSnX4zLjo1mn19y6u
+         a60D13FDZCcAkMTUqJDXVXvLZ1+B+PB8zJMI5TT33PpXVG3QOlZXDTDcNAAqv8a6SoIE
+         TTww==
+X-Gm-Message-State: APjAAAV8Ap9pBvVCWZIs8voLUBuXmR1lD28bMkaoI+DZiwCpTCnjKexz
+        nPfp70UjLs2AxeHU1HDlIPI30oZWvBQ1/lLCiNDKKKQxd6RuQA==
+X-Google-Smtp-Source: APXvYqzDDDWdu9fo9iPHY+ysVVykXsJWlZRil28ig+PCzrEXYHeHo4q5f7yXfu68QdSmpPfaBGotMnL52M7tvXUqMI4=
+X-Received: by 2002:a67:c84:: with SMTP id 126mr8581637vsm.178.1558011283233;
+ Thu, 16 May 2019 05:54:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <201905151018.42009E4868@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1557983320-14461-1-git-send-email-sagar.kadam@sifive.com>
+ <1557983320-14461-4-git-send-email-sagar.kadam@sifive.com> <20190516123120.GB14298@lunn.ch>
+In-Reply-To: <20190516123120.GB14298@lunn.ch>
+From:   Sagar Kadam <sagar.kadam@sifive.com>
+Date:   Thu, 16 May 2019 18:24:32 +0530
+Message-ID: <CAARK3H=L2AFtog6wdJGU7rKi7yk-AzDgFdjcjktZgkqdDwnOZQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Kees,
+Hello Andrew,
 
-On 15.05.2019 21:29, Kees Cook wrote:
-> On Wed, May 15, 2019 at 06:11:44PM +0300, Kirill Tkhai wrote:
->> This adds a new syscall to map from or to another
->> process vma. Flag PVMMAP_FIXED may be specified,
->> its meaning is similar to mmap()'s MAP_FIXED.
->>
->> @pid > 0 means to map from process of @pid to current,
->> @pid < 0 means to map from current to @pid process.
->>
->> VMA are merged on destination, i.e. if source task
->> has VMA with address [start; end], and we map it sequentially
->> twice:
->>
->> process_vm_mmap(@pid, start, start + (end - start)/2, ...);
->> process_vm_mmap(@pid, start + (end - start)/2, end,   ...);
->>
->> the destination task will have single vma [start, end].
->>
->> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
->> ---
->> [...]
->> diff --git a/include/uapi/asm-generic/mman-common.h b/include/uapi/asm-generic/mman-common.h
->> index abd238d0f7a4..44cb6cf77e93 100644
->> --- a/include/uapi/asm-generic/mman-common.h
->> +++ b/include/uapi/asm-generic/mman-common.h
->> @@ -28,6 +28,11 @@
->>  /* 0x0100 - 0x80000 flags are defined in asm-generic/mman.h */
->>  #define MAP_FIXED_NOREPLACE	0x100000	/* MAP_FIXED which doesn't unmap underlying mapping */
->>  
->> +/*
->> + * Flags for process_vm_mmap
->> + */
->> +#define PVMMAP_FIXED	0x01
-> 
-> I think PVMMAP_FIXED_NOREPLACE should be included from the start too. It
-> seems like providing the "do not overwrite existing remote mapping"
-> from the start would be good. :)
+On Thu, May 16, 2019 at 6:01 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > @@ -682,13 +693,24 @@ static int ocores_i2c_probe(struct platform_device *pdev)
+> >
+> >       irq = platform_get_irq(pdev, 0);
+> >       if (irq == -ENXIO) {
+> > -             i2c->flags |= OCORES_FLAG_POLL;
+> > +             /*
+> > +              * Set a OCORES_FLAG_BROKEN_IRQ to enable workaround for
+> > +              * FU540-C000 SoC in polling mode interface of i2c-ocore driver.
+> > +              * Else enable default polling mode interface for SIFIVE/OCORE
+> > +              * device types.
+> > +              */
+> > +             match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
+> > +             if (match && (long)match->data ==
+> > +                             (TYPE_SIFIVE_REV0 | OCORES_FLAG_BROKEN_IRQ))
+>
+> This looks wrong. You added:
+>
+> +       {
+> +               .compatible = "sifive,fu540-c000-i2c",
+> +               .data = (void *)TYPE_SIFIVE_REV0,
+> +       },
+> +       {
+> +               .compatible = "sifive,i2c0",
+> +               .data = (void *)TYPE_SIFIVE_REV0,
+> +       },
+>
+> So match->data just has TYPE_SIFIVE_REV0.
+I updated the device_id table into two logically separated patches as follows:-
 
-Good idea :)
->> [...]
->> +unsigned long mmap_process_vm(struct mm_struct *src_mm,
->> +			      unsigned long src_addr,
->> +			      struct mm_struct *dst_mm,
->> +			      unsigned long dst_addr,
->> +			      unsigned long len,
->> +			      unsigned long flags,
->> +			      struct list_head *uf)
->> +{
->> +	struct vm_area_struct *src_vma = find_vma(src_mm, src_addr);
->> +	unsigned long gua_flags = 0;
->> +	unsigned long ret;
->> +
->> +	if (!src_vma || src_vma->vm_start > src_addr)
->> +		return -EFAULT;
->> +	if (len > src_vma->vm_end - src_addr)
->> +		return -EFAULT;
->> +	if (src_vma->vm_flags & (VM_DONTEXPAND | VM_PFNMAP))
->> +		return -EFAULT;
->> +	if (is_vm_hugetlb_page(src_vma) || (src_vma->vm_flags & VM_IO))
->> +		return -EINVAL;
->> +        if (dst_mm->map_count + 2 > sysctl_max_map_count)
->> +                return -ENOMEM;
-> 
-> whitespace damage? Also, I think this should be:
-> 
-> 	if (dst_mm->map_count >= sysctl_max_map_count - 2) ...
+1. Update device id table for Sifive devices
+    [PATCH v3 2/3] i2c-ocore:
+                  .data for sifive,fu540-540-c000 and sifive,i2c0 both
+are for sifive devices hence TYPE_SIFIVE_REV0
+2. Add polling mode workaround fix for fu540-c000 SoC
+    [PATCH v3 3/3] i2c-ocores:
+                  .data for sifive,fu540-540-c000 is of
+TYPE_SIFIVE_REV0 and has a broken IRQ so the flag
+OCORES_FLAG_BROKEN_IRQ is OR'd to data into device id table.
 
-Sure, thanks.
+Please let me know if you feel patch 2 and patch 3 need to be squashed
+together into a single patch.
 
->> +	if (!IS_NULL_VM_UFFD_CTX(&src_vma->vm_userfaultfd_ctx))
->> +		return -ENOTSUPP;
-> 
-> Are these various checks from other places? I see simliar things in
-> vma_to_resize(). Should these be collected in a single helper for common
-> checks in various places?
+>
+> > +                     i2c->flags |= OCORES_FLAG_BROKEN_IRQ;
+> > +             else
+> > +                     i2c->flags |= OCORES_FLAG_POLL;
+>
+> These two don't need to be exclusive. It makes more sense to say
+> SIFIVE needs to poll and it its IRQ is broken. A lot of your other
+> changes then go away.
+>
+Other SiFive chip's with Ocore based I2C re-implementation might not
+need the broken IRQ workaround.
+and can use the the existing mainline polling mode interface, using
+OCORES_FLAG_POLL.
 
-Yes, some of them are from other places. VM_DONTEXPAND check is because of
-we want to filter mappings like AIO rings. Cloning of VM_IO vma may require
-additional permissions (and more work), so it's not supported now.
-
-It looks like, we may move find_vma() and first four checks into a helper,
-which is common with the function you pointed.
-
->> +
->> +	if (src_vma->vm_flags & VM_SHARED)
->> +		gua_flags |= MAP_SHARED;
->> +	else
->> +		gua_flags |= MAP_PRIVATE;
->> +	if (vma_is_anonymous(src_vma) || vma_is_shmem(src_vma))
->> +		gua_flags |= MAP_ANONYMOUS;
->> +	if (flags & PVMMAP_FIXED)
->> +		gua_flags |= MAP_FIXED;
-> 
-> And obviously add MAP_FIXED_NOREPLACE here too...
->>> +	ret = get_unmapped_area(src_vma->vm_file, dst_addr, len,
->> +				src_vma->vm_pgoff +
->> +				((src_addr - src_vma->vm_start) >> PAGE_SHIFT),
->> +				gua_flags);
->> +	if (offset_in_page(ret))
->> +                return ret;
->> +	dst_addr = ret;
->> +
->> +	/* Check against address space limit. */
->> +	if (!may_expand_vm(dst_mm, src_vma->vm_flags, len >> PAGE_SHIFT)) {
->> +		unsigned long nr_pages;
->> +
->> +		nr_pages = count_vma_pages_range(dst_mm, dst_addr, dst_addr + len);
->> +		if (!may_expand_vm(dst_mm, src_vma->vm_flags,
->> +					(len >> PAGE_SHIFT) - nr_pages))
->> +			return -ENOMEM;
->> +	}
->> +
->> +	ret = do_mmap_process_vm(src_vma, src_addr, dst_mm, dst_addr, len, uf);
->> +	if (ret)
->> +                return ret;
->> +
->> +	return dst_addr;
->> +}
->> +
->>  /*
->>   * Return true if the calling process may expand its vm space by the passed
->>   * number of pages
->> diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
->> index a447092d4635..7fca2c5c7edd 100644
->> --- a/mm/process_vm_access.c
->> +++ b/mm/process_vm_access.c
->> @@ -17,6 +17,8 @@
->>  #include <linux/ptrace.h>
->>  #include <linux/slab.h>
->>  #include <linux/syscalls.h>
->> +#include <linux/mman.h>
->> +#include <linux/userfaultfd_k.h>
->>  
->>  #ifdef CONFIG_COMPAT
->>  #include <linux/compat.h>
->> @@ -295,6 +297,68 @@ static ssize_t process_vm_rw(pid_t pid,
->>  	return rc;
->>  }
->>  
->> +static unsigned long process_vm_mmap(pid_t pid, unsigned long src_addr,
->> +				     unsigned long len, unsigned long dst_addr,
->> +				     unsigned long flags)
->> +{
->> +	struct mm_struct *src_mm, *dst_mm;
->> +	struct task_struct *task;
->> +	unsigned long ret;
->> +	int depth = 0;
->> +	LIST_HEAD(uf);
->> +
->> +	len = PAGE_ALIGN(len);
->> +	src_addr = round_down(src_addr, PAGE_SIZE);
->> +	if (flags & PVMMAP_FIXED)
->> +		dst_addr = round_down(dst_addr, PAGE_SIZE);
->> +	else
->> +		dst_addr = round_hint_to_min(dst_addr);
->> +
->> +	if ((flags & ~PVMMAP_FIXED) || len == 0 || len > TASK_SIZE ||
->> +	    src_addr == 0 || dst_addr > TASK_SIZE - len)
->> +		return -EINVAL;
-> 
-> And PVMMAP_FIXED_NOREPLACE here...
-> 
->> +	task = find_get_task_by_vpid(pid > 0 ? pid : -pid);
->> +	if (!task)
->> +		return -ESRCH;
->> +	if (unlikely(task->flags & PF_KTHREAD)) {
->> +		ret = -EINVAL;
->> +		goto out_put_task;
->> +	}
->> +
->> +	src_mm = mm_access(task, PTRACE_MODE_ATTACH_REALCREDS);
->> +	if (!src_mm || IS_ERR(src_mm)) {
->> +		ret = IS_ERR(src_mm) ? PTR_ERR(src_mm) : -ESRCH;
->> +		goto out_put_task;
->> +	}
->> +	dst_mm = current->mm;
->> +	mmget(dst_mm);
->> +
->> +	if (pid < 0)
->> +		swap(src_mm, dst_mm);
->> +
->> +	/* Double lock mm in address order: smallest is the first */
->> +	if (src_mm < dst_mm) {
->> +		down_write(&src_mm->mmap_sem);
->> +		depth = SINGLE_DEPTH_NESTING;
->> +	}
->> +	down_write_nested(&dst_mm->mmap_sem, depth);
->> +	if (src_mm > dst_mm)
->> +		down_write_nested(&src_mm->mmap_sem, SINGLE_DEPTH_NESTING);
->> +
->> +	ret = mmap_process_vm(src_mm, src_addr, dst_mm, dst_addr, len, flags, &uf);
->> +
->> +	up_write(&dst_mm->mmap_sem);
->> +	if (dst_mm != src_mm)
->> +		up_write(&src_mm->mmap_sem);
->> +
->> +	userfaultfd_unmap_complete(dst_mm, &uf);
->> +	mmput(src_mm);
->> +	mmput(dst_mm);
->> +out_put_task:
->> +	put_task_struct(task);
->> +	return ret;
->> +}
->> +
->>  SYSCALL_DEFINE6(process_vm_readv, pid_t, pid, const struct iovec __user *, lvec,
->>  		unsigned long, liovcnt, const struct iovec __user *, rvec,
->>  		unsigned long, riovcnt,	unsigned long, flags)
->> @@ -310,6 +374,13 @@ SYSCALL_DEFINE6(process_vm_writev, pid_t, pid,
->>  	return process_vm_rw(pid, lvec, liovcnt, rvec, riovcnt, flags, 1);
->>  }
->>  
->> +SYSCALL_DEFINE5(process_vm_mmap, pid_t, pid,
->> +		unsigned long, src_addr, unsigned long, len,
->> +		unsigned long, dst_addr, unsigned long, flags)
->> +{
->> +	return process_vm_mmap(pid, src_addr, len, dst_addr, flags);
->> +}
->> +
->>  #ifdef CONFIG_COMPAT
->>  
->>  static ssize_t
->>
-> 
-> Looks pretty interesting. I do wonder about "ATTACH" being a sufficient
-> description of this feature. "Give me your VMA" and "take this VMA"
-> is quite a bit stronger than "give me a copy of that memory" and "I
-> will write to your memory" in the sense that memory content changes are
-> now happening directly instead of through syscalls. But it's not much
-> different from regular shared memory, so, I guess it's fine? :)
-
-Yeah, as a conception it's similar to regular shared memory and to duplication
-of vma and PTEs we have during fork(). There are no much differences.
-Next time I'll advance the description to focus more on VMA, than on memory.
-
-Thanks for your comments.
-
-Kirill
+Thanks & BR,
+Sagar Kadam
+>        Andrew
