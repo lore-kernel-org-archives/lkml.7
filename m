@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9272C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB1DC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33BC21473
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E63720881
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558006844;
-	bh=aPpF74asY5kHDrkay7c2MpxiyGQsuQ60iTO7Rb3MIVc=;
+	s=default; t=1558006848;
+	bh=r7nnwI+HvDXg+ImLSt4ZAXpJMRrhBsAaw98ka5+lgnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WzMdIxCWIBdJbCjYoloZn62ssVcGxh8KGwL/xOl2VHHNNTJNrnPDnSgPrjaEsBr20
-	 ZNGyEDmAFLtFVOBWCd1BC8u3JPgChjkOn1T8rRbiz01cvdXi/CcfRrgv7yoMAvA9fW
-	 AqZT7pnvMVpaGXf3iW3EhwDpuJNwcVIBMJtVIIA8=
+	b=qW6PwoI/WeInzwyNHQlMX7QPPjd57cKTRjA8FPYbcyPP8nsGmnrwHp9V8rDy1OSLH
+	 lO7PWZKlZzQQM7Q3QHNKTDoFqdcKc8vomP6Dds2Yqr8G1lpp8vA+clrcVQr2rIIBYT
+	 fzqOdIdZEs67mNgujiX0x1yZtBkcV6eL1U6VJ0Kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbfEPLkn (ORCPT
+        id S1727878AbfEPLkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:40:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49072 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:40:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727828AbfEPLkk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:40:40 -0400
+        id S1727853AbfEPLkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:40:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7629E20833;
-        Thu, 16 May 2019 11:40:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A87AD20833;
+        Thu, 16 May 2019 11:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006840;
-        bh=aPpF74asY5kHDrkay7c2MpxiyGQsuQ60iTO7Rb3MIVc=;
+        s=default; t=1558006843;
+        bh=r7nnwI+HvDXg+ImLSt4ZAXpJMRrhBsAaw98ka5+lgnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e/mK02O8AMqnjNKWtWTHvN1tOpUZ0Fx72y8iwXbjpZnhGeoNmaVle+UNyDSYDkmLx
-         dbGS6r7sgWlqTXJRUAzTcm2GMhTWqf7hbnW8rL6K1+rN21DlA4fU2GT6RpFVzMNQXD
-         oS/fcj4AoOyWHfFlyj0YMOiZfDJTFvuFPYcUt2rU=
+        b=WgtrNL7LwicreP2tQTMZaeGnKVifE5IxkmWA6gq0EPt3Pmj7oA3ALC7R2NHAXJvHh
+         Ohei5/CC7/CF7Ad7iMf3rZ7upVy4bDU1Jk6PgdxW+Can/UVlefQ26yHb8z7LD4Owhc
+         PvJL2pupaChMtUE4nfQrrjgHqSPK9XofSgCMrBmo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 09/25] power: supply: cpcap-battery: Fix division by zero
-Date:   Thu, 16 May 2019 07:40:12 -0400
-Message-Id: <20190516114029.8682-9-sashal@kernel.org>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 12/25] PCI: Fix issue with "pci=disable_acs_redir" parameter being ignored
+Date:   Thu, 16 May 2019 07:40:15 -0400
+Message-Id: <20190516114029.8682-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516114029.8682-1-sashal@kernel.org>
 References: <20190516114029.8682-1-sashal@kernel.org>
@@ -59,44 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit dbe7208c6c4aec083571f2ec742870a0d0edbea3 ]
+[ Upstream commit d5bc73f34cc97c4b4b9202cc93182c2515076edf ]
 
-If called fast enough so samples do not increment, we can get
-division by zero in kernel:
+In most cases, kmalloc() will not be available early in boot when
+pci_setup() is called.  Thus, the kstrdup() call that was added to fix the
+__initdata bug with the disable_acs_redir parameter usually returns NULL,
+so the parameter is discarded and has no effect.
 
-__div0
-cpcap_battery_cc_raw_div
-cpcap_battery_get_property
-power_supply_get_property.part.1
-power_supply_get_property
-power_supply_show_property
-power_supply_uevent
+To fix this, store the string that's in initdata until an initcall function
+can allocate the memory appropriately.  This way we don't need any
+additional static memory.
 
-Fixes: 874b2adbed12 ("power: supply: cpcap-battery: Add a battery driver")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Fixes: d2fd6e81912a ("PCI: Fix __initdata issue with "pci=disable_acs_redir" parameter")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/cpcap-battery.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/pci.c | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/power/supply/cpcap-battery.c b/drivers/power/supply/cpcap-battery.c
-index 98ba07869c3b0..3bae02380bb22 100644
---- a/drivers/power/supply/cpcap-battery.c
-+++ b/drivers/power/supply/cpcap-battery.c
-@@ -221,6 +221,9 @@ static int cpcap_battery_cc_raw_div(struct cpcap_battery_ddata *ddata,
- 	int avg_current;
- 	u32 cc_lsb;
- 
-+	if (!divider)
-+		return 0;
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 30649addc6252..61f2ef28ea1c7 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -6135,8 +6135,7 @@ static int __init pci_setup(char *str)
+ 			} else if (!strncmp(str, "pcie_scan_all", 13)) {
+ 				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
+ 			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
+-				disable_acs_redir_param =
+-					kstrdup(str + 18, GFP_KERNEL);
++				disable_acs_redir_param = str + 18;
+ 			} else {
+ 				printk(KERN_ERR "PCI: Unknown option `%s'\n",
+ 						str);
+@@ -6147,3 +6146,19 @@ static int __init pci_setup(char *str)
+ 	return 0;
+ }
+ early_param("pci", pci_setup);
 +
- 	sample &= 0xffffff;		/* 24-bits, unsigned */
- 	offset &= 0x7ff;		/* 10-bits, signed */
- 
++/*
++ * 'disable_acs_redir_param' is initialized in pci_setup(), above, to point
++ * to data in the __initdata section which will be freed after the init
++ * sequence is complete. We can't allocate memory in pci_setup() because some
++ * architectures do not have any memory allocation service available during
++ * an early_param() call. So we allocate memory and copy the variable here
++ * before the init section is freed.
++ */
++static int __init pci_realloc_setup_params(void)
++{
++	disable_acs_redir_param = kstrdup(disable_acs_redir_param, GFP_KERNEL);
++
++	return 0;
++}
++pure_initcall(pci_realloc_setup_params);
 -- 
 2.20.1
 
