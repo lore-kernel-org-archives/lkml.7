@@ -2,114 +2,111 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBB3C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 23:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01934C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 23:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435982070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 23:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0A952070D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 23:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfEPX3u convert rfc822-to-8bit (ORCPT
+        id S1727308AbfEPXal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 19:29:50 -0400
-Received: from mga01.intel.com ([192.55.52.88]:32380 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbfEPX3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 19:29:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 16:29:49 -0700
-X-ExtLoop1: 1
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by orsmga006.jf.intel.com with ESMTP; 16 May 2019 16:29:48 -0700
-Received: from orsmsx116.amr.corp.intel.com ([169.254.7.165]) by
- ORSMSX107.amr.corp.intel.com ([169.254.1.194]) with mapi id 14.03.0415.000;
- Thu, 16 May 2019 16:29:48 -0700
-From:   "Xing, Cedric" <cedric.xing@intel.com>
-To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "Andy Lutomirski" <luto@kernel.org>
-CC:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: RE: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Thread-Topic: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Thread-Index: AQHVC0vUmIXibKT8TUm/EUnHn2XAfqZtq8EAgAEIegCAABy+AP//k24g
-Date:   Thu, 16 May 2019 23:29:47 +0000
-Message-ID: <960B34DE67B9E140824F1DCDEC400C0F654E4026@ORSMSX116.amr.corp.intel.com>
-References: <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com>
- <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190514204527.GC1977@linux.intel.com>
- <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
- <20190515013031.GF1977@linux.intel.com>
- <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
- <20190516051622.GC6388@linux.intel.com>
- <CALCETrVx1hgY67mP+73w5rT+eY+APcfS0YJ+XwtTLNz3CbVNMA@mail.gmail.com>
- <20190516224550.GC11204@linux.intel.com>
-In-Reply-To: <20190516224550.GC11204@linux.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjZkOTZkMmYtMTdhOC00MmNiLThjNDItOWM5MDEyMDhiYmUyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiM1kyR0FjWVJFcFVLODRSeFVoZVN1aXFWYitybDJRTHpoOHA4ZVpcL0pkUjFRRUFFemZGN05cL0JWZkpCdXlpSnlMIn0=
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.139]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 16 May 2019 19:30:41 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:51670 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726441AbfEPXal (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 19:30:41 -0400
+Received: from Internal Mail-Server by MTLPINE2 (envelope-from parav@mellanox.com)
+        with ESMTPS (AES256-SHA encrypted); 17 May 2019 02:30:38 +0300
+Received: from sw-mtx-036.mtx.labs.mlnx (sw-mtx-036.mtx.labs.mlnx [10.12.150.149])
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x4GNUZ9f029611;
+        Fri, 17 May 2019 02:30:35 +0300
+From:   Parav Pandit <parav@mellanox.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cohuck@redhat.com, kwankhede@nvidia.com, alex.williamson@redhat.com
+Cc:     cjia@nvidia.com, parav@mellanox.com
+Subject: [PATCHv3 0/3] vfio/mdev: Improve vfio/mdev core module
+Date:   Thu, 16 May 2019 18:30:31 -0500
+Message-Id: <20190516233034.16407-1-parav@mellanox.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > There is a problem here though. Usually the enclave itself is just a
-> > > loader that then loads the application from outside source and
-> > > creates the executable pages from the content.
-> > >
-> > > A great example of this is Graphene that bootstraps unmodified Linux
-> > > applications to an enclave:
-> > >
-> > > https://github.com/oscarlab/graphene
-> > >
-> >
-> > ISTM you should need EXECMEM or similar to run Graphene, then.
-> 
-> Agreed, Graphene is effectively running arbitrary enclave code.  I'm
-> guessing there is nothing that prevents extending/reworking Graphene to
-> allow generating the enclave ahead of time so as to avoid populating the
-> guts of the enclave at runtime, i.e. it's likely possible to run an
-> unmodified application in an enclave without EXECMEM if that's something
-> Graphene or its users really care about.
+As we would like to use mdev subsystem for wider use case as
+discussed in [1], [2] apart from an offline discussion.
+This use case is also discussed with wider forum in [4] in track
+'Lightweight NIC HW functions for container offload use cases'.
 
-Inefficient use of memory is a problem of running Graphene on SGX1, from at least 2 aspects: 1) heaps/stacks have to be pre-allocated but only a small portion of those pages will be actually used; and 2) dynamic linking is commonly used in *unmodified* applications and all dependent libraries have to be loaded, but only a subset of those pages will actually be used - e.g. most applications use only a small set of functions in libc.so but the whole library still has to be loaded. Hence a practical/efficient solution will require/involve EDMM features available in SGX2. I guess we shall look a bit further into future in order to address this problem properly. And I think it necessary to distinguish enclave virtual ranges from regular ones (probably at VMA level) before we could have a practical solution.
+This series is prep-work and improves vfio/mdev module in following ways.
+
+Patch-1 Improves the mdev create/remove sequence to match Linux
+bus, device model
+Patch-2 Avoid recreating remove file on stale device to eliminate
+call trace
+Patch-3 Fix race conditions of create/remove with parent removal.
+This is improved version than using srcu as srcu can take seconds
+to minutes.
+
+This series is tested using
+(a) mtty with VM using vfio_mdev driver for positive tests and device
+removal while device in use by VM using vfio_mdev driver.
+
+(b) mlx5 core driver using RFC patches [3] and internal patches.
+Internal patches are large and cannot be combined with this prep-work
+patches. It will posted once prep-work completes.
+
+[1] https://www.spinics.net/lists/netdev/msg556978.html
+[2] https://lkml.org/lkml/2019/3/7/696
+[3] https://lkml.org/lkml/2019/3/8/819
+[4] https://netdevconf.org/0x13/session.html?workshop-hardware-offload
+
+---
+Changelog:
+---
+v2->v3:
+ - Addressed comment from Cornelia
+ - Corrected several errors in commit log, updated commit log
+ - Dropped already merged 7 patches
+v1->v2:
+ - Addressed comments from Alex
+ - Rebased
+ - Inserted the device checking loop in Patch-6 as original code
+ - Added patch 7 to 10
+ - Added fixes for race condition in create/remove with parent removal
+   Patch-10 uses simplified refcount and completion, instead of srcu
+   which might take seconds to minutes on busy system.
+ - Added fix for device create/remove sequence to match
+   Linux device, bus model
+v0->v1:
+ - Dropped device placement on bus sequence patch for this series
+ - Addressed below comments from Alex, Kirti, Maxim.
+ - Added Review-by tag for already reviewed patches.
+ - Dropped incorrect patch of put_device().
+ - Corrected Fixes commit tag for sysfs remove sequence fix
+ - Split last 8th patch to smaller refactor and fixes patch
+ - Following coding style commenting format
+ - Fixed accidental delete of mutex_lock in mdev_unregister_device
+ - Renamed remove helped to mdev_device_remove_common().
+ - Rebased for uuid/guid change
+
+Parav Pandit (3):
+  vfio/mdev: Improve the create/remove sequence
+  vfio/mdev: Avoid creating sysfs remove file on stale device removal
+  vfio/mdev: Synchronize device create/remove with parent removal
+
+ drivers/vfio/mdev/mdev_core.c    | 150 ++++++++++++++-----------------
+ drivers/vfio/mdev/mdev_private.h |   8 +-
+ drivers/vfio/mdev/mdev_sysfs.c   |   6 +-
+ 3 files changed, 73 insertions(+), 91 deletions(-)
+
+-- 
+2.19.2
+
