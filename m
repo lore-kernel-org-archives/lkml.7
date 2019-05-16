@@ -2,90 +2,155 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86A4FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17789C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF3220833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:42:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558006969;
-	bh=2VwLVPXRY8r7CQMu8ilIfQKvLvFOcNZjwr1s8fY6Gmo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nP0+Xj8EzGyur4cXYaoJSBud9tvlieq4HJbJ5HBEPOtp9lvIkp/Q0p6IzmB1vmeqH
-	 kaaJiGPG11HiTuoTEev3cZThzYi2/SDS9KUD5GQT1LiBv9IgPh6QRnTtOZ8lcoBj1E
-	 th2iuRIKlX6LMG3NOQbLKnUvOxMTcRRTy1huRkfE=
+	by mail.kernel.org (Postfix) with ESMTP id E38A22087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbfEPLms (ORCPT
+        id S1728552AbfEPLmx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:42:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728407AbfEPLl5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:41:57 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3966F21726;
-        Thu, 16 May 2019 11:41:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006916;
-        bh=2VwLVPXRY8r7CQMu8ilIfQKvLvFOcNZjwr1s8fY6Gmo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z5DkSD/ocIcuAFuV0aqB1hHFMdpdzhYtkOMTH3dworz5k/bccRJnJv6FmQzE8mnql
-         M5nzyevRFjK+oe5sm9ytdxFZ06LMyKFswrQI7EqNFDrpaGaz75CpfbH526UyKU3V1G
-         KqBJEaOOFm0zWBvwAFLJaLiKxp8nPykFiLX3Mxfw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 7/8] ufs: fix braino in ufs_get_inode_gid() for solaris UFS flavour
-Date:   Thu, 16 May 2019 07:41:45 -0400
-Message-Id: <20190516114146.9267-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190516114146.9267-1-sashal@kernel.org>
-References: <20190516114146.9267-1-sashal@kernel.org>
+        Thu, 16 May 2019 07:42:53 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:32944 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727973AbfEPLmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:42:51 -0400
+Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id A54C148E50E23ECD1918;
+        Thu, 16 May 2019 12:42:48 +0100 (IST)
+Received: from [10.220.96.108] (10.220.96.108) by smtpsuk.huawei.com
+ (10.201.108.35) with Microsoft SMTP Server (TLS) id 14.3.408.0; Thu, 16 May
+ 2019 12:42:42 +0100
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+CC:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Rob Landley <rob@landley.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arvind Sankar <niveditas98@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        <initramfs@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+References: <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
+ <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
+ <CALCETrV3b205L38xqPr6QqwGn6-vxQdPoJGUygJJpgM-JqqXfQ@mail.gmail.com>
+ <1557861511.3378.19.camel@HansenPartnership.com>
+ <4da3dbda-bb76-5d71-d5c5-c03d98350ab0@landley.net>
+ <1557878052.2873.6.camel@HansenPartnership.com>
+ <20190515005221.GB88615@rani.riverdale.lan>
+ <a138af12-d983-453e-f0b2-661a80b7e837@huawei.com>
+ <20190515160834.GA81614@rani.riverdale.lan>
+ <ce65240a-4df6-8ebc-8360-c01451e724f0@huawei.com>
+ <20190516052934.GA68777@rani.riverdale.lan>
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+Message-ID: <ac930347-9a36-0e84-1f93-cd98e63de403@huawei.com>
+Date:   Thu, 16 May 2019 13:42:28 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.3.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190516052934.GA68777@rani.riverdale.lan>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.220.96.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On 5/16/2019 7:29 AM, Arvind Sankar wrote:
+> On Wed, May 15, 2019 at 07:06:52PM +0200, Roberto Sassu wrote:
+>> On 5/15/2019 6:08 PM, Arvind Sankar wrote:
+>>> On Wed, May 15, 2019 at 01:19:04PM +0200, Roberto Sassu wrote:
+>>>> On 5/15/2019 2:52 AM, Arvind Sankar wrote:
+>>> I don't understand what you mean? The IMA hashes are signed by some key,
+>>> but I don't see how what that key is needs to be different between the
+>>> two proposals. If the only files used are from the distro, in my scheme
+>>> as well you can use the signatures and key provided by the distro. If
+>>> they're not, then in your scheme as well you would have to allow for a
+>>> local signing key to be used. Both schemes are using the same
+>>> .xattr-list file, no?
+>>
+>> I was referring to James's proposal to load an external initramfs from
+>> the embedded initramfs. If the embedded initramfs opens the external
+>> initramfs when IMA is enabled, the external initramfs needs to be
+>> signed with a local signing key. But I read your answer that this
+>> wouldn't be feasible. You have to specify all initramfs in the boot
+>> loader configuration.
+>>
+>> I think deferring IMA initialization is not the safest approach, as it
+>> cannot be guaranteed for all possible scenarios that there won't be any
+>> file read before /init is executed.
+>>
+>> But if IMA is enabled, there is the problem of who signs .xattr-list.
+>> There should be a local signing key that it is not necessary if the user
+>> only accesses distro files.
+>>
+> I think that's a separate issue. If you want to allow people to be able
+> to put files onto the system that will be IMA verified, they need to
+> have some way to locally sign them whether it's inside an initramfs or
+> on a real root filesystem.
 
-[ Upstream commit 4e9036042fedaffcd868d7f7aa948756c48c637d ]
+Yes. But this shouldn't be a requirement. If I have only files signed by
+the distro, I should be able to do appraisal without a local signing
+key.
 
-To choose whether to pick the GID from the old (16bit) or new (32bit)
-field, we should check if the old gid field is set to 0xffff.  Mainline
-checks the old *UID* field instead - cut'n'paste from the corresponding
-code in ufs_get_inode_uid().
+I made an IMA extension called IMA Digest Lists, that extracts reference
+digests from RPM headers and performs appraisal based on the loaded
+white lists.  The only keys that must be in the kernel for signature
+verification are the PGP keys of the distro (plus the public key for the
+RPM parser, which at the moment is different).
 
-Fixes: 252e211e90ce
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/ufs/util.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+.xattr-list is generated by my custom dracut module and contains the
+signature of the digest lists and the parser.
 
-diff --git a/fs/ufs/util.h b/fs/ufs/util.h
-index 3f9463f8cf2fa..f877d5cadd981 100644
---- a/fs/ufs/util.h
-+++ b/fs/ufs/util.h
-@@ -228,7 +228,7 @@ ufs_get_inode_gid(struct super_block *sb, struct ufs_inode *inode)
- 	case UFS_UID_44BSD:
- 		return fs32_to_cpu(sb, inode->ui_u3.ui_44.ui_gid);
- 	case UFS_UID_EFT:
--		if (inode->ui_u1.oldids.ui_suid == 0xFFFF)
-+		if (inode->ui_u1.oldids.ui_sgid == 0xFFFF)
- 			return fs32_to_cpu(sb, inode->ui_u3.ui_sun.ui_gid);
- 		/* Fall through */
- 	default:
+
+>>> Right, I guess this would be sort of the minimal "modification" to the
+>>> CPIO format to allow it to support xattrs.
+>>
+>> I would try to do it without modification of the CPIO format. However,
+>> at the time .xattr-list is parsed (in do_copy() before .xattr-list is
+>> closed), it is not guaranteed that all files are extracted. These must
+>> be created before xattrs are added, but the file type must be correct,
+>> otherwise clean_path() removes the existing file with xattrs.
+>>
+>> Roberto
+>>
+>> -- 
+>> HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+>> Managing Director: Bo PENG, Jian LI, Yanli SHI
+> 
+> Right by "modification" in quotes I meant the format is actually the
+> same, but the kernel now interprets it a bit differently.
+> 
+> Regarding the order you don't have to handle that in the kernel. The
+> kernel CPIO format is already restricted in that directories have to be
+> specified before the files that contain them for example. It can very
+> well be restricted so that an .xattr-list can only specify xattrs for
+> files that were already extracted, else you bail out with an error. The
+> archive creation tooling can easily handle that. If someone wants to
+> shoot themselves in the foot by trying to add more files/replace
+> existing files after the .xattr-list its ok, the IMA policy will prevent
+> such files from being accessed and they can fix the archive for the next
+> boot.
+
+Unfortunately, dracut sorts the files before adding them to the CPIO
+image (.xattr-list is at the beginning). I could move xattrs from the
+existing file to the file with different mode, but this makes the code
+more complex. I think it is better to call do_readxattrs() after files
+are extracted, or when .xattr-list is going to be replaced by another
+one in the next initramfs.
+
+Roberto
+
 -- 
-2.20.1
-
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Bo PENG, Jian LI, Yanli SHI
