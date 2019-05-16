@@ -2,70 +2,175 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F964C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEB6C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:48:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C04F2087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67462087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:48:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfEPHrw (ORCPT
+        id S1726817AbfEPHsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 03:47:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57004 "EHLO mx1.redhat.com"
+        Thu, 16 May 2019 03:48:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43248 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbfEPHrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 03:47:52 -0400
+        id S1726767AbfEPHr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 03:47:58 -0400
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DFD143082B6B;
-        Thu, 16 May 2019 07:47:51 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id EE06F882FB;
+        Thu, 16 May 2019 07:47:57 +0000 (UTC)
 Received: from hp-dl380pg8-02.lab.eng.pek2.redhat.com (hp-dl380pg8-02.lab.eng.pek2.redhat.com [10.73.8.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 10A8998BB;
-        Thu, 16 May 2019 07:47:44 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6A8DC383F;
+        Thu, 16 May 2019 07:47:55 +0000 (UTC)
 From:   Jason Wang <jasowang@redhat.com>
 To:     mst@redhat.com, jasowang@redhat.com,
         virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     pbonzini@redhat.com, stefanha@redhat.com
-Subject: [PATCH net 0/4] Prevent vhost kthread from hogging CPU
-Date:   Thu, 16 May 2019 03:47:38 -0400
-Message-Id: <1557992862-27320-1-git-send-email-jasowang@redhat.com>
+Subject: [PATCH net 2/4] vhost_net: fix possible infinite loop
+Date:   Thu, 16 May 2019 03:47:40 -0400
+Message-Id: <1557992862-27320-3-git-send-email-jasowang@redhat.com>
+In-Reply-To: <1557992862-27320-1-git-send-email-jasowang@redhat.com>
+References: <1557992862-27320-1-git-send-email-jasowang@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Thu, 16 May 2019 07:47:51 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Thu, 16 May 2019 07:47:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi:
+When the rx buffer is too small for a packet, we will discard the vq
+descriptor and retry it for the next packet:
 
-This series try to prvernt a guest triggerable CPU hogging through
-vhost kthread. This is done by introducing and checking the weight
-after each requrest. The patch has been tested with reproducer of
-vsock and virtio-net. Only compile test is done for vhost-scsi.
+while ((sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
+					      &busyloop_intr))) {
+...
+	/* On overrun, truncate and discard */
+	if (unlikely(headcount > UIO_MAXIOV)) {
+		iov_iter_init(&msg.msg_iter, READ, vq->iov, 1, 1);
+		err = sock->ops->recvmsg(sock, &msg,
+					 1, MSG_DONTWAIT | MSG_TRUNC);
+		pr_debug("Discarded rx packet: len %zd\n", sock_len);
+		continue;
+	}
+...
+}
 
-Please review.
+This makes it possible to trigger a infinite while..continue loop
+through the co-opreation of two VMs like:
+
+1) Malicious VM1 allocate 1 byte rx buffer and try to slow down the
+   vhost process as much as possible e.g using indirect descriptors or
+   other.
+2) Malicious VM2 generate packets to VM1 as fast as possible
+
+Fixing this by checking against weight at the end of RX and TX
+loop. This also eliminate other similar cases when:
+
+- userspace is consuming the packets in the meanwhile
+- theoretical TOCTOU attack if guest moving avail index back and forth
+  to hit the continue after vhost find guest just add new buffers
 
 This addresses CVE-2019-3900.
 
-Jason Wang (4):
-  vhost: introduce vhost_exceeds_weight()
-  vhost_net: fix possible infinite loop
-  vhost: vsock: add weight support
-  vhost: scsi: add weight support
+Fixes: d8316f3991d20 ("vhost: fix total length when packets are too short")
+Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+The patch is needed for stable.
+---
+ drivers/vhost/net.c | 29 +++++++++++++----------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
 
- drivers/vhost/net.c   | 41 ++++++++++++++---------------------------
- drivers/vhost/scsi.c  | 21 ++++++++++++++-------
- drivers/vhost/vhost.c | 20 +++++++++++++++++++-
- drivers/vhost/vhost.h |  5 ++++-
- drivers/vhost/vsock.c | 28 +++++++++++++++++++++-------
- 5 files changed, 72 insertions(+), 43 deletions(-)
-
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index 061a06d..2d9df78 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -773,7 +773,7 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
+ 	int sent_pkts = 0;
+ 	bool sock_can_batch = (sock->sk->sk_sndbuf == INT_MAX);
+ 
+-	for (;;) {
++	do {
+ 		bool busyloop_intr = false;
+ 
+ 		if (nvq->done_idx == VHOST_NET_BATCH)
+@@ -839,9 +839,7 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
+ 		vq->heads[nvq->done_idx].id = cpu_to_vhost32(vq, head);
+ 		vq->heads[nvq->done_idx].len = 0;
+ 		++nvq->done_idx;
+-		if (vhost_exceeds_weight(vq, ++sent_pkts, total_len))
+-			break;
+-	}
++	} while (likely(!vhost_exceeds_weight(vq, ++sent_pkts, total_len)));
+ 
+ 	vhost_tx_batch(net, nvq, sock, &msg);
+ }
+@@ -866,7 +864,7 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
+ 	bool zcopy_used;
+ 	int sent_pkts = 0;
+ 
+-	for (;;) {
++	do {
+ 		bool busyloop_intr;
+ 
+ 		/* Release DMAs done buffers first */
+@@ -943,10 +941,7 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
+ 		else
+ 			vhost_zerocopy_signal_used(net, vq);
+ 		vhost_net_tx_packet(net);
+-		if (unlikely(vhost_exceeds_weight(vq, ++sent_pkts,
+-						  total_len)))
+-			break;
+-	}
++	} while (likely(!vhost_exceeds_weight(vq, ++sent_pkts, total_len)));
+ }
+ 
+ /* Expects to be always run from workqueue - which acts as
+@@ -1144,8 +1139,11 @@ static void handle_rx(struct vhost_net *net)
+ 		vq->log : NULL;
+ 	mergeable = vhost_has_feature(vq, VIRTIO_NET_F_MRG_RXBUF);
+ 
+-	while ((sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
+-						      &busyloop_intr))) {
++	do {
++		sock_len = vhost_net_rx_peek_head_len(net, sock->sk,
++						      &busyloop_intr);
++		if (!sock_len)
++			break;
+ 		sock_len += sock_hlen;
+ 		vhost_len = sock_len + vhost_hlen;
+ 		headcount = get_rx_bufs(vq, vq->heads + nvq->done_idx,
+@@ -1230,12 +1228,11 @@ static void handle_rx(struct vhost_net *net)
+ 			vhost_log_write(vq, vq_log, log, vhost_len,
+ 					vq->iov, in);
+ 		total_len += vhost_len;
+-		if (unlikely(vhost_exceeds_weight(vq, ++recv_pkts, total_len)))
+-			goto out;
+-	}
++	} while (likely(!vhost_exceeds_weight(vq, ++recv_pkts, total_len)));
++
+ 	if (unlikely(busyloop_intr))
+ 		vhost_poll_queue(&vq->poll);
+-	else
++	else if (!sock_len)
+ 		vhost_net_enable_vq(net, vq);
+ out:
+ 	vhost_net_signal_used(nvq);
+@@ -1328,7 +1325,7 @@ static int vhost_net_open(struct inode *inode, struct file *f)
+ 	}
+ 	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX,
+ 		       UIO_MAXIOV + VHOST_NET_BATCH,
+-		       VHOST_NET_WEIGHT, VHOST_NET_PKT_WEIGHT);
++		       VHOST_NET_PKT_WEIGHT, VHOST_NET_WEIGHT);
+ 
+ 	vhost_poll_init(n->poll + VHOST_NET_VQ_TX, handle_tx_net, EPOLLOUT, dev);
+ 	vhost_poll_init(n->poll + VHOST_NET_VQ_RX, handle_rx_net, EPOLLIN, dev);
 -- 
 1.8.3.1
 
