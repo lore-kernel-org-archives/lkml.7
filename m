@@ -2,93 +2,125 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B44BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD00C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B74520815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B7F20815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:55:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfEPPxz convert rfc822-to-8bit (ORCPT
+        id S1726587AbfEPPza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:53:55 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40346 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfEPPxz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:53:55 -0400
-Received: by mail-qk1-f196.google.com with SMTP id q197so2564427qke.7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 08:53:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JQI/WU1c4eX4Bc95K/7Uz+e1kJGO+JQuZlvUeSbbPGc=;
-        b=P1036jmKbqm/AJyk+/tVpMqLuyrp4uLjX7FVpjOsOuKkAwDkxuiRNznB0shzilRP7r
-         D4us/1t2NSsJugSSGfpAVazsx0tO1gPQlLvUNq9UtY2lo7jUGgHBhVMWsQBwidBpEp3S
-         WAFkNo/A3BybRjnOcfXcxHS1FV7cjrWeq+i6yP2hpAA51sfimpkHPtqHpWeGu/Fa7KDr
-         EM+4CznuB6xOHXSYtfuPYlRXR+5Ms/Gemn0rgEFJEALizzcacYGuPW58t94XVkFo5SOM
-         u1uI3A6/xrAyciOH+qgnyQuYEXvH6NIt6eprzAFyevTYRAljgbSfPQfp16Q4bFx8/xVQ
-         E6xQ==
-X-Gm-Message-State: APjAAAW/2+RoOAu7pluCrb0pCLw6lKE0DvFsdP91Gt6IfuE2n6J24Nbe
-        fUFNkiOOzui25IeXPilv+SIR4vwo0fYSz3hOiNkUH7mNd6Q=
-X-Google-Smtp-Source: APXvYqxGacujl3xkC+1CQj9ZgVTewrIKspT5Krb7d0/OwrCP8EKuEx+9fNaCY33lbb5MOJouXqule4hfYCGQTcBKDzk=
-X-Received: by 2002:a05:620a:1085:: with SMTP id g5mr23133232qkk.182.1558022034360;
- Thu, 16 May 2019 08:53:54 -0700 (PDT)
+        Thu, 16 May 2019 11:55:30 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:57778 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726314AbfEPPza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 11:55:30 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 877F9E94BECBF6786BB9;
+        Thu, 16 May 2019 23:55:24 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 16 May 2019
+ 23:55:18 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <socketcan@hartkopp.net>,
+        <mkl@pengutronix.de>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-can@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] can: gw: Fix error path of cgw_module_init
+Date:   Thu, 16 May 2019 23:54:35 +0800
+Message-ID: <20190516155435.42376-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <20190516064304.24057-1-olof@lixom.net> <20190516064304.24057-2-olof@lixom.net>
- <CAHk-=wj7uZ+rLecwEP+U3jRRPWRoB1QVTr8pHzTcmQadE=Ngvg@mail.gmail.com>
-In-Reply-To: <CAHk-=wj7uZ+rLecwEP+U3jRRPWRoB1QVTr8pHzTcmQadE=Ngvg@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 16 May 2019 17:53:37 +0200
-Message-ID: <CAK8P3a27zgq3c_iWHVfypAc-hLag06Bs=Q2D7bn4i4nVfPQSyw@mail.gmail.com>
-Subject: Re: [GIT PULL 1/4] ARM: SoC platform updates
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Olof Johansson <olof@lixom.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        ARM SoC <arm@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "linux-alpha@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 5:34 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Wed, May 15, 2019 at 11:43 PM Olof Johansson <olof@lixom.net> wrote:
-> >
-> > SoC updates, mostly refactorings and cleanups of old legacy platforms.
-> > Major themes this release:
->
-> Hmm. This brings in a new warning:
->
->   drivers/clocksource/timer-ixp4xx.c:78:20: warning:
-> ‘ixp4xx_read_sched_clock’ defined but not used [-Wunused-function]
->
-> because that drivers is enabled for build testing, but that function
-> is only used under
->
->   #ifdef CONFIG_ARM
->         sched_clock_register(ixp4xx_read_sched_clock, 32, timer_freq);
->   #endif
->
-> It's not clear why that #ifdef is there. This driver only builds
-> non-ARM when COMPILE_TEST is enabled, and that #ifdef actually breaks
-> that build test.
->
-> I'm going to remove that #ifdef in my merge, because I do *not* want
-> to see new warnings, and it doesn't seem to make any sense.
->
-> Maybe that's the wrong resolution, please holler and let me know if
-> you want something else.
+This patch fix error path for cgw_module_init
+to avoid possible crash if some error occurs.
 
-As far as I can tell, that is the best fix, thanks for the cleanup!
+Fixes: c1aabdf379bc ("can-gw: add netlink based CAN routing")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ net/can/gw.c | 46 +++++++++++++++++++++++++++++++---------------
+ 1 file changed, 31 insertions(+), 15 deletions(-)
 
-      Arnd
+diff --git a/net/can/gw.c b/net/can/gw.c
+index 53859346..8b53ec7 100644
+--- a/net/can/gw.c
++++ b/net/can/gw.c
+@@ -1046,32 +1046,48 @@ static __init int cgw_module_init(void)
+ 	pr_info("can: netlink gateway (rev " CAN_GW_VERSION ") max_hops=%d\n",
+ 		max_hops);
+ 
+-	register_pernet_subsys(&cangw_pernet_ops);
++	ret = register_pernet_subsys(&cangw_pernet_ops);
++	if (ret)
++		return ret;
++
++	ret = -ENOMEM;
+ 	cgw_cache = kmem_cache_create("can_gw", sizeof(struct cgw_job),
+ 				      0, 0, NULL);
+-
+ 	if (!cgw_cache)
+-		return -ENOMEM;
++		goto out_cache_create;
+ 
+ 	/* set notifier */
+ 	notifier.notifier_call = cgw_notifier;
+-	register_netdevice_notifier(&notifier);
++	ret = register_netdevice_notifier(&notifier);
++	if (ret)
++		goto out_register_notifier;
+ 
+ 	ret = rtnl_register_module(THIS_MODULE, PF_CAN, RTM_GETROUTE,
+ 				   NULL, cgw_dump_jobs, 0);
+-	if (ret) {
+-		unregister_netdevice_notifier(&notifier);
+-		kmem_cache_destroy(cgw_cache);
+-		return -ENOBUFS;
+-	}
+-
+-	/* Only the first call to rtnl_register_module can fail */
+-	rtnl_register_module(THIS_MODULE, PF_CAN, RTM_NEWROUTE,
+-			     cgw_create_job, NULL, 0);
+-	rtnl_register_module(THIS_MODULE, PF_CAN, RTM_DELROUTE,
+-			     cgw_remove_job, NULL, 0);
++	if (ret)
++		goto out_rtnl_register1;
++
++	ret = rtnl_register_module(THIS_MODULE, PF_CAN, RTM_NEWROUTE,
++				   cgw_create_job, NULL, 0);
++	if (ret)
++		goto out_rtnl_register2;
++	ret = rtnl_register_module(THIS_MODULE, PF_CAN, RTM_DELROUTE,
++				   cgw_remove_job, NULL, 0);
++	if (ret)
++		goto out_rtnl_register2;
+ 
+ 	return 0;
++
++out_rtnl_register2:
++	rtnl_unregister_all(PF_CAN);
++out_rtnl_register1:
++	unregister_netdevice_notifier(&notifier);
++out_register_notifier:
++	kmem_cache_destroy(cgw_cache);
++out_cache_create:
++	unregister_pernet_subsys(&cangw_pernet_ops);
++
++	return ret;
+ }
+ 
+ static __exit void cgw_module_exit(void)
+-- 
+1.8.3.1
+
+
