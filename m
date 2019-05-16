@@ -4,64 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24DAC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A0FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696F220833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BDC920833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558025390;
-	bh=f39J1y2HUBBvWJ/ZSxKNXPA2X7fuggYgqUX7ZitxiOQ=;
+	s=default; t=1558025411;
+	bh=LmBKXiHfrotUexFa5IXxJZ0NgFBhp3cJw8uJBHpEHCk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=v+HUrG578XZ+ChcUs34qvoflzFrB60MJuOTFZ/1RnjgbKvVBAO80/tQUoPYyAottE
-	 +FVNvMBbMYH5Ll0VCH0VKVSzv6OkDOCa106qO02vvuf1DhFLOA7Ncyrj7hXFBHWoqi
-	 unU1jem//unUi8Qxglw8/n5H0eRVG1hXZ0DEUQYQ=
+	b=brMDyYKKXSlMTetasfzpjdTbhCf10pNCNOtV5wzdv7Aeq7C8N986Z7R4EFHKQHQvq
+	 nNWqYNPYMTkmoMDwqaOusMbEMtPiM58ZC0lHmkmcHJ84vQdYQEth77Brl0T4PqdbPk
+	 aEAZs4u6++QfqoxF60uQhLrLrWPWD3e+u3MpWLyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbfEPQtt (ORCPT
+        id S1728728AbfEPQuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:49:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41090 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 12:50:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726853AbfEPQtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:49:49 -0400
+        id S1726853AbfEPQuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 12:50:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63B5C205ED;
-        Thu, 16 May 2019 16:49:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CC80205ED;
+        Thu, 16 May 2019 16:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558025388;
-        bh=f39J1y2HUBBvWJ/ZSxKNXPA2X7fuggYgqUX7ZitxiOQ=;
+        s=default; t=1558025409;
+        bh=LmBKXiHfrotUexFa5IXxJZ0NgFBhp3cJw8uJBHpEHCk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yEBswWOftjFuEI2KC+4z2rUHEcT7Cf1oD+RVQjGd8xRByrH0JwtcORXetNBPby6jr
-         uzP8X4YCZsKomIdSwje2Y0B0emGowIyiCjp5m+Pb8/BN/3+0JT2frGHocB93EwxiF6
-         GMZzSnpFnoR+GRtX2FKSB9r9m3nt8jAzkctJw7YA=
-Date:   Thu, 16 May 2019 18:49:46 +0200
+        b=Ab7tS6FeSRr0h/GQCkbVEYPabvb+6iqLdyHd7/UO1C9SLjUmxrvedqvNkvnFCHlB1
+         LUaKQbg5BueZhU00/434WuUz6o1pf1M1qe5v4pwBY/3KTRVGKlCGhuS/MhjEigvJb2
+         +mxHtnqG/SczCnuXq4GpNMrlQMBDjysO7oEbhQfM=
+Date:   Thu, 16 May 2019 18:50:06 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     shuah <shuah@kernel.org>
+To:     Jon Hunter <jonathanh@nvidia.com>
 Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
         patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        linux-tegra <linux-tegra@vger.kernel.org>
 Subject: Re: [PATCH 5.1 00/46] 5.1.3-stable review
-Message-ID: <20190516164946.GB12641@kroah.com>
+Message-ID: <20190516165006.GC12641@kroah.com>
 References: <20190515090616.670410738@linuxfoundation.org>
- <38cc4651-4e70-48c8-5793-5857d0f33cc5@kernel.org>
+ <5b7b4163-f616-3cd8-ea45-3fd3f495ae7f@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <38cc4651-4e70-48c8-5793-5857d0f33cc5@kernel.org>
+In-Reply-To: <5b7b4163-f616-3cd8-ea45-3fd3f495ae7f@nvidia.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 07:55:43AM -0600, shuah wrote:
-> On 5/15/19 4:56 AM, Greg Kroah-Hartman wrote:
+On Thu, May 16, 2019 at 12:04:32PM +0100, Jon Hunter wrote:
+> 
+> On 15/05/2019 11:56, Greg Kroah-Hartman wrote:
 > > This is the start of the stable review cycle for the 5.1.3 release.
 > > There are 46 patches in this series, all will be posted as a response
 > > to this one.  If anyone has any issues with these being applied, please
@@ -79,9 +81,19 @@ On Thu, May 16, 2019 at 07:55:43AM -0600, shuah wrote:
 > > thanks,
 > > 
 > > greg k-h
-> > 
 > 
-> Compiled and booted on my test system. No dmesg regressions.
+> All tests are passing for Tegra ...
+> 
+> Test results for stable-v5.1:
+>     12 builds:	12 pass, 0 fail
+>     22 boots:	22 pass, 0 fail
+>     32 tests:	32 pass, 0 fail
+> 
+> Linux version:	5.1.3-rc1-g6c9703a
+> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+>                 tegra194-p2972-0000, tegra20-ventana,
+>                 tegra210-p2371-2180, tegra30-cardhu-a04
+> 
 
 Thanks for testing all of these and letting me know.
 
