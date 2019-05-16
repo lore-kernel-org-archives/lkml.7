@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1442FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42021C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC19C20833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:43:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A7820833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558007012;
-	bh=vG6w+kxEum86OZUZK4YE2qow1sGnm3Pc4PI4GDuGS7k=;
+	s=default; t=1558007020;
+	bh=u7/+Ij92klFHuluyBxJc07tZPOljCHxST/RA3dFm3vg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nL/p1X1cDlkLnEE+S7/+5Rf8IBqkrEq6Lu4XWIH5OL2xYnEd4mDgS9zb6tdaDN1ae
-	 R9oQvqvP4EcR/CAMB/ggRO37QfFY8WDulFimQ2kSKt8g0hyNY7XXGDS0+erTSAUA8+
-	 /FHyyF6eaHSIwwcqL9oqDY1CfxvZrxW9I41SxYOY=
+	b=LhL5FGPDeTeFzAeWeROOk0snPqUvddbpWqU28TQ8ihLCLBLnix8L471skxzOYumj6
+	 eGDTZe8hTGnmI5e20VEwClMTx4YOlGZ2tAxpHLNQVGw3FiIXeCn0uIKnNP5FVehxpE
+	 6Y3ClWXYuHidK9ZqONTV4dlrsb6sWmNzYIIKXKrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbfEPLnc (ORCPT
+        id S1728209AbfEPLnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:43:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50470 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:43:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728297AbfEPLln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:41:43 -0400
+        id S1727539AbfEPLlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:41:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1BD292087E;
-        Thu, 16 May 2019 11:41:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04CA520881;
+        Thu, 16 May 2019 11:41:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006902;
-        bh=vG6w+kxEum86OZUZK4YE2qow1sGnm3Pc4PI4GDuGS7k=;
+        s=default; t=1558006901;
+        bh=u7/+Ij92klFHuluyBxJc07tZPOljCHxST/RA3dFm3vg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uXFCbmVkO1e6czud2TBS11UAcw9WcySbC14b1MbVTEY7NIgPo3obTJj5m1wc1xZGw
-         S/8QuwpwspFffRxKpb/RpMoOrNg7x4gN8wViQxruha1lMyHBMTrC4V40T3o7Mi2cKE
-         OVhvp8Vy6WQNkRASlCEnObeImTgWWXKOBxLQj8rU=
+        b=oH/ZhkSs+wuQ8XnDnj/V6luV2cF8eBth1APuquPNsZ4yAg2nt+9ssKye/d5A+kTze
+         UIRsCZBIvkQetpjkEFwUV+gvSwbe+pCkgyqfQ+MYZGvIwNfU/ARpIxlm/y2BVDn57k
+         Cx6E+/pmo4CWKqZT37MUZE8kVQUAlRa/teSD8Axk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>, linux-pm@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 7/9] power: supply: sysfs: prevent endless uevent loop with CONFIG_POWER_SUPPLY_DEBUG
-Date:   Thu, 16 May 2019 07:41:31 -0400
-Message-Id: <20190516114134.9146-7-sashal@kernel.org>
+Cc:     Andrew Jones <drjones@redhat.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Sasha Levin <sashal@kernel.org>, kvmarm@lists.cs.columbia.edu
+Subject: [PATCH AUTOSEL 4.9 6/9] KVM: arm/arm64: Ensure vcpu target is unset on reset failure
+Date:   Thu, 16 May 2019 07:41:30 -0400
+Message-Id: <20190516114134.9146-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516114134.9146-1-sashal@kernel.org>
 References: <20190516114134.9146-1-sashal@kernel.org>
@@ -60,67 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
+From: Andrew Jones <drjones@redhat.com>
 
-[ Upstream commit 349ced9984ff540ce74ca8a0b2e9b03dc434b9dd ]
+[ Upstream commit 811328fc3222f7b55846de0cd0404339e2e1e6d7 ]
 
-Fix a similar endless event loop as was done in commit
-8dcf32175b4e ("i2c: prevent endless uevent loop with
-CONFIG_I2C_DEBUG_CORE"):
+A failed KVM_ARM_VCPU_INIT should not set the vcpu target,
+as the vcpu target is used by kvm_vcpu_initialized() to
+determine if other vcpu ioctls may proceed. We need to set
+the target before calling kvm_reset_vcpu(), but if that call
+fails, we should then unset it and clear the feature bitmap
+while we're at it.
 
-  The culprit is the dev_dbg printk in the i2c uevent handler. If
-  this is activated (for instance by CONFIG_I2C_DEBUG_CORE) it results
-  in an endless loop with systemd-journald.
-
-  This happens if user-space scans the system log and reads the uevent
-  file to get information about a newly created device, which seems
-  fair use to me. Unfortunately reading the "uevent" file uses the
-  same function that runs for creating the uevent for a new device,
-  generating the next syslog entry
-
-Both CONFIG_I2C_DEBUG_CORE and CONFIG_POWER_SUPPLY_DEBUG were reported
-in https://bugs.freedesktop.org/show_bug.cgi?id=76886 but only former
-seems to have been fixed. Drop debug prints as it was done in I2C
-subsystem to resolve the issue.
-
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: linux-pm@vger.kernel.org
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Andrew Jones <drjones@redhat.com>
+[maz: Simplified patch, completed commit message]
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/power/supply/power_supply_sysfs.c | 6 ------
- 1 file changed, 6 deletions(-)
+ arch/arm/kvm/arm.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/power/supply/power_supply_sysfs.c b/drivers/power/supply/power_supply_sysfs.c
-index bcde8d13476af..c0fc98e03c912 100644
---- a/drivers/power/supply/power_supply_sysfs.c
-+++ b/drivers/power/supply/power_supply_sysfs.c
-@@ -278,15 +278,11 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 	char *prop_buf;
- 	char *attrname;
+diff --git a/arch/arm/kvm/arm.c b/arch/arm/kvm/arm.c
+index a670c70f4def9..dfc00a5bdc10d 100644
+--- a/arch/arm/kvm/arm.c
++++ b/arch/arm/kvm/arm.c
+@@ -801,7 +801,7 @@ int kvm_vm_ioctl_irq_line(struct kvm *kvm, struct kvm_irq_level *irq_level,
+ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
+ 			       const struct kvm_vcpu_init *init)
+ {
+-	unsigned int i;
++	unsigned int i, ret;
+ 	int phys_target = kvm_target_cpu();
  
--	dev_dbg(dev, "uevent\n");
--
- 	if (!psy || !psy->desc) {
- 		dev_dbg(dev, "No power supply yet\n");
- 		return ret;
- 	}
+ 	if (init->target != phys_target)
+@@ -836,9 +836,14 @@ static int kvm_vcpu_set_target(struct kvm_vcpu *vcpu,
+ 	vcpu->arch.target = phys_target;
  
--	dev_dbg(dev, "POWER_SUPPLY_NAME=%s\n", psy->desc->name);
--
- 	ret = add_uevent_var(env, "POWER_SUPPLY_NAME=%s", psy->desc->name);
- 	if (ret)
- 		return ret;
-@@ -322,8 +318,6 @@ int power_supply_uevent(struct device *dev, struct kobj_uevent_env *env)
- 			goto out;
- 		}
+ 	/* Now we know what it is, we can reset it. */
+-	return kvm_reset_vcpu(vcpu);
+-}
++	ret = kvm_reset_vcpu(vcpu);
++	if (ret) {
++		vcpu->arch.target = -1;
++		bitmap_zero(vcpu->arch.features, KVM_VCPU_MAX_FEATURES);
++	}
  
--		dev_dbg(dev, "prop %s=%s\n", attrname, prop_buf);
--
- 		ret = add_uevent_var(env, "POWER_SUPPLY_%s=%s", attrname, prop_buf);
- 		kfree(attrname);
- 		if (ret)
++	return ret;
++}
+ 
+ static int kvm_arch_vcpu_ioctl_vcpu_init(struct kvm_vcpu *vcpu,
+ 					 struct kvm_vcpu_init *init)
 -- 
 2.20.1
 
