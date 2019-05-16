@@ -2,151 +2,166 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B84C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F59C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12166206A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EFCF21734
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:32:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfEPJc1 (ORCPT
+        id S1727027AbfEPJc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 05:32:27 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:48868 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726383AbfEPJc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 05:32:26 -0400
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 15CE6A6871E7863AB5C8;
-        Thu, 16 May 2019 17:32:24 +0800 (CST)
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 16 May 2019 17:32:23 +0800
-Received: from szvp000201624.huawei.com (10.120.216.130) by
- dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Thu, 16 May 2019 17:32:23 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v2] f2fs: fix to do sanity check on segment bitmap of LFS curseg
-Date:   Thu, 16 May 2019 17:32:13 +0800
-Message-ID: <20190516093213.72645-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Thu, 16 May 2019 05:32:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44832 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726363AbfEPJc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 05:32:58 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 384CA99DDC;
+        Thu, 16 May 2019 09:32:57 +0000 (UTC)
+Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 472994D748;
+        Thu, 16 May 2019 09:32:52 +0000 (UTC)
+Subject: Re: [PATCH v2 6/7] iommu: Introduce IOMMU_RESV_DIRECT_RELAXABLE
+ reserved memory regions
+To:     eric.auger.pro@gmail.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        dwmw2@infradead.org, lorenzo.pieralisi@arm.com,
+        robin.murphy@arm.com, will.deacon@arm.com, hanjun.guo@linaro.org,
+        sudeep.holla@arm.com
+Cc:     alex.williamson@redhat.com, shameerali.kolothum.thodi@huawei.com
+References: <20190516084720.10498-1-eric.auger@redhat.com>
+ <20190516084720.10498-7-eric.auger@redhat.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <ab29565f-d601-8974-51e7-2b6c9982c21d@redhat.com>
+Date:   Thu, 16 May 2019 11:32:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-ClientProxiedBy: dggeme711-chm.china.huawei.com (10.1.199.107) To
- dggeme763-chm.china.huawei.com (10.3.19.109)
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190516084720.10498-7-eric.auger@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 16 May 2019 09:32:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Jungyeon Reported in bugzilla:
+Hi
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203233
+On 5/16/19 10:47 AM, Eric Auger wrote:
+> Introduce a new type for reserved region. This corresponds
+> to directly mapped regions which are known to be relaxable
+> in some specific conditions, such as device assignment use
+> case. Well known examples are those used by USB controllers
+> providing PS/2 keyboard emulation for pre-boot BIOS and
+> early BOOT or RMRRs associated to IGD working in legacy mode.
+> 
+> Since commit c875d2c1b808 ("iommu/vt-d: Exclude devices using RMRRs
+> from IOMMU API domains") and commit 18436afdc11a ("iommu/vt-d: Allow
+> RMRR on graphics devices too"), those regions are currently
+> considered "safe" with respect to device assignment use case
+> which requires a non direct mapping at IOMMU physical level
+> (RAM GPA -> HPA mapping).
+> 
+> Those RMRRs currently exist and sometimes the device is
+> attempting to access it but this has not been considered
+> an issue until now.
+> 
+> However at the moment, iommu_get_group_resv_regions() is
+> not able to make any difference between directly mapped
+> regions: those which must be absolutely enforced and those
+> like above ones which are known as relaxable.
+> 
+> This is a blocker for reporting severe conflicts between
+> non relaxable RMRRs (like MSI doorbells) and guest GPA space.
+> 
+> With this new reserved region type we will be able to use
+> iommu_get_group_resv_regions() to enumerate the IOVA space
+> that is usable through the IOMMU API without introducing
+> regressions with respect to existing device assignment
+> use cases (USB and IGD).
+> 
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> 
+> ---
+> 
+> Note: At the moment the sysfs ABI is not changed. However I wonder
+> whether it wouldn't be preferable to report the direct region as
+> "direct_relaxed" there. At the moment, in case the same direct
+> region is used by 2 devices, one USB/GFX and another not belonging
+> to the previous categories, the direct region will be output twice
+> with "direct" type.
+> 
+> This would unblock Shameer's series:
+> [PATCH v6 0/7] vfio/type1: Add support for valid iova list management
+> https://patchwork.kernel.org/patch/10425309/
+> 
+> which failed to get pulled for 4.18 merge window due to IGD
+> device assignment regression.
+> ---
+>  drivers/iommu/iommu.c | 12 +++++++-----
+>  include/linux/iommu.h |  6 ++++++
+>  2 files changed, 13 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index ae4ea5c0e6f9..84dcb6af6511 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -73,10 +73,11 @@ struct iommu_group_attribute {
+>  };
+>  
+>  static const char * const iommu_group_resv_type_string[] = {
+> -	[IOMMU_RESV_DIRECT]	= "direct",
+> -	[IOMMU_RESV_RESERVED]	= "reserved",
+> -	[IOMMU_RESV_MSI]	= "msi",
+> -	[IOMMU_RESV_SW_MSI]	= "msi",
+> +	[IOMMU_RESV_DIRECT]			= "direct",
+> +	[IOMMU_RESV_DIRECT_RELAXABLE]		= "direct",
+> +	[IOMMU_RESV_RESERVED]			= "reserved",
+> +	[IOMMU_RESV_MSI]			= "msi",
+> +	[IOMMU_RESV_SW_MSI]			= "msi",
+>  };
+>  
+>  #define IOMMU_GROUP_ATTR(_name, _mode, _show, _store)		\
+> @@ -573,7 +574,8 @@ static int iommu_group_create_direct_mappings(struct iommu_group *group,
+>  		start = ALIGN(entry->start, pg_size);
+>  		end   = ALIGN(entry->start + entry->length, pg_size);
+>  
+> -		if (entry->type != IOMMU_RESV_DIRECT)
+> +		if (entry->type != IOMMU_RESV_DIRECT ||
+It must be a "&&" and not "||"
 
-- Reproduces
-gcc poc_13.c
-./run.sh f2fs
+Respinning ...
 
-- Kernel messages
- F2FS-fs (sdb): Bitmap was wrongly set, blk:4608
- kernel BUG at fs/f2fs/segment.c:2133!
- RIP: 0010:update_sit_entry+0x35d/0x3e0
- Call Trace:
-  f2fs_allocate_data_block+0x16c/0x5a0
-  do_write_page+0x57/0x100
-  f2fs_do_write_node_page+0x33/0xa0
-  __write_node_page+0x270/0x4e0
-  f2fs_sync_node_pages+0x5df/0x670
-  f2fs_write_checkpoint+0x364/0x13a0
-  f2fs_sync_fs+0xa3/0x130
-  f2fs_do_sync_file+0x1a6/0x810
-  do_fsync+0x33/0x60
-  __x64_sys_fsync+0xb/0x10
-  do_syscall_64+0x43/0x110
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Eric
 
-The testcase fails because that, in fuzzed image, current segment was
-allocated with LFS type, its .next_blkoff should point to an unused
-block address, but actually, its bitmap shows it's not. So during
-allocation, f2fs crash when setting bitmap.
-
-Introducing sanity_check_curseg() to check such inconsistence of
-current in-used segment.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-v2:
-- check .next_blkoff for SSR curseg.
- fs/f2fs/segment.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
-
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 8dee063c833f..b5f21909356f 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -4232,6 +4232,41 @@ static int build_dirty_segmap(struct f2fs_sb_info *sbi)
- 	return init_victim_secmap(sbi);
- }
- 
-+int sanity_check_curseg(struct f2fs_sb_info *sbi)
-+{
-+	int i;
-+
-+	/*
-+	 * In LFS/SSR curseg, .next_blkoff should point to an unused blkaddr;
-+	 * In LFS curseg, all blkaddr after .next_blkoff should be unused.
-+	 */
-+	for (i = 0; i < NO_CHECK_TYPE; i++) {
-+		struct curseg_info *curseg = CURSEG_I(sbi, i);
-+		struct seg_entry *se = get_seg_entry(sbi, curseg->segno);
-+		unsigned int blkofs = curseg->next_blkoff;
-+
-+		if (f2fs_test_bit(blkofs, se->cur_valid_map))
-+			goto out;
-+
-+		if (curseg->alloc_type == SSR)
-+			continue;
-+
-+		for (blkofs += 1; blkofs < sbi->blocks_per_seg; blkofs++) {
-+			if (!f2fs_test_bit(blkofs, se->cur_valid_map))
-+				continue;
-+out:
-+			f2fs_msg(sbi->sb, KERN_ERR,
-+				"Current segment's next free block offset is "
-+				"inconsistent with bitmap, logtype:%u, "
-+				"segno:%u, type:%u, next_blkoff:%u, blkofs:%u",
-+				i, curseg->segno, curseg->alloc_type,
-+				curseg->next_blkoff, blkofs);
-+			return -EINVAL;
-+		}
-+	}
-+	return 0;
-+}
-+
- /*
-  * Update min, max modified time for cost-benefit GC algorithm
-  */
-@@ -4327,6 +4362,10 @@ int f2fs_build_segment_manager(struct f2fs_sb_info *sbi)
- 	if (err)
- 		return err;
- 
-+	err = sanity_check_curseg(sbi);
-+	if (err)
-+		return err;
-+
- 	init_min_max_mtime(sbi);
- 	return 0;
- }
--- 
-2.18.0.rc1
-
+> +		    entry->type != IOMMU_RESV_DIRECT_RELAXABLE)
+>  			continue;
+>  
+>  		for (addr = start; addr < end; addr += pg_size) {
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index ba91666998fb..14a521f85f14 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -135,6 +135,12 @@ enum iommu_attr {
+>  enum iommu_resv_type {
+>  	/* Memory regions which must be mapped 1:1 at all times */
+>  	IOMMU_RESV_DIRECT,
+> +	/*
+> +	 * Memory regions which are advertised to be 1:1 but are
+> +	 * commonly considered relaxable in some conditions,
+> +	 * for instance in device assignment use case (USB, Graphics)
+> +	 */
+> +	IOMMU_RESV_DIRECT_RELAXABLE,
+>  	/* Arbitrary "never map this or give it to a device" address ranges */
+>  	IOMMU_RESV_RESERVED,
+>  	/* Hardware MSI region (untranslated) */
+> 
