@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8705C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF0BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B54A720815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B7C20815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfEPQE5 (ORCPT
+        id S1727609AbfEPQFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:04:57 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42426 "EHLO
+        Thu, 16 May 2019 12:05:08 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42396 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726666AbfEPP6l (ORCPT
+        by vger.kernel.org with ESMTP id S1726622AbfEPP6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 May 2019 11:58:41 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImD-0006zA-SW; Thu, 16 May 2019 16:58:37 +0100
+        id 1hRImD-0006z0-J8; Thu, 16 May 2019 16:58:37 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImD-0001O5-3H; Thu, 16 May 2019 16:58:37 +0100
+        id 1hRImD-0001Nq-04; Thu, 16 May 2019 16:58:37 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,23 +35,18 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Brian Gerst" <brgerst@gmail.com>,
-        "Frederic Weisbecker" <fweisbec@gmail.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        "Andy Lutomirski" <luto@amacapital.net>,
-        "Denys Vlasenko" <dvlasenk@redhat.com>,
-        "Ingo Molnar" <mingo@kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
         "Thomas Gleixner" <tglx@linutronix.de>,
-        "Borislav Petkov" <bp@alien8.de>,
-        "Peter Zijlstra" <peterz@infradead.org>
+        "Ingo Molnar" <mingo@kernel.org>,
+        "Jonathan Corbet" <corbet@lwn.net>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Jason Baron" <jbaron@akamai.com>
 Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.193580430@decadent.org.uk>
+Message-ID: <lsq.1558022133.157799232@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 22/86] x86/asm: Add asm macros for static keys/jump
- labels
+Subject: [PATCH 3.16 19/86] locking/static_keys: Fix up the static keys
+ documentation
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -65,111 +60,65 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andy Lutomirski <luto@kernel.org>
+From: Jonathan Corbet <corbet@lwn.net>
 
-commit 2671c3e4fe2a34bd9bf2eecdf5d1149d4b55dbdf upstream.
+commit 1975dbc276c6ab62230cf4f9df5ddc9ff0e0e473 upstream.
 
-Unfortunately, we can only do this if HAVE_JUMP_LABEL.  In
-principle, we could do some serious surgery on the core jump
-label infrastructure to keep the patch infrastructure available
-on x86 on all builds, but that's probably not worth it.
+Fix a few small mistakes in the static key documentation and
+delete an unneeded sentence.
 
-Implementing the macros using a conditional branch as a fallback
-seems like a bad idea: we'd have to clobber flags.
-
-This limitation can't cause silent failures -- trying to include
-asm/jump_label.h at all on a non-HAVE_JUMP_LABEL kernel will
-error out.  The macro's users are responsible for handling this
-issue themselves.
-
-Signed-off-by: Andy Lutomirski <luto@kernel.org>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Denys Vlasenko <dvlasenk@redhat.com>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
+Suggested-by: Jason Baron <jbaron@akamai.com>
+Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/63aa45c4b692e8469e1876d6ccbb5da707972990.1447361906.git.luto@kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/20150914171105.511e1e21@lwn.net
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/include/asm/jump_label.h | 52 ++++++++++++++++++++++++++-----
- 1 file changed, 44 insertions(+), 8 deletions(-)
+ Documentation/static-keys.txt |  4 ++--
+ include/linux/jump_label.h    | 10 ++++------
+ 2 files changed, 6 insertions(+), 8 deletions(-)
 
---- a/arch/x86/include/asm/jump_label.h
-+++ b/arch/x86/include/asm/jump_label.h
-@@ -14,13 +14,6 @@
- #error asm/jump_label.h included on a non-jump-label kernel
- #endif
+--- a/Documentation/static-keys.txt
++++ b/Documentation/static-keys.txt
+@@ -15,8 +15,8 @@ The updated API replacements are:
  
--#ifndef __ASSEMBLY__
--
--#include <linux/stringify.h>
--#include <linux/types.h>
--#include <asm/nops.h>
--#include <asm/asm.h>
--
- #define JUMP_LABEL_NOP_SIZE 5
+ DEFINE_STATIC_KEY_TRUE(key);
+ DEFINE_STATIC_KEY_FALSE(key);
+-static_key_likely()
+-static_key_unlikely()
++static_branch_likely()
++static_branch_unlikely()
  
- #ifdef CONFIG_X86_64
-@@ -29,6 +22,14 @@
- # define STATIC_KEY_INIT_NOP GENERIC_NOP5_ATOMIC
- #endif
+ 0) Abstract
  
-+#include <asm/asm.h>
-+#include <asm/nops.h>
-+
-+#ifndef __ASSEMBLY__
-+
-+#include <linux/stringify.h>
-+#include <linux/types.h>
-+
- static __always_inline bool arch_static_branch(struct static_key *key, bool branch)
- {
- 	asm_volatile_goto("1:"
-@@ -72,5 +73,40 @@ struct jump_entry {
- 	jump_label_t key;
- };
- 
--#endif  /* __ASSEMBLY__ */
-+#else	/* __ASSEMBLY__ */
-+
-+.macro STATIC_JUMP_IF_TRUE target, key, def
-+.Lstatic_jump_\@:
-+	.if \def
-+	/* Equivalent to "jmp.d32 \target" */
-+	.byte		0xe9
-+	.long		\target - .Lstatic_jump_after_\@
-+.Lstatic_jump_after_\@:
-+	.else
-+	.byte		STATIC_KEY_INIT_NOP
-+	.endif
-+	.pushsection __jump_table, "aw"
-+	_ASM_ALIGN
-+	_ASM_PTR	.Lstatic_jump_\@, \target, \key
-+	.popsection
-+.endm
-+
-+.macro STATIC_JUMP_IF_FALSE target, key, def
-+.Lstatic_jump_\@:
-+	.if \def
-+	.byte		STATIC_KEY_INIT_NOP
-+	.else
-+	/* Equivalent to "jmp.d32 \target" */
-+	.byte		0xe9
-+	.long		\target - .Lstatic_jump_after_\@
-+.Lstatic_jump_after_\@:
-+	.endif
-+	.pushsection __jump_table, "aw"
-+	_ASM_ALIGN
-+	_ASM_PTR	.Lstatic_jump_\@, \target, \key + 1
-+	.popsection
-+.endm
-+
-+#endif	/* __ASSEMBLY__ */
-+
- #endif
+--- a/include/linux/jump_label.h
++++ b/include/linux/jump_label.h
+@@ -21,8 +21,8 @@
+  *
+  * DEFINE_STATIC_KEY_TRUE(key);
+  * DEFINE_STATIC_KEY_FALSE(key);
+- * static_key_likely()
+- * static_key_unlikely()
++ * static_branch_likely()
++ * static_branch_unlikely()
+  *
+  * Jump labels provide an interface to generate dynamic branches using
+  * self-modifying code. Assuming toolchain and architecture support, if we
+@@ -45,12 +45,10 @@
+  * statement, setting the key to true requires us to patch in a jump
+  * to the out-of-line of true branch.
+  *
+- * In addtion to static_branch_{enable,disable}, we can also reference count
++ * In addition to static_branch_{enable,disable}, we can also reference count
+  * the key or branch direction via static_branch_{inc,dec}. Thus,
+  * static_branch_inc() can be thought of as a 'make more true' and
+- * static_branch_dec() as a 'make more false'. The inc()/dec()
+- * interface is meant to be used exclusively from the inc()/dec() for a given
+- * key.
++ * static_branch_dec() as a 'make more false'.
+  *
+  * Since this relies on modifying code, the branch modifying functions
+  * must be considered absolute slow paths (machine wide synchronization etc.).
 
