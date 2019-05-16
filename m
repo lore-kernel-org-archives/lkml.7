@@ -2,197 +2,107 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25B6C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D9EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A57BC206A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5F1220862
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:31:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BFRH/DYu";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oba4MSJv"
+	dkim=pass (1024-bit key) header.d=itdevltd.onmicrosoft.com header.i=@itdevltd.onmicrosoft.com header.b="P+a0m83w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbfEPJah (ORCPT
+        id S1727069AbfEPJbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 05:30:37 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39876 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbfEPJag (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 05:30:36 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B412760AA3; Thu, 16 May 2019 09:30:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557999032;
-        bh=BQeF1SghZ/cw9v6x9DZFOORthYlBbnNOG2SlS537v3U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=BFRH/DYu1wXg3QQWrs7g+LzRHUCwO4azI6zhO/c/QseXFWoSu536x+50Ct9Hi8Sc+
-         jURtj1I6iMOxWLBMZ22PsImxlxRKXFYA+itDWEjj6+jEK7urJh3GVWp7BgzBY0B5u+
-         ZaWAZJ8C9vxpI3mmws94cCoGjouLK/PNXDDkmaRA=
-Received: from blr-ubuntu-41.ap.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 38E0260A43;
-        Thu, 16 May 2019 09:30:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1557999030;
-        bh=BQeF1SghZ/cw9v6x9DZFOORthYlBbnNOG2SlS537v3U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=oba4MSJvFuLeFSdasc4U5oYTvBGipxJu6XZ/MUkV+RP0S1DkD/+EEg0sBfTYTgr3q
-         c4s51rYoxO5UjSMjWU7Amj2vInP4frGltunoa3Mfoh9v/HKqYqv3JFnfpZ8S4H+LwO
-         u5oY7GHPLQJNLTEUvwfkbwukao23Jg0UCSDhwrME=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 38E0260A43
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-To:     will.deacon@arm.com, robin.murphy@arm.com, joro@8bytes.org,
-        iommu@lists.linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, pdaly@codeaurora.org,
-        pratikp@codeaurora.org, jcrouse@codeaurora.org,
-        Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: [PATCH v5 1/1] iommu/io-pgtable-arm: Add support to use system cache
-Date:   Thu, 16 May 2019 15:00:20 +0530
-Message-Id: <20190516093020.18028-1-vivek.gautam@codeaurora.org>
-X-Mailer: git-send-email 2.16.1.72.g5be1f00a9a70
+        Thu, 16 May 2019 05:31:11 -0400
+Received: from mail-eopbgr130075.outbound.protection.outlook.com ([40.107.13.75]:59230
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726374AbfEPJbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 05:31:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=itdevltd.onmicrosoft.com; s=selector1-itdevltd-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JN/0cKwExxFWXT6NQchMF8Gmsom+mwEEgXD/ZVEj/u0=;
+ b=P+a0m83wis7oQtEDNU69rXgc9TYo9enhuBY7/GSAt3de46EhBNJC6ZE/QSkZgiVEcYw3VBy9vI9WaAuT0wwUStZCO7dpKbrsK9syQs+taz+RqC5sLrPdvzbEj1PuxCS9jL85QAWlQAE4LmswL3pVfcf/gr4YN1PSptlYeIhI0U0=
+Received: from VI1PR08MB3168.eurprd08.prod.outlook.com (52.133.15.143) by
+ VI1PR08MB2878.eurprd08.prod.outlook.com (10.170.239.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.17; Thu, 16 May 2019 09:31:05 +0000
+Received: from VI1PR08MB3168.eurprd08.prod.outlook.com
+ ([fe80::8e9:9487:4f0a:fdaf]) by VI1PR08MB3168.eurprd08.prod.outlook.com
+ ([fe80::8e9:9487:4f0a:fdaf%3]) with mapi id 15.20.1878.024; Thu, 16 May 2019
+ 09:31:05 +0000
+From:   Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+To:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+CC:     Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] staging: vt6656: remove unused variable
+Thread-Topic: [PATCH] staging: vt6656: remove unused variable
+Thread-Index: AQHVC8oVWbJV7t4C7kCfosLx3wTTvA==
+Date:   Thu, 16 May 2019 09:31:05 +0000
+Message-ID: <20190516093046.1400-1-quentin.deslandes@itdev.co.uk>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: DB6PR1001CA0016.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:4:b7::26) To VI1PR08MB3168.eurprd08.prod.outlook.com
+ (2603:10a6:803:47::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=quentin.deslandes@itdev.co.uk; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [89.21.227.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 928aa406-891d-4716-b106-08d6d9e13809
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR08MB2878;
+x-ms-traffictypediagnostic: VI1PR08MB2878:
+x-microsoft-antispam-prvs: <VI1PR08MB28788C91A0833A8C9AAFFB6EB30A0@VI1PR08MB2878.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3276;
+x-forefront-prvs: 0039C6E5C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(39830400003)(366004)(376002)(396003)(136003)(199004)(189003)(8936002)(508600001)(316002)(44832011)(81166006)(81156014)(86362001)(6116002)(3846002)(8676002)(66066001)(6436002)(68736007)(2906002)(486006)(6486002)(476003)(5640700003)(6512007)(50226002)(2616005)(2351001)(74482002)(4326008)(71200400001)(71190400001)(52116002)(186003)(99286004)(1076003)(4744005)(386003)(6506007)(73956011)(66446008)(102836004)(64756008)(66946007)(66476007)(66556008)(36756003)(5660300002)(54906003)(26005)(2501003)(25786009)(305945005)(7736002)(6916009)(256004)(14444005)(14454004)(53936002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB2878;H:VI1PR08MB3168.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: itdev.co.uk does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Uc1wjTTew1fxAxF0ZvWS05YqsqSxLbODNpOVHjZjqEwUWQQxTP3KLBIUwnkZPCk+lploRMebw5clxygvBt7qQ1hEqUmBmH871DfO7ijTGPx+60ORcuB62ycm6t9fLnbELl3ZO7Wj/ZNJ4mcIZ6iO2lK1eDdl/q5qczpn/npZFi1x8/z21/2Qj5dVpQ2AR+ApHK3HoMtlFKP2ckncLgkxi9Mt1o9vWBOQnsFCLT/poamKu3wqZY9SBnhIxyrQ6zUQs6Xttuq6REYsKkAtLyOCY5Q0QyHHF+p8GXc0RQVmw5JAvU9pF1yLb9AG+p8AhE1WV4gbNGGO+UO4YjSpYOYlTePINmU/VLZYWnIErRmxfWvK87iz26O016W2+XOpCYHwvRuuuVk9NzmV/dkPKOlViNes9IrSdSR+KJuebO7NL7o=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: itdev.co.uk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 928aa406-891d-4716-b106-08d6d9e13809
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 09:31:05.5385
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 2d2930c4-2251-45b4-ad79-3582c5f41740
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB2878
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Few Qualcomm platforms such as, sdm845 have an additional outer
-cache called as System cache, aka. Last level cache (LLC) that
-allows non-coherent devices to upgrade to using caching.
-This cache sits right before the DDR, and is tightly coupled
-with the memory controller. The clients using this cache request
-their slices from this system cache, make it active, and can then
-start using it.
-
-There is a fundamental assumption that non-coherent devices can't
-access caches. This change adds an exception where they *can* use
-some level of cache despite still being non-coherent overall.
-The coherent devices that use cacheable memory, and CPU make use of
-this system cache by default.
-
-Looking at memory types, we have following -
-a) Normal uncached :- MAIR 0x44, inner non-cacheable,
-                      outer non-cacheable;
-b) Normal cached :-   MAIR 0xff, inner read write-back non-transient,
-                      outer read write-back non-transient;
-                      attribute setting for coherenet I/O devices.
-and, for non-coherent i/o devices that can allocate in system cache
-another type gets added -
-c) Normal sys-cached :- MAIR 0xf4, inner non-cacheable,
-                        outer read write-back non-transient
-
-Coherent I/O devices use system cache by marking the memory as
-normal cached.
-Non-coherent I/O devices should mark the memory as normal
-sys-cached in page tables to use system cache.
-
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
----
-
-V3 version of this patch and related series can be found at [1].
-V4 of this patch is available at [2].
-
-The example usage of how a smmu master can make use of this protection
-flag and set the correct memory attributes to start using system cache,
-can be found at [3]; and here at [3] IOMMU_UPSTREAM_HINT is same as
-IOMMU_QCOM_SYS_CACHE.
-
-Changes since v4:
- - Changed ARM_LPAE_MAIR_ATTR_QCOM_SYS_CACHE to
-   ARM_LPAE_MAIR_ATTR_INC_OWBRWA.
- - Changed ARM_LPAE_MAIR_ATTR_IDX_QCOM_SYS_CACHE to
-   ARM_LPAE_MAIR_ATTR_IDX_INC_OCACHE.
- - Added comments to iommu protection flag - IOMMU_QCOM_SYS_CACHE.
-
-Changes since v3:
- - Dropping support to cache i/o page tables to system cache. Getting support
-   for data buffers is the first step.
-   Removed io-pgtable quirk and related change to add domain attribute.
-
-Glmark2 numbers on SDM845 based cheza board:
-
-S.No.|	with LLC support   |	without LLC support
-     |	for data buffers   |
----------------------------------------------------		
-1    |	4480; 72.3fps      |	4042; 65.2fps
-2    |	4500; 72.6fps      |	4039; 65.1fps
-3    |	4523; 72.9fps	   |	4106; 66.2fps
-4    |	4489; 72.4fps	   |	4104; 66.2fps
-5    |	4518; 72.9fps	   |	4072; 65.7fps
-
-[1] https://patchwork.kernel.org/cover/10772629/
-[2] https://lore.kernel.org/patchwork/patch/1072936/
-[3] https://patchwork.kernel.org/patch/10302791/
-
- drivers/iommu/io-pgtable-arm.c | 9 ++++++++-
- include/linux/iommu.h          | 6 ++++++
- 2 files changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
-index 4e21efbc4459..2454ac11aa97 100644
---- a/drivers/iommu/io-pgtable-arm.c
-+++ b/drivers/iommu/io-pgtable-arm.c
-@@ -167,10 +167,12 @@
- #define ARM_LPAE_MAIR_ATTR_MASK		0xff
- #define ARM_LPAE_MAIR_ATTR_DEVICE	0x04
- #define ARM_LPAE_MAIR_ATTR_NC		0x44
-+#define ARM_LPAE_MAIR_ATTR_INC_OWBRWA	0xf4
- #define ARM_LPAE_MAIR_ATTR_WBRWA	0xff
- #define ARM_LPAE_MAIR_ATTR_IDX_NC	0
- #define ARM_LPAE_MAIR_ATTR_IDX_CACHE	1
- #define ARM_LPAE_MAIR_ATTR_IDX_DEV	2
-+#define ARM_LPAE_MAIR_ATTR_IDX_INC_OCACHE	3
- 
- #define ARM_MALI_LPAE_TTBR_ADRMODE_TABLE (3u << 0)
- #define ARM_MALI_LPAE_TTBR_READ_INNER	BIT(2)
-@@ -470,6 +472,9 @@ static arm_lpae_iopte arm_lpae_prot_to_pte(struct arm_lpae_io_pgtable *data,
- 		else if (prot & IOMMU_CACHE)
- 			pte |= (ARM_LPAE_MAIR_ATTR_IDX_CACHE
- 				<< ARM_LPAE_PTE_ATTRINDX_SHIFT);
-+		else if (prot & IOMMU_QCOM_SYS_CACHE)
-+			pte |= (ARM_LPAE_MAIR_ATTR_IDX_INC_OCACHE
-+				<< ARM_LPAE_PTE_ATTRINDX_SHIFT);
- 	}
- 
- 	if (prot & IOMMU_NOEXEC)
-@@ -857,7 +862,9 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg *cfg, void *cookie)
- 	      (ARM_LPAE_MAIR_ATTR_WBRWA
- 	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_CACHE)) |
- 	      (ARM_LPAE_MAIR_ATTR_DEVICE
--	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_DEV));
-+	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_DEV)) |
-+	      (ARM_LPAE_MAIR_ATTR_INC_OWBRWA
-+	       << ARM_LPAE_MAIR_ATTR_SHIFT(ARM_LPAE_MAIR_ATTR_IDX_INC_OCACHE));
- 
- 	cfg->arm_lpae_s1_cfg.mair[0] = reg;
- 	cfg->arm_lpae_s1_cfg.mair[1] = 0;
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index a815cf6f6f47..8ee3fbaf5855 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -41,6 +41,12 @@
-  * if the IOMMU page table format is equivalent.
-  */
- #define IOMMU_PRIV	(1 << 5)
-+/*
-+ * Non-coherent masters on few Qualcomm SoCs can use this page protection flag
-+ * to set correct cacheability attributes to use an outer level of cache -
-+ * last level cache, aka system cache.
-+ */
-+#define IOMMU_QCOM_SYS_CACHE	(1 << 6)
- 
- struct iommu_ops;
- struct iommu_group;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+Rml4ZWQgJ3NldCBidXQgbm90IHVzZWQnIHdhcm5pbmcgbWVzc2FnZSBvbiBhIHN0YXR1cyB2YXJp
+YWJsZS4gVGhlDQpjYWxsZWQgZnVuY3Rpb24gcmV0dXJuaW5nIHRoZSBzdGF0dXMgY29kZSAndm50
+X3N0YXJ0X2ludGVycnVwdF91cmIoKScNCmNsZWFuIHVwIGFmdGVyIGl0c2VsZiBhbmQgdGhlIGNh
+bGxlciBmdW5jdGlvbg0KJ3ZudF9pbnRfc3RhcnRfaW50ZXJydXB0KCknIGRvZXMgbm90IHJldHVy
+bnMgYW55IHZhbHVlLg0KDQpTaWduZWQtb2ZmLWJ5OiBRdWVudGluIERlc2xhbmRlcyA8cXVlbnRp
+bi5kZXNsYW5kZXNAaXRkZXYuY28udWs+DQotLS0NCiBkcml2ZXJzL3N0YWdpbmcvdnQ2NjU2L2lu
+dC5jIHwgMyArLS0NCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDIgZGVsZXRpb25z
+KC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvdnQ2NjU2L2ludC5jIGIvZHJpdmVy
+cy9zdGFnaW5nL3Z0NjY1Ni9pbnQuYw0KaW5kZXggNTA0NDI0YjE5ZmNmLi5hYzMwY2U3MmRiNWEg
+MTAwNjQ0DQotLS0gYS9kcml2ZXJzL3N0YWdpbmcvdnQ2NjU2L2ludC5jDQorKysgYi9kcml2ZXJz
+L3N0YWdpbmcvdnQ2NjU2L2ludC5jDQpAQCAtNDIsMTMgKzQyLDEyIEBAIHN0YXRpYyBjb25zdCB1
+OCBmYWxsYmFja19yYXRlMVs1XVs1XSA9IHsNCiB2b2lkIHZudF9pbnRfc3RhcnRfaW50ZXJydXB0
+KHN0cnVjdCB2bnRfcHJpdmF0ZSAqcHJpdikNCiB7DQogCXVuc2lnbmVkIGxvbmcgZmxhZ3M7DQot
+CWludCBzdGF0dXM7DQogDQogCWRldl9kYmcoJnByaXYtPnVzYi0+ZGV2LCAiLS0tLT5JbnRlcnJ1
+cHQgUG9sbGluZyBUaHJlYWRcbiIpOw0KIA0KIAlzcGluX2xvY2tfaXJxc2F2ZSgmcHJpdi0+bG9j
+aywgZmxhZ3MpOw0KIA0KLQlzdGF0dXMgPSB2bnRfc3RhcnRfaW50ZXJydXB0X3VyYihwcml2KTsN
+CisJdm50X3N0YXJ0X2ludGVycnVwdF91cmIocHJpdik7DQogDQogCXNwaW5fdW5sb2NrX2lycXJl
+c3RvcmUoJnByaXYtPmxvY2ssIGZsYWdzKTsNCiB9DQotLSANCjIuMTcuMQ0KDQo=
