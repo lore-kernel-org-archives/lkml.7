@@ -2,201 +2,97 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 841ADC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8F3C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD7120818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C71520862
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:48:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="PXFA17v1"
+	dkim=pass (2048-bit key) header.d=kolivas-org.20150623.gappssmtp.com header.i=@kolivas-org.20150623.gappssmtp.com header.b="JxyD05FK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727931AbfEPUoX (ORCPT
+        id S1728128AbfEPUsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 16:44:23 -0400
-Received: from mail-lj1-f181.google.com ([209.85.208.181]:41917 "EHLO
-        mail-lj1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727617AbfEPUoX (ORCPT
+        Thu, 16 May 2019 16:48:15 -0400
+Received: from mail-lf1-f44.google.com ([209.85.167.44]:36297 "EHLO
+        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728088AbfEPUsO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 16:44:23 -0400
-Received: by mail-lj1-f181.google.com with SMTP id k8so4313486lja.8
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 13:44:21 -0700 (PDT)
+        Thu, 16 May 2019 16:48:14 -0400
+Received: by mail-lf1-f44.google.com with SMTP id y10so3718753lfl.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 13:48:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=O4YQlmZ5MIYdnldebqyOQVqr06qrs1qRMTeOLjMVWrs=;
-        b=PXFA17v1UFO6E+VdhuOqRYErH8oPXRe6yZhAFz6xU+dvsk37W7zAJAepdhybCiXqg4
-         Ac/eWro6GJUUuCjePX4pCeeXuVlAJPT/i+Huitoajymg5PIqTTxhjI8DvM4rk40k6g9j
-         ocCoPziobgGcwxDVLMVQsw7n/MFClTxWsZVvo0I6lbSnzcAUXOIEBOzhPedxbaxmyFho
-         /gex9coX7lmVF2SfyelL1Ov0fC2x3Dx9deZqxabENXabDjKgA7X18YXUSCoqGdIkgKUc
-         K5WKOGJOtXK20BBYB6d2JRIRkkEpzQZrUv4SkKM0Rl7qyb059GRq7VMQszRcRjA/Huk/
-         tnfg==
+        d=kolivas-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=/zfJjbsgjfhcPhz4cNFPAebK7HlMUZRYQ6SujmzDQiE=;
+        b=JxyD05FKofY7Pas0O5P80rykIBJ/4NSl+9du3TfMjOJX6Zu1/EdlkEZ29kFevvZS9R
+         Dy8QiQ2JrqVPzEMX5KTd+I1SU4Xu8909ecfEhb4OM/XZe3FmrbOIO38DoZI3klEaRWbX
+         yNY8zz/Ao7Ic49xkiIfm0OAEgDPWPtMumXvoDgJmbjMvxmEhRFIQcuqjP2HQD+jJVfUO
+         KWBCG7YCpXTaf/xwj6E2EIeQ82nTn+e1o5CT4g5R+8N1FDJFLyhPgutdPO4ylP6QQyjl
+         0ahfW9LWC4hMGtKAboW2TKB9gP+c1wJ1kkj+vu5xB370VHhDUhbaBtlhyrIKH9qSeygz
+         Z5Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=O4YQlmZ5MIYdnldebqyOQVqr06qrs1qRMTeOLjMVWrs=;
-        b=ZXGLacKBJMflZtUI5+ywCpgfvW+3uFFBjkxRmDejcYTaJYkfCiDHLjsx/JsGHrvPJs
-         Eb4ilOBma1x0JSVIPBNQMSC8GyzqG74dVR9XYsKE7x2VY5BKKanajEY7r1ehfq9cPwqZ
-         baUH/sTq6GWNxrZICqxQFLer2f7IFYQl1ulVRjVrRbIjU0mmzDU6VrkiLWgor+4JtIsO
-         533/3wpDtcoUHeHPekTq3VymS/vLEXAXORRRgfshCSiXB/oJHpL2SQ+s59xLWyZqBbrf
-         AouIJ4UMvCkXzwFPVED3aA8Dl6+OJmj3bcC+9irQbxBr+0qvXYfZ8Z37h1bByNw0Jh3f
-         KUZQ==
-X-Gm-Message-State: APjAAAXNrb0KLzYxFgr9BB+dgDl8lPsuZxbl+vL/Z1+TnF4LJi5BElR+
-        MAI6vtN8n8+hzJ/Qjo9QvZnoSw==
-X-Google-Smtp-Source: APXvYqyVuLVySF5rnrnVsnLgnpGrCTm3hrpsqU2HjHmiL01Cn7/mJY0a3Tzg2KQnuTRCNbgPETjLHQ==
-X-Received: by 2002:a2e:8716:: with SMTP id m22mr10015439lji.128.1558039460458;
-        Thu, 16 May 2019 13:44:20 -0700 (PDT)
-Received: from localhost (89-233-230-99.cust.bredband2.com. [89.233.230.99])
-        by smtp.gmail.com with ESMTPSA id y25sm1147668lfy.59.2019.05.16.13.44.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 May 2019 13:44:19 -0700 (PDT)
-Date:   Thu, 16 May 2019 22:44:18 +0200
-From:   "niklas.soderlund@ragnatech.se" <niklas.soderlund@ragnatech.se>
-To:     "Rodin, Michael (Ferchau; ADITG/ESM1)" <mrodin@de.adit-jv.com>
-Cc:     "kieran.bingham@ideasonboard.com" <kieran.bingham@ideasonboard.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "michael@rodin.online" <michael@rodin.online>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH] media: i2c: adv748x: initialize bit 7 of
- csi_tx_top_reg_1f
-Message-ID: <20190516204418.GF31788@bigcity.dyn.berto.se>
-References: <1557502240-16274-1-git-send-email-mrodin@de.adit-jv.com>
- <26e001a0-298f-e23b-9e46-98e62a8399c2@ideasonboard.com>
- <20190510190124.GE28561@bigcity.dyn.berto.se>
- <AC35D0CFBC66A84AAA9DF4334B52828D136181C3@HI2EXCH01.adit-jv.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=/zfJjbsgjfhcPhz4cNFPAebK7HlMUZRYQ6SujmzDQiE=;
+        b=XHO6js+Y9R2JjDPk2YvPEO73g1uwWMFy4VTDwhspKMwPbuYf0Zne3QqR5pJ2/0PXhm
+         8kg61epZkwG4Wvlqdytydbp+qIt4ez8jszZAFdNZdEQLBGk81dfwLxnMyDLCOHKXgrqf
+         ataO313Snu89JJbxdGmlQO7y5fTP2l9xKK/Fh8IIbIfyuo5kmmqWSdTik1nyb7uKYYWp
+         M10BZoupP+AvmD/hsfsXcQkCqfFZngiawjgmong8NdgC7xb9jjuCLXxSQJNiw/PJMYxH
+         yhRQ0XMSoA5y64rM2t9KQldVwzmJ7gB1kFgGZkt6KZ3EUgZpgGGaRuGulATtZ78mIpqL
+         62/g==
+X-Gm-Message-State: APjAAAWsF97wnZ2uXPf5D2j3EaKUwkDshf1wUMUFLVGZmqfAsfR8TROV
+        BGTzxHI5/ZmFxdnaDp5hi/kk6jpmYMgq6oNa010+E8i+1OE=
+X-Google-Smtp-Source: APXvYqyStfmGeLBlAymXcQvqe5IKhZdeKkGsEPalzGGEY9n1S5rRgPe8dDVGAxY/5HRqnoPfxO4+eWp60TVHUW3wRa4=
+X-Received: by 2002:ac2:4571:: with SMTP id k17mr26302707lfm.133.1558039692425;
+ Thu, 16 May 2019 13:48:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AC35D0CFBC66A84AAA9DF4334B52828D136181C3@HI2EXCH01.adit-jv.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+From:   Con Kolivas <kernel@kolivas.org>
+Date:   Fri, 17 May 2019 06:48:01 +1000
+Message-ID: <CABqErrE2Sfj0wGFoVgYEu-4rpZ3KwgfHwZdinbip5Wqr=gRoNA@mail.gmail.com>
+Subject: linux-5.1-ck1, MuQSS version 0.192 for linux-5.1
+To:     linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rodin,
+Announcing a new -ck release, 5.1-ck1  with the latest version of the
+Multiple Queue Skiplist Scheduler, version 0.192. These are patches
+designed to improve system responsiveness and interactivity with
+specific emphasis on the desktop, but configurable for any workload.
 
-On 2019-05-16 14:24:13 +0000, Rodin, Michael (Ferchau; ADITG/ESM1) wrote:
-> Hi Kieran and Niklas,
-> 
-> thank you for your responses!
-> 
-> > Hi Kieran and Michael,
-> >
-> > On 2019-05-10 17:25:24 +0100, Kieran Bingham wrote:
-> > <snip>
-> >
-> > >
-> > > Niklas, how does RCar-CSI determine the top/bottom sequence?
-> >
-> > That patch just got merged in the media tree a few days ago,
-> >
-> >     9f7983bdc4925ae2 ("media: rcar-csi2: Propagate the FLD signal for NTSC
-> > and PAL")
-> >
-> > >
-> > > Do we have field inversion currently? (or one which is perhaps swapped
-> > > somewhere along the pipeline in rcar-vin?)
-> > >
-> >
-> > I'm not sure which tree this patch is developed on but Steve Longerbeam
-> > posted a RFC which IMHO had the fields inverted, there was a discussion in
-> his
-> > thread [1] where I tried to get to the bottom of the issue. My conclusions
-> > there might be wrong due to the issues addressed in this patch.
-> >
-> > Michael: Did you have Steve's patch in your tree when testing this?
-> >
-> > 1. https://patchwork.kernel.org/patch/10904263/
-> >
-> > --
-> > Regards,
-> > Niklas Söderlund
-> 
-> I had another version of Steve's patch when testing, but the FLD_NUM
-> setting was still the opposite compared to 9f7983bdc4925ae2
-> ("media: rcar-csi2: Propagate the FLD signal for NTSC and PAL").
-> I could send all patches from the private pull request which Steve Longerbeam
-> has created for ADIT if you want to better understand my test results,
-> but probably they can not be applied to the current mainline development tree.
-> The patch for adv748x I used for testing looks a bit different as well,
-> so it can be applied to the tree used by ADIT. But the functionality
-> is the same (I can provide the patch as well if it is required.).
-> There are also concerns regarding VnMC.FOC bit (I tested V4L2_FIELD_INTERLACED mode 
-> and in my tests I figured out, that this bit does not exactly do
-> what the Renesas Hardware Manual describes and should be always set to 0
-> regardless whether NTSC or PAL are used. But I had only Raspberry Pi as
-> NTSC test source and no additional NTSC camera for verification,
-> so the results may be not reliable.).
+linux-5.1-ck1:
+-ck1 patches:
+http://ck.kolivas.org/patches/5.0/5.1/5.1-ck1/
+Git tree:
+https://github.com/ckolivas/linux/tree/5.1-ck
 
-Interesting, I will add VnMC.FOC to my list of things to look into.
+MuQSS only:
+Download:
+http://ck.kolivas.org/patches/muqss/5.0/5.1/0001-MultiQueue-Skiplist-Schedu=
+ler-version-0.192.patch
+Git tree:
+https://github.com/ckolivas/linux/tree/5.1-muqss
 
-> 
-> 
-> Niklas, in [1] you mentioned that you could read the WC counter (which is in
-> fact the frame number in case of frame start packets) in the interrupt
-> INT_FSFE and it would start at 0. Could you please share the patch you used
-> for reading?
+Blog:
+http://ck-hack.blogspot.com/
 
-I'm sorry I no longer have that code. It was a small hack thrown 
-together quickly. Idea was to read the register from the interrupt 
-handler and printk() it. Not the best of methods but at the time it 
-confirmed my theory of how it should work. It might be that I have drawn 
-some premature conclusions.
+Web:
+http://kernel.kolivas.org
 
-> As Steve Longerbeam mentioned in [2], this would be a CSI spec 
->violation, which he has cited in the commit message of his RFC 
->patch[3]. It's important to mention that the violation would be on the 
->side of the adv748x chip (adv7482 on my Salvator-X board), because it 
->creates the Frame Start packets. And according to the description of 
->the FRAMENUMBER_INTERLACED bit in [4] (page 193), adv7481 should always 
->send the
-> "1,2,1,2..." CSI frame number sequence (I could  not find a generic document
-> valid for all adv748x but I doubt that it would be  different there.).
-> So starting with CSI frame number 0 would even violate specification in it's 
-> own data sheet. Another possibility could also be a silicon bug in rcar CSI interface,
-> which would decrement the WC value by one. 
 
-A more likely cause is that my way of testing was flawed ;-)
+This is mostly a resync from 5.0-ck1 with some build and boot fixes
+courtesy of Serge Belyshev (thanks!)
 
-I will add this to my growing pile of things to look into. I don't know 
-when I will find the time. If you got time and figure out a method to 
-verify the settings in rcar-csi2 together with a good video source 
-please post patches ;-) It would be great if this could be figured out 
-together with the VnMC.FOC issue mentioned above. If you should happen 
-to work on it you might be interested in the patches recently merged in 
-the media-tree which adds the interrupt handler to rcar-csi2 making 
-inspection hacks easier to add on top.
-
-One idea I have is to use a programmable video source and "display" 
-frames for capture where one can distinguish top/bottom (different 
-colors for each line for example) fields on the capture side and somehow 
-automate regression testing. I have had this plan for some years now and 
-I still use a old video game system as my test rig so don't hold your 
-breath ;-)
-
-> 
-> 
-> [1] https://patchwork.kernel.org/patch/10904263/#22594157
-> [2] https://patchwork.kernel.org/patch/10904263/#22594563
-> [3] https://patchwork.kernel.org/patch/10904263
-> [4] https://www.analog.com/media/en/technical-documentation/user-guides/ADV7481_UG-747.pdf
-> 
-> Regards,
-> Michael
-
--- 
-Regards,
-Niklas Söderlund
+Enjoy!
+=E3=81=8A=E6=A5=BD=E3=81=97=E3=81=BF=E4=B8=8B=E3=81=95=E3=81=84
+-ck
