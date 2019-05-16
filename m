@@ -2,122 +2,156 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617DAC46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C785C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:32:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 319BA2087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E868E2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:32:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SYjE/ozB"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NYTHLKBb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbfEPNce (ORCPT
+        id S1727648AbfEPNcm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:32:34 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42743 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727069AbfEPNcd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:32:33 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w9so690572oic.9
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 06:32:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X+8Dc+8NQkNb3/Q1ARB2w0BPiehxHFy6DByP8EfeHyE=;
-        b=SYjE/ozBIlk8Fx5sGYi6WTZimcARTlAHPPEaELxcs6u17YAQfVwz99WhY0CA7x7cml
-         b4Cbzvdp8D4NHP23ztKo/w3yjKTb6vite0InwNqCh9vwMas7ZY5DZACFYyoKryN+jMoV
-         NyjJVH4U+KBZh2WxuP67pee+2CWg+DVK+qrBguGtLysuan0h4KqHqlWLuJXrjYjddiTS
-         urPSTTaLVGMYc8qvdvqRVf/kNHorlEc45l0DrLwMjryCebhvK2KjtGwCcLCUUeSttn4X
-         CZIbEe5ZiInHuQP0yaoUgNKXgkMbz8IOp3sMzWpkjg/O0QLy/mCw2/ZKl8KC6OVEqqUx
-         fA9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X+8Dc+8NQkNb3/Q1ARB2w0BPiehxHFy6DByP8EfeHyE=;
-        b=WMxg4yAPztD0UmlJ4uL4ZL6QcR5dqJ8llJMzH1nB01iVSxca1oD/0MRtJPjAODby/7
-         Y2gcKJtklD6mkekmdkKeG7s/XZsa9Ilnq2OIngMcoTkfCsaU3XaT3UBuorhSSEEZ0Ijl
-         HWdThjtNYTujd44+oX8swX3HtGaXmVtLSloc+8dHuwh7O1Hdgkt9R0use5NrC+2s50oJ
-         mGNJ4IbalxaKXUp26Z8S4SCxm0Rltb8HrOBwMzx1EVtd0/MhS/GRSeq8PHxwt0A13fmi
-         Dp8F29vouln1GLPuRBREfMKXuj2MK0Ymif63D4TBdV7dG3dFcAATM0sHsMIcOT4Pkr2b
-         1vzg==
-X-Gm-Message-State: APjAAAWjUkc8CUAp/a31hvrWSS3PzWjiMoOXe4ufuRWbf4ijxoRpXESS
-        pVbHfPM9TGyrimUTSpwjljv2Jp3aGkWyOD4E+NHP2Q==
-X-Google-Smtp-Source: APXvYqyWTgxVAAT8JN7ctKRABfXdndp8feo5VLLNabYJZjH3z3RmiG0/e3+2ydfvO0aV6qZBGpe1mgmkhH0lQKZq3HI=
-X-Received: by 2002:aca:180d:: with SMTP id h13mr10065721oih.39.1558013552764;
- Thu, 16 May 2019 06:32:32 -0700 (PDT)
+        Thu, 16 May 2019 09:32:42 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:34384 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727069AbfEPNcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:32:41 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 454XRB1clVz9v6X8;
+        Thu, 16 May 2019 15:32:38 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=NYTHLKBb; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id YJ2fH7KAqsev; Thu, 16 May 2019 15:32:38 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 454XRB0P2lz9v6Ws;
+        Thu, 16 May 2019 15:32:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1558013558; bh=nnbDu0Oncip1B1EfAee0nXXH/Y+D1kJM8P3yAxFONt8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=NYTHLKBbYT+1AyjfBvVrBs+aVvT0yZrGdfDLlEw5m4ZSeWGjsy+j5C8Rusba+uXOC
+         09reBIj2aW5astgucBs6dszCpYVWDkiKv45TJDO8zpM3srgNKS6m2t+8G0AO9TDr7d
+         IHd0d8/WPeVC1xcTGhPFZEP3SMAbOwY5Zqi5GKIY=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 743F98B831;
+        Thu, 16 May 2019 15:32:39 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id MI1hq9bTdmn3; Thu, 16 May 2019 15:32:39 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D33418B82A;
+        Thu, 16 May 2019 15:32:38 +0200 (CEST)
+Subject: Re: [PATCH] crypto: talitos - fix skcipher failure due to wrong
+ output IV
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Horia Geanta <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <a5b0d31d8fc9fc9bc2b69baa5330466090825a39.1557923113.git.christophe.leroy@c-s.fr>
+ <VI1PR0402MB34858D80A15D4B55F64570E398090@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+ <29db3f20-f931-efc6-02a8-fe160ab8b484@c-s.fr>
+ <20190516023050.GA23200@sol.localdomain>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <593f51b1-8c51-1994-623d-f5a591891d8a@c-s.fr>
+Date:   Thu, 16 May 2019 15:32:38 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
-In-Reply-To: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 16 May 2019 15:32:06 +0200
-Message-ID: <CAG48ez3EOwLd8A6Ku53vKLdofmZAh1ZYfkK4rVgSgM8ZfcR4zg@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/5] mm: process_vm_mmap() -- syscall for duplication
- a process mapping
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@suse.com>, keith.busch@intel.com,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        pasha.tatashin@oracle.com,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        ira.weiny@intel.com, Andrey Konovalov <andreyknvl@google.com>,
-        arunks@codeaurora.org, Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Lameter <cl@linux.com>,
-        Rik van Riel <riel@surriel.com>,
-        Kees Cook <keescook@chromium.org>, hannes@cmpxchg.org,
-        npiggin@gmail.com,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        daniel.m.jordan@oracle.com,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190516023050.GA23200@sol.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 5:11 PM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
-> This patchset adds a new syscall, which makes possible
-> to clone a mapping from a process to another process.
-> The syscall supplements the functionality provided
-> by process_vm_writev() and process_vm_readv() syscalls,
-> and it may be useful in many situation.
-[...]
-> The proposed syscall aims to introduce an interface, which
-> supplements currently existing process_vm_writev() and
-> process_vm_readv(), and allows to solve the problem with
-> anonymous memory transfer. The above example may be rewritten as:
->
->         void *buf;
->
->         buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
->                    MAP_PRIVATE|MAP_ANONYMOUS, ...);
->         recv(sock, buf, n * PAGE_SIZE, 0);
->
->         /* Sign of @pid is direction: "from @pid task to current" or vice versa. */
->         process_vm_mmap(-pid, buf, n * PAGE_SIZE, remote_addr, PVMMAP_FIXED);
->         munmap(buf, n * PAGE_SIZE);
 
-In this specific example, an alternative would be to splice() from the
-socket into /proc/$pid/mem, or something like that, right?
-proc_mem_operations has no ->splice_read() at the moment, and it'd
-need that to be more efficient, but that could be built without
-creating new UAPI, right?
 
-But I guess maybe your workload is not that simple? What do you
-actually do with the received data between receiving it and shoving it
-over into the other process?
+Le 16/05/2019 à 04:30, Eric Biggers a écrit :
+> On Wed, May 15, 2019 at 08:49:48PM +0200, Christophe Leroy wrote:
+>>
+>>
+>> Le 15/05/2019 à 16:05, Horia Geanta a écrit :
+>>> On 5/15/2019 3:29 PM, Christophe Leroy wrote:
+>>>> Selftests report the following:
+>>>>
+>>>> [    2.984845] alg: skcipher: cbc-aes-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+>>>> [    2.995377] 00000000: 3d af ba 42 9d 9e b4 30 b4 22 da 80 2c 9f ac 41
+>>>> [    3.032673] alg: skcipher: cbc-des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+>>>> [    3.043185] 00000000: fe dc ba 98 76 54 32 10
+>>>> [    3.063238] alg: skcipher: cbc-3des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
+>>>> [    3.073818] 00000000: 7d 33 88 93 0f 93 b2 42
+>>>>
+>>>> This above dumps show that the actual output IV is indeed the input IV.
+>>>> This is due to the IV not being copied back into the request.
+>>>>
+>>>> This patch fixes that.
+>>>>
+>>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>>> Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
+>>
+>> It's missing a Fixes: tag and a Cc: to stable.
+>>
+>> I'll resend tomorrow.
+>>
+>>>
+>>> While here, could you please check ecb mode (which by definition does not have
+>>> an IV) is behaving correctly?
+>>> Looking in driver_algs[] list of crypto algorithms supported by talitos,
+>>> ecb(aes,des,3des) are declared with ivsize != 0.
+>>
+>> According to /proc/crypto, test are passed for ecb.
+>>
+> 
+> Did you try enabling CONFIG_CRYPTO_MANAGER_EXTRA_TESTS?  There is now a check
+> that the driver's ivsize matches the generic implementation's:
+> 
+>          if (ivsize != crypto_skcipher_ivsize(generic_tfm)) {
+>                  pr_err("alg: skcipher: ivsize for %s (%u) doesn't match generic impl (%u)\n",
+>                         driver, ivsize, crypto_skcipher_ivsize(generic_tfm));
+>                  err = -EINVAL;
+>                  goto out;
+>          }
+> 
+> For ECB that means the ivsize must be 0.
+> 
+> AFAICS the talitos driver even accesses the IV for ECB, which is wrong; and the
+> only reason this isn't crashing the self-tests already is that they are confused
+> by the declared ivsize being nonzero so they don't pass NULL as they should.
+> 
+
+Ok, thanks. I'll try and run EXTRA TESTS as soon as I get the current 
+test all fixed.
+
+For the time being, I'm having a problem that I'm a bit lost with:
+
+AEAD decryption fails at the moment for out-of-line tests, and the 
+reason is that the ICV (used to do the SW compare with the expected one) 
+is generated after the decrypted data.
+It works perfectly when src == dst, because the src has space for it, 
+but when the dst is different, the dst length is smaller so the ICV is 
+generated outside the sg list, and the comparison fails because the 
+comparison is done with the last bytes of the last segment of dst sg 
+list (which corresponds to the end of decrypted data in that case).
+
+What I'm having hard time with it that it seems that when the sg list 
+has several elements, it uses an out of line area for generating the ICV 
+but not when the sg list has only one element. I'm really wondering why.
+
+Thanks
+Christophe
