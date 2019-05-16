@@ -2,61 +2,59 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D77C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2151BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C0C20833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B0C2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558006889;
-	bh=CaOX8HMPFwv8yZnzHXXt2cK0AbeaTHQTOz1dQJgJDJU=;
+	s=default; t=1558006896;
+	bh=R2GJCRDzEZi/wpp1SYt48AKWooG/wtfAJwI9/Bm/QMg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JTZhJhq0QGOVaUIjsWCYXrHwwSS2s/21CdsG+NC+3TyaWFBDxFuRQiV0VR2u9FKW2
-	 tpHOpSQJ5SHV9haL+ZAVlRGrl7NeGzu+EoHlAR1MJh2dIpfcDhzoTSJzNjFJqFvdaO
-	 xlZZklk+cU7LGXcQbtuL1WA+zdaqGji/X/5FUQEk=
+	b=B1pMExUbvf48r0x+H+UyCgdYvBZLPZR/l+Lny66KwYF8R/HmSPDol7STdCZaaT0+U
+	 dPKGJkzKa36Dy37WAmj6JobKIaQ/4u0TecZmFSuqxvgYhXq13ljNnpsI6vOusFiDpq
+	 VB5x8oMTXNtDhUGaFes7+aQs+E6QPfB2Uu8vnFxA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbfEPLl2 (ORCPT
+        id S1728233AbfEPLlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:41:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50126 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:41:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728167AbfEPLlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:41:25 -0400
+        id S1728208AbfEPLle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:41:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A116D20848;
-        Thu, 16 May 2019 11:41:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77A2420833;
+        Thu, 16 May 2019 11:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006884;
-        bh=CaOX8HMPFwv8yZnzHXXt2cK0AbeaTHQTOz1dQJgJDJU=;
+        s=default; t=1558006893;
+        bh=R2GJCRDzEZi/wpp1SYt48AKWooG/wtfAJwI9/Bm/QMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JxS0y/OwZWXYLTdQtX0iMDzF2FAcalOWWWKs0Ncr8pZkKSP24pXetnqdHBldBAq4x
-         j6qiFdusMYv9Pz7f/2gKfFCDluZGLkpPFzj12AeLDIFyxR2HRng1sYwmfPKE/84YJW
-         A1/ffi1AYTknbv7cpC0LM3TpUDtSgGxmbSNtl8HY=
+        b=vNW44WhmQGg/+G14W2rKjooSQbhRAPaZWAQHQwjKqYgs8dXw0RjQNoexm/Bjr8cHZ
+         Pb7lKmzvz32jCQqknleDiAFYr6sgDP50Nwag3wuJ+n6AjOhh+xDQHn/TBLcIsGFgnD
+         kWBTalfJQN3zVed8v53l5cUfMDNzfCM8lYqzVcSU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Tobin C. Harding" <tobin@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 13/16] sched/cpufreq: Fix kobject memleak
-Date:   Thu, 16 May 2019 07:41:04 -0400
-Message-Id: <20190516114107.8963-13-sashal@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>,
+        linux-snps-arc@lists.infradead.org,
+        Namhyung Kim <namhyung@kernel.org>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 16/16] perf bench numa: Add define for RUSAGE_THREAD if not present
+Date:   Thu, 16 May 2019 07:41:07 -0400
+Message-Id: <20190516114107.8963-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516114107.8963-1-sashal@kernel.org>
 References: <20190516114107.8963-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,45 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Tobin C. Harding" <tobin@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-[ Upstream commit 9a4f26cc98d81b67ecc23b890c28e2df324e29f3 ]
+[ Upstream commit bf561d3c13423fc54daa19b5d49dc15fafdb7acc ]
 
-Currently the error return path from kobject_init_and_add() is not
-followed by a call to kobject_put() - which means we are leaking
-the kobject.
+While cross building perf to the ARC architecture on a fedora 30 host,
+we were failing with:
 
-Fix it by adding a call to kobject_put() in the error path of
-kobject_init_and_add().
+      CC       /tmp/build/perf/bench/numa.o
+  bench/numa.c: In function ‘worker_thread’:
+  bench/numa.c:1261:12: error: ‘RUSAGE_THREAD’ undeclared (first use in this function); did you mean ‘SIGEV_THREAD’?
+    getrusage(RUSAGE_THREAD, &rusage);
+              ^~~~~~~~~~~~~
+              SIGEV_THREAD
+  bench/numa.c:1261:12: note: each undeclared identifier is reported only once for each function it appears in
 
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tobin C. Harding <tobin@kernel.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Link: http://lkml.kernel.org/r/20190430001144.24890-1-tobin@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+[perfbuilder@60d5802468f6 perf]$ /arc_gnu_2019.03-rc1_prebuilt_uclibc_le_archs_linux_install/bin/arc-linux-gcc --version | head -1
+arc-linux-gcc (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1) 8.3.1 20190225
+[perfbuilder@60d5802468f6 perf]$
+
+Trying to reproduce a report by Vineet, I noticed that, with just
+cross-built zlib and numactl libraries, I ended up with the above
+failure.
+
+So, since RUSAGE_THREAD is available as a define, check for that and
+numactl libraries, I ended up with the above failure.
+
+So, since RUSAGE_THREAD is available as a define in the system headers,
+check if it is defined in the 'perf bench numa' sources and define it if
+not.
+
+Now it builds and I have to figure out if the problem reported by Vineet
+only takes place if we have libelf or some other library available.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: linux-snps-arc@lists.infradead.org
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Link: https://lkml.kernel.org/n/tip-2wb4r1gir9xrevbpq7qp0amk@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/cpufreq_schedutil.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/bench/numa.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index b314c9eaa71d3..f8c45d30ec6d0 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -600,6 +600,7 @@ static int sugov_init(struct cpufreq_policy *policy)
- 	return 0;
+diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+index 0afcc7eccc619..997875c770b10 100644
+--- a/tools/perf/bench/numa.c
++++ b/tools/perf/bench/numa.c
+@@ -38,6 +38,10 @@
+ #include <numa.h>
+ #include <numaif.h>
  
- fail:
-+	kobject_put(&tunables->attr_set.kobj);
- 	policy->governor_data = NULL;
- 	sugov_tunables_free(tunables);
- 
++#ifndef RUSAGE_THREAD
++# define RUSAGE_THREAD 1
++#endif
++
+ /*
+  * Regular printout to the terminal, supressed if -q is specified:
+  */
 -- 
 2.20.1
 
