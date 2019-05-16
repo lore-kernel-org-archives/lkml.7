@@ -2,242 +2,115 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD89FC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EF7C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB112082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CCDC2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:21:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfEPOUR (ORCPT
+        id S1727006AbfEPOVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:20:17 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40574 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfEPOUQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:20:16 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h4so3619017wre.7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 07:20:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ctvVQmdp/+3DlTEoEjBJpR8lgxdRXW/8ilCZfl4pfR8=;
-        b=Bxdm7acmXiY3EC5ZJTl+wLozpu3lAZC1FzM6q2NMJP+644YMBiN+oRkdCs69aFSRsW
-         2l9OnWsctYT+JdQmT5fJArm/Exj3glATL7c6kUf8K+2LeaWIUly58IvLobBlSfHkTTfh
-         hMauvaZgwXkKWsMgdQF52X+xaYxzOyyxxKD1HfrQTwuIRAE1SawvcIg3gzDGQ5sOd4OZ
-         +p8bUoGg2g8XZpiaGIoLUk49YEEUziz/xTsSgcBzlfGwDkK+lRjySKp2r8Hpq1pVuuOl
-         wekNUaMjvAk9/z8U2twIl9SiIFsIE48rhBwqMwjvGvrTi6MRYkk+l7JUyw1t3LsXub1a
-         8KNw==
-X-Gm-Message-State: APjAAAVNUR07/52XsXw4rVlgP0Ax3d+kM30W2xoLmSqXfLIIYub8fzGB
-        ArxchHyV/yhAo9qHfj4Hnr3njQ==
-X-Google-Smtp-Source: APXvYqy0dFWLfD16rJATaEZWOpkMhoKfQ9XY0KhSeaf4XlwLXJ5jVr6Y8jqArL2niVKWl9/+M+mu1Q==
-X-Received: by 2002:a5d:434c:: with SMTP id u12mr5534937wrr.92.1558016415071;
-        Thu, 16 May 2019 07:20:15 -0700 (PDT)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id w13sm9370113wmk.0.2019.05.16.07.20.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 May 2019 07:20:13 -0700 (PDT)
-Date:   Thu, 16 May 2019 16:20:13 +0200
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Hugh Dickins <hughd@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Greg KH <greg@kroah.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Timofey Titovets <nefelim4ag@gmail.com>,
-        Aaron Tomlin <atomlin@redhat.com>,
-        Grzegorz Halat <ghalat@redhat.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [PATCH RFC 4/5] mm/ksm, proc: introduce remote merge
-Message-ID: <20190516142013.sf2vitmksvbkb33f@butterfly.localdomain>
-References: <20190516094234.9116-1-oleksandr@redhat.com>
- <20190516094234.9116-5-oleksandr@redhat.com>
- <CAG48ez2yXw_PJXO-mS=Qw5rkLpG6zDPd0saMhhGk09-du2bpaA@mail.gmail.com>
+        Thu, 16 May 2019 10:21:03 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47398 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726687AbfEPOVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 10:21:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 599B11715;
+        Thu, 16 May 2019 07:21:02 -0700 (PDT)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21BAB3F71E;
+        Thu, 16 May 2019 07:21:00 -0700 (PDT)
+Subject: Re: Bad virt_to_phys since commit 54c7a8916a887f35
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+References: <20190516133820.GA43059@lakrids.cambridge.arm.com>
+ <20190516134105.GB43059@lakrids.cambridge.arm.com>
+ <e70ead93-2fe9-faf9-9e77-9df15809bad6@arm.com>
+ <20190516141640.GC43059@lakrids.cambridge.arm.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <d265e5fe-c061-17a0-427d-0e6f31be17f3@arm.com>
+Date:   Thu, 16 May 2019 15:20:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez2yXw_PJXO-mS=Qw5rkLpG6zDPd0saMhhGk09-du2bpaA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190516141640.GC43059@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
-
-On Thu, May 16, 2019 at 12:00:24PM +0200, Jann Horn wrote:
-> On Thu, May 16, 2019 at 11:43 AM Oleksandr Natalenko
-> <oleksandr@redhat.com> wrote:
-> > Use previously introduced remote madvise knob to mark task's
-> > anonymous memory as mergeable.
-> >
-> > To force merging task's VMAs, "merge" hint is used:
-> >
-> >    # echo merge > /proc/<pid>/madvise
-> >
-> > Force unmerging is done similarly:
-> >
-> >    # echo unmerge > /proc/<pid>/madvise
-> >
-> > To achieve this, previously introduced ksm_madvise_*() helpers
-> > are used.
+On 16/05/2019 15:16, Mark Rutland wrote:
+> On Thu, May 16, 2019 at 03:05:31PM +0100, Steven Price wrote:
+>> On 16/05/2019 14:41, Mark Rutland wrote:
+>>> On Thu, May 16, 2019 at 02:38:20PM +0100, Mark Rutland wrote:
+>>>> Hi,
+>>>>
+>>>> Since commit:
+>>>>
+>>>>   54c7a8916a887f35 ("initramfs: free initrd memory if opening /initrd.image fails")
+>>>
+>>> Ugh, I dropped a paragarph here.
+>>>
+>>> Since that commit, I'm seeing a boot-time splat on arm64 when using
+>>> CONFIG_DEBUG_VIRTUAL. I'm running an arm64 syzkaller instance, and this
+>>> kills the VM, preventing further testing, which is unfortunate.
+>>>
+>>> Mark.
+>>>
+>>>> IIUC prior to that commit, we'd only attempt to free an intird if we had
+>>>> one, whereas now we do so unconditionally. AFAICT, in this case
+>>>> initrd_start has not been initialized (I'm not using an initrd or
+>>>> initramfs on my system), so we end up trying virt_to_phys() on a bogus
+>>>> VA in free_initrd_mem().
+>>>>
+>>>> Any ideas on the right way to fix this?
+>>
+>> Your analysis looks right to me. In my review I'd managed to spot the
+>> change in behaviour when CONFIG_INITRAMFS_FORCE is set (the initrd is
+>> freed), but I'd overlooked what happens if initrd_start == 0 (the
+>> non-existent initrd is attempted to be freed).
+>>
+>> I suspect the following is sufficient to fix the problem:
+>>
+>> ----8<-----
+>> diff --git a/init/initramfs.c b/init/initramfs.c
+>> index 435a428c2af1..178130fd61c2 100644
+>> --- a/init/initramfs.c
+>> +++ b/init/initramfs.c
+>> @@ -669,7 +669,7 @@ static int __init populate_rootfs(void)
+>>  	 * If the initrd region is overlapped with crashkernel reserved region,
+>>  	 * free only memory that is not part of crashkernel region.
+>>  	 */
+>> -	if (!do_retain_initrd && !kexec_free_initrd())
+>> +	if (!do_retain_initrd && initrd_start && !kexec_free_initrd())
+>>  		free_initrd_mem(initrd_start, initrd_end);
+>>  	initrd_start = 0;
+>>  	initrd_end = 0;
 > 
-> Why does this not require PTRACE_MODE_ATTACH_FSCREDS to the target
-> process? Enabling KSM on another process is hazardous because it
-> significantly increases the attack surface for side channels.
+> That works for me. If you spin this as a real patch:
 > 
-> (Note that if you change this to require PTRACE_MODE_ATTACH_FSCREDS,
-> you'll want to use mm_access() in the ->open handler and drop the mm
-> in ->release. mm_access() from a ->write handler is not permitted.)
-
-Sounds reasonable. So, something similar to what mem_open() & friends do
-now:
-
-static int madvise_open(...)
-...
-	struct task_struct *task = get_proc_task(inode);
-...
-	if (task) {
-		mm = mm_access(task, PTRACE_MODE_ATTACH_FSCREDS);
-		put_task_struct(task);
-		if (!IS_ERR_OR_NULL(mm)) {
-			mmgrab(mm);
-			mmput(mm);
-...
-
-Then:
-
-static ssize_t madvise_write(...)
-...
-	if (!mmget_not_zero(mm))
-		goto out;
-
-	down_write(&mm->mmap_sem);
-	if (!mmget_still_valid(mm))
-		goto skip_mm;
-...
-skip_mm:
-	up_write(&mm->mmap_sem);
-
-	mmput(mm);
-out:
-	return ...;
-
-And, finally:
-
-static int madvise_release(...)
-...
-		mmdrop(mm);
-...
-
-Right?
-
-> [...]
-> > @@ -2960,15 +2962,63 @@ static int proc_stack_depth(struct seq_file *m, struct pid_namespace *ns,
-> >  static ssize_t madvise_write(struct file *file, const char __user *buf,
-> >                 size_t count, loff_t *ppos)
-> >  {
-> > +       /* For now, only KSM hints are implemented */
-> > +#ifdef CONFIG_KSM
-> > +       char buffer[PROC_NUMBUF];
-> > +       int behaviour;
-> >         struct task_struct *task;
-> > +       struct mm_struct *mm;
-> > +       int err = 0;
-> > +       struct vm_area_struct *vma;
-> > +
-> > +       memset(buffer, 0, sizeof(buffer));
-> > +       if (count > sizeof(buffer) - 1)
-> > +               count = sizeof(buffer) - 1;
-> > +       if (copy_from_user(buffer, buf, count))
-> > +               return -EFAULT;
-> > +
-> > +       if (!memcmp("merge", buffer, min(sizeof("merge")-1, count)))
+> Tested-by: Mark Rutland <mark.rutland@arm.com>
 > 
-> This means that you also match on something like "mergeblah". Just use strcmp().
+> As I mentioned, initrd_start has not been initialized at all, so I
+> suspect we should also update its declaration in init/do_mounts_initrd.c
+> such that it is guaranteed to be initialized to zero. We get away with
+> that today, but that won't necessarily hold with LTO and so on...
 
-I agree. Just to make it more interesting I must say that
+Well it's a global variable, so the C standard says it should be
+initialised to 0...
 
-   /sys/kernel/mm/transparent_hugepage/enabled
+I'll spin a real patch and add your Tested-by
 
-uses memcmp in the very same way, and thus echoing "alwaysssss" or
-"madviseeee" works perfectly there, and it was like that from the very
-beginning, it seems. Should we fix it, or it became (zomg) a public API?
-
-> > +               behaviour = MADV_MERGEABLE;
-> > +       else if (!memcmp("unmerge", buffer, min(sizeof("unmerge")-1, count)))
-> > +               behaviour = MADV_UNMERGEABLE;
-> > +       else
-> > +               return -EINVAL;
-> >
-> >         task = get_proc_task(file_inode(file));
-> >         if (!task)
-> >                 return -ESRCH;
-> >
-> > +       mm = get_task_mm(task);
-> > +       if (!mm) {
-> > +               err = -EINVAL;
-> > +               goto out_put_task_struct;
-> > +       }
-> > +
-> > +       down_write(&mm->mmap_sem);
-> 
-> Should a check for mmget_still_valid(mm) be inserted here? See commit
-> 04f5866e41fb70690e28397487d8bd8eea7d712a.
-
-Yeah, it seems so :/. Thanks for the pointer. I've put it into the
-madvise_write snippet above.
-
-> > +       switch (behaviour) {
-> > +       case MADV_MERGEABLE:
-> > +       case MADV_UNMERGEABLE:
-> 
-> This switch isn't actually necessary at this point, right?
-
-Yup, but it is there to highlight a possibility of adding other, non-KSM
-options. So, let it be, and I'll just re-arrange CONFIG_KSM ifdef
-instead.
-
-Thank you.
-
-> > +               vma = mm->mmap;
-> > +               while (vma) {
-> > +                       if (behaviour == MADV_MERGEABLE)
-> > +                               ksm_madvise_merge(vma->vm_mm, vma, &vma->vm_flags);
-> > +                       else
-> > +                               ksm_madvise_unmerge(vma, vma->vm_start, vma->vm_end, &vma->vm_flags);
-> > +                       vma = vma->vm_next;
-> > +               }
-> > +               break;
-> > +       }
-> > +       up_write(&mm->mmap_sem);
-> > +
-> > +       mmput(mm);
-> > +
-> > +out_put_task_struct:
-> >         put_task_struct(task);
-> >
-> > -       return count;
-> > +       return err ? err : count;
-> > +#else
-> > +       return -EINVAL;
-> > +#endif /* CONFIG_KSM */
-> >  }
-
--- 
-  Best regards,
-    Oleksandr Natalenko (post-factum)
-    Senior Software Maintenance Engineer
+Steve
