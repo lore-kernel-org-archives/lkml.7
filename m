@@ -2,81 +2,140 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5830EC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:37:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A16C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BDAE205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:37:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="FEZMG5jo"
+	by mail.kernel.org (Postfix) with ESMTP id BF8302087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:37:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfEPIhN (ORCPT
+        id S1726772AbfEPIhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 04:37:13 -0400
-Received: from mail-wm1-f41.google.com ([209.85.128.41]:52450 "EHLO
-        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726383AbfEPIhN (ORCPT
+        Thu, 16 May 2019 04:37:24 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47111 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726537AbfEPIhW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 04:37:13 -0400
-Received: by mail-wm1-f41.google.com with SMTP id y3so2658243wmm.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:37:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=X0zkQaio+t3Isoa+1OzyKr46ojREpowq03WuCew/y+o=;
-        b=FEZMG5jokgF9IM3MW63+oH/owSHc9Mt7X0CRnpU2pQrFi2C9epmpieOJRTfULKW8s0
-         1yEWzGF8PxCNCDcZIJv8ZcJDpWAYVe7gxLxMyku6POisarXUUXGoKtFteQLW3OFA5xjj
-         vAk14fhTC6TniuPsQ1mJxrOZj89VvR0Ecnrn3LHm/SL6QwMZECtF9JMuq1rPzhJ/l1Rj
-         YIYCSwuFdOWpqbDWX9tW23cCzlXh5HvaYL+s8iDAwcnvid8INbGQIRNfkNRUCnGkbGql
-         E9+bG2syI737jg0HTlcqqduUo/+gtPZecsKZRufDJiK016wgQXfmDKlEP2eRoawi2F6U
-         ihvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=X0zkQaio+t3Isoa+1OzyKr46ojREpowq03WuCew/y+o=;
-        b=ufckwhNILuwxNyQmz+IerB0A7QC4TkQGabzDHac4GMqQEj274tQ22yp7/6hCgtQ9Er
-         +kOPlHBtDy2qxMl60cZrBdiAO2YIBdTlSmlD9+dG+DukYzIyCSaw92kH+jQ388/pZixL
-         9REvvSLIwjA5UHwmSvj6rPlv4H2XrPGnTfLmlJTYloNsKYsugrQqIqt3NZwrTtKtTktE
-         CPBo77Q3k51cEeInn0IGtge4YqFzaxmW8RxVVcF8W5+s2cL4Sy1UI3ZpDyFbtEkk6lbM
-         bpxJ8D8uBY9XB3OEyhX4TTrQ4uQ78WrwPjECk9rcqe+VcALBvoeAJe07i846ObWkpFqm
-         Ybcw==
-X-Gm-Message-State: APjAAAV4V0tpOhfpnBsqwhfskNzDKXTYArUGrolgPzwv+dwJ3rKkaK/l
-        HOMo+BKBgXYS57PmlCohfSr+NOOvE3Wd7HnCIM+HKg==
-X-Google-Smtp-Source: APXvYqwF/2nWsGeagMYdw12EOcPA7geybvIqDdQIDsyNg9/UrIHWZzvOollMCLoIZ/RPJoJ3i9bQyYfjRnoOCEeVK/4=
-X-Received: by 2002:a1c:a64e:: with SMTP id p75mr16072945wme.62.1557995831226;
- Thu, 16 May 2019 01:37:11 -0700 (PDT)
+        Thu, 16 May 2019 04:37:22 -0400
+Received: from litschi.hi.pengutronix.de ([2001:67c:670:100:feaa:14ff:fe6a:8db5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <m.tretter@pengutronix.de>)
+        id 1hRBtA-0003B4-8Q; Thu, 16 May 2019 10:37:20 +0200
+Date:   Thu, 16 May 2019 10:37:15 +0200
+From:   Michael Tretter <m.tretter@pengutronix.de>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Pawel Osciak <posciak@chromium.org>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Kamil Debski <kamil@wypas.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jeongtae Park <jtp.park@samsung.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "Tiffany Lin (=?UTF-8?B?5p6X5oWn54+K?=)" <tiffany.lin@mediatek.com>,
+        "Andrew-CT Chen (=?UTF-8?B?6Zmz5pm66L+q?=)" 
+        <andrew-ct.chen@mediatek.com>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Todor Tomov <todor.tomov@linaro.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        dave.stevenson@raspberrypi.org,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Maxime Jourdan <maxi.jourdan@wanadoo.fr>
+Subject: Re: [PATCH v3 2/2] media: docs-rst: Document memory-to-memory video
+ encoder interface
+Message-ID: <20190516103715.283face8@litschi.hi.pengutronix.de>
+In-Reply-To: <20190514081204.GA132745@chromium.org>
+References: <20190124100419.26492-1-tfiga@chromium.org>
+ <20190124100419.26492-3-tfiga@chromium.org>
+ <20190430193412.4291fca8@litschi.hi.pengutronix.de>
+ <20190514081204.GA132745@chromium.org>
+Organization: Pengutronix
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20190516075656.25880-1-yuehaibing@huawei.com>
-In-Reply-To: <20190516075656.25880-1-yuehaibing@huawei.com>
-From:   Axel Lin <axel.lin@ingics.com>
-Date:   Thu, 16 May 2019 16:36:59 +0800
-Message-ID: <CAFRkauCSzkuNUugsfGY8jvcy-2hd-LfkuerJi56V3OM6oHu3yw@mail.gmail.com>
-Subject: Re: [PATCH] spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Alban Bedel <albeu@free.fr>, lorenzo.bianconi@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:feaa:14ff:fe6a:8db5
+X-SA-Exim-Mail-From: m.tretter@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-YueHaibing <yuehaibing@huawei.com> =E6=96=BC 2019=E5=B9=B45=E6=9C=8816=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=883:57=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> If spi_register_master fails in spi_bitbang_start
-> because device_add failure, We should return the
-> error code other than 0, otherwise calling
-> spi_bitbang_stop may trigger NULL pointer dereference
-> like this:
+On Tue, 14 May 2019 17:12:04 +0900, Tomasz Figa wrote:
+> Hi Michael,
+> 
+> On Tue, Apr 30, 2019 at 07:34:12PM +0200, Michael Tretter wrote:
+> > On Thu, 24 Jan 2019 19:04:19 +0900, Tomasz Figa wrote:  
+> 
+> [snip]
+> 
+> > > +State machine
+> > > +=============
+> > > +
+> > > +.. kernel-render:: DOT
+> > > +   :alt: DOT digraph of encoder state machine
+> > > +   :caption: Encoder state machine
+> > > +
+> > > +   digraph encoder_state_machine {
+> > > +       node [shape = doublecircle, label="Encoding"] Encoding;
+> > > +
+> > > +       node [shape = circle, label="Initialization"] Initialization;
+> > > +       node [shape = circle, label="Stopped"] Stopped;
+> > > +       node [shape = circle, label="Drain"] Drain;
+> > > +       node [shape = circle, label="Reset"] Reset;
+> > > +
+> > > +       node [shape = point]; qi
+> > > +       qi -> Initialization [ label = "open()" ];
+> > > +
+> > > +       Initialization -> Encoding [ label = "Both queues streaming" ];
+> > > +
+> > > +       Encoding -> Drain [ label = "V4L2_DEC_CMD_STOP" ];
+> > > +       Encoding -> Reset [ label = "VIDIOC_STREAMOFF(CAPTURE)" ];
+> > > +       Encoding -> Stopped [ label = "VIDIOC_STREAMOFF(OUTPUT)" ];
+> > > +       Encoding -> Encoding;
+> > > +
+> > > +       Drain -> Stopped [ label = "All CAPTURE\nbuffers dequeued\nor\nVIDIOC_STREAMOFF(CAPTURE)" ];  
+> > 
+> > Shouldn't this be
+> > 
+> > 	Drain -> Stopped [ label = "All OUTPUT\nbuffers dequeued\nor\nVIDIOC_STREAMOFF(OUTPUT)" ];
+> > 
+> > ? While draining, the encoder continues encoding until all source
+> > buffers, i.e., buffers in the OUTPUT queue, are encoded or STREAMOFF
+> > happens on the OUTPUT queue. At the same time, the client continues to
+> > queue and dequeue buffers on the CAPTURE queue and there might be
+> > buffers queued on the CAPTURE queue even if the driver returned the
+> > buffer with the FLAG_LAST set and returns -EPIPE on further DQBUF
+> > requests.
+> >  
+> 
+> The STREAMOFF should be on OUTPUT indeed, because that immediately
+> removes any OUTPUT buffers from the queue, so there is nothing to be
+> encoded to wait for anymore.
+> 
+> The "All OUTPUT buffers dequeued" part is correct, though. The last
+> OUTPUT buffer in the flush sequence is considered encoded after the
+> application dequeues the corresponding CAPTURE buffer is dequeued and
+> that buffer is marked with the V4L2_BUF_FLAG_LAST flag.
 
-Reviewed-by: Axel Lin <axel.lin@ingics.com>
+I understand. As the application continues to queue and dequeue buffers
+on the CAPTURE queue until it received the last CAPTURE buffer and cannot
+dequeue further CAPTURE buffers, "All CAPTURE buffers dequeued" is
+correct. Thanks for the clarification.
+
+Michael
+
+> 
+> Best regards,
+> Tomasz
+> 
