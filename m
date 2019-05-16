@@ -2,113 +2,157 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90519C46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D088FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EAA12082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AEEB20818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:00:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfEPL7s (ORCPT
+        id S1727492AbfEPL77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:59:48 -0400
-Received: from mail.monom.org ([188.138.9.77]:44448 "EHLO mail.monom.org"
+        Thu, 16 May 2019 07:59:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42668 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbfEPL7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:59:48 -0400
-Received: from mail.monom.org (localhost [127.0.0.1])
-        by filter.mynetwork.local (Postfix) with ESMTP id 2871C5006D0;
-        Thu, 16 May 2019 13:59:45 +0200 (CEST)
-Received: from [127.0.0.1] (mail.monom.org [188.138.9.77])
-        by mail.monom.org (Postfix) with ESMTPSA id D82B250051C;
-        Thu, 16 May 2019 13:59:43 +0200 (CEST)
-Subject: Re: [PATCH 4.4 000/266] 4.4.180-stable review
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, linux-tegra <linux-tegra@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>
-References: <20190515090722.696531131@linuxfoundation.org>
- <f32de22f-c928-2eaa-ee3f-d2b26c184dd4@nvidia.com>
-From:   Daniel Wagner <wagi@monom.org>
-Message-ID: <75c1f549-9098-933e-ab8b-4d0eeab87ddd@monom.org>
-Date:   Thu, 16 May 2019 13:59:43 +0200
+        id S1727281AbfEPL77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:59:59 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 61F213082135;
+        Thu, 16 May 2019 11:59:58 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-116-68.ams2.redhat.com [10.36.116.68])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 389AE60619;
+        Thu, 16 May 2019 11:59:51 +0000 (UTC)
+Subject: Re: [RFC PATCH 2/4] KVM: selftests: Align memory region addresses to
+ 1M on s390x
+To:     David Hildenbrand <david@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-s390@vger.kernel.org
+References: <20190516111253.4494-1-thuth@redhat.com>
+ <20190516111253.4494-3-thuth@redhat.com>
+ <d9c383ef-6f4b-4f51-b627-7565a67005d3@redhat.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=thuth@redhat.com; keydata=
+ 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
+Organization: Red Hat
+Message-ID: <395e1b02-09b7-9420-33e1-a3abb36282f0@redhat.com>
+Date:   Thu, 16 May 2019 13:59:50 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <f32de22f-c928-2eaa-ee3f-d2b26c184dd4@nvidia.com>
+In-Reply-To: <d9c383ef-6f4b-4f51-b627-7565a67005d3@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 16 May 2019 11:59:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jon,
+On 16/05/2019 13.30, David Hildenbrand wrote:
+> On 16.05.19 13:12, Thomas Huth wrote:
+>> On s390x, there is a constraint that memory regions have to be aligned
+>> to 1M (or running the VM will fail). Introduce a new "alignment" variable
+>> in the vm_userspace_mem_region_add() function which now can be used for
+>> both, huge page and s390x alignment requirements.
+>>
+>> Signed-off-by: Thomas Huth <thuth@redhat.com>
+>> ---
+>>  tools/testing/selftests/kvm/lib/kvm_util.c | 21 +++++++++++++++++-----
+>>  1 file changed, 16 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+>> index 8d63ccb93e10..64a0da6efe3d 100644
+>> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+>> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+>> @@ -559,6 +559,7 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
+>>  	unsigned long pmem_size = 0;
+>>  	struct userspace_mem_region *region;
+>>  	size_t huge_page_size = KVM_UTIL_PGS_PER_HUGEPG * vm->page_size;
+>> +	size_t alignment;
+>>  
+>>  	TEST_ASSERT((guest_paddr % vm->page_size) == 0, "Guest physical "
+>>  		"address not on a page boundary.\n"
+>> @@ -608,9 +609,20 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
+>>  	TEST_ASSERT(region != NULL, "Insufficient Memory");
+>>  	region->mmap_size = npages * vm->page_size;
+>>  
+>> -	/* Enough memory to align up to a huge page. */
+>> +#ifdef __s390x__
+>> +	/* On s390x, the host address must be aligned to 1M (due to PGSTEs) */
+>> +	alignment = 0x100000;
+> 
+> This corresponds to huge_page_size, maybe you can exploit this fact here.
+> 
+> Something like
+> 
+> alignment = 1;
+> 
+> /* On s390x, the host address must always be aligned to the THP size */
+> #ifndef __s390x__
+> if (src_type == VM_MEM_SRC_ANONYMOUS_THP)
+> #endif
+> 	alignment = huge_page_size;
+> 
+> Maybe in a nicer fashion. Not sure.
 
-> Boot regression detected for Tegra ...
-> 
-> Test results for stable-v4.4:
->     6 builds:	6 pass, 0 fail
->     15 boots:	6 pass, 9 fail
->     8 tests:	8 pass, 0 fail
-> 
-> Linux version:	4.4.180-rc1-gbe756da
-> Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
->                 tegra30-cardhu-a04
-> 
-> Bisect is point to the following commit ...
-> 
-> # first bad commit: [7849d64a1700ddae1963ff22a77292e9fb5c2983] mm, vmstat: make quiet_vmstat lighter
-> 
-> Reverting this on top v4.4.180-rc1 fixes the problem.  
+Hmm, but if I've got your explanation on IRC right, it's rather a
+coincidence that the huge page size matches the alignment requirements
+for KVM memslots, isn't it? So I think the code would look rather
+confusing if I'd try to shorten it this way...?
 
-I guess the patch depends on another change. I'll try to figure out what
-is missing.
-
-> Crash observed ...
-> 
-> [   17.155812] ------------[ cut here ]------------
-> [   17.160431] kernel BUG at /home/jonathanh/workdir/tegra/mlt-linux_stable-4.4/kernel/mm/vmstat.c:1425!
-> [   17.169632] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP ARM
-> [   17.175450] Modules linked in: ttm
-> [   17.178859] CPU: 0 PID: 92 Comm: kworker/0:2 Not tainted 4.4.179-00160-g7849d64a1700 #8
-> [   17.186843] Hardware name: NVIDIA Tegra SoC (Flattened Device Tree)
-> [   17.193100] Workqueue: vmstat vmstat_update
-> [   17.197279] task: ee14e700 ti: ee17a000 task.ti: ee17a000
-> [   17.202663] PC is at vmstat_update+0x9c/0xa4
-> [   17.206921] LR is at vmstat_update+0x94/0xa4
-> [   17.211179] pc : [<c00cdd80>]    lr : [<c00cdd78>]    psr: 20000113
-> [   17.211179] sp : ee17bef8  ip : 00000000  fp : eef91ac0
-> [   17.222629] r10: 00000008  r9 : 00000000  r8 : 00000000
-> [   17.227840] r7 : eef99900  r6 : eef91ac0  r5 : eef8f34c  r4 : ee13dc00
-> [   17.234350] r3 : 00000001  r2 : 0000000f  r1 : c0a885e0  r0 : 00000001
-> [   17.240861] Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-> [   17.247978] Control: 10c5387d  Table: ad02006a  DAC: 00000051
-> [   17.253708] Process kworker/0:2 (pid: 92, stack limit = 0xee17a210)
-> [   17.259957] Stack: (0xee17bef8 to 0xee17c000)
-> [   17.264301] bee0:                                                       ee13dc00 eef8f34c
-> [   17.272459] bf00: eef91ac0 c003b69c eef91ac0 ee17a038 c0a4ba60 eef91ac0 eef91ad4 ee17a038
-> [   17.280618] bf20: c0a4ba60 ee13dc18 ee13dc00 00000008 eef91ac0 c003b8f8 00000000 c09f6100
-> [   17.288778] bf40: c003b8b0 ee102a00 00000000 ee13dc00 c003b8b0 00000000 00000000 00000000
-> [   17.296937] bf60: 00000000 c0040ad0 00000000 00000000 00000000 ee13dc00 00000000 00000000
-> [   17.305094] bf80: ee17bf80 ee17bf80 00000000 00000000 ee17bf90 ee17bf90 ee17bfac ee102a00
-> [   17.313253] bfa0: c00409d0 00000000 00000000 c000f650 00000000 00000000 00000000 00000000
-> [   17.321412] bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [   17.329570] bfe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
-> [   17.337733] [<c00cdd80>] (vmstat_update) from [<c003b69c>] (process_one_work+0x124/0x338)
-> [   17.345893] [<c003b69c>] (process_one_work) from [<c003b8f8>] (worker_thread+0x48/0x4c4)
-> [   17.353966] [<c003b8f8>] (worker_thread) from [<c0040ad0>] (kthread+0x100/0x118)
-> [   17.361348] [<c0040ad0>] (kthread) from [<c000f650>] (ret_from_fork+0x14/0x24)
-> [   17.368553] Code: e5930010 eb05c417 e3500000 08bd8070 (e7f001f2) 
-> [   17.374633] ---[ end trace 17cf004302766810 ]---
-
-Thanks,
-Daniel
+ Thomas
