@@ -2,142 +2,93 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F536C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A546BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBA522070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D22B2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbfEPK5r (ORCPT
+        id S1727037AbfEPK5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 06:57:47 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:41656 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726660AbfEPK5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 06:57:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AFAE519BF;
-        Thu, 16 May 2019 03:57:46 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BB31F3F703;
-        Thu, 16 May 2019 03:57:43 -0700 (PDT)
-Date:   Thu, 16 May 2019 11:57:41 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        akpm@linux-foundation.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, mhocko@suse.com, mgorman@techsingularity.net,
-        james.morse@arm.com, robin.murphy@arm.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
-        david@redhat.com, cai@lca.pw, logang@deltatee.com,
-        ira.weiny@intel.com
-Subject: Re: [PATCH V3 4/4] arm64/mm: Enable memory hot remove
-Message-ID: <20190516105741.GC40960@lakrids.cambridge.arm.com>
-References: <1557824407-19092-1-git-send-email-anshuman.khandual@arm.com>
- <1557824407-19092-5-git-send-email-anshuman.khandual@arm.com>
- <20190515114911.GC23983@lakrids.cambridge.arm.com>
- <499ebd4b-c905-dd99-3fc7-66050d89dc35@arm.com>
+        Thu, 16 May 2019 06:57:52 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:41987 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726660AbfEPK5v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 06:57:51 -0400
+Received: by mail-qk1-f196.google.com with SMTP id d4so1917260qkc.9;
+        Thu, 16 May 2019 03:57:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aCf53hCQoTWRnc+iZ0G/hbKzA1wZVJqGhF/yu3TPIjE=;
+        b=gbZ/qRMDZrPE69UC8+4w1zV6JINvrCpjsLbWcwKwzI8UI3CJNjoenAFYH1N2Vpp4RP
+         gJ0f5NKpKdbmpdSvHH8NLcXXJGLStzulS33eBiDk/hJ0PIZybWi+yDNlV85jkBc+eRSq
+         rsVSeLMI4Dr+8nzyNpEkuXtQ3cfSI8Bh1lF9MK3na8eS+dX2GHsKu8Xf9y1x1mVxfjEF
+         VzMB1DfMI/LjlWj2SqE5sxbsQXP/3C6VMaykTpOTdUfw12voknPi+3n2newXT/9RD2sd
+         GjItkfXxQPZ0Et5IFv1mYiP3Jk6OfvkV4TVh9aOaD52NK6tEaW4S7lSAoXrNPpW8BATD
+         T6KQ==
+X-Gm-Message-State: APjAAAU3MtrF1KOg1zE2HUIbv0lDqeV8DomIMCeuiBDghMBhlGi/lfku
+        GHe0Sl48zNyCsCFyfcpRMJBW2fGeyNqjOk3DueM=
+X-Google-Smtp-Source: APXvYqxHUlclMun46EUI6hhWL0uRd1RyH8Yxyp8/vUn1bjtLtEkR/SvlDGi7zqiTh66Giq0qf20Kt0cHa0y9xR0L/WI=
+X-Received: by 2002:a37:ac0a:: with SMTP id e10mr37762394qkm.254.1558004270813;
+ Thu, 16 May 2019 03:57:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <499ebd4b-c905-dd99-3fc7-66050d89dc35@arm.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <20190516085810.31077-1-rpenyaev@suse.de> <20190516085810.31077-14-rpenyaev@suse.de>
+ <CAK8P3a2-fN_BHEnEHvf4X9Ysy4t0_SnJetQLvFU1kFa3OtM0fQ@mail.gmail.com> <41b847c48ccbe0c406bd54c16fbc1bf0@suse.de>
+In-Reply-To: <41b847c48ccbe0c406bd54c16fbc1bf0@suse.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 16 May 2019 12:57:34 +0200
+Message-ID: <CAK8P3a2TqHVyuPpQrghS8LfrvBffavsAFA5XC20Unf89CssRPw@mail.gmail.com>
+Subject: Re: [PATCH v3 13/13] epoll: implement epoll_create2() syscall
+To:     Roman Penyaev <rpenyaev@suse.de>
+Cc:     Azat Khuzhin <azat@libevent.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 11:04:48AM +0530, Anshuman Khandual wrote:
-> On 05/15/2019 05:19 PM, Mark Rutland wrote:
-> > On Tue, May 14, 2019 at 02:30:07PM +0530, Anshuman Khandual wrote:
-> >> Memory removal from an arch perspective involves tearing down two different
-> >> kernel based mappings i.e vmemmap and linear while releasing related page
-> >> table and any mapped pages allocated for given physical memory range to be
-> >> removed.
+On Thu, May 16, 2019 at 12:20 PM Roman Penyaev <rpenyaev@suse.de> wrote:
+>
+> On 2019-05-16 12:03, Arnd Bergmann wrote:
+> > On Thu, May 16, 2019 at 10:59 AM Roman Penyaev <rpenyaev@suse.de>
+> > wrote:
 > >>
-> >> Define a common kernel page table tear down helper remove_pagetable() which
-> >> can be used to unmap given kernel virtual address range. In effect it can
-> >> tear down both vmemap or kernel linear mappings. This new helper is called
-> >> from both vmemamp_free() and ___remove_pgd_mapping() during memory removal.
-> >>
-> >> For linear mapping there are no actual allocated pages which are mapped to
-> >> create the translation. Any pfn on a given entry is derived from physical
-> >> address (__va(PA) --> PA) whose linear translation is to be created. They
-> >> need not be freed as they were never allocated in the first place. But for
-> >> vmemmap which is a real virtual mapping (like vmalloc) physical pages are
-> >> allocated either from buddy or memblock which get mapped in the kernel page
-> >> table. These allocated and mapped pages need to be freed during translation
-> >> tear down. But page table pages need to be freed in both these cases.
-> > 
-> > As previously discussed, we should only hot-remove memory which was
-> > hot-added, so we shouldn't encounter memory allocated from memblock.
-> 
-> Right, not applicable any more. Will drop this word.
-> 
-> >> These mappings need to be differentiated while deciding if a mapped page at
-> >> any level i.e [pte|pmd|pud]_page() should be freed or not. Callers for the
-> >> mapping tear down process should pass on 'sparse_vmap' variable identifying
-> >> kernel vmemmap mappings.
-> > 
-> > I think that you can simplify the paragraphs above down to:
-> > 
-> >   The arch code for hot-remove must tear down portions of the linear map
-> >   and vmemmap corresponding to memory being removed. In both cases the
-> >   page tables mapping these regions must be freed, and when sparse
-> >   vmemmap is in use the memory backing the vmemmap must also be freed.
-> > 
-> >   This patch adds a new remove_pagetable() helper which can be used to
-> >   tear down either region, and calls it from vmemmap_free() and
-> >   ___remove_pgd_mapping(). The sparse_vmap argument determines whether
-> >   the backing memory will be freed.
-> 
-> The current one is bit more descriptive on detail. Anyways will replace with
-> the above writeup if that is preferred.
+> >> epoll_create2() is needed to accept EPOLL_USERPOLL flags
+> >> and size, i.e. this patch wires up polling from userspace.
+> >
+> > Could you add the system call to all syscall*.tbl files at the same
+> > time here?
+>
+> For all other archs, you mean?  Sure.  But what is the rule of thumb?
+> Sometimes people tend to add to the most common x86 and other tables
+> are left untouched, but then you commit the rest, e.g.
+>
+> commit 39036cd2727395c3369b1051005da74059a85317
+> Author: Arnd Bergmann <arnd@arndb.de>
+> Date:   Thu Feb 28 13:59:19 2019 +0100
+>
+>      arch: add pidfd and io_uring syscalls everywhere
 
-I would prefer the suggested form above, as it's easier to extract the
-necessary details from it.
+We only recently introduced syscall.tbl files in a common format,
+which makes it much easier to add new ones. I hope we can
+do it for all architectures right away from now on.
 
-[...]
+I just noticed that the new mount API assigns six new system
+calls as well, but did not use the same numbers across
+architectures. I hope we can still rectify that before -rc1
+and use the next available ones (428..433), then yours should
+be 434 on all architectures, with the exception of arch/alpha.
 
-> >> +static void
-> >> +remove_pagetable(unsigned long start, unsigned long end, bool sparse_vmap)
-> >> +{
-> >> +	unsigned long addr, next;
-> >> +	pud_t *pudp_base;
-> >> +	pgd_t *pgdp;
-> >> +
-> >> +	spin_lock(&init_mm.page_table_lock);
-> > 
-> > It would be good to explain why we need to take the ptl here.
-> 
-> Will update both commit message and add an in-code comment here.
-> 
-> > 
-> > IIUC that shouldn't be necessary for the linear map. Am I mistaken?
-> 
-> Its not absolutely necessary for linear map right now because both memory hot
-> plug & ptdump which modifies or walks the page table ranges respectively take
-> memory hotplug lock. That apart, no other callers creates or destroys linear
-> mapping at runtime.
-> 
-> > 
-> > Is there a specific race when tearing down the vmemmap?
-> 
-> This is trickier than linear map. vmemmap additions would be protected with
-> memory hotplug lock but this can potential collide with vmalloc/IO regions.
-> Even if they dont right now that will be because they dont share intermediate
-> page table levels.
-
-Sure; if we could just state something like:
-
-  The vmemmap region may share levels of table with the vmalloc region.
-  Take the ptl so that we can safely free potentially-sahred tables.
-
-... I think that would be sufficient.
-
-Thanks,
-Mark.
+      Arnd
