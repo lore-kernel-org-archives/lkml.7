@@ -7,49 +7,62 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA814C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7622DC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3EB12166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49B252168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558006816;
-	bh=KJF1ohD+GanVF7AGlDAg7a2PMSbc/5DsGZC2yHEZO0g=;
+	s=default; t=1558006819;
+	bh=Jsp4ZW27gPw6nL7ENlx29FDCLLb0NiL3Wc0CyIRJsbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R2a7UFeTBOqz9rOHfNmwd8bxH1sHtajvyGTU4LHqV6OHXbqht8///905SzQRBKK0c
-	 1ZvEK1B383hfrpPO7Ai/vMQAbaDZ+mFk9xfKNiUZD40t7WKNX2t6/Aqhszhp3ofc0J
-	 LIDkyKUDut+tG/bx/BoPI2l3FI0kIW+VRq6CkVsE=
+	b=1Ssu1dEQ8oSTN9wcrKdhutvE8QvUIJRtxFnd6/kPi3WdXfjkXXEhB8KK6rYt0HCq2
+	 b+atO81rHhWooFSkctIHFPJGIGH7/4yqyUW+1pQ75URKryLcSqL/ZsuUUFnYmHnCnx
+	 BJIL1JFjz7xnoySErIV6e2qTxsSR1AcI18XDpdbQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727633AbfEPLkL (ORCPT
+        id S1727670AbfEPLkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:40:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48114 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:40:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727572AbfEPLkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:40:04 -0400
+        id S1727623AbfEPLkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:40:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD9A020862;
-        Thu, 16 May 2019 11:40:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27D222089E;
+        Thu, 16 May 2019 11:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006803;
-        bh=KJF1ohD+GanVF7AGlDAg7a2PMSbc/5DsGZC2yHEZO0g=;
+        s=default; t=1558006814;
+        bh=Jsp4ZW27gPw6nL7ENlx29FDCLLb0NiL3Wc0CyIRJsbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uq+B5EM+bhZb70rts1oQMAu/fYkg1fUE1yHH9cjFSypxsCeS9uUNndXiwa5YbjTq6
-         8gLD/VIS8ikr8QRQ9R+vCBPQMRzskQocqKDrkziVnzLRvoZ2S73E3o2UHXg0uP07BF
-         qfd4RRAd/GJPCRDQjmOT7fHwa4jmevukLVjr8S8Q=
+        b=aG0cdbO1wk7akSYSTHAQbs1W2xEKiozYeKpDAGgGR2whbVsdgzRWDoTDcJQKgPHp5
+         XOa+gTuL2VfIOo4Mc2jP2p11hkj+W6teBOW7GFS39aY23PyHgqWPiGjP7ONA3BqxFs
+         wkP9jSxeS51gshg9ca2Hhq4SdzsWEf4xmngXgkKE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 23/34] bpf: Fix preempt_enable_no_resched() abuse
-Date:   Thu, 16 May 2019 07:39:20 -0400
-Message-Id: <20190516113932.8348-23-sashal@kernel.org>
+Cc:     Gary Hook <Gary.Hook@amd.com>, Li RongQing <lirongqing@baidu.com>,
+        Gary R Hook <gary.hook@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Coly Li <colyli@suse.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 27/34] x86/mm/mem_encrypt: Disable all instrumentation for early SME setup
+Date:   Thu, 16 May 2019 07:39:24 -0400
+Message-Id: <20190516113932.8348-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516113932.8348-1-sashal@kernel.org>
 References: <20190516113932.8348-1-sashal@kernel.org>
@@ -62,37 +75,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Gary Hook <Gary.Hook@amd.com>
 
-[ Upstream commit 0edd6b64d1939e9e9168ff27947995bb7751db5d ]
+[ Upstream commit b51ce3744f115850166f3d6c292b9c8cb849ad4f ]
 
-Unless the very next line is schedule(), or implies it, one must not use
-preempt_enable_no_resched(). It can cause a preemption to go missing and
-thereby cause arbitrary delays, breaking the PREEMPT=y invariant.
+Enablement of AMD's Secure Memory Encryption feature is determined very
+early after start_kernel() is entered. Part of this procedure involves
+scanning the command line for the parameter 'mem_encrypt'.
 
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+To determine intended state, the function sme_enable() uses library
+functions cmdline_find_option() and strncmp(). Their use occurs early
+enough such that it cannot be assumed that any instrumentation subsystem
+is initialized.
+
+For example, making calls to a KASAN-instrumented function before KASAN
+is set up will result in the use of uninitialized memory and a boot
+failure.
+
+When AMD's SME support is enabled, conditionally disable instrumentation
+of these dependent functions in lib/string.c and arch/x86/lib/cmdline.c.
+
+ [ bp: Get rid of intermediary nostackp var and cleanup whitespace. ]
+
+Fixes: aca20d546214 ("x86/mm: Add support to make use of Secure Memory Encryption")
+Reported-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: Coly Li <colyli@suse.de>
+Cc: "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Kent Overstreet <kent.overstreet@gmail.com>
+Cc: "luto@kernel.org" <luto@kernel.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: "mingo@redhat.com" <mingo@redhat.com>
+Cc: "peterz@infradead.org" <peterz@infradead.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/155657657552.7116.18363762932464011367.stgit@sosrh3.amd.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bpf.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/lib/Makefile | 12 ++++++++++++
+ lib/Makefile          | 11 +++++++++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index e734f163bd0b9..1fbd7672e4b37 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -455,7 +455,7 @@ int bpf_prog_array_copy(struct bpf_prog_array __rcu *old_array,
- 		}					\
- _out:							\
- 		rcu_read_unlock();			\
--		preempt_enable_no_resched();		\
-+		preempt_enable();			\
- 		_ret;					\
- 	 })
+diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
+index 140e61843a079..3cb3af51ec897 100644
+--- a/arch/x86/lib/Makefile
++++ b/arch/x86/lib/Makefile
+@@ -6,6 +6,18 @@
+ # Produces uninteresting flaky coverage.
+ KCOV_INSTRUMENT_delay.o	:= n
  
++# Early boot use of cmdline; don't instrument it
++ifdef CONFIG_AMD_MEM_ENCRYPT
++KCOV_INSTRUMENT_cmdline.o := n
++KASAN_SANITIZE_cmdline.o  := n
++
++ifdef CONFIG_FUNCTION_TRACER
++CFLAGS_REMOVE_cmdline.o = -pg
++endif
++
++CFLAGS_cmdline.o := $(call cc-option, -fno-stack-protector)
++endif
++
+ inat_tables_script = $(srctree)/arch/x86/tools/gen-insn-attr-x86.awk
+ inat_tables_maps = $(srctree)/arch/x86/lib/x86-opcode-map.txt
+ quiet_cmd_inat_tables = GEN     $@
+diff --git a/lib/Makefile b/lib/Makefile
+index e1b59da714186..d1f312096bec5 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -17,6 +17,17 @@ KCOV_INSTRUMENT_list_debug.o := n
+ KCOV_INSTRUMENT_debugobjects.o := n
+ KCOV_INSTRUMENT_dynamic_debug.o := n
+ 
++# Early boot use of cmdline, don't instrument it
++ifdef CONFIG_AMD_MEM_ENCRYPT
++KASAN_SANITIZE_string.o := n
++
++ifdef CONFIG_FUNCTION_TRACER
++CFLAGS_REMOVE_string.o = -pg
++endif
++
++CFLAGS_string.o := $(call cc-option, -fno-stack-protector)
++endif
++
+ lib-y := ctype.o string.o vsprintf.o cmdline.o \
+ 	 rbtree.o radix-tree.o timerqueue.o xarray.o \
+ 	 idr.o int_sqrt.o extable.o \
 -- 
 2.20.1
 
