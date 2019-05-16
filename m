@@ -2,58 +2,63 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A8E4C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87B5C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0D0020862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:56:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558014997;
-	bh=uoe7jw0e+uNuNcDQkLTv0BILM0FRBInrHzZkZz5BOhw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=YpX3ILjcmxFFLaAtr4egSrb9l5ae7mGrWQmNe5ipNMibckRpCcXQD3y6z9GFqEtRf
-	 IbOQJdt76gqd4pdPcH7Y97nb7RQyckWhqUU3Up524XXncYOGu9NwZ7W6prPaXlVQQw
-	 7r8eZ4FxhuyqERho+rIBzMtJjPeiLTLbRNwuR8Gs=
+	by mail.kernel.org (Postfix) with ESMTP id 941EB20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:57:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfEPN4g (ORCPT
+        id S1727779AbfEPN5E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:56:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38950 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 09:57:04 -0400
+Received: from relay.sw.ru ([185.231.240.75]:54072 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726911AbfEPN4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:56:35 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94BCA20657;
-        Thu, 16 May 2019 13:56:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558014995;
-        bh=uoe7jw0e+uNuNcDQkLTv0BILM0FRBInrHzZkZz5BOhw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=StJ+rmuvH7Txh48TZ6pYlOL6PEnDykPXXZb+dnTw4U4LU0Z8HtUVs+okwT87rdujC
-         huIKxzutEGOsBarjB4/6NngTfqOWQwrR/KZT5MNGOKLwaOQKjAMG0cuDHPOgWqdRHD
-         5DhvYTZJYNUnYl45YX1nJi48iQDs+6tg5S6KCQrg=
-Subject: Re: [PATCH 5.0 000/137] 5.0.17-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190515090651.633556783@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <551c94ee-e879-286a-7bd7-4070417c4826@kernel.org>
-Date:   Thu, 16 May 2019 07:56:34 -0600
+        id S1726911AbfEPN5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:57:04 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hRGsK-00075H-1m; Thu, 16 May 2019 16:56:48 +0300
+Subject: Re: [PATCH RFC 0/5] mm: process_vm_mmap() -- syscall for duplication
+ a process mapping
+To:     Jann Horn <jannh@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@suse.com>, keith.busch@intel.com,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        pasha.tatashin@oracle.com,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        ira.weiny@intel.com, Andrey Konovalov <andreyknvl@google.com>,
+        arunks@codeaurora.org, Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Lameter <cl@linux.com>,
+        Rik van Riel <riel@surriel.com>,
+        Kees Cook <keescook@chromium.org>, hannes@cmpxchg.org,
+        npiggin@gmail.com,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <guro@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        daniel.m.jordan@oracle.com,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>
+References: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
+ <CAG48ez3EOwLd8A6Ku53vKLdofmZAh1ZYfkK4rVgSgM8ZfcR4zg@mail.gmail.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <89124a45-ddfd-9c96-1957-304f67d4b9bc@virtuozzo.com>
+Date:   Thu, 16 May 2019 16:56:46 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190515090651.633556783@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAG48ez3EOwLd8A6Ku53vKLdofmZAh1ZYfkK4rVgSgM8ZfcR4zg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,28 +66,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/15/19 4:54 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.0.17 release.
-> There are 137 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 16.05.2019 16:32, Jann Horn wrote:
+> On Wed, May 15, 2019 at 5:11 PM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+>> This patchset adds a new syscall, which makes possible
+>> to clone a mapping from a process to another process.
+>> The syscall supplements the functionality provided
+>> by process_vm_writev() and process_vm_readv() syscalls,
+>> and it may be useful in many situation.
+> [...]
+>> The proposed syscall aims to introduce an interface, which
+>> supplements currently existing process_vm_writev() and
+>> process_vm_readv(), and allows to solve the problem with
+>> anonymous memory transfer. The above example may be rewritten as:
+>>
+>>         void *buf;
+>>
+>>         buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
+>>                    MAP_PRIVATE|MAP_ANONYMOUS, ...);
+>>         recv(sock, buf, n * PAGE_SIZE, 0);
+>>
+>>         /* Sign of @pid is direction: "from @pid task to current" or vice versa. */
+>>         process_vm_mmap(-pid, buf, n * PAGE_SIZE, remote_addr, PVMMAP_FIXED);
+>>         munmap(buf, n * PAGE_SIZE);
 > 
-> Responses should be made by Fri 17 May 2019 09:04:31 AM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.17-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> In this specific example, an alternative would be to splice() from the
+> socket into /proc/$pid/mem, or something like that, right?
+> proc_mem_operations has no ->splice_read() at the moment, and it'd
+> need that to be more efficient, but that could be built without
+> creating new UAPI, right?
 
-Compiled and booted on my test system. No dmesg regressions.
+I have just never seen, a socket memory may be preempted into swap.
+If so, there is a fundamental problem.
+But, anyway, like you guessed below:
+ 
+> But I guess maybe your workload is not that simple? What do you
+> actually do with the received data between receiving it and shoving it
+> over into the other process?
 
-thanks,
--- Shuah
+Data are usually sent encrypted and compressed by socket, so there is no
+possibility to go this way. You may want to do everything with data,
+before passing to another process.
 
+Kirill
