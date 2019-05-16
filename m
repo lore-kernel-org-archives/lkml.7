@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D9FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB8FC04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B2B32082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE0B520881
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:25:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dgGSuA8V"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lm3M7Aba"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbfEPRZT (ORCPT
+        id S1727850AbfEPRZW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 13:25:19 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33106 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726394AbfEPRZR (ORCPT
+        Thu, 16 May 2019 13:25:22 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45014 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727763AbfEPRZT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 13:25:17 -0400
-Received: by mail-pg1-f193.google.com with SMTP id h17so1905538pgv.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 10:25:17 -0700 (PDT)
+        Thu, 16 May 2019 13:25:19 -0400
+Received: by mail-pl1-f193.google.com with SMTP id c5so1936412pll.11
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 10:25:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ousylPICmwH1og6gjNylTr7gaxUc1ig3ZdhjNRxPghU=;
-        b=dgGSuA8VDPXv7Fj5Q5+ofTuWInUTRLCEGimaJ/XwDGZgH8iS5qpn3DIYuedOUERjIX
-         TgF/rxteIL7Z4FgxhseTSJdM60kvzN7B9+j7MOUShrmdYPyIeiqsNXzbHYJYAtdG1MRf
-         sXk2aqJnxCwgTHfdsfrBaJ3wtHTlqnbyhdVh4=
+        bh=lMSAIsZhKZG2h1JTrxIG+7d55aHOlT9g/JHuAffMChU=;
+        b=lm3M7Abais25GdMpfAmlFd1RXZxXFphbeQ7jGJe3AKBVsknHbMxhyrH4vT+MBb28A+
+         xP4nQPC5QkLetlEYajhKUsKHtuJITm+LT9nnHbWlAddEHLklQyGCAK0zKonDIjCHRuRm
+         n0incRdHOE8Y3OOvZzwBzlqIvRx1Z2ohANK2U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ousylPICmwH1og6gjNylTr7gaxUc1ig3ZdhjNRxPghU=;
-        b=LGthnhpdfuATN6Q2Tm+J5AP5dszsKOVynjEyO+KWFgVX+5tDzk8JtiMkkihkZHchRP
-         ZHRmRUAn5ubiK2JGKXIx4PXdy0x7KLAqFjDsfeBay9K1ZE2yFgYbpjWbZQ4Lv/B3NPZj
-         CGQVnPRbsr2UMXAp7Tp7ph8tLEm73viXO+rzukemjqSTZPONFL2V392tnzY7oxmdT4BB
-         Z9DBmsEMR6IARkNxkKTZaRfVd03aId2bcBjfckZ86N5JrIONzQ2jz8CaLIOv85/X4YYP
-         v8m/ze7U9k1BA7HKpRTC9Io9UEK4MBeTc/aVm1/tdsz4k0Ow/2elTKDm5yGUqjpOCPyY
-         zYTg==
-X-Gm-Message-State: APjAAAVpefPrlNs5QUUQcmoiidggrYPe8TirtScoJ6W5g0rpkcxkao7C
-        f0E2BQxRMJc5kfjuuMJw2LZB/w==
-X-Google-Smtp-Source: APXvYqyRLtHHdZ/6gBoDhAq+Ft8DnEuAOLEu1Tag/6FSXqdLHOz2xTh+/UUVMzZ7Jib/lJnPD2TaUw==
-X-Received: by 2002:a62:570a:: with SMTP id l10mr54993359pfb.151.1558027516911;
-        Thu, 16 May 2019 10:25:16 -0700 (PDT)
+        bh=lMSAIsZhKZG2h1JTrxIG+7d55aHOlT9g/JHuAffMChU=;
+        b=gGCk0CdMgPOtwp9UTy8kEHTx4NW51I7H9FaXh9eGtXQsKwqUaAfCAOE2GvqzxEBood
+         Sn6JCPiXQ5QQTXAomEQ+Fv2mdxvgBTY7+a3yJsq3kuWtzdl74XaANhaCHViDSskMPPA5
+         GJDzToW5p0DCGkmrSbXU25oYk0AgT8WdCbLE9Fi74oZiYAAYZ4M7ugHO4NoNKbj78TeT
+         osPQcvzFrp9f8eMYy2t0U0pYcmmP4zg0A2UtMNH/+wXi84NB71lmbIjdI8mv0iCpeT6A
+         OwSRUhVZg4nSkHaTeIlII+RPAjk7nYiCb1R6O6gPqrQ1lPHCnCT8oueV7RxY4y7zFvVt
+         64oQ==
+X-Gm-Message-State: APjAAAW07TBliAVTjc8bufJe8lYVAu+pmDOu23x0ufwmkfNjknLiuG5F
+        m7nbA0YIJOBRpHCiN0I6VdkarA==
+X-Google-Smtp-Source: APXvYqzIUsVmhUrS26/6IMXbb7QozvzV4UhQf72EtAlcEOaL7o68fTla/TZNzSHlTZB49FW8iDdDfw==
+X-Received: by 2002:a17:902:6809:: with SMTP id h9mr51869145plk.129.1558027518307;
+        Thu, 16 May 2019 10:25:18 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id f29sm17110563pfq.11.2019.05.16.10.25.15
+        by smtp.gmail.com with ESMTPSA id s77sm13264216pfa.63.2019.05.16.10.25.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 10:25:16 -0700 (PDT)
+        Thu, 16 May 2019 10:25:17 -0700 (PDT)
 From:   Matthias Kaehlcke <mka@chromium.org>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Heiko Stuebner <heiko@sntech.de>,
@@ -63,9 +63,9 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>,
         Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v2 2/3] ARM: dts: rockchip: Add #cooling-cells entry for rk3288 GPU
-Date:   Thu, 16 May 2019 10:25:09 -0700
-Message-Id: <20190516172510.181473-2-mka@chromium.org>
+Subject: [PATCH v2 3/3] ARM: dts: rockchip: Use GPU as cooling device for the GPU thermal zone of the rk3288
+Date:   Thu, 16 May 2019 10:25:10 -0700
+Message-Id: <20190516172510.181473-3-mka@chromium.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <20190516172510.181473-1-mka@chromium.org>
 References: <20190516172510.181473-1-mka@chromium.org>
@@ -76,30 +76,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Mali GPU of the rk3288 can be used as cooling device, add
-a #cooling-cells entry for it.
+Currently the CPUs are used as cooling devices of the rk3288 GPU
+thermal zone. The CPUs are also configured as cooling devices in the
+CPU thermal zone, which indirectly helps with cooling the GPU thermal
+zone, since the CPU and GPU temperatures are correlated on the rk3288.
+
+Configure the ARM Mali Midgard GPU as cooling device for the GPU
+thermal zone instead of the CPUs.
 
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
 ---
 Changes in v2:
-- added Doug's 'Reviewed-by' tag
+- patch added to the series
 ---
- arch/arm/boot/dts/rk3288.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/rk3288.dtsi | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index a024d1e7e74c..14d9609f0b15 100644
+index 14d9609f0b15..988555c5118d 100644
 --- a/arch/arm/boot/dts/rk3288.dtsi
 +++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -1273,6 +1273,7 @@
- 		interrupt-names = "job", "mmu", "gpu";
- 		clocks = <&cru ACLK_GPU>;
- 		operating-points-v2 = <&gpu_opp_table>;
-+		#cooling-cells = <2>; /* min followed by max */
- 		power-domains = <&power RK3288_PD_GPU>;
- 		status = "disabled";
- 	};
+@@ -547,10 +547,7 @@
+ 				map0 {
+ 					trip = <&gpu_alert0>;
+ 					cooling-device =
+-						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-						<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+-						<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++						<&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
+ 			};
+ 		};
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
