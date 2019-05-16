@@ -2,129 +2,132 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63026C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9218C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 870C620833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFB42082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:29:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="aCMm45J8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ayq0D5zU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfEPQ3C (ORCPT
+        id S1727063AbfEPQ3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:29:02 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:15847 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfEPQ3C (ORCPT
+        Thu, 16 May 2019 12:29:48 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42952 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfEPQ3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:29:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1558024140;
-        s=strato-dkim-0002; d=hartkopp.net;
-        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=Apx7ZxqDR7YHZ7kD/2IJRkM4VaciDIYJ3ycVJe9uIxc=;
-        b=aCMm45J8B2y/lyCbLNQ0dAXDmoX16yAxuCp/f+Rvqwvu0lfmvu70BPqSGPJyd1IvNv
-        Xj9eoFFcQFRMO++b7o4Yt3z4WJsa1vbDCEVkgsL6yKs0kxnNrxrbTmPg6XWxv+oCUOji
-        GIFFBuf85PUTE9K3PN2agzbvUFU3YgR77iWq2UcVXUW27dYt7TseJgUZZwJQQ8KcPxC4
-        NpD6eNQqUVsTMFl+dEOMOAOapKZI/lwqp9g4YWnhao5UFQGklW2VZ2fRxL6SC9LlX2Z4
-        Nm+Weotw44fQOr3K0nJQfDIjMt0vvkYKzgf9aeUu4gFlIZZ1LWvHrHSBcPp1QzwAv15t
-        oKtg==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJUMh6kkRA"
-X-RZG-CLASS-ID: mo00
-Received: from [192.168.1.200]
-        by smtp.strato.de (RZmta 44.18 DYNA|AUTH)
-        with ESMTPSA id q0b361v4GGPnEj4
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 16 May 2019 18:25:49 +0200 (CEST)
-Subject: Re: [PATCH] can: Fix error path of can_init
-To:     YueHaibing <yuehaibing@huawei.com>, davem@davemloft.net,
-        mkl@pengutronix.de
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-can@vger.kernel.org
-References: <20190516143626.27636-1-yuehaibing@huawei.com>
-From:   Oliver Hartkopp <socketcan@hartkopp.net>
-Message-ID: <70bc346c-9328-d0a2-bd7e-af8dff748061@hartkopp.net>
-Date:   Thu, 16 May 2019 18:25:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 16 May 2019 12:29:48 -0400
+Received: by mail-pl1-f196.google.com with SMTP id x15so1876861pln.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:29:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FOE0cCJQ21ga6g1DChuQ/Qq1kToyjWkdfWiPelD2OC4=;
+        b=ayq0D5zU19MEk0xwhDehYCYeWHoQ08w7g7ZjKSj8+Z7ap0fNQU02iAUi4BNKUwMN5E
+         DaDZsXTk9ac1bORDTuN/XFIeLq4ziTrZmWcEcwPx47BLpRJ937gCOyNca6DcHHrXlOI7
+         n3NMuXxbDIDHBpYxtnrBUtgjXrYN73x/nRozw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FOE0cCJQ21ga6g1DChuQ/Qq1kToyjWkdfWiPelD2OC4=;
+        b=Tsboz/UsV82SYMJarO96a7reXybKOkU+6AQJt5Q/5Iv6d6XkqCofroTQq1ABn/zsOk
+         8EO1ZEYIRJCHIUhcfWO6p7/X5tL2V1ybUUlmAYYWjArisH+P6+Yimfes2Tp3xa6HDNDb
+         84or7zWYYNYF7XhtNKLC8ydM5QU+Gkls/dwzeEMiw9ezrXzbLqQdumAKYSa69wOSNxnC
+         Sm7E7Tux4aX7yB3JpPy4soVCFzPdoxUbxreGDZc8T8brTwWBgxqzOFjqquDVchQ8z38G
+         SrN1qO0AvgVAhNP+El9O6nmWJk6qLskQRWS5Rd6di9rQzGmQKdY7V71oG3uPrG8ljujg
+         DnLA==
+X-Gm-Message-State: APjAAAXwh8pTp3uAk8Hf/5IMgXDju0t+wlIr0fv5AlfK/MGLq9LihSgk
+        HMXDcKXzDcZaukANbCdUooeZnQ==
+X-Google-Smtp-Source: APXvYqxrvwtoWK8QdXNAIVHAwc7IGRNSlG4OKmttVtrCs4o4+DbqSeo4gMHXIbJEH9AVCcAMyz3k0w==
+X-Received: by 2002:a17:902:8a83:: with SMTP id p3mr51848281plo.88.1558024187640;
+        Thu, 16 May 2019 09:29:47 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id g128sm7168645pfb.131.2019.05.16.09.29.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 May 2019 09:29:47 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v2 1/3] ARM: dts: rockchip: raise CPU trip point temperature for veyron to 100 degC
+Date:   Thu, 16 May 2019 09:29:40 -0700
+Message-Id: <20190516162942.154823-1-mka@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
-In-Reply-To: <20190516143626.27636-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This value matches what is used by the downstream Chrome OS 3.14
+kernel, the 'official' kernel for veyron devices. Keep the temperature
+for 'speedy' at 90°C, as in the downstream kernel.
 
+Increase the temperature for a hardware shutdown to 125°C, which
+matches the downstream configuration and gives the system a chance
+to shut down orderly at the criticial trip point.
 
-On 16.05.19 16:36, YueHaibing wrote:
-> This patch add error path for can_init to
-> avoid possible crash if some error occurs.
-> 
-> Fixes: 0d66548a10cb ("[CAN]: Add PF_CAN core module")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com
-Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+Changes in v2:
+- patch added to the series
+---
+ arch/arm/boot/dts/rk3288-veyron-speedy.dts | 4 ++++
+ arch/arm/boot/dts/rk3288-veyron.dtsi       | 5 +++++
+ 2 files changed, 9 insertions(+)
 
-Thanks!
+diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+index e16421d80d22..ab2a66aa337e 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
+@@ -64,6 +64,10 @@
+ 	temperature = <70000>;
+ };
+ 
++&cpu_crit {
++	temperature = <90000>;
++};
++
+ &edp {
+ 	/delete-property/pinctrl-names;
+ 	/delete-property/pinctrl-0;
+diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
+index 192dbc089ade..58dc538b5df3 100644
+--- a/arch/arm/boot/dts/rk3288-veyron.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
+@@ -99,6 +99,10 @@
+ 	cpu0-supply = <&vdd_cpu>;
+ };
+ 
++&cpu_crit {
++	temperature = <100000>;
++};
++
+ /* rk3288-c used in Veyron Chrome-devices has slightly changed OPPs */
+ &cpu_opp_table {
+ 	/delete-node/ opp-312000000;
+@@ -371,6 +375,7 @@
+ 
+ 	rockchip,hw-tshut-mode = <1>; /* tshut mode 0:CRU 1:GPIO */
+ 	rockchip,hw-tshut-polarity = <1>; /* tshut polarity 0:LOW 1:HIGH */
++	rockchip,hw-tshut-temp = <125000>;
+ };
+ 
+ &uart0 {
+-- 
+2.21.0.1020.gf2820cf01a-goog
 
-> ---
->   net/can/af_can.c | 24 +++++++++++++++++++++---
->   1 file changed, 21 insertions(+), 3 deletions(-)
-> 
-> diff --git a/net/can/af_can.c b/net/can/af_can.c
-> index 1684ba5..a1781ea 100644
-> --- a/net/can/af_can.c
-> +++ b/net/can/af_can.c
-> @@ -958,6 +958,8 @@ static void can_pernet_exit(struct net *net)
->   
->   static __init int can_init(void)
->   {
-> +	int rc;
-> +
->   	/* check for correct padding to be able to use the structs similarly */
->   	BUILD_BUG_ON(offsetof(struct can_frame, can_dlc) !=
->   		     offsetof(struct canfd_frame, len) ||
-> @@ -971,15 +973,31 @@ static __init int can_init(void)
->   	if (!rcv_cache)
->   		return -ENOMEM;
->   
-> -	register_pernet_subsys(&can_pernet_ops);
-> +	rc = register_pernet_subsys(&can_pernet_ops);
-> +	if (rc)
-> +		goto out_pernet;
->   
->   	/* protocol register */
-> -	sock_register(&can_family_ops);
-> -	register_netdevice_notifier(&can_netdev_notifier);
-> +	rc = sock_register(&can_family_ops);
-> +	if (rc)
-> +		goto out_sock;
-> +	rc = register_netdevice_notifier(&can_netdev_notifier);
-> +	if (rc)
-> +		goto out_notifier;
-> +
->   	dev_add_pack(&can_packet);
->   	dev_add_pack(&canfd_packet);
->   
->   	return 0;
-> +
-> +out_notifier:
-> +	sock_unregister(PF_CAN);
-> +out_sock:
-> +	unregister_pernet_subsys(&can_pernet_ops);
-> +out_pernet:
-> +	kmem_cache_destroy(rcv_cache);
-> +
-> +	return rc;
->   }
->   
->   static __exit void can_exit(void)
-> 
