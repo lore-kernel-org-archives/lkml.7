@@ -2,133 +2,88 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F212C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B492DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30C8020818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:00:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJ02SC2+"
+	by mail.kernel.org (Postfix) with ESMTP id 8A6C220818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:00:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbfEPJAI (ORCPT
+        id S1727069AbfEPJAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 05:00:08 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35026 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbfEPJAI (ORCPT
+        Thu, 16 May 2019 05:00:55 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:26776 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726466AbfEPJAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 05:00:08 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g5so1302283plt.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 02:00:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tsRvQ0ICVvL80K/llewLglNoh6LkE76YZlYz4k786T4=;
-        b=bJ02SC2+DLGQFnjhjfGLXa0GpC6fzBI58qPoOXXDddWPbG2SYKa3VWR2sGKswVGv/C
-         OMYvH8o89GaE/aEBZsZE8HnAGTfFQBK9Uff1LpPXT5gHEwDVZMc6ngYN7kDUQlHet9oY
-         KvAvLbR576fs+ZA48EcuSvfLsft3KPi1iqdrhSVMz6bqFKjOlhphsizoNZrCkfHR0F6A
-         TXYLhWw2D065WMf5QTI0Z4uGLCYwuUvPccDajFuDmTRIpLsie6cQAfsS412YqyQ0NHxg
-         Nxe/jJ7cuJWEfeTIlNQc5iQuC5tUJzt2ETtnGLufdPdg9DKah2Fe7tp+ZZlQ8OzE/T/j
-         99jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tsRvQ0ICVvL80K/llewLglNoh6LkE76YZlYz4k786T4=;
-        b=Nhg84c8KYeaXpfflBXEJop2uWN9p2YkvMBR8MoommqpfJFZtzAm8dathrriWfWrOZ0
-         Chi0hOpfw+3NgJlD2H0GeUmrEAJ6iyU6wWOzLRmRfyjT9Auc4w9zVj2QQOWyLPmgxjGT
-         pE4L1ZUkajGeNdDfz03SSS7ZkZZqwNR/h+S4k9AUetSpL9xuGe88N2CTsCZWoMaBeX9G
-         3i7btjRVBkOxjuuW70mmNxM45yFDVLQQEotKB3reveVzuTNU2o9HJAZ7rZX3slABJUpp
-         DPbfZz9DoTdi3yEhhrAcPRhcqZiEYx+IMjOVeYbDT/PTz32SLkgnw/kbISSFOb7ve7ql
-         s4rA==
-X-Gm-Message-State: APjAAAX+Ev+hVs4u7Q1x/rUtyWi1yaT5z1e9XMRo7reUALZLutehqmkT
-        KrfFYeLVPoA53OoWOPyI8UUqVXpHDwM=
-X-Google-Smtp-Source: APXvYqy7mWZPcvgEGfnai2/0Oe+KXnlLgoRS/IZIOMQhPkTBeu6DMSVcU51P9P+JPqTv+diaT86JZQ==
-X-Received: by 2002:a17:902:a988:: with SMTP id bh8mr48808665plb.243.1557997207431;
-        Thu, 16 May 2019 02:00:07 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id u76sm5917793pgc.84.2019.05.16.02.00.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 02:00:07 -0700 (PDT)
-Date:   Thu, 16 May 2019 16:59:57 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [Patch] hdac_sysfs: Fix a memory leaking bug in
- sound/hda/hdac_sysfs.c file of Linux 5.1
-Message-ID: <20190516085957.GA3107@zhanggen-UX430UQ>
-References: <20190516084003.GA20821@zhanggen-UX430UQ>
- <s5hzhnmn5qw.wl-tiwai@suse.de>
+        Thu, 16 May 2019 05:00:55 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-29-QTC7KcOOO2udt3W1q3ypsw-1; Thu, 16 May 2019 10:00:51 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu,
+ 16 May 2019 10:00:50 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 16 May 2019 10:00:50 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Masahiro Yamada' <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>
+CC:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Michal Marek <michal.lkml@markovi.net>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
+Subject: RE: [RFC PATCH] kbuild: check uniqueness of basename of modules
+Thread-Topic: [RFC PATCH] kbuild: check uniqueness of basename of modules
+Thread-Index: AQHVC0duCQWaXGJR5Uu8WNOo32As+qZtcj3A
+Date:   Thu, 16 May 2019 09:00:50 +0000
+Message-ID: <5e6999f3d0b349bd86a32a612cff7b4b@AcuMS.aculab.com>
+References: <20190515073818.22486-1-yamada.masahiro@socionext.com>
+ <CAK7LNAQgBKq9JDGtQUD1kgKrfLZ4jOjuLJi7_tpSPLJZsWtmag@mail.gmail.com>
+ <201905150913.C23BD99AD@keescook>
+ <CAK7LNARezpQgcK9O9K3ZFeebMVNroWStno_brvSLadsKXVfm-Q@mail.gmail.com>
+In-Reply-To: <CAK7LNARezpQgcK9O9K3ZFeebMVNroWStno_brvSLadsKXVfm-Q@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <s5hzhnmn5qw.wl-tiwai@suse.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-MC-Unique: QTC7KcOOO2udt3W1q3ypsw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 10:49:43AM +0200, Takashi Iwai wrote:
-> On Thu, 16 May 2019 10:40:03 +0200,
-> Gen Zhang wrote:
-> > 
-> > tree->root and tree->nodes are allocated by memory allocation 
-> > functions. And tree is also an allocated memory. When allocation of 
-> > tree->root and tree->nodes fails, not freeing tree will leak memory. 
-> > Thus we should free tree in this situation.
-> 
-> No, the leftover is freed in the caller side by calling
-> widget_tree_free().
-> 
-> 
-> thanks,
-> 
-> Takashi
-> 
-> > 
-> > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> > 
-> > ---
-> > diff --git a/sound/hda/hdac_sysfs.c b/sound/hda/hdac_sysfs.c
-> > index fb2aa34..5d8a939 100644
-> > --- a/sound/hda/hdac_sysfs.c
-> > +++ b/sound/hda/hdac_sysfs.c
-> > @@ -370,12 +370,12 @@ static int widget_tree_create(struct hdac_device *codec)
-> >  
-> >  	tree->root = kobject_create_and_add("widgets", &codec->dev.kobj);
-> >  	if (!tree->root)
-> > -		return -ENOMEM;
-> > +		goto free_tree;
-> >  
-> >  	tree->nodes = kcalloc(codec->num_nodes + 1, sizeof(*tree->nodes),
-> >  			      GFP_KERNEL);
-> >  	if (!tree->nodes)
-> > -		return -ENOMEM;
-> > +		goto free_tree;
-> >  
-> >  	for (i = 0, nid = codec->start_nid; i < codec->num_nodes; i++, nid++) {
-> >  		err = add_widget_node(tree->root, nid, &widget_node_group,
-> > @@ -393,6 +393,9 @@ static int widget_tree_create(struct hdac_device *codec)
-> >  
-> >  	kobject_uevent(tree->root, KOBJ_CHANGE);
-> >  	return 0;
-> > +free_tree:
-> > +	kfree(tree);
-> > +	return -ENOMEM;
-> >  }
-> >  
-> >  int hda_widget_sysfs_init(struct hdac_device *codec)
-> > ---
-> > 
-It is freed in the caller site :)
-But it is really a rare free usage.
-Thanks
-Gen
+RnJvbTogTWFzYWhpcm8gWWFtYWRhDQo+IFNlbnQ6IDE1IE1heSAyMDE5IDE4OjU1DQouLi4NCj4g
+PiAgICAgeGFyZ3MgYmFzZW5hbWUgLWEgLS0gfCBzb3J0IHwgLi4uDQo+IA0KPiBTb3JyeSBmb3Ig
+bXkgaWdub3JhbmNlLCBidXQgY291bGQgeW91DQo+IHRlYWNoIG1lIHRoZSBlZmZlY3Qgb2YgIi0t
+IiA/DQo+IA0KPiBJIHNvbWV0aW1lcyB1c2UgIi0tIiBhcyBhIHNlcGFyYXRvcg0KPiB3aGVuIHRo
+ZXJlIGlzIGFtYmlndWl0eSBpbiBhcmd1bWVudHMNCj4gZm9yIGV4YW1wbGUsICJnaXQgbG9nIDxy
+ZXZpc2lvbj4gLS0gPHBhdGg+Ig0KPiANCj4gSW4gdGhpcyBjYXNlLCB3aGF0IGlzIGludGVuZGVk
+IGJ5ICItLSI/DQoNClRoZSAnLS0nIHN0b3BzIGdldG9wdCgpIGZyb20gcGFyc2luZyBhbnkgbW9y
+ZSBwYXJhbWV0ZXJzLg0KVXNlZnVsIHRoaW5ncyBsaWtlICdncmVwIC0tIC1xJyB3aGljaCB3aWxs
+IHNlYXJjaCBmb3IgdGhlDQpzdHJpbmcgJy1xJyByYXRoZXIgdGhhbiB0cmVhdGluZyBpdCBhcyBh
+IGNvbW1hbmQgbGluZSBvcHRpb24uDQoNClRoaXMgaXMgYWxsIG1hZGUgbW9yZSBob3JyaWQgYnkg
+YSBkZWNpc2lvbiBieSB0aGUgd3JpdGVycw0Kb2YgZ2xpYmMgZ2V0b3B0KCkgdG8gJ3Blcm11dGUn
+IGFyZ3ZbXSBzbyB0aGF0ICdvcHRpb25zJw0KY2FuIGZvbGxvdyAnbm9ub3B0aW9ucycgaWUgaXQg
+Y29udmVydHM6DQoJcHJvZyBmaWxlIC1hcmcNCnRvDQoJcHJvZyAtYXJnIGZpbGUNClRoZSBvbmx5
+IHByb2dyYW0gdGhlIGhpc3RvcmljYWxseSBhbGxvd2VkICdsYXRlJyBvcHRpb25zDQp3YXMgJ3Js
+b2dpbiBob3N0bmFtZSAtbCB1c2VybmFtZScuDQpUaGlzIGlzIGp1c3QgYnJva2VuLi4uLi4NCg0K
+CURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBN
+b3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAx
+Mzk3Mzg2IChXYWxlcykNCg==
+
