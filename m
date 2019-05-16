@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50525C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4B8C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23D1420848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD11720848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558007353;
-	bh=Y/d90KxI5yg16CDsboELRhVC+mwoMNNnrNRWxrVu71I=;
+	s=default; t=1558007358;
+	bh=aH3b+fP/Z15xzrMBVGTSSwC9pPVL1Nox/juMJfQ2Y/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o176vr7Kgg77LJZa4960OjzLt0tOfddtOfu2PoJGfwT+ZZl0t8YFMMA9/Iiesa6wh
-	 x+Qgd7KGcdXa9OBg82uEn0SdmJUQdfFQiyI3OjocpC8OQSZAGc74aPmcj8scSs8Bj1
-	 vbZH941lyeMFdDqN2DZszsAzxbQGK3tHbWBJRKo4=
+	b=onfZ4B+27yhCYzOsavR1N5mAje+TJinVj16KyFt7ohCVWwN+Vxsx6PIn3GGZJuH2u
+	 FKAmpRcXA3Ku0OvuISnKo7G5oGpjQ0ykZeMXwHOHSVMqkuUlNGl4qXtH0RfmVW8+3y
+	 PNJV8iznx5zxqQ/d6H7yjh40iBr5rU9Rj2VyKIa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbfEPLtM (ORCPT
+        id S1727349AbfEPLjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:49:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47784 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727323AbfEPLjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 May 2019 07:39:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47666 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726260AbfEPLjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:39:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAF4A2089E;
-        Thu, 16 May 2019 11:39:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E40CE20862;
+        Thu, 16 May 2019 11:39:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006781;
-        bh=Y/d90KxI5yg16CDsboELRhVC+mwoMNNnrNRWxrVu71I=;
+        s=default; t=1558006776;
+        bh=aH3b+fP/Z15xzrMBVGTSSwC9pPVL1Nox/juMJfQ2Y/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FEYQTekzErjMpJSn6cH1KuITJw3BSq27i/O3c3jBB4r3lPZGpoBgYtgGcZmSOpXlz
-         EpzMIMnimTz4B1oVgEjsD0zKmpBu5n8Y3Q7W21r3xBEsGoS8RnUTqqEcKaSOzJqc8I
-         oAGAODMPz8Etx7hX1KBc2jTOT334CYKTTbqvGiJQ=
+        b=2vdnTLTTAo2Gok8pnvCW2tLL+fD0/bD0zxpJSguzZigceUbiD0SrTm9kt113vgtQd
+         ylVMG+HyvUwws+GuvcqPRpu48z17rXRwt2Su/K4e8boQnjaDSyJXC/LWZUjhBsnwb9
+         iBezt8adttMyqcTupgrR5upJzqI9ST113USmF5oA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Willi <martin@strongswan.org>,
+Cc:     Su Yanjun <suyj.fnst@cn.fujitsu.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 07/34] xfrm: Honor original L3 slave device in xfrmi policy lookup
-Date:   Thu, 16 May 2019 07:39:04 -0400
-Message-Id: <20190516113932.8348-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 03/34] xfrm6_tunnel: Fix potential panic when unloading xfrm6_tunnel module
+Date:   Thu, 16 May 2019 07:39:00 -0400
+Message-Id: <20190516113932.8348-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516113932.8348-1-sashal@kernel.org>
 References: <20190516113932.8348-1-sashal@kernel.org>
@@ -59,92 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Willi <martin@strongswan.org>
+From: Su Yanjun <suyj.fnst@cn.fujitsu.com>
 
-[ Upstream commit 025c65e119bf58b610549ca359c9ecc5dee6a8d2 ]
+[ Upstream commit 6ee02a54ef990a71bf542b6f0a4e3321de9d9c66 ]
 
-If an xfrmi is associated to a vrf layer 3 master device,
-xfrm_policy_check() fails after traffic decapsulation. The input
-interface is replaced by the layer 3 master device, and hence
-xfrmi_decode_session() can't match the xfrmi anymore to satisfy
-policy checking.
+When unloading xfrm6_tunnel module, xfrm6_tunnel_fini directly
+frees the xfrm6_tunnel_spi_kmem. Maybe someone has gotten the
+xfrm6_tunnel_spi, so need to wait it.
 
-Extend ingress xfrmi lookup to honor the original layer 3 slave
-device, allowing xfrm interfaces to operate within a vrf domain.
-
-Fixes: f203b76d7809 ("xfrm: Add virtual xfrm interfaces")
-Signed-off-by: Martin Willi <martin@strongswan.org>
+Fixes: 91cc3bb0b04ff("xfrm6_tunnel: RCU conversion")
+Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/xfrm.h        |  3 ++-
- net/xfrm/xfrm_interface.c | 17 ++++++++++++++---
- net/xfrm/xfrm_policy.c    |  2 +-
- 3 files changed, 17 insertions(+), 5 deletions(-)
+ net/ipv6/xfrm6_tunnel.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/include/net/xfrm.h b/include/net/xfrm.h
-index 902437dfbce77..c9b0b2b5d672f 100644
---- a/include/net/xfrm.h
-+++ b/include/net/xfrm.h
-@@ -295,7 +295,8 @@ struct xfrm_replay {
- };
- 
- struct xfrm_if_cb {
--	struct xfrm_if	*(*decode_session)(struct sk_buff *skb);
-+	struct xfrm_if	*(*decode_session)(struct sk_buff *skb,
-+					   unsigned short family);
- };
- 
- void xfrm_if_register_cb(const struct xfrm_if_cb *ifcb);
-diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
-index dbb3c1945b5c9..85fec98676d34 100644
---- a/net/xfrm/xfrm_interface.c
-+++ b/net/xfrm/xfrm_interface.c
-@@ -70,17 +70,28 @@ static struct xfrm_if *xfrmi_lookup(struct net *net, struct xfrm_state *x)
- 	return NULL;
+diff --git a/net/ipv6/xfrm6_tunnel.c b/net/ipv6/xfrm6_tunnel.c
+index bc65db782bfb1..12cb3aa990af4 100644
+--- a/net/ipv6/xfrm6_tunnel.c
++++ b/net/ipv6/xfrm6_tunnel.c
+@@ -402,6 +402,10 @@ static void __exit xfrm6_tunnel_fini(void)
+ 	xfrm6_tunnel_deregister(&xfrm6_tunnel_handler, AF_INET6);
+ 	xfrm_unregister_type(&xfrm6_tunnel_type, AF_INET6);
+ 	unregister_pernet_subsys(&xfrm6_tunnel_net_ops);
++	/* Someone maybe has gotten the xfrm6_tunnel_spi.
++	 * So need to wait it.
++	 */
++	rcu_barrier();
+ 	kmem_cache_destroy(xfrm6_tunnel_spi_kmem);
  }
  
--static struct xfrm_if *xfrmi_decode_session(struct sk_buff *skb)
-+static struct xfrm_if *xfrmi_decode_session(struct sk_buff *skb,
-+					    unsigned short family)
- {
- 	struct xfrmi_net *xfrmn;
--	int ifindex;
- 	struct xfrm_if *xi;
-+	int ifindex = 0;
- 
- 	if (!secpath_exists(skb) || !skb->dev)
- 		return NULL;
- 
-+	switch (family) {
-+	case AF_INET6:
-+		ifindex = inet6_sdif(skb);
-+		break;
-+	case AF_INET:
-+		ifindex = inet_sdif(skb);
-+		break;
-+	}
-+	if (!ifindex)
-+		ifindex = skb->dev->ifindex;
-+
- 	xfrmn = net_generic(xs_net(xfrm_input_state(skb)), xfrmi_net_id);
--	ifindex = skb->dev->ifindex;
- 
- 	for_each_xfrmi_rcu(xfrmn->xfrmi[0], xi) {
- 		if (ifindex == xi->dev->ifindex &&
-diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
-index 8d1a898d0ba56..a6b58df7a70f6 100644
---- a/net/xfrm/xfrm_policy.c
-+++ b/net/xfrm/xfrm_policy.c
-@@ -3313,7 +3313,7 @@ int __xfrm_policy_check(struct sock *sk, int dir, struct sk_buff *skb,
- 	ifcb = xfrm_if_get_cb();
- 
- 	if (ifcb) {
--		xi = ifcb->decode_session(skb);
-+		xi = ifcb->decode_session(skb, family);
- 		if (xi) {
- 			if_id = xi->p.if_id;
- 			net = xi->net;
 -- 
 2.20.1
 
