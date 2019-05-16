@@ -2,95 +2,96 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E641C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 03:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD5CDC04E87
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 03:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50BA12168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 03:32:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DDE12087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 03:33:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QIc649EZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cy15sJVS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726563AbfEPDce (ORCPT
+        id S1726575AbfEPDd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 23:32:34 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36211 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726218AbfEPDce (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 23:32:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 454H6l0x2gz9sD4;
-        Thu, 16 May 2019 13:32:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1557977551;
-        bh=eXMkfz/CLjFGvFTaRIFOOX1mVuffZ5U7dhSjW2XmU+U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QIc649EZnPUDpoWccRMZ7kSw9dcYb16VzpRfUh2t59C/C1GGLIoOPF6OhUTAcuFfG
-         fa6cpFAgqxedhmyNY1GtvBMwn1Wp3O8bUGv2ExMXHR/fsBruP3E4XScdnCnuDGZVNa
-         idpA2sNIkxZMzkjDwkA5SAAIEzQNfV6M/JU5cuCbn1NvQb1rBnbbRc44yiv+TZ2HMz
-         wP2e5aq7+iqG+5YKCawGBc20aMOR/DYmLrBYVE1N2sAlp9V6xwPsk8FUJkw9yh6DAF
-         xGdkT2u87McvcU6GS6oDQ2jJ4q1wDSgxtN9rqw7G9z6y24kCd9W0L+mvK8l4UZwLHZ
-         6ciULfzP8yDPA==
-Date:   Thu, 16 May 2019 13:32:30 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: linux-next: manual merge of the ftrace tree with Linus' tree
-Message-ID: <20190516133230.0c894ebf@canb.auug.org.au>
-In-Reply-To: <20190515215305.78e8ef4c@oasis.local.home>
-References: <20190516110548.0d22d048@canb.auug.org.au>
-        <20190515215305.78e8ef4c@oasis.local.home>
+        Wed, 15 May 2019 23:33:27 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35942 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726218AbfEPDd1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 23:33:27 -0400
+Received: by mail-pf1-f196.google.com with SMTP id v80so1065986pfa.3;
+        Wed, 15 May 2019 20:33:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UmIyH2QV58g1wQQu0RtCCr57U2+OV0nzDo73nB2SjmE=;
+        b=Cy15sJVSIYHQ9on7MHoCA7KMpNvts5xSBVOpBswhRHuBsG2Of0IuvfO7FM+fSjd3M5
+         yRM7CvG3bAKYQZ4VaDva7JKi8WCgQKG0Z2uS7R+JIV+YBwBAYPMb07PRHUWYKS9EYnAj
+         XXq4acq7butPZfTu0mG3TlolqqVsa2UmPcNQeMUuijvezP6hF+WPUahebwVOeO0+THq9
+         uaoz9YY4GX7B0/roOlX7R/tLjq+X4Wmuopj3ztcEcLepJ6HZp0Ltli7D9VcWrfaiiDZ3
+         zvz7k2CgU/ih7CYGwxT97/xA44iJztOYn2lFikr9UjXVAScRR0fZHN2xwbnsQM9IX7kb
+         Lz0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UmIyH2QV58g1wQQu0RtCCr57U2+OV0nzDo73nB2SjmE=;
+        b=OzMXQHGbkMkIjl4b9WEC04n5/aFmcSdhQ4CYa/+cMhk8D7FGq+fl6JHrvXwEdQ/U+o
+         tiDG9c1AML3d1n1Nnmv21I+jXs4gqW/SCLDMDuo3g6Ui79ycFqvbe8PCE0tl2fCYosXc
+         jhQXrpxHWhWZra3VUHiFhzV4cZNp6gevRnGMAPqidl8d/PePNKXqixRrPy6mAXSFlyRX
+         f7XrqPygw0Hoq0SkVBVguQ6vCwNGPOqwCSLLMbLo8eVnPF8FD6r7AgYA2mh2/l6NmxYJ
+         e1b3OFUschDq2yrCJWTgHS38KDkh4s8oGk3EdA/ekLH8HwkEzdDYpNid2rXIQgnfVeSD
+         m32A==
+X-Gm-Message-State: APjAAAX7su89xOgRejBlL9F/CA9Xf0aF0RZiznRe2ECrETsCrKPkkg/0
+        iF4Si3w++Vr+/LkaOByNeMrCFxa7
+X-Google-Smtp-Source: APXvYqyzJoRi5B2ScdZGgiTS19l+uV1hAg8VafNDJqbM1r/Te9FZ2qlzgGCqCj8kZYcOF6fHl01zDg==
+X-Received: by 2002:a62:4d03:: with SMTP id a3mr52577940pfb.2.1557977606187;
+        Wed, 15 May 2019 20:33:26 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x16sm4305212pff.30.2019.05.15.20.33.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 20:33:25 -0700 (PDT)
+Subject: Re: [PATCH 3.18 00/86] 3.18.140-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20190515090642.339346723@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <eb52b96d-0d34-9c59-5cfe-a3170cdba1d0@roeck-us.net>
+Date:   Wed, 15 May 2019 20:33:24 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/WGhoO1LbIMcdcEdyFWibU2."; protocol="application/pgp-signature"
+In-Reply-To: <20190515090642.339346723@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/WGhoO1LbIMcdcEdyFWibU2.
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 5/15/19 3:54 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 3.18.140 release.
+> There are 86 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 17 May 2019 09:04:45 AM UTC.
+> Anything received after that time might be too late.
+> 
 
-Hi Steve,
+Build results:
+	total: 155 pass: 155 fail: 0
+Qemu test results:
+	total: 230 pass: 230 fail: 0
 
-On Wed, 15 May 2019 21:53:05 -0400 Steven Rostedt <rostedt@goodmis.org> wro=
-te:
->
-> I mentioned this conflict and the entry_64.S one to Linus when
-> submitting my pull request. I fixed it up too in my ftrace/conflicts
-> branch.
-
-And he has merged your branch now, so all good.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/WGhoO1LbIMcdcEdyFWibU2.
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzc2c4ACgkQAVBC80lX
-0Gw8IwgAiRDBQhYFblBSXJd1CdE7An9kwugAGX+Ni1zoYKIkx0rMzleh0jTPJzRO
-Clwbu+b/yu72fG445AcwUh/re+3coQl9jXuzt8mv9H8WaTSfDA+1lJwQQIESi6Tc
-f23tmpby0/lNQot2e803/chuvbH9v+MkZziMVVJjjvIxARYYJeiVIEPuGyhHlFbM
-u//B1OZINLtROYAad3f4OvDmrJ1CwHPXojvCR55uBpQj6Fry18V7tpdOILo4Uw1D
-h8sC9RL+k8/9pOwiEtclshEBxRRVP3Puv0TE4EvzUa+qVPT7hYm9lqKY5AAiGsAg
-hRNNvHdK7ytEHMzheHKprjUaPegTnA==
-=UAnV
------END PGP SIGNATURE-----
-
---Sig_/WGhoO1LbIMcdcEdyFWibU2.--
+Guenter
