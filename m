@@ -2,143 +2,175 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DCDC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4D0C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B432089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YDhej+so"
+	by mail.kernel.org (Postfix) with ESMTP id 6F77120862
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558006867;
+	bh=H0bztZPvwHq2Z9gMbzDLu0UYSQZoQYk6njnVQhTNBrE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HAmG/v55YErzd3sXurwHniVh3m3k5c1VWLkvb4pLgF99mveLHUNK9T5VUFmfTd9X5
+	 q2jn4Z3ELEf61cl4CGcVtGzIWlrH1lSEpjL6kpZGe9cX82uardGwR0d4r4QdnbdnqH
+	 9IvbSVh7L9L4Zr4vpK9IBu7GT4iCLtffHkL3oZ1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbfEPLlD (ORCPT
+        id S1727998AbfEPLlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:41:03 -0400
-Received: from mail-eopbgr40064.outbound.protection.outlook.com ([40.107.4.64]:44539
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727964AbfEPLk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:40:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bmd5uyoXspeGw9a1scta0xCgKVhZ6BhnwWPIBkaeKe4=;
- b=YDhej+sombU9zT5mIOdAvFiUqp6aWSx7wXDBDXRzBI/Sb+2sK8D53378YZ/NVpVv1QR1awoEk3INLz3ssRexsUVB+7M14dLo0aRsAcHUJYskVRnPRTq3TGQoWTmBzfCfQtZGpgU9KHNMhlu+FWq0VXOSBgxYl+alSxF8ANpI7Ig=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1PR04MB6623.eurprd04.prod.outlook.com (20.179.235.29) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Thu, 16 May 2019 11:40:56 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::a5b5:13f5:f89c:9a30]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::a5b5:13f5:f89c:9a30%7]) with mapi id 15.20.1900.010; Thu, 16 May 2019
- 11:40:56 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     "brian.austin@cirrus.com" <brian.austin@cirrus.com>,
-        "Paul.Handrigan@cirrus.com" <Paul.Handrigan@cirrus.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH V5] ASoC: cs42xx8: add reset-gpios in binding document
-Thread-Topic: [PATCH V5] ASoC: cs42xx8: add reset-gpios in binding document
-Thread-Index: AQHVC9w51n/Go/hZQkqdj0LpyBc8Ww==
-Date:   Thu, 16 May 2019 11:40:56 +0000
-Message-ID: <3e15abaee348468a69005e4240346822320c7f69.1558006714.git.shengjiu.wang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.21.0
-x-clientproxiedby: HK0PR04CA0022.apcprd04.prod.outlook.com
- (2603:1096:203:36::34) To VE1PR04MB6479.eurprd04.prod.outlook.com
- (2603:10a6:803:11e::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 93a8d3c2-d43e-44bd-53df-08d6d9f35bc0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6623;
-x-ms-traffictypediagnostic: VE1PR04MB6623:
-x-microsoft-antispam-prvs: <VE1PR04MB662338EF0F0F2E91B1CD08F9E30A0@VE1PR04MB6623.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0039C6E5C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39860400002)(366004)(376002)(346002)(396003)(199004)(189003)(68736007)(36756003)(110136005)(118296001)(66556008)(316002)(64756008)(2501003)(486006)(186003)(3846002)(6116002)(53936002)(66446008)(71200400001)(71190400001)(66946007)(26005)(73956011)(86362001)(2201001)(66476007)(52116002)(478600001)(2906002)(5660300002)(25786009)(14444005)(6512007)(256004)(99286004)(14454004)(6436002)(4326008)(81166006)(6506007)(386003)(66066001)(2616005)(476003)(8936002)(102836004)(81156014)(305945005)(6486002)(8676002)(7736002)(50226002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6623;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: AV4DoTIIPiz+OmsUjZf7/eYaC3a6OVe39CrTxk/eTNMZk3Gd2O7YayNjV0PXSy+zmTpiGZdW8sFWFEjbhpX3yvWm1Q5NSMmV3+tGL1r9xqOiNUYqoLOpEFM6097RwMT/aF4z2nGFAzeKQQKAXY+axrJTpsLDTrJ4clmNTGQi1Uj6JzLGbOwR5enIw7BagqFcxZS/N3sFAAPiOPioQoqI9rTUBQJG1l8lTXomlZb7QPtHOp1geNY9Ec3IcYzwHJAQpFDGf0DsR4mEzAYjONt/oH4Dl/ESlQYq1QGTiU/3BAR5/mROzEdWPOPMPDrhTzivEKhaBUahnlYRemLVaKJ2t/gOPpyOBMksdGsa883uhMncd2is/FNPFEjbjSI+954pvE5da5IZbBtXaPiWALTedztJgeq8IX4xy3OU/BWI1mw=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <B74D0E497AF0AA44BEE6A4D2CF2369CA@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 16 May 2019 07:41:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727974AbfEPLlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:41:02 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF4E821773;
+        Thu, 16 May 2019 11:40:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558006861;
+        bh=H0bztZPvwHq2Z9gMbzDLu0UYSQZoQYk6njnVQhTNBrE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yzhN+194yOBqNIOBuEuCiaBiLINCGJJmLHmekn/br7hWNrx9YOP8BcvGdLv5FNqcG
+         NQySWQEU5AObfiwh19a/QxFmFzAxQw8qBkp9PEUShEmhW+n4+ZJSLcStrBP4JgPtqf
+         MToVeEp8+iuWhEuuBrUIK/shVoYPizxjd8W+puP4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Gary Hook <Gary.Hook@amd.com>, Li RongQing <lirongqing@baidu.com>,
+        Gary R Hook <gary.hook@amd.com>,
+        Borislav Petkov <bp@suse.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Coly Li <colyli@suse.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 22/25] x86/mm/mem_encrypt: Disable all instrumentation for early SME setup
+Date:   Thu, 16 May 2019 07:40:25 -0400
+Message-Id: <20190516114029.8682-22-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190516114029.8682-1-sashal@kernel.org>
+References: <20190516114029.8682-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93a8d3c2-d43e-44bd-53df-08d6d9f35bc0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 11:40:56.3372
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6623
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add reset-gpios property, which is optional.
+From: Gary Hook <Gary.Hook@amd.com>
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+[ Upstream commit b51ce3744f115850166f3d6c292b9c8cb849ad4f ]
+
+Enablement of AMD's Secure Memory Encryption feature is determined very
+early after start_kernel() is entered. Part of this procedure involves
+scanning the command line for the parameter 'mem_encrypt'.
+
+To determine intended state, the function sme_enable() uses library
+functions cmdline_find_option() and strncmp(). Their use occurs early
+enough such that it cannot be assumed that any instrumentation subsystem
+is initialized.
+
+For example, making calls to a KASAN-instrumented function before KASAN
+is set up will result in the use of uninitialized memory and a boot
+failure.
+
+When AMD's SME support is enabled, conditionally disable instrumentation
+of these dependent functions in lib/string.c and arch/x86/lib/cmdline.c.
+
+ [ bp: Get rid of intermediary nostackp var and cleanup whitespace. ]
+
+Fixes: aca20d546214 ("x86/mm: Add support to make use of Secure Memory Encryption")
+Reported-by: Li RongQing <lirongqing@baidu.com>
+Signed-off-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: Coly Li <colyli@suse.de>
+Cc: "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Kent Overstreet <kent.overstreet@gmail.com>
+Cc: "luto@kernel.org" <luto@kernel.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: "mingo@redhat.com" <mingo@redhat.com>
+Cc: "peterz@infradead.org" <peterz@infradead.org>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/155657657552.7116.18363762932464011367.stgit@sosrh3.amd.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes in V5
-- use GPIO_ACTIVE_LOW
+ arch/x86/lib/Makefile | 12 ++++++++++++
+ lib/Makefile          | 11 +++++++++++
+ 2 files changed, 23 insertions(+)
 
-Changes in V4
-- use gpios instead of gpio
-
-Changes in RESEND v3
-- send updated binding document only
-
-Changes in v3
-- update binding document.
-
-Changes in v2
-- use devm_gpiod_get_optional instead of of_get_named_gpio
-
- Documentation/devicetree/bindings/sound/cs42xx8.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/sound/cs42xx8.txt b/Document=
-ation/devicetree/bindings/sound/cs42xx8.txt
-index 8619a156d038..bbfe39347c20 100644
---- a/Documentation/devicetree/bindings/sound/cs42xx8.txt
-+++ b/Documentation/devicetree/bindings/sound/cs42xx8.txt
-@@ -14,6 +14,11 @@ Required properties:
-   - VA-supply, VD-supply, VLS-supply, VLC-supply: power supplies for the d=
-evice,
-     as covered in Documentation/devicetree/bindings/regulator/regulator.tx=
-t
-=20
-+Optional properties:
+diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
+index 25a972c61b0ae..3c19d60316a88 100644
+--- a/arch/x86/lib/Makefile
++++ b/arch/x86/lib/Makefile
+@@ -6,6 +6,18 @@
+ # Produces uninteresting flaky coverage.
+ KCOV_INSTRUMENT_delay.o	:= n
+ 
++# Early boot use of cmdline; don't instrument it
++ifdef CONFIG_AMD_MEM_ENCRYPT
++KCOV_INSTRUMENT_cmdline.o := n
++KASAN_SANITIZE_cmdline.o  := n
 +
-+  - reset-gpios : a GPIO spec to define which pin is connected to the chip=
-'s
-+    !RESET pin
++ifdef CONFIG_FUNCTION_TRACER
++CFLAGS_REMOVE_cmdline.o = -pg
++endif
 +
- Example:
-=20
- cs42888: codec@48 {
-@@ -25,4 +30,5 @@ cs42888: codec@48 {
- 	VD-supply =3D <&reg_audio>;
- 	VLS-supply =3D <&reg_audio>;
- 	VLC-supply =3D <&reg_audio>;
-+	reset-gpios =3D <&pca9557_b 1 GPIO_ACTIVE_LOW>;
- };
---=20
-2.21.0
++CFLAGS_cmdline.o := $(call cc-option, -fno-stack-protector)
++endif
++
+ inat_tables_script = $(srctree)/arch/x86/tools/gen-insn-attr-x86.awk
+ inat_tables_maps = $(srctree)/arch/x86/lib/x86-opcode-map.txt
+ quiet_cmd_inat_tables = GEN     $@
+diff --git a/lib/Makefile b/lib/Makefile
+index 4238764468109..0ab808318202c 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -17,6 +17,17 @@ KCOV_INSTRUMENT_list_debug.o := n
+ KCOV_INSTRUMENT_debugobjects.o := n
+ KCOV_INSTRUMENT_dynamic_debug.o := n
+ 
++# Early boot use of cmdline, don't instrument it
++ifdef CONFIG_AMD_MEM_ENCRYPT
++KASAN_SANITIZE_string.o := n
++
++ifdef CONFIG_FUNCTION_TRACER
++CFLAGS_REMOVE_string.o = -pg
++endif
++
++CFLAGS_string.o := $(call cc-option, -fno-stack-protector)
++endif
++
+ lib-y := ctype.o string.o vsprintf.o cmdline.o \
+ 	 rbtree.o radix-tree.o timerqueue.o\
+ 	 idr.o int_sqrt.o extable.o \
+-- 
+2.20.1
 
