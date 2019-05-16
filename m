@@ -2,81 +2,56 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE4DC04E87
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2545C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B880C2087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:40:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UfIVvSgh"
+	by mail.kernel.org (Postfix) with ESMTP id 9B00520862
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbfEPHkX (ORCPT
+        id S1726692AbfEPHmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 03:40:23 -0400
-Received: from mail-oi1-f177.google.com ([209.85.167.177]:35412 "EHLO
-        mail-oi1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbfEPHkW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 03:40:22 -0400
-Received: by mail-oi1-f177.google.com with SMTP id a132so1819489oib.2;
-        Thu, 16 May 2019 00:40:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U2+h/8RLqoYaj/QDLXv5hozjlrm561LLiGV0YnZUsFM=;
-        b=UfIVvSgh9tW2fx0O/r446tlpot6A6hGVEYDXDbmvXNezzm0ozMJebrhI6gGX7H/BqK
-         cl1aAJyQF3+xv7CWP/TeKC1D6L5dCh/tfmmqPwk9JZsrnYYfoQAz/Jkcvr3y1LAuWfgZ
-         0RT/QRdggbKb18gS4e7uiCCW1HrsudLJce194ZSo738S6NhXWn/oolMPsD9goAE+Ao7H
-         SgG4JdyKhrK8OWwnswYXTm1YTbWrSUdVzOo2ZX+NESbepZXudVNNuhztDNUJQB9yEE9n
-         Fr5NTyrUHfFvT2own58J8NZ6a+Z5UFMkmv2Y5HK8OO0gveGfZCwmxDNzPSh6XKexL8Cr
-         ZfuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U2+h/8RLqoYaj/QDLXv5hozjlrm561LLiGV0YnZUsFM=;
-        b=Caa83wutLg+uvrQmumEUQ++kTkMdHq7mhQGt75xb3rIpb74W1Z/rNUg8ib1zMJR7aj
-         TsEgBbKPprNh5XcJC6gZowOjqycVKZH55vD1Yx5f8vX8RuwjPPKkZSimwQuin+j2LuE8
-         q1VP9rewTeHqBOQU+2JgqqvKpckBCnbAx40SkN5zHRkPb/61GSJ/xNoiK7Xsvzdn1hqb
-         ZWwWchbRJS5RmYSSIrKj2CfgI9bPV8Xg1dTA0qfsGokRJLOQdYipP0fZs1eYjYa6bSLy
-         +CP5jdAvqB2wBCgGXrNlSeXQMtH9sim33KjX7fp5MtidA2jMtDRx0ZKpJHmvk5z/jwVq
-         U1nA==
-X-Gm-Message-State: APjAAAUnvDUw6zD0CBbMIiH5dg90k94K5Jmm2t6GnL0lmLIw2Kol8kqM
-        kunqPZlXWgW3oXIlgicRadrqyxENlRfzXnPemFI1eg==
-X-Google-Smtp-Source: APXvYqynNyRwkPL2O1IuzdKmVBU44+T/ucei56yyxoVIU7iBA1GwKUKmpER+vo4IDvLxcX7+uCFdEEW2rq2m0XbKjHM=
-X-Received: by 2002:aca:d746:: with SMTP id o67mr9469243oig.157.1557992422197;
- Thu, 16 May 2019 00:40:22 -0700 (PDT)
+        Thu, 16 May 2019 03:42:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49746 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726363AbfEPHmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 03:42:03 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6E188AD49;
+        Thu, 16 May 2019 07:42:02 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: fix locking violation in page fault handler
+References: <mvm5zqmu35d.fsf@suse.de>
+        <mhng-56794b7f-6cd4-4eb9-a962-83ad256ed3cd@palmer-si-x1e>
+X-Yow:  Don't SANFORIZE me!!
+Date:   Thu, 16 May 2019 09:42:01 +0200
+In-Reply-To: <mhng-56794b7f-6cd4-4eb9-a962-83ad256ed3cd@palmer-si-x1e> (Palmer
+        Dabbelt's message of "Tue, 07 May 2019 16:48:03 -0700 (PDT)")
+Message-ID: <mvmy336luba.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-References: <20190515090659.123121100@linuxfoundation.org> <20190515090704.367472403@linuxfoundation.org>
- <CAD9gYJ+zOgwe5mxns=0m=Lpz0Dthn0f1_YkyR+n0w7JaAswL1w@mail.gmail.com> <20190515163105.GB30626@kroah.com>
-In-Reply-To: <20190515163105.GB30626@kroah.com>
-From:   Jinpu Wang <jinpuwang@gmail.com>
-Date:   Thu, 16 May 2019 09:40:10 +0200
-Message-ID: <CAD9gYJKzrb5-us-6AjfJgb=pWhPw9vdTo9cW25S42u8CMHzwVA@mail.gmail.com>
-Subject: Re: [PATCH 4.14 067/115] crypto: testmgr - add AES-CFB tests
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "v3.14+, only the raid10 part" <stable@vger.kernel.org>,
-        Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <alexander.levin@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-snip
-> >
-> > Can you drop the patch?
->
-> Yes, now dropped.  Sasha, I think I did this same thing in the past :)
-Thanks, I remember I probably reported same thing in the past too :)
+On Mai 07 2019, Palmer Dabbelt <palmer@sifive.com> wrote:
 
-Jack
+> LMK if you, or anyone else, has a preference.  I'm assuming this will go in
+> through my tree, so I've picked up my version for now :)
+
+You did?
+
+Andreas.
+
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
