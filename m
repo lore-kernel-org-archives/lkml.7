@@ -2,263 +2,255 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E85C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4F0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC8020848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F14120848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:37:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726429AbfEPFez (ORCPT
+        id S1726513AbfEPFhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 01:34:55 -0400
-Received: from foss.arm.com ([217.140.101.70]:33608 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbfEPFez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 01:34:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41FA11715;
-        Wed, 15 May 2019 22:34:54 -0700 (PDT)
-Received: from [10.163.1.137] (unknown [10.163.1.137])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 262853F71E;
-        Wed, 15 May 2019 22:34:41 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH V3 4/4] arm64/mm: Enable memory hot remove
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        akpm@linux-foundation.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, mhocko@suse.com, mgorman@techsingularity.net,
-        james.morse@arm.com, robin.murphy@arm.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
-        david@redhat.com, cai@lca.pw, logang@deltatee.com,
-        ira.weiny@intel.com
-References: <1557824407-19092-1-git-send-email-anshuman.khandual@arm.com>
- <1557824407-19092-5-git-send-email-anshuman.khandual@arm.com>
- <20190515114911.GC23983@lakrids.cambridge.arm.com>
-Message-ID: <499ebd4b-c905-dd99-3fc7-66050d89dc35@arm.com>
-Date:   Thu, 16 May 2019 11:04:48 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 16 May 2019 01:37:09 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60902 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725975AbfEPFhI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 01:37:08 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4G5WJfs101501
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:37:06 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sh0bykadv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:37:06 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ego@linux.vnet.ibm.com>;
+        Thu, 16 May 2019 06:37:06 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 16 May 2019 06:37:03 +0100
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4G5b2nj27983958
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 May 2019 05:37:02 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3076C124054;
+        Thu, 16 May 2019 05:37:02 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D83B1124055;
+        Thu, 16 May 2019 05:37:01 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.124.35.248])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 16 May 2019 05:37:01 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 328F02E2EB4; Thu, 16 May 2019 11:06:59 +0530 (IST)
+Date:   Thu, 16 May 2019 11:06:59 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Abhishek <huntbag@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, daniel.lezcano@linaro.org,
+        dja@axtens.net, ego@linux.vnet.ibm.com, rjw@rjwysocki.net
+Subject: Re: [PATCH 0/1] Forced-wakeup for stop lite states on Powernv
+Reply-To: ego@linux.vnet.ibm.com
+References: <20190422063231.51043-1-huntbag@linux.vnet.ibm.com>
+ <1557291178.ow4spjzq5t.astroid@bobo.none>
+ <b2fcf69a-aecd-ea81-b497-737642354736@linux.vnet.ibm.com>
+ <1557981860.eltms77ctp.astroid@bobo.none>
 MIME-Version: 1.0
-In-Reply-To: <20190515114911.GC23983@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557981860.eltms77ctp.astroid@bobo.none>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+x-cbid: 19051605-0052-0000-0000-000003C00920
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011104; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01203996; UDB=6.00632022; IPR=6.00984926;
+ MB=3.00026912; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-16 05:37:05
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051605-0053-0000-0000-000060EA1B78
+Message-Id: <20190516053659.GA20396@in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905160039
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/15/2019 05:19 PM, Mark Rutland wrote:
-> Hi Anshuman,
-> 
-> On Tue, May 14, 2019 at 02:30:07PM +0530, Anshuman Khandual wrote:
->> Memory removal from an arch perspective involves tearing down two different
->> kernel based mappings i.e vmemmap and linear while releasing related page
->> table and any mapped pages allocated for given physical memory range to be
->> removed.
->>
->> Define a common kernel page table tear down helper remove_pagetable() which
->> can be used to unmap given kernel virtual address range. In effect it can
->> tear down both vmemap or kernel linear mappings. This new helper is called
->> from both vmemamp_free() and ___remove_pgd_mapping() during memory removal.
->>
->> For linear mapping there are no actual allocated pages which are mapped to
->> create the translation. Any pfn on a given entry is derived from physical
->> address (__va(PA) --> PA) whose linear translation is to be created. They
->> need not be freed as they were never allocated in the first place. But for
->> vmemmap which is a real virtual mapping (like vmalloc) physical pages are
->> allocated either from buddy or memblock which get mapped in the kernel page
->> table. These allocated and mapped pages need to be freed during translation
->> tear down. But page table pages need to be freed in both these cases.
-> 
-> As previously discussed, we should only hot-remove memory which was
-> hot-added, so we shouldn't encounter memory allocated from memblock.
+Hello Nicholas,
 
-Right, not applicable any more. Will drop this word.
 
+On Thu, May 16, 2019 at 02:55:42PM +1000, Nicholas Piggin wrote:
+> Abhishek's on May 13, 2019 7:49 pm:
+> > On 05/08/2019 10:29 AM, Nicholas Piggin wrote:
+> >> Abhishek Goel's on April 22, 2019 4:32 pm:
+> >>> Currently, the cpuidle governors determine what idle state a idling CPU
+> >>> should enter into based on heuristics that depend on the idle history on
+> >>> that CPU. Given that no predictive heuristic is perfect, there are cases
+> >>> where the governor predicts a shallow idle state, hoping that the CPU will
+> >>> be busy soon. However, if no new workload is scheduled on that CPU in the
+> >>> near future, the CPU will end up in the shallow state.
+> >>>
+> >>> Motivation
+> >>> ----------
+> >>> In case of POWER, this is problematic, when the predicted state in the
+> >>> aforementioned scenario is a lite stop state, as such lite states will
+> >>> inhibit SMT folding, thereby depriving the other threads in the core from
+> >>> using the core resources.
+> >>>
+> >>> So we do not want to get stucked in such states for longer duration. To
+> >>> address this, the cpuidle-core can queue timer to correspond with the
+> >>> residency value of the next available state. This timer will forcefully
+> >>> wakeup the cpu. Few such iterations will essentially train the governor to
+> >>> select a deeper state for that cpu, as the timer here corresponds to the
+> >>> next available cpuidle state residency. Cpu will be kicked out of the lite
+> >>> state and end up in a non-lite state.
+> >>>
+> >>> Experiment
+> >>> ----------
+> >>> I performed experiments for three scenarios to collect some data.
+> >>>
+> >>> case 1 :
+> >>> Without this patch and without tick retained, i.e. in a upstream kernel,
+> >>> It would spend more than even a second to get out of stop0_lite.
+> >>>
+> >>> case 2 : With tick retained in a upstream kernel -
+> >>>
+> >>> Generally, we have a sched tick at 4ms(CONF_HZ = 250). Ideally I expected
+> >>> it to take 8 sched tick to get out of stop0_lite. Experimentally,
+> >>> observation was
+> >>>
+> >>> =========================================================
+> >>> sample          min            max           99percentile
+> >>> 20              4ms            12ms          4ms
+> >>> =========================================================
+> >>>
+> >>> It would take atleast one sched tick to get out of stop0_lite.
+> >>>
+> >>> case 2 :  With this patch (not stopping tick, but explicitly queuing a
+> >>>            timer)
+> >>>
+> >>> ============================================================
+> >>> sample          min             max             99percentile
+> >>> ============================================================
+> >>> 20              144us           192us           144us
+> >>> ============================================================
+> >>>
+> >>> In this patch, we queue a timer just before entering into a stop0_lite
+> >>> state. The timer fires at (residency of next available state + exit latency
+> >>> of next available state * 2). Let's say if next state(stop0) is available
+> >>> which has residency of 20us, it should get out in as low as (20+2*2)*8
+> >>> [Based on the forumla (residency + 2xlatency)*history length] microseconds
+> >>> = 192us. Ideally we would expect 8 iterations, it was observed to get out
+> >>> in 6-7 iterations. Even if let's say stop2 is next available state(stop0
+> >>> and stop1 both are unavailable), it would take (100+2*10)*8 = 960us to get
+> >>> into stop2.
+> >>>
+> >>> So, We are able to get out of stop0_lite generally in 150us(with this
+> >>> patch) as compared to 4ms(with tick retained). As stated earlier, we do not
+> >>> want to get stuck into stop0_lite as it inhibits SMT folding for other
+> >>> sibling threads, depriving them of core resources. Current patch is using
+> >>> forced-wakeup only for stop0_lite, as it gives performance benefit(primary
+> >>> reason) along with lowering down power consumption. We may extend this
+> >>> model for other states in future.
+> >> I still have to wonder, between our snooze loop and stop0, what does
+> >> stop0_lite buy us.
+> >>
+> >> That said, the problem you're solving here is a generic one that all
+> >> stop states have, I think. Doesn't the same thing apply going from
+> >> stop0 to stop5? You might under estimate the sleep time and lose power
+> >> savings and therefore performance there too. Shouldn't we make it
+> >> generic for all stop states?
+> >>
+> >> Thanks,
+> >> Nick
+> >>
+> >>
+> > When a cpu is in snooze, it takes both space and time of core. When in 
+> > stop0_lite,
+> > it free up time but it still takes space.
 > 
->> These mappings need to be differentiated while deciding if a mapped page at
->> any level i.e [pte|pmd|pud]_page() should be freed or not. Callers for the
->> mapping tear down process should pass on 'sparse_vmap' variable identifying
->> kernel vmemmap mappings.
-> 
-> I think that you can simplify the paragraphs above down to:
-> 
->   The arch code for hot-remove must tear down portions of the linear map
->   and vmemmap corresponding to memory being removed. In both cases the
->   page tables mapping these regions must be freed, and when sparse
->   vmemmap is in use the memory backing the vmemmap must also be freed.
-> 
->   This patch adds a new remove_pagetable() helper which can be used to
->   tear down either region, and calls it from vmemmap_free() and
->   ___remove_pgd_mapping(). The sparse_vmap argument determines whether
->   the backing memory will be freed.
+> True, but snooze should only be taking less than 1% of front end
+> cycles. I appreciate there is some non-zero difference here, I just
+> wonder in practice what exactly we gain by it.
 
-The current one is bit more descriptive on detail. Anyways will replace with
-the above writeup if that is preferred.
+The idea behind implementing a lite-state was that on the future
+platforms it can be made to wait on a flag and hence act as a
+replacement for snooze. On POWER9 we don't have this feature.
 
-> 
-> Could you add a paragraph describing when we can encounter partial
-> tables (for which we need the p??_none() checks? IIUC that's not just> for cleaning up a failed hot-add, and it would be good to call that out.
+The motivation behind this patch was a HPC customer issue where they
+were observing some CPUs in the core getting stuck at stop0_lite
+state, thereby lowering the performance on the other CPUs of the core
+which were running the application.
 
-Sure, will do.
-
-> 
->> While here update arch_add_mempory() to handle __add_pages() failures by
->> just unmapping recently added kernel linear mapping. Now enable memory hot
->> remove on arm64 platforms by default with ARCH_ENABLE_MEMORY_HOTREMOVE.
-> 
-> Nit: s/arch_add_mempory/arch_add_memory/.
-
-Oops, will do.
-
-> 
-> [...]
-> 
->> +#if (CONFIG_PGTABLE_LEVELS > 2)
->> +static void free_pmd_table(pmd_t *pmdp, pud_t *pudp, unsigned long addr)
->> +{
->> +	struct page *page;
->> +	int i;
->> +
->> +	for (i = 0; i < PTRS_PER_PMD; i++) {
->> +		if (!pmd_none(pmdp[i]))
->> +			return;
->> +	}
->> +
->> +	page = pud_page(*pudp);
->> +	pud_clear(pudp);
->> +	__flush_tlb_kernel_pgtable(addr);
->> +	free_hotplug_pgtable_page(page);
->> +}
->> +#else
->> +static void free_pmd_table(pmd_t *pmdp, pud_t *pudp, unsigned long addr) { }
->> +#endif
-> 
-> Can we fold the check in and remove the ifdeferry? e.g.
-> 
-> static void free_pmd_table(pmd_t *pmdp, pud_t *pudp, unsigned long addr)
-> {
-> 	struct page *page;
-> 	int i;
-> 
-> 	if (CONFIG_PGTABLE_LEVELS <= 2)
-> 		return;
-> 	
-> 	...
-> }
-> 
-> ... that would ensure that we always got build coverage here, and
-
-Thats true. This will get compiled for all combinations.
-
-> minimize duplication. We do similar in map_kernel() and
-> early_fixmap_init() today.
-> 
-> Likewise for the other levels.
-
-Sure, will do.
+Disabling stop0_lite via sysfs didn't help since we would fallback to
+snooze and it would make matters worse.
 
 > 
-> For arm64, the general policy is to use READ_ONCE() when reading a page
-> table entry (even if not strictly necessary), so please do so
-> consistently.
+> We should always have fewer states unless proven otherwise.
 
-For the likes "page = p???_page(*p???p)" which got missed ? Will fix it.
+I agree.
 
 > 
-> [...]
+> That said, we enable it today so I don't want to argue this point
+> here, because it is a different issue from your patch.
 > 
->> +static void
->> +remove_pte_table(pmd_t *pmdp, unsigned long addr,
->> +			unsigned long end, bool sparse_vmap)
->> +{
->> +	struct page *page;
->> +	pte_t *ptep;
->> +	unsigned long start = addr;
->> +
->> +	for (; addr < end; addr += PAGE_SIZE) {
->> +		ptep = pte_offset_kernel(pmdp, addr);
->> +		if (!pte_present(*ptep))
->> +			continue;
->> +
->> +		if (sparse_vmap) {
->> +			page = pte_page(READ_ONCE(*ptep));
->> +			free_hotplug_page_range(page, PAGE_SIZE);
->> +		}
->> +		pte_clear(&init_mm, addr, ptep);
->> +	}
->> +	flush_tlb_kernel_range(start, end);
->> +}
+> > When it is in stop0 or deeper, 
+> > it free up both
+> > space and time slice of core.
+> > In stop0_lite, cpu doesn't free up the core resources and thus inhibits 
+> > thread
+> > folding. When a cpu goes to stop0, it will free up the core resources 
+> > thus increasing
+> > the single thread performance of other sibling thread.
+> > Hence, we do not want to get stuck in stop0_lite for long duration, and 
+> > want to quickly
+> > move onto the next state.
+> > If we get stuck in any other state we would possibly be losing on to 
+> > power saving,
+> > but will still be able to gain the performance benefits for other 
+> > sibling threads.
 > 
-> Please use a temporary pte variable here, e.g.
+> That's true, but stop0 -> deeper stop is also a benefit (for
+> performance if we have some power/thermal constraints, and/or for power
+> usage).
 > 
-> static void remove_pte_table(pmd_t *pmdp, unsigned long addr,
-> 			     unsigned long end, bool sparse_vmap)
-> {
-> 	unsigned long start = addr;
-> 	struct page *page;
-> 	pte_t *ptep, pte;
+> Sure it may not be so noticable as the SMT switch, but I just wonder
+> if the infrastructure should be there for the same reason.
 > 
-> 	for (; addr < end; addr += PAGE_SIZE) {
-> 		ptep = pte_offset_kernel(pmdp, addr);
-> 		pte = READ_ONCE(*ptep);
-> 
-> 		if (!pte_present(pte))
-> 			continue;
-> 		
-> 		if (sparse_vmap) {
-> 			page = pte_page(pte);
-> 			free_hotplug_page_range(page, PAGE_SIZE);
-> 		}
-> 
-> 		pte_clear(&init_mm, addr, ptep);
-> 	}
-> 
-> 	flush_tlb_kernel_range(start, end);
-> }
-> 
-> Likewise for the other levels.
+> I was testing interrupt frequency on some tickless workloads configs,
+> and without too much trouble you can get CPUs to sleep with no
+> interrupts for many minutes. Hours even. We wouldn't want the CPU to
+> stay in stop0 for that long.
 
-Makes sense. Will do.
+If it stays in stop0 or even stop2 for that long, we would want to
+"promote" it to a deeper state, such as say STOP5 which allows the
+other cores to run at higher frequencies.
 
 > 
-> [...]
-> 
->> +static void
->> +remove_pagetable(unsigned long start, unsigned long end, bool sparse_vmap)
->> +{
->> +	unsigned long addr, next;
->> +	pud_t *pudp_base;
->> +	pgd_t *pgdp;
->> +
->> +	spin_lock(&init_mm.page_table_lock);
-> 
-> It would be good to explain why we need to take the ptl here.
+> Just thinking about the patch itself, I wonder do you need a full
+> kernel timer, or could we just set the decrementer? Is there much 
+> performance cost here?
+>
 
-Will update both commit message and add an in-code comment here.
+Good point. A decrementer would do actually.
 
-> 
-> IIUC that shouldn't be necessary for the linear map. Am I mistaken?
+> Thanks,
+> Nick
 
-Its not absolutely necessary for linear map right now because both memory hot
-plug & ptdump which modifies or walks the page table ranges respectively take
-memory hotplug lock. That apart, no other callers creates or destroys linear
-mapping at runtime.
+--
+Thanks and Regards
+gautham.
 
-> 
-> Is there a specific race when tearing down the vmemmap?
-
-This is trickier than linear map. vmemmap additions would be protected with
-memory hotplug lock but this can potential collide with vmalloc/IO regions.
-Even if they dont right now that will be because they dont share intermediate
-page table levels.
-
-Memory hot-remove is not a very performance critical path. Not even as critical
-as memory hot add. Hence its not worth relying on current non-overlapping kernel
-virtual address range placement and reason it for not taking this critical lock
-which might be problematic if things change later. Lets be on the safer side and
-keep this lock.
