@@ -2,200 +2,99 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FC4C46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37657C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:31:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A0212089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:30:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558013445;
-	bh=nsuoPZEkx6Q9U84UggA8TaDDhhAbRFcemdtlTF80OxE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dGNKReFjF8EwjOhE5b+nS6BYN+MaXPIce2eKOkWArcGEv2GTy8RMGN3Ub7H8TPgxl
-	 v2AP9d+cXWpwBXxIwkx//tMtXkQYk//0TLglHtCLoY4eQkRdmn1wfSjW/z3tdPINTZ
-	 WMAyRpl8qQFnCbx4qiIZwgR8yQkrVtP3tlhtyQNU=
+	by mail.kernel.org (Postfix) with ESMTP id 08CF520815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:31:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VtBsh4pw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfEPNao (ORCPT
+        id S1727560AbfEPNbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:30:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59180 "EHLO mx1.suse.de"
+        Thu, 16 May 2019 09:31:17 -0400
+Received: from mail-eopbgr20047.outbound.protection.outlook.com ([40.107.2.47]:29879
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726528AbfEPNao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:30:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id B1F27AD7B;
-        Thu, 16 May 2019 13:30:41 +0000 (UTC)
-Date:   Thu, 16 May 2019 15:30:34 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
-        keith.busch@intel.com, kirill.shutemov@linux.intel.com,
-        pasha.tatashin@oracle.com, alexander.h.duyck@linux.intel.com,
-        ira.weiny@intel.com, andreyknvl@google.com, arunks@codeaurora.org,
-        vbabka@suse.cz, cl@linux.com, riel@surriel.com,
-        keescook@chromium.org, hannes@cmpxchg.org, npiggin@gmail.com,
-        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
-        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
-        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH RFC 0/5] mm: process_vm_mmap() -- syscall for duplication
- a process mapping
-Message-ID: <20190516133034.GT16651@dhcp22.suse.cz>
-References: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
+        id S1726528AbfEPNbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:31:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NCgt6aJ4FHdlBcWirefvbkbgnsQtFRXZ5rwvzDoRq4A=;
+ b=VtBsh4pw73zPcebTqr+K3LTT6av4XRu4pvrHG6n5g6mnY69fPIinhCh/CJwMZhVsj3xNufODKjMqFcmuAUNx/xNPMm4JZKc9PYPL16KkDBwm2aSEpRy6eypfqzufa4u5OdJMzroi3/HBOslQXpLNy+IpAbF8Lvvmbl6umQbmN20=
+Received: from VI1PR04MB4880.eurprd04.prod.outlook.com (20.177.49.153) by
+ VI1PR04MB5742.eurprd04.prod.outlook.com (20.178.127.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Thu, 16 May 2019 13:31:12 +0000
+Received: from VI1PR04MB4880.eurprd04.prod.outlook.com
+ ([fe80::d9de:1be3:e7e6:757f]) by VI1PR04MB4880.eurprd04.prod.outlook.com
+ ([fe80::d9de:1be3:e7e6:757f%3]) with mapi id 15.20.1900.010; Thu, 16 May 2019
+ 13:31:12 +0000
+From:   Claudiu Manoil <claudiu.manoil@nxp.com>
+To:     "Y.b. Lu" <yangbo.lu@nxp.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/3] enetc: add hardware timestamping support
+Thread-Topic: [PATCH 1/3] enetc: add hardware timestamping support
+Thread-Index: AQHVC84BpTq18Sng3k254t8Y+2yCUKZtu0bw
+Date:   Thu, 16 May 2019 13:31:12 +0000
+Message-ID: <VI1PR04MB4880C3E6D24AB7A53887D9C9960A0@VI1PR04MB4880.eurprd04.prod.outlook.com>
+References: <20190516100028.48256-1-yangbo.lu@nxp.com>
+ <20190516100028.48256-2-yangbo.lu@nxp.com>
+In-Reply-To: <20190516100028.48256-2-yangbo.lu@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=claudiu.manoil@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: af669eba-f862-4790-fd83-08d6da02c36d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5742;
+x-ms-traffictypediagnostic: VI1PR04MB5742:
+x-microsoft-antispam-prvs: <VI1PR04MB5742891663A18BB2EDD4A25F960A0@VI1PR04MB5742.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0039C6E5C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(396003)(39860400002)(136003)(376002)(13464003)(199004)(189003)(55016002)(478600001)(6436002)(9686003)(3846002)(4326008)(6116002)(53936002)(64756008)(256004)(33656002)(73956011)(66476007)(66556008)(71190400001)(66946007)(66446008)(76116006)(2906002)(110136005)(6246003)(71200400001)(446003)(2501003)(229853002)(7696005)(76176011)(54906003)(66066001)(26005)(74316002)(102836004)(305945005)(44832011)(486006)(7736002)(6506007)(25786009)(86362001)(99286004)(81156014)(81166006)(186003)(5660300002)(14454004)(11346002)(476003)(68736007)(8936002)(8676002)(316002)(4744005)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5742;H:VI1PR04MB4880.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Q10LGT+o1yOJVNPfES/wALUGZNVQgjpq5dbbFUJqf6iH9Ce5/oZPyEMdzsp18cQoFOYY/APOeEV/dk1/gtl4pBnjdmEkMBEc+wkkLX2tK4PsPSy+/6SPdBVODYy7AJ0LF4CELj6ooPLwGDufgrPMrFUi9yYn+T199Yi6vm0LrYF7fz5k4Z3Lhx2mQv5Yj4zkDzK7LevvHbKUSIgznRk5QTfUQRsify8LwA7lSNFEmuqDW7QKM7YKbkrodEVfKF49eBGOajuFdd6u4m1C3fzXBhf5SSQ3tCgYEHvmHLsGsGIH28acyBv/YEXHxr9iQ4Yob/Hxnc6sn0lwVrC5zMTpeQL+SmhYIymtZIT+nupYVU2KbDa2uRaCv/9kiwlX1IVhLrIf1bPg1++kClgZsTqm0tasPbEjLCvYzuKaf5AT9h4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af669eba-f862-4790-fd83-08d6da02c36d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 13:31:12.2079
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5742
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[You are defining a new user visible API, please always add linux-api
- mailing list - now done]
-
-On Wed 15-05-19 18:11:15, Kirill Tkhai wrote:
-> This patchset adds a new syscall, which makes possible
-> to clone a mapping from a process to another process.
-> The syscall supplements the functionality provided
-> by process_vm_writev() and process_vm_readv() syscalls,
-> and it may be useful in many situation.
-> 
-> For example, it allows to make a zero copy of data,
-> when process_vm_writev() was previously used:
-> 
-> 	struct iovec local_iov, remote_iov;
-> 	void *buf;
-> 
-> 	buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
-> 		   MAP_PRIVATE|MAP_ANONYMOUS, ...);
-> 	recv(sock, buf, n * PAGE_SIZE, 0);
-> 
-> 	local_iov->iov_base = buf;
-> 	local_iov->iov_len = n * PAGE_SIZE;
-> 	remove_iov = ...;
-> 
-> 	process_vm_writev(pid, &local_iov, 1, &remote_iov, 1 0);
-> 	munmap(buf, n * PAGE_SIZE);
-> 
-> 	(Note, that above completely ignores error handling)
-> 
-> There are several problems with process_vm_writev() in this example:
-> 
-> 1)it causes pagefault on remote process memory, and it forces
->   allocation of a new page (if was not preallocated);
-> 
-> 2)amount of memory for this example is doubled in a moment --
->   n pages in current and n pages in remote tasks are occupied
->   at the same time;
-> 
-> 3)received data has no a chance to be properly swapped for
->   a long time.
-> 
-> The third is the most critical in case of remote process touches
-> the data pages some time after process_vm_writev() was made.
-> Imagine, node is under memory pressure:
-> 
-> a)kernel moves @buf pages into swap right after recv();
-> b)process_vm_writev() reads the data back from swap to pages;
-> c)process_vm_writev() allocates duplicate pages in remote
->   process and populates them;
-> d)munmap() unmaps @buf;
-> e)5 minutes later remote task touches data.
-> 
-> In stages "a" and "b" kernel submits unneeded IO and makes
-> system IO throughput worse. To make "b" and "c", kernel
-> reclaims memory, and moves pages of some other processes
-> to swap, so they have to read pages from swap back. Also,
-> unneeded copying of pages is occured, while zero-copy is
-> more preferred.
-> 
-> We observe similar problem during online migration of big enough
-> containers, when after doubling of container's size, the time
-> increases 100 times. The system resides under high IO and
-> throwing out of useful cashes.
-> 
-> The proposed syscall aims to introduce an interface, which
-> supplements currently existing process_vm_writev() and
-> process_vm_readv(), and allows to solve the problem with
-> anonymous memory transfer. The above example may be rewritten as:
-> 
-> 	void *buf;
-> 
-> 	buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
-> 		   MAP_PRIVATE|MAP_ANONYMOUS, ...);
-> 	recv(sock, buf, n * PAGE_SIZE, 0);
-> 
-> 	/* Sign of @pid is direction: "from @pid task to current" or vice versa. */
-> 	process_vm_mmap(-pid, buf, n * PAGE_SIZE, remote_addr, PVMMAP_FIXED);
-> 	munmap(buf, n * PAGE_SIZE);
-> 
-> It is swap-friendly: in case of memory is swapped right after recv(),
-> the syscall just copies pagetable entries like we do on fork(),
-> so real access to pages does not occurs, and no IO is needed.
-> No excess pages are reclaimed, and number of pages is not doubled.
-> Also, zero-copy takes a place, and this also reduces overhead.
-> 
-> The patchset does not introduce much new code, since we simply
-> reuse existing copy_page_range() and copy_vma() functions.
-> We extend copy_vma() to be able merge VMAs in remote task [2/5],
-> and teach copy_page_range() to work with different local and
-> remote addresses [3/5]. Patch [5/5] introduces the syscall logic,
-> which mostly consists of sanity checks. The rest of patches
-> are preparations.
-> 
-> This syscall may be used for page servers like in example
-> above, for migration (I assume, even virtual machines may
-> want something like this), for zero-copy desiring users
-> of process_vm_writev() and process_vm_readv(), for debug
-> purposes, etc. It requires the same permittions like
-> existing proc_vm_xxx() syscalls have.
-> 
-> The tests I used may be obtained here:
-> 
-> [1]https://gist.github.com/tkhai/198d32fdc001ec7812a5e1ccf091f275
-> [2]https://gist.github.com/tkhai/f52dbaeedad5a699f3fb386fda676562
-> 
-> ---
-> 
-> Kirill Tkhai (5):
->       mm: Add process_vm_mmap() syscall declaration
->       mm: Extend copy_vma()
->       mm: Extend copy_page_range()
->       mm: Export round_hint_to_min()
->       mm: Add process_vm_mmap()
-> 
-> 
->  arch/x86/entry/syscalls/syscall_32.tbl |    1 
->  arch/x86/entry/syscalls/syscall_64.tbl |    2 
->  include/linux/huge_mm.h                |    6 +
->  include/linux/mm.h                     |   11 ++
->  include/linux/mm_types.h               |    2 
->  include/linux/mman.h                   |   14 +++
->  include/linux/syscalls.h               |    5 +
->  include/uapi/asm-generic/mman-common.h |    5 +
->  include/uapi/asm-generic/unistd.h      |    5 +
->  init/Kconfig                           |    9 +-
->  kernel/fork.c                          |    5 +
->  kernel/sys_ni.c                        |    2 
->  mm/huge_memory.c                       |   30 ++++--
->  mm/memory.c                            |  165 +++++++++++++++++++++-----------
->  mm/mmap.c                              |  154 ++++++++++++++++++++++++++----
->  mm/mremap.c                            |    4 -
->  mm/process_vm_access.c                 |   71 ++++++++++++++
->  17 files changed, 392 insertions(+), 99 deletions(-)
-> 
-> --
-> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-
--- 
-Michal Hocko
-SUSE Labs
+Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogWS5iLiBMdQ0KWy4uLl0NCj5TdWJq
+ZWN0OiBbUEFUQ0ggMS8zXSBlbmV0YzogYWRkIGhhcmR3YXJlIHRpbWVzdGFtcGluZyBzdXBwb3J0
+DQo+DQpbLi4uXQ0KDQpIaSBZYW5nYm8sDQoNClRoZXNlIGVuZXRjIHBhdGNoZXMgdGFyZ2V0aW5n
+IG5ldC1uZXh0IHdpbGwgaGF2ZSB0byBiZSByZWJhc2VkIG9uDQp0aGUgbGF0ZXN0IGVuZXRjIG5l
+dC5naXQgY29tbWl0cywgb3RoZXJ3aXNlIHRoZXJlIHdpbGwgYmUgc29tZSBtZXJnZQ0KY29uZmxp
+Y3RzIGZvciBlbmV0Yy5jIGFuZCBlbmV0Y19ldGh0b29sLmMuDQpUaGFua3MsDQpDbGF1ZGl1DQoN
+CnNlZQ0KMjJmYjQzZjM2MDA2ICJlbmV0YzogQWRkIG1pc3NpbmcgbGluayBzdGF0ZSBpbmZvIGZv
+ciBldGh0b29sIg0KZjRhMGJlODRkNzNlICJlbmV0YzogRml4IE5VTEwgZG1hIGFkZHJlc3MgdW5t
+YXAgZm9yIFR4IEJEIGV4dGVuc2lvbnMiDQoNCg==
