@@ -2,187 +2,197 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9D9C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF78C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B2DA2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C13D2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:23:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbfEPIWr (ORCPT
+        id S1726773AbfEPIXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 04:22:47 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51228 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726336AbfEPIWr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 04:22:47 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4G8MPJk095827
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 04:22:46 -0400
-Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sh42qrjma-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 04:22:45 -0400
-Received: from localhost
-        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ego@linux.vnet.ibm.com>;
-        Thu, 16 May 2019 09:22:45 +0100
-Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
-        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 16 May 2019 09:22:42 +0100
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4G8MffA15860102
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 May 2019 08:22:41 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7016FBE053;
-        Thu, 16 May 2019 08:22:41 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2731EBE054;
-        Thu, 16 May 2019 08:22:41 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.124.35.248])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 16 May 2019 08:22:41 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 2046C2E3894; Thu, 16 May 2019 13:52:38 +0530 (IST)
-Date:   Thu, 16 May 2019 13:52:38 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     ego@linux.vnet.ibm.com, daniel.lezcano@linaro.org, dja@axtens.net,
-        Abhishek <huntbag@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, rjw@rjwysocki.net
-Subject: Re: [PATCH 0/1] Forced-wakeup for stop lite states on Powernv
-Reply-To: ego@linux.vnet.ibm.com
-References: <20190422063231.51043-1-huntbag@linux.vnet.ibm.com>
- <1557291178.ow4spjzq5t.astroid@bobo.none>
- <b2fcf69a-aecd-ea81-b497-737642354736@linux.vnet.ibm.com>
- <1557981860.eltms77ctp.astroid@bobo.none>
- <20190516053659.GA20396@in.ibm.com>
- <1557986956.6pmjz10b9z.astroid@bobo.none>
+        Thu, 16 May 2019 04:23:53 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37262 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726347AbfEPIXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 04:23:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C7431715;
+        Thu, 16 May 2019 01:23:52 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 490AB3F703;
+        Thu, 16 May 2019 01:23:52 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id A66D7682413; Thu, 16 May 2019 09:23:50 +0100 (BST)
+Date:   Thu, 16 May 2019 09:23:50 +0100
+From:   "liviu.dudau@arm.com" <liviu.dudau@arm.com>
+To:     Wen He <wen.he_1@nxp.com>
+Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>
+Subject: Re: [EXT] Re: [v1] drm/arm/mali-dp: Disable checking for required
+ pixel clock rate
+Message-ID: <20190516082350.GB15144@e110455-lin.cambridge.arm.com>
+References: <20190515024348.43642-1-wen.he_1@nxp.com>
+ <20190515154530.GX15144@e110455-lin.cambridge.arm.com>
+ <AM0PR04MB48658C4B7AADE1E3FFCA7ED7E20A0@AM0PR04MB4865.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1557986956.6pmjz10b9z.astroid@bobo.none>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-x-cbid: 19051608-0036-0000-0000-00000ABC3AF4
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011104; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01204051; UDB=6.00632055; IPR=6.00984981;
- MB=3.00026913; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-16 08:22:45
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051608-0037-0000-0000-00004BD0A5B6
-Message-Id: <20190516082238.GB20396@in.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905160057
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM0PR04MB48658C4B7AADE1E3FFCA7ED7E20A0@AM0PR04MB4865.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicholas,
+On Thu, May 16, 2019 at 08:10:21AM +0000, Wen He wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: liviu.dudau@arm.com [mailto:liviu.dudau@arm.com]
+> > Sent: 2019年5月15日 23:46
+> > To: Wen He <wen.he_1@nxp.com>
+> > Cc: dri-devel@lists.freedesktop.org; linux-kernel@vger.kernel.org; Leo Li
+> > <leoyang.li@nxp.com>
+> > Subject: [EXT] Re: [v1] drm/arm/mali-dp: Disable checking for required pixel
+> > clock rate
+> > 
+> > 
+> > Hi Wen,
+> 
+> Hi Liviu,
+> 
+> > 
+> > On Wed, May 15, 2019 at 02:42:08AM +0000, Wen He wrote:
+> > > Disable checking for required pixel clock rate if ARCH_LAYERSCPAE is
+> > > enable.
+> > >
+> > > Signed-off-by: Alison Wang <alison.wang@nxp.com>
+> > > Signed-off-by: Wen He <wen.he_1@nxp.com>
+> > > ---
+> > > change in description:
+> > >       - This check that only supported one pixel clock required clock rate
+> > >       compare with dts node value. but we have supports 4 pixel clock
+> > >       for ls1028a board.
+> > 
+> > So, your DT says your pixel clock provider is a fixed clock? If you support more
+> > than one rate, you should instead use a real provider for it. How do you
+> > support the 4 pixel clocks?
+> > 
+>  
+> Yes , the DT node only can provided one pixel clock by using a fixed clock.
+> But we Display Port controller support 4 or more resolutions, each of which
+> requires a set of pixel clocks to drive, and we hope they can switch any resolution
+> we want by some program every times.
 
-On Thu, May 16, 2019 at 04:13:17PM +1000, Nicholas Piggin wrote:
+That program can't be some userspace application, because it will have to make
+changes to the hardware and the kernel will not know that things have changed
+under its feet. That leaves the option of the bootloader or some other kernel
+module doing the changes.
+
+If you have another kernel module that knows how to change clocks, that should
+be implemented using the common clocks infrastructure, at which time you can
+put it in the DT as the clock provider for the pixelclock.
+
+If the bootloader does the changes, then the bootloader should edit the DT and
+set the correct value for the pixel clock. Regardless, with your change and on
+your platform the user can request any resolution and the driver will silently
+fail to set that resolution.
+
+One other problem is the one Robin raised, where the kernel is compiled for
+multiple platforms, like what various Linux distributions do. That kernel will
+either work on other SoC or not, depending on what CONFIG_ARCH_LAYERSCAPE is
+set to.
+
+In summary, for this patch, it's a NAK. There are proper ways of achieving what
+you need, but this patch is not.
+
+Best regards,
+Liviu
 
 > 
-> > The motivation behind this patch was a HPC customer issue where they
-> > were observing some CPUs in the core getting stuck at stop0_lite
-> > state, thereby lowering the performance on the other CPUs of the core
-> > which were running the application.
-> > 
-> > Disabling stop0_lite via sysfs didn't help since we would fallback to
-> > snooze and it would make matters worse.
+> For example, if we set that fixed pixel clock is 27000000 (27Mhz), but user hope can see
+> a group 1080p resolution penguins during startup , and hope playing a 4k video once
+> system boot up done. 
+> Btw, In our board, the 1080p resolution is driven by a 148.5Mhz pixel clock, 4k is driven
+> by a 594Mhz. 27Mhz only can drive 480p resolution.
 > 
-> snooze has the timeout though, so it should kick into stop0 properly
-> (and if it doesn't that's another issue that should be fixed in this
-> series).
->
-> I'm not questioning the patch for stop0_lite, to be clear. I think
-> the logic is sound. I just raise one urelated issue that happens to
-> be for stop0_lite as well (should we even enable it on P9?), and one
-> peripheral issue (should we make a similar fix for deeper stop states?)
->
-
-I think it makes sense to generalize this from the point of view of
-CPUs remaining in shallower idle states for long durations on tickless
-kernels.
-
-> > 
-> >> 
-> >> We should always have fewer states unless proven otherwise.
-> > 
-> > I agree.
-> > 
-> >> 
-> >> That said, we enable it today so I don't want to argue this point
-> >> here, because it is a different issue from your patch.
-> >> 
-> >> > When it is in stop0 or deeper, 
-> >> > it free up both
-> >> > space and time slice of core.
-> >> > In stop0_lite, cpu doesn't free up the core resources and thus inhibits 
-> >> > thread
-> >> > folding. When a cpu goes to stop0, it will free up the core resources 
-> >> > thus increasing
-> >> > the single thread performance of other sibling thread.
-> >> > Hence, we do not want to get stuck in stop0_lite for long duration, and 
-> >> > want to quickly
-> >> > move onto the next state.
-> >> > If we get stuck in any other state we would possibly be losing on to 
-> >> > power saving,
-> >> > but will still be able to gain the performance benefits for other 
-> >> > sibling threads.
-> >> 
-> >> That's true, but stop0 -> deeper stop is also a benefit (for
-> >> performance if we have some power/thermal constraints, and/or for power
-> >> usage).
-> >> 
-> >> Sure it may not be so noticable as the SMT switch, but I just wonder
-> >> if the infrastructure should be there for the same reason.
-> >> 
-> >> I was testing interrupt frequency on some tickless workloads configs,
-> >> and without too much trouble you can get CPUs to sleep with no
-> >> interrupts for many minutes. Hours even. We wouldn't want the CPU to
-> >> stay in stop0 for that long.
-> > 
-> > If it stays in stop0 or even stop2 for that long, we would want to
-> > "promote" it to a deeper state, such as say STOP5 which allows the
-> > other cores to run at higher frequencies.
+> To meet the above user requirements, I was to setup following steps,
+> 1. Add the "video=1920x1080-32@60" to bootargs command line [specify penguins size]
+> 2. Play a 4K video with 4k resolution when system boot up done.
 > 
-> So we would want this same logic for all but the deepest runtime
-> stop state?
-
-Yes. We can, in steps, promote individual threads of the core to
-eventually request a deeper state such as stop4/5. On a completely
-idle tickless system, eventually we should see the core go to the
-deeper idle state.
-
-> 
-> >> Just thinking about the patch itself, I wonder do you need a full
-> >> kernel timer, or could we just set the decrementer? Is there much 
-> >> performance cost here?
-> >>
+> > Also, not sure what the paragraph above is meant to be. Should it be part of
+> > the commit message?
 > > 
-> > Good point. A decrementer would do actually.
 > 
-> That would be good if it does, might save a few cycles.
+> These comments just want to let you know.
 > 
-> Thanks,
-> Nick
->
+> > Best regards,
+> > Liviu
+> > 
+> > 
+> > >  drivers/gpu/drm/arm/malidp_crtc.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/arm/malidp_crtc.c
+> > > b/drivers/gpu/drm/arm/malidp_crtc.c
+> > > index 56aad288666e..bb79223d9981 100644
+> > > --- a/drivers/gpu/drm/arm/malidp_crtc.c
+> > > +++ b/drivers/gpu/drm/arm/malidp_crtc.c
+> > > @@ -36,11 +36,13 @@ static enum drm_mode_status
+> > > malidp_crtc_mode_valid(struct drm_crtc *crtc,
+> > >
+> 
+> According to our pixel configuration above,
+> Now the variable req_rate value is 148500000 or 59400000, another variable rate value is
+> 27000000, so we will get a warning and display will cannot works well. 
+> 
+> We're not sure which resolution are user want, and we also can't just offered one resolution
+> to user. so I remove this check on our board, maybe it's not good change.
+> 
+> I want to know do you have other good suggestion? Thanks.
+> 
+> Best Regards,
+> Wen
+> 
+> > >       if (req_rate) {
+> > >               rate = clk_round_rate(hwdev->pxlclk, req_rate);
+> > > +#ifndef CONFIG_ARCH_LAYERSCAPE
+> > >               if (rate != req_rate) {
+> > >                       DRM_DEBUG_DRIVER("pxlclk doesn't support %ld
+> > Hz\n",
+> > >                                        req_rate);
+> > >                       return MODE_NOCLOCK;
+> > >               }
+> > > +#endif
+> > >       }
+> > >
+> > >       return MODE_OK;
+> > > --
+> > > 2.17.1
+> > >
+> > 
+> > --
+> > ====================
+> > | I would like to |
+> > | fix the world,  |
+> > | but they're not |
+> > | giving me the   |
+> >  \ source code!  /
+> >   ---------------
+> >     ¯\_(ツ)_/¯
 
---
-Thanks and Regards
-gautham.
-
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
