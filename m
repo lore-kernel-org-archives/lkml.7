@@ -2,125 +2,200 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFFAC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FC4C46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 465CF20815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A0212089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558013445;
+	bh=nsuoPZEkx6Q9U84UggA8TaDDhhAbRFcemdtlTF80OxE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dGNKReFjF8EwjOhE5b+nS6BYN+MaXPIce2eKOkWArcGEv2GTy8RMGN3Ub7H8TPgxl
+	 v2AP9d+cXWpwBXxIwkx//tMtXkQYk//0TLglHtCLoY4eQkRdmn1wfSjW/z3tdPINTZ
+	 WMAyRpl8qQFnCbx4qiIZwgR8yQkrVtP3tlhtyQNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbfEPN2N (ORCPT
+        id S1727275AbfEPNao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:28:13 -0400
-Received: from mga04.intel.com ([192.55.52.120]:12658 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727584AbfEPN2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:28:10 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 06:28:09 -0700
-X-ExtLoop1: 1
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by fmsmga007.fm.intel.com with SMTP; 16 May 2019 06:28:04 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Thu, 16 May 2019 16:28:03 +0300
-Date:   Thu, 16 May 2019 16:28:03 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sean Paul <sean@poorly.run>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Eric Anholt <eric@anholt.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        intel-gfx <intel-gfx@lists.freedesktop.org>,
-        Nouveau Dev <nouveau@lists.freedesktop.org>,
-        "open list:DRM DRIVERS FOR RENESAS" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v3 04/10] drm: Convert
- connector_helper_funcs->atomic_check to accept drm_atomic_state
-Message-ID: <20190516132803.GM24299@intel.com>
-References: <20190502194956.218441-1-sean@poorly.run>
- <20190502194956.218441-5-sean@poorly.run>
- <20190511191202.GL13043@pendragon.ideasonboard.com>
- <20190513144747.GR17751@phenom.ffwll.local>
- <20190516120221.GI14820@pendragon.ideasonboard.com>
- <CAKMK7uG_TmzZBgVkJ+j9C53KRp1OgswYuxpFV77+eU6BPWwGgw@mail.gmail.com>
+        Thu, 16 May 2019 09:30:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59180 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726528AbfEPNao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:30:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B1F27AD7B;
+        Thu, 16 May 2019 13:30:41 +0000 (UTC)
+Date:   Thu, 16 May 2019 15:30:34 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
+        keith.busch@intel.com, kirill.shutemov@linux.intel.com,
+        pasha.tatashin@oracle.com, alexander.h.duyck@linux.intel.com,
+        ira.weiny@intel.com, andreyknvl@google.com, arunks@codeaurora.org,
+        vbabka@suse.cz, cl@linux.com, riel@surriel.com,
+        keescook@chromium.org, hannes@cmpxchg.org, npiggin@gmail.com,
+        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
+        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
+        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH RFC 0/5] mm: process_vm_mmap() -- syscall for duplication
+ a process mapping
+Message-ID: <20190516133034.GT16651@dhcp22.suse.cz>
+References: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAKMK7uG_TmzZBgVkJ+j9C53KRp1OgswYuxpFV77+eU6BPWwGgw@mail.gmail.com>
+In-Reply-To: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 02:07:34PM +0200, Daniel Vetter wrote:
-> On Thu, May 16, 2019 at 2:02 PM Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> >
-> > Hi Daniel,
-> >
-> > On Mon, May 13, 2019 at 04:47:47PM +0200, Daniel Vetter wrote:
-> > > On Sat, May 11, 2019 at 10:12:02PM +0300, Laurent Pinchart wrote:
-> > > > On Thu, May 02, 2019 at 03:49:46PM -0400, Sean Paul wrote:
-> > > >> From: Sean Paul <seanpaul@chromium.org>
-> > > >>
-> > > >> Everyone who implements connector_helper_funcs->atomic_check reaches
-> > > >> into the connector state to get the atomic state. Instead of continuing
-> > > >> this pattern, change the callback signature to just give atomic state
-> > > >> and let the driver determine what it does and does not need from it.
-> > > >>
-> > > >> Eventually all atomic functions should do this, but that's just too much
-> > > >> busy work for me.
-> > > >
-> > > > Given that drivers also access the connector state, isn't this slightly
-> > > > more inefficient ?
-> > >
-> > > It's atomic code, we're trying to optimize for clean code at the expense
-> > > of a bit of runtime overhead due to more pointer chasing. And I agree with
-> > > the general push, the pile of old/new_state pointers of various objects
-> > > we're passing around is confusing. Passing the overall drm_atomic_state
-> > > seems much more reasonable, and with that we can get everything else. Plus
-> > > it's much more obvious whether you have the old/new state (since that's
-> > > explicit when you look it up from the drm_atomic_state).
-> >
-> > Yes, I agree it's cleaner. I just hope the atomic state tracking cost
-> > can be kept under control :-)
-> >
-> > By the way, this is likely not going to happen as it would be way too
-> > intrusive, but it would be nice to rename drm_atomic_state to
-> > drm_atomic_transaction (or something similar). It doesn't model a state,
-> > but a change between an old state to a new state. This confused me in
-> > the past, and I'm sure it can still be confusing to newcomers.
+[You are defining a new user visible API, please always add linux-api
+ mailing list - now done]
+
+On Wed 15-05-19 18:11:15, Kirill Tkhai wrote:
+> This patchset adds a new syscall, which makes possible
+> to clone a mapping from a process to another process.
+> The syscall supplements the functionality provided
+> by process_vm_writev() and process_vm_readv() syscalls,
+> and it may be useful in many situation.
 > 
-> Why are you the first to suggest this, this is awesome!
-
-Can't quite tell if that's irony or not. Anyways, this has been
-suggested before but no volunteers stepped forward.
-
-> drm_atomic_state is indeed not a state, but a transaction representing
-> how we go from the old to the new state.
-
-On a semi-related topic, I've occasionally pondered about moving
-mode_changed & co. from the obj states to the top level
-state/transaction (maybe stored as a bitmask). But that would
-definitely not be a trivial sed job.
+> For example, it allows to make a zero copy of data,
+> when process_vm_writev() was previously used:
+> 
+> 	struct iovec local_iov, remote_iov;
+> 	void *buf;
+> 
+> 	buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
+> 		   MAP_PRIVATE|MAP_ANONYMOUS, ...);
+> 	recv(sock, buf, n * PAGE_SIZE, 0);
+> 
+> 	local_iov->iov_base = buf;
+> 	local_iov->iov_len = n * PAGE_SIZE;
+> 	remove_iov = ...;
+> 
+> 	process_vm_writev(pid, &local_iov, 1, &remote_iov, 1 0);
+> 	munmap(buf, n * PAGE_SIZE);
+> 
+> 	(Note, that above completely ignores error handling)
+> 
+> There are several problems with process_vm_writev() in this example:
+> 
+> 1)it causes pagefault on remote process memory, and it forces
+>   allocation of a new page (if was not preallocated);
+> 
+> 2)amount of memory for this example is doubled in a moment --
+>   n pages in current and n pages in remote tasks are occupied
+>   at the same time;
+> 
+> 3)received data has no a chance to be properly swapped for
+>   a long time.
+> 
+> The third is the most critical in case of remote process touches
+> the data pages some time after process_vm_writev() was made.
+> Imagine, node is under memory pressure:
+> 
+> a)kernel moves @buf pages into swap right after recv();
+> b)process_vm_writev() reads the data back from swap to pages;
+> c)process_vm_writev() allocates duplicate pages in remote
+>   process and populates them;
+> d)munmap() unmaps @buf;
+> e)5 minutes later remote task touches data.
+> 
+> In stages "a" and "b" kernel submits unneeded IO and makes
+> system IO throughput worse. To make "b" and "c", kernel
+> reclaims memory, and moves pages of some other processes
+> to swap, so they have to read pages from swap back. Also,
+> unneeded copying of pages is occured, while zero-copy is
+> more preferred.
+> 
+> We observe similar problem during online migration of big enough
+> containers, when after doubling of container's size, the time
+> increases 100 times. The system resides under high IO and
+> throwing out of useful cashes.
+> 
+> The proposed syscall aims to introduce an interface, which
+> supplements currently existing process_vm_writev() and
+> process_vm_readv(), and allows to solve the problem with
+> anonymous memory transfer. The above example may be rewritten as:
+> 
+> 	void *buf;
+> 
+> 	buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
+> 		   MAP_PRIVATE|MAP_ANONYMOUS, ...);
+> 	recv(sock, buf, n * PAGE_SIZE, 0);
+> 
+> 	/* Sign of @pid is direction: "from @pid task to current" or vice versa. */
+> 	process_vm_mmap(-pid, buf, n * PAGE_SIZE, remote_addr, PVMMAP_FIXED);
+> 	munmap(buf, n * PAGE_SIZE);
+> 
+> It is swap-friendly: in case of memory is swapped right after recv(),
+> the syscall just copies pagetable entries like we do on fork(),
+> so real access to pages does not occurs, and no IO is needed.
+> No excess pages are reclaimed, and number of pages is not doubled.
+> Also, zero-copy takes a place, and this also reduces overhead.
+> 
+> The patchset does not introduce much new code, since we simply
+> reuse existing copy_page_range() and copy_vma() functions.
+> We extend copy_vma() to be able merge VMAs in remote task [2/5],
+> and teach copy_page_range() to work with different local and
+> remote addresses [3/5]. Patch [5/5] introduces the syscall logic,
+> which mostly consists of sanity checks. The rest of patches
+> are preparations.
+> 
+> This syscall may be used for page servers like in example
+> above, for migration (I assume, even virtual machines may
+> want something like this), for zero-copy desiring users
+> of process_vm_writev() and process_vm_readv(), for debug
+> purposes, etc. It requires the same permittions like
+> existing proc_vm_xxx() syscalls have.
+> 
+> The tests I used may be obtained here:
+> 
+> [1]https://gist.github.com/tkhai/198d32fdc001ec7812a5e1ccf091f275
+> [2]https://gist.github.com/tkhai/f52dbaeedad5a699f3fb386fda676562
+> 
+> ---
+> 
+> Kirill Tkhai (5):
+>       mm: Add process_vm_mmap() syscall declaration
+>       mm: Extend copy_vma()
+>       mm: Extend copy_page_range()
+>       mm: Export round_hint_to_min()
+>       mm: Add process_vm_mmap()
+> 
+> 
+>  arch/x86/entry/syscalls/syscall_32.tbl |    1 
+>  arch/x86/entry/syscalls/syscall_64.tbl |    2 
+>  include/linux/huge_mm.h                |    6 +
+>  include/linux/mm.h                     |   11 ++
+>  include/linux/mm_types.h               |    2 
+>  include/linux/mman.h                   |   14 +++
+>  include/linux/syscalls.h               |    5 +
+>  include/uapi/asm-generic/mman-common.h |    5 +
+>  include/uapi/asm-generic/unistd.h      |    5 +
+>  init/Kconfig                           |    9 +-
+>  kernel/fork.c                          |    5 +
+>  kernel/sys_ni.c                        |    2 
+>  mm/huge_memory.c                       |   30 ++++--
+>  mm/memory.c                            |  165 +++++++++++++++++++++-----------
+>  mm/mmap.c                              |  154 ++++++++++++++++++++++++++----
+>  mm/mremap.c                            |    4 -
+>  mm/process_vm_access.c                 |   71 ++++++++++++++
+>  17 files changed, 392 insertions(+), 99 deletions(-)
+> 
+> --
+> Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
 
 -- 
-Ville Syrjälä
-Intel
+Michal Hocko
+SUSE Labs
