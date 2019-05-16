@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66697C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12818C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3734820848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9BB4206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558005246;
-	bh=umJwimOE3RS8SF4/ckTtSrnDGiqORUt9kU+yEmJXju0=;
+	s=default; t=1558005248;
+	bh=TqhZHdwfkO5ivrC/6wBTb10vpkHbNtbC4ec8hlXtbPY=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=wa4zWnbZAk/+LBgspjuK3MF2fuJACezuGjUhbywtQs1DMsA8z1Uh+wTH/GGEPee0M
-	 yJzYH25uWvXrWyPuPRjjlH6Cg3d0ObO+Cbu/yKXeAeZZF6galnMUaze6ihmvVjNIwq
-	 8ON4nhcVDCAqUez1W6Z7nQp7lVg9ePyOmGPy6Y4A=
+	b=UI9aaiuFVDQ1oxUJJfb1TIxRvx6SaRSnsMdkDDSJplOuV7RSPBgv2wpcP7tPr4QDY
+	 zVYVn796Umjm39mcu0QGXwcg56hAEszMkNcFInmaapXcAAPnTLiNTPOE/8U4KvKa3t
+	 QHJgB6cn/H3x9oyq1z8UFXFOv+AbmMtPJad7RUMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbfEPLOF (ORCPT
+        id S1727347AbfEPLOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:14:05 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35298 "EHLO
+        Thu, 16 May 2019 07:14:08 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35300 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727278AbfEPLOD (ORCPT
+        with ESMTP id S1727279AbfEPLOD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 May 2019 07:14:03 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,16 +34,16 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=37loz0j4/OZ5il819QfI9xzcVbzdXjCr6lBxULO4KQU=; b=buIQ0JjHLY0E
-        8DfILar/uGpDIyQoIxTmvvTZRzXylL6XAk+JVEopDmE4CFMJXrIK7vSia+un0vZC/s1nK7rSmgRWU
-        CGYpnl9/Sfowa/qK8/372m/BqzoTc/F+7NHQKtkIgPaJ/64oXlJuhdvWRD2L65I5TDFjb1Czobb+J
-        BWWTw=;
+        List-Archive; bh=gGP3DkbIF/cxsu+/ZUcpP5J0dMsctvEJY2qZqUFf/OY=; b=PmfERiVv7OwM
+        c1fg/+1vfnyuXyd+aMEu2YjFO7cgsleOlYqvvqesOOx0xen7NfxfCWZP6yJHr9UHuE6JDi5/3QAu7
+        nthGwooDQbvuMi/ZsWIMcp8tYY417GM4RUssJqIzFSYGxV4dGT8WrtrA3avuY7gT7dUNOXbDh5a+/
+        XkSrE=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hREKj-00066j-FX; Thu, 16 May 2019 11:13:57 +0000
+        id 1hREKj-00066i-FY; Thu, 16 May 2019 11:13:57 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 3D1DD1126D47; Thu, 16 May 2019 12:13:54 +0100 (BST)
+        id 07B201126D46; Thu, 16 May 2019 12:13:54 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Jerome Brunet <jbrunet@baylibre.com>
 Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
@@ -52,10 +52,10 @@ Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mark Brown <broonie@kernel.org>,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: Applied "ASoC: meson: add tohdmitx DT bindings" to the asoc tree
-In-Reply-To: <20190515131858.32130-4-jbrunet@baylibre.com>
+Subject: Applied "ASoC: meson: axg-card: add basic codec-to-codec link support" to the asoc tree
+In-Reply-To: <20190515131858.32130-5-jbrunet@baylibre.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190516111354.3D1DD1126D47@debutante.sirena.org.uk>
+Message-Id: <20190516111354.07B201126D46@debutante.sirena.org.uk>
 Date:   Thu, 16 May 2019 12:13:54 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -64,7 +64,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: meson: add tohdmitx DT bindings
+   ASoC: meson: axg-card: add basic codec-to-codec link support
 
 has been applied to the asoc tree at
 
@@ -89,105 +89,70 @@ to this mail.
 Thanks,
 Mark
 
-From e35f5ad6a965de5d301ca5957a1c48c53fe366fb Mon Sep 17 00:00:00 2001
+From 0a8f1117a6803398d361e7bd76fef59c636f143b Mon Sep 17 00:00:00 2001
 From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Wed, 15 May 2019 15:18:56 +0200
-Subject: [PATCH] ASoC: meson: add tohdmitx DT bindings
+Date: Wed, 15 May 2019 15:18:57 +0200
+Subject: [PATCH] ASoC: meson: axg-card: add basic codec-to-codec link support
 
-Add the bindings and the related documentation for the audio hdmitx
-control glue of the Amlogic g12a SoC family
+Add basic support for codec-to-codec link in the axg sound card.
+The cpu side of these links is expected to properly set the hw_params
+and format of the link.
+
+ATM, only the tohdmitx glue is supported but others (like the
+internal DAC glue) should follow.
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 Tested-by: Neil Armstrong <narmstrong@baylibre.com>
 Tested-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../bindings/sound/amlogic,g12a-tohdmitx.txt  | 55 +++++++++++++++++++
- .../dt-bindings/sound/meson-g12a-tohdmitx.h   | 13 +++++
- 2 files changed, 68 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
- create mode 100644 include/dt-bindings/sound/meson-g12a-tohdmitx.h
+ sound/soc/meson/axg-card.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt b/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
-new file mode 100644
-index 000000000000..aa6c35570d31
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/amlogic,g12a-tohdmitx.txt
-@@ -0,0 +1,55 @@
-+* Amlogic HDMI Tx control glue
-+
-+Required properties:
-+- compatible: "amlogic,g12a-tohdmitx"
-+- reg: physical base address of the controller and length of memory
-+       mapped region.
-+- #sound-dai-cells: should be 1.
-+
-+Example on the S905X2 SoC:
-+
-+tohdmitx: audio-controller@744 {
-+	compatible = "amlogic,g12a-tohdmitx";
-+	reg = <0x0 0x744 0x0 0x4>;
-+	#sound-dai-cells = <1>;
+diff --git a/sound/soc/meson/axg-card.c b/sound/soc/meson/axg-card.c
+index 5c8deee8d512..db0a7fc18928 100644
+--- a/sound/soc/meson/axg-card.c
++++ b/sound/soc/meson/axg-card.c
+@@ -29,6 +29,18 @@ struct axg_dai_link_tdm_data {
+ 	struct axg_dai_link_tdm_mask *codec_masks;
+ };
+ 
++/*
++ * Base params for the codec to codec links
++ * Those will be over-written by the CPU side of the link
++ */
++static const struct snd_soc_pcm_stream codec_params = {
++	.formats = SNDRV_PCM_FMTBIT_S24_LE,
++	.rate_min = 5525,
++	.rate_max = 192000,
++	.channels_min = 1,
++	.channels_max = 8,
 +};
 +
-+Example of an 'amlogic,axg-sound-card':
+ #define PREFIX "amlogic,"
+ 
+ static int axg_card_reallocate_links(struct axg_card *priv,
+@@ -517,6 +529,11 @@ static int axg_card_cpu_is_tdm_iface(struct device_node *np)
+ 	return of_device_is_compatible(np, PREFIX "axg-tdm-iface");
+ }
+ 
++static int axg_card_cpu_is_codec(struct device_node *np)
++{
++	return of_device_is_compatible(np, PREFIX "g12a-tohdmitx");
++}
 +
-+sound {
-+	compatible = "amlogic,axg-sound-card";
-+
-+[...]
-+
-+	dai-link-x {
-+		sound-dai = <&tdmif_a>;
-+		dai-format = "i2s";
-+		dai-tdm-slot-tx-mask-0 = <1 1>;
-+
-+		codec-0 {
-+			sound-dai = <&tohdmitx TOHDMITX_I2S_IN_A>;
-+		};
-+
-+		codec-1 {
-+			sound-dai = <&external_dac>;
-+		};
-+	};
-+
-+	dai-link-y {
-+		sound-dai = <&tdmif_c>;
-+		dai-format = "i2s";
-+		dai-tdm-slot-tx-mask-0 = <1 1>;
-+
-+		codec {
-+			sound-dai = <&tohdmitx TOHDMITX_I2S_IN_C>;
-+		};
-+	};
-+
-+	dai-link-z {
-+		sound-dai = <&tohdmitx TOHDMITX_I2S_OUT>;
-+
-+		codec {
-+			sound-dai = <&hdmi_tx>;
-+		};
-+	};
-+};
-diff --git a/include/dt-bindings/sound/meson-g12a-tohdmitx.h b/include/dt-bindings/sound/meson-g12a-tohdmitx.h
-new file mode 100644
-index 000000000000..c5e1f48d30d0
---- /dev/null
-+++ b/include/dt-bindings/sound/meson-g12a-tohdmitx.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __DT_MESON_G12A_TOHDMITX_H
-+#define __DT_MESON_G12A_TOHDMITX_H
-+
-+#define TOHDMITX_I2S_IN_A	0
-+#define TOHDMITX_I2S_IN_B	1
-+#define TOHDMITX_I2S_IN_C	2
-+#define TOHDMITX_I2S_OUT	3
-+#define TOHDMITX_SPDIF_IN_A	4
-+#define TOHDMITX_SPDIF_IN_B	5
-+#define TOHDMITX_SPDIF_OUT	6
-+
-+#endif /* __DT_MESON_G12A_TOHDMITX_H */
+ static int axg_card_add_link(struct snd_soc_card *card, struct device_node *np,
+ 			     int *index)
+ {
+@@ -540,6 +557,8 @@ static int axg_card_add_link(struct snd_soc_card *card, struct device_node *np,
+ 
+ 	if (axg_card_cpu_is_tdm_iface(dai_link->cpu_of_node))
+ 		ret = axg_card_parse_tdm(card, np, index);
++	else if (axg_card_cpu_is_codec(dai_link->cpu_of_node))
++		dai_link->params = &codec_params;
+ 
+ 	return ret;
+ }
 -- 
 2.20.1
 
