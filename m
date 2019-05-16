@@ -2,125 +2,132 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9C7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E246C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 067482087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F4622082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:39:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="GD3HsR78"
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="nK/xIje4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfEPJjc (ORCPT
+        id S1727146AbfEPJjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 05:39:32 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:52210 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbfEPJjc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 05:39:32 -0400
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x4G9dDcO030758;
-        Thu, 16 May 2019 18:39:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x4G9dDcO030758
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557999553;
-        bh=ItLMaSNmBZIJXqfk6ZYo/ABq2muq0aQgTGE1TDAZluI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GD3HsR78UCna+gSw5HCykseeD6debzsHpA71mVspp2in1ReVMEMxQBqe703Ue/fjp
-         utphWWctY851H1dys2a/kQYRn7i+IfDBFk+RiS4a74OWtwea+9nhdKHY0SciahRXpF
-         7Kbe6Uy8rfC5kSLGClZKKVv37p8X+xG8kieVgkXp4vIdeHzJd3+gQ0FubxON1xhnrB
-         B96Yur0UrPpBUstPDXZ9hxGzbvfmDHXNsfg7YdhFUx/uTjhdvIIkFDzfRh+zguwt4X
-         nVeYhHKpmKX9qrvoSXH2nmTfwcZOAlWGLv3gJS/d7iqaSfZDXDiIOehR+8zd2DHKzl
-         WE9CPdtYf5eFg==
-X-Nifty-SrcIP: [209.85.222.53]
-Received: by mail-ua1-f53.google.com with SMTP id r19so428506uap.5;
-        Thu, 16 May 2019 02:39:13 -0700 (PDT)
-X-Gm-Message-State: APjAAAX9CyBBb4Qit0OO2KUpst9OHq2dgg3NjF233uPI1Vko+Fxc9v8O
-        D3kkTfm2BCCzcRx70Mex6qjK0c6HrPb/QV1Jquc=
-X-Google-Smtp-Source: APXvYqwNo/oJRSKfwe0wmnho9as9QLLtnjg88c0HIcR9+AvwzmThx+PSLc05Hb8dCyppmmhNiycTMtE0k5OTdld/FRc=
-X-Received: by 2002:a9f:24a3:: with SMTP id 32mr607007uar.109.1557999552098;
- Thu, 16 May 2019 02:39:12 -0700 (PDT)
+        Thu, 16 May 2019 05:39:51 -0400
+Received: from ns.mm-sol.com ([37.157.136.199]:48688 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726374AbfEPJjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 05:39:51 -0400
+Received: from [192.168.27.209] (unknown [37.157.136.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id C8124CE6F;
+        Thu, 16 May 2019 12:39:47 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1557999587; bh=gtvWMbdQdnb7LYo5ABxwlV32TZDaPlVrBBH+/CofRko=;
+        h=Subject:To:Cc:From:Date:From;
+        b=nK/xIje4UFqTVVEISNtWB6QEO5a8wygY1e2E8Z4m7AUNg13m0ReU4WT9GSKz4Hytj
+         zmXkUJqsSxM4oCkQYsAD00OVwDTXFWH1h3g7n2pC1OgEKo8v6jPdb/sSIYAQ5omiQD
+         DrBhURBmTklidAqq1Mhdq+KizFSJAxNxMfL8f22EizKJVZkFrCBosYnwSoqei7y672
+         k4awo6qwCX7nelgUnfWv4ofToldsoX3K5gay5ZTE/WYH7/axgbMew41U52ZEDur+XH
+         dY1BpCOTsNrkFEASqqp+k1nR0cOtnJhaQEY0WISnPCerI2SnrUET/KOTbkVpvh8DRV
+         vwMfCR2A24YQw==
+Subject: Re: [PATCH v3 3/3] PCI: qcom: Add QCS404 PCIe controller support
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190502001955.10575-1-bjorn.andersson@linaro.org>
+ <20190502001955.10575-4-bjorn.andersson@linaro.org>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <d54c6002-496e-c8fb-b67f-e441453c29c6@mm-sol.com>
+Date:   Thu, 16 May 2019 12:39:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190515073818.22486-1-yamada.masahiro@socionext.com>
- <CAK7LNAQgBKq9JDGtQUD1kgKrfLZ4jOjuLJi7_tpSPLJZsWtmag@mail.gmail.com>
- <201905150913.C23BD99AD@keescook> <CAK7LNARezpQgcK9O9K3ZFeebMVNroWStno_brvSLadsKXVfm-Q@mail.gmail.com>
- <5e6999f3d0b349bd86a32a612cff7b4b@AcuMS.aculab.com>
-In-Reply-To: <5e6999f3d0b349bd86a32a612cff7b4b@AcuMS.aculab.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 16 May 2019 18:38:35 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQbtxRxg=1_ZDMmX=q8AGYQescqXZ1TqAjDufMFww6pyQ@mail.gmail.com>
-Message-ID: <CAK7LNAQbtxRxg=1_ZDMmX=q8AGYQescqXZ1TqAjDufMFww6pyQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] kbuild: check uniqueness of basename of modules
-To:     David Laight <David.Laight@aculab.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190502001955.10575-4-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+Hi Bjorn,
 
-On Thu, May 16, 2019 at 6:00 PM David Laight <David.Laight@aculab.com> wrote:
->
-> From: Masahiro Yamada
-> > Sent: 15 May 2019 18:55
-> ...
-> > >     xargs basename -a -- | sort | ...
-> >
-> > Sorry for my ignorance, but could you
-> > teach me the effect of "--" ?
-> >
-> > I sometimes use "--" as a separator
-> > when there is ambiguity in arguments
-> > for example, "git log <revision> -- <path>"
-> >
-> > In this case, what is intended by "--"?
->
-> The '--' stops getopt() from parsing any more parameters.
-> Useful things like 'grep -- -q' which will search for the
-> string '-q' rather than treating it as a command line option.
->
-> This is all made more horrid by a decision by the writers
-> of glibc getopt() to 'permute' argv[] so that 'options'
-> can follow 'nonoptions' ie it converts:
->         prog file -arg
-> to
->         prog -arg file
-> The only program the historically allowed 'late' options
-> was 'rlogin hostname -l username'.
-> This is just broken.....
+On 5/2/19 3:19 AM, Bjorn Andersson wrote:
+> The QCS404 platform contains a PCIe controller of version 2.4.0 and a
+> Qualcomm PCIe2 PHY. The driver already supports version 2.4.0, for the
+> IPQ4019, but this support touches clocks and resets related to the PHY
+> as well, and there's no upstream driver for the PHY.
+> 
+> On QCS404 we must initialize the PHY, so a separate PHY driver is
+> implemented to take care of this and the controller driver is updated to
+> not require the PHY related resources. This is done by relying on the
+> fact that operations in both the clock and reset framework are nops when
+> passed NULL, so we can isolate this change to only the get_resource
+> function.
+> 
+> For QCS404 we also need to enable the AHB (iface) clock, in order to
+> access the register space of the controller, but as this is not part of
+> the IPQ4019 DT binding this is only added for new users of the 2.4.0
+> controller.
+> 
+> Reviewed-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v2:
+> - None
+> 
+>  drivers/pci/controller/dwc/pcie-qcom.c | 64 +++++++++++++++-----------
+>  1 file changed, 38 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index d740cbe0e56d..d101bc5c0def 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -112,7 +112,7 @@ struct qcom_pcie_resources_2_3_2 {
+>  	struct regulator_bulk_data supplies[QCOM_PCIE_2_3_2_MAX_SUPPLY];
+>  };
+>  
+> -#define QCOM_PCIE_2_4_0_MAX_CLOCKS	3
+> +#define QCOM_PCIE_2_4_0_MAX_CLOCKS	4
+>  struct qcom_pcie_resources_2_4_0 {
+>  	struct clk_bulk_data clks[QCOM_PCIE_2_4_0_MAX_CLOCKS];
+>  	int num_clks;
+> @@ -638,13 +638,16 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
+>  	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
+>  	struct dw_pcie *pci = pcie->pci;
+>  	struct device *dev = pci->dev;
+> +	bool is_ipq = of_device_is_compatible(dev->of_node, "qcom,pcie-ipq4019");
+>  	int ret;
+>  
+>  	res->clks[0].id = "aux";
+>  	res->clks[1].id = "master_bus";
+>  	res->clks[2].id = "slave_bus";
+> +	res->clks[3].id = "iface";
+>  
+> -	res->num_clks = 3;
+> +	/* qcom,pcie-ipq4019 is defined without "iface" */
+> +	res->num_clks = is_ipq ? 3 : 4;
 
+This is ugly but I don't have better idea except having static const
+resource structures where we can describe num_clks and select the right
+resource from compatible string, but lets leave that for the future.
 
-Ah, I see.  This does not happen for
-modules.order or modules.builtin,
-but I will use '--' just in case.
+Otherwise:
 
-Thanks.
-
-
->         David
->
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-
-
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 
 -- 
-Best Regards
-Masahiro Yamada
+regards,
+Stan
