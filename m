@@ -2,181 +2,231 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B81FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A8EC04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0857520862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E330E2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:35:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qR6Y1RLy"
+	dkim=pass (1024-bit key) header.d=uwy.onmicrosoft.com header.i=@uwy.onmicrosoft.com header.b="nLi3s2C+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfEPQf1 (ORCPT
+        id S1727255AbfEPQfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:35:27 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36454 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbfEPQf0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:35:26 -0400
-Received: by mail-pf1-f194.google.com with SMTP id v80so2134197pfa.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:35:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9J9a2LzssNOHKN9GbYjxdjZY+TIqtIW8RPeTXwMxezA=;
-        b=qR6Y1RLypIHQr2YPzAk8GpNVBjwc4L5nEdW/ex0nmNmkVo/WwDQy1FrRZLP2h1qp7k
-         PGmjKb6Oqbjuu8AdQkHCsmRc7GTWWt2mjyw4TTboutPDVoACPunBKROxB8bXZMc63IKB
-         LjsPTilg+C4hsTZbBiNT52ieyyelwr654xuw/vXZOd/sPdHe3yC3W1fioPqjzM04W4iw
-         4OPSmjJyt0u8yUBefe36+UrsAHX++oDf0LGM3xPB4PmYIkOcR1FK3J9L8GJUm+Yx9S3O
-         +9lABDVEmY3tDFYXnamhK/BuMDLDmr3pYehi+5YnkEIEzI1UzRB4weU2zotTzPvXZmdz
-         D9LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9J9a2LzssNOHKN9GbYjxdjZY+TIqtIW8RPeTXwMxezA=;
-        b=OjqTpv2Qvw1prEVqpTsPTDaG/cUXi6lGNgfGnUrHcgOLtam5D99TiQdphlQmp+Eope
-         vjEJns2SCqBRfILvflBc61CPR3RuD/Q63a7A1gr1fYVkegJI5kCr2Oil57G/ETzmO/jj
-         JzH6ioXADg7SDCHqo67mMNWJ4hFhFU/akrmaTW50phYxhf9cbvE6PvdJLDjNGREb9r+s
-         FxFIlzBJdlqo0vlzGJGSa/87tfQPAxGHmdhSA7CTUHHv3gcJ4fTAcp4ZYxitEg4+YHiJ
-         6/a8lPVl1osIR3NagwnQMU5wfRlt8G4ye7JcyKzzpht6FeOr87m3F67n50TfOpI7cjJu
-         1xag==
-X-Gm-Message-State: APjAAAW2sPh9qg34rQOM0CE8Wp0FxTF58XldRPPyRo5D4NFGlXHk8Dyc
-        5/7KIRGOZIFrAoKIEth5u4gNyaqGBUkzLyOpwLqLcUojShNw3w==
-X-Google-Smtp-Source: APXvYqxyN5EOxa0PrXjKgoD0rTtQ/ipxRkM3fY5lzBGw8U4s4Dco01va6mjU04w4hYtLsK2wtFzvy6r0gsdwMO1l+lc=
-X-Received: by 2002:a62:7a8f:: with SMTP id v137mr55367829pfc.243.1558024525130;
- Thu, 16 May 2019 09:35:25 -0700 (PDT)
+        Thu, 16 May 2019 12:35:45 -0400
+Received: from mail-eopbgr760121.outbound.protection.outlook.com ([40.107.76.121]:19044
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726342AbfEPQfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 12:35:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uwy.onmicrosoft.com;
+ s=selector1-uwy-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uwbbRoSh0N6ERr2bops38ZpOb7iYYwZhzpXKOLnrQ1A=;
+ b=nLi3s2C+g3G42QJwwNg9M4sVR8OjB57PCrb4c5hCvGs8MtPW85UviDRf+X6MPlGsIizZrQCj0LM/7bl/yfLsn7QeIN6KkR9Di75SZDkFdSAeNAjs99MBluEBEWG0dvVuvbnn6JT0Rz0MnMgBGLzsvu1u8z7jzM9jbOs3bEVTQ6E=
+Received: from DM6PR05MB5259.namprd05.prod.outlook.com (20.177.223.223) by
+ DM6PR05MB5500.namprd05.prod.outlook.com (20.176.122.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.13; Thu, 16 May 2019 16:35:40 +0000
+Received: from DM6PR05MB5259.namprd05.prod.outlook.com
+ ([fe80::ec12:ed89:3597:ef2f]) by DM6PR05MB5259.namprd05.prod.outlook.com
+ ([fe80::ec12:ed89:3597:ef2f%5]) with mapi id 15.20.1922.002; Thu, 16 May 2019
+ 16:35:40 +0000
+From:   "Robert R. Howell" <RHowell@uwyo.edu>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ACPI / LPSS: Don't skip late system PM ops for hibernate
+ on BYT/CHT
+Thread-Topic: [PATCH] ACPI / LPSS: Don't skip late system PM ops for hibernate
+ on BYT/CHT
+Thread-Index: AQHU6eBClqunF/byekqefGejWfaC+aYqIfOAgAcThICAAL18AIAFeNOAgAp38wCAAktGAIAFVH4AgADH4wCAAL1BAIACLkCAgCCltACAAFskAA==
+Date:   Thu, 16 May 2019 16:35:40 +0000
+Message-ID: <7eef3905-9c74-7ed8-09e4-a255c8f7d959@uwyo.edu>
+References: <20190403054352.30120-1-kai.heng.feng@canonical.com>
+ <CAJZ5v0jJEovXXiqs-tzPC7FsGjGL+qxfXCxbTrQZqAxSCv1oyQ@mail.gmail.com>
+ <beab21cb-9f89-b934-e0a4-2fd85c69f4e6@uwyo.edu> <1588383.bXYZMuyLB9@kreacher>
+In-Reply-To: <1588383.bXYZMuyLB9@kreacher>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+x-originating-ip: [12.203.174.10]
+x-clientproxiedby: BYAPR07CA0030.namprd07.prod.outlook.com
+ (2603:10b6:a02:bc::43) To DM6PR05MB5259.namprd05.prod.outlook.com
+ (2603:10b6:5:7f::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=RHowell@uwyo.edu; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 41281787-43b1-4503-786c-08d6da1c886f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:DM6PR05MB5500;
+x-ms-traffictypediagnostic: DM6PR05MB5500:
+x-microsoft-antispam-prvs: <DM6PR05MB5500EAC5A94D85E91586208ED30A0@DM6PR05MB5500.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0039C6E5C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(39860400002)(376002)(136003)(346002)(396003)(51914003)(189003)(199004)(316002)(6916009)(476003)(11346002)(2616005)(75432002)(6246003)(786003)(73956011)(81166006)(305945005)(68736007)(8676002)(81156014)(229853002)(66066001)(71200400001)(65806001)(53936002)(6512007)(80792005)(66946007)(66476007)(66446008)(66556008)(186003)(5660300002)(25786009)(31696002)(446003)(7736002)(26005)(64756008)(36756003)(71190400001)(65956001)(8936002)(86362001)(31686004)(486006)(6116002)(3846002)(6486002)(14444005)(99286004)(52116002)(72206003)(256004)(5024004)(4326008)(478600001)(54906003)(58126008)(65826007)(88552002)(14454004)(102836004)(53546011)(6436002)(2906002)(6506007)(64126003)(76176011)(386003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR05MB5500;H:DM6PR05MB5259.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: uwyo.edu does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: gv/S4lztdzBtzLfhY7INCCa2jvMgyI/4UMAqFUB2Anqu2utQLgL9z73JzV+49oAXAqNAxKrw4D5QVoChhDo/y5tL4hCELMb4Ela6vKyhwwrHNcr+8jNkqmceQ/ybW3UHUwgAjinW2j3kNyRbSm5xDNKfV7vbn8vIgrqg604UYB4fth/zwBPheXvVt9imK/1TJ4QeA7jxUuDCHG/9bF++4AXs6yfygrqp9teT2NpbxPIs04u5E5DLvSrC9UaxJEQXUkkm9XvoVkk8loGnR6WJoDjawL3BaZLqk3LSGF19hMnaOlj+lXQcL0W3aA8801t9M/2Pr6isx1OUmZUieg/7adInPIU2/EeM3vp8Ph9tjlu5yLRK/oEEdSZpQvSB5TP5bHkFbwRwauYInrpyHrv3MaDiijbSyR5LI1B9wRI5az4=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <941E2A32C00C48459CC5F7985805571C@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190516064304.24057-1-olof@lixom.net> <20190516064304.24057-4-olof@lixom.net>
- <CAHk-=whb-KituxcvM6ZPuXqyPX+rJENb8cnGCPbGE9pyqwOmXA@mail.gmail.com>
-In-Reply-To: <CAHk-=whb-KituxcvM6ZPuXqyPX+rJENb8cnGCPbGE9pyqwOmXA@mail.gmail.com>
-From:   Patrick Venture <venture@google.com>
-Date:   Thu, 16 May 2019 09:35:14 -0700
-Message-ID: <CAO=notySOzSjJS9jBCF9fyXEUK7VDZQiJp3WaSLs4Y7X7PC8=Q@mail.gmail.com>
-Subject: Re: [GIT PULL 3/4] ARM: SoC-related driver updates
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Olof Johansson <olof@lixom.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        ARM SoC <arm@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "linux-alpha@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: uwyo.edu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41281787-43b1-4503-786c-08d6da1c886f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 16:35:40.5168
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f9cdd7ad-825d-4601-8e9c-a325e02d52da
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR05MB5500
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, May 16, 2019 at 9:27 AM
-To: Olof Johansson, Patrick Venture, Greg Kroah-Hartman
-Cc: ARM SoC, Linux List Kernel Mailing, linux-alpha@vger.kernel.org
-
-> On Wed, May 15, 2019 at 11:43 PM Olof Johansson <olof@lixom.net> wrote:
-> >
-> > Various driver updates for platforms and a couple of the small driver
-> > subsystems we merge through our tree:
->
-> Hmm. This moved the aspeed drivers from drivers/misc to
-> drivers/soc/aspeed (in commit 524feb799408 "soc: add aspeed folder and
-> misc drivers"), but in the meantime we also had a new aspeed soc
-> driver added (in commit 01c60dcea9f7 "drivers/misc: Add Aspeed P2A
-> control driver").
->
-> I ended up resolving that "conflict" by moving the new aspeed P2A
-> control driver to be with the other aspeed drivers too. That seemed to
-> be the cleanest model.
-
-Thank you.  I agree.  There was some back-and-forth about the SoC move
-w.r.t any new aspeed misc drivers. Whether moving them into SoC was a
-good approach versus leaving the growing list in misc.  Another aspeed
-driver, controlling UART was headed to misc and received push-back
-that it was sufficiently specialized to go into SoC
-(https://patchwork.ozlabs.org/patch/969238/).  This feedback triggered
-this staging move.
-
-I think storing the growing misc drivers for these SoCs (Aspeed,
-Nuvoton) in a SoC folder is a reasonable grouping.
-
->
-> I'm used to doing these kinds of fixups in a merge, but I have to
-> admit that maybe I should have made it a separate commit, because now
-> it's kind of non-obvious, and it's sometimes harder to see changes
-> that are in a merge commit than in a separate commit.
->
-> In particular, it looks like "git log --follow" is not smart enough to
-> follow a rename through a merge. But I think that is a git problem,
-> and not a very serious one at that ("git blame" has no such problem).
->
-> And it means that now the merge has
->
->  drivers/{misc => soc/aspeed}/aspeed-lpc-ctrl.c                   |   0
->  drivers/{misc => soc/aspeed}/aspeed-lpc-snoop.c                  |   0
->  drivers/{misc => soc/aspeed}/aspeed-p2a-ctrl.c                   |   0
->
-> when you do "git show --stat" on it, which looks correct, and it feels
-> like conceptually the right merge resolution to me.
->
-> Sending out this explanatory email to everybody involved, just so that
-> this doesn't take you by surprise. But it looks like Patrick Venture
-> is not just the author of that moved driver, he was also involved in
-> the move of the two other drivers, so I'm guessing there's not going
-> to be a lot of confusion here.
->
-> HOWEVER. More subtly, as part of my *testing* for this, I also
-> realized that commit 524feb799408 is buggy. In my tests, the config
-> worked fine, but the aspeed drivers were never actually *built*. The
-> reason is that commit 524feb799408 ends up doing
->
->    obj-$(CONFIG_ARCH_ASPEED)      += aspeed/
->
-> which is completely wrong, because the Kconfig fules are
->
->         depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
->
-> so those drivers can be configured even if ARCH_ASPEED *isn't* set.
-> The Kconfig part works fine, because the soc/aspeed/Kconfig file is
-> included unconditionally, but the actual build process then never
-> builds anything in the drivers/soc/aspeed/ subdirectory.
->
-> I solved _that_ problem by adding a new config option:
->
->   config SOC_ASPEED
->       def_bool y
->       depends on ARCH_ASPEED || COMPILE_TEST
->
-> and using that instead of ARCH_ASPEED.
-
-Thank you, that makes perfect sense.  When moving the drivers, I was
-only considering the case where one is compiling them for use and
-forgot to check for COMPILE_TEST.
-
->
-> End result: this was a somewhat messy merge, and the most subtle mess
-> was because of that buggy 524feb799408 "soc: add aspeed folder and
-> misc drivers").
->
-> I *think* I sorted it all out correctly, and now I see the aspeed
-> drivers being built (and cleanly at that) but I really *really* want
-> people to double-check this all.
->
-> Also, I think that the same "we don't actually build-test the end
-> result" problem exists else-where for the same reasons.
->
-> At the very least, drivers/soc/{atmel,rockchip,zte} seem to have the
-> exact same pattern: the Kconfig files enable the drivers, but the
-> Makefile in drivers/soc doesn't actually traverse into the
-> subdirectories.
->
-> End result: CONFIG_COMPILE_TEST doesn't actually do any compile
-> testing for those drivers.
->
-> I did not try to fix all of those things up, because I didn't do the
-> driver movements there.
->
->                   Linus
+SGkgUmFmYWVsDQoNCg0KT24gNS8xNi8xOSA1OjExIEFNLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90
+ZToNCg0KPiBPbiBUaHVyc2RheSwgQXByaWwgMjUsIDIwMTkgNjozODozNCBQTSBDRVNUIFJvYmVy
+dCBSLiBIb3dlbGwgd3JvdGU6DQo+PiBPbiA0LzI0LzE5IDE6MjAgQU0sIFJhZmFlbCBKLiBXeXNv
+Y2tpIHdyb3RlOg0KPj4NCj4+PiBPbiBUdWUsIEFwciAyMywgMjAxOSBhdCAxMDowMyBQTSBSb2Jl
+cnQgUi4gSG93ZWxsIDxSSG93ZWxsQHV3eW8uZWR1PiB3cm90ZToNCj4+Pj4NCj4+Pj4gT24gNC8y
+My8xOSAyOjA3IEFNLCBSYWZhZWwgSi4gV3lzb2NraSB3cm90ZToNCj4+Pj4+DQo+Pj4+PiBPbiBT
+YXQsIEFwciAyMCwgMjAxOSBhdCAxMjo0NCBBTSBSb2JlcnQgUi4gSG93ZWxsIDxSSG93ZWxsQHV3
+eW8uZWR1PiB3cm90ZToNCj4+Pj4+Pg0KPj4+Pj4+IE9uIDQvMTgvMTkgNTo0MiBBTSwgSGFucyBk
+ZSBHb2VkZSB3cm90ZToNCj4+Pj4+Pg0KPj4+Pj4+Pj4gT24gNC84LzE5IDI6MTYgQU0sIEhhbnMg
+ZGUgR29lZGUgd3JvdGU6Pg0KPj4+Pj4+Pj4+DQo+Pj4+Pj4+Pj4gSG1tLCBpbnRlcmVzdGluZyBz
+byB5b3UgaGF2ZSBoaWJlcm5hdGlvbiB3b3JraW5nIG9uIGEgVDEwMFRBDQo+Pj4+Pj4+Pj4gKHdp
+dGggNS4wICsgMDJlNDU2NDZkNTNiIHJldmVydGVkKSwgcmlnaHQgPw0KPj4+Pj4+Pj4+DQo+Pj4+
+Pj4NCj4+Pj4+Pg0KPj4+Pj4+IEkndmUgbWFuYWdlZCB0byBmaW5kIGEgd2F5IGFyb3VuZCB0aGUg
+aTJjX2Rlc2lnbndhcmUgdGltZW91dCBpc3N1ZXMNCj4+Pj4+PiBvbiB0aGUgVDEwMFRBJ3MuICBU
+aGUga2V5IGlzIHRvIE5PVCBzZXQgRFBNX0ZMQUdfU01BUlRfU1VTUEVORCwNCj4+Pj4+PiB3aGlj
+aCB3YXMgYWRkZWQgaW4gdGhlIDAyZTQ1NjQ2ZDUzYiBjb21taXQuDQo+Pj4+Pj4NCj4+Pj4+PiBU
+byB0ZXN0IHRoYXQgSSd2ZSBzdGFydGVkIHdpdGggYSA1LjEtcmM1IGtlcm5lbCwgYXBwbGllZCB5
+b3VyIHJlY2VudCBwYXRjaA0KPj4+Pj4+IHRvIGFjcGlfbHBzcy5jLCB0aGVuIGFwcGx5IHRoZSBm
+b2xsb3dpbmcgcGF0Y2ggb2YgbWluZSwgcmVtb3ZpbmcNCj4+Pj4+PiBEUE1fRkxBR19TTUFSVF9T
+VVNQRU5ELiAgKEZvciB0aGUgVDEwMCBoYXJkd2FyZSBJIG5lZWQgdG8gYXBwbHkgc29tZQ0KPj4+
+Pj4+IG90aGVyIHBhdGNoZXMgYXMgd2VsbCBidXQgdGhvc2UgYXJlIG5vdCByZWxhdGVkIHRvIHRo
+ZSBpMmMtZGVzaWdud2FyZSBvcg0KPj4+Pj4+IGFjcGkgaXNzdWVzIGFkZHJlc3NlZCBoZXJlLikN
+Cj4+Pj4+Pg0KPj4+Pj4+IE9uIGEgcmVzdW1lIGZyb20gaGliZXJuYXRpb24gSSBzdGlsbCBzZWUg
+b25lIGVycm9yOg0KPj4+Pj4+ICAgImkyY19kZXNpZ253YXJlIDgwODYwRjQxOjAwOiBFcnJvciBp
+MmNfZHdfeGZlciBjYWxsZWQgd2hpbGUgc3VzcGVuZGVkIg0KPj4+Pj4+IGJ1dCBJIG5vIGxvbmdl
+ciBnZXQgdGhlIGkyY19kZXNpZ253YXJlIHRpbWVvdXRzLCBhbmQgYXVkaW8gZG9lcyBub3cgd29y
+aw0KPj4+Pj4+IGFmdGVyIHRoZSByZXN1bWUuDQo+Pj4+Pj4NCj4+Pj4+PiBSZW1vdmluZyBEUE1f
+RkxBR19TTUFSVF9TVVNQRU5EIG1heSBub3QgYmUgd2hhdCB5b3Ugd2FudCBmb3Igb3RoZXINCj4+
+Pj4+PiBoYXJkd2FyZSwgYnV0IHBlcmhhcHMgdGhpcyB3aWxsIGdpdmUgeW91IGEgY2x1ZSBhcyB0
+byB3aGF0IGlzIGdvaW5nDQo+Pj4+Pj4gd3Jvbmcgd2l0aCBoaWJlcm5hdGUvcmVzdW1lIG9uIHRo
+ZSBUMTAwVEEncy4NCj4+Pj4+DQo+Pj4+PiBXaGF0IGlmIHlvdSBkcm9wIERQTV9GTEFHX0xFQVZF
+X1NVU1BFTkRFRCBhbG9uZSBpbnN0ZWFkPw0KPj4+Pj4NCj4+Pj4NCj4+Pj4gSSBkaWQgdHJ5IGRy
+b3BwaW5nIGp1c3QgRFBNX0ZMQUdfTEVBVkVfU1VTUEVOREVELCBkcm9wcGluZyBqdXN0DQo+Pj4+
+IERQTV9GTEFHX1NNQVJUX1NVU1BFTkQsIGFuZCBkcm9wcGluZyBib3RoIGZsYWdzLiAgV2hlbiBJ
+IGp1c3QgZHJvcA0KPj4+PiBEUE1fRkxBR19MRUFWRV9TVVNQRU5ERUQgSSBzdGlsbCBnZXQgdGhl
+IGkyY19kZXNpZ253YXJlIHRpbWVvdXRzDQo+Pj4+IGFmdGVyIHRoZSByZXN1bWUuICBJZiBJIGRy
+b3AganVzdCBEUE1fRkxBR19TTUFSVF9TVVNQRU5EIG9yIGRyb3AgYm90aCwNCj4+Pj4gdGhlbiB0
+aGUgdGltZW91dHMgZ28gYXdheS4NCj4+Pg0KPj4+IE9LLCB0aGFua3MhDQo+Pj4NCj4+PiBJcyBu
+b24taGliZXJuYXRpb24gc3lzdGVtIHN1c3BlbmQgYWZmZWN0ZWQgdG9vPw0KPj4NCj4+IEkganVz
+dCByYW4gc29tZSB0ZXN0cyBvbiBhIFQxMDBUQSwgdXNpbmcgdGhlIDUuMS1yYzUgY29kZSB3aXRo
+IEhhbnMnIHBhdGNoIGFwcGxpZWQNCj4+IGJ1dCB3aXRob3V0IGFueSBjaGFuZ2VzIHRvIGkyYy1k
+ZXNpZ253YXJlLXBsYXRkcnYuYywgc28gdGhlDQo+PiBEUE1fRkxBR19TTUFSVF9QUkVQQVJFLCBE
+UE1fRkxBR19TTUFSVF9TVVNQRU5ELCBhbmQgRFBNX0ZMQUdfTEVBVkVfU1VTUEVOREVEIGZsYWdz
+DQo+PiBhcmUgYWxsIHNldC4NCj4+DQo+PiBTdXNwZW5kIGRvZXMgd29yayBPSywgYW5kIGFmdGVy
+IHJlc3VtZSBJIGRvIE5PVCBnZXQgYW55IG9mIHRoZSBjcmlwcGxpbmcNCj4+IGkyY19kZXNpZ253
+YXJlIHRpbWVvdXQgZXJyb3JzIHdoaWNoIGNhdXNlIHNvdW5kIHRvIGZhaWwgYWZ0ZXIgaGliZXJu
+YXRlLiAgSSBETyBzZWUgb25lDQo+PiAgICJpMmNfZGVzaWdud2FyZSA4MDg2MEY0MTowMDogRXJy
+b3IgaTJjX2R3X3hmZXIgY2FsbCB3aGlsZSBzdXNwZW5kZWQiDQo+PiBlcnJvciBvbiByZXN1bWUs
+IGp1c3QgYXMgSSBkbyBvbiBoaWJlcm5hdGUuICBJJ3ZlIGF0dGFjaGVkIGEgcG9ydGlvbiBvZiBk
+bWVzZyBiZWxvdy4NCj4+IFRoZSAiYXN1c193bWk6ICBVbmtub3duIGtleSA3OSBwcmVzc2VkIiBl
+cnJvciBpcyBhIGdsaXRjaCB3aGljaCBvY2N1cnMNCj4+IGludGVybWl0dGVudGx5IG9uIHRoZXNl
+IG1hY2hpbmVzLCBidXQgZG9lc24ndCBzZWVtIHJlbGF0ZWQgdG8gdGhlIG90aGVyIGlzc3Vlcy4N
+Cj4+IEkgaGFkIG9uZSB0ZXN0IHJ1biB3aGVuIGl0IHdhcyBhYnNlbnQgYnV0IHRoZSByZXN0IG9m
+IHRoZSBtZXNzYWdlcyB3ZXJlIHRoZQ0KPj4gc2FtZSAtLSBidXQgdGhlbiBrZXB0IGdldHRpbmcg
+dGhhdCB1bmtub3duIGtleSBlcnJvciBvbiBhbGwgbXkgbGF0ZXIgdHJpZXMuDQo+Pg0KPj4gSSBk
+aWQgbm90aWNlIHRoZSAiMnNpZGxlIiBpbiB0aGUgZm9sbG93aW5nIHJhdGhlciB0aGFuICJzaGFs
+bG93IiBvciAiZGVlcCIuICBBDQo+PiBjYXQgb2YgL3N5cy9wb3dlci9zdGF0ZSBzaG93cyAiZnJl
+ZXplIG1lbSBkaXNrIiBidXQgYQ0KPj4gY2F0IG9mIC9zeXMvcG93ZXIvbWVtX3NsZWVwIiBzaG93
+cyBvbmx5ICJbczJpZGxlXSBzbyBpdCBsb29rcyBsaWtlIHNoYWxsb3cgYW5kIGRlZXANCj4+IGFy
+ZSBub3QgZW5hYmxlZCBmb3IgdGhpcyBzeXN0ZW0uICBJIGRpZCBjaGVjayB0aGUgaW5wdXQgcG93
+ZXIgKG9yIHJlYWxseSBjdXJyZW50KQ0KPj4gYXMgaXQgd2VudCBpbnRvIHN1c3BlbmQgYW5kIHRo
+ZSBtaWNyby11c2IgcG93ZXIgaW5wdXQgZHJvcHMgZnJvbSBhYm91dA0KPj4gMC41IGFtcHMgdG8g
+MC4wNSBhbXBzLiAgQnV0IGNsZWFybHkgYSBsb3Qgb2YgZGV2aWNlcyBhcmUgc3RpbGwgYWN0aXZl
+LCBhcyBtb3ZlbWVudA0KPj4gb2YgYSBibHVldG9vdGggbW91c2UgKHRoZSBNWCBBbnl3aGVyZSAy
+KSB3aWxsIHdha2UgaXQgZnJvbSBzdXNwZW5kLiAgVGhhdCBwcmVzdW1hYmx5IGlzDQo+PiB3aHkg
+c3VzcGVuZCBkb2Vzbid0IHRyaWdnZXIgdGhlIHNhbWUgaTJjX2Rlc2lnbndhcmUgcHJvYmxlbXMg
+YXMgaGliZXJuYXRlLg0KPj4NCj4+IExldCBtZSBrbm93IGlmIEkgY2FuIGRvIGFueSBvdGhlciB0
+ZXN0cy4NCj4gDQo+IENhbiB5b3UgcGxlYXNlIGNoZWNrIGlmIHRoZSBhcHBlbmRlZCBwYXRjaCBt
+YWtlcyB0aGUgaGliZXJuYXRlIGlzc3VlIGdvIGF3YXkgZm9yIHlvdSwgd2l0aG91dCBhbnkgb3Ro
+ZXIgY2hhbmdlcz8NCj4gDQo+IC0tLQ0KPiAgZHJpdmVycy9wY2kvcGNpLWRyaXZlci5jIHwgICAz
+NiArKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gIDEgZmlsZSBjaGFuZ2Vk
+LCAxMCBpbnNlcnRpb25zKCspLCAyNiBkZWxldGlvbnMoLSkNCj4gDQo+IEluZGV4OiBsaW51eC1w
+bS9kcml2ZXJzL3BjaS9wY2ktZHJpdmVyLmMNCj4gPT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPiAtLS0gbGludXgtcG0u
+b3JpZy9kcml2ZXJzL3BjaS9wY2ktZHJpdmVyLmMNCj4gKysrIGxpbnV4LXBtL2RyaXZlcnMvcGNp
+L3BjaS1kcml2ZXIuYw0KPiBAQCAtOTU3LDE1ICs5NTcsMTQgQEAgc3RhdGljIGludCBwY2lfcG1f
+ZnJlZXplKHN0cnVjdCBkZXZpY2UgKg0KPiAgICAgICAgIH0NCj4gDQo+ICAgICAgICAgLyoNCj4g
+LSAgICAgICAgKiBUaGlzIHVzZWQgdG8gYmUgZG9uZSBpbiBwY2lfcG1fcHJlcGFyZSgpIGZvciBh
+bGwgZGV2aWNlcyBhbmQgc29tZQ0KPiAtICAgICAgICAqIGRyaXZlcnMgbWF5IGRlcGVuZCBvbiBp
+dCwgc28gZG8gaXQgaGVyZS4gIElkZWFsbHksIHJ1bnRpbWUtc3VzcGVuZGVkDQo+IC0gICAgICAg
+ICogZGV2aWNlcyBzaG91bGQgbm90IGJlIHRvdWNoZWQgZHVyaW5nIGZyZWV6ZS90aGF3IHRyYW5z
+aXRpb25zLA0KPiAtICAgICAgICAqIGhvd2V2ZXIuDQo+ICsgICAgICAgICogUmVzdW1lIGFsbCBy
+dW50aW1lLXN1c3BlbmRlZCBkZXZpY2VzIGJlZm9yZSBjcmVhdGluZyBhIHNuYXBzaG90DQo+ICsg
+ICAgICAgICogaW1hZ2Ugb2Ygc3lzdGVtIG1lbW9yeSwgYmVjYXVzZSB0aGUgcmVzdG9yZSBrZXJu
+ZWwgZ2VuZXJhbGx5IGNhbm5vdA0KPiArICAgICAgICAqIGJlIGV4cGVjdGVkIHRvIGFsd2F5cyBo
+YW5kbGUgdGhlbSBjb25zaXN0ZW50bHkgYW5kIHBjaV9wbV9yZXN0b3JlKCkNCj4gKyAgICAgICAg
+KiBhbHdheXMgbGVhdmVzIHRoZW0gYXMgImFjdGl2ZSIsIHNvIGVuc3VyZSB0aGF0IHRoZSBzdGF0
+ZSBzYXZlZCBpbiB0aGUNCj4gKyAgICAgICAgKiBpbWFnZSB3aWxsIGFsd2F5cyBiZSBjb25zaXN0
+ZW50IHdpdGggdGhhdC4NCj4gICAgICAgICAgKi8NCj4gLSAgICAgICBpZiAoIWRldl9wbV9zbWFy
+dF9zdXNwZW5kX2FuZF9zdXNwZW5kZWQoZGV2KSkgew0KPiAtICAgICAgICAgICAgICAgcG1fcnVu
+dGltZV9yZXN1bWUoZGV2KTsNCj4gLSAgICAgICAgICAgICAgIHBjaV9kZXYtPnN0YXRlX3NhdmVk
+ID0gZmFsc2U7DQo+IC0gICAgICAgfQ0KPiArICAgICAgIHBtX3J1bnRpbWVfcmVzdW1lKGRldik7
+DQo+ICsgICAgICAgcGNpX2Rldi0+c3RhdGVfc2F2ZWQgPSBmYWxzZTsNCj4gDQo+ICAgICAgICAg
+aWYgKHBtLT5mcmVlemUpIHsNCj4gICAgICAgICAgICAgICAgIGludCBlcnJvcjsNCj4gQEAgLTk5
+Miw5ICs5OTEsNiBAQCBzdGF0aWMgaW50IHBjaV9wbV9mcmVlemVfbm9pcnEoc3RydWN0IGRlDQo+
+ICAgICAgICAgc3RydWN0IHBjaV9kZXYgKnBjaV9kZXYgPSB0b19wY2lfZGV2KGRldik7DQo+ICAg
+ICAgICAgc3RydWN0IGRldmljZV9kcml2ZXIgKmRydiA9IGRldi0+ZHJpdmVyOw0KPiANCj4gLSAg
+ICAgICBpZiAoZGV2X3BtX3NtYXJ0X3N1c3BlbmRfYW5kX3N1c3BlbmRlZChkZXYpKQ0KPiAtICAg
+ICAgICAgICAgICAgcmV0dXJuIDA7DQo+IC0NCj4gICAgICAgICBpZiAocGNpX2hhc19sZWdhY3lf
+cG1fc3VwcG9ydChwY2lfZGV2KSkNCj4gICAgICAgICAgICAgICAgIHJldHVybiBwY2lfbGVnYWN5
+X3N1c3BlbmRfbGF0ZShkZXYsIFBNU0dfRlJFRVpFKTsNCj4gDQo+IEBAIC0xMDI0LDE2ICsxMDIw
+LDYgQEAgc3RhdGljIGludCBwY2lfcG1fdGhhd19ub2lycShzdHJ1Y3QgZGV2aQ0KPiAgICAgICAg
+IHN0cnVjdCBkZXZpY2VfZHJpdmVyICpkcnYgPSBkZXYtPmRyaXZlcjsNCj4gICAgICAgICBpbnQg
+ZXJyb3IgPSAwOw0KPiANCj4gLSAgICAgICAvKg0KPiAtICAgICAgICAqIElmIHRoZSBkZXZpY2Ug
+aXMgaW4gcnVudGltZSBzdXNwZW5kLCB0aGUgY29kZSBiZWxvdyBtYXkgbm90IHdvcmsNCj4gLSAg
+ICAgICAgKiBjb3JyZWN0bHkgd2l0aCBpdCwgc28gc2tpcCB0aGF0IGNvZGUgYW5kIG1ha2UgdGhl
+IFBNIGNvcmUgc2tpcCBhbGwgb2YNCj4gLSAgICAgICAgKiB0aGUgc3Vic2VxdWVudCAidGhhdyIg
+Y2FsbGJhY2tzIGZvciB0aGUgZGV2aWNlLg0KPiAtICAgICAgICAqLw0KPiAtICAgICAgIGlmIChk
+ZXZfcG1fc21hcnRfc3VzcGVuZF9hbmRfc3VzcGVuZGVkKGRldikpIHsNCj4gLSAgICAgICAgICAg
+ICAgIGRldl9wbV9za2lwX25leHRfcmVzdW1lX3BoYXNlcyhkZXYpOw0KPiAtICAgICAgICAgICAg
+ICAgcmV0dXJuIDA7DQo+IC0gICAgICAgfQ0KPiAtDQo+ICAgICAgICAgaWYgKHBjaWJpb3NfcG1f
+b3BzLnRoYXdfbm9pcnEpIHsNCj4gICAgICAgICAgICAgICAgIGVycm9yID0gcGNpYmlvc19wbV9v
+cHMudGhhd19ub2lycShkZXYpOw0KPiAgICAgICAgICAgICAgICAgaWYgKGVycm9yKQ0KPiBAQCAt
+MTA5Myw4ICsxMDc5LDEwIEBAIHN0YXRpYyBpbnQgcGNpX3BtX3Bvd2Vyb2ZmKHN0cnVjdCBkZXZp
+Y2UNCj4gDQo+ICAgICAgICAgLyogVGhlIHJlYXNvbiB0byBkbyB0aGF0IGlzIHRoZSBzYW1lIGFz
+IGluIHBjaV9wbV9zdXNwZW5kKCkuICovDQo+ICAgICAgICAgaWYgKCFkZXZfcG1fdGVzdF9kcml2
+ZXJfZmxhZ3MoZGV2LCBEUE1fRkxBR19TTUFSVF9TVVNQRU5EKSB8fA0KPiAtICAgICAgICAgICAh
+cGNpX2Rldl9rZWVwX3N1c3BlbmRlZChwY2lfZGV2KSkNCj4gKyAgICAgICAgICAgIXBjaV9kZXZf
+a2VlcF9zdXNwZW5kZWQocGNpX2RldikpIHsNCj4gICAgICAgICAgICAgICAgIHBtX3J1bnRpbWVf
+cmVzdW1lKGRldik7DQo+ICsgICAgICAgICAgICAgICBwY2lfZGV2LT5zdGF0ZV9zYXZlZCA9IGZh
+bHNlOw0KPiArICAgICAgIH0NCj4gDQo+ICAgICAgICAgcGNpX2Rldi0+c3RhdGVfc2F2ZWQgPSBm
+YWxzZTsNCj4gICAgICAgICBpZiAocG0tPnBvd2Vyb2ZmKSB7DQo+IEBAIC0xMTY4LDEwICsxMTU2
+LDYgQEAgc3RhdGljIGludCBwY2lfcG1fcmVzdG9yZV9ub2lycShzdHJ1Y3QgZA0KPiAgICAgICAg
+IHN0cnVjdCBkZXZpY2VfZHJpdmVyICpkcnYgPSBkZXYtPmRyaXZlcjsNCj4gICAgICAgICBpbnQg
+ZXJyb3IgPSAwOw0KPiANCj4gLSAgICAgICAvKiBUaGlzIGlzIGFuYWxvZ291cyB0byB0aGUgcGNp
+X3BtX3Jlc3VtZV9ub2lycSgpIGNhc2UuICovDQo+IC0gICAgICAgaWYgKGRldl9wbV9zbWFydF9z
+dXNwZW5kX2FuZF9zdXNwZW5kZWQoZGV2KSkNCj4gLSAgICAgICAgICAgICAgIHBtX3J1bnRpbWVf
+c2V0X2FjdGl2ZShkZXYpOw0KPiAtDQo+ICAgICAgICAgaWYgKHBjaWJpb3NfcG1fb3BzLnJlc3Rv
+cmVfbm9pcnEpIHsNCj4gICAgICAgICAgICAgICAgIGVycm9yID0gcGNpYmlvc19wbV9vcHMucmVz
+dG9yZV9ub2lycShkZXYpOw0KPiAgICAgICAgICAgICAgICAgaWYgKGVycm9yKQ0KPiANCj4gDQo+
+IA0KDQpUaGFua3MgZm9yIHRoZSBwYXRjaC4gIEknbSB0cmF2ZWxpbmcgcmlnaHQgbm93IHNvIEkn
+bSBhd2F5IGZyb20gdGhlIG1hY2hpbmVzIEkgbmVlZCB0byB0ZXN0IHRoaXMsIA0KYnV0IEknbGwg
+YmUgYmFjayBob21lIGJ5IHRoZSBlbmQgb2YgdGhlIHdlZWsgYW5kIHdpbGwgdGVzdCB0aGUgcGF0
+Y2ggdGhlbi4NCg0KQm9iIEhvd2VsbA0K
