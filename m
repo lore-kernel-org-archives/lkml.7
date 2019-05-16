@@ -2,118 +2,192 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2E1C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199D7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B4120848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:26:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u4Bs2ZR9"
+	by mail.kernel.org (Postfix) with ESMTP id E043F20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:28:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfEPG0b (ORCPT
+        id S1726667AbfEPG2Z convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 02:26:31 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:32946 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbfEPG0a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 02:26:30 -0400
-Received: by mail-lj1-f195.google.com with SMTP id w1so2005410ljw.0;
-        Wed, 15 May 2019 23:26:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=wopevyOfrVcNgrs2OlRoJkSg1GME6xrc5gzsawzKoi4=;
-        b=u4Bs2ZR9I5NiC3tUkHwro0NaNYQTer2meRxQ1f7i3QntTO6Uxe3PIsdl0hPJq7/tvI
-         M4B9EalKq9eNCu7yK11e4OMIUCijrug2sTK9bWnm8qOF/eCn5OhtdHlsAMFOwW1ALlSO
-         vy3GmdKhcLgEUeOCutt1snzGpRtLBTlvCCh+ERJkgFyanEBzuWG0auDZiJH+YlcvDlwq
-         GOE7+0VY4aJI1hBAApc60LM33uCYXFd5Qj3zvkaT86rgZqXLyoUxqdioV6hO+vZGn4mq
-         WrlCcXJa1Z7O/yDs4zOvrqJlQfMpfNhTHv6Wk1Qnm2xJmTNOtUrlBa9PX6u4x74aA0KF
-         dlfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=wopevyOfrVcNgrs2OlRoJkSg1GME6xrc5gzsawzKoi4=;
-        b=KZ8YWAzkXAWPLOh0djEKeedZql/C2T+hs1NOYVmr5c7j6zYDruiEHdlfjAwh1Z3am8
-         rH68O7Gscn+4Jn2ZDDaP+PR4Pv+r974Fji0vRgRUrNToRLgBS+VFbU5Wkiy7Njr9cd0u
-         AQ8nDp7DRLg25MCxxgcbYHqBQJ1sLQaQZcidJ9JJZ2ZA+JMsi2+fEk4W1N8afnednyvx
-         NByx1GxJ57HZZ4wZl0DKyf1qOLkayDmazZGPi7otAQ8wCqWSrNwB2ncs402VO8pLK2F6
-         UMxXpJN2VWdT3byFHZynfM3f92agjBBXNbRMbPM93maYppa8APt/uPoIjgGozIqDcmr3
-         OmVw==
-X-Gm-Message-State: APjAAAUKqPARZAFQQEoqUjKnvB7UTNmNvlt2hDSbz3YyItgFEtkHa5bv
-        jUFTLeSiO2+TSFxTliPH3ug=
-X-Google-Smtp-Source: APXvYqxmhwMESExMgBx/ncLaEXSu/aignZEYzcIQ7Rj5rRdJ0TG1Bikq8bj5GIrD/1hxKwfDs98pQQ==
-X-Received: by 2002:a05:651c:150:: with SMTP id c16mr22906662ljd.65.1557987987979;
-        Wed, 15 May 2019 23:26:27 -0700 (PDT)
-Received: from [10.17.182.20] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
-        by smtp.gmail.com with ESMTPSA id j10sm882748lfc.45.2019.05.15.23.26.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 May 2019 23:26:27 -0700 (PDT)
-Subject: Re: [Xen-devel] [PATCH] xen/netfront: Remove unneeded .resume
- callback
-To:     Anchal Agarwal <anchalag@amzn.com>,
-        "Oleksandr_Andrushchenko@epam.com" <Oleksandr_Andrushchenko@epam.com>
-Cc:     Anchal Agarwal <anchalag@amazon.com>,
-        Munehisa Kamata <kamatam@amazon.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>,
-        Artem Mygaiev <Artem_Mygaiev@epam.com>
-References: <6205819a-af39-8cd8-db87-f3fe047ff064@gmail.com>
- <ecc825e6-89d3-bbd5-5243-5cc66fa93045@oracle.com>
- <b55d4f90-100c-7a2a-9651-c99c06953465@gmail.com>
- <09afcdca-258f-e5ca-5c31-b7fd079eb213@oracle.com>
- <3e868e7a-4872-e8ab-fd2c-90917ad6d593@arm.com>
- <d709d185-5345-c463-3fd1-e711f954e58a@gmail.com>
- <435369ba-ad3b-1d3a-c2f4-babe8bb6189c@amazon.com>
- <fde362d0-dd48-9c9a-e71a-8fb158909551@epam.com>
- <20190325173011.GA20277@kaos-source-ops-60001.pdx1.amazon.com>
- <f5e824de-da57-9574-3813-2668f2932a6e@gmail.com>
- <20190328231928.GA5172@kaos-source-ops-60001.pdx1.amazon.com>
-From:   Oleksandr Andrushchenko <andr2000@gmail.com>
-Message-ID: <48fedb13-5af2-e7cf-d182-0f2bb385dda2@gmail.com>
-Date:   Thu, 16 May 2019 09:26:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 16 May 2019 02:28:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34732 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726221AbfEPG2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 02:28:24 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 21F1B3DDBE;
+        Thu, 16 May 2019 06:28:23 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F29145D9C3;
+        Thu, 16 May 2019 06:28:22 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 973501806B11;
+        Thu, 16 May 2019 06:28:21 +0000 (UTC)
+Date:   Thu, 16 May 2019 02:28:20 -0400 (EDT)
+From:   Pankaj Gupta <pagupta@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        KVM list <kvm@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Qemu Developers <qemu-devel@nongnu.org>,
+        linux-ext4 <linux-ext4@vger.kernel.org>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Christoph Hellwig <hch@infradead.org>,
+        Len Brown <lenb@kernel.org>, Jan Kara <jack@suse.cz>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        jmoyer <jmoyer@redhat.com>,
+        Nitesh Narayan Lal <nilal@redhat.com>,
+        Rik van Riel <riel@surriel.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        david <david@fromorbit.com>, cohuck@redhat.com,
+        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        yuval shaia <yuval.shaia@oracle.com>, jstaron@google.com
+Message-ID: <1906905099.29162562.1557988100975.JavaMail.zimbra@redhat.com>
+In-Reply-To: <CAPcyv4gEr_zPJEQp3k89v2UXfHp9PQwnJXY+W99HwXfxpvua_w@mail.gmail.com>
+References: <20190514145422.16923-1-pagupta@redhat.com> <20190514145422.16923-2-pagupta@redhat.com> <CAPcyv4gEr_zPJEQp3k89v2UXfHp9PQwnJXY+W99HwXfxpvua_w@mail.gmail.com>
+Subject: Re: [PATCH v9 1/7] libnvdimm: nd_region flush callback support
 MIME-Version: 1.0
-In-Reply-To: <20190328231928.GA5172@kaos-source-ops-60001.pdx1.amazon.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.65.16.97, 10.4.195.4]
+Thread-Topic: libnvdimm: nd_region flush callback support
+Thread-Index: VrjlK3y+QUdLL94hHE7OyUkrop5Ojw==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 16 May 2019 06:28:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Anchal!
 
-On 3/29/19 1:19 AM, Anchal Agarwal wrote:
-[snip]
->>>> Great, could you please let us know what is the progress and further plans
->>>> on that, so we do not work on the same code and can coordinate our
->>>> efforts somehow? Anchal, could you please shed some light on this?
->>> Looks like my previous email did not make it to mailing list. May be some issues with my
->>> email server settings. Giving it another shot.
->>> Yes, I am working on those patches and plan to re-post them in an effort to upstream.
->> This is really great, looking forward to it: any date in your mind
->> when this can happen?
-> Not a specific date but may be in few weeks. I am currently swamped at work.
->
-Any progress on this?
+> >
+> > This patch adds functionality to perform flush from guest
+> > to host over VIRTIO. We are registering a callback based
+> > on 'nd_region' type. virtio_pmem driver requires this special
+> > flush function. For rest of the region types we are registering
+> > existing flush function. Report error returned by host fsync
+> > failure to userspace.
+> >
+> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
+> > ---
+> >  drivers/acpi/nfit/core.c     |  4 ++--
+> >  drivers/nvdimm/claim.c       |  6 ++++--
+> >  drivers/nvdimm/nd.h          |  1 +
+> >  drivers/nvdimm/pmem.c        | 13 ++++++++-----
+> >  drivers/nvdimm/region_devs.c | 26 ++++++++++++++++++++++++--
+> >  include/linux/libnvdimm.h    |  8 +++++++-
+> >  6 files changed, 46 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
+> > index 5a389a4f4f65..08dde76cf459 100644
+> > --- a/drivers/acpi/nfit/core.c
+> > +++ b/drivers/acpi/nfit/core.c
+> > @@ -2434,7 +2434,7 @@ static void write_blk_ctl(struct nfit_blk *nfit_blk,
+> > unsigned int bw,
+> >                 offset = to_interleave_offset(offset, mmio);
+> >
+> >         writeq(cmd, mmio->addr.base + offset);
+> > -       nvdimm_flush(nfit_blk->nd_region);
+> > +       nvdimm_flush(nfit_blk->nd_region, NULL);
+> >
+> >         if (nfit_blk->dimm_flags & NFIT_BLK_DCR_LATCH)
+> >                 readq(mmio->addr.base + offset);
+> > @@ -2483,7 +2483,7 @@ static int acpi_nfit_blk_single_io(struct nfit_blk
+> > *nfit_blk,
+> >         }
+> >
+> >         if (rw)
+> > -               nvdimm_flush(nfit_blk->nd_region);
+> > +               nvdimm_flush(nfit_blk->nd_region, NULL);
+> >
+> >         rc = read_blk_stat(nfit_blk, lane) ? -EIO : 0;
+> >         return rc;
+> > diff --git a/drivers/nvdimm/claim.c b/drivers/nvdimm/claim.c
+> > index fb667bf469c7..13510bae1e6f 100644
+> > --- a/drivers/nvdimm/claim.c
+> > +++ b/drivers/nvdimm/claim.c
+> > @@ -263,7 +263,7 @@ static int nsio_rw_bytes(struct nd_namespace_common
+> > *ndns,
+> >         struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
+> >         unsigned int sz_align = ALIGN(size + (offset & (512 - 1)), 512);
+> >         sector_t sector = offset >> 9;
+> > -       int rc = 0;
+> > +       int rc = 0, ret = 0;
+> >
+> >         if (unlikely(!size))
+> >                 return 0;
+> > @@ -301,7 +301,9 @@ static int nsio_rw_bytes(struct nd_namespace_common
+> > *ndns,
+> >         }
+> >
+> >         memcpy_flushcache(nsio->addr + offset, buf, size);
+> > -       nvdimm_flush(to_nd_region(ndns->dev.parent));
+> > +       ret = nvdimm_flush(to_nd_region(ndns->dev.parent), NULL);
+> > +       if (ret)
+> > +               rc = ret;
+> >
+> >         return rc;
+> >  }
+> > diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
+> > index a5ac3b240293..0c74d2428bd7 100644
+> > --- a/drivers/nvdimm/nd.h
+> > +++ b/drivers/nvdimm/nd.h
+> > @@ -159,6 +159,7 @@ struct nd_region {
+> >         struct badblocks bb;
+> >         struct nd_interleave_set *nd_set;
+> >         struct nd_percpu_lane __percpu *lane;
+> > +       int (*flush)(struct nd_region *nd_region, struct bio *bio);
+> 
+> So this triggers:
+> 
+> In file included from drivers/nvdimm/e820.c:7:
+> ./include/linux/libnvdimm.h:140:51: warning: ‘struct bio’ declared
+> inside parameter list will not be visible outside of this definition
+> or declaration
+>   int (*flush)(struct nd_region *nd_region, struct bio *bio);
+>                                                    ^~~
 
-Thank you,
-Oleksandr
+Sorry! for this. Fixed now.
+
+> I was already feeling uneasy about trying to squeeze this into v5.2,
+> but this warning and the continued drip of comments leads me to
+> conclude that this driver would do well to wait one more development
+> cycle. Lets close out the final fixups and let this driver soak in
+> -next. Then for the v5.3 cycle I'll redouble my efforts towards the
+> goal of closing patch acceptance at the -rc6 / -rc7 development
+> milestone.
+
+o.k. Will wait for Mike's ACK on device mapper patch and send the v10
+with final fix-ups. Thank you for your help.
+
+Best regards,
+Pankaj
+
+
+
+> 
