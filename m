@@ -2,200 +2,100 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966FAC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC18C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B522087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5DD920815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:00:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfEPQAD (ORCPT
+        id S1727755AbfEPQAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:00:03 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43326 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727158AbfEPP6u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:58:50 -0400
-Received: from [167.98.27.226] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hRImM-0006zU-QJ; Thu, 16 May 2019 16:58:47 +0100
-Received: from ben by deadeye with local (Exim 4.92)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1hRImD-0001Pl-QI; Thu, 16 May 2019 16:58:37 +0100
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Thu, 16 May 2019 12:00:09 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:45226 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726400AbfEPQAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 12:00:00 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 07E472064E;
+        Thu, 16 May 2019 17:59:59 +0200 (CEST)
+Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id ECB6920581;
+        Thu, 16 May 2019 17:59:58 +0200 (CEST)
+Subject: Re: [GIT PULL 1/4] ARM: SoC platform updates
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        arm-soc <arm@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20190516064304.24057-1-olof@lixom.net>
+ <20190516064304.24057-2-olof@lixom.net>
+ <CAHk-=wj7uZ+rLecwEP+U3jRRPWRoB1QVTr8pHzTcmQadE=Ngvg@mail.gmail.com>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <aad06de6-b85c-b549-5653-45f9c4ebb384@free.fr>
+Date:   Thu, 16 May 2019 17:59:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Dave Hansen" <dave.hansen@intel.com>,
-        "Andi Kleen" <ak@linux.intel.com>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Asit Mallick" <asit.k.mallick@intel.com>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Kees Cook" <keescook@chromium.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Jiri Kosina" <jkosina@suse.cz>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>,
-        "Tom Lendacky" <thomas.lendacky@amd.com>,
-        "Greg KH" <gregkh@linuxfoundation.org>,
-        "Casey Schaufler" <casey.schaufler@intel.com>,
-        "Tim Chen" <tim.c.chen@linux.intel.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        "Dave Stewart" <david.c.stewart@intel.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Jon Masters" <jcm@redhat.com>,
-        "Waiman Long" <longman9394@gmail.com>,
-        "Arjan van de Ven" <arjan@linux.intel.com>,
-        "Andrea Arcangeli" <aarcange@redhat.com>
-Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.249528149@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 43/86] x86/speculation: Rework SMT state change
-In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
-X-SA-Exim-Connect-IP: 167.98.27.226
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+In-Reply-To: <CAHk-=wj7uZ+rLecwEP+U3jRRPWRoB1QVTr8pHzTcmQadE=Ngvg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu May 16 17:59:59 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.68-rc1 review patch.  If anyone has any objections, please let me know.
+On 16/05/2019 17:33, Linus Torvalds wrote:
 
-------------------
+> On Wed, May 15, 2019 at 11:43 PM Olof Johansson wrote:
+>>
+>> SoC updates, mostly refactorings and cleanups of old legacy platforms.
+>> Major themes this release:
+> 
+> Hmm. This brings in a new warning:
+> 
+>   drivers/clocksource/timer-ixp4xx.c:78:20: warning:
+> ‘ixp4xx_read_sched_clock’ defined but not used [-Wunused-function]
+> 
+> because that drivers is enabled for build testing, but that function
+> is only used under
+> 
+>   #ifdef CONFIG_ARM
+>         sched_clock_register(ixp4xx_read_sched_clock, 32, timer_freq);
+>   #endif
+> 
+> It's not clear why that #ifdef is there. This driver only builds
+> non-ARM when COMPILE_TEST is enabled, and that #ifdef actually breaks
+> that build test.
+> 
+> I'm going to remove that #ifdef in my merge, because I do *not* want
+> to see new warnings, and it doesn't seem to make any sense.
+> 
+> Maybe that's the wrong resolution, please holler and let me know if
+> you want something else.
 
-From: Thomas Gleixner <tglx@linutronix.de>
+Hello BDFL,
 
-commit a74cfffb03b73d41e08f84c2e5c87dec0ce3db9f upstream.
+Your email client did something strange by changing
 
-arch_smt_update() is only called when the sysfs SMT control knob is
-changed. This means that when SMT is enabled in the sysfs control knob the
-system is considered to have SMT active even if all siblings are offline.
+	linux-arm-kernel@lists.infradead.org
+to
+	"linux-alpha@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>
 
-To allow finegrained control of the speculation mitigations, the actual SMT
-state is more interesting than the fact that siblings could be enabled.
+which is odd  ;-)
 
-Rework the code, so arch_smt_update() is invoked from each individual CPU
-hotplug function, and simplify the update function while at it.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Casey Schaufler <casey.schaufler@intel.com>
-Cc: Asit Mallick <asit.k.mallick@intel.com>
-Cc: Arjan van de Ven <arjan@linux.intel.com>
-Cc: Jon Masters <jcm@redhat.com>
-Cc: Waiman Long <longman9394@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Dave Stewart <david.c.stewart@intel.com>
-Cc: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20181125185004.521974984@linutronix.de
-[bwh: Backported to 3.16: adjust context]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
----
- arch/x86/kernel/cpu/bugs.c | 11 +++++------
- include/linux/sched/smt.h  |  2 ++
- kernel/cpu.c               | 15 +++++++++------
- 3 files changed, 16 insertions(+), 12 deletions(-)
+As for your actual remark, I note that Olof has an arm/late branch
+(which I assume he plans to submit in a few days?) which contains
+the change you mention:
 
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -13,6 +13,7 @@
- #include <linux/module.h>
- #include <linux/nospec.h>
- #include <linux/prctl.h>
-+#include <linux/sched/smt.h>
- 
- #include <asm/spec-ctrl.h>
- #include <asm/cmdline.h>
-@@ -403,16 +404,14 @@ void arch_smt_update(void)
- 		return;
- 
- 	mutex_lock(&spec_ctrl_mutex);
--	mask = x86_spec_ctrl_base;
--	if (IS_ENABLED(CONFIG_X86_HT))
-+
-+	mask = x86_spec_ctrl_base & ~SPEC_CTRL_STIBP;
-+	if (sched_smt_active())
- 		mask |= SPEC_CTRL_STIBP;
--	else
--		mask &= ~SPEC_CTRL_STIBP;
- 
- 	if (mask != x86_spec_ctrl_base) {
- 		pr_info("Spectre v2 cross-process SMT mitigation: %s STIBP\n",
--				IS_ENABLED(CONFIG_X86_HT) ?
--				"Enabling" : "Disabling");
-+			mask & SPEC_CTRL_STIBP ? "Enabling" : "Disabling");
- 		x86_spec_ctrl_base = mask;
- 		on_each_cpu(update_stibp_msr, NULL, 1);
- 	}
---- a/include/linux/sched/smt.h
-+++ b/include/linux/sched/smt.h
-@@ -15,4 +15,6 @@ static __always_inline bool sched_smt_ac
- static inline bool sched_smt_active(void) { return false; }
- #endif
- 
-+void arch_smt_update(void);
-+
- #endif
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -8,6 +8,7 @@
- #include <linux/init.h>
- #include <linux/notifier.h>
- #include <linux/sched.h>
-+#include <linux/sched/smt.h>
- #include <linux/unistd.h>
- #include <linux/cpu.h>
- #include <linux/oom.h>
-@@ -179,6 +180,12 @@ void cpu_hotplug_enable(void)
- 
- #endif	/* CONFIG_HOTPLUG_CPU */
- 
-+/*
-+ * Architectures that need SMT-specific errata handling during SMT hotplug
-+ * should override this.
-+ */
-+void __weak arch_smt_update(void) { }
-+
- /* Need to know about CPUs going up/down? */
- int __ref register_cpu_notifier(struct notifier_block *nb)
- {
-@@ -394,6 +401,7 @@ out_release:
- 	cpu_hotplug_done();
- 	if (!err)
- 		cpu_notify_nofail(CPU_POST_DEAD | mod, hcpu);
-+	arch_smt_update();
- 	return err;
- }
- 
-@@ -495,7 +503,7 @@ out_notify:
- 		__cpu_notify(CPU_UP_CANCELED | mod, hcpu, nr_calls, NULL);
- out:
- 	cpu_hotplug_done();
--
-+	arch_smt_update();
- 	return ret;
- }
- 
+https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/log/?h=arm/late
+https://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git/commit/?h=arm/late&id=5cb9de627e25421e2e2edaff6360c84d32cd3c02
 
+Regards.
