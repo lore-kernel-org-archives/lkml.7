@@ -2,118 +2,190 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAA1C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEA7C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E2D4205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98F40205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:11:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="vCowvd26"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A4cqwo2y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbfEPRKy (ORCPT
+        id S1727142AbfEPRLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 13:10:54 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:54816 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfEPRKy (ORCPT
+        Thu, 16 May 2019 13:11:08 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:34652 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726622AbfEPRLI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 13:10:54 -0400
-Received: by mail-it1-f196.google.com with SMTP id a190so7350847ite.4
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 10:10:53 -0700 (PDT)
+        Thu, 16 May 2019 13:11:08 -0400
+Received: by mail-it1-f193.google.com with SMTP id p18so8761671itm.1;
+        Thu, 16 May 2019 10:11:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5EwJksJ2FoQVnQI0xcmWd22xXK+H+BAMsUpI/Bz70Ko=;
-        b=vCowvd26w29wqEIEqcsiaPf/EuWN6j87GJLMX9br2vStXOBGTGzRN91ItAb+LaOQov
-         WcIXvg/Iss7UD0wf5R5taBEu6nJBnNMi+b2EvVfphRMPAV7l3DPtO/ZQ4xLQxMug0O51
-         +wlBD8vh1YTVeBBuA7q+6GY3HFwyoDWpZb6UAD1b4xhql5PGYneQIxHyH0Vs//sbyOS8
-         cPDxc784vau+PgeWv7Bexo+t3xJ/DR+CBS23VizH8X8qRN3V0s51vabU1T1LbJsPW0tC
-         6t4stv8bRxm0XZEuXUKnbQs7Xy8Tn5OTo92cVwgFjEVkqscPGTS5R1T9qb1Fh4QetsuM
-         Up4Q==
+         :cc;
+        bh=fVgWvZJjJ7LZA6VDcloEmUFXOAPk1PT27/O6DPevuoo=;
+        b=A4cqwo2yL1aggG4lM417VaU73zIpyeM1JjIhVvoca22iROz0Rlp4JkwF+l0tcZeRU+
+         3+/RLh0apRqAa6TC+fZnZ/vzZQXIXvYc0uxWamp3t2JDBCPJqR4uZxXZoDrTEQt3V0h3
+         apC3rfKagNzxS8t9W7GpQVZUM14DEvJ6em2On5JgFIleMe6XaucvT2+gj6XD31lWSXFG
+         tf9UzCkGKwohIZTJQn3wXJMIgufC3/YdqtvVM1ZkNBk0XVkt4V2JFg3wERawxT9QC7Q/
+         Y5vmhlJ51f8TBXO5/yelUaLZZ+CpUVZflfnBNj+Qm4Eabnr3iLcuAr5b4kRdnbl90MHZ
+         s4bQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5EwJksJ2FoQVnQI0xcmWd22xXK+H+BAMsUpI/Bz70Ko=;
-        b=jBNzy4f/AVhyNB1ecrZbXvVw42f4NZuRY9D7csq/7fVnnRAYaCe8rqKzUPqcUCcIpP
-         NotraNSQWlehmJVoU8tWhtdv2WReochtykbKWjVaBqqZvKCF9Yln8G61OIfqedMsBTNn
-         wUqry7WwxozXyN/4uAoosoRDfkTsnCzdS9U3RhJtH17ACZun2/1xG2Ij8KnefSR+W3Ig
-         7XM+Tq9o42g6mHm9oYEdY9yazZrrPEltBV1z08p2vXP8Ccd77GrvU+zgdjp/WgLuuCrI
-         Uxn4e1FBjVXRoxWG46aIU1ywWwmVdFPvUau2bxYRkT1xZeKyEUSYDTLayNnym4pSk5TL
-         crJA==
-X-Gm-Message-State: APjAAAVweFP+aXHt7zIrHDZtoVQWvet0mjE3tJGZ5xgcM8Ec2C7SzSRW
-        h5JoYcIk6eC23YofzBcwYKgzqCR5t0HIu6ytLpi7/g==
-X-Google-Smtp-Source: APXvYqzz59DMUAjZfEHs6VQoL3fmXQV164OUtAdl/v/4z6/H+c+fWkLi7UOzh0Zmnp7mXm/7gNJcsov+/59rFuOfTFM=
-X-Received: by 2002:a24:70ca:: with SMTP id f193mr13222240itc.103.1558026653421;
- Thu, 16 May 2019 10:10:53 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=fVgWvZJjJ7LZA6VDcloEmUFXOAPk1PT27/O6DPevuoo=;
+        b=C3p5PcxWPig68cbPR2ughJKZOexhcDiMw5NcW4eRMM/tCcoEvwp5Tqmk+vq3qoOoA3
+         shyhPfjyFnb6ih9PaXB1R0lGA46adGOgzYSRJOJBWKsHF4Ow4PeMIoCdLthUe6vRY9EM
+         dFt0sEXmCAnsADseO7hpZrMeZ6vtC9YblUur04nWlR1Rmk/XRCCwEIlo7XoJM6AxniCH
+         1VRXPIEcwelobEkbBt8QHwlI3NZSu977kRYBnXNsIqsvvGGYr2WTNaz7Qt6fPWvt8UWR
+         bHHxmxoyaoNpU0I+56RMyLwBKS7PLJkNrPfFFBVYU/FkM53RbOwijVI56sRz4jVRrtJk
+         Jnpg==
+X-Gm-Message-State: APjAAAV2G+gF/mvdiVTrqmRKoWGPbwOkdagZ75ga/MuW+ea8qb5UCUNk
+        87lw96LZJmc0dxJUaOmwxEB0kpwgFS8OEHFqzVg3W/Z0uQHDbA==
+X-Google-Smtp-Source: APXvYqy3m/oJMUKJD6ooOIYSw+QkNQB7gPWB3BwHZsKTSVtISBUaJfBt4qSiwurxdEPWDJsoE4o0ba753ipNvnpzweE=
+X-Received: by 2002:a02:7410:: with SMTP id o16mr32812026jac.87.1558026666868;
+ Thu, 16 May 2019 10:11:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190516064304.24057-1-olof@lixom.net> <20190516064304.24057-2-olof@lixom.net>
- <CAHk-=wj7uZ+rLecwEP+U3jRRPWRoB1QVTr8pHzTcmQadE=Ngvg@mail.gmail.com> <CAK8P3a27zgq3c_iWHVfypAc-hLag06Bs=Q2D7bn4i4nVfPQSyw@mail.gmail.com>
-In-Reply-To: <CAK8P3a27zgq3c_iWHVfypAc-hLag06Bs=Q2D7bn4i4nVfPQSyw@mail.gmail.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Thu, 16 May 2019 10:10:41 -0700
-Message-ID: <CAOesGMgQ9kF08PDzA3LSjsXt-ETB8vAnqo2EjtbKEMJ5UrnJnw@mail.gmail.com>
-Subject: Re: [GIT PULL 1/4] ARM: SoC platform updates
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        ARM SoC <arm@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "linux-alpha@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20190502171636.3yquioe3gcwsxlus@csclub.uwaterloo.ca>
+ <CAKgT0Ufk8LXMb9vVWfvgbjbQFKAuenncf95pfkA0P1t-3+Ni_g@mail.gmail.com>
+ <20190502175513.ei7kjug3az6fe753@csclub.uwaterloo.ca> <20190502185250.vlsainugtn6zjd6p@csclub.uwaterloo.ca>
+ <CAKgT0Uc_YVzns+26-TL+hhmErqG4_w4evRqLCaa=7nME7Zq+Vg@mail.gmail.com>
+ <20190503151421.akvmu77lghxcouni@csclub.uwaterloo.ca> <CAKgT0UcV2wCr6iUYktZ+Bju_GNpXKzR=M+NLfKhUsw4bsJSiyA@mail.gmail.com>
+ <20190503205935.bg45rsso5jjj3gnx@csclub.uwaterloo.ca> <20190513165547.alkkgcsdelaznw6v@csclub.uwaterloo.ca>
+ <CAKgT0Uf_nqZtCnHmC=-oDFz-3PuSM6=30BvJSDiAgzK062OY6w@mail.gmail.com> <20190514163443.glfjva3ofqcy7lbg@csclub.uwaterloo.ca>
+In-Reply-To: <20190514163443.glfjva3ofqcy7lbg@csclub.uwaterloo.ca>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 16 May 2019 10:10:55 -0700
+Message-ID: <CAKgT0UdPDyCBsShQVwwE5C8fBKkMcfS6_S5m3T7JP-So9fzVgA@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec packets
+To:     Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
+Content-Type: multipart/mixed; boundary="00000000000007a1700589045a5b"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 8:53 AM Arnd Bergmann <arnd@arndb.de> wrote:
+--00000000000007a1700589045a5b
+Content-Type: text/plain; charset="UTF-8"
+
+On Tue, May 14, 2019 at 9:34 AM Lennart Sorensen
+<lsorense@csclub.uwaterloo.ca> wrote:
 >
-> On Thu, May 16, 2019 at 5:34 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
+> On Mon, May 13, 2019 at 12:04:00PM -0700, Alexander Duyck wrote:
+> > So I recreated the first packet you listed via text2pcap, replayed it
+> > on my test system via tcpreplay, updated my configuration to 12
+> > queues, and used the 2 hash keys you listed. I ended up seeing the
+> > traffic bounce between queues 4 and 8 with an X710 I had to test with
+> > when I was changing the key value.
 > >
-> > On Wed, May 15, 2019 at 11:43 PM Olof Johansson <olof@lixom.net> wrote:
-> > >
-> > > SoC updates, mostly refactorings and cleanups of old legacy platforms=
-.
-> > > Major themes this release:
+> > Unfortunately I don't have an X722 to test with. I'm suspecting that
+> > there may be some difference in the RSS setup, specifically it seems
+> > like values in the PFQF_HENA register were changed for the X722 part
+> > that may be causing the issues we are seeing.
 > >
-> > Hmm. This brings in a new warning:
-> >
-> >   drivers/clocksource/timer-ixp4xx.c:78:20: warning:
-> > =E2=80=98ixp4xx_read_sched_clock=E2=80=99 defined but not used [-Wunuse=
-d-function]
-> >
-> > because that drivers is enabled for build testing, but that function
-> > is only used under
-> >
-> >   #ifdef CONFIG_ARM
-> >         sched_clock_register(ixp4xx_read_sched_clock, 32, timer_freq);
-> >   #endif
-> >
-> > It's not clear why that #ifdef is there. This driver only builds
-> > non-ARM when COMPILE_TEST is enabled, and that #ifdef actually breaks
-> > that build test.
-> >
-> > I'm going to remove that #ifdef in my merge, because I do *not* want
-> > to see new warnings, and it doesn't seem to make any sense.
-> >
-> > Maybe that's the wrong resolution, please holler and let me know if
-> > you want something else.
+> > I will see if I can get someone from the networking division to take a
+> > look at this since I don't have access to the part in question nor a
+> > datasheet for it so I am not sure if I can help much more.
 >
-> As far as I can tell, that is the best fix, thanks for the cleanup!
+> Great.  I hope someone can figure this out because it is working very
+> badly so far.
+>
+> --
+> Len Sorensen
 
-Yeah, this was entirely on me -- it was found and fixed on linux-next,
-and Linus Walleij sent patches. However, as I was staging these pull
-requests, I applied them to a branch of fixes that I'm collecting for
-later this week instead of on top of the one I was sending.
+So I was sent a link to the datasheet for the part and I have a
+working theory that what we may be seeing is a problem in the firmware
+for the part.
 
-Thanks for fixing it up.
+Can you try applying the attached patch and send the output from the
+dmesg? Specifically I would want anything with the name "i40e" in it.
+What I am looking for is something like the following:
+[  294.383416] i40e 0000:81:00.1: fw 5.0.40043 api 1.5 nvm 5.04 0x800024cd 0.0.0
+[  294.675039] i40e 0000:81:00.1: MAC address: 68:05:ca:37:c7:99
+[  294.685941] i40e 0000:81:00.1: flow_type: 63 input_mask:0x0000000000004000
+[  294.686056] i40e 0000:81:00.1: flow_type: 46 input_mask:0x0007fff800000000
+[  294.686170] i40e 0000:81:00.1: flow_type: 45 input_mask:0x0007fff800000000
+[  294.686284] i40e 0000:81:00.1: flow_type: 44 input_mask:0x0007ffff80000000
+[  294.686399] i40e 0000:81:00.1: flow_type: 43 input_mask:0x0007fffe00000000
+[  294.686513] i40e 0000:81:00.1: flow_type: 41 input_mask:0x0007fffe00000000
+[  294.686628] i40e 0000:81:00.1: flow_type: 36 input_mask:0x0001801800000000
+[  294.686743] i40e 0000:81:00.1: flow_type: 35 input_mask:0x0001801800000000
+[  294.686858] i40e 0000:81:00.1: flow_type: 34 input_mask:0x0001801f80000000
+[  294.686973] i40e 0000:81:00.1: flow_type: 33 input_mask:0x0001801e00000000
+[  294.687087] i40e 0000:81:00.1: flow_type: 31 input_mask:0x0001801e00000000
+[  294.691906] i40e 0000:81:00.1 ens5f1: renamed from eth0
+[  294.711173] i40e 0000:81:00.1 ens5f1: NIC Link is Up, 10 Gbps Full
+Duplex, Flow Control: None
+[  294.759061] i40e 0000:81:00.1: PCI-Express: Speed 8.0GT/s Width x8
+[  294.863363] i40e 0000:81:00.1: Features: PF-id[1] VFs: 32 VSIs: 34
+QP: 32 RSS FD_ATR FD_SB NTUPLE VxLAN Geneve PTP VEPA
 
+With that we can tell what flow types are enabled, and what input
+fields are enabled for each flow type. My suspicion is that we may see
+the two new types added to X722 for UDP, 29 and 30, may not match type
+31 which is the current flow type supported on the X710.
 
--Olof
+I have included a copy inline below in case the patch is stripped,
+however I suspect it will not apply cleanly as the mail client I am
+using usually ends up causing white space mangling by replacing tabs
+with spaces.
+
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c
+b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 65c2b9d2652b..0c93859f8184 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -10998,6 +10998,15 @@ static int i40e_pf_config_rss(struct i40e_pf *pf)
+                ((u64)i40e_read_rx_ctl(hw, I40E_PFQF_HENA(1)) << 32);
+        hena |= i40e_pf_get_default_rss_hena(pf);
+
++       for (ret = 64; ret--;) {
++               if (!(hena & (1ull << ret)))
++                       continue;
++               dev_info(&pf->pdev->dev, "flow_type: %d
+input_mask:0x%08x%08x\n",
++                        ret,
++                        i40e_read_rx_ctl(hw, I40E_GLQF_HASH_INSET(1, ret)),
++                        i40e_read_rx_ctl(hw, I40E_GLQF_HASH_INSET(0, ret)));
++       }
++
+        i40e_write_rx_ctl(hw, I40E_PFQF_HENA(0), (u32)hena);
+        i40e_write_rx_ctl(hw, I40E_PFQF_HENA(1), (u32)(hena >> 32));
+
+--00000000000007a1700589045a5b
+Content-Type: text/x-patch; charset="US-ASCII"; name="i40e-debug-hash-inputs.patch"
+Content-Disposition: attachment; filename="i40e-debug-hash-inputs.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jvqw89g40>
+X-Attachment-Id: f_jvqw89g40
+
+aTQwZTogRGVidWcgaGFzaCBpbnB1dHMKCkZyb206IEFsZXhhbmRlciBEdXljayA8YWxleGFuZGVy
+LmguZHV5Y2tAbGludXguaW50ZWwuY29tPgoKCi0tLQogZHJpdmVycy9uZXQvZXRoZXJuZXQvaW50
+ZWwvaTQwZS9pNDBlX21haW4uYyB8ICAgIDkgKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgOSBp
+bnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvaW50ZWwvaTQw
+ZS9pNDBlX21haW4uYyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ludGVsL2k0MGUvaTQwZV9tYWlu
+LmMKaW5kZXggNjVjMmI5ZDI2NTJiLi4wYzkzODU5ZjgxODQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
+bmV0L2V0aGVybmV0L2ludGVsL2k0MGUvaTQwZV9tYWluLmMKKysrIGIvZHJpdmVycy9uZXQvZXRo
+ZXJuZXQvaW50ZWwvaTQwZS9pNDBlX21haW4uYwpAQCAtMTA5OTgsNiArMTA5OTgsMTUgQEAgc3Rh
+dGljIGludCBpNDBlX3BmX2NvbmZpZ19yc3Moc3RydWN0IGk0MGVfcGYgKnBmKQogCQkoKHU2NClp
+NDBlX3JlYWRfcnhfY3RsKGh3LCBJNDBFX1BGUUZfSEVOQSgxKSkgPDwgMzIpOwogCWhlbmEgfD0g
+aTQwZV9wZl9nZXRfZGVmYXVsdF9yc3NfaGVuYShwZik7CiAKKwlmb3IgKHJldCA9IDY0OyByZXQt
+LTspIHsKKwkJaWYgKCEoaGVuYSAmICgxdWxsIDw8IHJldCkpKQorCQkJY29udGludWU7CisJCWRl
+dl9pbmZvKCZwZi0+cGRldi0+ZGV2LCAiZmxvd190eXBlOiAlZCBpbnB1dF9tYXNrOjB4JTA4eCUw
+OHhcbiIsCisJCQkgcmV0LAorCQkJIGk0MGVfcmVhZF9yeF9jdGwoaHcsIEk0MEVfR0xRRl9IQVNI
+X0lOU0VUKDEsIHJldCkpLAorCQkJIGk0MGVfcmVhZF9yeF9jdGwoaHcsIEk0MEVfR0xRRl9IQVNI
+X0lOU0VUKDAsIHJldCkpKTsKKwl9CisKIAlpNDBlX3dyaXRlX3J4X2N0bChodywgSTQwRV9QRlFG
+X0hFTkEoMCksICh1MzIpaGVuYSk7CiAJaTQwZV93cml0ZV9yeF9jdGwoaHcsIEk0MEVfUEZRRl9I
+RU5BKDEpLCAodTMyKShoZW5hID4+IDMyKSk7CiAK
+--00000000000007a1700589045a5b--
