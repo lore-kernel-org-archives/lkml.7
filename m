@@ -2,114 +2,128 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB5CC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56928C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46C272070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:59:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558040382;
-	bh=6ar+VWes5x8vVhPkHDf0GVQM4+1UB4ble0K8wdXqY4U=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KW7uGqCqpyWknOX1sseeGinonOaJ0k41SZadITDMzSZehGgC/dB4oQv88s6ZJgYz3
-	 WLMQ2S/BrtDs5pUHJ8VmE0XOCN7hEStByiM3kYrTRGp99DmInHVG7W+GCVPxfDBne6
-	 S7GPFy+bJ1/KYNb0tN3aS38qaHnZ0B3sKvJ6hL+c=
+	by mail.kernel.org (Postfix) with ESMTP id 336842070D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbfEPU7l (ORCPT
+        id S1728183AbfEPU7q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 16:59:41 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:38694 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727951AbfEPU7l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 16:59:41 -0400
-Received: by mail-lf1-f66.google.com with SMTP id y19so3716537lfy.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 13:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6oAPPlUpIkCtQ/levc8RsxEk+htcahssCA/GznIL0Us=;
-        b=YZ8c/cm5aMA7k3clC9oPBSrTRPSLiXxoGN+/rRTEEZuA1eKzCtY+bAPltIYlKN4zli
-         WJVE0BF2AxNUuBeHaqBEKA6z6gR46laXsGrUbQXk6EdimWFAv+u89zWsDjZL7k1NccgW
-         DlnxbLwfAWIL+QPoKXeDP9PbQ4U0PizyusWaY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6oAPPlUpIkCtQ/levc8RsxEk+htcahssCA/GznIL0Us=;
-        b=Z36st/xgmNGUnHRx3IbXhsVxu38e4xATVLGKMTkQ6pcYGy+lIqHlUdFpzXYWu2KVxO
-         2H9DPGI996anVgvzBL06i2YuTs1vvfxHYIPKvqqVInkyviXOM7UMyHBCKW9XA6XOFC+7
-         3F4kgOUz9XthEfpZqX67iCLwutEUiG4I/iYVzjenYaA3GwdVD34Jd8tKFji7JcA/Ed0z
-         ToPx4Dez9/GYb8m7ohmQS0GZ9cpj2wwcG7CDLZk4pKvsR2/ZR2yLsoe3DiK7yXB/0yUY
-         u6VZYRZB9OKEcSgdvnxMpeR96NgFug8JpFwngxA7Mt7iVk2NcGmVbQrVzjA0H11MLGfo
-         9lDw==
-X-Gm-Message-State: APjAAAXFJTB50Q2XGbDTUjwciXVje/dgAsciRMh9W9b6BnMxCMZY2TZW
-        +xJJeKpS2EhRd3QM8vVwOK1qvbcM72g=
-X-Google-Smtp-Source: APXvYqyaCCEKPGcnE5+Go3ommoloTxrcCrNi6H79bpACYDJ9AqYSGftaHC9PCiaLslU+D1jkiNsx3A==
-X-Received: by 2002:a19:ec12:: with SMTP id b18mr24967968lfa.149.1558040378644;
-        Thu, 16 May 2019 13:59:38 -0700 (PDT)
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com. [209.85.167.42])
-        by smtp.gmail.com with ESMTPSA id h11sm1167352lfh.8.2019.05.16.13.59.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 13:59:38 -0700 (PDT)
-Received: by mail-lf1-f42.google.com with SMTP id y19so3716475lfy.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 13:59:38 -0700 (PDT)
-X-Received: by 2002:ac2:510b:: with SMTP id q11mr23412586lfb.11.1558040376948;
- Thu, 16 May 2019 13:59:36 -0700 (PDT)
+        Thu, 16 May 2019 16:59:46 -0400
+Received: from mga17.intel.com ([192.55.52.151]:5975 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727951AbfEPU7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 16:59:44 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 13:59:43 -0700
+X-ExtLoop1: 1
+Received: from agluck-desk.sc.intel.com (HELO agluck-desk) ([10.3.52.160])
+  by fmsmga007.fm.intel.com with ESMTP; 16 May 2019 13:59:43 -0700
+Date:   Thu, 16 May 2019 13:59:43 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Message-ID: <20190516205943.GA3299@agluck-desk>
+References: <20190430203206.104163-1-Yazen.Ghannam@amd.com>
+ <20190430203206.104163-6-Yazen.Ghannam@amd.com>
+ <20190516155202.GA11517@agluck-desk>
+ <SN6PR12MB26397B30A120E3426184727FF80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516165648.GB21857@zn.tnic>
+ <SN6PR12MB26392B440ED735C26AA2C678F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516172117.GC21857@zn.tnic>
+ <SN6PR12MB26394CD4E1BAC068B0B1AEF6F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516203456.GD21857@zn.tnic>
 MIME-Version: 1.0
-References: <CAK8P3a2+RHAReOZdo8nEvqDeC1EPj83L2Ug4JuVRiUh943AuNw@mail.gmail.com>
- <CAHk-=wgiv5ftb+dq7N8cN4n2YX3VkyzeQccywn07Xu9xhOLTSw@mail.gmail.com> <CAK8P3a2EEuxh3uhsqauEC_vROZ7tQHhFwxgiLUnrgtpMdb3kuA@mail.gmail.com>
-In-Reply-To: <CAK8P3a2EEuxh3uhsqauEC_vROZ7tQHhFwxgiLUnrgtpMdb3kuA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 16 May 2019 13:59:21 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiH=vGjsW9MdWFGsgto2W+71sA4XJ7CSubpXkbpC_bGKA@mail.gmail.com>
-Message-ID: <CAHk-=wiH=vGjsW9MdWFGsgto2W+71sA4XJ7CSubpXkbpC_bGKA@mail.gmail.com>
-Subject: Re: [GIT PULL] asm-generic: kill <asm/segment.h> and improve nommu
- generic uaccess helpers
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190516203456.GD21857@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 1:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
->
-> I have reconfigured it locally now and pushed an identical tag with a
-> new signature. Can you see if that gives you the same warning if you
-> try to pull that?
+On Thu, May 16, 2019 at 10:34:56PM +0200, Borislav Petkov wrote:
+> On Thu, May 16, 2019 at 08:20:58PM +0000, Ghannam, Yazen wrote:
+> > We don't actually know if there are bits set in hardware until we read
+> > it back. So I don't think this is adding anything new.
+> 
+> Bah, of course. We need to read it first (pasting the whole function).
+> Now, __mcheck_cpu_init_clear_banks() gets called when we change
+> configuration too, in mce_cpu_restart() and if we do it this way, we'll
+> be rereading MCi_CTL each time but I don't see anything wrong with that.
 
-No, same issue:
+Intel doesn't "set any bits in hardware" ... so I think you'll just
+get a 0x0 and disable everything.
 
-   [torvalds@i7 linux]$ git fetch
-git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic
-tags/asm-generic-nommu
-   From ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic
-    * tag                         asm-generic-nommu -> FETCH_HEAD
-   [torvalds@i7 linux]$ git verify-tag FETCH_HEAD
-   gpg: Signature made Thu 16 May 2019 01:28:54 PM PDT
-   gpg:                using RSA key 60AB47FFC9095227
-   gpg: bad data signature from key 60AB47FFC9095227: Wrong key usage
-(0x00, 0x4)
-   gpg: Can't check signature: Wrong key usage
+> 
+> Hmmm?
+> 
+> static void __mcheck_cpu_init_clear_banks(void)
+> {
+>         struct mce_bank *mce_banks = this_cpu_read(mce_banks_array);
+>         int i;
+> 
+>         for (i = 0; i < this_cpu_read(mce_num_banks); i++) {
+>                 struct mce_bank *b = &mce_banks[i];
+> 
+>                 rdmsrl(msr_ops.ctl(i), b->ctl);
+> 
+>                 /* Bank is initialized if bits are set in hardware. */
+>                 b->init = !!b->ctl;
+>                 if (b->init) {
+>                         wrmsrl(msr_ops.ctl(i), b->ctl);
+>                         wrmsrl(msr_ops.status(i), 0);
+>                 }
+> 
+>         }
+> }
 
-That's the same key you used previously.
 
-I think you have to do some gpg edit-key magic or something, and then
-the key need to be refreshed.
+I think the intent of the original patch was to find out
+which bits are "implemented in hardware". I.e. throw all
+1's at the register and see if any of them stick.
 
-But I really despise the usability of gpg, so what do I know?
+I don't object to the idea behind the patch. But if you want
+to do this you just should not modify b->ctl.
 
-              Linus
+So something like:
+	
+
+static void __mcheck_cpu_init_clear_banks(void)
+{
+        struct mce_bank *mce_banks = this_cpu_read(mce_banks_array);
+	u64 tmp;
+        int i;
+
+        for (i = 0; i < this_cpu_read(mce_num_banks); i++) {
+                struct mce_bank *b = &mce_banks[i];
+
+                if (b->init) {
+                        wrmsrl(msr_ops.ctl(i), b->ctl);
+                        wrmsrl(msr_ops.status(i), 0);
+			rdmsrl(msr_ops.ctl(i), tmp);
+
+			/* Check if any bits implemented in h/w */
+			b->init = !!tmp;
+                }
+
+        }
+}
+
+-Tony
+
+-Tony
