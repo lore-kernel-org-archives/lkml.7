@@ -2,97 +2,110 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FFEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E466C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF4DF20815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701FE20815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:54:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558025683;
+	bh=zr/zxV1usENV4ElmdAnIWY6NyXFnfV23HLvkPZcxVQs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dN2a79xFWQS/C8eL+9885dE9vXIx3zAUMFZudv3nt7nwHbhd2QpMN0K8NyTIwU+WF
+	 O+7qEQ1uXPO+NPNc20NtGAgufMxaVZbHoTycwZjh/EZep6p5REB6ubIo7sZe4qkcdL
+	 BYp2LOzKeDOXJaWdvg6rLe3w2VCDZjSw+ScTBH1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbfEPQxs convert rfc822-to-8bit (ORCPT
+        id S1728679AbfEPQym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:53:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59990 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726357AbfEPQxs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:53:48 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3CD1D309267B;
-        Thu, 16 May 2019 16:53:48 +0000 (UTC)
-Received: from x1.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 45FE760E39;
-        Thu, 16 May 2019 16:53:45 +0000 (UTC)
-Date:   Thu, 16 May 2019 10:53:44 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Auger Eric <eric.auger@redhat.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, eric.auger.pro@gmail.com,
-        joro@8bytes.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, dwmw2@infradead.org,
-        lorenzo.pieralisi@arm.com, will.deacon@arm.com,
-        hanjun.guo@linaro.org, sudeep.holla@arm.com,
-        shameerali.kolothum.thodi@huawei.com
-Subject: Re: [PATCH v3 6/7] iommu: Introduce IOMMU_RESV_DIRECT_RELAXABLE
- reserved memory regions
-Message-ID: <20190516105344.5add5520@x1.home>
-In-Reply-To: <57db1955-9d19-7c0b-eca3-37cc0d7d745b@redhat.com>
-References: <20190516100817.12076-1-eric.auger@redhat.com>
-        <20190516100817.12076-7-eric.auger@redhat.com>
-        <ad8a99fa-b98a-14d3-12be-74df0e6eb8f8@arm.com>
-        <57db1955-9d19-7c0b-eca3-37cc0d7d745b@redhat.com>
-Organization: Red Hat
+        Thu, 16 May 2019 12:54:42 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42548 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726317AbfEPQym (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 12:54:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=VkFNzLKE4kl1CvHrPz9yn/s6HJV6YwA2NLY66fTp9J0=; b=XYnUP/h6DYKuIcn7ZZt2d5KzI
+        neFlnwfwa5xbxp+HzV4XNTtcA+UAql1Vbdc4nSWn+SQoQtBAM+mbcvHg+XKyMHz9e3OevtFIIwqci
+        CfWTrJQTSY1ZCTqbsUyxrytgMd9xgLdlri4ZpY+kvFssCwZ/IrTgMNjG8N5jnLe+DMWaI=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hRJdw-00076A-7k; Thu, 16 May 2019 16:54:08 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id BEF01112929C; Thu, 16 May 2019 17:54:07 +0100 (BST)
+Date:   Thu, 16 May 2019 17:54:07 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Viorel Suman <viorel.suman@nxp.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Colin Ian King <colin.king@canonical.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Viorel Suman <viorel.suman@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [alsa-devel] [PATCH] ASoC: AK4458: add regulator for ak4458
+Message-ID: <20190516165407.GJ5598@sirena.org.uk>
+References: <1558011640-7864-1-git-send-email-viorel.suman@nxp.com>
+ <CAOMZO5C1jm=7tiui221B-N+ptEknK_ZdHvrjvSHfvQ=W-K54Qw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 16 May 2019 16:53:48 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="SLfjTIIQuAzj8yil"
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5C1jm=7tiui221B-N+ptEknK_ZdHvrjvSHfvQ=W-K54Qw@mail.gmail.com>
+X-Cookie: <ahzz_> i figured 17G oughta be enough.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 May 2019 15:23:17 +0200
-Auger Eric <eric.auger@redhat.com> wrote:
 
-> Hi Robin,
-> On 5/16/19 2:46 PM, Robin Murphy wrote:
-> >> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-> >> index ba91666998fb..14a521f85f14 100644
-> >> --- a/include/linux/iommu.h
-> >> +++ b/include/linux/iommu.h
-> >> @@ -135,6 +135,12 @@ enum iommu_attr {
-> >>   enum iommu_resv_type {
-> >>       /* Memory regions which must be mapped 1:1 at all times */
-> >>       IOMMU_RESV_DIRECT,
-> >> +    /*
-> >> +     * Memory regions which are advertised to be 1:1 but are
-> >> +     * commonly considered relaxable in some conditions,
-> >> +     * for instance in device assignment use case (USB, Graphics)
-> >> +     */
-> >> +    IOMMU_RESV_DIRECT_RELAXABLE,  
-> > 
-> > What do you think of s/RELAXABLE/BOOT/ ? My understanding is that these
-> > regions are only considered relevant until Linux has taken full control
-> > of the endpoint, and having a slightly more well-defined scope than
-> > "some conditions" might be nice.  
-> That's not my current understanding. I think those RMRRs may be used
-> post-boot (especially the IGD stolen memory covered by RMRR). I
-> understand this depends on the video mode or FW in use by the IGD. But I
-> am definitively not an expert here.
+--SLfjTIIQuAzj8yil
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Nor am I, but generally the distinction I'm trying to achieve is
-whether the reserved region is necessary for the device operation or
-for the system operation.  If we deny the IGD device its mapping to
-stolen memory, then maybe the IGD device doesn't work, no big deal.  If
-we deny USB its RMRR, then we assume we're only cutting off PS/2
-emulation that we expect isn't used at this point anyway.  Both of these
-are choices in how the driver wants to use the device.  On the other
-hand if we have a system where management firmware has backdoors to
-devices for system health monitoring, then declining to honor the RMRR
-has larger implications.  Thanks,
+On Thu, May 16, 2019 at 10:14:42AM -0300, Fabio Estevam wrote:
 
-Alex
+> > +       ret = devm_regulator_bulk_get(ak4458->dev, ARRAY_SIZE(ak4458->supplies),
+> > +                                     ak4458->supplies);
+> > +       if (ret != 0) {
+> > +               dev_err(ak4458->dev, "Failed to request supplies: %d\n", ret);
+> > +               return ret;
+
+> This would break existing users that do not pass the regulators in device tree.
+
+It won't, if you're using regulator_get() and there's just no regulator
+in the DT the regulator framework just assumes that there is actually a
+regulator there which isn't described in the DT and substitutes in a
+dummy regulator for you.
+
+--SLfjTIIQuAzj8yil
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzdla8ACgkQJNaLcl1U
+h9APjQf+Lv8THYJ4esni1vNmG69HpD0BrrnTj4bJszGYZmzU+NUA1KpHwSgphVPx
+dNEm9YVRL58Ap8OQ6R46L0vKKwjv7O2PQHVAVpuH94fJEkdnlRLYppoEof9hODaa
+sIVb/mjegYSgclH+zisPqB4DrB9TFX55fkDl7I4JI+6IBuCCX6pGAmDC83VmgPhv
+CBgNmyBfE6Iim+g1AKFLo6UJK8Ygn1KKRAfEmNVdN4Q+Zo2GcynfnznEHiUR3gCc
+1iw2fGSjM4xOm42TezfFo+AZKBrCElE8jWQfInD3dQtbhJUtVljxIjOe1/ywebWi
+qW8LBq1eK2SLwtpuk9lL4BDPZpj4LA==
+=79lT
+-----END PGP SIGNATURE-----
+
+--SLfjTIIQuAzj8yil--
