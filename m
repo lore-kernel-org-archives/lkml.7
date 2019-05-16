@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3224AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3CAC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA142089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749A520881
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558006903;
-	bh=Lbbshxy3t043RQwkX65Q3YiIe574q3DmADiisCqRfFA=;
+	s=default; t=1558006905;
+	bh=8eARBYmvj/PR+Vmhg1+Mrnms2xkYXMN8hkHgcDObopo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UxWeqXLlNtFr//5OVsfYvz1+wzMGLg1BY7dpOFluiA9oWio4O+amv44E0OpOnwoGQ
-	 eoco+EnFFYh6Upwx1CE4dZvs7EyxuUGWg6PE+XwaB+v6zHHYUoWeXpSjEDShAUYNjw
-	 q8SVuF0pRHf4+I0W6YCRP3bMZ5+QKZ98GRAPTxgo=
+	b=qngvQG1pE88W/acB58QNnkWStYRm7XvSgU8vrF11EnTKGQxAiLtrqwOIwaq0uBl1t
+	 uMlZzcNZtXuX60loJCeAJAQJH7PFY8V61LoC2rrxS/zV3kkyvA/7f0odbapaPsUFle
+	 +G05PgrGX+oGZdAW59PVKwthS7iKYHmwer+wo1Tk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbfEPLll (ORCPT
+        id S1728308AbfEPLlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:41:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50372 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:41:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728234AbfEPLlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:41:37 -0400
+        id S1728279AbfEPLll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:41:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7322220833;
-        Thu, 16 May 2019 11:41:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B70F52089E;
+        Thu, 16 May 2019 11:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006897;
-        bh=Lbbshxy3t043RQwkX65Q3YiIe574q3DmADiisCqRfFA=;
+        s=default; t=1558006900;
+        bh=8eARBYmvj/PR+Vmhg1+Mrnms2xkYXMN8hkHgcDObopo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CrVqBawffrjnnfeIGRGdKIQXD9TnXK4E8NNUjE9iCOd4XgMwK76uRON1sPkYv+ADW
-         8AWtxSGnZHevJOyokV/6778hrjoRalH6t3If5t5ijBxABMvuxT4KDcg3aGnNWYuMBo
-         MbgfhWKv6jKXnbnL/sh6uxN87n/xuU5TegMRk224=
+        b=lIadVS4mwnMSPf7KYrK2NKYx+sZa3HkwiaZqt165prUzH0oqJFTNES3WkpBax351y
+         mTjpo2cjtXWYzntkRxBwEJNiOFfw7fxwOHQco0MzwtzQtlUGfgrZcEtAXKXEdVh+x4
+         y3klnUUgdA7M6su1ZAcZDNq+sdifKCrTKPtpzQtY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Su Yanjun <suyj.fnst@cn.fujitsu.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 2/9] xfrm6_tunnel: Fix potential panic when unloading xfrm6_tunnel module
-Date:   Thu, 16 May 2019 07:41:26 -0400
-Message-Id: <20190516114134.9146-2-sashal@kernel.org>
+Cc:     Bhagavathi Perumal S <bperumal@codeaurora.org>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 5/9] mac80211: Fix kernel panic due to use of txq after free
+Date:   Thu, 16 May 2019 07:41:29 -0400
+Message-Id: <20190516114134.9146-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516114134.9146-1-sashal@kernel.org>
 References: <20190516114134.9146-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,38 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+From: Bhagavathi Perumal S <bperumal@codeaurora.org>
 
-[ Upstream commit 6ee02a54ef990a71bf542b6f0a4e3321de9d9c66 ]
+[ Upstream commit f1267cf3c01b12e0f843fb6a7450a7f0b2efab8a ]
 
-When unloading xfrm6_tunnel module, xfrm6_tunnel_fini directly
-frees the xfrm6_tunnel_spi_kmem. Maybe someone has gotten the
-xfrm6_tunnel_spi, so need to wait it.
+The txq of vif is added to active_txqs list for ATF TXQ scheduling
+in the function ieee80211_queue_skb(), but it was not properly removed
+before freeing the txq object. It was causing use after free of the txq
+objects from the active_txqs list, result was kernel panic
+due to invalid memory access.
 
-Fixes: 91cc3bb0b04ff("xfrm6_tunnel: RCU conversion")
-Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fix kernel invalid memory access by properly removing txq object
+from active_txqs list before free the object.
+
+Signed-off-by: Bhagavathi Perumal S <bperumal@codeaurora.org>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/xfrm6_tunnel.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/mac80211/iface.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/ipv6/xfrm6_tunnel.c b/net/ipv6/xfrm6_tunnel.c
-index 3a2701d42f471..07b7b2540579c 100644
---- a/net/ipv6/xfrm6_tunnel.c
-+++ b/net/ipv6/xfrm6_tunnel.c
-@@ -391,6 +391,10 @@ static void __exit xfrm6_tunnel_fini(void)
- 	xfrm6_tunnel_deregister(&xfrm6_tunnel_handler, AF_INET6);
- 	xfrm_unregister_type(&xfrm6_tunnel_type, AF_INET6);
- 	unregister_pernet_subsys(&xfrm6_tunnel_net_ops);
-+	/* Someone maybe has gotten the xfrm6_tunnel_spi.
-+	 * So need to wait it.
-+	 */
-+	rcu_barrier();
- 	kmem_cache_destroy(xfrm6_tunnel_spi_kmem);
- }
+diff --git a/net/mac80211/iface.c b/net/mac80211/iface.c
+index 5768560cbfc3e..ad03331ee7855 100644
+--- a/net/mac80211/iface.c
++++ b/net/mac80211/iface.c
+@@ -1937,6 +1937,9 @@ void ieee80211_if_remove(struct ieee80211_sub_if_data *sdata)
+ 	list_del_rcu(&sdata->list);
+ 	mutex_unlock(&sdata->local->iflist_mtx);
  
++	if (sdata->vif.txq)
++		ieee80211_txq_purge(sdata->local, to_txq_info(sdata->vif.txq));
++
+ 	synchronize_rcu();
+ 
+ 	if (sdata->dev) {
 -- 
 2.20.1
 
