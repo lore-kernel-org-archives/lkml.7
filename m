@@ -2,135 +2,78 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21050C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81575C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA9D22082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:36:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="MlzYyqsQ"
+	by mail.kernel.org (Postfix) with ESMTP id 54A8920848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558028218;
+	bh=J0o9e5r85qw6Ct6cW0lnogaTj29MCoNBY5Ih5VQs1lI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=OFXh8T6IapPaRTCxtDR3vZqrIAP9O6StoXOJ1Af24WiME2ViRHJ1WSDWz3AAqpzQD
+	 DBVgD94Qv9PYxeTI3npekSZmh3fn4BD5j0vBIktbhfxfzhXowJ0MXgZqnEu95DZSEh
+	 yOltCZksX7ZPzXGoDzjRQx3ZvQ21wBmBtkZeAuQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbfEPRgy (ORCPT
+        id S1727939AbfEPRg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 13:36:54 -0400
-Received: from vps.xff.cz ([195.181.215.36]:38042 "EHLO vps.xff.cz"
+        Thu, 16 May 2019 13:36:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726409AbfEPRgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 13:36:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1558028210; bh=Jbc9aeVDZK4IVUtlH1rcpyyERggWBjuR3RQpcFzD1T0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MlzYyqsQURfuYpPc0op+qkOyLkPN7dYIRo4j+mrkhYHYwLuQlaIADILnCGtJtfM/p
-         RYtugzjmO7W2kVQcT7sWXDmiim8a3h/ixlJwffwkjNodM1ejasX5tJQxeVlwlHpes7
-         kiNj2m5G9DqxzV/jlVa7mK4k/8GmC7OxVxUcO1Fk=
-Date:   Thu, 16 May 2019 19:36:49 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Yangtao Li <tiny.windzz@gmail.com>, mark.rutland@arm.com,
-        daniel.lezcano@linaro.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, bjorn.andersson@linaro.org,
-        mchehab+samsung@kernel.org, paulmck@linux.ibm.com,
-        stefan.wahren@i2se.com, linux-pm@vger.kernel.org, wens@csie.org,
-        jagan@amarulasolutions.com, andy.gross@linaro.org,
-        rui.zhang@intel.com, devicetree@vger.kernel.org,
-        marc.w.gonzalez@free.fr, edubezval@gmail.com,
-        enric.balletbo@collabora.com, robh+dt@kernel.org,
-        Jonathan.Cameron@huawei.com, linux-arm-kernel@lists.infradead.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        olof@lixom.net, davem@davemloft.net
-Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
-Message-ID: <20190516173649.5s2s32ol43kbbhzg@core.my.home>
-Mail-Followup-To: Maxime Ripard <maxime.ripard@bootlin.com>,
-        Yangtao Li <tiny.windzz@gmail.com>, mark.rutland@arm.com,
-        daniel.lezcano@linaro.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, bjorn.andersson@linaro.org,
-        mchehab+samsung@kernel.org, paulmck@linux.ibm.com,
-        stefan.wahren@i2se.com, linux-pm@vger.kernel.org, wens@csie.org,
-        jagan@amarulasolutions.com, andy.gross@linaro.org,
-        rui.zhang@intel.com, devicetree@vger.kernel.org,
-        marc.w.gonzalez@free.fr, edubezval@gmail.com,
-        enric.balletbo@collabora.com, robh+dt@kernel.org,
-        Jonathan.Cameron@huawei.com, linux-arm-kernel@lists.infradead.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        olof@lixom.net, davem@davemloft.net
-References: <20190512082614.9045-1-tiny.windzz@gmail.com>
- <20190512082614.9045-3-tiny.windzz@gmail.com>
- <20190512133930.t5txssl7mou2gljt@flea>
- <20190512214128.qjyys3vfpwdiacib@core.my.home>
- <20190516150252.hf4u3bloo37chy6q@flea>
+        id S1726409AbfEPRgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 13:36:55 -0400
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C16920862;
+        Thu, 16 May 2019 17:36:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558028215;
+        bh=J0o9e5r85qw6Ct6cW0lnogaTj29MCoNBY5Ih5VQs1lI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=u10IDwUVP8rJJm66oGFoBRhxh9MWzvsgFmPE4/c0gr8b/WN9Uk6dO7TkxFRWQOE5P
+         bZlZgF/EMahvyY2MatNW814Yco7+Co3vz8woPup/+G6C95TtkLx8hPTegEi5jqJYPr
+         0lmTAFIJskrtU4Iypofsblx0fz0BS8CcS5YorCF8=
+Received: by mail-ed1-f48.google.com with SMTP id w33so6351448edb.10;
+        Thu, 16 May 2019 10:36:55 -0700 (PDT)
+X-Gm-Message-State: APjAAAUS5bKxCiP/10SmiNkKrxLsiVaufnYCc5NUVzdsz+02Fl6bBHIj
+        fw0hcj8AK1BE+6gVT+SwHw3G+AF002Ci2iM5doE=
+X-Google-Smtp-Source: APXvYqyan6695N5GdU2kofq+FcBtbqzSkRu8JRB/p3E9v6O6Oo0ldkOStBLBH6IHZJv+VXfnhvljdQA1j1owXABNx9c=
+X-Received: by 2002:a50:9266:: with SMTP id j35mr53083454eda.60.1558028213752;
+ Thu, 16 May 2019 10:36:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190516150252.hf4u3bloo37chy6q@flea>
+References: <1556528151-17221-1-git-send-email-hao.wu@intel.com> <1556528151-17221-6-git-send-email-hao.wu@intel.com>
+In-Reply-To: <1556528151-17221-6-git-send-email-hao.wu@intel.com>
+From:   Alan Tull <atull@kernel.org>
+Date:   Thu, 16 May 2019 12:36:17 -0500
+X-Gmail-Original-Message-ID: <CANk1AXQSL8k=FOLv4_rLfRHBqOi=CW=yP3O8ch4VEa25cj9+Cw@mail.gmail.com>
+Message-ID: <CANk1AXQSL8k=FOLv4_rLfRHBqOi=CW=yP3O8ch4VEa25cj9+Cw@mail.gmail.com>
+Subject: Re: [PATCH v2 05/18] Documentation: fpga: dfl: add descriptions for
+ virtualization and new interfaces.
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org, Xu Yilun <yilun.xu@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Maxime,
+On Mon, Apr 29, 2019 at 4:12 AM Wu Hao <hao.wu@intel.com> wrote:
+>
+> This patch adds virtualization support description for DFL based
+> FPGA devices (based on PCIe SRIOV), and introductions to new
+> interfaces added by new dfl private feature drivers.
+>
+> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
+> Signed-off-by: Wu Hao <hao.wu@intel.com>
 
-On Thu, May 16, 2019 at 05:02:52PM +0200, Maxime Ripard wrote:
-> Hi,
-> 
-> On Sun, May 12, 2019 at 11:41:28PM +0200, Ondřej Jirman wrote:
-> > > > +static int tsens_get_temp(void *data, int *temp)
-> > > > +{
-> > > > +	struct tsensor *s = data;
-> > > > +	struct tsens_device *tmdev = s->tmdev;
-> > > > +	int val;
-> > > > +
-> > > > +	regmap_read(tmdev->regmap, tmdev->chip->temp_data_base +
-> > > > +		    0x4 * s->id, &val);
-> > > > +
-> > > > +	if (unlikely(val == 0))
-> > > > +		return -EBUSY;
-> > >
-> > > I'm not sure why a val equals to 0 would be associated with EBUSY?
-> >
-> > Thermal zone driver can (will) call get_temp before we got the
-> > first interrupt and the thermal data. In that case val will be 0.
-> >
-> > Resulting in:
-> >
-> >  (val + offset) * scale = (-2794) * -67 = 187198
-> >
-> > 187°C and immediate shutdown during boot - based on cirtical
-> > temperature being reached.
-> >
-> > Busy here means, get_temp does not yet have data. Thermal zone
-> > driver just reports any error to dmesg output.
-> 
-> Ah, that makes sense.
-> 
-> I guess if we're switching to an interrupt-based driver, then we can
-> just use a waitqueue, or is get_temp supposed to be atomic?
+Acked-by: Alan Tull <atull@kernel.org>
 
-I'm not entirely sure, because I might have inadverently used a combination of
-interrupt and polling when testing this. It may be that if we set polling-delay
-to 0 in dts, that tz core will not try to call get_temp prematurely at all, and
-will simply wait for temperature update from the interrupt.
-
-I guess this needs to be tested/checked in tz code.
-
-regards,
-	o.
-
-> Maxime
-> 
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-
-
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
+Thanks,
+Alan
