@@ -2,121 +2,99 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9DDC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF65EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E862087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:45:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iFdbvY1Q"
+	by mail.kernel.org (Postfix) with ESMTP id 9041A2087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728518AbfEPWpG (ORCPT
+        id S1728682AbfEPWpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 18:45:06 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:32907 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726732AbfEPWpG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 18:45:06 -0400
-Received: by mail-vs1-f65.google.com with SMTP id y6so3420481vsb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 15:45:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+W9jD9o7YYLYB/v0Ro7pXl+sH8ADQyIbB7T7NXFVEcc=;
-        b=iFdbvY1Qgl23eLRHTcbK2KUoW8rVpz0RfgpjJVzvA3c+FlUStxkuV64Wmn8f0D9q+0
-         WFM2GPW77EVVaGnoDv7ntLl+FCqJJHHbK/5HI2zpwdwTg2qw1RbSA+tCBCNIKN5g9LuL
-         cXJ8bXROlUY7THLAZMkcbiVOe572QpbIYKKjs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+W9jD9o7YYLYB/v0Ro7pXl+sH8ADQyIbB7T7NXFVEcc=;
-        b=K5X0+DkPM0yoh2GS9y6cQR3prrR3ul3WBF6XguGvp6H4yg0P7wGYMjgwq5oB79D2gu
-         JFATl6rP4QG3fqevLw4XaPqhQ+YhvZvaZa+U5dviC/iyqTWBE9BA9+UYcrfd/FYpBgxo
-         31bQt9OfvJsPKEnbFj4CXJu1qBFA9wPJOv1UKrmgGsq/4kBMCvdzuJaQzbb6w+J3V2CY
-         XxMacafDRX92BVhOBc4FgLRevH+MBaFvgcLMIGmyZoYlqXtRsnD+bJ/M3DTjSXHy7YGI
-         D+LRSJ4yjCviYTuLIo6Z2+m5kmacKRl25/0wgPWK3Bvsq5x4hR5iDGeFFMloqz0Yjtz2
-         XFDw==
-X-Gm-Message-State: APjAAAXdBr+LvrHxD52u7xXlrwkw6IYe+2e5TjlMKjgoQ0zTLw62c/Ph
-        oGoRl954SflYw83WzGb1GlRzF5eISMI=
-X-Google-Smtp-Source: APXvYqz2vpPvVDhoWSJVuB1Nk1kcRmZ2SQeIyDUp61/yle4vDCqp1BPkm/+SEpgJy14iyhiYvnecOQ==
-X-Received: by 2002:a67:7587:: with SMTP id q129mr24197516vsc.40.1558046705122;
-        Thu, 16 May 2019 15:45:05 -0700 (PDT)
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
-        by smtp.gmail.com with ESMTPSA id d69sm2033698vkd.25.2019.05.16.15.45.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 15:45:03 -0700 (PDT)
-Received: by mail-vs1-f49.google.com with SMTP id l20so3407160vsp.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 15:45:03 -0700 (PDT)
-X-Received: by 2002:a67:b348:: with SMTP id b8mr17879343vsm.144.1558046702869;
- Thu, 16 May 2019 15:45:02 -0700 (PDT)
+        Thu, 16 May 2019 18:45:52 -0400
+Received: from mga14.intel.com ([192.55.52.115]:20424 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726732AbfEPWpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 18:45:52 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 15:45:51 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga005.fm.intel.com with ESMTP; 16 May 2019 15:45:50 -0700
+Date:   Thu, 16 May 2019 15:45:50 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190516224550.GC11204@linux.intel.com>
+References: <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+ <20190513102926.GD8743@linux.intel.com>
+ <20190514104323.GA7591@linux.intel.com>
+ <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+ <20190514204527.GC1977@linux.intel.com>
+ <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
+ <20190515013031.GF1977@linux.intel.com>
+ <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+ <20190516051622.GC6388@linux.intel.com>
+ <CALCETrVx1hgY67mP+73w5rT+eY+APcfS0YJ+XwtTLNz3CbVNMA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190516214022.65220-1-dianders@chromium.org> <20190516214022.65220-2-dianders@chromium.org>
-In-Reply-To: <20190516214022.65220-2-dianders@chromium.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 16 May 2019 15:44:51 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=V3U=5KttaqjUvvF=vpKwFNMd6q0=J1ZKUrJ1b-Stz5bQ@mail.gmail.com>
-Message-ID: <CAD=FV=V3U=5KttaqjUvvF=vpKwFNMd6q0=J1ZKUrJ1b-Stz5bQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] drm/rockchip: dw_hdmi: Handle suspend/resume
-To:     Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc:     "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrVx1hgY67mP+73w5rT+eY+APcfS0YJ+XwtTLNz3CbVNMA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, May 16, 2019 at 02:02:58PM -0700, Andy Lutomirski wrote:
+> > On May 15, 2019, at 10:16 PM, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
+> > There is a problem here though. Usually the enclave itself is just a
+> > loader that then loads the application from outside source and creates
+> > the executable pages from the content.
+> >
+> > A great example of this is Graphene that bootstraps unmodified Linux
+> > applications to an enclave:
+> >
+> > https://github.com/oscarlab/graphene
+> >
+> 
+> ISTM you should need EXECMEM or similar to run Graphene, then.
 
-On Thu, May 16, 2019 at 2:40 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> On Rockchip rk3288-based Chromebooks when you do a suspend/resume
-> cycle:
->
-> 1. You lose the ability to detect an HDMI device being plugged in.
->
-> 2. If you're using the i2c bus built in to dw_hdmi then it stops
-> working.
->
-> Let's call the core dw-hdmi's suspend/resume functions to restore
-> things.
->
-> NOTE: in downstream Chrome OS (based on kernel 3.14) we used the
-> "late/early" versions of suspend/resume because we found that the VOP
-> was sometimes resuming before dw_hdmi and then calling into us before
-> we were fully resumed.  For now I have gone back to the normal
-> suspend/resume because I can't reproduce the problems.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
-> Changes in v2:
-> - Add forgotten static (Laurent)
-> - No empty stub for suspend (Laurent)
->
->  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-
-Whoops, forgot that I should have carried forward:
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
--Doug
+Agreed, Graphene is effectively running arbitrary enclave code.  I'm
+guessing there is nothing that prevents extending/reworking Graphene to
+allow generating the enclave ahead of time so as to avoid populating the
+guts of the enclave at runtime, i.e. it's likely possible to run an
+unmodified application in an enclave without EXECMEM if that's something
+Graphene or its users really care about.
