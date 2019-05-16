@@ -2,139 +2,153 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D45A2C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0700FC04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A54AD20833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:57:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cENApoOz";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ev9uBfYP"
+	by mail.kernel.org (Postfix) with ESMTP id D873C20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfEPM5z (ORCPT
+        id S1727435AbfEPM6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 08:57:55 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:45057 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfEPM5z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 08:57:55 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9F455606CF; Thu, 16 May 2019 12:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558011474;
-        bh=wNPWdSNFLowBHRWGc2iu547/48b9Xj6CKUNFA19mcuU=;
-        h=Date:From:To:Subject:In-Reply-To:References:From;
-        b=cENApoOzXNBti6omO3W5/s3d0hfJTsLL/vGKAuMi7qeI14X+rw36bPY30gOivvRtY
-         IVephdNgSG9ZXNdWBAQA8jMn1HxXv33Y5BGtVFiCA/X1NUWtNhGVPHtUHaLk3R4fnF
-         RZq7gOpbqwUvejW42UL1Wb4KVX5u1ql/PAhcCpRQ=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id B3843606CF;
-        Thu, 16 May 2019 12:57:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1558011473;
-        bh=wNPWdSNFLowBHRWGc2iu547/48b9Xj6CKUNFA19mcuU=;
-        h=Date:From:To:Subject:In-Reply-To:References:From;
-        b=ev9uBfYPnkJiIVUo6J3Y0XY7X+Jqx8INNORcoWg+csM1tdvjghMm6E07MzP5qmXsy
-         DZ+7m5v/h4Dd0Khcn/3W2rv0v5bFQpkni+9ZDmdNFt3abtgdNu0d7g349WN91tBSfd
-         nx2QM01mKw5D+r16lvhZubB8eVw8/T/pADhZJamQ=
+        Thu, 16 May 2019 08:58:03 -0400
+Received: from mga03.intel.com ([134.134.136.65]:38130 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726692AbfEPM6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 08:58:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 05:58:01 -0700
+X-ExtLoop1: 1
+Received: from rongch2-mobl.ccr.corp.intel.com (HELO [10.255.30.127]) ([10.255.30.127])
+  by fmsmga001.fm.intel.com with ESMTP; 16 May 2019 05:57:58 -0700
+Subject: Re: undefined reference to `__aeabi_uldivmod' after 25c13324d03d
+ ("IB/mlx5: Add steering SW ICM device memory type")
+To:     Fengguang Wu <fengguang.wu@intel.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "kbuild@01.org" <kbuild@01.org>,
+        Ariel Levkovich <lariel@mellanox.com>,
+        Eli Cohen <eli@mellanox.com>, Mark Bloch <markb@mellanox.com>,
+        Doug Ledford <dledford@redhat.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Philip Li <philip.li@intel.com>
+References: <20190514194510.GA15465@archlinux-i9>
+ <20190515003202.GA14522@ziepe.ca> <20190515050331.GC5225@mtr-leonro.mtl.com>
+ <CAK8P3a0aH9Ezur3r7TDVMPreVKMip2HMEWhUsC_pKhOq7mE+3A@mail.gmail.com>
+ <20190515064043.GA944@archlinux-i9>
+ <CAK8P3a1r3QD=pwZqG+SfDkVr_V3P7ueRT8SLss9z+M6OEQst4A@mail.gmail.com>
+ <20190515064918.GA4807@archlinux-i9>
+ <20190516022135.6tnf3xx5mzctutxz@wfg-t540p.sh.intel.com>
+From:   "Chen, Rong A" <rong.a.chen@intel.com>
+Message-ID: <6f8089c8-788b-bbca-5b1b-1acc9791e9e7@intel.com>
+Date:   Thu, 16 May 2019 20:57:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20190516022135.6tnf3xx5mzctutxz@wfg-t540p.sh.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Thu, 16 May 2019 18:27:53 +0530
-From:   stummala@codeaurora.org
-To:     Junxiao Bi <junxiao.bi@oracle.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, stummala@codeaurora.org
-Subject: Re: [PATCH v2] configfs: Fix use-after-free when accessing
- sd->s_dentry
-In-Reply-To: <20190131032011.GC7308@codeaurora.org>
-References: <1546514295-24818-1-git-send-email-stummala@codeaurora.org>
- <20190131032011.GC7308@codeaurora.org>
-Message-ID: <0081e5c8083f5ed9f1c1e9b456739728@codeaurora.org>
-X-Sender: stummala@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph, Al,
+Hi,
 
-Can you please consider this patch for merging?
+On 5/16/2019 10:21 AM, Fengguang Wu wrote:
+> CC current 0day kbuild test maintainers Philip and Rong. -fengguang
+>
+> On Tue, May 14, 2019 at 11:49:18PM -0700, Nathan Chancellor wrote:
+>> On Wed, May 15, 2019 at 08:42:13AM +0200, Arnd Bergmann wrote:
+>>> On Wed, May 15, 2019 at 8:40 AM Nathan Chancellor
+>>> <natechancellor@gmail.com> wrote:
+>>> > On Wed, May 15, 2019 at 08:31:49AM +0200, Arnd Bergmann wrote:
+>>> > > On Wed, May 15, 2019 at 7:04 AM Leon Romanovsky 
+>>> <leonro@mellanox.com> wrote:
+>>> > > > On Tue, May 14, 2019 at 09:32:02PM -0300, Jason Gunthorpe wrote:
+>>> > > > > On Tue, May 14, 2019 at 12:45:10PM -0700, Nathan Chancellor 
+>>> wrote:
+>>> > > > > > Hi all,
+>>> > > > > >
+>>> > > > > > I checked the RDMA mailing list and trees and I haven't 
+>>> seen this
+>>> > > > > > reported/fixed yet (forgive me if it has) but when 
+>>> building for arm32
+>>> > > > > > with multi_v7_defconfig and the following configs 
+>>> (distilled from
+>>> > > > > > allyesconfig):
+>>> > > > > >
+>>> > > > > > CONFIG_INFINIBAND=y
+>>> > > > > > CONFIG_INFINIBAND_ON_DEMAND_PAGING=y
+>>> > > > > > CONFIG_INFINIBAND_USER_ACCESS=y
+>>> > > > > > CONFIG_MLX5_CORE=y
+>>> > > > > > CONFIG_MLX5_INFINIBAND=y
+>>> > > > > >
+>>> > > > > > The following link time errors occur:
+>>> > > > > >
+>>> > > > > > arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/main.o: 
+>>> in function `mlx5_ib_alloc_dm':
+>>> > > > > > main.c:(.text+0x60c): undefined reference to 
+>>> `__aeabi_uldivmod'
+>>> > > > > > arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/cmd.o: in 
+>>> function `mlx5_cmd_alloc_sw_icm':
+>>> > > > > > cmd.c:(.text+0x6d4): undefined reference to 
+>>> `__aeabi_uldivmod'
+>>> > > > > > arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/cmd.o: in 
+>>> function `mlx5_cmd_dealloc_sw_icm':
+>>> > > > > > cmd.c:(.text+0x9ec): undefined reference to 
+>>> `__aeabi_uldivmod'
+>>> > > > >
+>>> > > > > Fengguang, I'm surprised that 0-day didn't report this 
+>>> earlier..
+>>> > > >
+>>> > > > I got many successful emails after I pushed this patch to 
+>>> 0-day testing.
+>>> > >
+>>> > > The long division warnings can compiler specific, and depend on 
+>>> certain
+>>> > > optimization options, as compilers can optimize out certain 
+>>> divisions and
+>>> > > replace them with multiplications and/or shifts, or prove that 
+>>> they can be
+>>> > > replaced with a 32-bit division. If this is a case that gcc 
+>>> manages to
+>>> > > optimize but clang does not, it might be worth looking into 
+>>> whether an
+>>> > > optimization can be added to clang, in addition to improving the 
+>>> source.
+>>> >
+>>> > While I did run initially run into this with clang, the errors 
+>>> above are
+>>> > with gcc (mainly to show this was going to be a universal problem and
+>>> > not just something with clang).
+>>>
+>>> Which gcc version did you use here? Anything particularly old or 
+>>> particularly
+>>> new? I think 0-day is on a fairly recent gcc-8, but not the latest 
+>>> gcc-9
+>>> release.
+>>
+>> 8.2.0 it seems (I've been meaning to build from the 9.x branch though
+>> since it appears that Arch's arm-linux-gnueabi-gcc isn't going to get
+>> updated since it's in the AUR).
+>>
+Thanks for the reminding, we met some problems with gcc 8.1.0 once,
 
-Thanks,
-Sahitya.
+then we uses "arm-linux-gnueabi-gcc (Debian 7.2.0-11) 7.2.0" as the 
+default gcc for arm,
 
-On 2019-01-31 08:50, Sahitya Tummala wrote:
-> Al,
-> 
-> Can we merge this patch, if there are no further comments?
-> 
-> Thanks,
-> Sahitya.
-> 
-> On Thu, Jan 03, 2019 at 04:48:15PM +0530, Sahitya Tummala wrote:
->> In the vfs_statx() context, during path lookup, the dentry gets
->> added to sd->s_dentry via configfs_attach_attr(). In the end,
->> vfs_statx() kills the dentry by calling path_put(), which invokes
->> configfs_d_iput(). Ideally, this dentry must be removed from
->> sd->s_dentry but it doesn't if the sd->s_count >= 3. As a result,
->> sd->s_dentry is holding reference to a stale dentry pointer whose
->> memory is already freed up. This results in use-after-free issue,
->> when this stale sd->s_dentry is accessed later in
->> configfs_readdir() path.
->> 
->> This issue can be easily reproduced, by running the LTP test case -
->> sh fs_racer_file_list.sh /config
->> (https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/fs/racer/fs_racer_file_list.sh)
->> 
->> Fixes: 76ae281f6307 ('configfs: fix race between dentry put and 
->> lookup')
->> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
->> ---
->> v2:
->> - update comments relevant to the code.
->> 
->>  fs/configfs/dir.c | 9 ++++-----
->>  1 file changed, 4 insertions(+), 5 deletions(-)
->> 
->> diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
->> index 39843fa..f113101 100644
->> --- a/fs/configfs/dir.c
->> +++ b/fs/configfs/dir.c
->> @@ -58,15 +58,14 @@ static void configfs_d_iput(struct dentry * 
->> dentry,
->>  	if (sd) {
->>  		/* Coordinate with configfs_readdir */
->>  		spin_lock(&configfs_dirent_lock);
->> -		/* Coordinate with configfs_attach_attr where will increase
->> -		 * sd->s_count and update sd->s_dentry to new allocated one.
->> -		 * Only set sd->dentry to null when this dentry is the only
->> -		 * sd owner.
->> +		/*
->> +		 * Set sd->s_dentry to null only when this dentry is the
->> +		 * one that is going to be killed.
->>  		 * If not do so, configfs_d_iput may run just after
->>  		 * configfs_attach_attr and set sd->s_dentry to null
->>  		 * even it's still in use.
->>  		 */
->> -		if (atomic_read(&sd->s_count) <= 2)
->> +		if (sd->s_dentry == dentry)
->>  			sd->s_dentry = NULL;
->> 
->>  		spin_unlock(&configfs_dirent_lock);
->> --
->> Qualcomm India Private Limited, on behalf of Qualcomm Innovation 
->> Center, Inc.
->> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
->> Linux Foundation Collaborative Project.
->> 
+It seems we have missed some build issues detected by new gcc. we're 
+going to upgrade gcc ASAP.
+
+Best Regards,
+Rong Chen
