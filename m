@@ -2,152 +2,129 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AE2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B73FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D4520815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558022726;
-	bh=88gr+s6aDLZfVvSQFoNgzISrC6lvpe3dfXKTUnY3GPw=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=NqHeYRCYnf9Ndppp+uhKtgjgrM/oVhdO3T5o+0bj0QaEu8l/t+GF64oEDgIpzdYzo
-	 yK4FGHlOto6uxBPqU7hojhHAOr/dxRS/na0A7evm8utXQYmtJMzHIiq4SXsd+X7dS5
-	 TmbZtx9C4KzpOwbvJzo7KLJjVS6eJlcgPCJ82H38=
+	by mail.kernel.org (Postfix) with ESMTP id 0732320815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfEPQFZ (ORCPT
+        id S1726853AbfEPQFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:05:25 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:32819 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbfEPQFW (ORCPT
+        Thu, 16 May 2019 12:05:32 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42348 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726515AbfEPP6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:05:22 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d9so4080724wrx.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:05:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=q7pWT8kXPJxxR3x79I4/QO1kRi8GWpc3amVbJRsudng=;
-        b=busAmoMTBtuvy6voqADUSj2mY/HAEvbOK42BVdDK5fnPrw9eYgS1O6RmIggdX7G51I
-         CMQISWg0adYPGuNRM7J0lNX50hNIUZ2Nx+JTS4T5Pl3IiyPdKrjWxFOaMTBsaImr+8Q7
-         AXUzineg14N4RcAgFI3kdBOjbmXiZyLPNL9sbjqOn+V/e5FvXi9hnOow+URcAYcEY9RD
-         pn7Fmuz2mDPqtmgaI7NWbFts85oC475LMFhez03shoYUx0TjtJ+27eGNY29KRaMPp6dp
-         /AYJG5AB+aamT+AciRc4RfGqO4EJawat/CuPjJn+vBruYigej5QU3BDatyNFEUiPQNHm
-         MXtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=q7pWT8kXPJxxR3x79I4/QO1kRi8GWpc3amVbJRsudng=;
-        b=cVFMUQLEBBEVScsXAjqv1rqAj6e/JLRLENtzSg1/oFQoHWU3YYMYhJXccZYLYUl+Fn
-         QSSulUY2kgErtbz9t/0uDNcGKkRSx3HxwL98J2yEf7L69G8LSkVHZQwor5QQSHOkqnY+
-         YTU0pmpZ1PerBwXkVP2JnfEGnznL7DCCvyBHkSmjMwdfiXQa4HtfkiIRzuxzIND2UJ46
-         IuIYBTpbMEt6fNeR/duHXQZHzgGQU0RbBSLLb6CYaLRBpzHBrgJcIUB3ixi4iAC6kV7E
-         TJhqvDv4fZL9/4NvV9351OgJePOAH0SWZaaVQrYfylCSs3sBoyvAgv8FRXgFn8Q34Fc7
-         7NSA==
-X-Gm-Message-State: APjAAAWFabiAycY6FJfPw/KBqeIBOGRAobztu5wZzf444S5+H8sZxIn2
-        Guh4RNJsxB/lm7dGpeGvLuKUPQZf
-X-Google-Smtp-Source: APXvYqyz44gy7xXFf1s5NsimX2MXHADA8biKwP7LwCUZtB0bnz3lS/XK9wRx9dc6bvvaJPkREN1NbA==
-X-Received: by 2002:adf:e404:: with SMTP id g4mr30309133wrm.161.1558022721273;
-        Thu, 16 May 2019 09:05:21 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id g2sm6917655wru.37.2019.05.16.09.05.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 May 2019 09:05:20 -0700 (PDT)
-Date:   Thu, 16 May 2019 18:05:18 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Arnaldo Carvalho de Melo <acme@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] perf fixes
-Message-ID: <20190516160518.GA46645@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Thu, 16 May 2019 11:58:40 -0400
+Received: from [167.98.27.226] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hRImC-0006yh-Uu; Thu, 16 May 2019 16:58:37 +0100
+Received: from ben by deadeye with local (Exim 4.92)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hRImC-0001MU-BJ; Thu, 16 May 2019 16:58:36 +0100
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Petr Mladek" <pmladek@suse.cz>,
+        "Rusty Russell" <rusty@rustcorp.com.au>
+Date:   Thu, 16 May 2019 16:55:32 +0100
+Message-ID: <lsq.1558022132.775903169@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 02/86] module: add within_module() function
+In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
+X-SA-Exim-Connect-IP: 167.98.27.226
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+3.16.68-rc1 review patch.  If anyone has any objections, please let me know.
 
-Please pull the latest perf-urgent-for-linus git tree from:
+------------------
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-urgent-for-linus
+From: Petr Mladek <pmladek@suse.cz>
 
-   # HEAD: c7a286577d7592720c2f179aadfb325a1ff48c95 perf/x86/intel: Allow PEBS multi-entry in watermark mode
+commit 9b20a352d78a7651aa68a9220f77ccb03009d892 upstream.
 
-An x86 PMU constraint fix, an interface fix, and a Sparse fix.
+It is just a small optimization that allows to replace few
+occurrences of within_module_init() || within_module_core()
+with a single call.
 
- Thanks,
+Signed-off-by: Petr Mladek <pmladek@suse.cz>
+Signed-off-by: Rusty Russell <rusty@rustcorp.com.au>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ include/linux/module.h |  5 +++++
+ kernel/module.c        | 12 ++++--------
+ 2 files changed, 9 insertions(+), 8 deletions(-)
 
-	Ingo
-
------------------->
-Stephane Eranian (2):
-      perf/x86/intel: Fix INTEL_FLAGS_EVENT_CONSTRAINT* masking
-      perf/x86/intel: Allow PEBS multi-entry in watermark mode
-
-Wang Hai (1):
-      perf/x86/amd/iommu: Make the 'amd_iommu_attr_groups' symbol static
-
-
- arch/x86/events/amd/iommu.c  | 2 +-
- arch/x86/events/intel/core.c | 2 +-
- arch/x86/events/perf_event.h | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/events/amd/iommu.c b/arch/x86/events/amd/iommu.c
-index 7635c23f7d82..58a6993d7eb3 100644
---- a/arch/x86/events/amd/iommu.c
-+++ b/arch/x86/events/amd/iommu.c
-@@ -393,7 +393,7 @@ static __init int _init_events_attrs(void)
- 	return 0;
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -408,6 +408,11 @@ static inline int within_module_init(uns
+ 	       addr < (unsigned long)mod->module_init + mod->init_size;
  }
  
--const struct attribute_group *amd_iommu_attr_groups[] = {
-+static const struct attribute_group *amd_iommu_attr_groups[] = {
- 	&amd_iommu_format_group,
- 	&amd_iommu_cpumask_group,
- 	&amd_iommu_events_group,
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index ef763f535e3a..12ec402f4114 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3265,7 +3265,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 		return ret;
++static inline int within_module(unsigned long addr, const struct module *mod)
++{
++	return within_module_init(addr, mod) || within_module_core(addr, mod);
++}
++
+ /* Search for module by name: must hold module_mutex. */
+ struct module *find_module(const char *name);
  
- 	if (event->attr.precise_ip) {
--		if (!(event->attr.freq || event->attr.wakeup_events)) {
-+		if (!(event->attr.freq || (event->attr.wakeup_events && !event->attr.watermark))) {
- 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
- 			if (!(event->attr.sample_type &
- 			      ~intel_pmu_large_pebs_flags(event)))
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index 07fc84bb85c1..a6ac2f4f76fc 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -394,10 +394,10 @@ struct cpu_hw_events {
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3489,8 +3489,7 @@ const char *module_address_lookup(unsign
+ 	list_for_each_entry_rcu(mod, &modules, list) {
+ 		if (mod->state == MODULE_STATE_UNFORMED)
+ 			continue;
+-		if (within_module_init(addr, mod) ||
+-		    within_module_core(addr, mod)) {
++		if (within_module(addr, mod)) {
+ 			if (modname)
+ 				*modname = mod->name;
+ 			ret = get_ksymbol(mod, addr, size, offset);
+@@ -3514,8 +3513,7 @@ int lookup_module_symbol_name(unsigned l
+ 	list_for_each_entry_rcu(mod, &modules, list) {
+ 		if (mod->state == MODULE_STATE_UNFORMED)
+ 			continue;
+-		if (within_module_init(addr, mod) ||
+-		    within_module_core(addr, mod)) {
++		if (within_module(addr, mod)) {
+ 			const char *sym;
  
- /* Event constraint, but match on all event flags too. */
- #define INTEL_FLAGS_EVENT_CONSTRAINT(c, n) \
--	EVENT_CONSTRAINT(c, n, INTEL_ARCH_EVENT_MASK|X86_ALL_EVENT_FLAGS)
-+	EVENT_CONSTRAINT(c, n, ARCH_PERFMON_EVENTSEL_EVENT|X86_ALL_EVENT_FLAGS)
+ 			sym = get_ksymbol(mod, addr, NULL, NULL);
+@@ -3540,8 +3538,7 @@ int lookup_module_symbol_attrs(unsigned
+ 	list_for_each_entry_rcu(mod, &modules, list) {
+ 		if (mod->state == MODULE_STATE_UNFORMED)
+ 			continue;
+-		if (within_module_init(addr, mod) ||
+-		    within_module_core(addr, mod)) {
++		if (within_module(addr, mod)) {
+ 			const char *sym;
  
- #define INTEL_FLAGS_EVENT_CONSTRAINT_RANGE(c, e, n)			\
--	EVENT_CONSTRAINT_RANGE(c, e, n, INTEL_ARCH_EVENT_MASK|X86_ALL_EVENT_FLAGS)
-+	EVENT_CONSTRAINT_RANGE(c, e, n, ARCH_PERFMON_EVENTSEL_EVENT|X86_ALL_EVENT_FLAGS)
- 
- /* Check only flags, but allow all event/umask */
- #define INTEL_ALL_EVENT_CONSTRAINT(code, n)	\
+ 			sym = get_ksymbol(mod, addr, size, offset);
+@@ -3804,8 +3801,7 @@ struct module *__module_address(unsigned
+ 	list_for_each_entry_rcu(mod, &modules, list) {
+ 		if (mod->state == MODULE_STATE_UNFORMED)
+ 			continue;
+-		if (within_module_core(addr, mod)
+-		    || within_module_init(addr, mod))
++		if (within_module(addr, mod))
+ 			return mod;
+ 	}
+ 	return NULL;
+
