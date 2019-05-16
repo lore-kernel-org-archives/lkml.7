@@ -2,76 +2,66 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC3DC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC046C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B433220848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EB3620833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:03:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="CELJ9w/b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbfEPNCF (ORCPT
+        id S1727450AbfEPNDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:02:05 -0400
-Received: from foss.arm.com ([217.140.101.70]:45000 "EHLO foss.arm.com"
+        Thu, 16 May 2019 09:03:00 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:37237 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbfEPNCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:02:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72BB51715;
-        Thu, 16 May 2019 06:02:04 -0700 (PDT)
-Received: from queper01-lin (queper01-lin.cambridge.arm.com [10.1.195.48])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BD1B3F703;
-        Thu, 16 May 2019 06:02:02 -0700 (PDT)
-Date:   Thu, 16 May 2019 14:01:50 +0100
-From:   Quentin Perret <quentin.perret@arm.com>
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     douglas.raillard@arm.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
-        dietmar.eggemann@arm.com
-Subject: Re: [RFC PATCH 1/7] PM: Introduce em_pd_get_higher_freq()
-Message-ID: <20190516130148.uhq55ptut47usnae@queper01-lin>
-References: <20190508174301.4828-1-douglas.raillard@arm.com>
- <20190508174301.4828-2-douglas.raillard@arm.com>
- <20190516124200.opxczohjelhvrzmo@e110439-lin>
+        id S1726618AbfEPNC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:02:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=TxWIdfV2hL7/iT51c08JGwX3nJjgTJ/fYPgEs9gxoGM=; b=CELJ9w/bLskERYh1DvzhJgdlGf
+        54lADYLraF3PDZwmFVt7Jnk2lWkPZpPAlv2ET94JJQda86DYoESF1Z3Kxq10+xtoh00lzdSpnjRSt
+        N/ZSXMHaqMtIVUFndc/fMyAUKNfwcU0f9pBLoSSTxWYgcNz6qj+LombOlFDZrCDT21zg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hRG26-0003He-KB; Thu, 16 May 2019 15:02:50 +0200
+Date:   Thu, 16 May 2019 15:02:50 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Sagar Kadam <sagar.kadam@sifive.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] i2c-ocores: sifive: add polling mode workaround
+ for FU540-C000 SoC
+Message-ID: <20190516130250.GD14298@lunn.ch>
+References: <1557983320-14461-1-git-send-email-sagar.kadam@sifive.com>
+ <1557983320-14461-4-git-send-email-sagar.kadam@sifive.com>
+ <20190516123120.GB14298@lunn.ch>
+ <CAARK3H=L2AFtog6wdJGU7rKi7yk-AzDgFdjcjktZgkqdDwnOZQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190516124200.opxczohjelhvrzmo@e110439-lin>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <CAARK3H=L2AFtog6wdJGU7rKi7yk-AzDgFdjcjktZgkqdDwnOZQ@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 16 May 2019 at 13:42:00 (+0100), Patrick Bellasi wrote:
-> > +static inline unsigned long em_pd_get_higher_freq(struct em_perf_domain *pd,
-> > +	unsigned long min_freq, unsigned long cost_margin)
-> > +{
-> > +	unsigned long max_cost = 0;
-> > +	struct em_cap_state *cs;
-> > +	int i;
-> > +
-> > +	if (!pd)
-> > +		return min_freq;
-> > +
-> > +	/* Compute the maximum allowed cost */
-> > +	for (i = 0; i < pd->nr_cap_states; i++) {
-> > +		cs = &pd->table[i];
-> > +		if (cs->frequency >= min_freq) {
-> > +			max_cost = cs->cost + (cs->cost * cost_margin) / 1024;
->                                                                          ^^^^
-> ... end here we should probably better use SCHED_CAPACITY_SCALE
-> instead of hard-coding in values, isn't it?
+> Other SiFive chip's with Ocore based I2C re-implementation might not
+> need the broken IRQ workaround.
 
-I'm not sure to agree. This isn't part of the scheduler per se, and the
-cost thing isn't in units of capacity, but in units of power, so I don't
-think SCHED_CAPACITY_SCALE is correct here.
+They then get a different compatible string, because they are not bug
+compatible.
 
-But I agree these hard coded values (that one, and the 512 in one of the
-following patches) could use some motivation :-)
-
-Thanks,
-Quentin
+	Andrew
