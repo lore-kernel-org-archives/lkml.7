@@ -2,191 +2,95 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1A1C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61729C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC092082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:41:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="XG3L1ZDQ"
+	by mail.kernel.org (Postfix) with ESMTP id 31B592070D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbfEPRlU (ORCPT
+        id S1728894AbfEPRnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 13:41:20 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:21607 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727036AbfEPRlT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 13:41:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1558028479; x=1589564479;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:mime-version:
-   content-transfer-encoding;
-  bh=EeOQ/Wytv7i1KUb9By3pdfsSR47KzNNS8UhnNVxMV0c=;
-  b=XG3L1ZDQJWGZ5SuWV2k7qRXcNxOWObaBWd3Fx1tL+6oU5Vs1olC6fZSh
-   KySUG1zvZKYHfa9nhOkH0nks20O4D83IHmfm3pHhBkr/ZEytKw6t1aZN6
-   OdPd+t6xMLx/pyao9b3PljtAuqnoklS0kEDGvWjo8/K+RAb5HNbnw9BrP
-   I=;
-X-IronPort-AV: E=Sophos;i="5.60,477,1549929600"; 
-   d="scan'208";a="674734250"
-Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com) ([10.47.22.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 16 May 2019 17:41:16 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1e-303d0b0e.us-east-1.amazon.com (8.14.7/8.14.7) with ESMTP id x4GHfGfX061565
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
-        Thu, 16 May 2019 17:41:16 GMT
-Received: from EX13D02EUC001.ant.amazon.com (10.43.164.92) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 16 May 2019 17:41:15 +0000
-Received: from EX13D02EUC001.ant.amazon.com (10.43.164.92) by
- EX13D02EUC001.ant.amazon.com (10.43.164.92) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Thu, 16 May 2019 17:41:14 +0000
-Received: from EX13D02EUC001.ant.amazon.com ([10.43.164.92]) by
- EX13D02EUC001.ant.amazon.com ([10.43.164.92]) with mapi id 15.00.1367.000;
- Thu, 16 May 2019 17:41:14 +0000
-From:   "Sironi, Filippo" <sironi@amazon.de>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-CC:     "Graf, Alexander" <graf@amazon.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        KVM list <kvm@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "vasu.srinivasan@oracle.com" <vasu.srinivasan@oracle.com>
-Subject: Re: [PATCH v2 2/2] KVM: x86: Implement the arch-specific hook to
- report the VM UUID
-Thread-Topic: [PATCH v2 2/2] KVM: x86: Implement the arch-specific hook to
- report the VM UUID
-Thread-Index: AQHVCmgxSNZRVPU/lkacpReSlg9JAaZtyWCAgAAY24CAAAJ4gIAAErUAgAAQ44A=
-Date:   Thu, 16 May 2019 17:41:13 +0000
-Message-ID: <DD0087B6-094D-4D07-9C85-827881E3DDD0@amazon.de>
-References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
- <1557847002-23519-1-git-send-email-sironi@amazon.de>
- <1557847002-23519-3-git-send-email-sironi@amazon.de>
- <f51a6a84-b21c-ab75-7e30-bfbe2ac6b98b@amazon.com>
- <7395EFE9-0B38-4B61-81D4-E8450561AABE@amazon.de>
- <8c6a2de2-f080-aad5-16af-c4a5eafb31af@amazon.com>
- <3a9762a2-24e8-a842-862d-fadae563361d@oracle.com>
-In-Reply-To: <3a9762a2-24e8-a842-862d-fadae563361d@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.165.224]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <26EC1043BA52854DA988B6F84C5E0C27@amazon.com>
+        Thu, 16 May 2019 13:43:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38860 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726336AbfEPRnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 13:43:16 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 966D830043F8;
+        Thu, 16 May 2019 17:43:15 +0000 (UTC)
+Received: from treble (ovpn-120-91.rdu2.redhat.com [10.10.120.91])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5A8C2608A6;
+        Thu, 16 May 2019 17:43:14 +0000 (UTC)
+Date:   Thu, 16 May 2019 12:43:12 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ben Hutchings <ben@decadent.org.uk>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] cpu/speculation: Warn on unsupported mitigations=
+ parameter
+Message-ID: <20190516174312.f3ipwv4io4tnulnn@treble>
+References: <20190516070935.22546-1-geert@linux-m68k.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190516070935.22546-1-geert@linux-m68k.org>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 16 May 2019 17:43:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 16, 2019 at 09:09:35AM +0200, Geert Uytterhoeven wrote:
+> Currently, if the user specifies an unsupported mitigation strategy on
+> the kernel command line, it will be ignored silently.  The code will
+> fall back to the default strategy, possibly leaving the system more
+> vulnerable than expected.
+> 
+> This may happen due to e.g. a simple typo, or, for a stable kernel
+> release, because not all mitigation strategies have been backported.
+> 
+> Inform the user by printing a message.
+> 
+> Fixes: 98af8452945c5565 ("cpu/speculation: Add 'mitigations=' cmdline option")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> ---
+>  kernel/cpu.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/kernel/cpu.c b/kernel/cpu.c
+> index f2ef10460698e9ec..8458fda00e6ddb88 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -2339,6 +2339,9 @@ static int __init mitigations_parse_cmdline(char *arg)
+>  		cpu_mitigations = CPU_MITIGATIONS_AUTO;
+>  	else if (!strcmp(arg, "auto,nosmt"))
+>  		cpu_mitigations = CPU_MITIGATIONS_AUTO_NOSMT;
+> +	else
+> +		pr_crit("Unsupported mitigations=%s, system may still be vulnerable\n",
+> +			arg);
+>  
+>  	return 0;
+>  }
+> -- 
+> 2.17.1
+> 
 
-> On 16. May 2019, at 18:40, Boris Ostrovsky <boris.ostrovsky@oracle.com> w=
-rote:
-> =
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-> On 5/16/19 11:33 AM, Alexander Graf wrote:
->> On 16.05.19 08:25, Sironi, Filippo wrote:
->>>> On 16. May 2019, at 15:56, Graf, Alexander <graf@amazon.com> wrote:
->>>> =
-
->>>> On 14.05.19 08:16, Filippo Sironi wrote:
->>>>> On x86, we report the UUID in DMI System Information (i.e., DMI Type =
-1)
->>>>> as VM UUID.
->>>>> =
-
->>>>> Signed-off-by: Filippo Sironi <sironi@amazon.de>
->>>>> ---
->>>>> arch/x86/kernel/kvm.c | 7 +++++++
->>>>> 1 file changed, 7 insertions(+)
->>>>> =
-
->>>>> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
->>>>> index 5c93a65ee1e5..441cab08a09d 100644
->>>>> --- a/arch/x86/kernel/kvm.c
->>>>> +++ b/arch/x86/kernel/kvm.c
->>>>> @@ -25,6 +25,7 @@
->>>>> #include <linux/kernel.h>
->>>>> #include <linux/kvm_para.h>
->>>>> #include <linux/cpu.h>
->>>>> +#include <linux/dmi.h>
->>>>> #include <linux/mm.h>
->>>>> #include <linux/highmem.h>
->>>>> #include <linux/hardirq.h>
->>>>> @@ -694,6 +695,12 @@ bool kvm_para_available(void)
->>>>> }
->>>>> EXPORT_SYMBOL_GPL(kvm_para_available);
->>>>> =
-
->>>>> +const char *kvm_para_get_uuid(void)
->>>>> +{
->>>>> +	return dmi_get_system_info(DMI_PRODUCT_UUID);
->>>> This adds a new dependency on CONFIG_DMI. Probably best to guard it wi=
-th
->>>> an #if IS_ENABLED(CONFIG_DMI).
->>>> =
-
->>>> The concept seems sound though.
->>>> =
-
->>>> Alex
->>> include/linux/dmi.h contains a dummy implementation of
->>> dmi_get_system_info that returns NULL if CONFIG_DMI isn't defined.
->> =
-
->> Oh, I missed that bit. Awesome! Less work :).
->> =
-
->> =
-
->>> This is enough unless we decide to return "<denied>" like in Xen.
->>> If then, we can have the check in the generic code to turn NULL
->>> into "<denied>".
->> =
-
->> Yes. Waiting for someone from Xen to answer this :)
-> =
-
-> Not sure I am answering your question but on Xen we return UUID value
-> zero if access permissions are not sufficient. Not <denied>.
-> =
-
-> http://xenbits.xen.org/gitweb/?p=3Dxen.git;a=3Dblob;f=3Dxen/common/kernel=
-.c;h=3D612575430f1ce7faf5bd66e7a99f1758c63fb3cb;hb=3DHEAD#l506
-> =
-
-> -boris
-
-Then, I believe that returning 00000000-0000-0000-0000-000000000000
-instead of NULL in the weak implementation of 1/2 and translating
-NULL into 00000000-0000-0000-0000-000000000000 is the better approach.
-
-I'll repost.
-
-Filippo
-
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrer: Christian Schlaeger, Ralf Herbrich
-Ust-ID: DE 289 237 879
-Eingetragen am Amtsgericht Charlottenburg HRB 149173 B
-
-
+-- 
+Josh
