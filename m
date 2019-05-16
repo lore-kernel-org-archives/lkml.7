@@ -2,127 +2,94 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A60BC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7868C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CA9620848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E4C20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:42:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbfEPKky (ORCPT
+        id S1727154AbfEPKmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 06:40:54 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:42829 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726900AbfEPKkx (ORCPT
+        Thu, 16 May 2019 06:42:23 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:41200 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726857AbfEPKmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 06:40:53 -0400
-Received: from [IPv6:2001:420:44c1:2579:5556:9d1d:75e4:9919] ([IPv6:2001:420:44c1:2579:5556:9d1d:75e4:9919])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id RDobhFLI43qlsRDofhJXO9; Thu, 16 May 2019 12:40:51 +0200
-Subject: Re: [PATCH v2] media/doc: Allow sizeimage to be set by v4l clients
-To:     Tomasz Figa <tfiga@chromium.org>,
-        Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190412155915.16849-1-stanimir.varbanov@linaro.org>
- <a1807c37-99cf-d1fa-bcb9-67af2935abaf@xs4all.nl>
- <ca0e2c94-cca9-567f-5376-f302f79f4ba7@linaro.org>
- <CAAFQd5DBUUAPV0_=thmRBTFqJE+Nd4LZRzZE20rR0D8d7Cjz5g@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <cd7baea0-3893-7471-2e86-9cc6730843e3@xs4all.nl>
-Date:   Thu, 16 May 2019 12:40:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Thu, 16 May 2019 06:42:23 -0400
+Received: from 79.184.255.148.ipv4.supernova.orange.pl (79.184.255.148) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id d86607e85533ac73; Thu, 16 May 2019 12:42:20 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH] ACPI/PCI: PM: Add missing wakeup.flags.valid checks
+Date:   Thu, 16 May 2019 12:42:20 +0200
+Message-ID: <2091978.9z20bSIm3T@kreacher>
 MIME-Version: 1.0
-In-Reply-To: <CAAFQd5DBUUAPV0_=thmRBTFqJE+Nd4LZRzZE20rR0D8d7Cjz5g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfC+pZ2cLL5l2NoiBDT5OW7alsgmlwSoHeajG/jN5qLCRulIzhbjF3XyUAcun4KZfinyIJJuo39QnHsIYprgmoq21cRVYRrpfT0gKF18m++gZp+JB1Szf
- 5iShmic5kPvsHGh6BbNgf4g3h7nVs2sfWfhYssh9ui8ZiNftgsMQ6K9L9FlxITHoBTpRyOXEiOGpV2vsNktg7QkSoUxeFduhQoAPg5vAv0sf36FZgeLpv2M/
- 7gXmfjzJ+IK0TIDkPl9wpCRFLrBuc8/GA10BPah1a1N85xJhPtCqICMguyzxXH2Er+l31K0GXsZPvYEo53hvDarqvhnHsuzCgmJdRtUWY1iPa6SrjiUJvVfR
- hTY2ncAtJlA3F3RhY52TCQvCuIVuEUmMYDYeu46loTn7zJJf/pMaqrDFxyt9ebZmWDBvdXawhW8MbziQRSwfzmunREFGHpk9c3r+AX1xHK5tn1Oe/3avuKe5
- NrKitm6MFNYjDEPU
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/16/19 11:56 AM, Tomasz Figa wrote:
-> On Thu, May 16, 2019 at 5:09 PM Stanimir Varbanov
-> <stanimir.varbanov@linaro.org> wrote:
->>
->> Hi Hans,
->>
->> On 5/14/19 11:54 AM, Hans Verkuil wrote:
->>> Hi Stanimir,
->>>
->>> On 4/12/19 5:59 PM, Stanimir Varbanov wrote:
->>>> This changes v4l2_pix_format and v4l2_plane_pix_format sizeimage
->>>> field description to allow v4l clients to set bigger image size
->>>> in case of variable length compressed data.
->>>
->>> I've been reconsidering this change. The sizeimage value in the format
->>> is the minimum size a buffer should have in order to store the data of
->>> an image of the width and height as described in the format.
->>>
->>> But there is nothing that prevents userspace from calling VIDIOC_CREATEBUFS
->>> instead of VIDIOC_REQBUFS to allocate larger buffers.
->>
->> Sometimes CREATEBUFS cannot be implemented for a particular fw/hw.
->>
->> CC: Tomasz for his opinion.
->>
-> 
-> Thanks Stanimir.
-> 
-> Actually, if called at the same point in time as REQBUFS, CREATE_BUFS
-> doesn't really differ to much, except that it gives more flexibility
-> for allocating the buffers and that shouldn't depend on any specific
-> features of hardware or firmware.
-> 
-> Actually, one could even allocate any buffers any time regardless of
-> hardware/firmware support, but the ability to use such buffers would
-> actually depend on such.
-> 
-> Perhaps we should just let the drivers return -EBUSY from CREATE_BUFS
-> if called at the wrong time?
-> 
->>>
->>> So do we really need this change?
->>>
-> 
-> Yes, because this has worked like this all the time, but it was just
-> not documented. Disallowing this would break quite a bit of existing
-> userspace.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Which drivers allow this today? I think that would be useful information
-for the commit log of a v4 of this patch.
+Both acpi_pci_need_resume() and acpi_dev_needs_resume() check if the
+current ACPI wakeup configuration of the device matches what is
+expected as far as system wakeup from sleep states is concerned, as
+reflected by the device_may_wakeup() return value for the device.
 
-Regards,
+However, they only should do that if wakeup.flags.valid is set for
+the device's ACPI companion, because otherwise the wakeup.prepare_count
+value for it is meaningless.
 
-	Hans
+Add the missing wakeup.flags.valid checks to these functions.
 
-> 
-> Best regards,
-> Tomasz
-> 
->>> The more I think about this, the more uncomfortable I become with this change.
->>>
->>> Regards,
->>>
->>>       Hans
->>>
->>
->> <cut>
->>
->> --
->> regards,
->> Stan
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/device_pm.c |    4 ++--
+ drivers/pci/pci-acpi.c   |    3 ++-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+Index: linux-pm/drivers/pci/pci-acpi.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pci-acpi.c
++++ linux-pm/drivers/pci/pci-acpi.c
+@@ -666,7 +666,8 @@ static bool acpi_pci_need_resume(struct
+ 	if (!adev || !acpi_device_power_manageable(adev))
+ 		return false;
+ 
+-	if (device_may_wakeup(&dev->dev) != !!adev->wakeup.prepare_count)
++	if (adev->wakeup.flags.valid &&
++	    device_may_wakeup(&dev->dev) != !!adev->wakeup.prepare_count)
+ 		return true;
+ 
+ 	if (acpi_target_system_state() == ACPI_STATE_S0)
+Index: linux-pm/drivers/acpi/device_pm.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/device_pm.c
++++ linux-pm/drivers/acpi/device_pm.c
+@@ -952,8 +952,8 @@ static bool acpi_dev_needs_resume(struct
+ 	u32 sys_target = acpi_target_system_state();
+ 	int ret, state;
+ 
+-	if (!pm_runtime_suspended(dev) || !adev ||
+-	    device_may_wakeup(dev) != !!adev->wakeup.prepare_count)
++	if (!pm_runtime_suspended(dev) || !adev || (adev->wakeup.flags.valid &&
++	    device_may_wakeup(dev) != !!adev->wakeup.prepare_count))
+ 		return true;
+ 
+ 	if (sys_target == ACPI_STATE_S0)
+
+
 
