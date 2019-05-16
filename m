@@ -2,94 +2,124 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E24FEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F09DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF65520815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BAA320815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727397AbfEPOnL (ORCPT
+        id S1727495AbfEPOn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:43:11 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48250 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726717AbfEPOnK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:43:10 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D5461715;
-        Thu, 16 May 2019 07:43:10 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFD003F71E;
-        Thu, 16 May 2019 07:43:06 -0700 (PDT)
-Date:   Thu, 16 May 2019 15:43:04 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Miles Chen <miles.chen@mediatek.com>,
-        James Morse <james.morse@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH v3 2/3] arm64: implement update_fdt_pgprot()
-Message-ID: <20190516144303.GF43059@lakrids.cambridge.arm.com>
-References: <20190516102817.188519-1-hsinyi@chromium.org>
- <20190516102817.188519-2-hsinyi@chromium.org>
- <CAL_JsqLx1UdjCnZ69aQm0GU_uOdd7tTdD_oM=D7yhDANoQ0fEA@mail.gmail.com>
+        Thu, 16 May 2019 10:43:28 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35255 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727401AbfEPOn1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 10:43:27 -0400
+Received: by mail-wr1-f65.google.com with SMTP id m3so3551903wrv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 07:43:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Cj+rXNfNlUN3r4Yp7FC3w8W2jv87lre7M4pXy1RJygg=;
+        b=S6+iqijnJucwreWKxlpYkRrSVGQK1pNor13wssFA/H0y8dBClJmFrCrVxTeUYizJrD
+         OoejWbW5q/7zNxWTwDVghddMUrDAq7vrw6DwEPXUF5vtSVE7dF9iZrAtE+oiVO76c4I8
+         UUB+BHAVuPtK/YQWdcYEc/RrJ1byYPUrt3mIE2yNiaK2nSvMSoZMWy6/S/OoPm3QYNMF
+         +6ZkJlZE3JDU2zmNSDKoWRW+w/rTDxBU05354TVJmAnR6dax5apuM/E7/aP4tJA7uvjV
+         2swpOL3vmwzk0e2EyPA4/uFaIV4Hx5Q54Q9XKKJ3/DETbN1biKHDw/WC3VNGuIAzedIO
+         LRQw==
+X-Gm-Message-State: APjAAAX13thBNkfsBkJFhZGCVy/zynQGwmb+gXQ5UC0ZwTqnN9ZrK0Tr
+        j9beSdA1vPFVO9g6TpORZ/cX0w==
+X-Google-Smtp-Source: APXvYqzKDhdhn0sTfAQMEnf2Z3MPEpDPMQ1RAoC5i7RhAcgllW8ck8oD5TGkmgzragiiRcn+PESIqQ==
+X-Received: by 2002:a5d:4206:: with SMTP id n6mr17691401wrq.58.1558017806003;
+        Thu, 16 May 2019 07:43:26 -0700 (PDT)
+Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id q13sm6113444wrn.27.2019.05.16.07.43.24
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 May 2019 07:43:25 -0700 (PDT)
+Date:   Thu, 16 May 2019 16:43:24 +0200
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Hugh Dickins <hughd@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Greg KH <greg@kroah.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Timofey Titovets <nefelim4ag@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Grzegorz Halat <ghalat@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: [PATCH RFC 4/5] mm/ksm, proc: introduce remote merge
+Message-ID: <20190516144323.pzkvs6hapf3czorz@butterfly.localdomain>
+References: <20190516094234.9116-1-oleksandr@redhat.com>
+ <20190516094234.9116-5-oleksandr@redhat.com>
+ <CAG48ez2yXw_PJXO-mS=Qw5rkLpG6zDPd0saMhhGk09-du2bpaA@mail.gmail.com>
+ <20190516142013.sf2vitmksvbkb33f@butterfly.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLx1UdjCnZ69aQm0GU_uOdd7tTdD_oM=D7yhDANoQ0fEA@mail.gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20190516142013.sf2vitmksvbkb33f@butterfly.localdomain>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 09:37:05AM -0500, Rob Herring wrote:
-> On Thu, May 16, 2019 at 5:28 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> >
-> > Basically does similar things like __fixmap_remap_fdt(). It's supposed
-> > to be called after fixmap_remap_fdt() is called at least once, so region
-> > checking can be skipped. Since it needs to know dt physical address, make
-> > a copy of the value of __fdt_pointer.
-> >
-> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > ---
-> >  arch/arm64/kernel/setup.c |  2 ++
-> >  arch/arm64/mm/mmu.c       | 17 +++++++++++++++++
-> >  2 files changed, 19 insertions(+)
+On Thu, May 16, 2019 at 04:20:13PM +0200, Oleksandr Natalenko wrote:
+> > [...]
+> > > @@ -2960,15 +2962,63 @@ static int proc_stack_depth(struct seq_file *m, struct pid_namespace *ns,
+> > >  static ssize_t madvise_write(struct file *file, const char __user *buf,
+> > >                 size_t count, loff_t *ppos)
+> > >  {
+> > > +       /* For now, only KSM hints are implemented */
+> > > +#ifdef CONFIG_KSM
+> > > +       char buffer[PROC_NUMBUF];
+> > > +       int behaviour;
+> > >         struct task_struct *task;
+> > > +       struct mm_struct *mm;
+> > > +       int err = 0;
+> > > +       struct vm_area_struct *vma;
+> > > +
+> > > +       memset(buffer, 0, sizeof(buffer));
+> > > +       if (count > sizeof(buffer) - 1)
+> > > +               count = sizeof(buffer) - 1;
+> > > +       if (copy_from_user(buffer, buf, count))
+> > > +               return -EFAULT;
+> > > +
+> > > +       if (!memcmp("merge", buffer, min(sizeof("merge")-1, count)))
+> > 
+> > This means that you also match on something like "mergeblah". Just use strcmp().
 > 
-> Why not just map the FDT R/W at the start and change it to RO just
-> before calling unflatten_device_tree? Then all the FDT scanning
-> functions or any future fixups we need can just assume R/W. That is
-> essentially what Stephen suggested. However, there's no need for a
-> weak function as it can all be done within the arch code.
+> I agree. Just to make it more interesting I must say that
 > 
-> However, I'm still wondering why the FDT needs to be RO in the first place.
+>    /sys/kernel/mm/transparent_hugepage/enabled
+> 
+> uses memcmp in the very same way, and thus echoing "alwaysssss" or
+> "madviseeee" works perfectly there, and it was like that from the very
+> beginning, it seems. Should we fix it, or it became (zomg) a public API?
 
-We want to preserve the original FDT in a pristine form for kexec (and
-when exposed to userspace), and mapping it RO was the easiest way to
-catch it being randomly modified (e.g. without fixups applied).
+Actually, maybe, the reason for using memcmp is to handle "echo"
+properly: by default it puts a newline character at the end, so if we use
+just strcmp, echo should be called with -n, otherwise strcmp won't match
+the string.
 
-I'd prefer to keep it RO once we've removed/cleared certain properties
-from the chosen node that don't make sense to pass on for kexec
+Huh?
 
-Thanks,
-Mark.
+> [...]
+
+-- 
+  Best regards,
+    Oleksandr Natalenko (post-factum)
+    Senior Software Maintenance Engineer
