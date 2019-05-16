@@ -6,25 +6,24 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295B8C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272A0C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9EA920881
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45652087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:32:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfEPKcQ (ORCPT
+        id S1727087AbfEPKcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 06:32:16 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:53017 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfEPKcM (ORCPT
+        Thu, 16 May 2019 06:32:22 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:33037 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfEPKcV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 06:32:12 -0400
-X-Originating-IP: 80.215.244.179
+        Thu, 16 May 2019 06:32:21 -0400
 Received: from localhost (unknown [80.215.244.179])
         (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id A2BC91C001B;
-        Thu, 16 May 2019 10:32:04 +0000 (UTC)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 9F88510000E;
+        Thu, 16 May 2019 10:32:08 +0000 (UTC)
 From:   Maxime Ripard <maxime.ripard@bootlin.com>
 To:     Daniel Vetter <daniel.vetter@intel.com>,
         David Airlie <airlied@linux.ie>,
@@ -32,12 +31,10 @@ To:     Daniel Vetter <daniel.vetter@intel.com>,
         Sean Paul <seanpaul@chromium.org>,
         Maxime Ripard <maxime.ripard@bootlin.com>
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v3 3/7] drm: Remove users of drm_format_(horz|vert)_chroma_subsampling
-Date:   Thu, 16 May 2019 12:31:48 +0200
-Message-Id: <6b3cceb8161e2c1d40c2681de99202328b0a8abc.1558002671.git-series.maxime.ripard@bootlin.com>
+        Emil Velikov <emil.velikov@collabora.com>
+Subject: [PATCH v3 4/7] drm/fourcc: Pass the format_info pointer to drm_format_plane_cpp
+Date:   Thu, 16 May 2019 12:31:49 +0200
+Message-Id: <32aa13e53dbc98a90207fd290aa8e79f785fb11e.1558002671.git-series.maxime.ripard@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <27b0041c7977402df4a087c78d2849ffe51c9f1c.1558002671.git-series.maxime.ripard@bootlin.com>
 References: <27b0041c7977402df4a087c78d2849ffe51c9f1c.1558002671.git-series.maxime.ripard@bootlin.com>
@@ -48,495 +45,361 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drm_format_horz_chroma_subsampling and drm_format_vert_chroma_subsampling
-are basically a lookup in the drm_format_info table plus an access to the
-hsub and vsub fields of the appropriate entry.
+So far, the drm_format_plane_cpp function was operating on the format's
+fourcc and was doing a lookup to retrieve the drm_format_info structure and
+return the cpp.
 
-Most drivers are using this function while having access to the entry
-already, which means that we will perform an unnecessary lookup. Removing
-the call to these functions is therefore more efficient.
+However, this is inefficient since in most cases, we will have the
+drm_format_info pointer already available so we shouldn't have to perform a
+new lookup. Some drm_fourcc functions also already operate on the
+drm_format_info pointer for that reason, so the API is quite inconsistent
+there.
 
-Some drivers will not have access to that entry in the function, but in
-this case the overhead is minimal (we just have to call drm_format_info()
-to perform the lookup) and we can even avoid multiple, inefficient lookups
-in some places that need multiple fields from the drm_format_info
-structure.
-
-This is amplified by the fact that most of the time the callers will have
-to retrieve both the vsub and hsub fields, meaning that they would perform
-twice the lookup.
+Let's follow the latter pattern and remove the extra lookup while being a
+bit more consistent. In order to be extra consistent, also rename that
+function to drm_format_info_plane_cpp and to a static function in the
+header to match the current policy.
 
 Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
-Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- drivers/gpu/drm/arm/malidp_planes.c             |  6 +--
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c |  9 +----
- drivers/gpu/drm/drm_fourcc.c                    | 34 +------------------
- drivers/gpu/drm/imx/ipuv3-plane.c               | 15 +++-----
- drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c       |  9 +----
- drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c      | 24 +++++--------
- drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c        |  2 +-
- drivers/gpu/drm/msm/msm_fb.c                    |  8 +---
- drivers/gpu/drm/rockchip/rockchip_drm_fb.c      |  9 +----
- drivers/gpu/drm/rockchip/rockchip_drm_vop.c     | 10 ++---
- drivers/gpu/drm/tegra/fb.c                      |  9 +----
- drivers/gpu/drm/vc4/vc4_plane.c                 | 13 ++-----
- include/drm/drm_fourcc.h                        |  2 +-
- 13 files changed, 38 insertions(+), 112 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c     |  4 +++-
+ drivers/gpu/drm/arm/malidp_hw.c            |  3 ++-
+ drivers/gpu/drm/arm/malidp_planes.c        |  2 +-
+ drivers/gpu/drm/drm_client.c               |  3 ++-
+ drivers/gpu/drm/drm_fb_helper.c            |  2 +-
+ drivers/gpu/drm/drm_format_helper.c        |  4 ++--
+ drivers/gpu/drm/drm_fourcc.c               | 20 --------------------
+ drivers/gpu/drm/i915/intel_sprite.c        |  3 ++-
+ drivers/gpu/drm/mediatek/mtk_drm_fb.c      |  2 +-
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c  |  3 ++-
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c   |  2 +-
+ drivers/gpu/drm/msm/msm_fb.c               |  2 +-
+ drivers/gpu/drm/radeon/radeon_fb.c         |  4 +++-
+ drivers/gpu/drm/rockchip/rockchip_drm_fb.c |  2 +-
+ drivers/gpu/drm/stm/ltdc.c                 |  2 +-
+ drivers/gpu/drm/tegra/fb.c                 |  2 +-
+ drivers/gpu/drm/zte/zx_plane.c             |  2 +-
+ include/drm/drm_fourcc.h                   | 18 +++++++++++++++++-
+ 18 files changed, 42 insertions(+), 38 deletions(-)
 
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
+index e47609218839..06e73a343724 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
+@@ -121,6 +121,8 @@ static int amdgpufb_create_pinned_object(struct amdgpu_fbdev *rfbdev,
+ 					 struct drm_mode_fb_cmd2 *mode_cmd,
+ 					 struct drm_gem_object **gobj_p)
+ {
++	const struct drm_format_info *info = drm_get_format_info(dev,
++								 mode_cmd);
+ 	struct amdgpu_device *adev = rfbdev->adev;
+ 	struct drm_gem_object *gobj = NULL;
+ 	struct amdgpu_bo *abo = NULL;
+@@ -131,7 +133,7 @@ static int amdgpufb_create_pinned_object(struct amdgpu_fbdev *rfbdev,
+ 	int height = mode_cmd->height;
+ 	u32 cpp;
+ 
+-	cpp = drm_format_plane_cpp(mode_cmd->pixel_format, 0);
++	cpp = drm_format_info_plane_cpp(info, 0);
+ 
+ 	/* need to align pitch with crtc limits */
+ 	mode_cmd->pitches[0] = amdgpu_align_pitch(adev, mode_cmd->width, cpp,
+diff --git a/drivers/gpu/drm/arm/malidp_hw.c b/drivers/gpu/drm/arm/malidp_hw.c
+index 8df12e9a33bb..1c9e869f4c52 100644
+--- a/drivers/gpu/drm/arm/malidp_hw.c
++++ b/drivers/gpu/drm/arm/malidp_hw.c
+@@ -382,7 +382,8 @@ static void malidp500_modeset(struct malidp_hw_device *hwdev, struct videomode *
+ 
+ int malidp_format_get_bpp(u32 fmt)
+ {
+-	int bpp = drm_format_plane_cpp(fmt, 0) * 8;
++	const struct drm_format_info *info = drm_format_info(fmt);
++	int bpp = drm_format_info_plane_cpp(info, 0) * 8;
+ 
+ 	if (bpp == 0) {
+ 		switch (fmt) {
 diff --git a/drivers/gpu/drm/arm/malidp_planes.c b/drivers/gpu/drm/arm/malidp_planes.c
-index d42e0ea9a303..8f89813d08c1 100644
+index 8f89813d08c1..361c02988375 100644
 --- a/drivers/gpu/drm/arm/malidp_planes.c
 +++ b/drivers/gpu/drm/arm/malidp_planes.c
-@@ -233,8 +233,7 @@ bool malidp_format_mod_supported(struct drm_device *drm,
+@@ -227,7 +227,7 @@ bool malidp_format_mod_supported(struct drm_device *drm,
+ 
+ 	if (modifier & AFBC_SPLIT) {
+ 		if (!info->is_yuv) {
+-			if (drm_format_plane_cpp(format, 0) <= 2) {
++			if (drm_format_info_plane_cpp(info, 0) <= 2) {
+ 				DRM_DEBUG_KMS("RGB formats <= 16bpp are not supported with SPLIT\n");
+ 				return false;
  			}
- 		}
+diff --git a/drivers/gpu/drm/drm_client.c b/drivers/gpu/drm/drm_client.c
+index f20d1dda3961..169d8eeaa662 100644
+--- a/drivers/gpu/drm/drm_client.c
++++ b/drivers/gpu/drm/drm_client.c
+@@ -243,6 +243,7 @@ static void drm_client_buffer_delete(struct drm_client_buffer *buffer)
+ static struct drm_client_buffer *
+ drm_client_buffer_create(struct drm_client_dev *client, u32 width, u32 height, u32 format)
+ {
++	const struct drm_format_info *info = drm_format_info(format);
+ 	struct drm_mode_create_dumb dumb_args = { };
+ 	struct drm_device *dev = client->dev;
+ 	struct drm_client_buffer *buffer;
+@@ -258,7 +259,7 @@ drm_client_buffer_create(struct drm_client_dev *client, u32 width, u32 height, u
  
--		if ((drm_format_horz_chroma_subsampling(format) != 1) ||
--		    (drm_format_vert_chroma_subsampling(format) != 1)) {
-+		if ((info->hsub != 1) || (info->vsub != 1)) {
- 			if (!(format == DRM_FORMAT_YUV420_10BIT &&
- 			      (map->features & MALIDP_DEVICE_AFBC_YUV_420_10_SUPPORT_SPLIT))) {
- 				DRM_DEBUG_KMS("Formats which are sub-sampled should never be split\n");
-@@ -244,8 +243,7 @@ bool malidp_format_mod_supported(struct drm_device *drm,
- 	}
+ 	dumb_args.width = width;
+ 	dumb_args.height = height;
+-	dumb_args.bpp = drm_format_plane_cpp(format, 0) * 8;
++	dumb_args.bpp = drm_format_info_plane_cpp(info, 0) * 8;
+ 	ret = drm_mode_create_dumb(dev, &dumb_args, client->file);
+ 	if (ret)
+ 		goto err_delete;
+diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
+index 498f95c3e81d..184f455c99ab 100644
+--- a/drivers/gpu/drm/drm_fb_helper.c
++++ b/drivers/gpu/drm/drm_fb_helper.c
+@@ -767,7 +767,7 @@ static void drm_fb_helper_dirty_blit_real(struct drm_fb_helper *fb_helper,
+ 					  struct drm_clip_rect *clip)
+ {
+ 	struct drm_framebuffer *fb = fb_helper->fb;
+-	unsigned int cpp = drm_format_plane_cpp(fb->format->format, 0);
++	unsigned int cpp = drm_format_info_plane_cpp(fb->format, 0);
+ 	size_t offset = clip->y1 * fb->pitches[0] + clip->x1 * cpp;
+ 	void *src = fb_helper->fbdev->screen_buffer + offset;
+ 	void *dst = fb_helper->buffer->vaddr + offset;
+diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
+index a18da35145b7..8ad66aa1362a 100644
+--- a/drivers/gpu/drm/drm_format_helper.c
++++ b/drivers/gpu/drm/drm_format_helper.c
+@@ -36,7 +36,7 @@ static unsigned int clip_offset(struct drm_rect *clip,
+ void drm_fb_memcpy(void *dst, void *vaddr, struct drm_framebuffer *fb,
+ 		   struct drm_rect *clip)
+ {
+-	unsigned int cpp = drm_format_plane_cpp(fb->format->format, 0);
++	unsigned int cpp = drm_format_info_plane_cpp(fb->format, 0);
+ 	size_t len = (clip->x2 - clip->x1) * cpp;
+ 	unsigned int y, lines = clip->y2 - clip->y1;
  
- 	if (modifier & AFBC_CBR) {
--		if ((drm_format_horz_chroma_subsampling(format) == 1) ||
--		    (drm_format_vert_chroma_subsampling(format) == 1)) {
-+		if ((info->hsub == 1) || (info->vsub == 1)) {
- 			DRM_DEBUG_KMS("Formats which are not sub-sampled should not have CBR set\n");
- 			return false;
- 		}
-diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-index e836e2de35ce..fdd607ad27fe 100644
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c
-@@ -603,8 +603,6 @@ static int atmel_hlcdc_plane_atomic_check(struct drm_plane *p,
- 	const struct drm_display_mode *mode;
- 	struct drm_crtc_state *crtc_state;
- 	unsigned int tmp;
--	int hsub = 1;
--	int vsub = 1;
- 	int ret;
- 	int i;
- 
-@@ -642,13 +640,10 @@ static int atmel_hlcdc_plane_atomic_check(struct drm_plane *p,
- 	if (state->nplanes > ATMEL_HLCDC_LAYER_MAX_PLANES)
- 		return -EINVAL;
- 
--	hsub = drm_format_horz_chroma_subsampling(fb->format->format);
--	vsub = drm_format_vert_chroma_subsampling(fb->format->format);
--
- 	for (i = 0; i < state->nplanes; i++) {
- 		unsigned int offset = 0;
--		int xdiv = i ? hsub : 1;
--		int ydiv = i ? vsub : 1;
-+		int xdiv = i ? fb->format->hsub : 1;
-+		int ydiv = i ? fb->format->vsub : 1;
- 
- 		state->bpp[i] = fb->format->cpp[i];
- 		if (!state->bpp[i])
+@@ -63,7 +63,7 @@ void drm_fb_memcpy_dstclip(void __iomem *dst, void *vaddr,
+ 			   struct drm_framebuffer *fb,
+ 			   struct drm_rect *clip)
+ {
+-	unsigned int cpp = drm_format_plane_cpp(fb->format->format, 0);
++	unsigned int cpp = drm_format_info_plane_cpp(fb->format, 0);
+ 	unsigned int offset = clip_offset(clip, fb->pitches[0], cpp);
+ 	size_t len = (clip->x2 - clip->x1) * cpp;
+ 	unsigned int y, lines = clip->y2 - clip->y1;
 diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
-index 873c0001d8c8..e4a2c8372c8b 100644
+index e4a2c8372c8b..5f63fc74e265 100644
 --- a/drivers/gpu/drm/drm_fourcc.c
 +++ b/drivers/gpu/drm/drm_fourcc.c
-@@ -353,40 +353,6 @@ int drm_format_plane_cpp(uint32_t format, int plane)
- EXPORT_SYMBOL(drm_format_plane_cpp);
+@@ -333,26 +333,6 @@ drm_get_format_info(struct drm_device *dev,
+ EXPORT_SYMBOL(drm_get_format_info);
  
  /**
-- * drm_format_horz_chroma_subsampling - get the horizontal chroma subsampling factor
+- * drm_format_plane_cpp - determine the bytes per pixel value
 - * @format: pixel format (DRM_FORMAT_*)
+- * @plane: plane index
 - *
 - * Returns:
-- * The horizontal chroma subsampling factor for the
-- * specified pixel format.
+- * The bytes per pixel value for the specified plane.
 - */
--int drm_format_horz_chroma_subsampling(uint32_t format)
+-int drm_format_plane_cpp(uint32_t format, int plane)
 -{
 -	const struct drm_format_info *info;
 -
 -	info = drm_format_info(format);
--	return info ? info->hsub : 1;
--}
--EXPORT_SYMBOL(drm_format_horz_chroma_subsampling);
+-	if (!info || plane >= info->num_planes)
+-		return 0;
 -
--/**
-- * drm_format_vert_chroma_subsampling - get the vertical chroma subsampling factor
-- * @format: pixel format (DRM_FORMAT_*)
-- *
-- * Returns:
-- * The vertical chroma subsampling factor for the
-- * specified pixel format.
-- */
--int drm_format_vert_chroma_subsampling(uint32_t format)
--{
--	const struct drm_format_info *info;
--
--	info = drm_format_info(format);
--	return info ? info->vsub : 1;
+-	return info->cpp[plane];
 -}
--EXPORT_SYMBOL(drm_format_vert_chroma_subsampling);
+-EXPORT_SYMBOL(drm_format_plane_cpp);
 -
 -/**
   * drm_format_plane_width - width of the plane given the first plane
   * @width: width of the first plane
   * @format: pixel format
-diff --git a/drivers/gpu/drm/imx/ipuv3-plane.c b/drivers/gpu/drm/imx/ipuv3-plane.c
-index d81b3102b488..4a54a5c192d2 100644
---- a/drivers/gpu/drm/imx/ipuv3-plane.c
-+++ b/drivers/gpu/drm/imx/ipuv3-plane.c
-@@ -115,8 +115,8 @@ drm_plane_state_to_ubo(struct drm_plane_state *state)
- 	cma_obj = drm_fb_cma_get_gem_obj(fb, 1);
- 	BUG_ON(!cma_obj);
- 
--	x /= drm_format_horz_chroma_subsampling(fb->format->format);
--	y /= drm_format_vert_chroma_subsampling(fb->format->format);
-+	x /= fb->format->hsub;
-+	y /= fb->format->vsub;
- 
- 	return cma_obj->paddr + fb->offsets[1] + fb->pitches[1] * y +
- 	       fb->format->cpp[1] * x - eba;
-@@ -134,8 +134,8 @@ drm_plane_state_to_vbo(struct drm_plane_state *state)
- 	cma_obj = drm_fb_cma_get_gem_obj(fb, 2);
- 	BUG_ON(!cma_obj);
- 
--	x /= drm_format_horz_chroma_subsampling(fb->format->format);
--	y /= drm_format_vert_chroma_subsampling(fb->format->format);
-+	x /= fb->format->hsub;
-+	y /= fb->format->vsub;
- 
- 	return cma_obj->paddr + fb->offsets[2] + fb->pitches[2] * y +
- 	       fb->format->cpp[2] * x - eba;
-@@ -352,7 +352,6 @@ static int ipu_plane_atomic_check(struct drm_plane *plane,
- 	struct drm_framebuffer *old_fb = old_state->fb;
- 	unsigned long eba, ubo, vbo, old_ubo, old_vbo, alpha_eba;
- 	bool can_position = (plane->type == DRM_PLANE_TYPE_OVERLAY);
--	int hsub, vsub;
- 	int ret;
- 
- 	/* Ok to disable */
-@@ -471,10 +470,8 @@ static int ipu_plane_atomic_check(struct drm_plane *plane,
- 		 * The x/y offsets must be even in case of horizontal/vertical
- 		 * chroma subsampling.
- 		 */
--		hsub = drm_format_horz_chroma_subsampling(fb->format->format);
--		vsub = drm_format_vert_chroma_subsampling(fb->format->format);
--		if (((state->src.x1 >> 16) & (hsub - 1)) ||
--		    ((state->src.y1 >> 16) & (vsub - 1)))
-+		if (((state->src.x1 >> 16) & (fb->format->hsub - 1)) ||
-+		    ((state->src.y1 >> 16) & (fb->format->vsub - 1)))
- 			return -EINVAL;
- 		break;
- 	case DRM_FORMAT_RGB565_A8:
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-index da1f727d7495..7994de952353 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
-@@ -557,14 +557,9 @@ static void _dpu_plane_setup_scaler(struct dpu_plane *pdpu,
- 		struct dpu_plane_state *pstate,
- 		const struct dpu_format *fmt, bool color_fill)
+diff --git a/drivers/gpu/drm/i915/intel_sprite.c b/drivers/gpu/drm/i915/intel_sprite.c
+index 2913e89280d7..e35601b1f878 100644
+--- a/drivers/gpu/drm/i915/intel_sprite.c
++++ b/drivers/gpu/drm/i915/intel_sprite.c
+@@ -325,7 +325,8 @@ skl_plane_max_stride(struct intel_plane *plane,
+ 		     u32 pixel_format, u64 modifier,
+ 		     unsigned int rotation)
  {
--	uint32_t chroma_subsmpl_h, chroma_subsmpl_v;
-+	const struct drm_format_info *info = drm_format_info(fmt->base.pixel_format);
- 
- 	/* don't chroma subsample if decimating */
--	chroma_subsmpl_h =
--		drm_format_horz_chroma_subsampling(fmt->base.pixel_format);
--	chroma_subsmpl_v =
--		drm_format_vert_chroma_subsampling(fmt->base.pixel_format);
--
- 	/* update scaler. calculate default config for QSEED3 */
- 	_dpu_plane_setup_scaler3(pdpu, pstate,
- 			drm_rect_width(&pdpu->pipe_cfg.src_rect),
-@@ -572,7 +567,7 @@ static void _dpu_plane_setup_scaler(struct dpu_plane *pdpu,
- 			drm_rect_width(&pdpu->pipe_cfg.dst_rect),
- 			drm_rect_height(&pdpu->pipe_cfg.dst_rect),
- 			&pstate->scaler3_cfg, fmt,
--			chroma_subsmpl_h, chroma_subsmpl_v);
-+			info->hsub, info->vsub);
- }
- 
- /**
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
-index be13140967b4..9d9fb6c5fd68 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c
-@@ -650,10 +650,10 @@ static int calc_scalex_steps(struct drm_plane *plane,
- 		uint32_t pixel_format, uint32_t src, uint32_t dest,
- 		uint32_t phasex_steps[COMP_MAX])
- {
+-	int cpp = drm_format_plane_cpp(pixel_format, 0);
 +	const struct drm_format_info *info = drm_format_info(pixel_format);
- 	struct mdp5_kms *mdp5_kms = get_kms(plane);
- 	struct device *dev = mdp5_kms->dev->dev;
- 	uint32_t phasex_step;
--	unsigned int hsub;
- 	int ret;
++	int cpp = drm_format_info_plane_cpp(info, 0);
  
- 	ret = calc_phase_step(src, dest, &phasex_step);
-@@ -662,11 +662,9 @@ static int calc_scalex_steps(struct drm_plane *plane,
- 		return ret;
- 	}
+ 	/*
+ 	 * "The stride in bytes must not exceed the
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_fb.c b/drivers/gpu/drm/mediatek/mtk_drm_fb.c
+index 68fdef8b12bd..0d5334a5a9a7 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_fb.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_fb.c
+@@ -104,7 +104,7 @@ struct drm_framebuffer *mtk_drm_mode_fb_create(struct drm_device *dev,
+ 	if (!gem)
+ 		return ERR_PTR(-ENOENT);
  
--	hsub = drm_format_horz_chroma_subsampling(pixel_format);
--
- 	phasex_steps[COMP_0]   = phasex_step;
- 	phasex_steps[COMP_3]   = phasex_step;
--	phasex_steps[COMP_1_2] = phasex_step / hsub;
-+	phasex_steps[COMP_1_2] = phasex_step / info->hsub;
+-	bpp = drm_format_plane_cpp(cmd->pixel_format, 0);
++	bpp = drm_format_info_plane_cpp(info, 0);
+ 	size = (height - 1) * cmd->pitches[0] + width * bpp;
+ 	size += cmd->offsets[0];
  
- 	return 0;
- }
-@@ -675,10 +673,10 @@ static int calc_scaley_steps(struct drm_plane *plane,
- 		uint32_t pixel_format, uint32_t src, uint32_t dest,
- 		uint32_t phasey_steps[COMP_MAX])
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+index b0cf63c4e3d7..a565dccaba3a 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+@@ -782,6 +782,7 @@ static void get_roi(struct drm_crtc *crtc, uint32_t *roi_w, uint32_t *roi_h)
+ 
+ static void mdp5_crtc_restore_cursor(struct drm_crtc *crtc)
  {
-+	const struct drm_format_info *info = drm_format_info(pixel_format);
- 	struct mdp5_kms *mdp5_kms = get_kms(plane);
- 	struct device *dev = mdp5_kms->dev->dev;
- 	uint32_t phasey_step;
--	unsigned int vsub;
- 	int ret;
++	const struct drm_format_info *info = drm_format_info(DRM_FORMAT_ARGB8888);
+ 	struct mdp5_crtc_state *mdp5_cstate = to_mdp5_crtc_state(crtc->state);
+ 	struct mdp5_crtc *mdp5_crtc = to_mdp5_crtc(crtc);
+ 	struct mdp5_kms *mdp5_kms = get_kms(crtc);
+@@ -800,7 +801,7 @@ static void mdp5_crtc_restore_cursor(struct drm_crtc *crtc)
+ 	width = mdp5_crtc->cursor.width;
+ 	height = mdp5_crtc->cursor.height;
  
- 	ret = calc_phase_step(src, dest, &phasey_step);
-@@ -687,11 +685,9 @@ static int calc_scaley_steps(struct drm_plane *plane,
- 		return ret;
- 	}
+-	stride = width * drm_format_plane_cpp(DRM_FORMAT_ARGB8888, 0);
++	stride = width * drm_format_info_plane_cpp(info, 0);
  
--	vsub = drm_format_vert_chroma_subsampling(pixel_format);
--
- 	phasey_steps[COMP_0]   = phasey_step;
- 	phasey_steps[COMP_3]   = phasey_step;
--	phasey_steps[COMP_1_2] = phasey_step / vsub;
-+	phasey_steps[COMP_1_2] = phasey_step / info->vsub;
+ 	get_roi(crtc, &roi_w, &roi_h);
  
- 	return 0;
- }
-@@ -699,8 +695,9 @@ static int calc_scaley_steps(struct drm_plane *plane,
- static uint32_t get_scale_config(const struct mdp_format *format,
- 		uint32_t src, uint32_t dst, bool horz)
- {
-+	const struct drm_format_info *info = drm_format_info(format->base.pixel_format);
- 	bool scaling = format->is_yuv ? true : (src != dst);
--	uint32_t sub, pix_fmt = format->base.pixel_format;
-+	uint32_t sub;
- 	uint32_t ya_filter, uv_filter;
- 	bool yuv = format->is_yuv;
- 
-@@ -708,8 +705,7 @@ static uint32_t get_scale_config(const struct mdp_format *format,
- 		return 0;
- 
- 	if (yuv) {
--		sub = horz ? drm_format_horz_chroma_subsampling(pix_fmt) :
--			     drm_format_vert_chroma_subsampling(pix_fmt);
-+		sub = horz ? info->hsub : info->vsub;
- 		uv_filter = ((src / sub) <= dst) ?
- 				   SCALE_FILTER_BIL : SCALE_FILTER_PCMN;
- 	}
-@@ -754,7 +750,7 @@ static void mdp5_write_pixel_ext(struct mdp5_kms *mdp5_kms, enum mdp5_pipe pipe,
- 	uint32_t src_w, int pe_left[COMP_MAX], int pe_right[COMP_MAX],
- 	uint32_t src_h, int pe_top[COMP_MAX], int pe_bottom[COMP_MAX])
- {
--	uint32_t pix_fmt = format->base.pixel_format;
-+	const struct drm_format_info *info = drm_format_info(format->base.pixel_format);
- 	uint32_t lr, tb, req;
- 	int i;
- 
-@@ -763,8 +759,8 @@ static void mdp5_write_pixel_ext(struct mdp5_kms *mdp5_kms, enum mdp5_pipe pipe,
- 		uint32_t roi_h = src_h;
- 
- 		if (format->is_yuv && i == COMP_1_2) {
--			roi_w /= drm_format_horz_chroma_subsampling(pix_fmt);
--			roi_h /= drm_format_vert_chroma_subsampling(pix_fmt);
-+			roi_w /= info->hsub;
-+			roi_h /= info->vsub;
- 		}
- 
- 		lr  = (pe_left[i] >= 0) ?
 diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-index 72ab8d89efa4..b30b2f4efc60 100644
+index b30b2f4efc60..1ca294694597 100644
 --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
 +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-@@ -135,7 +135,7 @@ uint32_t mdp5_smp_calculate(struct mdp5_smp *smp,
- 	uint32_t blkcfg = 0;
+@@ -158,7 +158,7 @@ uint32_t mdp5_smp_calculate(struct mdp5_smp *smp,
+ 	for (i = 0; i < nplanes; i++) {
+ 		int n, fetch_stride, cpp;
  
- 	nplanes = info->num_planes;
--	hsub = drm_format_horz_chroma_subsampling(fmt);
-+	hsub = info->hsub;
+-		cpp = drm_format_plane_cpp(fmt, i);
++		cpp = drm_format_info_plane_cpp(info, i);
+ 		fetch_stride = width * cpp / (i ? hsub : 1);
  
- 	/* different if BWC (compressed framebuffer?) enabled: */
- 	nlines = 2;
+ 		n = DIV_ROUND_UP(fetch_stride * nlines, smp->blk_size);
 diff --git a/drivers/gpu/drm/msm/msm_fb.c b/drivers/gpu/drm/msm/msm_fb.c
-index 432beddafb9e..f69c0afd6ec6 100644
+index f69c0afd6ec6..29e45f2144b5 100644
 --- a/drivers/gpu/drm/msm/msm_fb.c
 +++ b/drivers/gpu/drm/msm/msm_fb.c
-@@ -145,16 +145,12 @@ static struct drm_framebuffer *msm_framebuffer_init(struct drm_device *dev,
- 	struct drm_framebuffer *fb;
- 	const struct msm_format *format;
- 	int ret, i, n;
--	unsigned int hsub, vsub;
- 
- 	DBG("create framebuffer: dev=%p, mode_cmd=%p (%dx%d@%4.4s)",
- 			dev, mode_cmd, mode_cmd->width, mode_cmd->height,
- 			(char *)&mode_cmd->pixel_format);
- 
- 	n = info->num_planes;
--	hsub = drm_format_horz_chroma_subsampling(mode_cmd->pixel_format);
--	vsub = drm_format_vert_chroma_subsampling(mode_cmd->pixel_format);
--
- 	format = kms->funcs->get_format(kms, mode_cmd->pixel_format,
- 			mode_cmd->modifier[0]);
- 	if (!format) {
-@@ -180,8 +176,8 @@ static struct drm_framebuffer *msm_framebuffer_init(struct drm_device *dev,
- 	}
- 
- 	for (i = 0; i < n; i++) {
--		unsigned int width = mode_cmd->width / (i ? hsub : 1);
--		unsigned int height = mode_cmd->height / (i ? vsub : 1);
-+		unsigned int width = mode_cmd->width / (i ? info->hsub : 1);
-+		unsigned int height = mode_cmd->height / (i ? info->vsub : 1);
+@@ -181,7 +181,7 @@ static struct drm_framebuffer *msm_framebuffer_init(struct drm_device *dev,
  		unsigned int min_size;
  
  		min_size = (height - 1) * mode_cmd->pitches[i]
+-			 + width * drm_format_plane_cpp(mode_cmd->pixel_format, i)
++			 + width * drm_format_info_plane_cpp(info, i)
+ 			 + mode_cmd->offsets[i];
+ 
+ 		if (bos[i]->size < min_size) {
+diff --git a/drivers/gpu/drm/radeon/radeon_fb.c b/drivers/gpu/drm/radeon/radeon_fb.c
+index 1298b84cb1c7..dbf596fc4339 100644
+--- a/drivers/gpu/drm/radeon/radeon_fb.c
++++ b/drivers/gpu/drm/radeon/radeon_fb.c
+@@ -125,6 +125,7 @@ static int radeonfb_create_pinned_object(struct radeon_fbdev *rfbdev,
+ 					 struct drm_mode_fb_cmd2 *mode_cmd,
+ 					 struct drm_gem_object **gobj_p)
+ {
++	const struct drm_format_info *info;
+ 	struct radeon_device *rdev = rfbdev->rdev;
+ 	struct drm_gem_object *gobj = NULL;
+ 	struct radeon_bo *rbo = NULL;
+@@ -135,7 +136,8 @@ static int radeonfb_create_pinned_object(struct radeon_fbdev *rfbdev,
+ 	int height = mode_cmd->height;
+ 	u32 cpp;
+ 
+-	cpp = drm_format_plane_cpp(mode_cmd->pixel_format, 0);
++	info = drm_get_format_info(rdev->ddev, mode_cmd);
++	cpp = drm_format_info_plane_cpp(info, 0);
+ 
+ 	/* need to align pitch with crtc limits */
+ 	mode_cmd->pitches[0] = radeon_align_pitch(rdev, mode_cmd->width, cpp,
 diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-index 606d176d5d96..c318fae28581 100644
+index c318fae28581..57873c99ae29 100644
 --- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
 +++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-@@ -79,18 +79,13 @@ rockchip_user_fb_create(struct drm_device *dev, struct drm_file *file_priv,
- 	struct drm_framebuffer *fb;
- 	struct drm_gem_object *objs[ROCKCHIP_MAX_FB_BUFFER];
- 	struct drm_gem_object *obj;
--	unsigned int hsub;
--	unsigned int vsub;
- 	int num_planes = min_t(int, info->num_planes, ROCKCHIP_MAX_FB_BUFFER);
- 	int ret;
- 	int i;
+@@ -98,7 +98,7 @@ rockchip_user_fb_create(struct drm_device *dev, struct drm_file *file_priv,
  
--	hsub = drm_format_horz_chroma_subsampling(mode_cmd->pixel_format);
--	vsub = drm_format_vert_chroma_subsampling(mode_cmd->pixel_format);
--
- 	for (i = 0; i < num_planes; i++) {
--		unsigned int width = mode_cmd->width / (i ? hsub : 1);
--		unsigned int height = mode_cmd->height / (i ? vsub : 1);
-+		unsigned int width = mode_cmd->width / (i ? info->hsub : 1);
-+		unsigned int height = mode_cmd->height / (i ? info->vsub : 1);
- 		unsigned int min_size;
+ 		min_size = (height - 1) * mode_cmd->pitches[i] +
+ 			mode_cmd->offsets[i] +
+-			width * drm_format_plane_cpp(mode_cmd->pixel_format, i);
++			width * drm_format_info_plane_cpp(info, i);
  
- 		obj = drm_gem_object_lookup(file_priv, mode_cmd->handles[i]);
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-index 9c0d6b367709..ad3f25290e76 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-@@ -320,11 +320,9 @@ static void scl_vop_cal_scl_fac(struct vop *vop, const struct vop_win_data *win,
- 	uint16_t yrgb_hor_scl_mode, yrgb_ver_scl_mode;
- 	uint16_t cbcr_hor_scl_mode = SCALE_NONE;
- 	uint16_t cbcr_ver_scl_mode = SCALE_NONE;
--	int hsub = drm_format_horz_chroma_subsampling(info->format);
--	int vsub = drm_format_vert_chroma_subsampling(info->format);
- 	bool is_yuv = false;
--	uint16_t cbcr_src_w = src_w / hsub;
--	uint16_t cbcr_src_h = src_h / vsub;
-+	uint16_t cbcr_src_w = src_w / info->hsub;
-+	uint16_t cbcr_src_h = src_h / info->vsub;
- 	uint16_t vsu_mode;
- 	uint16_t lb_mode;
- 	uint32_t val;
-@@ -828,8 +826,8 @@ static void vop_plane_atomic_update(struct drm_plane *plane,
- 		    (state->rotation & DRM_MODE_REFLECT_X) ? 1 : 0);
+ 		if (obj->size < min_size) {
+ 			drm_gem_object_put_unlocked(obj);
+diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
+index 32fd6a3b37fb..6bb3cd3a1a01 100644
+--- a/drivers/gpu/drm/stm/ltdc.c
++++ b/drivers/gpu/drm/stm/ltdc.c
+@@ -779,7 +779,7 @@ static void ltdc_plane_atomic_update(struct drm_plane *plane,
  
- 	if (is_yuv) {
--		int hsub = drm_format_horz_chroma_subsampling(fb->format->format);
--		int vsub = drm_format_vert_chroma_subsampling(fb->format->format);
-+		int hsub = fb->format->hsub;
-+		int vsub = fb->format->vsub;
- 		int bpp = fb->format->cpp[1];
- 
- 		uv_obj = fb->obj[1];
+ 	/* Configures the color frame buffer pitch in bytes & line length */
+ 	pitch_in_bytes = fb->pitches[0];
+-	line_length = drm_format_plane_cpp(fb->format->format, 0) *
++	line_length = drm_format_info_plane_cpp(fb->format, 0) *
+ 		      (x1 - x0 + 1) + (ldev->caps.bus_width >> 3) - 1;
+ 	val = ((pitch_in_bytes << 16) | line_length);
+ 	reg_update_bits(ldev->regs, LTDC_L1CFBLR + lofs,
 diff --git a/drivers/gpu/drm/tegra/fb.c b/drivers/gpu/drm/tegra/fb.c
-index da0747e317b7..94fb75089d87 100644
+index 94fb75089d87..d1042196a30f 100644
 --- a/drivers/gpu/drm/tegra/fb.c
 +++ b/drivers/gpu/drm/tegra/fb.c
-@@ -132,18 +132,15 @@ struct drm_framebuffer *tegra_fb_create(struct drm_device *drm,
- 					const struct drm_mode_fb_cmd2 *cmd)
- {
- 	const struct drm_format_info *info = drm_get_format_info(drm, cmd);
--	unsigned int hsub, vsub, i;
- 	struct tegra_bo *planes[4];
- 	struct drm_gem_object *gem;
- 	struct drm_framebuffer *fb;
-+	unsigned int i;
- 	int err;
+@@ -149,7 +149,7 @@ struct drm_framebuffer *tegra_fb_create(struct drm_device *drm,
+ 			goto unreference;
+ 		}
  
--	hsub = drm_format_horz_chroma_subsampling(cmd->pixel_format);
--	vsub = drm_format_vert_chroma_subsampling(cmd->pixel_format);
--
- 	for (i = 0; i < info->num_planes; i++) {
--		unsigned int width = cmd->width / (i ? hsub : 1);
--		unsigned int height = cmd->height / (i ? vsub : 1);
-+		unsigned int width = cmd->width / (i ? info->hsub : 1);
-+		unsigned int height = cmd->height / (i ? info->vsub : 1);
- 		unsigned int size, bpp;
+-		bpp = drm_format_plane_cpp(cmd->pixel_format, i);
++		bpp = drm_format_info_plane_cpp(info, i);
  
- 		gem = drm_gem_object_lookup(file, cmd->handles[i]);
-diff --git a/drivers/gpu/drm/vc4/vc4_plane.c b/drivers/gpu/drm/vc4/vc4_plane.c
-index e3c0a350cb77..be2274924b34 100644
---- a/drivers/gpu/drm/vc4/vc4_plane.c
-+++ b/drivers/gpu/drm/vc4/vc4_plane.c
-@@ -310,10 +310,10 @@ static int vc4_plane_setup_clipping_and_scaling(struct drm_plane_state *state)
- 	struct drm_framebuffer *fb = state->fb;
- 	struct drm_gem_cma_object *bo = drm_fb_cma_get_gem_obj(fb, 0);
- 	u32 subpixel_src_mask = (1 << 16) - 1;
--	u32 format = fb->format->format;
- 	int num_planes = fb->format->num_planes;
- 	struct drm_crtc_state *crtc_state;
--	u32 h_subsample, v_subsample;
-+	u32 h_subsample = fb->format->hsub;
-+	u32 v_subsample = fb->format->vsub;
- 	int i, ret;
- 
- 	crtc_state = drm_atomic_get_existing_crtc_state(state->state,
-@@ -328,9 +328,6 @@ static int vc4_plane_setup_clipping_and_scaling(struct drm_plane_state *state)
- 	if (ret)
- 		return ret;
- 
--	h_subsample = drm_format_horz_chroma_subsampling(format);
--	v_subsample = drm_format_vert_chroma_subsampling(format);
--
- 	for (i = 0; i < num_planes; i++)
- 		vc4_state->offsets[i] = bo->paddr + fb->offsets[i];
- 
-@@ -593,7 +590,8 @@ static int vc4_plane_mode_set(struct drm_plane *plane,
- 	const struct hvs_format *format = vc4_get_hvs_format(fb->format->format);
- 	u64 base_format_mod = fourcc_mod_broadcom_mod(fb->modifier);
- 	int num_planes = fb->format->num_planes;
--	u32 h_subsample, v_subsample;
-+	u32 h_subsample = fb->format->hsub;
-+	u32 v_subsample = fb->format->vsub;
- 	bool mix_plane_alpha;
- 	bool covers_screen;
- 	u32 scl0, scl1, pitch0;
-@@ -623,9 +621,6 @@ static int vc4_plane_mode_set(struct drm_plane *plane,
- 		scl1 = vc4_get_scl_field(state, 0);
+ 		size = (height - 1) * cmd->pitches[i] +
+ 		       width * bpp + cmd->offsets[i];
+diff --git a/drivers/gpu/drm/zte/zx_plane.c b/drivers/gpu/drm/zte/zx_plane.c
+index c6a8be444300..d97a4dff515d 100644
+--- a/drivers/gpu/drm/zte/zx_plane.c
++++ b/drivers/gpu/drm/zte/zx_plane.c
+@@ -222,7 +222,7 @@ static void zx_vl_plane_atomic_update(struct drm_plane *plane,
+ 		cma_obj = drm_fb_cma_get_gem_obj(fb, i);
+ 		paddr = cma_obj->paddr + fb->offsets[i];
+ 		paddr += src_y * fb->pitches[i];
+-		paddr += src_x * drm_format_plane_cpp(format, i);
++		paddr += src_x * drm_format_info_plane_cpp(fb->format, i);
+ 		zx_writel(paddr_reg, paddr);
+ 		paddr_reg += 4;
  	}
- 
--	h_subsample = drm_format_horz_chroma_subsampling(format->drm);
--	v_subsample = drm_format_vert_chroma_subsampling(format->drm);
--
- 	rotation = drm_rotation_simplify(state->rotation,
- 					 DRM_MODE_ROTATE_0 |
- 					 DRM_MODE_REFLECT_X |
 diff --git a/include/drm/drm_fourcc.h b/include/drm/drm_fourcc.h
-index 41779b327d91..eeec449d6c6a 100644
+index eeec449d6c6a..6b5a82b31bc4 100644
 --- a/include/drm/drm_fourcc.h
 +++ b/include/drm/drm_fourcc.h
-@@ -269,8 +269,6 @@ uint32_t drm_mode_legacy_fb_format(uint32_t bpp, uint32_t depth);
+@@ -260,6 +260,23 @@ drm_format_info_is_yuv_sampling_444(const struct drm_format_info *info)
+ 	return info->is_yuv && info->hsub == 1 && info->vsub == 1;
+ }
+ 
++/**
++ * drm_format_info_plane_cpp - determine the bytes per pixel value
++ * @format: pixel format info
++ * @plane: plane index
++ *
++ * Returns:
++ * The bytes per pixel value for the specified plane.
++ */
++static inline
++int drm_format_info_plane_cpp(const struct drm_format_info *info, int plane)
++{
++	if (!info || plane >= info->num_planes)
++		return 0;
++
++	return info->cpp[plane];
++}
++
+ const struct drm_format_info *__drm_format_info(u32 format);
+ const struct drm_format_info *drm_format_info(u32 format);
+ const struct drm_format_info *
+@@ -268,7 +285,6 @@ drm_get_format_info(struct drm_device *dev,
+ uint32_t drm_mode_legacy_fb_format(uint32_t bpp, uint32_t depth);
  uint32_t drm_driver_legacy_fb_format(struct drm_device *dev,
  				     uint32_t bpp, uint32_t depth);
- int drm_format_plane_cpp(uint32_t format, int plane);
--int drm_format_horz_chroma_subsampling(uint32_t format);
--int drm_format_vert_chroma_subsampling(uint32_t format);
+-int drm_format_plane_cpp(uint32_t format, int plane);
  int drm_format_plane_width(int width, uint32_t format, int plane);
  int drm_format_plane_height(int height, uint32_t format, int plane);
  unsigned int drm_format_info_block_width(const struct drm_format_info *info,
