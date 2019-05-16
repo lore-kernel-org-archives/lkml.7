@@ -2,241 +2,106 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C13C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 442A6C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 562FE21473
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B903A20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:59:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="se5MD3uH"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="O9UDoCee"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbfEPEzv (ORCPT
+        id S1726448AbfEPE7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 00:55:51 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:32994 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfEPEzu (ORCPT
+        Thu, 16 May 2019 00:59:50 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:25337 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfEPE7u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 00:55:50 -0400
-Received: by mail-pl1-f194.google.com with SMTP id y3so988137plp.0;
-        Wed, 15 May 2019 21:55:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=uktd7XQDdDULr5leGV0KZGf/+ljezZrUJm/HKaIvbqI=;
-        b=se5MD3uHJ8+Gc+mS+YyGaKQje/uCx4huJ/XEqaT8Gu2hiLrurV+fPQyFCO1nUH/23q
-         RCdc5JAP+VK4Tfjm/Dz8lEgxVNlph+UTmwrbQ7JG5MUERKeHFOXfLvQs8AXixpCJV1ZG
-         Q6ObBUrGP4T6siRpTWSVXRVxV7IlcdRe+4TnCEwKJ+T7pNGEvQRlkv7cimO14KMvOZ4G
-         KAX8y95S2A6Ux3w9qGKFoaRGgMgeZ751n11ELw1JYFfRf1KWhp7aHoZB25XOyB6TDifd
-         bf2CtMFSJiZOQRNOQv/i29Fxe2wyW0XLEo6Z7KG6N3d19/4mSYGq2tcWdr0mwWefoPlJ
-         it+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=uktd7XQDdDULr5leGV0KZGf/+ljezZrUJm/HKaIvbqI=;
-        b=dZ9c7oRqk2CXzDpcdmPx8l1yU1wL5Rgzv5/KmVULLbv9q/urhqmIXgU9Fk7b93e/8l
-         K6WtcZln8e3py4bd1+tDeseJXH/Hl5yW7u7bUwMw56ucMJyMKWmIcNE40r8a3q29qxfW
-         ITh9GJB2WYSAEg0VwsNcDsGm//r5dtV+l7tMefyh5T6dl3NjM+D115loN8nOWiNv/gD5
-         n0EDSRnF6uyVtBCCjtk1UAHhSkFPUYNXEheCSPd56bic809K6OykAzXkgBPawHXTH5BC
-         /Qtg9MfULqWJEYiHM0W1t/RZlulCqZOl4xO6lLqdrqjYRXcFUJ6ZIQhXkO1deJirFqOm
-         78aA==
-X-Gm-Message-State: APjAAAUyVnEqvWkryXhGVXLOEtgV0vFNTeua05Ibx0HDiageoSaHtj6f
-        it8aLNqB9+Ny2z51JNhTjMQ=
-X-Google-Smtp-Source: APXvYqxs2u00xmIx5LZqdbBUaIgVWgi+vCIJVeS76fvd2w+hJ7Bl3CiP21KCsUVxuNiEMxNCEfFsGQ==
-X-Received: by 2002:a17:902:f081:: with SMTP id go1mr546461plb.211.1557982549783;
-        Wed, 15 May 2019 21:55:49 -0700 (PDT)
-Received: from localhost (193-116-124-212.tpgi.com.au. [193.116.124.212])
-        by smtp.gmail.com with ESMTPSA id v4sm9053844pff.45.2019.05.15.21.55.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 May 2019 21:55:48 -0700 (PDT)
-Date:   Thu, 16 May 2019 14:55:42 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH 0/1] Forced-wakeup for stop lite states on Powernv
-To:     Abhishek <huntbag@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     daniel.lezcano@linaro.org, dja@axtens.net, ego@linux.vnet.ibm.com,
-        rjw@rjwysocki.net
-References: <20190422063231.51043-1-huntbag@linux.vnet.ibm.com>
-        <1557291178.ow4spjzq5t.astroid@bobo.none>
-        <b2fcf69a-aecd-ea81-b497-737642354736@linux.vnet.ibm.com>
-In-Reply-To: <b2fcf69a-aecd-ea81-b497-737642354736@linux.vnet.ibm.com>
+        Thu, 16 May 2019 00:59:50 -0400
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x4G4xWoB014187
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 13:59:33 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x4G4xWoB014187
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1557982773;
+        bh=9Ph0k+grbv6JWNUv54NWUGkLMtwGfMJBcFTvjqQFPk0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=O9UDoCeeGS9Q8UGhX2a1LFreuputm3gZZRI4zDrwBkqGm4URrl6A0cfy5dariKJLf
+         OcpMR2p+o13xSQoNX9D2eXZ9l0zepTXxs8KkSqweT3DvNxcJemxPD5Vbl2LbI6bVjG
+         6nz1877AVC2WEdRhRU8c+Pxhz/ABe/0EPKwRW9GzhBjAU652H1vEiXsopme8SJFlSA
+         J4juxwqhZt0PezcmtFi8utb86FiEtO8Rx4na+xjdO35PaMuj0ZyV57hPQfkVNLcjV3
+         q+D4skKCIElOcf0BoQGTfvmzW5wnhhAAfgVY2kXYgMJIX1vzrziaqahW8Z9RR5WA3Q
+         OnI85dG8aFX1w==
+X-Nifty-SrcIP: [209.85.222.54]
+Received: by mail-ua1-f54.google.com with SMTP id p13so777453uaa.11
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 21:59:33 -0700 (PDT)
+X-Gm-Message-State: APjAAAUGPJS5T4zaqzVP4Yb95raj6L6rVZ6D+utTNjASmZ97Uh98bSeT
+        CPK50ZDj4WeIFCLK2ZIshyHSKfAakjq1Eth1hXs=
+X-Google-Smtp-Source: APXvYqwExr/4di8INLQkJrRDaQheWIP5t5xUKnGAEoIV0Jcz144JQr/bNNxhYM9Biw317JwRRcspl7XRbcwfoXMGDrw=
+X-Received: by 2002:ab0:3058:: with SMTP id x24mr19663232ual.95.1557982772314;
+ Wed, 15 May 2019 21:59:32 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1557981860.eltms77ctp.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+References: <20190515194824.5641-1-labbott@redhat.com>
+In-Reply-To: <20190515194824.5641-1-labbott@redhat.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 16 May 2019 13:58:56 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASZnRrSsZSrnw41kintGfmpyj3iz-Vjduk7w3k9iSih-w@mail.gmail.com>
+Message-ID: <CAK7LNASZnRrSsZSrnw41kintGfmpyj3iz-Vjduk7w3k9iSih-w@mail.gmail.com>
+Subject: Re: [PATCH] arm64: vdso: Explicitly add build-id option
+To:     Laura Abbott <labbott@redhat.com>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Abhishek's on May 13, 2019 7:49 pm:
-> On 05/08/2019 10:29 AM, Nicholas Piggin wrote:
->> Abhishek Goel's on April 22, 2019 4:32 pm:
->>> Currently, the cpuidle governors determine what idle state a idling CPU
->>> should enter into based on heuristics that depend on the idle history o=
-n
->>> that CPU. Given that no predictive heuristic is perfect, there are case=
-s
->>> where the governor predicts a shallow idle state, hoping that the CPU w=
-ill
->>> be busy soon. However, if no new workload is scheduled on that CPU in t=
-he
->>> near future, the CPU will end up in the shallow state.
->>>
->>> Motivation
->>> ----------
->>> In case of POWER, this is problematic, when the predicted state in the
->>> aforementioned scenario is a lite stop state, as such lite states will
->>> inhibit SMT folding, thereby depriving the other threads in the core fr=
-om
->>> using the core resources.
->>>
->>> So we do not want to get stucked in such states for longer duration. To
->>> address this, the cpuidle-core can queue timer to correspond with the
->>> residency value of the next available state. This timer will forcefully
->>> wakeup the cpu. Few such iterations will essentially train the governor=
- to
->>> select a deeper state for that cpu, as the timer here corresponds to th=
-e
->>> next available cpuidle state residency. Cpu will be kicked out of the l=
-ite
->>> state and end up in a non-lite state.
->>>
->>> Experiment
->>> ----------
->>> I performed experiments for three scenarios to collect some data.
->>>
->>> case 1 :
->>> Without this patch and without tick retained, i.e. in a upstream kernel=
-,
->>> It would spend more than even a second to get out of stop0_lite.
->>>
->>> case 2 : With tick retained in a upstream kernel -
->>>
->>> Generally, we have a sched tick at 4ms(CONF_HZ =3D 250). Ideally I expe=
-cted
->>> it to take 8 sched tick to get out of stop0_lite. Experimentally,
->>> observation was
->>>
->>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>> sample          min            max           99percentile
->>> 20              4ms            12ms          4ms
->>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>>
->>> It would take atleast one sched tick to get out of stop0_lite.
->>>
->>> case 2 :  With this patch (not stopping tick, but explicitly queuing a
->>>            timer)
->>>
->>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>> sample          min             max             99percentile
->>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>> 20              144us           192us           144us
->>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>>
->>> In this patch, we queue a timer just before entering into a stop0_lite
->>> state. The timer fires at (residency of next available state + exit lat=
-ency
->>> of next available state * 2). Let's say if next state(stop0) is availab=
-le
->>> which has residency of 20us, it should get out in as low as (20+2*2)*8
->>> [Based on the forumla (residency + 2xlatency)*history length] microseco=
-nds
->>> =3D 192us. Ideally we would expect 8 iterations, it was observed to get=
- out
->>> in 6-7 iterations. Even if let's say stop2 is next available state(stop=
-0
->>> and stop1 both are unavailable), it would take (100+2*10)*8 =3D 960us t=
-o get
->>> into stop2.
->>>
->>> So, We are able to get out of stop0_lite generally in 150us(with this
->>> patch) as compared to 4ms(with tick retained). As stated earlier, we do=
- not
->>> want to get stuck into stop0_lite as it inhibits SMT folding for other
->>> sibling threads, depriving them of core resources. Current patch is usi=
-ng
->>> forced-wakeup only for stop0_lite, as it gives performance benefit(prim=
-ary
->>> reason) along with lowering down power consumption. We may extend this
->>> model for other states in future.
->> I still have to wonder, between our snooze loop and stop0, what does
->> stop0_lite buy us.
->>
->> That said, the problem you're solving here is a generic one that all
->> stop states have, I think. Doesn't the same thing apply going from
->> stop0 to stop5? You might under estimate the sleep time and lose power
->> savings and therefore performance there too. Shouldn't we make it
->> generic for all stop states?
->>
->> Thanks,
->> Nick
->>
->>
-> When a cpu is in snooze, it takes both space and time of core. When in=20
-> stop0_lite,
-> it free up time but it still takes space.
+On Thu, May 16, 2019 at 4:51 AM Laura Abbott <labbott@redhat.com> wrote:
+>
+> Commit 691efbedc60d ("arm64: vdso: use $(LD) instead of $(CC) to
+> link VDSO") switched to using LD explicitly. The --build-id option
+> needs to be passed explicitly, similar to x86. Add this option.
+>
+> Fixes: 691efbedc60d ("arm64: vdso: use $(LD) instead of $(CC) to link VDSO")
+> Signed-off-by: Laura Abbott <labbott@redhat.com>
+> ---
+>  arch/arm64/kernel/vdso/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
+> index 744b9dbaba03..ca209103cd06 100644
+> --- a/arch/arm64/kernel/vdso/Makefile
+> +++ b/arch/arm64/kernel/vdso/Makefile
+> @@ -13,6 +13,7 @@ targets := $(obj-vdso) vdso.so vdso.so.dbg
+>  obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
+>
+>  ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 \
+> +               $(call ld-option, --build-id) \
+>                 $(call ld-option, --hash-style=sysv) -n -T
+>
+>  # Disable gcov profiling for VDSO code
 
-True, but snooze should only be taking less than 1% of front end
-cycles. I appreciate there is some non-zero difference here, I just
-wonder in practice what exactly we gain by it.
 
-We should always have fewer states unless proven otherwise.
+I missed that. Sorry.
 
-That said, we enable it today so I don't want to argue this point
-here, because it is a different issue from your patch.
+You can add  --build-id without $(call ld-option,...)
+because it is supported by our minimal version of toolchain.
 
-> When it is in stop0 or deeper,=20
-> it free up both
-> space and time slice of core.
-> In stop0_lite, cpu doesn't free up the core resources and thus inhibits=20
-> thread
-> folding. When a cpu goes to stop0, it will free up the core resources=20
-> thus increasing
-> the single thread performance of other sibling thread.
-> Hence, we do not want to get stuck in stop0_lite for long duration, and=20
-> want to quickly
-> move onto the next state.
-> If we get stuck in any other state we would possibly be losing on to=20
-> power saving,
-> but will still be able to gain the performance benefits for other=20
-> sibling threads.
+See commit log of 1e0221374e for example.
 
-That's true, but stop0 -> deeper stop is also a benefit (for
-performance if we have some power/thermal constraints, and/or for power
-usage).
 
-Sure it may not be so noticable as the SMT switch, but I just wonder
-if the infrastructure should be there for the same reason.
+Otherwise, looks good to me.
 
-I was testing interrupt frequency on some tickless workloads configs,
-and without too much trouble you can get CPUs to sleep with no
-interrupts for many minutes. Hours even. We wouldn't want the CPU to
-stay in stop0 for that long.
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Just thinking about the patch itself, I wonder do you need a full
-kernel timer, or could we just set the decrementer? Is there much=20
-performance cost here?
 
-Thanks,
-Nick
-=
+--
+Best Regards
+
+Masahiro Yamada
