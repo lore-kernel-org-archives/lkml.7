@@ -2,131 +2,113 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9F8C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E877C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE3E020848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:51:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A06D2070D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:51:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="BC8Bsfal"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="JK0kNXwo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726780AbfEPVvO (ORCPT
+        id S1728100AbfEPVvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 17:51:14 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34787 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726750AbfEPVvM (ORCPT
+        Thu, 16 May 2019 17:51:53 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:41290 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726750AbfEPVvx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 17:51:12 -0400
-Received: by mail-lf1-f66.google.com with SMTP id v18so3821732lfi.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 14:51:11 -0700 (PDT)
+        Thu, 16 May 2019 17:51:53 -0400
+Received: by mail-ot1-f65.google.com with SMTP id g8so4892494otl.8
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 14:51:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TxsNy0d6Z0NEmyHjwLQqkeMvbekfex2o7Dex22q3rXc=;
-        b=BC8BsfalvsLkHyig9Dht9Oshl6827AqjIKgf14GTPWRJ+gFcmG0B/lcDupYHDLnDm9
-         FIagejSZDef52VTnIlw6cx4lLi/pclQyxNCrhSV/SIInc45kD+waIWwN4VKhb+0VKjqT
-         gr4O8X0pSyS5BWiaMKDgyBq4tGfaaqo3w/Lh9Ta7rV2BMLkVbMLRMHq/PgY2Cv7DxI3T
-         6Faq6HlJ+UJb9POBD8nbbsN8UwRY7EXqcYFpUAkSvddVoq6R1zkjgCEhzQ2qwPLkv1ol
-         fSB/gfX/Lgyac3ZXjDSyVvQlIKI2ut/dENTvP7T/lrOwzuUlOI0uah1UVe8Hy7Mv7dma
-         LOOA==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q9BJIUmtXvGA8NYL+nEThmnX3fsQkDEf9gjJHVtWFbw=;
+        b=JK0kNXwowOzM74+Om7kEhXLK+rOIMCMEPEAa6Fk0D93qKu8M2dq0YJm2ZfDxgTeCiU
+         ZnpolSVQFmjdgAGuHgNPUQKcuPGJMBEDpFs5OvgWHO2/r1lUKUoq+r79dmC3nusASLwW
+         b7J6BtVgy9HYQwcAKkLHQsoshwVUNWjVqol42iFhSJKjgsIi6Dc+SwbzWrocF4PuQV9M
+         IYPIajeB7RxjAFAl9a4GWlG5H5AeA23IEp+6x25xZR+whf8n/MJa5cQu6cdcsWrU1TDn
+         /Arr+Bi1p3leIaZVgocYnoMbwVUjOA/IIrN5CFkLQKwwu660ooYhVCJaHs5KP3OXWCL+
+         YIIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TxsNy0d6Z0NEmyHjwLQqkeMvbekfex2o7Dex22q3rXc=;
-        b=rRnW7HvsTAViEbGsRtv3FEkagBhi+l+FGfcuE/9Ja95N1uuS9CxU5uOGb63aX541+8
-         x0iX6ugQofUDfkPJwsZo1KO5EAxNrFA1T9aFCitxEBOCL9v7PG0EXm0CEqo17wr57k1A
-         p65L2xlreMaNrN3ttKq0JM1YeuYPm/S8OLlNyQXOzcXcXygx0fibrTM/lR7DaTOvrJx2
-         fWJkdB5sKlTCLJAf9QyqIZWP/JiPd7brah/fnI0A2hOEc2SzWgs/FBEibmHdeJ31Zb88
-         L3mH2UDfq0WwshLXjFRafwYIYoTaDatf7pKmx90tZQq7Y+H00RMItpQKMeV/6Dol4tkK
-         5hoA==
-X-Gm-Message-State: APjAAAVLXMSOk1ue5gy3gbEE1HTHqWt9/EpaBlCFBQhRPnybGdYHiozI
-        xq/A7vVeCtIbWgtDNZXGNd9OQw==
-X-Google-Smtp-Source: APXvYqyUx/72N94IFhpw2E4+oVtCGmXZIOvsrpFHsbjII9Tz+5BOtbhb8EcJkKImevrUyRIje+YKdQ==
-X-Received: by 2002:a19:5045:: with SMTP id z5mr26662060lfj.108.1558043470797;
-        Thu, 16 May 2019 14:51:10 -0700 (PDT)
-Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id o124sm1174315lfe.92.2019.05.16.14.51.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 May 2019 14:51:09 -0700 (PDT)
-Date:   Thu, 16 May 2019 14:48:19 -0700
-From:   Olof Johansson <olof@lixom.net>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Stefan Agner <stefan@agner.ch>, arnd@arndb.de, arm@kernel.org,
-        linux@armlinux.org.uk, ard.biesheuvel@linaro.org,
-        robin.murphy@arm.com, nicolas.pitre@linaro.org,
-        f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, kgene@kernel.org,
-        krzk@kernel.org, robh@kernel.org, ssantosh@kernel.org,
-        jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com,
-        sebastian.hesselbarth@gmail.com, marc.w.gonzalez@free.fr,
-        mans@mansr.com, ndesaulniers@google.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] ARM: use arch_extension directive instead of arch
- argument
-Message-ID: <20190516214819.dopw4eiumt6is46e@localhost>
-References: <f48c245e7e2b432f6771a5f97ff9f4b5bedc5089.1554968922.git.stefan@agner.ch>
- <2f3d0fa7ba599f46960ad3e7419477fd@agner.ch>
- <20190424141217.GC8007@atomide.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q9BJIUmtXvGA8NYL+nEThmnX3fsQkDEf9gjJHVtWFbw=;
+        b=uf91QmsVv0OabbiwSVNhMaaIQn1GifjXLPVfRIAd5bkckkhNLeYCeZh2FJ+u1nXI91
+         UBvJsujKjJrXq6E0X2Jm2WHthxKC1XAl3/62LujgC/Iuxs7DLNIbzi9aaJJmaLfFhNj6
+         Zs+ai/0MA24FN3jLwSqeyNazZgb1JIf1hkSfVXu6z5DO5gOA/e9TuWvjzt4mx9rSX7al
+         3n+XhRJDEZNdLJobljgWH5C5yYwZJf1mNPAB8BnDvV8z8Q5Xd4K0qzZoVG6JpxKNwvHJ
+         quCtGeGnFqQ82aAqAAMNQuIXgGJreS4Ze42xqk0684+a0opIeNSm7ENLgq3ACye1w7CR
+         Tmzg==
+X-Gm-Message-State: APjAAAVaWLpLLHVP017tSUHwu8TzsFqXDJrKPh71jxGaruJ5Boqbn7Sv
+        STQzTfeYDcBQU6EeGIsYgCHEmLtofK+kNb7hailLjQ==
+X-Google-Smtp-Source: APXvYqzibKwOyLJegIvrnmsMGvcFID1N0Mw2/FEB7rFcTHdA1PYSfF3HR1ZbWMzElybqvVBCcqSrRsrG3NhAGtjgYjo=
+X-Received: by 2002:a9d:2f0:: with SMTP id 103mr30133978otl.126.1558043512432;
+ Thu, 16 May 2019 14:51:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190424141217.GC8007@atomide.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <155727335978.292046.12068191395005445711.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <059859ca-3cc8-e3ff-f797-1b386931c41e@deltatee.com> <17ada515-f488-d153-90ef-7a5cc5fefb0f@deltatee.com>
+ <8a7cfa6b-6312-e8e5-9314-954496d2f6ce@oracle.com> <CAPcyv4i28tQMVrscQo31cfu1ZcMAb74iMkKYhu9iO_BjJvp+9A@mail.gmail.com>
+ <6bd8319d-3b73-bb1e-5f41-94c580ba271b@oracle.com> <d699e312-0e88-30c7-8e50-ff624418d486@oracle.com>
+In-Reply-To: <d699e312-0e88-30c7-8e50-ff624418d486@oracle.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 16 May 2019 14:51:40 -0700
+Message-ID: <CAPcyv4hujnGHtTwE78gvmEoY3Y6nLsd1AhJfeKMwHrxLvStf9w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] mm/devm_memremap_pages: Fix page release race
+To:     Jane Chu <jane.chu@oracle.com>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 24, 2019 at 07:12:17AM -0700, Tony Lindgren wrote:
-> * Stefan Agner <stefan@agner.ch> [190423 20:20]:
-> > On 11.04.2019 09:54, Stefan Agner wrote:
-> > > The LLVM Target parser currently does not allow to specify the security
-> > > extension as part of -march (see also LLVM Bug 40186 [0]). When trying
-> > > to use Clang with LLVM's integrated assembler, this leads to build
-> > > errors such as this:
-> > >   clang-8: error: the clang compiler does not support '-Wa,-march=armv7-a+sec'
-> > > 
-> > > Use ".arch_extension sec" to enable the security extension in a more
-> > > portable fasion. Also make sure to use ".arch armv7-a" in case a v6/v7
-> > > multi-platform kernel is being built.
-> > > 
-> > > Note that this is technically not exactly the same as the old code
-> > > checked for availabilty of the security extension by calling as-instr.
-> > > However, there are already other sites which use ".arch_extension sec"
-> > > unconditionally, hence de-facto we need an assembler capable of
-> > > ".arch_extension sec" already today (arch/arm/mm/proc-v7.S). The
-> > > arch extension "sec" is available since binutils 2.21 according to
-> > > its documentation [1].
-> > > 
-> > > [0] https://bugs.llvm.org/show_bug.cgi?id=40186
-> > > [1] https://sourceware.org/binutils/docs-2.21/as/ARM-Options.html
-> > > 
-> > > Signed-off-by: Stefan Agner <stefan@agner.ch>
-> > > Acked-by: Mans Rullgard <mans@mansr.com>
-> > > Acked-by: Arnd Bergmann <arnd@arndb.de>
-> > > Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > 
-> > Arnd, Tony,
-> > 
-> > Patch 3 and 4 got merged by Gregory. I think the other two patches are
-> > ready to be merged too. I think they should go in together to avoid
-> > merge conflicts. Tony, if you agree, can you Ack patch 2 so they can get
-> > merged through arm-soc?
-> 
-> Sure I just acked it for you.
+On Thu, May 16, 2019 at 9:45 AM Jane Chu <jane.chu@oracle.com> wrote:
+>
+> Hi,
+>
+> I'm able to reproduce the panic below by running two sets of ndctl
+> commands that actually serve legitimate purpose in parallel (unlike
+> the brute force experiment earlier), each set in a indefinite loop.
+> This time it takes about an hour to panic.  But I gather the cause
+> is probably the same: I've overlapped ndctl commands on the same
+> region.
+>
+> Could we add a check in nd_ioctl(), such that if there is
+> an ongoing ndctl command on a region, subsequent ndctl request
+> will fail immediately with something to the effect of EAGAIN?
+> The rationale being that kernel should protect itself against
+> user mistakes.
 
-Hi,
-
-These came in right around when I did the last patches for this merge
-window. I'll apply them once -rc1 is out for next release.
+We do already have locking in the driver to prevent configuration
+collisions. The problem looks to be broken assumptions about running
+the device unregistration path in a separate thread outside the lock.
+I suspect it may be incorrect assumptions about the userspace
+visibility of the device relative to teardown actions. To be clear
+this isn't the nd_ioctl() path this is the sysfs path.
 
 
--Olof
+> Also, sensing the subject fix is for a different problem, and has been
+> verified, I'm happy to see it in upstream, so we have a better
+> code base to digger deeper in terms of how the destructive ndctl
+> commands interacts to typical mission critical applications, include
+> but not limited to rdma.
+
+Right, the crash signature you are seeing looks unrelated to the issue
+being address in these patches which is device-teardown racing active
+page pins. I'll start the investigation on the crash signature, but
+again I don't think it reads on this fix series.
