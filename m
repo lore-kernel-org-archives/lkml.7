@@ -2,89 +2,192 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26236C04E53
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607BAC04E87
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6ED120862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F9342070D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:57:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GTW/fJD5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726481AbfEPB4b (ORCPT
+        id S1726513AbfEPB55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 21:56:31 -0400
-Received: from mail-pl1-f173.google.com ([209.85.214.173]:46275 "EHLO
-        mail-pl1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfEPB4b (ORCPT
+        Wed, 15 May 2019 21:57:57 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41800 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726039AbfEPB54 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 21:56:31 -0400
-Received: by mail-pl1-f173.google.com with SMTP id r18so745958pls.13
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 18:56:30 -0700 (PDT)
+        Wed, 15 May 2019 21:57:56 -0400
+Received: by mail-lj1-f195.google.com with SMTP id k8so1539609lja.8
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 18:57:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IBkvWkfjbo2qhlfdTqhbC3Z8epUXswTdb3LlL4ihZQk=;
+        b=GTW/fJD50G4i93ASZPIJ8j7jisA4gxQEkpi3pOeJMwZmkLnFE9vaJwOay3xrlYbeOb
+         Sa28FHESKBdZ5mTV+pwhIijvqNRpeQOFEXnKkV402zC/L09tj8Dq3CbGk9llFXrU9XSM
+         0TSwswhCsFlz0Qqw+2Rq+0iGsbTO91aDjQf0egzGhlTIPsGAMRgH0QGEYLlzLefrxAAk
+         mTpT90gmYUItC1mod7CEEwJ8RlEWR+QexsWGBh9sozEcPYzQRlklA+JwgmFQ8ZID2doH
+         KD2LXPjATScr2URA5lBsPbdsiWZmcrARzwJsYycxLjMaK6hevhR4vr8swivMgzwirUZm
+         7hfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=Zf5kgUF54eJecH+3vr5kLoRlvS4uu5lIJnWNEEHf8Bg=;
-        b=rKkJOObitqX26MsgLcQCcwF/uC055yYQNWY3P0Jy15z4uBi2oQAUNwb+1a0Zr/dHDT
-         5ypnkovyuXwrGil05XW7eX0IgCzqL2lEjF0YsS0UDX/MiAmyHr+x3+7117tMvdE6yxcd
-         0nr2JNJu2C6BvhK8Hz5X1zE3VWHF2bJjeujjlfMcBZmwOF/66ks1igWURCgtdUVICMjr
-         gt729VtVTMrs+WNeB16VhK6DAJECJd8W43Daow2ign+G+zKsyNPw2tiyE5QjIrkwecuG
-         FTZCipsp2hTeJFmOJI/rmEK99/OvhmjEGPMBNdB8ljzWw9Rdn2S3Wi0cNaWW+LxyrzoY
-         Q+BQ==
-X-Gm-Message-State: APjAAAVqfOWsEznaCBLLxKrGhUV5HkCtJQLh1Lv3E5FYBVZ13LaL6MFh
-        +4/iB8lwknozb3W7XWwRVABzTQ==
-X-Google-Smtp-Source: APXvYqw/2OjWMPbouASQFMJV5TfSTXbso5Z2ho9UWCmnVvHKk1SlB5jXN8UeF0v5jU9grFEiysumwQ==
-X-Received: by 2002:a17:902:2ae6:: with SMTP id j93mr23883308plb.130.1557971790092;
-        Wed, 15 May 2019 18:56:30 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id p7sm1051914pgb.92.2019.05.15.18.56.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 May 2019 18:56:29 -0700 (PDT)
-Date:   Wed, 15 May 2019 18:56:29 -0700 (PDT)
-X-Google-Original-Date: Wed, 15 May 2019 18:56:25 PDT (-0700)
-Subject:     Re: [GIT PULL] RISC-V Patches for the 5.2 Merge Window, Part 1
-In-Reply-To: <CAHk-=wjBRKqBHe5Au=TpDq3B5p=AFKvpaf_7XSU3Mv0MgfGj+A@mail.gmail.com>
-CC:     atish.patra@wdc.com, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Message-ID: <mhng-3c75df62-0cf8-4e9d-b2f5-0a141fd244e4@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IBkvWkfjbo2qhlfdTqhbC3Z8epUXswTdb3LlL4ihZQk=;
+        b=I8W4hboMQXlJwBjsERV/koD5VZcfzYrjWEex6V07TcLNIa8sd2BEhEGxIgyUGIqD2P
+         tb5JTH592yMZoEocTXlFij7hVK4TdVSyAqRywLKVfRjVHhK5OQIFNhSWMD88Ot3C+SM6
+         DgUlLuj57z+TrIaV8c8CxqzWRNQbA1jXtM0SmfI5j5z7l37rwdcvq78bKo7PRpAE8SCt
+         5CZSxF0X2h2U/hhJ7g5bGolT8o0RVzKqo5yy+bdNXgrSa53nqo20OZpS7ueHw5ihIm0g
+         O0WeoE6BuqlaiKGc67oLak2fvvwhxtBQuHBozGodIz7IcpsBjAh4qPJCKcoc/xj0tgvu
+         itdQ==
+X-Gm-Message-State: APjAAAVQIJGNoH9UN+FkIpATm/M3PdoR+Yc/rALbyG/kvnN2T+1WZuX+
+        sVnPR9EjcOlbyKkpw5dKFVXpeVJum9y7Ib9C/d9QnA==
+X-Google-Smtp-Source: APXvYqwLavl5xqcrY4wECeWHxyMenU5o/VgW46ojJJBdtWMUqQj5/mlqtcpa/UMsQNQErRG/93zcbkxVTPWOBdhgSDs=
+X-Received: by 2002:a2e:8583:: with SMTP id b3mr23688152lji.136.1557971874021;
+ Wed, 15 May 2019 18:57:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190515090659.123121100@linuxfoundation.org> <20190515181705.GB16742@roeck-us.net>
+ <20190515182427.GA26029@kroah.com> <20190515183729.GA2978@kroah.com>
+In-Reply-To: <20190515183729.GA2978@kroah.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 16 May 2019 07:27:42 +0530
+Message-ID: <CA+G9fYt0u15cKi-dEk7yW=6mTZvbRrvh=y4UWjo+SF+fPN2EvQ@mail.gmail.com>
+Subject: Re: [PATCH 4.14 000/115] 4.14.120-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 15 May 2019 18:49:57 PDT (-0700), Linus Torvalds wrote:
-> On Wed, May 15, 2019 at 6:43 PM Palmer Dabbelt <palmer@sifive.com> wrote:
->>
->> Linus: I'm not sure how to tag this PR as a mistake, so I'm going to just send
->> another one.  If this gets merged then I'll handle the follow-on.
+On Thu, 16 May 2019 at 00:07, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Just emailing in the same thread ends up with me hopefully seeing the
-> "oops, cancel pull request" before I actually pull, so you did the
-> right thing.
+> On Wed, May 15, 2019 at 08:24:27PM +0200, Greg Kroah-Hartman wrote:
+> > On Wed, May 15, 2019 at 11:17:05AM -0700, Guenter Roeck wrote:
+> > > On Wed, May 15, 2019 at 12:54:40PM +0200, Greg Kroah-Hartman wrote:
+> > > > This is the start of the stable review cycle for the 4.14.120 relea=
+se.
+> > > > There are 115 patches in this series, all will be posted as a respo=
+nse
+> > > > to this one.  If anyone has any issues with these being applied, pl=
+ease
+> > > > let me know.
+> > > >
+> > > > Responses should be made by Fri 17 May 2019 09:04:39 AM UTC.
+> > > > Anything received after that time might be too late.
+> > > >
+> > >
+> > > mips:malta_defconfig, parisc:defconfig with
+> > > CONFIG_CRYPTO_MANAGER_DISABLE_TESTS=3Dn:
+> > >
+> > > In file included from crypto/testmgr.c:54:0:
+> > > crypto/testmgr.h:16081:4: error:
+> > >     'const struct cipher_testvec' has no member named 'ptext'
+> > > crypto/testmgr.h:16089:4: error:
+> > >     'const struct cipher_testvec' has no member named 'ctext'
+> > >
+> > > and several more. Commit c97feceb948b6 ("crypto: testmgr - add AES-CF=
+B tests")
+> > > [upstream commit 7da66670775d201f633577f5b15a4bbeebaaa2b0] is the cul=
+prit -
+> > > aplying it to v4.14.y would require a backport.
+> >
+> > Already dropped.  I'll push out a -rc2 as you aren't the only one that
+> > hit this...
 >
-> To make sure, you _could_ obviously also just force-remove the tag you
-> asked me to pull, so that if I miss an email any pull attempt of mine
-> would just fail.
+> -rc2 is pushed out now, thanks.
 
-Ah, OK, I hadn't thought of that one.
+4.14.120-rc2 test results report,
 
-> .., and if were to have ended up pulling before you sent the cancel
-> email and/or removed the tag, it's obviously all too late, and then
-> we'd have to fix things up after the fact, but at least this time it
-> got caught in time.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Ya, that's fine.  It's just an extra 0-length file that doesn't get built
-("file." instead of "file.c"), which explains how it went unnoticed.  That
-said, it's a bit of an embarassment and I wanted to submit two more patches
-anyway so I was going to send another PR.  The rebased patches are sitting on
-my for-next now, I'll send them up tomorrow unless someone points something
-out.
+Summary
+------------------------------------------------------------------------
 
-Thanks for the quick reply!
+kernel: 4.14.120-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: 76f297797325042039484d833822c683d6335075
+git describe: v4.14.119-115-g76f297797325
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.119-115-g76f297797325
+
+No regressions (compared to build v4.14.119)
+
+No fixes (compared to build v4.14.119)
+
+Ran 23545 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* perf
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
