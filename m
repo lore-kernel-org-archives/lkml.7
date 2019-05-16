@@ -2,99 +2,135 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37657C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B75DC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CF520815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:31:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="VtBsh4pw"
+	by mail.kernel.org (Postfix) with ESMTP id 2427A20815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:31:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbfEPNbR (ORCPT
+        id S1727598AbfEPNby (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:31:17 -0400
-Received: from mail-eopbgr20047.outbound.protection.outlook.com ([40.107.2.47]:29879
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726528AbfEPNbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:31:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NCgt6aJ4FHdlBcWirefvbkbgnsQtFRXZ5rwvzDoRq4A=;
- b=VtBsh4pw73zPcebTqr+K3LTT6av4XRu4pvrHG6n5g6mnY69fPIinhCh/CJwMZhVsj3xNufODKjMqFcmuAUNx/xNPMm4JZKc9PYPL16KkDBwm2aSEpRy6eypfqzufa4u5OdJMzroi3/HBOslQXpLNy+IpAbF8Lvvmbl6umQbmN20=
-Received: from VI1PR04MB4880.eurprd04.prod.outlook.com (20.177.49.153) by
- VI1PR04MB5742.eurprd04.prod.outlook.com (20.178.127.84) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Thu, 16 May 2019 13:31:12 +0000
-Received: from VI1PR04MB4880.eurprd04.prod.outlook.com
- ([fe80::d9de:1be3:e7e6:757f]) by VI1PR04MB4880.eurprd04.prod.outlook.com
- ([fe80::d9de:1be3:e7e6:757f%3]) with mapi id 15.20.1900.010; Thu, 16 May 2019
- 13:31:12 +0000
-From:   Claudiu Manoil <claudiu.manoil@nxp.com>
-To:     "Y.b. Lu" <yangbo.lu@nxp.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/3] enetc: add hardware timestamping support
-Thread-Topic: [PATCH 1/3] enetc: add hardware timestamping support
-Thread-Index: AQHVC84BpTq18Sng3k254t8Y+2yCUKZtu0bw
-Date:   Thu, 16 May 2019 13:31:12 +0000
-Message-ID: <VI1PR04MB4880C3E6D24AB7A53887D9C9960A0@VI1PR04MB4880.eurprd04.prod.outlook.com>
-References: <20190516100028.48256-1-yangbo.lu@nxp.com>
- <20190516100028.48256-2-yangbo.lu@nxp.com>
-In-Reply-To: <20190516100028.48256-2-yangbo.lu@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=claudiu.manoil@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: af669eba-f862-4790-fd83-08d6da02c36d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5742;
-x-ms-traffictypediagnostic: VI1PR04MB5742:
-x-microsoft-antispam-prvs: <VI1PR04MB5742891663A18BB2EDD4A25F960A0@VI1PR04MB5742.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0039C6E5C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(346002)(396003)(39860400002)(136003)(376002)(13464003)(199004)(189003)(55016002)(478600001)(6436002)(9686003)(3846002)(4326008)(6116002)(53936002)(64756008)(256004)(33656002)(73956011)(66476007)(66556008)(71190400001)(66946007)(66446008)(76116006)(2906002)(110136005)(6246003)(71200400001)(446003)(2501003)(229853002)(7696005)(76176011)(54906003)(66066001)(26005)(74316002)(102836004)(305945005)(44832011)(486006)(7736002)(6506007)(25786009)(86362001)(99286004)(81156014)(81166006)(186003)(5660300002)(14454004)(11346002)(476003)(68736007)(8936002)(8676002)(316002)(4744005)(52536014);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5742;H:VI1PR04MB4880.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Q10LGT+o1yOJVNPfES/wALUGZNVQgjpq5dbbFUJqf6iH9Ce5/oZPyEMdzsp18cQoFOYY/APOeEV/dk1/gtl4pBnjdmEkMBEc+wkkLX2tK4PsPSy+/6SPdBVODYy7AJ0LF4CELj6ooPLwGDufgrPMrFUi9yYn+T199Yi6vm0LrYF7fz5k4Z3Lhx2mQv5Yj4zkDzK7LevvHbKUSIgznRk5QTfUQRsify8LwA7lSNFEmuqDW7QKM7YKbkrodEVfKF49eBGOajuFdd6u4m1C3fzXBhf5SSQ3tCgYEHvmHLsGsGIH28acyBv/YEXHxr9iQ4Yob/Hxnc6sn0lwVrC5zMTpeQL+SmhYIymtZIT+nupYVU2KbDa2uRaCv/9kiwlX1IVhLrIf1bPg1++kClgZsTqm0tasPbEjLCvYzuKaf5AT9h4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: af669eba-f862-4790-fd83-08d6da02c36d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 13:31:12.2079
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5742
+        Thu, 16 May 2019 09:31:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51702 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726742AbfEPNby (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:31:54 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4GDQxBZ101156
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:31:52 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sh7x62y38-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:31:52 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Thu, 16 May 2019 14:31:50 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 16 May 2019 14:31:46 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4GDVjWR52035654
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 May 2019 13:31:45 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1DBFFAE056;
+        Thu, 16 May 2019 13:31:45 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 63E07AE045;
+        Thu, 16 May 2019 13:31:43 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.95.230])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 16 May 2019 13:31:43 +0000 (GMT)
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Mehmet Kayaalp <mkayaalp@linux.ibm.com>
+Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Rob Landley <rob@landley.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arvind Sankar <niveditas98@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        initramfs@vger.kernel.org,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Date:   Thu, 16 May 2019 09:31:32 -0400
+In-Reply-To: <20190516052934.GA68777@rani.riverdale.lan>
+References: <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
+         <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
+         <CALCETrV3b205L38xqPr6QqwGn6-vxQdPoJGUygJJpgM-JqqXfQ@mail.gmail.com>
+         <1557861511.3378.19.camel@HansenPartnership.com>
+         <4da3dbda-bb76-5d71-d5c5-c03d98350ab0@landley.net>
+         <1557878052.2873.6.camel@HansenPartnership.com>
+         <20190515005221.GB88615@rani.riverdale.lan>
+         <a138af12-d983-453e-f0b2-661a80b7e837@huawei.com>
+         <20190515160834.GA81614@rani.riverdale.lan>
+         <ce65240a-4df6-8ebc-8360-c01451e724f0@huawei.com>
+         <20190516052934.GA68777@rani.riverdale.lan>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19051613-0020-0000-0000-0000033D5A54
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051613-0021-0000-0000-000021902221
+Message-Id: <1558013492.4581.97.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_11:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905160090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+RnJvbTogWS5iLiBMdQ0KWy4uLl0NCj5TdWJq
-ZWN0OiBbUEFUQ0ggMS8zXSBlbmV0YzogYWRkIGhhcmR3YXJlIHRpbWVzdGFtcGluZyBzdXBwb3J0
-DQo+DQpbLi4uXQ0KDQpIaSBZYW5nYm8sDQoNClRoZXNlIGVuZXRjIHBhdGNoZXMgdGFyZ2V0aW5n
-IG5ldC1uZXh0IHdpbGwgaGF2ZSB0byBiZSByZWJhc2VkIG9uDQp0aGUgbGF0ZXN0IGVuZXRjIG5l
-dC5naXQgY29tbWl0cywgb3RoZXJ3aXNlIHRoZXJlIHdpbGwgYmUgc29tZSBtZXJnZQ0KY29uZmxp
-Y3RzIGZvciBlbmV0Yy5jIGFuZCBlbmV0Y19ldGh0b29sLmMuDQpUaGFua3MsDQpDbGF1ZGl1DQoN
-CnNlZQ0KMjJmYjQzZjM2MDA2ICJlbmV0YzogQWRkIG1pc3NpbmcgbGluayBzdGF0ZSBpbmZvIGZv
-ciBldGh0b29sIg0KZjRhMGJlODRkNzNlICJlbmV0YzogRml4IE5VTEwgZG1hIGFkZHJlc3MgdW5t
-YXAgZm9yIFR4IEJEIGV4dGVuc2lvbnMiDQoNCg==
+On Thu, 2019-05-16 at 01:29 -0400, Arvind Sankar wrote:
+
+> I think that's a separate issue. If you want to allow people to be able
+> to put files onto the system that will be IMA verified, they need to
+> have some way to locally sign them whether it's inside an initramfs or
+> on a real root filesystem.
+
+Anyone building their own kernel can build their own key into the
+kernel image.  Another option is to build the kernel with  
+CONFIG_SYSTEM_EXTRA_CERTIFICATE enabled, allowing an additional
+certificate to be inserted into the kernel image post build.  The
+additional certificate will be loaded onto the builtin kernel keyring.
+ Certificates signed with the private key can then be added to the IMA
+keyring.  By modifying the kernel image, the kernel image obviously
+needs to be resigned.  Additional patches "Certificate insertion
+support for x86 bzImages" were posted, but have not been upstreamed.
+
+This patch set adds the security xattrs needed by IMA.
+
+Mimi
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
