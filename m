@@ -2,197 +2,85 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF78C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A1BDC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C13D2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 760152082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:25:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfEPIXx (ORCPT
+        id S1726796AbfEPIZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 04:23:53 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:37262 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726347AbfEPIXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 04:23:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C7431715;
-        Thu, 16 May 2019 01:23:52 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 490AB3F703;
-        Thu, 16 May 2019 01:23:52 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id A66D7682413; Thu, 16 May 2019 09:23:50 +0100 (BST)
-Date:   Thu, 16 May 2019 09:23:50 +0100
-From:   "liviu.dudau@arm.com" <liviu.dudau@arm.com>
-To:     Wen He <wen.he_1@nxp.com>
-Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>
-Subject: Re: [EXT] Re: [v1] drm/arm/mali-dp: Disable checking for required
- pixel clock rate
-Message-ID: <20190516082350.GB15144@e110455-lin.cambridge.arm.com>
-References: <20190515024348.43642-1-wen.he_1@nxp.com>
- <20190515154530.GX15144@e110455-lin.cambridge.arm.com>
- <AM0PR04MB48658C4B7AADE1E3FFCA7ED7E20A0@AM0PR04MB4865.eurprd04.prod.outlook.com>
+        Thu, 16 May 2019 04:25:24 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:36199 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfEPIZX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 04:25:23 -0400
+Received: by mail-vs1-f66.google.com with SMTP id l20so1778738vsp.3;
+        Thu, 16 May 2019 01:25:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kom7CYU+qZNtW2jhA/vUJyPJXygJervJGsEuV/SOp60=;
+        b=iuMcoLFRmGqCnoME87YxWMHfyLCUC+TKrE+vv6libXqIBnyoGZ6IbsvKwvOKa9FVlc
+         P7AWl7nqQN8ZKQr2KOWY7UtdMe25ui1Hq6NU20z1rf6JvmMLvg899FZ5irb/SIXBhI1W
+         VCTXfF9HUEyKA33cG9rxCavhm8Oy3MAl+pyNZDCTY7HR/PtRjWx5U+mRQMYE0tc71bu6
+         2azFS5w2Pi24ELZVx0GTM9x89nXy3fIqZ1Z4tUnzNlQvZmDejYxPAyj2mLy9loYBXmUc
+         XJIQvOjpyJ4OtJn0gn0ndEf1AaTVo+p1m3kVp5nQtw+B7GTKlFFbkWZOACC086cqqeBt
+         x08g==
+X-Gm-Message-State: APjAAAUGcwLAjT3wqhM3Y6Emu2G5NKIc+6FbphsXRiR47Vye4P63MFzc
+        l4d/2ACUUaIrN6oU/9n66sYVsIJEb7zxskWXlIQ=
+X-Google-Smtp-Source: APXvYqz8A+UKfZ2oOCYzeXseCIyYZ4wWUIDb6b9Gxt8lpJxZNlnNHTRGzBSCc2MdFNDG5Jw0r3bbHv8IOqodaorNY/Q=
+X-Received: by 2002:a67:fdd4:: with SMTP id l20mr18322924vsq.63.1557995122611;
+ Thu, 16 May 2019 01:25:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM0PR04MB48658C4B7AADE1E3FFCA7ED7E20A0@AM0PR04MB4865.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190516075656.25880-1-yuehaibing@huawei.com>
+In-Reply-To: <20190516075656.25880-1-yuehaibing@huawei.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 16 May 2019 10:25:11 +0200
+Message-ID: <CAMuHMdUMBg9HL8PQvkHvppP+qJ6fWjs0ZbFTX=8x0A1_AVUJqw@mail.gmail.com>
+Subject: Re: [PATCH] spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Mark Brown <broonie@kernel.org>, Axel Lin <axel.lin@ingics.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>, albeu@free.fr,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 08:10:21AM +0000, Wen He wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: liviu.dudau@arm.com [mailto:liviu.dudau@arm.com]
-> > Sent: 2019年5月15日 23:46
-> > To: Wen He <wen.he_1@nxp.com>
-> > Cc: dri-devel@lists.freedesktop.org; linux-kernel@vger.kernel.org; Leo Li
-> > <leoyang.li@nxp.com>
-> > Subject: [EXT] Re: [v1] drm/arm/mali-dp: Disable checking for required pixel
-> > clock rate
-> > 
-> > 
-> > Hi Wen,
-> 
-> Hi Liviu,
-> 
-> > 
-> > On Wed, May 15, 2019 at 02:42:08AM +0000, Wen He wrote:
-> > > Disable checking for required pixel clock rate if ARCH_LAYERSCPAE is
-> > > enable.
-> > >
-> > > Signed-off-by: Alison Wang <alison.wang@nxp.com>
-> > > Signed-off-by: Wen He <wen.he_1@nxp.com>
-> > > ---
-> > > change in description:
-> > >       - This check that only supported one pixel clock required clock rate
-> > >       compare with dts node value. but we have supports 4 pixel clock
-> > >       for ls1028a board.
-> > 
-> > So, your DT says your pixel clock provider is a fixed clock? If you support more
-> > than one rate, you should instead use a real provider for it. How do you
-> > support the 4 pixel clocks?
-> > 
->  
-> Yes , the DT node only can provided one pixel clock by using a fixed clock.
-> But we Display Port controller support 4 or more resolutions, each of which
-> requires a set of pixel clocks to drive, and we hope they can switch any resolution
-> we want by some program every times.
+On Thu, May 16, 2019 at 9:57 AM YueHaibing <yuehaibing@huawei.com> wrote:
+> If spi_register_master fails in spi_bitbang_start
+> because device_add failure, We should return the
+> error code other than 0, otherwise calling
+> spi_bitbang_stop may trigger NULL pointer dereference
+> like this:
+>
+> BUG: KASAN: null-ptr-deref in __list_del_entry_valid+0x45/0xd0
+> Read of size 8 at addr 0000000000000000 by task syz-executor.0/3661
 
-That program can't be some userspace application, because it will have to make
-changes to the hardware and the kernel will not know that things have changed
-under its feet. That leaves the option of the bootloader or some other kernel
-module doing the changes.
+[...]
 
-If you have another kernel module that knows how to change clocks, that should
-be implemented using the common clocks infrastructure, at which time you can
-put it in the DT as the clock provider for the pixelclock.
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: 702a4879ec33 ("spi: bitbang: Let spi_bitbang_start() take a reference to master")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-If the bootloader does the changes, then the bootloader should edit the DT and
-set the correct value for the pixel clock. Regardless, with your change and on
-your platform the user can request any resolution and the driver will silently
-fail to set that resolution.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-One other problem is the one Robin raised, where the kernel is compiled for
-multiple platforms, like what various Linux distributions do. That kernel will
-either work on other SoC or not, depending on what CONFIG_ARCH_LAYERSCAPE is
-set to.
+Gr{oetje,eeting}s,
 
-In summary, for this patch, it's a NAK. There are proper ways of achieving what
-you need, but this patch is not.
-
-Best regards,
-Liviu
-
-> 
-> For example, if we set that fixed pixel clock is 27000000 (27Mhz), but user hope can see
-> a group 1080p resolution penguins during startup , and hope playing a 4k video once
-> system boot up done. 
-> Btw, In our board, the 1080p resolution is driven by a 148.5Mhz pixel clock, 4k is driven
-> by a 594Mhz. 27Mhz only can drive 480p resolution.
-> 
-> To meet the above user requirements, I was to setup following steps,
-> 1. Add the "video=1920x1080-32@60" to bootargs command line [specify penguins size]
-> 2. Play a 4K video with 4k resolution when system boot up done.
-> 
-> > Also, not sure what the paragraph above is meant to be. Should it be part of
-> > the commit message?
-> > 
-> 
-> These comments just want to let you know.
-> 
-> > Best regards,
-> > Liviu
-> > 
-> > 
-> > >  drivers/gpu/drm/arm/malidp_crtc.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/arm/malidp_crtc.c
-> > > b/drivers/gpu/drm/arm/malidp_crtc.c
-> > > index 56aad288666e..bb79223d9981 100644
-> > > --- a/drivers/gpu/drm/arm/malidp_crtc.c
-> > > +++ b/drivers/gpu/drm/arm/malidp_crtc.c
-> > > @@ -36,11 +36,13 @@ static enum drm_mode_status
-> > > malidp_crtc_mode_valid(struct drm_crtc *crtc,
-> > >
-> 
-> According to our pixel configuration above,
-> Now the variable req_rate value is 148500000 or 59400000, another variable rate value is
-> 27000000, so we will get a warning and display will cannot works well. 
-> 
-> We're not sure which resolution are user want, and we also can't just offered one resolution
-> to user. so I remove this check on our board, maybe it's not good change.
-> 
-> I want to know do you have other good suggestion? Thanks.
-> 
-> Best Regards,
-> Wen
-> 
-> > >       if (req_rate) {
-> > >               rate = clk_round_rate(hwdev->pxlclk, req_rate);
-> > > +#ifndef CONFIG_ARCH_LAYERSCAPE
-> > >               if (rate != req_rate) {
-> > >                       DRM_DEBUG_DRIVER("pxlclk doesn't support %ld
-> > Hz\n",
-> > >                                        req_rate);
-> > >                       return MODE_NOCLOCK;
-> > >               }
-> > > +#endif
-> > >       }
-> > >
-> > >       return MODE_OK;
-> > > --
-> > > 2.17.1
-> > >
-> > 
-> > --
-> > ====================
-> > | I would like to |
-> > | fix the world,  |
-> > | but they're not |
-> > | giving me the   |
-> >  \ source code!  /
-> >   ---------------
-> >     ¯\_(ツ)_/¯
+                        Geert
 
 -- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
