@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4B8C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCE6C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD11720848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36F0220833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558007358;
-	bh=aH3b+fP/Z15xzrMBVGTSSwC9pPVL1Nox/juMJfQ2Y/A=;
+	s=default; t=1558007363;
+	bh=tnU8VFfG6jNyE6sm/+2+tvhnaW9yjzse30dp+2KV594=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=onfZ4B+27yhCYzOsavR1N5mAje+TJinVj16KyFt7ohCVWwN+Vxsx6PIn3GGZJuH2u
-	 FKAmpRcXA3Ku0OvuISnKo7G5oGpjQ0ykZeMXwHOHSVMqkuUlNGl4qXtH0RfmVW8+3y
-	 PNJV8iznx5zxqQ/d6H7yjh40iBr5rU9Rj2VyKIa0=
+	b=BsGTOHfA+USqIEvRmnKoZ34cnydo3JpZYAyoW2JullNVfAekBl64Q9oRpL5sfotrC
+	 KsGF+uyY2AGA/Glt7D0yyE8+ha6S7SszY62sC75KWTA/+wxp5VYrl4uossjSEG1OrU
+	 Syx6jnZSQQMp5ElrK3Q+e3Ye2otNwfOJDme0vBNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfEPLjm (ORCPT
+        id S1727301AbfEPLjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:39:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47666 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:39:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbfEPLjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:39:37 -0400
+        id S1727166AbfEPLji (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:39:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E40CE20862;
-        Thu, 16 May 2019 11:39:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D3322087E;
+        Thu, 16 May 2019 11:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006776;
-        bh=aH3b+fP/Z15xzrMBVGTSSwC9pPVL1Nox/juMJfQ2Y/A=;
+        s=default; t=1558006777;
+        bh=tnU8VFfG6jNyE6sm/+2+tvhnaW9yjzse30dp+2KV594=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2vdnTLTTAo2Gok8pnvCW2tLL+fD0/bD0zxpJSguzZigceUbiD0SrTm9kt113vgtQd
-         ylVMG+HyvUwws+GuvcqPRpu48z17rXRwt2Su/K4e8boQnjaDSyJXC/LWZUjhBsnwb9
-         iBezt8adttMyqcTupgrR5upJzqI9ST113USmF5oA=
+        b=AqB+LK0Amnvi88Z2335EY2MhXO2Hrq1qYy5wM6gAA2pI0WZCp64jNcHpk7e9fDuTR
+         TeGCX2JCqrF1SI1LChCP6snSznSBwRmOfBl6pzLLr+W3l2meRfhl2wkQ4ZNBeUhu5q
+         DPyR/1CNlvJNAXsszP8ijVDkqWxCrvSRrwOhHG+A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Su Yanjun <suyj.fnst@cn.fujitsu.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+Cc:     Jeremy Sowden <jeremy@azazel.net>,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 03/34] xfrm6_tunnel: Fix potential panic when unloading xfrm6_tunnel module
-Date:   Thu, 16 May 2019 07:39:00 -0400
-Message-Id: <20190516113932.8348-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 04/34] vti4: ipip tunnel deregistration fixes.
+Date:   Thu, 16 May 2019 07:39:01 -0400
+Message-Id: <20190516113932.8348-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516113932.8348-1-sashal@kernel.org>
 References: <20190516113932.8348-1-sashal@kernel.org>
@@ -60,38 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+From: Jeremy Sowden <jeremy@azazel.net>
 
-[ Upstream commit 6ee02a54ef990a71bf542b6f0a4e3321de9d9c66 ]
+[ Upstream commit 5483844c3fc18474de29f5d6733003526e0a9f78 ]
 
-When unloading xfrm6_tunnel module, xfrm6_tunnel_fini directly
-frees the xfrm6_tunnel_spi_kmem. Maybe someone has gotten the
-xfrm6_tunnel_spi, so need to wait it.
+If tunnel registration failed during module initialization, the module
+would fail to deregister the IPPROTO_COMP protocol and would attempt to
+deregister the tunnel.
 
-Fixes: 91cc3bb0b04ff("xfrm6_tunnel: RCU conversion")
-Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+The tunnel was not deregistered during module-exit.
+
+Fixes: dd9ee3444014e ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/xfrm6_tunnel.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/ipv4/ip_vti.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/ipv6/xfrm6_tunnel.c b/net/ipv6/xfrm6_tunnel.c
-index bc65db782bfb1..12cb3aa990af4 100644
---- a/net/ipv6/xfrm6_tunnel.c
-+++ b/net/ipv6/xfrm6_tunnel.c
-@@ -402,6 +402,10 @@ static void __exit xfrm6_tunnel_fini(void)
- 	xfrm6_tunnel_deregister(&xfrm6_tunnel_handler, AF_INET6);
- 	xfrm_unregister_type(&xfrm6_tunnel_type, AF_INET6);
- 	unregister_pernet_subsys(&xfrm6_tunnel_net_ops);
-+	/* Someone maybe has gotten the xfrm6_tunnel_spi.
-+	 * So need to wait it.
-+	 */
-+	rcu_barrier();
- 	kmem_cache_destroy(xfrm6_tunnel_spi_kmem);
- }
+diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
+index 68a21bf75dd0b..b6235ca09fa53 100644
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -659,9 +659,9 @@ static int __init vti_init(void)
+ 	return err;
  
+ rtnl_link_failed:
+-	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
+-xfrm_tunnel_failed:
+ 	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
++xfrm_tunnel_failed:
++	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
+ xfrm_proto_comp_failed:
+ 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
+ xfrm_proto_ah_failed:
+@@ -676,6 +676,7 @@ static int __init vti_init(void)
+ static void __exit vti_fini(void)
+ {
+ 	rtnl_link_unregister(&vti_link_ops);
++	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
+ 	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
+ 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
+ 	xfrm4_protocol_deregister(&vti_esp4_protocol, IPPROTO_ESP);
 -- 
 2.20.1
 
