@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D895C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE0DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E10D82087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13C4B20881
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:00:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y0zZt+o6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W2dWsZbe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726898AbfEPIAn (ORCPT
+        id S1726923AbfEPIAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 04:00:43 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46695 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbfEPIAn (ORCPT
+        Thu, 16 May 2019 04:00:47 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34988 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbfEPIAq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 04:00:43 -0400
-Received: by mail-pl1-f194.google.com with SMTP id r18so1200113pls.13
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:00:42 -0700 (PDT)
+        Thu, 16 May 2019 04:00:46 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h1so1173203pgs.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:00:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=eo36gth8TiJm3De/GHnJH2AyCm98XgpRVL6ZC2cXx9I=;
-        b=Y0zZt+o6mTNMdvOqAJuBc+tVbMVv/PfLYM9B2Wol5wLV9ESInsFE0rWz2BWS8CH7o5
-         OP9qrBBX3nREBuWZnBWCfMJrRNgRSVhiOWGW3IdpG/PFCpJpFhIVwfdJ2NBSXZ31Pffm
-         ioKE4F9FIb/NFPWnAEcmGnlD8YRmMN3Q2ryWB+SWUidtcMiw+U7SBJgc5aAp9QT3cco1
-         nFqHRrDyW0GXTbhbfGtkhxSxCIUg6bTXN1e2qSf9w5apt5DJzdxbo9YZYNtFR1Jfnxdb
-         mTlXIvGvmpdHx82uq20MYrA2bhzvTIiOcMuPXm8SzvOyt9Mw7tb775kNhzFNxYnff4AV
-         WVAg==
+        bh=kosXq0ZF1VWySbXOAJ231nmlCL06j4Wt318Yl0WkM/E=;
+        b=W2dWsZbey+2oYCPspmthpWmnMB5GVFP7X1LrhXDhDd7rKSYfxSlLq0LLWAcmizIP95
+         Olgt0LEC0IoyK9eM9daVAC95lwmU6zYNvf0UEz7njHQAVtdrNg92pO+525wy48R1TGc/
+         TyVoErfD2TuVKbZ4wNoLd2UzHUOHIyUUzf4B1fowITWUG3GS/CQl4eZ2UjajaArSpsgZ
+         d5MxUs3i0GBH5WK1YrecAzQ3Ezv8TmqU8rfhUiRLahG765umNdRY1gjsaUceFOTyplPy
+         7O6FJ5oWDb/OCZ/S8hA4biCcDRSy25ygQK4YP7At70y2Vd7bndAdKM8u750vjRnZKgPk
+         86dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eo36gth8TiJm3De/GHnJH2AyCm98XgpRVL6ZC2cXx9I=;
-        b=G2WU+ZTqKIPOoxUcbaeJGvty4JVv1nMc5QMdE/vh48uyHfyOqfrpysj4WDHCSutP7i
-         60Gc7eDmVlVTUV2RzsLWKDJkgm63bFfrLFLOMh73VbMDgYS5j5QONg0PjZ3FIlwvvXES
-         bqvyYxDxId/3pEsosFTQkv/QmxShGRgYXDWZ/aPkkPumSDwzQTlzlIFOVbkkLajdZAsQ
-         IlxHtdGDuZuN+r2SWM2JRIJKWK7na5FOrzLWMWc0Tc6CEuarGgqN1QUZmgCqqDHLI5v4
-         hW2ECTbElOfaAlCtFo8GlKBpDmrBgLMeIAf0KrJ3siRGYKlitG/Y/hLyWL8AMOJdK0FI
-         zueQ==
-X-Gm-Message-State: APjAAAUDcwgn4L1CPnS1HM0S6w37rJtXj1IexL229OsC3U+Rtk8a2S7f
-        olUvH6y//NfHyXX+cPr/LVE=
-X-Google-Smtp-Source: APXvYqyW3+tYedtleOkoP+xm1iU8NM7/nbzjy1G+hetnxIZ4j9CVQbdXterJYfpgMX1gTRDv31vVgg==
-X-Received: by 2002:a17:902:9884:: with SMTP id s4mr50144312plp.179.1557993642056;
-        Thu, 16 May 2019 01:00:42 -0700 (PDT)
+        bh=kosXq0ZF1VWySbXOAJ231nmlCL06j4Wt318Yl0WkM/E=;
+        b=OWowpk2Brinsk1gtpbT2qf4rPY6FgO5F2IQsjBZ8G05+/GcGRz/Y0EslO+8U7C9hvx
+         Jb9KwdSxMNS8WaLCWYK29JS/DpIaa3TSEH5hACx38m3aTBKZUxn3GX/vqWQb/1YMYviz
+         ZEjez2T4AKQfuFvDURn0gY6o4LMwIR7+DTXlIlhIdUlTM+1t/gfBoE5BSMRspD0ol+Jh
+         88VpzXx04Jq75CfYnnWV4lJ8NHPviiIdTCedeEWeq9mpLVgXtueC4rSxpM8xcVs1/3Rw
+         2KIeinU63/HWWlav7iK0wAP0oCyEnTgmPStxn38NlieW3g9CJlPcJXKEaw/QNq7VFG95
+         dOLA==
+X-Gm-Message-State: APjAAAXExR4B4wZfBw5chq8NEhtHj6627o9P6PiDDgEMSRWU1e5jNpjB
+        P6rkZgI8iS1l3tGORrAAaro=
+X-Google-Smtp-Source: APXvYqzyIE/ig2PmNYrPW5KqE+004U7x9D5yaOKQEGzF32xy+99IqdHzKh3aoTZak+Ue0vceUAqoNA==
+X-Received: by 2002:a63:8a4a:: with SMTP id y71mr48922072pgd.270.1557993645798;
+        Thu, 16 May 2019 01:00:45 -0700 (PDT)
 Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id p7sm2051471pgb.92.2019.05.16.01.00.38
+        by smtp.gmail.com with ESMTPSA id p7sm2051471pgb.92.2019.05.16.01.00.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 01:00:41 -0700 (PDT)
+        Thu, 16 May 2019 01:00:45 -0700 (PDT)
 From:   Yuyang Du <duyuyang@gmail.com>
 To:     peterz@infradead.org, will.deacon@arm.com, mingo@kernel.org
 Cc:     bvanassche@acm.org, ming.lei@redhat.com, frederic@kernel.org,
         tglx@linutronix.de, boqun.feng@gmail.com, paulmck@linux.ibm.com,
         linux-kernel@vger.kernel.org, Yuyang Du <duyuyang@gmail.com>
-Subject: [PATCH v2 05/17] locking/lockdep: Rename deadlock check functions
-Date:   Thu, 16 May 2019 16:00:03 +0800
-Message-Id: <20190516080015.16033-6-duyuyang@gmail.com>
+Subject: [PATCH v2 06/17] locking/lockdep: Adjust BFS algorithm to support multiple matches
+Date:   Thu, 16 May 2019 16:00:04 +0800
+Message-Id: <20190516080015.16033-7-duyuyang@gmail.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20190516080015.16033-1-duyuyang@gmail.com>
 References: <20190516080015.16033-1-duyuyang@gmail.com>
@@ -75,84 +75,168 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Deadlock checks are performed at two places:
-
- - Within current's held lock stack, check for lock recursion deadlock.
- - Within dependency graph, check for lock inversion deadlock.
-
-Rename the two relevant functions for later use. Plus, with read locks,
-dependency circle in graph is not a sufficient condition for lock
-inversion deadlocks anymore, so check_noncircular() is not entirely
-accurate.
+With read locks, circle is not sufficient condition for a deadlock. As a
+result, we need to continue the search after a match but the match is not
+wanted. __bfs() is adjusted to that end. The basic idea is to enqueue a
+node's children before matching the node.
 
 No functional change.
 
 Signed-off-by: Yuyang Du <duyuyang@gmail.com>
 ---
- kernel/locking/lockdep.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ kernel/locking/lockdep.c | 54 +++++++++++++++++++++++++-----------------------
+ 1 file changed, 28 insertions(+), 26 deletions(-)
 
 diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 1f1cb21..f4982ad 100644
+index f4982ad..54ddf85 100644
 --- a/kernel/locking/lockdep.c
 +++ b/kernel/locking/lockdep.c
-@@ -1771,8 +1771,8 @@ static inline void set_lock_type2(struct lock_list *lock, int read)
-  * Print an error and return 0 if it does.
-  */
- static noinline int
--check_noncircular(struct held_lock *src, struct held_lock *target,
--		  struct lock_trace *trace)
-+check_deadlock_graph(struct held_lock *src, struct held_lock *target,
-+		     struct lock_trace *trace)
+@@ -1417,7 +1417,7 @@ static int __bfs(struct lock_list *source_entry,
+ 		 void *data,
+ 		 int (*match)(struct lock_list *entry, void *data),
+ 		 struct lock_list **target_entry,
+-		 int offset)
++		 int offset, bool init)
  {
- 	int ret;
- 	struct lock_list *uninitialized_var(target_entry);
-@@ -2385,7 +2385,8 @@ static inline void inc_chains(void)
+ 	struct lock_list *entry;
+ 	struct lock_list *lock;
+@@ -1425,19 +1425,11 @@ static int __bfs(struct lock_list *source_entry,
+ 	struct circular_queue *cq = &lock_cq;
+ 	int ret = 1;
+ 
+-	if (match(source_entry, data)) {
+-		*target_entry = source_entry;
+-		ret = 0;
+-		goto exit;
++	if (init) {
++		__cq_init(cq);
++		__cq_enqueue(cq, source_entry);
+ 	}
+ 
+-	head = get_dep_list(source_entry, offset);
+-	if (list_empty(head))
+-		goto exit;
+-
+-	__cq_init(cq);
+-	__cq_enqueue(cq, source_entry);
+-
+ 	while ((lock = __cq_dequeue(cq))) {
+ 
+ 		if (!lock->class) {
+@@ -1449,25 +1441,34 @@ static int __bfs(struct lock_list *source_entry,
+ 
+ 		DEBUG_LOCKS_WARN_ON(!irqs_disabled());
+ 
++		/*
++		 * Enqueue a node's children before match() so that even
++		 * this node matches but is not wanted, we can continue
++		 * the search.
++		 */
+ 		list_for_each_entry_rcu(entry, head, entry) {
+ 			if (!lock_accessed(entry)) {
+ 				unsigned int cq_depth;
++
+ 				mark_lock_accessed(entry, lock);
+-				if (match(entry, data)) {
+-					*target_entry = entry;
+-					ret = 0;
+-					goto exit;
+-				}
+ 
+ 				if (__cq_enqueue(cq, entry)) {
+ 					ret = -1;
+ 					goto exit;
+ 				}
++
+ 				cq_depth = __cq_get_elem_count(cq);
+ 				if (max_bfs_queue_depth < cq_depth)
+ 					max_bfs_queue_depth = cq_depth;
+ 			}
+ 		}
++
++		if (match(lock, data)) {
++			*target_entry = lock;
++			ret = 0;
++			goto exit;
++		}
++
+ 	}
+ exit:
+ 	return ret;
+@@ -1476,10 +1477,10 @@ static int __bfs(struct lock_list *source_entry,
+ static inline int __bfs_forwards(struct lock_list *src_entry,
+ 			void *data,
+ 			int (*match)(struct lock_list *entry, void *data),
+-			struct lock_list **target_entry)
++			struct lock_list **target_entry, bool init)
+ {
+ 	return __bfs(src_entry, data, match, target_entry,
+-		     offsetof(struct lock_class, locks_after));
++		     offsetof(struct lock_class, locks_after), init);
+ 
  }
  
- /*
-- * Check whether we are holding such a class already.
-+ * Check whether we are holding such a class already in current
-+ * context's held lock stack.
-  *
-  * (Note that this has to be done separately, because the graph cannot
-  * detect such classes of deadlocks.)
-@@ -2396,7 +2397,7 @@ static inline void inc_chains(void)
-  *  3: LOCK_TYPE_RECURSIVE on recursive read
-  */
- static int
--check_deadlock(struct task_struct *curr, struct held_lock *next)
-+check_deadlock_current(struct task_struct *curr, struct held_lock *next)
+@@ -1489,7 +1490,7 @@ static inline int __bfs_backwards(struct lock_list *src_entry,
+ 			struct lock_list **target_entry)
  {
- 	struct held_lock *prev;
- 	struct held_lock *nest = NULL;
-@@ -2480,7 +2481,7 @@ static inline void inc_chains(void)
+ 	return __bfs(src_entry, data, match, target_entry,
+-		     offsetof(struct lock_class, locks_before));
++		     offsetof(struct lock_class, locks_before), true);
  
- 	/*
- 	 * Prove that the new <prev> -> <next> dependency would not
--	 * create a circular dependency in the graph. (We do this by
-+	 * create a deadlock scenario in the graph. (We do this by
- 	 * a breadth-first search into the graph starting at <next>,
- 	 * and check whether we can reach <prev>.)
- 	 *
-@@ -2488,7 +2489,7 @@ static inline void inc_chains(void)
- 	 * MAX_CIRCULAR_QUEUE_SIZE) which keeps track of a breadth of nodes
- 	 * in the graph whose neighbours are to be checked.
- 	 */
--	ret = check_noncircular(next, prev, trace);
-+	ret = check_deadlock_graph(next, prev, trace);
- 	if (unlikely(ret <= 0))
- 		return 0;
+ }
  
-@@ -2983,7 +2984,7 @@ static int validate_chain(struct task_struct *curr,
- 		 * The simple case: does the current hold the same lock
- 		 * already?
- 		 */
--		int ret = check_deadlock(curr, hlock);
-+		int ret = check_deadlock_current(curr, hlock);
+@@ -1662,7 +1663,7 @@ static unsigned long __lockdep_count_forward_deps(struct lock_list *this)
+ 	unsigned long  count = 0;
+ 	struct lock_list *uninitialized_var(target_entry);
  
- 		if (!ret)
- 			return 0;
+-	__bfs_forwards(this, (void *)&count, noop_count, &target_entry);
++	__bfs_forwards(this, (void *)&count, noop_count, &target_entry, true);
+ 
+ 	return count;
+ }
+@@ -1750,12 +1751,12 @@ static inline void set_lock_type2(struct lock_list *lock, int read)
+  */
+ static noinline int
+ check_path(struct lock_class *target, struct lock_list *src_entry,
+-	   struct lock_list **target_entry)
++	   struct lock_list **target_entry, bool init)
+ {
+ 	int ret;
+ 
+ 	ret = __bfs_forwards(src_entry, (void *)target, class_equal,
+-			     target_entry);
++			     target_entry, init);
+ 
+ 	if (unlikely(ret < 0))
+ 		print_bfs_bug(ret);
+@@ -1783,7 +1784,7 @@ static inline void set_lock_type2(struct lock_list *lock, int read)
+ 
+ 	debug_atomic_inc(nr_cyclic_checks);
+ 
+-	ret = check_path(hlock_class(target), &src_entry, &target_entry);
++	ret = check_path(hlock_class(target), &src_entry, &target_entry, true);
+ 
+ 	if (unlikely(!ret)) {
+ 		if (!trace->nr_entries) {
+@@ -1821,7 +1822,7 @@ static inline void set_lock_type2(struct lock_list *lock, int read)
+ 
+ 	debug_atomic_inc(nr_redundant_checks);
+ 
+-	ret = check_path(hlock_class(target), &src_entry, &target_entry);
++	ret = check_path(hlock_class(target), &src_entry, &target_entry, true);
+ 
+ 	if (!ret) {
+ 		struct lock_list *parent;
+@@ -1897,7 +1898,8 @@ static inline int usage_match(struct lock_list *entry, void *mask)
+ 
+ 	debug_atomic_inc(nr_find_usage_forwards_checks);
+ 
+-	result = __bfs_forwards(root, &usage_mask, usage_match, target_entry);
++	result = __bfs_forwards(root, &usage_mask, usage_match,
++				target_entry, true);
+ 
+ 	return result;
+ }
 -- 
 1.8.3.1
 
