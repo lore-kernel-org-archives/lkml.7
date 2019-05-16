@@ -2,99 +2,92 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A0FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FB0C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BDC920833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:50:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558025411;
-	bh=LmBKXiHfrotUexFa5IXxJZ0NgFBhp3cJw8uJBHpEHCk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=brMDyYKKXSlMTetasfzpjdTbhCf10pNCNOtV5wzdv7Aeq7C8N986Z7R4EFHKQHQvq
-	 nNWqYNPYMTkmoMDwqaOusMbEMtPiM58ZC0lHmkmcHJ84vQdYQEth77Brl0T4PqdbPk
-	 aEAZs4u6++QfqoxF60uQhLrLrWPWD3e+u3MpWLyQ=
+	by mail.kernel.org (Postfix) with ESMTP id CCAD4205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:50:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbfEPQuK (ORCPT
+        id S1728742AbfEPQu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:50:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726853AbfEPQuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:50:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CC80205ED;
-        Thu, 16 May 2019 16:50:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558025409;
-        bh=LmBKXiHfrotUexFa5IXxJZ0NgFBhp3cJw8uJBHpEHCk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ab7tS6FeSRr0h/GQCkbVEYPabvb+6iqLdyHd7/UO1C9SLjUmxrvedqvNkvnFCHlB1
-         LUaKQbg5BueZhU00/434WuUz6o1pf1M1qe5v4pwBY/3KTRVGKlCGhuS/MhjEigvJb2
-         +mxHtnqG/SczCnuXq4GpNMrlQMBDjysO7oEbhQfM=
-Date:   Thu, 16 May 2019 18:50:06 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.1 00/46] 5.1.3-stable review
-Message-ID: <20190516165006.GC12641@kroah.com>
-References: <20190515090616.670410738@linuxfoundation.org>
- <5b7b4163-f616-3cd8-ea45-3fd3f495ae7f@nvidia.com>
+        Thu, 16 May 2019 12:50:27 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:59384 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726487AbfEPQu0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 12:50:26 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hRJaI-00043u-Bq; Thu, 16 May 2019 16:50:22 +0000
+Date:   Thu, 16 May 2019 17:50:22 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     David Howells <dhowells@redhat.com>, torvalds@linux-foundation.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-abi@vger.kernel.org
+Subject: Re: [PATCH 0/4] uapi, vfs: Change the mount API UAPI [ver #2]
+Message-ID: <20190516165021.GD17978@ZenIV.linux.org.uk>
+References: <155800752418.4037.9567789434648701032.stgit@warthog.procyon.org.uk>
+ <20190516162259.GB17978@ZenIV.linux.org.uk>
+ <20190516163151.urrmrueugockxtdy@brauner.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5b7b4163-f616-3cd8-ea45-3fd3f495ae7f@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190516163151.urrmrueugockxtdy@brauner.io>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 12:04:32PM +0100, Jon Hunter wrote:
-> 
-> On 15/05/2019 11:56, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.1.3 release.
-> > There are 46 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Fri 17 May 2019 09:04:22 AM UTC.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.3-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> All tests are passing for Tegra ...
-> 
-> Test results for stable-v5.1:
->     12 builds:	12 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     32 tests:	32 pass, 0 fail
-> 
-> Linux version:	5.1.3-rc1-g6c9703a
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra30-cardhu-a04
-> 
+[linux-abi cc'd]
 
-Thanks for testing all of these and letting me know.
+On Thu, May 16, 2019 at 06:31:52PM +0200, Christian Brauner wrote:
+> On Thu, May 16, 2019 at 05:22:59PM +0100, Al Viro wrote:
+> > On Thu, May 16, 2019 at 12:52:04PM +0100, David Howells wrote:
+> > > 
+> > > Hi Linus, Al,
+> > > 
+> > > Here are some patches that make changes to the mount API UAPI and two of
+> > > them really need applying, before -rc1 - if they're going to be applied at
+> > > all.
+> > 
+> > I'm fine with 2--4, but I'm not convinced that cloexec-by-default crusade
+> > makes any sense.  Could somebody give coherent arguments in favour of
+> > abandoning the existing conventions?
+> 
+> So as I said in the commit message. From a userspace perspective it's
+> more of an issue if one accidently leaks an fd to a task during exec.
+> 
+> Also, most of the time one does not want to inherit an fd during an
+> exec. It is a hazzle to always have to specify an extra flag.
+> 
+> As Al pointed out to me open() semantics are not going anywhere. Sure,
+> no argument there at all.
+> But the idea of making fds cloexec by default is only targeted at fds
+> that come from separate syscalls. fsopen(), open_tree_clone(), etc. they
+> all return fds independent of open() so it's really easy to have them
+> cloexec by default without regressing anyone and we also remove the need
+> for a bunch of separate flags for each syscall to turn them into
+> cloexec-fds. I mean, those for syscalls came with 4 separate flags to be
+> able to specify that the returned fd should be made cloexec. The other
+> way around, cloexec by default, fcntl() to remove the cloexec bit is way
+> saner imho.
 
-greg k-h
+Re separate flags - it is, in principle, a valid argument.  OTOH, I'm not
+sure if they need to be separate - they all have the same value and
+I don't see any reason for that to change...
+
+Only tangentially related, but I wonder if something like close_range(from, to)
+would be a more useful approach...  That kind of open-coded loops is not
+rare in userland and kernel-side code can do them much cheaper.  Something
+like
+	/* that exec is sensitive */
+	unshare(CLONE_FILES);
+	/* we don't want anything past stderr here */
+	close_range(3, ~0U);
+	execve(....);
+on the userland side of thing.  Comments?
