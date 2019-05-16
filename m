@@ -2,189 +2,135 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E83ADC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D8CC04E87
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04B62087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:09:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="C7XFLkG1"
+	by mail.kernel.org (Postfix) with ESMTP id E178120881
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:16:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbfEPFJq (ORCPT
+        id S1726447AbfEPFQY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 01:09:46 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38861 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726374AbfEPFJp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 01:09:45 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f97so990038plb.5
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 22:09:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=agOsn/FsJEMc+Zf/iAfFT/NhIk1MJBZxFX9gyrs1azc=;
-        b=C7XFLkG1+645K/z9YPQ8jDojz6KnEEmXqDTB1ykI6sc64RJeJDUZR5J5OoM9qn9Gcy
-         5XnW4jrY9Q0qnFQ6klWH7yLSifNUGdW58uS+728vWOTcXgvHgjaQwkRtDStMrRA9xPd1
-         B0VW4LH2mHoLkJ9WKwhZ52YvjhnEhWzy7MhWcCZLQ55JLD9yzPtUhA+7tZRiVaMGrI4g
-         5R0bkfsGDJhpPNha5vbqaPEETH2Qy9xfd9r0Z7CHpnMBVzAi+Uk9sC6+bxFR8O/9i65q
-         1hBPlEJR7AXr9G4F0EayyPMxMdgdA2cWm/mg8TeAtRgA0Ez4/ArhdUhl+36/zuvoweD8
-         petw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=agOsn/FsJEMc+Zf/iAfFT/NhIk1MJBZxFX9gyrs1azc=;
-        b=Uj5LZr84Rfo/sLb/HzjJwjRXYnNoUWJIH4pwGvsGjBqR+j5/c/l80EB2t1rHj8yxTv
-         jICyvHVCwF7o/mixGjpsknav4LFYWEEz5So8WG5Euq934Z0cRPFCbJYaJDU6AdQtio4k
-         inmL51Dog/jfFCSztXgqQiTYTMHrebGPj60mTaYHcb0joodiY1YhwETG7BDlql3sLqY5
-         v8xbplgB8+sQZQzuKcrVHa3nka0vX7bTMNPbtEdrc2cFIu+NZ+3QB846MCXTeDBOAwrC
-         N6pyY4BmJkBMFMS3mkfYKBIw/erqWk1tXh36t5NLfh3XfHaql1D4xHqtbKrjHGdQQqeu
-         OXXA==
-X-Gm-Message-State: APjAAAUxmXzKrelcforWEi1/6TQQCVzrBz4MRzj2OVmh2434ORRy3XPk
-        16hSVgxyAgtN2l+yZKYH9XCqBg==
-X-Google-Smtp-Source: APXvYqyOeGqGHbyS1GYeHd3FsJ1ZgTt6oYeWr0jHKsYiJtZNEzr0IKux09yyFHVwkYQTcv7TjxWQsQ==
-X-Received: by 2002:a17:902:2d:: with SMTP id 42mr48829831pla.34.1557983384320;
-        Wed, 15 May 2019 22:09:44 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id u6sm5929531pfa.1.2019.05.15.22.09.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 15 May 2019 22:09:43 -0700 (PDT)
-From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, peter@korsgaard.com,
-        andrew@lunn.ch, palmer@sifive.com, paul.walmsley@sifive.com,
-        sagar.kadam@sifive.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] i2c-ocores: sifive: add polling mode workaround for FU540-C000 SoC
-Date:   Thu, 16 May 2019 10:38:40 +0530
-Message-Id: <1557983320-14461-4-git-send-email-sagar.kadam@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1557983320-14461-1-git-send-email-sagar.kadam@sifive.com>
-References: <1557983320-14461-1-git-send-email-sagar.kadam@sifive.com>
+        Thu, 16 May 2019 01:16:24 -0400
+Received: from mga02.intel.com ([134.134.136.20]:58065 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725975AbfEPFQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 01:16:23 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 22:16:22 -0700
+X-ExtLoop1: 1
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
+  by orsmga003.jf.intel.com with ESMTP; 15 May 2019 22:16:12 -0700
+Date:   Thu, 16 May 2019 08:16:22 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190516051622.GC6388@linux.intel.com>
+References: <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
+ <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
+ <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+ <20190513102926.GD8743@linux.intel.com>
+ <20190514104323.GA7591@linux.intel.com>
+ <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+ <20190514204527.GC1977@linux.intel.com>
+ <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
+ <20190515013031.GF1977@linux.intel.com>
+ <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i2c-ocore driver already has a polling mode interface.But it needs
-a workaround for FU540 Chipset on HiFive unleashed board (RevA00).
-There is an erratum in FU540 chip that prevents interrupt driven i2c
-transfers from working, and also the I2C controller's interrupt bit
-cannot be cleared if set, due to this the existing i2c polling mode
-interface added in mainline earlier doesn't work, and CPU stall's
-infinitely, when-ever i2c transfer is initiated.
+On Wed, May 15, 2019 at 11:27:04AM -0700, Andy Lutomirski wrote:
+> Hi, LSM and SELinux people-
+> 
+> We're trying to figure out how SGX fits in with LSMs.  For background,
+> an SGX library is functionally a bit like a DSO, except that it's
+> nominally resistant to attack from outside and the process of loading
+> it is complicated.  To load an enclave, a program can open
+> /dev/sgx/enclave, do some ioctls to load the code and data segments
+> into the enclave, call a special ioctl to "initialize" the enclave,
+> and then call into the enclave (using special CPU instructions).
+> 
+> One nastiness is that there is not actually a universally agreed upon,
+> documented file format for enclaves.  Windows has an undocumented
+> format, and there are probably a few others out there.  No one really
+> wants to teach the kernel to parse enclave files.
+> 
+> There are two issues with how this interacts with LSMs:
+> 
+> 1) LSMs might want to be able to whitelist, blacklist, or otherwise
+> restrict what enclaves can run at all.  The current proposal that
+> everyone seems to dislike the least is to have a .sigstruct file on
+> disk that contains a hash and signature of the enclave in a
+> CPU-defined format.  To initialize an enclave, a program will pass an
+> fd to this file, and a new LSM hook can be called to allow or disallow
+> the operation.  In a SELinux context, the idea is that policy could
+> require the .sigstruct file to be labeled with a type like
+> sgx_sigstruct_t, and only enclaves that have a matching .sigstruct
+> with such a label could run.
 
-Ref:previous polling mode support in mainline
+Similarly if we could take data for the enclave from fd and enforce
+it with sgx_enclave_t label.
 
-	commit 69c8c0c0efa8 ("i2c: ocores: add polling interface")
+> Here's a very vague proposal that's kind of like what I've been
+> thinking over the past few days.  The SGX inode could track, for each
+> page, a "safe-to-execute" bit.  When you first open /dev/sgx/enclave,
+> you get a blank enclave and all pages are safe-to-execute.  When you
+> do the ioctl to load context (which could be code, data, or anything
+> else), the kernel will check whether the *source* VMA is executable
+> and, if not, mark the page of the enclave being loaded as unsafe.
+> Once the enclave is initialized, the driver will clear the
+> safe-to-execute bit for any page that is successfully mapped writably.
 
-The workaround / fix under OCORES_FLAG_BROKEN_IRQ is particularly for
-FU540-COOO SoC.
+With the fd based model for source I'd mark SECINFO.W pages as unsafe
+to execute and then check unsafe bit before applying lets say EMODT
+or EMODPR.
 
-Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
----
- drivers/i2c/busses/i2c-ocores.c | 34 ++++++++++++++++++++++++++++------
- 1 file changed, 28 insertions(+), 6 deletions(-)
+There is a problem here though. Usually the enclave itself is just a
+loader that then loads the application from outside source and creates
+the executable pages from the content.
 
-diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-index aee1d86..00ee45c 100644
---- a/drivers/i2c/busses/i2c-ocores.c
-+++ b/drivers/i2c/busses/i2c-ocores.c
-@@ -27,6 +27,7 @@
- #include <linux/jiffies.h>
- 
- #define OCORES_FLAG_POLL BIT(0)
-+#define OCORES_FLAG_BROKEN_IRQ BIT(2) /* Broken IRQ in HiFive Unleashed */
- 
- /*
-  * 'process_lock' exists because ocores_process() and ocores_process_timeout()
-@@ -239,9 +240,13 @@ static irqreturn_t ocores_isr(int irq, void *dev_id)
- 	struct ocores_i2c *i2c = dev_id;
- 	u8 stat = oc_getreg(i2c, OCI2C_STATUS);
- 
--	if (!(stat & OCI2C_STAT_IF))
-+	if (i2c->flags & OCORES_FLAG_BROKEN_IRQ) {
-+		if (stat & OCI2C_STAT_IF)
-+			if (!(stat & OCI2C_STAT_BUSY))
-+				return IRQ_NONE;
-+	} else if (!(stat & OCI2C_STAT_IF)) {
- 		return IRQ_NONE;
--
-+	}
- 	ocores_process(i2c, stat);
- 
- 	return IRQ_HANDLED;
-@@ -356,6 +361,11 @@ static void ocores_process_polling(struct ocores_i2c *i2c)
- 		ret = ocores_isr(-1, i2c);
- 		if (ret == IRQ_NONE)
- 			break; /* all messages have been transferred */
-+		else {
-+			if (i2c->flags & OCORES_FLAG_BROKEN_IRQ)
-+				if (i2c->state == STATE_DONE)
-+					break;
-+		}
- 	}
- }
- 
-@@ -406,7 +416,7 @@ static int ocores_xfer(struct i2c_adapter *adap,
- {
- 	struct ocores_i2c *i2c = i2c_get_adapdata(adap);
- 
--	if (i2c->flags & OCORES_FLAG_POLL)
-+	if ((i2c->flags & (OCORES_FLAG_POLL | OCORES_FLAG_BROKEN_IRQ)))
- 		return ocores_xfer_polling(adap, msgs, num);
- 	return ocores_xfer_core(i2c, msgs, num, false);
- }
-@@ -471,7 +481,7 @@ static u32 ocores_func(struct i2c_adapter *adap)
- 	},
- 	{
- 		.compatible = "sifive,fu540-c000-i2c",
--		.data = (void *)TYPE_SIFIVE_REV0,
-+		.data = (void *)(TYPE_SIFIVE_REV0 | OCORES_FLAG_BROKEN_IRQ),
- 	},
- 	{
- 		.compatible = "sifive,i2c0",
-@@ -601,6 +611,7 @@ static int ocores_i2c_probe(struct platform_device *pdev)
- {
- 	struct ocores_i2c *i2c;
- 	struct ocores_i2c_platform_data *pdata;
-+	const struct of_device_id *match;
- 	struct resource *res;
- 	int irq;
- 	int ret;
-@@ -682,13 +693,24 @@ static int ocores_i2c_probe(struct platform_device *pdev)
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq == -ENXIO) {
--		i2c->flags |= OCORES_FLAG_POLL;
-+		/*
-+		 * Set a OCORES_FLAG_BROKEN_IRQ to enable workaround for
-+		 * FU540-C000 SoC in polling mode interface of i2c-ocore driver.
-+		 * Else enable default polling mode interface for SIFIVE/OCORE
-+		 * device types.
-+		 */
-+		match = of_match_node(ocores_i2c_match, pdev->dev.of_node);
-+		if (match && (long)match->data ==
-+				(TYPE_SIFIVE_REV0 | OCORES_FLAG_BROKEN_IRQ))
-+			i2c->flags |= OCORES_FLAG_BROKEN_IRQ;
-+		else
-+			i2c->flags |= OCORES_FLAG_POLL;
- 	} else {
- 		if (irq < 0)
- 			return irq;
- 	}
- 
--	if (!(i2c->flags & OCORES_FLAG_POLL)) {
-+	if (!(i2c->flags & (OCORES_FLAG_POLL | OCORES_FLAG_BROKEN_IRQ))) {
- 		ret = devm_request_irq(&pdev->dev, irq, ocores_isr, 0,
- 				       pdev->name, i2c);
- 		if (ret) {
--- 
-1.9.1
+A great example of this is Graphene that bootstraps unmodified Linux
+applications to an enclave:
 
+https://github.com/oscarlab/graphene
+
+/Jarkko
