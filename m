@@ -2,138 +2,112 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22E8C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D87C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:43:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFF52082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:40:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557988834;
-	bh=lDXJwF8L6Q3G9lM+UuPh8HMotl/xHXPZGZPwBCQSEQg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YcVESb/HIWiJAMsz1c7QUI3MCU1BQdmNF5ebSKJyW5UQYMj2ZdjdANfvXQROx0OtO
-	 ElmHKquFEil6A2Ez0MKWGV7Ug8Nq0Of2oWn9zoG0WVKjVlADb5fs9BRT6oQw1CiAUX
-	 +ZsRf/ZdQleJafikzds/JZQOzpAJcvkPCdy+gr0s=
+	by mail.kernel.org (Postfix) with ESMTP id 6FFB82082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:43:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="Gj9MopXz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfEPGke (ORCPT
+        id S1726604AbfEPGn1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 02:40:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726674AbfEPGkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 02:40:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02C332082E;
-        Thu, 16 May 2019 06:40:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557988831;
-        bh=lDXJwF8L6Q3G9lM+UuPh8HMotl/xHXPZGZPwBCQSEQg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hNIqYmstZpb+wXit7EojqiyIsSgJEunDeQWaq6Im3GG0QSpy4UF9UchyzUMGcfr75
-         OoURW/fXvIvahUMSzzbIdrMDWY5orpuWEZehhqKrbrDjtBZjBy7w8XdRlpF5/Spays
-         Fmtdqha8XUD4kOzSqoVZhdopv8p0dddBIdtF/elA=
-Date:   Thu, 16 May 2019 08:40:29 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Tobin C. Harding" <tobin@kernel.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] kobject: Clean up allocated memory on failure
-Message-ID: <20190516064029.GA17068@kroah.com>
-References: <20190516000716.24249-1-tobin@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516000716.24249-1-tobin@kernel.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Thu, 16 May 2019 02:43:27 -0400
+Received: from mail-pf1-f169.google.com ([209.85.210.169]:35127 "EHLO
+        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbfEPGn1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 02:43:27 -0400
+Received: by mail-pf1-f169.google.com with SMTP id t87so1313144pfa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 23:43:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=SqLUabMMzxCxSOebL0RIYlE+FsNekjMKv483Qc3eXKM=;
+        b=Gj9MopXzSpqX85oENFLgCbsQfKjA/2mr/v96/x0XAw0Hvk8iHXljsbU6k1UPa6KoNO
+         WpUUifFovIYExm9wJGV4MjhzPN0QSigTkRwcSmnRqbu7Wmrp95PheEVUpAuud2Wz6u+0
+         3JcCajMcAlMUF0NUGU71tAlntbJTe3XI1CKwg9GQIHwYNYpXvNYLAFWG63JDkxX030Lh
+         honZKMzNdGDe6REuxNlGdr6zwSaI436RfSlMSClCWcXdp2u9xCCXVAHRUUqxD/isb94S
+         3ivwctJp1mJY5KiwBTxkNUc+8nauKCHnmHaVY74lpJlX2PVhJJpNWsKs6cHOLFdw9WaB
+         q6Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SqLUabMMzxCxSOebL0RIYlE+FsNekjMKv483Qc3eXKM=;
+        b=bvUJZaQEKvQfQ2FAQAF2ZI/RDCyvHAxeExB5pcv3HqNWv3urT35LtLTFS9BgHM1J39
+         mjOb/0m5SUUYdsXn1zy9ygmDW5w5XBzXMgQ40nqNY+3GGUl3lYsoUDKFd55lDWpAcDBl
+         fD+SbbiyDDXtB8vg1sqoUMZsg06vU1T2XFkaqcd5Sxu/kIoE5bm1h4tJvsWHALeRkXGp
+         rsTcJfpES/80PgdV+yOV50TSUrodd7P1MLc/mnkSEb51dy/G+2QWsf8xCFh0dpSTR8es
+         kp+E/PZ1atv20cLKQBTLYxqiY14Tt/MMg1UGw5FdaO+om7NWPsPTCkEiVjaumlzU4uM/
+         R1Cw==
+X-Gm-Message-State: APjAAAVNUAjN4mdfU71j5fiI8RPHhYq8csF6DDmmYwFisb24VAECc+Rf
+        /z9Dlu2enY6apJ9tPr0LkSFkwA==
+X-Google-Smtp-Source: APXvYqw0OJ+MvOqREfJMhEjQhim2lbFJ/Zb5HXYS1GVYKGGhMwv45V3f+lNiCcI9UVQISNRsYlPgcQ==
+X-Received: by 2002:a62:c4:: with SMTP id 187mr40911403pfa.55.1557989006488;
+        Wed, 15 May 2019 23:43:26 -0700 (PDT)
+Received: from localhost.localdomain (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
+        by smtp.gmail.com with ESMTPSA id w194sm11196050pfd.56.2019.05.15.23.43.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 23:43:25 -0700 (PDT)
+From:   Olof Johansson <olof@lixom.net>
+To:     torvalds@linux-foundation.org
+Cc:     arm@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [GIT PULL 0/4] ARM: SoC contents for 5.2 merge window
+Date:   Wed, 15 May 2019 23:43:00 -0700
+Message-Id: <20190516064304.24057-1-olof@lixom.net>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 10:07:16AM +1000, Tobin C. Harding wrote:
-> Currently kobject_add_varg() calls kobject_set_name_vargs() then returns
-> the return value of kobject_add_internal().  kobject_set_name_vargs()
-> allocates memory for the name string.  When kobject_add_varg() returns
-> an error we do not know if memory was allocated or not.  If we check the
-> return value of kobject_add_internal() instead of returning it directly
-> we can free the allocated memory if kobject_add_internal() fails.  Doing
-> this means that we now know that if kobject_add_varg() fails we do not
-> have to do any clean up, this benefit goes back up the call chain
-> meaning that we now do not need to do any cleanup if kobject_del()
-> fails.  Moving further back (in a theoretical kobject user callchain)
-> this means we now no longer need to call kobject_put() after calling
-> kobject_init_and_add(), we can just call kfree() on the enclosing
-> structure.  This makes the kobject API better follow the principle of
-> least surprise.
-> 
-> Check return value of kobject_add_internal() and free previously
-> allocated memory on failure.
-> 
-> Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-> ---
-> 
-> Hi Greg,
-> 
-> Pretty excited by this one, if this is correct it means that kobject
-> initialisation code, in the error path, can now use either kobject_put()
-> (to trigger the release method) OR kfree().  This means most of the
-> call sites of kobject_init_and_add() will get fixed for free!
-> 
-> I've been wrong before so I'll state here that this is based on the
-> assumption that kobject_init() does nothing that causes leaked memory.
-> This is _not_ what the function docs in kobject.c say but it _is_ what
-> the code seems to say since kobject_init() does nothing except
-> initialise kobject data member values?  Or have I got the dog by the
-> tail?
+Hi Linus,
 
-I think you are correct here.  In looking at the code paths, all should
-be good and safe.
+The usual batch of patches for ARM SoCs. Like always, DT is the dominant
+portion, but there's an unusual amount of driver updates this release.
 
-But, if you use your patch, then you have to call kfree, and you can not
-call kobject_put(), otherwise kfree_const() will be called twice on the
-same pointer, right?  So you will have to audit the kernel and change
-everything again :)
+Main reason for that is that ixp4xx is seeing a bunch of modernization
+work by Linus Walleij, and some of that has included bringing some things
+out to proper driver. Acks have been collected, but are merged through
+our trees to keep things together.
 
-Or, maybe this patch would prevent that:
+Besides that it's a quiet-to-average merge window for us.
 
+Some statistics:
 
-diff --git a/lib/kobject.c b/lib/kobject.c
-index f2ccdbac8ed9..03cdec1d450a 100644
---- a/lib/kobject.c
-+++ b/lib/kobject.c
-@@ -387,7 +387,14 @@ static __printf(3, 0) int kobject_add_varg(struct kobject *kobj,
- 		return retval;
- 	}
- 	kobj->parent = parent;
--	return kobject_add_internal(kobj);
-+
-+	retval = kobject_add_internal(kobj);
-+	if (retval && !is_kernel_rodata((unsigned long)(kobj->name))) {
-+		kfree_const(kobj->name);
-+		kobj->name = NULL;
-+	}
-+
-+	return retval;
- }
- 
- /**
+82 downstream branches
+791 patches
+175 contributors
 
+4 upstream-bound branches (platform, DT, drivers, defconfig)
 
-But that feels like a huge hack to me.  I think, to be safe, we should
-keep the existing lifetime rules, as it mirrors what happens with
-'struct device', and that is what people _should_ be using, not "raw"
-kobjects if at all possible.
+New SoCs:
+ - Intel Agilex (SoCFPGA)
+ - NXP i.MX8MM (variant of i.MX8M)
 
-Yeah, I know filesystems don't do that, my fault, I never thought a
-filesystem would care about sysfs all those years ago :)
+New boards:
+ - Numerous, see DT pull request for full list
+ - Most visible one is probably Nvidia's Jetson Nano
 
-thanks,
-
-greg k-h
+Contributors with 10 or more patches this cycle:
+  54 Maxime Ripard
+  43 Tony Lindgren
+  38 Christina Quast
+  34 Linus Walleij
+  29 Neil Armstrong
+  27 Andrey Smirnov
+  20 Krzysztof Kozlowski
+  18 Thierry Reding
+  17 Amit Kucheria
+  17 Anson Huang
+  13 Dmitry Osipenko
+  12 Douglas Anderson
+  11 Biju Das
+  11 Manivannan Sadhasivam
+  11 Ondrej Jirman
+  10 Fabrizio Castro
