@@ -4,61 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7891C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8271C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93615216FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 877C2216FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558006872;
-	bh=fkeIAf6B3LFqNrSfMbNf5EJe+4kfmM+BmS9hz8rZlb8=;
+	s=default; t=1558006875;
+	bh=ARSnX5PfxluCo5dLGHRAKnhNTvSby6tcAwW2X3WgoCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P8GpBpbBMrxtHCb0ZxxSLSerFNX238u53EJgt06zsnNhxp3b2Q/haIro88lqt1DYe
-	 vS5cUuoMRmy3B0HDwHm1rlkoVEegQUpNx8wDY6YYaD5zCT89pEkY1+gr+1jXaBXEqa
-	 iZ6rZaRVDEry26e/6Hk1YSURj1A2lcmExqEw2g+4=
+	b=Kx+9FrlLvk1XC4CuydqDZhuWbyDMIPMNHRQRMu/E5etzg1bo3outIe351f3UJtykY
+	 WbQDwg/3yBKJtz8HCTNSVdZXPR4K3oSO/g2azDZMb3ImHuaJMLLIHwcVSpQF1et93W
+	 beKaQJJznjxVRvI2vqMB7vlxc4BZyIi/4o46dQj8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727393AbfEPLlL (ORCPT
+        id S1728067AbfEPLlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:41:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49712 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:41:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728003AbfEPLlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:41:08 -0400
+        id S1728027AbfEPLlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:41:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3597F2166E;
-        Thu, 16 May 2019 11:41:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0839F216F4;
+        Thu, 16 May 2019 11:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006866;
-        bh=fkeIAf6B3LFqNrSfMbNf5EJe+4kfmM+BmS9hz8rZlb8=;
+        s=default; t=1558006871;
+        bh=ARSnX5PfxluCo5dLGHRAKnhNTvSby6tcAwW2X3WgoCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mY2T94dAWupC/qZ5CS0CU6WRDrdkL7eVxizPpMNrlJfRrSIezDZZJrwIhJYOG7Tsu
-         g0kIPppQ53Y+VAtlhl4rtWtffe5bn4V+2uLmX599dhgbL4aobLBdgk0xXYrCJ//12D
-         XOBz+0KPlXudCJiw6urZl0tABS4H+F7fVjvOr7wE=
+        b=IozY+mCxoltI1rGqIBOnvlNY9JOWrgjBEPKyRnVuvl8L6GOfz7TMy21b6UCR721bY
+         Xfs3+4PXyL5HCIcyJDTfnl0gmXHZ0024ZVt+VIUD3MX3WByENyAAXITrDkplMH5gfB
+         9T436MHWPsTbvZkXXxoufDe6FT1eEsGNWC6pnqgE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        David Arcari <darcari@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Lendacky Thomas <Thomas.Lendacky@amd.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 25/25] perf/x86/intel: Fix race in intel_pmu_disable_event()
-Date:   Thu, 16 May 2019 07:40:28 -0400
-Message-Id: <20190516114029.8682-25-sashal@kernel.org>
+Cc:     Jeremy Sowden <jeremy@azazel.net>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 03/16] vti4: ipip tunnel deregistration fixes.
+Date:   Thu, 16 May 2019 07:40:54 -0400
+Message-Id: <20190516114107.8963-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190516114029.8682-1-sashal@kernel.org>
-References: <20190516114029.8682-1-sashal@kernel.org>
+In-Reply-To: <20190516114107.8963-1-sashal@kernel.org>
+References: <20190516114107.8963-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -68,122 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+From: Jeremy Sowden <jeremy@azazel.net>
 
-[ Upstream commit 6f55967ad9d9752813e36de6d5fdbd19741adfc7 ]
+[ Upstream commit 5483844c3fc18474de29f5d6733003526e0a9f78 ]
 
-New race in x86_pmu_stop() was introduced by replacing the
-atomic __test_and_clear_bit() of cpuc->active_mask by separate
-test_bit() and __clear_bit() calls in the following commit:
+If tunnel registration failed during module initialization, the module
+would fail to deregister the IPPROTO_COMP protocol and would attempt to
+deregister the tunnel.
 
-  3966c3feca3f ("x86/perf/amd: Remove need to check "running" bit in NMI handler")
+The tunnel was not deregistered during module-exit.
 
-The race causes panic for PEBS events with enabled callchains:
-
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-  ...
-  RIP: 0010:perf_prepare_sample+0x8c/0x530
-  Call Trace:
-   <NMI>
-   perf_event_output_forward+0x2a/0x80
-   __perf_event_overflow+0x51/0xe0
-   handle_pmi_common+0x19e/0x240
-   intel_pmu_handle_irq+0xad/0x170
-   perf_event_nmi_handler+0x2e/0x50
-   nmi_handle+0x69/0x110
-   default_do_nmi+0x3e/0x100
-   do_nmi+0x11a/0x180
-   end_repeat_nmi+0x16/0x1a
-  RIP: 0010:native_write_msr+0x6/0x20
-  ...
-   </NMI>
-   intel_pmu_disable_event+0x98/0xf0
-   x86_pmu_stop+0x6e/0xb0
-   x86_pmu_del+0x46/0x140
-   event_sched_out.isra.97+0x7e/0x160
-  ...
-
-The event is configured to make samples from PEBS drain code,
-but when it's disabled, we'll go through NMI path instead,
-where data->callchain will not get allocated and we'll crash:
-
-          x86_pmu_stop
-            test_bit(hwc->idx, cpuc->active_mask)
-            intel_pmu_disable_event(event)
-            {
-              ...
-              intel_pmu_pebs_disable(event);
-              ...
-
-EVENT OVERFLOW ->  <NMI>
-                     intel_pmu_handle_irq
-                       handle_pmi_common
-   TEST PASSES ->        test_bit(bit, cpuc->active_mask))
-                           perf_event_overflow
-                             perf_prepare_sample
-                             {
-                               ...
-                               if (!(sample_type & __PERF_SAMPLE_CALLCHAIN_EARLY))
-                                     data->callchain = perf_callchain(event, regs);
-
-         CRASH ->              size += data->callchain->nr;
-                             }
-                   </NMI>
-              ...
-              x86_pmu_disable_event(event)
-            }
-
-            __clear_bit(hwc->idx, cpuc->active_mask);
-
-Fixing this by disabling the event itself before setting
-off the PEBS bit.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: David Arcari <darcari@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Lendacky Thomas <Thomas.Lendacky@amd.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Fixes: 3966c3feca3f ("x86/perf/amd: Remove need to check "running" bit in NMI handler")
-Link: http://lkml.kernel.org/r/20190504151556.31031-1-jolsa@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: dd9ee3444014e ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/core.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ net/ipv4/ip_vti.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index a759e59990fbd..09c53bcbd497d 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2074,15 +2074,19 @@ static void intel_pmu_disable_event(struct perf_event *event)
- 	cpuc->intel_ctrl_host_mask &= ~(1ull << hwc->idx);
- 	cpuc->intel_cp_status &= ~(1ull << hwc->idx);
+diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
+index 306603a7f3514..c07065b7e3b0e 100644
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -663,9 +663,9 @@ static int __init vti_init(void)
+ 	return err;
  
--	if (unlikely(event->attr.precise_ip))
--		intel_pmu_pebs_disable(event);
--
- 	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
- 		intel_pmu_disable_fixed(hwc);
- 		return;
- 	}
- 
- 	x86_pmu_disable_event(event);
-+
-+	/*
-+	 * Needs to be called after x86_pmu_disable_event,
-+	 * so we don't trigger the event without PEBS bit set.
-+	 */
-+	if (unlikely(event->attr.precise_ip))
-+		intel_pmu_pebs_disable(event);
- }
- 
- static void intel_pmu_del_event(struct perf_event *event)
+ rtnl_link_failed:
+-	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
+-xfrm_tunnel_failed:
+ 	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
++xfrm_tunnel_failed:
++	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
+ xfrm_proto_comp_failed:
+ 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
+ xfrm_proto_ah_failed:
+@@ -680,6 +680,7 @@ static int __init vti_init(void)
+ static void __exit vti_fini(void)
+ {
+ 	rtnl_link_unregister(&vti_link_ops);
++	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
+ 	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
+ 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
+ 	xfrm4_protocol_deregister(&vti_esp4_protocol, IPPROTO_ESP);
 -- 
 2.20.1
 
