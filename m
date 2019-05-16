@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B822EC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51E8C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7D620848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C3C620881
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558006877;
-	bh=moVbWgE2w3fFMvHhbyPt3OLRK/YI6Tb/Ss0/EN43CQs=;
+	s=default; t=1558006881;
+	bh=IMJiCZPSYS+y4kCm9xDnxJHtTTXzXjnfjEhhpmvOUww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hpSBKtHIHlw27vw1VtYuYNYH2I4crKp0rt1/i4xhtvS085EBjgWrqfxV8ZLQmRP9P
-	 tF2m1bl/l3OZocqagsyU3xkyY4fpNRiWHiYjtAraVIyrjcgWGVy1Mk1iInXjAFo6HP
-	 /rOWTQBsSpcpXiqnHPaPXs5aYOoSj4keXWERwV84=
+	b=gZo5syD7t4gV2lL7670kHBsSFjNLprPBc5ww/xoKCrVZr09fbQ8krDNBxqIrbXO7l
+	 Edueta+YwDWMJ9A/Wl/C7G9BFbFBhL4CtGfOzTrVTLuygxIJd3C1smG/jbDMMVW0ug
+	 NP/RNfTycA4dZcziWPUCUznDH5nX1jBN4ur/BYhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbfEPLlQ (ORCPT
+        id S1727436AbfEPLlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:41:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49896 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:41:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728056AbfEPLlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:41:14 -0400
+        id S1727432AbfEPLlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:41:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35AAF21743;
-        Thu, 16 May 2019 11:41:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F4E0216F4;
+        Thu, 16 May 2019 11:41:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006873;
-        bh=moVbWgE2w3fFMvHhbyPt3OLRK/YI6Tb/Ss0/EN43CQs=;
+        s=default; t=1558006876;
+        bh=IMJiCZPSYS+y4kCm9xDnxJHtTTXzXjnfjEhhpmvOUww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yjsKbE99wqdj4VXQY+b/28z6oD3QX9C+r0HsknulEwphp84c5AcFR0CArxILGPtV1
-         O6DIM6EYJUkXC0pP9+GKTNAhOfdgvlJ4hZYUI9/RDhqIQCGb0UKeCW55pFfgB/FLJ3
-         k6Li4Td19oR0SezWGj3SrsHH2qIYhRgv9EI1KtCs=
+        b=wJbGsCUo50qXQUPbFGkuOzS79HG+LdsGWegXTYznk0vef0yhgMAFxDkXehYppYPvX
+         KaOUcQYMiuhs95G3vxtDb90y4CyRd2rLOzbEQ93bIUac4s0in/1ObJZ3hfgoGWs9a8
+         0j6a87C2GmYlU0tK68KGkFrN7FiYO5H4wL4wM7S8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 05/16] xfrm4: Fix uninitialized memory read in _decode_session4
-Date:   Thu, 16 May 2019 07:40:56 -0400
-Message-Id: <20190516114107.8963-5-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 07/16] securityfs: fix use-after-free on symlink traversal
+Date:   Thu, 16 May 2019 07:40:58 -0400
+Message-Id: <20190516114107.8963-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516114107.8963-1-sashal@kernel.org>
 References: <20190516114107.8963-1-sashal@kernel.org>
@@ -58,115 +58,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Klassert <steffen.klassert@secunet.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 8742dc86d0c7a9628117a989c11f04a9b6b898f3 ]
+[ Upstream commit 46c874419652bbefdfed17420fd6e88d8a31d9ec ]
 
-We currently don't reload pointers pointing into skb header
-after doing pskb_may_pull() in _decode_session4(). So in case
-pskb_may_pull() changed the pointers, we read from random
-memory. Fix this by putting all the needed infos on the
-stack, so that we don't need to access the header pointers
-after doing pskb_may_pull().
+symlink body shouldn't be freed without an RCU delay.  Switch securityfs
+to ->destroy_inode() and use of call_rcu(); free both the inode and symlink
+body in the callback.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/xfrm4_policy.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ security/inode.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/net/ipv4/xfrm4_policy.c b/net/ipv4/xfrm4_policy.c
-index 4b586e7d56370..5952dca98e6b7 100644
---- a/net/ipv4/xfrm4_policy.c
-+++ b/net/ipv4/xfrm4_policy.c
-@@ -111,7 +111,8 @@ static void
- _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
+diff --git a/security/inode.c b/security/inode.c
+index 8dd9ca8848e43..829f15672e01f 100644
+--- a/security/inode.c
++++ b/security/inode.c
+@@ -26,17 +26,22 @@
+ static struct vfsmount *mount;
+ static int mount_count;
+ 
+-static void securityfs_evict_inode(struct inode *inode)
++static void securityfs_i_callback(struct rcu_head *head)
  {
- 	const struct iphdr *iph = ip_hdr(skb);
--	u8 *xprth = skb_network_header(skb) + iph->ihl * 4;
-+	int ihl = iph->ihl;
-+	u8 *xprth = skb_network_header(skb) + ihl * 4;
- 	struct flowi4 *fl4 = &fl->u.ip4;
- 	int oif = 0;
- 
-@@ -122,6 +123,11 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 	fl4->flowi4_mark = skb->mark;
- 	fl4->flowi4_oif = reverse ? skb->skb_iif : oif;
- 
-+	fl4->flowi4_proto = iph->protocol;
-+	fl4->daddr = reverse ? iph->saddr : iph->daddr;
-+	fl4->saddr = reverse ? iph->daddr : iph->saddr;
-+	fl4->flowi4_tos = iph->tos;
+-	truncate_inode_pages_final(&inode->i_data);
+-	clear_inode(inode);
++	struct inode *inode = container_of(head, struct inode, i_rcu);
+ 	if (S_ISLNK(inode->i_mode))
+ 		kfree(inode->i_link);
++	free_inode_nonrcu(inode);
++}
 +
- 	if (!ip_is_fragment(iph)) {
- 		switch (iph->protocol) {
- 		case IPPROTO_UDP:
-@@ -133,7 +139,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
- 				__be16 *ports;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				ports = (__be16 *)xprth;
- 
- 				fl4->fl4_sport = ports[!!reverse];
-@@ -146,7 +152,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			    pskb_may_pull(skb, xprth + 2 - skb->data)) {
- 				u8 *icmp;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				icmp = xprth;
- 
- 				fl4->fl4_icmp_type = icmp[0];
-@@ -159,7 +165,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
- 				__be32 *ehdr;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				ehdr = (__be32 *)xprth;
- 
- 				fl4->fl4_ipsec_spi = ehdr[0];
-@@ -171,7 +177,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			    pskb_may_pull(skb, xprth + 8 - skb->data)) {
- 				__be32 *ah_hdr;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				ah_hdr = (__be32 *)xprth;
- 
- 				fl4->fl4_ipsec_spi = ah_hdr[1];
-@@ -183,7 +189,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			    pskb_may_pull(skb, xprth + 4 - skb->data)) {
- 				__be16 *ipcomp_hdr;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				ipcomp_hdr = (__be16 *)xprth;
- 
- 				fl4->fl4_ipsec_spi = htonl(ntohs(ipcomp_hdr[1]));
-@@ -196,7 +202,7 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 				__be16 *greflags;
- 				__be32 *gre_hdr;
- 
--				xprth = skb_network_header(skb) + iph->ihl * 4;
-+				xprth = skb_network_header(skb) + ihl * 4;
- 				greflags = (__be16 *)xprth;
- 				gre_hdr = (__be32 *)xprth;
- 
-@@ -213,10 +219,6 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
- 			break;
- 		}
- 	}
--	fl4->flowi4_proto = iph->protocol;
--	fl4->daddr = reverse ? iph->saddr : iph->daddr;
--	fl4->saddr = reverse ? iph->daddr : iph->saddr;
--	fl4->flowi4_tos = iph->tos;
++static void securityfs_destroy_inode(struct inode *inode)
++{
++	call_rcu(&inode->i_rcu, securityfs_i_callback);
  }
  
- static void xfrm4_update_pmtu(struct dst_entry *dst, struct sock *sk,
+ static const struct super_operations securityfs_super_operations = {
+ 	.statfs		= simple_statfs,
+-	.evict_inode	= securityfs_evict_inode,
++	.destroy_inode	= securityfs_destroy_inode,
+ };
+ 
+ static int fill_super(struct super_block *sb, void *data, int silent)
 -- 
 2.20.1
 
