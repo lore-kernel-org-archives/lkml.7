@@ -2,72 +2,70 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FDDC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEDCC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9690F20833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 094D520833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfEPMRx (ORCPT
+        id S1727294AbfEPMS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 08:17:53 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:54496 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726513AbfEPMRw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 08:17:52 -0400
-Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4GCHI2r077140;
-        Thu, 16 May 2019 21:17:18 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp);
- Thu, 16 May 2019 21:17:18 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav305.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4GCHBWG076893
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Thu, 16 May 2019 21:17:18 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: INFO: task hung in __get_super
-To:     Jan Kara <jack@suse.cz>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        syzbot <syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com>,
-        dvyukov@google.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        linux-block@vger.kernel.org
-References: <0000000000002cd22305879b22c4@google.com>
- <201905150102.x4F12b6o009249@www262.sakura.ne.jp>
- <20190515102133.GA16193@quack2.suse.cz>
- <024bba2a-4d2f-1861-bfd9-819511bdf6eb@i-love.sakura.ne.jp>
- <20190515130730.GA9526@quack2.suse.cz>
- <20190516114817.GD13274@quack2.suse.cz>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <ca1e5916-73ee-6fc4-1d78-428691f7fc64@i-love.sakura.ne.jp>
-Date:   Thu, 16 May 2019 21:17:14 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 16 May 2019 08:18:29 -0400
+Received: from skyboo.net ([94.40.87.198]:35706 "EHLO skyboo.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726513AbfEPMS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 08:18:28 -0400
+X-Greylist: delayed 1014 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 May 2019 08:18:27 EDT
+Received: from manio by skyboo.net with local (Exim 4.91)
+        (envelope-from <manio@skyboo.net>)
+        id 1hRF4k-0005wx-UO; Thu, 16 May 2019 14:01:31 +0200
+From:   Mariusz Bialonczyk <manio@skyboo.net>
+To:     linux-kernel@vger.kernel.org, greg@kroah.com
+Cc:     Mariusz Bialonczyk <manio@skyboo.net>,
+        Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+Date:   Thu, 16 May 2019 14:01:16 +0200
+Message-Id: <20190516120116.22262-1-manio@skyboo.net>
+X-Mailer: git-send-email 2.19.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <20190516114817.GD13274@quack2.suse.cz>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, greg@kroah.com, manio@skyboo.net, jeff.dagenais@gmail.com
+X-SA-Exim-Mail-From: manio@skyboo.net
+Subject: [PATCH] w1: ds2408: Fix typo after 49695ac46861 (reset on output_write retry with readback)
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on skyboo.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/05/16 20:48, Jan Kara wrote:
-> OK, so non-racy fix was a bit more involved and I've ended up just
-> upgrading the file reference to an exclusive one in loop_set_fd() instead
-> of trying to hand-craft some locking solution. The result is attached and
-> it passes blktests.
+Fix a typo in commit:
+49695ac46861 w1: ds2408: reset on output_write retry with readback
 
-blkdev_get() has corresponding blkdev_put().
-bdgrab() does not have corresponding bdput() ?
+Reported-by: Phil Elwell <phil@raspberrypi.org>
+Cc: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
+Signed-off-by: Mariusz Bialonczyk <manio@skyboo.net>
+---
+ drivers/w1/slaves/w1_ds2408.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/w1/slaves/w1_ds2408.c b/drivers/w1/slaves/w1_ds2408.c
+index 92e8f0755b9a..edf0bc98012c 100644
+--- a/drivers/w1/slaves/w1_ds2408.c
++++ b/drivers/w1/slaves/w1_ds2408.c
+@@ -138,7 +138,7 @@ static ssize_t status_control_read(struct file *filp, struct kobject *kobj,
+ 		W1_F29_REG_CONTROL_AND_STATUS, buf);
+ }
+ 
+-#ifdef fCONFIG_W1_SLAVE_DS2408_READBACK
++#ifdef CONFIG_W1_SLAVE_DS2408_READBACK
+ static bool optional_read_back_valid(struct w1_slave *sl, u8 expected)
+ {
+ 	u8 w1_buf[3];
+-- 
+2.19.0.rc1
+
