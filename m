@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C819EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C01C2C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9357F20833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DE5F20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558007163;
-	bh=QlOB0rWiUQgAkcCtgzVd9Vl2MwcQddiqWv87mwq8LoM=;
+	s=default; t=1558007172;
+	bh=v/HqS3IgvVJDebTuRTMYuP8V01kl/l3JAlMRASQwuIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nqVO0QX14ZJat7RmaAcCMhQJrrjXQfK/yKZgzp55cPw1SwChEdxT4LqpsGwSSlVeU
-	 GNsLDa+Hu/3VUxtfAAnj2khl8z+QerfVSDe/vQUBFN4AAnNxvNrW/cgOoTTJGXoZLQ
-	 JWWZvqgKRU/jE4nSLaGlVGMTuktoijQiqKAT+WQQ=
+	b=Bt+kxguSRW4rLaAtsSLYgxX/y1KuDmerip1yhWnj2YzyJvpm3HBh2Hjxv9GDaV7PL
+	 nJ84KvfnA0CC1J02yOgE6dx1ZzmMvZaTfRr8sKWcD9bUsUEGzZzTzYC3luTrES5s+O
+	 BFN2wgX4SpnDi/lJwc+iyChknBTzzknyg2iga7go=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728564AbfEPLqC (ORCPT
+        id S1728583AbfEPLqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:46:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49164 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:46:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727866AbfEPLkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:40:46 -0400
+        id S1727828AbfEPLkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:40:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D273F2089E;
-        Thu, 16 May 2019 11:40:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA99520881;
+        Thu, 16 May 2019 11:40:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006845;
-        bh=QlOB0rWiUQgAkcCtgzVd9Vl2MwcQddiqWv87mwq8LoM=;
+        s=default; t=1558006844;
+        bh=v/HqS3IgvVJDebTuRTMYuP8V01kl/l3JAlMRASQwuIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QsQcwdMcABbJmfHvfdU0S0fOAPXoaq/Xk6ybr+8fc7HRqIDwnwoHEKZb93FIYxca9
-         K8ir+SbdKtm9izLdcg4RGghOnuqfFK9UuvCyzdoARyzfOxTprl+3lXMO6Oob7sq2FD
-         xMFnYaMjvZCRpnzCSmWAigOsqXplB+jtbvUFJLvU=
+        b=u4yFKws3eeQI8SCcEbGdGgVF4igY6sVNguDUq0gSAa2HrSC2Caed/Wjz/NG9Kiedu
+         QeGYGmy1A/mBLSe/rhXFQ8WDnaETurheEwCVUp5UyUQIHnYMpvJATsn20kN22kUanz
+         ItH6nRHu3rI+nNbAAchHZIzVLaLz2PrV6UwfnRfo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bhagavathi Perumal S <bperumal@codeaurora.org>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 14/25] mac80211: Fix kernel panic due to use of txq after free
-Date:   Thu, 16 May 2019 07:40:17 -0400
-Message-Id: <20190516114029.8682-14-sashal@kernel.org>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 13/25] x86: kvm: hyper-v: deal with buggy TLB flush requests from WS2012
+Date:   Thu, 16 May 2019 07:40:16 -0400
+Message-Id: <20190516114029.8682-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516114029.8682-1-sashal@kernel.org>
 References: <20190516114029.8682-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,41 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bhagavathi Perumal S <bperumal@codeaurora.org>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[ Upstream commit f1267cf3c01b12e0f843fb6a7450a7f0b2efab8a ]
+[ Upstream commit da66761c2d93a46270d69001abb5692717495a68 ]
 
-The txq of vif is added to active_txqs list for ATF TXQ scheduling
-in the function ieee80211_queue_skb(), but it was not properly removed
-before freeing the txq object. It was causing use after free of the txq
-objects from the active_txqs list, result was kernel panic
-due to invalid memory access.
+It was reported that with some special Multi Processor Group configuration,
+e.g:
+ bcdedit.exe /set groupsize 1
+ bcdedit.exe /set maxgroup on
+ bcdedit.exe /set groupaware on
+for a 16-vCPU guest WS2012 shows BSOD on boot when PV TLB flush mechanism
+is in use.
 
-Fix kernel invalid memory access by properly removing txq object
-from active_txqs list before free the object.
+Tracing kvm_hv_flush_tlb immediately reveals the issue:
 
-Signed-off-by: Bhagavathi Perumal S <bperumal@codeaurora.org>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+ kvm_hv_flush_tlb: processor_mask 0x0 address_space 0x0 flags 0x2
+
+The only flag set in this request is HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES,
+however, processor_mask is 0x0 and no HV_FLUSH_ALL_PROCESSORS is specified.
+We don't flush anything and apparently it's not what Windows expects.
+
+TLFS doesn't say anything about such requests and newer Windows versions
+seem to be unaffected. This all feels like a WS2012 bug, which is, however,
+easy to workaround in KVM: let's flush everything when we see an empty
+flush request, over-flushing doesn't hurt.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/iface.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kvm/hyperv.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/net/mac80211/iface.c b/net/mac80211/iface.c
-index 3a0171a65db32..152d4365f9616 100644
---- a/net/mac80211/iface.c
-+++ b/net/mac80211/iface.c
-@@ -1910,6 +1910,9 @@ void ieee80211_if_remove(struct ieee80211_sub_if_data *sdata)
- 	list_del_rcu(&sdata->list);
- 	mutex_unlock(&sdata->local->iflist_mtx);
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 01d209ab5481b..229d996051653 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -1291,7 +1291,16 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *current_vcpu, u64 ingpa,
+ 				       flush.address_space, flush.flags);
  
-+	if (sdata->vif.txq)
-+		ieee80211_txq_purge(sdata->local, to_txq_info(sdata->vif.txq));
+ 		sparse_banks[0] = flush.processor_mask;
+-		all_cpus = flush.flags & HV_FLUSH_ALL_PROCESSORS;
 +
- 	synchronize_rcu();
- 
- 	if (sdata->dev) {
++		/*
++		 * Work around possible WS2012 bug: it sends hypercalls
++		 * with processor_mask = 0x0 and HV_FLUSH_ALL_PROCESSORS clear,
++		 * while also expecting us to flush something and crashing if
++		 * we don't. Let's treat processor_mask == 0 same as
++		 * HV_FLUSH_ALL_PROCESSORS.
++		 */
++		all_cpus = (flush.flags & HV_FLUSH_ALL_PROCESSORS) ||
++			flush.processor_mask == 0;
+ 	} else {
+ 		if (unlikely(kvm_read_guest(kvm, ingpa, &flush_ex,
+ 					    sizeof(flush_ex))))
 -- 
 2.20.1
 
