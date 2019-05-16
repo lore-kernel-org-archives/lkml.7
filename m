@@ -2,139 +2,151 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 852E6C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B84C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5130E206A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:31:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="BQLpv+w5"
+	by mail.kernel.org (Postfix) with ESMTP id 12166206A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:32:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfEPJbS (ORCPT
+        id S1726977AbfEPJc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 05:31:18 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38327 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbfEPJbR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 05:31:17 -0400
-Received: by mail-lj1-f193.google.com with SMTP id 14so2453889ljj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 02:31:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kinvolk.io; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=scP5pJngsU9KJ/PvOc7PkGn3ctf+6jypjet7NqrKqmA=;
-        b=BQLpv+w5ngjqKJjwCym2ZWvuhIyTXrQXe/cH0kkyhS3AsX/8P4b2Uup0CJ63BRhZw6
-         0f6scy9IOKguNgia+DARy/Pgsf9ihVfdo+x2VptKljZpgjcpQh2K6bqp5DpPLMTCR1Ms
-         G/Ir19EM1+91HaPREMy7MEtETZbC78Ge1OCtU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=scP5pJngsU9KJ/PvOc7PkGn3ctf+6jypjet7NqrKqmA=;
-        b=bPa+AqhTIfWtNidjxjz2G6x5crJnlKicPA66PdMXTc7FiCErXrUNI+4PhODdG9nccN
-         7fXMZydNiphM8nyTQqwRJFqcFiB0Mf9KXOuQ60X0B5Cc9PNeUWiottoupNfbO5bowIFz
-         ZDpNRk2kVycaI77+hbnm9TaIZAJD70Yutc7JwRNYPYkLFBGnFkMHbqhzI2NLqT/1R5jG
-         CzgdwsDeLuFD7U0nZw/0gHRdoRplJgOcaTmUb0n3f2OLZNm9EUEu09euzCjMyLCi7QAR
-         VyRX6gntEQdrZkMPlsHXdNYa1Q8K2LMBlqL7Vr38mmJrZiTIzshjR90Jx/olJjLLBXJn
-         a0oQ==
-X-Gm-Message-State: APjAAAUDewxE+nGdgiVnF9mLqHjdx9STD2YJe9y8SnXjOHdMTUQJjyOb
-        Js5IbVGZzFZg2Aqvv2YujP7jhsdqEthZodNWhidkoQ==
-X-Google-Smtp-Source: APXvYqwNaOEDdnyE4kovKiBd0lYy36SnZeTUeTmEcc48z/VV0dfPM42qlRB+DSHJU6bby/xttsO3fxo4hMv92OjcJ48=
-X-Received: by 2002:a2e:74f:: with SMTP id i15mr22844265ljd.156.1557999075116;
- Thu, 16 May 2019 02:31:15 -0700 (PDT)
+        Thu, 16 May 2019 05:32:27 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:48868 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726383AbfEPJc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 05:32:26 -0400
+Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 15CE6A6871E7863AB5C8;
+        Thu, 16 May 2019 17:32:24 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 May 2019 17:32:23 +0800
+Received: from szvp000201624.huawei.com (10.120.216.130) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Thu, 16 May 2019 17:32:23 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH v2] f2fs: fix to do sanity check on segment bitmap of LFS curseg
+Date:   Thu, 16 May 2019 17:32:13 +0800
+Message-ID: <20190516093213.72645-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-References: <20190515134731.12611-1-krzesimir@kinvolk.io> <20190515134731.12611-4-krzesimir@kinvolk.io>
- <20190515145037.6918f626@cakuba.netronome.com>
-In-Reply-To: <20190515145037.6918f626@cakuba.netronome.com>
-From:   Krzesimir Nowak <krzesimir@kinvolk.io>
-Date:   Thu, 16 May 2019 11:31:04 +0200
-Message-ID: <CAGGp+cHqJZFfYt9VUAuQ7SpCZZ9ijoreKVBumc+wnGfw7pAXTA@mail.gmail.com>
-Subject: Re: [PATCH bpf v1 3/3] selftests/bpf: Avoid a clobbering of errno
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     bpf@vger.kernel.org,
-        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>,
-        "Alban Crequy (Kinvolk)" <alban@kinvolk.io>,
-        Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrey Ignatov <rdna@fb.com>,
-        Jiong Wang <jiong.wang@netronome.com>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-ClientProxiedBy: dggeme711-chm.china.huawei.com (10.1.199.107) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 11:51 PM Jakub Kicinski
-<jakub.kicinski@netronome.com> wrote:
->
-> On Wed, 15 May 2019 15:47:28 +0200, Krzesimir Nowak wrote:
-> > Save errno right after bpf_prog_test_run returns, so we later check
-> > the error code actually set by bpf_prog_test_run, not by some libcap
-> > function.
-> >
-> > Cc: Jakub Kicinski <jakub.kicinski@netronome.com>
-> > Fixes: 5a8d5209ac022 ("selftests: bpf: add trivial JSET tests")
->
-> This commit (of mine) just moved this code into a helper, the bug is
-> older:
->
-> Fixes: 832c6f2c29ec ("bpf: test make sure to run unpriv test cases in tes=
-t_verifier")
+As Jungyeon Reported in bugzilla:
 
-Oops, ok. Will fix it. Thanks.
+https://bugzilla.kernel.org/show_bug.cgi?id=203233
 
->
-> > Signed-off-by: Krzesimir Nowak <krzesimir@kinvolk.io>
-> > ---
-> >  tools/testing/selftests/bpf/test_verifier.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/testin=
-g/selftests/bpf/test_verifier.c
-> > index bf0da03f593b..514e17246396 100644
-> > --- a/tools/testing/selftests/bpf/test_verifier.c
-> > +++ b/tools/testing/selftests/bpf/test_verifier.c
-> > @@ -818,15 +818,17 @@ static int do_prog_test_run(int fd_prog, bool unp=
-riv, uint32_t expected_val,
-> >       __u32 size_tmp =3D sizeof(tmp);
-> >       uint32_t retval;
-> >       int err;
-> > +     int saved_errno;
-> >
-> >       if (unpriv)
-> >               set_admin(true);
-> >       err =3D bpf_prog_test_run(fd_prog, 1, data, size_data,
-> >                               tmp, &size_tmp, &retval, NULL);
-> > +     saved_errno =3D errno;
-> >       if (unpriv)
-> >               set_admin(false);
-> >       if (err) {
-> > -             switch (errno) {
-> > +             switch (saved_errno) {
-> >               case 524/*ENOTSUPP*/:
-> >                       printf("Did not run the program (not supported) "=
-);
-> >                       return 0;
->
+- Reproduces
+gcc poc_13.c
+./run.sh f2fs
 
+- Kernel messages
+ F2FS-fs (sdb): Bitmap was wrongly set, blk:4608
+ kernel BUG at fs/f2fs/segment.c:2133!
+ RIP: 0010:update_sit_entry+0x35d/0x3e0
+ Call Trace:
+  f2fs_allocate_data_block+0x16c/0x5a0
+  do_write_page+0x57/0x100
+  f2fs_do_write_node_page+0x33/0xa0
+  __write_node_page+0x270/0x4e0
+  f2fs_sync_node_pages+0x5df/0x670
+  f2fs_write_checkpoint+0x364/0x13a0
+  f2fs_sync_fs+0xa3/0x130
+  f2fs_do_sync_file+0x1a6/0x810
+  do_fsync+0x33/0x60
+  __x64_sys_fsync+0xb/0x10
+  do_syscall_64+0x43/0x110
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
---=20
-Kinvolk GmbH | Adalbertstr.6a, 10999 Berlin | tel: +491755589364
-Gesch=C3=A4ftsf=C3=BChrer/Directors: Alban Crequy, Chris K=C3=BChl, Iago L=
-=C3=B3pez Galeiras
-Registergericht/Court of registration: Amtsgericht Charlottenburg
-Registernummer/Registration number: HRB 171414 B
-Ust-ID-Nummer/VAT ID number: DE302207000
+The testcase fails because that, in fuzzed image, current segment was
+allocated with LFS type, its .next_blkoff should point to an unused
+block address, but actually, its bitmap shows it's not. So during
+allocation, f2fs crash when setting bitmap.
+
+Introducing sanity_check_curseg() to check such inconsistence of
+current in-used segment.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+v2:
+- check .next_blkoff for SSR curseg.
+ fs/f2fs/segment.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 8dee063c833f..b5f21909356f 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -4232,6 +4232,41 @@ static int build_dirty_segmap(struct f2fs_sb_info *sbi)
+ 	return init_victim_secmap(sbi);
+ }
+ 
++int sanity_check_curseg(struct f2fs_sb_info *sbi)
++{
++	int i;
++
++	/*
++	 * In LFS/SSR curseg, .next_blkoff should point to an unused blkaddr;
++	 * In LFS curseg, all blkaddr after .next_blkoff should be unused.
++	 */
++	for (i = 0; i < NO_CHECK_TYPE; i++) {
++		struct curseg_info *curseg = CURSEG_I(sbi, i);
++		struct seg_entry *se = get_seg_entry(sbi, curseg->segno);
++		unsigned int blkofs = curseg->next_blkoff;
++
++		if (f2fs_test_bit(blkofs, se->cur_valid_map))
++			goto out;
++
++		if (curseg->alloc_type == SSR)
++			continue;
++
++		for (blkofs += 1; blkofs < sbi->blocks_per_seg; blkofs++) {
++			if (!f2fs_test_bit(blkofs, se->cur_valid_map))
++				continue;
++out:
++			f2fs_msg(sbi->sb, KERN_ERR,
++				"Current segment's next free block offset is "
++				"inconsistent with bitmap, logtype:%u, "
++				"segno:%u, type:%u, next_blkoff:%u, blkofs:%u",
++				i, curseg->segno, curseg->alloc_type,
++				curseg->next_blkoff, blkofs);
++			return -EINVAL;
++		}
++	}
++	return 0;
++}
++
+ /*
+  * Update min, max modified time for cost-benefit GC algorithm
+  */
+@@ -4327,6 +4362,10 @@ int f2fs_build_segment_manager(struct f2fs_sb_info *sbi)
+ 	if (err)
+ 		return err;
+ 
++	err = sanity_check_curseg(sbi);
++	if (err)
++		return err;
++
+ 	init_min_max_mtime(sbi);
+ 	return 0;
+ }
+-- 
+2.18.0.rc1
+
