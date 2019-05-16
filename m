@@ -2,170 +2,148 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C58F1C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1723C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989BB20848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:10:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8073120848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:10:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Jjy9nF9r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfEPHKY (ORCPT
+        id S1726767AbfEPHKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 03:10:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42656 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726319AbfEPHKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 03:10:24 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 740DDC004F44;
-        Thu, 16 May 2019 07:10:22 +0000 (UTC)
-Received: from [10.36.117.24] (ovpn-117-24.ams2.redhat.com [10.36.117.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 41EE59894;
-        Thu, 16 May 2019 07:10:13 +0000 (UTC)
-Subject: Re: [v5 0/3] "Hotremove" persistent memory
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        "tiwai@suse.de" <tiwai@suse.de>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "bp@suse.de" <bp@suse.de>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "jglisse@redhat.com" <jglisse@redhat.com>,
-        "zwisler@kernel.org" <zwisler@kernel.org>,
-        "mhocko@suse.com" <mhocko@suse.com>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        "Wu, Fengguang" <fengguang.wu@intel.com>,
-        "baiyaowei@cmss.chinamobile.com" <baiyaowei@cmss.chinamobile.com>
-References: <20190502184337.20538-1-pasha.tatashin@soleen.com>
- <76dfe7943f2a0ceaca73f5fd23e944dfdc0309d1.camel@intel.com>
- <CA+CK2bCKcJjXo7BGAVxvbQNYQFSDVLH5aB=S9yTmZWEfexOvtg@mail.gmail.com>
- <CAPcyv4jj557QNNwyQ7ez+=PnURsnXk9cGZ11Mmihmtem2bJ-3A@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <9add7fd4-6d6e-fa80-08db-7cffc9ae0b75@redhat.com>
-Date:   Thu, 16 May 2019 09:10:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 16 May 2019 03:10:55 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36221 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726319AbfEPHKy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 03:10:54 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x4G7ALDE710917
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Thu, 16 May 2019 00:10:21 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x4G7ALDE710917
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1557990622;
+        bh=OCazXXhgIvRMO9W3VarIQPHp9/HIQeqHqQ7g85rqSh8=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=Jjy9nF9rFhqWeggEUz0i1W5cv9qJT/PyU0k8aHDtfYuhrTSEBJc30YtVl6MksfgFX
+         wtS8UxaiqYROAXpbKc/F516js3eXPJgYGgNOYkyuWF9fzzxDugIsjBHUfuc37EAt1+
+         K301UP9ysHTKYQtCmjqAlzjp1CCU+B/wqj3RRCkKOjlAwNzZVs+d0+l3Fn6vSn5yfS
+         VIBYf4Qxs/PexbrhJgUPJYMkDU2EgSFd2+7JhnnfAru3FHmWONVY700bzslUVQTTxu
+         5YopGvgZmd3o187eu8xAlMARUD7HH7jH20z7Ew+K1LbVasgUO8Z+rzBICnBFr6yN4H
+         VAAhcuRf6VtaA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x4G7AL0W710912;
+        Thu, 16 May 2019 00:10:21 -0700
+Date:   Thu, 16 May 2019 00:10:21 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Andy Lutomirski <tipbot@zytor.com>
+Message-ID: <tip-88640e1dcd089879530a49a8d212d1814678dfe7@git.kernel.org>
+Cc:     tglx@linutronix.de, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, frederic@kernel.org, bp@suse.de,
+        peterz@infradead.org, torvalds@linux-foundation.org,
+        mingo@kernel.org, jcm@redhat.com, hpa@zytor.com, luto@kernel.org
+Reply-To: linux-kernel@vger.kernel.org, tglx@linutronix.de,
+          gregkh@linuxfoundation.org, peterz@infradead.org, bp@suse.de,
+          frederic@kernel.org, mingo@kernel.org, jcm@redhat.com,
+          torvalds@linux-foundation.org, hpa@zytor.com, luto@kernel.org
+In-Reply-To: <ac97612445c0a44ee10374f6ea79c222fe22a5c4.1557865329.git.luto@kernel.org>
+References: <ac97612445c0a44ee10374f6ea79c222fe22a5c4.1557865329.git.luto@kernel.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/speculation/mds: Revert CPU buffer clear on
+ double fault exit
+Git-Commit-ID: 88640e1dcd089879530a49a8d212d1814678dfe7
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4jj557QNNwyQ7ez+=PnURsnXk9cGZ11Mmihmtem2bJ-3A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 16 May 2019 07:10:23 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.05.19 02:42, Dan Williams wrote:
-> On Wed, May 15, 2019 at 11:12 AM Pavel Tatashin
-> <pasha.tatashin@soleen.com> wrote:
->>
->>> Hi Pavel,
->>>
->>> I am working on adding this sort of a workflow into a new daxctl command
->>> (daxctl-reconfigure-device)- this will allow changing the 'mode' of a
->>> dax device to kmem, online the resulting memory, and with your patches,
->>> also attempt to offline the memory, and change back to device-dax.
->>>
->>> In running with these patches, and testing the offlining part, I ran
->>> into the following lockdep below.
->>>
->>> This is with just these three patches on top of -rc7.
->>>
->>>
->>> [  +0.004886] ======================================================
->>> [  +0.001576] WARNING: possible circular locking dependency detected
->>> [  +0.001506] 5.1.0-rc7+ #13 Tainted: G           O
->>> [  +0.000929] ------------------------------------------------------
->>> [  +0.000708] daxctl/22950 is trying to acquire lock:
->>> [  +0.000548] 00000000f4d397f7 (kn->count#424){++++}, at: kernfs_remove_by_name_ns+0x40/0x80
->>> [  +0.000922]
->>>               but task is already holding lock:
->>> [  +0.000657] 000000002aa52a9f (mem_sysfs_mutex){+.+.}, at: unregister_memory_section+0x22/0xa0
->>
->> I have studied this issue, and now have a clear understanding why it
->> happens, I am not yet sure how to fix it, so suggestions are welcomed
->> :)
-> 
-> I would think that ACPI hotplug would have a similar problem, but it does this:
-> 
->                 acpi_unbind_memory_blocks(info);
->                 __remove_memory(nid, info->start_addr, info->length);
-> 
-> I wonder if that ordering prevents going too deep into the
-> device_unregister() call stack that you highlighted below.
-> 
+Commit-ID:  88640e1dcd089879530a49a8d212d1814678dfe7
+Gitweb:     https://git.kernel.org/tip/88640e1dcd089879530a49a8d212d1814678dfe7
+Author:     Andy Lutomirski <luto@kernel.org>
+AuthorDate: Tue, 14 May 2019 13:24:39 -0700
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Thu, 16 May 2019 09:05:11 +0200
 
-If that doesn't help, after we have
+x86/speculation/mds: Revert CPU buffer clear on double fault exit
 
-[PATCH v2 0/8] mm/memory_hotplug: Factor out memory block device handling
+The double fault ESPFIX path doesn't return to user mode at all --
+it returns back to the kernel by simulating a #GP fault.
+prepare_exit_to_usermode() will run on the way out of
+general_protection before running user code.
 
-we could probably pull the memory device removal phase out from the
-mem_hotplug_lock protection and let it be protected by the
-device_hotplug_lock only. Might require some more work, though.
+Signed-off-by: Andy Lutomirski <luto@kernel.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Fixes: 04dcbdb80578 ("x86/speculation/mds: Clear CPU buffers on exit to user")
+Link: http://lkml.kernel.org/r/ac97612445c0a44ee10374f6ea79c222fe22a5c4.1557865329.git.luto@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ Documentation/x86/mds.rst | 7 -------
+ arch/x86/kernel/traps.c   | 8 --------
+ 2 files changed, 15 deletions(-)
 
--- 
-
-Thanks,
-
-David / dhildenb
+diff --git a/Documentation/x86/mds.rst b/Documentation/x86/mds.rst
+index 534e9baa4e1d..0dc812bb9249 100644
+--- a/Documentation/x86/mds.rst
++++ b/Documentation/x86/mds.rst
+@@ -158,13 +158,6 @@ Mitigation points
+      mitigated on the return from do_nmi() to provide almost complete
+      coverage.
+ 
+-   - Double fault (#DF):
+-
+-     A double fault is usually fatal, but the ESPFIX workaround, which can
+-     be triggered from user space through modify_ldt(2) is a recoverable
+-     double fault. #DF uses the paranoid exit path, so explicit mitigation
+-     in the double fault handler is required.
+-
+    - Machine Check Exception (#MC):
+ 
+      Another corner case is a #MC which hits between the CPU buffer clear
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 7de466eb960b..8b6d03e55d2f 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -58,7 +58,6 @@
+ #include <asm/alternative.h>
+ #include <asm/fpu/xstate.h>
+ #include <asm/trace/mpx.h>
+-#include <asm/nospec-branch.h>
+ #include <asm/mpx.h>
+ #include <asm/vm86.h>
+ #include <asm/umip.h>
+@@ -368,13 +367,6 @@ dotraplinkage void do_double_fault(struct pt_regs *regs, long error_code)
+ 		regs->ip = (unsigned long)general_protection;
+ 		regs->sp = (unsigned long)&gpregs->orig_ax;
+ 
+-		/*
+-		 * This situation can be triggered by userspace via
+-		 * modify_ldt(2) and the return does not take the regular
+-		 * user space exit, so a CPU buffer clear is required when
+-		 * MDS mitigation is enabled.
+-		 */
+-		mds_user_clear_cpu_buffers();
+ 		return;
+ 	}
+ #endif
