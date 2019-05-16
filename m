@@ -2,96 +2,118 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 379FAC04E87
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2E1C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 060A02087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:21:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557987688;
-	bh=HlrV4ycJYaKgxVRVxbbwrsz5dVU1yzfML1x5QQyuh+c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o8FnfPrxtxqdzaYSXKKq116vZhhRqFwi+QrSTASnF+K/283F7FJYrbJzyNFDg7EYa
-	 0BivqCakMhb96IIdA5wXfDUR7UIm1oqLRMQDTJH5znpiGxe2sMQgQx8IOnsYPX871d
-	 thbLoQ4enU5AJTOXdXjYpVnaPfn61ibASHke7HW4=
+	by mail.kernel.org (Postfix) with ESMTP id E3B4120848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:26:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u4Bs2ZR9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfEPGV1 (ORCPT
+        id S1726598AbfEPG0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 02:21:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59840 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726296AbfEPGV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 02:21:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 850ED20862;
-        Thu, 16 May 2019 06:21:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557987686;
-        bh=HlrV4ycJYaKgxVRVxbbwrsz5dVU1yzfML1x5QQyuh+c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Gcmvs1aBFVSlCd8V7iMXbHiZO9pHYXCqXvtXtcoFFCR4p0mPIjNOO1ZGckFj8WGeN
-         AYyTIc1Oz+Yb4DqLidTfS/4D3EjuajI1Iygiagw92n7rPYLg/ue9S9sBSwPE/x9QHg
-         m4Fhd7Rc56Fa4Pa5JkCv2vzL4rWHhenDtIf4Pgtw=
-Date:   Thu, 16 May 2019 08:21:23 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 5.1 00/46] 5.1.3-stable review
-Message-ID: <20190516062123.GB16818@kroah.com>
-References: <20190515090616.670410738@linuxfoundation.org>
- <CA+G9fYuYYDpNTv9B5Y0uc1hAWfjv08EoUMhLFdOwVr6FQQC6Rw@mail.gmail.com>
+        Thu, 16 May 2019 02:26:31 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:32946 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726221AbfEPG0a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 02:26:30 -0400
+Received: by mail-lj1-f195.google.com with SMTP id w1so2005410ljw.0;
+        Wed, 15 May 2019 23:26:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=wopevyOfrVcNgrs2OlRoJkSg1GME6xrc5gzsawzKoi4=;
+        b=u4Bs2ZR9I5NiC3tUkHwro0NaNYQTer2meRxQ1f7i3QntTO6Uxe3PIsdl0hPJq7/tvI
+         M4B9EalKq9eNCu7yK11e4OMIUCijrug2sTK9bWnm8qOF/eCn5OhtdHlsAMFOwW1ALlSO
+         vy3GmdKhcLgEUeOCutt1snzGpRtLBTlvCCh+ERJkgFyanEBzuWG0auDZiJH+YlcvDlwq
+         GOE7+0VY4aJI1hBAApc60LM33uCYXFd5Qj3zvkaT86rgZqXLyoUxqdioV6hO+vZGn4mq
+         WrlCcXJa1Z7O/yDs4zOvrqJlQfMpfNhTHv6Wk1Qnm2xJmTNOtUrlBa9PX6u4x74aA0KF
+         dlfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=wopevyOfrVcNgrs2OlRoJkSg1GME6xrc5gzsawzKoi4=;
+        b=KZ8YWAzkXAWPLOh0djEKeedZql/C2T+hs1NOYVmr5c7j6zYDruiEHdlfjAwh1Z3am8
+         rH68O7Gscn+4Jn2ZDDaP+PR4Pv+r974Fji0vRgRUrNToRLgBS+VFbU5Wkiy7Njr9cd0u
+         AQ8nDp7DRLg25MCxxgcbYHqBQJ1sLQaQZcidJ9JJZ2ZA+JMsi2+fEk4W1N8afnednyvx
+         NByx1GxJ57HZZ4wZl0DKyf1qOLkayDmazZGPi7otAQ8wCqWSrNwB2ncs402VO8pLK2F6
+         UMxXpJN2VWdT3byFHZynfM3f92agjBBXNbRMbPM93maYppa8APt/uPoIjgGozIqDcmr3
+         OmVw==
+X-Gm-Message-State: APjAAAUKqPARZAFQQEoqUjKnvB7UTNmNvlt2hDSbz3YyItgFEtkHa5bv
+        jUFTLeSiO2+TSFxTliPH3ug=
+X-Google-Smtp-Source: APXvYqxmhwMESExMgBx/ncLaEXSu/aignZEYzcIQ7Rj5rRdJ0TG1Bikq8bj5GIrD/1hxKwfDs98pQQ==
+X-Received: by 2002:a05:651c:150:: with SMTP id c16mr22906662ljd.65.1557987987979;
+        Wed, 15 May 2019 23:26:27 -0700 (PDT)
+Received: from [10.17.182.20] (ll-22.209.223.85.sovam.net.ua. [85.223.209.22])
+        by smtp.gmail.com with ESMTPSA id j10sm882748lfc.45.2019.05.15.23.26.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 23:26:27 -0700 (PDT)
+Subject: Re: [Xen-devel] [PATCH] xen/netfront: Remove unneeded .resume
+ callback
+To:     Anchal Agarwal <anchalag@amzn.com>,
+        "Oleksandr_Andrushchenko@epam.com" <Oleksandr_Andrushchenko@epam.com>
+Cc:     Anchal Agarwal <anchalag@amazon.com>,
+        Munehisa Kamata <kamatam@amazon.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>,
+        Artem Mygaiev <Artem_Mygaiev@epam.com>
+References: <6205819a-af39-8cd8-db87-f3fe047ff064@gmail.com>
+ <ecc825e6-89d3-bbd5-5243-5cc66fa93045@oracle.com>
+ <b55d4f90-100c-7a2a-9651-c99c06953465@gmail.com>
+ <09afcdca-258f-e5ca-5c31-b7fd079eb213@oracle.com>
+ <3e868e7a-4872-e8ab-fd2c-90917ad6d593@arm.com>
+ <d709d185-5345-c463-3fd1-e711f954e58a@gmail.com>
+ <435369ba-ad3b-1d3a-c2f4-babe8bb6189c@amazon.com>
+ <fde362d0-dd48-9c9a-e71a-8fb158909551@epam.com>
+ <20190325173011.GA20277@kaos-source-ops-60001.pdx1.amazon.com>
+ <f5e824de-da57-9574-3813-2668f2932a6e@gmail.com>
+ <20190328231928.GA5172@kaos-source-ops-60001.pdx1.amazon.com>
+From:   Oleksandr Andrushchenko <andr2000@gmail.com>
+Message-ID: <48fedb13-5af2-e7cf-d182-0f2bb385dda2@gmail.com>
+Date:   Thu, 16 May 2019 09:26:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYuYYDpNTv9B5Y0uc1hAWfjv08EoUMhLFdOwVr6FQQC6Rw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190328231928.GA5172@kaos-source-ops-60001.pdx1.amazon.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 01:26:41AM +0530, Naresh Kamboju wrote:
-> On Wed, 15 May 2019 at 17:04, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.1.3 release.
-> > There are 46 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Fri 17 May 2019 09:04:22 AM UTC.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.3-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+Hello, Anchal!
 
-Wonderful!
+On 3/29/19 1:19 AM, Anchal Agarwal wrote:
+[snip]
+>>>> Great, could you please let us know what is the progress and further plans
+>>>> on that, so we do not work on the same code and can coordinate our
+>>>> efforts somehow? Anchal, could you please shed some light on this?
+>>> Looks like my previous email did not make it to mailing list. May be some issues with my
+>>> email server settings. Giving it another shot.
+>>> Yes, I am working on those patches and plan to re-post them in an effort to upstream.
+>> This is really great, looking forward to it: any date in your mind
+>> when this can happen?
+> Not a specific date but may be in few weeks. I am currently swamped at work.
+>
+Any progress on this?
 
-Thanks for testing all of these and letting me know.
-
-greg k-h
+Thank you,
+Oleksandr
