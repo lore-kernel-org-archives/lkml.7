@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ACBFC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0FEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:15:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6228D21743
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ADC92082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbfEPOPI (ORCPT
+        id S1727836AbfEPOPK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 16 May 2019 10:15:10 -0400
+Received: from foss.arm.com ([217.140.101.70]:47242 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727817AbfEPOPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 May 2019 10:15:08 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47212 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbfEPOPF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:15:05 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E46871AED;
-        Thu, 16 May 2019 07:15:04 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 24D751715;
+        Thu, 16 May 2019 07:15:08 -0700 (PDT)
 Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF8893F71E;
-        Thu, 16 May 2019 07:15:01 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F9ED3F71E;
+        Thu, 16 May 2019 07:15:05 -0700 (PDT)
 From:   Steven Price <steven.price@arm.com>
 To:     Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>
@@ -42,9 +42,9 @@ Cc:     Steven Price <steven.price@arm.com>,
         Sean Paul <sean@poorly.run>,
         Seung-Woo Kim <sw0312.kim@samsung.com>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] drm: shmem: Add drm_gem_shmem_map_offset() wrapper
-Date:   Thu, 16 May 2019 15:14:46 +0100
-Message-Id: <20190516141447.46839-3-steven.price@arm.com>
+Subject: [PATCH v2 3/3] drm/panfrost: Use drm_gem_shmem_map_offset()
+Date:   Thu, 16 May 2019 15:14:47 +0100
+Message-Id: <20190516141447.46839-4-steven.price@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516141447.46839-1-steven.price@arm.com>
 References: <20190516141447.46839-1-steven.price@arm.com>
@@ -55,60 +55,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Provide a wrapper for drm_gem_map_offset() for clients of shmem. This
-wrapper provides the correct semantics for the drm_gem_shmem_mmap()
-callback.
+panfrost_ioctl_mmap_bo() contains a reimplementation of
+drm_gem_shmem_map_offset() but with a bug - it allows mapping imported
+objects (without going through the exporter). Fix this by switching to
+use the new drm_gem_shmem_map_offset() function instead which has
+the bonus of simplifying the code.
 
+CC: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- drivers/gpu/drm/drm_gem_shmem_helper.c | 20 ++++++++++++++++++++
- include/drm/drm_gem_shmem_helper.h     |  2 ++
- 2 files changed, 22 insertions(+)
+ drivers/gpu/drm/panfrost/panfrost_drv.c | 16 ++--------------
+ 1 file changed, 2 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-index 1ee208c2c85e..9dbebc4897d1 100644
---- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-+++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-@@ -400,6 +400,26 @@ int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
- }
- EXPORT_SYMBOL_GPL(drm_gem_shmem_dumb_create);
- 
-+/**
-+ * drm_gem_map_offset - return the fake mmap offset for a gem object
-+ * @file: drm file-private structure containing the gem object
-+ * @dev: corresponding drm_device
-+ * @handle: gem object handle
-+ * @offset: return location for the fake mmap offset
-+ *
-+ * This provides an offset suitable for user space to return to the
-+ * drm_gem_shmem_mmap() callback via an mmap() call.
-+ *
-+ * Returns:
-+ * 0 on success or a negative error code on failure.
-+ */
-+int drm_gem_shmem_map_offset(struct drm_file *file, struct drm_device *dev,
-+			     u32 handle, u64 *offset)
-+{
-+	return drm_gem_map_offset(file, dev, handle, offset);
-+}
-+EXPORT_SYMBOL_GPL(drm_gem_shmem_map_offset);
-+
- static vm_fault_t drm_gem_shmem_fault(struct vm_fault *vmf)
+diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
+index 94b0819ad50b..a261b59208d0 100644
+--- a/drivers/gpu/drm/panfrost/panfrost_drv.c
++++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
+@@ -254,26 +254,14 @@ static int panfrost_ioctl_mmap_bo(struct drm_device *dev, void *data,
+ 		      struct drm_file *file_priv)
  {
- 	struct vm_area_struct *vma = vmf->vma;
-diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
-index 038b6d313447..4239ddaaaa4f 100644
---- a/include/drm/drm_gem_shmem_helper.h
-+++ b/include/drm/drm_gem_shmem_helper.h
-@@ -128,6 +128,8 @@ drm_gem_shmem_create_with_handle(struct drm_file *file_priv,
- int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
- 			      struct drm_mode_create_dumb *args);
+ 	struct drm_panfrost_mmap_bo *args = data;
+-	struct drm_gem_object *gem_obj;
+-	int ret;
  
-+int drm_gem_shmem_map_offset(struct drm_file *file, struct drm_device *dev,
-+			     u32 handle, u64 *offset);
- int drm_gem_shmem_mmap(struct file *filp, struct vm_area_struct *vma);
+ 	if (args->flags != 0) {
+ 		DRM_INFO("unknown mmap_bo flags: %d\n", args->flags);
+ 		return -EINVAL;
+ 	}
  
- extern const struct vm_operations_struct drm_gem_shmem_vm_ops;
+-	gem_obj = drm_gem_object_lookup(file_priv, args->handle);
+-	if (!gem_obj) {
+-		DRM_DEBUG("Failed to look up GEM BO %d\n", args->handle);
+-		return -ENOENT;
+-	}
+-
+-	ret = drm_gem_create_mmap_offset(gem_obj);
+-	if (ret == 0)
+-		args->offset = drm_vma_node_offset_addr(&gem_obj->vma_node);
+-	drm_gem_object_put_unlocked(gem_obj);
+-
+-	return ret;
++	return drm_gem_shmem_map_offset(file_priv, dev, args->handle,
++				       &args->offset);
+ }
+ 
+ static int panfrost_ioctl_get_bo_offset(struct drm_device *dev, void *data,
 -- 
 2.20.1
 
