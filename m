@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB28C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B5AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F5820815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6CAB2087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfEPP7L (ORCPT
+        id S1727543AbfEPP7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:59:11 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42642 "EHLO
+        Thu, 16 May 2019 11:59:33 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43954 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726866AbfEPP6o (ORCPT
+        by vger.kernel.org with ESMTP id S1727341AbfEPP7E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:58:44 -0400
+        Thu, 16 May 2019 11:59:04 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImH-0006zp-9p; Thu, 16 May 2019 16:58:41 +0100
+        id 1hRImJ-0006zD-H0; Thu, 16 May 2019 16:58:43 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImE-0001RQ-FP; Thu, 16 May 2019 16:58:38 +0100
+        id 1hRImF-0001Sn-3k; Thu, 16 May 2019 16:58:39 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,38 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Andi Kleen" <ak@linux.intel.com>, "Borislav Petkov" <bp@suse.de>,
         "Thomas Gleixner" <tglx@linutronix.de>,
-        "Jon Masters" <jcm@redhat.com>,
+        "Catalin Marinas" <catalin.marinas@arm.com>,
+        "Borislav Petkov" <bp@alien8.de>, "Jiri Kosina" <jkosina@suse.cz>,
+        "Tyler Hicks" <tyhicks@canonical.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Paul Mackerras" <paulus@samba.org>,
+        "Randy Dunlap" <rdunlap@infradead.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        "Jiri Kosina" <jikos@kernel.org>,
+        "Waiman Long" <longman@redhat.com>,
+        "Steven Price" <steven.price@arm.com>, linux-s390@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org,
+        "Heiko Carstens" <heiko.carstens@de.ibm.com>,
+        "Andrea Arcangeli" <aarcange@redhat.com>,
+        linux-arch@vger.kernel.org,
+        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
+        "Will Deacon" <will.deacon@arm.com>,
+        "Phil Auld" <pauld@redhat.com>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Frederic Weisbecker" <frederic@kernel.org>
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "Josh Poimboeuf" <jpoimboe@redhat.com>,
+        "Jon Masters" <jcm@redhat.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>
 Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.140207505@decadent.org.uk>
+Message-ID: <lsq.1558022133.121998781@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 63/86] x86/speculation/mds: Add basic bug
- infrastructure for MDS
+Subject: [PATCH 3.16 80/86] x86/speculation: Support 'mitigations='
+ cmdline option
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,153 +80,127 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Josh Poimboeuf <jpoimboe@redhat.com>
 
-commit ed5194c2732c8084af9fd159c146ea92bf137128 upstream.
+commit d68be4c4d31295ff6ae34a8ddfaa4c1a8ff42812 upstream.
 
-Microarchitectural Data Sampling (MDS), is a class of side channel attacks
-on internal buffers in Intel CPUs. The variants are:
+Configure x86 runtime CPU speculation bug mitigations in accordance with
+the 'mitigations=' cmdline option.  This affects Meltdown, Spectre v2,
+Speculative Store Bypass, and L1TF.
 
- - Microarchitectural Store Buffer Data Sampling (MSBDS) (CVE-2018-12126)
- - Microarchitectural Fill Buffer Data Sampling (MFBDS) (CVE-2018-12130)
- - Microarchitectural Load Port Data Sampling (MLPDS) (CVE-2018-12127)
+The default behavior is unchanged.
 
-MSBDS leaks Store Buffer Entries which can be speculatively forwarded to a
-dependent load (store-to-load forwarding) as an optimization. The forward
-can also happen to a faulting or assisting load operation for a different
-memory address, which can be exploited under certain conditions. Store
-buffers are partitioned between Hyper-Threads so cross thread forwarding is
-not possible. But if a thread enters or exits a sleep state the store
-buffer is repartitioned which can expose data from one thread to the other.
-
-MFBDS leaks Fill Buffer Entries. Fill buffers are used internally to manage
-L1 miss situations and to hold data which is returned or sent in response
-to a memory or I/O operation. Fill buffers can forward data to a load
-operation and also write data to the cache. When the fill buffer is
-deallocated it can retain the stale data of the preceding operations which
-can then be forwarded to a faulting or assisting load operation, which can
-be exploited under certain conditions. Fill buffers are shared between
-Hyper-Threads so cross thread leakage is possible.
-
-MLDPS leaks Load Port Data. Load ports are used to perform load operations
-from memory or I/O. The received data is then forwarded to the register
-file or a subsequent operation. In some implementations the Load Port can
-contain stale data from a previous operation which can be forwarded to
-faulting or assisting loads under certain conditions, which again can be
-exploited eventually. Load ports are shared between Hyper-Threads so cross
-thread leakage is possible.
-
-All variants have the same mitigation for single CPU thread case (SMT off),
-so the kernel can treat them as one MDS issue.
-
-Add the basic infrastructure to detect if the current CPU is affected by
-MDS.
-
-[ tglx: Rewrote changelog ]
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Reviewed-by: Jon Masters <jcm@redhat.com>
-Tested-by: Jon Masters <jcm@redhat.com>
+Tested-by: Jiri Kosina <jkosina@suse.cz> (on x86)
+Reviewed-by: Jiri Kosina <jkosina@suse.cz>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H . Peter Anvin" <hpa@zytor.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Kosina <jikos@kernel.org>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-arch@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Tyler Hicks <tyhicks@canonical.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Steven Price <steven.price@arm.com>
+Cc: Phil Auld <pauld@redhat.com>
+Link: https://lkml.kernel.org/r/6616d0ae169308516cfdf5216bedd169f8a8291b.1555085500.git.jpoimboe@redhat.com
 [bwh: Backported to 3.16:
- - Use CPU feature word 10 and next available bug flag
- - Adjust filename, context, indentation]
+ - Drop the auto,nosmt option and the l1tf mitigation selection, which we can't
+   support
+ - Adjust filenames, context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/include/asm/cpufeatures.h    |  2 ++
- arch/x86/include/uapi/asm/msr-index.h |  5 +++++
- arch/x86/kernel/cpu/common.c          | 23 +++++++++++++++--------
- 3 files changed, 22 insertions(+), 8 deletions(-)
-
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -243,6 +243,7 @@
- #define X86_FEATURE_AVX512CD	( 9*32+28) /* AVX-512 Conflict Detection */
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -1907,15 +1907,19 @@ bytes respectively. Such letter suffixes
+ 			http://repo.or.cz/w/linux-2.6/mini2440.git
  
- /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 10 */
-+#define X86_FEATURE_MD_CLEAR		(10*32+10) /* VERW clears CPU buffers */
- #define X86_FEATURE_SPEC_CTRL		(10*32+26) /* "" Speculation Control (IBRS + IBPB) */
- #define X86_FEATURE_INTEL_STIBP		(10*32+27) /* "" Single Thread Indirect Branch Predictors */
- #define X86_FEATURE_ARCH_CAPABILITIES	(10*32+29) /* IA32_ARCH_CAPABILITIES MSR (Intel) */
-@@ -271,5 +272,6 @@
- #define X86_BUG_SPECTRE_V2	X86_BUG(7) /* CPU is affected by Spectre variant 2 attack with indirect branches */
- #define X86_BUG_SPEC_STORE_BYPASS X86_BUG(8) /* CPU is affected by speculative store bypass attack */
- #define X86_BUG_L1TF		X86_BUG(9) /* CPU is affected by L1 Terminal Fault */
-+#define X86_BUG_MDS		X86_BUG(10) /* CPU is affected by Microarchitectural data sampling */
+ 	mitigations=
+-			Control optional mitigations for CPU vulnerabilities.
+-			This is a set of curated, arch-independent options, each
+-			of which is an aggregation of existing arch-specific
+-			options.
++			[X86] Control optional mitigations for CPU
++			vulnerabilities.  This is a set of curated,
++			arch-independent options, each of which is an
++			aggregation of existing arch-specific options.
  
- #endif /* _ASM_X86_CPUFEATURES_H */
---- a/arch/x86/include/uapi/asm/msr-index.h
-+++ b/arch/x86/include/uapi/asm/msr-index.h
-@@ -65,6 +65,11 @@
- 						    * attack, so no Speculative Store Bypass
- 						    * control required.
- 						    */
-+#define ARCH_CAP_MDS_NO			(1UL << 5) /*
-+						    * Not susceptible to
-+						    * Microarchitectural Data
-+						    * Sampling (MDS) vulnerabilities.
-+						    */
+ 			off
+ 				Disable all optional CPU mitigations.  This
+ 				improves system performance, but it may also
+ 				expose users to several CPU vulnerabilities.
++				Equivalent to: nopti [X86]
++					       nospectre_v2 [X86]
++					       spectre_v2_user=off [X86]
++					       spec_store_bypass_disable=off [X86]
  
- #define MSR_IA32_BBL_CR_CTL		0x00000119
- #define MSR_IA32_BBL_CR_CTL3		0x0000011e
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -811,6 +811,7 @@ static void identify_cpu_without_cpuid(s
- #define NO_MELTDOWN	BIT(1)
- #define NO_SSB		BIT(2)
- #define NO_L1TF		BIT(3)
-+#define NO_MDS		BIT(4)
+ 			auto (default)
+ 				Mitigate all CPU vulnerabilities, but leave SMT
+@@ -1923,7 +1927,7 @@ bytes respectively. Such letter suffixes
+ 				users who don't want to be surprised by SMT
+ 				getting disabled across kernel upgrades, or who
+ 				have other ways of avoiding SMT-based attacks.
+-				This is the default behavior.
++				Equivalent to: (default behavior)
  
- #define VULNWL(_vendor, _family, _model, _whitelist)	\
- 	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
-@@ -827,6 +828,7 @@ static const __initconst struct x86_cpu_
- 	VULNWL(INTEL,	5, X86_MODEL_ANY,	NO_SPECULATION),
- 	VULNWL(NSC,	5, X86_MODEL_ANY,	NO_SPECULATION),
+ 	mminit_loglevel=
+ 			[KNL] When CONFIG_DEBUG_MEMORY_INIT is set, this
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -545,7 +545,8 @@ static enum spectre_v2_mitigation_cmd __
+ 	char arg[20];
+ 	int ret, i;
  
-+	/* Intel Family 6 */
- 	VULNWL_INTEL(ATOM_SALTWELL,		NO_SPECULATION),
- 	VULNWL_INTEL(ATOM_SALTWELL_TABLET,	NO_SPECULATION),
- 	VULNWL_INTEL(ATOM_SALTWELL_MID,		NO_SPECULATION),
-@@ -843,17 +845,19 @@ static const __initconst struct x86_cpu_
- 	VULNWL_INTEL(CORE_YONAH,		NO_SSB),
+-	if (cmdline_find_option_bool(boot_command_line, "nospectre_v2"))
++	if (cmdline_find_option_bool(boot_command_line, "nospectre_v2") ||
++	    cpu_mitigations_off())
+ 		return SPECTRE_V2_CMD_NONE;
  
- 	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF),
--	VULNWL_INTEL(ATOM_GOLDMONT,		NO_L1TF),
--	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_L1TF),
--	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_L1TF),
--
--	VULNWL_AMD(0x0f,		NO_MELTDOWN | NO_SSB | NO_L1TF),
--	VULNWL_AMD(0x10,		NO_MELTDOWN | NO_SSB | NO_L1TF),
--	VULNWL_AMD(0x11,		NO_MELTDOWN | NO_SSB | NO_L1TF),
--	VULNWL_AMD(0x12,		NO_MELTDOWN | NO_SSB | NO_L1TF),
-+
-+	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF),
-+	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_MDS | NO_L1TF),
-+	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_MDS | NO_L1TF),
-+
-+	/* AMD Family 0xf - 0x12 */
-+	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
-+	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
-+	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
-+	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
+ 	ret = cmdline_find_option(boot_command_line, "spectre_v2", arg, sizeof(arg));
+@@ -809,7 +810,8 @@ static enum ssb_mitigation_cmd __init ss
+ 	char arg[20];
+ 	int ret, i;
  
- 	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
--	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF),
-+	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS),
- 	{}
- };
+-	if (cmdline_find_option_bool(boot_command_line, "nospec_store_bypass_disable")) {
++	if (cmdline_find_option_bool(boot_command_line, "nospec_store_bypass_disable") ||
++	    cpu_mitigations_off()) {
+ 		return SPEC_STORE_BYPASS_CMD_NONE;
+ 	} else {
+ 		ret = cmdline_find_option(boot_command_line, "spec_store_bypass_disable",
+--- a/arch/x86/mm/kaiser.c
++++ b/arch/x86/mm/kaiser.c
+@@ -10,6 +10,7 @@
+ #include <linux/mm.h>
+ #include <linux/uaccess.h>
+ #include <linux/ftrace.h>
++#include <linux/cpu.h>
+ #include <xen/xen.h>
  
-@@ -884,6 +888,9 @@ static void __init cpu_set_bug_bits(stru
- 	if (ia32_cap & ARCH_CAP_IBRS_ALL)
- 		setup_force_cpu_cap(X86_FEATURE_IBRS_ENHANCED);
+ #undef pr_fmt
+@@ -294,7 +295,8 @@ void __init kaiser_check_boottime_disabl
+ 			goto skip;
+ 	}
  
-+	if (!cpu_matches(NO_MDS) && !(ia32_cap & ARCH_CAP_MDS_NO))
-+		setup_force_cpu_bug(X86_BUG_MDS);
-+
- 	if (cpu_matches(NO_MELTDOWN))
- 		return;
+-	if (cmdline_find_option_bool(boot_command_line, "nopti"))
++	if (cmdline_find_option_bool(boot_command_line, "nopti") ||
++	    cpu_mitigations_off())
+ 		goto disable;
  
+ skip:
 
