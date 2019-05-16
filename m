@@ -2,120 +2,119 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58981C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F8DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2980E205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:54:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="5gQuHnUn"
+	by mail.kernel.org (Postfix) with ESMTP id E4220205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:57:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfEPHy5 (ORCPT
+        id S1726660AbfEPH5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 03:54:57 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34216 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbfEPHy5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 03:54:57 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4G7sUlc186465;
-        Thu, 16 May 2019 07:54:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=wlI4FuevQ2mhRamMuoO2zlRoWsnWTKc4nNrjHwGyT60=;
- b=5gQuHnUnkp2m3kS9rfSBd3os2IJV71BbS7WODagQKTlCsBuQxH6EYMnLBrHyDcpw1iyo
- uR01tB/m9/P47nCYDeEO0K3cIRJfRDsEs+VdRd53QLuYW3dHSZVQH8t/jKN5Wd7v5Hnd
- PfuesEeYPyXvUOA3jfz7+5GH6TDwU4qOPxzZSUJnzO65/UIpsUKJpwRCBw/ohrXzrRCy
- FF+KNl31MGykrkmBi6GVk10pDAsfKV6+toEBomis4vMybBxgX22XjnWbZVEWW2O7TCGS
- LtznRa3KTiTwcMN0tWCBO5IkpRrFV3IAIBFaUI1t9rHq5DHG8htKF0LRq1PUQevkQHwN PQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2sdq1qsfcw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 May 2019 07:54:48 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4G7rOSd024323;
-        Thu, 16 May 2019 07:54:47 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2sggethpg5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 May 2019 07:54:47 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4G7slYB019462;
-        Thu, 16 May 2019 07:54:47 GMT
-Received: from [10.0.5.57] (/213.57.127.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 16 May 2019 00:54:47 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: Question about MDS mitigation
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <f513e534-2c7b-f32b-7346-1a64edf0db73@huawei.com>
-Date:   Thu, 16 May 2019 10:54:43 +0300
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Huangzhichao <huangzhichao@huawei.com>,
-        guijianfeng <guijianfeng@huawei.com>,
-        gaowanlong <gaowanlong@huawei.com>,
-        "Chentao (Boby)" <boby.chen@huawei.com>,
-        "Liujinsong (Paul)" <liu.jinsong@huawei.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <39F1D5C9-BD42-4E9F-BE56-2473B4713B82@oracle.com>
-References: <f513e534-2c7b-f32b-7346-1a64edf0db73@huawei.com>
-To:     "wencongyang (A)" <wencongyang2@huawei.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9258 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=880
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905160054
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9258 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=910 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905160054
+        Thu, 16 May 2019 03:57:22 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7655 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726363AbfEPH5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 03:57:21 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 191AD6544DF4DFBF316D;
+        Thu, 16 May 2019 15:57:19 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Thu, 16 May 2019
+ 15:57:12 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <broonie@kernel.org>, <axel.lin@ingics.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <albeu@free.fr>, <lorenzo.bianconi@redhat.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] spi: bitbang: Fix NULL pointer dereference in spi_unregister_master
+Date:   Thu, 16 May 2019 15:56:56 +0800
+Message-ID: <20190516075656.25880-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Indeed those CPU resources are shared between sibling hyperthreads on =
-same CPU core.
-There is currently no mechanism merged upstream to completely mitigate =
-SMT-enabled scenarios.
-Note that this is also true for L1TF.
+If spi_register_master fails in spi_bitbang_start
+because device_add failure, We should return the
+error code other than 0, otherwise calling
+spi_bitbang_stop may trigger NULL pointer dereference
+like this:
 
-There are several proposal to address this but they are still in early =
-research mode.
-For example, see this KVM address space isolation patch series developed =
-by myself and Alexandre:
-https://lkml.org/lkml/2019/5/13/515
-(Which should be integrated with a mechanism which kick sibling =
-hyperthreads when switching from KVM isolated address space to full =
-kernel address space)
-This partially mimics Microsoft work regarding HyperClear which you can =
-read more about it here:
-=
-https://techcommunity.microsoft.com/t5/Virtualization/Hyper-V-HyperClear-M=
-itigation-for-L1-Terminal-Fault/ba-p/382429
+BUG: KASAN: null-ptr-deref in __list_del_entry_valid+0x45/0xd0
+Read of size 8 at addr 0000000000000000 by task syz-executor.0/3661
 
--Liran
+CPU: 0 PID: 3661 Comm: syz-executor.0 Not tainted 5.1.0+ #28
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ dump_stack+0xa9/0x10e
+ ? __list_del_entry_valid+0x45/0xd0
+ ? __list_del_entry_valid+0x45/0xd0
+ __kasan_report+0x171/0x18d
+ ? __list_del_entry_valid+0x45/0xd0
+ kasan_report+0xe/0x20
+ __list_del_entry_valid+0x45/0xd0
+ spi_unregister_controller+0x99/0x1b0
+ spi_lm70llp_attach+0x3ae/0x4b0 [spi_lm70llp]
+ ? 0xffffffffc1128000
+ ? klist_next+0x131/0x1e0
+ ? driver_detach+0x40/0x40 [parport]
+ port_check+0x3b/0x50 [parport]
+ bus_for_each_dev+0x115/0x180
+ ? subsys_dev_iter_exit+0x20/0x20
+ __parport_register_driver+0x1f0/0x210 [parport]
+ ? 0xffffffffc1150000
+ do_one_initcall+0xb9/0x3b5
+ ? perf_trace_initcall_level+0x270/0x270
+ ? kasan_unpoison_shadow+0x30/0x40
+ ? kasan_unpoison_shadow+0x30/0x40
+ do_init_module+0xe0/0x330
+ load_module+0x38eb/0x4270
+ ? module_frob_arch_sections+0x20/0x20
+ ? kernel_read_file+0x188/0x3f0
+ ? find_held_lock+0x6d/0xd0
+ ? fput_many+0x1a/0xe0
+ ? __do_sys_finit_module+0x162/0x190
+ __do_sys_finit_module+0x162/0x190
+ ? __ia32_sys_init_module+0x40/0x40
+ ? __mutex_unlock_slowpath+0xb4/0x3f0
+ ? wait_for_completion+0x240/0x240
+ ? vfs_write+0x160/0x2a0
+ ? lockdep_hardirqs_off+0xb5/0x100
+ ? mark_held_locks+0x1a/0x90
+ ? do_syscall_64+0x14/0x2a0
+ do_syscall_64+0x72/0x2a0
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-> On 16 May 2019, at 5:42, wencongyang (A) <wencongyang2@huawei.com> =
-wrote:
->=20
-> Hi all
->=20
-> Fill buffers, load ports are shared between threads on the same =
-physical core.
-> We need to run more than one vm on the same physical core.
-> Is there any complete mitigation for environments utilizing SMT?
->=20
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 702a4879ec33 ("spi: bitbang: Let spi_bitbang_start() take a reference to master")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/spi/spi-bitbang.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi-bitbang.c b/drivers/spi/spi-bitbang.c
+index dd9a8c54..be95be4 100644
+--- a/drivers/spi/spi-bitbang.c
++++ b/drivers/spi/spi-bitbang.c
+@@ -403,7 +403,7 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
+ 	if (ret)
+ 		spi_master_put(master);
+ 
+-	return 0;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(spi_bitbang_start);
+ 
+-- 
+1.8.3.1
+
 
