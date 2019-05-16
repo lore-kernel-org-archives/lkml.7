@@ -2,170 +2,129 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A070C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63026C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3D72082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:27:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558024028;
-	bh=JvHLQ3WLEQPhtVYvcVQym5MZ+Jr2ujTfzyMJQ+itCew=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kxAikzfr9za3BzmTxnjRkG3tUQFFSkncpd4UX8kEvd0f1+YWKLZQ4HfBP7Saqu/9G
-	 lAV1wqO0vQhSdIFgYnWzn3kqqlvv8roZt9sjqUgir2fjrcLMUfIUIcT6uYIvbeFsyt
-	 517fWXcfGv6wEvOdfN3mlMe4DMriWu8X2xRHbw9w=
+	by mail.kernel.org (Postfix) with ESMTP id 870C620833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:29:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="aCMm45J8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfEPQ1H (ORCPT
+        id S1726927AbfEPQ3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:27:07 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34256 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfEPQ1H (ORCPT
+        Thu, 16 May 2019 12:29:02 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:15847 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfEPQ3C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:27:07 -0400
-Received: by mail-lj1-f196.google.com with SMTP id j24so3715351ljg.1
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:27:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CJn+s1/9iwnST3l6oaCFH3Pabu3jpALwTCNZgnOPKSk=;
-        b=RbIOcHhbe/wAJnhmE+X0+jqRT3pY8KcZzvhJF5Lg9TwQ8gVf3VLYKAsRoqwWTQp4qX
-         GNwZxaLxD1imdCwMmdAyJyfUGNksYji2fm0afsXvot60M+nvGFT0cP+SGpPpRIIjwh3a
-         zRlK4oU9gZLMtkC00ta8Onnj2sYvjd9PLdIOI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CJn+s1/9iwnST3l6oaCFH3Pabu3jpALwTCNZgnOPKSk=;
-        b=HnoznO+phFu8nDjo75ahXglCRpg47d3VrwymV4UKg9bVZ0RKacBZgCM/3Bkx/a5BrZ
-         TpoXzXgAuCxXtbHwr4J6mdfg/IJ02GQ8BlqLBo3MVVC8zlk54D3ntOukhRrj+6PnZgK6
-         GjOycDofrRqciCJsa02z7LLDwwkjWTqlVwkZnMoCLFvpO15QmeVzlhqjPofhme9ZO9W3
-         jVpO0eSrdgg9DiTvgkd2GNYh1TA91cN7uv+NQcmBqIRQZLVwBmTFxxZwD/KuNlBjc3s3
-         BdGwFZ3CLijtGaMFndHKkQh74MTTynagckY++28kjciVxrsO9ffkIUSXBaNu15YflQJx
-         sVfw==
-X-Gm-Message-State: APjAAAUo1k5OcOCrBukt6aCYMgCephTlfhZ+j454KQIixKzslCZU7lCl
-        5DSdGx3MEhZ6G9ur/TYNNlp+1JwAWKI=
-X-Google-Smtp-Source: APXvYqyIeHmh6gDVSCAtlS6zsoC7qw/rkct5meaQ+qlMywnWI6tmaHhtvmx3/GG4Ot+W8E4iMXzy9w==
-X-Received: by 2002:a2e:96d9:: with SMTP id d25mr23702980ljj.78.1558024024228;
-        Thu, 16 May 2019 09:27:04 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id k26sm1184326lfb.63.2019.05.16.09.27.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 09:27:03 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id l26so3088941lfh.13
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:27:03 -0700 (PDT)
-X-Received: by 2002:ac2:5212:: with SMTP id a18mr25173004lfl.166.1558024022880;
- Thu, 16 May 2019 09:27:02 -0700 (PDT)
+        Thu, 16 May 2019 12:29:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1558024140;
+        s=strato-dkim-0002; d=hartkopp.net;
+        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=Apx7ZxqDR7YHZ7kD/2IJRkM4VaciDIYJ3ycVJe9uIxc=;
+        b=aCMm45J8B2y/lyCbLNQ0dAXDmoX16yAxuCp/f+Rvqwvu0lfmvu70BPqSGPJyd1IvNv
+        Xj9eoFFcQFRMO++b7o4Yt3z4WJsa1vbDCEVkgsL6yKs0kxnNrxrbTmPg6XWxv+oCUOji
+        GIFFBuf85PUTE9K3PN2agzbvUFU3YgR77iWq2UcVXUW27dYt7TseJgUZZwJQQ8KcPxC4
+        NpD6eNQqUVsTMFl+dEOMOAOapKZI/lwqp9g4YWnhao5UFQGklW2VZ2fRxL6SC9LlX2Z4
+        Nm+Weotw44fQOr3K0nJQfDIjMt0vvkYKzgf9aeUu4gFlIZZ1LWvHrHSBcPp1QzwAv15t
+        oKtg==
+X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJUMh6kkRA"
+X-RZG-CLASS-ID: mo00
+Received: from [192.168.1.200]
+        by smtp.strato.de (RZmta 44.18 DYNA|AUTH)
+        with ESMTPSA id q0b361v4GGPnEj4
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 16 May 2019 18:25:49 +0200 (CEST)
+Subject: Re: [PATCH] can: Fix error path of can_init
+To:     YueHaibing <yuehaibing@huawei.com>, davem@davemloft.net,
+        mkl@pengutronix.de
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-can@vger.kernel.org
+References: <20190516143626.27636-1-yuehaibing@huawei.com>
+From:   Oliver Hartkopp <socketcan@hartkopp.net>
+Message-ID: <70bc346c-9328-d0a2-bd7e-af8dff748061@hartkopp.net>
+Date:   Thu, 16 May 2019 18:25:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190516064304.24057-1-olof@lixom.net> <20190516064304.24057-4-olof@lixom.net>
-In-Reply-To: <20190516064304.24057-4-olof@lixom.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 16 May 2019 09:26:46 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whb-KituxcvM6ZPuXqyPX+rJENb8cnGCPbGE9pyqwOmXA@mail.gmail.com>
-Message-ID: <CAHk-=whb-KituxcvM6ZPuXqyPX+rJENb8cnGCPbGE9pyqwOmXA@mail.gmail.com>
-Subject: Re: [GIT PULL 3/4] ARM: SoC-related driver updates
-To:     Olof Johansson <olof@lixom.net>,
-        Patrick Venture <venture@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     ARM SoC <arm@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "linux-alpha@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190516143626.27636-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 11:43 PM Olof Johansson <olof@lixom.net> wrote:
->
-> Various driver updates for platforms and a couple of the small driver
-> subsystems we merge through our tree:
 
-Hmm. This moved the aspeed drivers from drivers/misc to
-drivers/soc/aspeed (in commit 524feb799408 "soc: add aspeed folder and
-misc drivers"), but in the meantime we also had a new aspeed soc
-driver added (in commit 01c60dcea9f7 "drivers/misc: Add Aspeed P2A
-control driver").
 
-I ended up resolving that "conflict" by moving the new aspeed P2A
-control driver to be with the other aspeed drivers too. That seemed to
-be the cleanest model.
+On 16.05.19 16:36, YueHaibing wrote:
+> This patch add error path for can_init to
+> avoid possible crash if some error occurs.
+> 
+> Fixes: 0d66548a10cb ("[CAN]: Add PF_CAN core module")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com
+Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
 
-I'm used to doing these kinds of fixups in a merge, but I have to
-admit that maybe I should have made it a separate commit, because now
-it's kind of non-obvious, and it's sometimes harder to see changes
-that are in a merge commit than in a separate commit.
+Thanks!
 
-In particular, it looks like "git log --follow" is not smart enough to
-follow a rename through a merge. But I think that is a git problem,
-and not a very serious one at that ("git blame" has no such problem).
-
-And it means that now the merge has
-
- drivers/{misc => soc/aspeed}/aspeed-lpc-ctrl.c                   |   0
- drivers/{misc => soc/aspeed}/aspeed-lpc-snoop.c                  |   0
- drivers/{misc => soc/aspeed}/aspeed-p2a-ctrl.c                   |   0
-
-when you do "git show --stat" on it, which looks correct, and it feels
-like conceptually the right merge resolution to me.
-
-Sending out this explanatory email to everybody involved, just so that
-this doesn't take you by surprise. But it looks like Patrick Venture
-is not just the author of that moved driver, he was also involved in
-the move of the two other drivers, so I'm guessing there's not going
-to be a lot of confusion here.
-
-HOWEVER. More subtly, as part of my *testing* for this, I also
-realized that commit 524feb799408 is buggy. In my tests, the config
-worked fine, but the aspeed drivers were never actually *built*. The
-reason is that commit 524feb799408 ends up doing
-
-   obj-$(CONFIG_ARCH_ASPEED)      += aspeed/
-
-which is completely wrong, because the Kconfig fules are
-
-        depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
-
-so those drivers can be configured even if ARCH_ASPEED *isn't* set.
-The Kconfig part works fine, because the soc/aspeed/Kconfig file is
-included unconditionally, but the actual build process then never
-builds anything in the drivers/soc/aspeed/ subdirectory.
-
-I solved _that_ problem by adding a new config option:
-
-  config SOC_ASPEED
-      def_bool y
-      depends on ARCH_ASPEED || COMPILE_TEST
-
-and using that instead of ARCH_ASPEED.
-
-End result: this was a somewhat messy merge, and the most subtle mess
-was because of that buggy 524feb799408 "soc: add aspeed folder and
-misc drivers").
-
-I *think* I sorted it all out correctly, and now I see the aspeed
-drivers being built (and cleanly at that) but I really *really* want
-people to double-check this all.
-
-Also, I think that the same "we don't actually build-test the end
-result" problem exists else-where for the same reasons.
-
-At the very least, drivers/soc/{atmel,rockchip,zte} seem to have the
-exact same pattern: the Kconfig files enable the drivers, but the
-Makefile in drivers/soc doesn't actually traverse into the
-subdirectories.
-
-End result: CONFIG_COMPILE_TEST doesn't actually do any compile
-testing for those drivers.
-
-I did not try to fix all of those things up, because I didn't do the
-driver movements there.
-
-                  Linus
+> ---
+>   net/can/af_can.c | 24 +++++++++++++++++++++---
+>   1 file changed, 21 insertions(+), 3 deletions(-)
+> 
+> diff --git a/net/can/af_can.c b/net/can/af_can.c
+> index 1684ba5..a1781ea 100644
+> --- a/net/can/af_can.c
+> +++ b/net/can/af_can.c
+> @@ -958,6 +958,8 @@ static void can_pernet_exit(struct net *net)
+>   
+>   static __init int can_init(void)
+>   {
+> +	int rc;
+> +
+>   	/* check for correct padding to be able to use the structs similarly */
+>   	BUILD_BUG_ON(offsetof(struct can_frame, can_dlc) !=
+>   		     offsetof(struct canfd_frame, len) ||
+> @@ -971,15 +973,31 @@ static __init int can_init(void)
+>   	if (!rcv_cache)
+>   		return -ENOMEM;
+>   
+> -	register_pernet_subsys(&can_pernet_ops);
+> +	rc = register_pernet_subsys(&can_pernet_ops);
+> +	if (rc)
+> +		goto out_pernet;
+>   
+>   	/* protocol register */
+> -	sock_register(&can_family_ops);
+> -	register_netdevice_notifier(&can_netdev_notifier);
+> +	rc = sock_register(&can_family_ops);
+> +	if (rc)
+> +		goto out_sock;
+> +	rc = register_netdevice_notifier(&can_netdev_notifier);
+> +	if (rc)
+> +		goto out_notifier;
+> +
+>   	dev_add_pack(&can_packet);
+>   	dev_add_pack(&canfd_packet);
+>   
+>   	return 0;
+> +
+> +out_notifier:
+> +	sock_unregister(PF_CAN);
+> +out_sock:
+> +	unregister_pernet_subsys(&can_pernet_ops);
+> +out_pernet:
+> +	kmem_cache_destroy(rcv_cache);
+> +
+> +	return rc;
+>   }
+>   
+>   static __exit void can_exit(void)
+> 
