@@ -2,255 +2,143 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE4F0C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D68C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F14120848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF76820848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:46:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfEPFhJ (ORCPT
+        id S1726542AbfEPFqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 01:37:09 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60902 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725975AbfEPFhI (ORCPT
+        Thu, 16 May 2019 01:46:06 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:40612 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfEPFqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 01:37:08 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4G5WJfs101501
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:37:06 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sh0bykadv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:37:06 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ego@linux.vnet.ibm.com>;
-        Thu, 16 May 2019 06:37:06 +0100
-Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 16 May 2019 06:37:03 +0100
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4G5b2nj27983958
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 May 2019 05:37:02 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3076C124054;
-        Thu, 16 May 2019 05:37:02 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D83B1124055;
-        Thu, 16 May 2019 05:37:01 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.124.35.248])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 16 May 2019 05:37:01 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 328F02E2EB4; Thu, 16 May 2019 11:06:59 +0530 (IST)
-Date:   Thu, 16 May 2019 11:06:59 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Abhishek <huntbag@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, daniel.lezcano@linaro.org,
-        dja@axtens.net, ego@linux.vnet.ibm.com, rjw@rjwysocki.net
-Subject: Re: [PATCH 0/1] Forced-wakeup for stop lite states on Powernv
-Reply-To: ego@linux.vnet.ibm.com
-References: <20190422063231.51043-1-huntbag@linux.vnet.ibm.com>
- <1557291178.ow4spjzq5t.astroid@bobo.none>
- <b2fcf69a-aecd-ea81-b497-737642354736@linux.vnet.ibm.com>
- <1557981860.eltms77ctp.astroid@bobo.none>
+        Thu, 16 May 2019 01:46:06 -0400
+Received: by mail-io1-f69.google.com with SMTP id d24so1861471iob.7
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 22:46:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ltOragm0SCqo4uoAEQQAlYmgIkzdvYfcpSv92gE1T/g=;
+        b=rYZWu06psc9LX/2mQOJ2CEYttBerdpmvRuA2Dz1APKE2VgGrpLc7UY6DpISPM4ncbk
+         E7BS+1M3qcO4AV3YxVHsAigMEd+pNsGJiTCQMiMyCzb8kKQyFdyGi3RgqRzx+YOUDtXu
+         6+caR/tU6Hz99ldBGB7PuEpGg6YgJEGUGHYntDd684Q2vl8oXONv4x7Er1T9a8cm+rQX
+         yqF+wGfiRqokUUSg0JfExwf8tADhpObhglhkzNOlb4b5CAxyP1kj6ZdErdJ+e15Iv020
+         wNqMN1SGGfOgqQKHyx+Y/7QFUHfwoATaY5EBsLQ7Smy5eK1enSJgPRzV3JCI98FvxIpO
+         Vb2Q==
+X-Gm-Message-State: APjAAAWFSVns68wCHGUWaxc3Ai1nX5Gyn6ZjAcJfiz2l6DBYUxoIThIj
+        VeexqnYAa0Y1Qlww8lhg+VYXgFFsrw5BsdfGgHwjz6/EIAXl
+X-Google-Smtp-Source: APXvYqzwKn9sE6VTf7DFye3cDrVijXOpZDs3MSil5qUtRVtlHQRwdifCAK2mN67WThT25zT+9EoQ4V1ve+lq7vw/p+h74CYtN/wj
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1557981860.eltms77ctp.astroid@bobo.none>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-x-cbid: 19051605-0052-0000-0000-000003C00920
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011104; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01203996; UDB=6.00632022; IPR=6.00984926;
- MB=3.00026912; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-16 05:37:05
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051605-0053-0000-0000-000060EA1B78
-Message-Id: <20190516053659.GA20396@in.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905160039
+X-Received: by 2002:a6b:ea02:: with SMTP id m2mr24613082ioc.270.1557985565350;
+ Wed, 15 May 2019 22:46:05 -0700 (PDT)
+Date:   Wed, 15 May 2019 22:46:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003028060588fac869@google.com>
+Subject: WARNING: locking bug in udpv6_pre_connect
+From:   syzbot <syzbot+65f10c5aadc049eb5ef5@syzkaller.appspotmail.com>
+To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, kafai@fb.com, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com,
+        yoshfuji@linux-ipv6.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Nicholas,
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    8f779443 net: phy: realtek: fix double page ops in generic..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=13f16ee8a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4005028a9d5ddac8
+dashboard link: https://syzkaller.appspot.com/bug?extid=65f10c5aadc049eb5ef5
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+65f10c5aadc049eb5ef5@syzkaller.appspotmail.com
+
+WARNING: CPU: 0 PID: 2749 at kernel/locking/lockdep.c:734  
+arch_local_save_flags arch/x86/include/asm/paravirt.h:762 [inline]
+WARNING: CPU: 0 PID: 2749 at kernel/locking/lockdep.c:734  
+arch_local_save_flags arch/x86/include/asm/paravirt.h:760 [inline]
+WARNING: CPU: 0 PID: 2749 at kernel/locking/lockdep.c:734  
+look_up_lock_class kernel/locking/lockdep.c:725 [inline]
+WARNING: CPU: 0 PID: 2749 at kernel/locking/lockdep.c:734  
+register_lock_class+0xe10/0x1860 kernel/locking/lockdep.c:1078
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 2749 Comm: syz-executor.2 Not tainted 5.1.0+ #8
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x65c kernel/panic.c:214
+  __warn.cold+0x20/0x45 kernel/panic.c:566
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:972
+RIP: 0010:look_up_lock_class kernel/locking/lockdep.c:734 [inline]
+RIP: 0010:register_lock_class+0xe10/0x1860 kernel/locking/lockdep.c:1078
+Code: 00 48 89 da 4d 8b 76 c0 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 80  
+3c 02 00 0f 85 23 07 00 00 4c 89 33 e9 e3 f4 ff ff 0f 0b <0f> 0b e9 ea f3  
+ff ff 44 89 e0 4c 8b 95 50 ff ff ff 83 c0 01 4c 8b
+RSP: 0018:ffff8880475b79e8 EFLAGS: 00010083
+RAX: dffffc0000000000 RBX: ffff888045e2f0a0 RCX: 0000000000000000
+RDX: 1ffff11008bc5e17 RSI: 0000000000000000 RDI: ffff888045e2f0b8
+RBP: ffff8880475b7ab0 R08: 1ffff11008eb6f45 R09: ffffffff8a455c80
+R10: ffffffff8a0e2318 R11: 0000000000000000 R12: ffffffff8a11ed60
+R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff87fe3860
+  __lock_acquire+0x116/0x5490 kernel/locking/lockdep.c:3673
+  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4302
+  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
+  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
+  spin_lock_bh include/linux/spinlock.h:343 [inline]
+  lock_sock_nested+0x41/0x120 net/core/sock.c:2917
+  lock_sock include/net/sock.h:1525 [inline]
+  udpv6_pre_connect net/ipv6/udp.c:1064 [inline]
+  udpv6_pre_connect+0xc4/0x170 net/ipv6/udp.c:1046
+  inet_dgram_connect+0x1cd/0x2e0 net/ipv4/af_inet.c:568
+  __sys_connect+0x266/0x330 net/socket.c:1840
+  __do_sys_connect net/socket.c:1851 [inline]
+  __se_sys_connect net/socket.c:1848 [inline]
+  __x64_sys_connect+0x73/0xb0 net/socket.c:1848
+  do_syscall_64+0x103/0x670 arch/x86/entry/common.c:298
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x458da9
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f9ad544cc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458da9
+RDX: 000000000000001c RSI: 0000000020000000 RDI: 0000000000000003
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f9ad544d6d4
+R13: 00000000004bf1fe R14: 00000000004d04b8 R15: 00000000ffffffff
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
-On Thu, May 16, 2019 at 02:55:42PM +1000, Nicholas Piggin wrote:
-> Abhishek's on May 13, 2019 7:49 pm:
-> > On 05/08/2019 10:29 AM, Nicholas Piggin wrote:
-> >> Abhishek Goel's on April 22, 2019 4:32 pm:
-> >>> Currently, the cpuidle governors determine what idle state a idling CPU
-> >>> should enter into based on heuristics that depend on the idle history on
-> >>> that CPU. Given that no predictive heuristic is perfect, there are cases
-> >>> where the governor predicts a shallow idle state, hoping that the CPU will
-> >>> be busy soon. However, if no new workload is scheduled on that CPU in the
-> >>> near future, the CPU will end up in the shallow state.
-> >>>
-> >>> Motivation
-> >>> ----------
-> >>> In case of POWER, this is problematic, when the predicted state in the
-> >>> aforementioned scenario is a lite stop state, as such lite states will
-> >>> inhibit SMT folding, thereby depriving the other threads in the core from
-> >>> using the core resources.
-> >>>
-> >>> So we do not want to get stucked in such states for longer duration. To
-> >>> address this, the cpuidle-core can queue timer to correspond with the
-> >>> residency value of the next available state. This timer will forcefully
-> >>> wakeup the cpu. Few such iterations will essentially train the governor to
-> >>> select a deeper state for that cpu, as the timer here corresponds to the
-> >>> next available cpuidle state residency. Cpu will be kicked out of the lite
-> >>> state and end up in a non-lite state.
-> >>>
-> >>> Experiment
-> >>> ----------
-> >>> I performed experiments for three scenarios to collect some data.
-> >>>
-> >>> case 1 :
-> >>> Without this patch and without tick retained, i.e. in a upstream kernel,
-> >>> It would spend more than even a second to get out of stop0_lite.
-> >>>
-> >>> case 2 : With tick retained in a upstream kernel -
-> >>>
-> >>> Generally, we have a sched tick at 4ms(CONF_HZ = 250). Ideally I expected
-> >>> it to take 8 sched tick to get out of stop0_lite. Experimentally,
-> >>> observation was
-> >>>
-> >>> =========================================================
-> >>> sample          min            max           99percentile
-> >>> 20              4ms            12ms          4ms
-> >>> =========================================================
-> >>>
-> >>> It would take atleast one sched tick to get out of stop0_lite.
-> >>>
-> >>> case 2 :  With this patch (not stopping tick, but explicitly queuing a
-> >>>            timer)
-> >>>
-> >>> ============================================================
-> >>> sample          min             max             99percentile
-> >>> ============================================================
-> >>> 20              144us           192us           144us
-> >>> ============================================================
-> >>>
-> >>> In this patch, we queue a timer just before entering into a stop0_lite
-> >>> state. The timer fires at (residency of next available state + exit latency
-> >>> of next available state * 2). Let's say if next state(stop0) is available
-> >>> which has residency of 20us, it should get out in as low as (20+2*2)*8
-> >>> [Based on the forumla (residency + 2xlatency)*history length] microseconds
-> >>> = 192us. Ideally we would expect 8 iterations, it was observed to get out
-> >>> in 6-7 iterations. Even if let's say stop2 is next available state(stop0
-> >>> and stop1 both are unavailable), it would take (100+2*10)*8 = 960us to get
-> >>> into stop2.
-> >>>
-> >>> So, We are able to get out of stop0_lite generally in 150us(with this
-> >>> patch) as compared to 4ms(with tick retained). As stated earlier, we do not
-> >>> want to get stuck into stop0_lite as it inhibits SMT folding for other
-> >>> sibling threads, depriving them of core resources. Current patch is using
-> >>> forced-wakeup only for stop0_lite, as it gives performance benefit(primary
-> >>> reason) along with lowering down power consumption. We may extend this
-> >>> model for other states in future.
-> >> I still have to wonder, between our snooze loop and stop0, what does
-> >> stop0_lite buy us.
-> >>
-> >> That said, the problem you're solving here is a generic one that all
-> >> stop states have, I think. Doesn't the same thing apply going from
-> >> stop0 to stop5? You might under estimate the sleep time and lose power
-> >> savings and therefore performance there too. Shouldn't we make it
-> >> generic for all stop states?
-> >>
-> >> Thanks,
-> >> Nick
-> >>
-> >>
-> > When a cpu is in snooze, it takes both space and time of core. When in 
-> > stop0_lite,
-> > it free up time but it still takes space.
-> 
-> True, but snooze should only be taking less than 1% of front end
-> cycles. I appreciate there is some non-zero difference here, I just
-> wonder in practice what exactly we gain by it.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-The idea behind implementing a lite-state was that on the future
-platforms it can be made to wait on a flag and hence act as a
-replacement for snooze. On POWER9 we don't have this feature.
-
-The motivation behind this patch was a HPC customer issue where they
-were observing some CPUs in the core getting stuck at stop0_lite
-state, thereby lowering the performance on the other CPUs of the core
-which were running the application.
-
-Disabling stop0_lite via sysfs didn't help since we would fallback to
-snooze and it would make matters worse.
-
-> 
-> We should always have fewer states unless proven otherwise.
-
-I agree.
-
-> 
-> That said, we enable it today so I don't want to argue this point
-> here, because it is a different issue from your patch.
-> 
-> > When it is in stop0 or deeper, 
-> > it free up both
-> > space and time slice of core.
-> > In stop0_lite, cpu doesn't free up the core resources and thus inhibits 
-> > thread
-> > folding. When a cpu goes to stop0, it will free up the core resources 
-> > thus increasing
-> > the single thread performance of other sibling thread.
-> > Hence, we do not want to get stuck in stop0_lite for long duration, and 
-> > want to quickly
-> > move onto the next state.
-> > If we get stuck in any other state we would possibly be losing on to 
-> > power saving,
-> > but will still be able to gain the performance benefits for other 
-> > sibling threads.
-> 
-> That's true, but stop0 -> deeper stop is also a benefit (for
-> performance if we have some power/thermal constraints, and/or for power
-> usage).
-> 
-> Sure it may not be so noticable as the SMT switch, but I just wonder
-> if the infrastructure should be there for the same reason.
-> 
-> I was testing interrupt frequency on some tickless workloads configs,
-> and without too much trouble you can get CPUs to sleep with no
-> interrupts for many minutes. Hours even. We wouldn't want the CPU to
-> stay in stop0 for that long.
-
-If it stays in stop0 or even stop2 for that long, we would want to
-"promote" it to a deeper state, such as say STOP5 which allows the
-other cores to run at higher frequencies.
-
-> 
-> Just thinking about the patch itself, I wonder do you need a full
-> kernel timer, or could we just set the decrementer? Is there much 
-> performance cost here?
->
-
-Good point. A decrementer would do actually.
-
-> Thanks,
-> Nick
-
---
-Thanks and Regards
-gautham.
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
