@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCFFC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A177C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3270720833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D7320833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727567AbfEPP7g (ORCPT
+        id S1727289AbfEPP67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:59:36 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43952 "EHLO
+        Thu, 16 May 2019 11:58:59 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42420 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727345AbfEPP7E (ORCPT
+        by vger.kernel.org with ESMTP id S1726677AbfEPP6m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:59:04 -0400
+        Thu, 16 May 2019 11:58:42 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImJ-0006zW-P7; Thu, 16 May 2019 16:58:43 +0100
+        id 1hRImD-0006yr-5r; Thu, 16 May 2019 16:58:37 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImF-0001Sj-2I; Thu, 16 May 2019 16:58:39 +0100
+        id 1hRImC-0001NF-Oe; Thu, 16 May 2019 16:58:36 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,37 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Borislav Petkov" <bp@alien8.de>,
-        "Tyler Hicks" <tyhicks@canonical.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Jiri Kosina" <jkosina@suse.cz>,
-        "Paul Mackerras" <paulus@samba.org>,
-        "Randy Dunlap" <rdunlap@infradead.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        "Jiri Kosina" <jikos@kernel.org>,
-        "Waiman Long" <longman@redhat.com>,
-        "Steven Price" <steven.price@arm.com>, linux-s390@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org,
-        "Heiko Carstens" <heiko.carstens@de.ibm.com>,
-        "Andrea Arcangeli" <aarcange@redhat.com>,
-        linux-arch@vger.kernel.org,
-        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Will Deacon" <will.deacon@arm.com>,
-        "Phil Auld" <pauld@redhat.com>, "H . Peter Anvin" <hpa@zytor.com>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>,
         "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Jon Masters" <jcm@redhat.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        "Andy Lutomirski" <luto@kernel.org>
+        "Ingo Molnar" <mingo@kernel.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>
 Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.486480847@decadent.org.uk>
+Message-ID: <lsq.1558022133.802319170@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 79/86] cpu/speculation: Add 'mitigations=' cmdline option
+Subject: [PATCH 3.16 12/86] jump_label, locking/static_keys: Rename
+ JUMP_LABEL_TYPE_* and related helpers to the static_key* pattern
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -79,144 +59,141 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Josh Poimboeuf <jpoimboe@redhat.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit 98af8452945c55652de68536afdde3b520fec429 upstream.
+commit a1efb01feca597b2abbc89873b40ef8ec6690168 upstream.
 
-Keeping track of the number of mitigations for all the CPU speculation
-bugs has become overwhelming for many users.  It's getting more and more
-complicated to decide which mitigations are needed for a given
-architecture.  Complicating matters is the fact that each arch tends to
-have its own custom way to mitigate the same vulnerability.
+Rename the JUMP_LABEL_TYPE_* macros to be JUMP_TYPE_* and move the
+inline helpers into kernel/jump_label.c, since that's the only place
+they're ever used.
 
-Most users fall into a few basic categories:
+Also rename the helpers where it's all about static keys.
 
-a) they want all mitigations off;
+This is the second step in removing the naming confusion that has led to
+a stream of avoidable bugs such as:
 
-b) they want all reasonable mitigations on, with SMT enabled even if
-   it's vulnerable; or
+  a833581e372a ("x86, perf: Fix static_key bug in load_mm_cr4()")
 
-c) they want all reasonable mitigations on, with SMT disabled if
-   vulnerable.
-
-Define a set of curated, arch-independent options, each of which is an
-aggregation of existing options:
-
-- mitigations=off: Disable all mitigations.
-
-- mitigations=auto: [default] Enable all the default mitigations, but
-  leave SMT enabled, even if it's vulnerable.
-
-- mitigations=auto,nosmt: Enable all the default mitigations, disabling
-  SMT if needed by a mitigation.
-
-Currently, these options are placeholders which don't actually do
-anything.  They will be fleshed out in upcoming patches.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Jiri Kosina <jkosina@suse.cz> (on x86)
-Reviewed-by: Jiri Kosina <jkosina@suse.cz>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Jon Masters <jcm@redhat.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: linux-s390@vger.kernel.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-arch@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Tyler Hicks <tyhicks@canonical.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Steven Price <steven.price@arm.com>
-Cc: Phil Auld <pauld@redhat.com>
-Link: https://lkml.kernel.org/r/b07a8ef9b7c5055c3a4637c87d07c296d5016fe0.1555085500.git.jpoimboe@redhat.com
-[bwh: Backported to 3.16:
- - Drop the auto,nosmt option which we can't support
- - Adjust filename]
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -1906,6 +1906,25 @@ bytes respectively. Such letter suffixes
- 			in the "bleeding edge" mini2440 support kernel at
- 			http://repo.or.cz/w/linux-2.6/mini2440.git
+ include/linux/jump_label.h | 25 +++++--------------------
+ kernel/jump_label.c        | 25 ++++++++++++++++---------
+ 2 files changed, 21 insertions(+), 29 deletions(-)
+
+--- a/include/linux/jump_label.h
++++ b/include/linux/jump_label.h
+@@ -101,24 +101,9 @@ static inline int static_key_count(struc
  
-+	mitigations=
-+			Control optional mitigations for CPU vulnerabilities.
-+			This is a set of curated, arch-independent options, each
-+			of which is an aggregation of existing arch-specific
-+			options.
-+
-+			off
-+				Disable all optional CPU mitigations.  This
-+				improves system performance, but it may also
-+				expose users to several CPU vulnerabilities.
-+
-+			auto (default)
-+				Mitigate all CPU vulnerabilities, but leave SMT
-+				enabled, even if it's vulnerable.  This is for
-+				users who don't want to be surprised by SMT
-+				getting disabled across kernel upgrades, or who
-+				have other ways of avoiding SMT-based attacks.
-+				This is the default behavior.
-+
- 	mminit_loglevel=
- 			[KNL] When CONFIG_DEBUG_MEMORY_INIT is set, this
- 			parameter allows control of the logging verbosity for
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -277,4 +277,21 @@ void arch_cpu_idle_enter(void);
- void arch_cpu_idle_exit(void);
- void arch_cpu_idle_dead(void);
+ #ifdef HAVE_JUMP_LABEL
  
-+/*
-+ * These are used for a global "mitigations=" cmdline option for toggling
-+ * optional CPU mitigations.
-+ */
-+enum cpu_mitigations {
-+	CPU_MITIGATIONS_OFF,
-+	CPU_MITIGATIONS_AUTO,
-+};
-+
-+extern enum cpu_mitigations cpu_mitigations;
-+
-+/* mitigations=off */
-+static inline bool cpu_mitigations_off(void)
-+{
-+	return cpu_mitigations == CPU_MITIGATIONS_OFF;
-+}
-+
- #endif /* _LINUX_CPU_H_ */
---- a/kernel/cpu.c
-+++ b/kernel/cpu.c
-@@ -795,3 +795,16 @@ void init_cpu_online(const struct cpumas
+-#define JUMP_LABEL_TYPE_FALSE_BRANCH	0UL
+-#define JUMP_LABEL_TYPE_TRUE_BRANCH	1UL
+-#define JUMP_LABEL_TYPE_MASK		1UL
+-
+-static
+-inline struct jump_entry *jump_label_get_entries(struct static_key *key)
+-{
+-	return (struct jump_entry *)((unsigned long)key->entries
+-						& ~JUMP_LABEL_TYPE_MASK);
+-}
+-
+-static inline bool jump_label_get_branch_default(struct static_key *key)
+-{
+-	if (((unsigned long)key->entries & JUMP_LABEL_TYPE_MASK) ==
+-	    JUMP_LABEL_TYPE_TRUE_BRANCH)
+-		return true;
+-	return false;
+-}
++#define JUMP_TYPE_FALSE	0UL
++#define JUMP_TYPE_TRUE	1UL
++#define JUMP_TYPE_MASK	1UL
+ 
+ static __always_inline bool static_key_false(struct static_key *key)
  {
- 	cpumask_copy(to_cpumask(cpu_online_bits), src);
- }
-+
-+enum cpu_mitigations cpu_mitigations = CPU_MITIGATIONS_AUTO;
-+
-+static int __init mitigations_parse_cmdline(char *arg)
+@@ -147,10 +132,10 @@ extern void jump_label_apply_nops(struct
+ 
+ #define STATIC_KEY_INIT_TRUE ((struct static_key)		\
+ 	{ .enabled = ATOMIC_INIT(1),				\
+-	  .entries = (void *)JUMP_LABEL_TYPE_TRUE_BRANCH })
++	  .entries = (void *)JUMP_TYPE_TRUE })
+ #define STATIC_KEY_INIT_FALSE ((struct static_key)		\
+ 	{ .enabled = ATOMIC_INIT(0),				\
+-	  .entries = (void *)JUMP_LABEL_TYPE_FALSE_BRANCH })
++	  .entries = (void *)JUMP_TYPE_FALSE })
+ 
+ #else  /* !HAVE_JUMP_LABEL */
+ 
+--- a/kernel/jump_label.c
++++ b/kernel/jump_label.c
+@@ -56,6 +56,11 @@ jump_label_sort_entries(struct jump_entr
+ 
+ static void jump_label_update(struct static_key *key, int enable);
+ 
++static inline bool static_key_type(struct static_key *key)
 +{
-+	if (!strcmp(arg, "off"))
-+		cpu_mitigations = CPU_MITIGATIONS_OFF;
-+	else if (!strcmp(arg, "auto"))
-+		cpu_mitigations = CPU_MITIGATIONS_AUTO;
-+
-+	return 0;
++	return (unsigned long)key->entries & JUMP_TYPE_MASK;
 +}
-+early_param("mitigations", mitigations_parse_cmdline);
++
+ void static_key_slow_inc(struct static_key *key)
+ {
+ 	STATIC_KEY_CHECK_USE();
+@@ -64,7 +69,7 @@ void static_key_slow_inc(struct static_k
+ 
+ 	jump_label_lock();
+ 	if (atomic_read(&key->enabled) == 0) {
+-		if (!jump_label_get_branch_default(key))
++		if (!static_key_type(key))
+ 			jump_label_update(key, JUMP_LABEL_JMP);
+ 		else
+ 			jump_label_update(key, JUMP_LABEL_NOP);
+@@ -87,7 +92,7 @@ static void __static_key_slow_dec(struct
+ 		atomic_inc(&key->enabled);
+ 		schedule_delayed_work(work, rate_limit);
+ 	} else {
+-		if (!jump_label_get_branch_default(key))
++		if (!static_key_type(key))
+ 			jump_label_update(key, JUMP_LABEL_NOP);
+ 		else
+ 			jump_label_update(key, JUMP_LABEL_JMP);
+@@ -185,15 +190,17 @@ static void __jump_label_update(struct s
+ 	}
+ }
+ 
+-static enum jump_label_type jump_label_type(struct static_key *key)
++static inline struct jump_entry *static_key_entries(struct static_key *key)
+ {
+-	bool true_branch = jump_label_get_branch_default(key);
+-	bool state = static_key_enabled(key);
++	return (struct jump_entry *)((unsigned long)key->entries & ~JUMP_TYPE_MASK);
++}
+ 
+-	if ((!true_branch && state) || (true_branch && !state))
+-		return JUMP_LABEL_JMP;
++static enum jump_label_type jump_label_type(struct static_key *key)
++{
++	bool enabled = static_key_enabled(key);
++	bool type = static_key_type(key);
+ 
+-	return JUMP_LABEL_NOP;
++	return enabled ^ type;
+ }
+ 
+ void __init jump_label_init(void)
+@@ -449,7 +456,7 @@ int jump_label_text_reserved(void *start
+ static void jump_label_update(struct static_key *key, int enable)
+ {
+ 	struct jump_entry *stop = __stop___jump_table;
+-	struct jump_entry *entry = jump_label_get_entries(key);
++	struct jump_entry *entry = static_key_entries(key);
+ #ifdef CONFIG_MODULES
+ 	struct module *mod;
+ 
 
