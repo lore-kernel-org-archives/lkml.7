@@ -2,154 +2,142 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60574C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A11B0C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33B482087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F0420657
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:07:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H6xNrQHk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9HrIa/z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfEPQGv (ORCPT
+        id S1727275AbfEPQHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:06:51 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:39881 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726529AbfEPQGv (ORCPT
+        Thu, 16 May 2019 12:07:09 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44256 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbfEPQHJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:06:51 -0400
-Received: by mail-ot1-f68.google.com with SMTP id r7so3941084otn.6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:06:50 -0700 (PDT)
+        Thu, 16 May 2019 12:07:09 -0400
+Received: by mail-oi1-f196.google.com with SMTP id z65so2896986oia.11;
+        Thu, 16 May 2019 09:07:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=I4VKFuY3dBhk8M0E31KTPJJ8MMHDVcscAUiCzod5h4g=;
-        b=H6xNrQHksO0mY+GD8TjSIB/dl7gXte6ptfd1KwGU7WS9fv6i/tgp5PRwV1QwuOcLn8
-         EQgegFWR1awHjfSGP4+gjgXMyl3Gl62XXSb7Mm7Nf1RXzKuaEetJoPJs6GSuS0KBL9vl
-         Wub95qd5nDDIuDpLobcQrJAeLZp5nVs+LMne3mcxV43wLSgIfXzXurgIQYOiBUs8VKq4
-         KUB/9oEuCvZV97lXvc2ABvfckVlCEpI9+rGFlz3y2hfmc98QPPAyHhjTuVHOdOUM3Bkm
-         UOJay+FnLHdEk6rocRtjzEXrvs47hR0q26+/2U1SS5+d0iEBJ8VXwWGOZJ51SarUWMvq
-         4fdw==
+        bh=If7DIMq1Gfx6XG6/ApM/VqLufFm2C3KncjrdjTPi5fw=;
+        b=W9HrIa/zrt9i9wWQLsWOgqvOcJ/ZEinVeMjhGTg/M6LgXGdcbPB38gp7CKW1Akzuix
+         FZeEC2qxcJaDiDUQWE144oDzyC6CIY14bFcVik75qRdaFo6gpHvLaXMHScwpez/TBXDE
+         LEJud/rc55JbTq4FLPH0uKppHUcREMpYUO0cWhrffQid3TzgZG0dj9tA79ffwhu7DX1L
+         ARsIgzfa6OlYV0/AUIwNy4TqKQ6NF/L3JtlzigKT31jbr3qBLHxPDUBJIR439EiMSiLt
+         zv6T7X7Lj9kuFbhIBO14quCYdRswsASy27tioqzSIKYGeVZBprXPfyb9dHAXh381oL9i
+         Ed7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=I4VKFuY3dBhk8M0E31KTPJJ8MMHDVcscAUiCzod5h4g=;
-        b=JzoVi0XfxsNFw3eYEtngySwsr7a4VN1ndM36p4JN3Db+NB30Ca41Z1YwOhUEGybG7K
-         0HMMlTzlsVQxiCG50bKjSxvgrKrAXC2glHjV949rv5N0TWPXbn4fR1PB3Fxu0kdXnmfV
-         5suBo6+4rDvHuUYTveN0WhrQtmAEtwU6FSf2NWa2rwhIaX1xoDnBzPNfFBF+AXFYY1zz
-         Hjd/Q47hLvqf8YgO18u4eFtpZWkIBEepwT5d32x//UE7NyjmGxZpstYTeFhQ/oc4ZISK
-         2ZBDTVLlGbUk9j09jUMlSeFotpexEcDRxLIEtECysnPCDpaDfEDi4SANLYuavpNEKhU2
-         qntw==
-X-Gm-Message-State: APjAAAUGi+i9my2BO793rnrVeCIFblTqzhsTumMwrmIK6PYFkEZszIOx
-        lZljSJ79cP00h3yYqLlpGnr95A0sSLX+c9jxz4QTbw==
-X-Google-Smtp-Source: APXvYqzler3soQWaPkgJTqHADqwjhXm5FObYmA+iecGHRrkmAWqb4Fk8pHSH7Qj3lDCx4Ml5SA54wKgEPHxudDIXDq4=
-X-Received: by 2002:a9d:7347:: with SMTP id l7mr6353382otk.183.1558022810319;
- Thu, 16 May 2019 09:06:50 -0700 (PDT)
+        bh=If7DIMq1Gfx6XG6/ApM/VqLufFm2C3KncjrdjTPi5fw=;
+        b=KJSdjYedsUL7N/IsSUCKn+nbO7QWyCAlb60awKoGDU+Er0lKkYfKeqOnna+AIS5x85
+         uWFODuHhFIc3zgGBYlBipfo/5oQijLpjpkxez/kPTyR/jdYpxIAGUDzMQvWVlkAHIO9X
+         1fKDewXzW8FgP4GQ6g7De509kQT4/XwopmnmwEQ93NK1E5jlqhhuE2DeIknDAJlOgFqQ
+         cB6AOIjjmszJB6TJAqa1gP1yLpHRoq836O/esJo3L6ok56L6lTuT9dOWE3JdxlT2IZTG
+         JiBkJ47+UqKHuMWAC3BulJhK9q+uwj4/gE+2lXdeLPIMQUXqFEpWTo4jEZpyACkWE/lo
+         Ozkg==
+X-Gm-Message-State: APjAAAX/AiM1DRiz6aYX9lEOmulMI2FiLGVrwi//IhGjtbIOdLtIwvBi
+        S7Ten5gP07WVqy4R01G1AOSaBdV5kjKokSmdgUE=
+X-Google-Smtp-Source: APXvYqxeWnmWZhffcM9dTuiS/N02EO1l6OnHcvpZADX+xNRI7YfuXCN7riZ/UAUEu9b/pdmZpShaSStxlQVSsRJkIpk=
+X-Received: by 2002:aca:38d4:: with SMTP id f203mr1339419oia.88.1558022828175;
+ Thu, 16 May 2019 09:07:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190516094234.9116-1-oleksandr@redhat.com> <20190516094234.9116-5-oleksandr@redhat.com>
- <CAG48ez2yXw_PJXO-mS=Qw5rkLpG6zDPd0saMhhGk09-du2bpaA@mail.gmail.com> <20190516142013.sf2vitmksvbkb33f@butterfly.localdomain>
-In-Reply-To: <20190516142013.sf2vitmksvbkb33f@butterfly.localdomain>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 16 May 2019 18:06:24 +0200
-Message-ID: <CAG48ez0teQk+rVnRmr=xcM8PJ_8UZC3hSi7PABx-qunz+5=DGg@mail.gmail.com>
-Subject: Re: [PATCH RFC 4/5] mm/ksm, proc: introduce remote merge
-To:     Oleksandr Natalenko <oleksandr@redhat.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Hugh Dickins <hughd@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Greg KH <greg@kroah.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Timofey Titovets <nefelim4ag@gmail.com>,
-        Aaron Tomlin <atomlin@redhat.com>,
-        Grzegorz Halat <ghalat@redhat.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>
+References: <20190514155911.6C0AC68B05@newverein.lst.de> <20190514160241.9EAC768C7B@newverein.lst.de>
+ <CA+E=qVfuKBzWK7dpM_eabjU8mLdzOw3zCnYk6Tc1oXdavH7CNA@mail.gmail.com>
+ <20190515093141.41016b11@blackhole.lan> <CA+E=qVf6K_0T0x2Hsfp6EDqM-ok6xiAzeZPvp6SRg0yt010pKA@mail.gmail.com>
+ <20190516154820.GA10431@lst.de>
+In-Reply-To: <20190516154820.GA10431@lst.de>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Thu, 16 May 2019 09:06:41 -0700
+Message-ID: <CA+E=qVe5NkAvHXPvVc7iTbZn5sKeoRm0166zPW_s83c2gk7B+g@mail.gmail.com>
+Subject: Re: [PATCH 4/4] arm64: DTS: allwinner: a64: enable ANX6345 bridge on Teres-I
+To:     Torsten Duwe <duwe@lst.de>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Harald Geyer <harald@ccbib.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        arm-linux <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 4:20 PM Oleksandr Natalenko
-<oleksandr@redhat.com> wrote:
-> On Thu, May 16, 2019 at 12:00:24PM +0200, Jann Horn wrote:
-> > On Thu, May 16, 2019 at 11:43 AM Oleksandr Natalenko
-> > <oleksandr@redhat.com> wrote:
-> > > Use previously introduced remote madvise knob to mark task's
-> > > anonymous memory as mergeable.
+On Thu, May 16, 2019 at 8:48 AM Torsten Duwe <duwe@lst.de> wrote:
+>
+> On Wed, May 15, 2019 at 08:08:57AM -0700, Vasily Khoruzhick wrote:
+> > On Wed, May 15, 2019 at 12:32 AM Torsten Duwe <duwe@lst.de> wrote:
 > > >
-> > > To force merging task's VMAs, "merge" hint is used:
-> > >
-> > >    # echo merge > /proc/<pid>/madvise
-> > >
-> > > Force unmerging is done similarly:
-> > >
-> > >    # echo unmerge > /proc/<pid>/madvise
-> > >
-> > > To achieve this, previously introduced ksm_madvise_*() helpers
-> > > are used.
+> > > It does comply with the bindings. The ports are all optional.
+> > > As far as DT is concerned, the signal path ends here. This is also the
+> > > final component _required_ to get the Linux kernel DRI up and running.
 > >
-> > Why does this not require PTRACE_MODE_ATTACH_FSCREDS to the target
-> > process? Enabling KSM on another process is hazardous because it
-> > significantly increases the attack surface for side channels.
-> >
-> > (Note that if you change this to require PTRACE_MODE_ATTACH_FSCREDS,
-> > you'll want to use mm_access() in the ->open handler and drop the mm
-> > in ->release. mm_access() from a ->write handler is not permitted.)
+> > Ugh, then bindings should be fixed. It's not optional. It may work if
+> > bootloader enables power for you, but it won't if you disable display
+> > driver in u-boot.
 >
-> Sounds reasonable. So, something similar to what mem_open() & friends do
-> now:
->
-> static int madvise_open(...)
-> ...
->         struct task_struct *task = get_proc_task(inode);
-> ...
->         if (task) {
->                 mm = mm_access(task, PTRACE_MODE_ATTACH_FSCREDS);
->                 put_task_struct(task);
->                 if (!IS_ERR_OR_NULL(mm)) {
->                         mmgrab(mm);
->                         mmput(mm);
-> ...
->
-> Then:
->
-> static ssize_t madvise_write(...)
-> ...
->         if (!mmget_not_zero(mm))
->                 goto out;
->
->         down_write(&mm->mmap_sem);
->         if (!mmget_still_valid(mm))
->                 goto skip_mm;
-> ...
-> skip_mm:
->         up_write(&mm->mmap_sem);
->
->         mmput(mm);
-> out:
->         return ...;
->
-> And, finally:
->
-> static int madvise_release(...)
-> ...
->                 mmdrop(mm);
-> ...
->
-> Right?
+> I double-checked. On the Teres-I, mentioning the panel _is_ optional.
 
-Yeah, that looks reasonable.
+It's not. See power on sequence in
+https://www.olimex.com/Products/DIY-Laptop/SPARE-PARTS/TERES-015-LCD11-6/resources/N116BGE-EA2.pdf
+
+Driver can talk to the panel over AUX channel only after t1+t3, t1 is
+up to 10ms, t3 is up to 200ms. It works with older version of driver
+that keeps panel always on because it takes a while between driver
+probe and pipeline start.
+
+It'll likely break with newer version of driver that turns on panel
+only when bridge is active. You'll see AUX timeouts - it won't be able
+to probe EDID in some cases. Problem can be intermittent and device
+dependent.
+
+All in all - you don't need panel timings since there's EDID but you
+still need panel delays. Anyway, it's up to you and maintainers.
+
+> PD23 powers down panel and backlight as much as possible, see
+> 24bd5d2cb93bc arm64: dts: allwinner: a64: teres-i: enable backlight
+> (currently only in Maxime's repo) and the Teres-I schematics...
+>
+> And the driver in your repo neatly guards all accesses with
+> "if (anx6345->panel)" -- good!
+> But I found the Vdds are required, so I added them as such.
+>
+> > I guess you're testing it with older version of anx6345. Newer version
+> > that supports power management [1] needs startup delay for panel.
+> > Another issue that you're seeing is that backlight is not disabled on
+> > DPMS events. All in all, you need to describe panel in dts.
+> >
+> > [1] https://github.com/anarsoul/linux-2.6/commit/2fbf9c242419c8bda698e8331a02d4312143ae2c
+>
+> > > Should I also have added a Tested-by: ? ;-)
+> >
+> > I don't have Teres, so I haven't tested these.
+>
+> *I* have one, and this works. I'll retest with your newer driver,
+> just in case. Nonetheless, the changes in this series should be fine.
+> Sending out v2 in a moment...
+>
+>         Torsten
+>
