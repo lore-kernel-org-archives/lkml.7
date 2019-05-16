@@ -3,136 +3,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C35AAC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A763FC04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A06062082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84393205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727329AbfEPOWE (ORCPT
+        id S1727347AbfEPOWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:22:04 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:52163 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726739AbfEPOWE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:22:04 -0400
-Received: from [IPv6:2001:420:44c1:2579:5556:9d1d:75e4:9919] ([IPv6:2001:420:44c1:2579:5556:9d1d:75e4:9919])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id RHGghHJoP3qlsRHGkhL0R5; Thu, 16 May 2019 16:22:02 +0200
-Subject: Re: [RFC PATCH v2] media: cec: expose HDMI connector to CEC dev
- mapping
-To:     Dariusz Marcinkiewicz <darekm@google.com>
-Cc:     linux-media@vger.kernel.org, hans.verkuil@cisco.com,
-        linux-kernel@vger.kernel.org
-References: <20190416083852.126786-1-darekm@google.com>
- <dcb189af-f67f-ede3-b4fb-de1da7b53ccb@xs4all.nl>
- <CALFZZQEoiikyXmHJyEgEJTRNryTN8ScNK4P3bDCp-9v9GtvU8g@mail.gmail.com>
- <b78864b4-e470-99b2-5505-890d178b72f8@xs4all.nl>
- <CALFZZQF9qJbDsG1nzdjTxaG=89Pu0k=pxg3TChMQcf+hDxaeuw@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <cea89a32-c04d-1acb-5b6b-aeb8dda3fccc@xs4all.nl>
-Date:   Thu, 16 May 2019 16:21:58 +0200
+        Thu, 16 May 2019 10:22:34 -0400
+Received: from relay.sw.ru ([185.231.240.75]:55154 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726696AbfEPOWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 10:22:33 -0400
+Received: from [172.16.25.169]
+        by relay.sw.ru with esmtp (Exim 4.91)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1hRHH5-0007GL-T0; Thu, 16 May 2019 17:22:24 +0300
+Subject: Re: [PATCH RFC 0/5] mm: process_vm_mmap() -- syscall for duplication
+ a process mapping
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
+        keith.busch@intel.com, kirill.shutemov@linux.intel.com,
+        pasha.tatashin@oracle.com, alexander.h.duyck@linux.intel.com,
+        ira.weiny@intel.com, andreyknvl@google.com, arunks@codeaurora.org,
+        vbabka@suse.cz, cl@linux.com, riel@surriel.com,
+        keescook@chromium.org, hannes@cmpxchg.org, npiggin@gmail.com,
+        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
+        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
+        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-api@vger.kernel.org
+References: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
+ <20190516133034.GT16651@dhcp22.suse.cz>
+ <20190516135259.GU16651@dhcp22.suse.cz>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <85562807-2a13-9aa2-e67d-15513c766eae@virtuozzo.com>
+Date:   Thu, 16 May 2019 17:22:23 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <CALFZZQF9qJbDsG1nzdjTxaG=89Pu0k=pxg3TChMQcf+hDxaeuw@mail.gmail.com>
+In-Reply-To: <20190516135259.GU16651@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfHXjG3pMfIqoxZVyuS01n0gYWZSoiUy6sfsRmkQWAD2nHsMlTgXhL76KGZi5VZ1rSFMggkH76FsGTXiwEV0JigAb1X+014dz70HG9oRCMiPdCp281sER
- YKhaANwV1dQ5UBkj33iq3mf5rxJ0YoDuT1UT57LZ9SZsfDHh/9gsSTAC5nNaJUwRjGEm3EvCtMmlrBruTbi70qmz1dzypmB4Z0A741VQPSPteK3olzw2Sl8k
- bgC4NsUplQIZ1KXW4JbUQIoXIsxVuKgZdAcdBDkjTLqVBbyxjUKzJDeIXKslDuQjTI7UDs97q7bTJXy12Mvfid/OXSwzo0xBbw5xF1qSCKavz37a4mXmzzMH
- LebI99EGVbhVHknoIoy3yTGJg0BGkcOfEGQx+6mxg49EJcxuDe0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/16/19 4:10 PM, Dariusz Marcinkiewicz wrote:
-> Hi Hans.
-> 
-> From: Hans Verkuil <hverkuil@xs4all.nl>
-> Date: Thu, May 9, 2019 at 11:31 AM
-> To: Dariusz Marcinkiewicz
-> Cc: <linux-media@vger.kernel.org>, <hans.verkuil@cisco.com>,
-> <linux-kernel@vger.kernel.org>
-> 
->> On 5/9/19 9:52 AM, Dariusz Marcinkiewicz wrote:
->>> Hi Hans.
+On 16.05.2019 16:52, Michal Hocko wrote:
+> On Thu 16-05-19 15:30:34, Michal Hocko wrote:
+>> [You are defining a new user visible API, please always add linux-api
+>>  mailing list - now done]
+>>
+>> On Wed 15-05-19 18:11:15, Kirill Tkhai wrote:
+> [...]
+>>> The proposed syscall aims to introduce an interface, which
+>>> supplements currently existing process_vm_writev() and
+>>> process_vm_readv(), and allows to solve the problem with
+>>> anonymous memory transfer. The above example may be rewritten as:
 >>>
->>> On Wed, Apr 24, 2019 at 2:09 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>>>
->>>> Hi Dariusz,
->>>>
->>>> This is getting close, so I think for the next version you can drop
->>>> the RFC tag.
->>>>
->>>> Some comments:
->>>>
->>> ...
->>>>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-cec.c
->>>>> @@ -261,7 +261,7 @@ static int dw_hdmi_cec_probe(struct platform_device *pdev)
->>>>>       cec->adap = cec_allocate_adapter(&dw_hdmi_cec_ops, cec, "dw_hdmi",
->>>>>                                        CEC_CAP_LOG_ADDRS | CEC_CAP_TRANSMIT |
->>>>>                                        CEC_CAP_RC | CEC_CAP_PASSTHROUGH,
->>>>> -                                      CEC_MAX_LOG_ADDRS);
->>>>> +                                      CEC_MAX_LOG_ADDRS, NULL);
->>>>
->>>> Hmm, the connector information is actually available through cec->hdmi.
->>>>
->>>> I think it would make sense to create a helper function that fills in
->>>> struct cec_connector_info based on a struct drm_connector pointer.
->>>> And add a function to drivers/gpu/drm/bridge/synopsys/dw-hdmi.c that
->>>> dw-hdmi-cec.c can call that does the same.
+>>> 	void *buf;
 >>>
->>> Looking at the code here, is the connector info guaranteed to be
->>> available at the time cec_allocate_adapter is called here?
->>> drm_connector won't be initialized until dw_hdmi_bridge_attach is
->>> called, which happens after the cec platform device is created.
->>
->> Good point. The creation of the cec platform device should probably
->> be moved to dw_hdmi_bridge_attach.
->>
->>> ...
->>>>>       priv->adap = cec_allocate_adapter(&tda9950_cec_ops, priv, "tda9950",
->>>>>                                         CEC_CAP_DEFAULTS,
->>>>> -                                       CEC_MAX_LOG_ADDRS);
->>>>> +                                       CEC_MAX_LOG_ADDRS,
->>>>> +                                       NULL);
->>>>
->>>> Here too the drm_connector can be found via struct tda9950_glue.
->>>> So it is easy to provide proper connector information.
+>>> 	buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
+>>> 		   MAP_PRIVATE|MAP_ANONYMOUS, ...);
+>>> 	recv(sock, buf, n * PAGE_SIZE, 0);
 >>>
->>> The same concern as with the comment before.
->>
->> Same solution: this has to be moved.
->>
->> I have hardware to test patches for both drivers. It might take 2-3 weeks
->> before I can test as I don't always has access to the hardware, but at
->> least I can verify that moving this code won't break anything.
->>
->> It's best to first move the code in separate patches before applying the
->> "expose HDMI connector to CEC dev mapping" patch on top of them.
->>
+>>> 	/* Sign of @pid is direction: "from @pid task to current" or vice versa. */
+>>> 	process_vm_mmap(-pid, buf, n * PAGE_SIZE, remote_addr, PVMMAP_FIXED);
+>>> 	munmap(buf, n * PAGE_SIZE);
 > 
-> I've submitted another revision of the changes, with those 2 patches
-> added on top. Hope that is ok.
-> 
-> Please take a look. It would be great if you could give those 2
-> patches a go on an actual hardware.
+> AFAIU this means that you actually want to do an mmap of an anonymous
+> memory with a COW semantic to the remote process right?
 
-I should be able to test the dw-hdmi patch next week, but testing the tda9950 patch
-has to wait until the week after that.
+Yes.
 
-Regards,
+> How does the remote process find out where and what has been mmaped?
 
-	Hans
+Any way. Isn't this a trivial task? :) You may use socket or any
+of appropriate linux features to communicate between them.
 
-> 
-> Thank you and best regards.
-> 
+>What if the range collides? This sounds quite scary to me TBH.
 
+In case of range collides, the part of old VMA becomes unmapped.
+The same way we behave on ordinary mmap. You may intersect a range,
+which another thread mapped, so you need a synchronization between
+them. There is no a principle difference.
+
+Also I'm going to add a flag to prevent unmapping like Kees suggested.
+Please, see his message.
+
+> Why cannot you simply use shared memory for that?
+
+Because of remote task may want specific type of VMA. It may want not to
+share a VMA with its children.
+
+Speaking about online migration, a task wants its anonymous private VMAs
+remain the same after the migration. Otherwise, imagine the situation,
+when task's stack becomes a shared VMA after the migration.
+Also, task wants anonymous mapping remains anonymous.
+
+In general, in case of shared memory is enough for everything, we would
+have never had process_vm_writev() and process_vm_readv() syscalls.
+
+Kirill
