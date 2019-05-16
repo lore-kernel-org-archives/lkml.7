@@ -2,137 +2,93 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0C2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B44BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64C5D2089E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B74520815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfEPPwI (ORCPT
+        id S1726494AbfEPPxz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:52:08 -0400
-Received: from verein.lst.de ([213.95.11.211]:60434 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727043AbfEPPwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:52:05 -0400
-Received: by newverein.lst.de (Postfix, from userid 2005)
-        id 964B068C4E; Thu, 16 May 2019 17:51:44 +0200 (CEST)
-From:   Torsten Duwe <duwe@lst.de>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Archit Taneja <architt@codeaurora.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] arm64: DTS: allwinner: a64: enable ANX6345 bridge on Teres-I
-References: <20190516154943.239E668B05@newverein.lst.de>
-Message-Id: <20190516155144.964B068C4E@newverein.lst.de>
-Date:   Thu, 16 May 2019 17:51:44 +0200 (CEST)
+        Thu, 16 May 2019 11:53:55 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40346 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfEPPxz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 11:53:55 -0400
+Received: by mail-qk1-f196.google.com with SMTP id q197so2564427qke.7
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 08:53:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JQI/WU1c4eX4Bc95K/7Uz+e1kJGO+JQuZlvUeSbbPGc=;
+        b=P1036jmKbqm/AJyk+/tVpMqLuyrp4uLjX7FVpjOsOuKkAwDkxuiRNznB0shzilRP7r
+         D4us/1t2NSsJugSSGfpAVazsx0tO1gPQlLvUNq9UtY2lo7jUGgHBhVMWsQBwidBpEp3S
+         WAFkNo/A3BybRjnOcfXcxHS1FV7cjrWeq+i6yP2hpAA51sfimpkHPtqHpWeGu/Fa7KDr
+         EM+4CznuB6xOHXSYtfuPYlRXR+5Ms/Gemn0rgEFJEALizzcacYGuPW58t94XVkFo5SOM
+         u1uI3A6/xrAyciOH+qgnyQuYEXvH6NIt6eprzAFyevTYRAljgbSfPQfp16Q4bFx8/xVQ
+         E6xQ==
+X-Gm-Message-State: APjAAAW/2+RoOAu7pluCrb0pCLw6lKE0DvFsdP91Gt6IfuE2n6J24Nbe
+        fUFNkiOOzui25IeXPilv+SIR4vwo0fYSz3hOiNkUH7mNd6Q=
+X-Google-Smtp-Source: APXvYqxGacujl3xkC+1CQj9ZgVTewrIKspT5Krb7d0/OwrCP8EKuEx+9fNaCY33lbb5MOJouXqule4hfYCGQTcBKDzk=
+X-Received: by 2002:a05:620a:1085:: with SMTP id g5mr23133232qkk.182.1558022034360;
+ Thu, 16 May 2019 08:53:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190516064304.24057-1-olof@lixom.net> <20190516064304.24057-2-olof@lixom.net>
+ <CAHk-=wj7uZ+rLecwEP+U3jRRPWRoB1QVTr8pHzTcmQadE=Ngvg@mail.gmail.com>
+In-Reply-To: <CAHk-=wj7uZ+rLecwEP+U3jRRPWRoB1QVTr8pHzTcmQadE=Ngvg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 16 May 2019 17:53:37 +0200
+Message-ID: <CAK8P3a27zgq3c_iWHVfypAc-hLag06Bs=Q2D7bn4i4nVfPQSyw@mail.gmail.com>
+Subject: Re: [GIT PULL 1/4] ARM: SoC platform updates
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Olof Johansson <olof@lixom.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        ARM SoC <arm@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "linux-alpha@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Icenowy Zheng <icenowy@aosc.io>
+On Thu, May 16, 2019 at 5:34 PM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
+> On Wed, May 15, 2019 at 11:43 PM Olof Johansson <olof@lixom.net> wrote:
+> >
+> > SoC updates, mostly refactorings and cleanups of old legacy platforms.
+> > Major themes this release:
+>
+> Hmm. This brings in a new warning:
+>
+>   drivers/clocksource/timer-ixp4xx.c:78:20: warning:
+> ‘ixp4xx_read_sched_clock’ defined but not used [-Wunused-function]
+>
+> because that drivers is enabled for build testing, but that function
+> is only used under
+>
+>   #ifdef CONFIG_ARM
+>         sched_clock_register(ixp4xx_read_sched_clock, 32, timer_freq);
+>   #endif
+>
+> It's not clear why that #ifdef is there. This driver only builds
+> non-ARM when COMPILE_TEST is enabled, and that #ifdef actually breaks
+> that build test.
+>
+> I'm going to remove that #ifdef in my merge, because I do *not* want
+> to see new warnings, and it doesn't seem to make any sense.
+>
+> Maybe that's the wrong resolution, please holler and let me know if
+> you want something else.
 
-TERES-I has an ANX6345 bridge connected to the RGB666 LCD output, and
-the I2C controlling signals are connected to I2C0 bus.
+As far as I can tell, that is the best fix, thanks for the cleanup!
 
-Enable it in the device tree.
-
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Torsten Duwe <duwe@suse.de>
----
-
-originally: patchwork.kernel.org/patch/10646867
-
-Changed the reset polarity, which is active low,
-according to the (terse) datasheet, Teres-I and pinebook schematics,
-and the confusing parts of the linux driver code (not yet included here).
-Active low -> no more confusion.
-
----
- .../boot/dts/allwinner/sun50i-a64-teres-i.dts | 40 +++++++++++++++++--
- 1 file changed, 36 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-index c455b24dd079..bc1d0d6c0672 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-@@ -72,20 +72,38 @@
- 	};
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
- 
- 
--/* The ANX6345 eDP-bridge is on i2c0. There is no linux (mainline)
-- * driver for this chip at the moment, the bootloader initializes it.
-- * However it can be accessed with the i2c-dev driver from user space.
-- */
- &i2c0 {
- 	clock-frequency = <100000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&i2c0_pins>;
- 	status = "okay";
-+
-+	anx6345: anx6345@38 {
-+		compatible = "analogix,anx6345";
-+		reg = <0x38>;
-+		reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
-+		dvdd25-supply = <&reg_dldo2>;
-+		dvdd12-supply = <&reg_dldo3>;
-+
-+		port {
-+			anx6345_in: endpoint {
-+				remote-endpoint = <&tcon0_out_anx6345>;
-+			};
-+		};
-+	};
-+};
-+
-+&mixer0 {
-+	status = "okay";
- };
- 
- &mmc0 {
-@@ -258,6 +276,20 @@
- 	vcc-hdmi-supply = <&reg_dldo1>;
- };
- 
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd_rgb666_pins>;
-+
-+	status = "okay";
-+};
-+
-+&tcon0_out {
-+	tcon0_out_anx6345: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&anx6345_in>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
+      Arnd
