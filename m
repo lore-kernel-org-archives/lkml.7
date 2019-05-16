@@ -2,88 +2,127 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91146C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FBC5C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 487DA2070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0378B2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:38:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="RFo89LUg"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="U/xGWQ3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728819AbfEPRhy (ORCPT
+        id S1728830AbfEPRi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 13:37:54 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:39996 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726409AbfEPRhy (ORCPT
+        Thu, 16 May 2019 13:38:29 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:47124 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726409AbfEPRi3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 13:37:54 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 29261C0BC3;
-        Thu, 16 May 2019 17:37:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1558028263; bh=Wmy4EGULNayDPs5gXSLg4GnxB4UoMyTMnJFypw/UAMs=;
-        h=From:To:CC:Subject:Date:References:From;
-        b=RFo89LUgrQVhapH4tg0LTkHnYmSWx/0iOcJhA1/wNiAqNlq2G0BcoBqBQ094mISSm
-         sUJNK2Mu9R/qVLHOM4oag6F34iE9EbuUVXrqaLIT+lVPLHCmB7al/P92uaisSvB4Bu
-         zOGPkf4va32BVku1mILHhQEYqe6wd1V0b1bJ1La3c3iWJFe3VH1WUfzI4UUsWGzGbL
-         MpN5Bb1Q7zEq6IsqtkgA8E+mLs9zKTz4xMQ9GGnwti40hCpmIe5EwPViiGeV378wC+
-         KMAN1mcDI6C/1vg2v4ib8pbEAKJUvXi2inpNw9CGudQuJi37F/g62dqVkUheaDkL3e
-         Tm/X0X86XhJJA==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 744EEA006A;
-        Thu, 16 May 2019 17:37:52 +0000 (UTC)
-Received: from us01wembx1.internal.synopsys.com ([169.254.1.22]) by
- US01WEHTC2.internal.synopsys.com ([10.12.239.237]) with mapi id
- 14.03.0415.000; Thu, 16 May 2019 10:37:52 -0700
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-CC:     "paltsev@snyopsys.com" <paltsev@snyopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>
-Subject: Re: [PATCH 4/9] ARC: mm: do_page_fault refactor #3: tidyup vma
- access permission code
-Thread-Topic: [PATCH 4/9] ARC: mm: do_page_fault refactor #3: tidyup vma
- access permission code
-Thread-Index: AQHVCrVZlKJI28iPlEu8hsRog7Qd0g==
-Date:   Thu, 16 May 2019 17:37:51 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA2307501A2517B16@us01wembx1.internal.synopsys.com>
-References: <1557880176-24964-1-git-send-email-vgupta@synopsys.com>
- <1557880176-24964-5-git-send-email-vgupta@synopsys.com>
- <1558027448.2682.11.camel@synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.13.184.19]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 16 May 2019 13:38:29 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4GHbZK0003099
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 10:38:27 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=B2SIJpPp/mlOGynEQLUWe5A/4Aq03L0X3tl4w90B9Gw=;
+ b=U/xGWQ3ojU2JxIog44PXNp5LPf2/Ycypw+1r8vLEJyLqAzCnHVyC3zvrKUvVZK0XoAwZ
+ DN0Y0n3NAKzNROT8Uh7Ecr++ixHJ9xnPfvBycVuQZ4gX7kxv3Xr0Nkf9WT4+yhJtCOo+
+ rJF8OhLSP4zv0YuxXkQW0bS/JN7M9+GwNnU= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2shc8br1pc-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 10:38:27 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 16 May 2019 10:38:25 -0700
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id B087112182CE9; Thu, 16 May 2019 10:38:23 -0700 (PDT)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     Tejun Heo <tj@kernel.org>
+CC:     Oleg Nesterov <oleg@redhat.com>, Alex Xu <alex_y_xu@yahoo.ca>,
+        <kernel-team@fb.com>, <cgroups@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH RESEND] signal: unconditionally leave the frozen state in ptrace_stop()
+Date:   Thu, 16 May 2019 10:38:21 -0700
+Message-ID: <20190516173821.1498807-1-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=317 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905160112
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/16/19 10:24 AM, Eugeniy Paltsev wrote:=0A=
->> +	unsigned int write =3D 0, exec =3D 0, mask;=0A=
-> Probably it's better to use 'bool' type for 'write' and 'exec' as we real=
-ly use them as a boolean variables.=0A=
-=0A=
-Right those are semantics, but the generated code for "bool" is not ideal -=
- given=0A=
-it is inherently a "char" it is promoted first to an int with an additional=
- EXTB=0A=
-which I really dislike.=0A=
-Guess it is more of a style thing.=0A=
-=0A=
--Vineet=0A=
+Alex Xu reported a regression in strace, caused by the introduction of
+the cgroup v2 freezer. The regression can be reproduced by stracing
+the following simple program:
+
+  #include <unistd.h>
+
+  int main() {
+      write(1, "a", 1);
+      return 0;
+  }
+
+An attempt to run strace ./a.out leads to the infinite loop:
+  [ pre-main omitted ]
+  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+  write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
+  [ repeats forever ]
+
+The problem occurs because the traced task leaves ptrace_stop()
+(and the signal handling loop) with the frozen bit set. So let's
+call cgroup_leave_frozen(true) unconditionally after sleeping
+in ptrace_stop().
+
+With this patch applied, strace works as expected:
+  [ pre-main omitted ]
+  write(1, "a", 1)                        = 1
+  exit_group(0)                           = ?
+  +++ exited with 0 +++
+
+Reported-by: Alex Xu <alex_y_xu@yahoo.ca>
+Fixes: 76f969e8948d ("cgroup: cgroup v2 freezer")
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Cc: Tejun Heo <tj@kernel.org>
+---
+ kernel/signal.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 8607b11ff936..565ba14d89d5 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2112,6 +2112,7 @@ static void ptrace_stop(int exit_code, int why, int clear_code, kernel_siginfo_t
+ 		preempt_enable_no_resched();
+ 		cgroup_enter_frozen();
+ 		freezable_schedule();
++		cgroup_leave_frozen(true);
+ 	} else {
+ 		/*
+ 		 * By the time we got the lock, our tracer went away.
+-- 
+2.20.1
+
