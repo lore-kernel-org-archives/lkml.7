@@ -2,142 +2,132 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A11B0C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E915C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74F0420657
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:07:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9HrIa/z"
+	by mail.kernel.org (Postfix) with ESMTP id 4AD41206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558022972;
+	bh=/jeEdhqq4/af+gMjDmWJh7vuXi4a38JsUBKz4GpDhAY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=lQNkgM1bR7A7gXbdSPHulpK32cqGL4T7BuXAUn9tbx9k0T8DPQQmXxS6i3clJ4fO4
+	 wsnvk6ks+GyaNbtJmCtfFAHWxkh0lfBd+HonDhif2sQGs+UaB2FOz1Y0KUKPzXLCKJ
+	 oLm1ZID061QWUSp9lv98juiTmj/UGk0kbDzOMhb4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfEPQHJ (ORCPT
+        id S1726575AbfEPQJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:07:09 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44256 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfEPQHJ (ORCPT
+        Thu, 16 May 2019 12:09:31 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55741 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfEPQJb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:07:09 -0400
-Received: by mail-oi1-f196.google.com with SMTP id z65so2896986oia.11;
-        Thu, 16 May 2019 09:07:08 -0700 (PDT)
+        Thu, 16 May 2019 12:09:31 -0400
+Received: by mail-wm1-f65.google.com with SMTP id x64so4212522wmb.5
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:09:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=If7DIMq1Gfx6XG6/ApM/VqLufFm2C3KncjrdjTPi5fw=;
-        b=W9HrIa/zrt9i9wWQLsWOgqvOcJ/ZEinVeMjhGTg/M6LgXGdcbPB38gp7CKW1Akzuix
-         FZeEC2qxcJaDiDUQWE144oDzyC6CIY14bFcVik75qRdaFo6gpHvLaXMHScwpez/TBXDE
-         LEJud/rc55JbTq4FLPH0uKppHUcREMpYUO0cWhrffQid3TzgZG0dj9tA79ffwhu7DX1L
-         ARsIgzfa6OlYV0/AUIwNy4TqKQ6NF/L3JtlzigKT31jbr3qBLHxPDUBJIR439EiMSiLt
-         zv6T7X7Lj9kuFbhIBO14quCYdRswsASy27tioqzSIKYGeVZBprXPfyb9dHAXh381oL9i
-         Ed7A==
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=eSAuT4yWDGwd60DxlAYtEEKGYksK3LIfdzrbrsSiK7U=;
+        b=DZQPhQichGv6w0zvYNtUgA2mnIl1GWVrH44VOX1xLZ+Dtm7XKvUHhHOCAxwrdSvXVk
+         FjQhR5wr/puQHHethqwpv3ZK166Zr0R04KYRctffMYX0uAfS7PpTEv1sZdVTwXO65p1Z
+         02w3jFgJgOJcU8ssHs+BijB7snmPlAO2+ZCVoithIcYhVC6drHaSQQS0IW9N/A6dEDxw
+         Ssr1ty65nfTgkN5prIym04CYOwxzYNsbo8HFRsISM2K9nOJOacjKyZe6fM1d1uP6W8bQ
+         OIxvZjo9C0zg6lQCUaGvMJ5F3gtLA6Ez9uAM+OGz6x7vwvXqRFHB7UFF0gzNKWfBGSb4
+         yF8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=If7DIMq1Gfx6XG6/ApM/VqLufFm2C3KncjrdjTPi5fw=;
-        b=KJSdjYedsUL7N/IsSUCKn+nbO7QWyCAlb60awKoGDU+Er0lKkYfKeqOnna+AIS5x85
-         uWFODuHhFIc3zgGBYlBipfo/5oQijLpjpkxez/kPTyR/jdYpxIAGUDzMQvWVlkAHIO9X
-         1fKDewXzW8FgP4GQ6g7De509kQT4/XwopmnmwEQ93NK1E5jlqhhuE2DeIknDAJlOgFqQ
-         cB6AOIjjmszJB6TJAqa1gP1yLpHRoq836O/esJo3L6ok56L6lTuT9dOWE3JdxlT2IZTG
-         JiBkJ47+UqKHuMWAC3BulJhK9q+uwj4/gE+2lXdeLPIMQUXqFEpWTo4jEZpyACkWE/lo
-         Ozkg==
-X-Gm-Message-State: APjAAAX/AiM1DRiz6aYX9lEOmulMI2FiLGVrwi//IhGjtbIOdLtIwvBi
-        S7Ten5gP07WVqy4R01G1AOSaBdV5kjKokSmdgUE=
-X-Google-Smtp-Source: APXvYqxeWnmWZhffcM9dTuiS/N02EO1l6OnHcvpZADX+xNRI7YfuXCN7riZ/UAUEu9b/pdmZpShaSStxlQVSsRJkIpk=
-X-Received: by 2002:aca:38d4:: with SMTP id f203mr1339419oia.88.1558022828175;
- Thu, 16 May 2019 09:07:08 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=eSAuT4yWDGwd60DxlAYtEEKGYksK3LIfdzrbrsSiK7U=;
+        b=HPxO8ihSX1WcsJH+7XLmr4tLucRpgHu8iEyBzWGLAEP00ORuOWtIkXT/rjL+bM0Z9R
+         InnVtVeKGv952dfDCslKxttZjED5geroDX5gUO9DnWZoeVeNMtf26iGD2lkE+7N/CuE1
+         HzoYenUWbsCyABy6JRpeIePuxrphVgHwNr0LLoCAlEK0xHQL1TIiyJExR+zl4cIUz01f
+         LhokNySRap8rqwbNlj3zX83WeM7xeUVUfXvrsDR0uEr0EF1dHfi+YlytSzFk7KLoXpd2
+         1h2INf4MyOetNsbyZsF+s0mfeKxbdI6GyPp2/JH/Myv37Ddb6Hv916do6tT+5Xj7Yrkx
+         r4Zw==
+X-Gm-Message-State: APjAAAW10KLuQDkbmFHoo9e3gyAcSMUlZtl40wJQI/U9qCyBcm1PXGUt
+        JHM1YOPwznoCBuiikiQsaOaUhWrv
+X-Google-Smtp-Source: APXvYqwm2Mq9BU0nCLDrPA38f/q0iRvzk10yQJ59EGK4WfbxH8LZXl0Yn6y4frMiTNBiHY3Sj8xVSw==
+X-Received: by 2002:a1c:8004:: with SMTP id b4mr27336809wmd.79.1558022968781;
+        Thu, 16 May 2019 09:09:28 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id x6sm7905180wru.36.2019.05.16.09.09.26
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 May 2019 09:09:27 -0700 (PDT)
+Date:   Thu, 16 May 2019 18:09:25 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] timer fixes
+Message-ID: <20190516160925.GA97788@gmail.com>
 MIME-Version: 1.0
-References: <20190514155911.6C0AC68B05@newverein.lst.de> <20190514160241.9EAC768C7B@newverein.lst.de>
- <CA+E=qVfuKBzWK7dpM_eabjU8mLdzOw3zCnYk6Tc1oXdavH7CNA@mail.gmail.com>
- <20190515093141.41016b11@blackhole.lan> <CA+E=qVf6K_0T0x2Hsfp6EDqM-ok6xiAzeZPvp6SRg0yt010pKA@mail.gmail.com>
- <20190516154820.GA10431@lst.de>
-In-Reply-To: <20190516154820.GA10431@lst.de>
-From:   Vasily Khoruzhick <anarsoul@gmail.com>
-Date:   Thu, 16 May 2019 09:06:41 -0700
-Message-ID: <CA+E=qVe5NkAvHXPvVc7iTbZn5sKeoRm0166zPW_s83c2gk7B+g@mail.gmail.com>
-Subject: Re: [PATCH 4/4] arm64: DTS: allwinner: a64: enable ANX6345 bridge on Teres-I
-To:     Torsten Duwe <duwe@lst.de>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Harald Geyer <harald@ccbib.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 8:48 AM Torsten Duwe <duwe@lst.de> wrote:
->
-> On Wed, May 15, 2019 at 08:08:57AM -0700, Vasily Khoruzhick wrote:
-> > On Wed, May 15, 2019 at 12:32 AM Torsten Duwe <duwe@lst.de> wrote:
-> > >
-> > > It does comply with the bindings. The ports are all optional.
-> > > As far as DT is concerned, the signal path ends here. This is also the
-> > > final component _required_ to get the Linux kernel DRI up and running.
-> >
-> > Ugh, then bindings should be fixed. It's not optional. It may work if
-> > bootloader enables power for you, but it won't if you disable display
-> > driver in u-boot.
->
-> I double-checked. On the Teres-I, mentioning the panel _is_ optional.
+Linus,
 
-It's not. See power on sequence in
-https://www.olimex.com/Products/DIY-Laptop/SPARE-PARTS/TERES-015-LCD11-6/resources/N116BGE-EA2.pdf
+Please pull the latest timers-urgent-for-linus git tree from:
 
-Driver can talk to the panel over AUX channel only after t1+t3, t1 is
-up to 10ms, t3 is up to 200ms. It works with older version of driver
-that keeps panel always on because it takes a while between driver
-probe and pipeline start.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-for-linus
 
-It'll likely break with newer version of driver that turns on panel
-only when bridge is active. You'll see AUX timeouts - it won't be able
-to probe EDID in some cases. Problem can be intermittent and device
-dependent.
+   # HEAD: fdc6bae940ee9eb869e493990540098b8c0fd6ab ntp: Allow TAI-UTC offset to be set to zero
 
-All in all - you don't need panel timings since there's EDID but you
-still need panel delays. Anyway, it's up to you and maintainers.
+A TIA adjtimex interface extension, and a POSIX compliance ABI fix for 
+timespec64 users.
 
-> PD23 powers down panel and backlight as much as possible, see
-> 24bd5d2cb93bc arm64: dts: allwinner: a64: teres-i: enable backlight
-> (currently only in Maxime's repo) and the Teres-I schematics...
->
-> And the driver in your repo neatly guards all accesses with
-> "if (anx6345->panel)" -- good!
-> But I found the Vdds are required, so I added them as such.
->
-> > I guess you're testing it with older version of anx6345. Newer version
-> > that supports power management [1] needs startup delay for panel.
-> > Another issue that you're seeing is that backlight is not disabled on
-> > DPMS events. All in all, you need to describe panel in dts.
-> >
-> > [1] https://github.com/anarsoul/linux-2.6/commit/2fbf9c242419c8bda698e8331a02d4312143ae2c
->
-> > > Should I also have added a Tested-by: ? ;-)
-> >
-> > I don't have Teres, so I haven't tested these.
->
-> *I* have one, and this works. I'll retest with your newer driver,
-> just in case. Nonetheless, the changes in this series should be fine.
-> Sending out v2 in a moment...
->
->         Torsten
->
+ Thanks,
+
+	Ingo
+
+------------------>
+Arnd Bergmann (1):
+      y2038: Make CONFIG_64BIT_TIME unconditional
+
+Miroslav Lichvar (1):
+      ntp: Allow TAI-UTC offset to be set to zero
+
+
+ arch/Kconfig      | 2 +-
+ kernel/time/ntp.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 33687dddd86a..9092e0ffe4d3 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -764,7 +764,7 @@ config COMPAT_OLD_SIGACTION
+ 	bool
+ 
+ config 64BIT_TIME
+-	def_bool ARCH_HAS_64BIT_TIME
++	def_bool y
+ 	help
+ 	  This should be selected by all architectures that need to support
+ 	  new system calls with a 64-bit time_t. This is relevant on all 32-bit
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index 92a90014a925..f43d47c8c3b6 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -690,7 +690,7 @@ static inline void process_adjtimex_modes(const struct __kernel_timex *txc,
+ 		time_constant = max(time_constant, 0l);
+ 	}
+ 
+-	if (txc->modes & ADJ_TAI && txc->constant > 0)
++	if (txc->modes & ADJ_TAI && txc->constant >= 0)
+ 		*time_tai = txc->constant;
+ 
+ 	if (txc->modes & ADJ_OFFSET)
