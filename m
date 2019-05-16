@@ -2,127 +2,172 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CDAC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 906CDC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:40:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 172592087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63DDA2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:40:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tmUl4rNa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d8eJIIag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbfEPPkI (ORCPT
+        id S1727637AbfEPPkT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:40:08 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:55062 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbfEPPkH (ORCPT
+        Thu, 16 May 2019 11:40:19 -0400
+Received: from mail-wr1-f41.google.com ([209.85.221.41]:36265 "EHLO
+        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfEPPkT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:40:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PHR0hYYEwPULziU46CMKQKc5SNs9O4WaI8hYyRJBMJY=; b=tmUl4rNa0e8kPfHmpmAiiRHx9
-        ps9QR8Gt8+nO7MO7sYMHwLW55WTc+VdHPlZ+LRyA1BWJ1riXwNU92+JHINbtKi2D69twAz2g5e+rR
-        Uv8ts+rT6CMJ9etGQROToSbN5J52CipEuy4FI2bBfgebVRU4G+dyi5iwld2dOFD4vMScfS59smfuW
-        THcVKoDjdW3iyJ8Sj52mDoRi/zM1QNJJ+h0ay07z7qz3YWT6oMjSpCycObIQImYBrBpZafTJg/F6S
-        R+TukXMxw63UBohzqSeg+nwhn9Ev7S3vTibExMt4CWLx511oULO+eEwcrF32NMmVlHW6PkGOyfYTE
-        VPg0uqBTA==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hRIUA-0007tb-37; Thu, 16 May 2019 15:39:58 +0000
-Subject: Re: [PATCH v3 3/3] fdt: add support for rng-seed
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Frank Rowand <frowand.list@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Miles Chen <miles.chen@mediatek.com>,
-        James Morse <james.morse@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kees Cook <keescook@chromium.org>
-References: <20190516102817.188519-1-hsinyi@chromium.org>
- <20190516102817.188519-3-hsinyi@chromium.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <932a02f2-a1d3-a8d7-c7a4-2891024d10a2@infradead.org>
-Date:   Thu, 16 May 2019 08:39:56 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 16 May 2019 11:40:19 -0400
+Received: by mail-wr1-f41.google.com with SMTP id s17so3966269wru.3;
+        Thu, 16 May 2019 08:40:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5xSbdCo2088ZqCPrSF9g7xEVEzDABY2YcRLKAXfPGSI=;
+        b=d8eJIIagruGv9s64K44RXN03oOtaC1VRjIV+RWUlOr1Kx9ptga/FXxIkPCQJxqLsN1
+         vdX4qqXEz/dwFnmylryABoqw+opB/JhDZu+27N5F1dsg4WuE77dWtxSx3qJtKdkqYuFD
+         JH84BYrUIXCqxgrJsMxmeAzllEGsd8BlpS0FJLGmB4/BDJliSZ7xNBp+nXN2MkHR+UiL
+         6VNPSII+YeSt7H4AmHrKMD9bqCZSYMbURP05mFMLb4CsR7lRGcgVbyjwgMpXUfu7o5QE
+         0LNDsROWXWQjPE08iTUrlpeNEQLQZukIOt+XISWmqdsaPD9/3R1Nm34LSbw5pkdYTKKC
+         ZSgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5xSbdCo2088ZqCPrSF9g7xEVEzDABY2YcRLKAXfPGSI=;
+        b=fyo0OMvBqKavHAJsuzpAGWSvu0mLo96oAebmoiBjTip8cXNeJHCmYnUUm1wO63jvoL
+         38FvN1fC5F/ibYoh5867AX+O0HP9/m8YBy8S1u0ebuHrJAvOaBSQrmBBMQrPI3Abuz70
+         nUc/EAQw6PynqEc+iwTOCxYyM4b8D72aZfl1almWff2CoOU4/yeHsSXH60F9aya/w8GW
+         oiWieYISHt8iRnm1AHL9KqWr7Eer5kkUmSseJVm5eb74s4LvJ5axMWQs1fESi10dV2hO
+         xrS7KzUd5FHufcyU6uLvHXQikgT8GEZ8HS+BSW+4fbnNwCR+ZjCf85BQR4X+teD2v1Nw
+         ZEJA==
+X-Gm-Message-State: APjAAAUlYV+/+L0upHkHcPHWMW/ggUVaRoyFOPkAiHEhdepxvRRpgrmg
+        Fho6jUJkzj53suNONt+OP+QG0P5L
+X-Google-Smtp-Source: APXvYqzHj0gHAVGWXDe4xZb3o/fP+SYr4nrHJmnNwgjUnI1lnNWjTeWwxAL19PVV2SHDhogCuMRNLA==
+X-Received: by 2002:adf:b612:: with SMTP id f18mr30404470wre.236.1558021217141;
+        Thu, 16 May 2019 08:40:17 -0700 (PDT)
+Received: from kwango.redhat.com (ovpn-brq.redhat.com. [213.175.37.11])
+        by smtp.gmail.com with ESMTPSA id q24sm5887339wmc.18.2019.05.16.08.40.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 May 2019 08:40:16 -0700 (PDT)
+From:   Ilya Dryomov <idryomov@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Ceph updates for 5.2-rc1
+Date:   Thu, 16 May 2019 17:40:05 +0200
+Message-Id: <20190516154005.22583-1-idryomov@gmail.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-In-Reply-To: <20190516102817.188519-3-hsinyi@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/16/19 3:28 AM, Hsin-Yi Wang wrote:
-> Introducing a chosen node, rng-seed, which is an entropy that can be
-> passed to kernel called very early to increase initial device
-> randomness. Bootloader should provide this entropy and the value is
-> read from /chosen/rng-seed in DT.
-> 
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
-> change v2->v3:
-> 1. use arch hook for fdt pgprot change
-> 2. handle CONFIG_KEXEC
-> ---
->  Documentation/devicetree/bindings/chosen.txt | 14 +++++
->  drivers/of/fdt.c                             | 55 ++++++++++++++++++++
->  2 files changed, 69 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-> index 45e79172a646..fef5c82672dc 100644
-> --- a/Documentation/devicetree/bindings/chosen.txt
-> +++ b/Documentation/devicetree/bindings/chosen.txt
-> @@ -28,6 +28,20 @@ mode) when EFI_RNG_PROTOCOL is supported, it will be overwritten by
->  the Linux EFI stub (which will populate the property itself, using
->  EFI_RNG_PROTOCOL).
->  
-> +rng-seed
-> +-----------
-> +
-> +This property served as an entropy to add device randomness. It is parsed
+Hi Linus,
 
-                 serves
+The following changes since commit e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd:
 
+  Linux 5.1 (2019-05-05 17:42:58 -0700)
 
-> +as a byte array, e.g.
-> +
-> +/ {
-> +	chosen {
-> +		rng-seed = <0x31 0x95 0x1b 0x3c 0xc9 0xfa 0xb3 ...>;
-> +	};
-> +};
-> +
-> +This random value should be provided by bootloader.
-> +
->  stdout-path
->  -----------
->  
+are available in the Git repository at:
 
+  https://github.com/ceph/ceph-client.git tags/ceph-for-5.2-rc1
 
+for you to fetch changes up to 00abf69dd24f4444d185982379c5cc3bb7b6d1fc:
 
--- 
-~Randy
+  ceph: flush dirty inodes before proceeding with remount (2019-05-07 19:43:05 +0200)
+
+----------------------------------------------------------------
+On the filesystem side we have:
+
+- a fix to enforce quotas set above the mount point (Luis Henriques)
+
+- support for exporting snapshots through NFS (Zheng Yan)
+
+- proper statx implementation (Jeff Layton).  statx flags are mapped
+  to MDS caps, with AT_STATX_{DONT,FORCE}_SYNC taken into account.
+
+- some follow-up dentry name handling fixes, in particular elimination
+  of our hand-rolled helper and the switch to __getname() as suggested
+  by Al (Jeff Layton)
+
+- a set of MDS client cleanups in preparation for async MDS requests
+  in the future (Jeff Layton)
+
+- a fix to sync the filesystem before remounting (Jeff Layton)
+
+On the rbd side, work is on-going on object-map and fast-diff image
+features.
+
+----------------------------------------------------------------
+Arnd Bergmann (3):
+      rbd: avoid clang -Wuninitialized warning
+      rbd: convert all rbd_assert(0) to BUG()
+      libceph: fix clang warning for CEPH_DEFINE_OID_ONSTACK
+
+Ilya Dryomov (2):
+      rbd: client_mutex is never nested
+      rbd: don't assert on writes to snapshots
+
+Jeff Layton (20):
+      ceph: remove superfluous inode_lock in ceph_fsync
+      ceph: properly handle granular statx requests
+      ceph: fix NULL pointer deref when debugging is enabled
+      ceph: make iterate_session_caps a public symbol
+      ceph: dump granular cap info in "caps" debugfs file
+      ceph: fix potential use-after-free in ceph_mdsc_build_path
+      ceph: use ceph_mdsc_build_path instead of clone_dentry_name
+      ceph: use __getname/__putname in ceph_mdsc_build_path
+      ceph: use pathlen values returned by set_request_path_attr
+      ceph: after an MDS request, do callback and completions
+      ceph: have ceph_mdsc_do_request call ceph_mdsc_submit_request
+      ceph: move wait for mds request into helper function
+      ceph: fix comment over ceph_drop_caps_for_unlink
+      ceph: simplify arguments and return semantics of try_get_cap_refs
+      ceph: just call get_session in __ceph_lookup_mds_session
+      ceph: print inode number in __caps_issued_mask debugging messages
+      libceph: fix unaligned accesses in ceph_entity_addr handling
+      libceph: make ceph_pr_addr take an struct ceph_entity_addr pointer
+      ceph: fix unaligned access in ceph_send_cap_releases
+      ceph: flush dirty inodes before proceeding with remount
+
+Luis Henriques (2):
+      ceph: factor out ceph_lookup_inode()
+      ceph: quota: fix quota subdir mounts
+
+Yan, Zheng (1):
+      ceph: snapshot nfs re-export
+
+Zhi Zhang (1):
+      ceph: remove duplicated filelock ref increase
+
+ drivers/block/rbd.c            |  24 +--
+ fs/ceph/caps.c                 |  93 +++++------
+ fs/ceph/debugfs.c              |  40 ++++-
+ fs/ceph/export.c               | 356 ++++++++++++++++++++++++++++++++++++++---
+ fs/ceph/file.c                 |   2 +-
+ fs/ceph/inode.c                |  85 ++++++----
+ fs/ceph/locks.c                |  13 --
+ fs/ceph/mds_client.c           | 205 ++++++++++--------------
+ fs/ceph/mds_client.h           |  33 +++-
+ fs/ceph/mdsmap.c               |   2 +-
+ fs/ceph/quota.c                | 177 ++++++++++++++++++--
+ fs/ceph/super.c                |   7 +
+ fs/ceph/super.h                |   2 +
+ include/linux/ceph/ceph_fs.h   |   6 +
+ include/linux/ceph/messenger.h |   3 +-
+ include/linux/ceph/osdmap.h    |  13 +-
+ net/ceph/cls_lock_client.c     |   2 +-
+ net/ceph/debugfs.c             |   4 +-
+ net/ceph/messenger.c           | 121 +++++++-------
+ net/ceph/mon_client.c          |   6 +-
+ net/ceph/osd_client.c          |   2 +-
+ 21 files changed, 845 insertions(+), 351 deletions(-)
