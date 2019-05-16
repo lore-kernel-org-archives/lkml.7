@@ -2,76 +2,93 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF9AEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB0AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8339120815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB5420815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:44:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lSbRP38A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727454AbfEPMod (ORCPT
+        id S1727493AbfEPMoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 08:44:33 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:34806 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726911AbfEPMod (ORCPT
+        Thu, 16 May 2019 08:44:44 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:43002 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727198AbfEPMon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 08:44:33 -0400
-Received: from penelope.horms.nl (ip4dab7138.direct-adsl.nl [77.171.113.56])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id E2E9C25AD69;
-        Thu, 16 May 2019 22:44:30 +1000 (AEST)
-Received: by penelope.horms.nl (Postfix, from userid 7100)
-        id D590EE216B9; Thu, 16 May 2019 14:44:28 +0200 (CEST)
-Date:   Thu, 16 May 2019 14:44:28 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        David Miller <davem@davemloft.net>,
-        Doug Ledford <dledford@redhat.com>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH v2] RDMA: Directly cast the sockaddr union to sockaddr
-Message-ID: <20190516124428.hytvkwfltfi24lrv@verge.net.au>
-References: <20190514005521.GA18085@ziepe.ca>
+        Thu, 16 May 2019 08:44:43 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 188so2949569ljf.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 05:44:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WAcJqFUogOC+q5kPPB4TqPaHzS2NFJ0eM8JptnvXwCY=;
+        b=lSbRP38AQ6SFgZe7kefhpxx8/TDZSnH2lvUSx43pHjMx7U+pNW/gkPtChmN1XxMZQF
+         aG2GYCNFQE+Js4XFSeeF7MJ/tiTkjkFTJRM70xPIljpD2HgNUhuqx8SA46t1GmT6Rdl8
+         3RLaQ2GRTITuwusHV0tg0yumSCSrJF5QL1iHC65CT/k8XNcW8NDZ/jRf4dZGVELvQS4s
+         s0DL/WgyqYOS3VbeBY3JXWXLvY2aEWcwuTp77vIRTQs9uxgH3+45Fo/vPNGdEM15QrZ0
+         b5P0PZA8CP9nS+kTyJv9NupA/e7XY8Px9gHOg0Ite/fQTuPpCEO2N4o1Y+5S5IEtTBBw
+         9EfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WAcJqFUogOC+q5kPPB4TqPaHzS2NFJ0eM8JptnvXwCY=;
+        b=Iid8n4Ap6wjd4gzg0Eeawcmv1t3/leW1nkETNByD2NQvxAEIKRzNS5xiPqUXRVkb3j
+         I0DBZ9kJNnCYPCMdGgjZliaHM+/Kzz+cDyp9WGFx7gmgHqFi4iMB8TNlFkRK27+/nusU
+         6S8+F3gglkzPtqi6cpBncIEEZU71A4qTKxePZr1iVwEZW+yxi92c++YSu0ERk4umzsLX
+         H7Fzq+xTjK8AZUxpKnmghx/Zt0XNK6WGK5OC9eT7Eobe0jOBwS8mWe0PI8W0uXrfCHjh
+         fZqn8JZKY7RV3e+m8+IFnQ/FOguXBQRjdLL18HYDEvYwaPmn+Gy0mkUam3UFYLHrap7n
+         5BBA==
+X-Gm-Message-State: APjAAAUF1ATKVUtnzVs00JUpKv68bQNB9rySEh9h/Ie9xHizN9tDYhAl
+        9K/qVItiTvdOI7ApREJOCaZDeBpDJwxP1zf6cJs+eQ==
+X-Google-Smtp-Source: APXvYqz1nKgkBL8f+HFCe7nXbFNOicCiF9Au3HD3bQcJw9TF68xCQ8lq2AMz/ruba3dbZXK+AF6xyEkmAFuQTpMWTEI=
+X-Received: by 2002:a2e:301a:: with SMTP id w26mr8899681ljw.153.1558010681900;
+ Thu, 16 May 2019 05:44:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514005521.GA18085@ziepe.ca>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <20190428150822.13935-1-j.neuschaefer@gmx.net>
+In-Reply-To: <20190428150822.13935-1-j.neuschaefer@gmx.net>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 May 2019 14:44:30 +0200
+Message-ID: <CACRpkdZcP3gEsudT0rpzNuBe=4Mz0s=KLPd_y-38E4oxVeQD0A@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: pinctrl: Fix spelling of bias-pull-up
+To:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 09:55:21PM -0300, Jason Gunthorpe wrote:
-> gcc 9 now does allocation size tracking and thinks that passing the member
-> of a union and then accessing beyond that member's bounds is an overflow.
-> 
-> Instead of using the union member, use the entire union with a cast to
-> get to the sockaddr. gcc will now know that the memory extends the full
-> size of the union.
-> 
-> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-> ---
->  drivers/infiniband/core/addr.c           | 16 ++++++++--------
->  drivers/infiniband/hw/ocrdma/ocrdma_ah.c |  5 ++---
->  drivers/infiniband/hw/ocrdma/ocrdma_hw.c |  5 ++---
->  3 files changed, 12 insertions(+), 14 deletions(-)
-> 
-> I missed the ocrdma files in the v1
-> 
-> We can revisit what to do with that repetitive union after the merge
-> window, but this simple patch will eliminate the warnings for now.
-> 
-> Linus, I'll send this as a PR tomorrow - there is also a bug fix for
-> the rdma-netlink changes posted that should go too.
+On Sun, Apr 28, 2019 at 5:08 PM Jonathan Neusch=C3=A4fer
+<j.neuschaefer@gmx.net> wrote:
 
-<2c>
-I would be very happy to see this revisited in such a way
-that some use is made of the C type system (instead of casts).
-</2c>
+> The property is spelled 'bias-pull-up', as documented in
+> pinctrl-bindings.txt.
+>
+> Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+It appears from Rob's comment that he's applying it,
+tell me if I need to apply it to the pinctrl tree.
+
+Yours,
+Linus Walleij
