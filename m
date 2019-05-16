@@ -2,142 +2,117 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8FEC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6F7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE9E620848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAAC220848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:50:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="n5uXhLly"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfEPFqL (ORCPT
+        id S1726528AbfEPFu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 01:46:11 -0400
-Received: from mail-it1-f198.google.com ([209.85.166.198]:54284 "EHLO
-        mail-it1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbfEPFqG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 01:46:06 -0400
-Received: by mail-it1-f198.google.com with SMTP id k8so2250405itd.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 22:46:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=tgc7GEi/p8to8+1uRafrubdbYu2TMmvglM0eA+RoSWQ=;
-        b=R7W/i4yw3aquX2I3RfgpvNXtnulpKvC8ioBHAalF6R0WfoMhguDkEUUxhFXPVYBDlr
-         3+TH3MCX+ZU8IyG5inaV7xlYBybtU38W+0504U1OtXTgqrfvAoC51xnqBphEKVYhUZ3T
-         AeZEmshi6eqdz5E/Nxjj+AGfJf/Fi0f7eWu6PI7pND6NyFvGC5FfeOO9xur/Yv2q/1/b
-         MhrL1Ad4vNssweR/w+NVAtLauKVMqX8u+DSkW9a3dyxMVTEQbGifjcMg0rZfvUVlH3Nx
-         flP2D/9v/zDXzbaVIwBDCXTuQQiDhSLQWrx+pELs08HMuWFfI+HOFAAQxp9LXfc61jb/
-         8Pxw==
-X-Gm-Message-State: APjAAAVbuadbeQ7isJGv0J9xOGRXH91wj8aHb0enVXD4G16gbqUROoxD
-        sp3K3SBLS6hrscevLlYWh8wicHjroGp32ROnX3E/TejpXTOQ
-X-Google-Smtp-Source: APXvYqxdnOLPNI4SPCg8kAAc4Imf3dgIaZgeX3CzvLXOlPKTDwXGEropBQJBQyY6HpcG8WVv6rtv/62aUZVwHw8wIyiroxq8mp2G
+        Thu, 16 May 2019 01:50:26 -0400
+Received: from mail-eopbgr130075.outbound.protection.outlook.com ([40.107.13.75]:15008
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726344AbfEPFu0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 01:50:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ea7s7gV++ju0odhg74nZ2Is4HRr9jlcD4nSEDbl05YI=;
+ b=n5uXhLlyY/esrbWTrMqsjbg/pQot7odyIsKdKqltbF6WhAf3OKVxxdscqX3JP+PoBsJf+hucZDDvxmD2cagmvvz9DLpVO0CAeIQzV0azPhORZJ7NFO0Lg4im0QFZMSzrjBQJQ6n1X3c/tlhzujRN0cajZBLHCAtL+SQvC9LbtKo=
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
+ VE1PR04MB6557.eurprd04.prod.outlook.com (20.179.234.86) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Thu, 16 May 2019 05:50:22 +0000
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::a5b5:13f5:f89c:9a30]) by VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::a5b5:13f5:f89c:9a30%7]) with mapi id 15.20.1900.010; Thu, 16 May 2019
+ 05:50:22 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     "brian.austin@cirrus.com" <brian.austin@cirrus.com>,
+        "Paul.Handrigan@cirrus.com" <Paul.Handrigan@cirrus.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: cs42xx8: Add reset gpio handling
+Thread-Topic: [PATCH] ASoC: cs42xx8: Add reset gpio handling
+Thread-Index: AdULqw8bAAGC7faUTbaffmppV3l1ug==
+Date:   Thu, 16 May 2019 05:50:22 +0000
+Message-ID: <VE1PR04MB64791493BF55A587AD10B267E30A0@VE1PR04MB6479.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4fae456c-2a09-417e-8466-08d6d9c262b1
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6557;
+x-ms-traffictypediagnostic: VE1PR04MB6557:
+x-microsoft-antispam-prvs: <VE1PR04MB6557262E417B86038A9C027FE30A0@VE1PR04MB6557.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:125;
+x-forefront-prvs: 0039C6E5C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(346002)(376002)(366004)(396003)(199004)(189003)(6506007)(229853002)(9686003)(26005)(4326008)(55016002)(186003)(6116002)(68736007)(486006)(8676002)(316002)(2906002)(81166006)(33656002)(52536014)(3846002)(81156014)(256004)(102836004)(6916009)(14444005)(71190400001)(8936002)(71200400001)(66066001)(478600001)(99286004)(66946007)(76116006)(73956011)(5660300002)(7696005)(66556008)(53936002)(64756008)(66446008)(66476007)(476003)(54906003)(14454004)(6436002)(74316002)(4744005)(305945005)(6246003)(25786009)(86362001)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6557;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: WpW20+S1PHDW7fbJeXsEb65ZddGH161kdOeA8mdOXLREYjBqtK6dkTZ6VxcCczAdOe2q1rar8bgaQrqqh+sfitQYPbmKMWPUKJyxFDeTONvUIXhJl759zOwfL1YnVxgCIxDfoOa1FQKebkB13UxA9OVIQ4T8Y4lhJ8G6FwUgs/ZctNkUTDwFqNCsoKMZvPxHJvknKtTArA0lnfEBJTs2zLZMbXsvl3SCLc02ji1fVYnTcq8WKyi4/mPVECq00CEum7549eaSWN5gU8E8Pb1SfmZ6JcmqRdAu7EH/4MyO+Bnlfk1yArZ5N50eWxZvPHZGkBYqVEtDTIch8kQIvufvf7HgR8QfNJMsTqlkGIXb1UoSPMw67N0AAfcM77eoK4U+QezqlLNoYdQaWmPUCr4sdVbegYHNWJ6HRmM1q7GZFyI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a24:9906:: with SMTP id a6mr10464843ite.52.1557985565578;
- Wed, 15 May 2019 22:46:05 -0700 (PDT)
-Date:   Wed, 15 May 2019 22:46:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000033a0120588fac894@google.com>
-Subject: WARNING: locking bug in inet_autobind
-From:   syzbot <syzbot+94cc2a66fc228b23f360@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, kafai@fb.com, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com,
-        yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4fae456c-2a09-417e-8466-08d6d9c262b1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 05:50:22.1298
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6557
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Mark
 
-syzbot found the following crash on:
+>=20
+> On Mon, Apr 29, 2019 at 10:46:03AM +0000, S.j. Wang wrote:
+>=20
+> > +	cs42xx8->gpio_reset =3D of_get_named_gpio(dev->of_node, "gpio-
+> reset", 0);
+> > +	if (gpio_is_valid(cs42xx8->gpio_reset)) {
+> > +		ret =3D devm_gpio_request_one(dev, cs42xx8->gpio_reset,
+> > +				GPIOF_OUT_INIT_LOW, "cs42xx8 reset");
+>=20
+> You should just be able to request the GPIO by name without going
+> through of_get_named_gpio() using devm_gpio_get().
+>=20
+Will send v2.
 
-HEAD commit:    35c99ffa Merge tag 'for_linus' of git://git.kernel.org/pub..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10e970f4a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=82f0809e8f0a8c87
-dashboard link: https://syzkaller.appspot.com/bug?extid=94cc2a66fc228b23f360
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > @@ -559,6 +577,7 @@ static int cs42xx8_runtime_resume(struct device
+> > *dev)
+> >
+> >  	regcache_cache_only(cs42xx8->regmap, false);
+> >
+> > +	regcache_mark_dirty(cs42xx8->regmap);
+> >  	ret =3D regcache_sync(cs42xx8->regmap);
+> >  	if (ret) {
+> >  		dev_err(dev, "failed to sync regmap: %d\n", ret);
+>=20
+> This looks like an unrelated bugfix.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Will separate it to another patch.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+94cc2a66fc228b23f360@syzkaller.appspotmail.com
-
-WARNING: CPU: 1 PID: 32543 at kernel/locking/lockdep.c:734  
-arch_local_save_flags arch/x86/include/asm/paravirt.h:762 [inline]
-WARNING: CPU: 1 PID: 32543 at kernel/locking/lockdep.c:734  
-arch_local_save_flags arch/x86/include/asm/paravirt.h:760 [inline]
-WARNING: CPU: 1 PID: 32543 at kernel/locking/lockdep.c:734  
-look_up_lock_class kernel/locking/lockdep.c:725 [inline]
-WARNING: CPU: 1 PID: 32543 at kernel/locking/lockdep.c:734  
-register_lock_class+0xe10/0x1860 kernel/locking/lockdep.c:1078
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 32543 Comm: syz-executor.4 Not tainted 5.1.0+ #9
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2cb/0x65c kernel/panic.c:214
-  __warn.cold+0x20/0x45 kernel/panic.c:566
-  report_bug+0x263/0x2b0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:180 [inline]
-  fixup_bug arch/x86/kernel/traps.c:175 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:273
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:292
-  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:972
-RIP: 0010:look_up_lock_class kernel/locking/lockdep.c:734 [inline]
-RIP: 0010:register_lock_class+0xe10/0x1860 kernel/locking/lockdep.c:1078
-Code: 00 48 89 da 4d 8b 76 c0 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 80  
-3c 02 00 0f 85 23 07 00 00 4c 89 33 e9 e3 f4 ff ff 0f 0b <0f> 0b e9 ea f3  
-ff ff 44 89 e0 4c 8b 95 50 ff ff ff 83 c0 01 4c 8b
-RSP: 0018:ffff88806395f9e8 EFLAGS: 00010083
-RAX: dffffc0000000000 RBX: ffff8880a947f1e0 RCX: 0000000000000000
-RDX: 1ffff1101528fe3f RSI: 0000000000000000 RDI: ffff8880a947f1f8
-RBP: ffff88806395fab0 R08: 1ffff1100c72bf45 R09: ffffffff8a459c80
-R10: ffffffff8a0e47e0 R11: 0000000000000000 R12: ffffffff8a1235a0
-R13: 0000000000000000 R14: 0000000000000000 R15: ffffffff87fe4c60
-  __lock_acquire+0x116/0x5490 kernel/locking/lockdep.c:3673
-  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4302
-  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-  _raw_spin_lock_bh+0x33/0x50 kernel/locking/spinlock.c:175
-  spin_lock_bh include/linux/spinlock.h:343 [inline]
-  lock_sock_nested+0x41/0x120 net/core/sock.c:2917
-  lock_sock include/net/sock.h:1525 [inline]
-  inet_autobind+0x20/0x1a0 net/ipv4/af_inet.c:183
-  inet_dgram_connect+0x252/0x2e0 net/ipv4/af_inet.c:573
-  __sys_connect+0x266/0x330 net/socket.c:1840
-  __do_sys_connect net/socket.c:1851 [inline]
-  __se_sys_connect net/socket.c:1848 [inline]
-  __x64_sys_connect+0x73/0xb0 net/socket.c:1848
-  do_syscall_64+0x103/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x458da9
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f695f8b6c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458da9
-RDX: 000000000000001c RSI: 0000000020000000 RDI: 0000000000000003
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f695f8b76d4
-R13: 00000000004bf1fe R14: 00000000004d04f8 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Best regards
+Wang shengjiu
