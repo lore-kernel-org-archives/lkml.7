@@ -2,97 +2,169 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D8F3C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4A0C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C71520862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABC6B20818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:49:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kolivas-org.20150623.gappssmtp.com header.i=@kolivas-org.20150623.gappssmtp.com header.b="JxyD05FK"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="loAapQuh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfEPUsP (ORCPT
+        id S1727508AbfEPUtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 16:48:15 -0400
-Received: from mail-lf1-f44.google.com ([209.85.167.44]:36297 "EHLO
-        mail-lf1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728088AbfEPUsO (ORCPT
+        Thu, 16 May 2019 16:49:02 -0400
+Received: from mail.efficios.com ([167.114.142.138]:35978 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbfEPUtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 16:48:14 -0400
-Received: by mail-lf1-f44.google.com with SMTP id y10so3718753lfl.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 13:48:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kolivas-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=/zfJjbsgjfhcPhz4cNFPAebK7HlMUZRYQ6SujmzDQiE=;
-        b=JxyD05FKofY7Pas0O5P80rykIBJ/4NSl+9du3TfMjOJX6Zu1/EdlkEZ29kFevvZS9R
-         Dy8QiQ2JrqVPzEMX5KTd+I1SU4Xu8909ecfEhb4OM/XZe3FmrbOIO38DoZI3klEaRWbX
-         yNY8zz/Ao7Ic49xkiIfm0OAEgDPWPtMumXvoDgJmbjMvxmEhRFIQcuqjP2HQD+jJVfUO
-         KWBCG7YCpXTaf/xwj6E2EIeQ82nTn+e1o5CT4g5R+8N1FDJFLyhPgutdPO4ylP6QQyjl
-         0ahfW9LWC4hMGtKAboW2TKB9gP+c1wJ1kkj+vu5xB370VHhDUhbaBtlhyrIKH9qSeygz
-         Z5Yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=/zfJjbsgjfhcPhz4cNFPAebK7HlMUZRYQ6SujmzDQiE=;
-        b=XHO6js+Y9R2JjDPk2YvPEO73g1uwWMFy4VTDwhspKMwPbuYf0Zne3QqR5pJ2/0PXhm
-         8kg61epZkwG4Wvlqdytydbp+qIt4ez8jszZAFdNZdEQLBGk81dfwLxnMyDLCOHKXgrqf
-         ataO313Snu89JJbxdGmlQO7y5fTP2l9xKK/Fh8IIbIfyuo5kmmqWSdTik1nyb7uKYYWp
-         M10BZoupP+AvmD/hsfsXcQkCqfFZngiawjgmong8NdgC7xb9jjuCLXxSQJNiw/PJMYxH
-         yhRQ0XMSoA5y64rM2t9KQldVwzmJ7gB1kFgGZkt6KZ3EUgZpgGGaRuGulATtZ78mIpqL
-         62/g==
-X-Gm-Message-State: APjAAAWsF97wnZ2uXPf5D2j3EaKUwkDshf1wUMUFLVGZmqfAsfR8TROV
-        BGTzxHI5/ZmFxdnaDp5hi/kk6jpmYMgq6oNa010+E8i+1OE=
-X-Google-Smtp-Source: APXvYqyStfmGeLBlAymXcQvqe5IKhZdeKkGsEPalzGGEY9n1S5rRgPe8dDVGAxY/5HRqnoPfxO4+eWp60TVHUW3wRa4=
-X-Received: by 2002:ac2:4571:: with SMTP id k17mr26302707lfm.133.1558039692425;
- Thu, 16 May 2019 13:48:12 -0700 (PDT)
+        Thu, 16 May 2019 16:49:02 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id F240EADBAA;
+        Thu, 16 May 2019 16:49:00 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id vzaCwoTpeqOF; Thu, 16 May 2019 16:49:00 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 7C23AADB9D;
+        Thu, 16 May 2019 16:49:00 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 7C23AADB9D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1558039740;
+        bh=T6tB5oucUJQiYwUQy00a3W/PHRzwk7hwAhqOqcUpxQU=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=loAapQuhGsDymqQYkp3fr522T6o689kXMDM78TPzkykDOIfQFimq7bB4OSHLjEwbq
+         j5dFVwWlNXFaUrhNRdjC5L3q7YMEkklz3uBoLHmSPb8S8Se8qP3FfEh0fTKbBq7T0W
+         1VGChKEtSFW/D5harJ6CZNu71CXXqpa3tU/1S+YHuaoPNTEbnbMjvAqdVHdyQNN2tc
+         LY4AjQSF/uAlHlc4Y4MD7rsC0YoXvnI26c9uYZmvKo2Uxv2AAUHhGGOzdFv37BR2pa
+         FeT2EdktJoraiNlmQC/9ZDbLeHHVC6lxCPPZdnPh8G/6TjBUdw1/sRPFUCZJf0ekUX
+         A4Jr4pUJhRnZg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id 6_bTRsBCf0uv; Thu, 16 May 2019 16:49:00 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 5B469ADB8A;
+        Thu, 16 May 2019 16:49:00 -0400 (EDT)
+Date:   Thu, 16 May 2019 16:49:00 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     shuah <shuah@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Russell King <linux@arm.linux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
+        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
+        rostedt <rostedt@goodmis.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Joel Fernandes <joelaf@google.com>,
+        schwidefsky <schwidefsky@de.ibm.com>
+Message-ID: <1150133970.2996.1558039740182.JavaMail.zimbra@efficios.com>
+In-Reply-To: <ae4bdd65-d7ab-6bb8-f823-c22e320b4f64@kernel.org>
+References: <20190429152803.7719-1-mathieu.desnoyers@efficios.com> <20190429152803.7719-8-mathieu.desnoyers@efficios.com> <ae4bdd65-d7ab-6bb8-f823-c22e320b4f64@kernel.org>
+Subject: Re: [PATCH for 5.2 07/12] rseq/selftests: s390: use trap4 for
+ RSEQ_SIG
 MIME-Version: 1.0
-From:   Con Kolivas <kernel@kolivas.org>
-Date:   Fri, 17 May 2019 06:48:01 +1000
-Message-ID: <CABqErrE2Sfj0wGFoVgYEu-4rpZ3KwgfHwZdinbip5Wqr=gRoNA@mail.gmail.com>
-Subject: linux-5.1-ck1, MuQSS version 0.192 for linux-5.1
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: rseq/selftests: s390: use trap4 for RSEQ_SIG
+Thread-Index: MQQxEXkQJjNJ2KoXle2eK6CTH9qBYg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Announcing a new -ck release, 5.1-ck1  with the latest version of the
-Multiple Queue Skiplist Scheduler, version 0.192. These are patches
-designed to improve system responsiveness and interactivity with
-specific emphasis on the desktop, but configurable for any workload.
+----- On May 16, 2019, at 4:39 PM, shuah shuah@kernel.org wrote:
 
-linux-5.1-ck1:
--ck1 patches:
-http://ck.kolivas.org/patches/5.0/5.1/5.1-ck1/
-Git tree:
-https://github.com/ckolivas/linux/tree/5.1-ck
+> Hi Mathieu,
+> 
+> On 4/29/19 9:27 AM, Mathieu Desnoyers wrote:
+>> From: Martin Schwidefsky <schwidefsky@de.ibm.com>
+>> 
+>> Use trap4 as the guard instruction for the restartable sequence abort
+>> handler.
+>> 
+>> Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+>> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+>> ---
+>>   tools/testing/selftests/rseq/rseq-s390.h | 9 ++++++++-
+>>   1 file changed, 8 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/tools/testing/selftests/rseq/rseq-s390.h
+>> b/tools/testing/selftests/rseq/rseq-s390.h
+>> index 7c4f3a70b6c7..1d05c5187ae6 100644
+>> --- a/tools/testing/selftests/rseq/rseq-s390.h
+>> +++ b/tools/testing/selftests/rseq/rseq-s390.h
+>> @@ -1,6 +1,13 @@
+>>   /* SPDX-License-Identifier: LGPL-2.1 OR MIT */
+>>   
+>> -#define RSEQ_SIG	0x53053053
+>> +/*
+>> + * RSEQ_SIG uses the trap4 instruction. As Linux does not make use of the
+>> + * access-register mode nor the linkage stack this instruction will always
+>> + * cause a special-operation exception (the trap-enabled bit in the DUCT
+>> + * is and will stay 0). The instruction pattern is
+>> + *	b2 ff 0f ff	trap4   4095(%r0)
+>> + */
+>> +#define RSEQ_SIG	0xB2FF0FFF
+>>   
+>>   #define rseq_smp_mb()	__asm__ __volatile__ ("bcr 15,0" ::: "memory")
+>>   #define rseq_smp_rmb()	rseq_smp_mb()
+>> 
+> 
+> I generated my pull request for Linus and did a sanity check and ran
+> into merge conflict on this patch. Looks like this is already in
+> Linus's tree.
+> 
+> Can you confirm!
+> 
+> I have to drop this patch and regenerate my pull request. Can you
+> confirm!
 
-MuQSS only:
-Download:
-http://ck.kolivas.org/patches/muqss/5.0/5.1/0001-MultiQueue-Skiplist-Schedu=
-ler-version-0.192.patch
-Git tree:
-https://github.com/ckolivas/linux/tree/5.1-muqss
+I confirm, it went through the s390 maintainer tree, here is the
+upstream commit already in Linus' master:
 
-Blog:
-http://ck-hack.blogspot.com/
+commit e24e4712efad737ca09ff299276737331cd021d9
+Author: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Date:   Wed Apr 10 12:28:41 2019 +0200
 
-Web:
-http://kernel.kolivas.org
+    s390/rseq: use trap4 for RSEQ_SIG
+    
+    Use trap4 as the guard instruction for the restartable sequence abort
+    handler.
+    
+    Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+
+So you can either drop it from your end of the pull request, or Linus will
+deal with the merge, as you prefer.
+
+Thanks!
+
+Mathieu
 
 
-This is mostly a resync from 5.0-ck1 with some build and boot fixes
-courtesy of Serge Belyshev (thanks!)
+> 
+> thanks,
+> -- Shuah
 
-Enjoy!
-=E3=81=8A=E6=A5=BD=E3=81=97=E3=81=BF=E4=B8=8B=E3=81=95=E3=81=84
--ck
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
