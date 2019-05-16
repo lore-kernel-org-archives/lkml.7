@@ -2,109 +2,109 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2F1C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F05C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFABD20833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CEE720833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:26:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bhjzbr0k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfEPOZM (ORCPT
+        id S1727152AbfEPO0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:25:12 -0400
-Received: from relay.sw.ru ([185.231.240.75]:55298 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726790AbfEPOZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:25:11 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hRHJj-0007J4-HM; Thu, 16 May 2019 17:25:07 +0300
-Subject: Re: [PATCH RFC 0/5] mm: process_vm_mmap() -- syscall for duplication
- a process mapping
-To:     Adam Borowski <kilobyte@angband.pl>
-Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
-        mhocko@suse.com, keith.busch@intel.com,
-        kirill.shutemov@linux.intel.com, pasha.tatashin@oracle.com,
-        alexander.h.duyck@linux.intel.com, ira.weiny@intel.com,
-        andreyknvl@google.com, arunks@codeaurora.org, vbabka@suse.cz,
-        cl@linux.com, riel@surriel.com, keescook@chromium.org,
-        hannes@cmpxchg.org, npiggin@gmail.com,
-        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
-        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
-        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
- <20190515193841.GA29728@angband.pl>
- <7136aa47-3ce5-243d-6c92-5893b7b1379d@virtuozzo.com>
- <20190516134220.GB24860@angband.pl>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <14efd2c5-ffd1-84ad-b1d1-42f8ef44d7e2@virtuozzo.com>
-Date:   Thu, 16 May 2019 17:25:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 16 May 2019 10:26:44 -0400
+Received: from mail-wr1-f47.google.com ([209.85.221.47]:39807 "EHLO
+        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbfEPO0n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 10:26:43 -0400
+Received: by mail-wr1-f47.google.com with SMTP id w8so3646620wrl.6;
+        Thu, 16 May 2019 07:26:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lUmsapdPYG6bp652zPn+NzbRoqrSwbAyyYlD6+mB3JE=;
+        b=Bhjzbr0kd/1H2iMGGWGKcFwaoanS/0rleHShFPO7OsTIgPL4hCdpLQjIl+wEc8IBEL
+         LO3PTQ8QqWTjcYAaKRy54RZELK1c9O49xmbIk8X5TXoilQudWo1r/OqhXVWZO/yQ6TY3
+         o0DTNWlJ0nmOD+gDxarap67H4ZU0lKJG3HSZgaUfJzdMU/3/BzF6VQb+meeqqMTBMKnd
+         RHo4T2qRP1gv+sZ8jtlnFOvG0vcYzpExFAGVFCvQaXuMkgbCYTWZ//X5nxHhYiszJ1Sq
+         M854ahb7m/D+6A+mxaEpWwTm4htV5YEYI2H9/iBw/eKtghqVuLTExS/9/jUJu9lzL9bv
+         AwPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lUmsapdPYG6bp652zPn+NzbRoqrSwbAyyYlD6+mB3JE=;
+        b=VDA8MpFIp5zbRWOAkZDbY9NcDtWY5ix3VQyrlFetYZrRXikt8pCCGc6T/NKAz1SJSd
+         Lo8si0Lo1/w8RsEPhapTB2jpteEtcM2E0/djCUQGfHj/3EFqnqQz+uy7D6WqkNs9h65L
+         52TUxITBBYW1FmGGsYBG4LMg3pQRsrLEplq/BMnciH5hZ52yowtRruH+WYetjmdaqggd
+         aZHoNjYgmCi9ATN12DeiS1DUDoSb/CXwTSLgTIPnlrpzkdrdLM/lE09pE4u2BlN11dYI
+         I1wI232jY5TpRfjWRNysWk6CjQfZumk+ONnt40CLKI16s9B/Etkhq4MqPkMnBXezSUQY
+         ZVDw==
+X-Gm-Message-State: APjAAAW8vDH3c+6vLvp88R4v6TdpGjdq9ISlo+Pa4ynFIonGE3mAXS22
+        c1c72i1Fur7XumvQ6B6x82I9OgujMAA=
+X-Google-Smtp-Source: APXvYqz8KWbolH8G2m4rSMx+jji9yTY1gYw6IoJ46yLo9d+QCu8HVmHuqr9r1iEmLayLeRRCaBq6Vg==
+X-Received: by 2002:a5d:658b:: with SMTP id q11mr11748075wru.130.1558016800923;
+        Thu, 16 May 2019 07:26:40 -0700 (PDT)
+Received: from xws.fritz.box (pD9EA30D0.dip0.t-ipconnect.de. [217.234.48.208])
+        by smtp.gmail.com with ESMTPSA id q4sm4852427wrx.25.2019.05.16.07.26.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 May 2019 07:26:40 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [RFC 0/2] Support for buttons on newer MS Surface devices
+Date:   Thu, 16 May 2019 16:25:21 +0200
+Message-Id: <20190516142523.117978-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20190516134220.GB24860@angband.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.05.2019 16:42, Adam Borowski wrote:
-> On Thu, May 16, 2019 at 04:10:07PM +0300, Kirill Tkhai wrote:
->> On 15.05.2019 22:38, Adam Borowski wrote:
->>> On Wed, May 15, 2019 at 06:11:15PM +0300, Kirill Tkhai wrote:
->>>> This patchset adds a new syscall, which makes possible
->>>> to clone a mapping from a process to another process.
->>>> The syscall supplements the functionality provided
->>>> by process_vm_writev() and process_vm_readv() syscalls,
->>>> and it may be useful in many situation.
->>>>
->>>> For example, it allows to make a zero copy of data,
->>>> when process_vm_writev() was previously used:
->>>
->>> I wonder, why not optimize the existing interfaces to do zero copy if
->>> properly aligned?  No need for a new syscall, and old code would immediately
->>> benefit.
->>
->> Because, this is just not possible. You can't zero copy anonymous pages
->> of a process to pages of a remote process, when they are different pages.
-> 
-> fork() manages that, and so does KSM.  Like KSM, you want to make a page
-> shared -- you just skip the comparison step as you want to overwrite the old
-> contents.
-> 
-> And there's no need to touch the page, as fork() manages that fine no matter
-> if the page is resident, anonymous in swap, or file-backed, all without
-> reading from swap.
+This series adds suport for power and volume buttons on 5th and 6th
+generation Microsoft Surface devices. Specifically, it adds support for
+the power-button on the Surface Laptop 1 and Laptop 2, as well as
+support for power- and (on-device) volume-buttons on the Surface Pro 5
+(2017), Pro 6, and Book 2.
 
-Yes, and in case of you dive into the patchset, you will found the new syscall
-manages page table entries in the same way fork() makes.
- 
->>>> There are several problems with process_vm_writev() in this example:
->>>>
->>>> 1)it causes pagefault on remote process memory, and it forces
->>>>   allocation of a new page (if was not preallocated);
->>>>
->>>> 2)amount of memory for this example is doubled in a moment --
->>>>   n pages in current and n pages in remote tasks are occupied
->>>>   at the same time;
->>>>
->>>> 3)received data has no a chance to be properly swapped for
->>>>   a long time.
->>>
->>> That'll handle all of your above problems, except for making pages
->>> subject to CoW if written to.  But if making pages writeably shared is
->>> desired, the old functions have a "flags" argument that doesn't yet have a
->>> single bit defined.
-> 
-> 
-> Meow!
-> 
+These devices use the same MSHW0040 device as on the Surface Pro 4,
+however, whereas the Pro 4 uses an ACPI notify handler, the newer
+devices use GPIO interrupts to signal these events.
+
+The first patch of this series ensures that the surfacepro3_button
+driver, used for MSHW0040 on the Pro 4, does not probe for the newer
+devices. The second patch adapts soc_button_array to implement the
+actual button support.
+
+I think the changes to soc_button_array in the second patch warrant a
+thorough review. I've tried to make things a bit more generic to be able
+to integrate arbitrary ACPI GPIO power-/volume-button devices more
+easily, I'm not sure if there may be reasons against this. 
+
+Maximilian Luz (2):
+  platform: Fix device check for surfacepro3_button
+  input: soc_button_array for newer surface devices
+
+ drivers/input/misc/soc_button_array.c     | 134 ++++++++++++++++++++--
+ drivers/platform/x86/surfacepro3_button.c |  38 ++++++
+ 2 files changed, 160 insertions(+), 12 deletions(-)
+
+-- 
+2.21.0
 
