@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9218C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D357C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AFB42082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F9332082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:29:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ayq0D5zU"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A/QcefCO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfEPQ3s (ORCPT
+        id S1727142AbfEPQ3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:29:48 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42952 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfEPQ3s (ORCPT
+        Thu, 16 May 2019 12:29:53 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37168 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726314AbfEPQ3t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:29:48 -0400
-Received: by mail-pl1-f196.google.com with SMTP id x15so1876861pln.9
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:29:48 -0700 (PDT)
+        Thu, 16 May 2019 12:29:49 -0400
+Received: by mail-pl1-f193.google.com with SMTP id p15so1887915pll.4
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:29:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FOE0cCJQ21ga6g1DChuQ/Qq1kToyjWkdfWiPelD2OC4=;
-        b=ayq0D5zU19MEk0xwhDehYCYeWHoQ08w7g7ZjKSj8+Z7ap0fNQU02iAUi4BNKUwMN5E
-         DaDZsXTk9ac1bORDTuN/XFIeLq4ziTrZmWcEcwPx47BLpRJ937gCOyNca6DcHHrXlOI7
-         n3NMuXxbDIDHBpYxtnrBUtgjXrYN73x/nRozw=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=F+MUix4E2fzDWarwS4nmG/Em5BaLYXIJG0RnslLnuRA=;
+        b=A/QcefCONy0p8hJbO0heZwLqxWZ8lsgdagrHghkE9zjmezGMvjfyieeXactlpqZRRa
+         YLS81uVk2pJdVXGp9xaDmlgMq2U+xIeDeNkcu+gI4czxMzsnQt5Y7DBVdyYnqcLHRHSe
+         /f/w5SMGU32q0oRor5O557Y/iSuZDQryFc1t8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FOE0cCJQ21ga6g1DChuQ/Qq1kToyjWkdfWiPelD2OC4=;
-        b=Tsboz/UsV82SYMJarO96a7reXybKOkU+6AQJt5Q/5Iv6d6XkqCofroTQq1ABn/zsOk
-         8EO1ZEYIRJCHIUhcfWO6p7/X5tL2V1ybUUlmAYYWjArisH+P6+Yimfes2Tp3xa6HDNDb
-         84or7zWYYNYF7XhtNKLC8ydM5QU+Gkls/dwzeEMiw9ezrXzbLqQdumAKYSa69wOSNxnC
-         Sm7E7Tux4aX7yB3JpPy4soVCFzPdoxUbxreGDZc8T8brTwWBgxqzOFjqquDVchQ8z38G
-         SrN1qO0AvgVAhNP+El9O6nmWJk6qLskQRWS5Rd6di9rQzGmQKdY7V71oG3uPrG8ljujg
-         DnLA==
-X-Gm-Message-State: APjAAAXwh8pTp3uAk8Hf/5IMgXDju0t+wlIr0fv5AlfK/MGLq9LihSgk
-        HMXDcKXzDcZaukANbCdUooeZnQ==
-X-Google-Smtp-Source: APXvYqxrvwtoWK8QdXNAIVHAwc7IGRNSlG4OKmttVtrCs4o4+DbqSeo4gMHXIbJEH9AVCcAMyz3k0w==
-X-Received: by 2002:a17:902:8a83:: with SMTP id p3mr51848281plo.88.1558024187640;
-        Thu, 16 May 2019 09:29:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=F+MUix4E2fzDWarwS4nmG/Em5BaLYXIJG0RnslLnuRA=;
+        b=bAAegxHAK0EMA4wUqmkxzpWaHrcmmL2hy95+rgXa2G+rVGr5TMqumjLaOFvd4zpBB9
+         5xuT1pnaBysgBJx8hulhbiRcpKJeVq9QwFCh3Wl2sG78es9qXPJCJ/mrmSvdym5i9yVD
+         xc+ohHxnHSvJCLvFHa1/OP4KE5Ga8qi3NYtV+Ff2iPQrmcds9Twmovc20yCiPW9D3fjQ
+         RJNZ42l9K8Lsex205/bnTrpPLESXzcRPayartwRKtN7waozq8AF7pSBb6aGhyiyrDsaW
+         E1cDq4XbwYutzRLby/WM/MzntZ/BgVA/+ntIaKw3m4vrCCAfJfNsmwKN1eY9Iud+y2JO
+         QAfA==
+X-Gm-Message-State: APjAAAXZbiKaPOhO+NTvf+2Qtk7GSJ6hHX6nptSK3aHjKFaOI0N2CFkk
+        xEMWkq7rh4jkx/L1f/6Etwi7Rg==
+X-Google-Smtp-Source: APXvYqxkK/qfoQgyJc5dgRsnMZtbcRgZDE5QF6K47Pw4/YozjwnhVzeOxcxp4uW/0m6HCYUODwDYOA==
+X-Received: by 2002:a17:902:683:: with SMTP id 3mr9312171plh.209.1558024188932;
+        Thu, 16 May 2019 09:29:48 -0700 (PDT)
 Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id g128sm7168645pfb.131.2019.05.16.09.29.46
+        by smtp.gmail.com with ESMTPSA id d85sm8140067pfd.94.2019.05.16.09.29.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 09:29:47 -0700 (PDT)
+        Thu, 16 May 2019 09:29:48 -0700 (PDT)
 From:   Matthias Kaehlcke <mka@chromium.org>
 To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
@@ -61,10 +61,12 @@ Cc:     linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>,
         Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v2 1/3] ARM: dts: rockchip: raise CPU trip point temperature for veyron to 100 degC
-Date:   Thu, 16 May 2019 09:29:40 -0700
-Message-Id: <20190516162942.154823-1-mka@chromium.org>
+Subject: [PATCH v2 2/3] ARM: dts: rockchip: raise GPU trip point temperatures for veyron
+Date:   Thu, 16 May 2019 09:29:41 -0700
+Message-Id: <20190516162942.154823-2-mka@chromium.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+In-Reply-To: <20190516162942.154823-1-mka@chromium.org>
+References: <20190516162942.154823-1-mka@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -73,61 +75,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This value matches what is used by the downstream Chrome OS 3.14
-kernel, the 'official' kernel for veyron devices. Keep the temperature
-for 'speedy' at 90°C, as in the downstream kernel.
-
-Increase the temperature for a hardware shutdown to 125°C, which
-matches the downstream configuration and gives the system a chance
-to shut down orderly at the criticial trip point.
+The values match thorse used by the downstream Chrome OS 3.14
+kernel, the 'official' kernel for veyron devices. Keep the critical
+trip point for speedy at 90°C as in the downstream configuration.
 
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
 Changes in v2:
-- patch added to the series
+- also raise temperature of critical trip point
+- add entries at position in alphabetical order
+- added entry to keep critical trip point for speedy at 90°C
+- updated commit message
 ---
  arch/arm/boot/dts/rk3288-veyron-speedy.dts | 4 ++++
- arch/arm/boot/dts/rk3288-veyron.dtsi       | 5 +++++
- 2 files changed, 9 insertions(+)
+ arch/arm/boot/dts/rk3288-veyron.dtsi       | 8 ++++++++
+ 2 files changed, 12 insertions(+)
 
 diff --git a/arch/arm/boot/dts/rk3288-veyron-speedy.dts b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-index e16421d80d22..ab2a66aa337e 100644
+index ab2a66aa337e..3d2769f1bef2 100644
 --- a/arch/arm/boot/dts/rk3288-veyron-speedy.dts
 +++ b/arch/arm/boot/dts/rk3288-veyron-speedy.dts
-@@ -64,6 +64,10 @@
- 	temperature = <70000>;
+@@ -75,6 +75,10 @@
+ 	force-hpd;
  };
  
-+&cpu_crit {
++&gpu_crit {
 +	temperature = <90000>;
 +};
 +
- &edp {
- 	/delete-property/pinctrl-names;
- 	/delete-property/pinctrl-0;
+ &panel {
+ 	power-supply= <&panel_regulator>;
+ };
 diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 192dbc089ade..58dc538b5df3 100644
+index 58dc538b5df3..aee8350b2800 100644
 --- a/arch/arm/boot/dts/rk3288-veyron.dtsi
 +++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -99,6 +99,10 @@
- 	cpu0-supply = <&vdd_cpu>;
+@@ -142,6 +142,14 @@
+ 	status = "okay";
  };
  
-+&cpu_crit {
++&gpu_alert0 {
++	temperature = <72500>;
++};
++
++&gpu_crit {
 +	temperature = <100000>;
 +};
 +
- /* rk3288-c used in Veyron Chrome-devices has slightly changed OPPs */
- &cpu_opp_table {
- 	/delete-node/ opp-312000000;
-@@ -371,6 +375,7 @@
- 
- 	rockchip,hw-tshut-mode = <1>; /* tshut mode 0:CRU 1:GPIO */
- 	rockchip,hw-tshut-polarity = <1>; /* tshut polarity 0:LOW 1:HIGH */
-+	rockchip,hw-tshut-temp = <125000>;
- };
- 
- &uart0 {
+ &hdmi {
+ 	ddc-i2c-bus = <&i2c5>;
+ 	status = "okay";
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
