@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E3AC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB28C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 176DD216F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F5820815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbfEPP7T (ORCPT
+        id S1727422AbfEPP7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:59:19 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43342 "EHLO
+        Thu, 16 May 2019 11:59:11 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42642 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727162AbfEPP6u (ORCPT
+        by vger.kernel.org with ESMTP id S1726866AbfEPP6o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:58:50 -0400
+        Thu, 16 May 2019 11:58:44 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImM-0006zQ-OX; Thu, 16 May 2019 16:58:46 +0100
+        id 1hRImH-0006zp-9p; Thu, 16 May 2019 16:58:41 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImE-0001QK-0M; Thu, 16 May 2019 16:58:38 +0100
+        id 1hRImE-0001RQ-FP; Thu, 16 May 2019 16:58:38 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,33 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>,
-        "Tom Lendacky" <thomas.lendacky@amd.com>,
-        "Greg KH" <gregkh@linuxfoundation.org>,
-        "Casey Schaufler" <casey.schaufler@intel.com>,
-        "Tim Chen" <tim.c.chen@linux.intel.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        "Dave Stewart" <david.c.stewart@intel.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Jon Masters" <jcm@redhat.com>,
-        "Waiman Long" <longman9394@gmail.com>,
-        "Arjan van de Ven" <arjan@linux.intel.com>,
-        "Andrea Arcangeli" <aarcange@redhat.com>,
-        "Dave Hansen" <dave.hansen@intel.com>,
-        "Andi Kleen" <ak@linux.intel.com>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        "Asit Mallick" <asit.k.mallick@intel.com>,
+        "Andi Kleen" <ak@linux.intel.com>, "Borislav Petkov" <bp@suse.de>,
         "Thomas Gleixner" <tglx@linutronix.de>,
-        "Kees Cook" <keescook@chromium.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Jiri Kosina" <jkosina@suse.cz>
+        "Jon Masters" <jcm@redhat.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Frederic Weisbecker" <frederic@kernel.org>
 Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.580742350@decadent.org.uk>
+Message-ID: <lsq.1558022133.140207505@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 50/86] x86/process: Consolidate and simplify
- switch_to_xtra() code
+Subject: [PATCH 3.16 63/86] x86/speculation/mds: Add basic bug
+ infrastructure for MDS
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -75,180 +59,153 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Andi Kleen <ak@linux.intel.com>
 
-commit ff16701a29cba3aafa0bd1656d766813b2d0a811 upstream.
+commit ed5194c2732c8084af9fd159c146ea92bf137128 upstream.
 
-Move the conditional invocation of __switch_to_xtra() into an inline
-function so the logic can be shared between 32 and 64 bit.
+Microarchitectural Data Sampling (MDS), is a class of side channel attacks
+on internal buffers in Intel CPUs. The variants are:
 
-Remove the handthrough of the TSS pointer and retrieve the pointer directly
-in the bitmap handling function. Use this_cpu_ptr() instead of the
-per_cpu() indirection.
+ - Microarchitectural Store Buffer Data Sampling (MSBDS) (CVE-2018-12126)
+ - Microarchitectural Fill Buffer Data Sampling (MFBDS) (CVE-2018-12130)
+ - Microarchitectural Load Port Data Sampling (MLPDS) (CVE-2018-12127)
 
-This is a preparatory change so integration of conditional indirect branch
-speculation optimization happens only in one place.
+MSBDS leaks Store Buffer Entries which can be speculatively forwarded to a
+dependent load (store-to-load forwarding) as an optimization. The forward
+can also happen to a faulting or assisting load operation for a different
+memory address, which can be exploited under certain conditions. Store
+buffers are partitioned between Hyper-Threads so cross thread forwarding is
+not possible. But if a thread enters or exits a sleep state the store
+buffer is repartitioned which can expose data from one thread to the other.
 
+MFBDS leaks Fill Buffer Entries. Fill buffers are used internally to manage
+L1 miss situations and to hold data which is returned or sent in response
+to a memory or I/O operation. Fill buffers can forward data to a load
+operation and also write data to the cache. When the fill buffer is
+deallocated it can retain the stale data of the preceding operations which
+can then be forwarded to a faulting or assisting load operation, which can
+be exploited under certain conditions. Fill buffers are shared between
+Hyper-Threads so cross thread leakage is possible.
+
+MLDPS leaks Load Port Data. Load ports are used to perform load operations
+from memory or I/O. The received data is then forwarded to the register
+file or a subsequent operation. In some implementations the Load Port can
+contain stale data from a previous operation which can be forwarded to
+faulting or assisting loads under certain conditions, which again can be
+exploited eventually. Load ports are shared between Hyper-Threads so cross
+thread leakage is possible.
+
+All variants have the same mitigation for single CPU thread case (SMT off),
+so the kernel can treat them as one MDS issue.
+
+Add the basic infrastructure to detect if the current CPU is affected by
+MDS.
+
+[ tglx: Rewrote changelog ]
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Casey Schaufler <casey.schaufler@intel.com>
-Cc: Asit Mallick <asit.k.mallick@intel.com>
-Cc: Arjan van de Ven <arjan@linux.intel.com>
-Cc: Jon Masters <jcm@redhat.com>
-Cc: Waiman Long <longman9394@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Dave Stewart <david.c.stewart@intel.com>
-Cc: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20181125185005.280855518@linutronix.de
+Reviewed-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Reviewed-by: Jon Masters <jcm@redhat.com>
+Tested-by: Jon Masters <jcm@redhat.com>
 [bwh: Backported to 3.16:
- - Use init_tss instead of cpu_tss_rw
- - __switch_to() still uses the tss variable, so don't delete it
- - Adjust context]
+ - Use CPU feature word 10 and next available bug flag
+ - Adjust filename, context, indentation]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/arch/x86/include/asm/switch_to.h
-+++ b/arch/x86/include/asm/switch_to.h
-@@ -6,9 +6,6 @@
- struct task_struct; /* one of the stranger aspects of C forward declarations */
- __visible struct task_struct *__switch_to(struct task_struct *prev,
- 					   struct task_struct *next);
--struct tss_struct;
--void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p,
--		      struct tss_struct *tss);
+ arch/x86/include/asm/cpufeatures.h    |  2 ++
+ arch/x86/include/uapi/asm/msr-index.h |  5 +++++
+ arch/x86/kernel/cpu/common.c          | 23 +++++++++++++++--------
+ 3 files changed, 22 insertions(+), 8 deletions(-)
+
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -243,6 +243,7 @@
+ #define X86_FEATURE_AVX512CD	( 9*32+28) /* AVX-512 Conflict Detection */
  
- #ifdef CONFIG_X86_32
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (EDX), word 10 */
++#define X86_FEATURE_MD_CLEAR		(10*32+10) /* VERW clears CPU buffers */
+ #define X86_FEATURE_SPEC_CTRL		(10*32+26) /* "" Speculation Control (IBRS + IBPB) */
+ #define X86_FEATURE_INTEL_STIBP		(10*32+27) /* "" Single Thread Indirect Branch Predictors */
+ #define X86_FEATURE_ARCH_CAPABILITIES	(10*32+29) /* IA32_ARCH_CAPABILITIES MSR (Intel) */
+@@ -271,5 +272,6 @@
+ #define X86_BUG_SPECTRE_V2	X86_BUG(7) /* CPU is affected by Spectre variant 2 attack with indirect branches */
+ #define X86_BUG_SPEC_STORE_BYPASS X86_BUG(8) /* CPU is affected by speculative store bypass attack */
+ #define X86_BUG_L1TF		X86_BUG(9) /* CPU is affected by L1 Terminal Fault */
++#define X86_BUG_MDS		X86_BUG(10) /* CPU is affected by Microarchitectural data sampling */
  
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -32,6 +32,8 @@
- #include <asm/tlbflush.h>
- #include <asm/spec-ctrl.h>
+ #endif /* _ASM_X86_CPUFEATURES_H */
+--- a/arch/x86/include/uapi/asm/msr-index.h
++++ b/arch/x86/include/uapi/asm/msr-index.h
+@@ -65,6 +65,11 @@
+ 						    * attack, so no Speculative Store Bypass
+ 						    * control required.
+ 						    */
++#define ARCH_CAP_MDS_NO			(1UL << 5) /*
++						    * Not susceptible to
++						    * Microarchitectural Data
++						    * Sampling (MDS) vulnerabilities.
++						    */
  
-+#include "process.h"
+ #define MSR_IA32_BBL_CR_CTL		0x00000119
+ #define MSR_IA32_BBL_CR_CTL3		0x0000011e
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -811,6 +811,7 @@ static void identify_cpu_without_cpuid(s
+ #define NO_MELTDOWN	BIT(1)
+ #define NO_SSB		BIT(2)
+ #define NO_L1TF		BIT(3)
++#define NO_MDS		BIT(4)
+ 
+ #define VULNWL(_vendor, _family, _model, _whitelist)	\
+ 	{ X86_VENDOR_##_vendor, _family, _model, X86_FEATURE_ANY, _whitelist }
+@@ -827,6 +828,7 @@ static const __initconst struct x86_cpu_
+ 	VULNWL(INTEL,	5, X86_MODEL_ANY,	NO_SPECULATION),
+ 	VULNWL(NSC,	5, X86_MODEL_ANY,	NO_SPECULATION),
+ 
++	/* Intel Family 6 */
+ 	VULNWL_INTEL(ATOM_SALTWELL,		NO_SPECULATION),
+ 	VULNWL_INTEL(ATOM_SALTWELL_TABLET,	NO_SPECULATION),
+ 	VULNWL_INTEL(ATOM_SALTWELL_MID,		NO_SPECULATION),
+@@ -843,17 +845,19 @@ static const __initconst struct x86_cpu_
+ 	VULNWL_INTEL(CORE_YONAH,		NO_SSB),
+ 
+ 	VULNWL_INTEL(ATOM_AIRMONT_MID,		NO_L1TF),
+-	VULNWL_INTEL(ATOM_GOLDMONT,		NO_L1TF),
+-	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_L1TF),
+-	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_L1TF),
+-
+-	VULNWL_AMD(0x0f,		NO_MELTDOWN | NO_SSB | NO_L1TF),
+-	VULNWL_AMD(0x10,		NO_MELTDOWN | NO_SSB | NO_L1TF),
+-	VULNWL_AMD(0x11,		NO_MELTDOWN | NO_SSB | NO_L1TF),
+-	VULNWL_AMD(0x12,		NO_MELTDOWN | NO_SSB | NO_L1TF),
 +
- /*
-  * per-CPU TSS segments. Threads are completely 'soft' on Linux,
-  * no more per-task TSS's. The TSS size is kept cacheline-aligned
-@@ -197,11 +199,12 @@ int set_tsc_mode(unsigned int val)
- 	return 0;
- }
- 
--static inline void switch_to_bitmap(struct tss_struct *tss,
--				    struct thread_struct *prev,
-+static inline void switch_to_bitmap(struct thread_struct *prev,
- 				    struct thread_struct *next,
- 				    unsigned long tifp, unsigned long tifn)
- {
-+	struct tss_struct *tss = this_cpu_ptr(&init_tss);
++	VULNWL_INTEL(ATOM_GOLDMONT,		NO_MDS | NO_L1TF),
++	VULNWL_INTEL(ATOM_GOLDMONT_X,		NO_MDS | NO_L1TF),
++	VULNWL_INTEL(ATOM_GOLDMONT_PLUS,	NO_MDS | NO_L1TF),
 +
- 	if (tifn & _TIF_IO_BITMAP) {
- 		/*
- 		 * Copy the relevant range of the IO bitmap.
-@@ -388,8 +391,7 @@ void speculation_ctrl_update(unsigned lo
- 	preempt_enable();
- }
++	/* AMD Family 0xf - 0x12 */
++	VULNWL_AMD(0x0f,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
++	VULNWL_AMD(0x10,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
++	VULNWL_AMD(0x11,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
++	VULNWL_AMD(0x12,	NO_MELTDOWN | NO_SSB | NO_L1TF | NO_MDS),
  
--void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p,
--		      struct tss_struct *tss)
-+void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p)
- {
- 	struct thread_struct *prev, *next;
- 	unsigned long tifp, tifn;
-@@ -399,7 +401,7 @@ void __switch_to_xtra(struct task_struct
+ 	/* FAMILY_ANY must be last, otherwise 0x0f - 0x12 matches won't work */
+-	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF),
++	VULNWL_AMD(X86_FAMILY_ANY,	NO_MELTDOWN | NO_L1TF | NO_MDS),
+ 	{}
+ };
  
- 	tifn = ACCESS_ONCE(task_thread_info(next_p)->flags);
- 	tifp = ACCESS_ONCE(task_thread_info(prev_p)->flags);
--	switch_to_bitmap(tss, prev, next, tifp, tifn);
-+	switch_to_bitmap(prev, next, tifp, tifn);
+@@ -884,6 +888,9 @@ static void __init cpu_set_bug_bits(stru
+ 	if (ia32_cap & ARCH_CAP_IBRS_ALL)
+ 		setup_force_cpu_cap(X86_FEATURE_IBRS_ENHANCED);
  
- 	propagate_user_return_notify(prev_p, next_p);
- 
---- /dev/null
-+++ b/arch/x86/kernel/process.h
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Code shared between 32 and 64 bit
++	if (!cpu_matches(NO_MDS) && !(ia32_cap & ARCH_CAP_MDS_NO))
++		setup_force_cpu_bug(X86_BUG_MDS);
 +
-+void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p);
-+
-+/*
-+ * This needs to be inline to optimize for the common case where no extra
-+ * work needs to be done.
-+ */
-+static inline void switch_to_extra(struct task_struct *prev,
-+				   struct task_struct *next)
-+{
-+	unsigned long next_tif = task_thread_info(next)->flags;
-+	unsigned long prev_tif = task_thread_info(prev)->flags;
-+
-+	/*
-+	 * __switch_to_xtra() handles debug registers, i/o bitmaps,
-+	 * speculation mitigations etc.
-+	 */
-+	if (unlikely(next_tif & _TIF_WORK_CTXSW_NEXT ||
-+		     prev_tif & _TIF_WORK_CTXSW_PREV))
-+		__switch_to_xtra(prev, next);
-+}
---- a/arch/x86/kernel/process_32.c
-+++ b/arch/x86/kernel/process_32.c
-@@ -55,6 +55,8 @@
- #include <asm/debugreg.h>
- #include <asm/switch_to.h>
+ 	if (cpu_matches(NO_MELTDOWN))
+ 		return;
  
-+#include "process.h"
-+
- asmlinkage void ret_from_fork(void) __asm__("ret_from_fork");
- asmlinkage void ret_from_kernel_thread(void) __asm__("ret_from_kernel_thread");
- 
-@@ -298,12 +300,7 @@ __switch_to(struct task_struct *prev_p,
- 	task_thread_info(prev_p)->saved_preempt_count = this_cpu_read(__preempt_count);
- 	this_cpu_write(__preempt_count, task_thread_info(next_p)->saved_preempt_count);
- 
--	/*
--	 * Now maybe handle debug registers and/or IO bitmaps
--	 */
--	if (unlikely(task_thread_info(prev_p)->flags & _TIF_WORK_CTXSW_PREV ||
--		     task_thread_info(next_p)->flags & _TIF_WORK_CTXSW_NEXT))
--		__switch_to_xtra(prev_p, next_p, tss);
-+	switch_to_extra(prev_p, next_p);
- 
- 	/*
- 	 * Leave lazy mode, flushing any hypercalls made here.
---- a/arch/x86/kernel/process_64.c
-+++ b/arch/x86/kernel/process_64.c
-@@ -51,6 +51,8 @@
- #include <asm/switch_to.h>
- #include <asm/xen/hypervisor.h>
- 
-+#include "process.h"
-+
- asmlinkage extern void ret_from_fork(void);
- 
- __visible DEFINE_PER_CPU_USER_MAPPED(unsigned long, old_rsp);
-@@ -428,12 +430,7 @@ __switch_to(struct task_struct *prev_p,
- 		  (unsigned long)task_stack_page(next_p) +
- 		  THREAD_SIZE - KERNEL_STACK_OFFSET);
- 
--	/*
--	 * Now maybe reload the debug registers and handle I/O bitmaps
--	 */
--	if (unlikely(task_thread_info(next_p)->flags & _TIF_WORK_CTXSW_NEXT ||
--		     task_thread_info(prev_p)->flags & _TIF_WORK_CTXSW_PREV))
--		__switch_to_xtra(prev_p, next_p, tss);
-+	switch_to_extra(prev_p, next_p);
- 
- #ifdef CONFIG_XEN
- 	/*
 
