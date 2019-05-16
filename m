@@ -2,155 +2,206 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 564CEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEF3C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EBFF206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:09:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sLM1xDEb"
+	by mail.kernel.org (Postfix) with ESMTP id 0E253206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:12:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbfEPLJe (ORCPT
+        id S1726857AbfEPLL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:09:34 -0400
-Received: from mail-eopbgr130045.outbound.protection.outlook.com ([40.107.13.45]:36526
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726363AbfEPLJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:09:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2Ha2NsyKgYgQ1gbTS+hR677Dg5idbqKDTX/U4xyPZ/0=;
- b=sLM1xDEbdsm3cmv+RDMXenUNENxj4khcvTX0+X1v+84MQQRxpXKEB/Jjkph/lcXO+yMP7QhHl8QpdeZPyP9W+Q9y1H6TYRDzlfFnStgyM7dsf53rD06c05u+0U7l2D6yVou/6vxY1DxiplKqlAH6bn24W9SCIDStdBCTrezXNYQ=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3945.eurprd04.prod.outlook.com (52.134.65.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Thu, 16 May 2019 11:09:29 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::d035:3bd0:a56a:189d]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::d035:3bd0:a56a:189d%2]) with mapi id 15.20.1900.010; Thu, 16 May 2019
- 11:09:29 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Leonard Crestez <leonard.crestez@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC:     "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "agross@kernel.org" <agross@kernel.org>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "olof@lixom.net" <olof@lixom.net>,
-        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
-        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
-        "dinguyen@kernel.org" <dinguyen@kernel.org>,
-        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 1/2] soc: imx: Add SCU SoC info driver support
-Thread-Topic: [PATCH V3 1/2] soc: imx: Add SCU SoC info driver support
-Thread-Index: AQHVC5bqk1P5MqRzRU2gqcSUyb18B6ZtleYw
-Date:   Thu, 16 May 2019 11:09:29 +0000
-Message-ID: <DB3PR0402MB3916C57857BC1064FD4295B5F50A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1557976777-8304-1-git-send-email-Anson.Huang@nxp.com>
- <AM0PR04MB6434E01AD0A18405A9E0DDF8EE0A0@AM0PR04MB6434.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB6434E01AD0A18405A9E0DDF8EE0A0@AM0PR04MB6434.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cecb6db5-c70a-48c0-b9b1-08d6d9eef749
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3945;
-x-ms-traffictypediagnostic: DB3PR0402MB3945:
-x-microsoft-antispam-prvs: <DB3PR0402MB394513EC19918715390266D7F50A0@DB3PR0402MB3945.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0039C6E5C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(396003)(376002)(39860400002)(366004)(13464003)(189003)(199004)(53936002)(6436002)(2906002)(2501003)(9686003)(110136005)(54906003)(14454004)(316002)(7416002)(99286004)(5660300002)(229853002)(74316002)(86362001)(478600001)(33656002)(6246003)(55016002)(8936002)(102836004)(446003)(81156014)(8676002)(476003)(66066001)(81166006)(64756008)(66556008)(66446008)(68736007)(76116006)(11346002)(66476007)(305945005)(7736002)(76176011)(26005)(7696005)(486006)(71190400001)(71200400001)(186003)(3846002)(6116002)(73956011)(52536014)(66946007)(44832011)(256004)(25786009)(4326008)(6506007)(53546011)(15866825006);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3945;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Zt29hRZUbDamH7107o/fRAPBcyStR8659eEDhj/i94mmd7PCaklQVtWPJTfJjivmTuzAy6KGQW1j56Uh3hv1R2WhMlfCK++FnpmRIRTUJCfIHx2oSYrZgdvYENbMJPTQ36TxDIxptE+s4Ut+HFawkkkZ6JwJYR96Tu0QFXTLRm1IJyFQjhS2yAAbOwE1GexnjnjNn6hJVAsKnM9s97y14aLlcjoRgSTM/B+LWxbwx+ykPg2M7Y4xvZ4lD7szKK7fRpGe994hhLOJAFFqdnHbzbQ2CHjFogizwpgL9HU8Sb92Sj3PMV+uaQAFUcLPUI/fviSLQh1yZMi2VXSiUjfiDcJa87nKb4bhOOU87TsE9pkKqyyUWJ9HIdmsbbpCt1tYeLuO6zco7COE337ubdgCl3tF66qHYWDWYgwtSl9W/ag=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 16 May 2019 07:11:59 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:49040 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbfEPLL7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:11:59 -0400
+Received: from 79.184.255.148.ipv4.supernova.orange.pl (79.184.255.148) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id b1a95bd50fccdae6; Thu, 16 May 2019 13:11:55 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     "Robert R. Howell" <RHowell@uwyo.edu>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ACPI / LPSS: Don't skip late system PM ops for hibernate on BYT/CHT
+Date:   Thu, 16 May 2019 13:11:54 +0200
+Message-ID: <1588383.bXYZMuyLB9@kreacher>
+In-Reply-To: <beab21cb-9f89-b934-e0a4-2fd85c69f4e6@uwyo.edu>
+References: <20190403054352.30120-1-kai.heng.feng@canonical.com> <CAJZ5v0jJEovXXiqs-tzPC7FsGjGL+qxfXCxbTrQZqAxSCv1oyQ@mail.gmail.com> <beab21cb-9f89-b934-e0a4-2fd85c69f4e6@uwyo.edu>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cecb6db5-c70a-48c0-b9b1-08d6d9eef749
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 11:09:29.1980
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3945
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIExlb25hcmQNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMZW9u
-YXJkIENyZXN0ZXoNCj4gU2VudDogVGh1cnNkYXksIE1heSAxNiwgMjAxOSA2OjA3IFBNDQo+IFRv
-OiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT47IHNoYXduZ3VvQGtlcm5lbC5vcmcN
-Cj4gQ2M6IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOyB3aWxsLmRlYWNvbkBhcm0uY29tOw0KPiBz
-LmhhdWVyQHBlbmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IGZlc3RldmFtQGdt
-YWlsLmNvbTsNCj4gYWdyb3NzQGtlcm5lbC5vcmc7IG1heGltZS5yaXBhcmRAYm9vdGxpbi5jb207
-IG9sb2ZAbGl4b20ubmV0Ow0KPiBob3JtcytyZW5lc2FzQHZlcmdlLm5ldC5hdTsgamFnYW5AYW1h
-cnVsYXNvbHV0aW9ucy5jb207DQo+IGJqb3JuLmFuZGVyc3NvbkBsaW5hcm8ub3JnOyBtYXJjLncu
-Z29uemFsZXpAZnJlZS5mcjsNCj4gZGluZ3V5ZW5Aa2VybmVsLm9yZzsgZW5yaWMuYmFsbGV0Ym9A
-Y29sbGFib3JhLmNvbTsNCj4gbC5zdGFjaEBwZW5ndXRyb25peC5kZTsgQWlzaGVuZyBEb25nIDxh
-aXNoZW5nLmRvbmdAbnhwLmNvbT47IEFiZWwgVmVzYQ0KPiA8YWJlbC52ZXNhQG54cC5jb20+OyBy
-b2JoQGtlcm5lbC5vcmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRsLWxpbnV4LWlteA0KPiA8bGludXgtaW14
-QG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjMgMS8yXSBzb2M6IGlteDogQWRkIFND
-VSBTb0MgaW5mbyBkcml2ZXIgc3VwcG9ydA0KPiANCj4gT24gMTYuMDUuMjAxOSAwNjoyNCwgQW5z
-b24gSHVhbmcgd3JvdGU6DQo+ID4gQWRkIGkuTVggU0NVIFNvQyBpbmZvIGRyaXZlciB0byBzdXBw
-b3J0IGkuTVg4UVhQIFNvQywgaW50cm9kdWNlIGRyaXZlcg0KPiA+IGRlcGVuZGVuY3kgaW50byBL
-Y29uZmlnIGFzIENPTkZJR19JTVhfU0NVIG11c3QgYmUgc2VsZWN0ZWQgdG8gc3VwcG9ydA0KPiA+
-IGkuTVggU0NVIFNvQyBkcml2ZXIsIGFsc28gbmVlZCB0byB1c2UgcGxhdGZvcm0gZHJpdmVyIG1v
-ZGVsIHRvIG1ha2UNCj4gPiBzdXJlIElNWF9TQ1UgZHJpdmVyIGlzIHByb2JlZCBiZWZvcmUgaS5N
-WCBTQ1UgU29DIGRyaXZlci4NCj4gDQo+ID4gKyNkZWZpbmUgaW14X3NjdV9yZXZpc2lvbihzb2Nf
-cmV2KSBcDQo+ID4gKwlzb2NfcmV2ID8gXA0KPiA+ICsJa2FzcHJpbnRmKEdGUF9LRVJORUwsICIl
-ZC4lZCIsIChzb2NfcmV2ID4+IDQpICYgMHhmLCAgc29jX3JldiAmDQo+IDB4ZikgOiBcDQo+ID4g
-KwkidW5rbm93biINCj4gDQo+ID4gKwlpZCA9IG9mX21hdGNoX25vZGUoaW14X3NjdV9zb2NfbWF0
-Y2gsIHBkZXYtPmRldi5vZl9ub2RlKTsNCj4gPiArCWRhdGEgPSBpZC0+ZGF0YTsNCj4gPiArCWlm
-IChkYXRhKSB7DQo+ID4gKwkJc29jX2Rldl9hdHRyLT5zb2NfaWQgPSBkYXRhLT5uYW1lOw0KPiA+
-ICsJCWlmIChkYXRhLT5zb2NfcmV2aXNpb24pDQo+ID4gKwkJCXNvY19yZXYgPSBkYXRhLT5zb2Nf
-cmV2aXNpb24oKTsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlzb2NfZGV2X2F0dHItPnJldmlzaW9u
-ID0gaW14X3NjdV9yZXZpc2lvbihzb2NfcmV2KTsNCj4gPiArCWlmICghc29jX2Rldl9hdHRyLT5y
-ZXZpc2lvbikNCj4gPiArCQlyZXR1cm4gLUVOT0RFVjsNCj4gDQo+IFRoZSBpbXhfc2N1X3Jldmlz
-aW9uIG1hY3JvIHJldHVybnMgZWl0aGVyIGthc3ByaW50ZiBvciAidW5rbm93biIsIG5ldmVyDQo+
-IE5VTEwuIFNvIGl0J3Mgbm90IGNsZWFyIHdoYXQgdGhpcyByZXR1cm4gLUVOT0RFViBkb2VzIGV4
-YWN0bHkuDQoNClRoZSBrYXNwcmludGYgY291bGQgcmV0dXJuIE5VTEwgdGhvdWdoLg0KDQo+IA0K
-PiBJdCBtYWtlcyBtb3JlIHNlbnNlIHRvIHJldHVybiAtRU5PREVWIGlmIGdldF9zb2NfcmV2aXNp
-b24gZmFpbHMsIHNvIG1heWJlDQo+IGNoZWNrICJzb2NfcmV2ICE9IDAiIGluc3RlYWQ/DQo+IA0K
-PiBJZiB5b3UgcmVhbGx5IHdhbnQgdG8gY2hlY2sgdGhlIGthc3ByaW50ZiByZXN1bHQgdGhlbiB5
-b3Ugc2hvdWxkIHJldHVybiAtDQo+IEVOT01FTSBmb3IgaXQuIEl0IHdvdWxkIGJlIGNsZWFyZXIg
-aWYgeW91IGRyb3BwZWQgdGhlIGlteF9zY3VfcmV2aXNpb24NCj4gcmV2aXNpb24gbWFjcm8gYW5k
-IG9wZW4tY29kZWQgaW5zdGVhZC4NCg0KVGhpcyBtYWtlcyBtb3JlIHNlbnNlLCBJIHRoaW5rIG1h
-eWJlIHdlIGNhbiByZW1vdmUgdGhlIGlteF9zY3VfcmV2aXNpb24gbWFjcm8sDQpqdXN0IHVzZSBi
-ZWxvdyBjb2RlIGluc3RlYWQsIGFuZCByZXR1cm4gLUVOT01FTSBpZiBrYXNwcmludGYgcmV0dXJu
-cyBOVUxMLg0KDQoxMTMgICAgICAgICBzb2NfZGV2X2F0dHItPnJldmlzaW9uID0gc29jX3JldiA/
-IGthc3ByaW50ZihHRlBfS0VSTkVMLA0KMTE0ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIiVkLiVkIiwNCjExNSAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIChzb2NfcmV2ID4+IDQpICYgMHhmLA0K
-MTE2ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-c29jX3JldiAmIDB4ZikgOiAidW5rbm93biI7DQoxMTcgICAgICAgICBpZiAoIXNvY19kZXZfYXR0
-ci0+cmV2aXNpb24pDQoxMTggICAgICAgICAgICAgICAgIHJldHVybiAtRU5PTUVNOw0KDQpCVFcs
-IHRoZSBzb2MtaW14OC5jIGxvb2tzIGxpa2UgYWxzbyBoYXZpbmcgc2FtZSBpc3N1ZSwgZG8geW91
-IHRoaW5rIHdlIHNob3VsZCBmaXggaXQNCmFzIHdlbGw/DQoNCkFuc29uDQoNCj4gDQo+IC0tDQo+
-IFJlZ2FyZHMsDQo+IExlb25hcmQNCg==
+On Thursday, April 25, 2019 6:38:34 PM CEST Robert R. Howell wrote:
+> On 4/24/19 1:20 AM, Rafael J. Wysocki wrote:
+> 
+> > On Tue, Apr 23, 2019 at 10:03 PM Robert R. Howell <RHowell@uwyo.edu> wrote:
+> >>
+> >> On 4/23/19 2:07 AM, Rafael J. Wysocki wrote:
+> >>>
+> >>> On Sat, Apr 20, 2019 at 12:44 AM Robert R. Howell <RHowell@uwyo.edu> wrote:
+> >>>>
+> >>>> On 4/18/19 5:42 AM, Hans de Goede wrote:
+> >>>>
+> >>>>>> On 4/8/19 2:16 AM, Hans de Goede wrote:>
+> >>>>>>>
+> >>>>>>> Hmm, interesting so you have hibernation working on a T100TA
+> >>>>>>> (with 5.0 + 02e45646d53b reverted), right ?
+> >>>>>>>
+> >>>>
+> >>>>
+> >>>> I've managed to find a way around the i2c_designware timeout issues
+> >>>> on the T100TA's.  The key is to NOT set DPM_FLAG_SMART_SUSPEND,
+> >>>> which was added in the 02e45646d53b commit.
+> >>>>
+> >>>> To test that I've started with a 5.1-rc5 kernel, applied your recent patch
+> >>>> to acpi_lpss.c, then apply the following patch of mine, removing
+> >>>> DPM_FLAG_SMART_SUSPEND.  (For the T100 hardware I need to apply some
+> >>>> other patches as well but those are not related to the i2c-designware or
+> >>>> acpi issues addressed here.)
+> >>>>
+> >>>> On a resume from hibernation I still see one error:
+> >>>>   "i2c_designware 80860F41:00: Error i2c_dw_xfer called while suspended"
+> >>>> but I no longer get the i2c_designware timeouts, and audio does now work
+> >>>> after the resume.
+> >>>>
+> >>>> Removing DPM_FLAG_SMART_SUSPEND may not be what you want for other
+> >>>> hardware, but perhaps this will give you a clue as to what is going
+> >>>> wrong with hibernate/resume on the T100TA's.
+> >>>
+> >>> What if you drop DPM_FLAG_LEAVE_SUSPENDED alone instead?
+> >>>
+> >>
+> >> I did try dropping just DPM_FLAG_LEAVE_SUSPENDED, dropping just
+> >> DPM_FLAG_SMART_SUSPEND, and dropping both flags.  When I just drop
+> >> DPM_FLAG_LEAVE_SUSPENDED I still get the i2c_designware timeouts
+> >> after the resume.  If I drop just DPM_FLAG_SMART_SUSPEND or drop both,
+> >> then the timeouts go away.
+> > 
+> > OK, thanks!
+> > 
+> > Is non-hibernation system suspend affected too?
+> 
+> I just ran some tests on a T100TA, using the 5.1-rc5 code with Hans' patch applied 
+> but without any changes to i2c-designware-platdrv.c, so the 
+> DPM_FLAG_SMART_PREPARE, DPM_FLAG_SMART_SUSPEND, and DPM_FLAG_LEAVE_SUSPENDED flags 
+> are all set.  
+> 
+> Suspend does work OK, and after resume I do NOT get any of the crippling 
+> i2c_designware timeout errors which cause sound to fail after hibernate.  I DO see one 
+>   "i2c_designware 80860F41:00: Error i2c_dw_xfer call while suspended"
+> error on resume, just as I do on hibernate.  I've attached a portion of dmesg below.
+> The "asus_wmi:  Unknown key 79 pressed" error is a glitch which occurs 
+> intermittently on these machines, but doesn't seem related to the other issues.  
+> I had one test run when it was absent but the rest of the messages were the 
+> same -- but then kept getting that unknown key error on all my later tries.
+> 
+> I did notice the "2sidle" in the following rather than "shallow" or "deep".  A
+> cat of /sys/power/state shows "freeze mem disk" but a
+> cat of /sys/power/mem_sleep" shows only "[s2idle] so it looks like shallow and deep 
+> are not enabled for this system.  I did check the input power (or really current) 
+> as it went into suspend and the micro-usb power input drops from about 
+> 0.5 amps to 0.05 amps.  But clearly a lot of devices are still active, as movement 
+> of a bluetooth mouse (the MX Anywhere 2) will wake it from suspend.  That presumably is 
+> why suspend doesn't trigger the same i2c_designware problems as hibernate.
+> 
+> Let me know if I can do any other tests.
+
+Can you please check if the appended patch makes the hibernate issue go away for you, without any other changes?
+
+---
+ drivers/pci/pci-driver.c |   36 ++++++++++--------------------------
+ 1 file changed, 10 insertions(+), 26 deletions(-)
+
+Index: linux-pm/drivers/pci/pci-driver.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pci-driver.c
++++ linux-pm/drivers/pci/pci-driver.c
+@@ -957,15 +957,14 @@ static int pci_pm_freeze(struct device *
+ 	}
+ 
+ 	/*
+-	 * This used to be done in pci_pm_prepare() for all devices and some
+-	 * drivers may depend on it, so do it here.  Ideally, runtime-suspended
+-	 * devices should not be touched during freeze/thaw transitions,
+-	 * however.
++	 * Resume all runtime-suspended devices before creating a snapshot
++	 * image of system memory, because the restore kernel generally cannot
++	 * be expected to always handle them consistently and pci_pm_restore()
++	 * always leaves them as "active", so ensure that the state saved in the
++	 * image will always be consistent with that.
+ 	 */
+-	if (!dev_pm_smart_suspend_and_suspended(dev)) {
+-		pm_runtime_resume(dev);
+-		pci_dev->state_saved = false;
+-	}
++	pm_runtime_resume(dev);
++	pci_dev->state_saved = false;
+ 
+ 	if (pm->freeze) {
+ 		int error;
+@@ -992,9 +991,6 @@ static int pci_pm_freeze_noirq(struct de
+ 	struct pci_dev *pci_dev = to_pci_dev(dev);
+ 	struct device_driver *drv = dev->driver;
+ 
+-	if (dev_pm_smart_suspend_and_suspended(dev))
+-		return 0;
+-
+ 	if (pci_has_legacy_pm_support(pci_dev))
+ 		return pci_legacy_suspend_late(dev, PMSG_FREEZE);
+ 
+@@ -1024,16 +1020,6 @@ static int pci_pm_thaw_noirq(struct devi
+ 	struct device_driver *drv = dev->driver;
+ 	int error = 0;
+ 
+-	/*
+-	 * If the device is in runtime suspend, the code below may not work
+-	 * correctly with it, so skip that code and make the PM core skip all of
+-	 * the subsequent "thaw" callbacks for the device.
+-	 */
+-	if (dev_pm_smart_suspend_and_suspended(dev)) {
+-		dev_pm_skip_next_resume_phases(dev);
+-		return 0;
+-	}
+-
+ 	if (pcibios_pm_ops.thaw_noirq) {
+ 		error = pcibios_pm_ops.thaw_noirq(dev);
+ 		if (error)
+@@ -1093,8 +1079,10 @@ static int pci_pm_poweroff(struct device
+ 
+ 	/* The reason to do that is the same as in pci_pm_suspend(). */
+ 	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
+-	    !pci_dev_keep_suspended(pci_dev))
++	    !pci_dev_keep_suspended(pci_dev)) {
+ 		pm_runtime_resume(dev);
++		pci_dev->state_saved = false;
++	}
+ 
+ 	pci_dev->state_saved = false;
+ 	if (pm->poweroff) {
+@@ -1168,10 +1156,6 @@ static int pci_pm_restore_noirq(struct d
+ 	struct device_driver *drv = dev->driver;
+ 	int error = 0;
+ 
+-	/* This is analogous to the pci_pm_resume_noirq() case. */
+-	if (dev_pm_smart_suspend_and_suspended(dev))
+-		pm_runtime_set_active(dev);
+-
+ 	if (pcibios_pm_ops.restore_noirq) {
+ 		error = pcibios_pm_ops.restore_noirq(dev);
+ 		if (error)
+
+
+
