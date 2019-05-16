@@ -2,324 +2,138 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19510C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCB0C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4568206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DFE5206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:24:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Sltg+6Ii"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfEPLYK (ORCPT
+        id S1727412AbfEPLYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:24:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37904 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726537AbfEPLYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:24:09 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CD92687645;
-        Thu, 16 May 2019 11:24:08 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0740818394;
-        Thu, 16 May 2019 11:24:06 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 4/4] uapi: Wire up the mount API syscalls on non-x86 arches
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
-Cc:     Arnd Bergmann <arnd@arndb.de>, dhowells@redhat.com,
-        christian@brauner.io, arnd@arndb.de, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 16 May 2019 12:24:06 +0100
-Message-ID: <155800584626.26930.8723624357941420192.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155800581545.26930.2167325198332902897.stgit@warthog.procyon.org.uk>
-References: <155800581545.26930.2167325198332902897.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Thu, 16 May 2019 07:24:16 -0400
+Received: from mail-eopbgr30042.outbound.protection.outlook.com ([40.107.3.42]:39235
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726537AbfEPLYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:24:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o5Pmafg8pm32hRxJ/xCqaP5OyzTxAvzFiL42BtQ5F8I=;
+ b=Sltg+6Iih30t/wMTRaOQjsMoL+TUi1LvS1Kb5sr39hgUWoSZ6mzdk+tdBeOF37Bu3S6mYrCiNp26l+X7T9ZJNr73w982PgWt0puvOQrAOL8JnykoP0kOQ1qWsT3v0hoAdn5Ft5JSpzdUCIKo11vNy8oZJb+6wV4C6DQEwZokvac=
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
+ VE1PR04MB6766.eurprd04.prod.outlook.com (20.179.235.219) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Thu, 16 May 2019 11:24:12 +0000
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::a5b5:13f5:f89c:9a30]) by VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::a5b5:13f5:f89c:9a30%7]) with mapi id 15.20.1900.010; Thu, 16 May 2019
+ 11:24:12 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     "brian.austin@cirrus.com" <brian.austin@cirrus.com>,
+        "Paul.Handrigan@cirrus.com" <Paul.Handrigan@cirrus.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH RESEND V3] ASoC: cs42xx8: add reset-gpio in binding document
+Thread-Topic: [PATCH RESEND V3] ASoC: cs42xx8: add reset-gpio in binding
+ document
+Thread-Index: AQHVC9njdHFVpoMQJkaGKICvqNXQ+Q==
+Date:   Thu, 16 May 2019 11:24:12 +0000
+Message-ID: <c2118efa4ee6c915473060405805e6c6c6db681f.1558005661.git.shengjiu.wang@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.21.0
+x-clientproxiedby: HK0PR03CA0023.apcprd03.prod.outlook.com
+ (2603:1096:203:2e::35) To VE1PR04MB6479.eurprd04.prod.outlook.com
+ (2603:10a6:803:11e::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ab6873ed-afa8-4ad8-01ee-08d6d9f1059b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6766;
+x-ms-traffictypediagnostic: VE1PR04MB6766:
+x-microsoft-antispam-prvs: <VE1PR04MB67666A70FBA61614FB0AC262E30A0@VE1PR04MB6766.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0039C6E5C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(346002)(396003)(136003)(366004)(189003)(199004)(66066001)(2201001)(71190400001)(6486002)(305945005)(6506007)(386003)(36756003)(7736002)(5660300002)(86362001)(256004)(66946007)(99286004)(52116002)(6436002)(14444005)(476003)(486006)(66556008)(66476007)(64756008)(66446008)(2616005)(73956011)(6116002)(3846002)(478600001)(68736007)(6512007)(102836004)(2501003)(53936002)(8676002)(25786009)(8936002)(81156014)(50226002)(14454004)(81166006)(4326008)(316002)(118296001)(71200400001)(110136005)(2906002)(26005)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6766;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: OWHMZcPDtVaPFrYVdYy2dJ4RSA6rzDPyG+CnCrrUrpzy2w8IG+sGTLmYebleKSC8vJmJNyZ97GqxzfJ75IuRzyMLz/+UODAqstcCUUVlI2f7UEgvI949HtQwvnzJEuyWxNPYBJfzUYOvvGse40buYf2fhUvMV2zm4PbKXLlGonr6tLicfJr4GLu01s90d6CUIlT8k/trSfMyAovDubvIZYAfpeVtaLakkF7Ng8mzt69Y9IHG5hqSisKVcO9G9wyeV8zLapuJz5eKhJDvwiHjJ01Bu1FjlPU+1gP7a7zKVLuzAMn4SJRRlxQk9OyQ07uPvMBeNqauetTndIXn9ncKVX+UiOadchH84GHI9sGt4T07ZPRK/2G4O9cGMcFdZhli1Gotzeq0VSVgNeLA14jVmQMva/YHmcvBoe5J4u7ELmQ=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <B540429D4C6352488F3D67CDEADD7BBC@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 16 May 2019 11:24:08 +0000 (UTC)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ab6873ed-afa8-4ad8-01ee-08d6d9f1059b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 11:24:12.8371
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6766
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wire up the mount API syscalls on non-x86 arches.
+Add reset-gpio property, which is an optional option
 
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 ---
+Changes in RESEND v3
+- send updated binding document only
 
- arch/alpha/kernel/syscalls/syscall.tbl      |    6 ++++++
- arch/arm/tools/syscall.tbl                  |    6 ++++++
- arch/arm64/include/asm/unistd32.h           |   12 ++++++++++++
- arch/ia64/kernel/syscalls/syscall.tbl       |    6 ++++++
- arch/m68k/kernel/syscalls/syscall.tbl       |    6 ++++++
- arch/microblaze/kernel/syscalls/syscall.tbl |    6 ++++++
- arch/mips/kernel/syscalls/syscall_n32.tbl   |    6 ++++++
- arch/mips/kernel/syscalls/syscall_n64.tbl   |    6 ++++++
- arch/mips/kernel/syscalls/syscall_o32.tbl   |    6 ++++++
- arch/parisc/kernel/syscalls/syscall.tbl     |    6 ++++++
- arch/powerpc/kernel/syscalls/syscall.tbl    |    6 ++++++
- arch/s390/kernel/syscalls/syscall.tbl       |    6 ++++++
- arch/sh/kernel/syscalls/syscall.tbl         |    6 ++++++
- arch/sparc/kernel/syscalls/syscall.tbl      |    6 ++++++
- arch/xtensa/kernel/syscalls/syscall.tbl     |    6 ++++++
- include/uapi/asm-generic/unistd.h           |   14 +++++++++++++-
- 16 files changed, 109 insertions(+), 1 deletion(-)
+Changes in v3
+- update binding document.
 
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index 165f268beafc..9e7704e44f6d 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -467,3 +467,9 @@
- 535	common	io_uring_setup			sys_io_uring_setup
- 536	common	io_uring_enter			sys_io_uring_enter
- 537	common	io_uring_register		sys_io_uring_register
-+538	common	open_tree			sys_open_tree
-+539	common	move_mount			sys_move_mount
-+540	common	fsopen				sys_fsopen
-+541	common	fsconfig			sys_fsconfig
-+542	common	fsmount				sys_fsmount
-+543	common	fspick				sys_fspick
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index 0393917eaa57..aaf479a9e92d 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -441,3 +441,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-index 23f1a44acada..3734789e9f25 100644
---- a/arch/arm64/include/asm/unistd32.h
-+++ b/arch/arm64/include/asm/unistd32.h
-@@ -874,6 +874,18 @@ __SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
- __SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
- #define __NR_io_uring_register 427
- __SYSCALL(__NR_io_uring_register, sys_io_uring_register)
-+#define __NR_open_tree 428
-+__SYSCALL(__NR_open_tree, open_tree)
-+#define __NR_move_mount 429
-+__SYSCALL(__NR_move_mount, move_mount)
-+#define __NR_fsopen 430
-+__SYSCALL(__NR_fsopen, fsopen)
-+#define __NR_fsconfig 431
-+__SYSCALL(__NR_fsconfig, fsconfig)
-+#define __NR_fsmount 432
-+__SYSCALL(__NR_fsmount, fsmount)
-+#define __NR_fspick 433
-+__SYSCALL(__NR_fspick, fspick)
- 
- /*
-  * Please add new compat syscalls above this comment and update
-diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
-index 56e3d0b685e1..e01df3f2f80d 100644
---- a/arch/ia64/kernel/syscalls/syscall.tbl
-+++ b/arch/ia64/kernel/syscalls/syscall.tbl
-@@ -348,3 +348,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index df4ec3ec71d1..7e3d0734b2f3 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -427,3 +427,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index 4964947732af..26339e417695 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -433,3 +433,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index 9392dfe33f97..0e2dd68ade57 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -366,3 +366,9 @@
- 425	n32	io_uring_setup			sys_io_uring_setup
- 426	n32	io_uring_enter			sys_io_uring_enter
- 427	n32	io_uring_register		sys_io_uring_register
-+428	n32	open_tree			sys_open_tree
-+429	n32	move_mount			sys_move_mount
-+430	n32	fsopen				sys_fsopen
-+431	n32	fsconfig			sys_fsconfig
-+432	n32	fsmount				sys_fsmount
-+433	n32	fspick				sys_fspick
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index cd0c8aa21fba..5eebfa0d155c 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -342,3 +342,9 @@
- 425	n64	io_uring_setup			sys_io_uring_setup
- 426	n64	io_uring_enter			sys_io_uring_enter
- 427	n64	io_uring_register		sys_io_uring_register
-+428	n64	open_tree			sys_open_tree
-+429	n64	move_mount			sys_move_mount
-+430	n64	fsopen				sys_fsopen
-+431	n64	fsconfig			sys_fsconfig
-+432	n64	fsmount				sys_fsmount
-+433	n64	fspick				sys_fspick
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index e849e8ffe4a2..3cc1374e02d0 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -415,3 +415,9 @@
- 425	o32	io_uring_setup			sys_io_uring_setup
- 426	o32	io_uring_enter			sys_io_uring_enter
- 427	o32	io_uring_register		sys_io_uring_register
-+428	o32	open_tree			sys_open_tree
-+429	o32	move_mount			sys_move_mount
-+430	o32	fsopen				sys_fsopen
-+431	o32	fsconfig			sys_fsconfig
-+432	o32	fsmount				sys_fsmount
-+433	o32	fspick				sys_fspick
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index fe8ca623add8..c9e377d59232 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -424,3 +424,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index 00f5a63c8d9a..103655d84b4b 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -509,3 +509,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index 061418f787c3..e822b2964a83 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -430,3 +430,9 @@
- 425  common	io_uring_setup		sys_io_uring_setup              sys_io_uring_setup
- 426  common	io_uring_enter		sys_io_uring_enter              sys_io_uring_enter
- 427  common	io_uring_register	sys_io_uring_register           sys_io_uring_register
-+428  common	open_tree		sys_open_tree			sys_open_tree
-+429  common	move_mount		sys_move_mount			sys_move_mount
-+430  common	fsopen			sys_fsopen			sys_fsopen
-+431  common	fsconfig		sys_fsconfig			sys_fsconfig
-+432  common	fsmount			sys_fsmount			sys_fsmount
-+433  common	fspick			sys_fspick			sys_fspick
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index 480b057556ee..016a727d4357 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -430,3 +430,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index a1dd24307b00..e047480b1605 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -473,3 +473,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index 30084eaf8422..5fa0ee1c8e00 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -398,3 +398,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index dee7292e1df6..29bf3bbcce78 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -832,9 +832,21 @@ __SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
- __SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
- #define __NR_io_uring_register 427
- __SYSCALL(__NR_io_uring_register, sys_io_uring_register)
-+#define __NR_open_tree 428
-+__SYSCALL(__NR_open_tree, open_tree)
-+#define __NR_move_mount 429
-+__SYSCALL(__NR_move_mount, move_mount)
-+#define __NR_fsopen 430
-+__SYSCALL(__NR_fsopen, fsopen)
-+#define __NR_fsconfig 431
-+__SYSCALL(__NR_fsconfig, fsconfig)
-+#define __NR_fsmount 432
-+__SYSCALL(__NR_fsmount, fsmount)
-+#define __NR_fspick 433
-+__SYSCALL(__NR_fspick, fspick)
- 
- #undef __NR_syscalls
--#define __NR_syscalls 428
-+#define __NR_syscalls 434
- 
- /*
-  * 32 bit systems traditionally used different
+Changes in v2
+- use devm_gpiod_get_optional instead of of_get_named_gpio
+
+ Documentation/devicetree/bindings/sound/cs42xx8.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/cs42xx8.txt b/Document=
+ation/devicetree/bindings/sound/cs42xx8.txt
+index 8619a156d038..ab8f54095269 100644
+--- a/Documentation/devicetree/bindings/sound/cs42xx8.txt
++++ b/Documentation/devicetree/bindings/sound/cs42xx8.txt
+@@ -14,6 +14,11 @@ Required properties:
+   - VA-supply, VD-supply, VLS-supply, VLC-supply: power supplies for the d=
+evice,
+     as covered in Documentation/devicetree/bindings/regulator/regulator.tx=
+t
+=20
++Optional properties:
++
++  - reset-gpio : a GPIO spec to define which pin is connected to the chip'=
+s
++    !RESET pin
++
+ Example:
+=20
+ cs42888: codec@48 {
+@@ -25,4 +30,5 @@ cs42888: codec@48 {
+ 	VD-supply =3D <&reg_audio>;
+ 	VLS-supply =3D <&reg_audio>;
+ 	VLC-supply =3D <&reg_audio>;
++	reset-gpio =3D <&pca9557_b 1 1>;
+ };
+--=20
+2.21.0
 
