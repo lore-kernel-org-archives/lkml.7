@@ -2,80 +2,77 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB47C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5365EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF3E2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:28:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U0hLthwL"
+	by mail.kernel.org (Postfix) with ESMTP id 2E3462082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfEPL2t (ORCPT
+        id S1727172AbfEPL3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:28:49 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36930 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbfEPL2s (ORCPT
+        Thu, 16 May 2019 07:29:37 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42573 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbfEPL3g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:28:48 -0400
-Received: by mail-lf1-f65.google.com with SMTP id q17so2361152lfo.4;
-        Thu, 16 May 2019 04:28:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gEjnrderMD+qji8n1CYhJ0D2hXht6X9XySdj+hZW94M=;
-        b=U0hLthwL7+2gRy5q0s51ncMxVgZCn0YB/oeY4lU5sUEEqrz1Al3Nvz+M1YdrEmgxtj
-         UqhxKhjK7LBnWppGau3vUs7WYn+pXUtIub+VkjPAJOPW2TTsbIRSZXzpCk95rsm2gonQ
-         s3C6CCfnF/DPGJqXi+C5hCcnqP6K8/JOWKEcTs37qFZjqhzFF5ryQF9/vC/ML2yBj5N7
-         qYnOJGOR0Womg4/2suFy7VhPRdQhEiXfzQmYXKIY3Ax8mOs7IAhD4xhwEvc1vFEo4ugH
-         8LtsewAqlhevcnERFBTNucLJ0uzcpoHdwEFV6fK4SoTUa9KqGNMiymLv7NnCouqNy5UT
-         R6cw==
+        Thu, 16 May 2019 07:29:36 -0400
+Received: by mail-qt1-f194.google.com with SMTP id j53so3363552qta.9;
+        Thu, 16 May 2019 04:29:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gEjnrderMD+qji8n1CYhJ0D2hXht6X9XySdj+hZW94M=;
-        b=XTlhZ/DLdoMPVljo1peu0hp7WjbW6ln1qqolb1jvMTvmCtSmfpfFSUyyn+s4XVWOjv
-         mmoPZZSQgqmiBYfpwbW0Z7okJneg4CQeiZleVxkHLHK9Golbf1I5SUd+wtzxmLIQf9ZY
-         zyAVvxIiJq8xq+sF8yzwCCdVY/L7JZVyvf1Wq8Lo/KdBRPkbUqKPHnQKtjyLVku7dqtP
-         2Fif2lfyqp/AWcH/uq1nodqRTFeu+HnX02gIWN3cCMATmFE+e5O5y3dNYTFZzqDwMS81
-         SR0a+KaMdfrjsrj/UX9TWT4Fg8w+KYkdayD+wnWYGf3Zh4vDrVi+sK6cuOmeEao+X3bN
-         UWgA==
-X-Gm-Message-State: APjAAAXtN6F3YhLIZ6sUSoB8t2trvyJPabNpl9Hk0dPdHx1XLAoSuABH
-        Kf7Ki6nRMOmzZd7PRxKaxs4CrANmd9GNAYiDlXFyc9EF
-X-Google-Smtp-Source: APXvYqzZnEVBjcr0UUArd9Y/oHNPeVsZfHHba7EOXCtZd2u8f9QMTyL9WbJ198nWm+6fzBcph0vev4uy1X5N+aE9RX8=
-X-Received: by 2002:ac2:5621:: with SMTP id b1mr24888584lff.27.1558006126907;
- Thu, 16 May 2019 04:28:46 -0700 (PDT)
+        bh=rzVcxVnFAhhhwS6SmNGAz5LONQcWFWbAgnrIavt93QM=;
+        b=i5e05YEm2CLkMuCjTAinCSid6d3qF5ZvxR0AdVDFr2b4c5gZEkeGv0h3YOYrMgFAvh
+         J/qbhh/aY+kvytRidKViKCZkpaTHhCDmS8KWKryOZwU9a603/hT69SPKr38VdNogDiIg
+         AJgIcbQt/FS9NI8PZ0HLc7ZN8V6IVPlnJ4RdCl70dn2a+Rc/wq5pz2wh0Gr/K4YovwUg
+         6r5hgb4mN4khhHKOXy/IJlIEj7wrxFyFcKtQZmMxWfCs5kqjuaTxutm1RtbLElSDi6vy
+         Hj53jpIqJKa1bEgKy93iKpo3gELv64skKI6XhY+m+SpqmUzR9gcb7TdXs43KFpvCFTS/
+         EKxQ==
+X-Gm-Message-State: APjAAAU3bl4c+uylYvR0nJ9XzB6BoF6+LxAZjvybEj+7pW/1jv4a9mPh
+        4he/9oL/kubEmi7GqzXEcu8fKgz/dPeoHYAt+28=
+X-Google-Smtp-Source: APXvYqz2d9dZQwnnUk9pUn0cYUvFT0Pdw9MFbIzzIkr6l/rN+HuIopzXxgFtiZa5CopJqIL8faKjbCutlYXzRDoSfhw=
+X-Received: by 2002:ac8:390e:: with SMTP id s14mr18333086qtb.343.1558006175664;
+ Thu, 16 May 2019 04:29:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190516111450.6730-1-cniedermaier@dh-electronics.com>
-In-Reply-To: <20190516111450.6730-1-cniedermaier@dh-electronics.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 16 May 2019 08:28:36 -0300
-Message-ID: <CAOMZO5AVxwFWswCqJNaU1jo3iLc1UJZ52HvHvCHhzDU195WsFg@mail.gmail.com>
-Subject: Re: [PATCH] spi: spidev: Add dhcom-board to compatibility list [Klartext]
-To:     Christoph Niedermaier <cniedermaier@dh-electronics.com>
-Cc:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
+References: <155800581545.26930.2167325198332902897.stgit@warthog.procyon.org.uk>
+ <155800583882.26930.17007472666085260160.stgit@warthog.procyon.org.uk>
+In-Reply-To: <155800583882.26930.17007472666085260160.stgit@warthog.procyon.org.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Thu, 16 May 2019 13:29:19 +0200
+Message-ID: <CAK8P3a3qtr4kvVRf0bvUOzv342px++wi7iA44zCmNRi_ipUd_w@mail.gmail.com>
+Subject: Re: [PATCH 3/4] uapi, x86: Fix the syscall numbering of the mount API syscalls
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
-
-It seems that the [Klartext] string is added in the Subject by mistake?
-
-On Thu, May 16, 2019 at 8:23 AM Christoph Niedermaier
-<cniedermaier@dh-electronics.com> wrote:
+On Thu, May 16, 2019 at 1:24 PM David Howells <dhowells@redhat.com> wrote:
 >
-> Prepare to use devices on the external SPI interface
-> on a DH electronics Development Board.
+> Fix the syscall numbering of the mount API syscalls so that the numbers
+> match between i386 and x86_64 and that they're in the common numbering
+> scheme space.
 >
-> Signed-off-by: Christoph Niedermaier <cniedermaier@dh-electronics.com>
+> Fixes: a07b20004793 ("vfs: syscall: Add open_tree(2) to reference or clone a mount")
+> Fixes: 2db154b3ea8e ("vfs: syscall: Add move_mount(2) to move mounts around")
+> Fixes: 24dcb3d90a1f ("vfs: syscall: Add fsopen() to prepare for superblock creation")
+> Fixes: ecdab150fddb ("vfs: syscall: Add fsconfig() for configuring and managing a context")
+> Fixes: 93766fbd2696 ("vfs: syscall: Add fsmount() to create a mount for a superblock")
+> Fixes: cf3cba4a429b ("vfs: syscall: Add fspick() to select a superblock for reconfiguration")
+> Reported-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+
+Thanks!
+
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
