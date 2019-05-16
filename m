@@ -2,141 +2,202 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4EFC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D411DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFCB120657
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:29:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="TH4z/rM7"
+	by mail.kernel.org (Postfix) with ESMTP id B007320657
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:29:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbfEPP3W (ORCPT
+        id S1727791AbfEPP3k convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:29:22 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44112 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727398AbfEPP3V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:29:21 -0400
-Received: by mail-ed1-f65.google.com with SMTP id b8so5784021edm.11
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 08:29:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZqfBKUXmncS+f99++ptXSxdqupLw9zmhEoHFhOKQ3+w=;
-        b=TH4z/rM7ErguN84LC3AmRg3JM/hVu0pzNCfG54H90jzb63FEyWpgQxI/RMgxJKMw0P
-         YMcyNk31xsPD9o3Q8SwKVFbPkeg8kucRDIsE3yDY3iiXnyBwTwnYxeZvDW5/V+wBXU6a
-         4Whkmp9tF7azl07xuKt/fN1RfMwR7c1B7epJGJ4YizDr1inzgV4yUswyquIaazuD7NSA
-         +Y7PT7f4mQIjQrv4yQyYO9MGe0DD0FnBStZnFHo1gVuPfCi9qKCZU5pU6DsIxSnGA9Ik
-         9SEOtQn5L4G4624dzeKPE3TTelvggQSyZJ+x/s6KcHf9L4yAiTiSgxh1JqlUq122MXzB
-         4CVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZqfBKUXmncS+f99++ptXSxdqupLw9zmhEoHFhOKQ3+w=;
-        b=ucagzLRmjkXyJvDXm8zjLj9r3uZz/AQfGzs6X9ghtacl+F5WyuW2OPn8sliReXmgg1
-         4h+5EEF4We7Ap7UPUZWOtG3j9PhzKvcpD6Hnvp4gpnYPohBhmsOaoq33RSDyIbGeNurj
-         ZSTl2Fps9LDZ+0dLoHTe5Ase2DBLTYByKMGgEZ942vlT3Y3HvK0+jV5tnIk0XZ8uzHBh
-         yM6ytXy97T54yfw02EiO4Mf8tv3VXurDKUFKkM8l51H77S9j6jDzDY3J0HCPYJeGMzC/
-         E42IV9vmr5/H6kUiLMAMRJSencTgkIPNAdBwll+mNhFt7k08/0nb8sjZQ4PSoapeY5FF
-         31Jw==
-X-Gm-Message-State: APjAAAUS+KUOyTgB+SWpKyV/QnmxGUT60XYyelVxPMjG8tK9FIq8r3C/
-        sTrDWpagMrXvzqHHBBRb29VpGw==
-X-Google-Smtp-Source: APXvYqzND3qJO+X7rGwmXjyWOGo7yuQQOnxCqVFCr+1kxGCEKNbb6bF5poI+TQvkmuF3C5Oy1BVzkw==
-X-Received: by 2002:a50:a886:: with SMTP id k6mr51048650edc.211.1558020559731;
-        Thu, 16 May 2019 08:29:19 -0700 (PDT)
-Received: from brauner.io ([193.96.224.243])
-        by smtp.gmail.com with ESMTPSA id b4sm1889513edf.7.2019.05.16.08.29.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 16 May 2019 08:29:19 -0700 (PDT)
-Date:   Thu, 16 May 2019 17:29:16 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>, jannh@google.com,
-        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, arnd@arndb.de,
-        akpm@linux-foundation.org, dhowells@redhat.com,
-        ebiederm@xmission.com, elena.reshetova@intel.com,
-        keescook@chromium.org, luto@amacapital.net, luto@kernel.org,
-        tglx@linutronix.de, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, joel@joelfernandes.org,
-        dancol@google.com, serge@hallyn.com,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v1 1/2] pid: add pidfd_open()
-Message-ID: <20190516152915.3t2wofeu3xsyhfbd@brauner.io>
-References: <20190516135944.7205-1-christian@brauner.io>
- <20190516142659.GB22564@redhat.com>
- <20190516145607.j43xyj26k6l5vmbd@yavin>
- <20190516150611.GC22564@redhat.com>
- <20190516151202.hrawrx7hxllmz2di@yavin>
- <20190516152252.GD22564@redhat.com>
+        Thu, 16 May 2019 11:29:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:17233 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726758AbfEPP3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 11:29:40 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 51C93307C940;
+        Thu, 16 May 2019 15:29:39 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 371B45D6A9;
+        Thu, 16 May 2019 15:29:39 +0000 (UTC)
+Received: from zmail17.collab.prod.int.phx2.redhat.com (zmail17.collab.prod.int.phx2.redhat.com [10.5.83.19])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 902B31806B11;
+        Thu, 16 May 2019 15:29:38 +0000 (UTC)
+Date:   Thu, 16 May 2019 11:29:35 -0400 (EDT)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, peterz@infradead.org,
+        namit@vmware.com, minchan@kernel.org, mgorman@suse.de,
+        stable@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Jan Stancek <jstancek@redhat.com>
+Message-ID: <1158926942.23199905.1558020575293.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20190514145445.GB2825@fuggles.cambridge.arm.com>
+References: <1557444414-12090-1-git-send-email-yang.shi@linux.alibaba.com> <20190513163804.GB10754@fuggles.cambridge.arm.com> <360170d7-b16f-f130-f930-bfe54be9747a@linux.alibaba.com> <20190514145445.GB2825@fuggles.cambridge.arm.com>
+Subject: Re: [v2 PATCH] mm: mmu_gather: remove __tlb_reset_range() for force
+ flush
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190516152252.GD22564@redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.43.17.163, 10.4.195.10]
+Thread-Topic: mmu_gather: remove __tlb_reset_range() for force flush
+Thread-Index: uzKTPt4zsaol+2IqXYgAH+t+3N7Fug==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 16 May 2019 15:29:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 05:22:53PM +0200, Oleg Nesterov wrote:
-> On 05/17, Aleksa Sarai wrote:
-> >
-> > On 2019-05-16, Oleg Nesterov <oleg@redhat.com> wrote:
-> > > On 05/17, Aleksa Sarai wrote:
-> > > > On 2019-05-16, Oleg Nesterov <oleg@redhat.com> wrote:
-> > > > > On 05/16, Christian Brauner wrote:
-> > > > > > With the introduction of pidfds through CLONE_PIDFD it is possible to
-> > > > > > created pidfds at process creation time.
-> > > > >
-> > > > > Now I am wondering why do we need CLONE_PIDFD, you can just do
-> > > > >
-> > > > > 	pid = fork();
-> > > > > 	pidfd_open(pid);
-> > > >
-> > > > While the race window would be exceptionally short, there is the
-> > > > possibility that the child will die
-> > >
-> > > Yes,
-> > >
-> > > > and their pid will be recycled
-> > > > before you do pidfd_open().
-> > >
-> > > No.
-> > >
-> > > Unless the caller's sub-thread does wait() before pidfd_open(), of course.
-> > > Or unless you do signal(SIGCHILD, SIG_IGN).
-> >
-> > What about CLONE_PARENT?
-> 
-> I should have mentioned CLONE_PARENT ;)
-> 
-> Of course in this case the child can be reaped before pidfd_open(). But how often
-> do you or other people use clone(CLONE_PARENT) ? not to mention you can trivially
-> eliminate/detect this race if you really need this.
-> 
-> Don't get me wrong, I am not trying to say that CLONE_PIDFD is a bad idea.
-> 
-> But to me pidfd_open() is much more useful. Say, as a perl programmer I can easily
-> use pidfd_open(), but not CLONE_PIDFD.
 
-Right, but for a libc, service- or container manager CLONE_PIDFD is much
-nicer when spawning processes quickly. :) I think both are very good to
-have.
 
-Thanks, Oleg. As always super helpful reviews. :)
-Christian
+----- Original Message -----
+> On Mon, May 13, 2019 at 04:01:09PM -0700, Yang Shi wrote:
+> > 
+> > 
+> > On 5/13/19 9:38 AM, Will Deacon wrote:
+> > > On Fri, May 10, 2019 at 07:26:54AM +0800, Yang Shi wrote:
+> > > > diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+> > > > index 99740e1..469492d 100644
+> > > > --- a/mm/mmu_gather.c
+> > > > +++ b/mm/mmu_gather.c
+> > > > @@ -245,14 +245,39 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
+> > > >   {
+> > > >   	/*
+> > > >   	 * If there are parallel threads are doing PTE changes on same range
+> > > > -	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
+> > > > -	 * flush by batching, a thread has stable TLB entry can fail to flush
+> > > > -	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
+> > > > -	 * forcefully if we detect parallel PTE batching threads.
+> > > > +	 * under non-exclusive lock (e.g., mmap_sem read-side) but defer TLB
+> > > > +	 * flush by batching, one thread may end up seeing inconsistent PTEs
+> > > > +	 * and result in having stale TLB entries.  So flush TLB forcefully
+> > > > +	 * if we detect parallel PTE batching threads.
+> > > > +	 *
+> > > > +	 * However, some syscalls, e.g. munmap(), may free page tables, this
+> > > > +	 * needs force flush everything in the given range. Otherwise this
+> > > > +	 * may result in having stale TLB entries for some architectures,
+> > > > +	 * e.g. aarch64, that could specify flush what level TLB.
+> > > >   	 */
+> > > > -	if (mm_tlb_flush_nested(tlb->mm)) {
+> > > > -		__tlb_reset_range(tlb);
+> > > > -		__tlb_adjust_range(tlb, start, end - start);
+> > > > +	if (mm_tlb_flush_nested(tlb->mm) && !tlb->fullmm) {
+> > > > +		/*
+> > > > +		 * Since we can't tell what we actually should have
+> > > > +		 * flushed, flush everything in the given range.
+> > > > +		 */
+> > > > +		tlb->freed_tables = 1;
+> > > > +		tlb->cleared_ptes = 1;
+> > > > +		tlb->cleared_pmds = 1;
+> > > > +		tlb->cleared_puds = 1;
+> > > > +		tlb->cleared_p4ds = 1;
+> > > > +
+> > > > +		/*
+> > > > +		 * Some architectures, e.g. ARM, that have range invalidation
+> > > > +		 * and care about VM_EXEC for I-Cache invalidation, need force
+> > > > +		 * vma_exec set.
+> > > > +		 */
+> > > > +		tlb->vma_exec = 1;
+> > > > +
+> > > > +		/* Force vma_huge clear to guarantee safer flush */
+> > > > +		tlb->vma_huge = 0;
+> > > > +
+> > > > +		tlb->start = start;
+> > > > +		tlb->end = end;
+> > > >   	}
+> > > Whilst I think this is correct, it would be interesting to see whether
+> > > or not it's actually faster than just nuking the whole mm, as I mentioned
+> > > before.
+> > > 
+> > > At least in terms of getting a short-term fix, I'd prefer the diff below
+> > > if it's not measurably worse.
+> > 
+> > I did a quick test with ebizzy (96 threads with 5 iterations) on my x86 VM,
+> > it shows slightly slowdown on records/s but much more sys time spent with
+> > fullmm flush, the below is the data.
+> > 
+> >                                     nofullmm                 fullmm
+> > ops (records/s)              225606                  225119
+> > sys (s)                            0.69                        1.14
+> > 
+> > It looks the slight reduction of records/s is caused by the increase of sys
+> > time.
+> 
+> That's not what I expected, and I'm unable to explain why moving to fullmm
+> would /increase/ the system time. I would've thought the time spent doing
+> the invalidation would decrease, with the downside that the TLB is cold
+> when returning back to userspace.
+> 
+
+I tried ebizzy with various parameters (malloc vs mmap, ran it for hour),
+but performance was very similar for both patches.
+
+So, I was looking for workload that would demonstrate the largest difference.
+Inspired by python xml-rpc, which can handle each request in new thread,
+I tried following [1]:
+
+16 threads, each looping 100k times over:
+  mmap(16M)
+  touch 1 page
+  madvise(DONTNEED)
+  munmap(16M)
+
+This yields quite significant difference for 2 patches when running on
+my 46 CPU arm host. I checked it twice - applied patch, recompiled, rebooted,
+but numbers stayed +- couple seconds the same.
+
+Does it somewhat match your expectation?
+
+v2 patch
+---------
+real    2m33.460s
+user    0m3.359s
+sys     15m32.307s
+
+real    2m33.895s
+user    0m2.749s
+sys     16m34.500s
+
+real    2m35.666s
+user    0m3.528s
+sys     15m23.377s
+
+real    2m32.898s
+user    0m2.789s
+sys     16m18.801s
+
+real    2m33.087s
+user    0m3.565s
+sys     16m23.815s
+
+
+fullmm version
+---------------
+real    0m46.811s
+user    0m1.596s
+sys     1m47.500s
+
+real    0m47.322s
+user    0m1.803s
+sys     1m48.449s
+
+real    0m46.668s
+user    0m1.508s
+sys     1m47.352s
+
+real    0m46.742s
+user    0m2.007s
+sys     1m47.217s
+
+real    0m46.948s
+user    0m1.785s
+sys     1m47.906s
+
+[1] https://github.com/jstancek/reproducers/blob/master/kernel/page_fault_stall/mmap8.c
