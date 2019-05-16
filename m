@@ -2,129 +2,150 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E39FC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D75BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD122087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:23:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AabVOpc0"
+	by mail.kernel.org (Postfix) with ESMTP id 76868206A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:28:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726820AbfEPJXc (ORCPT
+        id S1726857AbfEPJ2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 05:23:32 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:43991 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726447AbfEPJXc (ORCPT
+        Thu, 16 May 2019 05:28:04 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:53913 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726363AbfEPJ2D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 05:23:32 -0400
-Received: by mail-pg1-f194.google.com with SMTP id t22so1257928pgi.10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 02:23:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=reAgSdPZ/Igx7TP/G4DFm5yRB5oI6NXcR4YRtQByf1A=;
-        b=AabVOpc0gax5y+C34MwQA8XkHzluhPkc93PJn6cEymixXWGT8AUzl1dNJ4pU9uVb1e
-         GpB82yMP99M52j2Y3rQUP6OoCY7o5ErYKmID6yVZnXfsn6IPu8VxP/fenqWHRtteWZMi
-         V/2Bf6FeKafR4m81+5tNZzKmTbeBs3AQsOtixYHzFiaHD06OQLy6Lxo63jB00qGRbVFc
-         fAx0TdpgM2u404lkqC5aO2sl/qL9QzVSGbo9dJK0nM2UKvvAc+cAc0b2ntQz6dICxBuu
-         rGnQfWI/5ZuRroAP2vMMcyGvLK3+pxmvkI+fmWJKuGQOOal7lYdksBx/uJxR/I9nB9Xk
-         6xsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=reAgSdPZ/Igx7TP/G4DFm5yRB5oI6NXcR4YRtQByf1A=;
-        b=eZs2ejoAAr7cyXL0RgEKFwKFYSaIVt2WuUjQxzpLb4QJxdNqWKT/R8uotvnEyk7A8B
-         +ZMVVB0rSlgXFQotZ5NFWS+ETOIItmNuKR7GRgFELt9dm2k/5lUjC3rG3Gq5yhJJrPN9
-         TxpZ7Zt01Yp3tEiwE10haleJ0S1CzdtQboLfmCmbI3cN+hUqOfCGzv2Fz3KcBfgey2t0
-         uCN1wi2ciKuq341kF3vwCFbVV+WbSUXh78FEjAJVEFB9zuNM5acssoEmZRGP6rXf1yc2
-         qSoNn8IWlhiXPdN0xgcTygb2ST7yG4YznGxgKj4s4xRvBC96MPB54klgTWG4ADex47d5
-         faxQ==
-X-Gm-Message-State: APjAAAVYLLPiaURJ4fCTwQzl1UZ43TLddiTv0QMRJiLm+py3nS/NFqYe
-        iCwt0cXTQ9LKbJT9MF3ehi4Jwg==
-X-Google-Smtp-Source: APXvYqzNARvSk1LSdQloLfBOFGXDLFTRU7QAXyWtKTnPx1omDlEXCkQ0bQF3o6bztshPU1rHZXHIEQ==
-X-Received: by 2002:a65:5347:: with SMTP id w7mr94039pgr.375.1557998611813;
-        Thu, 16 May 2019 02:23:31 -0700 (PDT)
-Received: from localhost ([122.172.118.99])
-        by smtp.gmail.com with ESMTPSA id s80sm14002886pfs.117.2019.05.16.02.23.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 02:23:31 -0700 (PDT)
-Date:   Thu, 16 May 2019 14:53:28 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Thu, 16 May 2019 05:28:03 -0400
+X-UUID: d86e117a3c794947902cb259459271e0-20190516
+X-UUID: d86e117a3c794947902cb259459271e0-20190516
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <bibby.hsieh@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1025656641; Thu, 16 May 2019 17:27:57 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 16 May 2019 17:27:55 +0800
+Received: from mtkslt302.mediatek.inc (10.21.14.115) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 16 May 2019 17:27:55 +0800
+From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com, fan.chen@mediatek.com
-Subject: Re: [PATCH 0/8] Add cpufreq and cci devfreq for mt8183, and SVS
- support
-Message-ID: <20190516092328.4n7kuqw7bxokhdjp@vireshk-i7>
-References: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com>
+        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>
+CC:     Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        YT Shen <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
+Subject: [PATCH v6 10/12] soc: mediatek: cmdq: add cmdq_dev_get_subsys function
+Date:   Thu, 16 May 2019 17:27:53 +0800
+Message-ID: <20190516092754.33425-2-bibby.hsieh@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20190516092754.33425-1-bibby.hsieh@mediatek.com>
+References: <20190516092754.33425-1-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1557997725-12178-1-git-send-email-andrew-sh.cheng@mediatek.com>
-User-Agent: NeoMutt/20180716-391-311a52
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-05-19, 17:08, Andrew-sh.Cheng wrote:
-> From: "Andrew-sh.Cheng" <andrew-sh.cheng@mediatek.com>
-> 
-> MT8183 supports CPU DVFS and CCI DVFS, and LITTLE cpus and CCI are in the same voltage domain.
-> So, this series is to add drivers to handle the voltage coupling between CPU and CCI DVFS.
-> 
-> For SVS support, add OPP_EVENT_ADJUST_VOLTAGE and corresponding reaction.
+GCE cannot know the register base address, this function
+can help cmdq client to get the relationship of subsys
+and register base address.
 
-No version information here or what has changed. That doesn't help.
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+---
+ drivers/soc/mediatek/mtk-cmdq-helper.c | 25 +++++++++++++++++++++++++
+ include/linux/soc/mediatek/mtk-cmdq.h  | 18 ++++++++++++++++++
+ 2 files changed, 43 insertions(+)
 
-I believe this is V3.
-
-Don't resend it but please mention the changes in reply now. Thanks.
-
-> Andrew-sh.Cheng (7):
->   cpufreq: mediatek: change to regulator_get_optional
->   cpufreq: mediatek: add clock enable for intermediate clock
->   cpufreq: mediatek: Add support for mt8183
->   dt-bindings: devfreq: add compatible for mt8183 cci devfreq
->   devfreq: add mediatek cci devfreq
->   cpufreq: mediatek: add opp notification for SVS support
->   devfreq: cci devfreq register opp notification for SVS support
-> 
-> Stephen Boyd (1):
->   PM / OPP: Support adjusting OPP voltages at runtime
-> 
->  .../bindings/devfreq/mt8183-cci-devfreq.txt        |  20 ++
->  drivers/cpufreq/cpufreq-dt-platdev.c               |   1 +
->  drivers/cpufreq/mediatek-cpufreq.c                 |  88 +++++-
->  drivers/devfreq/Kconfig                            |  10 +
->  drivers/devfreq/Makefile                           |   1 +
->  drivers/devfreq/mt8183-cci-devfreq.c               | 310 +++++++++++++++++++++
->  drivers/opp/core.c                                 |  78 ++++++
->  include/linux/pm_opp.h                             |  11 +
->  8 files changed, 517 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/devfreq/mt8183-cci-devfreq.txt
->  create mode 100644 drivers/devfreq/mt8183-cci-devfreq.c
-> 
-> -- 
-> 2.12.5
-
+diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+index a53cdd71cfc2..a64060a34e01 100644
+--- a/drivers/soc/mediatek/mtk-cmdq-helper.c
++++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+@@ -27,6 +27,31 @@ struct cmdq_instruction {
+ 	u8 op;
+ };
+ 
++struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx)
++{
++	struct cmdq_subsys *subsys;
++	struct of_phandle_args spec;
++
++	subsys = devm_kzalloc(dev, sizeof(*subsys), GFP_KERNEL);
++	if (!subsys)
++		return NULL;
++
++	if (of_parse_phandle_with_args(dev->of_node, "mediatek,gce-client-reg",
++				       "#subsys-cells", idx, &spec)) {
++		dev_err(dev, "can't parse gce-client-reg property");
++
++		return (struct cmdq_subsys *)-ENODEV;
++	}
++
++	subsys->id = spec.args[0];
++	subsys->offset = spec.args[1];
++	subsys->size = spec.args[2];
++	of_node_put(spec.np);
++
++	return subsys;
++}
++EXPORT_SYMBOL(cmdq_dev_get_subsys);
++
+ static void cmdq_client_timeout(struct timer_list *t)
+ {
+ 	struct cmdq_client *client = from_timer(client, t, timer);
+diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+index 0651a0bffa54..574006c5cd76 100644
+--- a/include/linux/soc/mediatek/mtk-cmdq.h
++++ b/include/linux/soc/mediatek/mtk-cmdq.h
+@@ -15,6 +15,12 @@
+ 
+ struct cmdq_pkt;
+ 
++struct cmdq_subsys {
++	u8 id;
++	u16 offset;
++	u16 size;
++};
++
+ struct cmdq_client {
+ 	spinlock_t lock;
+ 	u32 pkt_cnt;
+@@ -142,4 +148,16 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+  */
+ int cmdq_pkt_flush(struct cmdq_pkt *pkt);
+ 
++/**
++ * cmdq_dev_get_subsys() - parse sub system from the device node of CMDQ client
++ * @dev:	device of CMDQ mailbox client
++ * @idx:	the index of desired subsys
++ *
++ * Return: CMDQ subsys pointer
++ *
++ * Help CMDQ client pasing the sub system number
++ * from the device node of CMDQ client.
++ */
++struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx);
++
+ #endif	/* __MTK_CMDQ_H__ */
 -- 
-viresh
+2.18.0
+
