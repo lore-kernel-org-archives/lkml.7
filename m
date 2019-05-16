@@ -2,271 +2,121 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A13F9C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9DDC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B55120862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E862087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:45:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iFdbvY1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728201AbfEPWmv (ORCPT
+        id S1728518AbfEPWpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 18:42:51 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:51391 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726943AbfEPWmv (ORCPT
+        Thu, 16 May 2019 18:45:06 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:32907 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726732AbfEPWpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 18:42:51 -0400
-Received: from 79.184.255.148.ipv4.supernova.orange.pl (79.184.255.148) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
- id 9390007ae767d244; Fri, 17 May 2019 00:42:46 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     "Robert R. Howell" <RHowell@uwyo.edu>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ACPI / LPSS: Don't skip late system PM ops for hibernate on BYT/CHT
-Date:   Fri, 17 May 2019 00:42:46 +0200
-Message-ID: <20527023.VNImpdbrUu@kreacher>
-In-Reply-To: <7eef3905-9c74-7ed8-09e4-a255c8f7d959@uwyo.edu>
-References: <20190403054352.30120-1-kai.heng.feng@canonical.com> <1588383.bXYZMuyLB9@kreacher> <7eef3905-9c74-7ed8-09e4-a255c8f7d959@uwyo.edu>
+        Thu, 16 May 2019 18:45:06 -0400
+Received: by mail-vs1-f65.google.com with SMTP id y6so3420481vsb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 15:45:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+W9jD9o7YYLYB/v0Ro7pXl+sH8ADQyIbB7T7NXFVEcc=;
+        b=iFdbvY1Qgl23eLRHTcbK2KUoW8rVpz0RfgpjJVzvA3c+FlUStxkuV64Wmn8f0D9q+0
+         WFM2GPW77EVVaGnoDv7ntLl+FCqJJHHbK/5HI2zpwdwTg2qw1RbSA+tCBCNIKN5g9LuL
+         cXJ8bXROlUY7THLAZMkcbiVOe572QpbIYKKjs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+W9jD9o7YYLYB/v0Ro7pXl+sH8ADQyIbB7T7NXFVEcc=;
+        b=K5X0+DkPM0yoh2GS9y6cQR3prrR3ul3WBF6XguGvp6H4yg0P7wGYMjgwq5oB79D2gu
+         JFATl6rP4QG3fqevLw4XaPqhQ+YhvZvaZa+U5dviC/iyqTWBE9BA9+UYcrfd/FYpBgxo
+         31bQt9OfvJsPKEnbFj4CXJu1qBFA9wPJOv1UKrmgGsq/4kBMCvdzuJaQzbb6w+J3V2CY
+         XxMacafDRX92BVhOBc4FgLRevH+MBaFvgcLMIGmyZoYlqXtRsnD+bJ/M3DTjSXHy7YGI
+         D+LRSJ4yjCviYTuLIo6Z2+m5kmacKRl25/0wgPWK3Bvsq5x4hR5iDGeFFMloqz0Yjtz2
+         XFDw==
+X-Gm-Message-State: APjAAAXdBr+LvrHxD52u7xXlrwkw6IYe+2e5TjlMKjgoQ0zTLw62c/Ph
+        oGoRl954SflYw83WzGb1GlRzF5eISMI=
+X-Google-Smtp-Source: APXvYqz2vpPvVDhoWSJVuB1Nk1kcRmZ2SQeIyDUp61/yle4vDCqp1BPkm/+SEpgJy14iyhiYvnecOQ==
+X-Received: by 2002:a67:7587:: with SMTP id q129mr24197516vsc.40.1558046705122;
+        Thu, 16 May 2019 15:45:05 -0700 (PDT)
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com. [209.85.217.49])
+        by smtp.gmail.com with ESMTPSA id d69sm2033698vkd.25.2019.05.16.15.45.03
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 May 2019 15:45:03 -0700 (PDT)
+Received: by mail-vs1-f49.google.com with SMTP id l20so3407160vsp.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 15:45:03 -0700 (PDT)
+X-Received: by 2002:a67:b348:: with SMTP id b8mr17879343vsm.144.1558046702869;
+ Thu, 16 May 2019 15:45:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190516214022.65220-1-dianders@chromium.org> <20190516214022.65220-2-dianders@chromium.org>
+In-Reply-To: <20190516214022.65220-2-dianders@chromium.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 16 May 2019 15:44:51 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=V3U=5KttaqjUvvF=vpKwFNMd6q0=J1ZKUrJ1b-Stz5bQ@mail.gmail.com>
+Message-ID: <CAD=FV=V3U=5KttaqjUvvF=vpKwFNMd6q0=J1ZKUrJ1b-Stz5bQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] drm/rockchip: dw_hdmi: Handle suspend/resume
+To:     Heiko Stuebner <heiko@sntech.de>, Sandy Huang <hjc@rock-chips.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Cc:     "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday, May 16, 2019 6:35:40 PM CEST Robert R. Howell wrote:
-> Hi Rafael
-> 
-> 
-> On 5/16/19 5:11 AM, Rafael J. Wysocki wrote:
-> 
-> > On Thursday, April 25, 2019 6:38:34 PM CEST Robert R. Howell wrote:
-> >> On 4/24/19 1:20 AM, Rafael J. Wysocki wrote:
-> >>
-> >>> On Tue, Apr 23, 2019 at 10:03 PM Robert R. Howell <RHowell@uwyo.edu> wrote:
-> >>>>
-> >>>> On 4/23/19 2:07 AM, Rafael J. Wysocki wrote:
-> >>>>>
-> >>>>> On Sat, Apr 20, 2019 at 12:44 AM Robert R. Howell <RHowell@uwyo.edu> wrote:
-> >>>>>>
-> >>>>>> On 4/18/19 5:42 AM, Hans de Goede wrote:
-> >>>>>>
-> >>>>>>>> On 4/8/19 2:16 AM, Hans de Goede wrote:>
-> >>>>>>>>>
-> >>>>>>>>> Hmm, interesting so you have hibernation working on a T100TA
-> >>>>>>>>> (with 5.0 + 02e45646d53b reverted), right ?
-> >>>>>>>>>
-> >>>>>>
-> >>>>>>
-> >>>>>> I've managed to find a way around the i2c_designware timeout issues
-> >>>>>> on the T100TA's.  The key is to NOT set DPM_FLAG_SMART_SUSPEND,
-> >>>>>> which was added in the 02e45646d53b commit.
-> >>>>>>
-> >>>>>> To test that I've started with a 5.1-rc5 kernel, applied your recent patch
-> >>>>>> to acpi_lpss.c, then apply the following patch of mine, removing
-> >>>>>> DPM_FLAG_SMART_SUSPEND.  (For the T100 hardware I need to apply some
-> >>>>>> other patches as well but those are not related to the i2c-designware or
-> >>>>>> acpi issues addressed here.)
-> >>>>>>
-> >>>>>> On a resume from hibernation I still see one error:
-> >>>>>>   "i2c_designware 80860F41:00: Error i2c_dw_xfer called while suspended"
-> >>>>>> but I no longer get the i2c_designware timeouts, and audio does now work
-> >>>>>> after the resume.
-> >>>>>>
-> >>>>>> Removing DPM_FLAG_SMART_SUSPEND may not be what you want for other
-> >>>>>> hardware, but perhaps this will give you a clue as to what is going
-> >>>>>> wrong with hibernate/resume on the T100TA's.
-> >>>>>
-> >>>>> What if you drop DPM_FLAG_LEAVE_SUSPENDED alone instead?
-> >>>>>
-> >>>>
-> >>>> I did try dropping just DPM_FLAG_LEAVE_SUSPENDED, dropping just
-> >>>> DPM_FLAG_SMART_SUSPEND, and dropping both flags.  When I just drop
-> >>>> DPM_FLAG_LEAVE_SUSPENDED I still get the i2c_designware timeouts
-> >>>> after the resume.  If I drop just DPM_FLAG_SMART_SUSPEND or drop both,
-> >>>> then the timeouts go away.
-> >>>
-> >>> OK, thanks!
-> >>>
-> >>> Is non-hibernation system suspend affected too?
-> >>
-> >> I just ran some tests on a T100TA, using the 5.1-rc5 code with Hans' patch applied
-> >> but without any changes to i2c-designware-platdrv.c, so the
-> >> DPM_FLAG_SMART_PREPARE, DPM_FLAG_SMART_SUSPEND, and DPM_FLAG_LEAVE_SUSPENDED flags
-> >> are all set.
-> >>
-> >> Suspend does work OK, and after resume I do NOT get any of the crippling
-> >> i2c_designware timeout errors which cause sound to fail after hibernate.  I DO see one
-> >>   "i2c_designware 80860F41:00: Error i2c_dw_xfer call while suspended"
-> >> error on resume, just as I do on hibernate.  I've attached a portion of dmesg below.
-> >> The "asus_wmi:  Unknown key 79 pressed" error is a glitch which occurs
-> >> intermittently on these machines, but doesn't seem related to the other issues.
-> >> I had one test run when it was absent but the rest of the messages were the
-> >> same -- but then kept getting that unknown key error on all my later tries.
-> >>
-> >> I did notice the "2sidle" in the following rather than "shallow" or "deep".  A
-> >> cat of /sys/power/state shows "freeze mem disk" but a
-> >> cat of /sys/power/mem_sleep" shows only "[s2idle] so it looks like shallow and deep
-> >> are not enabled for this system.  I did check the input power (or really current)
-> >> as it went into suspend and the micro-usb power input drops from about
-> >> 0.5 amps to 0.05 amps.  But clearly a lot of devices are still active, as movement
-> >> of a bluetooth mouse (the MX Anywhere 2) will wake it from suspend.  That presumably is
-> >> why suspend doesn't trigger the same i2c_designware problems as hibernate.
-> >>
-> >> Let me know if I can do any other tests.
-> > 
-> > Can you please check if the appended patch makes the hibernate issue go away for you, without any other changes?
-> > 
-> > ---
-> >  drivers/pci/pci-driver.c |   36 ++++++++++--------------------------
-> >  1 file changed, 10 insertions(+), 26 deletions(-)
-> > 
-> > Index: linux-pm/drivers/pci/pci-driver.c
-> > ===================================================================
-> > --- linux-pm.orig/drivers/pci/pci-driver.c
-> > +++ linux-pm/drivers/pci/pci-driver.c
-> > @@ -957,15 +957,14 @@ static int pci_pm_freeze(struct device *
-> >         }
-> > 
-> >         /*
-> > -        * This used to be done in pci_pm_prepare() for all devices and some
-> > -        * drivers may depend on it, so do it here.  Ideally, runtime-suspended
-> > -        * devices should not be touched during freeze/thaw transitions,
-> > -        * however.
-> > +        * Resume all runtime-suspended devices before creating a snapshot
-> > +        * image of system memory, because the restore kernel generally cannot
-> > +        * be expected to always handle them consistently and pci_pm_restore()
-> > +        * always leaves them as "active", so ensure that the state saved in the
-> > +        * image will always be consistent with that.
-> >          */
-> > -       if (!dev_pm_smart_suspend_and_suspended(dev)) {
-> > -               pm_runtime_resume(dev);
-> > -               pci_dev->state_saved = false;
-> > -       }
-> > +       pm_runtime_resume(dev);
-> > +       pci_dev->state_saved = false;
-> > 
-> >         if (pm->freeze) {
-> >                 int error;
-> > @@ -992,9 +991,6 @@ static int pci_pm_freeze_noirq(struct de
-> >         struct pci_dev *pci_dev = to_pci_dev(dev);
-> >         struct device_driver *drv = dev->driver;
-> > 
-> > -       if (dev_pm_smart_suspend_and_suspended(dev))
-> > -               return 0;
-> > -
-> >         if (pci_has_legacy_pm_support(pci_dev))
-> >                 return pci_legacy_suspend_late(dev, PMSG_FREEZE);
-> > 
-> > @@ -1024,16 +1020,6 @@ static int pci_pm_thaw_noirq(struct devi
-> >         struct device_driver *drv = dev->driver;
-> >         int error = 0;
-> > 
-> > -       /*
-> > -        * If the device is in runtime suspend, the code below may not work
-> > -        * correctly with it, so skip that code and make the PM core skip all of
-> > -        * the subsequent "thaw" callbacks for the device.
-> > -        */
-> > -       if (dev_pm_smart_suspend_and_suspended(dev)) {
-> > -               dev_pm_skip_next_resume_phases(dev);
-> > -               return 0;
-> > -       }
-> > -
-> >         if (pcibios_pm_ops.thaw_noirq) {
-> >                 error = pcibios_pm_ops.thaw_noirq(dev);
-> >                 if (error)
-> > @@ -1093,8 +1079,10 @@ static int pci_pm_poweroff(struct device
-> > 
-> >         /* The reason to do that is the same as in pci_pm_suspend(). */
-> >         if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND) ||
-> > -           !pci_dev_keep_suspended(pci_dev))
-> > +           !pci_dev_keep_suspended(pci_dev)) {
-> >                 pm_runtime_resume(dev);
-> > +               pci_dev->state_saved = false;
-> > +       }
-> > 
-> >         pci_dev->state_saved = false;
-> >         if (pm->poweroff) {
-> > @@ -1168,10 +1156,6 @@ static int pci_pm_restore_noirq(struct d
-> >         struct device_driver *drv = dev->driver;
-> >         int error = 0;
-> > 
-> > -       /* This is analogous to the pci_pm_resume_noirq() case. */
-> > -       if (dev_pm_smart_suspend_and_suspended(dev))
-> > -               pm_runtime_set_active(dev);
-> > -
-> >         if (pcibios_pm_ops.restore_noirq) {
-> >                 error = pcibios_pm_ops.restore_noirq(dev);
-> >                 if (error)
-> > 
-> > 
-> > 
-> 
-> Thanks for the patch.  I'm traveling right now so I'm away from the machines I need to test this, 
-> but I'll be back home by the end of the week and will test the patch then.
+Hi,
 
-Thanks!
+On Thu, May 16, 2019 at 2:40 PM Douglas Anderson <dianders@chromium.org> wrote:
+>
+> On Rockchip rk3288-based Chromebooks when you do a suspend/resume
+> cycle:
+>
+> 1. You lose the ability to detect an HDMI device being plugged in.
+>
+> 2. If you're using the i2c bus built in to dw_hdmi then it stops
+> working.
+>
+> Let's call the core dw-hdmi's suspend/resume functions to restore
+> things.
+>
+> NOTE: in downstream Chrome OS (based on kernel 3.14) we used the
+> "late/early" versions of suspend/resume because we found that the VOP
+> was sometimes resuming before dw_hdmi and then calling into us before
+> we were fully resumed.  For now I have gone back to the normal
+> suspend/resume because I can't reproduce the problems.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+> Changes in v2:
+> - Add forgotten static (Laurent)
+> - No empty stub for suspend (Laurent)
+>
+>  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 
-It would be better to test the one appended below instead, though, so please do that.
+Whoops, forgot that I should have carried forward:
 
----
- drivers/acpi/device_pm.c |    9 +--------
- drivers/pci/pci-driver.c |   12 ++----------
- 2 files changed, 3 insertions(+), 18 deletions(-)
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Index: linux-pm/drivers/acpi/device_pm.c
-===================================================================
---- linux-pm.orig/drivers/acpi/device_pm.c
-+++ linux-pm/drivers/acpi/device_pm.c
-@@ -1119,14 +1119,7 @@ EXPORT_SYMBOL_GPL(acpi_subsys_resume_ear
-  */
- int acpi_subsys_freeze(struct device *dev)
- {
--	/*
--	 * This used to be done in acpi_subsys_prepare() for all devices and
--	 * some drivers may depend on it, so do it here.  Ideally, however,
--	 * runtime-suspended devices should not be touched during freeze/thaw
--	 * transitions.
--	 */
--	if (!dev_pm_test_driver_flags(dev, DPM_FLAG_SMART_SUSPEND))
--		pm_runtime_resume(dev);
-+	pm_runtime_resume(dev);
- 
- 	return pm_generic_freeze(dev);
- }
-Index: linux-pm/drivers/pci/pci-driver.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci-driver.c
-+++ linux-pm/drivers/pci/pci-driver.c
-@@ -956,16 +956,8 @@ static int pci_pm_freeze(struct device *
- 		return 0;
- 	}
- 
--	/*
--	 * This used to be done in pci_pm_prepare() for all devices and some
--	 * drivers may depend on it, so do it here.  Ideally, runtime-suspended
--	 * devices should not be touched during freeze/thaw transitions,
--	 * however.
--	 */
--	if (!dev_pm_smart_suspend_and_suspended(dev)) {
--		pm_runtime_resume(dev);
--		pci_dev->state_saved = false;
--	}
-+	pm_runtime_resume(dev);
-+	pci_dev->state_saved = false;
- 
- 	if (pm->freeze) {
- 		int error;
-
-
-
+-Doug
