@@ -2,123 +2,101 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A56C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DB37C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB9EE2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC75E2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:55:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v26qoU6H"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CUsyorl2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfEPLy6 (ORCPT
+        id S1727530AbfEPLz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:54:58 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:39114 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727242AbfEPLy5 (ORCPT
+        Thu, 16 May 2019 07:55:59 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42870 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727242AbfEPLz7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:54:57 -0400
-Received: by mail-vk1-f193.google.com with SMTP id t18so935588vkb.6
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 04:54:57 -0700 (PDT)
+        Thu, 16 May 2019 07:55:59 -0400
+Received: by mail-lf1-f66.google.com with SMTP id y13so2390731lfh.9
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 04:55:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=gw9Ghc+xQrqh42btkF+tSwScblo1M5MvWvdVH4TT7i0=;
-        b=v26qoU6H8L1eKcYMoea7paIcbwqKfFyFfh4g29/LlGR6+AUpIUNU3bNE8s3wyNQJKd
-         kQCGJb9CAIQ2AgFYlk0SLoUn4HsoNoh0eNBdhek1FO+tVLDcJ5NcdPQjy6BRdvLxlaQK
-         0aIlSfSssyMkTz7GipBksDjARihKegYcNTAz8t5xd/SHkEavzcNuZ/+vIVV1I/nndpea
-         MP06okMhU0f1Athz5O6dl7kceRU43aFcm0qDLB0uMM12eSEiS6XTppcIe0Y4FZn/2rV1
-         GuoBk8CKXPPLoHvogkLGbVn8coLEnYox/LkyrDuG7ZQXRrykgKDd2NWvR7GV7av2PyfU
-         /tCw==
+        bh=hO177V5YstoHgCwjJTd6QkNHj63uQ+DjBf4IdD4xe9U=;
+        b=CUsyorl2ruAim6PW7M+EDIOkom4xJQXASAd8/umQpC24MPSnfKP1z/6sQVViheAjF0
+         5EF6lw9qAc4E/11MOWdtZ2lMTogd4pz+rY65IAbvn5hJKCxL+SiUDPTXK282GvCmqoI2
+         a+kpWjK+OlweLcp2FOnLoidRq0bCigIVTWoEXSiQCceK1hoY3IjV2kvY8FS2763FKYOx
+         mmYRyQFEUN5P1zjdQKTaqL8RPcrTsLQCqiE5d2NcP9FjR/q3Qg+hsPXIOx8QdjBN+7uz
+         t98bs17n0trMpRKcS3QNHg3KgD1RrGZIoEeGHYD36OZfMEBNLCuJ/AEhMCzHStHnMDah
+         2jew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gw9Ghc+xQrqh42btkF+tSwScblo1M5MvWvdVH4TT7i0=;
-        b=OxwjtVNNfMJlaBuxPpubNwRUg9lRDCFkeUfWJJFHSPFjuFVLAKLpFuyp3M4t0FJWwS
-         /G/LbGoO1kqlsa3Byg3fwC7FFIkPD1/iJxdCmlO9C7AnUJaoyxwx34RNGcYfUZR35jGB
-         rFom1JvgO9e4b+EFcfksqxT9ISHM4tZj8T226whZC3E051HHepjwnTNfKNsaqiasnwLj
-         /TzNeEX+6SXscCjcuj9BkOzioxAHledLt5/Q2EpujbgiVJOC0TwwZfk2SLcnikXjGLow
-         fScbp+jTGIB8FugKnYQgI+8QQf+A6CFrtDVvgxfIcXD+dOK0xaKD2/mOr1cDrhi3ntPk
-         1U0w==
-X-Gm-Message-State: APjAAAVH0szqVJpiIyk0JJ5QPUQrG0ccpHUb2QfqCTZxXoGhf7WNWB6X
-        8yoiJ5Dw/cMOvbWYb/OnxEJ8PYPVSvfzZXHKrnZ/Ig==
-X-Google-Smtp-Source: APXvYqy+0i0NCLJY9mu7r+K0u56+d0TTe1O6WRw/Ai9J8XZgwGaPKyF4TLUj8e80gKzDj9M2oxm9yBWBX3AdrhjAKaY=
-X-Received: by 2002:a1f:812:: with SMTP id 18mr22833450vki.68.1558007696693;
- Thu, 16 May 2019 04:54:56 -0700 (PDT)
+        bh=hO177V5YstoHgCwjJTd6QkNHj63uQ+DjBf4IdD4xe9U=;
+        b=JZbEiMdDPEt8HuBahh8JHS8XXZFDeOlCAcrWGTwJoB0+ojVtv5nzko8fu9Dxww3wSg
+         XIo3Ydw10iNsOK/mvJPi5ogNifkA1+3FwyUKvt6Wu9g3viS+N/SUHfbeiyw0dTgB3b+9
+         KXFqY3jLgh8NGBElmNG1XR8iTwEeu8vLA67CBtzIEc8+hDqh+GLw0Oq6IClw5w4j4wW9
+         LLuCrLyoDWgmrtkxLA2NzSVDeoP15yKoV37Tv9M8lTXTh0GK1nZKpcMovE1fjKaxuGJG
+         7GmlrZ3QAxbxG2lIKQfwXSRWfgILnRH/o/sNE2cXqm/tMCu4+9B9YAVNtGIOjQvy9xjm
+         0Lbg==
+X-Gm-Message-State: APjAAAVA7FXuHGq5mCVQhYMXJwvmda1uruC+xvzosheMnMov/3szJGjk
+        np2ANBOh8ZBRERN9atcj8NVvNBEejCnyiINH5AkIgg==
+X-Google-Smtp-Source: APXvYqyZ8YtOPeMszJlq1lN+VhvgOvRHSsqzsCTDLezRY/k3Tb/Z9ZQ2wRmo8YDVATi18dFWIID2WHYRpAKSQEcvW8I=
+X-Received: by 2002:a19:cd82:: with SMTP id d124mr11861237lfg.8.1558007757283;
+ Thu, 16 May 2019 04:55:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190114184255.258318-1-mka@chromium.org> <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
- <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com> <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com>
-In-Reply-To: <155786856719.14659.2902538189660269078@swboyd.mtv.corp.google.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Thu, 16 May 2019 17:24:45 +0530
-Message-ID: <CAHLCerP69Jw27VyO+ek4Fe3-2fDiOejtz6XZPykPSRA2G1831w@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
-To:     Stephen Boyd <swboyd@chromium.org>, Andy Gross <agross@kernel.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
+References: <20190508073331.27475-1-drinkcat@chromium.org>
+In-Reply-To: <20190508073331.27475-1-drinkcat@chromium.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 May 2019 13:55:46 +0200
+Message-ID: <CACRpkdZb73vNyepcfjzEGAopc7BBxde_N1wxn7PSJ3aGC0=Gig@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] pinctrl: mediatek: mt8183: Add support for wake sources
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Chuanjia Liu <Chuanjia.Liu@mediatek.com>,
+        Evan Green <evgreen@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(cc'ing Andy's correct email address)
+On Wed, May 8, 2019 at 9:33 AM Nicolas Boichat <drinkcat@chromium.org> wrote:
 
-On Wed, May 15, 2019 at 2:46 AM Stephen Boyd <swboyd@chromium.org> wrote:
+> This adds support for wake sources in pinctrl-mtk-common-v2, and
+> pinctrl-mt8183. Without this patch, all interrupts that are left
+> enabled on suspend act as wake sources (and wake sources without
+> interrupt enabled do not).
 >
-> Quoting Amit Kucheria (2019-05-13 04:54:12)
-> > On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> > >
-> > > On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> > > >
-> > > > The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
-> > > > ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
-> > > > that describes this topology.
-> > >
-> > > This is partly true. There are two groups of gold and silver cores,
-> > > but AFAICT they are in a single cluster, not two separate ones. SDM845
-> > > is one of the early examples of ARM's Dynamiq architecture.
-> > >
-> > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > >
-> > > I noticed that this patch sneaked through for this merge window but
-> > > perhaps we can whip up a quick fix for -rc2?
-> > >
-> >
-> > And please find attached a patch to fix this up. Andy, since this
-> > hasn't landed yet (can we still squash this into the original patch?),
-> > I couldn't add a Fixes tag.
-> >
+> Changes since v1:
+>  - Move changes from mtk-common-v2 to mtk-pinctrl-paris, as
+>    recommended by Sean, to keep better separation between eint
+>    and pinctrl-common features.
 >
-> I had the same concern. Thanks for catching this. I suspect this must
-> cause some problem for IPA given that it can't discern between the big
-> and little "power clusters"?
+> Nicolas Boichat (2):
+>   pinctrl: mediatek: Add pm_ops to pinctrl-paris
+>   pinctrl: mediatek: mt8183: Add mtk_pinctrl_paris_pm_ops
 
-Both EAS and IPA, I believe. It influences the scheduler's view of the
-the topology.
+All seems to look fair to me, but I need some official ACK from
+Sean on these.
 
-> Either way,
->
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+I see there is some discussion on a related patch set which
+also has two patches so I am a but confused how mature the
+two patch sets are? Are they at all related?
 
-Thanks.
-
-Andy/Bjorn, can we squeeze this in for -rc2 as a bugfix?
-
-Regards,
-Amit
+Yours,
+Linus Walleij
