@@ -2,211 +2,139 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E421AC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D086EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:03:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B55A62087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A497920675
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:03:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ze8Tkxqk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gfpj8t04"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727845AbfEPOAp (ORCPT
+        id S1727627AbfEPOD4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:00:45 -0400
-Received: from mail-yb1-f201.google.com ([209.85.219.201]:56452 "EHLO
-        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727678AbfEPOAp (ORCPT
+        Thu, 16 May 2019 10:03:56 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43019 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727448AbfEPODy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:00:45 -0400
-Received: by mail-yb1-f201.google.com with SMTP id d10so2825288ybn.23
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 07:00:44 -0700 (PDT)
+        Thu, 16 May 2019 10:03:54 -0400
+Received: by mail-ot1-f66.google.com with SMTP id i8so3485506oth.10
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 07:03:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=0W2BzNydBRd7QhaGcoJcvGTU7rmnrCYSV56xvl6bzSI=;
-        b=Ze8Tkxqk0wx23S6A7duvigoJPnTj7PRU02KReczZHeQEeF4mhN+1JFLjXiyvLc2uOo
-         K0L+nHK5dIoAKUezZbvHDmZnHd+p6BSfo3sxFUUDRPLhx7bGncD/pjOwb6QUbv3cOkrz
-         6XAnncWcjHlIqBY2nP9hXLzj6HRzvCXZ1rqLPMOOiILRHvPR31uRLrrzVKF1z2TIyd11
-         hZxLUK3tJaLFX5RY0W09ISXDy3pMLKE/YAfHuFt+uSHeEadW1GSRIWNTjmuAUFgtg1Cr
-         XqKADFQcLIDucjHgE9sQapJlUwjh8H94yZ47pbLaCYqCr7ovB9TM7TxNCAKRcY46qx47
-         hBfA==
+        bh=ucVxbOUWrZZfDk/EU6PatKkf44/FaoRbkOnctoq4RZ0=;
+        b=gfpj8t048K9YVTN68kQxa+FHJsU/2ANQn9m7IrGbqPQ/o0kHghHsG/uJc4zd0VpsFW
+         tt+lyUarxKBI29oVO1Q7sF6b60g/Y4zexIgF4+6YB95Zr7oBm41HjsNb+60bflVmIM/a
+         UKZ8eN6pNZNVROnG/kopqrr9ADEgcqic3lsaeqN3/9cIUca8DzVHJlNdufwkTOFf0fvt
+         WuJWnXkH3Px0YXQ3FCfU3bP9mLp8nfVLzMr3JYliO8GXvlga8zbDUkxdoqZiZYSZv54T
+         LbJwnBwECMCyoIPfR+yi8OKgHUx1TaxeYr/Z3Fe86n//upCOfxiL1JyMYYPQMvqWFEUj
+         axYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=0W2BzNydBRd7QhaGcoJcvGTU7rmnrCYSV56xvl6bzSI=;
-        b=P2YUj0F2RnV+br7kM0Z/fx9YAl/cQpzE3//Uvh7+Rqf4cYmbZOtwlEBxpD6VRIDR8C
-         MaGUjzBCPtOiiEOj3nvWIMZY/OvD2FZg9+xT/f78GYGojQ+R8rmvl2Ii92bEb9mh/pJD
-         pYlls88pxdmcIvngOt7VxTM7SppX9qnEUygYlo0QAz7CtwGwltRk3LjDXtq/sqvZ87kV
-         Vv7zNjL6eQrZzHUn5H3ZucMOyhzeG6Xay8OMl8QSLaaF+M2HQxpqmkzUANN6BNDmrXsq
-         DHRQB15HzrV366mACJDaIBaSb1Tqc45d/yWoZzXObARrPm2pol4WbnJr7Sbi7fycZUBy
-         O/BA==
-X-Gm-Message-State: APjAAAXKCxZHUg5N7FyT/7Npmyfb35CYafVvX/QR0SSCKn2oNRUaKxki
-        HgBGMj+kqkJlC/3RPTfHlP5R7iQbyDQ=
-X-Google-Smtp-Source: APXvYqylyCuEAoh/IO80hPvL85QhJypPrPpWyzFZNNCr4o4QOYuBtPRskXjvQaK6dQzj824TNXBcM630WdM=
-X-Received: by 2002:a81:2717:: with SMTP id n23mr25197449ywn.511.1558015244107;
- Thu, 16 May 2019 07:00:44 -0700 (PDT)
-Date:   Thu, 16 May 2019 16:00:20 +0200
-In-Reply-To: <20190516140020.200105-1-darekm@google.com>
-Message-Id: <20190516140020.200105-3-darekm@google.com>
-Mime-Version: 1.0
-References: <20190516140020.200105-1-darekm@google.com>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: [PATCH v5 3/3] drm/i2c: tda9950: pass HDMI connector info to CEC adapter
-From:   Dariusz Marcinkiewicz <darekm@google.com>
-To:     linux-media@vger.kernel.org, hans.verkuil@cisco.com,
-        hverkuil@xs4all.nl
-Cc:     linux-kernel@vger.kernel.org,
-        Dariusz Marcinkiewicz <darekm@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ucVxbOUWrZZfDk/EU6PatKkf44/FaoRbkOnctoq4RZ0=;
+        b=FA0cIe4FQhQALKkbww9OFU3MHlFMg1wN0To544m2V8oM5Rl5hW+0+5ruRGLXcHu+JJ
+         A8vC1UJ1yZilg59EY1iQQH31K1G7bohYMNKMmCUfLSarnq/fHgU4Oxh++wvQcRBZT3nT
+         eOG5z15R5TNX5R+SiHQuyxyEF7czdl9PTwOgIZnNgFvRfxZ55AVs5RMG+JV05T7RBe9I
+         Ae9a+gcVJlb2m0PKfFiS+9/NKbj8rYFQYX/Z7Dv59TK7QeMf8ov2Be40hY8PZkc2Afqi
+         vhTG5rTk1AtswnpNhz9cFYA7+CjXfQ60WpIr2rJ+az6V7WEcjzVzOhS5bIo37PemaCwi
+         C4LQ==
+X-Gm-Message-State: APjAAAUsGrayI5nE0DwPDEMT+Tj1Izv/LJWpa0vEITYAm0Roi7QLSyjz
+        6/8hDRZNJXqXrlcqqvGY8ygtiFayzdJsu6p3cwGFNA==
+X-Google-Smtp-Source: APXvYqyBb5F3egziJpog88dFflIwgg+mGPtRq5YXqoN1sjx7sxZUEswiE+BHUSh78yMMJxAxYlD3ql7CsUOCTyJayJE=
+X-Received: by 2002:a9d:6954:: with SMTP id p20mr9094093oto.337.1558015433692;
+ Thu, 16 May 2019 07:03:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190515100400.3450-1-christian@brauner.io> <CAKOZuesPF+ftwqsNDMBy1LpwJgWTNuQm9-E=C90sSTBYEEsDww@mail.gmail.com>
+ <20190516130813.i66ujfzftbgpqhnh@brauner.io>
+In-Reply-To: <20190516130813.i66ujfzftbgpqhnh@brauner.io>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 16 May 2019 16:03:27 +0200
+Message-ID: <CAG48ez05OtBi_yX+071TrrfK3zKOn9h1kFyPr5rttiqQAZ0sEA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] pid: add pidfd_open()
+To:     Christian Brauner <christian@brauner.io>,
+        Daniel Colascione <dancol@google.com>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With that change tda998x provides a connector info to the CEC
-adapter. In order to be able to that it delays creation of
-respective CEC device until the DRM connector is initialized.
+On Thu, May 16, 2019 at 3:08 PM Christian Brauner <christian@brauner.io> wrote:
+> On Wed, May 15, 2019 at 10:45:06AM -0700, Daniel Colascione wrote:
+> > On Wed, May 15, 2019 at 3:04 AM Christian Brauner <christian@brauner.io> wrote:
+> > >
+> > > This adds the pidfd_open() syscall. It allows a caller to retrieve pollable
+> > > pidfds for a process which did not get created via CLONE_PIDFD, i.e. for a
+> > > process that is created via traditional fork()/clone() calls that is only
+> > > referenced by a PID:
+[...]
+> > > +/**
+> > > + * pidfd_open() - Open new pid file descriptor.
+> > > + *
+> > > + * @pid:   pid for which to retrieve a pidfd
+> > > + * @flags: flags to pass
+> > > + *
+> > > + * This creates a new pid file descriptor with the O_CLOEXEC flag set for
+> > > + * the process identified by @pid. Currently, the process identified by
+> > > + * @pid must be a thread-group leader. This restriction currently exists
+> > > + * for all aspects of pidfds including pidfd creation (CLONE_PIDFD cannot
+> > > + * be used with CLONE_THREAD) and pidfd polling (only supports thread group
+> > > + * leaders).
+> > > + *
+> > > + * Return: On success, a cloexec pidfd is returned.
+> > > + *         On error, a negative errno number will be returned.
+> > > + */
+> > > +SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+> > > +{
+[...]
+> > > +       if (pid <= 0)
+> > > +               return -EINVAL;
+> >
+> > WDYT of defining pid == 0 to mean "open myself"?
+>
+> I'm torn. It be a nice shortcut of course but pid being 0 is usually an
+> indicator for child processes. So unless the getpid() before
+> pidfd_open() is an issue I'd say let's leave it as is. If you really
+> want the shortcut might -1 be better?
 
-Requires testing.
-
-Signed-off-by: Dariusz Marcinkiewicz <darekm@google.com>
----
- drivers/gpu/drm/i2c/tda9950.c         |  7 ++++-
- drivers/gpu/drm/i2c/tda998x_drv.c     | 41 +++++++++++++--------------
- include/linux/platform_data/tda9950.h |  2 ++
- 3 files changed, 28 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/gpu/drm/i2c/tda9950.c b/drivers/gpu/drm/i2c/tda9950.c
-index b944dd9df85e1..2778a0015cc31 100644
---- a/drivers/gpu/drm/i2c/tda9950.c
-+++ b/drivers/gpu/drm/i2c/tda9950.c
-@@ -382,6 +382,7 @@ static int tda9950_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
- 	struct tda9950_glue *glue = client->dev.platform_data;
-+	struct cec_connector_info conn_info;
- 	struct device *dev = &client->dev;
- 	struct tda9950_priv *priv;
- 	unsigned long irqflags;
-@@ -422,10 +423,14 @@ static int tda9950_probe(struct i2c_client *client,
- 	if (glue && glue->parent)
- 		priv->hdmi = glue->parent;
- 
-+	memset(&conn_info, 0, sizeof(conn_info));
-+	if (glue)
-+		cec_fill_connector_info(&conn_info, glue->connector);
-+
- 	priv->adap = cec_allocate_adapter(&tda9950_cec_ops, priv, "tda9950",
- 					  CEC_CAP_DEFAULTS,
- 					  CEC_MAX_LOG_ADDRS,
--					  NULL);
-+					  &conn_info);
- 	if (IS_ERR(priv->adap))
- 		return PTR_ERR(priv->adap);
- 
-diff --git a/drivers/gpu/drm/i2c/tda998x_drv.c b/drivers/gpu/drm/i2c/tda998x_drv.c
-index 7f34601bb5155..ef2aa3134b387 100644
---- a/drivers/gpu/drm/i2c/tda998x_drv.c
-+++ b/drivers/gpu/drm/i2c/tda998x_drv.c
-@@ -1253,6 +1253,7 @@ static int tda998x_connector_init(struct tda998x_priv *priv,
- 				  struct drm_device *drm)
- {
- 	struct drm_connector *connector = &priv->connector;
-+	struct i2c_board_info cec_info;
- 	int ret;
- 
- 	connector->interlace_allowed = 1;
-@@ -1269,6 +1270,24 @@ static int tda998x_connector_init(struct tda998x_priv *priv,
- 	if (ret)
- 		return ret;
- 
-+	/*
-+	 * Some TDA998x are actually two I2C devices merged onto one piece
-+	 * of silicon: TDA9989 and TDA19989 combine the HDMI transmitter
-+	 * with a slightly modified TDA9950 CEC device.  The CEC device
-+	 * is at the TDA9950 address, with the address pins strapped across
-+	 * to the TDA998x address pins.  Hence, it always has the same
-+	 * offset.
-+	 */
-+	memset(&cec_info, 0, sizeof(cec_info));
-+	strlcpy(cec_info.type, "tda9950", sizeof(cec_info.type));
-+	cec_info.addr = priv->cec_addr;
-+	cec_info.platform_data = &priv->cec_glue;
-+	cec_info.irq = priv->hdmi->irq;
-+
-+	priv->cec = i2c_new_device(priv->hdmi->adapter, &cec_info);
-+	if (!priv->cec)
-+		return -ENODEV;
-+
- 	drm_connector_attach_encoder(&priv->connector,
- 				     priv->bridge.encoder);
- 
-@@ -1658,7 +1677,6 @@ static int tda998x_create(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
- 	struct device_node *np = client->dev.of_node;
--	struct i2c_board_info cec_info;
- 	struct tda998x_priv *priv;
- 	u32 video;
- 	int rev_lo, rev_hi, ret;
-@@ -1783,32 +1801,13 @@ static int tda998x_create(struct device *dev)
- 	}
- 
- 	priv->cec_glue.parent = dev;
-+	priv->cec_glue.connector = &priv->connector;
- 	priv->cec_glue.data = priv;
- 	priv->cec_glue.init = tda998x_cec_hook_init;
- 	priv->cec_glue.exit = tda998x_cec_hook_exit;
- 	priv->cec_glue.open = tda998x_cec_hook_open;
- 	priv->cec_glue.release = tda998x_cec_hook_release;
- 
--	/*
--	 * Some TDA998x are actually two I2C devices merged onto one piece
--	 * of silicon: TDA9989 and TDA19989 combine the HDMI transmitter
--	 * with a slightly modified TDA9950 CEC device.  The CEC device
--	 * is at the TDA9950 address, with the address pins strapped across
--	 * to the TDA998x address pins.  Hence, it always has the same
--	 * offset.
--	 */
--	memset(&cec_info, 0, sizeof(cec_info));
--	strlcpy(cec_info.type, "tda9950", sizeof(cec_info.type));
--	cec_info.addr = priv->cec_addr;
--	cec_info.platform_data = &priv->cec_glue;
--	cec_info.irq = client->irq;
--
--	priv->cec = i2c_new_device(client->adapter, &cec_info);
--	if (!priv->cec) {
--		ret = -ENODEV;
--		goto fail;
--	}
--
- 	/* enable EDID read irq: */
- 	reg_set(priv, REG_INT_FLAGS_2, INT_FLAGS_2_EDID_BLK_RD);
- 
-diff --git a/include/linux/platform_data/tda9950.h b/include/linux/platform_data/tda9950.h
-index c65efd461102e..7e6893bad03a2 100644
---- a/include/linux/platform_data/tda9950.h
-+++ b/include/linux/platform_data/tda9950.h
-@@ -2,10 +2,12 @@
- #define LINUX_PLATFORM_DATA_TDA9950_H
- 
- struct device;
-+struct drm_connector;
- 
- struct tda9950_glue {
- 	struct device *parent;
- 	unsigned long irq_flags;
-+	const struct drm_connector *connector;
- 	void *data;
- 	int (*init)(void *);
- 	void (*exit)(void *);
--- 
-2.18.1
-
+Joining the bikeshed painting club: Please don't allow either 0 or -1
+as shortcut for "self". James Forshaw found an Android security bug a
+while back (https://bugs.chromium.org/p/project-zero/issues/detail?id=727)
+that passed a PID to getpidcon(), except that the PID was 0
+(placeholder for oneway binder transactions), and then the service
+thought it was talking to itself. You could pick some other number and
+provide a #define for that, but I think pidfd_open(getpid(), ...)
+makes more sense.
