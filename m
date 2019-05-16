@@ -2,71 +2,180 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2CEC04E87
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A416C04E87
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAE5F20881
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D64F620881
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VCQOndVd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbfEPBr3 (ORCPT
+        id S1727811AbfEPBrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 21:47:29 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7651 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726342AbfEPBm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 21:42:26 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B15E134E22D2AB63071C;
-        Thu, 16 May 2019 09:42:24 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 16 May 2019 09:42:15 +0800
-From:   Kefeng Wang <wangkefeng.wang@huawei.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] kernel: fork: make max_threads symbol static
-Date:   Thu, 16 May 2019 09:51:18 +0800
-Message-ID: <20190516015118.140561-1-wangkefeng.wang@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 15 May 2019 21:47:11 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35697 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726901AbfEPBGN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 21:06:13 -0400
+Received: by mail-ot1-f68.google.com with SMTP id n14so1883481otk.2;
+        Wed, 15 May 2019 18:06:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=J6f1GZ8vCMw819yikh69VjuQxUpy7OYmJvnY0pJldzc=;
+        b=VCQOndVdDPVpCcmRB4XI4mPyBaz8hFP/tZZ+OrKuD/J0xM/ZN9hbmJne51MgjHXpsc
+         mSclLtRVpK8X/6tfslh8J5RQQoR3HciSPXP9Iup6nZdYzKEkaIK4RW1YUDJybCZy9BTQ
+         Rd8KH/9Lu/TYSmVYnyp7BfMk0xO9NuHm9MIwG9ic5Kud59FrMya2LROAt06ksGGwef+8
+         jCtGhkqbq6tGS3szt6Y1Y3SbSEnWLIneuWvC8XbsLEqoYRKPwj2NM+2pl217TGYJZyEh
+         odBvDMneEHV4RABX+U9+HECmzcx4/BX7BNXbD0El0Ll68ZbxCLj4G+LX1bmuDZ9CMc8w
+         mvIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J6f1GZ8vCMw819yikh69VjuQxUpy7OYmJvnY0pJldzc=;
+        b=nPF0OkWvklQVe4YjDAA++qQoyAFMOWKhEGRIqKgswNbSuBgcVY1l7f4ovYesQnUMHz
+         Pis7vA4lx3WJei5IVINIjui6GivwqByZ/HwK6YKiU80P2PwUODetFHRaQyBkU/KsAvNR
+         SHj9RP1l5tIQYbI2r3SvXVqIAGxtYr/1zC3UCjRG3tKIuGxFxeGGbyReT7jyxafGPWZ3
+         f04ldeKwtH+ttz+nR6hG0fKfkDdTmgcul7KmFYA5bv/jf82A1Jt9cLuwPme0Hk4ETsRV
+         E70UWCrqctuZB5cbajfdQvpXzzbNITDaQmw2D6Jvi7CET/3Qd8u/Gmm0pgm9JivlAYoz
+         Mvkg==
+X-Gm-Message-State: APjAAAX+abP34F0S+TLCcL6NSNQBKFO4x3jJpwr7CXhywxlqSmyVGisc
+        TxS/YJB/h5z2h3WcsG6VilyhI7AauSweBCdBZKs=
+X-Google-Smtp-Source: APXvYqyUghYepUxVunBrQJsSOb/EkGSL/LU3bonenux+W/r6y1N76kWBBLy2tg3qyc1ZMcipE5G908BUMvPkPl9jC14=
+X-Received: by 2002:a05:6830:1356:: with SMTP id r22mr5792502otq.191.1557968772119;
+ Wed, 15 May 2019 18:06:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+References: <20190507185647.GA29409@amt.cnet> <CANRm+Cx8zCDG6Oz1m9eukkmx_uVFYcQOdMwZrHwsQcbLm_kuPA@mail.gmail.com>
+ <20190514135022.GD4392@amt.cnet> <7e390fef-e0df-963f-4e18-e44ac2766be3@oracle.com>
+In-Reply-To: <7e390fef-e0df-963f-4e18-e44ac2766be3@oracle.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Thu, 16 May 2019 09:07:32 +0800
+Message-ID: <CANRm+CyrLneGkOXzEmGyB-Sr+DOqqDAF4eNB1YBpbhm3Edo3Gw@mail.gmail.com>
+Subject: Re: [PATCH] sched: introduce configurable delay before entering idle
+To:     Ankur Arora <ankur.a.arora@oracle.com>
+Cc:     Marcelo Tosatti <mtosatti@redhat.com>,
+        kvm-devel <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Bandan Das <bsd@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix build warning,
-kernel/fork.c:125:5: warning: symbol 'max_threads' was not declared. Should it be static?
+On Thu, 16 May 2019 at 02:42, Ankur Arora <ankur.a.arora@oracle.com> wrote:
+>
+> On 5/14/19 6:50 AM, Marcelo Tosatti wrote:
+> > On Mon, May 13, 2019 at 05:20:37PM +0800, Wanpeng Li wrote:
+> >> On Wed, 8 May 2019 at 02:57, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+> >>>
+> >>>
+> >>> Certain workloads perform poorly on KVM compared to baremetal
+> >>> due to baremetal's ability to perform mwait on NEED_RESCHED
+> >>> bit of task flags (therefore skipping the IPI).
+> >>
+> >> KVM supports expose mwait to the guest, if it can solve this?
+> >>
+> >> Regards,
+> >> Wanpeng Li
+> >
+> > Unfortunately mwait in guest is not feasible (uncompatible with multiple
+> > guests). Checking whether a paravirt solution is possible.
+>
+> Hi Marcelo,
+>
+> I was also looking at making MWAIT available to guests in a safe manner:
+> whether through emulation or a PV-MWAIT. My (unsolicited) thoughts
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
----
- kernel/fork.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+MWAIT emulation is not simple, here is a research
+https://www.contrib.andrew.cmu.edu/~somlo/OSXKVM/mwait.html
 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index b4cba953040a..6efd32030518 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -122,7 +122,7 @@
- unsigned long total_forks;	/* Handle normal Linux uptimes. */
- int nr_threads;			/* The idle threads do not count.. */
- 
--int max_threads;		/* tunable limit on nr_threads */
-+static int max_threads;		/* tunable limit on nr_threads */
- 
- DEFINE_PER_CPU(unsigned long, process_counts) = 0;
- 
--- 
-2.20.1
+Regards,
+Wanpeng Li
 
+> follow.
+>
+> We basically want to handle this sequence:
+>
+>      monitor(monitor_address);
+>      if (*monitor_address == base_value)
+>           mwaitx(max_delay);
+>
+> Emulation seems problematic because, AFAICS this would happen:
+>
+>      guest                                   hypervisor
+>      =====                                   ====
+>
+>      monitor(monitor_address);
+>          vmexit  ===>                        monitor(monitor_address)
+>      if (*monitor_address == base_value)
+>           mwait();
+>                vmexit    ====>               mwait()
+>
+> There's a context switch back to the guest in this sequence which seems
+> problematic. Both the AMD and Intel specs list system calls and
+> far calls as events which would lead to the MWAIT being woken up:
+> "Voluntary transitions due to fast system call and far calls (occurring
+> prior to issuing MWAIT but after setting the monitor)".
+>
+>
+> We could do this instead:
+>
+>      guest                                   hypervisor
+>      =====                                   ====
+>
+>      monitor(monitor_address);
+>          vmexit  ===>                        cache monitor_address
+>      if (*monitor_address == base_value)
+>           mwait();
+>                vmexit    ====>              monitor(monitor_address)
+>                                             mwait()
+>
+> But, this would miss the "if (*monitor_address == base_value)" check in
+> the host which is problematic if *monitor_address changed simultaneously
+> when monitor was executed.
+> (Similar problem if we cache both the monitor_address and
+> *monitor_address.)
+>
+>
+> So, AFAICS, the only thing that would work is the guest offloading the
+> whole PV-MWAIT operation.
+>
+> AFAICS, that could be a paravirt operation which needs three parameters:
+> (monitor_address, base_value, max_delay.)
+>
+> This would allow the guest to offload this whole operation to
+> the host:
+>      monitor(monitor_address);
+>      if (*monitor_address == base_value)
+>           mwaitx(max_delay);
+>
+> I'm guessing you are thinking on similar lines?
+>
+>
+> High level semantics: If the CPU doesn't have any runnable threads, then
+> we actually do this version of PV-MWAIT -- arming a timer if necessary
+> so we only sleep until the time-slice expires or the MWAIT max_delay does.
+>
+> If the CPU has any runnable threads then this could still finish its
+> time-quanta or we could just do a schedule-out.
+>
+>
+> So the semantics guaranteed to the host would be that PV-MWAIT returns
+> after >= max_delay OR with the *monitor_address changed.
+>
+>
+>
+> Ankur
