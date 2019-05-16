@@ -2,141 +2,99 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DBCC04E53
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3CBC04E53
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8567020873
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:50:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bXMgsHQy"
+	by mail.kernel.org (Postfix) with ESMTP id 8F0E520873
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:50:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557971424;
+	bh=4+6HxItRfftLa22wPHvsvq5qAhdPlSRzanjH1VTJ53A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hTd0xZFCzFEsyemIk716KoMM67ZCPB1dzMyd1YKQU6qvZCnALKumZQFg7z2WFmvfU
+	 PB9RploFPSxvyypMaoZVFSLoOwXjYN4O1o/qMp4rptbAg9UPjT1a2j80zTCJiPyWBk
+	 pR5XGJqnDlpMAihkAaMr5enS3OgFu969pXJYI/Po=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfEPBqW (ORCPT
+        id S1726441AbfEPBuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 21:46:22 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41005 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726416AbfEOXl2 (ORCPT
+        Wed, 15 May 2019 21:50:23 -0400
+Received: from mail-lj1-f178.google.com ([209.85.208.178]:46709 "EHLO
+        mail-lj1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbfEPBuQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 19:41:28 -0400
-Received: by mail-pl1-f196.google.com with SMTP id f12so617425plt.8
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 16:41:28 -0700 (PDT)
+        Wed, 15 May 2019 21:50:16 -0400
+Received: by mail-lj1-f178.google.com with SMTP id h21so1502323ljk.13
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 18:50:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZjzAq2AO1sRBqrHJUjIMR4JCd00dysDTYDWKUQqEjMQ=;
-        b=bXMgsHQyNMU2fM0Ue9SNrNhQp2QCv7JSxc5jzX0IZmgsg2OidZNzsm8l3jUm1uE6nJ
-         lWaqMUHtNuGJqztJtHFz8qq0mDt/CiCZpfad5s4Lar/0LSp9YNJ4LfCfOyPKjC1m6mz1
-         3ptuYCoxX+8Jb5kFkHkJRuLa8Cb48QvPHkyzvL/aOFptkBfoE1sfSG/DH75K0zkMGOCk
-         UKLn1z8DM2/dwHP26TVmBpEDMUleMKoGHiO5SPFdigIH4tDV5uYGfhAUHlUkpBA9aeGT
-         zfHAkEmYsHIQ8owAl5TDHSjfDoC//9ZGpi9UGnLUd1nHfq3vJ58bJ/rhc01P05NZBFF2
-         oyyQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1eJ7zq+bbWUBl6uTT/Oi/zTtKOAXvl0vTCu6S+eKKjg=;
+        b=Pf0mWhiZ+sUUrUff614uWxE95Su9GTskTCzTGgmd97yGl7tdorXVdA608ETMTsE7c3
+         iBNGIH0NJh5+rka4Hc+AwsdujnfIVuE43zsq/IOFAGPARTBtQhHQORhBIfx/5qQL23zC
+         9nOh30bk37wglCI+MPC+x9M9E1z+6wmtbpzJg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZjzAq2AO1sRBqrHJUjIMR4JCd00dysDTYDWKUQqEjMQ=;
-        b=maXBaK2VrnVZSgTaEQEIMU6gf5IZsYCUgfMmtZYcGtQAJI28IoXeesNtKLoVikV+or
-         vd8QYUmxRDbzmy7izHWuW2GvfNQTdn+YjewZyU/zWTWB3C1rDCBbzb4ks/SXY+dIUv/z
-         plP0pz1kkVFYiwrbMNMBdm4RevLvtXkUBVKk3Vv/Cpj0Uyb6M0U6eNFZL0zGP5hbvMUA
-         egEsIQDjdcF312a7rCLiOejheSR7aP2aE6iqJnUBnUNtYlTSYdReQMwp7xr/b6fGyOLy
-         4iErHiAq1mwSjMjGy12EPWhGG3jA3yMvv1lcOv79T/O1mErsX97BMrj25OpTGKqINPq3
-         z+GQ==
-X-Gm-Message-State: APjAAAUedyE8cBgOnDnfGv32HoZmQcBkvCp3R5Z9VUHS7xjFdLtdUNdy
-        XpFygYdfac/7CaH4E/qA5qxDWg==
-X-Google-Smtp-Source: APXvYqyRpmmXxhxDQ6tCx1u6g4+IFs/LWvWFlwdifLuOAObsUDyvgkOgAz2yesijZ/zlqJKH0WhsiQ==
-X-Received: by 2002:a17:902:2d03:: with SMTP id o3mr11064877plb.309.1557963687169;
-        Wed, 15 May 2019 16:41:27 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g22sm4011790pfo.28.2019.05.15.16.41.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 15 May 2019 16:41:25 -0700 (PDT)
-Date:   Wed, 15 May 2019 16:41:23 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC 2/3] arm64: dts: qcom: sdm845-cheza: Re-add reserved memory
-Message-ID: <20190515234123.GP31438@minitux>
-References: <20190509184415.11592-1-robdclark@gmail.com>
- <20190509184415.11592-3-robdclark@gmail.com>
- <CAD=FV=WXW3aApS=c7baxhtfr1Nf-UnBN2s=rEBBkjj4=TCdT+g@mail.gmail.com>
- <CAJs_Fx5PDj+T+DVixzHjun_wCG5fhZsxH8xUqRwmkfwN87UP_A@mail.gmail.com>
- <CAD=FV=Vgiej=+hCZ_Eekoa4FJfpKxhOge8Wy29EEmtjB8JeF9g@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1eJ7zq+bbWUBl6uTT/Oi/zTtKOAXvl0vTCu6S+eKKjg=;
+        b=PKFB7HLyUYtcOxNvCjaTWHqKBLnjDTpPwt9+ZvkkCi4UuXPWatiXODRiMb0gDbhKNw
+         +AfN5xOkWIZ7skMv5m5YKEmDV68DVcXOSGhCXy2VpHlsNjHPNaeBFREWqtT0xymOj83E
+         EZ2xiJQfm7je4vU/Kgs3n0a42XIKasqGRlJ5Aa5bjE5falO8hHs6+VHGlB6hyej/fATC
+         Vfed7Rkj4bEgNkjbg3U7CwllPRNUaD88ZNdDBAMUE8vL9v7MVD+71O81PRAsDNM82WfV
+         F5/4Fj/Eqd6HhXkYpbtzGThkwD++NLOMD9S0XEORMg5WJHrTMpLyY+YYr2GZfAr1/16F
+         XI8A==
+X-Gm-Message-State: APjAAAXoa/oJ8n0klzgkrWXDBZ02Vnr/VfQi4YDGki3a4K1D6XoEXToy
+        rQnjwWLQGcaa+cT4t+mmZKg5mquIASU=
+X-Google-Smtp-Source: APXvYqxPRIp9prHj/Y1Dx0HBY0e2WievSrsHr69rw6LQIoBe//CRQXCuhtnx47x7M1qQjBoPHDaRSg==
+X-Received: by 2002:a2e:d1a:: with SMTP id 26mr22257753ljn.147.1557971413793;
+        Wed, 15 May 2019 18:50:13 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id c23sm669219lfg.43.2019.05.15.18.50.12
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 18:50:13 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id 14so1547925ljj.5
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 18:50:12 -0700 (PDT)
+X-Received: by 2002:a2e:978f:: with SMTP id y15mr4350081lji.125.1557971412623;
+ Wed, 15 May 2019 18:50:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=Vgiej=+hCZ_Eekoa4FJfpKxhOge8Wy29EEmtjB8JeF9g@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <21598eb7-8ff0-2b6b-4cab-c0d1295fd46e@wdc.com> <mhng-54fad465-30c1-426c-84c1-99fd4ac827b0@palmer-si-x1e>
+In-Reply-To: <mhng-54fad465-30c1-426c-84c1-99fd4ac827b0@palmer-si-x1e>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 15 May 2019 18:49:57 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjBRKqBHe5Au=TpDq3B5p=AFKvpaf_7XSU3Mv0MgfGj+A@mail.gmail.com>
+Message-ID: <CAHk-=wjBRKqBHe5Au=TpDq3B5p=AFKvpaf_7XSU3Mv0MgfGj+A@mail.gmail.com>
+Subject: Re: [GIT PULL] RISC-V Patches for the 5.2 Merge Window, Part 1
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     atish.patra@wdc.com, linux-riscv@lists.infradead.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 15 May 14:50 PDT 2019, Doug Anderson wrote:
+On Wed, May 15, 2019 at 6:43 PM Palmer Dabbelt <palmer@sifive.com> wrote:
+>
+> Linus: I'm not sure how to tag this PR as a mistake, so I'm going to just send
+> another one.  If this gets merged then I'll handle the follow-on.
 
-> Hi,
-> 
-> On Tue, May 14, 2019 at 9:10 PM Rob Clark <robdclark@chromium.org> wrote:
-> 
-> > On Mon, May 13, 2019 at 3:48 PM Doug Anderson <dianders@chromium.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Thu, May 9, 2019 at 11:44 AM Rob Clark <robdclark@gmail.com> wrote:
-> > >
-> > > > From: Douglas Anderson <dianders@chromium.org>
-> > > >
-> > > > Let's fixup the reserved memory to re-add the things we deleted in
-> > > > ("CHROMIUM: arm64: dts: qcom: sdm845-cheza: Temporarily delete
-> > > > reserved-mem changes") in a way that plays nicely with the new
-> > > > upstream definitions.
-> > >
-> > > The message above makes no sense since that commit you reference isn't
-> > > in upstream.
-> > >
-> > > ...but in any case, why not squash this in with the previous commit?
-> >
-> > Yeah, I should have mentioned this was my intention, I just left it
-> > unsquashed since (at the time) it was something I had cherry-picked on
-> > top of current 4.19 cros kernel..
-> >
-> > anyways, I pushed an (unsquashed, converted to fixup!'s) update to:
-> >
-> > https://github.com/freedreno/kernel-msm/commits/wip/cheza-dtb-upstreaming
-> >
-> > which has updates based on you're review comments (at least assuming I
-> > understood them correctly).. plus some unrelated to cheza-dt patches
-> > on top to get things actually working (ie. ignore everything on top of
-> > the fixup!'s)
-> 
-> Looks OK to me.  Are you going to post this?  Bjorn / Andy: do you
-> guys have opinions here?
-> 
+Just emailing in the same thread ends up with me hopefully seeing the
+"oops, cancel pull request" before I actually pull, so you did the
+right thing.
 
-I think this is a good opportunity to get people with Cheza off 4.19, so
-I'm all for landing this upstream.
+To make sure, you _could_ obviously also just force-remove the tag you
+asked me to pull, so that if I miss an email any pull attempt of mine
+would just fail.
 
-Regards,
-Bjorn
+.., and if were to have ended up pulling before you sent the cancel
+email and/or removed the tag, it's obviously all too late, and then
+we'd have to fix things up after the fact, but at least this time it
+got caught in time.
 
-> 
-> > I didn't see any comments on the 'delete zap-shader' patch, so
-> > hopefully that means what I did there was a sane (or at least not
-> > insane) way to handle android/linux tz vs what we have on cheza?
-> 
-> I wasn't CCed, so I assumed you were looking for feedback from others
-> on that one.  ;-)  Oh, but I guess Jordan and Bjorn also weren't
-> CCed...  In any case, I replied now.
+            Linus
