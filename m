@@ -2,120 +2,161 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B1AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51108C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1C820833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DE9A20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:58:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfEPM6N (ORCPT
+        id S1727532AbfEPM6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 08:58:13 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:57191 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfEPM6H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 08:58:07 -0400
-Received: by mail-io1-f72.google.com with SMTP id n24so2566117ioo.23
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 05:58:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=MdrEULgmHdt5/2TFOXFQeQY/puqA7jR5xNjMz6LOyvk=;
-        b=LyqTDwywi7DcKEMIXvP9NKWcur22palQWjBvCHuiTJtdG930kswGaGvPC6xAQm1BKm
-         fIFxLGD74iKIgZ1fRxHRWHr7drFerUrHg0UOlXFlfdV2Dc6lDGrdYYtZEjLmoP86f4QA
-         GSQGx01nRUQHWUtorv+Ma5AGX/Q6GYk0OWRGyVPIpd2tPVIfi5vTNa8aruVc3DOdxa2n
-         /HWLR7iC7Tll9d2+kzesoW4c/e8TGltS9u3ZHBbQmrO+DPmBhKQnZAChmNo92WbYSPbb
-         fEIYBKrK5aN5O9UxYwvqK2Zsy4Mb/AKsY86l9v0KcXe2T1FvKxO+12ItkJ90t2hfSOOW
-         mLTg==
-X-Gm-Message-State: APjAAAUrhSxEDODWNW59LCnhd6+a5in/KoWoo4Ni/83wqLbwRHvBNxmu
-        H8ZPfyalD8MGvpQDbJfufm51ANS1OleJbszq5Hhuq1fAOHJ5
-X-Google-Smtp-Source: APXvYqyuRmTOlyRqyVEWDCNz961U9p5PW5aySiOaHjUpeWLFq4qIn/0BleEX42b7buxqyo2Ia438+NNTzHmv7voWHXJL4v9YrfTq
+        Thu, 16 May 2019 08:58:20 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54718 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726692AbfEPM6U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 08:58:20 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1632030C2119;
+        Thu, 16 May 2019 12:58:19 +0000 (UTC)
+Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 81B2B5D6A9;
+        Thu, 16 May 2019 12:58:09 +0000 (UTC)
+Subject: Re: [PATCH v3 6/7] iommu: Introduce IOMMU_RESV_DIRECT_RELAXABLE
+ reserved memory regions
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        eric.auger.pro@gmail.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        dwmw2@infradead.org, lorenzo.pieralisi@arm.com,
+        robin.murphy@arm.com, will.deacon@arm.com, hanjun.guo@linaro.org,
+        sudeep.holla@arm.com
+Cc:     alex.williamson@redhat.com
+References: <20190516100817.12076-1-eric.auger@redhat.com>
+ <20190516100817.12076-7-eric.auger@redhat.com>
+ <3e21e370-135e-2eab-dd99-50e19cd53b86@arm.com>
+ <403897e7-2af9-3fa9-2264-f66dfeda6fd7@redhat.com>
+ <214a20d2-9cb5-c23d-ad38-8a0dea729e00@arm.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <342a4aad-3abd-f9a8-05fd-e8e260bbb69d@redhat.com>
+Date:   Thu, 16 May 2019 14:58:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:221:: with SMTP id f1mr30700825jaq.1.1558011486298;
- Thu, 16 May 2019 05:58:06 -0700 (PDT)
-Date:   Thu, 16 May 2019 05:58:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000032685a058900d170@google.com>
-Subject: KMSAN: uninit-value in tomoyo_check_inet_address
-From:   syzbot <syzbot+1018d578c410f9f37261@syzkaller.appspotmail.com>
-To:     glider@google.com, jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        penguin-kernel@I-love.SAKURA.ne.jp, serge@hallyn.com,
-        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <214a20d2-9cb5-c23d-ad38-8a0dea729e00@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 16 May 2019 12:58:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Jean-Philippe,
 
-syzbot found the following crash on:
+On 5/16/19 2:43 PM, Jean-Philippe Brucker wrote:
+> On 16/05/2019 12:45, Auger Eric wrote:
+>> Hi Jean-Philippe,
+>>
+>> On 5/16/19 1:16 PM, Jean-Philippe Brucker wrote:
+>>> On 16/05/2019 11:08, Eric Auger wrote:
+>>>> Note: At the moment the sysfs ABI is not changed. However I wonder
+>>>> whether it wouldn't be preferable to report the direct region as
+>>>> "direct_relaxed" there. At the moment, in case the same direct
+>>>> region is used by 2 devices, one USB/GFX and another not belonging
+>>>> to the previous categories, the direct region will be output twice
+>>>> with "direct" type.
+>>>>
+>>>> This would unblock Shameer's series:
+>>>> [PATCH v6 0/7] vfio/type1: Add support for valid iova list management
+>>>> https://patchwork.kernel.org/patch/10425309/
+>>>
+>>> Thanks for doing this!
+>>>
+>>>> which failed to get pulled for 4.18 merge window due to IGD
+>>>> device assignment regression.
+>>>>
+>>>> v2 -> v3:
+>>>> - fix direct type check
+>>>> ---
+>>>>  drivers/iommu/iommu.c | 12 +++++++-----
+>>>>  include/linux/iommu.h |  6 ++++++
+>>>>  2 files changed, 13 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>>>> index ae4ea5c0e6f9..28c3d6351832 100644
+>>>> --- a/drivers/iommu/iommu.c
+>>>> +++ b/drivers/iommu/iommu.c
+>>>> @@ -73,10 +73,11 @@ struct iommu_group_attribute {
+>>>>  };
+>>>>  
+>>>>  static const char * const iommu_group_resv_type_string[] = {
+>>>> -	[IOMMU_RESV_DIRECT]	= "direct",
+>>>> -	[IOMMU_RESV_RESERVED]	= "reserved",
+>>>> -	[IOMMU_RESV_MSI]	= "msi",
+>>>> -	[IOMMU_RESV_SW_MSI]	= "msi",
+>>>> +	[IOMMU_RESV_DIRECT]			= "direct",
+>>>> +	[IOMMU_RESV_DIRECT_RELAXABLE]		= "direct",
+>>>> +	[IOMMU_RESV_RESERVED]			= "reserved",
+>>>> +	[IOMMU_RESV_MSI]			= "msi",
+>>>> +	[IOMMU_RESV_SW_MSI]			= "msi",
+>>>>  };
+>>>>  
+>>>>  #define IOMMU_GROUP_ATTR(_name, _mode, _show, _store)		\
+>>>> @@ -573,7 +574,8 @@ static int iommu_group_create_direct_mappings(struct iommu_group *group,
+>>>>  		start = ALIGN(entry->start, pg_size);
+>>>>  		end   = ALIGN(entry->start + entry->length, pg_size);
+>>>>  
+>>>> -		if (entry->type != IOMMU_RESV_DIRECT)
+>>>> +		if (entry->type != IOMMU_RESV_DIRECT &&
+>>>> +		    entry->type != IOMMU_RESV_DIRECT_RELAXABLE)
+>>>
+>>> I'm trying to understand why you need to create direct mappings at all
+>>> for these relaxable regions. In the host the region is needed for legacy
+>>> device features, which are disabled (and cannot be re-enabled) when
+>>> assigning the device to a guest?
+>> This follows Kevin's comment in the thread below:
+>> https://patchwork.kernel.org/patch/10449103/#21957279
+>>
+>> In normal DMA API host path, those regions need to be 1-1 mapped. They
+>> are likely to be accessed by the driver or FW at early boot phase or
+>> even during execution, depending on features being used.
+>>
+>> That's the reason, according to Kevin we couldn't hide them.
+>>
+>> We just know that, in general, they are not used anymore when assigning
+>> the device or if accesses are attempted this generally does not block
+>> the assignment use case. For example, it is said in
+>> https://github.com/qemu/qemu/blob/master/docs/igd-assign.txt that in
+>> legacy IGD assignment use case, there may be "a small numbers of DMAR
+>> faults when initially assigned".
+> 
+> Hmm, fair enough. That doesn't sound too good, if the device might
+> perform arbitrary writes into guest memory once new IOMMU mappings are
+> in place. I was wondering if we could report some IOVA ranges as
+> "available but avoid if possible".
+In Shameer's series we currently reject any vfio dma_map that would fall
+into an RMRR (hence the regression on existing USB/GFX use case). With
+the relaxable RMRR info we could imagine to let the userspace choose
+whether we want to proceed with the dma_map despite the risk or
+introduce a vfio_iommu_type1 module option (turned off by default for
+not regressing existing USB/GFX passthrough) that would forbid dma_map
+on relaxable RMRR regions.
 
-HEAD commit:    3b955a40 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       kmsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=1027e608a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
-dashboard link: https://syzkaller.appspot.com/bug?extid=1018d578c410f9f37261
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
+Thanks
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Eric
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+1018d578c410f9f37261@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KMSAN: uninit-value in tomoyo_check_inet_address+0x143/0xd10  
-security/tomoyo/network.c:508
-CPU: 0 PID: 22966 Comm: syz-executor.2 Not tainted 5.1.0+ #3
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
-  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:619
-  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
-  tomoyo_check_inet_address+0x143/0xd10 security/tomoyo/network.c:508
-  tomoyo_socket_bind_permission+0x343/0x3b0 security/tomoyo/network.c:741
-  tomoyo_socket_bind+0x8b/0xa0 security/tomoyo/tomoyo.c:471
-  security_socket_bind+0x127/0x200 security/security.c:1943
-  __sys_bind+0x536/0x7c0 net/socket.c:1623
-  __do_sys_bind net/socket.c:1638 [inline]
-  __se_sys_bind+0x8d/0xb0 net/socket.c:1636
-  __x64_sys_bind+0x4a/0x70 net/socket.c:1636
-  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
-  entry_SYSCALL_64_after_hwframe+0x63/0xe7
-RIP: 0033:0x458da9
-Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f4aeb5bbc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458da9
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
-RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f4aeb5bc6d4
-R13: 00000000004bee1f R14: 00000000004cfe68 R15: 00000000ffffffff
-
-Local variable description: ----address@__sys_bind
-Variable was created at:
-  sockfd_lookup_light net/socket.c:488 [inline]
-  __sys_bind+0x8c/0x7c0 net/socket.c:1619
-  __do_sys_bind net/socket.c:1638 [inline]
-  __se_sys_bind+0x8d/0xb0 net/socket.c:1636
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+ If the guest has a vIOMMU, they are
+> easy to avoid. But I doubt they would ever get used, since probably no
+> one is going to instantiate a vIOMMU for a graphics device in legacy mode.
+> 
+> Thanks,
+> Jean
+> 
