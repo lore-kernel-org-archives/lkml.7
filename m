@@ -2,96 +2,150 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A68C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09ED3C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C74D2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D105F2168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:30:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="Ud+R7juj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbfEPQ3w (ORCPT
+        id S1727193AbfEPQas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:29:52 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35799 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbfEPQ3t (ORCPT
+        Thu, 16 May 2019 12:30:48 -0400
+Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.20]:16045 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbfEPQar (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:29:49 -0400
-Received: by mail-wm1-f68.google.com with SMTP id q15so4138276wmj.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:29:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bmJ3oGbhkIfE+oGMXz0i/1fqw7BH4scbuPzlcTLdX0o=;
-        b=LqiV9D6Ghpb4aXnQor+QWgNaddHzAVkuW/6LpF+d4LvRNoQL6uujnn6+eV4DoVWMs4
-         Rh+QQZDwGK9eFp1H4RUOobWq14ylZcgktFfiLU8YNDzJwgDA1tmQBZQTTo055yZUlZZh
-         PrpsvOstihWpMH/SGhjYTLh3Pmrre5SbjcqFjX3AageSqO64CJNauz1DgzA/2dNS/avz
-         hKWDgyFtm1RvgfofWNgasScifHoer2bEs+Q0CFHKKvHDlgPj3ZkdzQY81ufj/o4xGTtR
-         fBvT5a7+Qsm8zZTIIbjAiTt4YaKFETs2RnJv/hbmK1X59d4W4f1XVongAAd+Kvx/lA4B
-         BNhw==
-X-Gm-Message-State: APjAAAUjlKbm7YaG1DdB/AM22tebYLRaP3CFVlVm3NJ0Ket46/8699C5
-        y0GrimIptKWXn9767I0dT465
-X-Google-Smtp-Source: APXvYqw4xzsO/ZHDRK8RT2D9NZpnGvFVdO15DLWHiBOzYw0vUAqtOT7NkS6GGg4mfAYLcWMR8bMLaA==
-X-Received: by 2002:a1c:e714:: with SMTP id e20mr18848944wmh.143.1558024187943;
-        Thu, 16 May 2019 09:29:47 -0700 (PDT)
-Received: from localhost (cpc111743-lutn13-2-0-cust844.9-3.cable.virginm.net. [82.17.115.77])
-        by smtp.gmail.com with ESMTPSA id l8sm7695747wrw.56.2019.05.16.09.29.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 May 2019 09:29:47 -0700 (PDT)
-Date:   Thu, 16 May 2019 17:29:46 +0100
-From:   Aaron Tomlin <atomlin@redhat.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Hugh Dickins <hughd@google.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Greg KH <greg@kroah.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Timofey Titovets <nefelim4ag@gmail.com>,
-        Grzegorz Halat <ghalat@redhat.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: [PATCH RFC 4/5] mm/ksm, proc: introduce remote merge
-Message-ID: <20190516162946.zwzhxkft342b25pd@atomlin.usersys.com>
-References: <20190516094234.9116-1-oleksandr@redhat.com>
- <20190516094234.9116-5-oleksandr@redhat.com>
- <CAG48ez2yXw_PJXO-mS=Qw5rkLpG6zDPd0saMhhGk09-du2bpaA@mail.gmail.com>
+        Thu, 16 May 2019 12:30:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1558024245;
+        s=strato-dkim-0002; d=hartkopp.net;
+        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=FQma3RmWDS8VYLqxGeNcHo7p5BwbUBC6TbpAzjFKweQ=;
+        b=Ud+R7juj9V8dW3YGjEnsvVemVWpTSAe/JKmdSHKUJ3VPz29qFZOWciGQcrJCkNGmNd
+        VaRHYTN2JNaDub3HR0xARyMf8CvOl6KC/GYCYeclzP2h8FuKMIv4gJTFSTG2YyxfMpSg
+        vY2yIlke5jCNtYCVQcOGzAgbNhoJlVlW/Mx8aYn4dS6tnEBCy/keyzYCEN6viyyA1dvM
+        lGpW+NZ/ItGEyFbNCAL0x+lPXFLJcowNttFNUBnOmZLaNBy+2P3NHJ3p4xKCBKYUZymT
+        e0rgk/KapagHXdKhhhDiBAHxE1lbrKdR3a707Jg6wv0RyMrGZX43wOYux8n8Dfdmcxxs
+        fI0w==
+X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJUMh6kkRA"
+X-RZG-CLASS-ID: mo00
+Received: from [192.168.1.200]
+        by smtp.strato.de (RZmta 44.18 DYNA|AUTH)
+        with ESMTPSA id q0b361v4GGOjEiy
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 16 May 2019 18:24:45 +0200 (CEST)
+Subject: Re: [PATCH] can: gw: Fix error path of cgw_module_init
+To:     YueHaibing <yuehaibing@huawei.com>, davem@davemloft.net,
+        mkl@pengutronix.de
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-can@vger.kernel.org
+References: <20190516155435.42376-1-yuehaibing@huawei.com>
+From:   Oliver Hartkopp <socketcan@hartkopp.net>
+Message-ID: <5e833f8b-537b-f4b0-4d7d-489936026cca@hartkopp.net>
+Date:   Thu, 16 May 2019 18:24:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAG48ez2yXw_PJXO-mS=Qw5rkLpG6zDPd0saMhhGk09-du2bpaA@mail.gmail.com>
-X-PGP-Key: http://pgp.mit.edu/pks/lookup?search=atomlin%40redhat.com
-X-PGP-Fingerprint: 7906 84EB FA8A 9638 8D1E  6E9B E2DE 9658 19CC 77D6
-User-Agent: NeoMutt/20180716-1637-ee8449
+In-Reply-To: <20190516155435.42376-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-05-16 12:00 +0200, Jann Horn wrote:
-> On Thu, May 16, 2019 at 11:43 AM Oleksandr Natalenko
-> <oleksandr@redhat.com> wrote:
-[ ... ]
-> > +       }
-> > +
-> > +       down_write(&mm->mmap_sem);
+
+
+On 16.05.19 17:54, YueHaibing wrote:
+> This patch fix error path for cgw_module_init
+> to avoid possible crash if some error occurs.
 > 
-> Should a check for mmget_still_valid(mm) be inserted here? See commit
-> 04f5866e41fb70690e28397487d8bd8eea7d712a.
+> Fixes: c1aabdf379bc ("can-gw: add netlink based CAN routing")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Yes - I'd say this is required here.
+Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
 
-Thanks,
+Thanks!
 
--- 
-Aaron Tomlin
+> ---
+>   net/can/gw.c | 46 +++++++++++++++++++++++++++++++---------------
+>   1 file changed, 31 insertions(+), 15 deletions(-)
+> 
+> diff --git a/net/can/gw.c b/net/can/gw.c
+> index 53859346..8b53ec7 100644
+> --- a/net/can/gw.c
+> +++ b/net/can/gw.c
+> @@ -1046,32 +1046,48 @@ static __init int cgw_module_init(void)
+>   	pr_info("can: netlink gateway (rev " CAN_GW_VERSION ") max_hops=%d\n",
+>   		max_hops);
+>   
+> -	register_pernet_subsys(&cangw_pernet_ops);
+> +	ret = register_pernet_subsys(&cangw_pernet_ops);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = -ENOMEM;
+>   	cgw_cache = kmem_cache_create("can_gw", sizeof(struct cgw_job),
+>   				      0, 0, NULL);
+> -
+>   	if (!cgw_cache)
+> -		return -ENOMEM;
+> +		goto out_cache_create;
+>   
+>   	/* set notifier */
+>   	notifier.notifier_call = cgw_notifier;
+> -	register_netdevice_notifier(&notifier);
+> +	ret = register_netdevice_notifier(&notifier);
+> +	if (ret)
+> +		goto out_register_notifier;
+>   
+>   	ret = rtnl_register_module(THIS_MODULE, PF_CAN, RTM_GETROUTE,
+>   				   NULL, cgw_dump_jobs, 0);
+> -	if (ret) {
+> -		unregister_netdevice_notifier(&notifier);
+> -		kmem_cache_destroy(cgw_cache);
+> -		return -ENOBUFS;
+> -	}
+> -
+> -	/* Only the first call to rtnl_register_module can fail */
+> -	rtnl_register_module(THIS_MODULE, PF_CAN, RTM_NEWROUTE,
+> -			     cgw_create_job, NULL, 0);
+> -	rtnl_register_module(THIS_MODULE, PF_CAN, RTM_DELROUTE,
+> -			     cgw_remove_job, NULL, 0);
+> +	if (ret)
+> +		goto out_rtnl_register1;
+> +
+> +	ret = rtnl_register_module(THIS_MODULE, PF_CAN, RTM_NEWROUTE,
+> +				   cgw_create_job, NULL, 0);
+> +	if (ret)
+> +		goto out_rtnl_register2;
+> +	ret = rtnl_register_module(THIS_MODULE, PF_CAN, RTM_DELROUTE,
+> +				   cgw_remove_job, NULL, 0);
+> +	if (ret)
+> +		goto out_rtnl_register2;
+>   
+>   	return 0;
+> +
+> +out_rtnl_register2:
+> +	rtnl_unregister_all(PF_CAN);
+> +out_rtnl_register1:
+> +	unregister_netdevice_notifier(&notifier);
+> +out_register_notifier:
+> +	kmem_cache_destroy(cgw_cache);
+> +out_cache_create:
+> +	unregister_pernet_subsys(&cangw_pernet_ops);
+> +
+> +	return ret;
+>   }
+>   
+>   static __exit void cgw_module_exit(void)
+> 
