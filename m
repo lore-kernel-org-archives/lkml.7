@@ -2,210 +2,94 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBDDC04E87
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C4FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF86E20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E85205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:52:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="a0eafnwh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfEPHtI (ORCPT
+        id S1726702AbfEPHwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 03:49:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55050 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726513AbfEPHtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 03:49:07 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 16 May 2019 03:52:40 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:46016 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726363AbfEPHwk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 03:52:40 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 394FD10C94;
-        Thu, 16 May 2019 07:49:06 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 12CC660600;
-        Thu, 16 May 2019 07:49:06 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 8AF211806B11;
-        Thu, 16 May 2019 07:49:05 +0000 (UTC)
-Date:   Thu, 16 May 2019 03:49:05 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, mst@redhat.com,
-        dan j williams <dan.j.williams@intel.com>,
-        zwisler@kernel.org, vishal l verma <vishal.l.verma@intel.com>,
-        dave jiang <dave.jiang@intel.com>, jasowang@redhat.com,
-        willy@infradead.org, rjw@rjwysocki.net, hch@infradead.org,
-        lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger kernel <adilger.kernel@dilger.ca>,
-        darrick wong <darrick.wong@oracle.com>, lcapitulino@redhat.com,
-        kwolf@redhat.com, imammedo@redhat.com, jmoyer@redhat.com,
-        nilal@redhat.com, riel@surriel.com, stefanha@redhat.com,
-        aarcange@redhat.com, david@fromorbit.com, cohuck@redhat.com,
-        xiaoguangrong eric <xiaoguangrong.eric@gmail.com>,
-        pbonzini@redhat.com, kilobyte@angband.pl,
-        yuval shaia <yuval.shaia@oracle.com>, jstaron@google.com
-Message-ID: <1441757090.29182398.1557992945173.JavaMail.zimbra@redhat.com>
-In-Reply-To: <9f6b1d8e-ef90-7d8b-56da-61a426953ba3@redhat.com>
-References: <20190514145422.16923-1-pagupta@redhat.com> <20190514145422.16923-3-pagupta@redhat.com> <9f6b1d8e-ef90-7d8b-56da-61a426953ba3@redhat.com>
-Subject: Re: [PATCH v9 2/7] virtio-pmem: Add virtio pmem driver
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3A78FC2634;
+        Thu, 16 May 2019 07:52:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1557993149; bh=9PSf5qStiTiN7G0Rs+TvXW44EQP+VkAyDeSi/WBBYs4=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=a0eafnwhQSLULa6CClpPs+c41eTX/3jFVvLiyys9gpmyen1udET+zciQrygX8MxY+
+         jFHJYUvZq8vjZIC9Uf6kOuTXCZlAsjPIk7umk9KgAy1w9y28IJm3n6gBoSAdZG80my
+         sgZ8IoI0WWslHe061Oy3ueAoeRwpQceerAf/RLD1KTXaUmreqe2cbCq9ImOEVLkGMS
+         ySly7yH5XEjqIwqYGODnZOhMHzmxq7DW9hDrfDzXvkf7xaIaXK8xo8q+VaM8ynRcre
+         yyQO80WUz/2MZV5LcYuMhpu5N3MOXc6I5qBahNwAjeqyMzZiPF489oDf8C8sRKx9eu
+         IgZ95SATvTv+A==
+Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 2B4E3A0095;
+        Thu, 16 May 2019 07:52:34 +0000 (UTC)
+Received: from DE02WEHTCA.internal.synopsys.com (10.225.19.92) by
+ US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 16 May 2019 00:52:34 -0700
+Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
+ by DE02WEHTCA.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Thu,
+ 16 May 2019 09:52:31 +0200
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: RE: [RFC net-next v2 00/14] net: stmmac: Selftests
+Thread-Topic: [RFC net-next v2 00/14] net: stmmac: Selftests
+Thread-Index: AQHVCmwZe0pPTbFIM0O0cHECuOY9LqZsURgAgAER6JA=
+Date:   Thu, 16 May 2019 07:52:32 +0000
+Message-ID: <78EB27739596EE489E55E81C33FEC33A0B9216D0@DE02WEMBXB.internal.synopsys.com>
+References: <cover.1557848472.git.joabreu@synopsys.com>
+ <20190515172922.GA30321@Red>
+In-Reply-To: <20190515172922.GA30321@Red>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.107.19.176]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.16.97, 10.4.195.30]
-Thread-Topic: virtio-pmem: Add virtio pmem driver
-Thread-Index: au4HbQEd/vcK+r9shsETeRHx6YmHRw==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 16 May 2019 07:49:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Date: Wed, May 15, 2019 at 18:29:22
 
-> 
-> > +	vpmem->vdev = vdev;
-> > +	vdev->priv = vpmem;
-> > +	err = init_vq(vpmem);
-> > +	if (err) {
-> > +		dev_err(&vdev->dev, "failed to initialize virtio pmem vq's\n");
-> > +		goto out_err;
-> > +	}
-> > +
-> > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-> > +			start, &vpmem->start);
-> > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-> > +			size, &vpmem->size);
-> > +
-> > +	res.start = vpmem->start;
-> > +	res.end   = vpmem->start + vpmem->size-1;
-> 
-> nit: " - 1;"
+> I will try to investigate the MMC failure. Does -1 (vs other -EXXXX) is t=
+he right error code to return from the driver ?
 
-Sure.
+Thank you for testing!
 
-> 
-> > +	vpmem->nd_desc.provider_name = "virtio-pmem";
-> > +	vpmem->nd_desc.module = THIS_MODULE;
-> > +
-> > +	vpmem->nvdimm_bus = nvdimm_bus_register(&vdev->dev,
-> > +						&vpmem->nd_desc);
-> > +	if (!vpmem->nvdimm_bus) {
-> > +		dev_err(&vdev->dev, "failed to register device with nvdimm_bus\n");
-> > +		err = -ENXIO;
-> > +		goto out_vq;
-> > +	}
-> > +
-> > +	dev_set_drvdata(&vdev->dev, vpmem->nvdimm_bus);
-> > +
-> > +	ndr_desc.res = &res;
-> > +	ndr_desc.numa_node = nid;
-> > +	ndr_desc.flush = async_pmem_flush;
-> > +	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-> > +	set_bit(ND_REGION_ASYNC, &ndr_desc.flags);
-> > +	nd_region = nvdimm_pmem_region_create(vpmem->nvdimm_bus, &ndr_desc);
-> > +	if (!nd_region) {
-> > +		dev_err(&vdev->dev, "failed to create nvdimm region\n");
-> > +		err = -ENXIO;
-> > +		goto out_nd;
-> > +	}
-> > +	nd_region->provider_data = dev_to_virtio(nd_region->dev.parent->parent);
-> > +	return 0;
-> > +out_nd:
-> > +	nvdimm_bus_unregister(vpmem->nvdimm_bus);
-> > +out_vq:
-> > +	vdev->config->del_vqs(vdev);
-> > +out_err:
-> > +	return err;
-> > +}
-> > +
-> > +static void virtio_pmem_remove(struct virtio_device *vdev)
-> > +{
-> > +	struct nvdimm_bus *nvdimm_bus = dev_get_drvdata(&vdev->dev);
-> > +
-> > +	nvdimm_bus_unregister(nvdimm_bus);
-> > +	vdev->config->del_vqs(vdev);
-> > +	vdev->config->reset(vdev);
-> > +}
-> > +
-> > +static struct virtio_driver virtio_pmem_driver = {
-> > +	.driver.name		= KBUILD_MODNAME,
-> > +	.driver.owner		= THIS_MODULE,
-> > +	.id_table		= id_table,
-> > +	.probe			= virtio_pmem_probe,
-> > +	.remove			= virtio_pmem_remove,
-> > +};
-> > +
-> > +module_virtio_driver(virtio_pmem_driver);
-> > +MODULE_DEVICE_TABLE(virtio, id_table);
-> > +MODULE_DESCRIPTION("Virtio pmem driver");
-> > +MODULE_LICENSE("GPL");
-> > diff --git a/drivers/nvdimm/virtio_pmem.h b/drivers/nvdimm/virtio_pmem.h
-> > new file mode 100644
-> > index 000000000000..ab1da877575d
-> > --- /dev/null
-> > +++ b/drivers/nvdimm/virtio_pmem.h
-> > @@ -0,0 +1,60 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * virtio_pmem.h: virtio pmem Driver
-> > + *
-> > + * Discovers persistent memory range information
-> > + * from host and provides a virtio based flushing
-> > + * interface.
-> > + **/
-> > +
-> > +#ifndef _LINUX_VIRTIO_PMEM_H
-> > +#define _LINUX_VIRTIO_PMEM_H
-> > +
-> > +#include <linux/virtio_ids.h>
-> > +#include <linux/module.h>
-> > +#include <linux/virtio_config.h>
-> > +#include <uapi/linux/virtio_pmem.h>
-> > +#include <linux/libnvdimm.h>
-> > +#include <linux/spinlock.h>
-> > +
-> > +struct virtio_pmem_request {
-> > +	/* Host return status corresponding to flush request */
-> > +	int ret;
-> > +
-> > +	/* command name*/
-> > +	char name[16];
-> 
-> So ... why are we sending string commands and expect native-endianess
-> integers and don't define a proper request/response structure + request
-> types in include/uapi/linux/virtio_pmem.h like
-> 
-> struct virtio_pmem_resp {
-> 	__virtio32 ret;
-> }
-> 
-> #define VIRTIO_PMEM_REQ_TYPE_FLUSH	1
-> struct virtio_pmem_req {
-> 	__virtio16 type;
-> }
-> 
-> ... and this way we also define a proper endianess format for exchange
-> and keep it extensible
+Yes, I will fix to return a valid error code.
 
-Done the suggested change.
+As per MMC failure this can be due to your HW not having all MMC counters=20
+available. Can you please remove all if conditions in stmmac_test_mmc()=20
+and just leave the "mmc_tx_framecount_g" check ?
 
-Thank you,
-Pankaj
-
-> 
-> @MST, what's your take on this?
-> 
-> 
-> --
-> 
-> Thanks,
-> 
-> David / dhildenb
-> 
+Thanks,
+Jose Miguel Abreu
