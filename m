@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A39C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D60C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E9620862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6104F20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558007075;
-	bh=FXDuVxiBXbsl4QZDdR6w/GeJ6pexSEJO3wfr+1TAQfg=;
+	s=default; t=1558007087;
+	bh=WZqns/vmD52csxksCTSJKOst800Pa8BQAwy8k1CCExQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ohogDYmxsbCGYY3vlNfQmRW1gfnUKmGG6/82tjGr96y6rdYCiHBUe4Sq4Fj+r/kmv
-	 3D8ccZugRUQ1H8apguxUaqJTRZnwbYM8enljWvWgqbihd7/BJmPA0xih7hCGzWSWWu
-	 gQ+lHwxySUc6/7g+C8AFBkYEOfUC5jI9uS5AKUtA=
+	b=abuiacLt4Q+3qOgf/YpJJeY+ECiPV6PZJq8c3YkLHJbYB6VKqySSOjcfsk5SeOEZM
+	 h2mkexdMPQaDHRzy+jlI2ZMJwFOuUsmfpuYo7yAuAKOw5Ot2Gatv7gROQl0YnW2n6c
+	 7CO732aGvRnv3wDDKAqcdYxxIzoyAo6X+mqjADGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbfEPLoe (ORCPT
+        id S1728051AbfEPLlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:44:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49954 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:41:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728056AbfEPLlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:41:17 -0400
+        id S1728025AbfEPLlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:41:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D2BA216FD;
-        Thu, 16 May 2019 11:41:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0ED720833;
+        Thu, 16 May 2019 11:41:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006877;
-        bh=FXDuVxiBXbsl4QZDdR6w/GeJ6pexSEJO3wfr+1TAQfg=;
+        s=default; t=1558006870;
+        bh=WZqns/vmD52csxksCTSJKOst800Pa8BQAwy8k1CCExQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B3LvwTK0Iy4KzN6Vs3jGwxjXOt9bmdWjvCUwNZVXyrkFkJueu3ej8KUnvO1ZOcqAZ
-         /NG6VW1mVQXgtAIBjpB6rlrpu6au+MOSo2xN14rk2hwYn6ZoJdrgXfL2MBYgEpQjcf
-         K2dfzo+p1Yb7lMZ+04fsqt5QJKRaoOJTXnMdN1Wg=
+        b=JHKEpEPqrfXJPFfeBekXXx45UHl0zgypmX8LBKXVJH5uxSSo+D5qikSTN66w+8PWt
+         DHBV5zoB1sniny9aDJOzplTxuVQuYFitnXu0PmIMDhEEoU76BBdG79QdTyF+7uM6/R
+         0lIYY/7CY435W8z/KjsE6IPHuvT7DHQoCyiEwKpQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 08/16] apparmorfs: fix use-after-free on symlink traversal
-Date:   Thu, 16 May 2019 07:40:59 -0400
-Message-Id: <20190516114107.8963-8-sashal@kernel.org>
+Cc:     Su Yanjun <suyj.fnst@cn.fujitsu.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 02/16] xfrm6_tunnel: Fix potential panic when unloading xfrm6_tunnel module
+Date:   Thu, 16 May 2019 07:40:53 -0400
+Message-Id: <20190516114107.8963-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516114107.8963-1-sashal@kernel.org>
 References: <20190516114107.8963-1-sashal@kernel.org>
@@ -58,50 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Su Yanjun <suyj.fnst@cn.fujitsu.com>
 
-[ Upstream commit f51dcd0f621caac5380ce90fbbeafc32ce4517ae ]
+[ Upstream commit 6ee02a54ef990a71bf542b6f0a4e3321de9d9c66 ]
 
-symlink body shouldn't be freed without an RCU delay.  Switch apparmorfs
-to ->destroy_inode() and use of call_rcu(); free both the inode and symlink
-body in the callback.
+When unloading xfrm6_tunnel module, xfrm6_tunnel_fini directly
+frees the xfrm6_tunnel_spi_kmem. Maybe someone has gotten the
+xfrm6_tunnel_spi, so need to wait it.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Fixes: 91cc3bb0b04ff("xfrm6_tunnel: RCU conversion")
+Signed-off-by: Su Yanjun <suyj.fnst@cn.fujitsu.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/apparmor/apparmorfs.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ net/ipv6/xfrm6_tunnel.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
-index 0e03377bb83ea..dd746bd69a9b2 100644
---- a/security/apparmor/apparmorfs.c
-+++ b/security/apparmor/apparmorfs.c
-@@ -126,17 +126,22 @@ static int aafs_show_path(struct seq_file *seq, struct dentry *dentry)
- 	return 0;
+diff --git a/net/ipv6/xfrm6_tunnel.c b/net/ipv6/xfrm6_tunnel.c
+index c28e3eaad7c26..b51368ebd1e67 100644
+--- a/net/ipv6/xfrm6_tunnel.c
++++ b/net/ipv6/xfrm6_tunnel.c
+@@ -391,6 +391,10 @@ static void __exit xfrm6_tunnel_fini(void)
+ 	xfrm6_tunnel_deregister(&xfrm6_tunnel_handler, AF_INET6);
+ 	xfrm_unregister_type(&xfrm6_tunnel_type, AF_INET6);
+ 	unregister_pernet_subsys(&xfrm6_tunnel_net_ops);
++	/* Someone maybe has gotten the xfrm6_tunnel_spi.
++	 * So need to wait it.
++	 */
++	rcu_barrier();
+ 	kmem_cache_destroy(xfrm6_tunnel_spi_kmem);
  }
- 
--static void aafs_evict_inode(struct inode *inode)
-+static void aafs_i_callback(struct rcu_head *head)
- {
--	truncate_inode_pages_final(&inode->i_data);
--	clear_inode(inode);
-+	struct inode *inode = container_of(head, struct inode, i_rcu);
- 	if (S_ISLNK(inode->i_mode))
- 		kfree(inode->i_link);
-+	free_inode_nonrcu(inode);
-+}
-+
-+static void aafs_destroy_inode(struct inode *inode)
-+{
-+	call_rcu(&inode->i_rcu, aafs_i_callback);
- }
- 
- static const struct super_operations aafs_super_ops = {
- 	.statfs = simple_statfs,
--	.evict_inode = aafs_evict_inode,
-+	.destroy_inode = aafs_destroy_inode,
- 	.show_path = aafs_show_path,
- };
  
 -- 
 2.20.1
