@@ -2,112 +2,69 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A763FC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CACAC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84393205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C07520833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:23:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfEPOWe (ORCPT
+        id S1727146AbfEPOXp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:22:34 -0400
-Received: from relay.sw.ru ([185.231.240.75]:55154 "EHLO relay.sw.ru"
+        Thu, 16 May 2019 10:23:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55898 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726696AbfEPOWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:22:33 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hRHH5-0007GL-T0; Thu, 16 May 2019 17:22:24 +0300
-Subject: Re: [PATCH RFC 0/5] mm: process_vm_mmap() -- syscall for duplication
- a process mapping
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     akpm@linux-foundation.org, dan.j.williams@intel.com,
-        keith.busch@intel.com, kirill.shutemov@linux.intel.com,
-        pasha.tatashin@oracle.com, alexander.h.duyck@linux.intel.com,
-        ira.weiny@intel.com, andreyknvl@google.com, arunks@codeaurora.org,
-        vbabka@suse.cz, cl@linux.com, riel@surriel.com,
-        keescook@chromium.org, hannes@cmpxchg.org, npiggin@gmail.com,
-        mathieu.desnoyers@efficios.com, shakeelb@google.com, guro@fb.com,
-        aarcange@redhat.com, hughd@google.com, jglisse@redhat.com,
-        mgorman@techsingularity.net, daniel.m.jordan@oracle.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-api@vger.kernel.org
-References: <155793276388.13922.18064660723547377633.stgit@localhost.localdomain>
- <20190516133034.GT16651@dhcp22.suse.cz>
- <20190516135259.GU16651@dhcp22.suse.cz>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <85562807-2a13-9aa2-e67d-15513c766eae@virtuozzo.com>
-Date:   Thu, 16 May 2019 17:22:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726692AbfEPOXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 10:23:45 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D2AD93083392;
+        Thu, 16 May 2019 14:23:44 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F70F5D6A9;
+        Thu, 16 May 2019 14:23:42 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 20E57220386; Thu, 16 May 2019 10:23:42 -0400 (EDT)
+Date:   Thu, 16 May 2019 10:23:42 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Miklos Szeredi <miklos@szeredi.hu>
+Subject: Re: [PATCH v2 12/30] dax: remove block device dependencies
+Message-ID: <20190516142342.GA31638@redhat.com>
+References: <20190515192715.18000-1-vgoyal@redhat.com>
+ <20190515192715.18000-13-vgoyal@redhat.com>
+ <CAPcyv4i_-ri=w0jYJ4WjK4QD9E8pMzkGQNdMbt9H_nawDqYD3A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190516135259.GU16651@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4i_-ri=w0jYJ4WjK4QD9E8pMzkGQNdMbt9H_nawDqYD3A@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 16 May 2019 14:23:45 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.05.2019 16:52, Michal Hocko wrote:
-> On Thu 16-05-19 15:30:34, Michal Hocko wrote:
->> [You are defining a new user visible API, please always add linux-api
->>  mailing list - now done]
->>
->> On Wed 15-05-19 18:11:15, Kirill Tkhai wrote:
-> [...]
->>> The proposed syscall aims to introduce an interface, which
->>> supplements currently existing process_vm_writev() and
->>> process_vm_readv(), and allows to solve the problem with
->>> anonymous memory transfer. The above example may be rewritten as:
->>>
->>> 	void *buf;
->>>
->>> 	buf = mmap(NULL, n * PAGE_SIZE, PROT_READ|PROT_WRITE,
->>> 		   MAP_PRIVATE|MAP_ANONYMOUS, ...);
->>> 	recv(sock, buf, n * PAGE_SIZE, 0);
->>>
->>> 	/* Sign of @pid is direction: "from @pid task to current" or vice versa. */
->>> 	process_vm_mmap(-pid, buf, n * PAGE_SIZE, remote_addr, PVMMAP_FIXED);
->>> 	munmap(buf, n * PAGE_SIZE);
-> 
-> AFAIU this means that you actually want to do an mmap of an anonymous
-> memory with a COW semantic to the remote process right?
+On Wed, May 15, 2019 at 05:21:51PM -0700, Dan Williams wrote:
 
-Yes.
+[..]
+> It just seems to me that we should stop pretending that the
+> filesystem-dax facility requires block devices and try to move this
+> functionality to generically use a dax device across all interfaces.
 
-> How does the remote process find out where and what has been mmaped?
+That sounds reasonable and will help with our use case where we don't
+have the block device at all.
 
-Any way. Isn't this a trivial task? :) You may use socket or any
-of appropriate linux features to communicate between them.
-
->What if the range collides? This sounds quite scary to me TBH.
-
-In case of range collides, the part of old VMA becomes unmapped.
-The same way we behave on ordinary mmap. You may intersect a range,
-which another thread mapped, so you need a synchronization between
-them. There is no a principle difference.
-
-Also I'm going to add a flag to prevent unmapping like Kees suggested.
-Please, see his message.
-
-> Why cannot you simply use shared memory for that?
-
-Because of remote task may want specific type of VMA. It may want not to
-share a VMA with its children.
-
-Speaking about online migration, a task wants its anonymous private VMAs
-remain the same after the migration. Otherwise, imagine the situation,
-when task's stack becomes a shared VMA after the migration.
-Also, task wants anonymous mapping remains anonymous.
-
-In general, in case of shared memory is enough for everything, we would
-have never had process_vm_writev() and process_vm_readv() syscalls.
-
-Kirill
+Vivek
