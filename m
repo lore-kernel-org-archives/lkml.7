@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4246FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D385C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EADB20848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B3A520815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfEPQEB (ORCPT
+        id S1727780AbfEPQEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:04:01 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42520 "EHLO
+        Thu, 16 May 2019 12:04:08 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42502 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726735AbfEPP6n (ORCPT
+        by vger.kernel.org with ESMTP id S1726510AbfEPP6n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 May 2019 11:58:43 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImG-0006zU-Ly; Thu, 16 May 2019 16:58:40 +0100
+        id 1hRImE-0006zS-9Q; Thu, 16 May 2019 16:58:38 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImE-0001QR-24; Thu, 16 May 2019 16:58:38 +0100
+        id 1hRImD-0001Og-Cj; Thu, 16 May 2019 16:58:37 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,31 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Andrea Arcangeli" <aarcange@redhat.com>,
-        "Arjan van de Ven" <arjan@linux.intel.com>,
-        "Tom Lendacky" <thomas.lendacky@amd.com>,
-        "Greg KH" <gregkh@linuxfoundation.org>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Jon Masters" <jcm@redhat.com>,
-        "Dave Stewart" <david.c.stewart@intel.com>,
-        "Waiman Long" <longman9394@gmail.com>,
-        "Casey Schaufler" <casey.schaufler@intel.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        "Tim Chen" <tim.c.chen@linux.intel.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Kees Cook" <keescook@chromium.org>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        "Asit Mallick" <asit.k.mallick@intel.com>,
-        "Jiri Kosina" <jkosina@suse.cz>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Dave Hansen" <dave.hansen@intel.com>,
-        "Andi Kleen" <ak@linux.intel.com>, "Ingo Molnar" <mingo@kernel.org>
+        zhong.weidong@zte.com.cn, konrad.wilk@oracle.com, hpa@zytor.com,
+        bp@suse.de, "Jiang Biao" <jiang.biao2@zte.com.cn>,
+        "Thomas Gleixner" <tglx@linutronix.de>, dwmw2@amazon.co.uk
 Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.122628530@decadent.org.uk>
+Message-ID: <lsq.1558022133.377453694@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 51/86] x86/speculation: Avoid __switch_to_xtra() calls
+Subject: [PATCH 3.16 29/86] x86/speculation: Remove SPECTRE_V2_IBRS in
+ enum spectre_v2_mitigation
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -73,106 +57,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Jiang Biao <jiang.biao2@zte.com.cn>
 
-commit 5635d99953f04b550738f6f4c1c532667c3fd872 upstream.
+commit d9f4426c73002957be5dd39936f44a09498f7560 upstream.
 
-The TIF_SPEC_IB bit does not need to be evaluated in the decision to invoke
-__switch_to_xtra() when:
+SPECTRE_V2_IBRS in enum spectre_v2_mitigation is never used. Remove it.
 
- - CONFIG_SMP is disabled
-
- - The conditional STIPB mode is disabled
-
-The TIF_SPEC_IB bit still controls IBPB in both cases so the TIF work mask
-checks might invoke __switch_to_xtra() for nothing if TIF_SPEC_IB is the
-only set bit in the work masks.
-
-Optimize it out by masking the bit at compile time for CONFIG_SMP=n and at
-run time when the static key controlling the conditional STIBP mode is
-disabled.
-
+Signed-off-by: Jiang Biao <jiang.biao2@zte.com.cn>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: David Woodhouse <dwmw@amazon.co.uk>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: Casey Schaufler <casey.schaufler@intel.com>
-Cc: Asit Mallick <asit.k.mallick@intel.com>
-Cc: Arjan van de Ven <arjan@linux.intel.com>
-Cc: Jon Masters <jcm@redhat.com>
-Cc: Waiman Long <longman9394@gmail.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>
-Cc: Dave Stewart <david.c.stewart@intel.com>
-Cc: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20181125185005.374062201@linutronix.de
+Cc: hpa@zytor.com
+Cc: dwmw2@amazon.co.uk
+Cc: konrad.wilk@oracle.com
+Cc: bp@suse.de
+Cc: zhong.weidong@zte.com.cn
+Link: https://lkml.kernel.org/r/1531872194-39207-1-git-send-email-jiang.biao2@zte.com.cn
 [bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/include/asm/thread_info.h | 13 +++++++++++--
- arch/x86/kernel/process.h          | 15 +++++++++++++++
- 2 files changed, 26 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/nospec-branch.h | 1 -
+ 1 file changed, 1 deletion(-)
 
---- a/arch/x86/include/asm/thread_info.h
-+++ b/arch/x86/include/asm/thread_info.h
-@@ -149,9 +149,18 @@ struct thread_info {
- 	 _TIF_USER_RETURN_NOTIFY | _TIF_UPROBE)
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -169,7 +169,6 @@ enum spectre_v2_mitigation {
+ 	SPECTRE_V2_RETPOLINE_MINIMAL_AMD,
+ 	SPECTRE_V2_RETPOLINE_GENERIC,
+ 	SPECTRE_V2_RETPOLINE_AMD,
+-	SPECTRE_V2_IBRS,
+ 	SPECTRE_V2_IBRS_ENHANCED,
+ };
  
- /* flags to check in __switch_to() */
--#define _TIF_WORK_CTXSW							\
-+#define _TIF_WORK_CTXSW_BASE						\
- 	(_TIF_IO_BITMAP|_TIF_NOTSC|_TIF_BLOCKSTEP|			\
--	 _TIF_SSBD|_TIF_SPEC_IB)
-+	 _TIF_SSBD)
-+
-+/*
-+ * Avoid calls to __switch_to_xtra() on UP as STIBP is not evaluated.
-+ */
-+#ifdef CONFIG_SMP
-+# define _TIF_WORK_CTXSW	(_TIF_WORK_CTXSW_BASE | _TIF_SPEC_IB)
-+#else
-+# define _TIF_WORK_CTXSW	(_TIF_WORK_CTXSW_BASE)
-+#endif
- 
- #define _TIF_WORK_CTXSW_PREV (_TIF_WORK_CTXSW|_TIF_USER_RETURN_NOTIFY)
- #define _TIF_WORK_CTXSW_NEXT (_TIF_WORK_CTXSW)
---- a/arch/x86/kernel/process.h
-+++ b/arch/x86/kernel/process.h
-@@ -2,6 +2,8 @@
- //
- // Code shared between 32 and 64 bit
- 
-+#include <asm/spec-ctrl.h>
-+
- void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p);
- 
- /*
-@@ -14,6 +16,19 @@ static inline void switch_to_extra(struc
- 	unsigned long next_tif = task_thread_info(next)->flags;
- 	unsigned long prev_tif = task_thread_info(prev)->flags;
- 
-+	if (IS_ENABLED(CONFIG_SMP)) {
-+		/*
-+		 * Avoid __switch_to_xtra() invocation when conditional
-+		 * STIPB is disabled and the only different bit is
-+		 * TIF_SPEC_IB. For CONFIG_SMP=n TIF_SPEC_IB is not
-+		 * in the TIF_WORK_CTXSW masks.
-+		 */
-+		if (!static_branch_likely(&switch_to_cond_stibp)) {
-+			prev_tif &= ~_TIF_SPEC_IB;
-+			next_tif &= ~_TIF_SPEC_IB;
-+		}
-+	}
-+
- 	/*
- 	 * __switch_to_xtra() handles debug registers, i/o bitmaps,
- 	 * speculation mitigations etc.
 
