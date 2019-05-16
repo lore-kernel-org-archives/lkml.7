@@ -2,212 +2,248 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A25E6C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EEFC04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A1002087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:40:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557981640;
-	bh=38ylCjlm5iAP/Ou8rSegy/JItYb7X26CL4djObD2NAs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kCaKRJf+Vn2OT89NOcF1NgQfWR/tgj3TFSoRTkkVdFa8Qg+5LcQd+E0Yb8Vh92KSr
-	 x92TEWcp6Bzs5RH2t7sDahk2eEtURmn6fAQSnnpkc43B6PSFPweA+3sl9g+OPOvZrC
-	 1e+WPVJdpvid7vRzfFRvlQehV4+RoeWO+ndlk0gI=
+	by mail.kernel.org (Postfix) with ESMTP id 8693E2087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:43:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TKQjb330"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfEPEkj (ORCPT
+        id S1726429AbfEPEnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 00:40:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48240 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726347AbfEPEki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 00:40:38 -0400
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41E342177B
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 04:40:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557981637;
-        bh=38ylCjlm5iAP/Ou8rSegy/JItYb7X26CL4djObD2NAs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Oc4gkqwIBEAfsGndmhrY2fSi23HeojozZkvemcvde6sChHVslDNFY4pYPkZh/BYLH
-         XJ+o9tpsEiU4rBqW5zU81Xl1XAIAR3DzjocV7BtNijI2RaaEt/HC98GfICXGSfRCrd
-         4KJCj7QBPzmgS19OzZNQVHk9PNL2hPc1zr6yW7l4=
-Received: by mail-wm1-f52.google.com with SMTP id n25so1594445wmk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 21:40:37 -0700 (PDT)
-X-Gm-Message-State: APjAAAVIntiCJpt4rcApNYtzeD3s574reYWrQjK9VDdp7IltkMl7D43C
-        Y6AFPK71Pfqvd+B8JJDcCZwK8HjXLMdUo0oGfHzHNQ==
-X-Google-Smtp-Source: APXvYqzROYtIxqkjhdn79+zJ7p3zNsiMWwvYuddRT0OAHYdmnxPjv/FuKmbs6R9PAXuS/de56lFOw6TKw5WA5KIsla4=
-X-Received: by 2002:a1c:486:: with SMTP id 128mr24234379wme.83.1557981635591;
- Wed, 15 May 2019 21:40:35 -0700 (PDT)
+        Thu, 16 May 2019 00:43:19 -0400
+Received: from mail-pg1-f182.google.com ([209.85.215.182]:38857 "EHLO
+        mail-pg1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfEPEnT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 00:43:19 -0400
+Received: by mail-pg1-f182.google.com with SMTP id j26so904310pgl.5;
+        Wed, 15 May 2019 21:43:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=wN34173xpf/6mtqZSpgPuozTnCy2fGMnh6ji7J9ET1Y=;
+        b=TKQjb330FOL2RQf5vMjT20pzorPLk8Tb5+r7NPZUjOrWakRLrilk9dQ31QT3Ergn4k
+         Gd7t8AzO0ybrgTwDZhLtwNYqTOs1CWoRxqjiOcdSTFSfAuW3iJ9QQN2gyZKxPD+6CsYb
+         dsjruKZmxbLM5v0c70ICed4S+eDc5xSZ6AL+V1nBflKzyr9SjLHJU+KSuHIEuWBjc5Vm
+         /qKEHIVY5FAuRI26uMfz2uuzI6Z6LesFBvdtRCGW28PF96GcVGrSXwG878RMQW0kha8u
+         LRogtxpRXh18aDOFBJbISXqqAqT96eUz4k59s4nYcnFnT+8yBYvNpsyoqboJVAo4By1A
+         rjkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=wN34173xpf/6mtqZSpgPuozTnCy2fGMnh6ji7J9ET1Y=;
+        b=SNR4UfrY8wZBHsdCUCATqZOzIB+lMBPvXoj2qE1/u+2ohioHu4+DQw+3Zo8GhGPROY
+         pzPEAXlGGzEk3+VoMwxUjBeZYjS+P8ivOYB5/9TMALABqyb6Cd2AN79MkQVoa7NHzTiK
+         LNF0KrcFJVsGqIb2Nlhn/Svs06FFDBdLfubGz8XL+wpSmyyXYane6b6SY0t7+we5x/PY
+         pZrIWvCYnE2NgKjtghx0BruEhi1+zKoyzHZhu873fgG3+at8BfQRJSJ7Pm2IUvsKZOSw
+         +qhW+tu6VetP0aA2qVYk98nRitzOC9Ex/OXTelG8d+5+GhOfsbCxP0qFlW/eW60ys79V
+         3xPw==
+X-Gm-Message-State: APjAAAVCrvaIGecjBMXyHYr5pFXhodHALl7JVGbSkggGIBF31s8OmCrn
+        gwFlh06VBsDMoYSRsOOXhjU=
+X-Google-Smtp-Source: APXvYqzhON08IhcpMOKp1b2wceuN+XNO7KkXMqXPwgiIfpSN4oRcNwitGNgmg3zRaosphPjylxR/yA==
+X-Received: by 2002:a65:5c8c:: with SMTP id a12mr48030291pgt.452.1557981798080;
+        Wed, 15 May 2019 21:43:18 -0700 (PDT)
+Received: from localhost.localdomain ([2601:644:8201:32e0:7256:81ff:febd:926d])
+        by smtp.gmail.com with ESMTPSA id l23sm3905562pgh.68.2019.05.15.21.43.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 21:43:16 -0700 (PDT)
+Date:   Wed, 15 May 2019 21:43:14 -0700
+From:   Eduardo Valentin <edubezval@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Rui Zhang <rui.zhang@intel.com>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Thermal-SoC management changes for v5.2-rc1
+Message-ID: <20190516044313.GA17751@localhost.localdomain>
 MIME-Version: 1.0
-References: <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
- <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com> <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
- <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com> <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com> <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190514204527.GC1977@linux.intel.com> <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
- <20190515013031.GF1977@linux.intel.com> <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
- <alpine.LRH.2.21.1905160543070.19802@namei.org> <CALCETrX_Q6qwNRNF0TL2tgfm1j6DKLX7NVHHmWbMFtk3WnHDKw@mail.gmail.com>
- <alpine.LRH.2.21.1905160844130.29250@namei.org> <CALCETrX2ovRx3Rre+1_xC-q6CiybyLjQ-gmB4FZF_qCZ-Qd+4A@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E38CD@ORSMSX116.amr.corp.intel.com>
-In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F654E38CD@ORSMSX116.amr.corp.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 15 May 2019 21:40:23 -0700
-X-Gmail-Original-Message-ID: <CALCETrUfmyQ7ivNzQic0FyPXe1fmAnoK093jnz0i8DRn2LvdSA@mail.gmail.com>
-Message-ID: <CALCETrUfmyQ7ivNzQic0FyPXe1fmAnoK093jnz0i8DRn2LvdSA@mail.gmail.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On May 15, 2019, at 8:03 PM, Xing, Cedric <cedric.xing@intel.com> wrote:
->
-> Hi Andy,
->
->> From: Andy Lutomirski [mailto:luto@kernel.org]
->>
->>> On Wed, May 15, 2019 at 3:46 PM James Morris <jmorris@namei.org> wrote:
->>>
->>> On Wed, 15 May 2019, Andy Lutomirski wrote:
->>>
->>>>> Why not just use an xattr, like security.sgx ?
->>>>
->>>> Wouldn't this make it so that only someone with CAP_MAC_ADMIN could
->>>> install an enclave?  I think that this decision should be left up the
->>>> administrator, and it should be easy to set up a loose policy where
->>>> anyone can load whatever enclave they want.  That's what would happen
->>>> in my proposal if there was no LSM loaded or of the LSM policy didn't
->>>> restrict what .sigstruct files were acceptable.
->>>>
->>>
->>> You could try user.sigstruct, which does not require any privs.
->>>
->>
->> I don't think I understand your proposal.  What file would this
->> attribute be on?  What would consume it?
->>
->> I'm imagining that there's some enclave in a file
->> crypto_thingy.enclave.  There's also a file crypto_thingy.sigstruct.
->> crypto_thingy.enclave has type lib_t or similar so that it's
->> executable.  crypto_thingy.sigstruct has type sgx_sigstruct_t.  The
->> enclave loader does, in effect:
->>
->> void *source_data =3D mmap(crypto_thingy.enclave, PROT_READ | PROT_EXEC,=
- ...);
->> int sigstruct_fd =3D open("crypto_thingy.sigstruct", O_RDONLY);
->> int enclave_fd =3D open("/dev/sgx/enclave", O_RDWR);
->>
->> ioctl(enclave_fd, SGX_IOC_ADD_SOME_DATA, source_data + source_offset,
->> enclave_offset, len, ...);
->> ioctl(enclave_fd, SGX_IOC_ADD_SOME_DATA, source_data + source_offset2,
->> enclave_offset2, len, ...);
->> etc.
->>
->> /* Here's where LSMs get to check that the sigstruct is acceptable.
->> The CPU will check that the sigstruct matches the enclave. */
->> ioctl(enclave_fd, SGX_INIT_THE_ENCLAVE, sigstruct_fd);
->
-> SIGSTRUCT isn't necessarily stored on disk so may not always have a fd. H=
-ow about the following?
-> void *ss_pointer =3D mmap(sigstruct_fd, PROT_READ,...);
-> ioctl(enclave_fd, SGX_INIT_THE_ENCLAVE, ss_pointer);
->
-> The idea here is SIGSTRUCT will still be passed in memory so it works the=
- same way when no LSM modules are loaded or basing its decision on the .sig=
-struct file. Otherwise, an LSM module can figure out the backing file (and =
-offset within that file) by looking into the VMA covering ss_pointer.
+Hello Linus,
 
-I don=E2=80=99t love this approach.  Application authors seem likely to use
-read() instead of mmap(), and it=E2=80=99ll still work in many cares. It wo=
-uld
-also complicate the kernel implementation, and looking at the inode
-backing the vma that backs a pointer is at least rather unusual.
-Instead, if the sigstruct isn=E2=80=99t on disk because it=E2=80=99s dynami=
-c or came
-from a network, the application can put it in a memfd.
+Please consider the following thermal soc changes for v5.2-rc1.
 
->
->>
->> /* Actually map the thing */
->> mmap(enclave_fd RO section, PROT_READ, ...);
->> mmap(enclave_fd RW section, PROT_READ | PROT_WRITE, ...);
->> mmap(enclave_fd RX section, PROT_READ | PROT_EXEC, ...);
->>
->> /* This should fail unless EXECMOD is available, I think */
->> mmap(enclave_fd RWX section, PROT_READ | PROT_WRITE | PROT_EXEC);
->>
->> And the idea here is that, if the .enclave file isn't mapped
->> PROT_EXEC, then mmapping the RX section will also require EXECMEM or
->> EXECMOD.
->
-> From security perspective, I think it reasonable to give EXECMEM and EXEC=
-MOD to /dev/sgx/enclave because the actual permissions are guarded by EPCM =
-permissions, which are "inherited" from the source pages, whose permissions=
- have passed LSM checks.
+The following changes since commit 37624b58542fb9f2d9a70e6ea006ef8a5f66c30b:
 
-I disagree.  If you deny a program EXECMOD, it=E2=80=99s not because you
-distrust the program. It=E2=80=99s because you want to enforce good securit=
-y
-practices.  (Or you=E2=80=99re Apple and want to disallow third-party JITs.=
-)
-A policy that accepts any sigstruct but requires that enclaves come
-from disk and respect W^X seems entirely reasonable.
+  Linux 5.1-rc7 (2019-04-28 17:04:13 -0700)
 
-I think that blocking EXECMOD has likely served two very real security
-purposes. It helps force application and library developers to write
-and compile their code in a way that doesn=E2=80=99t rely on dangerous tric=
-ks
-like putting executable trampolines on the stack.  It also makes it
-essentially impossible for an exploit to run actual downloaded machine
-code =E2=80=94 if there is no way to run code that isn=E2=80=99t appropriat=
-ely
-labeled, then attackers are more limited in what they can do.
+are available in the git repository at:
 
-I don=E2=80=99t think that SGX should become an exception to either of thes=
-e.
-Code should not have an excuse to use WX memory just because it=E2=80=99s i=
-n
-an enclave. Similarly, an exploit should not be able to run an
-attacker-supplied enclave as a way around a policy that would
-otherwise prevent downloaded code from running.
+  git://git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal linus
 
+for you to fetch changes up to 37bcec5d9f71bd13142a97d2196b293c9ac23823:
 
-=E2=80=94Andy
+  hwmon: (pwm-fan) Use devm_thermal_of_cooling_device_register (2019-05-14 07:00:47 -0700)
+
+Specifics:
+- thermal core has a new devm_* API for registering cooling devices, thanks to Guenter R.
+  I took the entire series, that is why you see changes on drivers/hwmon in this pull.
+- rockchip thermal driver gains support to PX30 SoC, thanks to Elaine Z.
+- the generic-adc thermal driver now considers the lookup table DT property as optional,
+  thanks to Jean-Francois D.
+- Refactoring of tsens thermal driver, thanks to Amit K.
+- Cleanups on cpu cooling driver, thanks to Daniel L.
+- broadcom thermal driver dropped support to ACPI, thanks to Srinath M.
+- tegra thermal driver gains support to OC hw throttle and GPU throtle, thanks to Wei Ni.
+- Fixes in several thermal drivers.
+
+BR,
+
+Eduardo Valentin
+
+----------------------------------------------------------------
+Amit Kucheria (21):
+      drivers: thermal: tsens: Document the data structures
+      drivers: thermal: tsens: Rename tsens_data
+      drivers: thermal: tsens: Rename tsens_device
+      drivers: thermal: tsens: Rename variable tmdev
+      drivers: thermal: tsens: Use consistent names for variables
+      drivers: thermal: tsens: Function prototypes should have argument names
+      drivers: thermal: tsens: Rename tsens-8916 to prepare to merge with tsens-8974
+      drivers: thermal: tsens: Rename constants to prepare to merge with tsens-8974
+      drivers: thermal: tsens: Merge tsens-8974 into tsens-v0_1
+      drivers: thermal: tsens: Introduce reg_fields to deal with register description
+      drivers: thermal: tsens: Save reference to the device pointer and use it
+      drivers: thermal: tsens: Don't print error message on -EPROBE_DEFER
+      drivers: thermal: tsens: Add new operation to check if a sensor is enabled
+      drivers: thermal: tsens: change data type for sensor IDs
+      drivers: thermal: tsens: Introduce IP-specific max_sensor count
+      drivers: thermal: tsens: simplify get_temp_tsens_v2 routine
+      drivers: thermal: tsens: Move get_temp_tsens_v2 to allow sharing
+      drivers: thermal: tsens: Common get_temp() learns to do ADC conversion
+      dt: thermal: tsens: Add bindings for qcs404
+      drivers: thermal: tsens: Add generic support for TSENS v1 IP
+      drivers: thermal: tsens: Move calibration constants to header file
+
+Andrey Smirnov (1):
+      thermal: qoriq: Remove unnecessary DT node is NULL check
+
+Daniel Lezcano (4):
+      thermal/drivers/cpu_cooling: Remove pointless test in power2state()
+      thermal/drivers/cpu_cooling: Fixup the header and copyright
+      thermal/drivers/cpu_cooling: Add Software Package Data Exchange (SPDX)
+      thermal/drivers/cpu_cooling: Remove pointless field
+
+Elaine Zhang (3):
+      thermal: rockchip: fix up the tsadc pinctrl setting error
+      dt-bindings: rockchip-thermal: Support the PX30 SoC compatible
+      thermal: rockchip: Support the PX30 SoC in thermal driver
+
+Enrico Weigelt, metux IT consult (1):
+      drivers: thermal: Kconfig: pedantic cleanups
+
+Guenter Roeck (6):
+      thermal: Introduce devm_thermal_of_cooling_device_register
+      hwmon: (aspeed-pwm-tacho) Use devm_thermal_of_cooling_device_register
+      hwmon: (gpio-fan) Use devm_thermal_of_cooling_device_register
+      hwmon: (mlxreg-fan) Use devm_thermal_of_cooling_device_register
+      hwmon: (npcm750-pwm-fan) Use devm_thermal_of_cooling_device_register
+      hwmon: (pwm-fan) Use devm_thermal_of_cooling_device_register
+
+Hoan Nguyen An (1):
+      thermal: rcar_gen3_thermal: Fix init value of IRQCTL register
+
+Jean-Francois Dagenais (2):
+      thermal: generic-adc: make lookup table optional
+      dt-bindings: thermal: generic-adc: make lookup-table optional
+
+Jiada Wang (3):
+      thermal: rcar_gen3_thermal: fix interrupt type
+      thermal: rcar_gen3_thermal: disable interrupt in .remove
+      thermal: rcar_gen3_thermal: Fix to show correct trip points number
+
+Matthias Kaehlcke (1):
+      thermal: cpu_cooling: Actually trace CPU load in thermal_power_cpu_get_power
+
+Srinath Mannam (1):
+      thermal: broadcom: Remove ACPI support
+
+Talel Shenhar (3):
+      dt-bindings: thermal: al-thermal: Add binding documentation
+      thermal: Introduce Amazon's Annapurna Labs Thermal Driver
+      thermal: Fix build error of missing devm_ioremap_resource on UM
+
+Wei Ni (9):
+      of: Add bindings of thermtrip for Tegra soctherm
+      thermal: tegra: support hw and sw shutdown
+      of: Add bindings of gpu hw throttle for Tegra soctherm
+      thermal: tegra: add support for gpu hw-throttle
+      thermal: tegra: add support for thermal IRQ
+      thermal: tegra: add set_trips functionality
+      thermal: tegra: add support for EDP IRQ
+      of: Add bindings of OC hw throttle for Tegra soctherm
+      thermal: tegra: enable OC hw throttle
+
+Wolfram Sang (1):
+      thermal: stm32: simplify getting .driver_data
+
+Yangtao Li (1):
+      of: thermal: Improve print information
+
+Yoshihiro Kaneko (1):
+      thermal: rcar_thermal: update calculation formula for R-Car Gen3 SoCs
+
+ .../bindings/thermal/amazon,al-thermal.txt         |  33 +
+ .../bindings/thermal/nvidia,tegra124-soctherm.txt  |  62 +-
+ .../devicetree/bindings/thermal/qcom-tsens.txt     |  14 +
+ .../bindings/thermal/rockchip-thermal.txt          |   1 +
+ .../bindings/thermal/thermal-generic-adc.txt       |  10 +-
+ MAINTAINERS                                        |   6 +
+ drivers/hwmon/aspeed-pwm-tacho.c                   |   6 +-
+ drivers/hwmon/gpio-fan.c                           |  25 +-
+ drivers/hwmon/mlxreg-fan.c                         |  31 +-
+ drivers/hwmon/npcm750-pwm-fan.c                    |   6 +-
+ drivers/hwmon/pwm-fan.c                            |  73 +-
+ drivers/thermal/Kconfig                            |  11 +
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/broadcom/sr-thermal.c              |   8 -
+ drivers/thermal/cpu_cooling.c                      |  30 +-
+ drivers/thermal/of-thermal.c                       |   3 +
+ drivers/thermal/qcom/Makefile                      |   4 +-
+ drivers/thermal/qcom/tsens-8916.c                  | 105 ---
+ drivers/thermal/qcom/tsens-8960.c                  |  84 +-
+ drivers/thermal/qcom/tsens-common.c                | 159 +++-
+ .../thermal/qcom/{tsens-8974.c => tsens-v0_1.c}    | 166 +++-
+ drivers/thermal/qcom/tsens-v1.c                    | 193 +++++
+ drivers/thermal/qcom/tsens-v2.c                    | 111 +--
+ drivers/thermal/qcom/tsens.c                       | 100 ++-
+ drivers/thermal/qcom/tsens.h                       | 291 ++++++-
+ drivers/thermal/qoriq_thermal.c                    |   5 -
+ drivers/thermal/rcar_gen3_thermal.c                |  51 +-
+ drivers/thermal/rcar_thermal.c                     |  11 +-
+ drivers/thermal/rockchip_thermal.c                 |  74 +-
+ drivers/thermal/st/Kconfig                         |  22 +-
+ drivers/thermal/st/stm_thermal.c                   |   6 +-
+ drivers/thermal/tegra/Kconfig                      |   4 +-
+ drivers/thermal/tegra/soctherm.c                   | 961 +++++++++++++++++++--
+ drivers/thermal/tegra/soctherm.h                   |  16 +
+ drivers/thermal/tegra/tegra124-soctherm.c          |   7 +-
+ drivers/thermal/tegra/tegra132-soctherm.c          |   7 +-
+ drivers/thermal/tegra/tegra210-soctherm.c          |  15 +-
+ drivers/thermal/thermal-generic-adc.c              |   9 +-
+ drivers/thermal/thermal_core.c                     |  49 ++
+ drivers/thermal/thermal_mmio.c                     | 129 +++
+ include/dt-bindings/thermal/tegra124-soctherm.h    |   8 +-
+ include/linux/thermal.h                            |  13 +
+ 42 files changed, 2330 insertions(+), 590 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/amazon,al-thermal.txt
+ delete mode 100644 drivers/thermal/qcom/tsens-8916.c
+ rename drivers/thermal/qcom/{tsens-8974.c => tsens-v0_1.c} (56%)
+ create mode 100644 drivers/thermal/qcom/tsens-v1.c
+ create mode 100644 drivers/thermal/thermal_mmio.c
