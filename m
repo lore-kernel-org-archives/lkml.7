@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6A8C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47541C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7F5220815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18FE020833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:03:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfEPQDb (ORCPT
+        id S1726871AbfEPP6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:03:31 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42606 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726812AbfEPP6n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 May 2019 11:58:43 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42324 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726314AbfEPP6k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 11:58:40 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImH-0006zd-9z; Thu, 16 May 2019 16:58:41 +0100
+        id 1hRImC-0006yg-U0; Thu, 16 May 2019 16:58:37 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImE-0001RD-DZ; Thu, 16 May 2019 16:58:38 +0100
+        id 1hRImC-0001Mc-DK; Thu, 16 May 2019 16:58:36 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Borislav Petkov" <bp@suse.de>,
-        "Frederic Weisbecker" <frederic@kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Jon Masters" <jcm@redhat.com>
-Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.115038243@decadent.org.uk>
+        "Ralf Baechle" <ralf@linux-mips.org>, linux-mips@linux-mips.org,
+        "Maciej W. Rozycki" <macro@codesourcery.com>
+Date:   Thu, 16 May 2019 16:55:32 +0100
+Message-ID: <lsq.1558022132.744609106@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 61/86] x86/msr-index: Cleanup bit defines
+Subject: [PATCH 3.16 04/86] MIPS: jump_label.c: Correct the span of the J
+ instruction
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,63 +56,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: "Maciej W. Rozycki" <macro@codesourcery.com>
 
-commit d8eabc37310a92df40d07c5a8afc53cebf996716 upstream.
+commit 99436f7d69045800ffd1d66912f85d37150c7e2b upstream.
 
-Greg pointed out that speculation related bit defines are using (1 << N)
-format instead of BIT(N). Aside of that (1 << N) is wrong as it should use
-1UL at least.
+Correct the check for the span of the 256MB segment addressable by the J
+instruction according to this instruction's semantics.  The calculation
+of the jump target is applied to the address of the delay-slot
+instruction that immediately follows.  Adjust the check accordingly by
+adding 4 to `e->code' that holds the address of the J instruction
+itself.
 
-Clean it up.
-
-[ Josh Poimboeuf: Fix tools build ]
-
-Reported-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Reviewed-by: Jon Masters <jcm@redhat.com>
-Tested-by: Jon Masters <jcm@redhat.com>
-[bwh: Backported to 3.16:
- - Since <asm/msr-index.h> is a UAPI header here, open-code BIT() and drop
-   changes under tools/
- - Drop changes to flush MSRs which we haven't defined]
+Signed-off-by: Maciej W. Rozycki <macro@codesourcery.com>
+Cc: linux-mips@linux-mips.org
+Patchwork: https://patchwork.linux-mips.org/patch/8515/
+Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/arch/x86/include/uapi/asm/msr-index.h
-+++ b/arch/x86/include/uapi/asm/msr-index.h
-@@ -33,14 +33,14 @@
+ arch/mips/kernel/jump_label.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--- a/arch/mips/kernel/jump_label.c
++++ b/arch/mips/kernel/jump_label.c
+@@ -27,8 +27,8 @@ void arch_jump_label_transform(struct ju
+ 	union mips_instruction *insn_p =
+ 		(union mips_instruction *)(unsigned long)e->code;
  
- /* Intel MSRs. Some also available on other CPUs */
- #define MSR_IA32_SPEC_CTRL		0x00000048 /* Speculation Control */
--#define SPEC_CTRL_IBRS			(1 << 0)   /* Indirect Branch Restricted Speculation */
-+#define SPEC_CTRL_IBRS			(1UL << 0) /* Indirect Branch Restricted Speculation */
- #define SPEC_CTRL_STIBP_SHIFT		1	   /* Single Thread Indirect Branch Predictor (STIBP) bit */
--#define SPEC_CTRL_STIBP			(1 << SPEC_CTRL_STIBP_SHIFT)	/* STIBP mask */
-+#define SPEC_CTRL_STIBP			(1UL << SPEC_CTRL_STIBP_SHIFT)	/* STIBP mask */
- #define SPEC_CTRL_SSBD_SHIFT		2	   /* Speculative Store Bypass Disable bit */
--#define SPEC_CTRL_SSBD			(1 << SPEC_CTRL_SSBD_SHIFT)	/* Speculative Store Bypass Disable */
-+#define SPEC_CTRL_SSBD			(1UL << SPEC_CTRL_SSBD_SHIFT) /* Speculative Store Bypass Disable */
+-	/* Jump only works within a 256MB aligned region. */
+-	BUG_ON((e->target & ~J_RANGE_MASK) != (e->code & ~J_RANGE_MASK));
++	/* Jump only works within a 256MB aligned region of its delay slot. */
++	BUG_ON((e->target & ~J_RANGE_MASK) != ((e->code + 4) & ~J_RANGE_MASK));
  
- #define MSR_IA32_PRED_CMD		0x00000049 /* Prediction Command */
--#define PRED_CMD_IBPB			(1 << 0)   /* Indirect Branch Prediction Barrier */
-+#define PRED_CMD_IBPB			(1UL << 0) /* Indirect Branch Prediction Barrier */
- 
- #define MSR_IA32_PERFCTR0		0x000000c1
- #define MSR_IA32_PERFCTR1		0x000000c2
-@@ -58,9 +58,9 @@
- #define MSR_MTRRcap			0x000000fe
- 
- #define MSR_IA32_ARCH_CAPABILITIES	0x0000010a
--#define ARCH_CAP_RDCL_NO		(1 << 0)   /* Not susceptible to Meltdown */
--#define ARCH_CAP_IBRS_ALL		(1 << 1)   /* Enhanced IBRS support */
--#define ARCH_CAP_SSB_NO			(1 << 4)   /*
-+#define ARCH_CAP_RDCL_NO		(1UL << 0) /* Not susceptible to Meltdown */
-+#define ARCH_CAP_IBRS_ALL		(1UL << 1) /* Enhanced IBRS support */
-+#define ARCH_CAP_SSB_NO			(1UL << 4) /*
- 						    * Not susceptible to Speculative Store Bypass
- 						    * attack, so no Speculative Store Bypass
- 						    * control required.
+ 	/* Target must have 4 byte alignment. */
+ 	BUG_ON((e->target & 3) != 0);
 
