@@ -2,233 +2,127 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03454C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CDAC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C074C2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 172592087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:40:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ALyc7P86"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tmUl4rNa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfEPPjm (ORCPT
+        id S1727468AbfEPPkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:39:42 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36243 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfEPPjl (ORCPT
+        Thu, 16 May 2019 11:40:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55062 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfEPPkH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:39:41 -0400
-Received: by mail-qt1-f194.google.com with SMTP id a17so4446705qth.3;
-        Thu, 16 May 2019 08:39:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2fucNeGLVJ+d2Z6pO2MAWI5egeSfRnpuIQ5sFO0bkEc=;
-        b=ALyc7P86MwlpsWVd/8dzfg0fvyKnwqsj8vk4XqqkLw97LH5dep5kyHSKzSSUyfCfbL
-         v8AoOMWhafLWcm0oz9YqTB1S4mXN3TyPjW8+h2AHcB6fhi+IXuUQXQDxyZV4yAZr136z
-         bDI+4IhEleyjUeC58ciECzON1kY0LQ5FwUouw/99gphcxABKnTBqAQv6moLzv87J5iXn
-         fde1tgapwHgCKc6znCgUOLd8xlUXleyqAv60OjVYNtYzb72Y0TnHPaEK6dsFeiXbVWzf
-         Lzx1vwmM2Bod09Y3ueY4fdhsGDLnmjVzDacKSc3YgqI6O0EoE+muSceMXoR0B1hG48m2
-         7+Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2fucNeGLVJ+d2Z6pO2MAWI5egeSfRnpuIQ5sFO0bkEc=;
-        b=HLXLeP+bO4t5+Lav68o7MDavpi+v3kkpzEtA15qDI7/T93EqWXCNkxcTTHh/naC4Ip
-         SdufWmpj6r2O6Cv5neOXTsv+TmDBWHpCUpe3eJzMcEuwMXYr0wSVYlWUJHKpkyDJSx0k
-         cuSlCT7WcaIOEIQKx3Fi1JGHbN9ROCKKhGuf2dLYi/xzfh5IVyb2+SUdv7StzjbI8MWf
-         3ftck8BwBV3xr1pBK0drShmf1zFhTxsInG5t6Upj9xsvSJC+jFlmlQ9n3659nN8hGc4a
-         uQeDL9vUOlTD5aeKW7flKi4KTzFVegwdb2ZzwsnHTnp8JGsa9OXQ87uQj6Z0JIEQ1QvP
-         WOqA==
-X-Gm-Message-State: APjAAAUID+GcusyhoMopdsUGaBNzVqYBckLjQaUbaw33WlIVISbmgXN+
-        kTdu60bAmCWgLhHWZBoiJgteWCPMZzwht7Lk7E0=
-X-Google-Smtp-Source: APXvYqyYzYJ8p/LjkZLq3rUwySlBVWphza95OT9qxYPQIBK34vYrTSB1qPi5f4QtPVEucfBgw0aPxekJkUwIvXClPGg=
-X-Received: by 2002:ac8:538f:: with SMTP id x15mr8270285qtp.263.1558021180433;
- Thu, 16 May 2019 08:39:40 -0700 (PDT)
+        Thu, 16 May 2019 11:40:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PHR0hYYEwPULziU46CMKQKc5SNs9O4WaI8hYyRJBMJY=; b=tmUl4rNa0e8kPfHmpmAiiRHx9
+        ps9QR8Gt8+nO7MO7sYMHwLW55WTc+VdHPlZ+LRyA1BWJ1riXwNU92+JHINbtKi2D69twAz2g5e+rR
+        Uv8ts+rT6CMJ9etGQROToSbN5J52CipEuy4FI2bBfgebVRU4G+dyi5iwld2dOFD4vMScfS59smfuW
+        THcVKoDjdW3iyJ8Sj52mDoRi/zM1QNJJ+h0ay07z7qz3YWT6oMjSpCycObIQImYBrBpZafTJg/F6S
+        R+TukXMxw63UBohzqSeg+nwhn9Ev7S3vTibExMt4CWLx511oULO+eEwcrF32NMmVlHW6PkGOyfYTE
+        VPg0uqBTA==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hRIUA-0007tb-37; Thu, 16 May 2019 15:39:58 +0000
+Subject: Re: [PATCH v3 3/3] fdt: add support for rng-seed
+To:     Hsin-Yi Wang <hsinyi@chromium.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Frank Rowand <frowand.list@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Miles Chen <miles.chen@mediatek.com>,
+        James Morse <james.morse@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kees Cook <keescook@chromium.org>
+References: <20190516102817.188519-1-hsinyi@chromium.org>
+ <20190516102817.188519-3-hsinyi@chromium.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <932a02f2-a1d3-a8d7-c7a4-2891024d10a2@infradead.org>
+Date:   Thu, 16 May 2019 08:39:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190509111849.22927-1-marcos.souza.org@gmail.com> <20190516112317.GA8611@geeko>
-In-Reply-To: <20190516112317.GA8611@geeko>
-From:   Song Liu <liu.song.a23@gmail.com>
-Date:   Thu, 16 May 2019 08:39:29 -0700
-Message-ID: <CAPhsuW6i2N-pLcUEC7g3VZxBOMOhEJ8=cS3FwQonf3529=x_Mg@mail.gmail.com>
-Subject: Re: [PATCH] drivers: md: Unify common definitions of raid1 and raid10
-To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        NeilBrown <neilb@suse.com>, Shaohua Li <shli@kernel.org>,
-        "open list:SOFTWARE RAID (Multiple Disks) SUPPORT" 
-        <linux-raid@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190516102817.188519-3-hsinyi@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 4:24 AM Marcos Paulo de Souza
-<marcos.souza.org@gmail.com> wrote:
->
-> ping.
->
+On 5/16/19 3:28 AM, Hsin-Yi Wang wrote:
+> Introducing a chosen node, rng-seed, which is an entropy that can be
+> passed to kernel called very early to increase initial device
+> randomness. Bootloader should provide this entropy and the value is
+> read from /chosen/rng-seed in DT.
+> 
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+> change v2->v3:
+> 1. use arch hook for fdt pgprot change
+> 2. handle CONFIG_KEXEC
+> ---
+>  Documentation/devicetree/bindings/chosen.txt | 14 +++++
+>  drivers/of/fdt.c                             | 55 ++++++++++++++++++++
+>  2 files changed, 69 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> index 45e79172a646..fef5c82672dc 100644
+> --- a/Documentation/devicetree/bindings/chosen.txt
+> +++ b/Documentation/devicetree/bindings/chosen.txt
+> @@ -28,6 +28,20 @@ mode) when EFI_RNG_PROTOCOL is supported, it will be overwritten by
+>  the Linux EFI stub (which will populate the property itself, using
+>  EFI_RNG_PROTOCOL).
+>  
+> +rng-seed
+> +-----------
+> +
+> +This property served as an entropy to add device randomness. It is parsed
 
-Thanks for the patch. I will process it after the merge window closes.
+                 serves
 
-Song
 
-> On Thu, May 09, 2019 at 08:18:49AM -0300, Marcos Paulo de Souza wrote:
-> > These definitions are being moved to raid1-10.c.
-> >
-> > Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-> > ---
-> >  drivers/md/raid1-10.c | 25 +++++++++++++++++++++++++
-> >  drivers/md/raid1.c    | 29 ++---------------------------
-> >  drivers/md/raid10.c   | 27 +--------------------------
-> >  3 files changed, 28 insertions(+), 53 deletions(-)
-> >
-> > diff --git a/drivers/md/raid1-10.c b/drivers/md/raid1-10.c
-> > index 400001b815db..7d968bf08e54 100644
-> > --- a/drivers/md/raid1-10.c
-> > +++ b/drivers/md/raid1-10.c
-> > @@ -3,6 +3,31 @@
-> >  #define RESYNC_BLOCK_SIZE (64*1024)
-> >  #define RESYNC_PAGES ((RESYNC_BLOCK_SIZE + PAGE_SIZE-1) / PAGE_SIZE)
-> >
-> > +/*
-> > + * Number of guaranteed raid bios in case of extreme VM load:
-> > + */
-> > +#define      NR_RAID_BIOS 256
-> > +
-> > +/* when we get a read error on a read-only array, we redirect to another
-> > + * device without failing the first device, or trying to over-write to
-> > + * correct the read error.  To keep track of bad blocks on a per-bio
-> > + * level, we store IO_BLOCKED in the appropriate 'bios' pointer
-> > + */
-> > +#define IO_BLOCKED ((struct bio *)1)
-> > +/* When we successfully write to a known bad-block, we need to remove the
-> > + * bad-block marking which must be done from process context.  So we record
-> > + * the success by setting devs[n].bio to IO_MADE_GOOD
-> > + */
-> > +#define IO_MADE_GOOD ((struct bio *)2)
-> > +
-> > +#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
-> > +
-> > +/* When there are this many requests queue to be written by
-> > + * the raid thread, we become 'congested' to provide back-pressure
-> > + * for writeback.
-> > + */
-> > +static int max_queued_requests = 1024;
-> > +
-> >  /* for managing resync I/O pages */
-> >  struct resync_pages {
-> >       void            *raid_bio;
-> > diff --git a/drivers/md/raid1.c b/drivers/md/raid1.c
-> > index 0c8a098d220e..bb052c35bf29 100644
-> > --- a/drivers/md/raid1.c
-> > +++ b/drivers/md/raid1.c
-> > @@ -50,31 +50,6 @@
-> >        (1L << MD_HAS_PPL) |           \
-> >        (1L << MD_HAS_MULTIPLE_PPLS))
-> >
-> > -/*
-> > - * Number of guaranteed r1bios in case of extreme VM load:
-> > - */
-> > -#define      NR_RAID1_BIOS 256
-> > -
-> > -/* when we get a read error on a read-only array, we redirect to another
-> > - * device without failing the first device, or trying to over-write to
-> > - * correct the read error.  To keep track of bad blocks on a per-bio
-> > - * level, we store IO_BLOCKED in the appropriate 'bios' pointer
-> > - */
-> > -#define IO_BLOCKED ((struct bio *)1)
-> > -/* When we successfully write to a known bad-block, we need to remove the
-> > - * bad-block marking which must be done from process context.  So we record
-> > - * the success by setting devs[n].bio to IO_MADE_GOOD
-> > - */
-> > -#define IO_MADE_GOOD ((struct bio *)2)
-> > -
-> > -#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
-> > -
-> > -/* When there are this many requests queue to be written by
-> > - * the raid1 thread, we become 'congested' to provide back-pressure
-> > - * for writeback.
-> > - */
-> > -static int max_queued_requests = 1024;
-> > -
-> >  static void allow_barrier(struct r1conf *conf, sector_t sector_nr);
-> >  static void lower_barrier(struct r1conf *conf, sector_t sector_nr);
-> >
-> > @@ -2955,7 +2930,7 @@ static struct r1conf *setup_conf(struct mddev *mddev)
-> >       if (!conf->poolinfo)
-> >               goto abort;
-> >       conf->poolinfo->raid_disks = mddev->raid_disks * 2;
-> > -     err = mempool_init(&conf->r1bio_pool, NR_RAID1_BIOS, r1bio_pool_alloc,
-> > +     err = mempool_init(&conf->r1bio_pool, NR_RAID_BIOS, r1bio_pool_alloc,
-> >                          r1bio_pool_free, conf->poolinfo);
-> >       if (err)
-> >               goto abort;
-> > @@ -3240,7 +3215,7 @@ static int raid1_reshape(struct mddev *mddev)
-> >       newpoolinfo->mddev = mddev;
-> >       newpoolinfo->raid_disks = raid_disks * 2;
-> >
-> > -     ret = mempool_init(&newpool, NR_RAID1_BIOS, r1bio_pool_alloc,
-> > +     ret = mempool_init(&newpool, NR_RAID_BIOS, r1bio_pool_alloc,
-> >                          r1bio_pool_free, newpoolinfo);
-> >       if (ret) {
-> >               kfree(newpoolinfo);
-> > diff --git a/drivers/md/raid10.c b/drivers/md/raid10.c
-> > index 3b6880dd648d..24cb116d950f 100644
-> > --- a/drivers/md/raid10.c
-> > +++ b/drivers/md/raid10.c
-> > @@ -73,31 +73,6 @@
-> >   *    [B A] [D C]    [B A] [E C D]
-> >   */
-> >
-> > -/*
-> > - * Number of guaranteed r10bios in case of extreme VM load:
-> > - */
-> > -#define      NR_RAID10_BIOS 256
-> > -
-> > -/* when we get a read error on a read-only array, we redirect to another
-> > - * device without failing the first device, or trying to over-write to
-> > - * correct the read error.  To keep track of bad blocks on a per-bio
-> > - * level, we store IO_BLOCKED in the appropriate 'bios' pointer
-> > - */
-> > -#define IO_BLOCKED ((struct bio *)1)
-> > -/* When we successfully write to a known bad-block, we need to remove the
-> > - * bad-block marking which must be done from process context.  So we record
-> > - * the success by setting devs[n].bio to IO_MADE_GOOD
-> > - */
-> > -#define IO_MADE_GOOD ((struct bio *)2)
-> > -
-> > -#define BIO_SPECIAL(bio) ((unsigned long)bio <= 2)
-> > -
-> > -/* When there are this many requests queued to be written by
-> > - * the raid10 thread, we become 'congested' to provide back-pressure
-> > - * for writeback.
-> > - */
-> > -static int max_queued_requests = 1024;
-> > -
-> >  static void allow_barrier(struct r10conf *conf);
-> >  static void lower_barrier(struct r10conf *conf);
-> >  static int _enough(struct r10conf *conf, int previous, int ignore);
-> > @@ -3684,7 +3659,7 @@ static struct r10conf *setup_conf(struct mddev *mddev)
-> >
-> >       conf->geo = geo;
-> >       conf->copies = copies;
-> > -     err = mempool_init(&conf->r10bio_pool, NR_RAID10_BIOS, r10bio_pool_alloc,
-> > +     err = mempool_init(&conf->r10bio_pool, NR_RAID_BIOS, r10bio_pool_alloc,
-> >                          r10bio_pool_free, conf);
-> >       if (err)
-> >               goto out;
-> > --
-> > 2.21.0
-> >
->
-> --
-> Thanks,
-> Marcos
+> +as a byte array, e.g.
+> +
+> +/ {
+> +	chosen {
+> +		rng-seed = <0x31 0x95 0x1b 0x3c 0xc9 0xfa 0xb3 ...>;
+> +	};
+> +};
+> +
+> +This random value should be provided by bootloader.
+> +
+>  stdout-path
+>  -----------
+>  
+
+
+
+-- 
+~Randy
