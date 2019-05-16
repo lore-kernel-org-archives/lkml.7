@@ -2,340 +2,199 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D69C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840CAC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7C4E20645
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50A5B20645
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:53:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hStxZEju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbfEPLwi (ORCPT
+        id S1727624AbfEPLxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:52:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38606 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726878AbfEPLwh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:52:37 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 65EF6308FEC1;
-        Thu, 16 May 2019 11:52:37 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-61.rdu2.redhat.com [10.10.120.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 914746A25A;
-        Thu, 16 May 2019 11:52:35 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 4/4] uapi: Wire up the mount API syscalls on non-x86 arches
- [ver #2]
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
-Cc:     Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@arndb.de>,
-        dhowells@redhat.com, christian@brauner.io, arnd@arndb.de,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 16 May 2019 12:52:34 +0100
-Message-ID: <155800755482.4037.14407450837395686732.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155800752418.4037.9567789434648701032.stgit@warthog.procyon.org.uk>
-References: <155800752418.4037.9567789434648701032.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Thu, 16 May 2019 07:53:33 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:4741 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbfEPLxd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:53:33 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cdd4f410000>; Thu, 16 May 2019 04:53:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 16 May 2019 04:53:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 16 May 2019 04:53:30 -0700
+Received: from HQMAIL112.nvidia.com (172.18.146.18) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 May
+ 2019 11:53:30 +0000
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL112.nvidia.com
+ (172.18.146.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 May
+ 2019 11:53:30 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 16 May 2019 11:53:30 +0000
+Received: from kyarlagadda-linux.nvidia.com (Not Verified[10.19.64.169]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cdd4f370000>; Thu, 16 May 2019 04:53:29 -0700
+From:   Krishna Yarlagadda <kyarlagadda@nvidia.com>
+To:     <linus.walleij@linaro.org>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <pdeschrijver@nvidia.com>, <josephl@nvidia.com>,
+        <smangipudi@nvidia.com>, <ldewangan@nvidia.com>,
+        <vidyas@nvidia.com>, Krishna Yarlagadda <kyarlagadda@nvidia.com>
+Subject: [PATCH V3 1/4] dt-binding: Tegra194 pinctrl support
+Date:   Thu, 16 May 2019 17:23:11 +0530
+Message-ID: <1558007594-14824-1-git-send-email-kyarlagadda@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 16 May 2019 11:52:37 +0000 (UTC)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558007617; bh=c+YpXF05rlm4EMkpRgTcr8+uuVrXJmn3e/VNxp+q8K0=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=hStxZEjuc3HtPn+RNYp/FlLmA5aiXzvfl40GFhxhJzH2OHKQojMk80M0YXyQX6Usv
+         u+a+19XekCQjd5cX4VTgcmuKpIDznipvQJqdylc8hkfcsoME/15GEUGR/KmubpbjTI
+         zkQPPNXPv1Hos2brOD0FAXOIWVTrHCbllb/KEtEIcb4lQDSdhGzIR/36QqE+UnGMmi
+         sMELqBVaA7VZyFETvFDRLnuNcgy0xTrdQEd+VV/xUc5bhH2f0Hmi0/WF4dkPYZNmze
+         TajUNNJ//gys0OacT21HxFT+Us7ksYFdYDl1omiRWCEMzDlztNYZXonncNfxbppOzE
+         3TePwyw7UsssA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wire up the mount API syscalls on non-x86 arches.
+Add binding doc for Tegra 194 pinctrl driver
 
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
 ---
+Changes in V3:
+remove optional fields not supported by pins published here
 
- arch/alpha/kernel/syscalls/syscall.tbl      |    6 ++++++
- arch/arm/tools/syscall.tbl                  |    6 ++++++
- arch/arm64/include/asm/unistd.h             |    2 +-
- arch/arm64/include/asm/unistd32.h           |   12 ++++++++++++
- arch/ia64/kernel/syscalls/syscall.tbl       |    6 ++++++
- arch/m68k/kernel/syscalls/syscall.tbl       |    6 ++++++
- arch/microblaze/kernel/syscalls/syscall.tbl |    6 ++++++
- arch/mips/kernel/syscalls/syscall_n32.tbl   |    6 ++++++
- arch/mips/kernel/syscalls/syscall_n64.tbl   |    6 ++++++
- arch/mips/kernel/syscalls/syscall_o32.tbl   |    6 ++++++
- arch/parisc/kernel/syscalls/syscall.tbl     |    6 ++++++
- arch/powerpc/kernel/syscalls/syscall.tbl    |    6 ++++++
- arch/s390/kernel/syscalls/syscall.tbl       |    6 ++++++
- arch/sh/kernel/syscalls/syscall.tbl         |    6 ++++++
- arch/sparc/kernel/syscalls/syscall.tbl      |    6 ++++++
- arch/xtensa/kernel/syscalls/syscall.tbl     |    6 ++++++
- include/uapi/asm-generic/unistd.h           |   14 +++++++++++++-
- 17 files changed, 110 insertions(+), 2 deletions(-)
+ .../bindings/pinctrl/nvidia,tegra194-pinmux.txt    | 107 +++++++++++++++++++++
+ 1 file changed, 107 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
 
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index 165f268beafc..9e7704e44f6d 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -467,3 +467,9 @@
- 535	common	io_uring_setup			sys_io_uring_setup
- 536	common	io_uring_enter			sys_io_uring_enter
- 537	common	io_uring_register		sys_io_uring_register
-+538	common	open_tree			sys_open_tree
-+539	common	move_mount			sys_move_mount
-+540	common	fsopen				sys_fsopen
-+541	common	fsconfig			sys_fsconfig
-+542	common	fsmount				sys_fsmount
-+543	common	fspick				sys_fspick
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index 0393917eaa57..aaf479a9e92d 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -441,3 +441,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-index f2a83ff6b73c..70e6882853c0 100644
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -44,7 +44,7 @@
- #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
- #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
- 
--#define __NR_compat_syscalls		428
-+#define __NR_compat_syscalls		434
- #endif
- 
- #define __ARCH_WANT_SYS_CLONE
-diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-index 23f1a44acada..c39e90600bb3 100644
---- a/arch/arm64/include/asm/unistd32.h
-+++ b/arch/arm64/include/asm/unistd32.h
-@@ -874,6 +874,18 @@ __SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
- __SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
- #define __NR_io_uring_register 427
- __SYSCALL(__NR_io_uring_register, sys_io_uring_register)
-+#define __NR_open_tree 428
-+__SYSCALL(__NR_open_tree, sys_open_tree)
-+#define __NR_move_mount 429
-+__SYSCALL(__NR_move_mount, sys_move_mount)
-+#define __NR_fsopen 430
-+__SYSCALL(__NR_fsopen, sys_fsopen)
-+#define __NR_fsconfig 431
-+__SYSCALL(__NR_fsconfig, sys_fsconfig)
-+#define __NR_fsmount 432
-+__SYSCALL(__NR_fsmount, sys_fsmount)
-+#define __NR_fspick 433
-+__SYSCALL(__NR_fspick, sys_fspick)
- 
- /*
-  * Please add new compat syscalls above this comment and update
-diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
-index 56e3d0b685e1..e01df3f2f80d 100644
---- a/arch/ia64/kernel/syscalls/syscall.tbl
-+++ b/arch/ia64/kernel/syscalls/syscall.tbl
-@@ -348,3 +348,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index df4ec3ec71d1..7e3d0734b2f3 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -427,3 +427,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index 4964947732af..26339e417695 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -433,3 +433,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index 9392dfe33f97..0e2dd68ade57 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -366,3 +366,9 @@
- 425	n32	io_uring_setup			sys_io_uring_setup
- 426	n32	io_uring_enter			sys_io_uring_enter
- 427	n32	io_uring_register		sys_io_uring_register
-+428	n32	open_tree			sys_open_tree
-+429	n32	move_mount			sys_move_mount
-+430	n32	fsopen				sys_fsopen
-+431	n32	fsconfig			sys_fsconfig
-+432	n32	fsmount				sys_fsmount
-+433	n32	fspick				sys_fspick
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index cd0c8aa21fba..5eebfa0d155c 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -342,3 +342,9 @@
- 425	n64	io_uring_setup			sys_io_uring_setup
- 426	n64	io_uring_enter			sys_io_uring_enter
- 427	n64	io_uring_register		sys_io_uring_register
-+428	n64	open_tree			sys_open_tree
-+429	n64	move_mount			sys_move_mount
-+430	n64	fsopen				sys_fsopen
-+431	n64	fsconfig			sys_fsconfig
-+432	n64	fsmount				sys_fsmount
-+433	n64	fspick				sys_fspick
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index e849e8ffe4a2..3cc1374e02d0 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -415,3 +415,9 @@
- 425	o32	io_uring_setup			sys_io_uring_setup
- 426	o32	io_uring_enter			sys_io_uring_enter
- 427	o32	io_uring_register		sys_io_uring_register
-+428	o32	open_tree			sys_open_tree
-+429	o32	move_mount			sys_move_mount
-+430	o32	fsopen				sys_fsopen
-+431	o32	fsconfig			sys_fsconfig
-+432	o32	fsmount				sys_fsmount
-+433	o32	fspick				sys_fspick
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index fe8ca623add8..c9e377d59232 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -424,3 +424,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index 00f5a63c8d9a..103655d84b4b 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -509,3 +509,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index 061418f787c3..e822b2964a83 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -430,3 +430,9 @@
- 425  common	io_uring_setup		sys_io_uring_setup              sys_io_uring_setup
- 426  common	io_uring_enter		sys_io_uring_enter              sys_io_uring_enter
- 427  common	io_uring_register	sys_io_uring_register           sys_io_uring_register
-+428  common	open_tree		sys_open_tree			sys_open_tree
-+429  common	move_mount		sys_move_mount			sys_move_mount
-+430  common	fsopen			sys_fsopen			sys_fsopen
-+431  common	fsconfig		sys_fsconfig			sys_fsconfig
-+432  common	fsmount			sys_fsmount			sys_fsmount
-+433  common	fspick			sys_fspick			sys_fspick
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index 480b057556ee..016a727d4357 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -430,3 +430,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index a1dd24307b00..e047480b1605 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -473,3 +473,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index 30084eaf8422..5fa0ee1c8e00 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -398,3 +398,9 @@
- 425	common	io_uring_setup			sys_io_uring_setup
- 426	common	io_uring_enter			sys_io_uring_enter
- 427	common	io_uring_register		sys_io_uring_register
-+428	common	open_tree			sys_open_tree
-+429	common	move_mount			sys_move_mount
-+430	common	fsopen				sys_fsopen
-+431	common	fsconfig			sys_fsconfig
-+432	common	fsmount				sys_fsmount
-+433	common	fspick				sys_fspick
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index dee7292e1df6..a87904daf103 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -832,9 +832,21 @@ __SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
- __SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
- #define __NR_io_uring_register 427
- __SYSCALL(__NR_io_uring_register, sys_io_uring_register)
-+#define __NR_open_tree 428
-+__SYSCALL(__NR_open_tree, sys_open_tree)
-+#define __NR_move_mount 429
-+__SYSCALL(__NR_move_mount, sys_move_mount)
-+#define __NR_fsopen 430
-+__SYSCALL(__NR_fsopen, sys_fsopen)
-+#define __NR_fsconfig 431
-+__SYSCALL(__NR_fsconfig, sys_fsconfig)
-+#define __NR_fsmount 432
-+__SYSCALL(__NR_fsmount, sys_fsmount)
-+#define __NR_fspick 433
-+__SYSCALL(__NR_fspick, sys_fspick)
- 
- #undef __NR_syscalls
--#define __NR_syscalls 428
-+#define __NR_syscalls 434
- 
- /*
-  * 32 bit systems traditionally used different
+diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
+new file mode 100644
+index 0000000..8763f44
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
+@@ -0,0 +1,107 @@
++NVIDIA Tegra194 pinmux controller
++
++Required properties:
++- compatible: "nvidia,tegra194-pinmux"
++- reg: Should contain a list of base address and size pairs for:
++  - first entry: The APB_MISC_GP_*_PADCTRL registers (pad control)
++  - second entry: The PINMUX_AUX_* registers (pinmux)
++
++Please refer to pinctrl-bindings.txt in this directory for details of the
++common pinctrl bindings used by client devices, including the meaning of the
++phrase "pin configuration node".
++
++Tegra's pin configuration nodes act as a container for an arbitrary number of
++subnodes. Each of these subnodes represents some desired configuration for a
++pin, a group, or a list of pins or groups. This configuration can include the
++mux function to select on those pin(s)/group(s), and various pin configuration
++parameters, such as pull-up, tristate, drive strength, etc.
++
++See the TRM to determine which properties and values apply to each pin/group.
++Macro values for property values are defined in
++include/dt-binding/pinctrl/pinctrl-tegra.h.
++
++Required subnode-properties:
++- nvidia,pins : An array of strings. Each string contains the name of a pin or
++    group. Valid values for these names are listed below.
++
++Optional subnode-properties:
++- nvidia,function: A string containing the name of the function to mux to the
++    pin or group.
++- nvidia,pull: Integer, representing the pull-down/up to apply to the pin.
++    0: none, 1: down, 2: up.
++- nvidia,tristate: Integer.
++    0: drive, 1: tristate.
++- nvidia,enable-input: Integer. Enable the pin's input path.
++    enable :TEGRA_PIN_ENABLE and
++    disable or output only: TEGRA_PIN_DISABLE.
++- nvidia,open-drain: Integer.
++    enable: TEGRA_PIN_ENABLE.
++    disable: TEGRA_PIN_DISABLE.
++- nvidia,lock: Integer. Lock the pin configuration against further changes
++    until reset.
++    enable: TEGRA_PIN_ENABLE.
++    disable: TEGRA_PIN_DISABLE.
++- nvidia,io-hv: Integer. Select high-voltage receivers.
++    normal: TEGRA_PIN_DISABLE
++    high: TEGRA_PIN_ENABLE
++- nvidia,schmitt: Integer. Enables Schmitt Trigger on the input.
++    normal: TEGRA_PIN_DISABLE
++    high: TEGRA_PIN_ENABLE
++- nvidia,drive-type: Integer. Valid range 0...3.
++- nvidia,pull-down-strength: Integer. Controls drive strength. 0 is weakest.
++    The range of valid values depends on the pingroup. See "CAL_DRVDN" in the
++    Tegra TRM.
++- nvidia,pull-up-strength: Integer. Controls drive strength. 0 is weakest.
++    The range of valid values depends on the pingroup. See "CAL_DRVUP" in the
++    Tegra TRM.
++
++Valid values for pin and group names (nvidia,pin) are:
++
++    These correspond to Tegra PADCTL_* (pinmux) registers.
++
++  Mux groups:
++
++    These correspond to Tegra PADCTL_* (pinmux) registers. Any property
++    that exists in those registers may be set for the following pin names.
++
++    pex_l5_clkreq_n_pgg0, pex_l5_rst_n_pgg1
++
++  Drive groups:
++
++    These registers controls a single pin for which a mux group exists.
++    See the list above for the pin name to use when configuring the pinmux.
++
++    pex_l5_clkreq_n_pgg0, pex_l5_rst_n_pgg1
++
++Valid values for nvidia,functions are:
++
++    pe5
++
++Power Domain:
++    pex_l5_clkreq_n_pgg0 and pex_l5_rst_n_pgg1 are part of PCIE C5 power
++    partition. Client devices must enable this partition before accessing
++    these pins here.
++
++
++Example:
++
++		tegra_pinctrl: pinmux: pinmux@2430000 {
++			compatible = "nvidia,tegra194-pinmux";
++			reg = <0x2430000 0x17000
++			       0xc300000 0x4000>;
++
++			pinctrl-names = "pex_rst";
++			pinctrl-0 = <&pex_rst_c5_out_state>;
++
++			pex_rst_c5_out_state: pex_rst_c5_out {
++				pex_rst {
++					nvidia,pins = "pex_l5_rst_n_pgg1";
++					nvidia,schmitt = <TEGRA_PIN_DISABLE>;
++					nvidia,lpdr = <TEGRA_PIN_ENABLE>;
++					nvidia,enable-input = <TEGRA_PIN_DISABLE>;
++					nvidia,io-high-voltage = <TEGRA_PIN_ENABLE>;
++					nvidia,tristate = <TEGRA_PIN_DISABLE>;
++					nvidia,pull = <TEGRA_PIN_PULL_NONE>;
++				};
++			};
++		};
+-- 
+2.7.4
 
