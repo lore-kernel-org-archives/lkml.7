@@ -2,118 +2,154 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96553C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 914EBC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F1D82087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:19:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 614E820848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:29:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BwK3/SkN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfEPFTd (ORCPT
+        id S1726448AbfEPF3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 01:19:33 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51094 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726324AbfEPFTd (ORCPT
+        Thu, 16 May 2019 01:29:40 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:37772 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbfEPF3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 01:19:33 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4G5HjMn034313
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:19:31 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sgxh8p1g6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:19:31 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 16 May 2019 06:19:29 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 16 May 2019 06:19:25 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4G5JOew57802782
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 May 2019 05:19:24 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7A8A911C06E;
-        Thu, 16 May 2019 05:19:24 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 81D8911C05B;
-        Thu, 16 May 2019 05:19:23 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.112])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 16 May 2019 05:19:23 +0000 (GMT)
-Date:   Thu, 16 May 2019 08:19:21 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] remove ARCH_SELECT_MEMORY_MODEL where it has no
- effect
-References: <1556740577-4140-1-git-send-email-rppt@linux.ibm.com>
+        Thu, 16 May 2019 01:29:39 -0400
+Received: by mail-qt1-f196.google.com with SMTP id o7so2524146qtp.4;
+        Wed, 15 May 2019 22:29:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zPhYJs6tUAai5DYwqxdzu4CT68FsA8mRHrqOPfi0tng=;
+        b=BwK3/SkNEbeGhGHCPGal9aJRSkD0A6WMfMZmrfxhorPWHZIuGfJ6oXMKbK0kb0zvVU
+         D27Njyax//0BOR7gwqhtcKZ2m76gvtEX6jxGBXtl9Mi/SuXebH0yAIX5Xd56M6zT3y1V
+         d9pn2SGP+LtldqLQtL1HtwP4BkzySpUJ/v+Ol4j2OxL4D/T4YVY5tGr/RWp/FbICHKdp
+         3Ud3DnOgarX7XpiOupCX76X8+pqlz0F3cRSZKIsSurjzBk1/+XQysRfe+RYCkrPW2ceD
+         rHiMz1UTvypR3++jK+jbvF9RIC10pz7L4+EkjOFhpyWyBIR6OycxO9zDcvRjksngMXxw
+         E81Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zPhYJs6tUAai5DYwqxdzu4CT68FsA8mRHrqOPfi0tng=;
+        b=cHTmP8vdZ/gJRtR8sP+sdhXeBXKbL2scyeZqsP8bOXTWQNRxfs6tOyaWt/yNDDvJQr
+         o4OWFsbrpGgVmGMpqEJG/etANjyUPwqhIQG9vORZXsRNdHpQwbOrpU77Sk9kfykqV2X3
+         ZRGE29GQw7bCIjPODeCSLzCzrRJB2IPvmCXd4sJPGVLfRuKH+fU7pdU0xlzui3r6btGB
+         CStche/duJuTPdXCZTpR+/3HDdYdJdtH0VQmlNV3CISeHL81djkDXx0EaMSf2RoGZKge
+         0XvEQ7uogzv6gK812gc41/NHNGW6xJ23zIMQIbd6hdWLusFK68aA/WtbI0p7Tv5iEioq
+         6Osw==
+X-Gm-Message-State: APjAAAX++K/GKJU3jkFBcWql2iYiL1Mh2HZ4Iv0YpkTQJX5xppTxlB20
+        woRH6nNVfzfk5b7yVMrYK+iGYtxMqqM=
+X-Google-Smtp-Source: APXvYqxV9mBmwmYVkzFISxUjwBj5hupH87klIJjbMyAvtWYLe6nRJtk/xKH4tyjuK03pUxI+QGiQjg==
+X-Received: by 2002:ac8:fdd:: with SMTP id f29mr40426005qtk.17.1557984577991;
+        Wed, 15 May 2019 22:29:37 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id d64sm2120328qke.55.2019.05.15.22.29.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 22:29:37 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Thu, 16 May 2019 01:29:35 -0400
+To:     Roberto Sassu <roberto.sassu@huawei.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Rob Landley <rob@landley.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arvind Sankar <niveditas98@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        initramfs@vger.kernel.org,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
+Subject: Re: [PATCH v2 0/3] initramfs: add support for xattrs in the initial
+ ram disk
+Message-ID: <20190516052934.GA68777@rani.riverdale.lan>
+References: <4f522e28-29c8-5930-5d90-e0086b503613@landley.net>
+ <f7bc547c-61f4-1a17-735c-7e8df97d7965@huawei.com>
+ <CALCETrV3b205L38xqPr6QqwGn6-vxQdPoJGUygJJpgM-JqqXfQ@mail.gmail.com>
+ <1557861511.3378.19.camel@HansenPartnership.com>
+ <4da3dbda-bb76-5d71-d5c5-c03d98350ab0@landley.net>
+ <1557878052.2873.6.camel@HansenPartnership.com>
+ <20190515005221.GB88615@rani.riverdale.lan>
+ <a138af12-d983-453e-f0b2-661a80b7e837@huawei.com>
+ <20190515160834.GA81614@rani.riverdale.lan>
+ <ce65240a-4df6-8ebc-8360-c01451e724f0@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1556740577-4140-1-git-send-email-rppt@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19051605-4275-0000-0000-000003354B30
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051605-4276-0000-0000-00003844D161
-Message-Id: <20190516051921.GC21366@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=690 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905160037
+In-Reply-To: <ce65240a-4df6-8ebc-8360-c01451e724f0@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew,
-
-Can this go via the -mm tree?
-
-On Wed, May 01, 2019 at 10:56:14PM +0300, Mike Rapoport wrote:
-> Hi,
+On Wed, May 15, 2019 at 07:06:52PM +0200, Roberto Sassu wrote:
+> On 5/15/2019 6:08 PM, Arvind Sankar wrote:
+> > On Wed, May 15, 2019 at 01:19:04PM +0200, Roberto Sassu wrote:
+> >> On 5/15/2019 2:52 AM, Arvind Sankar wrote:
+> > I don't understand what you mean? The IMA hashes are signed by some key,
+> > but I don't see how what that key is needs to be different between the
+> > two proposals. If the only files used are from the distro, in my scheme
+> > as well you can use the signatures and key provided by the distro. If
+> > they're not, then in your scheme as well you would have to allow for a
+> > local signing key to be used. Both schemes are using the same
+> > .xattr-list file, no?
 > 
-> For several architectures the ARCH_SELECT_MEMORY_MODEL has no real effect
-> because the dependencies for the memory model are always evaluated to a
-> single value.
+> I was referring to James's proposal to load an external initramfs from
+> the embedded initramfs. If the embedded initramfs opens the external
+> initramfs when IMA is enabled, the external initramfs needs to be
+> signed with a local signing key. But I read your answer that this
+> wouldn't be feasible. You have to specify all initramfs in the boot
+> loader configuration.
 > 
-> Remove the ARCH_SELECT_MEMORY_MODEL from the Kconfigs for these
-> architectures.
+> I think deferring IMA initialization is not the safest approach, as it
+> cannot be guaranteed for all possible scenarios that there won't be any
+> file read before /init is executed.
 > 
-> Mike Rapoport (3):
->   arm: remove ARCH_SELECT_MEMORY_MODEL
->   s390: remove ARCH_SELECT_MEMORY_MODEL
->   sparc: remove ARCH_SELECT_MEMORY_MODEL
+> But if IMA is enabled, there is the problem of who signs .xattr-list.
+> There should be a local signing key that it is not necessary if the user
+> only accesses distro files.
 > 
->  arch/arm/Kconfig   | 3 ---
->  arch/s390/Kconfig  | 3 ---
->  arch/sparc/Kconfig | 3 ---
->  3 files changed, 9 deletions(-)
+I think that's a separate issue. If you want to allow people to be able
+to put files onto the system that will be IMA verified, they need to
+have some way to locally sign them whether it's inside an initramfs or
+on a real root filesystem.
+> 
+> > Right, I guess this would be sort of the minimal "modification" to the
+> > CPIO format to allow it to support xattrs.
+> 
+> I would try to do it without modification of the CPIO format. However,
+> at the time .xattr-list is parsed (in do_copy() before .xattr-list is
+> closed), it is not guaranteed that all files are extracted. These must
+> be created before xattrs are added, but the file type must be correct,
+> otherwise clean_path() removes the existing file with xattrs.
+> 
+> Roberto
 > 
 > -- 
-> 2.7.4
-> 
+> HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+> Managing Director: Bo PENG, Jian LI, Yanli SHI
 
--- 
-Sincerely yours,
-Mike.
+Right by "modification" in quotes I meant the format is actually the
+same, but the kernel now interprets it a bit differently.
 
+Regarding the order you don't have to handle that in the kernel. The
+kernel CPIO format is already restricted in that directories have to be
+specified before the files that contain them for example. It can very
+well be restricted so that an .xattr-list can only specify xattrs for
+files that were already extracted, else you bail out with an error. The
+archive creation tooling can easily handle that. If someone wants to
+shoot themselves in the foot by trying to add more files/replace
+existing files after the .xattr-list its ok, the IMA policy will prevent
+such files from being accessed and they can fix the archive for the next
+boot.
