@@ -2,116 +2,150 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B81C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E7CC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A692920848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 575552082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:03:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m67rHuJ6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbfEPPDF (ORCPT
+        id S1727507AbfEPPDM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:03:05 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:58399 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbfEPPDE (ORCPT
+        Thu, 16 May 2019 11:03:12 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:48012 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726687AbfEPPDL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:03:04 -0400
-Received: from localhost (unknown [80.215.79.199])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 1129E200018;
-        Thu, 16 May 2019 15:02:52 +0000 (UTC)
-Date:   Thu, 16 May 2019 17:02:52 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Yangtao Li <tiny.windzz@gmail.com>, mark.rutland@arm.com,
-        daniel.lezcano@linaro.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, bjorn.andersson@linaro.org,
-        mchehab+samsung@kernel.org, paulmck@linux.ibm.com,
-        stefan.wahren@i2se.com, linux-pm@vger.kernel.org, wens@csie.org,
-        jagan@amarulasolutions.com, andy.gross@linaro.org,
-        rui.zhang@intel.com, devicetree@vger.kernel.org,
-        marc.w.gonzalez@free.fr, edubezval@gmail.com,
-        enric.balletbo@collabora.com, robh+dt@kernel.org,
-        Jonathan.Cameron@huawei.com, linux-arm-kernel@lists.infradead.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        olof@lixom.net, davem@davemloft.net
-Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
-Message-ID: <20190516150252.hf4u3bloo37chy6q@flea>
-References: <20190512082614.9045-1-tiny.windzz@gmail.com>
- <20190512082614.9045-3-tiny.windzz@gmail.com>
- <20190512133930.t5txssl7mou2gljt@flea>
- <20190512214128.qjyys3vfpwdiacib@core.my.home>
+        Thu, 16 May 2019 11:03:11 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4GEwuJq165009;
+        Thu, 16 May 2019 15:02:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=CEliZ7+T5NDLrMHrikPoN8vHUXniCEvebAc8ymNPGu4=;
+ b=m67rHuJ6yMMHTeFiE8akqxWrf/39kTx//2c/AyvOygDuOwNj3hRTpeaBIyLMrHnO7dm8
+ kctsnf6gAVN0l0u5Fih8ucxHN17z3jjbn5b63XLnMh8Gt+yqsuYQLqC2Lm/YLAjw60Ft
+ RsWPM6W0tALOxNj3YVv+k+gIHAGiBRYUxs0SQFotWD9IfwR+gwdIRPVywQ3N9B5xEzgO
+ HgbBCeiOJeFRE43ZagNUwEBk6y1d6KZJdAlGHzt/mn7MxcEudnNDSI8PuJQpVbvsRTPJ
+ Of4L6gLwKPkQpS3cS1S4lklcCAZBOP/lhEPxYsMnMddRT6Vgaf49R8uCgxiofzaMVhlQ zA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 2sdkwe4807-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 May 2019 15:02:53 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4GF1Re6096541;
+        Thu, 16 May 2019 15:02:53 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2sgp3321sy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 May 2019 15:02:52 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4GF2oc9003548;
+        Thu, 16 May 2019 15:02:50 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 16 May 2019 08:02:50 -0700
+Subject: Re: [Xen-devel] [PATCH v2 1/2] KVM: Start populating /sys/hypervisor
+ with KVM entries
+To:     Alexander Graf <graf@amazon.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Filippo Sironi <sironi@amazon.de>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        borntraeger@de.ibm.com, cohuck@redhat.com, konrad.wilk@oracle.com,
+        xen-devel@lists.xenproject.org
+References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-2-git-send-email-sironi@amazon.de>
+ <e976f31b-2ccd-29ba-6a32-2edde49f867f@amazon.com>
+ <7aae3e49-5b1c-96d1-466e-5b061305dc9d@citrix.com>
+ <22fadfb1-e48d-ccb6-0e42-c105b7335d7a@amazon.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
+ 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
+ Jg6OxFYd01z+a+oL
+Message-ID: <92f2f186-2e29-d798-84bd-7209e874f103@oracle.com>
+Date:   Thu, 16 May 2019 11:02:15 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7vj27y3kfhi2ktlo"
-Content-Disposition: inline
-In-Reply-To: <20190512214128.qjyys3vfpwdiacib@core.my.home>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <22fadfb1-e48d-ccb6-0e42-c105b7335d7a@amazon.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9258 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1905160096
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9258 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1905160096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---7vj27y3kfhi2ktlo
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Sun, May 12, 2019 at 11:41:28PM +0200, Ond=C5=99ej Jirman wrote:
-> > > +static int tsens_get_temp(void *data, int *temp)
-> > > +{
-> > > +	struct tsensor *s =3D data;
-> > > +	struct tsens_device *tmdev =3D s->tmdev;
-> > > +	int val;
-> > > +
-> > > +	regmap_read(tmdev->regmap, tmdev->chip->temp_data_base +
-> > > +		    0x4 * s->id, &val);
-> > > +
-> > > +	if (unlikely(val =3D=3D 0))
-> > > +		return -EBUSY;
-> >
-> > I'm not sure why a val equals to 0 would be associated with EBUSY?
+On 5/16/19 10:08 AM, Alexander Graf wrote:
 >
-> Thermal zone driver can (will) call get_temp before we got the
-> first interrupt and the thermal data. In that case val will be 0.
->
-> Resulting in:
->
->  (val + offset) * scale =3D (-2794) * -67 =3D 187198
->
-> 187=C2=B0C and immediate shutdown during boot - based on cirtical
-> temperature being reached.
->
-> Busy here means, get_temp does not yet have data. Thermal zone
-> driver just reports any error to dmesg output.
+> My point is mostly that we should be as common
+> as possible when it comes to /sys/hypervisor, so that tools don't have
+> to care about the HV they're working against.
 
-Ah, that makes sense.
+It might make sense to have a common sys-hypervisor.c file
+(drivers/hypervisor/sys-hypervisor.c or some such), with
+hypervisor-specific ops/callbacks/etc.
 
-I guess if we're switching to an interrupt-based driver, then we can
-just use a waitqueue, or is get_temp supposed to be atomic?
+-boris
 
-Maxime
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---7vj27y3kfhi2ktlo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXN17nAAKCRDj7w1vZxhR
-xZVgAQDEhhE/FQspXxx58VLtzI/e0Kz9gZa92QnGGjDbVWxBTwEA1iAzA+XGbDtR
-1TM7/Hc1lwDV+qLHJYnbwcFfq+6XBAg=
-=qzgC
------END PGP SIGNATURE-----
-
---7vj27y3kfhi2ktlo--
