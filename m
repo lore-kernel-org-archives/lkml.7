@@ -2,235 +2,189 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3318C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3CDC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 931AC206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:32:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BF93206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:35:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfEPKci (ORCPT
+        id S1727125AbfEPKfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 06:32:38 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:55107 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726336AbfEPKci (ORCPT
+        Thu, 16 May 2019 06:35:08 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:38649 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726864AbfEPKfH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 06:32:38 -0400
-X-Originating-IP: 80.215.244.179
-Received: from localhost (unknown [80.215.244.179])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 9AFA91BF20B;
-        Thu, 16 May 2019 10:32:32 +0000 (UTC)
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Emil Velikov <emil.velikov@collabora.com>
-Subject: [PATCH v3 5/7] drm/fourcc: Pass the format_info pointer to drm_format_plane_width/height
-Date:   Thu, 16 May 2019 12:31:50 +0200
-Message-Id: <514af1d489d80b8b1767e3716b663ce5103da6eb.1558002671.git-series.maxime.ripard@bootlin.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <27b0041c7977402df4a087c78d2849ffe51c9f1c.1558002671.git-series.maxime.ripard@bootlin.com>
-References: <27b0041c7977402df4a087c78d2849ffe51c9f1c.1558002671.git-series.maxime.ripard@bootlin.com>
+        Thu, 16 May 2019 06:35:07 -0400
+Received: by mail-it1-f199.google.com with SMTP id m20so2861066itn.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 03:35:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ogi4Zx9YKcEIb3tc3T3zeOW92HZiBY/I1YpoRF0AIfw=;
+        b=Yqj8nanfOOdMNiqT+MRJOQMX1agT6XhSd/T/Ung6qx7anUGCix92U9fujMnYFNNlsW
+         L5cDTD8BSPEEnJlpniwzsXg0Bi7IeXm1ezoaAm6gUeF1gi7uuXwTOGTCAsFZGsD1rEm8
+         D7B8v2kzrwKYnK+Hk5NreSmo8qHUBPm3Vc9KJ1mB089twrG6KHEJuFo3o+TFsRmvGBW5
+         OEMQnLjHU1nXF3Ue6waUQC0o62BhLknWfxli8jHEn41hVPCKu//2AfK+Mez6B1cUGYDq
+         f9YXMcDaSnK9QLnTwEqzcSaqSr9M8atnEkpumnQt/bbFjmq8QRnuJOST3q/0dlsf8nrL
+         8PUQ==
+X-Gm-Message-State: APjAAAXaaFWfbluER6qigtWm3/4/p4SDSMoRJeeX3W1BxKob8c1n3LH5
+        SQQmqDqkCgXDRX0UfY7NmykYjyVUZeTnYyGX+3HcpS01CKIi
+X-Google-Smtp-Source: APXvYqy/km2xk0VlmCUiEVpTpP+aBex2sJKgvPvIo3Wuiw0LVsmIi0xRW8hj3b80c46hq5VOiJe0e/2U+yMec4lafVq8gXpCDCSu
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a6b:e718:: with SMTP id b24mr25879886ioh.213.1558002906701;
+ Thu, 16 May 2019 03:35:06 -0700 (PDT)
+Date:   Thu, 16 May 2019 03:35:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d028b30588fed102@google.com>
+Subject: KASAN: use-after-free Write in xfrm_hash_rebuild
+From:   syzbot <syzbot+0165480d4ef07360eeda@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So far, the drm_format_plane_height/width functions were operating on the
-format's fourcc and was doing a lookup to retrieve the drm_format_info
-structure and return the cpp.
+Hello,
 
-However, this is inefficient since in most cases, we will have the
-drm_format_info pointer already available so we shouldn't have to perform a
-new lookup. Some drm_fourcc functions also already operate on the
-drm_format_info pointer for that reason, so the API is quite inconsistent
-there.
+syzbot found the following crash on:
 
-Let's follow the latter pattern and remove the extra lookup while being a
-bit more consistent.
+HEAD commit:    601e6bcc Merge git://git.kernel.org/pub/scm/linux/kernel/g..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1534f3d0a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4005028a9d5ddac8
+dashboard link: https://syzkaller.appspot.com/bug?extid=0165480d4ef07360eeda
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-In order to be extra consistent, also rename that function to
-drm_format_info_plane_cpp and to a static function in the header to match
-the current policy. The parameters order have also be changed to match the
-other functions prototype.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+0165480d4ef07360eeda@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in __write_once_size  
+include/linux/compiler.h:220 [inline]
+BUG: KASAN: use-after-free in __hlist_del include/linux/list.h:713 [inline]
+BUG: KASAN: use-after-free in hlist_del_rcu include/linux/rculist.h:455  
+[inline]
+BUG: KASAN: use-after-free in xfrm_hash_rebuild+0xfff/0x10f0  
+net/xfrm/xfrm_policy.c:1317
+Write of size 8 at addr ffff888098529100 by task kworker/0:0/5
+
+CPU: 0 PID: 5 Comm: kworker/0:0 Not tainted 5.1.0+ #4
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events xfrm_hash_rebuild
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
+  __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+  kasan_report+0x12/0x20 mm/kasan/common.c:614
+  __asan_report_store8_noabort+0x17/0x20 mm/kasan/generic_report.c:137
+  __write_once_size include/linux/compiler.h:220 [inline]
+  __hlist_del include/linux/list.h:713 [inline]
+  hlist_del_rcu include/linux/rculist.h:455 [inline]
+  xfrm_hash_rebuild+0xfff/0x10f0 net/xfrm/xfrm_policy.c:1317
+  process_one_work+0x98e/0x1790 kernel/workqueue.c:2268
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2414
+  kthread+0x357/0x430 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+
+Allocated by task 8152:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_kmalloc mm/kasan/common.c:489 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
+  kmem_cache_alloc_node_trace+0x153/0x720 mm/slab.c:3630
+  kmalloc_node include/linux/slab.h:585 [inline]
+  kzalloc_node include/linux/slab.h:753 [inline]
+  __get_vm_area_node+0x12b/0x3a0 mm/vmalloc.c:1401
+  __vmalloc_node_range+0xd4/0x790 mm/vmalloc.c:1840
+  __vmalloc_node mm/vmalloc.c:1900 [inline]
+  __vmalloc_node_flags mm/vmalloc.c:1914 [inline]
+  vzalloc+0x6b/0x90 mm/vmalloc.c:1959
+  alloc_counters.isra.0+0x53/0x690 net/ipv6/netfilter/ip6_tables.c:819
+  copy_entries_to_user net/ipv4/netfilter/arp_tables.c:674 [inline]
+  get_entries net/ipv4/netfilter/arp_tables.c:861 [inline]
+  do_arpt_get_ctl+0x4a0/0x820 net/ipv4/netfilter/arp_tables.c:1482
+  nf_sockopt net/netfilter/nf_sockopt.c:104 [inline]
+  nf_getsockopt+0x80/0xe0 net/netfilter/nf_sockopt.c:122
+  ip_getsockopt net/ipv4/ip_sockglue.c:1574 [inline]
+  ip_getsockopt+0x176/0x1d0 net/ipv4/ip_sockglue.c:1554
+  tcp_getsockopt net/ipv4/tcp.c:3623 [inline]
+  tcp_getsockopt+0x95/0xf0 net/ipv4/tcp.c:3617
+  sock_common_getsockopt+0x9a/0xe0 net/core/sock.c:3089
+  __sys_getsockopt+0x168/0x250 net/socket.c:2115
+  __do_sys_getsockopt net/socket.c:2126 [inline]
+  __se_sys_getsockopt net/socket.c:2123 [inline]
+  __x64_sys_getsockopt+0xbe/0x150 net/socket.c:2123
+  do_syscall_64+0x103/0x670 arch/x86/entry/common.c:298
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 8152:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+  __cache_free mm/slab.c:3463 [inline]
+  kfree+0xcf/0x230 mm/slab.c:3786
+  __vunmap+0x704/0x9c0 mm/vmalloc.c:1617
+  __vfree+0x41/0xd0 mm/vmalloc.c:1658
+  vfree+0x5f/0x90 mm/vmalloc.c:1688
+  copy_entries_to_user net/ipv4/netfilter/arp_tables.c:706 [inline]
+  get_entries net/ipv4/netfilter/arp_tables.c:861 [inline]
+  do_arpt_get_ctl+0x67b/0x820 net/ipv4/netfilter/arp_tables.c:1482
+  nf_sockopt net/netfilter/nf_sockopt.c:104 [inline]
+  nf_getsockopt+0x80/0xe0 net/netfilter/nf_sockopt.c:122
+  ip_getsockopt net/ipv4/ip_sockglue.c:1574 [inline]
+  ip_getsockopt+0x176/0x1d0 net/ipv4/ip_sockglue.c:1554
+  tcp_getsockopt net/ipv4/tcp.c:3623 [inline]
+  tcp_getsockopt+0x95/0xf0 net/ipv4/tcp.c:3617
+  sock_common_getsockopt+0x9a/0xe0 net/core/sock.c:3089
+  __sys_getsockopt+0x168/0x250 net/socket.c:2115
+  __do_sys_getsockopt net/socket.c:2126 [inline]
+  __se_sys_getsockopt net/socket.c:2123 [inline]
+  __x64_sys_getsockopt+0xbe/0x150 net/socket.c:2123
+  do_syscall_64+0x103/0x670 arch/x86/entry/common.c:298
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff888098529100
+  which belongs to the cache kmalloc-64 of size 64
+The buggy address is located 0 bytes inside of
+  64-byte region [ffff888098529100, ffff888098529140)
+The buggy address belongs to the page:
+page:ffffea0002614a40 count:1 mapcount:0 mapping:ffff8880aa400340  
+index:0xffff888098529600
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea0002a22fc8 ffffea00026d2888 ffff8880aa400340
+raw: ffff888098529600 ffff888098529000 000000010000001b 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff888098529000: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+  ffff888098529080: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+> ffff888098529100: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                    ^
+  ffff888098529180: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+  ffff888098529200: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+==================================================================
+
+
 ---
- drivers/gpu/drm/drm_fourcc.c          | 48 +----------------------------
- drivers/gpu/drm/meson/meson_overlay.c | 12 +++----
- include/drm/drm_fourcc.h              | 46 +++++++++++++++++++++++++--
- 3 files changed, 50 insertions(+), 56 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
-index 5f63fc74e265..35b459d186c5 100644
---- a/drivers/gpu/drm/drm_fourcc.c
-+++ b/drivers/gpu/drm/drm_fourcc.c
-@@ -333,54 +333,6 @@ drm_get_format_info(struct drm_device *dev,
- EXPORT_SYMBOL(drm_get_format_info);
- 
- /**
-- * drm_format_plane_width - width of the plane given the first plane
-- * @width: width of the first plane
-- * @format: pixel format
-- * @plane: plane index
-- *
-- * Returns:
-- * The width of @plane, given that the width of the first plane is @width.
-- */
--int drm_format_plane_width(int width, uint32_t format, int plane)
--{
--	const struct drm_format_info *info;
--
--	info = drm_format_info(format);
--	if (!info || plane >= info->num_planes)
--		return 0;
--
--	if (plane == 0)
--		return width;
--
--	return width / info->hsub;
--}
--EXPORT_SYMBOL(drm_format_plane_width);
--
--/**
-- * drm_format_plane_height - height of the plane given the first plane
-- * @height: height of the first plane
-- * @format: pixel format
-- * @plane: plane index
-- *
-- * Returns:
-- * The height of @plane, given that the height of the first plane is @height.
-- */
--int drm_format_plane_height(int height, uint32_t format, int plane)
--{
--	const struct drm_format_info *info;
--
--	info = drm_format_info(format);
--	if (!info || plane >= info->num_planes)
--		return 0;
--
--	if (plane == 0)
--		return height;
--
--	return height / info->vsub;
--}
--EXPORT_SYMBOL(drm_format_plane_height);
--
--/**
-  * drm_format_info_block_width - width in pixels of block.
-  * @info: pixel format info
-  * @plane: plane index
-diff --git a/drivers/gpu/drm/meson/meson_overlay.c b/drivers/gpu/drm/meson/meson_overlay.c
-index fb8515b2860c..55b3f2f2e608 100644
---- a/drivers/gpu/drm/meson/meson_overlay.c
-+++ b/drivers/gpu/drm/meson/meson_overlay.c
-@@ -466,8 +466,8 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
- 		priv->viu.vd1_addr2 = gem->paddr + fb->offsets[2];
- 		priv->viu.vd1_stride2 = fb->pitches[2];
- 		priv->viu.vd1_height2 =
--			drm_format_plane_height(fb->height,
--						fb->format->format, 2);
-+			drm_format_info_plane_height(fb->format,
-+						fb->height, 2);
- 		DRM_DEBUG("plane 2 addr 0x%x stride %d height %d\n",
- 			 priv->viu.vd1_addr2,
- 			 priv->viu.vd1_stride2,
-@@ -478,8 +478,8 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
- 		priv->viu.vd1_addr1 = gem->paddr + fb->offsets[1];
- 		priv->viu.vd1_stride1 = fb->pitches[1];
- 		priv->viu.vd1_height1 =
--			drm_format_plane_height(fb->height,
--						fb->format->format, 1);
-+			drm_format_info_plane_height(fb->format,
-+						fb->height, 1);
- 		DRM_DEBUG("plane 1 addr 0x%x stride %d height %d\n",
- 			 priv->viu.vd1_addr1,
- 			 priv->viu.vd1_stride1,
-@@ -490,8 +490,8 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
- 		priv->viu.vd1_addr0 = gem->paddr + fb->offsets[0];
- 		priv->viu.vd1_stride0 = fb->pitches[0];
- 		priv->viu.vd1_height0 =
--			drm_format_plane_height(fb->height,
--						fb->format->format, 0);
-+			drm_format_info_plane_height(fb->format,
-+						fb->height, 0);
- 		DRM_DEBUG("plane 0 addr 0x%x stride %d height %d\n",
- 			 priv->viu.vd1_addr0,
- 			 priv->viu.vd1_stride0,
-diff --git a/include/drm/drm_fourcc.h b/include/drm/drm_fourcc.h
-index 6b5a82b31bc4..4ef8ccb5d236 100644
---- a/include/drm/drm_fourcc.h
-+++ b/include/drm/drm_fourcc.h
-@@ -277,6 +277,50 @@ int drm_format_info_plane_cpp(const struct drm_format_info *info, int plane)
- 	return info->cpp[plane];
- }
- 
-+/**
-+ * drm_format_info_plane_width - width of the plane given the first plane
-+ * @format: pixel format info
-+ * @width: width of the first plane
-+ * @plane: plane index
-+ *
-+ * Returns:
-+ * The width of @plane, given that the width of the first plane is @width.
-+ */
-+static inline
-+int drm_format_info_plane_width(const struct drm_format_info *info, int width,
-+				int plane)
-+{
-+	if (!info || plane >= info->num_planes)
-+		return 0;
-+
-+	if (plane == 0)
-+		return width;
-+
-+	return width / info->hsub;
-+}
-+
-+/**
-+ * drm_format_info_plane_height - height of the plane given the first plane
-+ * @format: pixel format info
-+ * @height: height of the first plane
-+ * @plane: plane index
-+ *
-+ * Returns:
-+ * The height of @plane, given that the height of the first plane is @height.
-+ */
-+static inline
-+int drm_format_info_plane_height(const struct drm_format_info *info, int height,
-+				 int plane)
-+{
-+	if (!info || plane >= info->num_planes)
-+		return 0;
-+
-+	if (plane == 0)
-+		return height;
-+
-+	return height / info->vsub;
-+}
-+
- const struct drm_format_info *__drm_format_info(u32 format);
- const struct drm_format_info *drm_format_info(u32 format);
- const struct drm_format_info *
-@@ -285,8 +329,6 @@ drm_get_format_info(struct drm_device *dev,
- uint32_t drm_mode_legacy_fb_format(uint32_t bpp, uint32_t depth);
- uint32_t drm_driver_legacy_fb_format(struct drm_device *dev,
- 				     uint32_t bpp, uint32_t depth);
--int drm_format_plane_width(int width, uint32_t format, int plane);
--int drm_format_plane_height(int height, uint32_t format, int plane);
- unsigned int drm_format_info_block_width(const struct drm_format_info *info,
- 					 int plane);
- unsigned int drm_format_info_block_height(const struct drm_format_info *info,
--- 
-git-series 0.9.1
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
