@@ -2,130 +2,143 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E094AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E25C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9DC620818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A9B92087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:20:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NyYpd+dk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfEPNQf (ORCPT
+        id S1727181AbfEPNUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:16:35 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35892 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfEPNQf (ORCPT
+        Thu, 16 May 2019 09:20:01 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:45168 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbfEPNUB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:16:35 -0400
-Received: by mail-qk1-f194.google.com with SMTP id c14so2209791qke.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 06:16:35 -0700 (PDT)
+        Thu, 16 May 2019 09:20:01 -0400
+Received: by mail-vk1-f193.google.com with SMTP id r23so999286vkd.12
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 06:20:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=8Mom9MODQ5/QqS+RDXttev2mPfjd0+NlE9IuL/dY7r0=;
+        b=NyYpd+dkEe2YZFx36BzlohQJ+8JNYLj3zvAZeOi8NXLBd9Cfc1WAr4LKDFtfqnGpad
+         StU7H7B3CNs4PTRtMPNyu48VG0OZOTZup0nt++JNMt27PlrD0ZmxJV1bfN72QLCfNuf6
+         w7gdkwYzuTZZNUyNWLDDFcEpc+Yt/Koj5aaJMPvc1MnekJnzFPwg/6VOt0JMkZ3JCPck
+         x3J0yX/c5zszJjTgdOGbi0c8d6dY2RpB2WP5V1wutc4hZGvz37FMXRudGdXPGb3adGS4
+         HMQw1aG9pYnoANuDja2STHdq5iiD076Y53phnswgHQxYlemD+OLxg7fnU/di1ZVQ146z
+         ojdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Xbcsfs9fPhPAxid9VLXerkrXA7gIRwceIo40+cdxdOM=;
-        b=SZpuGgXYZ8yVKTkrX3qZ4PDquXl9PYzb/Ar0cQUclrKNcTRgkstVIc/LG7u679ms1r
-         IfICuo2wMMcmaYfQA8K9bPVaRtUxWX2akGeqBzznL+DnvPZvaeXBY/6//ob74NnZAnZR
-         SEbsJOADQHzH8vSswU4XxMP9VB5CxkPrnIiPYTVMsn/oh2ANaQEy9PsOtvldOUe7OFIc
-         6FgClPNaiB99ySPzgNVTLKkgwlLrzF3DlL10ZFB/iMzu1WvHm2g3n8ab9aITZ/e8Y2UQ
-         J2KwE3HIA+1qtu0Uxtg9A2iPxSaiepwAEB2bh8L8ORne8YuyATdRh6HF2ov8ncK6LHZ8
-         s2Hw==
-X-Gm-Message-State: APjAAAV+CSbHSHu6UubbkHPgEYoE6cgYIe1IQMS4pmbpZSg2bMg8QMkB
-        pVgZCCpM8jYKNBxmOW8ONh6l2A==
-X-Google-Smtp-Source: APXvYqw9TWQ3IfH3iSJSDru28VPmlBF3K1DIMQfkSHuQda0F5JApl5cueYi9JH5aELT2HWEmikJyjg==
-X-Received: by 2002:a05:620a:1116:: with SMTP id o22mr38219629qkk.23.1558012594687;
-        Thu, 16 May 2019 06:16:34 -0700 (PDT)
-Received: from ?IPv6:2601:602:9800:dae6::e443? ([2601:602:9800:dae6::e443])
-        by smtp.gmail.com with ESMTPSA id d127sm2471936qkg.69.2019.05.16.06.16.32
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 06:16:32 -0700 (PDT)
-Subject: Re: [PATCH] arm64: vdso: Explicitly add build-id option
-To:     Will Deacon <will.deacon@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-References: <20190515194824.5641-1-labbott@redhat.com>
- <CAK7LNASZnRrSsZSrnw41kintGfmpyj3iz-Vjduk7w3k9iSih-w@mail.gmail.com>
- <20190516104619.GA29705@fuggles.cambridge.arm.com>
-From:   Laura Abbott <labbott@redhat.com>
-Message-ID: <fb9891e6-3bc4-5bef-6575-5c272082085e@redhat.com>
-Date:   Thu, 16 May 2019 06:16:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=8Mom9MODQ5/QqS+RDXttev2mPfjd0+NlE9IuL/dY7r0=;
+        b=O4YC1sQv5B5iidEW/wMgseNT3DBCG+c86QLmgGQNPZrsoTLxrOBif+z9HocI9NMuQJ
+         n6OSgVqz25xdy8OsFfHUqcdHA9fVMjLDZjUs8WuDpWrPAUQgfT8IO82VJFYdI+OAMGJy
+         jaE0FxQtx44zUBBcR3fJ9k8Oc8B4BFIBnkCs9wk4/nYtLEFcb7Zo8Sp7/tQmCClbSaMx
+         XNakb8DTtjGKTgauYF5XBC7ND3g72g5S0Ua8wOkqiaUr9i19U93rXjUGUfl7pMZ0UgGs
+         w/UiD+56ujcKOTrdJ2Ug8zqOiWAmgUnxDBIqaigUwZroSqrPty4GIFOiG7QIQoyzunNR
+         2XjQ==
+X-Gm-Message-State: APjAAAUKPdSFf5cUgiLiLZBYYNZmJAAYdwSeBJOBG5IbJvSjjrjhY35U
+        FCEqSnM2sJlIoATqHpzAWcdKKf215MBZbD/Zk9UlPsQE9fc=
+X-Google-Smtp-Source: APXvYqwHkWIjT82JQxz+Mhj+wFekyLzeKbvlA3oD6vV2Dm+OkWUy416z1duYLdzrQPrdKwcvwPtwQgxdzG09+lz8BzY=
+X-Received: by 2002:a1f:3492:: with SMTP id b140mr22269628vka.8.1558012799699;
+ Thu, 16 May 2019 06:19:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190516104619.GA29705@fuggles.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <00000000000032685a058900d170@google.com> <2b0b9d18-6773-f2dc-ecb2-9f8782d0962a@i-love.sakura.ne.jp>
+In-Reply-To: <2b0b9d18-6773-f2dc-ecb2-9f8782d0962a@i-love.sakura.ne.jp>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Thu, 16 May 2019 15:19:48 +0200
+Message-ID: <CAG_fn=UHjDv=Jc_nEKKknVGrr9CC4rZ+a+hw_yAL-j4y4=89cg@mail.gmail.com>
+Subject: Re: KMSAN: uninit-value in tomoyo_check_inet_address
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     syzbot <syzbot+1018d578c410f9f37261@syzkaller.appspotmail.com>,
+        James Morris <jmorris@namei.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        takedakn@nttdata.co.jp
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/16/19 3:46 AM, Will Deacon wrote:
-> On Thu, May 16, 2019 at 01:58:56PM +0900, Masahiro Yamada wrote:
->> On Thu, May 16, 2019 at 4:51 AM Laura Abbott <labbott@redhat.com> wrote:
->>>
->>> Commit 691efbedc60d ("arm64: vdso: use $(LD) instead of $(CC) to
->>> link VDSO") switched to using LD explicitly. The --build-id option
->>> needs to be passed explicitly, similar to x86. Add this option.
->>>
->>> Fixes: 691efbedc60d ("arm64: vdso: use $(LD) instead of $(CC) to link VDSO")
->>> Signed-off-by: Laura Abbott <labbott@redhat.com>
->>> ---
->>>   arch/arm64/kernel/vdso/Makefile | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
->>> index 744b9dbaba03..ca209103cd06 100644
->>> --- a/arch/arm64/kernel/vdso/Makefile
->>> +++ b/arch/arm64/kernel/vdso/Makefile
->>> @@ -13,6 +13,7 @@ targets := $(obj-vdso) vdso.so vdso.so.dbg
->>>   obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
->>>
->>>   ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 \
->>> +               $(call ld-option, --build-id) \
->>>                  $(call ld-option, --hash-style=sysv) -n -T
->>>
->>>   # Disable gcov profiling for VDSO code
->>
->>
->> I missed that. Sorry.
->>
->> You can add  --build-id without $(call ld-option,...)
->> because it is supported by our minimal version of toolchain.
->>
->> See commit log of 1e0221374e for example.
-> 
-> Ok, so I'm ok folding in the diff below on top?
-> 
-> Will
-> 
-> --->8
-> 
-> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
-> index ca209103cd06..fa230ff09aa1 100644
-> --- a/arch/arm64/kernel/vdso/Makefile
-> +++ b/arch/arm64/kernel/vdso/Makefile
-> @@ -12,9 +12,8 @@ obj-vdso := gettimeofday.o note.o sigreturn.o
->   targets := $(obj-vdso) vdso.so vdso.so.dbg
->   obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
->   
-> -ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 \
-> -		$(call ld-option, --build-id) \
-> -		$(call ld-option, --hash-style=sysv) -n -T
-> +ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 --hash-style=sysv \
-> +		--build-id -n -T
->   
->   # Disable gcov profiling for VDSO code
->   GCOV_PROFILE := n
-> 
+From: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Date: Thu, May 16, 2019 at 3:13 PM
+To: syzbot
+Cc: <glider@google.com>, <jmorris@namei.org>,
+<linux-kernel@vger.kernel.org>,
+<linux-security-module@vger.kernel.org>, <serge@hallyn.com>,
+<syzkaller-bugs@googlegroups.com>, <takedakn@nttdata.co.jp>
 
-Looks good to me.
+> On 2019/05/16 21:58, syzbot wrote:
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    3b955a40 usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       kmsan
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=3D1027e608a00=
+000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D602468164cc=
+dc30a
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=3D1018d578c410f=
+9f37261
+> > compiler:       clang version 9.0.0 (/home/glider/llvm/clang 06d00afa61=
+eef8f7f501ebdb4e8612ea43ec2d78)
+> >
+> > Unfortunately, I don't have any reproducer for this crash yet.
+>
+> This should be already fixed in linux.git.
+>
+> #syz fix: tomoyo: Check address length before reading address family
+>
+> commit e6193f78bb689f3f424559bb45f4a091c8b314df
+> Author: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> Date:   Fri Apr 12 19:59:36 2019 +0900
+>
+>     tomoyo: Check address length before reading address family
+>
+>     KMSAN will complain if valid address length passed to bind()/connect(=
+)/
+>     sendmsg() is shorter than sizeof("struct sockaddr"->sa_family) bytes.
+>
+>     Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+>     Signed-off-by: James Morris <jamorris@linux.microsoft.com>
+Apparently the fix didn't make it to 5.1, I'll cherry-pick it to KMSAN tree=
+.
+OOC, how did you know about this bug?
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgi=
+d/syzkaller-bugs/2b0b9d18-6773-f2dc-ecb2-9f8782d0962a%40i-love.sakura.ne.jp=
+.
+> For more options, visit https://groups.google.com/d/optout.
 
-Thanks,
-Laura
+
+
+--=20
+Alexander Potapenko
+Software Engineer
+
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
