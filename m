@@ -2,136 +2,199 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9952FC04E87
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E491CC04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7316A20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:02:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B723B20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:04:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfEPHCt (ORCPT
+        id S1726692AbfEPHE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 03:02:49 -0400
-Received: from mga07.intel.com ([134.134.136.100]:16965 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726319AbfEPHCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 03:02:49 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 00:02:47 -0700
-X-ExtLoop1: 1
-Received: from odonnabh-mobl.ger.corp.intel.com (HELO localhost) ([10.252.32.47])
-  by fmsmga007.fm.intel.com with ESMTP; 16 May 2019 00:02:38 -0700
-Date:   Thu, 16 May 2019 10:02:36 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: [PATCH v20 00/28] Intel SGX1 support
-Message-ID: <20190516070236.GA5589@linux.intel.com>
-References: <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com>
- <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190514204527.GC1977@linux.intel.com>
- <20190515103531.GB10917@linux.intel.com>
- <20190515110005.GA14718@linux.intel.com>
- <B1DF6DCD-C37D-4C87-AF32-F31785184482@amacapital.net>
- <20190516050705.GB6388@linux.intel.com>
- <20190516065103.GA4642@linux.intel.com>
+        Thu, 16 May 2019 03:04:57 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:37480 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbfEPHE4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 03:04:56 -0400
+Received: by mail-vs1-f66.google.com with SMTP id o5so1641602vsq.4;
+        Thu, 16 May 2019 00:04:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q015/QHSXrok6Bw3iqMxHNHZLCbCNdwdW05xVaqSbFA=;
+        b=Adg2mPG3Opp+lMa037EF7O/Z1k8qcMAVRXY/0GcL5pmFYE4HfMGm08a0FIZgCUx/R5
+         8p0gqUgNp1uXo83fe0Bvp+XcCTJ+f7CL1DZYA2871cudz2eKINib1AMy7ZoH4O7XEKgj
+         cnNYXnnpGXoaqesWVesiJuB/7AHR53r8ohgG/JJ/ZMkfJIR5oz/YDxTaOzbw7Aw4LCsY
+         ZmwoXeDMXEW37JXu8THg6noFDcbR2CDSRP5KUVn8hL6jA/sla/eKVoOuHWyBaaTqr/8R
+         h7u4TlCjVHWXOuKyLSRRIxdidBroJHs9SBWaj3y9u/Pp1RyZDPvuu2afgGjJUVpnb30v
+         240Q==
+X-Gm-Message-State: APjAAAU2EBzwMfTpnl15FnXKz03Rx4nSwgbdczpkO7u/F24d7+uOXEH1
+        N/QHtB3e9hA76qWno7WlR3DpuxUzPyAbzoIo8O8=
+X-Google-Smtp-Source: APXvYqw6dkP3FpbWRddQ96QVJAiiTPvgI18vgQaVewrbrBgFk7NwzmrgB/94Q+BFkCvWo9DPpaDiVAnXWQvZ+5swDfg=
+X-Received: by 2002:a67:f303:: with SMTP id p3mr11428563vsf.166.1557990294356;
+ Thu, 16 May 2019 00:04:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516065103.GA4642@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190515090722.696531131@linuxfoundation.org> <20190515090731.364702401@linuxfoundation.org>
+In-Reply-To: <20190515090731.364702401@linuxfoundation.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 16 May 2019 09:04:41 +0200
+Message-ID: <CAMuHMdVFaQLbH7F=Ard5MzUzG1FTfwLH=7xz=LpA3YaZyj2+Zg@mail.gmail.com>
+Subject: Re: [PATCH 4.4 247/266] cpu/speculation: Add mitigations= cmdline option
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Price <steven.price@arm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jon Masters <jcm@redhat.com>, Waiman Long <longman@redhat.com>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Jiri Kosina <jikos@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Phil Auld <pauld@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        stable <stable@vger.kernel.org>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 09:51:03AM +0300, Jarkko Sakkinen wrote:
-> On Thu, May 16, 2019 at 08:07:05AM +0300, Jarkko Sakkinen wrote:
-> > On Wed, May 15, 2019 at 07:27:02AM -0700, Andy Lutomirski wrote:
-> > > 
-> > > > On May 15, 2019, at 4:00 AM, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com> wrote:
-> > > > 
-> > > >> On Wed, May 15, 2019 at 01:35:31PM +0300, Jarkko Sakkinen wrote:
-> > > >> This brings me to an open question in Andy's model: lets say that we
-> > > >> change the source for SIGSTRUCT from memory address to fd. How can the
-> > > >> policy prevent the use not creating a file containing a SIGSTRUCT and
-> > > >> passing fd of that to the EINIT ioctl?
-> > > > 
-> > > 
-> > > The policy will presumably check the label on the file that the fd points to.
-> > 
-> > Right (checked SELinux documentation).
-> > 
-> > Got one idea from this. Right now creation and initialization does not
-> > require any VMAs to be created (since v20). Requiring to map a VMA for
-> > copying the data would bring in my opinion a glitch to this model that
-> > we have done effort to build up.
-> > 
-> > What if we similarly change EADD ioctl in a way that it'd take an fd
-> > and an offset? This way we can enforce policy to the source where the
-> > enclave data is loaded from. On the other hand, loading SIGSTRUCT from
-> > fd enforces a legit structure for the enclave.
-> > 
-> > This would still allow to construct enclaves in VMA independent way.
-> 
-> The API would turn into this:
-> 
-> /**
->  * struct sgx_enclave_add_page - parameter structure for the
->  *                               %SGX_IOC_ENCLAVE_ADD_PAGE ioctl
->  * @fd:		file containing the page data
->  * @offset:	offset in the file containing the page data
->  * @secinfo:	address for the SECINFO data
->  * @mrmask:	bitmask for the measured 256 byte chunks
->  */
-> struct sgx_enclave_add_page {
-> 	__u64	fd;
-> 	__u64	offset;
-> 	__u64	secinfo;
-> 	__u16	mrmask;
-> } __attribute__((__packed__));
-> 
-> 
-> /**
->  * struct sgx_enclave_init - parameter structure for the
->  *                           %SGX_IOC_ENCLAVE_INIT ioctl
->  * @fd:		file containing the sigstruct
->  * @offset:	offset in the file containing the sigstruct
->  */
-> struct sgx_enclave_init {
-> 	__u64	fd;
-> 	__u64	offset;
-> };
+Hi Greg, Ben,
 
-The change to EADD/EINIT ioctl's would be simply fget/kernel_read/fput
-sequence replacing copy_from_user().
+On Wed, May 15, 2019 at 1:12 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> From: Josh Poimboeuf <jpoimboe@redhat.com>
+>
+> commit 98af8452945c55652de68536afdde3b520fec429 upstream.
+>
+> Keeping track of the number of mitigations for all the CPU speculation
+> bugs has become overwhelming for many users.  It's getting more and more
+> complicated to decide which mitigations are needed for a given
+> architecture.  Complicating matters is the fact that each arch tends to
+> have its own custom way to mitigate the same vulnerability.
+>
+> Most users fall into a few basic categories:
+>
+> a) they want all mitigations off;
+>
+> b) they want all reasonable mitigations on, with SMT enabled even if
+>    it's vulnerable; or
+>
+> c) they want all reasonable mitigations on, with SMT disabled if
+>    vulnerable.
+>
+> Define a set of curated, arch-independent options, each of which is an
+> aggregation of existing options:
+>
+> - mitigations=off: Disable all mitigations.
+>
+> - mitigations=auto: [default] Enable all the default mitigations, but
+>   leave SMT enabled, even if it's vulnerable.
+>
+> - mitigations=auto,nosmt: Enable all the default mitigations, disabling
+>   SMT if needed by a mitigation.
+>
+> Currently, these options are placeholders which don't actually do
+> anything.  They will be fleshed out in upcoming patches.
+>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
-/Jarkko
+> [bwh: Backported to 4.4:
+>  - Drop the auto,nosmt option which we can't support
+
+This doesn't really stand out. I.e. I completely missed it, and started
+wondering why "auto,nosmt" was not documented in
+kernel-parameters.txt below...
+
+> --- a/Documentation/kernel-parameters.txt
+> +++ b/Documentation/kernel-parameters.txt
+> @@ -2173,6 +2173,25 @@ bytes respectively. Such letter suffixes
+>                         in the "bleeding edge" mini2440 support kernel at
+>                         http://repo.or.cz/w/linux-2.6/mini2440.git
+>
+> +       mitigations=
+> +                       Control optional mitigations for CPU vulnerabilities.
+> +                       This is a set of curated, arch-independent options, each
+> +                       of which is an aggregation of existing arch-specific
+> +                       options.
+> +
+> +                       off
+> +                               Disable all optional CPU mitigations.  This
+> +                               improves system performance, but it may also
+> +                               expose users to several CPU vulnerabilities.
+> +
+> +                       auto (default)
+> +                               Mitigate all CPU vulnerabilities, but leave SMT
+> +                               enabled, even if it's vulnerable.  This is for
+> +                               users who don't want to be surprised by SMT
+> +                               getting disabled across kernel upgrades, or who
+> +                               have other ways of avoiding SMT-based attacks.
+> +                               This is the default behavior.
+> +
+>         mminit_loglevel=
+>                         [KNL] When CONFIG_DEBUG_MEMORY_INIT is set, this
+>                         parameter allows control of the logging verbosity for
+
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -842,3 +842,16 @@ void init_cpu_online(const struct cpumas
+>  {
+>         cpumask_copy(to_cpumask(cpu_online_bits), src);
+>  }
+> +
+> +enum cpu_mitigations cpu_mitigations = CPU_MITIGATIONS_AUTO;
+> +
+> +static int __init mitigations_parse_cmdline(char *arg)
+> +{
+> +       if (!strcmp(arg, "off"))
+> +               cpu_mitigations = CPU_MITIGATIONS_OFF;
+> +       else if (!strcmp(arg, "auto"))
+> +               cpu_mitigations = CPU_MITIGATIONS_AUTO;
+
+Perhaps
+
+    else
+            pr_crit("mitigations=%s is not supported\n", arg);
+
+?
+
+Actually that makes sense on mainline, too.
+Cooking a patch...
+
+> +
+> +       return 0;
+> +}
+> +early_param("mitigations", mitigations_parse_cmdline);
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
