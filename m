@@ -2,59 +2,63 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF0FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D56D2C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA882070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A074820848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 21:42:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eB3u/4N9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W/s8Jblq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbfEPVm3 (ORCPT
+        id S1728812AbfEPVmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 17:42:29 -0400
-Received: from mail-oi1-f201.google.com ([209.85.167.201]:55371 "EHLO
-        mail-oi1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726732AbfEPVm2 (ORCPT
+        Thu, 16 May 2019 17:42:33 -0400
+Received: from mail-vk1-f201.google.com ([209.85.221.201]:40468 "EHLO
+        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726732AbfEPVmc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 17:42:28 -0400
-Received: by mail-oi1-f201.google.com with SMTP id c64so2028895oia.22
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 14:42:28 -0700 (PDT)
+        Thu, 16 May 2019 17:42:32 -0400
+Received: by mail-vk1-f201.google.com with SMTP id d64so1799562vkg.7
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 14:42:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=bCifeYOTD3ZRMR+f0DJzC8Jsulb5gaAzagPHZLEhx8E=;
-        b=eB3u/4N9Lqf1dpOkY9UM43yqpeZDopx8/soQCcOB2zamnS3shAPt6eJYcUjtwZ68aN
-         54eUKlps4CZWJTRsXL5V2YpQgv3Ck8tGgZQ8VLWpucd6LkJHBsNaIqOw9gAdbwMA7old
-         W0P0pDzR/Nmr+Ivj0q5UG/63CCRxK+iwccajCg4qF8mOs+Qvo8wrikc+rDwnPQ7PdNmY
-         sspwXzouTux0Y/5Bg0xxiy5L0ebt8zvxEx4O9M7FKN1+sHpXbRg0I7d0+fRrjZAWGrc3
-         DyXwJmdvqYDva/ZbQUHx1aTKWkgX+/wLP2keuESnXg8vHpK7Iswkjlpks48QPQoNjWg9
-         9sWw==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=dzrCuR0CYk8j8JHGMP9OKcrg17nxFH7UW7yzX+clpRM=;
+        b=W/s8Jblq1GsRFbjb5XVhpcEHui0zgHCgxnU2c7Tlg/gWmEhESkOmAX5zkR411ILh84
+         z/8x13syAaDRUFmdNz+oEXNQVB1F9ESw4iM1KZeGb7lfpNEYp7bVsrYDy+lDjNwqIhSi
+         6TL+oG1fIfRaeU+io8iPpU6hK2lDJOUHm+EsHbMObGSl/AQnACA03W/ria/AUZl50mDf
+         kA0Fd+P3qjt+XINUh0rq3YiJezttup4RP6jTDNyC4ltADmKTlEGnkTYQPoxEDWWBqRUy
+         HbIKRULRlW6J3sbQeo3dlKlBzy01pqL+t0LmB142tNM0/C8QXmGaWYvuCUJHIuwHkyNN
+         tXpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=bCifeYOTD3ZRMR+f0DJzC8Jsulb5gaAzagPHZLEhx8E=;
-        b=KBAZtV78T3h9Hl5c3fmxFXwDusHi/x3W6/M/MPbSwJ8a3rrmKzk37J1QN5uz+bpLQL
-         j3Ckakb8oDuIiQfG4ydx7C3QCkuxonKtMp7mF5xfMioXkNNZrssdQFOJcN+SRHoaHeE4
-         xLPvQyZufqIHBa5iyl1lyiVStoRNPjtM7sA5Q0omDBTTDFXMe+i330BO6GaN9lzkJ1l/
-         feu7apgviVzryFb6DUN/lpPry6thugzmjWOAqbDGpx7vpJ+xgK1v16HJlM5D731DnVjt
-         470fVRu1kWhN/AeDS+mxMK7qBJvsLbIRItiOYGd403TFCKVKoR65cdHzr7jCIfW6EpTO
-         p9BQ==
-X-Gm-Message-State: APjAAAVPVefcCs9RoTK4P4cK90qnnUsUH1cgmg7qbLbwAXVQMcGxB+G8
-        CXhBaxeh2csrVnIjDDKYG43tvaFgtQ==
-X-Google-Smtp-Source: APXvYqymfc3zRs8o+jSc39kXwo0wB9flMCq+k1ZIVTCxqqf0oZhBmiZLWGcuX/yjgG0+8sd0WZgjf/2hhg==
-X-Received: by 2002:a9d:7347:: with SMTP id l7mr511806otk.183.1558042947824;
- Thu, 16 May 2019 14:42:27 -0700 (PDT)
-Date:   Thu, 16 May 2019 14:42:07 -0700
-Message-Id: <20190516214209.139726-1-kunyi@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=dzrCuR0CYk8j8JHGMP9OKcrg17nxFH7UW7yzX+clpRM=;
+        b=YkdrMmY04f0oq6CFFQ1gt2aP/w8aotJpTvoBIFdfLP6IxqyKgHD+7b20mBtgyjOE/d
+         zomJ35uuuk/R4vYvFAB7G5iEMzV070dIUoN6V5DxRyu/ISZPaWaLPgiBDkD0suY2Sx4s
+         mAu01i6e64DsmiURQHiLvmNLtaAAc6EXxZUoxqWSXGW+JwsOdlBQuUhpTN5jGamZiJWE
+         C5Na2i6Y+flE9vfaSvGcYYHqcR4DKeaAjhwuYiBkafpSWidbYbJOUpiVnlFmzJ2lbrvq
+         mngMst09M5XDITP+UcUXOoSiUp2DAGqiDOmU8IGhEYeABQpcJAp1qbPG64Mpa0+nG5Ny
+         Cr0A==
+X-Gm-Message-State: APjAAAXYHgbAmXY8VsZBIUzA82nGq9RpPKWK30VJAxklCWsFUwTpONfp
+        YmpetsDTo1L5okcNFnDEXQHnRwfESw==
+X-Google-Smtp-Source: APXvYqxoifRO9sH2RiZFojMHVJ10usKMr33G7oMaM4OHjVll1Z9hzRSZlNR8bShxOBoIUagpMNsyS6CLkA==
+X-Received: by 2002:a1f:fe81:: with SMTP id l123mr589442vki.51.1558042951597;
+ Thu, 16 May 2019 14:42:31 -0700 (PDT)
+Date:   Thu, 16 May 2019 14:42:08 -0700
+In-Reply-To: <20190516214209.139726-1-kunyi@google.com>
+Message-Id: <20190516214209.139726-2-kunyi@google.com>
 Mime-Version: 1.0
+References: <20190516214209.139726-1-kunyi@google.com>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: [PATCH 0/2] Fix LED GPIO trigger behavior
+Subject: [PATCH 1/2] ledtrig-gpio: Request user input pin as GPIO
 From:   Kun Yi <kunyi@google.com>
 To:     linux-leds@vger.kernel.org
 Cc:     Kun Yi <kunyi@google.com>, jacek.anaszewski@gmail.com,
@@ -66,25 +70,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-*** BLURB HERE ***
-Hello there,
+The ledtrig-gpio logic assumes the input pin can be directly converted
+to IRQ using gpio_to_irq. This is problematic since there is no
+guarantee on the pinmux function nor the direction of the pin. Request
+the pin as an input GPIO before requesting it as an IRQ.
 
-I recently tested ledtrig-gpio on an embedded controller and one of the
-issues I had involve not requesting the user input pin as GPIO.
+Tested: a free pin can be correctly requested as GPIO
+Signed-off-by: Kun Yi <kunyi@google.com>
+Change-Id: I657e3e108552612506775cc348a8b4b35d40cac5
+---
+ drivers/leds/trigger/ledtrig-gpio.c | 31 +++++++++++++++++++++++------
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
-In many embedded systems, a pin could be muxed as several functions, and
-requesting the pin as GPIO is necessary to let pinmux select the pin as
-a GPIO instead of, say an I2C pin. I'd like to learn whether it is appropriate
-to assume user of ledtrig-gpio really intends to use GPIOs and not some
-weird pins that are used as other functions.
-
-Kun Yi (2):
-  ledtrig-gpio: Request user input pin as GPIO
-  ledtrig-gpio: 0 is a valid GPIO number
-
- drivers/leds/trigger/ledtrig-gpio.c | 35 ++++++++++++++++++++---------
- 1 file changed, 24 insertions(+), 11 deletions(-)
-
+diff --git a/drivers/leds/trigger/ledtrig-gpio.c b/drivers/leds/trigger/ledtrig-gpio.c
+index ed0db8ed825f..f6d50e031492 100644
+--- a/drivers/leds/trigger/ledtrig-gpio.c
++++ b/drivers/leds/trigger/ledtrig-gpio.c
+@@ -117,6 +117,16 @@ static ssize_t gpio_trig_gpio_show(struct device *dev,
+ 	return sprintf(buf, "%u\n", gpio_data->gpio);
+ }
+ 
++static inline void free_used_gpio_if_valid(unsigned int gpio,
++					   struct led_classdev *led)
++{
++	if (gpio == 0)
++		return;
++
++	free_irq(gpio_to_irq(gpio), led);
++	gpio_free(gpio);
++}
++
+ static ssize_t gpio_trig_gpio_store(struct device *dev,
+ 		struct device_attribute *attr, const char *buf, size_t n)
+ {
+@@ -135,20 +145,30 @@ static ssize_t gpio_trig_gpio_store(struct device *dev,
+ 		return n;
+ 
+ 	if (!gpio) {
+-		if (gpio_data->gpio != 0)
+-			free_irq(gpio_to_irq(gpio_data->gpio), led);
++		free_used_gpio_if_valid(gpio_data->gpio, led);
+ 		gpio_data->gpio = 0;
+ 		return n;
+ 	}
+ 
++	ret = gpio_request(gpio, "ledtrig-gpio");
++	if (ret) {
++		dev_err(dev, "gpio_request failed with error %d\n", ret);
++		return ret;
++	}
++
++	ret = gpio_direction_input(gpio);
++	if (ret) {
++		dev_err(dev, "gpio_direction_input failed with err %d\n", ret);
++		return ret;
++	}
++
+ 	ret = request_threaded_irq(gpio_to_irq(gpio), NULL, gpio_trig_irq,
+ 			IRQF_ONESHOT | IRQF_SHARED | IRQF_TRIGGER_RISING
+ 			| IRQF_TRIGGER_FALLING, "ledtrig-gpio", led);
+ 	if (ret) {
+ 		dev_err(dev, "request_irq failed with error %d\n", ret);
+ 	} else {
+-		if (gpio_data->gpio != 0)
+-			free_irq(gpio_to_irq(gpio_data->gpio), led);
++		free_used_gpio_if_valid(gpio_data->gpio, led);
+ 		gpio_data->gpio = gpio;
+ 		/* After changing the GPIO, we need to update the LED. */
+ 		gpio_trig_irq(0, led);
+@@ -184,8 +204,7 @@ static void gpio_trig_deactivate(struct led_classdev *led)
+ {
+ 	struct gpio_trig_data *gpio_data = led_get_trigger_data(led);
+ 
+-	if (gpio_data->gpio != 0)
+-		free_irq(gpio_to_irq(gpio_data->gpio), led);
++	free_used_gpio_if_valid(gpio_data->gpio, led);
+ 	kfree(gpio_data);
+ }
+ 
 -- 
 2.21.0.1020.gf2820cf01a-goog
 
