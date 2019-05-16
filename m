@@ -2,112 +2,154 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DDAC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60574C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1040B20815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:06:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B482087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:06:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=omnibond-com.20150623.gappssmtp.com header.i=@omnibond-com.20150623.gappssmtp.com header.b="Y0mXezBZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H6xNrQHk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbfEPQGn (ORCPT
+        id S1727189AbfEPQGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:06:43 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:40965 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726529AbfEPQGm (ORCPT
+        Thu, 16 May 2019 12:06:51 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39881 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbfEPQGv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:06:42 -0400
-Received: by mail-yb1-f194.google.com with SMTP id a13so1450825ybl.8
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:06:42 -0700 (PDT)
+        Thu, 16 May 2019 12:06:51 -0400
+Received: by mail-ot1-f68.google.com with SMTP id r7so3941084otn.6
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:06:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=omnibond-com.20150623.gappssmtp.com; s=20150623;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=CHWyz1LU+xHA4Q1ska4TffuV2AfB2TvrKTO3gR0GbGE=;
-        b=Y0mXezBZVxIxseokZsbxqalDY+MaBWbgOOboidAQf5Pma6GdOx6ZZxVHR30++t/Y7q
-         P4kua8WZMlbWVIE1t/ywUPS4L/qmMs+NyeEkbC5QIECT0cXdsBYd+UxeuKIbXXG6cx+1
-         GY+oD0njrg6/P9nBGOCHBvBWGQRZfp5OOeFqsacn0cJDfuCyPZFJ3UECh54jrCIETv2A
-         ebwlOHH7So5wen48Z0j33UczjRMSJT+kNffsRx55e6kC/3la9syO+SwhKOvdhx2DrBqo
-         x1GWHEYxpzdmhD2PZmvHYLIkmozTXQny5F7/UQOE1XrIru48Nw44/P9PWTS4gBKhljp5
-         3dsA==
+        bh=I4VKFuY3dBhk8M0E31KTPJJ8MMHDVcscAUiCzod5h4g=;
+        b=H6xNrQHksO0mY+GD8TjSIB/dl7gXte6ptfd1KwGU7WS9fv6i/tgp5PRwV1QwuOcLn8
+         EQgegFWR1awHjfSGP4+gjgXMyl3Gl62XXSb7Mm7Nf1RXzKuaEetJoPJs6GSuS0KBL9vl
+         Wub95qd5nDDIuDpLobcQrJAeLZp5nVs+LMne3mcxV43wLSgIfXzXurgIQYOiBUs8VKq4
+         KUB/9oEuCvZV97lXvc2ABvfckVlCEpI9+rGFlz3y2hfmc98QPPAyHhjTuVHOdOUM3Bkm
+         UOJay+FnLHdEk6rocRtjzEXrvs47hR0q26+/2U1SS5+d0iEBJ8VXwWGOZJ51SarUWMvq
+         4fdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CHWyz1LU+xHA4Q1ska4TffuV2AfB2TvrKTO3gR0GbGE=;
-        b=cXQOmoeXCuAgTpawe2lim+jWXV+SpPALdaYs2wUO8khTYr232OdGimUuMEHSjkWeiD
-         zwAa3NAFg7CCOcRQzIX5hOzj//+SXiNonkiPpUrW/VsKcDcJFIYbhSgD1Ga0LO8ExGR2
-         nC/KxiV3WWaRdrvpFyJv4goXROabiw54xbU9x9g1CXu1tvgIC1WY++0/o2pNifOV2Mub
-         tP0BPejqc9paNiOymi7cTB9zgcrvOdPkd4vy34rgZ5nRHmI6Z2+ok0/V+G9ACMoh738h
-         r9EsI5kcCzoBQz5vi8sNpkZ5GkZ/qNdNE2IV825iOSoCtoFjDRjGjwtXJ0+Esplx5hzV
-         TCDA==
-X-Gm-Message-State: APjAAAUj8AtgS0Pa2ycUzR0CqXkI1VbTvzhHyn6BFT6szhcQ+nYEUA/h
-        KOtlXqqezGeANmu1hFGTT9rX8jH9szSieK0Twy0ddQ==
-X-Google-Smtp-Source: APXvYqwTwUep44gjhL50pdhBMWRKO6w6XgfCToc9A83ssp6llyoXZB/UrsVDxWm82O0MyBEOv0DQEWDkOmlNKpI2j8A=
-X-Received: by 2002:a25:26c7:: with SMTP id m190mr22880219ybm.486.1558022802021;
- Thu, 16 May 2019 09:06:42 -0700 (PDT)
+        bh=I4VKFuY3dBhk8M0E31KTPJJ8MMHDVcscAUiCzod5h4g=;
+        b=JzoVi0XfxsNFw3eYEtngySwsr7a4VN1ndM36p4JN3Db+NB30Ca41Z1YwOhUEGybG7K
+         0HMMlTzlsVQxiCG50bKjSxvgrKrAXC2glHjV949rv5N0TWPXbn4fR1PB3Fxu0kdXnmfV
+         5suBo6+4rDvHuUYTveN0WhrQtmAEtwU6FSf2NWa2rwhIaX1xoDnBzPNfFBF+AXFYY1zz
+         Hjd/Q47hLvqf8YgO18u4eFtpZWkIBEepwT5d32x//UE7NyjmGxZpstYTeFhQ/oc4ZISK
+         2ZBDTVLlGbUk9j09jUMlSeFotpexEcDRxLIEtECysnPCDpaDfEDi4SANLYuavpNEKhU2
+         qntw==
+X-Gm-Message-State: APjAAAUGi+i9my2BO793rnrVeCIFblTqzhsTumMwrmIK6PYFkEZszIOx
+        lZljSJ79cP00h3yYqLlpGnr95A0sSLX+c9jxz4QTbw==
+X-Google-Smtp-Source: APXvYqzler3soQWaPkgJTqHADqwjhXm5FObYmA+iecGHRrkmAWqb4Fk8pHSH7Qj3lDCx4Ml5SA54wKgEPHxudDIXDq4=
+X-Received: by 2002:a9d:7347:: with SMTP id l7mr6353382otk.183.1558022810319;
+ Thu, 16 May 2019 09:06:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190511132700.4862-1-colin.king@canonical.com>
-In-Reply-To: <20190511132700.4862-1-colin.king@canonical.com>
-From:   Mike Marshall <hubcap@omnibond.com>
-Date:   Thu, 16 May 2019 12:06:31 -0400
-Message-ID: <CAOg9mSQt42NQu-3nwZOCGOPx45y7G8aaiDaVe4SwotGnD9iY1A@mail.gmail.com>
-Subject: Re: [PATCH] orangefs: remove redundant assignment to variable buffer_index
-To:     Colin King <colin.king@canonical.com>
-Cc:     Martin Brandenburg <martin@omnibond.com>, devel@lists.orangefs.org,
-        kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mike Marshall <hubcap@omnibond.com>
+References: <20190516094234.9116-1-oleksandr@redhat.com> <20190516094234.9116-5-oleksandr@redhat.com>
+ <CAG48ez2yXw_PJXO-mS=Qw5rkLpG6zDPd0saMhhGk09-du2bpaA@mail.gmail.com> <20190516142013.sf2vitmksvbkb33f@butterfly.localdomain>
+In-Reply-To: <20190516142013.sf2vitmksvbkb33f@butterfly.localdomain>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 16 May 2019 18:06:24 +0200
+Message-ID: <CAG48ez0teQk+rVnRmr=xcM8PJ_8UZC3hSi7PABx-qunz+5=DGg@mail.gmail.com>
+Subject: Re: [PATCH RFC 4/5] mm/ksm, proc: introduce remote merge
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Hugh Dickins <hughd@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Greg KH <greg@kroah.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Timofey Titovets <nefelim4ag@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Grzegorz Halat <ghalat@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Colin...
+On Thu, May 16, 2019 at 4:20 PM Oleksandr Natalenko
+<oleksandr@redhat.com> wrote:
+> On Thu, May 16, 2019 at 12:00:24PM +0200, Jann Horn wrote:
+> > On Thu, May 16, 2019 at 11:43 AM Oleksandr Natalenko
+> > <oleksandr@redhat.com> wrote:
+> > > Use previously introduced remote madvise knob to mark task's
+> > > anonymous memory as mergeable.
+> > >
+> > > To force merging task's VMAs, "merge" hint is used:
+> > >
+> > >    # echo merge > /proc/<pid>/madvise
+> > >
+> > > Force unmerging is done similarly:
+> > >
+> > >    # echo unmerge > /proc/<pid>/madvise
+> > >
+> > > To achieve this, previously introduced ksm_madvise_*() helpers
+> > > are used.
+> >
+> > Why does this not require PTRACE_MODE_ATTACH_FSCREDS to the target
+> > process? Enabling KSM on another process is hazardous because it
+> > significantly increases the attack surface for side channels.
+> >
+> > (Note that if you change this to require PTRACE_MODE_ATTACH_FSCREDS,
+> > you'll want to use mm_access() in the ->open handler and drop the mm
+> > in ->release. mm_access() from a ->write handler is not permitted.)
+>
+> Sounds reasonable. So, something similar to what mem_open() & friends do
+> now:
+>
+> static int madvise_open(...)
+> ...
+>         struct task_struct *task = get_proc_task(inode);
+> ...
+>         if (task) {
+>                 mm = mm_access(task, PTRACE_MODE_ATTACH_FSCREDS);
+>                 put_task_struct(task);
+>                 if (!IS_ERR_OR_NULL(mm)) {
+>                         mmgrab(mm);
+>                         mmput(mm);
+> ...
+>
+> Then:
+>
+> static ssize_t madvise_write(...)
+> ...
+>         if (!mmget_not_zero(mm))
+>                 goto out;
+>
+>         down_write(&mm->mmap_sem);
+>         if (!mmget_still_valid(mm))
+>                 goto skip_mm;
+> ...
+> skip_mm:
+>         up_write(&mm->mmap_sem);
+>
+>         mmput(mm);
+> out:
+>         return ...;
+>
+> And, finally:
+>
+> static int madvise_release(...)
+> ...
+>                 mmdrop(mm);
+> ...
+>
+> Right?
 
-Thanks for the patch. Before I initialized buffer_index, Dan Williams sent
-in a warning that a particular error path could try to use ibuffer_index
-uninitialized. I could induce the problem he described with one
-of the xfstests resulting in a crashed kernel. I will try to refactor
-the code to fix the problem some other way than initializing
-buffer_index in the declaration.
-
--Mike
-
-On Sat, May 11, 2019 at 9:27 AM Colin King <colin.king@canonical.com> wrote:
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> The variable buffer_index is being initialized however this is never
-> read and later it is being reassigned to a new value. The initialization
-> is redundant and hence can be removed.
->
-> Addresses-Coverity: ("Unused Value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  fs/orangefs/file.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/orangefs/file.c b/fs/orangefs/file.c
-> index a35c17017210..80f06ee794c5 100644
-> --- a/fs/orangefs/file.c
-> +++ b/fs/orangefs/file.c
-> @@ -52,7 +52,7 @@ ssize_t wait_for_direct_io(enum ORANGEFS_io_type type, struct inode *inode,
->         struct orangefs_inode_s *orangefs_inode = ORANGEFS_I(inode);
->         struct orangefs_khandle *handle = &orangefs_inode->refn.khandle;
->         struct orangefs_kernel_op_s *new_op = NULL;
-> -       int buffer_index = -1;
-> +       int buffer_index;
->         ssize_t ret;
->         size_t copy_amount;
->
-> --
-> 2.20.1
->
+Yeah, that looks reasonable.
