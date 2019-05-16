@@ -2,109 +2,212 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E46DAC04E87
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2D2C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6BDB206A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:16:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1557994593;
-	bh=PdCpmUbmpqpTdBKFLPFgjQgpSknHTPpWqz0nse0/6GA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hfoHLS4v9PvnawhOY+0PpAcUqP4hht4nDvVd2WZRlJuXc+4iW3qUmqZvCybrRAEZH
-	 qE4/qAFDMZOdWnkkpyOU/qLjLmp5cO0aOToiYP1sw9/anWXFoTuR1rmkD+ACdNGCDz
-	 CSZnmlg8BW7pUN560PdudckQjYi6dBUh3uGzCpfE=
+	by mail.kernel.org (Postfix) with ESMTP id 3BB5520818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726739AbfEPIQc (ORCPT
+        id S1726554AbfEPITT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 04:16:32 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45223 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfEPIQc (ORCPT
+        Thu, 16 May 2019 04:19:19 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:37624 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726272AbfEPITT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 04:16:32 -0400
-Received: by mail-wr1-f67.google.com with SMTP id b18so2233123wrq.12;
-        Thu, 16 May 2019 01:16:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0fnfe8Q9cs3mUyaf6ypStYy6Jn39oq2+1juaIcTgyT8=;
-        b=qPMurDwKMikN+99yRkycl0UBlF9+bsgsK+t/KBSNF8dv9njkGn+bh2cyDWKlBylvhS
-         nrWkZN3AKrr55HSxYWe5KBWlgve2PUg5PqqPyO8xS2zzkT5VmLjvTNqmeygfcb5sl91h
-         mgBBlfBPtcZl3Y62KgjR8eBflUdFMjQZscpHF3A/TGuKGFWoCJqum4nWCrVigh/K03u+
-         hICm2254MRLzISmjKns22x9SW1zP7o7VxGOfMu+wCr9MnJRGx8B4z9N+H6fKIoO8Dsvy
-         Cz9LjM/6XATDqdmm/wU/4PUmmzxB5T0W1wUiM84beF2/0dUDKTeY2JUW1kkgpt8KoYIl
-         CYgw==
+        Thu, 16 May 2019 04:19:19 -0400
+Received: by mail-it1-f193.google.com with SMTP id m140so4786968itg.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:19:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0fnfe8Q9cs3mUyaf6ypStYy6Jn39oq2+1juaIcTgyT8=;
-        b=tkEWMuPksBrTgcu0qIA3Zq3AWagYn8IXd8Umi9ckPTnyaz73HDOtJqfuRtV02APmNu
-         LKnNLWHMuTbx0s7UBKDFwNmHzRiNkT/npqTMjHPhlObbe6J9HzohIP5HJwW78dfk6hEt
-         QDty8GnoRIy5K2YVGieygVIWCc7QpNBLpOK3DFi+U5qTiBgM6BqSyXqb3ds0uROeoKRY
-         C8UwARmGn4susKkMIAQSZcUfjW+IyIHi5og+4VMOqietu4e8BtY5MnlbxEd4O4p/1kvT
-         MCLdFIcRvSuTsXemINzUpUvNLKfLhmV+YQYPRiZcb80z+1EmSaMj+3NI6LDiIFb7iSfb
-         RTIQ==
-X-Gm-Message-State: APjAAAXlhpYywPjKquxPqOX2pWcY3qvUMgcDtUBDBm75qsgXaA3wHkym
-        vkhBrTTq6ep4W+CBTTram74=
-X-Google-Smtp-Source: APXvYqxjSfJRXAtTYKgQve1Gfd36DHEOs3ixCCYsa6uTbx/h4372ohZLd7H2PLAYHboVJJ5dTV5H9Q==
-X-Received: by 2002:adf:afdf:: with SMTP id y31mr26761723wrd.315.1557994590605;
-        Thu, 16 May 2019 01:16:30 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id d3sm6175861wmf.46.2019.05.16.01.16.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 May 2019 01:16:29 -0700 (PDT)
-Date:   Thu, 16 May 2019 10:16:27 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] cpu/speculation: Warn on unsupported mitigations=
- parameter
-Message-ID: <20190516081627.GA109450@gmail.com>
-References: <20190516070935.22546-1-geert@linux-m68k.org>
- <nycvar.YFH.7.76.1905160947210.22183@cbobk.fhfr.pm>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s68yQo+QQvCZajbWc1oevyw/oT7lrvS4cXS+T8Bmo2M=;
+        b=EwphtlJ63VR9Yn8Ov0HSG/7H1y1l97MkP6vXNWnzJiuPCaIE2FkVZVjDYnoozd0IaM
+         Fg6/PHMKy2T4d4D4F0lTywdb2S4BHDk9aaifwJoW8TwZ7oL6N2i8Juf+bOrmw4eHGXYf
+         PmQQlJG854i1FWeCaHZ7QQFahHzvxp4bDqDgm5MipZ3onnJoeib6jfJg+E4oMcw6a74K
+         UXHNRUFYC/6nhayqnDk4tK3ej3kBdbiWNkrJeyCJPyVTH5aqbIOSCCgpKCkXauLxLAmu
+         yq0G8LqZtpyyM2DZFmIGKuIdSMXUkbPBvkCzI9kCzP2ukvN1iCDQdnH3OBRRfJB+9sz8
+         6pew==
+X-Gm-Message-State: APjAAAXGDvTcpYZLyKFrdOS2HMyZ48eUaQZ5oGNu8UZ69q2e6c7q4nhK
+        6zFVO7doD2LBrqoZyjzrbBvplisRu5vKc1zX3pKlSw==
+X-Google-Smtp-Source: APXvYqxE7uRnSXhpRjc6utJg1hkfIvguX4bu4Q62XoHeKtFLtbDbP5ywW+siT+0KWV1MRstAncfRoFq49aUQmT8mCfY=
+X-Received: by 2002:a02:37d7:: with SMTP id r206mr32206828jar.127.1557994757853;
+ Thu, 16 May 2019 01:19:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.1905160947210.22183@cbobk.fhfr.pm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190510102051.25647-1-kasong@redhat.com> <4f453ec6-67a6-2c8f-2aab-acb54ae55645@redhat.com>
+In-Reply-To: <4f453ec6-67a6-2c8f-2aab-acb54ae55645@redhat.com>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Thu, 16 May 2019 16:19:06 +0800
+Message-ID: <CACPcB9d-h75MEMrjREe7sMvjRqvxBhGxaeR3_k7An2-BDsDy4Q@mail.gmail.com>
+Subject: Re: [RFC PATCH] vmcore: Add a kernel cmdline device_dump_limit
+To:     Bhupesh Sharma <bhsharma@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Young <dyoung@redhat.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Ganesh Goudar <ganeshgr@chelsio.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 10, 2019 at 7:17 PM Bhupesh Sharma <bhsharma@redhat.com> wrote:
+>
+> Hi Kairui,
+>
+> Thanks for the patch. Please see my comments in-line:
+>
+> On 05/10/2019 03:50 PM, Kairui Song wrote:
+> > Device dump allow drivers to add device related dump data to vmcore as
+> > they want. This have a potential issue, the data is stored in memory,
+> > drivers may append too much data and use too much memory. The vmcore is
+> > typically used in a kdump kernel which runs in a pre-reserved small
+> > chunk of memory. So as a result it will make kdump unusable at all due
+> > to OOM issues.
+> >
+> > So introduce new device_dump_limit= kernel parameter, and set the
+> > default limit to 0, so device dump is not enabled unless user specify
+> > the accetable maxiam
+>
+>        ^^^^ acceptable maximum
 
-* Jiri Kosina <jikos@kernel.org> wrote:
+Will fix this typo.
 
-> On Thu, 16 May 2019, Geert Uytterhoeven wrote:
-> 
-> > Currently, if the user specifies an unsupported mitigation strategy on
-> > the kernel command line, it will be ignored silently.  The code will
-> > fall back to the default strategy, possibly leaving the system more
-> > vulnerable than expected.
-> 
-> Honestly, I am not convinced. We are not doing this for vast majority of 
-> other cmdline options either, if for any at all.
+>
+> > memory usage for device dump data. In this way user
+> > will also have the chance to adjust the kdump reserved memory
+> > accordingly.
+>
+> Hmmm., this doesn't give much confidence with the
+> PROC_VMCORE_DEVICE_DUMP feature in its current shape. Rather shouldn't
+> we be enabling config PROC_VMCORE_DEVICE_DUMP only under EXPERT mode for
+> now, considering that this feature needs further thrashing and testing
+> with real setups including platforms where drivers append large amounts
+> of data to vmcore:
 
-That's really a weakness - I've been bitten by this previously: I typoed 
-or mis-remembered a command line option and didn't have it while I 
-thought I had it.
+I think no need to move it to expert mode, just leave it disabled by
+default should be better, that should be enough to make sure driver
+won't append that much memory and cause OOM, while it could still be
+enabled without changing the kernel, so this feature won't bring extra
+risk, and could be enabled anytime easily.
 
-Our boot-commandline library is pretty user-unfriendly.
+>
+> diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
+> index 817c02b13b1d..c47a12cf7fc0 100644
+> --- a/fs/proc/Kconfig
+> +++ b/fs/proc/Kconfig
+> @@ -45,7 +45,7 @@ config PROC_VMCORE
+>           Exports the dump image of crashed kernel in ELF format.
+>
+>   config PROC_VMCORE_DEVICE_DUMP
+> -       bool "Device Hardware/Firmware Log Collection"
+> +       bool "Device Hardware/Firmware Log Collection" if EXPERT
+>          depends on PROC_VMCORE
+>          default n
+>          help
+> @@ -59,6 +59,12 @@ config PROC_VMCORE_DEVICE_DUMP
+>            If you say Y here, the collected device dumps will be added
+>            as ELF notes to /proc/vmcore.
+>
+> +         Considering that there can be device drivers which append
+> +         large amounts of data to vmcore, you should say N here unless
+> +         you are reserving a large chunk of memory for crashdump
+> +         kernel, because otherwise the crashdump kernel might become
+> +         unusable due to OOM issues.
+> +
+>
+> May be you can add a 'Fixes:' tag here.
 
-Thanks,
+Problem is previous commit seems not broken, just bring extra memory
+stress. Is "Fixes:" tag suitable for this commit?
 
-	Ingo
+>
+> > Signed-off-by: Kairui Song <kasong@redhat.com>
+> > ---
+> >   fs/proc/vmcore.c | 20 ++++++++++++++++++++
+> >   1 file changed, 20 insertions(+)
+> >
+> > diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> > index 3fe90443c1bb..e28695ef2439 100644
+> > --- a/fs/proc/vmcore.c
+> > +++ b/fs/proc/vmcore.c
+> > @@ -53,6 +53,9 @@ static struct proc_dir_entry *proc_vmcore;
+> >   /* Device Dump list and mutex to synchronize access to list */
+> >   static LIST_HEAD(vmcoredd_list);
+> >   static DEFINE_MUTEX(vmcoredd_mutex);
+> > +
+> > +/* Device Dump Limit */
+> > +static size_t vmcoredd_limit;
+> >   #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+> >
+> >   /* Device Dump Size */
+> > @@ -1465,6 +1468,11 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+> >       data_size = roundup(sizeof(struct vmcoredd_header) + data->size,
+> >                           PAGE_SIZE);
+> >
+> > +     if (vmcoredd_orig_sz + data_size >= vmcoredd_limit) {
+> > +             ret = -ENOMEM;
+>
+> Should we be adding a WARN() here to let the user know that the device
+> dump data will not be available in vmcore?
+
+Yes, that could be very helpful. How about pr_err_once? WARN is too
+noise, just give a hint to the user that device dump is disabled
+should be enough, so user will know why device dump data is not
+present and will just enable it.
+
+>
+> > +             goto out_err;
+> > +     }
+> > +
+> >       /* Allocate buffer for driver's to write their dumps */
+> >       buf = vmcore_alloc_buf(data_size);
+> >       if (!buf) {
+> > @@ -1502,6 +1510,18 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
+> >       return ret;
+> >   }
+> >   EXPORT_SYMBOL(vmcore_add_device_dump);
+> > +
+> > +static int __init parse_vmcoredd_limit(char *arg)
+> > +{
+> > +     char *end;
+> > +
+> > +     if (!arg)
+> > +             return -EINVAL;
+> > +     vmcoredd_limit = memparse(arg, &end);
+> > +     return end > arg ? 0 : -EINVAL;
+> > +
+> > +}
+> > +__setup("device_dump_limit=", parse_vmcoredd_limit);
+>
+> We should be adding this boot argument and its description to
+> 'Documentation/admin-guide/kernel-parameters.txt'
+
+Good suggestion, will update the document.
+
+>
+> >   #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+> >
+> >   /* Free all dumps in vmcore device dump list */
+> >
+>
+> Thanks,
+> Bhupesh
+
+Thanks for the review!
+
+
+
+--
+Best Regards,
+Kairui Song
