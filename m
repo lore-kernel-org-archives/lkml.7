@@ -2,126 +2,145 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9385C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9C6C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77F982070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2606E2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:44:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XE11i5xy"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="ggFBjkGi";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="XWvtEmS/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728906AbfEPRob (ORCPT
+        id S1728908AbfEPRo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 13:44:31 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44481 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfEPRob (ORCPT
+        Thu, 16 May 2019 13:44:57 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:38680 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726441AbfEPRo4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 13:44:31 -0400
-Received: by mail-pl1-f196.google.com with SMTP id c5so1958897pll.11
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 10:44:31 -0700 (PDT)
+        Thu, 16 May 2019 13:44:56 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost1.synopsys.com [10.12.135.161])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D013DC0B97;
+        Thu, 16 May 2019 17:45:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1558028701; bh=crxjKHxEpieoI+cLpdzkqh0oUiM/l9M6CXzyCwZkdhI=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=ggFBjkGijkfoJM5Ozcqz40PK3kEr8j+yzWnHuC55qsD6vDzi/hT2NIIyUgppm8OXn
+         vIrQpfK2DP9FCWYPunx1l3yVkmVP69SYIt6XD8IizAnZCYc6xy3itGglXaOLAh43X9
+         ykRA44Z9qWCp1vTmJpESTbB93gwrIREsUnJBorpKtKLziSL9P6rPDM3BdPV+yQfFSC
+         GawVZCKT9GZOEp0y3L7sM+of+QdCTsYojJFSdJmAx12F2v340uNvkVOcEC9epD2Rwa
+         /G0Sbsoixy3akafk9pC9KywwdH6tN6hUEPpg+C8bzIlmbBTHsQoRhRmdHnDvedr279
+         s+MiWI0dfO/Zw==
+Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id C0B1CA009B;
+        Thu, 16 May 2019 17:44:50 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 16 May 2019 10:44:48 -0700
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Thu, 16 May 2019 10:44:48 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:from:cc:to:user-agent:date;
-        bh=DX/0b6pgfq4vy5hUE2kIwYaDF+AtWlTKg8LM9zPMAa8=;
-        b=XE11i5xyueyydoGi38YztQ9gONd0wLmDe/yVLxiFnODw2wvOE8lJprhZUutH/Gdcpv
-         eYIv8FhThxToxGi5KSJixb92A62/lV/+0IeFK2kOVV/KUchrY3Z7Ey+5vgkZ2CDhK5Ye
-         T4EYyt69uuYjqPSvA0xLVWIDZ+Ijr0X5Xfb7E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:from:cc:to
-         :user-agent:date;
-        bh=DX/0b6pgfq4vy5hUE2kIwYaDF+AtWlTKg8LM9zPMAa8=;
-        b=k5qWfPsm+uI8CcdnbkXfl+BH8oOMwsJWbvf+hgReUP5T4l/n2gyjEaPp3CZwVJPY5L
-         RuIfrWRdRVnQXJ8u4UDt4gpUrOHGVP3L5GQYsMBRDlHSSSOz8nnnePw7OBa/kdWIsS8P
-         L7p95VfpcN9gpC2on7T5GM637UWY5pVFUjNJAjNeYcjdMiwOF9sLlNntvnnahDToDGpJ
-         55zrAU2wHAYm3UEwWFP+haylq9YWIKjI5Gue95WnRGwd/7gLWMGM6a00CtAHqQCOqRYx
-         9LAbrAjoTnT+mkViHnT93488JNB8KwXXQ13FgEag0x/RwKphayASGSZVwsp1HTTwdavk
-         KcBg==
-X-Gm-Message-State: APjAAAUDOOJ0lPxi90vyCP0Y/1om7RVloFpJMEsah1QbzxhjZ6bqf6qN
-        86dlc4xkTXL5uXJWT931/+Vugg==
-X-Google-Smtp-Source: APXvYqwy/23C7m757nVm0coVXHptiwFhOoy5KhnjKfhpmcwZpI4khzL/xlya3yYqee+7/YvydKFFsQ==
-X-Received: by 2002:a17:902:b489:: with SMTP id y9mr49928224plr.70.1558028670695;
-        Thu, 16 May 2019 10:44:30 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id c16sm3017447pfd.99.2019.05.16.10.44.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 May 2019 10:44:29 -0700 (PDT)
-Message-ID: <5cdda17d.1c69fb81.8e244.683a@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <5f598806-1c36-7c2a-0f47-da79ec7d28c6@arm.com>
-References: <20190516102817.188519-1-hsinyi@chromium.org> <20190516102817.188519-2-hsinyi@chromium.org> <CAL_JsqLx1UdjCnZ69aQm0GU_uOdd7tTdD_oM=D7yhDANoQ0fEA@mail.gmail.com> <CAJMQK-jrJQri3gM=X6JRD6Rk+B5S4939HJTptrQMY64xEWr1qA@mail.gmail.com> <CAL_Jsq+dVg9E_EzpoC4Bz1ytUckDGXUcEJyU5pV2HS6rZuKmHA@mail.gmail.com> <CAJMQK-hzjSBf2-QFMn52Sa8fwvm5-gaddzBOudfEc1neR2rwnA@mail.gmail.com> <5f598806-1c36-7c2a-0f47-da79ec7d28c6@arm.com>
-Subject: Re: [PATCH v3 2/3] arm64: implement update_fdt_pgprot()
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+ d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rmN+AYK9mAKfOlO6Te8/lSQdYymNXwo+lfd4hh7gwRo=;
+ b=XWvtEmS/5T+96RkA7s6+z+Mvcii4oqrb+kQ3YYdxhfj2iBc03PUvegQwG9nzcRnb2iS1EVazfGx+G4ktzkrQUYiMcOxAJhTcaPLr+qvLf1sYq85oe6ExfLU1O20b+mIWGVtPuTkviMYnH4Q/tH+iIdlwjA8O7aeaFkStDjkxbVo=
+Received: from CY4PR1201MB0120.namprd12.prod.outlook.com (10.172.78.14) by
+ CY4PR1201MB0024.namprd12.prod.outlook.com (10.172.77.135) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.17; Thu, 16 May 2019 17:44:45 +0000
+Received: from CY4PR1201MB0120.namprd12.prod.outlook.com
+ ([fe80::d536:9377:4e1c:75ad]) by CY4PR1201MB0120.namprd12.prod.outlook.com
+ ([fe80::d536:9377:4e1c:75ad%4]) with mapi id 15.20.1900.010; Thu, 16 May 2019
+ 17:44:45 +0000
+From:   Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+CC:     "paltsev@snyopsys.com" <paltsev@snyopsys.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Miles Chen <miles.chen@mediatek.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Kees Cook <keescook@chromium.org>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        James Morse <james.morse@arm.com>
-User-Agent: alot/0.8.1
-Date:   Thu, 16 May 2019 10:44:28 -0700
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: RE: [PATCH 4/9] ARC: mm: do_page_fault refactor #3: tidyup vma access
+ permission code
+Thread-Topic: [PATCH 4/9] ARC: mm: do_page_fault refactor #3: tidyup vma
+ access permission code
+Thread-Index: AQHVCrVzPLg+oAEwCUOQqcYrmCMW8aZuCFmg
+Date:   Thu, 16 May 2019 17:44:44 +0000
+Message-ID: <CY4PR1201MB0120A3C58405DD60FF6B4359A10A0@CY4PR1201MB0120.namprd12.prod.outlook.com>
+References: <1557880176-24964-1-git-send-email-vgupta@synopsys.com>
+ <1557880176-24964-5-git-send-email-vgupta@synopsys.com>
+ <1558027448.2682.11.camel@synopsys.com>
+ <C2D7FE5348E1B147BCA15975FBA2307501A2517B16@us01wembx1.internal.synopsys.com>
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A2517B16@us01wembx1.internal.synopsys.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abrodkin@synopsys.com; 
+x-originating-ip: [198.182.37.200]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1077b586-acf5-412c-092c-08d6da262ee8
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:CY4PR1201MB0024;
+x-ms-traffictypediagnostic: CY4PR1201MB0024:
+x-microsoft-antispam-prvs: <CY4PR1201MB002463280129A553DFE80501A10A0@CY4PR1201MB0024.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0039C6E5C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(366004)(376002)(346002)(39860400002)(13464003)(189003)(199004)(256004)(14454004)(14444005)(66066001)(7696005)(66946007)(76176011)(73956011)(66476007)(66556008)(64756008)(66446008)(476003)(71200400001)(11346002)(446003)(71190400001)(486006)(6636002)(4326008)(316002)(99286004)(86362001)(54906003)(68736007)(478600001)(76116006)(26005)(186003)(53936002)(6246003)(4744005)(3846002)(6116002)(33656002)(2906002)(102836004)(6506007)(53546011)(55016002)(25786009)(9686003)(305945005)(7736002)(107886003)(74316002)(6436002)(229853002)(6862004)(81166006)(5660300002)(52536014)(8676002)(81156014)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR1201MB0024;H:CY4PR1201MB0120.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: pdL7VN2asrODAZs1KAZmRuYYW1bxsPnqamB6kHGgDhZpjNHzS1qpVvD+oebPpQLvSM+mehomemiXO2c/NuC4Ja/b6WK50TwOuzDPn5DVQto2qWB59/wfYVF4kTeRkYNm1T6tsfWgiJtdny/4YuTuu6C6T9DpBtHildij8kogUF3IG9sgEOomWwgqmnv5hWlWipCEMjvHib5HzyzA6H+vsiVuVawXOCH6wtPqXryAxCGrG78kNGLAq8z5b6olRYPJr6tdmzaWxP4/QB4hfICPw4HHauaAO/64c+H7S13K9uAbXj3e1MUZokXsRWnN34e6xWL+48tRfRIakjxiNZVEmpIA8u2tPFS+0H511mD54+rojAEIOLj2lmyXhduNhhrgQWF+YELc987tgVUZzKloOdyTF8Q4VaqIsW7b1hQhjZo=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1077b586-acf5-412c-092c-08d6da262ee8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 17:44:44.9274
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0024
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting James Morse (2019-05-16 10:34:16)
-> Hi!
->=20
-> On 16/05/2019 17:48, Hsin-Yi Wang wrote:
-> > On Thu, May 16, 2019 at 11:32 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >> Doesn't kexec operate on a copy because it already does modifications.
->=20
-> It does!
->=20
-> > This patch is to assist "[PATCH v3 3/3] fdt: add support for rng-seed"
-> > (https://lkml.org/lkml/2019/5/16/257). I thought that by default
-> > second kernel would use original fdt, so I write new seed back to
-> > original fdt. Might be wrong.
-> >=20
-> > ** "[PATCH v3 3/3] fdt: add support for rng-seed" is supposed to
-> > handle for adding new seed in kexec case, discussed in v2
-> > (https://lkml.org/lkml/2019/5/13/425)
-> >=20
-> > By default (not considering user defines their own fdt), if second
-> > kernel uses copied fdt, when is it copied and can we modify that?
->=20
-> Regular kexec's user-space already updates the dtb for the cmdline and ma=
-ybe the initrd.
-> For KASLR, it generates its own seed with getrandom():
->=20
-> https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/tree/ke=
-xec/arch/arm64/kexec-arm64.c#n483
->=20
-> If user-space can do it, user-space should do it!
->=20
+Hi Vineet,
 
-Doesn't it need to be done in two places? Userspace and also in the
-kernel when kexec_file_load() is used? At least, I see a bit of code
-that does kaslr seed updates to the copied dtb in setup_dtb() of
-arch/arm64/kernel/machine_kexec_file.c that probably needs to get an
-update for this new property too.
+> -----Original Message-----
+> From: Vineet Gupta <vgupta@synopsys.com>
+> Sent: Thursday, May 16, 2019 8:38 PM
+> To: Eugeniy Paltsev <paltsev@synopsys.com>
+> Cc: paltsev@snyopsys.com; linux-kernel@vger.kernel.org; Alexey Brodkin <a=
+brodkin@synopsys.com>; linux-
+> snps-arc@lists.infradead.org
+> Subject: Re: [PATCH 4/9] ARC: mm: do_page_fault refactor #3: tidyup vma a=
+ccess permission code
+>=20
+> On 5/16/19 10:24 AM, Eugeniy Paltsev wrote:
+> >> +	unsigned int write =3D 0, exec =3D 0, mask;
+> > Probably it's better to use 'bool' type for 'write' and 'exec' as we re=
+ally use them as a boolean
+> variables.
+>=20
+> Right those are semantics, but the generated code for "bool" is not ideal=
+ - given
+> it is inherently a "char" it is promoted first to an int with an addition=
+al EXTB
+> which I really dislike.
+> Guess it is more of a style thing.
 
+In that sense maybe think about re-definition of "bool" type to 32-bit one
+for entire architecture and get that benefit across the entire source tree?
+
+-Alexey
