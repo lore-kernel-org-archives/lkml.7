@@ -2,147 +2,103 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE66C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE68C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F80F205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:49:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558025352;
-	bh=etY63TGfN/UcXCwcQB48z3t2Eq9+EUF4qwVjeYxerr8=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=ScaghBmyBb3v/bPCJT+TEAEzCvO9OowcS4ZF74i4hRJxiA2NIfsVFYO9VMkzbcA2A
-	 t3dtTMNGNev0N0URzXC+xyo/VsJNYKDFnze2mxvuIdTc1Rds9G+iHnvS9vkrpYBYtv
-	 QLYl3E6x+6tcnPX1lQdiYSGvTCqxM7rh9yWgTB3k=
+	by mail.kernel.org (Postfix) with ESMTP id BD681205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:49:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y7WJlt4b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbfEPQtL (ORCPT
+        id S1728681AbfEPQtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:49:11 -0400
-Received: from casper.infradead.org ([85.118.1.10]:35514 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbfEPQtK (ORCPT
+        Thu, 16 May 2019 12:49:14 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46088 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728035AbfEPQtO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:49:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=tKk911ROe0tCzfs+bPSmBKTBLaoEpyGgcQBfu96Z0/A=; b=o+KMLHQcUSCKeA1ZIZKrnKMdM/
-        2nBNKGsEqWbYOWDUBEJtN6ARs6K3xOzhRIbBu2ouzL9VarJ/1dPQ0hq48iBBvLE86aeYUccksRnwa
-        DZGA5XVXUwaLaCgj1B/uhN70TY+TH1m7aip/IQUcYt47KNOaVevs1pqlAZfD9b8NIslR6ush0LUlx
-        z+ILLXF0w0RH7YmF2uviGbTRmkMpMpIVDeWUBQq9unDNurrRbP41/m0GNMtsFWnv90dzfkvpntmAx
-        uQoOdmEczCNaohZ/EG3SplP0ZH4U6SeKzq6CS5evW6pLT6IcewLG75WKabgEzVoORfVjyfJaAqoiY
-        doYP8aOg==;
-Received: from 179.186.99.85.dynamic.adsl.gvt.net.br ([179.186.99.85] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hRJZ6-0001JX-EY; Thu, 16 May 2019 16:49:08 +0000
-Date:   Thu, 16 May 2019 13:49:02 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL for v5.2-rc1] media fixes
-Message-ID: <20190516134902.59a3a855@coco.lan>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 16 May 2019 12:49:14 -0400
+Received: by mail-qt1-f196.google.com with SMTP id z19so4640072qtz.13
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:49:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V54eRnKwdjS+PEKbXuK6UCgdmon3FdybUlySjzqEJGo=;
+        b=Y7WJlt4bLjAJ4WhWIbMzJ/8PhricDREUZCU7Q1/HTZvvFSjXhMw6Fj3NYJLMxnF5H3
+         xFmNwRnXYTntWpRu3Lpdbvwa5tqci5Xe358XawRq25kd+KE+5NovF5rGFK6+pyVUKFjE
+         t5pWcHvFVNZlhWAdiIbzyX+khalrXvVMxRhdo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V54eRnKwdjS+PEKbXuK6UCgdmon3FdybUlySjzqEJGo=;
+        b=qzZh9SxsiAiAUuE/FPLywk7z6GCOX+oyB421rAAR09Rcf5xx0jT9MhrRozlb7kLyx4
+         by8LTTi0WLwduA1XjD/Elu5+AcGhVb08HZ+mq1k0Inetb4xw9NUeWOUoTRcAuwINQJFC
+         avlwwIUow8l2BmJsF1RhKot0fBjC5FN6xDzzJFas9dCRUmDlK7m23E0ng6TXcU4QXc2V
+         /e4uBstkpI0sKVcox02GFhsae527Qji9qfBJJ6HiQGbvUdBrRYwdVcJcTz8QdtO08IC6
+         xvW2ZYt0tovWhh3d1Wt4W5Z0Wyu5jR7jvX1qv+rlmWhO6uCFR68DK8AWTX5pyKws5ELo
+         gnvw==
+X-Gm-Message-State: APjAAAUloXaD7OVSbitjzQnL66HGYcw0aMaZB0EnfhKV+Ixd7OquikZB
+        GYi33nIpxJY+XojyiPI8WtYkNdAFvdmfKp2NCZznaQ==
+X-Google-Smtp-Source: APXvYqy+/6RfTqO4HVKK22HJ4SUb9lK/prYvmIxZ0Cl7qxFHUR3oqhJi1qikDD7OHXt/c+stN5QSeCyFVHsMZ9dZnA4=
+X-Received: by 2002:a0c:8aad:: with SMTP id 42mr40983967qvv.200.1558025353386;
+ Thu, 16 May 2019 09:49:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20190516102817.188519-1-hsinyi@chromium.org> <20190516102817.188519-2-hsinyi@chromium.org>
+ <CAL_JsqLx1UdjCnZ69aQm0GU_uOdd7tTdD_oM=D7yhDANoQ0fEA@mail.gmail.com>
+ <CAJMQK-jrJQri3gM=X6JRD6Rk+B5S4939HJTptrQMY64xEWr1qA@mail.gmail.com> <CAL_Jsq+dVg9E_EzpoC4Bz1ytUckDGXUcEJyU5pV2HS6rZuKmHA@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+dVg9E_EzpoC4Bz1ytUckDGXUcEJyU5pV2HS6rZuKmHA@mail.gmail.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Fri, 17 May 2019 00:48:47 +0800
+Message-ID: <CAJMQK-hzjSBf2-QFMn52Sa8fwvm5-gaddzBOudfEc1neR2rwnA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] arm64: implement update_fdt_pgprot()
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Miles Chen <miles.chen@mediatek.com>,
+        James Morse <james.morse@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, May 16, 2019 at 11:32 PM Rob Herring <robh+dt@kernel.org> wrote:
 
-Please pull from:
-  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/me=
-dia/v5.2-1
+> Doesn't kexec operate on a copy because it already does modifications.
+>
+Hi Rob,
 
-For some fixes for some platform drivers (rockchip, atmel, omap, daVinci,
-tegra-cec, coda and rcar).=20
+This patch is to assist "[PATCH v3 3/3] fdt: add support for rng-seed"
+(https://lkml.org/lkml/2019/5/16/257). I thought that by default
+second kernel would use original fdt, so I write new seed back to
+original fdt. Might be wrong.
 
-It also includes a fix on one of the V4L2 uAPI doc, explaining a border cas=
-e.
+** "[PATCH v3 3/3] fdt: add support for rng-seed" is supposed to
+handle for adding new seed in kexec case, discussed in v2
+(https://lkml.org/lkml/2019/5/13/425)
+
+By default (not considering user defines their own fdt), if second
+kernel uses copied fdt, when is it copied and can we modify that?
 
 Thanks!
-Mauro
-
-The following changes since commit 0d672fffb447aa1699d76fdacd90dc31eeb66d97:
-
-  media: dt-bindings: aspeed-video: Add missing memory-region property (201=
-9-04-30 13:53:12 -0400)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/me=
-dia/v5.2-1
-
-for you to fetch changes up to fc8670d1f72b746ff3a5fe441f1fca4c4dba0e6f:
-
-  media: rockchip/vpu: Fix/re-order probe-error/remove path (2019-05-15 05:=
-38:22 -0400)
-
-----------------------------------------------------------------
-media updates for v5.2-rc1
-
-----------------------------------------------------------------
-Boris Brezillon (2):
-      media: rockchip/vpu: Get vdev from the file arg in vidioc_querycap()
-      media: rockchip/vpu: Initialize mdev->bus_info
-
-Dan Carpenter (2):
-      media: omap_vout: potential buffer overflow in vidioc_dqbuf()
-      media: davinci/vpbe: array underflow in vpbe_enum_outputs()
-
-Eugen Hristev (3):
-      media: atmel: atmel-isc: limit incoming pixels per frame
-      media: atmel: atmel-isc: fix INIT_WORK misplacement
-      media: atmel: atmel-isc: fix asd memory allocation
-
-Hans Verkuil (2):
-      media: field-order.rst: clarify FIELD_ANY and FIELD_NONE
-      media: tegra-cec: fix cec_notifier_parse_hdmi_phandle return check
-
-Jonas Karlman (3):
-      media: rockchip/vpu: Do not request id 0 for our video device
-      media: rockchip/vpu: Add missing dont_use_autosuspend() calls
-      media: rockchip/vpu: Fix/re-order probe-error/remove path
-
-Niklas S=C3=B6derlund (2):
-      media: rcar-csi2: restart CSI-2 link if error is detected
-      media: rcar-csi2: Propagate the FLD signal for NTSC and PAL
-
-Philipp Zabel (1):
-      media: coda: fix unset field and fail on invalid field in buf_prepare
-
-Rui Miguel Silva (1):
-      media: staging/imx: add media device to capture register
-
- Documentation/media/uapi/v4l/field-order.rst       | 16 +++--
- drivers/media/platform/atmel/atmel-isc-regs.h      | 19 ++++++
- drivers/media/platform/atmel/atmel-isc.c           | 46 +++++++++++++--
- drivers/media/platform/coda/coda-common.c          | 10 ++++
- drivers/media/platform/davinci/vpbe.c              |  2 +-
- drivers/media/platform/omap/omap_vout.c            | 15 ++---
- drivers/media/platform/rcar-vin/rcar-csi2.c        | 68 ++++++++++++++++++=
-++--
- drivers/media/platform/tegra-cec/tegra_cec.c       |  4 +-
- drivers/staging/media/imx/imx-ic-prpencvf.c        |  2 +-
- drivers/staging/media/imx/imx-media-capture.c      |  6 +-
- drivers/staging/media/imx/imx-media-csi.c          |  2 +-
- drivers/staging/media/imx/imx-media.h              |  3 +-
- drivers/staging/media/imx/imx7-media-csi.c         |  2 +-
- .../staging/media/rockchip/vpu/rockchip_vpu_drv.c  | 14 +++--
- .../staging/media/rockchip/vpu/rockchip_vpu_enc.c  |  3 +-
- include/media/davinci/vpbe.h                       |  2 +-
- 16 files changed, 172 insertions(+), 42 deletions(-)
-
