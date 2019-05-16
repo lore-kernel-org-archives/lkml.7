@@ -4,57 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B6EC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E4FC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 454A02087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE7622053B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558007240;
-	bh=BKXauO2Zc4XHHOgQk7SKdfzxMgK8rT1MjX+j7lxm+lI=;
+	s=default; t=1558007246;
+	bh=XHv33oDvCTQ41+E7zo+bGDI+pR7RThafNLojm+xkSyo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y/LYOemTug/0NopK08TB9Z50IL232VUlvxDZzATuVte8812VEt2mW5qxAP2574pwX
-	 /LCrQf6Qw4Yp0Zxkjd1E1ToAsgGo55dbvfRYXYqEirr9ABZ7YjEji6LbZmYBuEQNrQ
-	 iCZhrU1fAPlByLzeVJ+EBhh7IMVvSiJwchhgkdfQ=
+	b=bRZ+4MD0aokq1whbAhy9anf34awPoJmZ3ZVanLPXqEhk9NlWll21lCNbNNYf0XlSd
+	 7BKhBcGk9eaCSOs3Yvn39Fni4i9I37p1B8aWtqv0y26RhDZDB0425cC9lDLVT8eysi
+	 U8ITes0okGCeKXxj3B8cA+IDbdgm4YoYYXsZYSNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbfEPLrT (ORCPT
+        id S1728463AbfEPLr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:47:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48658 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:47:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727704AbfEPLk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:40:27 -0400
+        id S1727674AbfEPLkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:40:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 116BF20862;
-        Thu, 16 May 2019 11:40:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DEF621473;
+        Thu, 16 May 2019 11:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006826;
-        bh=BKXauO2Zc4XHHOgQk7SKdfzxMgK8rT1MjX+j7lxm+lI=;
+        s=default; t=1558006819;
+        bh=XHv33oDvCTQ41+E7zo+bGDI+pR7RThafNLojm+xkSyo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ShVi1q9RGjETx5YfaYeLBBDUBvBn+JBESMurjuWmIpW8YOqtc+Ki2OODaujZIZbjx
-         Z0DySjk7hddFCaVBQSQrDm5FKHbPRbXGd5HNAwMZ9rh4sZvr+svdmQgIbm1/HvcCFN
-         1lICgZmT24uymnEfRmgblJOvHDIcmUTiBKS+ZiPs=
+        b=aPCGCffawrqjul51YR3WXX1t57ZUM/sLgSo9TlK9JOjqXNSReKlE0HY2ZL5K8Jsch
+         40ncIhwSxQkPvRrdQpUCixnpFLtXM8RGuj0p0xMUh1NntqsMOe4fb44yg2x6Ue+4X0
+         wBrqTygT8owgKU/s4AK2VljcIuQAvDOfHunrbl7U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Robert Walker <robert.walker@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Suzuki K Poulouse <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.0 33/34] perf cs-etm: Always allocate memory for cs_etm_queue::prev_packet
-Date:   Thu, 16 May 2019 07:39:30 -0400
-Message-Id: <20190516113932.8348-33-sashal@kernel.org>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 29/34] KVM: selftests: make hyperv_cpuid test pass on AMD
+Date:   Thu, 16 May 2019 07:39:26 -0400
+Message-Id: <20190516113932.8348-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516113932.8348-1-sashal@kernel.org>
 References: <20190516113932.8348-1-sashal@kernel.org>
@@ -67,66 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[ Upstream commit 35bb59c10a6d0578806dd500477dae9cb4be344e ]
+[ Upstream commit eba3afde1cea7dbd7881683232f2a85e2ed86bfe ]
 
-Robert Walker reported a segmentation fault is observed when process
-CoreSight trace data; this issue can be easily reproduced by the command
-'perf report --itrace=i1000i' for decoding tracing data.
+Enlightened VMCS is only supported on Intel CPUs but the test shouldn't
+fail completely.
 
-If neither the 'b' flag (synthesize branches events) nor 'l' flag
-(synthesize last branch entries) are specified to option '--itrace',
-cs_etm_queue::prev_packet will not been initialised.  After merging the
-code to support exception packets and sample flags, there introduced a
-number of uses of cs_etm_queue::prev_packet without checking whether it
-is valid, for these cases any accessing to uninitialised prev_packet
-will cause crash.
-
-As cs_etm_queue::prev_packet is used more widely now and it's already
-hard to follow which functions have been called in a context where the
-validity of cs_etm_queue::prev_packet has been checked, this patch
-always allocates memory for cs_etm_queue::prev_packet.
-
-Reported-by: Robert Walker <robert.walker@arm.com>
-Suggested-by: Robert Walker <robert.walker@arm.com>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Tested-by: Robert Walker <robert.walker@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Suzuki K Poulouse <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Fixes: 7100b12cf474 ("perf cs-etm: Generate branch sample for exception packet")
-Fixes: 24fff5eb2b93 ("perf cs-etm: Avoid stale branch samples when flush packet")
-Link: http://lkml.kernel.org/r/20190428083228.20246-1-leo.yan@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/util/cs-etm.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 27a374ddf6615..947f1bb2fbdfb 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -345,11 +345,9 @@ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm,
- 	if (!etmq->packet)
- 		goto out_free;
+diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+index 264425f75806b..9a21e912097c4 100644
+--- a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
++++ b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+@@ -141,7 +141,13 @@ int main(int argc, char *argv[])
  
--	if (etm->synth_opts.last_branch || etm->sample_branches) {
--		etmq->prev_packet = zalloc(szp);
--		if (!etmq->prev_packet)
--			goto out_free;
--	}
-+	etmq->prev_packet = zalloc(szp);
-+	if (!etmq->prev_packet)
-+		goto out_free;
+ 	free(hv_cpuid_entries);
  
- 	if (etm->synth_opts.last_branch) {
- 		size_t sz = sizeof(struct branch_stack);
+-	vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
++	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
++
++	if (rv) {
++		fprintf(stderr,
++			"Enlightened VMCS is unsupported, skip related test\n");
++		goto vm_free;
++	}
+ 
+ 	hv_cpuid_entries = kvm_get_supported_hv_cpuid(vm);
+ 	if (!hv_cpuid_entries)
+@@ -151,6 +157,7 @@ int main(int argc, char *argv[])
+ 
+ 	free(hv_cpuid_entries);
+ 
++vm_free:
+ 	kvm_vm_free(vm);
+ 
+ 	return 0;
 -- 
 2.20.1
 
