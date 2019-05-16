@@ -2,169 +2,147 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00B4C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE66C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E27720645
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:42:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/z7DR9B"
+	by mail.kernel.org (Postfix) with ESMTP id 0F80F205ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:49:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558025352;
+	bh=etY63TGfN/UcXCwcQB48z3t2Eq9+EUF4qwVjeYxerr8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=ScaghBmyBb3v/bPCJT+TEAEzCvO9OowcS4ZF74i4hRJxiA2NIfsVFYO9VMkzbcA2A
+	 t3dtTMNGNev0N0URzXC+xyo/VsJNYKDFnze2mxvuIdTc1Rds9G+iHnvS9vkrpYBYtv
+	 QLYl3E6x+6tcnPX1lQdiYSGvTCqxM7rh9yWgTB3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbfEPQmd (ORCPT
+        id S1728662AbfEPQtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:42:33 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45295 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728203AbfEPQmc (ORCPT
+        Thu, 16 May 2019 12:49:11 -0400
+Received: from casper.infradead.org ([85.118.1.10]:35514 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726808AbfEPQtK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:42:32 -0400
-Received: by mail-ed1-f67.google.com with SMTP id g57so6111080edc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:42:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wa1mrjd2PehMiQ4tkO2lOhokR8tf+BLQRnMqAVbGJys=;
-        b=g/z7DR9BmTxEIxCYbvmHbg6qBFLxaVwDPKWyQqTzjFpeonA3/xxh6TTSnxTVMrYPuh
-         3Bb0qTQaYoaiaE1tZbJxW3yT0A6iBGhPNtkXJnX5ATbFX5oIjzk5QmBmasxxLNNDaQI9
-         3IbRvhNTMBu35NaDQjVCMwsoCWW9rHVr1RelvgLuTvmT5Pa+JowucaGMTj0a5vJsF4Mh
-         hl1MiRg2nhqw91tUlvpOGFK3voLLVx5IkeSObZBvAI0LUKxUP1hz4dMnq9917Fk+gesc
-         XxJpOWqurq25m0TqSBw8TP4kVi8lW8HwY7rrE1mkZxb2P0kRLUSA1EvU8k/0QyJ2J+dp
-         aWNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=wa1mrjd2PehMiQ4tkO2lOhokR8tf+BLQRnMqAVbGJys=;
-        b=TDva9oSMPeXMyXtm8Ayir6sw3LdeFLebppkTIl/khna+CdnBWpJoc21y8qg7OV38mg
-         5E7ozigxnUEyrkn8AGHzpjMvjVSW0EpWn6emM9OnPyfy2l/zlh6lBDpGSDw/zPCxy9Ka
-         oJFQs3IR4lJAJ6YNmybS+5hxhOUvA/7wmaWawQaFQ2iuUaael3OziHd5mJGaMWzUkz3h
-         EmhEmn9x4BZp0IpcSv101FvivGeFY+VJONEopmFfEYtt9pQ5+tH7sOWErZZgZVLjF9jT
-         Ey5SbdtjZZkd0L91ROPpDKyUNY0kSoXv0CFcasP/zeaIwIgrYWhb57RfIgXTvduLpT/V
-         5+eg==
-X-Gm-Message-State: APjAAAUDsuuFSajVeQCVnp39Z5zrlr+aHTB6YdmiCChDhJd7MdbCx/ZW
-        XaAnOzHOs5a997t1z5GqJhI=
-X-Google-Smtp-Source: APXvYqxVkN8VU/C2NqT5TNs/gJqQuUgvqrlRLD7rfThGYlt6/mc7Qi88kYFV9TNRC3Mkvp9j3h9MKw==
-X-Received: by 2002:aa7:c645:: with SMTP id z5mr16773975edr.43.1558024951396;
-        Thu, 16 May 2019 09:42:31 -0700 (PDT)
-Received: from mail.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id i45sm2013709eda.67.2019.05.16.09.42.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 09:42:30 -0700 (PDT)
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-To:     linux-mtd@lists.infradead.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH v3 2/2] mtd: nand: raw: brcmnand: When oops in progress use pio and interrupt polling
-Date:   Thu, 16 May 2019 12:41:47 -0400
-Message-Id: <1558024913-26502-2-git-send-email-kdasu.kdev@gmail.com>
-X-Mailer: git-send-email 1.9.0.138.g2de3478
-In-Reply-To: <1558024913-26502-1-git-send-email-kdasu.kdev@gmail.com>
-References: <1558024913-26502-1-git-send-email-kdasu.kdev@gmail.com>
+        Thu, 16 May 2019 12:49:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=tKk911ROe0tCzfs+bPSmBKTBLaoEpyGgcQBfu96Z0/A=; b=o+KMLHQcUSCKeA1ZIZKrnKMdM/
+        2nBNKGsEqWbYOWDUBEJtN6ARs6K3xOzhRIbBu2ouzL9VarJ/1dPQ0hq48iBBvLE86aeYUccksRnwa
+        DZGA5XVXUwaLaCgj1B/uhN70TY+TH1m7aip/IQUcYt47KNOaVevs1pqlAZfD9b8NIslR6ush0LUlx
+        z+ILLXF0w0RH7YmF2uviGbTRmkMpMpIVDeWUBQq9unDNurrRbP41/m0GNMtsFWnv90dzfkvpntmAx
+        uQoOdmEczCNaohZ/EG3SplP0ZH4U6SeKzq6CS5evW6pLT6IcewLG75WKabgEzVoORfVjyfJaAqoiY
+        doYP8aOg==;
+Received: from 179.186.99.85.dynamic.adsl.gvt.net.br ([179.186.99.85] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hRJZ6-0001JX-EY; Thu, 16 May 2019 16:49:08 +0000
+Date:   Thu, 16 May 2019 13:49:02 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL for v5.2-rc1] media fixes
+Message-ID: <20190516134902.59a3a855@coco.lan>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If mtd_oops is in progress, switch to polling during NAND command
-completion instead of relying on DMA/interrupts so that the mtd_oops
-buffer can be completely written in the assigned NAND partition.
+Hi Linus,
 
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
----
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 48 ++++++++++++++++++++++++++++++--
- 1 file changed, 45 insertions(+), 3 deletions(-)
+Please pull from:
+  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/me=
+dia/v5.2-1
 
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index ce0b8ff..dca8eb8 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -159,6 +159,7 @@ struct brcmnand_controller {
- 	u32			nand_cs_nand_xor;
- 	u32			corr_stat_threshold;
- 	u32			flash_dma_mode;
-+	bool			pio_poll_mode;
- };
- 
- struct brcmnand_cfg {
-@@ -823,6 +824,20 @@ static inline bool has_flash_dma(struct brcmnand_controller *ctrl)
- 	return ctrl->flash_dma_base;
- }
- 
-+static inline void disable_ctrl_irqs(struct brcmnand_controller *ctrl)
-+{
-+	if (ctrl->pio_poll_mode)
-+		return;
-+
-+	if (has_flash_dma(ctrl)) {
-+		ctrl->flash_dma_base = 0;
-+		disable_irq(ctrl->dma_irq);
-+	}
-+
-+	disable_irq(ctrl->irq);
-+	ctrl->pio_poll_mode = true;
-+}
-+
- static inline bool flash_dma_buf_ok(const void *buf)
- {
- 	return buf && !is_vmalloc_addr(buf) &&
-@@ -1237,15 +1252,42 @@ static void brcmnand_cmd_ctrl(struct nand_chip *chip, int dat,
- 	/* intentionally left blank */
- }
- 
-+static bool brcmstb_nand_wait_for_completion(struct nand_chip *chip)
-+{
-+	struct brcmnand_host *host = nand_get_controller_data(chip);
-+	struct brcmnand_controller *ctrl = host->ctrl;
-+	struct mtd_info *mtd = nand_to_mtd(chip);
-+	bool err = false;
-+	int sts;
-+
-+	if (mtd->oops_panic_write) {
-+		/* switch to interrupt polling and PIO mode */
-+		disable_ctrl_irqs(ctrl);
-+		sts = bcmnand_ctrl_poll_status(ctrl, NAND_CTRL_RDY,
-+					       NAND_CTRL_RDY, 0);
-+		err = (sts < 0) ? true : false;
-+	} else {
-+		unsigned long timeo = msecs_to_jiffies(
-+						NAND_POLL_STATUS_TIMEOUT_MS);
-+		/* wait for completion interrupt */
-+		sts = wait_for_completion_timeout(&ctrl->done, timeo);
-+		err = (sts <= 0) ? true : false;
-+	}
-+
-+	return err;
-+}
-+
- static int brcmnand_waitfunc(struct nand_chip *chip)
- {
- 	struct brcmnand_host *host = nand_get_controller_data(chip);
- 	struct brcmnand_controller *ctrl = host->ctrl;
--	unsigned long timeo = msecs_to_jiffies(100);
-+	bool err = false;
- 
- 	dev_dbg(ctrl->dev, "wait on native cmd %d\n", ctrl->cmd_pending);
--	if (ctrl->cmd_pending &&
--			wait_for_completion_timeout(&ctrl->done, timeo) <= 0) {
-+	if (ctrl->cmd_pending)
-+		err = brcmstb_nand_wait_for_completion(chip);
-+
-+	if (err) {
- 		u32 cmd = brcmnand_read_reg(ctrl, BRCMNAND_CMD_START)
- 					>> brcmnand_cmd_shift(ctrl);
- 
--- 
-1.9.0.138.g2de3478
+For some fixes for some platform drivers (rockchip, atmel, omap, daVinci,
+tegra-cec, coda and rcar).=20
+
+It also includes a fix on one of the V4L2 uAPI doc, explaining a border cas=
+e.
+
+Thanks!
+Mauro
+
+The following changes since commit 0d672fffb447aa1699d76fdacd90dc31eeb66d97:
+
+  media: dt-bindings: aspeed-video: Add missing memory-region property (201=
+9-04-30 13:53:12 -0400)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media tags/me=
+dia/v5.2-1
+
+for you to fetch changes up to fc8670d1f72b746ff3a5fe441f1fca4c4dba0e6f:
+
+  media: rockchip/vpu: Fix/re-order probe-error/remove path (2019-05-15 05:=
+38:22 -0400)
+
+----------------------------------------------------------------
+media updates for v5.2-rc1
+
+----------------------------------------------------------------
+Boris Brezillon (2):
+      media: rockchip/vpu: Get vdev from the file arg in vidioc_querycap()
+      media: rockchip/vpu: Initialize mdev->bus_info
+
+Dan Carpenter (2):
+      media: omap_vout: potential buffer overflow in vidioc_dqbuf()
+      media: davinci/vpbe: array underflow in vpbe_enum_outputs()
+
+Eugen Hristev (3):
+      media: atmel: atmel-isc: limit incoming pixels per frame
+      media: atmel: atmel-isc: fix INIT_WORK misplacement
+      media: atmel: atmel-isc: fix asd memory allocation
+
+Hans Verkuil (2):
+      media: field-order.rst: clarify FIELD_ANY and FIELD_NONE
+      media: tegra-cec: fix cec_notifier_parse_hdmi_phandle return check
+
+Jonas Karlman (3):
+      media: rockchip/vpu: Do not request id 0 for our video device
+      media: rockchip/vpu: Add missing dont_use_autosuspend() calls
+      media: rockchip/vpu: Fix/re-order probe-error/remove path
+
+Niklas S=C3=B6derlund (2):
+      media: rcar-csi2: restart CSI-2 link if error is detected
+      media: rcar-csi2: Propagate the FLD signal for NTSC and PAL
+
+Philipp Zabel (1):
+      media: coda: fix unset field and fail on invalid field in buf_prepare
+
+Rui Miguel Silva (1):
+      media: staging/imx: add media device to capture register
+
+ Documentation/media/uapi/v4l/field-order.rst       | 16 +++--
+ drivers/media/platform/atmel/atmel-isc-regs.h      | 19 ++++++
+ drivers/media/platform/atmel/atmel-isc.c           | 46 +++++++++++++--
+ drivers/media/platform/coda/coda-common.c          | 10 ++++
+ drivers/media/platform/davinci/vpbe.c              |  2 +-
+ drivers/media/platform/omap/omap_vout.c            | 15 ++---
+ drivers/media/platform/rcar-vin/rcar-csi2.c        | 68 ++++++++++++++++++=
+++--
+ drivers/media/platform/tegra-cec/tegra_cec.c       |  4 +-
+ drivers/staging/media/imx/imx-ic-prpencvf.c        |  2 +-
+ drivers/staging/media/imx/imx-media-capture.c      |  6 +-
+ drivers/staging/media/imx/imx-media-csi.c          |  2 +-
+ drivers/staging/media/imx/imx-media.h              |  3 +-
+ drivers/staging/media/imx/imx7-media-csi.c         |  2 +-
+ .../staging/media/rockchip/vpu/rockchip_vpu_drv.c  | 14 +++--
+ .../staging/media/rockchip/vpu/rockchip_vpu_enc.c  |  3 +-
+ include/media/davinci/vpbe.h                       |  2 +-
+ 16 files changed, 172 insertions(+), 42 deletions(-)
 
