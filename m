@@ -4,175 +4,156 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9D2C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A9AC04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:01:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 245D720833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04D3820833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:01:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ObQQ/jfo"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="SIeqP3f6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727188AbfEPNAx (ORCPT
+        id S1727329AbfEPNBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:00:53 -0400
-Received: from mail-eopbgr150053.outbound.protection.outlook.com ([40.107.15.53]:56892
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726618AbfEPNAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:00:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=M25hDT1I3ZxwMms/pM7xnaXpBXmkT2/AVLvSBif+c5A=;
- b=ObQQ/jfoC/9LnnYHQLyP2XQ78PR+e8bOhgyztHQ8tSQgoCwutojzfDtvgPyPdA/ApX4g9YbixeDwAZlfe1N+Ji/DlSStNiXdRzP5l68tS4s+shAHpr5C0pu5BZre1IkM+iie12ZCx4QXhIEPMW1UCcbls57hwajx2EWBlfIawOo=
-Received: from VI1PR04MB4704.eurprd04.prod.outlook.com (20.177.48.157) by
- VI1PR04MB5407.eurprd04.prod.outlook.com (20.178.121.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Thu, 16 May 2019 13:00:49 +0000
-Received: from VI1PR04MB4704.eurprd04.prod.outlook.com
- ([fe80::2ce8:d8f5:9745:99df]) by VI1PR04MB4704.eurprd04.prod.outlook.com
- ([fe80::2ce8:d8f5:9745:99df%6]) with mapi id 15.20.1900.010; Thu, 16 May 2019
- 13:00:49 +0000
-From:   Viorel Suman <viorel.suman@nxp.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Viorel Suman <viorel.suman@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Colin Ian King <colin.king@canonical.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>,
-        Viorel Suman <viorel.suman@gmail.com>
-Subject: [PATCH] ASoC: AK4458: add regulator for ak4458
-Thread-Topic: [PATCH] ASoC: AK4458: add regulator for ak4458
-Thread-Index: AQHVC+dix6gnGF9HoUCg65Wy4dJcvg==
-Date:   Thu, 16 May 2019 13:00:48 +0000
-Message-ID: <1558011640-7864-1-git-send-email-viorel.suman@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR07CA0217.eurprd07.prod.outlook.com
- (2603:10a6:802:58::20) To VI1PR04MB4704.eurprd04.prod.outlook.com
- (2603:10a6:803:52::29)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=viorel.suman@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [89.37.124.34]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 390a5f3c-2e5c-4eca-9803-08d6d9fe8470
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB5407;
-x-ms-traffictypediagnostic: VI1PR04MB5407:
-x-microsoft-antispam-prvs: <VI1PR04MB5407CA423B61784E5C3AE593920A0@VI1PR04MB5407.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:854;
-x-forefront-prvs: 0039C6E5C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(136003)(366004)(376002)(39860400002)(189003)(199004)(99286004)(52116002)(8936002)(81166006)(36756003)(81156014)(6436002)(25786009)(2501003)(71200400001)(71190400001)(386003)(6506007)(8676002)(50226002)(102836004)(14444005)(256004)(53936002)(68736007)(54906003)(110136005)(316002)(6512007)(66446008)(5660300002)(66946007)(73956011)(64756008)(4326008)(6116002)(86362001)(2616005)(476003)(66556008)(186003)(2201001)(478600001)(26005)(486006)(2906002)(44832011)(14454004)(7736002)(6486002)(66066001)(305945005)(3846002)(66476007)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB5407;H:VI1PR04MB4704.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: oHGXLeZc9w8EbyL5L/K1W6GDS4KqFlu5SlFfli9rQXaTPi+E4XLxLC07KeDaSJb2rKdZflOaC/ZjHkf3cWZEu2XahcSkKw5o1045bG5ifj5bmygOE3LFbjWLv00LD7/pFxP2gCSqm2gfglAvoq9RUbpxJpqT3Ou7dGiI4PDjkMPKzCF1JrFSjrKhU6G98lj5JQTORjVvTiIG+GmRWayj0drKGqv8iEziZeCyXoEvBzkWD4EKWfbNgf3Y/gvfAwut9uOJQA7Iy0z6E8hMyTUIXdg+r4uXjGrD8QKgOI+qqqlmsfoRRGRJs+/Yq8rWxvfFeRZtCtzG7HcdCn2ImgvHXyiktRAXz5sD+JaxerOOjOgw2j5QUmZrt+n5KbIYB63zqZui2EFLBq+mTLnEHwAi2Q+V3mIeO27kGn63eapRnBg=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <84B5814EB7C3584DB9AFC20C3093B2FF@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Thu, 16 May 2019 09:01:35 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46219 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726528AbfEPNBe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:01:34 -0400
+Received: by mail-ed1-f65.google.com with SMTP id f37so5098371edb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 06:01:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Op0ZOu3pv2+cSDoiT6vVZUHFiOJRH52sO9/tDHONC4I=;
+        b=SIeqP3f6PTE2ZzcuBqs8yMC+kwmSPJ6U9m4sjtz7SRu0asefPmFYQQuxQFWOu8LkmM
+         Fsr+SszBCfv2J04tuSGcfZswp4HXPhZCqpo2hzprPISBH+qdPKU/SHrlv05sJ65bnlXn
+         p2yewqQd095oea+NvUgRujIVnHBH8y+TdHdU4kGQG5a6ksvvUJqOdDlqPdCJCJQUQ4zH
+         +JdNZ8rWeM5iaIy8fiA/DQWUX+/fA1mipZm5JVYILT6nq9uwHtU3udkHQMwBFoEHLk1D
+         lY37trhQtZ+UngpuyTA3sdxzAeHG2od2R05PlWUwp7jY0YN11wTzo9p6U9wPh3sYvsNL
+         MFbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Op0ZOu3pv2+cSDoiT6vVZUHFiOJRH52sO9/tDHONC4I=;
+        b=mz0wrAwFWFJEVljlsXChaO+7OClAYjQuh/b2SeSx00l9q1P9TLUldkQDmga5l7bJsc
+         g9LzFeFrluNgGaQ3jPH3h2JCW1ZjZ59nfY1NUWMuuZM56udyidpT+2fQmlYUI+yVhhZx
+         HWDOkOvq5v5r06smBfHPoIeMOpg84Og8mt5yCM0ndRlbh0cPuSeOW402ZygeROYnWE4e
+         ErVsOdnc7ghcFZ4k2fczlK43s5pxzxLT870BziWlGHhpLGwENvIFbDWthiWTgNIVrLc5
+         tvjV1X/mbtmxfiRqJDj02VBVe+iM6zBy1XQ51XzwvL/bGJN2StK7dlPJXz3PxtXGkHPF
+         YYBg==
+X-Gm-Message-State: APjAAAUCZhB9UM7nf9sClLTkioKZNcWhYR7Np0Y78muDQa66w3ZPJoIk
+        H1lafeOljJKBsEwVZd9ncncrxg==
+X-Google-Smtp-Source: APXvYqzyfbJvu4eJXJ8K6+zcs3F/dZ6CR6N5DOG2jmD9xDBlzBrtQ+eluDwrGV5ZrMBWuUk8fQyCTw==
+X-Received: by 2002:a17:906:60c9:: with SMTP id f9mr2762887ejk.83.1558011692001;
+        Thu, 16 May 2019 06:01:32 -0700 (PDT)
+Received: from brauner.io ([193.96.224.243])
+        by smtp.gmail.com with ESMTPSA id l5sm1819356edb.50.2019.05.16.06.01.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 16 May 2019 06:01:31 -0700 (PDT)
+Date:   Thu, 16 May 2019 15:01:30 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     David Howells <dhowells@redhat.com>
+Cc:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
+        Arnd Bergmann <arnd@arndb.de>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] uapi, x86: Fix the syscall numbering of the mount
+ API syscalls [ver #2]
+Message-ID: <20190516130130.qc4ljx7lsvym56w6@brauner.io>
+References: <155800752418.4037.9567789434648701032.stgit@warthog.procyon.org.uk>
+ <155800754738.4037.11950529125416851948.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 390a5f3c-2e5c-4eca-9803-08d6d9fe8470
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 13:00:49.0123
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB5407
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <155800754738.4037.11950529125416851948.stgit@warthog.procyon.org.uk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+On Thu, May 16, 2019 at 12:52:27PM +0100, David Howells wrote:
+> Fix the syscall numbering of the mount API syscalls so that the numbers
+> match between i386 and x86_64 and that they're in the common numbering
+> scheme space.
+> 
+> Fixes: a07b20004793 ("vfs: syscall: Add open_tree(2) to reference or clone a mount")
+> Fixes: 2db154b3ea8e ("vfs: syscall: Add move_mount(2) to move mounts around")
+> Fixes: 24dcb3d90a1f ("vfs: syscall: Add fsopen() to prepare for superblock creation")
+> Fixes: ecdab150fddb ("vfs: syscall: Add fsconfig() for configuring and managing a context")
+> Fixes: 93766fbd2696 ("vfs: syscall: Add fsmount() to create a mount for a superblock")
+> Fixes: cf3cba4a429b ("vfs: syscall: Add fspick() to select a superblock for reconfiguration")
+> Reported-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-Add regulator for ak4458.
+Reviewed-by: Christian Brauner <christian@brauner.io>
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
----
- sound/soc/codecs/ak4458.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
-
-diff --git a/sound/soc/codecs/ak4458.c b/sound/soc/codecs/ak4458.c
-index 7156215..06dcf13 100644
---- a/sound/soc/codecs/ak4458.c
-+++ b/sound/soc/codecs/ak4458.c
-@@ -12,6 +12,7 @@
- #include <linux/of_device.h>
- #include <linux/of_gpio.h>
- #include <linux/pm_runtime.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- #include <sound/initval.h>
- #include <sound/pcm_params.h>
-@@ -21,6 +22,12 @@
-=20
- #include "ak4458.h"
-=20
-+#define AK4458_NUM_SUPPLIES 2
-+static const char *ak4458_supply_names[AK4458_NUM_SUPPLIES] =3D {
-+	"DVDD",
-+	"AVDD",
-+};
-+
- struct ak4458_drvdata {
- 	struct snd_soc_dai_driver *dai_drv;
- 	const struct snd_soc_component_driver *comp_drv;
-@@ -37,6 +44,7 @@ struct ak4458_priv {
- 	int fmt;
- 	int slots;
- 	int slot_width;
-+	struct regulator_bulk_data supplies[AK4458_NUM_SUPPLIES];
- };
-=20
- static const struct reg_default ak4458_reg_defaults[] =3D {
-@@ -666,7 +674,7 @@ static int ak4458_i2c_probe(struct i2c_client *i2c)
- {
- 	struct ak4458_priv *ak4458;
- 	const struct ak4458_drvdata *drvdata;
--	int ret;
-+	int ret, i;
-=20
- 	ak4458 =3D devm_kzalloc(&i2c->dev, sizeof(*ak4458), GFP_KERNEL);
- 	if (!ak4458)
-@@ -691,6 +699,23 @@ static int ak4458_i2c_probe(struct i2c_client *i2c)
- 	if (IS_ERR(ak4458->mute_gpiod))
- 		return PTR_ERR(ak4458->mute_gpiod);
-=20
-+	for (i =3D 0; i < ARRAY_SIZE(ak4458->supplies); i++)
-+		ak4458->supplies[i].supply =3D ak4458_supply_names[i];
-+
-+	ret =3D devm_regulator_bulk_get(ak4458->dev, ARRAY_SIZE(ak4458->supplies)=
-,
-+				      ak4458->supplies);
-+	if (ret !=3D 0) {
-+		dev_err(ak4458->dev, "Failed to request supplies: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret =3D regulator_bulk_enable(ARRAY_SIZE(ak4458->supplies),
-+				    ak4458->supplies);
-+	if (ret !=3D 0) {
-+		dev_err(ak4458->dev, "Failed to enable supplies: %d\n", ret);
-+		return ret;
-+	}
-+
- 	ret =3D devm_snd_soc_register_component(ak4458->dev, drvdata->comp_drv,
- 					      drvdata->dai_drv, 1);
- 	if (ret < 0) {
---=20
-2.7.4
-
+> ---
+> 
+>  arch/x86/entry/syscalls/syscall_32.tbl |   12 ++++++------
+>  arch/x86/entry/syscalls/syscall_64.tbl |   12 ++++++------
+>  2 files changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+> index 4cd5f982b1e5..ad968b7bac72 100644
+> --- a/arch/x86/entry/syscalls/syscall_32.tbl
+> +++ b/arch/x86/entry/syscalls/syscall_32.tbl
+> @@ -398,12 +398,6 @@
+>  384	i386	arch_prctl		sys_arch_prctl			__ia32_compat_sys_arch_prctl
+>  385	i386	io_pgetevents		sys_io_pgetevents_time32	__ia32_compat_sys_io_pgetevents
+>  386	i386	rseq			sys_rseq			__ia32_sys_rseq
+> -387	i386	open_tree		sys_open_tree			__ia32_sys_open_tree
+> -388	i386	move_mount		sys_move_mount			__ia32_sys_move_mount
+> -389	i386	fsopen			sys_fsopen			__ia32_sys_fsopen
+> -390	i386	fsconfig		sys_fsconfig			__ia32_sys_fsconfig
+> -391	i386	fsmount			sys_fsmount			__ia32_sys_fsmount
+> -392	i386	fspick			sys_fspick			__ia32_sys_fspick
+>  393	i386	semget			sys_semget    			__ia32_sys_semget
+>  394	i386	semctl			sys_semctl    			__ia32_compat_sys_semctl
+>  395	i386	shmget			sys_shmget    			__ia32_sys_shmget
+> @@ -438,3 +432,9 @@
+>  425	i386	io_uring_setup		sys_io_uring_setup		__ia32_sys_io_uring_setup
+>  426	i386	io_uring_enter		sys_io_uring_enter		__ia32_sys_io_uring_enter
+>  427	i386	io_uring_register	sys_io_uring_register		__ia32_sys_io_uring_register
+> +428	i386	open_tree		sys_open_tree			__ia32_sys_open_tree
+> +429	i386	move_mount		sys_move_mount			__ia32_sys_move_mount
+> +430	i386	fsopen			sys_fsopen			__ia32_sys_fsopen
+> +431	i386	fsconfig		sys_fsconfig			__ia32_sys_fsconfig
+> +432	i386	fsmount			sys_fsmount			__ia32_sys_fsmount
+> +433	i386	fspick			sys_fspick			__ia32_sys_fspick
+> diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+> index 64ca0d06259a..b4e6f9e6204a 100644
+> --- a/arch/x86/entry/syscalls/syscall_64.tbl
+> +++ b/arch/x86/entry/syscalls/syscall_64.tbl
+> @@ -343,18 +343,18 @@
+>  332	common	statx			__x64_sys_statx
+>  333	common	io_pgetevents		__x64_sys_io_pgetevents
+>  334	common	rseq			__x64_sys_rseq
+> -335	common	open_tree		__x64_sys_open_tree
+> -336	common	move_mount		__x64_sys_move_mount
+> -337	common	fsopen			__x64_sys_fsopen
+> -338	common	fsconfig		__x64_sys_fsconfig
+> -339	common	fsmount			__x64_sys_fsmount
+> -340	common	fspick			__x64_sys_fspick
+>  # don't use numbers 387 through 423, add new calls after the last
+>  # 'common' entry
+>  424	common	pidfd_send_signal	__x64_sys_pidfd_send_signal
+>  425	common	io_uring_setup		__x64_sys_io_uring_setup
+>  426	common	io_uring_enter		__x64_sys_io_uring_enter
+>  427	common	io_uring_register	__x64_sys_io_uring_register
+> +428	common	open_tree		__x64_sys_open_tree
+> +429	common	move_mount		__x64_sys_move_mount
+> +430	common	fsopen			__x64_sys_fsopen
+> +431	common	fsconfig		__x64_sys_fsconfig
+> +432	common	fsmount			__x64_sys_fsmount
+> +433	common	fspick			__x64_sys_fspick
+>  
+>  #
+>  # x32-specific system call numbers start at 512 to avoid cache impact
+> 
