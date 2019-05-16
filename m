@@ -2,105 +2,88 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E4FC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72EFC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE7622053B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:47:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558007246;
-	bh=XHv33oDvCTQ41+E7zo+bGDI+pR7RThafNLojm+xkSyo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bRZ+4MD0aokq1whbAhy9anf34awPoJmZ3ZVanLPXqEhk9NlWll21lCNbNNYf0XlSd
-	 7BKhBcGk9eaCSOs3Yvn39Fni4i9I37p1B8aWtqv0y26RhDZDB0425cC9lDLVT8eysi
-	 U8ITes0okGCeKXxj3B8cA+IDbdgm4YoYYXsZYSNc=
+	by mail.kernel.org (Postfix) with ESMTP id 7E23620833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:47:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728463AbfEPLr0 (ORCPT
+        id S1728618AbfEPLra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:47:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48516 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:47:30 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:43692 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727674AbfEPLkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:40:20 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DEF621473;
-        Thu, 16 May 2019 11:40:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006819;
-        bh=XHv33oDvCTQ41+E7zo+bGDI+pR7RThafNLojm+xkSyo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aPCGCffawrqjul51YR3WXX1t57ZUM/sLgSo9TlK9JOjqXNSReKlE0HY2ZL5K8Jsch
-         40ncIhwSxQkPvRrdQpUCixnpFLtXM8RGuj0p0xMUh1NntqsMOe4fb44yg2x6Ue+4X0
-         wBrqTygT8owgKU/s4AK2VljcIuQAvDOfHunrbl7U=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 29/34] KVM: selftests: make hyperv_cpuid test pass on AMD
-Date:   Thu, 16 May 2019 07:39:26 -0400
-Message-Id: <20190516113932.8348-29-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190516113932.8348-1-sashal@kernel.org>
-References: <20190516113932.8348-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S1728389AbfEPLr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:47:26 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6E1321A0087;
+        Thu, 16 May 2019 13:47:25 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6155C1A001D;
+        Thu, 16 May 2019 13:47:25 +0200 (CEST)
+Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.82.13])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D4376205CD;
+        Thu, 16 May 2019 13:47:24 +0200 (CEST)
+From:   laurentiu.tudor@nxp.com
+To:     hch@lst.de, stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, marex@denx.de
+Cc:     leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
+        robin.murphy@arm.com, noring@nocrew.org, JuergenUrban@gmx.de,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: [PATCH v4 0/3] prerequisites for device reserved local mem rework
+Date:   Thu, 16 May 2019 14:47:18 +0300
+Message-Id: <20190516114721.27694-1-laurentiu.tudor@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-[ Upstream commit eba3afde1cea7dbd7881683232f2a85e2ed86bfe ]
+For HCs that have local memory, replace the current DMA API usage
+with a genalloc generic allocator to manage the mappings for these
+devices.
+This is in preparation for dropping the existing "coherent" dma
+mem declaration APIs. Current implementation was relying on a short
+circuit in the DMA API that in the end, was acting as an allocator
+for these type of devices.
 
-Enlightened VMCS is only supported on Intel CPUs but the test shouldn't
-fail completely.
+Only compiled tested, so any volunteers willing to test are most welcome.
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Thank you!
 
-diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
-index 264425f75806b..9a21e912097c4 100644
---- a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
-+++ b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
-@@ -141,7 +141,13 @@ int main(int argc, char *argv[])
- 
- 	free(hv_cpuid_entries);
- 
--	vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
-+	rv = _vcpu_ioctl(vm, VCPU_ID, KVM_ENABLE_CAP, &enable_evmcs_cap);
-+
-+	if (rv) {
-+		fprintf(stderr,
-+			"Enlightened VMCS is unsupported, skip related test\n");
-+		goto vm_free;
-+	}
- 
- 	hv_cpuid_entries = kvm_get_supported_hv_cpuid(vm);
- 	if (!hv_cpuid_entries)
-@@ -151,6 +157,7 @@ int main(int argc, char *argv[])
- 
- 	free(hv_cpuid_entries);
- 
-+vm_free:
- 	kvm_vm_free(vm);
- 
- 	return 0;
+For context, see thread here: https://lkml.org/lkml/2019/4/22/357
+
+Changes in v4:
+ - created mapping for local mem
+ - fix genalloc misuse
+
+Changes in v3:
+ - rearranged calls into genalloc simplifying the code a bit (Christoph)
+ - dropped RFC prefix
+
+Changes in v2:
+ - use genalloc also in core usb (based on comment from Robin)
+ - moved genpool decl to usb_hcd to be accesible from core usb
+
+Laurentiu Tudor (3):
+  USB: use genalloc for USB HCs with local memory
+  usb: host: ohci-sm501: init genalloc for local memory
+  usb: host: ohci-tmio: init genalloc for local memory
+
+ drivers/usb/core/buffer.c     | 15 +++++---
+ drivers/usb/host/ohci-hcd.c   | 23 +++++++++---
+ drivers/usb/host/ohci-sm501.c | 66 +++++++++++++++++++++--------------
+ drivers/usb/host/ohci-tmio.c  | 32 ++++++++++++-----
+ include/linux/usb/hcd.h       |  3 ++
+ 5 files changed, 95 insertions(+), 44 deletions(-)
+
 -- 
-2.20.1
+2.17.1
 
