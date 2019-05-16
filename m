@@ -2,107 +2,99 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 987A0C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46829C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6705020818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:15:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YGLG2XRT"
+	by mail.kernel.org (Postfix) with ESMTP id 23EA920815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:15:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfEPQP2 (ORCPT
+        id S1727018AbfEPQPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:15:28 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43455 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726510AbfEPQP2 (ORCPT
+        Thu, 16 May 2019 12:15:54 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54464 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726540AbfEPQPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:15:28 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u27so3076966lfg.10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:15:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LBNDRhhKywXBp2MSuZfngBTVHWR97SCmvRB6eI8uLbE=;
-        b=YGLG2XRTx2rzAnfC7U7Pt27EAxYtRFVsHIL2F6MDo4Eb18nu45zjdjHrwS1A9kdPGe
-         7AIr1yDi9FrkAOD910N+/Gftjemk6VQpdwLEb6WWejY5+Cn6CS2NDKVPjnz4IQ92cu0t
-         0s8PelXOgvWB0aAfwdmg6nSu5jdC5BtNCXpg4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LBNDRhhKywXBp2MSuZfngBTVHWR97SCmvRB6eI8uLbE=;
-        b=qj35NGwLwOrp1zQy3eupsxr3au+BBB1oFmVwYnL9HLmG9iTaMNwhIrRwEiALuq/0lh
-         5gNG3AwWElgHotceS8dnQJJI/SfMxsOm8ml5K9uSrWW5f8Zk4wxMr2irekFhk1SH+6jC
-         pzUt+iAhpfrt/oOcJr3ulk17Z8i99oBqQlGWLOwGc61+kNneSk6Wr0nH4m+yTNEVS+sd
-         3SHaoPT2qCyKxB2NneqkhHxi9xL23O8uzx0L6tGdjQ3EU5A7nnlC5P4PCHBUT1Ty2C6D
-         Oqb+fOIpIZ/mj8G7wSBqIs2xhZK4S73QeJ+MPe/UBj5ZZD2N3qvWuFQyWMewXOMGdleW
-         vlVA==
-X-Gm-Message-State: APjAAAWcL5EiAz6pp3zLTm9F8gM+Kyo/GauhWyIcRehL/0ZCmbiSUNYh
-        zAIE14m/o5E5KirHEdoS2GqUpZK9cjOcZZXpcIpuNOW9
-X-Google-Smtp-Source: APXvYqzDx21IaIaK95EwYZHZnuKZ60WB8qRKmhPS4eJD5UoIunNxJ5iVpBl+vhmkGydAw0xGLL0IfTX7yIdjwsn9BZs=
-X-Received: by 2002:a19:2791:: with SMTP id n139mr16901324lfn.67.1558023326364;
- Thu, 16 May 2019 09:15:26 -0700 (PDT)
+        Thu, 16 May 2019 12:15:53 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4GGCWvW003151
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 12:15:53 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sharb9kvs-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 12:15:52 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <parth@linux.ibm.com>;
+        Thu, 16 May 2019 17:15:50 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 16 May 2019 17:15:47 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4GGFkDY58785998
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 May 2019 16:15:47 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C73D15269F;
+        Thu, 16 May 2019 16:15:46 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.91.88])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 87AA852692;
+        Thu, 16 May 2019 16:15:44 +0000 (GMT)
+Subject: Re: [RFCv2 2/6] sched: Introduce switch to enable TurboSched mode
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        mingo@redhat.com, dietmar.eggemann@arm.com, dsmythies@telus.net
+References: <20190515135322.19393-1-parth@linux.ibm.com>
+ <20190515135322.19393-3-parth@linux.ibm.com>
+ <20190515163032.GU2589@hirez.programming.kicks-ass.net>
+From:   Parth Shah <parth@linux.ibm.com>
+Date:   Thu, 16 May 2019 21:45:42 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.0
 MIME-Version: 1.0
-References: <1558022399-24863-1-git-send-email-kdasu.kdev@gmail.com> <1558022399-24863-2-git-send-email-kdasu.kdev@gmail.com>
-In-Reply-To: <1558022399-24863-2-git-send-email-kdasu.kdev@gmail.com>
-From:   Kamal Dasu <kamal.dasu@broadcom.com>
-Date:   Thu, 16 May 2019 12:14:49 -0400
-Message-ID: <CAKekbes5XOU81ANJGeSsn_Ww59Fx1kymBt8fscv-fsSJdvaVeA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] mtd: nand: raw: brcmnand: When oops in progress
- use pio and interrupt polling
-To:     Kamal Dasu <kdasu.kdev@gmail.com>
-Cc:     MTD Maling List <linux-mtd@lists.infradead.org>,
-        bcm-kernel-feedback-list@broadcom.com,
-        open list <linux-kernel@vger.kernel.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190515163032.GU2589@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19051616-0020-0000-0000-0000033D66A2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051616-0021-0000-0000-000021902F38
+Message-Id: <fd7bd5e7-8d89-2c0b-1f3d-d229b7af5757@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905160103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please ignore v2 patch 1/2 and 2/2. The commit ordering is not right.
-v3 patch on the way
 
 
+On 5/15/19 10:00 PM, Peter Zijlstra wrote:
+> On Wed, May 15, 2019 at 07:23:18PM +0530, Parth Shah wrote:
+>> +void turbo_sched_get(void)
+>> +{
+>> +	spin_lock(&turbo_sched_lock);
+>> +	if (!turbo_sched_count++)
+>> +		static_branch_enable(&__turbo_sched_enabled);
+>> +	spin_unlock(&turbo_sched_lock);
+>> +}
+> 
+> Muwhahaha, you didn't test this code, did you?
+> 
 
-Kamal
+yeah, I didn't see task-sleep problem coming in.
+I will change to mutex.
 
-On Thu, May 16, 2019 at 12:01 PM Kamal Dasu <kdasu.kdev@gmail.com> wrote:
->
-> If mtd_oops is in progress switch to polling for nand command completion
-> interrupts and use PIO mode wihtout DMA so that the mtd_oops buffer can
-> be completely written in the assinged nand partition.
->
-> Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-> ---
->  drivers/mtd/nand/raw/brcmnand/brcmnand.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> index a30a7f0..dca8eb8 100644
-> --- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> +++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-> @@ -835,7 +835,6 @@ static inline void disable_ctrl_irqs(struct brcmnand_controller *ctrl)
->         }
->
->         disable_irq(ctrl->irq);
-> -
->         ctrl->pio_poll_mode = true;
->  }
->
-> --
-> 1.9.0.138.g2de3478
->
+Thanks for pointing out.
+
