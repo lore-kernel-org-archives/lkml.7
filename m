@@ -7,62 +7,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4D0C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7891C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F77120862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93615216FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558006867;
-	bh=H0bztZPvwHq2Z9gMbzDLu0UYSQZoQYk6njnVQhTNBrE=;
+	s=default; t=1558006872;
+	bh=fkeIAf6B3LFqNrSfMbNf5EJe+4kfmM+BmS9hz8rZlb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HAmG/v55YErzd3sXurwHniVh3m3k5c1VWLkvb4pLgF99mveLHUNK9T5VUFmfTd9X5
-	 q2jn4Z3ELEf61cl4CGcVtGzIWlrH1lSEpjL6kpZGe9cX82uardGwR0d4r4QdnbdnqH
-	 9IvbSVh7L9L4Zr4vpK9IBu7GT4iCLtffHkL3oZ1k=
+	b=P8GpBpbBMrxtHCb0ZxxSLSerFNX238u53EJgt06zsnNhxp3b2Q/haIro88lqt1DYe
+	 vS5cUuoMRmy3B0HDwHm1rlkoVEegQUpNx8wDY6YYaD5zCT89pEkY1+gr+1jXaBXEqa
+	 iZ6rZaRVDEry26e/6Hk1YSURj1A2lcmExqEw2g+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbfEPLlG (ORCPT
+        id S1727393AbfEPLlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:41:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49560 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:41:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727974AbfEPLlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:41:02 -0400
+        id S1728003AbfEPLlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:41:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF4E821773;
-        Thu, 16 May 2019 11:40:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3597F2166E;
+        Thu, 16 May 2019 11:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006861;
-        bh=H0bztZPvwHq2Z9gMbzDLu0UYSQZoQYk6njnVQhTNBrE=;
+        s=default; t=1558006866;
+        bh=fkeIAf6B3LFqNrSfMbNf5EJe+4kfmM+BmS9hz8rZlb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yzhN+194yOBqNIOBuEuCiaBiLINCGJJmLHmekn/br7hWNrx9YOP8BcvGdLv5FNqcG
-         NQySWQEU5AObfiwh19a/QxFmFzAxQw8qBkp9PEUShEmhW+n4+ZJSLcStrBP4JgPtqf
-         MToVeEp8+iuWhEuuBrUIK/shVoYPizxjd8W+puP4=
+        b=mY2T94dAWupC/qZ5CS0CU6WRDrdkL7eVxizPpMNrlJfRrSIezDZZJrwIhJYOG7Tsu
+         g0kIPppQ53Y+VAtlhl4rtWtffe5bn4V+2uLmX599dhgbL4aobLBdgk0xXYrCJ//12D
+         XOBz+0KPlXudCJiw6urZl0tABS4H+F7fVjvOr7wE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gary Hook <Gary.Hook@amd.com>, Li RongQing <lirongqing@baidu.com>,
-        Gary R Hook <gary.hook@amd.com>,
-        Borislav Petkov <bp@suse.de>,
+Cc:     Jiri Olsa <jolsa@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Coly Li <colyli@suse.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 22/25] x86/mm/mem_encrypt: Disable all instrumentation for early SME setup
-Date:   Thu, 16 May 2019 07:40:25 -0400
-Message-Id: <20190516114029.8682-22-sashal@kernel.org>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        David Arcari <darcari@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Lendacky Thomas <Thomas.Lendacky@amd.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 25/25] perf/x86/intel: Fix race in intel_pmu_disable_event()
+Date:   Thu, 16 May 2019 07:40:28 -0400
+Message-Id: <20190516114029.8682-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516114029.8682-1-sashal@kernel.org>
 References: <20190516114029.8682-1-sashal@kernel.org>
@@ -75,102 +68,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gary Hook <Gary.Hook@amd.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-[ Upstream commit b51ce3744f115850166f3d6c292b9c8cb849ad4f ]
+[ Upstream commit 6f55967ad9d9752813e36de6d5fdbd19741adfc7 ]
 
-Enablement of AMD's Secure Memory Encryption feature is determined very
-early after start_kernel() is entered. Part of this procedure involves
-scanning the command line for the parameter 'mem_encrypt'.
+New race in x86_pmu_stop() was introduced by replacing the
+atomic __test_and_clear_bit() of cpuc->active_mask by separate
+test_bit() and __clear_bit() calls in the following commit:
 
-To determine intended state, the function sme_enable() uses library
-functions cmdline_find_option() and strncmp(). Their use occurs early
-enough such that it cannot be assumed that any instrumentation subsystem
-is initialized.
+  3966c3feca3f ("x86/perf/amd: Remove need to check "running" bit in NMI handler")
 
-For example, making calls to a KASAN-instrumented function before KASAN
-is set up will result in the use of uninitialized memory and a boot
-failure.
+The race causes panic for PEBS events with enabled callchains:
 
-When AMD's SME support is enabled, conditionally disable instrumentation
-of these dependent functions in lib/string.c and arch/x86/lib/cmdline.c.
+  BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+  ...
+  RIP: 0010:perf_prepare_sample+0x8c/0x530
+  Call Trace:
+   <NMI>
+   perf_event_output_forward+0x2a/0x80
+   __perf_event_overflow+0x51/0xe0
+   handle_pmi_common+0x19e/0x240
+   intel_pmu_handle_irq+0xad/0x170
+   perf_event_nmi_handler+0x2e/0x50
+   nmi_handle+0x69/0x110
+   default_do_nmi+0x3e/0x100
+   do_nmi+0x11a/0x180
+   end_repeat_nmi+0x16/0x1a
+  RIP: 0010:native_write_msr+0x6/0x20
+  ...
+   </NMI>
+   intel_pmu_disable_event+0x98/0xf0
+   x86_pmu_stop+0x6e/0xb0
+   x86_pmu_del+0x46/0x140
+   event_sched_out.isra.97+0x7e/0x160
+  ...
 
- [ bp: Get rid of intermediary nostackp var and cleanup whitespace. ]
+The event is configured to make samples from PEBS drain code,
+but when it's disabled, we'll go through NMI path instead,
+where data->callchain will not get allocated and we'll crash:
 
-Fixes: aca20d546214 ("x86/mm: Add support to make use of Secure Memory Encryption")
-Reported-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Gary R Hook <gary.hook@amd.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
+          x86_pmu_stop
+            test_bit(hwc->idx, cpuc->active_mask)
+            intel_pmu_disable_event(event)
+            {
+              ...
+              intel_pmu_pebs_disable(event);
+              ...
+
+EVENT OVERFLOW ->  <NMI>
+                     intel_pmu_handle_irq
+                       handle_pmi_common
+   TEST PASSES ->        test_bit(bit, cpuc->active_mask))
+                           perf_event_overflow
+                             perf_prepare_sample
+                             {
+                               ...
+                               if (!(sample_type & __PERF_SAMPLE_CALLCHAIN_EARLY))
+                                     data->callchain = perf_callchain(event, regs);
+
+         CRASH ->              size += data->callchain->nr;
+                             }
+                   </NMI>
+              ...
+              x86_pmu_disable_event(event)
+            }
+
+            __clear_bit(hwc->idx, cpuc->active_mask);
+
+Fixing this by disabling the event itself before setting
+off the PEBS bit.
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Boris Brezillon <bbrezillon@kernel.org>
-Cc: Coly Li <colyli@suse.de>
-Cc: "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Kent Overstreet <kent.overstreet@gmail.com>
-Cc: "luto@kernel.org" <luto@kernel.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: "mingo@redhat.com" <mingo@redhat.com>
-Cc: "peterz@infradead.org" <peterz@infradead.org>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: David Arcari <darcari@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Lendacky Thomas <Thomas.Lendacky@amd.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/155657657552.7116.18363762932464011367.stgit@sosrh3.amd.com
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Fixes: 3966c3feca3f ("x86/perf/amd: Remove need to check "running" bit in NMI handler")
+Link: http://lkml.kernel.org/r/20190504151556.31031-1-jolsa@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/lib/Makefile | 12 ++++++++++++
- lib/Makefile          | 11 +++++++++++
- 2 files changed, 23 insertions(+)
+ arch/x86/events/intel/core.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-index 25a972c61b0ae..3c19d60316a88 100644
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -6,6 +6,18 @@
- # Produces uninteresting flaky coverage.
- KCOV_INSTRUMENT_delay.o	:= n
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index a759e59990fbd..09c53bcbd497d 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2074,15 +2074,19 @@ static void intel_pmu_disable_event(struct perf_event *event)
+ 	cpuc->intel_ctrl_host_mask &= ~(1ull << hwc->idx);
+ 	cpuc->intel_cp_status &= ~(1ull << hwc->idx);
  
-+# Early boot use of cmdline; don't instrument it
-+ifdef CONFIG_AMD_MEM_ENCRYPT
-+KCOV_INSTRUMENT_cmdline.o := n
-+KASAN_SANITIZE_cmdline.o  := n
-+
-+ifdef CONFIG_FUNCTION_TRACER
-+CFLAGS_REMOVE_cmdline.o = -pg
-+endif
-+
-+CFLAGS_cmdline.o := $(call cc-option, -fno-stack-protector)
-+endif
-+
- inat_tables_script = $(srctree)/arch/x86/tools/gen-insn-attr-x86.awk
- inat_tables_maps = $(srctree)/arch/x86/lib/x86-opcode-map.txt
- quiet_cmd_inat_tables = GEN     $@
-diff --git a/lib/Makefile b/lib/Makefile
-index 4238764468109..0ab808318202c 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -17,6 +17,17 @@ KCOV_INSTRUMENT_list_debug.o := n
- KCOV_INSTRUMENT_debugobjects.o := n
- KCOV_INSTRUMENT_dynamic_debug.o := n
+-	if (unlikely(event->attr.precise_ip))
+-		intel_pmu_pebs_disable(event);
+-
+ 	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
+ 		intel_pmu_disable_fixed(hwc);
+ 		return;
+ 	}
  
-+# Early boot use of cmdline, don't instrument it
-+ifdef CONFIG_AMD_MEM_ENCRYPT
-+KASAN_SANITIZE_string.o := n
+ 	x86_pmu_disable_event(event);
 +
-+ifdef CONFIG_FUNCTION_TRACER
-+CFLAGS_REMOVE_string.o = -pg
-+endif
-+
-+CFLAGS_string.o := $(call cc-option, -fno-stack-protector)
-+endif
-+
- lib-y := ctype.o string.o vsprintf.o cmdline.o \
- 	 rbtree.o radix-tree.o timerqueue.o\
- 	 idr.o int_sqrt.o extable.o \
++	/*
++	 * Needs to be called after x86_pmu_disable_event,
++	 * so we don't trigger the event without PEBS bit set.
++	 */
++	if (unlikely(event->attr.precise_ip))
++		intel_pmu_pebs_disable(event);
+ }
+ 
+ static void intel_pmu_del_event(struct perf_event *event)
 -- 
 2.20.1
 
