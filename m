@@ -7,28 +7,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D75BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D88BC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76868206A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02C73206A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfEPJ2E (ORCPT
+        id S1726959AbfEPJ2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 05:28:04 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:53913 "EHLO
+        Thu, 16 May 2019 05:28:09 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:48454 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726363AbfEPJ2D (ORCPT
+        with ESMTP id S1726363AbfEPJ2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 05:28:03 -0400
-X-UUID: d86e117a3c794947902cb259459271e0-20190516
-X-UUID: d86e117a3c794947902cb259459271e0-20190516
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        Thu, 16 May 2019 05:28:06 -0400
+X-UUID: 4637ff2b277f4e3a9730e921846a5ec5-20190516
+X-UUID: 4637ff2b277f4e3a9730e921846a5ec5-20190516
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
         (envelope-from <bibby.hsieh@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1025656641; Thu, 16 May 2019 17:27:57 +0800
+        with ESMTP id 113987192; Thu, 16 May 2019 17:28:02 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
  15.0.1395.4; Thu, 16 May 2019 17:27:55 +0800
 Received: from mtkslt302.mediatek.inc (10.21.14.115) by mtkcas07.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
@@ -52,100 +52,91 @@ CC:     Daniel Kurtz <djkurtz@chromium.org>,
         Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
         Houlong Wei <houlong.wei@mediatek.com>,
         <ginny.chen@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v6 10/12] soc: mediatek: cmdq: add cmdq_dev_get_subsys function
-Date:   Thu, 16 May 2019 17:27:53 +0800
-Message-ID: <20190516092754.33425-2-bibby.hsieh@mediatek.com>
+Subject: [PATCH v6 07/12] soc: mediatek: cmdq: clear the event in cmdq initial flow
+Date:   Thu, 16 May 2019 17:27:52 +0800
+Message-ID: <20190516092754.33425-1-bibby.hsieh@mediatek.com>
 X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20190516092754.33425-1-bibby.hsieh@mediatek.com>
-References: <20190516092754.33425-1-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
+X-TM-SNTS-SMTP: 41BF739DE66FE4DBD0FD8AD9EA84FDC74A6A4D699C23EB81D2709C284B6545432000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GCE cannot know the register base address, this function
-can help cmdq client to get the relationship of subsys
-and register base address.
+GCE hardware stored event information in own internal sysram,
+if the initial value in those sysram is not zero value
+it will cause a situation that gce can wait the event immediately
+after client ask gce to wait event but not really trigger the
+corresponding hardware.
+
+In order to make sure that the wait event function is
+exactly correct, we need to clear the sysram value in
+cmdq initial flow.
+
+Fixes: 623a6143a845 ("mailbox: mediatek: Add Mediatek CMDQ driver")
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-cmdq-helper.c | 25 +++++++++++++++++++++++++
- include/linux/soc/mediatek/mtk-cmdq.h  | 18 ++++++++++++++++++
- 2 files changed, 43 insertions(+)
+ drivers/mailbox/mtk-cmdq-mailbox.c       | 5 +++++
+ include/linux/mailbox/mtk-cmdq-mailbox.h | 2 ++
+ include/linux/soc/mediatek/mtk-cmdq.h    | 3 ---
+ 3 files changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-index a53cdd71cfc2..a64060a34e01 100644
---- a/drivers/soc/mediatek/mtk-cmdq-helper.c
-+++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-@@ -27,6 +27,31 @@ struct cmdq_instruction {
- 	u8 op;
- };
+diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+index 6db1e2dd2dea..2c1b80d82c3a 100644
+--- a/drivers/mailbox/mtk-cmdq-mailbox.c
++++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+@@ -20,6 +20,7 @@
+ #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
  
-+struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx)
-+{
-+	struct cmdq_subsys *subsys;
-+	struct of_phandle_args spec;
-+
-+	subsys = devm_kzalloc(dev, sizeof(*subsys), GFP_KERNEL);
-+	if (!subsys)
-+		return NULL;
-+
-+	if (of_parse_phandle_with_args(dev->of_node, "mediatek,gce-client-reg",
-+				       "#subsys-cells", idx, &spec)) {
-+		dev_err(dev, "can't parse gce-client-reg property");
-+
-+		return (struct cmdq_subsys *)-ENODEV;
-+	}
-+
-+	subsys->id = spec.args[0];
-+	subsys->offset = spec.args[1];
-+	subsys->size = spec.args[2];
-+	of_node_put(spec.np);
-+
-+	return subsys;
-+}
-+EXPORT_SYMBOL(cmdq_dev_get_subsys);
-+
- static void cmdq_client_timeout(struct timer_list *t)
+ #define CMDQ_CURR_IRQ_STATUS		0x10
++#define CMDQ_SYNC_TOKEN_UPDATE		0x68
+ #define CMDQ_THR_SLOT_CYCLES		0x30
+ #define CMDQ_THR_BASE			0x100
+ #define CMDQ_THR_SIZE			0x80
+@@ -103,8 +104,12 @@ static void cmdq_thread_resume(struct cmdq_thread *thread)
+ 
+ static void cmdq_init(struct cmdq *cmdq)
  {
- 	struct cmdq_client *client = from_timer(client, t, timer);
++	int i;
++
+ 	WARN_ON(clk_enable(cmdq->clock) < 0);
+ 	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
++	for (i = 0; i <= CMDQ_MAX_EVENT; i++)
++		writel(i, cmdq->base + CMDQ_SYNC_TOKEN_UPDATE);
+ 	clk_disable(cmdq->clock);
+ }
+ 
+diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+index ccb73422c2fa..911475da7a53 100644
+--- a/include/linux/mailbox/mtk-cmdq-mailbox.h
++++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+@@ -19,6 +19,8 @@
+ #define CMDQ_WFE_UPDATE			BIT(31)
+ #define CMDQ_WFE_WAIT			BIT(15)
+ #define CMDQ_WFE_WAIT_VALUE		0x1
++/** cmdq event maximum */
++#define CMDQ_MAX_EVENT			0x3ff
+ 
+ /*
+  * CMDQ_CODE_MASK:
 diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 0651a0bffa54..574006c5cd76 100644
+index 54ade13a9b15..4e8899972db4 100644
 --- a/include/linux/soc/mediatek/mtk-cmdq.h
 +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -15,6 +15,12 @@
+@@ -13,9 +13,6 @@
  
+ #define CMDQ_NO_TIMEOUT		0xffffffffu
+ 
+-/** cmdq event maximum */
+-#define CMDQ_MAX_EVENT				0x3ff
+-
  struct cmdq_pkt;
  
-+struct cmdq_subsys {
-+	u8 id;
-+	u16 offset;
-+	u16 size;
-+};
-+
  struct cmdq_client {
- 	spinlock_t lock;
- 	u32 pkt_cnt;
-@@ -142,4 +148,16 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
-  */
- int cmdq_pkt_flush(struct cmdq_pkt *pkt);
- 
-+/**
-+ * cmdq_dev_get_subsys() - parse sub system from the device node of CMDQ client
-+ * @dev:	device of CMDQ mailbox client
-+ * @idx:	the index of desired subsys
-+ *
-+ * Return: CMDQ subsys pointer
-+ *
-+ * Help CMDQ client pasing the sub system number
-+ * from the device node of CMDQ client.
-+ */
-+struct cmdq_subsys *cmdq_dev_get_subsys(struct device *dev, int idx);
-+
- #endif	/* __MTK_CMDQ_H__ */
 -- 
 2.18.0
 
