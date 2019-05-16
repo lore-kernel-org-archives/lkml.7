@@ -2,109 +2,181 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56250C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0F11C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:00:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FB5B20848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:59:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B143120848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:00:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QknrASxb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rusCImqc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbfEPJ7Y (ORCPT
+        id S1727193AbfEPKAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 05:59:24 -0400
-Received: from mail-eopbgr50067.outbound.protection.outlook.com ([40.107.5.67]:6097
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726374AbfEPJ7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 05:59:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3oqcAU1kVA1ub98bL2yBCizXoCsaLON2Rz+UkYSGjL8=;
- b=QknrASxbeZdxd3FgSNZglSe32RRmKlVb+V1bq5twq+V5mhSmJu6wy6AT+sX98W2/qgGwCo6aUGw+OD4rvz6WdowF4lpVcrw6keTAiCyTtNXSqsHK8VPzf9Z2SeIg8nBjl12rI+azo90CwpXiWkwQSgK7f9UYe/vSAR2BgSkIhIo=
-Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com (10.169.132.138) by
- VI1PR0401MB2445.eurprd04.prod.outlook.com (10.168.64.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.24; Thu, 16 May 2019 09:59:17 +0000
-Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com
- ([fe80::b091:6395:e853:5986]) by VI1PR0401MB2237.eurprd04.prod.outlook.com
- ([fe80::b091:6395:e853:5986%3]) with mapi id 15.20.1900.010; Thu, 16 May 2019
- 09:59:17 +0000
-From:   "Y.b. Lu" <yangbo.lu@nxp.com>
-To:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Y.b. Lu" <yangbo.lu@nxp.com>
-Subject: [PATCH 3/3] arm64: dts: fsl: ls1028a: add ENETC 1588 timer node
-Thread-Topic: [PATCH 3/3] arm64: dts: fsl: ls1028a: add ENETC 1588 timer node
-Thread-Index: AQHVC84G1nIRmQ4iwECD7FOpa1iiEg==
-Date:   Thu, 16 May 2019 09:59:17 +0000
-Message-ID: <20190516100028.48256-4-yangbo.lu@nxp.com>
-References: <20190516100028.48256-1-yangbo.lu@nxp.com>
-In-Reply-To: <20190516100028.48256-1-yangbo.lu@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HK2PR0302CA0017.apcprd03.prod.outlook.com
- (2603:1096:202::27) To VI1PR0401MB2237.eurprd04.prod.outlook.com
- (2603:10a6:800:27::10)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yangbo.lu@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2f54b599-2ff1-481c-9f10-08d6d9e5283b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR0401MB2445;
-x-ms-traffictypediagnostic: VI1PR0401MB2445:
-x-microsoft-antispam-prvs: <VI1PR0401MB244504AE692A8FD3A97135EEF80A0@VI1PR0401MB2445.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:296;
-x-forefront-prvs: 0039C6E5C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(376002)(136003)(396003)(346002)(199004)(189003)(6506007)(99286004)(386003)(14454004)(76176011)(52116002)(5660300002)(54906003)(4326008)(478600001)(316002)(102836004)(66066001)(6116002)(3846002)(2906002)(68736007)(36756003)(71200400001)(4744005)(8936002)(53936002)(256004)(64756008)(66556008)(66476007)(73956011)(66446008)(66946007)(486006)(6512007)(7736002)(446003)(8676002)(186003)(11346002)(476003)(2616005)(71190400001)(305945005)(2501003)(25786009)(26005)(86362001)(6436002)(6486002)(110136005)(81156014)(81166006)(50226002)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2445;H:VI1PR0401MB2237.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: cADOvOveZ3jcgAiJerPAVu0cApHIkVtVzvjaB334UfTrzf6WkT+xTXO0VEPTcFE+9BkZt2LqxkdWga7LC4aEzHm8FgvlG4okrcTBtkBB2+JmexGaVjIpHgdcWdGbKKyI7L3VsjY93/K7X+s0yJ+nCkaJhVXeYIy0CEV2232BxHvxjnah+B9aigLAUN2b9XBpkMDMtHkOw4hV50URxe3cg6tSm7Up+W3m5M37cTwO4JZGNwY4+AVtjTzQcZVTTgn40DlJugwFKWBmWeMtRaJPkZ/LjAqdBXTh4V6xbzQSPekDUf/z1dfBC5eMnfFw9T0Q8kDL+ijKhf02IboTExGKM8EeXRj3WbpwSlKxH1dcCRKS4Q6m9zeWyBODA9++um+3YsqtpaWmNRsUOaFSqQPmGPDs/vmbCeZTWcl+BYdCujo=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 16 May 2019 06:00:52 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40665 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726374AbfEPKAw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 06:00:52 -0400
+Received: by mail-oi1-f194.google.com with SMTP id r136so2053937oie.7
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 03:00:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dC3aSgv+o3HSYvM8J8FMKymuhEQ4FThUEnqG0ntB4g0=;
+        b=rusCImqcsRelViq7BjTj8x6kkzQ7cL9BId6Q2hif54CzbiF2xexI8tw8D5bQ3Q6HLt
+         l4Fc8osLWvc/mFIQ0lcIGpQelUQltkxqLGCz+/Oe6Un0I0xiembCGtk90t1JUC8cFExL
+         hiM8oJYcfzEbVRzLR+jVGIv2X+WSy8ArgEm6sDYpKjifpSCcPcFIaQ42Qg4wirz6BBHO
+         RKDlH9nba+5XQn6n19kOSVR/TU/lT++yDt/HW6vWFf86nDvW72knrug0SBpJeZIKzOOD
+         W5xi2wekab69fIhm12WD6de9sXy3LG6XrRTh7bl6poYUh4ZyEl4VUbR4nVo667mnp3wj
+         UpsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dC3aSgv+o3HSYvM8J8FMKymuhEQ4FThUEnqG0ntB4g0=;
+        b=sApnQiaqw7TsHuGIkQWgfU763oXzm35MlNVctvaRoP/fjVck21eQJyCqR/EeRDxhNf
+         qTsNkm4TzSJ4DloSvmKPwNm1Q6e2jccqKi5I6QoGDURLU0OF5JGQHGg39/mzJBWblvQE
+         cy36DkSbTBR9Jk9nY85mQF0e5lcxgMgfRnzH9AJYM7eI0iSuEES0eanjvM5a1BA8rdkP
+         /zA7WdE7C57p39LbEVwvb53O6r8HWopG9jCxod9F6/hMWeBA4eTOzeiInrt2svdWZrSI
+         xE4XszQOvvmDbf08gk5L4WQgL7orMfvGJqk8hBkCxQNUW/1a6fpC3OtdXFrciLsa8k92
+         InLg==
+X-Gm-Message-State: APjAAAUYRnoc/gV5ePKTo+pkIomjeXoc3nStowq1h24KJMnm3hjtPl7h
+        4kI4ZkMjG6aqmLDXZT6Q2+uc2GfBPrjfFJGa1g6pxw==
+X-Google-Smtp-Source: APXvYqw8UaGLIZvpXm/eLsQS3GmsqOIGz12mauFeRh7e/B8z5XURykeEcCxzQqp0PTqaQVSeftW47QM4HusRyiTUL58=
+X-Received: by 2002:aca:180d:: with SMTP id h13mr9485857oih.39.1558000850840;
+ Thu, 16 May 2019 03:00:50 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2f54b599-2ff1-481c-9f10-08d6d9e5283b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 09:59:17.0972
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2445
+References: <20190516094234.9116-1-oleksandr@redhat.com> <20190516094234.9116-5-oleksandr@redhat.com>
+In-Reply-To: <20190516094234.9116-5-oleksandr@redhat.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 16 May 2019 12:00:24 +0200
+Message-ID: <CAG48ez2yXw_PJXO-mS=Qw5rkLpG6zDPd0saMhhGk09-du2bpaA@mail.gmail.com>
+Subject: Re: [PATCH RFC 4/5] mm/ksm, proc: introduce remote merge
+To:     Oleksandr Natalenko <oleksandr@redhat.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Hugh Dickins <hughd@google.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Greg KH <greg@kroah.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Timofey Titovets <nefelim4ag@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Grzegorz Halat <ghalat@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIEVORVRDIDE1ODggdGltZXIgbm9kZSB3aGljaCBpcyBFTkVUQyBQRiA0IChQaHlzaXNjYWwg
-RnVuY3Rpb24gNCkuDQoNClNpZ25lZC1vZmYtYnk6IFlhbmdibyBMdSA8eWFuZ2JvLmx1QG54cC5j
-b20+DQotLS0NCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNp
-IHwgNSArKysrKw0KIDEgZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdp
-dCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kgYi9hcmNo
-L2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQppbmRleCAyODk2YmJj
-ZmEzYmIuLmQ3MzJhNjM3NTRmYiAxMDA2NDQNCi0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJl
-ZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kNCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNj
-YWxlL2ZzbC1sczEwMjhhLmR0c2kNCkBAIC0zNjksNiArMzY5LDExIEBADQogCQkJCWNvbXBhdGli
-bGUgPSAiZnNsLGVuZXRjIjsNCiAJCQkJcmVnID0gPDB4MDAwMTAwIDAgMCAwIDA+Ow0KIAkJCX07
-DQorCQkJZXRoZXJuZXRAMCw0IHsgLyogUFRQIGNsb2NrICovDQorCQkJCXJlZyA9IDwweDAwMDQw
-MCAwIDAgMCAwPjsNCisJCQkJY2xvY2tzID0gPCZjbG9ja2dlbiA0IDA+Ow0KKwkJCQlsaXR0bGUt
-ZW5kaWFuOw0KKwkJCX07DQogCQl9Ow0KIAl9Ow0KIH07DQotLSANCjIuMTcuMQ0KDQo=
+On Thu, May 16, 2019 at 11:43 AM Oleksandr Natalenko
+<oleksandr@redhat.com> wrote:
+> Use previously introduced remote madvise knob to mark task's
+> anonymous memory as mergeable.
+>
+> To force merging task's VMAs, "merge" hint is used:
+>
+>    # echo merge > /proc/<pid>/madvise
+>
+> Force unmerging is done similarly:
+>
+>    # echo unmerge > /proc/<pid>/madvise
+>
+> To achieve this, previously introduced ksm_madvise_*() helpers
+> are used.
+
+Why does this not require PTRACE_MODE_ATTACH_FSCREDS to the target
+process? Enabling KSM on another process is hazardous because it
+significantly increases the attack surface for side channels.
+
+(Note that if you change this to require PTRACE_MODE_ATTACH_FSCREDS,
+you'll want to use mm_access() in the ->open handler and drop the mm
+in ->release. mm_access() from a ->write handler is not permitted.)
+
+[...]
+> @@ -2960,15 +2962,63 @@ static int proc_stack_depth(struct seq_file *m, struct pid_namespace *ns,
+>  static ssize_t madvise_write(struct file *file, const char __user *buf,
+>                 size_t count, loff_t *ppos)
+>  {
+> +       /* For now, only KSM hints are implemented */
+> +#ifdef CONFIG_KSM
+> +       char buffer[PROC_NUMBUF];
+> +       int behaviour;
+>         struct task_struct *task;
+> +       struct mm_struct *mm;
+> +       int err = 0;
+> +       struct vm_area_struct *vma;
+> +
+> +       memset(buffer, 0, sizeof(buffer));
+> +       if (count > sizeof(buffer) - 1)
+> +               count = sizeof(buffer) - 1;
+> +       if (copy_from_user(buffer, buf, count))
+> +               return -EFAULT;
+> +
+> +       if (!memcmp("merge", buffer, min(sizeof("merge")-1, count)))
+
+This means that you also match on something like "mergeblah". Just use strcmp().
+
+> +               behaviour = MADV_MERGEABLE;
+> +       else if (!memcmp("unmerge", buffer, min(sizeof("unmerge")-1, count)))
+> +               behaviour = MADV_UNMERGEABLE;
+> +       else
+> +               return -EINVAL;
+>
+>         task = get_proc_task(file_inode(file));
+>         if (!task)
+>                 return -ESRCH;
+>
+> +       mm = get_task_mm(task);
+> +       if (!mm) {
+> +               err = -EINVAL;
+> +               goto out_put_task_struct;
+> +       }
+> +
+> +       down_write(&mm->mmap_sem);
+
+Should a check for mmget_still_valid(mm) be inserted here? See commit
+04f5866e41fb70690e28397487d8bd8eea7d712a.
+
+> +       switch (behaviour) {
+> +       case MADV_MERGEABLE:
+> +       case MADV_UNMERGEABLE:
+
+This switch isn't actually necessary at this point, right?
+
+> +               vma = mm->mmap;
+> +               while (vma) {
+> +                       if (behaviour == MADV_MERGEABLE)
+> +                               ksm_madvise_merge(vma->vm_mm, vma, &vma->vm_flags);
+> +                       else
+> +                               ksm_madvise_unmerge(vma, vma->vm_start, vma->vm_end, &vma->vm_flags);
+> +                       vma = vma->vm_next;
+> +               }
+> +               break;
+> +       }
+> +       up_write(&mm->mmap_sem);
+> +
+> +       mmput(mm);
+> +
+> +out_put_task_struct:
+>         put_task_struct(task);
+>
+> -       return count;
+> +       return err ? err : count;
+> +#else
+> +       return -EINVAL;
+> +#endif /* CONFIG_KSM */
+>  }
