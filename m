@@ -2,153 +2,120 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0700FC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:58:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41C7C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D873C20848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDAFD20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:58:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfEPM6D (ORCPT
+        id S1727504AbfEPM6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 08:58:03 -0400
-Received: from mga03.intel.com ([134.134.136.65]:38130 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726692AbfEPM6C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 08:58:02 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 05:58:01 -0700
-X-ExtLoop1: 1
-Received: from rongch2-mobl.ccr.corp.intel.com (HELO [10.255.30.127]) ([10.255.30.127])
-  by fmsmga001.fm.intel.com with ESMTP; 16 May 2019 05:57:58 -0700
-Subject: Re: undefined reference to `__aeabi_uldivmod' after 25c13324d03d
- ("IB/mlx5: Add steering SW ICM device memory type")
-To:     Fengguang Wu <fengguang.wu@intel.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "kbuild@01.org" <kbuild@01.org>,
-        Ariel Levkovich <lariel@mellanox.com>,
-        Eli Cohen <eli@mellanox.com>, Mark Bloch <markb@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Philip Li <philip.li@intel.com>
-References: <20190514194510.GA15465@archlinux-i9>
- <20190515003202.GA14522@ziepe.ca> <20190515050331.GC5225@mtr-leonro.mtl.com>
- <CAK8P3a0aH9Ezur3r7TDVMPreVKMip2HMEWhUsC_pKhOq7mE+3A@mail.gmail.com>
- <20190515064043.GA944@archlinux-i9>
- <CAK8P3a1r3QD=pwZqG+SfDkVr_V3P7ueRT8SLss9z+M6OEQst4A@mail.gmail.com>
- <20190515064918.GA4807@archlinux-i9>
- <20190516022135.6tnf3xx5mzctutxz@wfg-t540p.sh.intel.com>
-From:   "Chen, Rong A" <rong.a.chen@intel.com>
-Message-ID: <6f8089c8-788b-bbca-5b1b-1acc9791e9e7@intel.com>
-Date:   Thu, 16 May 2019 20:57:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 16 May 2019 08:58:09 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:52661 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727450AbfEPM6H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 08:58:07 -0400
+Received: by mail-io1-f69.google.com with SMTP id n82so2591377iod.19
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 05:58:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=QrnszPDU3yxNLe2DVRQI/pEmO3ZdX0JPjpwSh5YyPIE=;
+        b=Nl/YEpZ5eihuGt9vWGBGxY2hjaIRIq2cIElc7G1OBn5aT6feltMO4VuM4Cc1lAcO9s
+         Ec+GdPo78VBhpLEPfm/O7D3bn4OpvLGIBCM0fmHeAofZx03GbgVOgrpnf+8CV8KFT4Yf
+         XQ7ae6YUz5VZC98Kz0HojYuTotUIEowYspRZ4YyQ34Jev1whbhjlNJSP9G2XreotJzSv
+         qK6DpDZKx7R0Wi2WJNrxj1S4OKO+tFkx/E+mnHyxF2o9biChsNMi9DwFx+b9TW50WnXG
+         nevLF40Vqz4e6VQTlf1iArVF5HCGuxIBF/IY79yyAGPkU6yaHNpSOGEqABGsc5UjX6VI
+         Vg7w==
+X-Gm-Message-State: APjAAAWfm8S+cb0HnBKrbe2XYHRpXRVUqEztu3yay5jFiBpjkL1fALt4
+        ApEHdQjnwO2Ctp0eRmu0cu5aQuxt0GXIB7bIyoMeCGMsbhnY
+X-Google-Smtp-Source: APXvYqwojGgc+W/W/JhFKzKop4P4kpB0lNtV5LPoj4eV3Hu55LHgcbrblzklvEH7U3R949VAgYzz9B06uPE71r3VqHbW1rzg4AUA
 MIME-Version: 1.0
-In-Reply-To: <20190516022135.6tnf3xx5mzctutxz@wfg-t540p.sh.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+X-Received: by 2002:a24:8c:: with SMTP id 134mr12523083ita.24.1558011486534;
+ Thu, 16 May 2019 05:58:06 -0700 (PDT)
+Date:   Thu, 16 May 2019 05:58:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000360994058900d17f@google.com>
+Subject: KMSAN: uninit-value in tomoyo_check_unix_address
+From:   syzbot <syzbot+e9687dbb0b6b2057d0ed@syzkaller.appspotmail.com>
+To:     glider@google.com, jmorris@namei.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        penguin-kernel@I-love.SAKURA.ne.jp, serge@hallyn.com,
+        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello,
 
-On 5/16/2019 10:21 AM, Fengguang Wu wrote:
-> CC current 0day kbuild test maintainers Philip and Rong. -fengguang
->
-> On Tue, May 14, 2019 at 11:49:18PM -0700, Nathan Chancellor wrote:
->> On Wed, May 15, 2019 at 08:42:13AM +0200, Arnd Bergmann wrote:
->>> On Wed, May 15, 2019 at 8:40 AM Nathan Chancellor
->>> <natechancellor@gmail.com> wrote:
->>> > On Wed, May 15, 2019 at 08:31:49AM +0200, Arnd Bergmann wrote:
->>> > > On Wed, May 15, 2019 at 7:04 AM Leon Romanovsky 
->>> <leonro@mellanox.com> wrote:
->>> > > > On Tue, May 14, 2019 at 09:32:02PM -0300, Jason Gunthorpe wrote:
->>> > > > > On Tue, May 14, 2019 at 12:45:10PM -0700, Nathan Chancellor 
->>> wrote:
->>> > > > > > Hi all,
->>> > > > > >
->>> > > > > > I checked the RDMA mailing list and trees and I haven't 
->>> seen this
->>> > > > > > reported/fixed yet (forgive me if it has) but when 
->>> building for arm32
->>> > > > > > with multi_v7_defconfig and the following configs 
->>> (distilled from
->>> > > > > > allyesconfig):
->>> > > > > >
->>> > > > > > CONFIG_INFINIBAND=y
->>> > > > > > CONFIG_INFINIBAND_ON_DEMAND_PAGING=y
->>> > > > > > CONFIG_INFINIBAND_USER_ACCESS=y
->>> > > > > > CONFIG_MLX5_CORE=y
->>> > > > > > CONFIG_MLX5_INFINIBAND=y
->>> > > > > >
->>> > > > > > The following link time errors occur:
->>> > > > > >
->>> > > > > > arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/main.o: 
->>> in function `mlx5_ib_alloc_dm':
->>> > > > > > main.c:(.text+0x60c): undefined reference to 
->>> `__aeabi_uldivmod'
->>> > > > > > arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/cmd.o: in 
->>> function `mlx5_cmd_alloc_sw_icm':
->>> > > > > > cmd.c:(.text+0x6d4): undefined reference to 
->>> `__aeabi_uldivmod'
->>> > > > > > arm-linux-gnueabi-ld: drivers/infiniband/hw/mlx5/cmd.o: in 
->>> function `mlx5_cmd_dealloc_sw_icm':
->>> > > > > > cmd.c:(.text+0x9ec): undefined reference to 
->>> `__aeabi_uldivmod'
->>> > > > >
->>> > > > > Fengguang, I'm surprised that 0-day didn't report this 
->>> earlier..
->>> > > >
->>> > > > I got many successful emails after I pushed this patch to 
->>> 0-day testing.
->>> > >
->>> > > The long division warnings can compiler specific, and depend on 
->>> certain
->>> > > optimization options, as compilers can optimize out certain 
->>> divisions and
->>> > > replace them with multiplications and/or shifts, or prove that 
->>> they can be
->>> > > replaced with a 32-bit division. If this is a case that gcc 
->>> manages to
->>> > > optimize but clang does not, it might be worth looking into 
->>> whether an
->>> > > optimization can be added to clang, in addition to improving the 
->>> source.
->>> >
->>> > While I did run initially run into this with clang, the errors 
->>> above are
->>> > with gcc (mainly to show this was going to be a universal problem and
->>> > not just something with clang).
->>>
->>> Which gcc version did you use here? Anything particularly old or 
->>> particularly
->>> new? I think 0-day is on a fairly recent gcc-8, but not the latest 
->>> gcc-9
->>> release.
->>
->> 8.2.0 it seems (I've been meaning to build from the 9.x branch though
->> since it appears that Arch's arm-linux-gnueabi-gcc isn't going to get
->> updated since it's in the AUR).
->>
-Thanks for the reminding, we met some problems with gcc 8.1.0 once,
+syzbot found the following crash on:
 
-then we uses "arm-linux-gnueabi-gcc (Debian 7.2.0-11) 7.2.0" as the 
-default gcc for arm,
+HEAD commit:    3b955a40 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       kmsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=15014d44a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=602468164ccdc30a
+dashboard link: https://syzkaller.appspot.com/bug?extid=e9687dbb0b6b2057d0ed
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+06d00afa61eef8f7f501ebdb4e8612ea43ec2d78)
 
-It seems we have missed some build issues detected by new gcc. we're 
-going to upgrade gcc ASAP.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-Best Regards,
-Rong Chen
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+e9687dbb0b6b2057d0ed@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KMSAN: uninit-value in tomoyo_check_unix_address+0x36a/0xa30  
+security/tomoyo/network.c:597
+CPU: 1 PID: 30810 Comm: syz-executor.4 Not tainted 5.1.0+ #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x130/0x2a0 mm/kmsan/kmsan.c:619
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:310
+  tomoyo_check_unix_address+0x36a/0xa30 security/tomoyo/network.c:597
+  tomoyo_socket_connect_permission+0x315/0x400 security/tomoyo/network.c:705
+  tomoyo_socket_connect+0x8b/0xa0 security/tomoyo/tomoyo.c:456
+  security_socket_connect+0x127/0x200 security/security.c:1948
+  __sys_connect+0x536/0x820 net/socket.c:1804
+  __do_sys_connect net/socket.c:1819 [inline]
+  __se_sys_connect+0x8d/0xb0 net/socket.c:1816
+  __x64_sys_connect+0x4a/0x70 net/socket.c:1816
+  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+RIP: 0033:0x458da9
+Code: ad b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f825eeb8c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000458da9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 000000000073bf00 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f825eeb96d4
+R13: 00000000004bf2cf R14: 00000000004d0660 R15: 00000000ffffffff
+
+Local variable description: ----address@__sys_connect
+Variable was created at:
+  sockfd_lookup_light net/socket.c:488 [inline]
+  __sys_connect+0x8c/0x820 net/socket.c:1796
+  __do_sys_connect net/socket.c:1819 [inline]
+  __se_sys_connect+0x8d/0xb0 net/socket.c:1816
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
