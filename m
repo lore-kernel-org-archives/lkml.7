@@ -2,203 +2,305 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3E4C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFA0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AA4A20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ECF021734
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:13:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="o14TXBjf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dAhrylH8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbfEPGNS (ORCPT
+        id S1726678AbfEPGN2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 02:13:18 -0400
-Received: from mail-eopbgr40062.outbound.protection.outlook.com ([40.107.4.62]:52679
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726448AbfEPGNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 02:13:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector1-arm-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EismOEVb7VNoJBCjK3lnGmOkgyxmVzMKkWlGhomr/lM=;
- b=o14TXBjfanF8cc4TUiuvBGMNoMP+49fOQOmu4+OmFxhPLigukELFITJsGpQHxkqtkHk/gqrLbV4ZTiog7rEtjz2Qll09+PbAfj0qpaGWt7sBSImSq6XjqBBvfyh+BZWqpfrqyuLgHonREOGqMJYKmEPb6Na7oONri6UlRV/7Z1o=
-Received: from DB7PR08MB3530.eurprd08.prod.outlook.com (20.177.120.80) by
- DB7PR08MB3788.eurprd08.prod.outlook.com (20.178.84.205) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1878.24; Thu, 16 May 2019 06:13:13 +0000
-Received: from DB7PR08MB3530.eurprd08.prod.outlook.com
- ([fe80::e41c:9e3c:80bf:25c6]) by DB7PR08MB3530.eurprd08.prod.outlook.com
- ([fe80::e41c:9e3c:80bf:25c6%5]) with mapi id 15.20.1900.010; Thu, 16 May 2019
- 06:13:13 +0000
-From:   "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-To:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>
-CC:     "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: [PATCH v1 2/2] drm/komeda: Enable color-encoding (YUV format) support
-Thread-Topic: [PATCH v1 2/2] drm/komeda: Enable color-encoding (YUV format)
- support
-Thread-Index: AQHVC65xCo/tKX4lyUClf4OkvYeneg==
-Date:   Thu, 16 May 2019 06:13:13 +0000
-Message-ID: <1557987170-24032-3-git-send-email-lowry.li@arm.com>
-References: <1557987170-24032-1-git-send-email-lowry.li@arm.com>
-In-Reply-To: <1557987170-24032-1-git-send-email-lowry.li@arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK2PR0401CA0007.apcprd04.prod.outlook.com
- (2603:1096:202:2::17) To DB7PR08MB3530.eurprd08.prod.outlook.com
- (2603:10a6:10:49::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Lowry.Li@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 1.9.1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b4905844-e7d7-4872-99df-08d6d9c593e1
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB7PR08MB3788;
-x-ms-traffictypediagnostic: DB7PR08MB3788:
-nodisclaimer: True
-x-microsoft-antispam-prvs: <DB7PR08MB37884D8559A3A1889DBD7ECB9F0A0@DB7PR08MB3788.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:403;
-x-forefront-prvs: 0039C6E5C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(136003)(346002)(39860400002)(376002)(189003)(199004)(486006)(6512007)(36756003)(8676002)(6436002)(26005)(81156014)(73956011)(66446008)(64756008)(66556008)(66476007)(81166006)(66946007)(7736002)(6636002)(186003)(305945005)(11346002)(2616005)(6486002)(476003)(446003)(8936002)(50226002)(66066001)(478600001)(316002)(55236004)(25786009)(102836004)(2201001)(386003)(52116002)(71190400001)(76176011)(86362001)(71200400001)(6506007)(3846002)(72206003)(2906002)(2501003)(68736007)(6116002)(14454004)(53936002)(4326008)(54906003)(5660300002)(256004)(14444005)(99286004)(110136005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB3788;H:DB7PR08MB3530.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: cA7AeDfl4HgF66adn4s7vhyXW5VqWQZNOKqdzv9M5RdSNAbIIcVNw9Ia42k1gzUVE/YlIKC3kC26GtZMg4FTlh2kZelLIJc5cO6Vouk5IHPdfonDDEhraLb2xIGIRofHUhA3pBhTPKQy08fP4Cj09Wxde/CVAghF8jjqJhGyi4xlGcP78vLCSoMJ4EWUsi+edfxkN1llGPlYiHUBpS5X2+SVG0BBen7zjd3o84cK6r4zwtMxPkBHGyv3l6l8ehGB4McNqWlMFlpBSnk2KLp1iLALIBjczQtRmWEUhtFro1RsppBNittyDYd04f3sFNiJ4qPI7PmCsp/uI99C+HMj+3VH0aQnHPqNe15FhdnS4n85p3MK/PcE6lTNs7WcptJzP0Ph9EktMTNITebYTl5SdCX4XKfOx9Yz2pnQMJc1/v4=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 16 May 2019 02:13:28 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38513 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726448AbfEPGN1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 02:13:27 -0400
+Received: by mail-pg1-f194.google.com with SMTP id j26so1017081pgl.5;
+        Wed, 15 May 2019 23:13:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=QOOIsPT3oQV8T/SeoWPkg7q6TShxRdch8us/KFzG6P4=;
+        b=dAhrylH8oKJ3BQBaHxhVlhOYOvL44uJWJu0XVziXbdFPBKgfdCMoD7bpbxF++UO+jb
+         N7nbYtgPv9YlCiWhCI2bZmzJYmYyg/6xtEPbO1uEmfaE5ue4DxoCFwJiqpUofJ3v3Uq1
+         SvTMEmQuf6DbRKAQAva02k9mCMvriVygSTOj/tG9twWZI8vm3CU8X2wk4Xc7IG3w+iUJ
+         sT/Kw2aaY9O0+J5pLYaI97iyHnWSfXP3xMiJld2ePDv0gXQtmQNC2gv4O1ytDY+zsTgm
+         oVft9F8rdVVq1V1u446pGRnlBzkKudLXhYmgbZ1Y5L5g4mRq0Adb6ntGpsUsEPQbqlk+
+         33WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=QOOIsPT3oQV8T/SeoWPkg7q6TShxRdch8us/KFzG6P4=;
+        b=Gyu9KtxKzMB3SbiZJKsCIKRBWC8Lj/icf3QW4FHG1euHd8dNbxz+uigT+KiZuAXOLQ
+         5wpe5oF0ztL+mHX0r0M62AL8FYz3Avihu23oVNZ/ijSqM5BasYGXQRB7qqadb/TtmVQU
+         vTStW1zrXHYXaaZgqZzH8RrjrFi1p+B01ogNwBEYEoxDPOYaYIh07RMywj24x2DcwHZr
+         BFOrXsttCvAApQm/Vp/hfSzT/5nIsp1xdfGvkPtARDMHutAth/2nTKfnU+FW70ugppRP
+         dq92IKuue8tiGMeKQUBQU/MUNwcydYPXOMNmTK3/hRsoH71mx891kNozvaG/4oJ4Ns+c
+         j+cw==
+X-Gm-Message-State: APjAAAWpaWZwv4/NHV2QhAYo7M52qtyQ4wHwh0R5FY+6Y/F7FgneHYKa
+        d1XTpHYgyApYXlUjNIOrhJ6cvolV
+X-Google-Smtp-Source: APXvYqw8sD9VBUD7ZJ6ukr3CG9WfGYfbkK9bd03QC45AnvUhyP7WLw9gUxpm7SgKghV6yhJvjNq/cw==
+X-Received: by 2002:a62:1a93:: with SMTP id a141mr19796907pfa.72.1557987207002;
+        Wed, 15 May 2019 23:13:27 -0700 (PDT)
+Received: from localhost (193-116-124-212.tpgi.com.au. [193.116.124.212])
+        by smtp.gmail.com with ESMTPSA id x66sm5315826pfb.78.2019.05.15.23.13.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 15 May 2019 23:13:26 -0700 (PDT)
+Date:   Thu, 16 May 2019 16:13:17 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH 0/1] Forced-wakeup for stop lite states on Powernv
+To:     ego@linux.vnet.ibm.com
+Cc:     daniel.lezcano@linaro.org, dja@axtens.net,
+        Abhishek <huntbag@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, rjw@rjwysocki.net
+References: <20190422063231.51043-1-huntbag@linux.vnet.ibm.com>
+        <1557291178.ow4spjzq5t.astroid@bobo.none>
+        <b2fcf69a-aecd-ea81-b497-737642354736@linux.vnet.ibm.com>
+        <1557981860.eltms77ctp.astroid@bobo.none>
+        <20190516053659.GA20396@in.ibm.com>
+In-Reply-To: <20190516053659.GA20396@in.ibm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b4905844-e7d7-4872-99df-08d6d9c593e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 06:13:13.5362
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3788
+User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1557986956.6pmjz10b9z.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkcyBjb2xvci1lbmNvZGluZyBwcm9wZXJ0aWVzIGlmIGxheWVyIGNhbiBzdXBwb3J0IFlVViBm
-b3JtYXQuDQpVcGRhdGVzIEhXIFlVVi1SR0IgbWF0cml4IHN0YXRlIGFjY29yZGluZyB0byB0aGUg
-Y29sb3ItZW5jb2RpbmcNCnByb3BlcnRpZXMuDQoNClNpZ25lZC1vZmYtYnk6IExvd3J5IExpIChB
-cm0gVGVjaG5vbG9neSBDaGluYSkgPGxvd3J5LmxpQGFybS5jb20+DQotLS0NCiBkcml2ZXJzL2dw
-dS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL01ha2VmaWxlICAgICAgICB8ICAxICsNCiAuLi4vZ3B1
-L2RybS9hcm0vZGlzcGxheS9rb21lZGEvZDcxL2Q3MV9jb21wb25lbnQuYyB8ICA2ICsrDQogLi4u
-L2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9jb2xvcl9tZ210LmMgfCA2NyArKysr
-KysrKysrKysrKysrKysrKysrDQogLi4uL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVk
-YV9jb2xvcl9tZ210LmggfCAxNyArKysrKysNCiBkcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkv
-a29tZWRhL2tvbWVkYV9wbGFuZS5jICB8IDEzICsrKysrDQogNSBmaWxlcyBjaGFuZ2VkLCAxMDQg
-aW5zZXJ0aW9ucygrKQ0KIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXJtL2Rp
-c3BsYXkva29tZWRhL2tvbWVkYV9jb2xvcl9tZ210LmMNCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
-dmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfY29sb3JfbWdtdC5oDQoNCmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL01ha2VmaWxlIGIv
-ZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9NYWtlZmlsZQ0KaW5kZXggZDdlMjlm
-Yy4uNzNiOGU4YiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21l
-ZGEvTWFrZWZpbGUNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEvTWFr
-ZWZpbGUNCkBAIC04LDYgKzgsNyBAQCBrb21lZGEteSA6PSBcDQogCWtvbWVkYV9kcnYubyBcDQog
-CWtvbWVkYV9kZXYubyBcDQogCWtvbWVkYV9mb3JtYXRfY2Fwcy5vIFwNCisJa29tZWRhX2NvbG9y
-X21nbXQubyBcDQogCWtvbWVkYV9waXBlbGluZS5vIFwNCiAJa29tZWRhX3BpcGVsaW5lX3N0YXRl
-Lm8gXA0KIAlrb21lZGFfZnJhbWVidWZmZXIubyBcDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9kNzEvZDcxX2NvbXBvbmVudC5jIGIvZHJpdmVycy9ncHUv
-ZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9kNzEvZDcxX2NvbXBvbmVudC5jDQppbmRleCBkZmM3MGY1
-Li5iODU1MTRiIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVk
-YS9kNzEvZDcxX2NvbXBvbmVudC5jDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkv
-a29tZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMNCkBAIC0xMCw2ICsxMCw3IEBADQogI2luY2x1ZGUg
-ImtvbWVkYV9rbXMuaCINCiAjaW5jbHVkZSAibWFsaWRwX2lvLmgiDQogI2luY2x1ZGUgImtvbWVk
-YV9mcmFtZWJ1ZmZlci5oIg0KKyNpbmNsdWRlICJrb21lZGFfY29sb3JfbWdtdC5oIg0KIA0KIHN0
-YXRpYyB2b2lkIGdldF9yZXNvdXJjZXNfaWQodTMyIGh3X2lkLCB1MzIgKnBpcGVfaWQsIHUzMiAq
-Y29tcF9pZCkNCiB7DQpAQCAtMjM5LDYgKzI0MCwxMSBAQCBzdGF0aWMgdm9pZCBkNzFfbGF5ZXJf
-dXBkYXRlKHN0cnVjdCBrb21lZGFfY29tcG9uZW50ICpjLA0KIAkJfQ0KIA0KIAkJbWFsaWRwX3dy
-aXRlMzIocmVnLCBMQVlFUl9SX0NPTlRST0wsIHVwc2FtcGxpbmcpOw0KKwkJbWFsaWRwX3dyaXRl
-X2dyb3VwKHJlZywgTEFZRVJfWVVWX1JHQl9DT0VGRjAsDQorCQkJCSAgIEtPTUVEQV9OX1lVVjJS
-R0JfQ09FRkZTLA0KKwkJCQkgICBrb21lZGFfc2VsZWN0X3l1djJyZ2JfY29lZmZzKA0KKwkJCQkJ
-cGxhbmVfc3QtPmNvbG9yX2VuY29kaW5nLA0KKwkJCQkJcGxhbmVfc3QtPmNvbG9yX3JhbmdlKSk7
-DQogCX0NCiANCiAJbWFsaWRwX3dyaXRlMzIocmVnLCBMQVlFUl9GTVQsIGtmYi0+Zm9ybWF0X2Nh
-cHMtPmh3X2lkKTsNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29t
-ZWRhL2tvbWVkYV9jb2xvcl9tZ210LmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29t
-ZWRhL2tvbWVkYV9jb2xvcl9tZ210LmMNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAw
-MDAwLi45ZDE0YTkyDQotLS0gL2Rldi9udWxsDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rp
-c3BsYXkva29tZWRhL2tvbWVkYV9jb2xvcl9tZ210LmMNCkBAIC0wLDAgKzEsNjcgQEANCisvLyBT
-UERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KKy8qDQorICogKEMpIENPUFlSSUdIVCAy
-MDE5IEFSTSBMaW1pdGVkLiBBbGwgcmlnaHRzIHJlc2VydmVkLg0KKyAqIEF1dGhvcjogSmFtZXMu
-UWlhbi5XYW5nIDxqYW1lcy5xaWFuLndhbmdAYXJtLmNvbT4NCisgKg0KKyAqLw0KKw0KKyNpbmNs
-dWRlICJrb21lZGFfY29sb3JfbWdtdC5oIg0KKw0KKy8qIDEwYml0IHByZWNpc2lvbiBZVVYyUkdC
-IG1hdHJpeCAqLw0KK3N0YXRpYyBjb25zdCBzMzIgeXV2MnJnYl9idDYwMV9uYXJyb3dbS09NRURB
-X05fWVVWMlJHQl9DT0VGRlNdID0gew0KKwkxMTkyLCAgICAwLCAxNjM0LA0KKwkxMTkyLCAtNDAx
-LCAtODMyLA0KKwkxMTkyLCAyMDY2LCAgICAwLA0KKwkgIDY0LCAgNTEyLCAgNTEyDQorfTsNCisN
-CitzdGF0aWMgY29uc3QgczMyIHl1djJyZ2JfYnQ2MDFfd2lkZVtLT01FREFfTl9ZVVYyUkdCX0NP
-RUZGU10gPSB7DQorCTEwMjQsICAgIDAsIDE0MzYsDQorCTEwMjQsIC0zNTIsIC03MzEsDQorCTEw
-MjQsIDE4MTUsICAgIDAsDQorCSAgIDAsICA1MTIsICA1MTINCit9Ow0KKw0KK3N0YXRpYyBjb25z
-dCBzMzIgeXV2MnJnYl9idDcwOV9uYXJyb3dbS09NRURBX05fWVVWMlJHQl9DT0VGRlNdID0gew0K
-KwkxMTkyLCAgICAwLCAxODM2LA0KKwkxMTkyLCAtMjE4LCAtNTQ2LA0KKwkxMTkyLCAyMTYzLCAg
-ICAwLA0KKwkgIDY0LCAgNTEyLCAgNTEyDQorfTsNCisNCitzdGF0aWMgY29uc3QgczMyIHl1djJy
-Z2JfYnQ3MDlfd2lkZVtLT01FREFfTl9ZVVYyUkdCX0NPRUZGU10gPSB7DQorCTEwMjQsICAgIDAs
-IDE2MTMsDQorCTEwMjQsIC0xOTIsIC00NzksDQorCTEwMjQsIDE5MDAsICAgIDAsDQorCSAgIDAs
-ICA1MTIsICA1MTINCit9Ow0KKw0KK3N0YXRpYyBjb25zdCBzMzIgeXV2MnJnYl9idDIwMjBbS09N
-RURBX05fWVVWMlJHQl9DT0VGRlNdID0gew0KKwkxMDI0LCAgICAwLCAxNDc2LA0KKwkxMDI0LCAt
-MTY1LCAtNTcyLA0KKwkxMDI0LCAxODg0LCAgICAwLA0KKwkgICAwLCAgNTEyLCAgNTEyDQorfTsN
-CisNCitjb25zdCBzMzIgKmtvbWVkYV9zZWxlY3RfeXV2MnJnYl9jb2VmZnModTMyIGNvbG9yX2Vu
-Y29kaW5nLCB1MzIgY29sb3JfcmFuZ2UpDQorew0KKwlib29sIG5hcnJvdyA9IGNvbG9yX3Jhbmdl
-ID09IERSTV9DT0xPUl9ZQ0JDUl9MSU1JVEVEX1JBTkdFOw0KKwljb25zdCBzMzIgKmNvZWZmczsN
-CisNCisJc3dpdGNoIChjb2xvcl9lbmNvZGluZykgew0KKwljYXNlIERSTV9DT0xPUl9ZQ0JDUl9C
-VDcwOToNCisJCWNvZWZmcyA9IG5hcnJvdyA/IHl1djJyZ2JfYnQ3MDlfbmFycm93IDogeXV2MnJn
-Yl9idDcwOV93aWRlOw0KKwkJYnJlYWs7DQorCWNhc2UgRFJNX0NPTE9SX1lDQkNSX0JUNjAxOg0K
-KwkJY29lZmZzID0gbmFycm93ID8geXV2MnJnYl9idDYwMV9uYXJyb3cgOiB5dXYycmdiX2J0NjAx
-X3dpZGU7DQorCQlicmVhazsNCisJY2FzZSBEUk1fQ09MT1JfWUNCQ1JfQlQyMDIwOg0KKwkJY29l
-ZmZzID0geXV2MnJnYl9idDIwMjA7DQorCQlicmVhazsNCisJZGVmYXVsdDoNCisJCWNvZWZmcyA9
-IE5VTEw7DQorCQlicmVhazsNCisJfQ0KKw0KKwlyZXR1cm4gY29lZmZzOw0KK30NCmRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9jb2xvcl9tZ210
-LmggYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9jb2xvcl9tZ210
-LmgNCm5ldyBmaWxlIG1vZGUgMTAwNjQ0DQppbmRleCAwMDAwMDAwLi5hMmRmMjE4DQotLS0gL2Rl
-di9udWxsDQorKysgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9j
-b2xvcl9tZ210LmgNCkBAIC0wLDAgKzEsMTcgQEANCisvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmll
-cjogR1BMLTIuMCAqLw0KKy8qDQorICogKEMpIENPUFlSSUdIVCAyMDE5IEFSTSBMaW1pdGVkLiBB
-bGwgcmlnaHRzIHJlc2VydmVkLg0KKyAqIEF1dGhvcjogSmFtZXMuUWlhbi5XYW5nIDxqYW1lcy5x
-aWFuLndhbmdAYXJtLmNvbT4NCisgKg0KKyAqLw0KKw0KKyNpZm5kZWYgX0tPTUVEQV9DT0xPUl9N
-R01UX0hfDQorI2RlZmluZSBfS09NRURBX0NPTE9SX01HTVRfSF8NCisNCisjaW5jbHVkZSA8ZHJt
-L2RybV9jb2xvcl9tZ210Lmg+DQorDQorI2RlZmluZSBLT01FREFfTl9ZVVYyUkdCX0NPRUZGUwkJ
-MTINCisNCitjb25zdCBzMzIgKmtvbWVkYV9zZWxlY3RfeXV2MnJnYl9jb2VmZnModTMyIGNvbG9y
-X2VuY29kaW5nLCB1MzIgY29sb3JfcmFuZ2UpOw0KKw0KKyNlbmRpZg0KZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BsYW5lLmMgYi9kcml2ZXJz
-L2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9wbGFuZS5jDQppbmRleCBmMzQ0MDQ4
-Li5iY2YzMGE3IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVk
-YS9rb21lZGFfcGxhbmUuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVk
-YS9rb21lZGFfcGxhbmUuYw0KQEAgLTEzNSw2ICsxMzUsOCBAQCBzdGF0aWMgdm9pZCBrb21lZGFf
-cGxhbmVfcmVzZXQoc3RydWN0IGRybV9wbGFuZSAqcGxhbmUpDQogCQlzdGF0ZS0+YmFzZS5waXhl
-bF9ibGVuZF9tb2RlID0gRFJNX01PREVfQkxFTkRfUFJFTVVMVEk7DQogCQlzdGF0ZS0+YmFzZS5h
-bHBoYSA9IERSTV9CTEVORF9BTFBIQV9PUEFRVUU7DQogCQlzdGF0ZS0+YmFzZS56cG9zID0ga3Bs
-YW5lLT5sYXllci0+YmFzZS5pZDsNCisJCXN0YXRlLT5iYXNlLmNvbG9yX2VuY29kaW5nID0gRFJN
-X0NPTE9SX1lDQkNSX0JUNjAxOw0KKwkJc3RhdGUtPmJhc2UuY29sb3JfcmFuZ2UgPSBEUk1fQ09M
-T1JfWUNCQ1JfTElNSVRFRF9SQU5HRTsNCiAJCXBsYW5lLT5zdGF0ZSA9ICZzdGF0ZS0+YmFzZTsN
-CiAJCXBsYW5lLT5zdGF0ZS0+cGxhbmUgPSBwbGFuZTsNCiAJfQ0KQEAgLTMzMCw2ICszMzIsMTcg
-QEAgc3RhdGljIGludCBrb21lZGFfcGxhbmVfYWRkKHN0cnVjdCBrb21lZGFfa21zX2RldiAqa21z
-LA0KIAlpZiAoZXJyKQ0KIAkJZ290byBjbGVhbnVwOw0KIA0KKwllcnIgPSBkcm1fcGxhbmVfY3Jl
-YXRlX2NvbG9yX3Byb3BlcnRpZXMocGxhbmUsDQorCQkJQklUKERSTV9DT0xPUl9ZQ0JDUl9CVDYw
-MSkgfA0KKwkJCUJJVChEUk1fQ09MT1JfWUNCQ1JfQlQ3MDkpIHwNCisJCQlCSVQoRFJNX0NPTE9S
-X1lDQkNSX0JUMjAyMCksDQorCQkJQklUKERSTV9DT0xPUl9ZQ0JDUl9MSU1JVEVEX1JBTkdFKSB8
-DQorCQkJQklUKERSTV9DT0xPUl9ZQ0JDUl9GVUxMX1JBTkdFKSwNCisJCQlEUk1fQ09MT1JfWUNC
-Q1JfQlQ2MDEsDQorCQkJRFJNX0NPTE9SX1lDQkNSX0xJTUlURURfUkFOR0UpOw0KKwlpZiAoZXJy
-KQ0KKwkJZ290byBjbGVhbnVwOw0KKw0KIAlyZXR1cm4gMDsNCiBjbGVhbnVwOg0KIAlrb21lZGFf
-cGxhbmVfZGVzdHJveShwbGFuZSk7DQotLSANCjEuOS4xDQoNCg==
+Gautham R Shenoy's on May 16, 2019 3:36 pm:
+> Hello Nicholas,
+>=20
+>=20
+> On Thu, May 16, 2019 at 02:55:42PM +1000, Nicholas Piggin wrote:
+>> Abhishek's on May 13, 2019 7:49 pm:
+>> > On 05/08/2019 10:29 AM, Nicholas Piggin wrote:
+>> >> Abhishek Goel's on April 22, 2019 4:32 pm:
+>> >>> Currently, the cpuidle governors determine what idle state a idling =
+CPU
+>> >>> should enter into based on heuristics that depend on the idle histor=
+y on
+>> >>> that CPU. Given that no predictive heuristic is perfect, there are c=
+ases
+>> >>> where the governor predicts a shallow idle state, hoping that the CP=
+U will
+>> >>> be busy soon. However, if no new workload is scheduled on that CPU i=
+n the
+>> >>> near future, the CPU will end up in the shallow state.
+>> >>>
+>> >>> Motivation
+>> >>> ----------
+>> >>> In case of POWER, this is problematic, when the predicted state in t=
+he
+>> >>> aforementioned scenario is a lite stop state, as such lite states wi=
+ll
+>> >>> inhibit SMT folding, thereby depriving the other threads in the core=
+ from
+>> >>> using the core resources.
+>> >>>
+>> >>> So we do not want to get stucked in such states for longer duration.=
+ To
+>> >>> address this, the cpuidle-core can queue timer to correspond with th=
+e
+>> >>> residency value of the next available state. This timer will forcefu=
+lly
+>> >>> wakeup the cpu. Few such iterations will essentially train the gover=
+nor to
+>> >>> select a deeper state for that cpu, as the timer here corresponds to=
+ the
+>> >>> next available cpuidle state residency. Cpu will be kicked out of th=
+e lite
+>> >>> state and end up in a non-lite state.
+>> >>>
+>> >>> Experiment
+>> >>> ----------
+>> >>> I performed experiments for three scenarios to collect some data.
+>> >>>
+>> >>> case 1 :
+>> >>> Without this patch and without tick retained, i.e. in a upstream ker=
+nel,
+>> >>> It would spend more than even a second to get out of stop0_lite.
+>> >>>
+>> >>> case 2 : With tick retained in a upstream kernel -
+>> >>>
+>> >>> Generally, we have a sched tick at 4ms(CONF_HZ =3D 250). Ideally I e=
+xpected
+>> >>> it to take 8 sched tick to get out of stop0_lite. Experimentally,
+>> >>> observation was
+>> >>>
+>> >>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> >>> sample          min            max           99percentile
+>> >>> 20              4ms            12ms          4ms
+>> >>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> >>>
+>> >>> It would take atleast one sched tick to get out of stop0_lite.
+>> >>>
+>> >>> case 2 :  With this patch (not stopping tick, but explicitly queuing=
+ a
+>> >>>            timer)
+>> >>>
+>> >>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> >>> sample          min             max             99percentile
+>> >>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> >>> 20              144us           192us           144us
+>> >>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> >>>
+>> >>> In this patch, we queue a timer just before entering into a stop0_li=
+te
+>> >>> state. The timer fires at (residency of next available state + exit =
+latency
+>> >>> of next available state * 2). Let's say if next state(stop0) is avai=
+lable
+>> >>> which has residency of 20us, it should get out in as low as (20+2*2)=
+*8
+>> >>> [Based on the forumla (residency + 2xlatency)*history length] micros=
+econds
+>> >>> =3D 192us. Ideally we would expect 8 iterations, it was observed to =
+get out
+>> >>> in 6-7 iterations. Even if let's say stop2 is next available state(s=
+top0
+>> >>> and stop1 both are unavailable), it would take (100+2*10)*8 =3D 960u=
+s to get
+>> >>> into stop2.
+>> >>>
+>> >>> So, We are able to get out of stop0_lite generally in 150us(with thi=
+s
+>> >>> patch) as compared to 4ms(with tick retained). As stated earlier, we=
+ do not
+>> >>> want to get stuck into stop0_lite as it inhibits SMT folding for oth=
+er
+>> >>> sibling threads, depriving them of core resources. Current patch is =
+using
+>> >>> forced-wakeup only for stop0_lite, as it gives performance benefit(p=
+rimary
+>> >>> reason) along with lowering down power consumption. We may extend th=
+is
+>> >>> model for other states in future.
+>> >> I still have to wonder, between our snooze loop and stop0, what does
+>> >> stop0_lite buy us.
+>> >>
+>> >> That said, the problem you're solving here is a generic one that all
+>> >> stop states have, I think. Doesn't the same thing apply going from
+>> >> stop0 to stop5? You might under estimate the sleep time and lose powe=
+r
+>> >> savings and therefore performance there too. Shouldn't we make it
+>> >> generic for all stop states?
+>> >>
+>> >> Thanks,
+>> >> Nick
+>> >>
+>> >>
+>> > When a cpu is in snooze, it takes both space and time of core. When in=
+=20
+>> > stop0_lite,
+>> > it free up time but it still takes space.
+>>=20
+>> True, but snooze should only be taking less than 1% of front end
+>> cycles. I appreciate there is some non-zero difference here, I just
+>> wonder in practice what exactly we gain by it.
+>=20
+> The idea behind implementing a lite-state was that on the future
+> platforms it can be made to wait on a flag and hence act as a
+> replacement for snooze. On POWER9 we don't have this feature.
+
+Right. I mean for POWER9.
+
+> The motivation behind this patch was a HPC customer issue where they
+> were observing some CPUs in the core getting stuck at stop0_lite
+> state, thereby lowering the performance on the other CPUs of the core
+> which were running the application.
+>=20
+> Disabling stop0_lite via sysfs didn't help since we would fallback to
+> snooze and it would make matters worse.
+
+snooze has the timeout though, so it should kick into stop0 properly
+(and if it doesn't that's another issue that should be fixed in this
+series).
+
+I'm not questioning the patch for stop0_lite, to be clear. I think
+the logic is sound. I just raise one urelated issue that happens to
+be for stop0_lite as well (should we even enable it on P9?), and one
+peripheral issue (should we make a similar fix for deeper stop states?)
+
+>=20
+>>=20
+>> We should always have fewer states unless proven otherwise.
+>=20
+> I agree.
+>=20
+>>=20
+>> That said, we enable it today so I don't want to argue this point
+>> here, because it is a different issue from your patch.
+>>=20
+>> > When it is in stop0 or deeper,=20
+>> > it free up both
+>> > space and time slice of core.
+>> > In stop0_lite, cpu doesn't free up the core resources and thus inhibit=
+s=20
+>> > thread
+>> > folding. When a cpu goes to stop0, it will free up the core resources=20
+>> > thus increasing
+>> > the single thread performance of other sibling thread.
+>> > Hence, we do not want to get stuck in stop0_lite for long duration, an=
+d=20
+>> > want to quickly
+>> > move onto the next state.
+>> > If we get stuck in any other state we would possibly be losing on to=20
+>> > power saving,
+>> > but will still be able to gain the performance benefits for other=20
+>> > sibling threads.
+>>=20
+>> That's true, but stop0 -> deeper stop is also a benefit (for
+>> performance if we have some power/thermal constraints, and/or for power
+>> usage).
+>>=20
+>> Sure it may not be so noticable as the SMT switch, but I just wonder
+>> if the infrastructure should be there for the same reason.
+>>=20
+>> I was testing interrupt frequency on some tickless workloads configs,
+>> and without too much trouble you can get CPUs to sleep with no
+>> interrupts for many minutes. Hours even. We wouldn't want the CPU to
+>> stay in stop0 for that long.
+>=20
+> If it stays in stop0 or even stop2 for that long, we would want to
+> "promote" it to a deeper state, such as say STOP5 which allows the
+> other cores to run at higher frequencies.
+
+So we would want this same logic for all but the deepest runtime
+stop state?
+
+>> Just thinking about the patch itself, I wonder do you need a full
+>> kernel timer, or could we just set the decrementer? Is there much=20
+>> performance cost here?
+>>
+>=20
+> Good point. A decrementer would do actually.
+
+That would be good if it does, might save a few cycles.
+
+Thanks,
+Nick
+
+=
