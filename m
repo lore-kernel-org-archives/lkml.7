@@ -6,259 +6,134 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8212FC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9233AC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 473702082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E4452082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbfEPIT0 convert rfc822-to-8bit (ORCPT
+        id S1726804AbfEPIUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 04:19:26 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:52004 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726272AbfEPITZ (ORCPT
+        Thu, 16 May 2019 04:20:03 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:52178 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726429AbfEPIUD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 04:19:25 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 2BBC53C013A;
-        Thu, 16 May 2019 10:19:23 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Uu1cCZtkaWvY; Thu, 16 May 2019 10:19:16 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 08F2D3C00D1;
-        Thu, 16 May 2019 10:19:16 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com ([fe80::69bf:8148:2f13:f289]) by
- HI2EXCH01.adit-jv.com ([fe80::69bf:8148:2f13:f289%12]) with mapi id
- 14.03.0439.000; Thu, 16 May 2019 10:19:15 +0200
-From:   "Rodin, Michael (Ferchau; ADITG/ESM1)" <mrodin@de.adit-jv.com>
-To:     "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-CC:     "Friedrich, Eugen (ADITG/ESM1)" <efriedrich@de.adit-jv.com>,
-        "Rosca, Eugeniu (ADITG/ESM1)" <erosca@de.adit-jv.com>,
-        "slongerbeam@gmail.com" <slongerbeam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: Questions regarding Documentation/media/uapi/v4l/field-order.rst
-Thread-Topic: Questions regarding
- Documentation/media/uapi/v4l/field-order.rst
-Thread-Index: AdT0SL9o51JIskG9TEewiVl3rOlV0gFhA90ABHsrheA=
-Date:   Thu, 16 May 2019 08:19:15 +0000
-Message-ID: <AC35D0CFBC66A84AAA9DF4334B52828D13617E17@HI2EXCH01.adit-jv.com>
-References: <AC35D0CFBC66A84AAA9DF4334B52828D13614162@HI2EXCH01.adit-jv.com>
- <187c237b-6b75-f408-ae41-6065baf5cd7f@xs4all.nl>
-In-Reply-To: <187c237b-6b75-f408-ae41-6065baf5cd7f@xs4all.nl>
-Accept-Language: en-US, de-DE
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.72.92.112]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 16 May 2019 04:20:03 -0400
+Received: from fsav102.sakura.ne.jp (fsav102.sakura.ne.jp [27.133.134.229])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4G8JFRQ017674;
+        Thu, 16 May 2019 17:19:15 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav102.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav102.sakura.ne.jp);
+ Thu, 16 May 2019 17:19:15 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav102.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4G8J9Bw017640
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Thu, 16 May 2019 17:19:15 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH] kernel/hung_task.c: Monitor killed tasks.
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Liu Chuansheng <chuansheng.liu@intel.com>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
+References: <1557745331-10367-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
+ <20190515105540.vyzh6n62rqi5imqv@pathway.suse.cz>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <ee7501c6-d996-1684-1652-f0f838ba69c3@i-love.sakura.ne.jp>
+Date:   Thu, 16 May 2019 17:19:12 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190515105540.vyzh6n62rqi5imqv@pathway.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On 4/16/19 3:54 PM, Rodin, Michael (Ferchau; ADITG/ESM1) wrote:
-> > Hi,
-> >
-> > I would like to ask several questions regarding the documentation of the
-> enum "v4l2_field" [1].
-> > These questions came up during my investigations of issues with
-> > interaction between the gstreamer plugin v4l2src and the rcar video input
-> driver [2].
-> >
-> > The documentation [1] specifies that:
-> > "All video capture and output devices must report the current field order.
-> > Some drivers may permit the selection of a different order, to this
-> > end applications initialize the field field of struct v4l2_pix_format
-> > before calling the VIDIOC_S_FMT ioctl. If this is not desired it
-> > should have the value V4L2_FIELD_ANY (0)."
-> >
-> > If I have understood these lines correctly, this means that if
-> > userspace sets "field" member of the struct "v4l2_pix_format" to
-> > V4L2_FIELD_ANY and uses this as parameter for the VIDIOC_S_FMT ioctl,
-> > then a driver should select/report the field order, which was
-> > previously set by media-ctl utility in the next subdevice, which is
-> > connected
-> to the /dev/videoX node (From my understanding this would be equivalent to
-> the "current field order").
-> >
-> > If the described behavior is correct, then the description in the table
-> > row for
-> V4L2_FIELD_ANY in [1] is incomplete:
-> > "Applications request this field order when any one of the
-> V4L2_FIELD_NONE, V4L2_FIELD_TOP, V4L2_FIELD_BOTTOM, or
-> V4L2_FIELD_INTERLACED formats is acceptable."
-> > What if V4L2_FIELD_ALTERNATE or V4L2_FIELD_SEQ_TB or
-> V4L2_FIELD_SEQ_BT are also acceptable for the application?
-> > I think that the specification is either unprecise or my understanding of
-> > the
-> specification is wrong.
->
-> The spec is a bit out of date: those missing field values were probably
-> added
-> after this text was written. I'll make a patch fixing this.
+On 2019/05/15 19:55, Petr Mladek wrote:
+>> +	if (!stamp) {
+>> +		stamp = jiffies;
+>> +		if (!stamp)
+>> +			stamp++;
+>> +		t->killed_time = stamp;
+>> +		return;
+>> +	}
+> 
+> I might be too dumb but the above code looks pretty tricky to me.
+> It would deserve a comment. Or better, I would remove
+> trick to handle overflow. If it happens, we would just
+> lose one check period.
 
-Thank you for the patch! I think, the sentence "Drivers choose depending on
-hardware capabilities..." in the description of V4L2_FIELD_ANY is also
-unprecise,
-because when media-ctl is used, the format is chosen by the userspace and
-not by the driver. So if I choose "interlaced" for the connected subdevice
-by using media-ctl (which calls VIDIOC_SUBDEV_S_FMT) and it is successfully
-set, then V4L2_FIELD_ANY will definitely return V4L2_FIELD_INTERLACED
-and nothing else is possible.
+We can use
 
-> >
-> > Another potential issue, which I found in this documentation is that
-> > it does not distinguish between multiple contexts in which enum v4l2_field
-> can be used. I can think of at least two different contexts:
-> > - When used to select the field order with VIDIOC_S_FMT ioctl.
-> > - When used to report the field order in a buffer: for example application
-> sets V4L2_FIELD_ALTERNATE in VIDIOC_S_FMT ioctl and then gets buffers,
-> which have V4L2_FIELD_TOP/BOTTOM set.
->
-> IMHO the text is reasonably clear on that. But if you have suggestions to
-> improve it, then make a proposal.
->
-> > Now with this in mind, when I read the description of V4L2_FIELD_NONE:
-> > "The driver may also indicate this order when it cannot distinguish
-> > between
-> V4L2_FIELD_TOP and V4L2_FIELD_BOTTOM."
->
-> Whoops, that makes no sense. There are no drivers that do this. I'll remove
-> this line. If a driver can't tell the difference, then it should just pick
-> FIELD_TOP
-> or BOTTOM.
+  static inline unsigned long jiffies_nonzero(void)
+  {
+      const unsigned long stamp = jiffies;
 
-Thank you! So this means that drivers should return FIELD_ALTERNATE in S_FMT,
-even if they can not distinguish between FIELD_TOP and FIELD_BOTTOM.
-Would it make sense to add your last sentence "If a driver can't tell the
-difference,
-then it should just pick FIELD_TOP or BOTTOM." to the description of
-V4L2_FIELD_ALTERNATE (or better just FIELD_TOP so it is easier for userspace
-to check whether there is no field detection), so this case is documented
-after
-removing of "The driver may also indicate this order when it cannot
-distinguish
-between V4L2_FIELD_TOP and V4L2_FIELD_BOTTOM."?
+      return stamp ? stamp : -1;
+  }
 
-> > I see two possible meanings/interpretations:
-> > - If application sets V4L2_FIELD_ALTERNATE in VIDIOC_S_FMT ioctl, report
-> V4L2_FIELD_NONE back
-> >    so the application knows that the driver can not provide any TOP/BOTTOM
-> metadata in the buffers
-> >    (which may be necessary for the application for example for
-> > deinterlacing)
-> before it has got any buffer.
-> > - If application sets V4L2_FIELD_ALTERNATE in VIDIOC_S_FMT ioctl, driver
-> reports V4L2_FIELD_ALTERNATE back,
-> >    even if it can not distinguish between TOP/BOTTOM. But when the
-> application starts to read buffers,
-> >    they have V4L2_FIELD_NONE set if it's not possible to distinguish
-> > between
-> TOP/BOTTOM.
->
-> Actually, drivers cannot ever return NONE for a top or bottom field.
-> FIELD_NONE indicates that a full frame has arrived, and doing something else
-> would break userspace.
->
-> >
-> > Also there is another ambiguity in the description of V4L2_FIELD_NONE:
-> > "Images are in progressive format, not interlaced."
-> > What does "interlaced" mean in this case? Does it mean the other possible
-> enum values or just the V4L2_FIELD_INTERLACED?
->
-> It means that the source video transmitted full frames, not top and bottom
-> fields. I clarified the text a bit.
+or even shortcut "jiffies | 1" because difference by one jiffie
+is an measurement error for multiple HZ of timeout.
 
-Thanks for the clarification! So just to avoid misunderstanding, 
-V4L2_FIELD_INTERLACED and V4L2_FIELD_SEQ_BT/TB
-are "interlaced" in this context, because they contain fields (and are "field-based")?
+> 
+> Alternative solution would be to set the timestamp in
+> complete_signal(). Then we would know that the timestamp
+> is always valid when a fatal signal is pending.
 
-> > If this just means V4L2_FIELD_INTERLACED, then it would imply that for
-> > example V4L2_FIELD_SEQ_TB and V4L2_FIELD_ALTERNATE are progressive
-> formats, which is obviously not true.
-> > And also generally, in which of described contexts should be
-> V4L2_FIELD_NONE set or reported (buffer or VIDIOC_S_FMT ioctl)?
->
-> For video capture (that's what we are talking about here) it is returned by
-> the
-> driver in v4l2_buffer, never by userspace. Userspace can try to request a
-> specific field value when calling S_FMT, but the driver can overwrite it.
+Yes. But I guess that since signal might be delivered just before
+setting PF_FROZEN and the thread might be kept frozen for longer
+than timeout, we will need to reset the timestamp just before
+clearing PF_FROZEN.
 
-Sorry, what do you mean by "returned by userspace" here?
 
-> The possible field values that a driver can support are dependent on the
-> video
-> source (i.e. sensors are always FIELD_NONE) and the hardware capabilities.
->
-> > Another point is that V4L2_FIELD_INTERLACED is also used by v4l2src to
-> > tell rcar-vin driver to combine the fields before giving them to
-> > application, so
-> basically it requests progressive signal. So the meanings of
-> V4L2_FIELD_INTERLACED and V4L2_FIELD_NONE are basically the same in this
-> case.
->
-> Certainly not. FIELD_INTERLACED combines two fields into a single buffer,
-> but
-> the odd and even lines in the frame were captured at different times.
-> Whereas for FIELD_NONE all lines were captured at the same time.
->
-> So a FIELD_INTERLACED buffer may need to undergo additional deinterlacing.
->
-> If the hardware already does high-quality deinterlacing then that might be a
-> reason for the driver to return FIELD_NONE to avoid additional deinterlacing
-> in userspace.
->
-> In practice there are three main categories in the way the field is handled:
->
-> 1) The video source is a webcam: field is always FIELD_NONE, set by the
-> driver.
->
-> 2) The video source is HDMI: if the video is progressive, then the field is
-> always
->    FIELD_NONE. If the video is interlaced, then the field is always
-> FIELD_ALTERNATE
->    in v4l2_format and alternating FIELD_TOP and BOTTOM in v4l2_buffer.
->
-> 3) The video source is SDTV (i.e. S-Video or composite): the video is always
->    interlaced, and it depends on the hardware which field values are
-> supported,
->    except for FIELD_NONE, which is never returned as far as I am aware.
->
-> Regards,
->
-> 	Hans
->
-> >
-> > Thank you in advance and sorry for the long mail!
-> >
-> > [1] Documentation/media/uapi/v4l/field-order.rst
-> > [2] drivers/media/platform/rcar-vin
-> >
-> > Best regards
-> >
-> > Michael Rodin
-> >
-> > Advanced Driver Information Technology GmbH Engineering Software
-> > Multimedia 1 (ADITG/ESM1) Robert-Bosch-Str. 200
-> > 31139 Hildesheim
-> > Germany
-> >
-> > Tel. +49 5121 49 6936
-> > Fax +49 5121 49 6999
-> > mrodin@de.adit-jv.com
-> > Web: www.adit-jv.com
-> >
-> > ADIT is a joint venture company of Robert Bosch GmbH/Robert Bosch Car
-> > Multimedia GmbH and DENSO Corporation
-> > Sitz: Hildesheim, Registergericht: Amtsgericht Hildesheim HRB 3438
-> > Geschaeftsfuehrung: Wilhelm Grabow, Ken Yaguchi
-> >
+
+>> +	if (time_is_after_jiffies(stamp + timeout * HZ))
+>> +		return;
+>> +	trace_sched_process_hang(t);
+>> +	if (sysctl_hung_task_panic) {
+>> +		console_verbose();
+>> +		hung_task_call_panic = true;
+> 
+> IMHO, the delayed task exit is much less fatal than sleeping
+> in an uninterruptible state.
+> 
+> Anyway, the check is much less reliable. In case of hung_task,
+> it is enough when the task gets scheduled. In the new check,
+> the task has to do some amount of work until the signal
+> gets handled and do_exit() is called.
+> 
+> The panic should either get enabled separately or we should
+> never panic in this case.
+
+OK, we should not share existing sysctl settings.
+
+But in the context of syzbot's testing where there are only 2 CPUs
+in the target VM (which means that only small number of threads and
+not so much memory) and threads get SIGKILL after 5 seconds from fork(),
+being unable to reach do_exit() within 10 seconds is likely a sign of
+something went wrong. For example, 6 out of 7 trials of a reproducer for
+https://syzkaller.appspot.com/bug?id=835a0b9e75b14b55112661cbc61ca8b8f0edf767
+resulted in "no output from test machine" rather than "task hung".
+This patch is revealing that such killed threads are failing to reach
+do_exit() because they are trapped at unkillable retry loop due to a
+race bug.
+
+Therefore, I would like to try this patch in linux-next.git for feasibility
+testing whether this patch helps finding more bugs and reproducers for such
+bugs, by bringing "unable to terminate threads" reports out of "no output from
+test machine" reports. We can add sysctl settings before sending to linux.git.
+
+Any questions?
 
