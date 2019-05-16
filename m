@@ -2,112 +2,134 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CACC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32475C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4932087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04BC220818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:15:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PesW0sD/"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="gZT8I55H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbfEPNPR (ORCPT
+        id S1727568AbfEPNPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:15:17 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37331 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfEPNPR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:15:17 -0400
-Received: by mail-pg1-f195.google.com with SMTP id e6so1569693pgc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 06:15:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AI8JZy9keS1o3wGiqH13yvNioRMPnmitZYzglqzVfaM=;
-        b=PesW0sD/ciOLThNvEJ5C/W678/gfkxLY7wHxWDXM4XUpjORA7GFmWmCdTTSvPA3Z/0
-         mRU2vzRtPQ8B9koGUI7hKssaUEBT9F4MR0ZH2GvgZy8EmQcnc09vQRlNg/gMzumatICh
-         IAX4WvXg1JAaX1ZUyhP7NrI++OVIlOUGFAWHcmIxxNLMrBqJR49DGSbUUaTN3nVIJPic
-         /+6NKGSPOtcHaLcBMAUOYaPUul/RGAKyJ/WJJfMUrYdkILEhf8MJvxTqjjvrCO0NFOFf
-         3q8zPRViuBCjVBhQ95qbQdcrb6rRjoLbtwsbi5mla3krW5q7Yw9WpaK5QadmNSDB2o2y
-         xh0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AI8JZy9keS1o3wGiqH13yvNioRMPnmitZYzglqzVfaM=;
-        b=NIA8mOQSoaSclay51XSL/QqFhBRdfnXCTADxrTFpQ34fZJey77q5kTKF6vLuxGiRAS
-         oREq4PbUKtaSCoRiw6Kt77nI+M02zR/cgxz7civwGcaOhpz5plOEI+YCDjr7t+urj34N
-         j1TZ7P7NS2yh3JGxoGA/EAUr1fl2uOD5mZ067VO9TbSIMLd7fuz0FrcHagKq4p8F+H5C
-         WY9pRcYrBD2A4+ESh+I2ggwZMQiS6qC/beSQE6f50B+wA/k7ZSe7jLdAHWMTzodDwN8Q
-         lE48XAfv+jHEh8WBurHyeK/aGBUiJdJVyvwXXtLv7q2qNC4eHlv7lwr6THfsIF4a+951
-         4NBA==
-X-Gm-Message-State: APjAAAUX8rZtT5RXPcvGxPzdYgveIdFnTpagDEP3l0VSxCybLkX3d2Bq
-        oCMRKZxwFaObaDDE4/eGNzrV9DCfGTJMEYE3ybs=
-X-Google-Smtp-Source: APXvYqzudyk1qALYh5US3Qa7TwBBWRQjv2nVATbz+op+71ojr+YahyEVhSZZYFuqUDeefV1vVymRSCmRg0vDR5v/Kjg=
-X-Received: by 2002:a63:fd4a:: with SMTP id m10mr51120343pgj.302.1558012515963;
- Thu, 16 May 2019 06:15:15 -0700 (PDT)
+        Thu, 16 May 2019 09:15:24 -0400
+Received: from mout.gmx.net ([212.227.15.19]:34607 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726427AbfEPNPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:15:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1558012516;
+        bh=4PSlOiO3eht+wWQhmBnMks1JK1SUuaolOlOFVMPsFKg=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=gZT8I55HYG+eXIuD+hI8Nwg4b2+u0YlQCZSpmJ6d8XRtab7Uo5AZ0b3ZOiO46jHWi
+         C9HyaR0jD5FhM9ujXcOA0hHl8v1j14ZnFvjySmsRQ3uTuy8zRa7FJfEKW6F/SRfH9F
+         9NxSphwuM2WaJx+ePeRpLYC5XJjc2cfnAYOToEd4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([109.90.233.200]) by mail.gmx.com (mrgmx003
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 0Lb5GD-1gyV6z2Uwr-00kibW; Thu, 16
+ May 2019 15:15:16 +0200
+Date:   Thu, 16 May 2019 15:15:15 +0200
+From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] dt-bindings: pinctrl: Fix spelling of bias-pull-up
+Message-ID: <20190516131515.GB2000@latitude>
+References: <20190428150822.13935-1-j.neuschaefer@gmx.net>
+ <CACRpkdZcP3gEsudT0rpzNuBe=4Mz0s=KLPd_y-38E4oxVeQD0A@mail.gmail.com>
 MIME-Version: 1.0
-References: <5cda6ee2.1c69fb81.2949b.d3e7@mx.google.com> <20190514073542.GA4969@pendragon.ideasonboard.com>
-In-Reply-To: <20190514073542.GA4969@pendragon.ideasonboard.com>
-From:   Sabyasachi Gupta <sabyasachi.linux@gmail.com>
-Date:   Thu, 16 May 2019 18:45:04 +0530
-Message-ID: <CAJr6mf0zy37MTuZQV2YLLQ7dY4a0r6LpSRTKByX0dBBfxuA4_g@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge: Remove duplicate header
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     architt@codeaurora.org, a.hajda@samsung.com, airlied@linux.ie,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZcP3gEsudT0rpzNuBe=4Mz0s=KLPd_y-38E4oxVeQD0A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:Ue4Zk/ZiHBIR0wdXiJyWlB7U9GLA0tsVWbvjz0k9/U2nNoQgzvs
+ l36UQu5c7MJiQHuy9vlcNE3aEY4u3KTq4GmYtmyEoZWHmsUwHr9KR5sVodNkMHyhVsWnXMP
+ ahZVoFVvnRbonQWFlQdKF+rLVkRVatYHqUkZPdC11igbZOJ8QqZYBzoTNDQouyS2Sley0Xi
+ KUbMYvZQiEIUcPksylp0w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:c51TKyMCnFY=:cTt9QpyEDqQtRvclrxCIxx
+ 1ukQuW8dx1RvA5SyRSf9jo/IqKZxcruWAjhSErjdXRDZc8SttXdvdv5GD4cj/PSO8s6PaGYk9
+ rE8jKwrkKUwkXcqOBbFfvXUQ6+GUX5OFit0J+JdEoXNgO2+ADQmadWFCdsjNIhX8WqsqMo6ea
+ y1EQn3e8mVJw8IfIG56LehkeD1ZrVFOc7qziAhrjpjAPv92cY21kg5GkX3EWZb2PUpv9KHLjO
+ 13bzx2f3ie39sg4K7yBJ7TgpxzG3gwlv8q5ZzoulwbbdIO5Yy83oYUpcrUP2gMwzYINIhGylb
+ yjXJ//3mLIUGtx8v/MVDHwdvSqq2VLGRrf5j95y91YZLPDW8+c7GrnrJRaxNXIKoVOp+SFSJ9
+ R3qWv4B2E5BU2oVch5Xa9e8KrOa/7ZQ1Biw5p078YtDraaZivfjOMH+2bYVpMghQw3gNwn8f2
+ GiWu8jpElhGrVacy110UKY7uJNRimkzT80ggUYyZSNJ/WxQSjgjuX9Z45/BiZ8qkGx9LVyfRP
+ cZlgrL2fLxOog6yC1IDsB5AnSwYlefH5F7BcsAI23/TQzyOVIpwfRzV/ySqd0b/JzKZE4/xn6
+ Nz5Iz12LjRSHeRvRpZuItpztUdKCK8r8/yils/Qb/bgTU/va1jWjZkXi4mDiUVaLu3QVR96/T
+ 9vsdPDRuqxcNOWLIg1A3iyGXHDhABbG9/n1Q49HJLvc44Fic3HP6Q/cKZlCsK92eP1vzhEXgq
+ HeFfgD/T4/xvZjQRgmIyx8iPWYLZx7d6dt0ZTjBVItMNIKZU8ZoPP0FlrX5vUhAQPiRTDGWXR
+ hPz329qM5kU2Zn+4eUEmuo5JFUpaFDc+7rWu0uoxUjRj8MRYq7G3xMXjyki4LOuV00V7jQocH
+ eNAbHguyrWrIoR8rIZHUWCsdCDQ0pb0lZw/dHZy71dDhutal/ROZnoYIrgzp60/hM8Qewosqp
+ H2+GV6AKtiBnsv8yIM/X8N0bq3FNZU/g=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 1:05 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Sabyasachi,
->
-> Thank you for the patch.
->
-> On Tue, May 14, 2019 at 01:01:41PM +0530, Sabyasachi Gupta wrote:
-> > Remove drm/drm_panel.h which is included more than once
+
+--M9NhX3UHpAaciwkO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, May 16, 2019 at 02:44:30PM +0200, Linus Walleij wrote:
+> On Sun, Apr 28, 2019 at 5:08 PM Jonathan Neusch=C3=A4fer
+> <j.neuschaefer@gmx.net> wrote:
+>=20
+> > The property is spelled 'bias-pull-up', as documented in
+> > pinctrl-bindings.txt.
 > >
-> > Signed-off-by: Sabyasachi Gupta <sabyasachi.linux@gmail.com>
-> > ---
-> >  drivers/gpu/drm/bridge/panel.c | 1 -
-> >  1 file changed, 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/bridge/panel.c b/drivers/gpu/drm/bridge/panel.c
-> > index 7cbaba2..402b318 100644
-> > --- a/drivers/gpu/drm/bridge/panel.c
-> > +++ b/drivers/gpu/drm/bridge/panel.c
-> > @@ -15,7 +15,6 @@
-> >  #include <drm/drm_crtc_helper.h>
-> >  #include <drm/drm_encoder.h>
-> >  #include <drm/drm_modeset_helper_vtables.h>
-> > -#include <drm/drm_panel.h>
->
-> Which tree is this against ? The patch applies on neither drm-next nor
-> drm-misc-next.
->
-It is against linux-next tree
-> While at it, could you you reorder the other header alphabetically to
-> make this kind of issue easier to notice ?
->
-It is already arranged in alphabetical order
-> >
-> >  struct panel_bridge {
-> >       struct drm_bridge bridge;
->
-> --
-> Regards,
->
-> Laurent Pinchart
+> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+>=20
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>=20
+> It appears from Rob's comment that he's applying it,
+> tell me if I need to apply it to the pinctrl tree.
+
+Yes, Rob applied Christian's version to dt/next:
+https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=3D=
+dt/next&id=3Dc50495aa4cfcaace5f61174ab3069d5047d14f17
+
+So there's no need to apply my version.
+
+
+Thanks,
+Jonathan Neusch=C3=A4fer
+
+--M9NhX3UHpAaciwkO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAlzdYl0ACgkQCDBEmo7z
+X9vDaBAArHDvJllzymlUcI+Bs9d6A5YfI4V3wR7SI7nvjkCSa+ctj11a0qOLsLqw
+4+QoXkCETu5Qrwz4utAi8emKVpSjWaEkkickLtpjNDZacjF8kt8QA28uzn8WScoe
+7gs+bd0DZ2Q+doK/QRoGAIZvY/SPSTacaNwec2wKc0d63dn8tKoqrz29r9fNOW3Z
+MvS03f9PF2JFgHCPJkQPDbfmaMXl+57S4N7F9USDhFZmiF2hZNAwL4/p8whw8fLq
+1aRjIpqLw9otvivF4LpK5WUj5XZoSGxbIfAQ2pS2Uj8K+MUp95fB8TqXCGG9hQHw
+dstusnYe8NrcwCBYkedHoNAy2cmj3l73JTe9bSZkeSpSo/dFO9GEvILvS9BaYhJZ
+9bTydEkP1YmAUeC0R962HGD1Yx1t6izL0WNzX/cawg4iQUC1uJPPLWu1p2y2FajO
+FX+nUz3/z8CtGu49Wl8gezj+eI1L3joUuRAMypw7MfQzDsFv0G39wNzjcsfllhZg
+8w71tQx7yA7M4tUGFBWip1tj30d1M8HghAn7psNN8FOKxZbb5NUyDT8l1v+wt1Xl
+VcIfIfT9P2p9//etRlY3gdiTVj7rkZedJttSPq4LUWxENMUVnBf8BYF49hruMat8
+w6L9nhPmq1qQMjZStJBQQupKADwnt6Yce6xhk4f6BYeNbuHAtZY=
+=BpWe
+-----END PGP SIGNATURE-----
+
+--M9NhX3UHpAaciwkO--
