@@ -2,135 +2,118 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19D8CC04E87
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96553C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E178120881
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F1D82087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:19:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbfEPFQY (ORCPT
+        id S1726528AbfEPFTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 01:16:24 -0400
-Received: from mga02.intel.com ([134.134.136.20]:58065 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbfEPFQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 01:16:23 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 22:16:22 -0700
-X-ExtLoop1: 1
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
-  by orsmga003.jf.intel.com with ESMTP; 15 May 2019 22:16:12 -0700
-Date:   Thu, 16 May 2019 08:16:22 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190516051622.GC6388@linux.intel.com>
-References: <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
- <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
- <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com>
- <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190514204527.GC1977@linux.intel.com>
- <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
- <20190515013031.GF1977@linux.intel.com>
- <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+        Thu, 16 May 2019 01:19:33 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51094 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726324AbfEPFTd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 01:19:33 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4G5HjMn034313
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:19:31 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sgxh8p1g6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:19:31 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 16 May 2019 06:19:29 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 16 May 2019 06:19:25 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4G5JOew57802782
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 May 2019 05:19:24 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7A8A911C06E;
+        Thu, 16 May 2019 05:19:24 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 81D8911C05B;
+        Thu, 16 May 2019 05:19:23 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.112])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 16 May 2019 05:19:23 +0000 (GMT)
+Date:   Thu, 16 May 2019 08:19:21 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] remove ARCH_SELECT_MEMORY_MODEL where it has no
+ effect
+References: <1556740577-4140-1-git-send-email-rppt@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1556740577-4140-1-git-send-email-rppt@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19051605-4275-0000-0000-000003354B30
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051605-4276-0000-0000-00003844D161
+Message-Id: <20190516051921.GC21366@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=690 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905160037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 11:27:04AM -0700, Andy Lutomirski wrote:
-> Hi, LSM and SELinux people-
+Andrew,
+
+Can this go via the -mm tree?
+
+On Wed, May 01, 2019 at 10:56:14PM +0300, Mike Rapoport wrote:
+> Hi,
 > 
-> We're trying to figure out how SGX fits in with LSMs.  For background,
-> an SGX library is functionally a bit like a DSO, except that it's
-> nominally resistant to attack from outside and the process of loading
-> it is complicated.  To load an enclave, a program can open
-> /dev/sgx/enclave, do some ioctls to load the code and data segments
-> into the enclave, call a special ioctl to "initialize" the enclave,
-> and then call into the enclave (using special CPU instructions).
+> For several architectures the ARCH_SELECT_MEMORY_MODEL has no real effect
+> because the dependencies for the memory model are always evaluated to a
+> single value.
 > 
-> One nastiness is that there is not actually a universally agreed upon,
-> documented file format for enclaves.  Windows has an undocumented
-> format, and there are probably a few others out there.  No one really
-> wants to teach the kernel to parse enclave files.
+> Remove the ARCH_SELECT_MEMORY_MODEL from the Kconfigs for these
+> architectures.
 > 
-> There are two issues with how this interacts with LSMs:
+> Mike Rapoport (3):
+>   arm: remove ARCH_SELECT_MEMORY_MODEL
+>   s390: remove ARCH_SELECT_MEMORY_MODEL
+>   sparc: remove ARCH_SELECT_MEMORY_MODEL
 > 
-> 1) LSMs might want to be able to whitelist, blacklist, or otherwise
-> restrict what enclaves can run at all.  The current proposal that
-> everyone seems to dislike the least is to have a .sigstruct file on
-> disk that contains a hash and signature of the enclave in a
-> CPU-defined format.  To initialize an enclave, a program will pass an
-> fd to this file, and a new LSM hook can be called to allow or disallow
-> the operation.  In a SELinux context, the idea is that policy could
-> require the .sigstruct file to be labeled with a type like
-> sgx_sigstruct_t, and only enclaves that have a matching .sigstruct
-> with such a label could run.
+>  arch/arm/Kconfig   | 3 ---
+>  arch/s390/Kconfig  | 3 ---
+>  arch/sparc/Kconfig | 3 ---
+>  3 files changed, 9 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
 
-Similarly if we could take data for the enclave from fd and enforce
-it with sgx_enclave_t label.
+-- 
+Sincerely yours,
+Mike.
 
-> Here's a very vague proposal that's kind of like what I've been
-> thinking over the past few days.  The SGX inode could track, for each
-> page, a "safe-to-execute" bit.  When you first open /dev/sgx/enclave,
-> you get a blank enclave and all pages are safe-to-execute.  When you
-> do the ioctl to load context (which could be code, data, or anything
-> else), the kernel will check whether the *source* VMA is executable
-> and, if not, mark the page of the enclave being loaded as unsafe.
-> Once the enclave is initialized, the driver will clear the
-> safe-to-execute bit for any page that is successfully mapped writably.
-
-With the fd based model for source I'd mark SECINFO.W pages as unsafe
-to execute and then check unsafe bit before applying lets say EMODT
-or EMODPR.
-
-There is a problem here though. Usually the enclave itself is just a
-loader that then loads the application from outside source and creates
-the executable pages from the content.
-
-A great example of this is Graphene that bootstraps unmodified Linux
-applications to an enclave:
-
-https://github.com/oscarlab/graphene
-
-/Jarkko
