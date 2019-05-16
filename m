@@ -2,154 +2,125 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E38AFC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFFAC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B65D420881
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:28:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558013290;
-	bh=Zv6ZRln99gohm9loMinCpGMe8ABSvr0R7QAANxBD+kc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PqjJiv6Ih8Q1YGRU04+LIz/qQeSAnZKQJw+Ib++hJVQ43qSV/ymMUZTmmr0QibDBW
-	 YubPhBSKvjq6yY+Vzl2bbRFyIWkoVhelCXlFZQXHu6e+hmYuh1OudtFyOfGbaONANF
-	 Of5EczVXIcOejn01QrgcoTClohCE1U8zXqStLoKY=
+	by mail.kernel.org (Postfix) with ESMTP id 465CF20815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:28:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727614AbfEPN2K (ORCPT
+        id S1727637AbfEPN2N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:28:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60014 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 09:28:13 -0400
+Received: from mga04.intel.com ([192.55.52.120]:12658 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726955AbfEPN2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:28:09 -0400
-Received: from localhost (50-82-73-190.client.mchsi.com [50.82.73.190])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7720C20815;
-        Thu, 16 May 2019 13:28:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558013288;
-        bh=Zv6ZRln99gohm9loMinCpGMe8ABSvr0R7QAANxBD+kc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jBfwdHcf4Po3DSORzgMh2uiY9Ul04pxKYbhMY/zaWlfmyGmYMrWktAkYMR3/g+Zl5
-         QD+ntDpAEK1xbh69SJsqqUrJOze0M+lq5CE9k5BEH4i1YZ48kZLzEOp3Uq2M+X0e1Q
-         by/MDglHyhTFkXEIUWDjKZbIxkpBNpeq0mzZ2ocE=
-Date:   Thu, 16 May 2019 08:28:07 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V6 02/15] PCI/PME: Export pcie_pme_disable_msi() &
- pcie_pme_no_msi() APIs
-Message-ID: <20190516132807.GB101793@google.com>
-References: <20190513050626.14991-1-vidyas@nvidia.com>
- <20190513050626.14991-3-vidyas@nvidia.com>
+        id S1727584AbfEPN2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:28:10 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 06:28:09 -0700
+X-ExtLoop1: 1
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga007.fm.intel.com with SMTP; 16 May 2019 06:28:04 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Thu, 16 May 2019 16:28:03 +0300
+Date:   Thu, 16 May 2019 16:28:03 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sean Paul <sean@poorly.run>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Eric Anholt <eric@anholt.net>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        intel-gfx <intel-gfx@lists.freedesktop.org>,
+        Nouveau Dev <nouveau@lists.freedesktop.org>,
+        "open list:DRM DRIVERS FOR RENESAS" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v3 04/10] drm: Convert
+ connector_helper_funcs->atomic_check to accept drm_atomic_state
+Message-ID: <20190516132803.GM24299@intel.com>
+References: <20190502194956.218441-1-sean@poorly.run>
+ <20190502194956.218441-5-sean@poorly.run>
+ <20190511191202.GL13043@pendragon.ideasonboard.com>
+ <20190513144747.GR17751@phenom.ffwll.local>
+ <20190516120221.GI14820@pendragon.ideasonboard.com>
+ <CAKMK7uG_TmzZBgVkJ+j9C53KRp1OgswYuxpFV77+eU6BPWwGgw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190513050626.14991-3-vidyas@nvidia.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAKMK7uG_TmzZBgVkJ+j9C53KRp1OgswYuxpFV77+eU6BPWwGgw@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 10:36:13AM +0530, Vidya Sagar wrote:
-> Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs to enable drivers
-> using these APIs be able to build as loadable modules.
+On Thu, May 16, 2019 at 02:07:34PM +0200, Daniel Vetter wrote:
+> On Thu, May 16, 2019 at 2:02 PM Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> >
+> > Hi Daniel,
+> >
+> > On Mon, May 13, 2019 at 04:47:47PM +0200, Daniel Vetter wrote:
+> > > On Sat, May 11, 2019 at 10:12:02PM +0300, Laurent Pinchart wrote:
+> > > > On Thu, May 02, 2019 at 03:49:46PM -0400, Sean Paul wrote:
+> > > >> From: Sean Paul <seanpaul@chromium.org>
+> > > >>
+> > > >> Everyone who implements connector_helper_funcs->atomic_check reaches
+> > > >> into the connector state to get the atomic state. Instead of continuing
+> > > >> this pattern, change the callback signature to just give atomic state
+> > > >> and let the driver determine what it does and does not need from it.
+> > > >>
+> > > >> Eventually all atomic functions should do this, but that's just too much
+> > > >> busy work for me.
+> > > >
+> > > > Given that drivers also access the connector state, isn't this slightly
+> > > > more inefficient ?
+> > >
+> > > It's atomic code, we're trying to optimize for clean code at the expense
+> > > of a bit of runtime overhead due to more pointer chasing. And I agree with
+> > > the general push, the pile of old/new_state pointers of various objects
+> > > we're passing around is confusing. Passing the overall drm_atomic_state
+> > > seems much more reasonable, and with that we can get everything else. Plus
+> > > it's much more obvious whether you have the old/new state (since that's
+> > > explicit when you look it up from the drm_atomic_state).
+> >
+> > Yes, I agree it's cleaner. I just hope the atomic state tracking cost
+> > can be kept under control :-)
+> >
+> > By the way, this is likely not going to happen as it would be way too
+> > intrusive, but it would be nice to rename drm_atomic_state to
+> > drm_atomic_transaction (or something similar). It doesn't model a state,
+> > but a change between an old state to a new state. This confused me in
+> > the past, and I'm sure it can still be confusing to newcomers.
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Why are you the first to suggest this, this is awesome!
 
-Nak, as-is.
+Can't quite tell if that's irony or not. Anyways, this has been
+suggested before but no volunteers stepped forward.
 
-1) The argument for why this is needed is unconvincing.  If device
-advertises MSI support, we should be able to use it.
+> drm_atomic_state is indeed not a state, but a transaction representing
+> how we go from the old to the new state.
 
-2) If it turns out we really need this, it should be some sort of
-per-device setting rather than a global thing like this.
+On a semi-related topic, I've occasionally pondered about moving
+mode_changed & co. from the obj states to the top level
+state/transaction (maybe stored as a bitmask). But that would
+definitely not be a trivial sed job.
 
-> ---
-> Changes since [v5]:
-> * Corrected inline implementation of pcie_pme_no_msi() API
-> 
-> Changes since [v4]:
-> * None
-> 
-> Changes since [v3]:
-> * None
-> 
-> Changes since [v2]:
-> * Exported pcie_pme_no_msi() API after making pcie_pme_msi_disabled a static
-> 
-> Changes since [v1]:
-> * This is a new patch in v2 series
-> 
->  drivers/pci/pcie/pme.c     | 14 +++++++++++++-
->  drivers/pci/pcie/portdrv.h | 14 ++------------
->  2 files changed, 15 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-> index 54d593d10396..d5e0ea4a62fc 100644
-> --- a/drivers/pci/pcie/pme.c
-> +++ b/drivers/pci/pcie/pme.c
-> @@ -25,7 +25,19 @@
->   * that using MSI for PCIe PME signaling doesn't play well with PCIe PME-based
->   * wake-up from system sleep states.
->   */
-> -bool pcie_pme_msi_disabled;
-> +static bool pcie_pme_msi_disabled;
-> +
-> +void pcie_pme_disable_msi(void)
-> +{
-> +	pcie_pme_msi_disabled = true;
-> +}
-> +EXPORT_SYMBOL_GPL(pcie_pme_disable_msi);
-> +
-> +bool pcie_pme_no_msi(void)
-> +{
-> +	return pcie_pme_msi_disabled;
-> +}
-> +EXPORT_SYMBOL_GPL(pcie_pme_no_msi);
->  
->  static int __init pcie_pme_setup(char *str)
->  {
-> diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-> index 944827a8c7d3..1d441fe26c51 100644
-> --- a/drivers/pci/pcie/portdrv.h
-> +++ b/drivers/pci/pcie/portdrv.h
-> @@ -129,18 +129,8 @@ void pcie_port_bus_unregister(void);
->  struct pci_dev;
->  
->  #ifdef CONFIG_PCIE_PME
-> -extern bool pcie_pme_msi_disabled;
-> -
-> -static inline void pcie_pme_disable_msi(void)
-> -{
-> -	pcie_pme_msi_disabled = true;
-> -}
-> -
-> -static inline bool pcie_pme_no_msi(void)
-> -{
-> -	return pcie_pme_msi_disabled;
-> -}
-> -
-> +void pcie_pme_disable_msi(void);
-> +bool pcie_pme_no_msi(void);
->  void pcie_pme_interrupt_enable(struct pci_dev *dev, bool enable);
->  #else /* !CONFIG_PCIE_PME */
->  static inline void pcie_pme_disable_msi(void) {}
-> -- 
-> 2.17.1
-> 
+-- 
+Ville Syrjälä
+Intel
