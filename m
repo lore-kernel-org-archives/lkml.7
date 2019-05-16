@@ -2,169 +2,173 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4A0C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2158BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABC6B20818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:49:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA82C20818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 20:51:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="loAapQuh"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V3SH9UWT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfEPUtC (ORCPT
+        id S1728133AbfEPUvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 16:49:02 -0400
-Received: from mail.efficios.com ([167.114.142.138]:35978 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726785AbfEPUtC (ORCPT
+        Thu, 16 May 2019 16:51:11 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:50962 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbfEPUvL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 16:49:02 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id F240EADBAA;
-        Thu, 16 May 2019 16:49:00 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id vzaCwoTpeqOF; Thu, 16 May 2019 16:49:00 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 7C23AADB9D;
-        Thu, 16 May 2019 16:49:00 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 7C23AADB9D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1558039740;
-        bh=T6tB5oucUJQiYwUQy00a3W/PHRzwk7hwAhqOqcUpxQU=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=loAapQuhGsDymqQYkp3fr522T6o689kXMDM78TPzkykDOIfQFimq7bB4OSHLjEwbq
-         j5dFVwWlNXFaUrhNRdjC5L3q7YMEkklz3uBoLHmSPb8S8Se8qP3FfEh0fTKbBq7T0W
-         1VGChKEtSFW/D5harJ6CZNu71CXXqpa3tU/1S+YHuaoPNTEbnbMjvAqdVHdyQNN2tc
-         LY4AjQSF/uAlHlc4Y4MD7rsC0YoXvnI26c9uYZmvKo2Uxv2AAUHhGGOzdFv37BR2pa
-         FeT2EdktJoraiNlmQC/9ZDbLeHHVC6lxCPPZdnPh8G/6TjBUdw1/sRPFUCZJf0ekUX
-         A4Jr4pUJhRnZg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id 6_bTRsBCf0uv; Thu, 16 May 2019 16:49:00 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 5B469ADB8A;
-        Thu, 16 May 2019 16:49:00 -0400 (EDT)
-Date:   Thu, 16 May 2019 16:49:00 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     shuah <shuah@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Russell King <linux@arm.linux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <andi@firstfloor.org>,
-        Chris Lameter <cl@linux.com>, Ben Maurer <bmaurer@fb.com>,
-        rostedt <rostedt@goodmis.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Joel Fernandes <joelaf@google.com>,
-        schwidefsky <schwidefsky@de.ibm.com>
-Message-ID: <1150133970.2996.1558039740182.JavaMail.zimbra@efficios.com>
-In-Reply-To: <ae4bdd65-d7ab-6bb8-f823-c22e320b4f64@kernel.org>
-References: <20190429152803.7719-1-mathieu.desnoyers@efficios.com> <20190429152803.7719-8-mathieu.desnoyers@efficios.com> <ae4bdd65-d7ab-6bb8-f823-c22e320b4f64@kernel.org>
-Subject: Re: [PATCH for 5.2 07/12] rseq/selftests: s390: use trap4 for
- RSEQ_SIG
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: rseq/selftests: s390: use trap4 for RSEQ_SIG
-Thread-Index: MQQxEXkQJjNJ2KoXle2eK6CTH9qBYg==
+        Thu, 16 May 2019 16:51:11 -0400
+Received: by mail-pf1-f201.google.com with SMTP id u7so2945025pfh.17
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 13:51:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=O0A3Y6O8QZ1jZo/IAcyQwbrOJctQs0ZeB/K1vYWmuBI=;
+        b=V3SH9UWTXhecnBvY9y5BQamRei5+qE2Sfjc4eidha3qPpIUKiFC2Za/3ErpPsnlN8W
+         2+YfB6DRHUxK86SVsJQ6HjeCgq/V+ywqPMuLW2kErg8FmTPzKnWZu3K3jboTADUzrV+/
+         zJHSv1CG9E1NrqB6ZtXofWvgyI/BMJDpbHgRgfXupGEBoOI6rca9n+8JFme6U3Z9NyOf
+         sil6q/xnC5ZppxoSW1dAZmXM51G91MNKXOu/ApqMaUGTEpL7g+Qw9gm8nm9uYsS0SrzG
+         WOp24BXJeHc9i1WyrUKHdAnHDB8xbzO44RPj+JlDVuyfvKCTZDppOjyT6w8dy5JqtqQe
+         uo/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=O0A3Y6O8QZ1jZo/IAcyQwbrOJctQs0ZeB/K1vYWmuBI=;
+        b=HFdDv1xqWz/wEx4M4Qdo1Fn8FCtVX0DxcU6pgJeteOMs4SrClNJ08K0MHe5r4Xz/tk
+         mVgLEH5i5akaR5c5osPXHZD96cx47IxIvH6fAzkx7qB1Z5FGVYDSEDhrUQkdvcOX99rH
+         BGjc+lCvy9a/pZmhrrFrequX92uCruc+n1PNtY7+mPsrvW24EUF9/CzAIkZP2scLLOQe
+         KdMzWBhXWcvP0nwunSwbYRiLXu8trVYpUPT44s3B8qN9WlKRyG4HBIQNScOW4pB4WmBD
+         eXTTKOn++kREHZCQ6R5wF1KEeO6pPILT1hKUYZTzzlnCOY+bP31gRSsyPBe8KhI7IgqR
+         inqQ==
+X-Gm-Message-State: APjAAAWEJ1jdndFPVhGqyO763SZ9tzrHxpIuxw6sVFOnxt1cuHJRPHl1
+        VDIOqOTov50UIB6uyt6zKxaFu9Zjl3nl7G/LPYO/A+NA07eg0I7xudO1EzwNueN3WS0kYM7X5DJ
+        ZfylX3fgUMmjSh7hv0QymtqDGf71SsEf6pZeywDD4ATb4amDU/i3iNUkb/taWbBqcEhtGXt54as
+        Owng==
+X-Google-Smtp-Source: APXvYqwf41flQIat3KOIsyjjpw5N63ZvcHDik9EhfhYXCkBPgjXrtlDQs2OKDmjNAjHU9uyT/bCBM5OoUqnw6s4=
+X-Received: by 2002:a63:7552:: with SMTP id f18mr49259106pgn.234.1558039869914;
+ Thu, 16 May 2019 13:51:09 -0700 (PDT)
+Date:   Thu, 16 May 2019 13:51:07 -0700
+Message-Id: <20190516205107.222003-1-jemoreira@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: [PATCH RESEND] vsock/virtio: Initialize core virtio vsock before
+ registering the driver
+From:   "Jorge E. Moreira" <jemoreira@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        kernel-team@android.com, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On May 16, 2019, at 4:39 PM, shuah shuah@kernel.org wrote:
+Avoid a race in which static variables in net/vmw_vsock/af_vsock.c are
+accessed (while handling interrupts) before they are initialized.
 
-> Hi Mathieu,
-> 
-> On 4/29/19 9:27 AM, Mathieu Desnoyers wrote:
->> From: Martin Schwidefsky <schwidefsky@de.ibm.com>
->> 
->> Use trap4 as the guard instruction for the restartable sequence abort
->> handler.
->> 
->> Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
->> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
->> ---
->>   tools/testing/selftests/rseq/rseq-s390.h | 9 ++++++++-
->>   1 file changed, 8 insertions(+), 1 deletion(-)
->> 
->> diff --git a/tools/testing/selftests/rseq/rseq-s390.h
->> b/tools/testing/selftests/rseq/rseq-s390.h
->> index 7c4f3a70b6c7..1d05c5187ae6 100644
->> --- a/tools/testing/selftests/rseq/rseq-s390.h
->> +++ b/tools/testing/selftests/rseq/rseq-s390.h
->> @@ -1,6 +1,13 @@
->>   /* SPDX-License-Identifier: LGPL-2.1 OR MIT */
->>   
->> -#define RSEQ_SIG	0x53053053
->> +/*
->> + * RSEQ_SIG uses the trap4 instruction. As Linux does not make use of the
->> + * access-register mode nor the linkage stack this instruction will always
->> + * cause a special-operation exception (the trap-enabled bit in the DUCT
->> + * is and will stay 0). The instruction pattern is
->> + *	b2 ff 0f ff	trap4   4095(%r0)
->> + */
->> +#define RSEQ_SIG	0xB2FF0FFF
->>   
->>   #define rseq_smp_mb()	__asm__ __volatile__ ("bcr 15,0" ::: "memory")
->>   #define rseq_smp_rmb()	rseq_smp_mb()
->> 
-> 
-> I generated my pull request for Linus and did a sanity check and ran
-> into merge conflict on this patch. Looks like this is already in
-> Linus's tree.
-> 
-> Can you confirm!
-> 
-> I have to drop this patch and regenerate my pull request. Can you
-> confirm!
+[    4.201410] BUG: unable to handle kernel paging request at ffffffffffffffe8
+[    4.207829] IP: vsock_addr_equals_addr+0x3/0x20
+[    4.211379] PGD 28210067 P4D 28210067 PUD 28212067 PMD 0
+[    4.211379] Oops: 0000 [#1] PREEMPT SMP PTI
+[    4.211379] Modules linked in:
+[    4.211379] CPU: 1 PID: 30 Comm: kworker/1:1 Not tainted 4.14.106-419297-gd7e28cc1f241 #1
+[    4.211379] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
+[    4.211379] Workqueue: virtio_vsock virtio_transport_rx_work
+[    4.211379] task: ffffa3273d175280 task.stack: ffffaea1800e8000
+[    4.211379] RIP: 0010:vsock_addr_equals_addr+0x3/0x20
+[    4.211379] RSP: 0000:ffffaea1800ebd28 EFLAGS: 00010286
+[    4.211379] RAX: 0000000000000002 RBX: 0000000000000000 RCX: ffffffffb94e42f0
+[    4.211379] RDX: 0000000000000400 RSI: ffffffffffffffe0 RDI: ffffaea1800ebdd0
+[    4.211379] RBP: ffffaea1800ebd58 R08: 0000000000000001 R09: 0000000000000001
+[    4.211379] R10: 0000000000000000 R11: ffffffffb89d5d60 R12: ffffaea1800ebdd0
+[    4.211379] R13: 00000000828cbfbf R14: 0000000000000000 R15: ffffaea1800ebdc0
+[    4.211379] FS:  0000000000000000(0000) GS:ffffa3273fd00000(0000) knlGS:0000000000000000
+[    4.211379] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    4.211379] CR2: ffffffffffffffe8 CR3: 000000002820e001 CR4: 00000000001606e0
+[    4.211379] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[    4.211379] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[    4.211379] Call Trace:
+[    4.211379]  ? vsock_find_connected_socket+0x6c/0xe0
+[    4.211379]  virtio_transport_recv_pkt+0x15f/0x740
+[    4.211379]  ? detach_buf+0x1b5/0x210
+[    4.211379]  virtio_transport_rx_work+0xb7/0x140
+[    4.211379]  process_one_work+0x1ef/0x480
+[    4.211379]  worker_thread+0x312/0x460
+[    4.211379]  kthread+0x132/0x140
+[    4.211379]  ? process_one_work+0x480/0x480
+[    4.211379]  ? kthread_destroy_worker+0xd0/0xd0
+[    4.211379]  ret_from_fork+0x35/0x40
+[    4.211379] Code: c7 47 08 00 00 00 00 66 c7 07 28 00 c7 47 08 ff ff ff ff c7 47 04 ff ff ff ff c3 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 8b 47 08 <3b> 46 08 75 0a 8b 47 04 3b 46 04 0f 94 c0 c3 31 c0 c3 90 66 2e
+[    4.211379] RIP: vsock_addr_equals_addr+0x3/0x20 RSP: ffffaea1800ebd28
+[    4.211379] CR2: ffffffffffffffe8
+[    4.211379] ---[ end trace f31cc4a2e6df3689 ]---
+[    4.211379] Kernel panic - not syncing: Fatal exception in interrupt
+[    4.211379] Kernel Offset: 0x37000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[    4.211379] Rebooting in 5 seconds..
 
-I confirm, it went through the s390 maintainer tree, here is the
-upstream commit already in Linus' master:
+Fixes: 22b5c0b63f32 ("vsock/virtio: fix kernel panic after device hot-unplug")
+Cc: Stefan Hajnoczi <stefanha@redhat.com>
+Cc: Stefano Garzarella <sgarzare@redhat.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: kvm@vger.kernel.org
+Cc: virtualization@lists.linux-foundation.org
+Cc: netdev@vger.kernel.org
+Cc: kernel-team@android.com
+Cc: stable@vger.kernel.org [4.9+]
+Signed-off-by: Jorge E. Moreira <jemoreira@google.com>
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+---
+ net/vmw_vsock/virtio_transport.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-commit e24e4712efad737ca09ff299276737331cd021d9
-Author: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Date:   Wed Apr 10 12:28:41 2019 +0200
-
-    s390/rseq: use trap4 for RSEQ_SIG
-    
-    Use trap4 as the guard instruction for the restartable sequence abort
-    handler.
-    
-    Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-
-So you can either drop it from your end of the pull request, or Linus will
-deal with the merge, as you prefer.
-
-Thanks!
-
-Mathieu
-
-
-> 
-> thanks,
-> -- Shuah
-
+diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+index 15eb5d3d4750..96ab344f17bb 100644
+--- a/net/vmw_vsock/virtio_transport.c
++++ b/net/vmw_vsock/virtio_transport.c
+@@ -702,28 +702,27 @@ static int __init virtio_vsock_init(void)
+ 	if (!virtio_vsock_workqueue)
+ 		return -ENOMEM;
+ 
+-	ret = register_virtio_driver(&virtio_vsock_driver);
++	ret = vsock_core_init(&virtio_transport.transport);
+ 	if (ret)
+ 		goto out_wq;
+ 
+-	ret = vsock_core_init(&virtio_transport.transport);
++	ret = register_virtio_driver(&virtio_vsock_driver);
+ 	if (ret)
+-		goto out_vdr;
++		goto out_vci;
+ 
+ 	return 0;
+ 
+-out_vdr:
+-	unregister_virtio_driver(&virtio_vsock_driver);
++out_vci:
++	vsock_core_exit();
+ out_wq:
+ 	destroy_workqueue(virtio_vsock_workqueue);
+ 	return ret;
+-
+ }
+ 
+ static void __exit virtio_vsock_exit(void)
+ {
+-	vsock_core_exit();
+ 	unregister_virtio_driver(&virtio_vsock_driver);
++	vsock_core_exit();
+ 	destroy_workqueue(virtio_vsock_workqueue);
+ }
+ 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.21.0.1020.gf2820cf01a-goog
+
