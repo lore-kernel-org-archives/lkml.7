@@ -2,101 +2,167 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9CFC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAB7C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48B1720818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:33:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X+NsxmTu"
+	by mail.kernel.org (Postfix) with ESMTP id 73DC020818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:34:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbfEPSdb (ORCPT
+        id S1728915AbfEPSeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 14:33:31 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45042 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbfEPSdb (ORCPT
+        Thu, 16 May 2019 14:34:11 -0400
+Received: from caffeine.csclub.uwaterloo.ca ([129.97.134.17]:39203 "EHLO
+        caffeine.csclub.uwaterloo.ca" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726357AbfEPSeL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 14:33:31 -0400
-Received: by mail-lf1-f67.google.com with SMTP id n134so3380845lfn.11;
-        Thu, 16 May 2019 11:33:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G+UOIQsK9fdttsJTvXZlnEG7LtoiIYogaWMmnhqc+ok=;
-        b=X+NsxmTuP+wmtl7CIf+6brQUbRvm+YTEx6xdwkGhDK4KdncaLrOWHFtjDdCFzfBMD2
-         Hcj6tKow81vKPvXKlMSaz2SK+bXMwjPhn6cFD/Y4ex4we1aJNxSYPqxqa2W2lFWPH9Jv
-         RTIpvkjjTj0DIebp6ewtE8VrW+N0VdnBrJ9l2l+AyHkjRoHdGZ+JmNmCTW/OvWIsiivV
-         syCgauDHV33Tj/i02gJKO4lhE2g7nfiJKwKfVlUzUtxrWJqLDxeoaRcFmSi+ts6elJCA
-         ZVA1Z259n5dDcSUfGsMa4ON28CMNjFXk3tr1yw47tAH5TSRZ9yhSmcxGQzaB4V6mtJpA
-         Ntmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G+UOIQsK9fdttsJTvXZlnEG7LtoiIYogaWMmnhqc+ok=;
-        b=NSuaqG+CxtjnwMb9mQFiDpL1dJ4GSLGW7kw/3Czx/Z4AHXBVHVzgHoyyOLzXKLa7hS
-         w4a8iJ3ysHFEn2xtNlfT/uHbd7t5tOwoE4CxerK6ZXNKk78WxcmVDe418xeYc+mL/DEu
-         FMvJD4+CP0zts9SSnI04tbSJNN3r/IvmpIRCN7U4aeKwbMoFzK3rECpHbs3bGfo2Qo2w
-         aDvsFhaSb4bGx/Y48PA85f6U8TYwlO99vtJ5GlfiLk3RavMpn3bXzYzXKxtNNNXespok
-         FQDrya+lIVSQalv8L7KehdpToYJzmf1d2+9ddI6lTAFfeWyMO+yecHzFVq6rMBpK/qhY
-         Hg0w==
-X-Gm-Message-State: APjAAAWGpsYUc51wDY8I7+OY2yeu+QO3iATsgWT/5Ht+qFW0TdIc0bcC
-        1sKl3YTlanLeIuUYcfE6cfKBsgZ9t1OISqdaGGA=
-X-Google-Smtp-Source: APXvYqwi2VC0mkED0PDqmCKfRnKlbR1V2ivKuFx74kxGlmBApi18n5RaG1NyaW1xGZ3QiEE3xA12ExoZOAA2iJlblQE=
-X-Received: by 2002:ac2:5621:: with SMTP id b1mr26223764lff.27.1558031609083;
- Thu, 16 May 2019 11:33:29 -0700 (PDT)
+        Thu, 16 May 2019 14:34:11 -0400
+Received: by caffeine.csclub.uwaterloo.ca (Postfix, from userid 20367)
+        id 1C77846380B; Thu, 16 May 2019 14:34:08 -0400 (EDT)
+Date:   Thu, 16 May 2019 14:34:08 -0400
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
+Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec
+ packets
+Message-ID: <20190516183407.qswotwyjwtjqfdqm@csclub.uwaterloo.ca>
+References: <20190502175513.ei7kjug3az6fe753@csclub.uwaterloo.ca>
+ <20190502185250.vlsainugtn6zjd6p@csclub.uwaterloo.ca>
+ <CAKgT0Uc_YVzns+26-TL+hhmErqG4_w4evRqLCaa=7nME7Zq+Vg@mail.gmail.com>
+ <20190503151421.akvmu77lghxcouni@csclub.uwaterloo.ca>
+ <CAKgT0UcV2wCr6iUYktZ+Bju_GNpXKzR=M+NLfKhUsw4bsJSiyA@mail.gmail.com>
+ <20190503205935.bg45rsso5jjj3gnx@csclub.uwaterloo.ca>
+ <20190513165547.alkkgcsdelaznw6v@csclub.uwaterloo.ca>
+ <CAKgT0Uf_nqZtCnHmC=-oDFz-3PuSM6=30BvJSDiAgzK062OY6w@mail.gmail.com>
+ <20190514163443.glfjva3ofqcy7lbg@csclub.uwaterloo.ca>
+ <CAKgT0UdPDyCBsShQVwwE5C8fBKkMcfS6_S5m3T7JP-So9fzVgA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190515144210.25596-1-daniel.baluta@nxp.com> <20190515144210.25596-2-daniel.baluta@nxp.com>
-In-Reply-To: <20190515144210.25596-2-daniel.baluta@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 16 May 2019 15:33:19 -0300
-Message-ID: <CAOMZO5Avmjf9GpGWBbMJrOxWdvdBTyXMoOPQw_uOQHhCayuHtg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] arm64: dts: imx8mm: Add SAI nodes
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>, Peng Fan <peng.fan@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "m.felsch@pengutronix.de" <m.felsch@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0UdPDyCBsShQVwwE5C8fBKkMcfS6_S5m3T7JP-So9fzVgA@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+From:   lsorense@csclub.uwaterloo.ca (Lennart Sorensen)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+On Thu, May 16, 2019 at 10:10:55AM -0700, Alexander Duyck wrote:
+> So I was sent a link to the datasheet for the part and I have a
+> working theory that what we may be seeing is a problem in the firmware
+> for the part.
+> 
+> Can you try applying the attached patch and send the output from the
+> dmesg? Specifically I would want anything with the name "i40e" in it.
+> What I am looking for is something like the following:
+> [  294.383416] i40e 0000:81:00.1: fw 5.0.40043 api 1.5 nvm 5.04 0x800024cd 0.0.0
+> [  294.675039] i40e 0000:81:00.1: MAC address: 68:05:ca:37:c7:99
+> [  294.685941] i40e 0000:81:00.1: flow_type: 63 input_mask:0x0000000000004000
+> [  294.686056] i40e 0000:81:00.1: flow_type: 46 input_mask:0x0007fff800000000
+> [  294.686170] i40e 0000:81:00.1: flow_type: 45 input_mask:0x0007fff800000000
+> [  294.686284] i40e 0000:81:00.1: flow_type: 44 input_mask:0x0007ffff80000000
+> [  294.686399] i40e 0000:81:00.1: flow_type: 43 input_mask:0x0007fffe00000000
+> [  294.686513] i40e 0000:81:00.1: flow_type: 41 input_mask:0x0007fffe00000000
+> [  294.686628] i40e 0000:81:00.1: flow_type: 36 input_mask:0x0001801800000000
+> [  294.686743] i40e 0000:81:00.1: flow_type: 35 input_mask:0x0001801800000000
+> [  294.686858] i40e 0000:81:00.1: flow_type: 34 input_mask:0x0001801f80000000
+> [  294.686973] i40e 0000:81:00.1: flow_type: 33 input_mask:0x0001801e00000000
+> [  294.687087] i40e 0000:81:00.1: flow_type: 31 input_mask:0x0001801e00000000
+> [  294.691906] i40e 0000:81:00.1 ens5f1: renamed from eth0
+> [  294.711173] i40e 0000:81:00.1 ens5f1: NIC Link is Up, 10 Gbps Full
+> Duplex, Flow Control: None
+> [  294.759061] i40e 0000:81:00.1: PCI-Express: Speed 8.0GT/s Width x8
+> [  294.863363] i40e 0000:81:00.1: Features: PF-id[1] VFs: 32 VSIs: 34
+> QP: 32 RSS FD_ATR FD_SB NTUPLE VxLAN Geneve PTP VEPA
+> 
+> With that we can tell what flow types are enabled, and what input
+> fields are enabled for each flow type. My suspicion is that we may see
+> the two new types added to X722 for UDP, 29 and 30, may not match type
+> 31 which is the current flow type supported on the X710.
+> 
+> I have included a copy inline below in case the patch is stripped,
+> however I suspect it will not apply cleanly as the mail client I am
+> using usually ends up causing white space mangling by replacing tabs
+> with spaces.
+> 
+> diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c
+> b/drivers/net/ethernet/intel/i40e/i40e_main.c
+> index 65c2b9d2652b..0c93859f8184 100644
+> --- a/drivers/net/ethernet/intel/i40e/i40e_main.c
+> +++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+> @@ -10998,6 +10998,15 @@ static int i40e_pf_config_rss(struct i40e_pf *pf)
+>                 ((u64)i40e_read_rx_ctl(hw, I40E_PFQF_HENA(1)) << 32);
+>         hena |= i40e_pf_get_default_rss_hena(pf);
+> 
+> +       for (ret = 64; ret--;) {
+> +               if (!(hena & (1ull << ret)))
+> +                       continue;
+> +               dev_info(&pf->pdev->dev, "flow_type: %d
+> input_mask:0x%08x%08x\n",
+> +                        ret,
+> +                        i40e_read_rx_ctl(hw, I40E_GLQF_HASH_INSET(1, ret)),
+> +                        i40e_read_rx_ctl(hw, I40E_GLQF_HASH_INSET(0, ret)));
+> +       }
+> +
+>         i40e_write_rx_ctl(hw, I40E_PFQF_HENA(0), (u32)hena);
+>         i40e_write_rx_ctl(hw, I40E_PFQF_HENA(1), (u32)(hena >> 32));
 
-On Wed, May 15, 2019 at 11:42 AM Daniel Baluta <daniel.baluta@nxp.com> wrote:
->
-> i.MX8MM has 5 SAI instances with the following base
-> addresses according to RM.
->
-> SAI1 base address: 3001_0000h
-> SAI2 base address: 3002_0000h
-> SAI3 base address: 3003_0000h
-> SAI5 base address: 3005_0000h
-> SAI6 base address: 3006_0000h
+> i40e: Debug hash inputs
 
-No SAI4?
+Here is what I see:
 
-I know the RM does not show the SAI4 in the memory map, but the clock
-driver does show a SAI4 clock gate.
+i40e: Intel(R) Ethernet Connection XL710 Network Driver - version 2.1.7-k
+i40e: Copyright (c) 2013 - 2014 Intel Corporation.
+i40e 0000:3d:00.0: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
+i40e 0000:3d:00.0: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
+i40e 0000:3d:00.0: MAC address: a4:bf:01:4e:0c:87
+i40e 0000:3d:00.0: flow_type: 63 input_mask:0x0000000000004000
+i40e 0000:3d:00.0: flow_type: 46 input_mask:0x0007fff800000000
+i40e 0000:3d:00.0: flow_type: 45 input_mask:0x0007fff800000000
+i40e 0000:3d:00.0: flow_type: 44 input_mask:0x0007ffff80000000
+i40e 0000:3d:00.0: flow_type: 43 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type: 42 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type: 41 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type: 40 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type: 39 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.0: flow_type: 36 input_mask:0x0006060000000000
+i40e 0000:3d:00.0: flow_type: 35 input_mask:0x0006060000000000
+i40e 0000:3d:00.0: flow_type: 34 input_mask:0x0006060780000000
+i40e 0000:3d:00.0: flow_type: 33 input_mask:0x0006060600000000
+i40e 0000:3d:00.0: flow_type: 32 input_mask:0x0006060600000000
+i40e 0000:3d:00.0: flow_type: 31 input_mask:0x0006060600000000
+i40e 0000:3d:00.0: flow_type: 30 input_mask:0x0006060600000000
+i40e 0000:3d:00.0: flow_type: 29 input_mask:0x0006060600000000
+i40e 0000:3d:00.0: Features: PF-id[0] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
+i40e 0000:3d:00.1: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
+i40e 0000:3d:00.1: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
+i40e 0000:3d:00.1: MAC address: a4:bf:01:4e:0c:88
+i40e 0000:3d:00.1: flow_type: 63 input_mask:0x0000000000004000
+i40e 0000:3d:00.1: flow_type: 46 input_mask:0x0007fff800000000
+i40e 0000:3d:00.1: flow_type: 45 input_mask:0x0007fff800000000
+i40e 0000:3d:00.1: flow_type: 44 input_mask:0x0007ffff80000000
+i40e 0000:3d:00.1: flow_type: 43 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.1: flow_type: 42 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.1: flow_type: 41 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.1: flow_type: 40 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.1: flow_type: 39 input_mask:0x0007fffe00000000
+i40e 0000:3d:00.1: flow_type: 36 input_mask:0x0006060000000000
+i40e 0000:3d:00.1: flow_type: 35 input_mask:0x0006060000000000
+i40e 0000:3d:00.1: flow_type: 34 input_mask:0x0006060780000000
+i40e 0000:3d:00.1: flow_type: 33 input_mask:0x0006060600000000
+i40e 0000:3d:00.1: flow_type: 32 input_mask:0x0006060600000000
+i40e 0000:3d:00.1: flow_type: 31 input_mask:0x0006060600000000
+i40e 0000:3d:00.1: flow_type: 30 input_mask:0x0006060600000000
+i40e 0000:3d:00.1: flow_type: 29 input_mask:0x0006060600000000
+i40e 0000:3d:00.1: Features: PF-id[1] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
+i40e 0000:3d:00.1 eth2: NIC Link is Up, 1000 Mbps Full Duplex, Flow Control: None
+i40e_ioctl: power down: eth1
+i40e_ioctl: power down: eth2
 
-So it seems we have a contradiction in the reference manual. Could you
-please double check with the internal folks?
+-- 
+Len Sorensen
