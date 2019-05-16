@@ -2,103 +2,97 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F1FC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4793C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB5B21726
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 850EC20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 12:52:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iC9xJc/L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbfEPMvK (ORCPT
+        id S1727375AbfEPMwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 08:51:10 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:49334 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726503AbfEPMvK (ORCPT
+        Thu, 16 May 2019 08:52:17 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36201 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727149AbfEPMwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 08:51:10 -0400
-Received: from fsav101.sakura.ne.jp (fsav101.sakura.ne.jp [27.133.134.228])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4GComBb001967;
-        Thu, 16 May 2019 21:50:48 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav101.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav101.sakura.ne.jp);
- Thu, 16 May 2019 21:50:48 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav101.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4GComi8001962
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Thu, 16 May 2019 21:50:48 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: INFO: task hung in __get_super
-To:     Jan Kara <jack@suse.cz>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        syzbot <syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com>,
-        dvyukov@google.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        linux-block@vger.kernel.org
-References: <0000000000002cd22305879b22c4@google.com>
- <201905150102.x4F12b6o009249@www262.sakura.ne.jp>
- <20190515102133.GA16193@quack2.suse.cz>
- <024bba2a-4d2f-1861-bfd9-819511bdf6eb@i-love.sakura.ne.jp>
- <20190515130730.GA9526@quack2.suse.cz>
- <20190516114817.GD13274@quack2.suse.cz>
- <ca1e5916-73ee-6fc4-1d78-428691f7fc64@i-love.sakura.ne.jp>
- <20190516123201.GG13274@quack2.suse.cz>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <e9ffd00a-809c-9eca-45b4-31449a64032e@i-love.sakura.ne.jp>
-Date:   Thu, 16 May 2019 21:50:51 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 16 May 2019 08:52:17 -0400
+Received: by mail-lj1-f194.google.com with SMTP id z1so2998746ljb.3
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 05:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=M8dIMMLTGG86thIxs/mRUU5bsghAX7RRvWXWnrAvMAs=;
+        b=iC9xJc/LqP5wzVxXoivXXOnuzTrrgFiN2GtZrWRT5bsmasTGCrg1mUFbsRM8/yJ8lE
+         Chia4VkQR8GHzZ1wp3SftBAPhcf0/0id8JlaHJajgdxXO4Fo/NfHfxfwZJhaYduFdKPz
+         oX39O8pOX2C1YCZdt6Z1yL8eTySL64PduJAGls98JcKwJ8XtPpYNUuaPXVGg3C+bqQ0v
+         G+dFQh2qz/jUZKW5/q6RWlhrG4KOpDKiBtPFLz8HkLYufM8kTyzHmC0u8Gzu6hbq2W2n
+         RnAB8XpXl17EpT/Wkex+RjpHiNP90Y5JpsNjFtK5hVwJ2oSDKVetXxS0UvIQ5qd2tovw
+         qhiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=M8dIMMLTGG86thIxs/mRUU5bsghAX7RRvWXWnrAvMAs=;
+        b=iLCxthEhsXFIubxU4oh+huGjJzwiA+XaQznzAg3nsuy0qBp90doXkOcyniM5lU+11q
+         G/j55Z8VnzN2sUVfrPAebqU+c0yB4Q7SNUN9y7yOzFFoweCsWxw+f2dec/Aq6/pRPSt/
+         XvoujVC1O20uQ0fIXdpZccABG8eedbfZu7AjPS7+51PeF/1ggoAy61PXZl1m0hxcF9m9
+         TPqynk3LJ+lo06liqUHWRkYv703LaLeYs5xJ4gTdFsO3Yi2lFWRQYBqALGYtA3CGMzNu
+         vaU/DfcrzH4A2ZEvtJfEBRWhMswbkYIne+0Ij7xki3GIM5SraMf3FIju8etXHW3irmae
+         ZI8w==
+X-Gm-Message-State: APjAAAVKcH85NtdDGDv4YKeDVTjN6vC7SFWA0caP5CrG9SApEGUqPGyz
+        NL9G8jHEOKu5lAiwdKfGwNGUY7TxFm5GK053wik1/g==
+X-Google-Smtp-Source: APXvYqyKQvo32z2nDVQNlGDeWm4ClSjw2DAn7P89XY+RzmdqMHft5SDvxQb/j4IO5PU3+gOiYdzXt4I8x6QxAuXOZMU=
+X-Received: by 2002:a2e:731a:: with SMTP id o26mr21431284ljc.105.1558011134949;
+ Thu, 16 May 2019 05:52:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190516123201.GG13274@quack2.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190514082652.20686-1-glaroque@baylibre.com>
+In-Reply-To: <20190514082652.20686-1-glaroque@baylibre.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 May 2019 14:52:03 +0200
+Message-ID: <CACRpkdZ+p-J5Em3rzZcUwpA-a+CVOY91CgLqoRm_QVZP6E4Osw@mail.gmail.com>
+Subject: Re: [PATCH v6 0/6] Add drive-strength in Meson pinctrl driver
+To:     Guillaume La Roque <glaroque@baylibre.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/05/16 21:32, Jan Kara wrote:
-> On Thu 16-05-19 21:17:14, Tetsuo Handa wrote:
->> On 2019/05/16 20:48, Jan Kara wrote:
->>> OK, so non-racy fix was a bit more involved and I've ended up just
->>> upgrading the file reference to an exclusive one in loop_set_fd() instead
->>> of trying to hand-craft some locking solution. The result is attached and
->>> it passes blktests.
->>
->> blkdev_get() has corresponding blkdev_put().
->> bdgrab() does not have corresponding bdput() ?
-> 
-> Yes, and that's hidden inside blkdev_put() (or failing blkdev_get()). Don't
-> get me started on calling conventions of these functions... I've wasted half
-> an hour trying to figure out where I'm leaking inode references in my patch
-> ;).
+On Tue, May 14, 2019 at 10:26 AM Guillaume La Roque
+<glaroque@baylibre.com> wrote:
 
-Ah, found tricky comment. Please apply the patch. Thank you.
+> The purpose of this patchset is to add drive-strength support in meson pinconf
+> driver. This is a new feature that was added on the g12a. It is critical for us
+> to support this since many functions are failing with default pad drive-strength.
+>
+> The value achievable by the SoC are 0.5mA, 2.5mA, 3mA and 4mA and the DT property
+> 'drive-strength' is expressed in mA.
+> So this patch add another generic property "drive-strength-microamp". The change to do so
+> would be minimal and could be benefit to other platforms later on.
+>
+> Cheers
+> Guillaume
+>
+> Changes since v5:
+> - restore Tested-by/Reviewed-by/Ack-by tags
 
-/**
- * blkdev_get - open a block device
- * @bdev: block_device to open
- * @mode: FMODE_* mask
- * @holder: exclusive holder identifier
- *
- * Open @bdev with @mode.  If @mode includes %FMODE_EXCL, @bdev is
- * open with exclusive access.  Specifying %FMODE_EXCL with %NULL
- * @holder is invalid.  Exclusive opens may nest for the same @holder.
- *
- * On success, the reference count of @bdev is unchanged.  On failure,
- * @bdev is put.
- *
- * CONTEXT:
- * Might sleep.
- *
- * RETURNS:
- * 0 on success, -errno on failure.
- */
+All 6 patches applied for v5.3.
+
+They will appear in the tree once v5.2-rc1 is out.
+
+Yours,
+Linus Walleij
