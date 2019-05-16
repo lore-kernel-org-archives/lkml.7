@@ -7,20 +7,21 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDA7C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 02:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E33C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 02:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16B7420848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 02:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57DC520848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 02:11:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfEPCHq convert rfc822-to-8bit (ORCPT
+        id S1726383AbfEPCLQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 22:07:46 -0400
-Received: from cnbjsegrel01.sonyericsson.com ([219.141.167.163]:8764 "EHLO
+        Wed, 15 May 2019 22:11:16 -0400
+Received: from cnbjsegrel01.sonyericsson.com ([219.141.167.163]:8920 "EHLO
         CNBJSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725953AbfEPCHp (ORCPT
+        by vger.kernel.org with ESMTP id S1725953AbfEPCLQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 22:07:45 -0400
+        Wed, 15 May 2019 22:11:16 -0400
+From:   "Mao, Chenxi" <Chenxi.Mao@sony.com>
 Subject: Re: [PATCH 1/1] LZ4: Port LZ4 1.9.x FAST_DEC_LOOP and enable it on
  x86 and ARM64
 To:     Gao Xiang <gaoxiang25@huawei.com>
@@ -41,9 +42,8 @@ References: <20190515004336.66555-1-chenxi.mao@sony.com>
  <d5001400-f46f-9da3-a8b2-611429acaa68@huawei.com>
  <5c735ce9-04fc-a2a4-4f0c-ba5718fe7933@sony.com>
  <1ca01dfb-c478-0752-cda0-b98f3da9f1b0@huawei.com>
-From:   "Mao, Chenxi" <Chenxi.Mao@sony.com>
-Message-ID: <cd5e539d-fa95-6ba3-4d95-c0658e796795@sony.com>
-Date:   Thu, 16 May 2019 10:07:39 +0800
+Message-ID: <7ef83790-043a-45df-1daa-26af67d6e32d@sony.com>
+Date:   Thu, 16 May 2019 10:11:04 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
