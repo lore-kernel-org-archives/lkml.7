@@ -2,138 +2,187 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9233AC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9D9C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E4452082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B2DA2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:22:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbfEPIUD (ORCPT
+        id S1726692AbfEPIWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 04:20:03 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:52178 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726429AbfEPIUD (ORCPT
+        Thu, 16 May 2019 04:22:47 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51228 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726336AbfEPIWr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 04:20:03 -0400
-Received: from fsav102.sakura.ne.jp (fsav102.sakura.ne.jp [27.133.134.229])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x4G8JFRQ017674;
-        Thu, 16 May 2019 17:19:15 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav102.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav102.sakura.ne.jp);
- Thu, 16 May 2019 17:19:15 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav102.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x4G8J9Bw017640
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Thu, 16 May 2019 17:19:15 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] kernel/hung_task.c: Monitor killed tasks.
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Liu Chuansheng <chuansheng.liu@intel.com>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        linux-kernel@vger.kernel.org, Dmitry Vyukov <dvyukov@google.com>
-References: <1557745331-10367-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp>
- <20190515105540.vyzh6n62rqi5imqv@pathway.suse.cz>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <ee7501c6-d996-1684-1652-f0f838ba69c3@i-love.sakura.ne.jp>
-Date:   Thu, 16 May 2019 17:19:12 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 16 May 2019 04:22:47 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4G8MPJk095827
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 04:22:46 -0400
+Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sh42qrjma-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 04:22:45 -0400
+Received: from localhost
+        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ego@linux.vnet.ibm.com>;
+        Thu, 16 May 2019 09:22:45 +0100
+Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
+        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 16 May 2019 09:22:42 +0100
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4G8MffA15860102
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 May 2019 08:22:41 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7016FBE053;
+        Thu, 16 May 2019 08:22:41 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2731EBE054;
+        Thu, 16 May 2019 08:22:41 +0000 (GMT)
+Received: from sofia.ibm.com (unknown [9.124.35.248])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu, 16 May 2019 08:22:41 +0000 (GMT)
+Received: by sofia.ibm.com (Postfix, from userid 1000)
+        id 2046C2E3894; Thu, 16 May 2019 13:52:38 +0530 (IST)
+Date:   Thu, 16 May 2019 13:52:38 +0530
+From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     ego@linux.vnet.ibm.com, daniel.lezcano@linaro.org, dja@axtens.net,
+        Abhishek <huntbag@linux.vnet.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, rjw@rjwysocki.net
+Subject: Re: [PATCH 0/1] Forced-wakeup for stop lite states on Powernv
+Reply-To: ego@linux.vnet.ibm.com
+References: <20190422063231.51043-1-huntbag@linux.vnet.ibm.com>
+ <1557291178.ow4spjzq5t.astroid@bobo.none>
+ <b2fcf69a-aecd-ea81-b497-737642354736@linux.vnet.ibm.com>
+ <1557981860.eltms77ctp.astroid@bobo.none>
+ <20190516053659.GA20396@in.ibm.com>
+ <1557986956.6pmjz10b9z.astroid@bobo.none>
 MIME-Version: 1.0
-In-Reply-To: <20190515105540.vyzh6n62rqi5imqv@pathway.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1557986956.6pmjz10b9z.astroid@bobo.none>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-TM-AS-GCONF: 00
+x-cbid: 19051608-0036-0000-0000-00000ABC3AF4
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011104; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01204051; UDB=6.00632055; IPR=6.00984981;
+ MB=3.00026913; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-16 08:22:45
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051608-0037-0000-0000-00004BD0A5B6
+Message-Id: <20190516082238.GB20396@in.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905160057
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/05/15 19:55, Petr Mladek wrote:
->> +	if (!stamp) {
->> +		stamp = jiffies;
->> +		if (!stamp)
->> +			stamp++;
->> +		t->killed_time = stamp;
->> +		return;
->> +	}
-> 
-> I might be too dumb but the above code looks pretty tricky to me.
-> It would deserve a comment. Or better, I would remove
-> trick to handle overflow. If it happens, we would just
-> lose one check period.
+Hi Nicholas,
 
-We can use
-
-  static inline unsigned long jiffies_nonzero(void)
-  {
-      const unsigned long stamp = jiffies;
-
-      return stamp ? stamp : -1;
-  }
-
-or even shortcut "jiffies | 1" because difference by one jiffie
-is an measurement error for multiple HZ of timeout.
+On Thu, May 16, 2019 at 04:13:17PM +1000, Nicholas Piggin wrote:
 
 > 
-> Alternative solution would be to set the timestamp in
-> complete_signal(). Then we would know that the timestamp
-> is always valid when a fatal signal is pending.
-
-Yes. But I guess that since signal might be delivered just before
-setting PF_FROZEN and the thread might be kept frozen for longer
-than timeout, we will need to reset the timestamp just before
-clearing PF_FROZEN.
-
-
-
->> +	if (time_is_after_jiffies(stamp + timeout * HZ))
->> +		return;
->> +	trace_sched_process_hang(t);
->> +	if (sysctl_hung_task_panic) {
->> +		console_verbose();
->> +		hung_task_call_panic = true;
+> > The motivation behind this patch was a HPC customer issue where they
+> > were observing some CPUs in the core getting stuck at stop0_lite
+> > state, thereby lowering the performance on the other CPUs of the core
+> > which were running the application.
+> > 
+> > Disabling stop0_lite via sysfs didn't help since we would fallback to
+> > snooze and it would make matters worse.
 > 
-> IMHO, the delayed task exit is much less fatal than sleeping
-> in an uninterruptible state.
+> snooze has the timeout though, so it should kick into stop0 properly
+> (and if it doesn't that's another issue that should be fixed in this
+> series).
+>
+> I'm not questioning the patch for stop0_lite, to be clear. I think
+> the logic is sound. I just raise one urelated issue that happens to
+> be for stop0_lite as well (should we even enable it on P9?), and one
+> peripheral issue (should we make a similar fix for deeper stop states?)
+>
+
+I think it makes sense to generalize this from the point of view of
+CPUs remaining in shallower idle states for long durations on tickless
+kernels.
+
+> > 
+> >> 
+> >> We should always have fewer states unless proven otherwise.
+> > 
+> > I agree.
+> > 
+> >> 
+> >> That said, we enable it today so I don't want to argue this point
+> >> here, because it is a different issue from your patch.
+> >> 
+> >> > When it is in stop0 or deeper, 
+> >> > it free up both
+> >> > space and time slice of core.
+> >> > In stop0_lite, cpu doesn't free up the core resources and thus inhibits 
+> >> > thread
+> >> > folding. When a cpu goes to stop0, it will free up the core resources 
+> >> > thus increasing
+> >> > the single thread performance of other sibling thread.
+> >> > Hence, we do not want to get stuck in stop0_lite for long duration, and 
+> >> > want to quickly
+> >> > move onto the next state.
+> >> > If we get stuck in any other state we would possibly be losing on to 
+> >> > power saving,
+> >> > but will still be able to gain the performance benefits for other 
+> >> > sibling threads.
+> >> 
+> >> That's true, but stop0 -> deeper stop is also a benefit (for
+> >> performance if we have some power/thermal constraints, and/or for power
+> >> usage).
+> >> 
+> >> Sure it may not be so noticable as the SMT switch, but I just wonder
+> >> if the infrastructure should be there for the same reason.
+> >> 
+> >> I was testing interrupt frequency on some tickless workloads configs,
+> >> and without too much trouble you can get CPUs to sleep with no
+> >> interrupts for many minutes. Hours even. We wouldn't want the CPU to
+> >> stay in stop0 for that long.
+> > 
+> > If it stays in stop0 or even stop2 for that long, we would want to
+> > "promote" it to a deeper state, such as say STOP5 which allows the
+> > other cores to run at higher frequencies.
 > 
-> Anyway, the check is much less reliable. In case of hung_task,
-> it is enough when the task gets scheduled. In the new check,
-> the task has to do some amount of work until the signal
-> gets handled and do_exit() is called.
+> So we would want this same logic for all but the deepest runtime
+> stop state?
+
+Yes. We can, in steps, promote individual threads of the core to
+eventually request a deeper state such as stop4/5. On a completely
+idle tickless system, eventually we should see the core go to the
+deeper idle state.
+
 > 
-> The panic should either get enabled separately or we should
-> never panic in this case.
+> >> Just thinking about the patch itself, I wonder do you need a full
+> >> kernel timer, or could we just set the decrementer? Is there much 
+> >> performance cost here?
+> >>
+> > 
+> > Good point. A decrementer would do actually.
+> 
+> That would be good if it does, might save a few cycles.
+> 
+> Thanks,
+> Nick
+>
 
-OK, we should not share existing sysctl settings.
-
-But in the context of syzbot's testing where there are only 2 CPUs
-in the target VM (which means that only small number of threads and
-not so much memory) and threads get SIGKILL after 5 seconds from fork(),
-being unable to reach do_exit() within 10 seconds is likely a sign of
-something went wrong. For example, 6 out of 7 trials of a reproducer for
-https://syzkaller.appspot.com/bug?id=835a0b9e75b14b55112661cbc61ca8b8f0edf767
-resulted in "no output from test machine" rather than "task hung".
-This patch is revealing that such killed threads are failing to reach
-do_exit() because they are trapped at unkillable retry loop due to a
-race bug.
-
-Therefore, I would like to try this patch in linux-next.git for feasibility
-testing whether this patch helps finding more bugs and reproducers for such
-bugs, by bringing "unable to terminate threads" reports out of "no output from
-test machine" reports. We can add sysctl settings before sending to linux.git.
-
-Any questions?
+--
+Thanks and Regards
+gautham.
 
