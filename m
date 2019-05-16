@@ -2,146 +2,102 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523CFC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA67C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0EA20833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070EA20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:37:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558017440;
+	bh=UPgAsUc79XNtfoQLrq5V7qKL0/VATYvYljrh0Yj6lC8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=uBUl2K05uMTm8/B2I9EosO4h03rIU9gWirgcQ5TqsVrjcylnv8mUtnLSRjNWjYFWR
+	 MxfyylC7ItXsQbv7gNasqwp8pydmS6zvW0VhvUt9KIsZrIZ55jWH/UXgp0o1uFkMQY
+	 ko5g0YfRqZvUwR9i+NNX+ajDa7vTM81AO9B9HEZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfEPOg5 (ORCPT
+        id S1727218AbfEPOhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:36:57 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60900 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726687AbfEPOg5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:36:57 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4GEan5p116434
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 10:36:55 -0400
-Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sh8d6m8tn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 10:36:50 -0400
-Received: from localhost
-        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <kgold@linux.ibm.com>;
-        Thu, 16 May 2019 15:34:18 +0100
-Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
-        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 16 May 2019 15:34:13 +0100
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4GEYC0s26673236
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 May 2019 14:34:12 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AC94A112065;
-        Thu, 16 May 2019 14:34:11 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 90AD8112072;
-        Thu, 16 May 2019 14:34:11 +0000 (GMT)
-Received: from [9.2.202.76] (unknown [9.2.202.76])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 16 May 2019 14:34:11 +0000 (GMT)
-Subject: Re: [PATCH 0/2] public key: IMA signer logging: Log public key of IMA
- Signature signer in IMA log
-To:     Lakshmi <nramas@linux.microsoft.com>,
-        Linux Integrity <linux-integrity@vger.kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Cc:     Balaji Balasubramanyan <balajib@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva@linux.microsoft.com>
-References: <6b69f115-96cf-890a-c92b-0b2b05798357@linux.microsoft.com>
-From:   Ken Goldman <kgold@linux.ibm.com>
-Date:   Thu, 16 May 2019 10:34:12 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 16 May 2019 10:37:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56424 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726687AbfEPOhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 10:37:18 -0400
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D040C20862;
+        Thu, 16 May 2019 14:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558017437;
+        bh=UPgAsUc79XNtfoQLrq5V7qKL0/VATYvYljrh0Yj6lC8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=n2o986utdwrt65N1HHcVbGub2fHvrq6Z4LEqkZ2qoBktiT2y2DVRtZPHi7RdF9M4b
+         PLRCHV1s+1ZaAkWT+a8kBvyFVXzVXKww0djxYygi+d8bTb7bkSpZ003Bw0TIqndGt2
+         waogEKjp45WBd1mx5k4syT9ImPuVR90FaHySr/x8=
+Received: by mail-qt1-f171.google.com with SMTP id y22so4124656qtn.8;
+        Thu, 16 May 2019 07:37:17 -0700 (PDT)
+X-Gm-Message-State: APjAAAWYKF4x1IS1n0KLvQxaIxWrF4lpfYhIMYN8LdImu7mK6A4QWPc2
+        +K479C24tmlqPVR82OYdgZOQK4Bt/JRqILipBg==
+X-Google-Smtp-Source: APXvYqxjn8+Q/tX6w4aHOCCOy/nwGU1dlgV2FSFLkzU2uNxOFA2xYDsfkDw8xIChp0sA+l8ZLuw1WIIccuhOM18Sefw=
+X-Received: by 2002:a0c:87cd:: with SMTP id 13mr13711355qvk.218.1558017437078;
+ Thu, 16 May 2019 07:37:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <6b69f115-96cf-890a-c92b-0b2b05798357@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19051614-0060-0000-0000-00000341228C
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011105; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01204175; UDB=6.00632130; IPR=6.00985105;
- MB=3.00026918; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-16 14:34:16
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051614-0061-0000-0000-0000495F0973
-Message-Id: <750fdb9f-fc9b-24bf-42c3-32156ecdc16f@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905160094
+References: <20190516102817.188519-1-hsinyi@chromium.org> <20190516102817.188519-2-hsinyi@chromium.org>
+In-Reply-To: <20190516102817.188519-2-hsinyi@chromium.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 16 May 2019 09:37:05 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLx1UdjCnZ69aQm0GU_uOdd7tTdD_oM=D7yhDANoQ0fEA@mail.gmail.com>
+Message-ID: <CAL_JsqLx1UdjCnZ69aQm0GU_uOdd7tTdD_oM=D7yhDANoQ0fEA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] arm64: implement update_fdt_pgprot()
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Miles Chen <miles.chen@mediatek.com>,
+        James Morse <james.morse@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/14/2019 1:14 PM, Lakshmi wrote:
-> The motive behind this patch series is to measure the public key
-> of the IMA signature signer in the IMA log.
+On Thu, May 16, 2019 at 5:28 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+>
+> Basically does similar things like __fixmap_remap_fdt(). It's supposed
+> to be called after fixmap_remap_fdt() is called at least once, so region
+> checking can be skipped. Since it needs to know dt physical address, make
+> a copy of the value of __fdt_pointer.
+>
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+>  arch/arm64/kernel/setup.c |  2 ++
+>  arch/arm64/mm/mmu.c       | 17 +++++++++++++++++
+>  2 files changed, 19 insertions(+)
 
-I have some questions about the rationale for the design ...
+Why not just map the FDT R/W at the start and change it to RO just
+before calling unflatten_device_tree? Then all the FDT scanning
+functions or any future fixups we need can just assume R/W. That is
+essentially what Stephen suggested. However, there's no need for a
+weak function as it can all be done within the arch code.
 
-> > The IMA signature of the file, logged using ima-sig template, contains
-> the key identifier of the key that was used to generate the signature.
-> But outside the client machine this key id is not sufficient to
-> uniquely determine which key the signature corresponds to.
+However, I'm still wondering why the FDT needs to be RO in the first place.
 
-Why is this not sufficient?
-
-In my implementation, I create a lookup table at the attestation service 
-that maps the 4-byte IMA log key identifier to the signing public key.
-
-Are you concerned about collisions?  Something else?
-
-> Providing the public key of the signer in the IMA log would
-> allow, for example, an attestation service to securely verify
-> if the key used to generate the IMA signature is a valid and
-> trusted one, and that the key has not been revoked or expired.
-
-Are you suggesting that the client supply the verification public key 
-and that the verifier trust it?  Wouldn't that make the log self signed?
-
-How would the verifier determine that the key from the IMA log is valid 
-/ trusted / not revoked from the log itself?
-
-> An attestation service would just need to maintain a list of
-> valid public keys and using the data from the IMA log can attest
-> the system files loaded on the client machine.
-
-If the verifier has the list of valid keys, why must they also come with 
-the IMA log?
-
-> 
-> To achieve the above the patch series does the following:
->    - Adds a new method in asymmetric_key_subtype to query
->      the public key of the given key
->    - Adds a new IMA template namely "ima-sigkey" to store\read
->      the public key of the IMA signature signer. This template
->      extends the existing template "ima-sig"
-
-A minor question here.
-
-Are you proposing that the IMA log contain a single ima-sigkey entry per 
-public key followed by ima-sig entries?
-
-Or are you proposing that ima-sig be replaced by ima-sigkey, and that 
-each event would contain both the signature and the public key?
-
-If the latter, this could add 25M to a server's 100K log.  Would that 
-increase in size concern anyone?  Could it be a concern on the other 
-end, an IoT device with limited memory?
-
+Rob
