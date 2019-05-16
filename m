@@ -2,95 +2,165 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8583BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C34C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4897420815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:56:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558022173;
-	bh=8xQGYMWEUvgEKQ9dnqz6HVEgkN3PnC4OsTTFftuaUkw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M2pWctT98Q+/hp1kkP4e2631eC7yWsM9OZMNjPR6CXftE1QJU+FI8Op3C4RwFxOBF
-	 XYf7dXO/fAG0dZyRg+fm85P7MFJNbz6V1hJnY4C5IujSj549KFTCYrnbwpgoRMdjiG
-	 DLvH2kYFGaQSWeAwJt1TCKv4i8yN1j0ZB2crue3c=
+	by mail.kernel.org (Postfix) with ESMTP id 7E80D20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfEPP4M (ORCPT
+        id S1727057AbfEPP6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:56:12 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56958 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfEPP4L (ORCPT
+        Thu, 16 May 2019 11:58:47 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42328 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726409AbfEPP6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:56:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8xQGYMWEUvgEKQ9dnqz6HVEgkN3PnC4OsTTFftuaUkw=; b=rcILKcdTLzB+Hw4ficgrdCjKU
-        lDGe84tvh2rEsJHUFDlfK3hwv4VdKCBoth2YVcKMtYQ2O0eA6X9jx53ZV28pgA/ESXTwFgnbMggfv
-        fAOlqK/U2RdI2bLg/mbWR4+GaQVNFDncfyCcE1+9+6SgJbSc0pz4MgDsJudrIdOvpjheU=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hRIjo-0006xQ-Kr; Thu, 16 May 2019 15:56:08 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 07392112929C; Thu, 16 May 2019 16:56:03 +0100 (BST)
-Date:   Thu, 16 May 2019 16:56:02 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Christoph Niedermaier <cniedermaier@dh-electronics.com>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] spi: spidev: Add dhcom-board to compatibility list
- [Klartext]
-Message-ID: <20190516155602.GH5598@sirena.org.uk>
-References: <kcis.7DC7E250415B4C2E9DA25490D6832213@DHPLMX01>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="N8ia4yKhAKKETby7"
+        Thu, 16 May 2019 11:58:40 -0400
+Received: from [167.98.27.226] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hRImC-0006yj-U0; Thu, 16 May 2019 16:58:37 +0100
+Received: from ben by deadeye with local (Exim 4.92)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hRImC-0001Mg-ER; Thu, 16 May 2019 16:58:36 +0100
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-In-Reply-To: <kcis.7DC7E250415B4C2E9DA25490D6832213@DHPLMX01>
-X-Cookie: <ahzz_> i figured 17G oughta be enough.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Maciej W. Rozycki" <macro@codesourcery.com>,
+        linux-mips@linux-mips.org, "Ralf Baechle" <ralf@linux-mips.org>
+Date:   Thu, 16 May 2019 16:55:32 +0100
+Message-ID: <lsq.1558022132.250828593@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 05/86] MIPS: jump_label.c: Handle the microMIPS J
+ instruction encoding
+In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
+X-SA-Exim-Connect-IP: 167.98.27.226
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+3.16.68-rc1 review patch.  If anyone has any objections, please let me know.
 
---N8ia4yKhAKKETby7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+------------------
 
-On Thu, May 16, 2019 at 12:48:10PM +0000, Christoph Niedermaier wrote:
+From: "Maciej W. Rozycki" <macro@codesourcery.com>
 
-> You are right, it has something do to with encryption on our mailing server.
-> I am in contact with our IT department to fix this issue.
-> Should I resend the patch when this issue is fixed?
+commit 935c2dbec4d6d3163ee8e7409996904a734ad89a upstream.
 
-This is already the second time you sent it today, the other time didn't
-have this problem.
+Implement the microMIPS encoding of the J instruction for the purpose of
+the static keys feature, fixing a crash early on in bootstrap as the
+kernel is unhappy seeing the ISA bit set in jump table entries.  Make
+sure the ISA bit correctly reflects the instruction encoding chosen for
+the kernel, 0 for the standard MIPS and 1 for the microMIPS encoding.
 
---N8ia4yKhAKKETby7
-Content-Type: application/pgp-signature; name="signature.asc"
+Also make sure the instruction to patch is a 32-bit NOP in the microMIPS
+mode as by default the 16-bit short encoding is assumed
 
------BEGIN PGP SIGNATURE-----
+Signed-off-by: Maciej W. Rozycki <macro@codesourcery.com>
+Cc: linux-mips@linux-mips.org
+Patchwork: https://patchwork.linux-mips.org/patch/8516/
+Signed-off-by: Ralf Baechle <ralf@linux-mips.org>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ arch/mips/include/asm/jump_label.h |  8 +++++-
+ arch/mips/kernel/jump_label.c      | 40 +++++++++++++++++++++++-------
+ 2 files changed, 38 insertions(+), 10 deletions(-)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzdiBIACgkQJNaLcl1U
-h9AWxAf9HlPgqvZTVahRW3CfddQctwPCo7feSgJDs9NW7GSx/CRLWlNpAXj+Bi0Q
-TO03hjqaSgez+yU/ptkYZDIy7Xh+G6R2O8BZ0avQGT/fv9YNa98pjGj6MJaClb0q
-6xgsDauTMzvAScwgc1h8YRXfNvkjb258SjxmYFwA0JcZZAeXORd15ZuvLB7RXau+
-Yv00Ru97EXjxK0qHKr/NWs5QJ4jPaSBqPKqWtzNC2sUndNz7/eUr3C4rdsGTXBXH
-/sBYUU/t8XT33fEA+Bl7Rlxc09DqJWek+V8t/O4sOtezxgKPFrOdEFt4ManISbX5
-tRXLJayyjQHV61ZRG+CbObjgh/UrPw==
-=BvsO
------END PGP SIGNATURE-----
+--- a/arch/mips/include/asm/jump_label.h
++++ b/arch/mips/include/asm/jump_label.h
+@@ -20,9 +20,15 @@
+ #define WORD_INSN ".word"
+ #endif
+ 
++#ifdef CONFIG_CPU_MICROMIPS
++#define NOP_INSN "nop32"
++#else
++#define NOP_INSN "nop"
++#endif
++
+ static __always_inline bool arch_static_branch(struct static_key *key)
+ {
+-	asm_volatile_goto("1:\tnop\n\t"
++	asm_volatile_goto("1:\t" NOP_INSN "\n\t"
+ 		"nop\n\t"
+ 		".pushsection __jump_table,  \"aw\"\n\t"
+ 		WORD_INSN " 1b, %l[l_yes], %0\n\t"
+--- a/arch/mips/kernel/jump_label.c
++++ b/arch/mips/kernel/jump_label.c
+@@ -18,31 +18,53 @@
+ 
+ #ifdef HAVE_JUMP_LABEL
+ 
+-#define J_RANGE_MASK ((1ul << 28) - 1)
++/*
++ * Define parameters for the standard MIPS and the microMIPS jump
++ * instruction encoding respectively:
++ *
++ * - the ISA bit of the target, either 0 or 1 respectively,
++ *
++ * - the amount the jump target address is shifted right to fit in the
++ *   immediate field of the machine instruction, either 2 or 1,
++ *
++ * - the mask determining the size of the jump region relative to the
++ *   delay-slot instruction, either 256MB or 128MB,
++ *
++ * - the jump target alignment, either 4 or 2 bytes.
++ */
++#define J_ISA_BIT	IS_ENABLED(CONFIG_CPU_MICROMIPS)
++#define J_RANGE_SHIFT	(2 - J_ISA_BIT)
++#define J_RANGE_MASK	((1ul << (26 + J_RANGE_SHIFT)) - 1)
++#define J_ALIGN_MASK	((1ul << J_RANGE_SHIFT) - 1)
+ 
+ void arch_jump_label_transform(struct jump_entry *e,
+ 			       enum jump_label_type type)
+ {
++	union mips_instruction *insn_p;
+ 	union mips_instruction insn;
+-	union mips_instruction *insn_p =
+-		(union mips_instruction *)(unsigned long)e->code;
+ 
+-	/* Jump only works within a 256MB aligned region of its delay slot. */
++	insn_p = (union mips_instruction *)msk_isa16_mode(e->code);
++
++	/* Jump only works within an aligned region its delay slot is in. */
+ 	BUG_ON((e->target & ~J_RANGE_MASK) != ((e->code + 4) & ~J_RANGE_MASK));
+ 
+-	/* Target must have 4 byte alignment. */
+-	BUG_ON((e->target & 3) != 0);
++	/* Target must have the right alignment and ISA must be preserved. */
++	BUG_ON((e->target & J_ALIGN_MASK) != J_ISA_BIT);
+ 
+ 	if (type == JUMP_LABEL_ENABLE) {
+-		insn.j_format.opcode = j_op;
+-		insn.j_format.target = (e->target & J_RANGE_MASK) >> 2;
++		insn.j_format.opcode = J_ISA_BIT ? mm_j32_op : j_op;
++		insn.j_format.target = e->target >> J_RANGE_SHIFT;
+ 	} else {
+ 		insn.word = 0; /* nop */
+ 	}
+ 
+ 	get_online_cpus();
+ 	mutex_lock(&text_mutex);
+-	*insn_p = insn;
++	if (IS_ENABLED(CONFIG_CPU_MICROMIPS)) {
++		insn_p->halfword[0] = insn.word >> 16;
++		insn_p->halfword[1] = insn.word;
++	} else
++		*insn_p = insn;
+ 
+ 	flush_icache_range((unsigned long)insn_p,
+ 			   (unsigned long)insn_p + sizeof(*insn_p));
 
---N8ia4yKhAKKETby7--
