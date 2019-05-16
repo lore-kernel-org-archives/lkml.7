@@ -2,215 +2,172 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86CDAC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AFC3C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60E2E20848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E05A20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:59:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558015169;
+	bh=RFfRkj/S4KV4Fd1JQnHQAGj9J+4M1vhBVJSUv6j92Eo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IjLSuIGpxY7/+yZXx3Exodp4u8dsMxBs5JDhgdvLZRgrrPMAyynZBrQzUyFQkgyas
+	 sVtrg3IlmNPXPFWxH3loQ3yQwRAcebdqryg+iLA0aZYzKdDgugsJO27QV7XMeSu3FB
+	 R/Gg7j08FCxqQZPK58D/ZmyGgQmKjZShCEIN57jc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfEPN7V (ORCPT
+        id S1727737AbfEPN72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:59:21 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41931 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfEPN7U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:59:20 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y22so3950485qtn.8
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 06:59:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4W8nxk4k4MVtLI1JLQcZmk+Bl22d4lanY5c6NY2cMcc=;
-        b=DmkA43B9CkQL+y3P1vzVmAEAnNg1wfPNSBKda4+XRL93DSG2FKGvwCQM0WHgnqSm7W
-         FpxREZgNBuQjMgqpAVgvPVS0Yl1TJgHLB+F5ZZQXMHld0c973ZlYJ7+qoxrw0wdWFRK8
-         9H54w6OgeXx0K1BQ0OlZ//CItCvIicxlI+fuXphpdAoXfcF/Envif6qo4Seea9ko5sIs
-         Eb9EERtlLMcrUJx1W2jWlQ3950CmRU+bMauY39wdm0FBOpEdIy3QArAsC26XvwFpkL5u
-         DLOz3b66bUWfuwS46Mi1RwjxV3OxdnyHaaI98/rhutjEz9JEYUyelBhIhI66N6QDNYhR
-         4ECA==
-X-Gm-Message-State: APjAAAWPYDwz5LPkIbi6hm2+fOBWW8R7VuSjK6YU8FIRJO4Mw+2uOw2i
-        KxUen+/AECcdGMhiG3jImjWfLg==
-X-Google-Smtp-Source: APXvYqwNqjWbg9ip//OmA0nM3GR5PQZt9aCGRYqOitDJVOvfxjGNt2YWHJMFjse5jwjGBTbN3j6Jnw==
-X-Received: by 2002:a0c:fe48:: with SMTP id u8mr39012393qvs.234.1558015159428;
-        Thu, 16 May 2019 06:59:19 -0700 (PDT)
-Received: from redhat.com ([185.54.206.10])
-        by smtp.gmail.com with ESMTPSA id o37sm3676500qta.86.2019.05.16.06.59.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 16 May 2019 06:59:18 -0700 (PDT)
-Date:   Thu, 16 May 2019 09:59:09 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Pankaj Gupta <pagupta@redhat.com>, linux-nvdimm@lists.01.org,
-        linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        qemu-devel@nongnu.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, dan.j.williams@intel.com,
-        zwisler@kernel.org, vishal.l.verma@intel.com, dave.jiang@intel.com,
-        jasowang@redhat.com, willy@infradead.org, rjw@rjwysocki.net,
-        hch@infradead.org, lenb@kernel.org, jack@suse.cz, tytso@mit.edu,
-        adilger.kernel@dilger.ca, darrick.wong@oracle.com,
-        lcapitulino@redhat.com, kwolf@redhat.com, imammedo@redhat.com,
-        jmoyer@redhat.com, nilal@redhat.com, riel@surriel.com,
-        stefanha@redhat.com, aarcange@redhat.com, david@fromorbit.com,
-        cohuck@redhat.com, xiaoguangrong.eric@gmail.com,
-        pbonzini@redhat.com, kilobyte@angband.pl, yuval.shaia@oracle.com,
-        jstaron@google.com
-Subject: Re: [PATCH v9 2/7] virtio-pmem: Add virtio pmem driver
-Message-ID: <20190516095618-mutt-send-email-mst@kernel.org>
-References: <20190514145422.16923-1-pagupta@redhat.com>
- <20190514145422.16923-3-pagupta@redhat.com>
- <9f6b1d8e-ef90-7d8b-56da-61a426953ba3@redhat.com>
+        Thu, 16 May 2019 09:59:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36586 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727709AbfEPN70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:59:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 52070AC8D;
+        Thu, 16 May 2019 13:59:24 +0000 (UTC)
+Date:   Thu, 16 May 2019 15:59:23 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc:     Jiri Slaby <jslaby@suse.cz>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        cgroups@vger.kernel.org,
+        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
+Subject: Re: [PATCH] memcg: make it work on sparse non-0-node systems
+Message-ID: <20190516135923.GV16651@dhcp22.suse.cz>
+References: <359d98e6-044a-7686-8522-bdd2489e9456@suse.cz>
+ <20190429105939.11962-1-jslaby@suse.cz>
+ <20190509122526.ck25wscwanooxa3t@esperanza>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9f6b1d8e-ef90-7d8b-56da-61a426953ba3@redhat.com>
+In-Reply-To: <20190509122526.ck25wscwanooxa3t@esperanza>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 15, 2019 at 10:46:00PM +0200, David Hildenbrand wrote:
-> > +	vpmem->vdev = vdev;
-> > +	vdev->priv = vpmem;
-> > +	err = init_vq(vpmem);
-> > +	if (err) {
-> > +		dev_err(&vdev->dev, "failed to initialize virtio pmem vq's\n");
-> > +		goto out_err;
-> > +	}
-> > +
-> > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-> > +			start, &vpmem->start);
-> > +	virtio_cread(vpmem->vdev, struct virtio_pmem_config,
-> > +			size, &vpmem->size);
-> > +
-> > +	res.start = vpmem->start;
-> > +	res.end   = vpmem->start + vpmem->size-1;
+On Thu 09-05-19 15:25:26, Vladimir Davydov wrote:
+> On Mon, Apr 29, 2019 at 12:59:39PM +0200, Jiri Slaby wrote:
+> > We have a single node system with node 0 disabled:
+> >   Scanning NUMA topology in Northbridge 24
+> >   Number of physical nodes 2
+> >   Skipping disabled node 0
+> >   Node 1 MemBase 0000000000000000 Limit 00000000fbff0000
+> >   NODE_DATA(1) allocated [mem 0xfbfda000-0xfbfeffff]
+> > 
+> > This causes crashes in memcg when system boots:
+> >   BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
+> >   #PF error: [normal kernel read fault]
+> > ...
+> >   RIP: 0010:list_lru_add+0x94/0x170
+> > ...
+> >   Call Trace:
+> >    d_lru_add+0x44/0x50
+> >    dput.part.34+0xfc/0x110
+> >    __fput+0x108/0x230
+> >    task_work_run+0x9f/0xc0
+> >    exit_to_usermode_loop+0xf5/0x100
+> > 
+> > It is reproducible as far as 4.12. I did not try older kernels. You have
+> > to have a new enough systemd, e.g. 241 (the reason is unknown -- was not
+> > investigated). Cannot be reproduced with systemd 234.
+> > 
+> > The system crashes because the size of lru array is never updated in
+> > memcg_update_all_list_lrus and the reads are past the zero-sized array,
+> > causing dereferences of random memory.
+> > 
+> > The root cause are list_lru_memcg_aware checks in the list_lru code.
+> > The test in list_lru_memcg_aware is broken: it assumes node 0 is always
+> > present, but it is not true on some systems as can be seen above.
+> > 
+> > So fix this by checking the first online node instead of node 0.
+> > 
+> > Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> > Cc: Johannes Weiner <hannes@cmpxchg.org>
+> > Cc: Michal Hocko <mhocko@kernel.org>
+> > Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> > Cc: <cgroups@vger.kernel.org>
+> > Cc: <linux-mm@kvack.org>
+> > Cc: Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
+> > ---
+> >  mm/list_lru.c | 6 +-----
+> >  1 file changed, 1 insertion(+), 5 deletions(-)
+> > 
+> > diff --git a/mm/list_lru.c b/mm/list_lru.c
+> > index 0730bf8ff39f..7689910f1a91 100644
+> > --- a/mm/list_lru.c
+> > +++ b/mm/list_lru.c
+> > @@ -37,11 +37,7 @@ static int lru_shrinker_id(struct list_lru *lru)
+> >  
+> >  static inline bool list_lru_memcg_aware(struct list_lru *lru)
+> >  {
+> > -	/*
+> > -	 * This needs node 0 to be always present, even
+> > -	 * in the systems supporting sparse numa ids.
+> > -	 */
+> > -	return !!lru->node[0].memcg_lrus;
+> > +	return !!lru->node[first_online_node].memcg_lrus;
+> >  }
+> >  
+> >  static inline struct list_lru_one *
 > 
-> nit: " - 1;"
+> Yep, I didn't expect node 0 could ever be unavailable, my bad.
+> The patch looks fine to me:
 > 
-> > +	vpmem->nd_desc.provider_name = "virtio-pmem";
-> > +	vpmem->nd_desc.module = THIS_MODULE;
-> > +
-> > +	vpmem->nvdimm_bus = nvdimm_bus_register(&vdev->dev,
-> > +						&vpmem->nd_desc);
-> > +	if (!vpmem->nvdimm_bus) {
-> > +		dev_err(&vdev->dev, "failed to register device with nvdimm_bus\n");
-> > +		err = -ENXIO;
-> > +		goto out_vq;
-> > +	}
-> > +
-> > +	dev_set_drvdata(&vdev->dev, vpmem->nvdimm_bus);
-> > +
-> > +	ndr_desc.res = &res;
-> > +	ndr_desc.numa_node = nid;
-> > +	ndr_desc.flush = async_pmem_flush;
-> > +	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-> > +	set_bit(ND_REGION_ASYNC, &ndr_desc.flags);
-> > +	nd_region = nvdimm_pmem_region_create(vpmem->nvdimm_bus, &ndr_desc);
-> > +	if (!nd_region) {
-> > +		dev_err(&vdev->dev, "failed to create nvdimm region\n");
-> > +		err = -ENXIO;
-> > +		goto out_nd;
-> > +	}
-> > +	nd_region->provider_data = dev_to_virtio(nd_region->dev.parent->parent);
-> > +	return 0;
-> > +out_nd:
-> > +	nvdimm_bus_unregister(vpmem->nvdimm_bus);
-> > +out_vq:
-> > +	vdev->config->del_vqs(vdev);
-> > +out_err:
-> > +	return err;
-> > +}
-> > +
-> > +static void virtio_pmem_remove(struct virtio_device *vdev)
-> > +{
-> > +	struct nvdimm_bus *nvdimm_bus = dev_get_drvdata(&vdev->dev);
-> > +
-> > +	nvdimm_bus_unregister(nvdimm_bus);
-> > +	vdev->config->del_vqs(vdev);
-> > +	vdev->config->reset(vdev);
-> > +}
-> > +
-> > +static struct virtio_driver virtio_pmem_driver = {
-> > +	.driver.name		= KBUILD_MODNAME,
-> > +	.driver.owner		= THIS_MODULE,
-> > +	.id_table		= id_table,
-> > +	.probe			= virtio_pmem_probe,
-> > +	.remove			= virtio_pmem_remove,
-> > +};
-> > +
-> > +module_virtio_driver(virtio_pmem_driver);
-> > +MODULE_DEVICE_TABLE(virtio, id_table);
-> > +MODULE_DESCRIPTION("Virtio pmem driver");
-> > +MODULE_LICENSE("GPL");
-> > diff --git a/drivers/nvdimm/virtio_pmem.h b/drivers/nvdimm/virtio_pmem.h
-> > new file mode 100644
-> > index 000000000000..ab1da877575d
-> > --- /dev/null
-> > +++ b/drivers/nvdimm/virtio_pmem.h
-> > @@ -0,0 +1,60 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * virtio_pmem.h: virtio pmem Driver
-> > + *
-> > + * Discovers persistent memory range information
-> > + * from host and provides a virtio based flushing
-> > + * interface.
-> > + **/
-> > +
-> > +#ifndef _LINUX_VIRTIO_PMEM_H
-> > +#define _LINUX_VIRTIO_PMEM_H
-> > +
-> > +#include <linux/virtio_ids.h>
-> > +#include <linux/module.h>
-> > +#include <linux/virtio_config.h>
-> > +#include <uapi/linux/virtio_pmem.h>
-> > +#include <linux/libnvdimm.h>
-> > +#include <linux/spinlock.h>
-> > +
-> > +struct virtio_pmem_request {
-> > +	/* Host return status corresponding to flush request */
-> > +	int ret;
-> > +
-> > +	/* command name*/
-> > +	char name[16];
+> Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
 > 
-> So ... why are we sending string commands and expect native-endianess
-> integers and don't define a proper request/response structure + request
-> types in include/uapi/linux/virtio_pmem.h like
+> However, I tend to agree with Michal that (ab)using node[0].memcg_lrus
+> to check if a list_lru is memcg aware looks confusing. I guess we could
+> simply add a bool flag to list_lru instead. Something like this, may be:
 
-passing names could be ok.
-I missed the fact we return a native endian int.
-Pls fix that.
-
+Yes, this makes much more sense to me!
 
 > 
-> struct virtio_pmem_resp {
-> 	__virtio32 ret;
-> }
-> 
-> #define VIRTIO_PMEM_REQ_TYPE_FLUSH	1
-> struct virtio_pmem_req {
-> 	__virtio16 type;
-> }
-> 
-> ... and this way we also define a proper endianess format for exchange
-> and keep it extensible
-> 
-> @MST, what's your take on this?
+> diff --git a/include/linux/list_lru.h b/include/linux/list_lru.h
+> index aa5efd9351eb..d5ceb2839a2d 100644
+> --- a/include/linux/list_lru.h
+> +++ b/include/linux/list_lru.h
+> @@ -54,6 +54,7 @@ struct list_lru {
+>  #ifdef CONFIG_MEMCG_KMEM
+>  	struct list_head	list;
+>  	int			shrinker_id;
+> +	bool			memcg_aware;
+>  #endif
+>  };
+>  
+> diff --git a/mm/list_lru.c b/mm/list_lru.c
+> index 0730bf8ff39f..8e605e40a4c6 100644
+> --- a/mm/list_lru.c
+> +++ b/mm/list_lru.c
+> @@ -37,11 +37,7 @@ static int lru_shrinker_id(struct list_lru *lru)
+>  
+>  static inline bool list_lru_memcg_aware(struct list_lru *lru)
+>  {
+> -	/*
+> -	 * This needs node 0 to be always present, even
+> -	 * in the systems supporting sparse numa ids.
+> -	 */
+> -	return !!lru->node[0].memcg_lrus;
+> +	return lru->memcg_aware;
+>  }
+>  
+>  static inline struct list_lru_one *
+> @@ -451,6 +447,7 @@ static int memcg_init_list_lru(struct list_lru *lru, bool memcg_aware)
+>  {
+>  	int i;
+>  
+> +	lru->memcg_aware = memcg_aware;
+>  	if (!memcg_aware)
+>  		return 0;
+>  
 
-Extensions can always use feature bits so I don't think
-it's a problem.
-
-> 
-> -- 
-> 
-> Thanks,
-> 
-> David / dhildenb
+-- 
+Michal Hocko
+SUSE Labs
