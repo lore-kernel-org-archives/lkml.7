@@ -2,112 +2,282 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B786C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAD3C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67368205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:40:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NpShI3pR"
+	by mail.kernel.org (Postfix) with ESMTP id 8C4E4205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:46:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbfEPIkW (ORCPT
+        id S1726707AbfEPIqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 04:40:22 -0400
-Received: from mail-pg1-f181.google.com ([209.85.215.181]:37304 "EHLO
-        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfEPIkW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 04:40:22 -0400
-Received: by mail-pg1-f181.google.com with SMTP id e6so1218167pgc.4
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 01:40:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=qucPwOXzUMdB8r6/rIr/ipDc05rKwLATQUHRFg3Vz7U=;
-        b=NpShI3pRzuxbiGHz/d+EKq6zUIrgrBqPjOZAwy8KzM10VagyYAl+zLLvoMBbnrPgoE
-         G6KMXtBOWXklBi5FSMubHLq6K2q54xj9XSDxtGRpd0y8JdWz9pV6QVtmkaGFtCgExh4P
-         uqiU1AWPumgrkdD8scx4SZhel6sFrKnw+QB8/LgtCujdnb3dB8dlH2bmmt0qRPx2v6sa
-         i1g093NHAoqrDAXNgxvodhOqpoIEWDGsFdn1H018goLxrUL0z8rutu6AwWurg/JasLb8
-         jKNqKrUMZiXYvhUXgCn33NUdQOxk4YcHqinAeDIBA8ARisD/D2HN7VzhOwTYq21OdbIz
-         CHNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=qucPwOXzUMdB8r6/rIr/ipDc05rKwLATQUHRFg3Vz7U=;
-        b=RUGAUFpmd3U0SA8WjjB5Di2qo4Q9UVu1PHXPdFmlUYUlxZspwf8A8weOerrDN4zGXQ
-         v7Shl2kHbwCtSYw9cpdRjFwqJZWW5dClSOgoVT+pIks3Rgko7A99+j0v5/x1r5yXTP3H
-         fnx2Nb3QNxCG9VYeae/WW27ifkVXh/jBMCFv3CQ1AbdSvNfsX9W1ASe7E0IHDpK3PICY
-         STmty6wLG5tyg9bTRN5sIJrcn1eNMJ/7dAMwGcexRazU6O/qigCUClLjDkxL0qk1f9/z
-         PrHJ1ZY6MciIwSKUkAlv3haPzs2K1tmY3p7VxC6QDOrbeLupKsY0fPV1MuQxXVl5j3FV
-         SyDQ==
-X-Gm-Message-State: APjAAAU3uMS9x0mrbhkCc4QGqMlQsId5Cqo0AHdkb3qvD1W9nks61Zxf
-        A0GMtwxWbvil6FToAyr8KZU=
-X-Google-Smtp-Source: APXvYqz9+WWctldPXr83wGxtrfi84sPH9dqWXGoaWfejzpIreuG0ooNmjc3VRGcuYIChuYpHM8t2YQ==
-X-Received: by 2002:a63:db4e:: with SMTP id x14mr33465425pgi.119.1557996021480;
-        Thu, 16 May 2019 01:40:21 -0700 (PDT)
-Received: from zhanggen-UX430UQ ([66.42.35.75])
-        by smtp.gmail.com with ESMTPSA id 63sm6072791pfu.95.2019.05.16.01.40.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 01:40:20 -0700 (PDT)
-Date:   Thu, 16 May 2019 16:40:03 +0800
-From:   Gen Zhang <blackgod016574@gmail.com>
-To:     perex@perex.cz, tiwai@suse.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [Patch] hdac_sysfs: Fix a memory leaking bug in
- sound/hda/hdac_sysfs.c file of Linux 5.1
-Message-ID: <20190516084003.GA20821@zhanggen-UX430UQ>
+        Thu, 16 May 2019 04:46:38 -0400
+Received: from mga06.intel.com ([134.134.136.31]:23525 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726352AbfEPIqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 04:46:38 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 01:46:36 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga003.jf.intel.com with ESMTP; 16 May 2019 01:46:33 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hRC23-0000bu-Ua; Thu, 16 May 2019 11:46:31 +0300
+Date:   Thu, 16 May 2019 11:46:31 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kirti Wankhede <kwankhede@nvidia.com>,
+        Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH] vfio-mdev/samples: make some symbols static
+Message-ID: <20190516084631.GX9224@smile.fi.intel.com>
+References: <20190516015526.141404-1-wangkefeng.wang@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190516015526.141404-1-wangkefeng.wang@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree->root and tree->nodes are allocated by memory allocation 
-functions. And tree is also an allocated memory. When allocation of 
-tree->root and tree->nodes fails, not freeing tree will leak memory. 
-Thus we should free tree in this situation.
+On Thu, May 16, 2019 at 09:55:26AM +0800, Kefeng Wang wrote:
+> Make some structs and functions static to fix build warning, parts of
+> warning shown below,
+> 
+> amples/vfio-mdev/mtty.c:730:5: warning: symbol 'mtty_create' was not declared. Should it be static?
+> samples/vfio-mdev/mtty.c:780:5: warning: symbol 'mtty_remove' was not declared. Should it be static?
+> samples/vfio-mdev/mtty.c:802:5: warning: symbol 'mtty_reset' was not declared. Should it be static?
+> samples/vfio-mdev/mtty.c:818:9: warning: symbol 'mtty_read' was not declared. Should it be static?
+> samples/vfio-mdev/mtty.c:877:9: warning: symbol 'mtty_write' was not declared. Should it be static?
+> samples/vfio-mdev/mtty.c:1070:5: warning: symbol 'mtty_get_region_info' was not declared. Should it be static?
+> samples/vfio-mdev/mtty.c:1119:5: warning: symbol 'mtty_get_irq_info' was not declared. Should it be static?
+> samples/vfio-mdev/mtty.c:1143:5: warning: symbol 'mtty_get_device_info' was not declared. Should it be static?
+> samples/vfio-mdev/mtty.c:1275:5: warning: symbol 'mtty_open' was not declared. Should it be static?
+> samples/vfio-mdev/mtty.c:1281:6: warning: symbol 'mtty_close' was not declared. Should it be static?
+> samples/vfio-mdev/mtty.c:1305:30: warning: symbol 'mtty_dev_groups' was not declared. Should it be static?
+> 
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+FWIW,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
----
-diff --git a/sound/hda/hdac_sysfs.c b/sound/hda/hdac_sysfs.c
-index fb2aa34..5d8a939 100644
---- a/sound/hda/hdac_sysfs.c
-+++ b/sound/hda/hdac_sysfs.c
-@@ -370,12 +370,12 @@ static int widget_tree_create(struct hdac_device *codec)
- 
- 	tree->root = kobject_create_and_add("widgets", &codec->dev.kobj);
- 	if (!tree->root)
--		return -ENOMEM;
-+		goto free_tree;
- 
- 	tree->nodes = kcalloc(codec->num_nodes + 1, sizeof(*tree->nodes),
- 			      GFP_KERNEL);
- 	if (!tree->nodes)
--		return -ENOMEM;
-+		goto free_tree;
- 
- 	for (i = 0, nid = codec->start_nid; i < codec->num_nodes; i++, nid++) {
- 		err = add_widget_node(tree->root, nid, &widget_node_group,
-@@ -393,6 +393,9 @@ static int widget_tree_create(struct hdac_device *codec)
- 
- 	kobject_uevent(tree->root, KOBJ_CHANGE);
- 	return 0;
-+free_tree:
-+	kfree(tree);
-+	return -ENOMEM;
- }
- 
- int hda_widget_sysfs_init(struct hdac_device *codec)
----
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Kirti Wankhede <kwankhede@nvidia.com>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+>  samples/vfio-mdev/mtty.c | 44 ++++++++++++++++++++--------------------
+>  1 file changed, 22 insertions(+), 22 deletions(-)
+> 
+> diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
+> index 1c77c370c92f..880eeac0c7c9 100644
+> --- a/samples/vfio-mdev/mtty.c
+> +++ b/samples/vfio-mdev/mtty.c
+> @@ -72,7 +72,7 @@
+>   * Global Structures
+>   */
+>  
+> -struct mtty_dev {
+> +static struct mtty_dev {
+>  	dev_t		vd_devt;
+>  	struct class	*vd_class;
+>  	struct cdev	vd_cdev;
+> @@ -88,7 +88,7 @@ struct mdev_region_info {
+>  };
+>  
+>  #if defined(DEBUG_REGS)
+> -const char *wr_reg[] = {
+> +static const char *wr_reg[] = {
+>  	"TX",
+>  	"IER",
+>  	"FCR",
+> @@ -99,7 +99,7 @@ const char *wr_reg[] = {
+>  	"SCR"
+>  };
+>  
+> -const char *rd_reg[] = {
+> +static const char *rd_reg[] = {
+>  	"RX",
+>  	"IER",
+>  	"IIR",
+> @@ -147,8 +147,8 @@ struct mdev_state {
+>  	int nr_ports;
+>  };
+>  
+> -struct mutex mdev_list_lock;
+> -struct list_head mdev_devices_list;
+> +static struct mutex mdev_list_lock;
+> +static struct list_head mdev_devices_list;
+>  
+>  static const struct file_operations vd_fops = {
+>  	.owner          = THIS_MODULE,
+> @@ -171,7 +171,7 @@ static struct mdev_state *find_mdev_state_by_uuid(const guid_t *uuid)
+>  	return NULL;
+>  }
+>  
+> -void dump_buffer(u8 *buf, uint32_t count)
+> +static void dump_buffer(u8 *buf, uint32_t count)
+>  {
+>  #if defined(DEBUG)
+>  	int i;
+> @@ -727,7 +727,7 @@ static ssize_t mdev_access(struct mdev_device *mdev, u8 *buf, size_t count,
+>  	return ret;
+>  }
+>  
+> -int mtty_create(struct kobject *kobj, struct mdev_device *mdev)
+> +static int mtty_create(struct kobject *kobj, struct mdev_device *mdev)
+>  {
+>  	struct mdev_state *mdev_state;
+>  	char name[MTTY_STRING_LEN];
+> @@ -777,7 +777,7 @@ int mtty_create(struct kobject *kobj, struct mdev_device *mdev)
+>  	return 0;
+>  }
+>  
+> -int mtty_remove(struct mdev_device *mdev)
+> +static int mtty_remove(struct mdev_device *mdev)
+>  {
+>  	struct mdev_state *mds, *tmp_mds;
+>  	struct mdev_state *mdev_state = mdev_get_drvdata(mdev);
+> @@ -799,7 +799,7 @@ int mtty_remove(struct mdev_device *mdev)
+>  	return ret;
+>  }
+>  
+> -int mtty_reset(struct mdev_device *mdev)
+> +static int mtty_reset(struct mdev_device *mdev)
+>  {
+>  	struct mdev_state *mdev_state;
+>  
+> @@ -815,7 +815,7 @@ int mtty_reset(struct mdev_device *mdev)
+>  	return 0;
+>  }
+>  
+> -ssize_t mtty_read(struct mdev_device *mdev, char __user *buf, size_t count,
+> +static ssize_t mtty_read(struct mdev_device *mdev, char __user *buf, size_t count,
+>  		  loff_t *ppos)
+>  {
+>  	unsigned int done = 0;
+> @@ -874,7 +874,7 @@ ssize_t mtty_read(struct mdev_device *mdev, char __user *buf, size_t count,
+>  	return -EFAULT;
+>  }
+>  
+> -ssize_t mtty_write(struct mdev_device *mdev, const char __user *buf,
+> +static ssize_t mtty_write(struct mdev_device *mdev, const char __user *buf,
+>  		   size_t count, loff_t *ppos)
+>  {
+>  	unsigned int done = 0;
+> @@ -1067,7 +1067,7 @@ static int mtty_trigger_interrupt(const guid_t *uuid)
+>  	return ret;
+>  }
+>  
+> -int mtty_get_region_info(struct mdev_device *mdev,
+> +static int mtty_get_region_info(struct mdev_device *mdev,
+>  			 struct vfio_region_info *region_info,
+>  			 u16 *cap_type_id, void **cap_type)
+>  {
+> @@ -1116,7 +1116,7 @@ int mtty_get_region_info(struct mdev_device *mdev,
+>  	return 0;
+>  }
+>  
+> -int mtty_get_irq_info(struct mdev_device *mdev, struct vfio_irq_info *irq_info)
+> +static int mtty_get_irq_info(struct mdev_device *mdev, struct vfio_irq_info *irq_info)
+>  {
+>  	switch (irq_info->index) {
+>  	case VFIO_PCI_INTX_IRQ_INDEX:
+> @@ -1140,7 +1140,7 @@ int mtty_get_irq_info(struct mdev_device *mdev, struct vfio_irq_info *irq_info)
+>  	return 0;
+>  }
+>  
+> -int mtty_get_device_info(struct mdev_device *mdev,
+> +static int mtty_get_device_info(struct mdev_device *mdev,
+>  			 struct vfio_device_info *dev_info)
+>  {
+>  	dev_info->flags = VFIO_DEVICE_FLAGS_PCI;
+> @@ -1272,13 +1272,13 @@ static long mtty_ioctl(struct mdev_device *mdev, unsigned int cmd,
+>  	return -ENOTTY;
+>  }
+>  
+> -int mtty_open(struct mdev_device *mdev)
+> +static int mtty_open(struct mdev_device *mdev)
+>  {
+>  	pr_info("%s\n", __func__);
+>  	return 0;
+>  }
+>  
+> -void mtty_close(struct mdev_device *mdev)
+> +static void mtty_close(struct mdev_device *mdev)
+>  {
+>  	pr_info("%s\n", __func__);
+>  }
+> @@ -1302,7 +1302,7 @@ static const struct attribute_group mtty_dev_group = {
+>  	.attrs = mtty_dev_attrs,
+>  };
+>  
+> -const struct attribute_group *mtty_dev_groups[] = {
+> +static const struct attribute_group *mtty_dev_groups[] = {
+>  	&mtty_dev_group,
+>  	NULL,
+>  };
+> @@ -1329,7 +1329,7 @@ static const struct attribute_group mdev_dev_group = {
+>  	.attrs = mdev_dev_attrs,
+>  };
+>  
+> -const struct attribute_group *mdev_dev_groups[] = {
+> +static const struct attribute_group *mdev_dev_groups[] = {
+>  	&mdev_dev_group,
+>  	NULL,
+>  };
+> @@ -1351,7 +1351,7 @@ name_show(struct kobject *kobj, struct device *dev, char *buf)
+>  	return -EINVAL;
+>  }
+>  
+> -MDEV_TYPE_ATTR_RO(name);
+> +static MDEV_TYPE_ATTR_RO(name);
+>  
+>  static ssize_t
+>  available_instances_show(struct kobject *kobj, struct device *dev, char *buf)
+> @@ -1379,7 +1379,7 @@ available_instances_show(struct kobject *kobj, struct device *dev, char *buf)
+>  	return sprintf(buf, "%d\n", (MAX_MTTYS - used)/ports);
+>  }
+>  
+> -MDEV_TYPE_ATTR_RO(available_instances);
+> +static MDEV_TYPE_ATTR_RO(available_instances);
+>  
+>  
+>  static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
+> @@ -1388,7 +1388,7 @@ static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
+>  	return sprintf(buf, "%s\n", VFIO_DEVICE_API_PCI_STRING);
+>  }
+>  
+> -MDEV_TYPE_ATTR_RO(device_api);
+> +static MDEV_TYPE_ATTR_RO(device_api);
+>  
+>  static struct attribute *mdev_types_attrs[] = {
+>  	&mdev_type_attr_name.attr,
+> @@ -1407,7 +1407,7 @@ static struct attribute_group mdev_type_group2 = {
+>  	.attrs = mdev_types_attrs,
+>  };
+>  
+> -struct attribute_group *mdev_type_groups[] = {
+> +static struct attribute_group *mdev_type_groups[] = {
+>  	&mdev_type_group1,
+>  	&mdev_type_group2,
+>  	NULL,
+> -- 
+> 2.20.1
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
