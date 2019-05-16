@@ -2,168 +2,102 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0D8AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783D7C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA70720815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B4020815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727559AbfEPNWS (ORCPT
+        id S1727580AbfEPNWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:22:18 -0400
-Received: from foss.arm.com ([217.140.101.70]:45514 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726623AbfEPNWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:22:18 -0400
+        Thu, 16 May 2019 09:22:23 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45536 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726623AbfEPNWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:22:23 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A51931715;
-        Thu, 16 May 2019 06:22:17 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B4EF3F703;
-        Thu, 16 May 2019 06:22:15 -0700 (PDT)
-Date:   Thu, 16 May 2019 14:22:08 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Amit Kucheria <amit.kucheria@linaro.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
-Message-ID: <20190516132208.GA22096@e107155-lin>
-References: <20190114184255.258318-1-mka@chromium.org>
- <CAHLCerP+F9AP97+qVCMqwu-OMJXRhwZrXd33Wk-vj5eyyw-KyA@mail.gmail.com>
- <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHLCerPZ0Y-rkeMa_7BJWtR4g5af2vwfPY9FgOuvpUTJG3rf7g@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAA2D1715;
+        Thu, 16 May 2019 06:22:22 -0700 (PDT)
+Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.108])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A2993F703;
+        Thu, 16 May 2019 06:22:21 -0700 (PDT)
+From:   Raphael Gault <raphael.gault@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, acme@kernel.org, mark.rutland@arm.com,
+        Raphael Gault <raphael.gault@arm.com>
+Subject: [RFC 0/6] arm64: Enable access to pmu registers by user-space
+Date:   Thu, 16 May 2019 14:21:42 +0100
+Message-Id: <20190516132148.10085-1-raphael.gault@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 13, 2019 at 05:24:12PM +0530, Amit Kucheria wrote:
-> On Mon, May 13, 2019 at 4:31 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
-> >
-> > On Tue, Jan 15, 2019 at 12:13 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> > >
-> > > The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
-> > > ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
-> > > that describes this topology.
-> >
-> > This is partly true. There are two groups of gold and silver cores,
-> > but AFAICT they are in a single cluster, not two separate ones. SDM845
-> > is one of the early examples of ARM's Dynamiq architecture.
-> >
-> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> >
-> > I noticed that this patch sneaked through for this merge window but
-> > perhaps we can whip up a quick fix for -rc2?
-> >
-> 
-> And please find attached a patch to fix this up. Andy, since this
-> hasn't landed yet (can we still squash this into the original patch?),
-> I couldn't add a Fixes tag.
-> 
-> Regards,
-> Amit
-> 
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 38 ++++++++++++++++++++++++++++
-> > >  1 file changed, 38 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > index c27cbd3bcb0a6..f6c0d87e663f3 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > @@ -192,6 +192,44 @@
-> > >                                 next-level-cache = <&L3_0>;
-> > >                         };
-> > >                 };
-> > > +
-> > > +               cpu-map {
-> > > +                       cluster0 {
-> > > +                               core0 {
-> > > +                                       cpu = <&CPU0>;
-> > > +                               };
-> > > +
-> > > +                               core1 {
-> > > +                                       cpu = <&CPU1>;
-> > > +                               };
-> > > +
-> > > +                               core2 {
-> > > +                                       cpu = <&CPU2>;
-> > > +                               };
-> > > +
-> > > +                               core3 {
-> > > +                                       cpu = <&CPU3>;
-> > > +                               };
-> > > +                       };
-> > > +
-> > > +                       cluster1 {
-> >
-> > This shouldn't exist.
-> >
-> > > +                               core0 {
-> >
-> > Rename to core4, 5, etc...
-> >
-> > > +                                       cpu = <&CPU4>;
-> > > +                               };
-> > > +
-> > > +                               core1 {
-> > > +                                       cpu = <&CPU5>;
-> > > +                               };
-> > > +
-> > > +                               core2 {
-> > > +                                       cpu = <&CPU6>;
-> > > +                               };
-> > > +
-> > > +                               core3 {
-> > > +                                       cpu = <&CPU7>;
-> > > +                               };
-> > > +                       };
-> > > +               };
-> > >         };
-> > >
-> > >         pmu {
-> > > --
-> > > 2.20.1.97.g81188d93c3-goog
-> > >
+The perf user-space tool relies on the PMU to monitor events. It offers an
+abstraction layer over the hardware counters since the underlying
+implementation is cpu-dependent. We want to allow userspace tools to have
+access to the registers storing the hardware counters' values directly.
+This targets specifically self-monitoring tasks in order to reduce the
+overhead by directly accessing the registers without having to go
+through the kernel.
+In order to do this we need to setup the pmu so that it exposes its registers
+to userspace access.
 
-> From 9e7d60bcabad7594a1da43982bbc9fda04669717 Mon Sep 17 00:00:00 2001
-> Message-Id: <9e7d60bcabad7594a1da43982bbc9fda04669717.1557748437.git.amit.kucheria@linaro.org>
-> From: Amit Kucheria <amit.kucheria@linaro.org>
-> Date: Mon, 13 May 2019 17:08:33 +0530
-> Subject: [PATCH] arm64: dts: sdm845: Fix up CPU topology
-> 
-> SDM845 implements ARM's Dynamiq architecture that allows the big and
-> LITTLE cores to exist in a single cluster sharing the L3 cache.
-> 
-> Fix the cpu-map to put all cpus into a single cluster.
->
+The first patch enables the tests for arm64 architecture in the perf
+tool to be compiled systematically.
 
-Thanks for noticing and fixing this. I always mentioned this should
-never land in mainline when Arm suggested this as hack/workaround
-but it has unfortunately.
+The second patch add a test to the perf tool so that we can test that the
+access to the registers works correctly from userspace.
 
-FWIW,
+The third patch focuses on the armv8 pmuv3 PMU support and makes sure that
+the access to the pmu registers is enable and that the userspace have
+access to the relevent information in order to use them.
 
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+The fourth patch adds a hook to handle faulting access to the pmu
+registers. This is necessary in order to have a coherent behaviour
+on big.LITTLE environment.
 
---
-Regards,
-Sudeep
+The fifth patch put in place callbacks to enable access to the hardware
+counters from userspace when a compatible event is opened using the perf
+API.
+
+Note:
+This series is applied on top of this patch (already acked):
+https://patchwork.kernel.org/patch/10896407/
+
+*** BLURB HERE ***
+
+Raphael Gault (6):
+  perf: arm64: Compile tests unconditionally
+  perf: arm64: Add test to check userspace access to hardware counters.
+  arm64: pmu: Add function implementation to update event index in
+    userpage.
+  arm64: pmu: Add hook to handle pmu-related undefined instructions
+  arm64: perf: Enable pmu counter direct access for perf event on armv8
+  Documentation: arm64: Document PMU counters access from userspace
+
+ .../arm64/pmu_counter_user_access.txt         |  42 +++
+ arch/arm64/include/asm/mmu.h                  |   6 +
+ arch/arm64/include/asm/mmu_context.h          |   2 +
+ arch/arm64/include/asm/perf_event.h           |  14 +
+ arch/arm64/kernel/perf_event.c                |  72 +++++
+ drivers/perf/arm_pmu.c                        |  48 ++++
+ include/linux/perf/arm_pmu.h                  |   2 +
+ tools/perf/arch/arm64/Build                   |   2 +-
+ tools/perf/arch/arm64/include/arch-tests.h    |   6 +
+ tools/perf/arch/arm64/tests/Build             |   3 +-
+ tools/perf/arch/arm64/tests/arch-tests.c      |   4 +
+ tools/perf/arch/arm64/tests/user-events.c     | 255 ++++++++++++++++++
+ 12 files changed, 454 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/arm64/pmu_counter_user_access.txt
+ create mode 100644 tools/perf/arch/arm64/tests/user-events.c
+
+-- 
+2.17.1
+
