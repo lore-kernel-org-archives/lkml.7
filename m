@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BF6C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AED1C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C124020818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCBB120862
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 09:02:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbfEPJCw (ORCPT
+        id S1727266AbfEPJC7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 05:02:52 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:31646 "EHLO
+        Thu, 16 May 2019 05:02:59 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:2422 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726503AbfEPJCu (ORCPT
+        with ESMTP id S1727176AbfEPJCu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 May 2019 05:02:50 -0400
-X-UUID: 8442ead08aa84f86bd6bc48a5a2838e3-20190516
-X-UUID: 8442ead08aa84f86bd6bc48a5a2838e3-20190516
+X-UUID: daf842882f6c4d03a417a182f73ed000-20190516
+X-UUID: daf842882f6c4d03a417a182f73ed000-20190516
 Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
         (envelope-from <bibby.hsieh@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 2082283879; Thu, 16 May 2019 17:02:29 +0800
+        with ESMTP id 153919159; Thu, 16 May 2019 17:02:29 +0800
 Received: from mtkcas07.mediatek.inc (172.21.101.84) by
  mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
  15.0.1395.4; Thu, 16 May 2019 17:02:27 +0800
@@ -53,93 +53,75 @@ CC:     Daniel Kurtz <djkurtz@chromium.org>,
         <dennis-yc.hsimediatek/mtkcam/drv/fdvt/4.0/cam_fdvt_v4l2.cppeh@mediatek.com>,
         Houlong Wei <houlong.wei@mediatek.com>,
         <ginny.chen@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
-Subject: [PATCH v6 07/12] soc: mediatek: cmdq: clear the event in cmdq initial flow
-Date:   Thu, 16 May 2019 17:02:19 +0800
-Message-ID: <20190516090224.59070-8-bibby.hsieh@mediatek.com>
+Subject: [PATCH v6 03/12] dt-binding: gce: add binding for gce subsys property
+Date:   Thu, 16 May 2019 17:02:15 +0800
+Message-ID: <20190516090224.59070-4-bibby.hsieh@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
 References: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: CC716D871F9485835047CD2E9DF238C2FAB434002683F5C8D8D990C2A4B58BB42000:8
+X-TM-SNTS-SMTP: 133ABA43BC3171D96E19DE5D7CE24F57DF595CB91A101F3EBF67AE96D240CE432000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GCE hardware stored event information in own internal sysram,
-if the initial value in those sysram is not zero value
-it will cause a situation that gce can wait the event immediately
-after client ask gce to wait event but not really trigger the
-corresponding hardware.
-
-In order to make sure that the wait event function is
-exactly correct, we need to clear the sysram value in
-cmdq initial flow.
-
-Fixes: 623a6143a845 ("mailbox: mediatek: Add Mediatek CMDQ driver")
+tcmdq driver provide a function that get the relationship
+of sub system number from device node for client.
+add specification for #subsys-cells, mediatek,gce-subsys.
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-Reviewed-by: CK Hu <ck.hu@mediatek.com>
 ---
- drivers/mailbox/mtk-cmdq-mailbox.c       | 5 +++++
- include/linux/mailbox/mtk-cmdq-mailbox.h | 2 ++
- include/linux/soc/mediatek/mtk-cmdq.h    | 3 ---
- 3 files changed, 7 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/mailbox/mtk-gce.txt       | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-index 6db1e2dd2dea..2c1b80d82c3a 100644
---- a/drivers/mailbox/mtk-cmdq-mailbox.c
-+++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-@@ -20,6 +20,7 @@
- #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
+diff --git a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+index 1f7f8f2a3f49..dceab63ccd06 100644
+--- a/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
++++ b/Documentation/devicetree/bindings/mailbox/mtk-gce.txt
+@@ -21,11 +21,19 @@ Required properties:
+ 	priority: Priority of GCE thread.
+ 	atomic_exec: GCE processing continuous packets of commands in atomic
+ 		way.
++- #subsys-cells: Should be 3.
++	<&phandle subsys_number start_offset size>
++	phandle: Label name of a gce node.
++	subsys_number: specify the sub-system id which is corresponding
++		       to the register address.
++	start_offset: the start offset of register address that GCE can access.
++	size: the total size of register address that GCE can access.
  
- #define CMDQ_CURR_IRQ_STATUS		0x10
-+#define CMDQ_SYNC_TOKEN_UPDATE		0x68
- #define CMDQ_THR_SLOT_CYCLES		0x30
- #define CMDQ_THR_BASE			0x100
- #define CMDQ_THR_SIZE			0x80
-@@ -103,8 +104,12 @@ static void cmdq_thread_resume(struct cmdq_thread *thread)
+ Required properties for a client device:
+ - mboxes: Client use mailbox to communicate with GCE, it should have this
+   property and list of phandle, mailbox specifiers.
+-- mediatek,gce-subsys: u32, specify the sub-system id which is corresponding
++Optional properties for a client device:
++- mediatek,gce-client-reg: u32, specify the sub-system id which is corresponding
+   to the register address.
  
- static void cmdq_init(struct cmdq *cmdq)
- {
-+	int i;
-+
- 	WARN_ON(clk_enable(cmdq->clock) < 0);
- 	writel(CMDQ_THR_ACTIVE_SLOT_CYCLES, cmdq->base + CMDQ_THR_SLOT_CYCLES);
-+	for (i = 0; i <= CMDQ_MAX_EVENT; i++)
-+		writel(i, cmdq->base + CMDQ_SYNC_TOKEN_UPDATE);
- 	clk_disable(cmdq->clock);
- }
+ Some vaules of properties are defined in 'dt-bindings/gce/mt8173-gce.h'
+@@ -40,6 +48,7 @@ Example:
+ 		clocks = <&infracfg CLK_INFRA_GCE>;
+ 		clock-names = "gce";
+ 		#mbox-cells = <3>;
++		#subsys-cells = <3>;
+ 	};
  
-diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-index ccb73422c2fa..911475da7a53 100644
---- a/include/linux/mailbox/mtk-cmdq-mailbox.h
-+++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-@@ -19,6 +19,8 @@
- #define CMDQ_WFE_UPDATE			BIT(31)
- #define CMDQ_WFE_WAIT			BIT(15)
- #define CMDQ_WFE_WAIT_VALUE		0x1
-+/** cmdq event maximum */
-+#define CMDQ_MAX_EVENT			0x3ff
- 
- /*
-  * CMDQ_CODE_MASK:
-diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-index 54ade13a9b15..4e8899972db4 100644
---- a/include/linux/soc/mediatek/mtk-cmdq.h
-+++ b/include/linux/soc/mediatek/mtk-cmdq.h
-@@ -13,9 +13,6 @@
- 
- #define CMDQ_NO_TIMEOUT		0xffffffffu
- 
--/** cmdq event maximum */
--#define CMDQ_MAX_EVENT				0x3ff
+ Example for a client device:
+@@ -48,9 +57,9 @@ Example for a client device:
+ 		compatible = "mediatek,mt8173-mmsys";
+ 		mboxes = <&gce 0 CMDQ_THR_PRIO_LOWEST 1>,
+ 			 <&gce 1 CMDQ_THR_PRIO_LOWEST 1>;
+-		mediatek,gce-subsys = <SUBSYS_1400XXXX>;
+ 		mutex-event-eof = <CMDQ_EVENT_MUTEX0_STREAM_EOF
+ 				CMDQ_EVENT_MUTEX1_STREAM_EOF>;
 -
- struct cmdq_pkt;
- 
- struct cmdq_client {
++		mediatek,gce-client-reg = <&gce SUBSYS_1400XXXX 0x3000 0x1000>,
++					  <&gce SUBSYS_1401XXXX 0x2000 0x100>;
+ 		...
+ 	};
 -- 
 2.18.0
 
