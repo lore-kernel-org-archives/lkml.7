@@ -2,172 +2,106 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107ACC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 19:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38926C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 19:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F85206A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 19:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F8B7206A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 19:36:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="R9zCOeql"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="urBmpTon"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727294AbfEPTgK (ORCPT
+        id S1727445AbfEPTgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 15:36:10 -0400
-Received: from mail-eopbgr730117.outbound.protection.outlook.com ([40.107.73.117]:21770
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726586AbfEPTgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 15:36:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=vyqS8CLUiU6FrKS6OANtygZM38S/ActRoVwr71umvDb1DfHwsvJYXHjTt3OMB8iFvl67yx/REA/TmwG0o1ejzh/gHUa+521svkgyAK0m+QasD5xTj6BihwU2DYD2fUWi0aVQ2GBolP1eq7TlZo2JNLFIncQFnHjW9h9bsMltJ5w=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uBseKympQtgKPpR6ckm/j+Hq14h0qsVuCxgAh3W1aUc=;
- b=sXvhdYougSZLjWj0dSMlzOVORqcfKIyJTER5OauM8/YlDtJliiTw2V2j+ZdCfQL1GZrvg63vy9KbTkwuSFQ6skq/WFCvd2tq7W4V+Saaq6aciEBcg8uaptu93+1huXnoK/RZEEBk5ktxqVfRc0jmf0R6hBijVYu6Fx3FcJt8l7A=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uBseKympQtgKPpR6ckm/j+Hq14h0qsVuCxgAh3W1aUc=;
- b=R9zCOeql8iGEnAHx1gdpFEpQwke3UcxtJ0EvVamGuhkBgfLG+Tnse1t6jhHZO95luwSqsYz1AQoXt0N5Wi0QYtn0U2VtyZe5W9EzcbZFJdwD3bTRPlrgGty72fG4mg29jd7XWBTqU6/InEGdOuNJQYpon4gMy0fTzHtkKLm25Sg=
-Received: from DM6PR21MB1324.namprd21.prod.outlook.com (2603:10b6:5:175::11)
- by DM6PR21MB1211.namprd21.prod.outlook.com (2603:10b6:5:166::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1922.4; Thu, 16 May
- 2019 19:36:05 +0000
-Received: from DM6PR21MB1324.namprd21.prod.outlook.com
- ([fe80::c439:40a:2a9e:e211]) by DM6PR21MB1324.namprd21.prod.outlook.com
- ([fe80::c439:40a:2a9e:e211%7]) with mapi id 15.20.1922.002; Thu, 16 May 2019
- 19:36:05 +0000
-From:   "Lei Wang (BSP)" <Wang.Lei@microsoft.com>
-To:     James Morse <james.morse@arm.com>, Rui Zhao <ruizhao@outlook.com>
-CC:     "bp@alien8.de" <bp@alien8.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "okaya@kernel.org" <okaya@kernel.org>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Hang Li <hangl@microsoft.com>, Rui Zhao <ruizhao@microsoft.com>
-Subject: RE: [PATCH v2 2/2] dt-bindings: edac: arm-dmc520.txt
-Thread-Topic: [PATCH v2 2/2] dt-bindings: edac: arm-dmc520.txt
-Thread-Index: AQHU1IR05Uxdw3NZh0y2dQGi+EwxJKYcyIoAgFCwt8A=
-Date:   Thu, 16 May 2019 19:36:05 +0000
-Message-ID: <DM6PR21MB13245182E07A6276E9BB5B18900A0@DM6PR21MB1324.namprd21.prod.outlook.com>
-References: <1551921818-2825-1-git-send-email-ruizhao@outlook.com>
- <BN7PR08MB5572B3388B2D7DC8F6C7F285AE4C0@BN7PR08MB5572.namprd08.prod.outlook.com>
- <3b740d3a-ba0d-d186-e8f8-6fdf75a36056@arm.com>
-In-Reply-To: <3b740d3a-ba0d-d186-e8f8-6fdf75a36056@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=lewan@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-16T19:36:03.1278729Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7b4a8393-38f7-4897-9737-2fffc09b9fb6;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Wang.Lei@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:a:488f:8888:7969:e786]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d36f349e-cc02-4e26-884b-08d6da35bcec
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1211;
-x-ms-traffictypediagnostic: DM6PR21MB1211:
-x-microsoft-antispam-prvs: <DM6PR21MB121107DC2FBF3AD571506164900A0@DM6PR21MB1211.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0039C6E5C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(366004)(396003)(39860400002)(346002)(376002)(199004)(189003)(13464003)(72206003)(53936002)(478600001)(11346002)(4326008)(33656002)(446003)(14454004)(25786009)(6436002)(10090500001)(10290500003)(486006)(46003)(55016002)(6246003)(476003)(68736007)(107886003)(229853002)(7696005)(8990500004)(9686003)(76176011)(86362001)(71190400001)(52396003)(71200400001)(256004)(14444005)(316002)(8676002)(6506007)(53546011)(99286004)(74316002)(22452003)(5660300002)(7736002)(7416002)(6116002)(2906002)(186003)(305945005)(86612001)(81166006)(8936002)(52536014)(66556008)(76116006)(73956011)(66446008)(66476007)(102836004)(64756008)(54906003)(110136005)(81156014)(66946007);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1211;H:DM6PR21MB1324.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 1IG2/JAhEmAmywSX/Z8rth4D69Uxmp5v84TLgldTSixKvzckVJeglLWGREXtt/nRaPWloC9WJH9W/ueyDq6G+l6ZjgCiinFkxhM2uZ06RoJia/cgKZwQ/rsp8d1vyqP8I2F5ADdPNKGwEH2ENjCcTa+/2N4sNZdMaYyz9Z6rMRimDtRsu++PZLF6eoi1C810bNHQUDKBd5pgKpuuPZ848win/jVqPkHKWpZg8A0JSmj1XQGW93Y5IOqaE8dYwyBEy1G0t23Z2h4j3skwOoBXilF+GOzsMzsktBumU5GdEfj2CsTNBbwvU+5gUuMZBNhKSppcZgAmbfpeqmOmW62vtRTwMYwqL4VZ2gJfCcaGLXJTtGSOM7eTnS9U7+1ekO9n8kToh1lRf18gA5VSONYd5wjMLlqhCQqrsNJk6LxO4hw=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d36f349e-cc02-4e26-884b-08d6da35bcec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 19:36:05.5630
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lewan@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1211
+        Thu, 16 May 2019 15:36:21 -0400
+Received: from mail-ot1-f74.google.com ([209.85.210.74]:46382 "EHLO
+        mail-ot1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbfEPTgU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 15:36:20 -0400
+Received: by mail-ot1-f74.google.com with SMTP id a2so2158638otk.13
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 12:36:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=12EGJp2weOlY59Dj7vV05HjIGESe9b6AhkqGjpcGHLg=;
+        b=urBmpTon+Le+jCkO6VTthpilCEiGEBJ+NguFlbe8htRT9oOFlZjA5eX+9KFJnvJ6dR
+         2/0vp/U+A9TJsDxQOXvm8q7n+U5euA0gZ3itQzOrUfZJmrp95jn8+ooqKKJmxJwp0XDQ
+         Zr+jUOWN6eSmgz8L0c7geuv7GoTqDQtpRE3+1brSXH5zaDPrU8Hfdp6DkUCc42WltUQl
+         JvD59vpW4r/voyvmFUCruEbvjrY613yGidXFv8PVfG53r5W8xrHZyPLQ4CdDVg+ci8i0
+         feCXPZJlr57FrBcSGSBTlz0szIoU1EbRRdf7VnNreAgWtcU94E6uz/sVaLtKGpyhPlAQ
+         eRuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=12EGJp2weOlY59Dj7vV05HjIGESe9b6AhkqGjpcGHLg=;
+        b=B0WbGYT1c5hoyAFI+TrcRmDzJnx2BMn10dmuGGXw3aeag4m+Vxf6NeU8UQVKV0o/7P
+         1isSyZ5p8f0OdSDwxOBEQck8BcUAYyBNiPVBCFhlHCaoLoZB+EbH0Me2JcZkPSWPyBLK
+         AP3SRqyY/ZFtIEuXzHRJlmYhkzgDNZ/FJZC7kXcDysNYUKbWN76A7oD+g6Mk8heleeMC
+         xyTf0OFaMgiK7lpEMO6PITXFY1jl89i1JyTo+EUET8OWG/50liEk9hIskS71HnblrNbZ
+         fW8Ptxqvo2fsRhc8odB+v0Uex8VqRyL9/51YuL6XALnGGUNxx4K0Frv5ZQKKwLoDY0uc
+         iMFg==
+X-Gm-Message-State: APjAAAWNy/rHyJIXuSMTYGSu2RyVo8MbDtwWMM74xWu8+C+OXUfhKWhz
+        ecMg0QsmFvY2jLdsj8EaLkl8L93yAO3Q
+X-Google-Smtp-Source: APXvYqx+jf/+JoigIT9JXRpeKBSCRv9kNlQwQn22no5e+MnXS9Q+xe7hKd9hgfc3nvxXXBHLakQ6J3Qv9xVD
+X-Received: by 2002:aca:e387:: with SMTP id a129mr9403268oih.93.1558035379931;
+ Thu, 16 May 2019 12:36:19 -0700 (PDT)
+Date:   Thu, 16 May 2019 12:36:16 -0700
+Message-Id: <20190516193616.252788-1-furquan@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: [PATCH] ACPI: PM: Clear wake-up device GPEs before enabling
+From:   Furquan Shaikh <furquan@google.com>
+To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>
+Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rajatja@google.com, furquan@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmFtZXMvQm9yaXNsYXYsDQoNCkkgYWRkcmVzc2VkIHlvdXIgY29tbWVudHMgYW5kIHNlbnQg
-b3V0ICJbUEFUQ0ggdjMgMS8yXSBkdC1iaW5kaW5nczogZWRhYzogYXJtLWRtYzUyMC50eHQiIGZv
-ciByZXZpZXcuIFRoYW5rcyENCg0KLUxlaQ0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
-RnJvbTogSmFtZXMgTW9yc2UgPGphbWVzLm1vcnNlQGFybS5jb20+IA0KU2VudDogTW9uZGF5LCBN
-YXJjaCAyNSwgMjAxOSAxMTozMCBBTQ0KVG86IFJ1aSBaaGFvIDxydWl6aGFvQG91dGxvb2suY29t
-Pg0KQ2M6IGJwQGFsaWVuOC5kZTsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJt
-LmNvbTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
-bC5vcmc7IGxpbnV4LWVkYWNAdmdlci5rZXJuZWwub3JnOyBva2F5YUBrZXJuZWwub3JnOyBtY2hl
-aGFiQGtlcm5lbC5vcmc7IHdpbGwuZGVhY29uQGFybS5jb207IHNhc2hhbEBrZXJuZWwub3JnOyBI
-YW5nIExpIDxoYW5nbEBtaWNyb3NvZnQuY29tPjsgTGVpIFdhbmcgKEJTUCkgPFdhbmcuTGVpQG1p
-Y3Jvc29mdC5jb20+OyBSdWkgWmhhbyA8cnVpemhhb0BtaWNyb3NvZnQuY29tPg0KU3ViamVjdDog
-UmU6IFtQQVRDSCB2MiAyLzJdIGR0LWJpbmRpbmdzOiBlZGFjOiBhcm0tZG1jNTIwLnR4dA0KDQpI
-aSBSdWksDQoNCk9uIDA3LzAzLzIwMTkgMDE6MjQsIFJ1aSBaaGFvIHdyb3RlOg0KPiBGcm9tOiBS
-dWkgWmhhbyA8cnVpemhhb0BtaWNyb3NvZnQuY29tPiBkdC1iaW5kaW5ncyBmb3IgbmV3IEVEQUMg
-ZHJpdmVyIA0KPiBkbWM1MjBfZWRhYy5jLg0KDQoobWlub3Igbml0LCB0aGUgRFQgZm9sayBwcmVm
-ZXIgdGhlIGJpbmRpbmcgdG8gY29tZSBmaXJzdCBpbiB0aGUgc2VyaWVzLCB0aGlzIG1ha2VzIGl0
-IGVhc2llciB0byByZXZpZXcpDQoNCg0KPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2VkYWMvYXJtLWRtYzUyMC50eHQgDQo+IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2VkYWMvYXJtLWRtYzUyMC50eHQNCj4gbmV3IGZpbGUgbW9kZSAx
-MDA2NDQNCj4gaW5kZXggMDAwMDAwMC4uN2JlYTdkZA0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBi
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9lZGFjL2FybS1kbWM1MjAudHh0DQo+
-IEBAIC0wLDAgKzEsMjEgQEANCj4gKyogQVJNIERNQy01MjAgRURBQyBub2RlDQo+ICsNCj4gK1Jl
-cXVpcmVkIHByb3BlcnRpZXM6DQo+ICstIGNvbXBhdGlibGUJCTogImFybSxkbWMtNTIwIi4NCj4g
-Ky0gcmVnCQkJOiBBZGRyZXNzIHJhbmdlIG9mIHRoZSBETUMtNTIwIHJlZ2lzdGVycy4NCj4gKy0g
-aW50ZXJydXB0cwkJOiBETUMtNTIwIGludGVycnVwdCBudW1iZXJzLg0KDQpZb3VyIGV4YW1wbGUg
-aGFzIHR3byBpbnRlcnJ1cHRzLCB3aGF0IGRvIHRoZXkgY29ycmVzcG9uZCB0bz8gKEl0IG5lZWRz
-IHRvIGJlIGNsZWFyIGZyb20gdGhlIGJpbmRpbmcpDQoNCkJlY2F1c2UgdGhpcyB0aGluZyBoYXMg
-cXVpdGUgYSBmZXcsIGl0IG1heSBiZSB3b3J0aCBuYW1pbmcgdGhlIG9uZXMgeW91IHVzZS4gSWYg
-c29tZW9uZSBlbHNlJ3MgcGxhdGZvcm0gdXNlcyBvbmUgb2YgdGhlIG90aGVycywgdGhleSBjYW4g
-YWRkIGl0IHdpdGhvdXQgY29uZmxpY3Rpbmcgd2l0aCBEVHMgZm9yIHlvdXJzLg0KDQpMb29raW5n
-IHRocm91Z2ggdGhlIFRSTSBmb3IgdGhpbmdzIGVuZGluZyBpbiBfaW50LCB0aGV5IHNlZW0gdG8g
-YmU6DQoqIHJhbV9lY2NfZXJjDQoqIHJhbV9lY2NfZXJkDQoqIGRyYW1fZWNjX2VyYw0KKiBkcmFt
-X2VjY19lcmQNCiogZmFpbGVkX2FjY2Vzcw0KKiBmYWlsZWRfcHJvZw0KKiBsaW5rX2Vycg0KKiBh
-cmNoX2ZzbQ0KKiB0ZW1wZXJhdHVyZV9ldmVudA0KKiBwaHlfcmVxdWVzdA0KKiBjb21iaW5lZF9p
-bnQNCg0KSSB0aGluayB0aGlzIGlzIGZhciB0b28gbWFueSB0byBlbnVtZXJhdGUgZnJvbSBkYXkg
-b25lLCBlc3BlY2lhbGx5IGFzIHlvdXIgcGxhdGZvcm0gb25seSBuZWVkcyB0d28uIENvdWxkIHdl
-IG5hbWUgdGhlIHR3byB5b3UgbmVlZCBzbyB0aGF0IGl0cyBjbGVhciB3aGljaCBvbmVzIHRoZXkg
-YXJlLCBhbmQgb3RoZXJzIGNhbiBiZSBhZGRlZCB3aGVuIHNvbWVvbmUgbmVlZHMgdGhlbS4NCg0K
-DQo+ICstIGludGVycnVwdC1tYXNrCTogSW50ZXJydXB0cyB0byBiZSBlbmFibGVkLCByZWZlciB0
-byBpbnRlcnJ1cHRfY29udHJvbA0KPiArCQkJICByZWdpc3RlciBpbiBETUMtNTIwIFRSTSBmb3Ig
-aW50ZXJydXB0IG1hcHBpbmcuDQoNClRoaXMgc291bmRzIGxpa2UgcG9saWN5LiBJdCB3b3VsZCBi
-ZSBnb29kIHRvIG9taXQgdGhlIGludGVycnVwdHMgdGhhdCBhcmVuJ3Qgd2lyZWQgdXAuIElmIHRo
-ZXJlIGlzIGEgcG9saWN5IGxpa2UgJ3VzZSByYW0gbm90IGRyYW0gb24gcGxhdGZvcm0gWScgd2Ug
-Y2FuIGdldCB0aGUgZWRhYyBkcml2ZXIgdG8gZG8gdGhhdCBiYXNlZCBvbiBvZl9tYWNoaW5lX2lz
-X2NvbXBhdGlibGUoKSAoYXMgdGhlIGFsdGVyYSBlZGFjIGRyaXZlciBhbHJlYWR5IGRvZXMpLg0K
-DQoNCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ICstIGludGVycnVwdC1zaGFyZWQJOiBzZXQg
-dGhpcyBwcm9wZXJ0eSBpZiBhbmQgb25seSBpZiBhbGwgRE1DLTUyMA0KPiArCQkJICBpbnRlcnJ1
-cHRzIHNoYXJlIHRoZSBpbnRlcnJ1cHQgbnVtYmVyLg0KDQpXaGF0IGlmIHNvbWUgb2YgdGhlbSBh
-cmUgY29tYmluZWQsIGFuZCBzb21lIGFyZW4ndD8NCg0KKHRoaXMgc2hhcmVkLWludGVycnVwdHMg
-d2FzIG15IGV4YW1wbGUgb2Ygd2h5IHdlIG5lZWQgYSBkb2N1bWVudGVkIGJpbmRpbmcgdG8gd29y
-ayBvdXQgd2hhdCBpcyBzcGVjaWZpYyB0byB5b3VyIHBsYXRvZnJtKQ0KDQpJJ20gbm90IHN1cmUg
-aG93IHRoaXMgdXN1YWxseSBnZXRzIGRlc2NyaWJlZCBpbiBhIERUIGJpbmRpbmcgLi4uIGNvdWxk
-bid0IHdlIHNwb3QgdGhpcyBmcm9tIGR1cGxpY2F0ZSBlbnRyaWVzIGluIHRoZSBpbnRlcnJ1cHRz
-IHByb3BlcnR5PyBJZiB3ZSByZWdpc3RlciB0aGVtIHdpdGggSVJRRl9TSEFSRUQsIHdvdWxkIGl0
-IG1hdHRlcj8NCg0KKFdlIGNhbiBhbHdheXMgdGVsbCBpdHMgb3VyIGRldmljZSBmcm9tIHRoZSBz
-dGF0dXMgcmVnaXN0ZXIsIHNvIEkgdGhpbmsgd2Ugc2hvdWxkIHVzZSBJUlFGX1NIQVJFRCByZWdh
-cmRsZXNzLikNCg0KDQpUaGFua3MsDQoNCkphbWVzDQo=
+This change clears GPE status for wake-up devices before enabling that
+GPE. This is required to ensure that stale GPE status does
+not result in pre-mature wake on enabling GPE for wake-up devices.
+
+Without this change, here is the sequence of events that is causing
+suspend aborts on recent chrome books:
+
+1. System decides to enter sleep.
+2. All devices in the system are put into low power mode.
+3. This results in acpi_dev_suspend being called for each ACPI
+device.
+4. If the device is wake capable, then acpi_dev_suspend calls
+acpi_device_wakeup_enable to enable GPE for the device.
+5. If GPE status is already set, enabling GPE for the wakeup device
+results in generating a SCI which is handled by acpi_ev_detect_gpe
+ultimately calling wakeup_source_activate that increments wakeup
+events, and thus aborting the suspend attempt.
+
+Signed-off-by: Furquan Shaikh <furquan@google.com>
+---
+ drivers/acpi/device_pm.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+index b859d75eaf9f6..e05ee3ff45683 100644
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -721,6 +721,8 @@ static int __acpi_device_wakeup_enable(struct acpi_device *adev,
+ 	if (error)
+ 		goto out;
+ 
++	acpi_clear_gpe(wakeup->gpe_device, wakeup->gpe_number);
++
+ 	status = acpi_enable_gpe(wakeup->gpe_device, wakeup->gpe_number);
+ 	if (ACPI_FAILURE(status)) {
+ 		acpi_disable_wakeup_device_power(adev);
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
