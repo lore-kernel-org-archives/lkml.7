@@ -2,92 +2,110 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB42BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B566AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:56:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4682082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 915D52082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:56:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbfEPO42 (ORCPT
+        id S1727704AbfEPO4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:56:28 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:39639 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727603AbfEPO4Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:56:24 -0400
-Received: by mail-vs1-f66.google.com with SMTP id m1so2503704vsr.6;
-        Thu, 16 May 2019 07:56:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A7nEL+WPfPN1rBA+/PuN1J/S5uyKwnA6j8/pFf9zHN4=;
-        b=NCrTt6RyqZlchwKIYN4hIjLDoEN7HbpLxjgvLemvF7pMHGzMZMvfE+sr5ur5KMOfvW
-         hVQHUxWD4D6/PMk6ih05MU3ICJtzKCFnebxvfvQv7CopgIlKaI0N6pbI/VWM8aMQSIbC
-         TyiJAV6p/pUpjtTtqvMQFnBHeZB+wmWWxI+Btal7EkfsVAbNn2X5wNmwUPKr0DpFB9rC
-         iEx70k7EvV2oWcFQFGve95waCY0xefukjc15RAnd2S1NOlBhL5BF3D/SC6Fcrw56vLoS
-         FYlfwL6oySeN9e/TBEOg+yTJ9yxQ+yejspkkOgYq0TWWnQBnZKbIp0Yh4DLOjO4ag5/C
-         Qrew==
-X-Gm-Message-State: APjAAAVtXmcFbfYsO+cjcOZGO7qTr0bwGlGTxyI8vXP7BTTBloVLvjpX
-        qJIwbFh3Am9DNyNq0ZmvF9Wev7wdX4uBKeMS5lY=
-X-Google-Smtp-Source: APXvYqzEce0hna+NIpEAjAwxrp3WXHdhwiLZYzNSambp2Tqp9lbWiT2Er/sNJ/Cyun4+1E0OoRvh7/Hb9d7XNywa1WI=
-X-Received: by 2002:a67:8e03:: with SMTP id q3mr24527906vsd.152.1558018583276;
- Thu, 16 May 2019 07:56:23 -0700 (PDT)
+        Thu, 16 May 2019 10:56:35 -0400
+Received: from mx1.mailbox.org ([80.241.60.212]:43414 "EHLO mx1.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727658AbfEPO4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 10:56:34 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx1.mailbox.org (Postfix) with ESMTPS id 5BDF94CB10;
+        Thu, 16 May 2019 16:56:30 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
+        with ESMTP id 8d4PMuRmJICT; Thu, 16 May 2019 16:56:27 +0200 (CEST)
+Date:   Fri, 17 May 2019 00:56:07 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Christian Brauner <christian@brauner.io>, jannh@google.com,
+        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, arnd@arndb.de,
+        akpm@linux-foundation.org, dhowells@redhat.com,
+        ebiederm@xmission.com, elena.reshetova@intel.com,
+        keescook@chromium.org, luto@amacapital.net, luto@kernel.org,
+        tglx@linutronix.de, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, joel@joelfernandes.org,
+        dancol@google.com, serge@hallyn.com,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v1 1/2] pid: add pidfd_open()
+Message-ID: <20190516145607.j43xyj26k6l5vmbd@yavin>
+References: <20190516135944.7205-1-christian@brauner.io>
+ <20190516142659.GB22564@redhat.com>
 MIME-Version: 1.0
-References: <155800752418.4037.9567789434648701032.stgit@warthog.procyon.org.uk>
- <155800755482.4037.14407450837395686732.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155800755482.4037.14407450837395686732.stgit@warthog.procyon.org.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 16 May 2019 16:56:10 +0200
-Message-ID: <CAMuHMdWsgSWC2AFGf_XBaEc0g=FDkGB1=UH+Ekh9n6k3W4ifWQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] uapi: Wire up the mount API syscalls on non-x86
- arches [ver #2]
-To:     David Howells <dhowells@redhat.com>,
-        Christian Brauner <christian@brauner.io>
-Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="asldj7bns6ry6jfo"
+Content-Disposition: inline
+In-Reply-To: <20190516142659.GB22564@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David, Christian,
 
-On Thu, May 16, 2019 at 1:54 PM David Howells <dhowells@redhat.com> wrote:
-> Wire up the mount API syscalls on non-x86 arches.
->
-> Reported-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+--asldj7bns6ry6jfo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +428    common  open_tree                       sys_open_tree
-> +429    common  move_mount                      sys_move_mount
-> +430    common  fsopen                          sys_fsopen
-> +431    common  fsconfig                        sys_fsconfig
-> +432    common  fsmount                         sys_fsmount
-> +433    common  fspick                          sys_fspick
+On 2019-05-16, Oleg Nesterov <oleg@redhat.com> wrote:
+> On 05/16, Christian Brauner wrote:
+> >
+> > With the introduction of pidfds through CLONE_PIDFD it is possible to
+> > created pidfds at process creation time.
+>=20
+> Now I am wondering why do we need CLONE_PIDFD, you can just do
+>=20
+> 	pid =3D fork();
+> 	pidfd_open(pid);
 
-The first number conflicts with "[PATCH v1 1/2] pid: add pidfd_open()".
+While the race window would be exceptionally short, there is the
+possibility that the child will die and their pid will be recycled
+before you do pidfd_open(). CLONE_PIDFD removes the race completely.
 
-Note that none of this is part of linux-next.
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-Gr{oetje,eeting}s,
+--asldj7bns6ry6jfo
+Content-Type: application/pgp-signature; name="signature.asc"
 
-                        Geert
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlzdegcACgkQSnvnv3De
+m59otQ//cKLIBYu0NRjFiTL/Sy05MLpjdwxWtxgO+bUeTNYJNghTPgEJw+c+25c7
+tNoebC+JCGcAwO8ACNKnZDd3AuaNys1ZrFwNP7s9IcfOhPEHbcgD2OthKJUE5zZJ
+bXypZRJF+JWJYvn8yBVWpV0IKZwytCnY/yDelTQgcZnKQ2fnmPLEIDtYD3zAuab+
+IgkiYZ/oDsrgUIjkgiYs7gHSqU/cZEDI+dxAZawR2xuSOg7nLUlZ9mJmFWiUYwfL
+55w4joeTcTAlRUDEBzsJFemknqCEo+5qrX0C2qoTmZvdiaVqMQKmGiqYbxdTRC/o
+6lH2q4JQE2aYetbZ9Q9gl4fnFsbbAZBADAuAd8xV0rFWbCB+gkTdZS4G3MZ9baAm
+F0o5HofG0TvkzG5K81aRWlipjvnngapLm/xnSCrfe3rIi9Kw+u1+9jMr+1/BTN/5
+dsHnpAqWPt81mJdlzOSqhCfG7aLmJ/AQKvrC8h2JvtKema98vpK7hJhCbAUi+6lU
+1V9iCvnERBIOlmzkE67ZGtKRPXmPSKIxKgbvOhc1f9DAYQID20S+SNtRJcBpSwhH
++YDqmefCAfqC6+JU/ZySLZrkuNOmoGuHP+T3ku0JyGn4xUayM1ZtKece3ILcafoi
+hRTQy5y2ax/fJ2EPN7o5qc8Oe8DMInckJzKsOvbMe43FldNhKzA=
+=SNKZ
+-----END PGP SIGNATURE-----
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--asldj7bns6ry6jfo--
