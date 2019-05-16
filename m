@@ -2,210 +2,128 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ADDCC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B5EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2338820815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70EBE20815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:21:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="JPlM3LzE"
+	dkim=pass (1024-bit key) header.d=kinvolk.io header.i=@kinvolk.io header.b="ArCqLQ+m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbfEPQUx (ORCPT
+        id S1726946AbfEPQVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:20:53 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:39500 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfEPQUw (ORCPT
+        Thu, 16 May 2019 12:21:47 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44118 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbfEPQVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:20:52 -0400
-Received: by mail-it1-f194.google.com with SMTP id 9so7224591itf.4
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:20:52 -0700 (PDT)
+        Thu, 16 May 2019 12:21:46 -0400
+Received: by mail-lj1-f195.google.com with SMTP id e13so3619643ljl.11
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 09:21:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=hMLpDS1jKcs2MyhRFTjl19/qN34wfJls1Iu1HUS9Vz4=;
-        b=JPlM3LzE1hWtQkAOdAG30RK6qrwfJt24cV6Tw561ErU5FLecTW3IJkI6+ODGvIZMTc
-         KiQirom5P0jlRWDvHHOffWmD25hm0jeVgWo5hBvk7sEyFzI/qhdOZhPGdezYCT9b156+
-         jTW4mfIW24KZ8HRP7TD/RnZaa5W6uiWphjYAI+UkstYvMlIC5+Csp/uxWTfNZpYmkCGr
-         gGixL8nHlLxDf8MP67nVga1rn24eyQUefjdNODtyYE9Xtpee+CQLsnr6abx237wAcU2N
-         ruuJy6rgatmV90J8s8h+2YB86NpA7KlTn8nOJBlXtmFFc3qEVNO+KgfV4yVMDgcFI/2s
-         3DdQ==
+        d=kinvolk.io; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=2e5Do/kWandKX1Zbza7sapR2anoZAP3eXmyFdlVoIKA=;
+        b=ArCqLQ+mQc4Jf+7VG1OdMWx31L6sOXF2Y4z/qL7fxHo0l/XOMLxlZhFvmSO9hV7WSy
+         6RJy27G0BLy0i2xPqrJIdetwNB9Q4Spb89sBui0GkTfheyp1uV6bp0C+WzQPpw197YmW
+         Dt+Sg/qBSz6e625LoIace3EjYmevysKHUexhc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=hMLpDS1jKcs2MyhRFTjl19/qN34wfJls1Iu1HUS9Vz4=;
-        b=B7f+46SQ2np6oYrTajF4ASXTo7nny4wEmkQwefjQlLQ81SW8fTsy+9rMeICF/dGU87
-         uj9Px+q2wPFufj7NJw5aSPAMTPLKrqRhP4hQrUMHPMTgGDP54VIuCGreNuFDJk2lhCBn
-         cW33FWnfkP0Nabbu6S8Rn5sLQLmTqIUZWdEZGipKZWu+Pqt7OF6gO0XE2p8u4godWnmN
-         GLtIYeUEYkGg+3gxAcZKIAA8/0E9H9AxbJ1SPJlg5Re2xip9TOYcovvyGZ1Dahm1q4T6
-         GVLK87kGJjZAttv97kp/Vi3N3FpA4ITxDPb7HiVFlXkPxUKjDhDDnZ4kQ8dwuZf5r2GY
-         yL1A==
-X-Gm-Message-State: APjAAAX7JvXNGz6uCp+g9h97Bl1XbHAAzJankySZTX7Vqovh5FqOtUa5
-        zSu/6x410kRBxUngsd49Xj2eHA==
-X-Google-Smtp-Source: APXvYqyMYLQHH8q9zmIFP9JOmOSxSC2ZmZMq4gXVNXN+eM4JSY3bwaceLZVoS0swTPIkyrPmuKyxdQ==
-X-Received: by 2002:a02:95aa:: with SMTP id b39mr32673541jai.45.1558023651411;
-        Thu, 16 May 2019 09:20:51 -0700 (PDT)
-Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id 25sm1819099iof.37.2019.05.16.09.20.50
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 May 2019 09:20:50 -0700 (PDT)
-Date:   Thu, 16 May 2019 09:20:49 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Atish Patra <atish.patra@wdc.com>
-cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        marek.vasut@gmail.com, trini@konsulko.com,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Zong Li <zong@andestech.com>, catalin.marinas@arm.com,
-        will.deacon@arm.com, linux-arm-kernel@lists.infradead.org,
-        "merker@debian.org" <merker@debian.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Subject: Re: [v2 PATCH] RISC-V: Add a PE/COFF compliant Image header.
-In-Reply-To: <bb7f36bd-d614-b235-7100-3d965f92afc8@wdc.com>
-Message-ID: <alpine.DEB.2.21.9999.1905160833030.9104@viisi.sifive.com>
-References: <20190501195607.32553-1-atish.patra@wdc.com> <alpine.DEB.2.21.9999.1905131522370.21198@viisi.sifive.com> <a498967c-cdc8-637a-340b-202d216c5360@wdc.com> <alpine.DEB.2.21.9999.1905131704371.21198@viisi.sifive.com> <a3eb8e32-5344-801e-03ef-98107ed13130@wdc.com>
- <alpine.DEB.2.21.9999.1905131735450.21198@viisi.sifive.com> <bb7f36bd-d614-b235-7100-3d965f92afc8@wdc.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2e5Do/kWandKX1Zbza7sapR2anoZAP3eXmyFdlVoIKA=;
+        b=EeqzbS6PctTnWYm25rMh6oQoZcoJolmlQ8b5GIebr/4Don66nQzI75s1ZpDb4TcZfQ
+         s6xP9rTu51BD7a/Cing/3ugrLBjH3mhSQspRTxZSs5yC5OM2pJh16EAmSqqnaUH2J5nD
+         9ZuYmwO1SV/DqfxpTUXSEprdUV+gipMFp0QnTcKzY9/vQ9Ty4Yhu5/BXYbdDUWjYsBBR
+         uKni+r+GDEDFlnUSrAx3oKtYKez7qZdU9c7u5LMXc5rOzCleMXX7gte0vnRm8+JjpJze
+         8p8G0FKLg19T9PD5gEIeznp/DMQPoTkIvGhMQN00jmZrQx+RqFIjOqT75CmoHLtD1UsI
+         IrmQ==
+X-Gm-Message-State: APjAAAUuDys/upBH1fRhmVo8IJuKJpngQvklLgPARAyu6ezlW0Ve3oNj
+        vtfAaAJky0yXMM00Y9odYd/oDSrZ+2F71quH2j+bEdZ2d3o=
+X-Google-Smtp-Source: APXvYqyqHiyH4AeBft1evepIQq8xBjLJiWFn//O/FH36CylnD2Em3MeZL1D22OC+4X2lB0bbci0VypEz679vdXG/w5Q=
+X-Received: by 2002:a2e:88ce:: with SMTP id a14mr18017256ljk.122.1558023704266;
+ Thu, 16 May 2019 09:21:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190515134731.12611-1-krzesimir@kinvolk.io> <20190515134731.12611-3-krzesimir@kinvolk.io>
+ <20190515144537.57f559e7@cakuba.netronome.com> <CAGGp+cGN+YYVjJee5ba84HstSrHGurBvwmKmzNsFRvb344Df3A@mail.gmail.com>
+ <20190516085035.3cdb0ae6@cakuba.netronome.com>
+In-Reply-To: <20190516085035.3cdb0ae6@cakuba.netronome.com>
+From:   Krzesimir Nowak <krzesimir@kinvolk.io>
+Date:   Thu, 16 May 2019 18:21:32 +0200
+Message-ID: <CAGGp+cEFxzbH-8vnSAK3sZkM-u3WN4HGnkYvhFwBp85yVtD7Xg@mail.gmail.com>
+Subject: Re: [PATCH bpf v1 2/3] selftests/bpf: Print a message when tester
+ could not run a program
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+Cc:     bpf@vger.kernel.org,
+        =?UTF-8?Q?Iago_L=C3=B3pez_Galeiras?= <iago@kinvolk.io>,
+        "Alban Crequy (Kinvolk)" <alban@kinvolk.io>,
+        Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrey Ignatov <rdna@fb.com>, linux-kselftest@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ ARM64 maintainers, Tom, Marek
+On Thu, May 16, 2019 at 5:51 PM Jakub Kicinski
+<jakub.kicinski@netronome.com> wrote:
+>
+> On Thu, 16 May 2019 11:29:39 +0200, Krzesimir Nowak wrote:
+> > > > diff --git a/tools/testing/selftests/bpf/test_verifier.c b/tools/te=
+sting/selftests/bpf/test_verifier.c
+> > > > index ccd896b98cac..bf0da03f593b 100644
+> > > > --- a/tools/testing/selftests/bpf/test_verifier.c
+> > > > +++ b/tools/testing/selftests/bpf/test_verifier.c
+> > > > @@ -825,11 +825,20 @@ static int do_prog_test_run(int fd_prog, bool=
+ unpriv, uint32_t expected_val,
+> > > >                               tmp, &size_tmp, &retval, NULL);
+> > > >       if (unpriv)
+> > > >               set_admin(false);
+> > > > -     if (err && errno !=3D 524/*ENOTSUPP*/ && errno !=3D EPERM) {
+> > > > -             printf("Unexpected bpf_prog_test_run error ");
+> > > > -             return err;
+> > > > +     if (err) {
+> > > > +             switch (errno) {
+> > > > +             case 524/*ENOTSUPP*/:
+> > > > +                     printf("Did not run the program (not supporte=
+d) ");
+> > > > +                     return 0;
+> > > > +             case EPERM:
+> > > > +                     printf("Did not run the program (no permissio=
+n) ");
+> > > > +                     return 0;
+> > >
+> > > Perhaps use strerror(errno)?
+> >
+> > As I said in the commit message, I open-coded those messages because
+> > strerror for ENOTSUPP returns "Unknown error 524".
+>
+> Ah, sorry, missed that.  I wonder if that's something worth addressing
+> in libc, since the BPF subsystem uses ENOTSUPP a lot.
 
-Hi Atish,
+The "not supported" errno situation seems to be a mess. There is an
+ENOTSUP define in libc. ENOTSUP is usually defined to be EOPNOTSUPP
+(taken from kernel), which in turn seems to have a different value
+(95) than kernel's ENOTSUPP (524). Adding ENOTSUPP (with two Ps) to
+libc would only add to the confusion. So it's kind of meh and I guess
+people just moved on with workarounds.
 
-On Mon, 13 May 2019, Atish Patra wrote:
-
-> On 5/13/19 5:40 PM, Paul Walmsley wrote:
-> > On Mon, 13 May 2019, Atish Patra wrote:
-> > > On 5/13/19 5:09 PM, Paul Walmsley wrote:
-> > > 
-> > > > What are the semantics of those reserved fields?
-> > > 
-> > > +struct riscv_image_header {
-> > > +	u32 code0;
-> > > +	u32 code1;
-> > > +	u64 text_offset;
-> > > +	u64 image_size;
-> > > +	u64 res1;
-> > > +	u64 res2;
-> > > +	u64 res3;
-> > > +	u64 magic;
-> > > +	u32 res4; ---> We can use this for versioning when required
-> > > +	u32 res5; ---> This is reserved for PE/COFF header
-> > > +};
-> > 
-> > I saw that in your patch.  The problem is that this doesn't describe what
-> > other software might expect in those fields.  Can anything at all be
-> > placed in those reserved fields?
-> 
-> Yes. The reserved fields can be used for anything that boot loaders and Linux
-> kernel can agree with each other. If you look at the ARM64, they have
-> "Informative flags" in place of res1.
-> 
-> > > > > Do we need to add it now or add it later when we actually need a
-> > > > > version
-> > > > > number. My preference is to add it later based on requirement.
-> > > > 
-> > > > If it isn't added now, how would bootloaders know whether it was there
-> > > > or
-> > > > not?
-> > > > 
-> > > > 
-> > > Here is the corresponding U-Boot Patch
-> > > https://patchwork.ozlabs.org/patch/1096087/
-> > > 
-> > > Currently, boot loader doesn't care about versioning. Since we are
-> > > updating a
-> > > reserved field, offsets will not change. If a boot loader want to use the
-> > > versioning, it should be patched along with the kernel patch.
-> > > 
-> > > Any other boot loader that doesn't care about the version, it can continue
-> > > to
-> > > do so without any change.
-> > > 
-> > > My idea is to enable the minimum required fields in this patch and keep
-> > > everything else as reserved so that it can be amended in future as
-> > > required.
-> > 
-> > If those fields really are reserved for implementors to do whatever they
-> > want with them, then that might be a reasonable approach.  That seems
-> > unlikely, however, since specification authors usually reserve the right
-> > to use reserved fields for their own purposes in later versions.
-> > 
-> Technically, we are just implementing the "DOS" header part of PE/COFF format
-> for now. It only mandates a magic string "MZ" at the top and a 32bit value at
-> offset 0x3c tells us offset of PE/COFF header in image.
-> Anything in between is implementation specific.
-> 
-> For example, it will be updated to support EFI stub as described in the commit
-> text,
-> "In order to support EFI stub, code0 should be replaced with "MZ" magic string
-> and res5(at offset 0x3c) should point to the rest of the PE/COFF header (which
-> will be added during EFI support)."
-
-OK.  I think we should try to share this header format with other 
-architectures.  This one after all is copied from ARM64, and some of the 
-core fields will be the same across multiple architectures.  That way we 
-can try to avoid proliferating different boot header formats for each 
-architecture, which should be better for both the kernel and the 
-bootloaders.  ARM64 folks, would you be interested in working together on 
-this?
-
-Meanwhile, to unblock RISC-V, and to make this header durable for future 
-extensions and to match the existing ARM64 usage, I think we should make 
-the following technical changes to what you proposed:
-
-1. Reserve all of the existing ARM64 fields in the same way ARM64 does 
-   now.  This keeps open the possibility that we can merge this format 
-   with the one used with ARM64, and reuse the same bootloader code.  
-   Based on our discussions, it sounds like the primary difference between 
-   what you're proposing and the ARM64 format involves the flags/res1 
-   field.  Let's keep that as a flag field, reuse ARM64's endianness bit 
-   as architecture-independent, then define the rest of the flags in that 
-   field as architecture-defined.
-
-2. Allocate another set of reserved bits for a format version number.
-   Probably 16 bits is sufficient.  This tells bootloaders how to 
-   interpret the header fields in future extensions.  The goal is to 
-   preserve compatibility across newer and older versions of the header.  
-   The existing ARM64 header would be version 0.  This format that 
-   incorporates these changes would be version 1.  The thought here is to 
-   preserve all of the semantics of existing fields in newer versions 
-   (except for any remaining reserved fields), since many people often do 
-   not replace their bootloaders.
-
-3. Define a way to point to additional fields outside this existing
-   header.  Another 32 bits of previously reserved data can be defined as 
-   a file offset to additional fields (defined as 32-bit words from the 
-   beginning of the header).  This should make it technically simple to 
-   add additional fields in the future.  For example, RISC-V, and probably 
-   other architectures, will want to add some way to indicate which ISA 
-   extensions are necessary to run the kernel image.  Right now there 
-   won't be any fields defined, so we can leave the format undefined for 
-   the moment also.  Let's stipulate for version 1 that this field 
-   should be fixed at 0, indicating no additional fields.
-
-4. Document all of this, in this patch, in a file such as
-   Documentation/riscv/boot-image-header.txt.  If
-   we're able to reach agreement with other maintainers, then we
-   can move this file out into a common, non-architecture-specific 
-   documentation location.
-
-
-thanks
-
-- Paul
+--=20
+Kinvolk GmbH | Adalbertstr.6a, 10999 Berlin | tel: +491755589364
+Gesch=C3=A4ftsf=C3=BChrer/Directors: Alban Crequy, Chris K=C3=BChl, Iago L=
+=C3=B3pez Galeiras
+Registergericht/Court of registration: Amtsgericht Charlottenburg
+Registernummer/Registration number: HRB 171414 B
+Ust-ID-Nummer/VAT ID number: DE302207000
