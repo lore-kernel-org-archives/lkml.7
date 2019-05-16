@@ -2,446 +2,135 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD14C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21050C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B78F2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:36:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558028169;
-	bh=/sAY8t1A2a8x9jGDW/d99ZN+Y12XSVjAKT+PAXncHFY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YzcCNWOWKPFuIcAOwhCneqF0tpfLMMT0/vEoSlN6CCrbeLAtUTkZ30M30AXZJk2Jz
-	 G4dCbU84+UOmp5n65R/anYV8GUQf7PI613PNcIAK4SFcjIQFJb2fmlpcd6K6HomRbB
-	 Gdqu8BtpfizY84Ahug/RQP4/FrVWcqvpHWKA8UyI=
+	by mail.kernel.org (Postfix) with ESMTP id EA9D22082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:36:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="MlzYyqsQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbfEPRgI (ORCPT
+        id S1727628AbfEPRgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 13:36:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54280 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 13:36:54 -0400
+Received: from vps.xff.cz ([195.181.215.36]:38042 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726409AbfEPRgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 13:36:07 -0400
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B30172082E;
-        Thu, 16 May 2019 17:36:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558028166;
-        bh=/sAY8t1A2a8x9jGDW/d99ZN+Y12XSVjAKT+PAXncHFY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=fTZ8JoWBZDLZOjYiv6zpRTbjIUhf9+rLmXOHN0M8hBAK2TD96Rltm1fauJie8BxJI
-         894fhZQJBeRJPqHlBE4r2OJ6ktAO4s4OBzIohUHIhqs66K4VR5A7IEhJsEbz0/Gt4R
-         LpbiNECzzDC+VYu3Avz0bnEicaJGMVQ2KqzUMQrE=
-Received: by mail-ed1-f47.google.com with SMTP id a8so6401325edx.3;
-        Thu, 16 May 2019 10:36:05 -0700 (PDT)
-X-Gm-Message-State: APjAAAXYLCoSaelzYVA/UTJwaAJWX7QfFCSbj8drxJGoaGcqIJTvkbZ4
-        kwVilrUuzT6QhcvyMv3/1HFrP244YVaA4rXnqWs=
-X-Google-Smtp-Source: APXvYqyihPYuv2s9oL4bteQojescLJxnXbxiOLogoRcR49NAc7DmnGOldcwQG2+JsZQK1wrl6KzL1y60/JX753J2WT4=
-X-Received: by 2002:a17:906:7cd2:: with SMTP id h18mr3759943ejp.267.1558028164257;
- Thu, 16 May 2019 10:36:04 -0700 (PDT)
+        id S1726409AbfEPRgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 13:36:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1558028210; bh=Jbc9aeVDZK4IVUtlH1rcpyyERggWBjuR3RQpcFzD1T0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MlzYyqsQURfuYpPc0op+qkOyLkPN7dYIRo4j+mrkhYHYwLuQlaIADILnCGtJtfM/p
+         RYtugzjmO7W2kVQcT7sWXDmiim8a3h/ixlJwffwkjNodM1ejasX5tJQxeVlwlHpes7
+         kiNj2m5G9DqxzV/jlVa7mK4k/8GmC7OxVxUcO1Fk=
+Date:   Thu, 16 May 2019 19:36:49 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>, mark.rutland@arm.com,
+        daniel.lezcano@linaro.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, bjorn.andersson@linaro.org,
+        mchehab+samsung@kernel.org, paulmck@linux.ibm.com,
+        stefan.wahren@i2se.com, linux-pm@vger.kernel.org, wens@csie.org,
+        jagan@amarulasolutions.com, andy.gross@linaro.org,
+        rui.zhang@intel.com, devicetree@vger.kernel.org,
+        marc.w.gonzalez@free.fr, edubezval@gmail.com,
+        enric.balletbo@collabora.com, robh+dt@kernel.org,
+        Jonathan.Cameron@huawei.com, linux-arm-kernel@lists.infradead.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        olof@lixom.net, davem@davemloft.net
+Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
+Message-ID: <20190516173649.5s2s32ol43kbbhzg@core.my.home>
+Mail-Followup-To: Maxime Ripard <maxime.ripard@bootlin.com>,
+        Yangtao Li <tiny.windzz@gmail.com>, mark.rutland@arm.com,
+        daniel.lezcano@linaro.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, bjorn.andersson@linaro.org,
+        mchehab+samsung@kernel.org, paulmck@linux.ibm.com,
+        stefan.wahren@i2se.com, linux-pm@vger.kernel.org, wens@csie.org,
+        jagan@amarulasolutions.com, andy.gross@linaro.org,
+        rui.zhang@intel.com, devicetree@vger.kernel.org,
+        marc.w.gonzalez@free.fr, edubezval@gmail.com,
+        enric.balletbo@collabora.com, robh+dt@kernel.org,
+        Jonathan.Cameron@huawei.com, linux-arm-kernel@lists.infradead.org,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        olof@lixom.net, davem@davemloft.net
+References: <20190512082614.9045-1-tiny.windzz@gmail.com>
+ <20190512082614.9045-3-tiny.windzz@gmail.com>
+ <20190512133930.t5txssl7mou2gljt@flea>
+ <20190512214128.qjyys3vfpwdiacib@core.my.home>
+ <20190516150252.hf4u3bloo37chy6q@flea>
 MIME-Version: 1.0
-References: <1556528151-17221-1-git-send-email-hao.wu@intel.com> <1556528151-17221-5-git-send-email-hao.wu@intel.com>
-In-Reply-To: <1556528151-17221-5-git-send-email-hao.wu@intel.com>
-From:   Alan Tull <atull@kernel.org>
-Date:   Thu, 16 May 2019 12:35:27 -0500
-X-Gmail-Original-Message-ID: <CANk1AXSuacSP79gtxiOUdf3pKgq0-eWXoeoQdTYX4QV4=NedDA@mail.gmail.com>
-Message-ID: <CANk1AXSuacSP79gtxiOUdf3pKgq0-eWXoeoQdTYX4QV4=NedDA@mail.gmail.com>
-Subject: Re: [PATCH v2 04/18] fpga: dfl: fme: support 512bit data width PR
-To:     Wu Hao <hao.wu@intel.com>, Scott Wood <swood@redhat.com>
-Cc:     Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org, Ananda Ravuri <ananda.ravuri@intel.com>,
-        Xu Yilun <yilun.xu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190516150252.hf4u3bloo37chy6q@flea>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 29, 2019 at 4:12 AM Wu Hao <hao.wu@intel.com> wrote:
+Hello Maxime,
 
-It looks like this addressed the review comments.  Adding my Ack.  Is
-there anything else on this patch?
+On Thu, May 16, 2019 at 05:02:52PM +0200, Maxime Ripard wrote:
+> Hi,
+> 
+> On Sun, May 12, 2019 at 11:41:28PM +0200, Ondřej Jirman wrote:
+> > > > +static int tsens_get_temp(void *data, int *temp)
+> > > > +{
+> > > > +	struct tsensor *s = data;
+> > > > +	struct tsens_device *tmdev = s->tmdev;
+> > > > +	int val;
+> > > > +
+> > > > +	regmap_read(tmdev->regmap, tmdev->chip->temp_data_base +
+> > > > +		    0x4 * s->id, &val);
+> > > > +
+> > > > +	if (unlikely(val == 0))
+> > > > +		return -EBUSY;
+> > >
+> > > I'm not sure why a val equals to 0 would be associated with EBUSY?
+> >
+> > Thermal zone driver can (will) call get_temp before we got the
+> > first interrupt and the thermal data. In that case val will be 0.
+> >
+> > Resulting in:
+> >
+> >  (val + offset) * scale = (-2794) * -67 = 187198
+> >
+> > 187°C and immediate shutdown during boot - based on cirtical
+> > temperature being reached.
+> >
+> > Busy here means, get_temp does not yet have data. Thermal zone
+> > driver just reports any error to dmesg output.
+> 
+> Ah, that makes sense.
+> 
+> I guess if we're switching to an interrupt-based driver, then we can
+> just use a waitqueue, or is get_temp supposed to be atomic?
 
-Alan
+I'm not entirely sure, because I might have inadverently used a combination of
+interrupt and polling when testing this. It may be that if we set polling-delay
+to 0 in dts, that tz core will not try to call get_temp prematurely at all, and
+will simply wait for temperature update from the interrupt.
 
->
-> In early partial reconfiguration private feature, it only
-> supports 32bit data width when writing data to hardware for
-> PR. 512bit data width PR support is an important optimization
-> for some specific solutions (e.g. XEON with FPGA integrated),
-> it allows driver to use AVX512 instruction to improve the
-> performance of partial reconfiguration. e.g. programming one
-> 100MB bitstream image via this 512bit data width PR hardware
-> only takes ~300ms, but 32bit revision requires ~3s per test
-> result.
->
-> Please note now this optimization is only done on revision 2
-> of this PR private feature which is only used in integrated
-> solution that AVX512 is always supported. This revision 2
-> hardware doesn't support 32bit PR.
->
-> Signed-off-by: Ananda Ravuri <ananda.ravuri@intel.com>
-> Signed-off-by: Xu Yilun <yilun.xu@intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
+I guess this needs to be tested/checked in tz code.
 
-Acked-by: Alan Tull <atull@kernel.org>
+regards,
+	o.
 
-
-> ---
-> v2: check AVX512 support using cpu_feature_enabled()
->     fix other comments from Scott Wood <swood@redhat.com>
-> ---
->  drivers/fpga/dfl-fme-main.c |   3 ++
->  drivers/fpga/dfl-fme-mgr.c  | 113 +++++++++++++++++++++++++++++++++++++-------
->  drivers/fpga/dfl-fme-pr.c   |  43 +++++++++++------
->  drivers/fpga/dfl-fme.h      |   2 +
->  drivers/fpga/dfl.h          |   5 ++
->  5 files changed, 135 insertions(+), 31 deletions(-)
->
-> diff --git a/drivers/fpga/dfl-fme-main.c b/drivers/fpga/dfl-fme-main.c
-> index 086ad24..076d74f 100644
-> --- a/drivers/fpga/dfl-fme-main.c
-> +++ b/drivers/fpga/dfl-fme-main.c
-> @@ -21,6 +21,8 @@
->  #include "dfl.h"
->  #include "dfl-fme.h"
->
-> +#define DRV_VERSION    "0.8"
-> +
->  static ssize_t ports_num_show(struct device *dev,
->                               struct device_attribute *attr, char *buf)
->  {
-> @@ -277,3 +279,4 @@ static int fme_remove(struct platform_device *pdev)
->  MODULE_AUTHOR("Intel Corporation");
->  MODULE_LICENSE("GPL v2");
->  MODULE_ALIAS("platform:dfl-fme");
-> +MODULE_VERSION(DRV_VERSION);
-> diff --git a/drivers/fpga/dfl-fme-mgr.c b/drivers/fpga/dfl-fme-mgr.c
-> index b3f7eee..d1a4ba5 100644
-> --- a/drivers/fpga/dfl-fme-mgr.c
-> +++ b/drivers/fpga/dfl-fme-mgr.c
-> @@ -22,14 +22,18 @@
->  #include <linux/io-64-nonatomic-lo-hi.h>
->  #include <linux/fpga/fpga-mgr.h>
->
-> +#include "dfl.h"
->  #include "dfl-fme-pr.h"
->
-> +#define DRV_VERSION    "0.8"
-> +
->  /* FME Partial Reconfiguration Sub Feature Register Set */
->  #define FME_PR_DFH             0x0
->  #define FME_PR_CTRL            0x8
->  #define FME_PR_STS             0x10
->  #define FME_PR_DATA            0x18
->  #define FME_PR_ERR             0x20
-> +#define FME_PR_512_DATA                0x40 /* Data Register for 512bit datawidth PR */
->  #define FME_PR_INTFC_ID_L      0xA8
->  #define FME_PR_INTFC_ID_H      0xB0
->
-> @@ -67,8 +71,43 @@
->  #define PR_WAIT_TIMEOUT   8000000
->  #define PR_HOST_STATUS_IDLE    0
->
-> +#if defined(CONFIG_X86) && defined(CONFIG_AS_AVX512)
-> +
-> +#include <linux/cpufeature.h>
-> +#include <asm/fpu/api.h>
-> +
-> +static inline int is_cpu_avx512_enabled(void)
-> +{
-> +       return cpu_feature_enabled(X86_FEATURE_AVX512F);
-> +}
-> +
-> +static inline void copy512(const void *src, void __iomem *dst)
-> +{
-> +       kernel_fpu_begin();
-> +
-> +       asm volatile("vmovdqu64 (%0), %%zmm0;"
-> +                    "vmovntdq %%zmm0, (%1);"
-> +                    :
-> +                    : "r"(src), "r"(dst)
-> +                    : "memory");
-> +
-> +       kernel_fpu_end();
-> +}
-> +#else
-> +static inline int is_cpu_avx512_enabled(void)
-> +{
-> +       return 0;
-> +}
-> +
-> +static inline void copy512(const void *src, void __iomem *dst)
-> +{
-> +       WARN_ON_ONCE(1);
-> +}
-> +#endif
-> +
->  struct fme_mgr_priv {
->         void __iomem *ioaddr;
-> +       unsigned int pr_datawidth;
->         u64 pr_error;
->  };
->
-> @@ -169,7 +208,7 @@ static int fme_mgr_write(struct fpga_manager *mgr,
->         struct fme_mgr_priv *priv = mgr->priv;
->         void __iomem *fme_pr = priv->ioaddr;
->         u64 pr_ctrl, pr_status, pr_data;
-> -       int delay = 0, pr_credit, i = 0;
-> +       int ret = 0, delay = 0, pr_credit;
->
->         dev_dbg(dev, "start request\n");
->
-> @@ -181,9 +220,9 @@ static int fme_mgr_write(struct fpga_manager *mgr,
->
->         /*
->          * driver can push data to PR hardware using PR_DATA register once HW
-> -        * has enough pr_credit (> 1), pr_credit reduces one for every 32bit
-> -        * pr data write to PR_DATA register. If pr_credit <= 1, driver needs
-> -        * to wait for enough pr_credit from hardware by polling.
-> +        * has enough pr_credit (> 1), pr_credit reduces one for every pr data
-> +        * width write to PR_DATA register. If pr_credit <= 1, driver needs to
-> +        * wait for enough pr_credit from hardware by polling.
->          */
->         pr_status = readq(fme_pr + FME_PR_STS);
->         pr_credit = FIELD_GET(FME_PR_STS_PR_CREDIT, pr_status);
-> @@ -192,7 +231,8 @@ static int fme_mgr_write(struct fpga_manager *mgr,
->                 while (pr_credit <= 1) {
->                         if (delay++ > PR_WAIT_TIMEOUT) {
->                                 dev_err(dev, "PR_CREDIT timeout\n");
-> -                               return -ETIMEDOUT;
-> +                               ret = -ETIMEDOUT;
-> +                               goto done;
->                         }
->                         udelay(1);
->
-> @@ -200,21 +240,27 @@ static int fme_mgr_write(struct fpga_manager *mgr,
->                         pr_credit = FIELD_GET(FME_PR_STS_PR_CREDIT, pr_status);
->                 }
->
-> -               if (count < 4) {
-> -                       dev_err(dev, "Invalid PR bitstream size\n");
-> -                       return -EINVAL;
-> +               WARN_ON(count < priv->pr_datawidth);
-> +
-> +               switch (priv->pr_datawidth) {
-> +               case 4:
-> +                       pr_data = FIELD_PREP(FME_PR_DATA_PR_DATA_RAW,
-> +                                            *(u32 *)buf);
-> +                       writeq(pr_data, fme_pr + FME_PR_DATA);
-> +                       break;
-> +               case 64:
-> +                       copy512(buf, fme_pr + FME_PR_512_DATA);
-> +                       break;
-> +               default:
-> +                       WARN_ON_ONCE(1);
->                 }
-> -
-> -               pr_data = 0;
-> -               pr_data |= FIELD_PREP(FME_PR_DATA_PR_DATA_RAW,
-> -                                     *(((u32 *)buf) + i));
-> -               writeq(pr_data, fme_pr + FME_PR_DATA);
-> -               count -= 4;
-> +               buf += priv->pr_datawidth;
-> +               count -= priv->pr_datawidth;
->                 pr_credit--;
-> -               i++;
->         }
->
-> -       return 0;
-> +done:
-> +       return ret;
->  }
->
->  static int fme_mgr_write_complete(struct fpga_manager *mgr,
-> @@ -279,6 +325,36 @@ static void fme_mgr_get_compat_id(void __iomem *fme_pr,
->         id->id_h = readq(fme_pr + FME_PR_INTFC_ID_H);
->  }
->
-> +static u8 fme_mgr_get_pr_datawidth(struct device *dev, void __iomem *fme_pr)
-> +{
-> +       u8 revision = dfl_feature_revision(fme_pr);
-> +
-> +       if (revision < 2) {
-> +               /*
-> +                * revision 0 and 1 only support 32bit data width partial
-> +                * reconfiguration, so pr_datawidth is 4 (Byte).
-> +                */
-> +               return 4;
-> +       } else if (revision == 2) {
-> +               /*
-> +                * revision 2 hardware has optimization to support 512bit data
-> +                * width partial reconfiguration with AVX512 instructions. So
-> +                * pr_datawidth is 64 (Byte). As revision 2 hardware is only
-> +                * used in integrated solution, CPU supports AVX512 instructions
-> +                * for sure, but it still needs to check here as AVX512 could be
-> +                * disabled in kernel (e.g. using clearcpuid boot option).
-> +                */
-> +               if (is_cpu_avx512_enabled())
-> +                       return 64;
-> +
-> +               dev_err(dev, "revision 2: AVX512 is disabled\n");
-> +               return 0;
-> +       }
-> +
-> +       dev_err(dev, "revision %d is not supported yet\n", revision);
-> +       return 0;
-> +}
-> +
->  static int fme_mgr_probe(struct platform_device *pdev)
->  {
->         struct dfl_fme_mgr_pdata *pdata = dev_get_platdata(&pdev->dev);
-> @@ -302,6 +378,10 @@ static int fme_mgr_probe(struct platform_device *pdev)
->                         return PTR_ERR(priv->ioaddr);
->         }
->
-> +       priv->pr_datawidth = fme_mgr_get_pr_datawidth(dev, priv->ioaddr);
-> +       if (!priv->pr_datawidth)
-> +               return -ENODEV;
-> +
->         compat_id = devm_kzalloc(dev, sizeof(*compat_id), GFP_KERNEL);
->         if (!compat_id)
->                 return -ENOMEM;
-> @@ -342,3 +422,4 @@ static int fme_mgr_remove(struct platform_device *pdev)
->  MODULE_AUTHOR("Intel Corporation");
->  MODULE_LICENSE("GPL v2");
->  MODULE_ALIAS("platform:dfl-fme-mgr");
-> +MODULE_VERSION(DRV_VERSION);
-> diff --git a/drivers/fpga/dfl-fme-pr.c b/drivers/fpga/dfl-fme-pr.c
-> index 3c71dc3..cd94ba8 100644
-> --- a/drivers/fpga/dfl-fme-pr.c
-> +++ b/drivers/fpga/dfl-fme-pr.c
-> @@ -83,7 +83,7 @@ static int fme_pr(struct platform_device *pdev, unsigned long arg)
->         if (copy_from_user(&port_pr, argp, minsz))
->                 return -EFAULT;
->
-> -       if (port_pr.argsz < minsz || port_pr.flags)
-> +       if (port_pr.argsz < minsz || port_pr.flags || !port_pr.buffer_size)
->                 return -EINVAL;
->
->         /* get fme header region */
-> @@ -101,15 +101,25 @@ static int fme_pr(struct platform_device *pdev, unsigned long arg)
->                        port_pr.buffer_size))
->                 return -EFAULT;
->
-> +       mutex_lock(&pdata->lock);
-> +       fme = dfl_fpga_pdata_get_private(pdata);
-> +       /* fme device has been unregistered. */
-> +       if (!fme) {
-> +               ret = -EINVAL;
-> +               goto unlock_exit;
-> +       }
-> +
->         /*
->          * align PR buffer per PR bandwidth, as HW ignores the extra padding
->          * data automatically.
->          */
-> -       length = ALIGN(port_pr.buffer_size, 4);
-> +       length = ALIGN(port_pr.buffer_size, fme->pr_datawidth);
->
->         buf = vmalloc(length);
-> -       if (!buf)
-> -               return -ENOMEM;
-> +       if (!buf) {
-> +               ret = -ENOMEM;
-> +               goto unlock_exit;
-> +       }
->
->         if (copy_from_user(buf,
->                            (void __user *)(unsigned long)port_pr.buffer_address,
-> @@ -127,18 +137,10 @@ static int fme_pr(struct platform_device *pdev, unsigned long arg)
->
->         info->flags |= FPGA_MGR_PARTIAL_RECONFIG;
->
-> -       mutex_lock(&pdata->lock);
-> -       fme = dfl_fpga_pdata_get_private(pdata);
-> -       /* fme device has been unregistered. */
-> -       if (!fme) {
-> -               ret = -EINVAL;
-> -               goto unlock_exit;
-> -       }
-> -
->         region = dfl_fme_region_find(fme, port_pr.port_id);
->         if (!region) {
->                 ret = -EINVAL;
-> -               goto unlock_exit;
-> +               goto free_exit;
->         }
->
->         fpga_image_info_free(region->info);
-> @@ -159,10 +161,10 @@ static int fme_pr(struct platform_device *pdev, unsigned long arg)
->                 fpga_bridges_put(&region->bridge_list);
->
->         put_device(&region->dev);
-> -unlock_exit:
-> -       mutex_unlock(&pdata->lock);
->  free_exit:
->         vfree(buf);
-> +unlock_exit:
-> +       mutex_unlock(&pdata->lock);
->         return ret;
->  }
->
-> @@ -388,6 +390,17 @@ static int pr_mgmt_init(struct platform_device *pdev,
->         mutex_lock(&pdata->lock);
->         priv = dfl_fpga_pdata_get_private(pdata);
->
-> +       /*
-> +        * Initialize PR data width.
-> +        * Only revision 2 supports 512bit datawidth for better performance,
-> +        * other revisions use default 32bit datawidth. This is used for
-> +        * buffer alignment.
-> +        */
-> +       if (dfl_feature_revision(feature->ioaddr) == 2)
-> +               priv->pr_datawidth = 64;
-> +       else
-> +               priv->pr_datawidth = 4;
-> +
->         /* Initialize the region and bridge sub device list */
->         INIT_LIST_HEAD(&priv->region_list);
->         INIT_LIST_HEAD(&priv->bridge_list);
-> diff --git a/drivers/fpga/dfl-fme.h b/drivers/fpga/dfl-fme.h
-> index 5394a21..de20755 100644
-> --- a/drivers/fpga/dfl-fme.h
-> +++ b/drivers/fpga/dfl-fme.h
-> @@ -21,12 +21,14 @@
->  /**
->   * struct dfl_fme - dfl fme private data
->   *
-> + * @pr_datawidth: data width for partial reconfiguration.
->   * @mgr: FME's FPGA manager platform device.
->   * @region_list: linked list of FME's FPGA regions.
->   * @bridge_list: linked list of FME's FPGA bridges.
->   * @pdata: fme platform device's pdata.
->   */
->  struct dfl_fme {
-> +       int pr_datawidth;
->         struct platform_device *mgr;
->         struct list_head region_list;
->         struct list_head bridge_list;
-> diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
-> index a8b869e..8851c6c 100644
-> --- a/drivers/fpga/dfl.h
-> +++ b/drivers/fpga/dfl.h
-> @@ -331,6 +331,11 @@ static inline bool dfl_feature_is_port(void __iomem *base)
->                 (FIELD_GET(DFH_ID, v) == DFH_ID_FIU_PORT);
->  }
->
-> +static inline u8 dfl_feature_revision(void __iomem *base)
-> +{
-> +       return (u8)FIELD_GET(DFH_REVISION, readq(base + DFH));
-> +}
-> +
->  /**
->   * struct dfl_fpga_enum_info - DFL FPGA enumeration information
->   *
+> Maxime
+> 
 > --
-> 1.8.3.1
->
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+
+
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
