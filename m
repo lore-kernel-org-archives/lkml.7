@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A16BC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 03:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A29AC04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 03:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06FC12087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 03:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DB320873
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 03:06:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CxCK8+hW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMQKAxPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfEPDGg (ORCPT
+        id S1726589AbfEPDGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 23:06:36 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35677 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbfEPDGa (ORCPT
+        Wed, 15 May 2019 23:06:39 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44470 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfEPDGh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 23:06:30 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t87so1036481pfa.2;
-        Wed, 15 May 2019 20:06:30 -0700 (PDT)
+        Wed, 15 May 2019 23:06:37 -0400
+Received: by mail-pf1-f194.google.com with SMTP id g9so1011548pfo.11;
+        Wed, 15 May 2019 20:06:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SwGzI5XfH1K4vXAfrjZTodx1XMnoUAT4N0Igdk71XCY=;
-        b=CxCK8+hWXUC/IsZttM/3bc0OlKs2wOHmKNiQQVDA+rXljOvT9HmjNnpIlTby+T9ypA
-         p4wJgF9iBHZf477hKUEELAoJptIOEcQqhEAuti/hXhXNpELDi00Ai8SwSaAPsSD1svdD
-         5bbWuYXXw6nLzqV72ERgK7lNHfOt4AaReShmJU2Iz2yKRy/Bb53iCIQowQeezC1Py0vd
-         lA77LOYZgcosRzQ1w3fxxL0+xgYOV9+0PRnbq1FvccrtnX9JP8x91l1J26EWhi4fTVZy
-         8UTYrteBIYJCitMCoKQLMjyOvqQXsUtFkR1wsKtvsUkMFHU9jDtcioIcl7dAi/LSJK6u
-         ARaA==
+        bh=8Dqc/R6tA+VMXmtA2D7t9ERetiSobjxfaHTvZxh87cs=;
+        b=LMQKAxPNiEAw4esPWE9xHoQHd5QDjZ5hsi41ovW5fo1e5/LHao0sf4+NWU1dyvDJXK
+         jH949r0+Hgu+b+AN/VF7hoZzPvXY2f1coyNiOsQfZNT+hMpa1ec4xDa0ek+XTPgjlV1y
+         hlPGtnxuuFbCcf4Y8uqXjNtqyuPdTWevbiF4h3t5dXNdX1+FH7JNuWc1uBeqSrGPOsdJ
+         NWBkFgJNgp/ZDa3u2wkyAUX3gxwrrbIbXYY4eV0ENFjMeXifo+zKKwRLa6eIudMjJzxv
+         CkQzthtVhx6rIz1nk9ONx48qCME+TffyMWv03ocsdA86vxElcpYB02Und6uNZdt9fi19
+         hwlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SwGzI5XfH1K4vXAfrjZTodx1XMnoUAT4N0Igdk71XCY=;
-        b=BxykZxIgaTI4tiiJiGnpYAssoXqm+5Pw7YlKxYUBZZKwms4pX13mMXm+H0sOhSALjA
-         Ibg0GwGMzHfy77xapXybtQEBb8e+23T9dWJTp+spNZoSw6vESDAgijvCEqPtx2OeFKKj
-         T0ejTTROfHFwYEBAy5p0QABJPQux6XozBBk0KEXM+xqJJPwFKDyQE1WcL+0sRftmVxeb
-         eTVPvJar6YB6cRYJXCjDvPfS0ettGOm44vvCVMxCaorhq7jARns7mv8PEVv2jqLXDPWz
-         Dkk2myDmjgVTAbuV1IUlQaF+PC3lM+SYurroWC85mnuSwgm+aCy36fetangXgiYfHNxd
-         pKlA==
-X-Gm-Message-State: APjAAAXhmWdzCwTUVp2s8eE+VSI5aq0sOLZfu3aI2wyhE/Nwa8WuRX4C
-        DjSZxfoytCYm4IrZPRHxxbDYPsZA
-X-Google-Smtp-Source: APXvYqyQRbNYUpi6AM3QFqVjthzxMSwLs5tUPma0gt9fm3Qcg/xpDvVCfZjCz448TEeT9nqUonGldw==
-X-Received: by 2002:a62:3605:: with SMTP id d5mr30017505pfa.28.1557975989597;
-        Wed, 15 May 2019 20:06:29 -0700 (PDT)
+        bh=8Dqc/R6tA+VMXmtA2D7t9ERetiSobjxfaHTvZxh87cs=;
+        b=YtLeWpmLhrYExFHnQNA915TwflDOxJ2izo6kwOqyRN+ZLTYaygrcwLa2So1TRkMl7h
+         pUn1scImCHKJ1i+eq1GeTH58QCE7By9laLJt0s8mhyApSZJsVYc9eEATzPCLxsWsFKz5
+         BtvuAj71OoVe4igc0I5a3es5rJ8vkWpjFwVZY+Y3U1sLPKTBSp6upSIPojYXJoKs2hks
+         aE+5DdfbcwAtKo/LcuC89ltGBgo30+793Gnksk1VBKCKYs3hpNUOpM8GMcia2HaCo1/5
+         nvbZeHy+mTUApskD495FDKUVqi15YNZXqxv71275lkfsG1BZYfeu7Lgrbyc2uxRLzt8r
+         9n1g==
+X-Gm-Message-State: APjAAAW3tLtm9Gsf3pOXTKl1rUw8r7/4/EPl+P+/AjhVK+W2J6LXTf3R
+        p7FhnXdLVnJ7yO6yhC5gxugfdtFP
+X-Google-Smtp-Source: APXvYqxr7R99Px+0MMIVX+pkBprPOLXsFKpqsgnYXCaTEulKIvasaZBeIxu/L9MnEkhxrU6n3CrSWA==
+X-Received: by 2002:a63:e645:: with SMTP id p5mr47328343pgj.4.1557975996516;
+        Wed, 15 May 2019 20:06:36 -0700 (PDT)
 Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id 204sm4247614pgh.50.2019.05.15.20.06.27
+        by smtp.googlemail.com with ESMTPSA id 204sm4247614pgh.50.2019.05.15.20.06.34
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 15 May 2019 20:06:29 -0700 (PDT)
+        Wed, 15 May 2019 20:06:36 -0700 (PDT)
 From:   Wanpeng Li <kernellwp@gmail.com>
 X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
@@ -64,9 +64,9 @@ Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Liran Alon <liran.alon@oracle.com>
-Subject: [PATCH v3 2/5] KVM: LAPIC: Fix lapic_timer_advance_ns parameter overflow
-Date:   Thu, 16 May 2019 11:06:17 +0800
-Message-Id: <1557975980-9875-3-git-send-email-wanpengli@tencent.com>
+Subject: [PATCH v3 5/5] KVM: LAPIC: Optimize timer latency further
+Date:   Thu, 16 May 2019 11:06:20 +0800
+Message-Id: <1557975980-9875-6-git-send-email-wanpengli@tencent.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1557975980-9875-1-git-send-email-wanpengli@tencent.com>
 References: <1557975980-9875-1-git-send-email-wanpengli@tencent.com>
@@ -80,43 +80,112 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Wanpeng Li <wanpengli@tencent.com>
 
-After commit c3941d9e0 (KVM: lapic: Allow user to disable adaptive tuning of
-timer advancement), '-1' enables adaptive tuning starting from default
-advancment of 1000ns. However, we should expose an int instead of an overflow
-uint module parameter.
+Advance lapic timer tries to hidden the hypervisor overhead between the 
+host emulated timer fires and the guest awares the timer is fired. However, 
+it just hidden the time between apic_timer_fn/handle_preemption_timer -> 
+wait_lapic_expire, instead of the real position of vmentry which is 
+mentioned in the orignial commit d0659d946be0 ("KVM: x86: add option to 
+advance tscdeadline hrtimer expiration"). There is 700+ cpu cycles between 
+the end of wait_lapic_expire and before world switch on my haswell desktop.
 
-Before patch:
+This patch tries to narrow the last gap(wait_lapic_expire -> world switch), 
+it takes the real overhead time between apic_timer_fn/handle_preemption_timer
+and before world switch into consideration when adaptively tuning timer 
+advancement. The patch can reduce 40% latency (~1600+ cycles to ~1000+ cycles 
+on a haswell desktop) for kvm-unit-tests/tscdeadline_latency when testing 
+busy waits.
 
-/sys/module/kvm/parameters/lapic_timer_advance_ns:4294967295
-
-After patch:
-
-/sys/module/kvm/parameters/lapic_timer_advance_ns:-1
-
-Fixes: c3941d9e0 (KVM: lapic: Allow user to disable adaptive tuning of timer advancement)
 Cc: Paolo Bonzini <pbonzini@redhat.com>
 Cc: Radim Krčmář <rkrcmar@redhat.com>
 Cc: Sean Christopherson <sean.j.christopherson@intel.com>
 Cc: Liran Alon <liran.alon@oracle.com>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 ---
- arch/x86/kvm/x86.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/lapic.c   | 3 ++-
+ arch/x86/kvm/lapic.h   | 2 +-
+ arch/x86/kvm/svm.c     | 4 ++++
+ arch/x86/kvm/vmx/vmx.c | 4 ++++
+ arch/x86/kvm/x86.c     | 3 ---
+ 5 files changed, 11 insertions(+), 5 deletions(-)
 
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index af38ece..63513de 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1531,7 +1531,7 @@ static inline void adaptive_tune_timer_advancement(struct kvm_vcpu *vcpu,
+ 	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+ }
+ 
+-void wait_lapic_expire(struct kvm_vcpu *vcpu)
++void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+ {
+ 	struct kvm_lapic *apic = vcpu->arch.apic;
+ 	u64 guest_tsc, tsc_deadline;
+@@ -1553,6 +1553,7 @@ void wait_lapic_expire(struct kvm_vcpu *vcpu)
+ 	if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
+ 		adaptive_tune_timer_advancement(vcpu, apic->lapic_timer.advance_expire_delta);
+ }
++EXPORT_SYMBOL_GPL(kvm_wait_lapic_expire);
+ 
+ static void start_sw_tscdeadline(struct kvm_lapic *apic)
+ {
+diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+index 3e72a25..f974a3d 100644
+--- a/arch/x86/kvm/lapic.h
++++ b/arch/x86/kvm/lapic.h
+@@ -220,7 +220,7 @@ static inline int kvm_lapic_latched_init(struct kvm_vcpu *vcpu)
+ 
+ bool kvm_apic_pending_eoi(struct kvm_vcpu *vcpu, int vector);
+ 
+-void wait_lapic_expire(struct kvm_vcpu *vcpu);
++void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu);
+ 
+ bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_irq *irq,
+ 			struct kvm_vcpu **dest_vcpu);
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 6b92eaf..955cfcb 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -5638,6 +5638,10 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
+ 	clgi();
+ 	kvm_load_guest_xcr0(vcpu);
+ 
++	if (lapic_in_kernel(vcpu) &&
++		vcpu->arch.apic->lapic_timer.timer_advance_ns)
++		kvm_wait_lapic_expire(vcpu);
++
+ 	/*
+ 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
+ 	 * it's non-zero. Since vmentry is serialising on affected CPUs, there
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index e1fa935..771d3bf 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6423,6 +6423,10 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 
+ 	vmx_update_hv_timer(vcpu);
+ 
++	if (lapic_in_kernel(vcpu) &&
++		vcpu->arch.apic->lapic_timer.timer_advance_ns)
++		kvm_wait_lapic_expire(vcpu);
++
+ 	/*
+ 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
+ 	 * it's non-zero. Since vmentry is serialising on affected CPUs, there
 diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index b63e7b0..f2e3847 100644
+index 4a7b00c..e154f52 100644
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -143,7 +143,7 @@ module_param(tsc_tolerance_ppm, uint, S_IRUGO | S_IWUSR);
-  * tuning, i.e. allows priveleged userspace to set an exact advancement time.
-  */
- static int __read_mostly lapic_timer_advance_ns = -1;
--module_param(lapic_timer_advance_ns, uint, S_IRUGO | S_IWUSR);
-+module_param(lapic_timer_advance_ns, int, S_IRUGO | S_IWUSR);
+@@ -7903,9 +7903,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 	}
  
- static bool __read_mostly vector_hashing = true;
- module_param(vector_hashing, bool, S_IRUGO);
+ 	trace_kvm_entry(vcpu->vcpu_id);
+-	if (lapic_in_kernel(vcpu) &&
+-	    vcpu->arch.apic->lapic_timer.timer_advance_ns)
+-		wait_lapic_expire(vcpu);
+ 	guest_enter_irqoff();
+ 
+ 	fpregs_assert_state_consistent();
 -- 
 2.7.4
 
