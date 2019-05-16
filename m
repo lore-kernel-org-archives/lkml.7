@@ -2,103 +2,105 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC86EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88500C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE61520815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:25:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GQmbJ3aV"
+	by mail.kernel.org (Postfix) with ESMTP id 5BF0120815
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:27:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558013225;
+	bh=zEFdoInrSu3w4wszosiHwA5hrPeEyDrnKLKZLKu+oow=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PCHO1B/XwgI7P1fndgt+e6V0LtiE5iQwq5ZKMV0woNMckhjS0vl0z9RetibQaoKOJ
+	 cq1gkLkk7egAIybbkyEft56nJu4xOVYfoL0WKs4OAHNYJnx31Nr0r4kzyZCYuKbQ5n
+	 9rIsacZZinNDcgl3yn1tDQoMV+ItQvRV1ab/O438=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfEPNZu (ORCPT
+        id S1727511AbfEPN1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:25:50 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40354 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727496AbfEPNZt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:25:49 -0400
-Received: by mail-lj1-f193.google.com with SMTP id d15so3088396ljc.7
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 06:25:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YBQglN9y1UCEoiDsyDKmavv3pTw2avVwHy9wGSr4d+c=;
-        b=GQmbJ3aVkAkxYq4ebWu1xQr82AleFWY5CEch/sBznZ0n1N0TCZv7wWXuBmc5XP4gK9
-         0kz8teIQJnMwKDt4K3j18W4obgX85WUOBdEyFawJHemHKe/k3RiymhPVyQ15zn3EOflo
-         68z0GFwwNB0yuxgeOj4koQP5hlddq3mITwbdTJl1YABN4VIEGYhAAVYgj0LaHQ/e2/3f
-         igDW+NXWmbxv28jV6e2QnJqq+R+z1fq+bQEsXVh4pRMoJVxLNnB2ISHUhoqATTsEUlzq
-         MhKsuF+/P24J230PUDWXeuNC2ijNAiqOyXuNACqs8iMiQsma6XyJtItfunwihjMfiT5s
-         4i5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YBQglN9y1UCEoiDsyDKmavv3pTw2avVwHy9wGSr4d+c=;
-        b=PJxn5nxeA1sk9kxPXEDZOVQMx0N73wca38MUcG/y9GIfviR/Rnhvsnz93e+9V4LMbD
-         ++nrlmHgxjH5bSC61cJN6KT8yeAIYg/8HZHvBf5sSMUmQiyjBRJaTmZ33vg7BehQoI4I
-         d3Ijmy6tjn2ZbsFavSstioJBc1Di8KIKIj1UGS6x/X88BF8EBd9qjk/sefqwNdgGCsyy
-         QH3BrvR5a3OguHaRcxf0nxZ9Rjjr4VHADlnm++9Zvt+8sOPbV9GFV1xpWcsEVfJXvqGn
-         ApMCLDpD75WvpRLyvAh9CfHBx/d//l7/IXspnBdu92nLmvtYXDs60vp2WukfDig2/9I8
-         rxLg==
-X-Gm-Message-State: APjAAAXPB2Yiza2EbrA7dSlBtrNOY2/96/xUHlZsPhp5NbhmjZ7q5Jo3
-        gvejzLHiAriWx+NRht4zwGX/DIpWGxvQjcwntAHw8A==
-X-Google-Smtp-Source: APXvYqxyM8uKxGHNJAN6reja+yN/0m8IqjdmaVrInAyROSmFRr/vSpkDGQKVYugaZ4aLVYVtQpPVddOrXFdHM695bek=
-X-Received: by 2002:a2e:60a:: with SMTP id 10mr3406462ljg.126.1558013147786;
- Thu, 16 May 2019 06:25:47 -0700 (PDT)
+        Thu, 16 May 2019 09:27:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726742AbfEPN1E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:27:04 -0400
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3031C21734;
+        Thu, 16 May 2019 13:27:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558013223;
+        bh=zEFdoInrSu3w4wszosiHwA5hrPeEyDrnKLKZLKu+oow=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FKFchKCzGYAA0qrYlNLrhBBoLziA8Qm8XW1eejQ/Pic/iSQAYvB/TY66dKlaTeEXz
+         rDSgI+u5JM5pCPch1jMH59NVvH2xn51LD4UT7xpOWZBwNQJJlXbajjbu0W8WxlxvkL
+         yddx0cPeXRg2I1W02zMw9L94lwdQtuMSLLzjqTL0=
+Received: by mail-qk1-f177.google.com with SMTP id d10so2231839qko.4;
+        Thu, 16 May 2019 06:27:03 -0700 (PDT)
+X-Gm-Message-State: APjAAAXyHIJAA20Z1Td0+Ytqi9E+itTtX/CnQQoBQLN7h/8+KslAw79n
+        nTI5QAdbMfNh8/Lu9xIKvT+9i/0c8lbfGCVRzA==
+X-Google-Smtp-Source: APXvYqz882BYvIjG1PBCKdxbGNuYx/9DtP7e/wTxIKnWhMHtvFhKWfNav3sowYfhMHzDpQ7AFfYuV8thXD8HGlRsEbU=
+X-Received: by 2002:a05:620a:16c8:: with SMTP id a8mr25728481qkn.4.1558013222345;
+ Thu, 16 May 2019 06:27:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190509205955.27842-1-f.fainelli@gmail.com> <20190509205955.27842-3-f.fainelli@gmail.com>
-In-Reply-To: <20190509205955.27842-3-f.fainelli@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 16 May 2019 15:25:36 +0200
-Message-ID: <CACRpkdYXp3LMXrSQrndUWWNq0eYb=P22FC9V0__j2AZPGCq0Jw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] pinctrl: bcm: Allow PINCTRL_BCM2835 for ARCH_BRCMSTB
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Doug Berger <opendmb@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "maintainer:BROADCOM BCM281XX/BCM11XXX/BCM216XX ARM ARCHITE..." 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Eric Anholt <eric@anholt.net>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Matheus Castello <matheus@castello.eng.br>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        Lukas Wunner <lukas@wunner.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Al Cooper <alcooperx@gmail.com>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
+References: <1557938083-25423-1-git-send-email-fabrizio.castro@bp.renesas.com> <1557938083-25423-3-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1557938083-25423-3-git-send-email-fabrizio.castro@bp.renesas.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 16 May 2019 08:26:51 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqKZNPGwTp3OR7E-05cA5Kh5+2TmaP5c3ryOoX_V-FbmLw@mail.gmail.com>
+Message-ID: <CAL_JsqKZNPGwTp3OR7E-05cA5Kh5+2TmaP5c3ryOoX_V-FbmLw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-bindings: arm: renesas: Add HopeRun RZ/G2[M] boards
+To:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Simon Horman <horms@verge.net.au>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        "open list:MEDIA DRIVERS FOR RENESAS - FCP" 
+        <linux-renesas-soc@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 9, 2019 at 11:01 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
-
-> From: Doug Berger <opendmb@gmail.com>
+On Wed, May 15, 2019 at 11:35 AM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
 >
-> ARCH_BRCMSTB needs to use the BCM2835 pin controller for chips
-> like BCM7211 which adopted that pin controller for GPIO. This
-> commit makes the option menu configurable with default enabled
-> for ARCH_BRCMSTB and ARCH_BCM2835.
+> This patch adds board HiHope RZ/G2M (the main board, powered by
+> the R8A774A1) and board HiHope RZ/G2 EX (the expansion board
+> that sits on top of the HiHope RZ/G2M). Both boards are made
+> by Jiangsu HopeRun Software Co., Ltd. (a.k.a. HopeRun).
 >
-> Signed-off-by: Doug Berger <opendmb@gmail.com>
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Useful links:
+> http://hihope.org/product/detail/rzg2
+> https://item.taobao.com/item.htm?spm=a2oq0.12575281.0.0.6bcf1debQpzkRS&ft=t&id=592177498472
+> http://www.hoperun.com/Cn/news/id/379
+>
+> We already know that the HiHope RZ/G2 EX will also sit on the
+> HiHope RZ/G2N, even though the HiHope RZ/G2N doesn't exist just
+> yet.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+>
+> ---
+> v1->v2:
+> * Fixed according to Rob's comments
+>
+>  Documentation/devicetree/bindings/arm/renesas.yaml | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-Patch applied for v5.3 with the ACKs.
-
-Yours,
-Linus Walleij
+Reviewed-by: Rob Herring <robh@kernel.org>
