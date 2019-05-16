@@ -2,111 +2,130 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575F0C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC304C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26B3C20657
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:13:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A5A620848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:14:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hZmYFnES"
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="iLghvfw7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727483AbfEPPNw (ORCPT
+        id S1727646AbfEPPOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:13:52 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40756 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726856AbfEPPNt (ORCPT
+        Thu, 16 May 2019 11:14:24 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:20354 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727109AbfEPPOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:13:49 -0400
-Received: by mail-wm1-f68.google.com with SMTP id h11so3850578wmb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 08:13:47 -0700 (PDT)
+        Thu, 16 May 2019 11:14:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=m99MP6x4cChPdhbIubtpCxGHABkHuAb2m4hPfeMsS4c=;
-        b=hZmYFnESuV6VuicUNxJtmgvxqvOU0LIiIjYlEGsI0RkzI5Tk2IzOetocq1Z5UmerbG
-         MOXmFIJwhjvbTTU2fuEx0yis/gk3acViM/0yeBRgGO5Ui77w1HmnFdoY9zHTRBblKKwE
-         /iYeklpIPxMdpjronphLgx0HWI98eTem+wx5rbVZjX+Rva3dLo2A43odbvzv/cfEdEne
-         0+HT9R4H1uACijhqnf8h86PLldxtwYSVKLuBF3FFOf6iPjL/dGBQx55aE0Ugz2uWM2Y/
-         nQz02omzLe6ubaQvObP3hjE976/I+4ggSupyrmo96nbBJQjYlHZU0x+BbO9Pa0RZG0uV
-         MmDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=m99MP6x4cChPdhbIubtpCxGHABkHuAb2m4hPfeMsS4c=;
-        b=JgYBAtl6MVSDicwAj+F6umdBnYMhZ8d73yOtYizdkHODz8mRvIukav08ub6d3GUDOf
-         urDZsBDLO4PXBKRo7QC0q2HDfl7+yuagib83OBdGiUcTjG3G0FwK7zCqq4RoyV5yk0tZ
-         y4VhYlBCvIA988bXcwaW4ncn/so9/h7IP11Q13zI49mfKdpaMLqL+krfviOxGU5AyhHj
-         eieS2TuIovfdA4J38d3Wxsa6ULA0IvwopvJ1kjnglwkJLynCeH1WUeQ5Xy5ZXucxu7R0
-         Fgy/M9OKCKIeCWvMp36RjzZ67hIHDIH3w4Hh0QaNHcGXoqQEtJqb7kJ7peTSR0Y8Iplp
-         ppEg==
-X-Gm-Message-State: APjAAAXls7JqfLOowrYU0fR7umt2GAximoeWw5xPqO9VyOnkRGQ/N3S0
-        pEKztoA8koHpTueS91GDFJqwCw==
-X-Google-Smtp-Source: APXvYqz0RBerowQxIC2ARNV37JyqrgGCqaAxT6IWvRGxWQ56B4nchusaxmMXapm+9EOE8RC7Q22Gfw==
-X-Received: by 2002:a1c:a745:: with SMTP id q66mr18504974wme.83.1558019627166;
-        Thu, 16 May 2019 08:13:47 -0700 (PDT)
-Received: from boomer.lan (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
-        by smtp.googlemail.com with ESMTPSA id 17sm6968126wrk.91.2019.05.16.08.13.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 May 2019 08:13:46 -0700 (PDT)
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: pinctrl: meson: add output support in pinconf
-Date:   Thu, 16 May 2019 17:13:38 +0200
-Message-Id: <20190516151339.25846-2-jbrunet@baylibre.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190516151339.25846-1-jbrunet@baylibre.com>
-References: <20190516151339.25846-1-jbrunet@baylibre.com>
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1558019662; x=1589555662;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:mime-version:
+   content-transfer-encoding;
+  bh=aig0jPNztAGTfLrveYmFoH55ckuO8R7q/yjW4HU7drI=;
+  b=iLghvfw7DmDA9oQ8+pD3fZJ8tfQBAcqoTsSof03pQz5NQtxfIF5gZNze
+   77VeFBmdUtotNCjrQa0lMLfgbEp/m1BkHc2jKKfHt8pyY0T+/84schARa
+   7RNr3cdBwry6M0njpPMlqe1BxVLxXLmBvLAi/oQPqpwUiET3aCQynh8x0
+   o=;
+X-IronPort-AV: E=Sophos;i="5.60,477,1549929600"; 
+   d="scan'208";a="800025988"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 16 May 2019 15:14:18 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x4GFEEo0036922
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Thu, 16 May 2019 15:14:18 GMT
+Received: from EX13D02EUC003.ant.amazon.com (10.43.164.10) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 16 May 2019 15:14:17 +0000
+Received: from EX13D02EUC001.ant.amazon.com (10.43.164.92) by
+ EX13D02EUC003.ant.amazon.com (10.43.164.10) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 16 May 2019 15:14:16 +0000
+Received: from EX13D02EUC001.ant.amazon.com ([10.43.164.92]) by
+ EX13D02EUC001.ant.amazon.com ([10.43.164.92]) with mapi id 15.00.1367.000;
+ Thu, 16 May 2019 15:14:16 +0000
+From:   "Sironi, Filippo" <sironi@amazon.de>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+CC:     "Graf, Alexander" <graf@amazon.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Subject: Re: [Xen-devel] [PATCH v2 1/2] KVM: Start populating /sys/hypervisor
+ with KVM entries
+Thread-Topic: [Xen-devel] [PATCH v2 1/2] KVM: Start populating /sys/hypervisor
+ with KVM entries
+Thread-Index: AQHVCmguTMwTmVyYP0+tMrT8Z/dQMaZtx8qAgAADQgCAAAG8gIAADxmAgAADWQA=
+Date:   Thu, 16 May 2019 15:14:16 +0000
+Message-ID: <649AEBAC-8408-4BC0-AA22-F721CC23648D@amazon.de>
+References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-2-git-send-email-sironi@amazon.de>
+ <e976f31b-2ccd-29ba-6a32-2edde49f867f@amazon.com>
+ <7aae3e49-5b1c-96d1-466e-5b061305dc9d@citrix.com>
+ <22fadfb1-e48d-ccb6-0e42-c105b7335d7a@amazon.com>
+ <92f2f186-2e29-d798-84bd-7209e874f103@oracle.com>
+In-Reply-To: <92f2f186-2e29-d798-84bd-7209e874f103@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.165.224]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <6E2A8B9BB2A14F4E92BDE4A9FB721974@amazon.com>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add support for the pinconf DT property output-enable, output-disable,
-output-low and output-high in the meson pinctrl driver.
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- .../devicetree/bindings/pinctrl/meson,pinctrl.txt    | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+> On 16. May 2019, at 17:02, Boris Ostrovsky <boris.ostrovsky@oracle.com> w=
+rote:
+> =
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-index a7618605bf1e..10dc4f7176ca 100644
---- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-@@ -47,9 +47,15 @@ Required properties for pinmux nodes are:
- Required properties for configuration nodes:
-  - pins: a list of pin names
- 
--Configuration nodes support the generic properties "bias-disable",
--"bias-pull-up" and "bias-pull-down", described in file
--pinctrl-bindings.txt
-+Configuration nodes support the following generic properties, as
-+described in file pinctrl-bindings.txt:
-+ - "bias-disable"
-+ - "bias-pull-up"
-+ - "bias-pull-down"
-+ - "output-enable"
-+ - "output-disable"
-+ - "output-low"
-+ - "output-high"
- 
- Optional properties :
-  - drive-strength-microamp: Drive strength for the specified pins in uA.
--- 
-2.20.1
+> On 5/16/19 10:08 AM, Alexander Graf wrote:
+>> =
+
+>> My point is mostly that we should be as common
+>> as possible when it comes to /sys/hypervisor, so that tools don't have
+>> to care about the HV they're working against.
+> =
+
+> It might make sense to have a common sys-hypervisor.c file
+> (drivers/hypervisor/sys-hypervisor.c or some such), with
+> hypervisor-specific ops/callbacks/etc.
+> =
+
+> -boris
+
+
+Yes, it definitely does. I would follow up with future patches to make it
+happen.
+
+Filippo
+
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrer: Christian Schlaeger, Ralf Herbrich
+Ust-ID: DE 289 237 879
+Eingetragen am Amtsgericht Charlottenburg HRB 149173 B
+
 
