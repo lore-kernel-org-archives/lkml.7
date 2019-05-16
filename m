@@ -2,185 +2,141 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D826EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D5EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAAC72087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:45:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558007138;
-	bh=iOKHTgaUD++EaecvRM2Rsa8NGxXdxwr8UENTk53sYxs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jvfhg4leD8fMhNNnIGpuCi4d0Aigbgt+2zfOeCQRZnQHv+2EtD+4OgnaQgD99Zv+H
-	 A2QowcOqu702mUZyTem7LFn0RhefB9wpwEN2hvPxQBebQHNtpuW6eMsBYeuZueWJH8
-	 yVKkh1lu4USUxpTYexacOf3xN+AcDLC5uBnY1GJs=
+	by mail.kernel.org (Postfix) with ESMTP id 019DB20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbfEPLph (ORCPT
+        id S1728507AbfEPLpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:45:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49348 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:45:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48422 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727905AbfEPLkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:40:53 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727832AbfEPLpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:45:42 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B26A20862;
-        Thu, 16 May 2019 11:40:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006851;
-        bh=iOKHTgaUD++EaecvRM2Rsa8NGxXdxwr8UENTk53sYxs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CdxaUuavdmyHR458asB2L7PHBErXwzFt5YTIB2kyuRUFjXKeBKFFw6u4J2/gWHRMl
-         wqy5aGeXWpGAm98/90lKEEU5VXw/n872y1ypCs+rEjcZbK7oG9JrltDol/dEOjmJfu
-         gllCe0sseY5goyBgLmNwC2gfId1FlzDNhwh9m1Jc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        Lars Melin <larsm17@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 19/25] qmi_wwan: new Wistron, ZTE and D-Link devices
-Date:   Thu, 16 May 2019 07:40:22 -0400
-Message-Id: <20190516114029.8682-19-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190516114029.8682-1-sashal@kernel.org>
-References: <20190516114029.8682-1-sashal@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id CED227F770;
+        Thu, 16 May 2019 11:45:41 +0000 (UTC)
+Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C31110021B2;
+        Thu, 16 May 2019 11:45:36 +0000 (UTC)
+Subject: Re: [PATCH v3 6/7] iommu: Introduce IOMMU_RESV_DIRECT_RELAXABLE
+ reserved memory regions
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        eric.auger.pro@gmail.com, joro@8bytes.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        dwmw2@infradead.org, lorenzo.pieralisi@arm.com,
+        robin.murphy@arm.com, will.deacon@arm.com, hanjun.guo@linaro.org,
+        sudeep.holla@arm.com
+Cc:     alex.williamson@redhat.com
+References: <20190516100817.12076-1-eric.auger@redhat.com>
+ <20190516100817.12076-7-eric.auger@redhat.com>
+ <3e21e370-135e-2eab-dd99-50e19cd53b86@arm.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <403897e7-2af9-3fa9-2264-f66dfeda6fd7@redhat.com>
+Date:   Thu, 16 May 2019 13:45:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <3e21e370-135e-2eab-dd99-50e19cd53b86@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 16 May 2019 11:45:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+Hi Jean-Philippe,
 
-[ Upstream commit 88ef66a28391ea7b624bfb7508a5b015c13b28f3 ]
+On 5/16/19 1:16 PM, Jean-Philippe Brucker wrote:
+> On 16/05/2019 11:08, Eric Auger wrote:
+>> Note: At the moment the sysfs ABI is not changed. However I wonder
+>> whether it wouldn't be preferable to report the direct region as
+>> "direct_relaxed" there. At the moment, in case the same direct
+>> region is used by 2 devices, one USB/GFX and another not belonging
+>> to the previous categories, the direct region will be output twice
+>> with "direct" type.
+>>
+>> This would unblock Shameer's series:
+>> [PATCH v6 0/7] vfio/type1: Add support for valid iova list management
+>> https://patchwork.kernel.org/patch/10425309/
+> 
+> Thanks for doing this!
+> 
+>> which failed to get pulled for 4.18 merge window due to IGD
+>> device assignment regression.
+>>
+>> v2 -> v3:
+>> - fix direct type check
+>> ---
+>>  drivers/iommu/iommu.c | 12 +++++++-----
+>>  include/linux/iommu.h |  6 ++++++
+>>  2 files changed, 13 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>> index ae4ea5c0e6f9..28c3d6351832 100644
+>> --- a/drivers/iommu/iommu.c
+>> +++ b/drivers/iommu/iommu.c
+>> @@ -73,10 +73,11 @@ struct iommu_group_attribute {
+>>  };
+>>  
+>>  static const char * const iommu_group_resv_type_string[] = {
+>> -	[IOMMU_RESV_DIRECT]	= "direct",
+>> -	[IOMMU_RESV_RESERVED]	= "reserved",
+>> -	[IOMMU_RESV_MSI]	= "msi",
+>> -	[IOMMU_RESV_SW_MSI]	= "msi",
+>> +	[IOMMU_RESV_DIRECT]			= "direct",
+>> +	[IOMMU_RESV_DIRECT_RELAXABLE]		= "direct",
+>> +	[IOMMU_RESV_RESERVED]			= "reserved",
+>> +	[IOMMU_RESV_MSI]			= "msi",
+>> +	[IOMMU_RESV_SW_MSI]			= "msi",
+>>  };
+>>  
+>>  #define IOMMU_GROUP_ATTR(_name, _mode, _show, _store)		\
+>> @@ -573,7 +574,8 @@ static int iommu_group_create_direct_mappings(struct iommu_group *group,
+>>  		start = ALIGN(entry->start, pg_size);
+>>  		end   = ALIGN(entry->start + entry->length, pg_size);
+>>  
+>> -		if (entry->type != IOMMU_RESV_DIRECT)
+>> +		if (entry->type != IOMMU_RESV_DIRECT &&
+>> +		    entry->type != IOMMU_RESV_DIRECT_RELAXABLE)
+> 
+> I'm trying to understand why you need to create direct mappings at all
+> for these relaxable regions. In the host the region is needed for legacy
+> device features, which are disabled (and cannot be re-enabled) when
+> assigning the device to a guest?
+This follows Kevin's comment in the thread below:
+https://patchwork.kernel.org/patch/10449103/#21957279
 
-Adding device entries found in vendor modified versions of this
-driver.  Function maps for some of the devices follow:
+In normal DMA API host path, those regions need to be 1-1 mapped. They
+are likely to be accessed by the driver or FW at early boot phase or
+even during execution, depending on features being used.
 
-WNC D16Q1, D16Q5, D18Q1 LTE CAT3 module (1435:0918)
+That's the reason, according to Kevin we couldn't hide them.
 
-MI_00 Qualcomm HS-USB Diagnostics
-MI_01 Android Debug interface
-MI_02 Qualcomm HS-USB Modem
-MI_03 Qualcomm Wireless HS-USB Ethernet Adapter
-MI_04 Qualcomm Wireless HS-USB Ethernet Adapter
-MI_05 Qualcomm Wireless HS-USB Ethernet Adapter
-MI_06 USB Mass Storage Device
+We just know that, in general, they are not used anymore when assigning
+the device or if accesses are attempted this generally does not block
+the assignment use case. For example, it is said in
+https://github.com/qemu/qemu/blob/master/docs/igd-assign.txt that in
+legacy IGD assignment use case, there may be "a small numbers of DMAR
+faults when initially assigned".
 
- T:  Bus=02 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=480 MxCh= 0
- D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
- P:  Vendor=1435 ProdID=0918 Rev= 2.32
- S:  Manufacturer=Android
- S:  Product=Android
- S:  SerialNumber=0123456789ABCDEF
- C:* #Ifs= 7 Cfg#= 1 Atr=80 MxPwr=500mA
- I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
- E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
- E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
- E:  Ad=84(I) Atr=03(Int.) MxPS=  64 Ivl=32ms
- E:  Ad=83(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
- E:  Ad=86(I) Atr=03(Int.) MxPS=  64 Ivl=32ms
- E:  Ad=85(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
- E:  Ad=88(I) Atr=03(Int.) MxPS=  64 Ivl=32ms
- E:  Ad=87(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- I:* If#= 5 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
- E:  Ad=8a(I) Atr=03(Int.) MxPS=  64 Ivl=32ms
- E:  Ad=89(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
- E:  Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+Thanks
 
-WNC D18 LTE CAT3 module (1435:d182)
+Eric
 
-MI_00 Qualcomm HS-USB Diagnostics
-MI_01 Androd Debug interface
-MI_02 Qualcomm HS-USB Modem
-MI_03 Qualcomm HS-USB NMEA
-MI_04 Qualcomm Wireless HS-USB Ethernet Adapter
-MI_05 Qualcomm Wireless HS-USB Ethernet Adapter
-MI_06 USB Mass Storage Device
 
-ZM8510/ZM8620/ME3960 (19d2:0396)
-
-MI_00 ZTE Mobile Broadband Diagnostics Port
-MI_01 ZTE Mobile Broadband AT Port
-MI_02 ZTE Mobile Broadband Modem
-MI_03 ZTE Mobile Broadband NDIS Port (qmi_wwan)
-MI_04 ZTE Mobile Broadband ADB Port
-
-ME3620_X (19d2:1432)
-
-MI_00 ZTE Diagnostics Device
-MI_01 ZTE UI AT Interface
-MI_02 ZTE Modem Device
-MI_03 ZTE Mobile Broadband Network Adapter
-MI_04 ZTE Composite ADB Interface
-
-Reported-by: Lars Melin <larsm17@gmail.com>
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/usb/qmi_wwan.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 9195f3476b1d7..679e404a5224f 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1122,9 +1122,16 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x0846, 0x68d3, 8)},	/* Netgear Aircard 779S */
- 	{QMI_FIXED_INTF(0x12d1, 0x140c, 1)},	/* Huawei E173 */
- 	{QMI_FIXED_INTF(0x12d1, 0x14ac, 1)},	/* Huawei E1820 */
-+	{QMI_FIXED_INTF(0x1435, 0x0918, 3)},	/* Wistron NeWeb D16Q1 */
-+	{QMI_FIXED_INTF(0x1435, 0x0918, 4)},	/* Wistron NeWeb D16Q1 */
-+	{QMI_FIXED_INTF(0x1435, 0x0918, 5)},	/* Wistron NeWeb D16Q1 */
-+	{QMI_FIXED_INTF(0x1435, 0x3185, 4)},	/* Wistron NeWeb M18Q5 */
-+	{QMI_FIXED_INTF(0x1435, 0xd111, 4)},	/* M9615A DM11-1 D51QC */
- 	{QMI_FIXED_INTF(0x1435, 0xd181, 3)},	/* Wistron NeWeb D18Q1 */
- 	{QMI_FIXED_INTF(0x1435, 0xd181, 4)},	/* Wistron NeWeb D18Q1 */
- 	{QMI_FIXED_INTF(0x1435, 0xd181, 5)},	/* Wistron NeWeb D18Q1 */
-+	{QMI_FIXED_INTF(0x1435, 0xd182, 4)},	/* Wistron NeWeb D18 */
-+	{QMI_FIXED_INTF(0x1435, 0xd182, 5)},	/* Wistron NeWeb D18 */
- 	{QMI_FIXED_INTF(0x1435, 0xd191, 4)},	/* Wistron NeWeb D19Q1 */
- 	{QMI_QUIRK_SET_DTR(0x1508, 0x1001, 4)},	/* Fibocom NL668 series */
- 	{QMI_FIXED_INTF(0x16d8, 0x6003, 0)},	/* CMOTech 6003 */
-@@ -1180,6 +1187,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x19d2, 0x0265, 4)},	/* ONDA MT8205 4G LTE */
- 	{QMI_FIXED_INTF(0x19d2, 0x0284, 4)},	/* ZTE MF880 */
- 	{QMI_FIXED_INTF(0x19d2, 0x0326, 4)},	/* ZTE MF821D */
-+	{QMI_FIXED_INTF(0x19d2, 0x0396, 3)},	/* ZTE ZM8620 */
- 	{QMI_FIXED_INTF(0x19d2, 0x0412, 4)},	/* Telewell TW-LTE 4G */
- 	{QMI_FIXED_INTF(0x19d2, 0x1008, 4)},	/* ZTE (Vodafone) K3570-Z */
- 	{QMI_FIXED_INTF(0x19d2, 0x1010, 4)},	/* ZTE (Vodafone) K3571-Z */
-@@ -1200,7 +1208,9 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x19d2, 0x1425, 2)},
- 	{QMI_FIXED_INTF(0x19d2, 0x1426, 2)},	/* ZTE MF91 */
- 	{QMI_FIXED_INTF(0x19d2, 0x1428, 2)},	/* Telewell TW-LTE 4G v2 */
-+	{QMI_FIXED_INTF(0x19d2, 0x1432, 3)},	/* ZTE ME3620 */
- 	{QMI_FIXED_INTF(0x19d2, 0x2002, 4)},	/* ZTE (Vodafone) K3765-Z */
-+	{QMI_FIXED_INTF(0x2001, 0x7e16, 3)},	/* D-Link DWM-221 */
- 	{QMI_FIXED_INTF(0x2001, 0x7e19, 4)},	/* D-Link DWM-221 B1 */
- 	{QMI_FIXED_INTF(0x2001, 0x7e35, 4)},	/* D-Link DWM-222 */
- 	{QMI_FIXED_INTF(0x2020, 0x2031, 4)},	/* Olicard 600 */
--- 
-2.20.1
-
+> 
+> Thanks,
+> Jean
+> 
