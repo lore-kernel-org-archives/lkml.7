@@ -2,156 +2,109 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C785C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF496C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E868E2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:32:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NYTHLKBb"
+	by mail.kernel.org (Postfix) with ESMTP id C12982087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:34:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558013669;
+	bh=PBPZzcKd0Z8uWoCgQKHE0hud8HInbi5Qz300gJ1ZCa8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GeRKZePAp+nWxAN0VclsXM22ruhrRmQFKJ+LqxnXbisXYzI9EPyHhl8A3+A0emBXR
+	 P6bqMA/iRqt3KF3osjQc1GtojHgvEnOT1Wxl5O2+SZU90iD+mZZdtNPPf0FSI2Zy3J
+	 6g6Cm+T/roYUSVnbRpMQcdP7cYXo0T9eIdc/xD7c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727648AbfEPNcm (ORCPT
+        id S1727523AbfEPNe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:32:42 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:34384 "EHLO pegase1.c-s.fr"
+        Thu, 16 May 2019 09:34:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727069AbfEPNcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:32:41 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 454XRB1clVz9v6X8;
-        Thu, 16 May 2019 15:32:38 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=NYTHLKBb; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id YJ2fH7KAqsev; Thu, 16 May 2019 15:32:38 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 454XRB0P2lz9v6Ws;
-        Thu, 16 May 2019 15:32:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1558013558; bh=nnbDu0Oncip1B1EfAee0nXXH/Y+D1kJM8P3yAxFONt8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=NYTHLKBbYT+1AyjfBvVrBs+aVvT0yZrGdfDLlEw5m4ZSeWGjsy+j5C8Rusba+uXOC
-         09reBIj2aW5astgucBs6dszCpYVWDkiKv45TJDO8zpM3srgNKS6m2t+8G0AO9TDr7d
-         IHd0d8/WPeVC1xcTGhPFZEP3SMAbOwY5Zqi5GKIY=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 743F98B831;
-        Thu, 16 May 2019 15:32:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id MI1hq9bTdmn3; Thu, 16 May 2019 15:32:39 +0200 (CEST)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D33418B82A;
-        Thu, 16 May 2019 15:32:38 +0200 (CEST)
-Subject: Re: [PATCH] crypto: talitos - fix skcipher failure due to wrong
- output IV
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Horia Geanta <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-References: <a5b0d31d8fc9fc9bc2b69baa5330466090825a39.1557923113.git.christophe.leroy@c-s.fr>
- <VI1PR0402MB34858D80A15D4B55F64570E398090@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <29db3f20-f931-efc6-02a8-fe160ab8b484@c-s.fr>
- <20190516023050.GA23200@sol.localdomain>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <593f51b1-8c51-1994-623d-f5a591891d8a@c-s.fr>
-Date:   Thu, 16 May 2019 15:32:38 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726528AbfEPNe2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:34:28 -0400
+Received: from localhost (50-82-73-190.client.mchsi.com [50.82.73.190])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E6EB2082E;
+        Thu, 16 May 2019 13:34:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558013667;
+        bh=PBPZzcKd0Z8uWoCgQKHE0hud8HInbi5Qz300gJ1ZCa8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ev7849NFKxRx5zGJKMpGlDGI4a4fgEQWXOAnjyB15r1743IVrj/AqKQhSAOJzrRdv
+         TRKLOZKNE2WUkVzKU9wboToh/XPA1fFvCSt6qaEpn64neel1l9y4eff4ImEzwN61N0
+         vEEPb0jY5bWsnzmxfKOLHMdHuyTgYlJYHjflOvts=
+Date:   Thu, 16 May 2019 08:34:26 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, lorenzo.pieralisi@arm.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, kishon@ti.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, mperttunen@nvidia.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V6 02/15] PCI/PME: Export pcie_pme_disable_msi() &
+ pcie_pme_no_msi() APIs
+Message-ID: <20190516133426.GC101793@google.com>
+References: <20190513050626.14991-1-vidyas@nvidia.com>
+ <20190513050626.14991-3-vidyas@nvidia.com>
+ <20190513072539.GA27708@infradead.org>
+ <3a8cea93-2aeb-e5e2-4d56-f0c6449073c3@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20190516023050.GA23200@sol.localdomain>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3a8cea93-2aeb-e5e2-4d56-f0c6449073c3@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, May 14, 2019 at 09:00:19AM +0530, Vidya Sagar wrote:
+> On 5/13/2019 12:55 PM, Christoph Hellwig wrote:
+> > On Mon, May 13, 2019 at 10:36:13AM +0530, Vidya Sagar wrote:
+> > > Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs to enable drivers
+> > > using these APIs be able to build as loadable modules.
+> > 
+> > But this is a global setting.  If you root port is broken you need
+> > a per-rootport quirk instead.
+> > 
+> There is nothing broken in Tegra194 root port as such, rather, this
+> is more of software configuration choice and we are going with
+> legacy interrupts than MSI interrupts (as Tegra194 doesn't support
+> raising PME interrupts through MSI and please note that this doesn't
+> mean root port is broken).
 
+I think the port *is* broken.  PCIe r4.0, sec 6.1.6, says
 
-Le 16/05/2019 à 04:30, Eric Biggers a écrit :
-> On Wed, May 15, 2019 at 08:49:48PM +0200, Christophe Leroy wrote:
->>
->>
->> Le 15/05/2019 à 16:05, Horia Geanta a écrit :
->>> On 5/15/2019 3:29 PM, Christophe Leroy wrote:
->>>> Selftests report the following:
->>>>
->>>> [    2.984845] alg: skcipher: cbc-aes-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
->>>> [    2.995377] 00000000: 3d af ba 42 9d 9e b4 30 b4 22 da 80 2c 9f ac 41
->>>> [    3.032673] alg: skcipher: cbc-des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
->>>> [    3.043185] 00000000: fe dc ba 98 76 54 32 10
->>>> [    3.063238] alg: skcipher: cbc-3des-talitos encryption test failed (wrong output IV) on test vector 0, cfg="in-place"
->>>> [    3.073818] 00000000: 7d 33 88 93 0f 93 b2 42
->>>>
->>>> This above dumps show that the actual output IV is indeed the input IV.
->>>> This is due to the IV not being copied back into the request.
->>>>
->>>> This patch fixes that.
->>>>
->>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->>> Reviewed-by: Horia Geantă <horia.geanta@nxp.com>
->>
->> It's missing a Fixes: tag and a Cc: to stable.
->>
->> I'll resend tomorrow.
->>
->>>
->>> While here, could you please check ecb mode (which by definition does not have
->>> an IV) is behaving correctly?
->>> Looking in driver_algs[] list of crypto algorithms supported by talitos,
->>> ecb(aes,des,3des) are declared with ivsize != 0.
->>
->> According to /proc/crypto, test are passed for ecb.
->>
-> 
-> Did you try enabling CONFIG_CRYPTO_MANAGER_EXTRA_TESTS?  There is now a check
-> that the driver's ivsize matches the generic implementation's:
-> 
->          if (ivsize != crypto_skcipher_ivsize(generic_tfm)) {
->                  pr_err("alg: skcipher: ivsize for %s (%u) doesn't match generic impl (%u)\n",
->                         driver, ivsize, crypto_skcipher_ivsize(generic_tfm));
->                  err = -EINVAL;
->                  goto out;
->          }
-> 
-> For ECB that means the ivsize must be 0.
-> 
-> AFAICS the talitos driver even accesses the IV for ECB, which is wrong; and the
-> only reason this isn't crashing the self-tests already is that they are confused
-> by the declared ivsize being nonzero so they don't pass NULL as they should.
-> 
+  If the Root Port is enabled for edge-triggered interrupt signaling
+  using MSI or MSI-X, an interrupt message must be sent every time the
+  logical AND of the following conditions transitions from FALSE to
+  TRUE:
 
-Ok, thanks. I'll try and run EXTRA TESTS as soon as I get the current 
-test all fixed.
+    * The associated vector is unmasked (not applicable if MSI does
+      not support PVM).
 
-For the time being, I'm having a problem that I'm a bit lost with:
+    * The PME Interrupt Enable bit in the Root Control register is set
+      to 1b.
 
-AEAD decryption fails at the moment for out-of-line tests, and the 
-reason is that the ICV (used to do the SW compare with the expected one) 
-is generated after the decrypted data.
-It works perfectly when src == dst, because the src has space for it, 
-but when the dst is different, the dst length is smaller so the ICV is 
-generated outside the sg list, and the comparison fails because the 
-comparison is done with the last bytes of the last segment of dst sg 
-list (which corresponds to the end of decrypted data in that case).
+    * The PME Status bit in the Root Status register is set.
 
-What I'm having hard time with it that it seems that when the sg list 
-has several elements, it uses an out of line area for generating the ICV 
-but not when the sg list has only one element. I'm really wondering why.
+The Tegra194 root port advertises MSI support, so the above should
+apply.
 
-Thanks
-Christophe
+> Since Tegra194 has only Synopsys DesignWare core based host
+> controllers and not any other hosts, I think it is fine to call this
+> API in driver.
+
+It's fine to add a per-device quirk to set pdev->no_msi or something
+similar.
+
+Bjorn
