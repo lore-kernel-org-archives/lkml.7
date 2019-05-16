@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF27DC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A95C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:39:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6792173C
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:39:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D7A320833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:39:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558006777;
-	bh=n5drNTJVsfBprc1U7u/JfOyJbqlXK0RHi11OOIakdPc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Mt7O6v7xPFBpxrcnLlv/Kg1hkdiTXmOAIZL2QJUXBX9ZXeDzkO25wVTqtfgkrc4an
-	 zNfMXqdEL0OnbYVFaBUNAZrSMWudIqTH3JY5LmwGNpS4Uuns+ndPf6a1JfN6WWHXav
-	 zW9wR7qH9pE1cQc2WDYQDa+lmtznxY9IqX1Gweig=
+	s=default; t=1558006789;
+	bh=tBCzZByeN4C91PgXW1UqMiCBhoEnLvF0UumL/e18Rc4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=njKyd3qvEgjjC3kGgqPhy2usIZypJmop0Iuvlne129QBA1VK1GAkqwNUZmbe7hrF5
+	 +j8xKR3r0wUvkd0EiOLLCjnYvyhP82yjI1WKpuImeZO7v3/MyYI+Mycx4uX9LDeWCp
+	 DtTRQL4TUN1tFIFdhp6D5D/8EDqgyRIyFMqxC7GY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfEPLjg (ORCPT
+        id S1727443AbfEPLjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:39:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47650 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:39:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbfEPLjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:39:36 -0400
+        id S1727408AbfEPLjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:39:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6306F20833;
-        Thu, 16 May 2019 11:39:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0AA920881;
+        Thu, 16 May 2019 11:39:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006774;
-        bh=n5drNTJVsfBprc1U7u/JfOyJbqlXK0RHi11OOIakdPc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tbQMozbTp4WRf64puoqKFzJBzb8HUlTfifEUaWI0H9V7MI3RqiBPkp+rLhfgjyFOj
-         n9WOstvOV6jTQXn7Qidrnq9ktBf3zZLGaHa010g5c3H7eMyWvOc180yhByAzIxewu7
-         lsKr7g0ALFs/1rdHIUcCEpjs14+Nw2BkDROhboKM=
+        s=default; t=1558006786;
+        bh=tBCzZByeN4C91PgXW1UqMiCBhoEnLvF0UumL/e18Rc4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1oNB/ukrGnBywjVn/X2wQN+8NEDG9YU6SYAaVu+ZZO4IlLrCbZH0mgbn4phR/v1d9
+         y0wJexXmb2Hc+zX1ox5wH+FK9h/Le42yDD50LeZZ4Xq7ruXb8lJ342g2TdJZ2gkm3Z
+         bnC5M9hYplEhdR2ipzodslYjID3VYluqCz9T1roA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 01/34] xfrm: policy: Fix out-of-bound array accesses in __xfrm_policy_unlink
-Date:   Thu, 16 May 2019 07:38:58 -0400
-Message-Id: <20190516113932.8348-1-sashal@kernel.org>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 10/34] clk: sunxi-ng: nkmp: Avoid GENMASK(-1, 0)
+Date:   Thu, 16 May 2019 07:39:07 -0400
+Message-Id: <20190516113932.8348-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190516113932.8348-1-sashal@kernel.org>
+References: <20190516113932.8348-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,89 +59,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-[ Upstream commit b805d78d300bcf2c83d6df7da0c818b0fee41427 ]
+[ Upstream commit 2abc330c514fe56c570bb1a6318b054b06a4f72e ]
 
-UBSAN report this:
+Sometimes one of the nkmp factors is unused. This means that one of the
+factors shift and width values are set to 0. Current nkmp clock code
+generates a mask for each factor with GENMASK(width + shift - 1, shift).
+For unused factor this translates to GENMASK(-1, 0). This code is
+further expanded by C preprocessor to final version:
+(((~0UL) - (1UL << (0)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (-1))))
+or a bit simplified:
+(~0UL & (~0UL >> BITS_PER_LONG))
 
-UBSAN: Undefined behaviour in net/xfrm/xfrm_policy.c:1289:24
-index 6 is out of range for type 'unsigned int [6]'
-CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.4.162-514.55.6.9.x86_64+ #13
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
- 0000000000000000 1466cf39b41b23c9 ffff8801f6b07a58 ffffffff81cb35f4
- 0000000041b58ab3 ffffffff83230f9c ffffffff81cb34e0 ffff8801f6b07a80
- ffff8801f6b07a20 1466cf39b41b23c9 ffffffff851706e0 ffff8801f6b07ae8
-Call Trace:
- <IRQ>  [<ffffffff81cb35f4>] __dump_stack lib/dump_stack.c:15 [inline]
- <IRQ>  [<ffffffff81cb35f4>] dump_stack+0x114/0x1a0 lib/dump_stack.c:51
- [<ffffffff81d94225>] ubsan_epilogue+0x12/0x8f lib/ubsan.c:164
- [<ffffffff81d954db>] __ubsan_handle_out_of_bounds+0x16e/0x1b2 lib/ubsan.c:382
- [<ffffffff82a25acd>] __xfrm_policy_unlink+0x3dd/0x5b0 net/xfrm/xfrm_policy.c:1289
- [<ffffffff82a2e572>] xfrm_policy_delete+0x52/0xb0 net/xfrm/xfrm_policy.c:1309
- [<ffffffff82a3319b>] xfrm_policy_timer+0x30b/0x590 net/xfrm/xfrm_policy.c:243
- [<ffffffff813d3927>] call_timer_fn+0x237/0x990 kernel/time/timer.c:1144
- [<ffffffff813d8e7e>] __run_timers kernel/time/timer.c:1218 [inline]
- [<ffffffff813d8e7e>] run_timer_softirq+0x6ce/0xb80 kernel/time/timer.c:1401
- [<ffffffff8120d6f9>] __do_softirq+0x299/0xe10 kernel/softirq.c:273
- [<ffffffff8120e676>] invoke_softirq kernel/softirq.c:350 [inline]
- [<ffffffff8120e676>] irq_exit+0x216/0x2c0 kernel/softirq.c:391
- [<ffffffff82c5edab>] exiting_irq arch/x86/include/asm/apic.h:652 [inline]
- [<ffffffff82c5edab>] smp_apic_timer_interrupt+0x8b/0xc0 arch/x86/kernel/apic/apic.c:926
- [<ffffffff82c5c985>] apic_timer_interrupt+0xa5/0xb0 arch/x86/entry/entry_64.S:735
- <EOI>  [<ffffffff81188096>] ? native_safe_halt+0x6/0x10 arch/x86/include/asm/irqflags.h:52
- [<ffffffff810834d7>] arch_safe_halt arch/x86/include/asm/paravirt.h:111 [inline]
- [<ffffffff810834d7>] default_idle+0x27/0x430 arch/x86/kernel/process.c:446
- [<ffffffff81085f05>] arch_cpu_idle+0x15/0x20 arch/x86/kernel/process.c:437
- [<ffffffff8132abc3>] default_idle_call+0x53/0x90 kernel/sched/idle.c:92
- [<ffffffff8132b32d>] cpuidle_idle_call kernel/sched/idle.c:156 [inline]
- [<ffffffff8132b32d>] cpu_idle_loop kernel/sched/idle.c:251 [inline]
- [<ffffffff8132b32d>] cpu_startup_entry+0x60d/0x9a0 kernel/sched/idle.c:299
- [<ffffffff8113e119>] start_secondary+0x3c9/0x560 arch/x86/kernel/smpboot.c:245
+It turns out that result of the second part (~0UL >> BITS_PER_LONG) is
+actually undefined by C standard, which clearly specifies:
 
-The issue is triggered as this:
+"If the value of the right operand is negative or is greater than or
+equal to the width of the promoted left operand, the behavior is
+undefined."
 
-xfrm_add_policy
-    -->verify_newpolicy_info  //check the index provided by user with XFRM_POLICY_MAX
-			      //In my case, the index is 0x6E6BB6, so it pass the check.
-    -->xfrm_policy_construct  //copy the user's policy and set xfrm_policy_timer
-    -->xfrm_policy_insert
-	--> __xfrm_policy_link //use the orgin dir, in my case is 2
-	--> xfrm_gen_index   //generate policy index, there is 0x6E6BB6
+Additionally, compiling kernel with aarch64-linux-gnu-gcc 8.3.0 gave
+different results whether literals or variables with same values as
+literals were used. GENMASK with literals -1 and 0 gives zero and with
+variables gives 0xFFFFFFFFFFFFFFF (~0UL). Because nkmp driver uses
+GENMASK with variables as parameter, expression calculates mask as ~0UL
+instead of 0. This has further consequences that LSB in register is
+always set to 1 (1 is neutral value for a factor and shift is 0).
 
-then xfrm_policy_timer be fired
+For example, H6 pll-de clock is set to 600 MHz by sun4i-drm driver, but
+due to this bug ends up being 300 MHz. Additionally, 300 MHz seems to be
+too low because following warning can be found in dmesg:
 
-xfrm_policy_timer
-   --> xfrm_policy_id2dir  //get dir from (policy index & 7), in my case is 6
-   --> xfrm_policy_delete
-      --> __xfrm_policy_unlink //access policy_count[dir], trigger out of range access
+[    1.752763] WARNING: CPU: 2 PID: 41 at drivers/clk/sunxi-ng/ccu_common.c:41 ccu_helper_wait_for_lock.part.0+0x6c/0x90
+[    1.763378] Modules linked in:
+[    1.766441] CPU: 2 PID: 41 Comm: kworker/2:1 Not tainted 5.1.0-rc2-next-20190401 #138
+[    1.774269] Hardware name: Pine H64 (DT)
+[    1.778200] Workqueue: events deferred_probe_work_func
+[    1.783341] pstate: 40000005 (nZcv daif -PAN -UAO)
+[    1.788135] pc : ccu_helper_wait_for_lock.part.0+0x6c/0x90
+[    1.793623] lr : ccu_helper_wait_for_lock.part.0+0x48/0x90
+[    1.799107] sp : ffff000010f93840
+[    1.802422] x29: ffff000010f93840 x28: 0000000000000000
+[    1.807735] x27: ffff800073ce9d80 x26: ffff000010afd1b8
+[    1.813049] x25: ffffffffffffffff x24: 00000000ffffffff
+[    1.818362] x23: 0000000000000001 x22: ffff000010abd5c8
+[    1.823675] x21: 0000000010000000 x20: 00000000685f367e
+[    1.828987] x19: 0000000000001801 x18: 0000000000000001
+[    1.834300] x17: 0000000000000001 x16: 0000000000000000
+[    1.839613] x15: 0000000000000000 x14: ffff000010789858
+[    1.844926] x13: 0000000000000000 x12: 0000000000000001
+[    1.850239] x11: 0000000000000000 x10: 0000000000000970
+[    1.855551] x9 : ffff000010f936c0 x8 : ffff800074cec0d0
+[    1.860864] x7 : 0000800067117000 x6 : 0000000115c30b41
+[    1.866177] x5 : 00ffffffffffffff x4 : 002c959300bfe500
+[    1.871490] x3 : 0000000000000018 x2 : 0000000029aaaaab
+[    1.876802] x1 : 00000000000002e6 x0 : 00000000686072bc
+[    1.882114] Call trace:
+[    1.884565]  ccu_helper_wait_for_lock.part.0+0x6c/0x90
+[    1.889705]  ccu_helper_wait_for_lock+0x10/0x20
+[    1.894236]  ccu_nkmp_set_rate+0x244/0x2a8
+[    1.898334]  clk_change_rate+0x144/0x290
+[    1.902258]  clk_core_set_rate_nolock+0x180/0x1b8
+[    1.906963]  clk_set_rate+0x34/0xa0
+[    1.910455]  sun8i_mixer_bind+0x484/0x558
+[    1.914466]  component_bind_all+0x10c/0x230
+[    1.918651]  sun4i_drv_bind+0xc4/0x1a0
+[    1.922401]  try_to_bring_up_master+0x164/0x1c0
+[    1.926932]  __component_add+0xa0/0x168
+[    1.930769]  component_add+0x10/0x18
+[    1.934346]  sun8i_dw_hdmi_probe+0x18/0x20
+[    1.938443]  platform_drv_probe+0x50/0xa0
+[    1.942455]  really_probe+0xcc/0x280
+[    1.946032]  driver_probe_device+0x54/0xe8
+[    1.950130]  __device_attach_driver+0x80/0xb8
+[    1.954488]  bus_for_each_drv+0x78/0xc8
+[    1.958326]  __device_attach+0xd4/0x130
+[    1.962163]  device_initial_probe+0x10/0x18
+[    1.966348]  bus_probe_device+0x90/0x98
+[    1.970185]  deferred_probe_work_func+0x6c/0xa0
+[    1.974720]  process_one_work+0x1e0/0x320
+[    1.978732]  worker_thread+0x228/0x428
+[    1.982484]  kthread+0x120/0x128
+[    1.985714]  ret_from_fork+0x10/0x18
+[    1.989290] ---[ end trace 9babd42e1ca4b84f ]---
 
-Add xfrm_policy_id2dir check in verify_newpolicy_info, make sure the computed dir is
-valid, to fix the issue.
+This commit solves the issue by first checking value of the factor
+width. If it is equal to 0 (unused factor), mask is set to 0, otherwise
+GENMASK() macro is used as before.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: e682adf021be ("xfrm: Try to honor policy index if it's supplied by user")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Fixes: d897ef56faf9 ("clk: sunxi-ng: Mask nkmp factors when setting register")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xfrm/xfrm_user.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/clk/sunxi-ng/ccu_nkmp.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
 
-diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
-index a131f9ff979e1..8d4d52fd457b2 100644
---- a/net/xfrm/xfrm_user.c
-+++ b/net/xfrm/xfrm_user.c
-@@ -1424,7 +1424,7 @@ static int verify_newpolicy_info(struct xfrm_userpolicy_info *p)
- 	ret = verify_policy_dir(p->dir);
- 	if (ret)
- 		return ret;
--	if (p->index && ((p->index & XFRM_POLICY_MAX) != p->dir))
-+	if (p->index && (xfrm_policy_id2dir(p->index) != p->dir))
- 		return -EINVAL;
+diff --git a/drivers/clk/sunxi-ng/ccu_nkmp.c b/drivers/clk/sunxi-ng/ccu_nkmp.c
+index 9b49adb20d07c..69dfc6de1c4e6 100644
+--- a/drivers/clk/sunxi-ng/ccu_nkmp.c
++++ b/drivers/clk/sunxi-ng/ccu_nkmp.c
+@@ -167,7 +167,7 @@ static int ccu_nkmp_set_rate(struct clk_hw *hw, unsigned long rate,
+ 			   unsigned long parent_rate)
+ {
+ 	struct ccu_nkmp *nkmp = hw_to_ccu_nkmp(hw);
+-	u32 n_mask, k_mask, m_mask, p_mask;
++	u32 n_mask = 0, k_mask = 0, m_mask = 0, p_mask = 0;
+ 	struct _ccu_nkmp _nkmp;
+ 	unsigned long flags;
+ 	u32 reg;
+@@ -186,10 +186,18 @@ static int ccu_nkmp_set_rate(struct clk_hw *hw, unsigned long rate,
  
- 	return 0;
+ 	ccu_nkmp_find_best(parent_rate, rate, &_nkmp);
+ 
+-	n_mask = GENMASK(nkmp->n.width + nkmp->n.shift - 1, nkmp->n.shift);
+-	k_mask = GENMASK(nkmp->k.width + nkmp->k.shift - 1, nkmp->k.shift);
+-	m_mask = GENMASK(nkmp->m.width + nkmp->m.shift - 1, nkmp->m.shift);
+-	p_mask = GENMASK(nkmp->p.width + nkmp->p.shift - 1, nkmp->p.shift);
++	if (nkmp->n.width)
++		n_mask = GENMASK(nkmp->n.width + nkmp->n.shift - 1,
++				 nkmp->n.shift);
++	if (nkmp->k.width)
++		k_mask = GENMASK(nkmp->k.width + nkmp->k.shift - 1,
++				 nkmp->k.shift);
++	if (nkmp->m.width)
++		m_mask = GENMASK(nkmp->m.width + nkmp->m.shift - 1,
++				 nkmp->m.shift);
++	if (nkmp->p.width)
++		p_mask = GENMASK(nkmp->p.width + nkmp->p.shift - 1,
++				 nkmp->p.shift);
+ 
+ 	spin_lock_irqsave(nkmp->common.lock, flags);
+ 
 -- 
 2.20.1
 
