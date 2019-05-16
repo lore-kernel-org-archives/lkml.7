@@ -2,142 +2,166 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA59BC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:21:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5B3C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C421620657
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:21:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E5620657
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:21:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="DkbFR1OD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727375AbfEPRVT (ORCPT
+        id S1727420AbfEPRV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 13:21:19 -0400
-Received: from www.llwyncelyn.cymru ([82.70.14.225]:42792 "EHLO fuzix.org"
+        Thu, 16 May 2019 13:21:26 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:51634 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726807AbfEPRVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 13:21:19 -0400
-Received: from alans-desktop (82-70-14-226.dsl.in-addr.zen.co.uk [82.70.14.226])
-        by fuzix.org (8.15.2/8.15.2) with ESMTP id x4GHKxbf002968;
-        Thu, 16 May 2019 18:20:59 +0100
-Date:   Thu, 16 May 2019 18:20:58 +0100
-From:   Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        xiang xiao <xiaoxiang781216@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        Fabien DESSENNE <fabien.dessenne@st.com>
-Subject: Re: [PATCH v2 2/2] tty: add rpmsg driver
-Message-ID: <20190516182058.2a565748@alans-desktop>
-In-Reply-To: <1557500577-22366-3-git-send-email-arnaud.pouliquen@st.com>
-References: <1557500577-22366-1-git-send-email-arnaud.pouliquen@st.com>
-        <1557500577-22366-3-git-send-email-arnaud.pouliquen@st.com>
-Organization: Intel Corporation
-X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1726807AbfEPRVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 13:21:25 -0400
+Received: from zn.tnic (p200300EC2F0D4A003151DF689BFB5B9C.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:4a00:3151:df68:9bfb:5b9c])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0B33C1EC0283;
+        Thu, 16 May 2019 19:21:24 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1558027284;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=JCIZxYrE9KDZAt3pwKYx4Xvd9dz8k7cJKOtbl1+sdow=;
+        b=DkbFR1ODHCCbk0k06Ynorgo9cN44FBJnpqnyz2EZG1pv9/xf5yLogHkHUXB+blWyCQQc3d
+        qY64wkynyQYCvJt49l9u4q6scD4ujoTVb5W7DPO+Xi/Lqg49YmVT5fLGVDr2ZW8uaIqJy+
+        a3H+3E2ZwVIUOLhiNC3n747WnBkyBwI=
+Date:   Thu, 16 May 2019 19:21:17 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Message-ID: <20190516172117.GC21857@zn.tnic>
+References: <20190430203206.104163-1-Yazen.Ghannam@amd.com>
+ <20190430203206.104163-6-Yazen.Ghannam@amd.com>
+ <20190516155202.GA11517@agluck-desk>
+ <SN6PR12MB26397B30A120E3426184727FF80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516165648.GB21857@zn.tnic>
+ <SN6PR12MB26392B440ED735C26AA2C678F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <SN6PR12MB26392B440ED735C26AA2C678F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 16, 2019 at 05:09:11PM +0000, Ghannam, Yazen wrote:
+> So that the sysfs files show the control values that are set in the
+> hardware. It seemed like this would be more helpful than showing all
+> 0xF's.
 
-> +static int rpmsg_tty_data_handler(struct rpmsg_device *rpdev, void *data,
-> +				  int len, void *priv, u32 src)
-> +{
-> +	struct rpmsg_tty_port *cport = dev_get_drvdata(&rpdev->dev);
-> +	u8 *cbuf;
-> +	int space;
-> +
-> +	dev_dbg(&rpdev->dev, "msg(<- src 0x%x) len %d\n", src, len);
-> +
-> +	if (!len)
-> +		return 0;
-> +
-> +	dev_dbg(&rpdev->dev, "space available: %d\n",
-> +		tty_buffer_space_avail(&cport->port));
-> +
-> +	space = tty_prepare_flip_string(&cport->port, &cbuf, len);
-> +	if (space <= 0) {
-> +		dev_err(&rpdev->dev, "No memory for tty_prepare_flip_string\n");
-> +		return -ENOMEM;
-> +	}
+Yeah, but it has been like that since forever and it hasn't bugged
+anybody. Probably because anybody doesn't even look at those files. As
+Tony says:
 
-Really bad idea.
+"RAS is a lonely subsystem ... even EDAC gets more love."
 
-1. It's not an 'error'. It's normal that in the case the consumer is
-blocked you can run out of processing space
+:-)))
 
-2. You will trigger this when being hit by a very large fast flow of data
-so responding by burning CPU spewing messages (possibly even out of this
-tty) is bad.
+And adding yet another vendor check for this seemed just not worth it.
 
-It's not a bug - just keep statistics and throw it away. If anyone cares
-they will do flow control.
+> Should I send out another version of this set?
 
+I simply zapped 5/6. I still think your 6/6 makes sense though.
 
-> +
-> +static int rpmsg_tty_write_control(struct tty_struct *tty, u8 ctrl, u8 *values,
-> +				   unsigned int n_value)
-> +{
-> +	struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
-> +	struct rpmsg_tty_payload *msg;
-> +	struct rpmsg_tty_ctrl *m_ctrl;
-> +	struct rpmsg_device *rpdev;
-> +	unsigned int msg_size;
-> +	int ret;
-> +
-> +	if (!cport) {
-> +		dev_err(tty->dev, "cannot get cport\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	rpdev = cport->rpdev;
-> +
-> +	msg_size = sizeof(*msg) + sizeof(*m_ctrl) + n_value;
-> +	msg = kzalloc(msg_size, GFP_KERNEL);
+---
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+Date: Tue, 30 Apr 2019 20:32:21 +0000
+Subject: [PATCH] x86/MCE: Determine MCA banks' init state properly
 
+The OS is expected to write all bits to MCA_CTL for each bank,
+thus enabling error reporting in all banks. However, some banks
+may be unused in which case the registers for such banks are
+Read-as-Zero/Writes-Ignored. Also, the OS may avoid setting some control
+bits because of quirks, etc.
 
-Out of memory check ?
+A bank can be considered uninitialized if the MCA_CTL register returns
+zero. This is because either the OS did not write anything or because
+the hardware is enforcing RAZ/WI for the bank.
 
-> +static int rpmsg_tty_write(struct tty_struct *tty, const u8 *buf, int len)
-> +{
-> +	struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
-> +	struct rpmsg_device *rpdev;
-> +	int msg_size, msg_max_size, ret = 0;
-> +	int cmd_sz = sizeof(struct rpmsg_tty_payload);
-> +	u8 *tmpbuf;
-> +
-> +	if (!cport) {
-> +		dev_err(tty->dev, "cannot get cport\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* If cts not set, the message is not sent*/
-> +	if (!cport->cts)
-> +		return 0;
-> +
-> +	rpdev = cport->rpdev;
-> +
-> +	dev_dbg(&rpdev->dev, "%s: send msg from tty->index = %d, len = %d\n",
-> +		__func__, tty->index, len);
-> +	if (!buf) {
-> +		dev_err(&rpdev->dev, "buf shouldn't be null.\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	msg_max_size = rpmsg_get_buf_payload_size(rpdev->ept);
-> +	if (msg_max_size < 0)
-> +		return msg_max_size;
-> +
-> +	msg_size = min(len + cmd_sz, msg_max_size);
-> +	tmpbuf = kzalloc(msg_size, GFP_KERNEL);
+Set a bank's init value based on if the control bits are set or not in
+hardware. Return an error code in the sysfs interface for uninitialized
+banks.
 
-Allocation failure check ?
+ [ bp: Massage a bit. ]
 
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: "x86@kernel.org" <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190430203206.104163-7-Yazen.Ghannam@amd.com
+---
+ arch/x86/kernel/cpu/mce/core.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 5bcecadcf4d9..c049689f3d73 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1567,10 +1567,13 @@ static void __mcheck_cpu_init_clear_banks(void)
+ 	for (i = 0; i < this_cpu_read(mce_num_banks); i++) {
+ 		struct mce_bank *b = &mce_banks[i];
+ 
+-		if (!b->init)
+-			continue;
+-		wrmsrl(msr_ops.ctl(i), b->ctl);
+-		wrmsrl(msr_ops.status(i), 0);
++		if (b->init) {
++			wrmsrl(msr_ops.ctl(i), b->ctl);
++			wrmsrl(msr_ops.status(i), 0);
++		}
++
++		/* Bank is initialized if bits are set in hardware. */
++		b->init = !!b->ctl;
+ 	}
+ }
+ 
+@@ -2095,6 +2098,9 @@ static ssize_t show_bank(struct device *s, struct device_attribute *attr,
+ 
+ 	b = &per_cpu(mce_banks_array, s->id)[bank];
+ 
++	if (!b->init)
++		return -ENODEV;
++
+ 	return sprintf(buf, "%llx\n", b->ctl);
+ }
+ 
+@@ -2113,6 +2119,9 @@ static ssize_t set_bank(struct device *s, struct device_attribute *attr,
+ 
+ 	b = &per_cpu(mce_banks_array, s->id)[bank];
+ 
++	if (!b->init)
++		return -ENODEV;
++
+ 	b->ctl = new;
+ 	mce_restart();
+ 
+-- 
+2.21.0
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
