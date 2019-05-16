@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AEDC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73057C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C2920833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4566220833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558007197;
-	bh=tbOjMBMj6sA81jPJRxjoqNZV/rUdTrG1WpStJ306LTE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qTMnZ8fZjCaC5TAMSyoE1qLw7Na6vZezlN6GckXc4zlLMfv9kHsIdb4pOhln9rQMF
-	 6bWewB9Cru5SO1LgyCMquyWeacd97VtNXJK2SkjpTLOALbCtv5vX3G14z7PmrKrfAu
-	 puM0fdHtbsYPWy8mds4lzrGfaSepBeCHlBGv+v1E=
+	s=default; t=1558007203;
+	bh=OgAr9NnJOu4bo2BNM55+71cqwwgE6NUDDGHNnnfrFGU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=xDuWMUNQXCOk7pqVpxFRJ6cmIbqjGsyqfAdcu1u87mRUYZTYXSmXbDqpLPgD0wXfN
+	 9asCaVLVFjXFVlOhQCQXHcezMMbon0vo5iFFgJYEIQOUNG0Y2c/kyxSXb7h3rh+Fdw
+	 Bkmf+uoS2zahr+iwNOZ21T5xttiaKljKN4YPFY/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbfEPLqg (ORCPT
+        id S1726687AbfEPLkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:46:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49010 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:40:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727797AbfEPLki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:40:38 -0400
+        id S1727741AbfEPLkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:40:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C95D20833;
-        Thu, 16 May 2019 11:40:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 215D220833;
+        Thu, 16 May 2019 11:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006837;
-        bh=tbOjMBMj6sA81jPJRxjoqNZV/rUdTrG1WpStJ306LTE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=On1jKOREpnGL7hakuAW9OPVWR9PWM0Hv8Gzjol+eMIzdsjvA0FypNVyhJafoxzwzS
-         kX6I3vx7ufPDA1iLgqOIyx1Om2V8mN13wZkqrAIQ9q3ZqxPZU6dpt8hsIE7C0LeR/Q
-         eipgX3lc72N3cFwi/I+mj5R5Y/jUHp5Td3xGyk5I=
+        s=default; t=1558006831;
+        bh=OgAr9NnJOu4bo2BNM55+71cqwwgE6NUDDGHNnnfrFGU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FdwyFH8DBUr2A443w9H5aDnB+XmlzEOTwtQlu9pIOg7gO4eRk0r4e//AC1CTY3Ovp
+         do39YuCj6tdnHvDIqtdt2/csPKXDos98x0gt4O1sMBIqgZG1k94PswVfNIFZKvwwQG
+         jbdD1EGlz4fRIM0UtxVbgZWfK3h/wEciNYvSu0Cs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Martin Willi <martin@strongswan.org>,
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Steffen Klassert <steffen.klassert@secunet.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 06/25] xfrm: Honor original L3 slave device in xfrmi policy lookup
-Date:   Thu, 16 May 2019 07:40:09 -0400
-Message-Id: <20190516114029.8682-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 01/25] xfrm: policy: Fix out-of-bound array accesses in __xfrm_policy_unlink
+Date:   Thu, 16 May 2019 07:40:04 -0400
+Message-Id: <20190516114029.8682-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190516114029.8682-1-sashal@kernel.org>
-References: <20190516114029.8682-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,92 +58,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Willi <martin@strongswan.org>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 025c65e119bf58b610549ca359c9ecc5dee6a8d2 ]
+[ Upstream commit b805d78d300bcf2c83d6df7da0c818b0fee41427 ]
 
-If an xfrmi is associated to a vrf layer 3 master device,
-xfrm_policy_check() fails after traffic decapsulation. The input
-interface is replaced by the layer 3 master device, and hence
-xfrmi_decode_session() can't match the xfrmi anymore to satisfy
-policy checking.
+UBSAN report this:
 
-Extend ingress xfrmi lookup to honor the original layer 3 slave
-device, allowing xfrm interfaces to operate within a vrf domain.
+UBSAN: Undefined behaviour in net/xfrm/xfrm_policy.c:1289:24
+index 6 is out of range for type 'unsigned int [6]'
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 4.4.162-514.55.6.9.x86_64+ #13
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+ 0000000000000000 1466cf39b41b23c9 ffff8801f6b07a58 ffffffff81cb35f4
+ 0000000041b58ab3 ffffffff83230f9c ffffffff81cb34e0 ffff8801f6b07a80
+ ffff8801f6b07a20 1466cf39b41b23c9 ffffffff851706e0 ffff8801f6b07ae8
+Call Trace:
+ <IRQ>  [<ffffffff81cb35f4>] __dump_stack lib/dump_stack.c:15 [inline]
+ <IRQ>  [<ffffffff81cb35f4>] dump_stack+0x114/0x1a0 lib/dump_stack.c:51
+ [<ffffffff81d94225>] ubsan_epilogue+0x12/0x8f lib/ubsan.c:164
+ [<ffffffff81d954db>] __ubsan_handle_out_of_bounds+0x16e/0x1b2 lib/ubsan.c:382
+ [<ffffffff82a25acd>] __xfrm_policy_unlink+0x3dd/0x5b0 net/xfrm/xfrm_policy.c:1289
+ [<ffffffff82a2e572>] xfrm_policy_delete+0x52/0xb0 net/xfrm/xfrm_policy.c:1309
+ [<ffffffff82a3319b>] xfrm_policy_timer+0x30b/0x590 net/xfrm/xfrm_policy.c:243
+ [<ffffffff813d3927>] call_timer_fn+0x237/0x990 kernel/time/timer.c:1144
+ [<ffffffff813d8e7e>] __run_timers kernel/time/timer.c:1218 [inline]
+ [<ffffffff813d8e7e>] run_timer_softirq+0x6ce/0xb80 kernel/time/timer.c:1401
+ [<ffffffff8120d6f9>] __do_softirq+0x299/0xe10 kernel/softirq.c:273
+ [<ffffffff8120e676>] invoke_softirq kernel/softirq.c:350 [inline]
+ [<ffffffff8120e676>] irq_exit+0x216/0x2c0 kernel/softirq.c:391
+ [<ffffffff82c5edab>] exiting_irq arch/x86/include/asm/apic.h:652 [inline]
+ [<ffffffff82c5edab>] smp_apic_timer_interrupt+0x8b/0xc0 arch/x86/kernel/apic/apic.c:926
+ [<ffffffff82c5c985>] apic_timer_interrupt+0xa5/0xb0 arch/x86/entry/entry_64.S:735
+ <EOI>  [<ffffffff81188096>] ? native_safe_halt+0x6/0x10 arch/x86/include/asm/irqflags.h:52
+ [<ffffffff810834d7>] arch_safe_halt arch/x86/include/asm/paravirt.h:111 [inline]
+ [<ffffffff810834d7>] default_idle+0x27/0x430 arch/x86/kernel/process.c:446
+ [<ffffffff81085f05>] arch_cpu_idle+0x15/0x20 arch/x86/kernel/process.c:437
+ [<ffffffff8132abc3>] default_idle_call+0x53/0x90 kernel/sched/idle.c:92
+ [<ffffffff8132b32d>] cpuidle_idle_call kernel/sched/idle.c:156 [inline]
+ [<ffffffff8132b32d>] cpu_idle_loop kernel/sched/idle.c:251 [inline]
+ [<ffffffff8132b32d>] cpu_startup_entry+0x60d/0x9a0 kernel/sched/idle.c:299
+ [<ffffffff8113e119>] start_secondary+0x3c9/0x560 arch/x86/kernel/smpboot.c:245
 
-Fixes: f203b76d7809 ("xfrm: Add virtual xfrm interfaces")
-Signed-off-by: Martin Willi <martin@strongswan.org>
+The issue is triggered as this:
+
+xfrm_add_policy
+    -->verify_newpolicy_info  //check the index provided by user with XFRM_POLICY_MAX
+			      //In my case, the index is 0x6E6BB6, so it pass the check.
+    -->xfrm_policy_construct  //copy the user's policy and set xfrm_policy_timer
+    -->xfrm_policy_insert
+	--> __xfrm_policy_link //use the orgin dir, in my case is 2
+	--> xfrm_gen_index   //generate policy index, there is 0x6E6BB6
+
+then xfrm_policy_timer be fired
+
+xfrm_policy_timer
+   --> xfrm_policy_id2dir  //get dir from (policy index & 7), in my case is 6
+   --> xfrm_policy_delete
+      --> __xfrm_policy_unlink //access policy_count[dir], trigger out of range access
+
+Add xfrm_policy_id2dir check in verify_newpolicy_info, make sure the computed dir is
+valid, to fix the issue.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: e682adf021be ("xfrm: Try to honor policy index if it's supplied by user")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/xfrm.h        |  3 ++-
- net/xfrm/xfrm_interface.c | 17 ++++++++++++++---
- net/xfrm/xfrm_policy.c    |  2 +-
- 3 files changed, 17 insertions(+), 5 deletions(-)
+ net/xfrm/xfrm_user.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/xfrm.h b/include/net/xfrm.h
-index 3e966c632f3b2..4ddd2b13ac8d6 100644
---- a/include/net/xfrm.h
-+++ b/include/net/xfrm.h
-@@ -295,7 +295,8 @@ struct xfrm_replay {
- };
+diff --git a/net/xfrm/xfrm_user.c b/net/xfrm/xfrm_user.c
+index 7e4904b930041..060afc4ffd958 100644
+--- a/net/xfrm/xfrm_user.c
++++ b/net/xfrm/xfrm_user.c
+@@ -1424,7 +1424,7 @@ static int verify_newpolicy_info(struct xfrm_userpolicy_info *p)
+ 	ret = verify_policy_dir(p->dir);
+ 	if (ret)
+ 		return ret;
+-	if (p->index && ((p->index & XFRM_POLICY_MAX) != p->dir))
++	if (p->index && (xfrm_policy_id2dir(p->index) != p->dir))
+ 		return -EINVAL;
  
- struct xfrm_if_cb {
--	struct xfrm_if	*(*decode_session)(struct sk_buff *skb);
-+	struct xfrm_if	*(*decode_session)(struct sk_buff *skb,
-+					   unsigned short family);
- };
- 
- void xfrm_if_register_cb(const struct xfrm_if_cb *ifcb);
-diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
-index 82723ef44db3e..555ee2aca6c01 100644
---- a/net/xfrm/xfrm_interface.c
-+++ b/net/xfrm/xfrm_interface.c
-@@ -70,17 +70,28 @@ static struct xfrm_if *xfrmi_lookup(struct net *net, struct xfrm_state *x)
- 	return NULL;
- }
- 
--static struct xfrm_if *xfrmi_decode_session(struct sk_buff *skb)
-+static struct xfrm_if *xfrmi_decode_session(struct sk_buff *skb,
-+					    unsigned short family)
- {
- 	struct xfrmi_net *xfrmn;
--	int ifindex;
- 	struct xfrm_if *xi;
-+	int ifindex = 0;
- 
- 	if (!secpath_exists(skb) || !skb->dev)
- 		return NULL;
- 
-+	switch (family) {
-+	case AF_INET6:
-+		ifindex = inet6_sdif(skb);
-+		break;
-+	case AF_INET:
-+		ifindex = inet_sdif(skb);
-+		break;
-+	}
-+	if (!ifindex)
-+		ifindex = skb->dev->ifindex;
-+
- 	xfrmn = net_generic(xs_net(xfrm_input_state(skb)), xfrmi_net_id);
--	ifindex = skb->dev->ifindex;
- 
- 	for_each_xfrmi_rcu(xfrmn->xfrmi[0], xi) {
- 		if (ifindex == xi->dev->ifindex &&
-diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
-index bf5d59270f79d..ce1b262ce9646 100644
---- a/net/xfrm/xfrm_policy.c
-+++ b/net/xfrm/xfrm_policy.c
-@@ -2339,7 +2339,7 @@ int __xfrm_policy_check(struct sock *sk, int dir, struct sk_buff *skb,
- 	ifcb = xfrm_if_get_cb();
- 
- 	if (ifcb) {
--		xi = ifcb->decode_session(skb);
-+		xi = ifcb->decode_session(skb, family);
- 		if (xi) {
- 			if_id = xi->p.if_id;
- 			net = xi->net;
+ 	return 0;
 -- 
 2.20.1
 
