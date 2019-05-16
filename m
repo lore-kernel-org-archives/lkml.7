@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DFAC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34882C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E37D520833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F4220848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558007310;
-	bh=Ws+bFHUyMptDpf6Ro3V5FFO0qL8keE+Bq8CM4i285u8=;
+	s=default; t=1558007314;
+	bh=0te2/MatERJ1D9RAWwRpgHkRIsAxhubHijqTPPdWFPk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2PeqX62cxGz1PqbvM5kvpX9h5kqAv2yfCza6jWJe/ApZplgMgEjvetAjuhjYx4aso
-	 xuxI0DrEJR0aDTuShEPDDv7xsLrCvwqkzXw/Lni2yCJ638uWAiD/rsUNCL3Rftfj5a
-	 qDNXqHG4M2ZsVAs/vLrOHeJRqq2dzxBfYD+jUbz0=
+	b=DvtrJDiyLcfmzFvXitxVTVflGGI61AUXQxjCmZ/dE8+y1t39qUWeWWToJ/e50kY/+
+	 C3q/7IbX1iyezE1k6TI+HBej8V3i0d/rjrPTsKstCkuQZdRXVu9zOTK5ZQdwgFi8Xq
+	 XBAVN7U6F1nAh+Aq1kkUKalW0rf8WSK0FOaxLrnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfEPLjz (ORCPT
+        id S1728621AbfEPLsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:39:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47928 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:48:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727427AbfEPLjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:39:52 -0400
+        id S1727497AbfEPLjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:39:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A09B62166E;
-        Thu, 16 May 2019 11:39:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCB5720833;
+        Thu, 16 May 2019 11:39:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006792;
-        bh=Ws+bFHUyMptDpf6Ro3V5FFO0qL8keE+Bq8CM4i285u8=;
+        s=default; t=1558006794;
+        bh=0te2/MatERJ1D9RAWwRpgHkRIsAxhubHijqTPPdWFPk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aKg8MOv+4yU0eXv86kBtyV31dI+wqZ+VAALgaRrTwjPph5sn/M3ggxrg0FD8VOFRz
-         oyl9+pxHukLRmCFc+fXDWSDCJA1nAtezbpw/avS6Pv0XIUWdBYUg+csSL2O3Ba4wfe
-         EmJxG1MobILRBZJ9GxkoB+InmeJPc++bqgDjHHpY=
+        b=CCeWWz6x4tX2vvvDAwjjXQpMKee6aGf8pVyVGz1P4BJoIpZfm85km713YJopl2IZ4
+         Z5XN9X8kVUziujj3qVzGxA8Ji7UIJ9wZnAWCToIXsWvvLRdHOFCnjrcUDEj59tjUGS
+         ouf8FiUmuUJG8+uVT+FAwGA0BvHXKzhiKzGhPMbk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 15/34] apparmorfs: fix use-after-free on symlink traversal
-Date:   Thu, 16 May 2019 07:39:12 -0400
-Message-Id: <20190516113932.8348-15-sashal@kernel.org>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 17/34] x86: kvm: hyper-v: deal with buggy TLB flush requests from WS2012
+Date:   Thu, 16 May 2019 07:39:14 -0400
+Message-Id: <20190516113932.8348-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516113932.8348-1-sashal@kernel.org>
 References: <20190516113932.8348-1-sashal@kernel.org>
@@ -58,51 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[ Upstream commit f51dcd0f621caac5380ce90fbbeafc32ce4517ae ]
+[ Upstream commit da66761c2d93a46270d69001abb5692717495a68 ]
 
-symlink body shouldn't be freed without an RCU delay.  Switch apparmorfs
-to ->destroy_inode() and use of call_rcu(); free both the inode and symlink
-body in the callback.
+It was reported that with some special Multi Processor Group configuration,
+e.g:
+ bcdedit.exe /set groupsize 1
+ bcdedit.exe /set maxgroup on
+ bcdedit.exe /set groupaware on
+for a 16-vCPU guest WS2012 shows BSOD on boot when PV TLB flush mechanism
+is in use.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Tracing kvm_hv_flush_tlb immediately reveals the issue:
+
+ kvm_hv_flush_tlb: processor_mask 0x0 address_space 0x0 flags 0x2
+
+The only flag set in this request is HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES,
+however, processor_mask is 0x0 and no HV_FLUSH_ALL_PROCESSORS is specified.
+We don't flush anything and apparently it's not what Windows expects.
+
+TLFS doesn't say anything about such requests and newer Windows versions
+seem to be unaffected. This all feels like a WS2012 bug, which is, however,
+easy to workaround in KVM: let's flush everything when we see an empty
+flush request, over-flushing doesn't hurt.
+
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- security/apparmor/apparmorfs.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/x86/kvm/hyperv.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
-index 3f80a684c232a..665853dd517ca 100644
---- a/security/apparmor/apparmorfs.c
-+++ b/security/apparmor/apparmorfs.c
-@@ -123,17 +123,22 @@ static int aafs_show_path(struct seq_file *seq, struct dentry *dentry)
- 	return 0;
- }
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 371c669696d70..610c0f1fbdd71 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -1371,7 +1371,16 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *current_vcpu, u64 ingpa,
  
--static void aafs_evict_inode(struct inode *inode)
-+static void aafs_i_callback(struct rcu_head *head)
- {
--	truncate_inode_pages_final(&inode->i_data);
--	clear_inode(inode);
-+	struct inode *inode = container_of(head, struct inode, i_rcu);
- 	if (S_ISLNK(inode->i_mode))
- 		kfree(inode->i_link);
-+	free_inode_nonrcu(inode);
-+}
+ 		valid_bank_mask = BIT_ULL(0);
+ 		sparse_banks[0] = flush.processor_mask;
+-		all_cpus = flush.flags & HV_FLUSH_ALL_PROCESSORS;
 +
-+static void aafs_destroy_inode(struct inode *inode)
-+{
-+	call_rcu(&inode->i_rcu, aafs_i_callback);
- }
- 
- static const struct super_operations aafs_super_ops = {
- 	.statfs = simple_statfs,
--	.evict_inode = aafs_evict_inode,
-+	.destroy_inode = aafs_destroy_inode,
- 	.show_path = aafs_show_path,
- };
- 
++		/*
++		 * Work around possible WS2012 bug: it sends hypercalls
++		 * with processor_mask = 0x0 and HV_FLUSH_ALL_PROCESSORS clear,
++		 * while also expecting us to flush something and crashing if
++		 * we don't. Let's treat processor_mask == 0 same as
++		 * HV_FLUSH_ALL_PROCESSORS.
++		 */
++		all_cpus = (flush.flags & HV_FLUSH_ALL_PROCESSORS) ||
++			flush.processor_mask == 0;
+ 	} else {
+ 		if (unlikely(kvm_read_guest(kvm, ingpa, &flush_ex,
+ 					    sizeof(flush_ex))))
 -- 
 2.20.1
 
