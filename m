@@ -2,158 +2,180 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HTTP_ESCAPED_HOST,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8571C04E53
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6D0C04E53
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC7F52087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A2C02087E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:47:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Dnp/7aNi"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="U/Y22/bC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbfEPBrH (ORCPT
+        id S1727714AbfEPBrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 21:47:07 -0400
-Received: from mail-eopbgr800099.outbound.protection.outlook.com ([40.107.80.99]:33463
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726878AbfEPBAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 21:00:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=TDhBOZQYZcgMY3BrZ051d/Z0ZspZgL7N0/Qg2GypJ6K7DWxd0cW/xABvQB9RKXmUgTmZ8oSK7yVh57FbW7xRyClv4mqbtasBFqUgmLsZBzYyVWHwqkaYwwVwrWbH1LG0nutYA4EufSLMKtGrLujfVnMckMO8+cvJSC4DyX4HIC4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uS3ZLtcUf5PHhSuvLuh1Z04+j72FbftBKfsh0TfueXo=;
- b=Wtr5U2r+o117SwJo7EhbFJMhbq0TiJjlnm0eaOAqsTqbDuiS9ocJ/74J2UxXz5Dv0dcJWoI5yMEE+79L5vga2sfNuNrWHSJZepLqKcQW2g9KGoEb/h8cj7p5IfUXazURZRHgEgAmLglDSCokd2Z8Q6cebhgFHGg7SbrQSMfEBLk=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uS3ZLtcUf5PHhSuvLuh1Z04+j72FbftBKfsh0TfueXo=;
- b=Dnp/7aNiG0OSyikzaXxxpE3hPzfRYIv4Rjw0W9094WAa7KV52ovnoG4ipOe0mUP/UdYYHu7/ZRsc8sSg8mnA0GERoahULnf1SxlaxWqBBz5wqGqTPbWk+s7bDaypCDe/PLJEKj3RcViTnRD6menB6sOWjFM9JtwMovcQa5l8hwc=
-Received: from CY4PR21MB0279.namprd21.prod.outlook.com (2603:10b6:903:bb::17)
- by CY4PR21MB0694.namprd21.prod.outlook.com (2603:10b6:903:13b::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1922.5; Thu, 16 May
- 2019 01:00:12 +0000
-Received: from CY4PR21MB0279.namprd21.prod.outlook.com
- ([fe80::9843:add4:f5b:8fc1]) by CY4PR21MB0279.namprd21.prod.outlook.com
- ([fe80::9843:add4:f5b:8fc1%5]) with mapi id 15.20.1922.002; Thu, 16 May 2019
- 01:00:12 +0000
-From:   Thirupathaiah Annapureddy <thiruan@microsoft.com>
-To:     Sumit Garg <sumit.garg@linaro.org>, Sasha Levin <sashal@kernel.org>
-CC:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        "peterhuewe@gmx.de" <peterhuewe@gmx.de>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>, "corbet@lwn.net" <corbet@lwn.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        Microsoft Linux Kernel List <linux-kernel@microsoft.com>,
-        "Bryan Kelly (CSI)" <bryankel@microsoft.com>
-Subject: RE: [PATCH v3 0/2] ftpm: a firmware based TPM driver
-Thread-Topic: [PATCH v3 0/2] ftpm: a firmware based TPM driver
-Thread-Index: AQHU86PZuIUdaSF7RUeiIyc+iLswraZgEJkAgAE/tQCACd+EAIAAbVeAgAFpYfA=
-Date:   Thu, 16 May 2019 01:00:12 +0000
-Message-ID: <CY4PR21MB0279339E8B0A15414C8F9E14BC0A0@CY4PR21MB0279.namprd21.prod.outlook.com>
-References: <20190415155636.32748-1-sashal@kernel.org>
- <20190507174020.GH1747@sasha-vm> <20190508124436.GE7642@linux.intel.com>
- <20190514193056.GN11972@sasha-vm>
- <CAFA6WYM06E0y9o6+CLNPe48spiL=UDEqoGsidMbk1dBa5Rbmkg@mail.gmail.com>
-In-Reply-To: <CAFA6WYM06E0y9o6+CLNPe48spiL=UDEqoGsidMbk1dBa5Rbmkg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thiruan@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:b:320a:2187:ff1a:ca0b]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7772ecb2-757d-4f2c-f938-08d6d999d99d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:CY4PR21MB0694;
-x-ms-traffictypediagnostic: CY4PR21MB0694:
-x-ms-exchange-purlcount: 1
-x-microsoft-antispam-prvs: <CY4PR21MB069475AE03DC4D3BD8FFE108BC0A0@CY4PR21MB0694.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0039C6E5C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(136003)(376002)(39860400002)(346002)(13464003)(189003)(199004)(54906003)(25786009)(5660300002)(68736007)(81156014)(2906002)(110136005)(86612001)(71200400001)(71190400001)(229853002)(52536014)(86362001)(6116002)(7736002)(305945005)(966005)(8936002)(9686003)(107886003)(186003)(10290500003)(6246003)(6306002)(478600001)(76176011)(8990500004)(99286004)(53936002)(256004)(486006)(74316002)(102836004)(53546011)(33656002)(476003)(11346002)(6506007)(446003)(76116006)(81166006)(73956011)(66946007)(10090500001)(4326008)(46003)(8676002)(14454004)(6436002)(7696005)(55016002)(316002)(52396003)(66446008)(66476007)(66556008)(22452003)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:CY4PR21MB0694;H:CY4PR21MB0279.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: XyX95+XjGx/VPXlqa3OVHgCa7bRp85GAbU4MYEISr6eWfyujFmanft55YK0XRnxLkn0bobPxyBtFctXl/ZTp2R4G9fM5f3N9zEJZvXMjcKpq5BZqOciPX/6pbxNKRSI2MFZNtH14QE4TodD6UKYwt0DrrDaC6xlmrPMofC53KRVvQ0dHXPFSfW7TQFknC68VgbevGxZs1x/tYNIV1DNcCNFb0c0qONODkThOo1Ql+EbA0gHXogHerzFzjmjd1MeHUsi/r0MRqI7NkVg8dp/T1z7Mh2ZvbgWb3JR00hXvvN5LVwKuTelr64UqaMuRzpQc14TAuRFhUiU0bz+RzF2o5v9omAuIFrJtRahCE8SO/w8LzbnuY4jUSiGOLZMvOx8iBPS9hicIFiYPkt8Cd4srXzAWzswCYrjBI95V2DbAbog=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 15 May 2019 21:47:00 -0400
+Received: from mail-ot1-f51.google.com ([209.85.210.51]:40569 "EHLO
+        mail-ot1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbfEPAmy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 20:42:54 -0400
+Received: by mail-ot1-f51.google.com with SMTP id u11so1815044otq.7
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 17:42:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4wF4B/XO+LFCzisDrNsMqmlSL+kOk21IiP/4p8K0X7U=;
+        b=U/Y22/bCzRIzE1Xsqh5f3+RBvJUV1RMz+pVgOjqYlQhz4iQqdrUPBRWbWciAaasKQe
+         vf8QyeNFoGsz8yqkGygyREx7lhw9HstPaMuVrr27/KyitIfiP0TnNsEbh+rsCCGBoUDY
+         irfkr7iszBcaj4LIg2eFjALBbAw0LyVbqSAuaajKOP0NsaCv5sTe9zXHbxvKAFhfARk0
+         7L4havjtTmMCm3Md5Y9rr5ig4PFYphhp95oMlWixzxiSkNqTP59gYvQk/rhziKM7Zrrm
+         VAtwNZsGyNLgm0GA15nZVzk8++wQz8D0asXbsKwS3EQzV03FdRgsSypZRh/sKEIYDtVc
+         9H7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4wF4B/XO+LFCzisDrNsMqmlSL+kOk21IiP/4p8K0X7U=;
+        b=KtFaYn9ETaQmpq2QMS+C1Vl2UlZ2GycGnLoDMxttEr/tDbfSlSohOpnmvX7feuW+se
+         OWBswJ5q0+qS1E0wcYWBShfj+M9cp1wjKyDzSPQbtsse+hOC6dgmBd3E10KZpKyQSWz2
+         u7WNqlUBJoK1HIjubfjL5zHG31tISW84bXOm4smdos5plLEtXaURlw3yT38YCWjnog1u
+         1HKyp1hH7/5048NXF0O4dZGtZuLpeqCv2mVmfAoUqRNstz6USbn+K156cSQ6bG5BVDbc
+         38ma8+6ULpsNZWjFJ3Sftw9vpSjVHug4ErSVVGCF/xKeQZFsvoji4d7DWwiAO3afmlP7
+         kYig==
+X-Gm-Message-State: APjAAAX6SKlNUBN4Y7HOGXvzsl3/8V0WFmmnk6QnS0wZLeIeLtCZdiZA
+        MiSyIHEi1smZIKNuePnjDHEwh4oK1Kqkuh/sWASkbz8uj4Y=
+X-Google-Smtp-Source: APXvYqxHHdBhJkGMx5fiIIlPrJsnSR6+qYmBOEInSq5ilrexTUGafywN2clUkUaBI+pWKFUlTJBtGXaBRq9YnBc8yJ0=
+X-Received: by 2002:a9d:d09:: with SMTP id 9mr28295683oti.82.1557967372879;
+ Wed, 15 May 2019 17:42:52 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7772ecb2-757d-4f2c-f938-08d6d999d99d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 01:00:12.1794
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: thiruan@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR21MB0694
+References: <20190502184337.20538-1-pasha.tatashin@soleen.com>
+ <76dfe7943f2a0ceaca73f5fd23e944dfdc0309d1.camel@intel.com> <CA+CK2bCKcJjXo7BGAVxvbQNYQFSDVLH5aB=S9yTmZWEfexOvtg@mail.gmail.com>
+In-Reply-To: <CA+CK2bCKcJjXo7BGAVxvbQNYQFSDVLH5aB=S9yTmZWEfexOvtg@mail.gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 15 May 2019 17:42:42 -0700
+Message-ID: <CAPcyv4jj557QNNwyQ7ez+=PnURsnXk9cGZ11Mmihmtem2bJ-3A@mail.gmail.com>
+Subject: Re: [v5 0/3] "Hotremove" persistent memory
+To:     Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jmorris@namei.org" <jmorris@namei.org>,
+        "tiwai@suse.de" <tiwai@suse.de>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "david@redhat.com" <david@redhat.com>, "bp@suse.de" <bp@suse.de>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "jglisse@redhat.com" <jglisse@redhat.com>,
+        "zwisler@kernel.org" <zwisler@kernel.org>,
+        "mhocko@suse.com" <mhocko@suse.com>,
+        "Jiang, Dave" <dave.jiang@intel.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        "Wu, Fengguang" <fengguang.wu@intel.com>,
+        "baiyaowei@cmss.chinamobile.com" <baiyaowei@cmss.chinamobile.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3VtaXQgR2FyZyA8c3Vt
-aXQuZ2FyZ0BsaW5hcm8ub3JnPg0KPiBTZW50OiBUdWVzZGF5LCBNYXkgMTQsIDIwMTkgNzowMiBQ
-TQ0KPiBUbzogU2FzaGEgTGV2aW4gPHNhc2hhbEBrZXJuZWwub3JnPg0KPiBDYzogSmFya2tvIFNh
-a2tpbmVuIDxqYXJra28uc2Fra2luZW5AbGludXguaW50ZWwuY29tPjsgcGV0ZXJodWV3ZUBnbXgu
-ZGU7DQo+IGpnZ0B6aWVwZS5jYTsgY29yYmV0QGx3bi5uZXQ7IExpbnV4IEtlcm5lbCBNYWlsaW5n
-IExpc3QgPGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgbGludXgtZG9jQHZnZXIu
-a2VybmVsLm9yZzsgbGludXgtDQo+IGludGVncml0eUB2Z2VyLmtlcm5lbC5vcmc7IE1pY3Jvc29m
-dCBMaW51eCBLZXJuZWwgTGlzdCA8bGludXgtDQo+IGtlcm5lbEBtaWNyb3NvZnQuY29tPjsgVGhp
-cnVwYXRoYWlhaCBBbm5hcHVyZWRkeSA8dGhpcnVhbkBtaWNyb3NvZnQuY29tPjsNCj4gQnJ5YW4g
-S2VsbHkgKENTSSkgPGJyeWFua2VsQG1pY3Jvc29mdC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFU
-Q0ggdjMgMC8yXSBmdHBtOiBhIGZpcm13YXJlIGJhc2VkIFRQTSBkcml2ZXINCj4gDQo+IE9uIFdl
-ZCwgMTUgTWF5IDIwMTkgYXQgMDE6MDAsIFNhc2hhIExldmluIDxzYXNoYWxAa2VybmVsLm9yZz4g
-d3JvdGU6DQo+ID4NCj4gPiBPbiBXZWQsIE1heSAwOCwgMjAxOSBhdCAwMzo0NDozNlBNICswMzAw
-LCBKYXJra28gU2Fra2luZW4gd3JvdGU6DQo+ID4gPk9uIFR1ZSwgTWF5IDA3LCAyMDE5IGF0IDAx
-OjQwOjIwUE0gLTA0MDAsIFNhc2hhIExldmluIHdyb3RlOg0KPiA+ID4+IE9uIE1vbiwgQXByIDE1
-LCAyMDE5IGF0IDExOjU2OjM0QU0gLTA0MDAsIFNhc2hhIExldmluIHdyb3RlOg0KPiA+ID4+ID4g
-RnJvbTogIlNhc2hhIExldmluIChNaWNyb3NvZnQpIiA8c2FzaGFsQGtlcm5lbC5vcmc+DQo+ID4g
-Pj4gPg0KPiA+ID4+ID4gQ2hhbmdlcyBzaW5jZSB2MjoNCj4gPiA+PiA+DQo+ID4gPj4gPiAtIERy
-b3AgdGhlIGRldmljZXRyZWUgYmluZGluZ3MgcGF0Y2ggKHdlIGRvbid0IGFkZCBhbnkgbmV3IG9u
-ZXMpLg0KPiA+ID4+ID4gLSBNb3JlIGNvZGUgY2xlYW51cHMgYmFzZWQgb24gSmFzb24gR3VudGhv
-cnBlJ3MgcmV2aWV3Lg0KPiA+ID4+ID4NCj4gPiA+PiA+IFNhc2hhIExldmluICgyKToNCj4gPiA+
-PiA+ICBmdHBtOiBmaXJtd2FyZSBUUE0gcnVubmluZyBpbiBURUUNCj4gPiA+PiA+ICBmdHBtOiBh
-ZGQgZG9jdW1lbnRhdGlvbiBmb3IgZnRwbSBkcml2ZXINCj4gPiA+Pg0KPiA+ID4+IFBpbmc/IERv
-ZXMgYW55b25lIGhhdmUgYW55IG9iamVjdGlvbnMgdG8gdGhpcz8NCj4gPiA+DQo+ID4gPlNvcnJ5
-IEkndmUgYmVlbiBvbiB2YWNhdGlvbiB3ZWVrIGJlZm9yZSBsYXN0IHdlZWsgYW5kIGxhc3Qgd2Vl
-aw0KPiA+ID5JIHdhcyBleHRyZW1lbHkgYnVzeSBiZWNhdXNlIEkgaGFkIGJlZW4gb24gdmFjYXRp
-b24uIFRoaXMgaW4NCj4gPiA+bXkgVE9ETyBsaXN0LiBXaWxsIGxvb2sgaW50byBpdCB0b21vcnJv
-dyBpbiBkZXRhaWwuDQo+ID4gPg0KPiA+ID5BcG9sb2dpZXMgZm9yIHRoZSBkZWxheSB3aXRoIHRo
-aXMhDQo+ID4NCj4gPiBIaSBKYXJra28sDQo+ID4NCj4gPiBJZiB0aGVyZSBhcmVuJ3QgYW55IGJp
-ZyBvYmplY3Rpb25zIHRvIHRoaXMsIGNhbiB3ZSBnZXQgaXQgbWVyZ2VkIGluPw0KPiA+IFdlJ2xs
-IGJlIGhhcHB5IHRvIGFkZHJlc3MgYW55IGNvbW1lbnRzIHRoYXQgY29tZSB1cC4NCj4gDQo+IEkg
-Z3Vlc3MgeW91IGhhdmUgbWlzc2VkIG9yIGlnbm9yZWQgdGhpcyBjb21tZW50IFsxXS4gUGxlYXNl
-IGFkZHJlc3MgaXQuDQo+IA0KPiBbMV0NCj4gaHR0cHM6Ly9uYW0wNi5zYWZlbGlua3MucHJvdGVj
-dGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGbGttbC5vcmclDQo+IDJGbGttbCUy
-RjIwMTklMkY1JTJGOCUyRjExJmFtcDtkYXRhPTAxJTdDMDElN0N0aGlydWFuJTQwbWljcm9zb2Z0
-LmNvbSU3Q2YyYQ0KPiA4MGM3Yjk0NDM0MzI5ZWFlZTA4ZDZkOGQ5NjJiMSU3QzcyZjk4OGJmODZm
-MTQxYWY5MWFiMmQ3Y2QwMTFkYjQ3JTdDMSZhbXA7c2QNCj4gYXRhPWh5SlJjMjNOd0VGTER1YUlN
-a2JTQ0dldGQlMkJPYlFXaUFnJTJCSnRNTVI2ejlVJTNEJmFtcDtyZXNlcnZlZD0wDQo+IA0KPiAt
-U3VtaXQNCg0KVGhhbmtzIGZvciByZXZpZXdpbmcgYW5kIGFkZGluZyBjb21tZW50cy4NCg0KV2Ug
-dHJpZWQgdG8gdXNlIFRFRSBidXMgZnJhbWV3b3JrIHlvdSBzdWdnZXN0ZWQgZm9yIGZUUE0gZW51
-bWVyYXRpb24uDQpXZSB3ZXJlIG5vdCBhYmxlIHRvIHBhc3MgdGhlIFRDRyBMb2dzIGNvbGxlY3Rl
-ZCBieSB0aGUgYm9vdCBsb2FkZXJzLg0KDQpDdXJyZW50bHkgdGhlcmUgYXJlIDMgd2F5cyB0byBw
-YXNzIFRDRyBMb2dzIGJhc2VkIG9uIHRoZSBjb2RlIA0KaW4gZHJpdmVycy9jaGFyL3RwbS9ldmVu
-dGxvZzoNCg0KMS4gQUNQSSBUYWJsZQ0KMi4gRUZJIFRhYmxlDQozLiBPRiBEZXZpY2Ugbm9kZSBw
-cm9wZXJ0aWVzDQoNCk91ciBBUk0gc3lzdGVtIGlzIGJvb3RpbmcgdXNpbmcgVS1ib290IGFuZCBE
-ZXZpY2UgVHJlZS4gDQpTbyBBQ1BJL0VGSSB0YWJsZSBtZWNoYW5pc20gdG8gcGFzcyBUQ0cyIGxv
-Z3Mgd29uJ3QgYmUgYXBwbGljYWJsZS4NCldlIG5lZWRlZCB0byB1c2UgT0YgZGV2aWNlIG5vZGUg
-cHJvcGVydGllcyB0byBwYXNzIFRDRzIgTG9ncy4NClRFRSBidXMgZW51bWVyYXRpb24gZnJhbWV3
-b3JrIGRvZXMgbm90IHdvcmsgZm9yIG91ciB1c2UgY2FzZSBkdWUgdG8gdGhlIGFib3ZlLg0KDQpJ
-cyBpdCBwb3NzaWJsZSB0byBhZGQgZmxleGliaWxpdHkgaW4gVEVFIGJ1cyBlbnVtZXJhdGlvbiBm
-cmFtZXdvcmsgdG8gc3VwcG9ydCANCnBsYXRmb3JtIHNwZWNpZmljIHByb3BlcnRpZXMgdGhyb3Vn
-aCBPRiBub2RlcyBvciBBQ1BJPw0KDQo+IA0KPiA+DQo+ID4gLS0NCj4gPiBUaGFua3MsDQo+ID4g
-U2FzaGENCg==
+On Wed, May 15, 2019 at 11:12 AM Pavel Tatashin
+<pasha.tatashin@soleen.com> wrote:
+>
+> > Hi Pavel,
+> >
+> > I am working on adding this sort of a workflow into a new daxctl command
+> > (daxctl-reconfigure-device)- this will allow changing the 'mode' of a
+> > dax device to kmem, online the resulting memory, and with your patches,
+> > also attempt to offline the memory, and change back to device-dax.
+> >
+> > In running with these patches, and testing the offlining part, I ran
+> > into the following lockdep below.
+> >
+> > This is with just these three patches on top of -rc7.
+> >
+> >
+> > [  +0.004886] ======================================================
+> > [  +0.001576] WARNING: possible circular locking dependency detected
+> > [  +0.001506] 5.1.0-rc7+ #13 Tainted: G           O
+> > [  +0.000929] ------------------------------------------------------
+> > [  +0.000708] daxctl/22950 is trying to acquire lock:
+> > [  +0.000548] 00000000f4d397f7 (kn->count#424){++++}, at: kernfs_remove_by_name_ns+0x40/0x80
+> > [  +0.000922]
+> >               but task is already holding lock:
+> > [  +0.000657] 000000002aa52a9f (mem_sysfs_mutex){+.+.}, at: unregister_memory_section+0x22/0xa0
+>
+> I have studied this issue, and now have a clear understanding why it
+> happens, I am not yet sure how to fix it, so suggestions are welcomed
+> :)
+
+I would think that ACPI hotplug would have a similar problem, but it does this:
+
+                acpi_unbind_memory_blocks(info);
+                __remove_memory(nid, info->start_addr, info->length);
+
+I wonder if that ordering prevents going too deep into the
+device_unregister() call stack that you highlighted below.
+
+
+>
+> Here is the problem:
+>
+> When we offline pages we have the following call stack:
+>
+> # echo offline > /sys/devices/system/memory/memory8/state
+> ksys_write
+>  vfs_write
+>   __vfs_write
+>    kernfs_fop_write
+>     kernfs_get_active
+>      lock_acquire                       kn->count#122 (lock for
+> "memory8/state" kn)
+>     sysfs_kf_write
+>      dev_attr_store
+>       state_store
+>        device_offline
+>         memory_subsys_offline
+>          memory_block_action
+>           offline_pages
+>            __offline_pages
+>             percpu_down_write
+>              down_write
+>               lock_acquire              mem_hotplug_lock.rw_sem
+>
+> When we unbind dax0.0 we have the following  stack:
+> # echo dax0.0 > /sys/bus/dax/drivers/kmem/unbind
+> drv_attr_store
+>  unbind_store
+>   device_driver_detach
+>    device_release_driver_internal
+>     dev_dax_kmem_remove
+>      remove_memory                      device_hotplug_lock
+>       try_remove_memory                 mem_hotplug_lock.rw_sem
+>        arch_remove_memory
+>         __remove_pages
+>          __remove_section
+>           unregister_memory_section
+>            remove_memory_section        mem_sysfs_mutex
+>             unregister_memory
+>              device_unregister
+>               device_del
+>                device_remove_attrs
+>                 sysfs_remove_groups
+>                  sysfs_remove_group
+>                   remove_files
+>                    kernfs_remove_by_name
+>                     kernfs_remove_by_name_ns
+>                      __kernfs_remove    kn->count#122
+>
+> So, lockdep found the ordering issue with the above two stacks:
+>
+> 1. kn->count#122 -> mem_hotplug_lock.rw_sem
+> 2. mem_hotplug_lock.rw_sem -> kn->count#122
