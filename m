@@ -2,119 +2,81 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19ADC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB42BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C36AC2082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4682082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:56:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbfEPO4Y (ORCPT
+        id S1727656AbfEPO42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:56:24 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:43977 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727573AbfEPO4W (ORCPT
+        Thu, 16 May 2019 10:56:28 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:39639 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727603AbfEPO4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:56:22 -0400
-Received: by mail-vk1-f193.google.com with SMTP id h72so1096777vkh.10;
-        Thu, 16 May 2019 07:56:21 -0700 (PDT)
+        Thu, 16 May 2019 10:56:24 -0400
+Received: by mail-vs1-f66.google.com with SMTP id m1so2503704vsr.6;
+        Thu, 16 May 2019 07:56:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=05GCtpont9YEywFzf84z1q9MwrqOSiu52jwQOd14/zs=;
-        b=NqRraoEHORwbbMw0jdlkm1gqvvZ7Ona5zso2iADzUe435KgwdUeQrFVeZK1kG8w3y2
-         tDOGY1PhQsbuWp4zX4vuepzAtxDAz0xqKqexS2aNqtCf2ZemV+LdDZ1L3vOsk2oVrOv3
-         MxO25Edon6SuprOVYFKacjdA1qnVMLJNHlkwQ7goZwTRdBbKKWaNEOG0mJWa0jqyWyXt
-         NqUhxBQRV/tfAsvKIHdEoSp4QhfDxMdJDI42EpnMOYsym5B+UsK4gjR4v4C7ch7wGZ0w
-         XN9nhIpclGns00wQgPac8PDAASbkljVJvIS2qc3V5naQoIy4Wf4kyR6xuMSJfwWtcuhX
-         UjmQ==
-X-Gm-Message-State: APjAAAXyUvKL8IARnIGhuVSdX5oNXGKE4NR6SxAcypv2R5+XyV/CC6jD
-        mIcZY/4zymv28Z180BYrS/sXP9gzz36sJG+9a2I=
-X-Google-Smtp-Source: APXvYqwJkEyDq3zOtk8OfRAodMj5uaJzILWIRnCKOk3dtxYk7GsdMRXLOna8zNuSkRyU4hilGsRAQgTc6aWaoZtw994=
-X-Received: by 2002:a1f:c2c1:: with SMTP id s184mr23362067vkf.65.1558018580810;
- Thu, 16 May 2019 07:56:20 -0700 (PDT)
+        bh=A7nEL+WPfPN1rBA+/PuN1J/S5uyKwnA6j8/pFf9zHN4=;
+        b=NCrTt6RyqZlchwKIYN4hIjLDoEN7HbpLxjgvLemvF7pMHGzMZMvfE+sr5ur5KMOfvW
+         hVQHUxWD4D6/PMk6ih05MU3ICJtzKCFnebxvfvQv7CopgIlKaI0N6pbI/VWM8aMQSIbC
+         TyiJAV6p/pUpjtTtqvMQFnBHeZB+wmWWxI+Btal7EkfsVAbNn2X5wNmwUPKr0DpFB9rC
+         iEx70k7EvV2oWcFQFGve95waCY0xefukjc15RAnd2S1NOlBhL5BF3D/SC6Fcrw56vLoS
+         FYlfwL6oySeN9e/TBEOg+yTJ9yxQ+yejspkkOgYq0TWWnQBnZKbIp0Yh4DLOjO4ag5/C
+         Qrew==
+X-Gm-Message-State: APjAAAVtXmcFbfYsO+cjcOZGO7qTr0bwGlGTxyI8vXP7BTTBloVLvjpX
+        qJIwbFh3Am9DNyNq0ZmvF9Wev7wdX4uBKeMS5lY=
+X-Google-Smtp-Source: APXvYqzEce0hna+NIpEAjAwxrp3WXHdhwiLZYzNSambp2Tqp9lbWiT2Er/sNJ/Cyun4+1E0OoRvh7/Hb9d7XNywa1WI=
+X-Received: by 2002:a67:8e03:: with SMTP id q3mr24527906vsd.152.1558018583276;
+ Thu, 16 May 2019 07:56:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190516135944.7205-1-christian@brauner.io>
-In-Reply-To: <20190516135944.7205-1-christian@brauner.io>
+References: <155800752418.4037.9567789434648701032.stgit@warthog.procyon.org.uk>
+ <155800755482.4037.14407450837395686732.stgit@warthog.procyon.org.uk>
+In-Reply-To: <155800755482.4037.14407450837395686732.stgit@warthog.procyon.org.uk>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 16 May 2019 16:56:08 +0200
-Message-ID: <CAMuHMdVbUJ0+28Lc2wHPah8UUk8Ou9m81KzLvhrcMsJzz2bX2A@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] pid: add pidfd_open()
-To:     Christian Brauner <christian@brauner.io>,
-        David Howells <dhowells@redhat.com>
-Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+Date:   Thu, 16 May 2019 16:56:10 +0200
+Message-ID: <CAMuHMdWsgSWC2AFGf_XBaEc0g=FDkGB1=UH+Ekh9n6k3W4ifWQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] uapi: Wire up the mount API syscalls on non-x86
+ arches [ver #2]
+To:     David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian@brauner.io>
+Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
         Al Viro <viro@zeniv.linux.org.uk>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        elena.reshetova@intel.com, Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        linux-xtensa@linux-xtensa.org, Kees Cook <keescook@chromium.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>, cyphar@cyphar.com,
-        Andy Lutomirski <luto@amacapital.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        alpha <linux-alpha@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian, David,
+Hi David, Christian,
 
-On Thu, May 16, 2019 at 4:00 PM Christian Brauner <christian@brauner.io> wrote:
-> This adds the pidfd_open() syscall. It allows a caller to retrieve pollable
-> pidfds for a process which did not get created via CLONE_PIDFD, i.e. for a
-> process that is created via traditional fork()/clone() calls that is only
-> referenced by a PID:
+On Thu, May 16, 2019 at 1:54 PM David Howells <dhowells@redhat.com> wrote:
+> Wire up the mount API syscalls on non-x86 arches.
 >
-> int pidfd = pidfd_open(1234, 0);
-> ret = pidfd_send_signal(pidfd, SIGSTOP, NULL, 0);
->
-> With the introduction of pidfds through CLONE_PIDFD it is possible to
-> created pidfds at process creation time.
-> However, a lot of processes get created with traditional PID-based calls
-> such as fork() or clone() (without CLONE_PIDFD). For these processes a
-> caller can currently not create a pollable pidfd. This is a huge problem
-> for Android's low memory killer (LMK) and service managers such as systemd.
-> Both are examples of tools that want to make use of pidfds to get reliable
-> notification of process exit for non-parents (pidfd polling) and race-free
-> signal sending (pidfd_send_signal()). They intend to switch to this API for
-> process supervision/management as soon as possible. Having no way to get
-> pollable pidfds from PID-only processes is one of the biggest blockers for
-> them in adopting this api. With pidfd_open() making it possible to retrieve
-> pidfd for PID-based processes we enable them to adopt this api.
->
-> In line with Arnd's recent changes to consolidate syscall numbers across
-> architectures, I have added the pidfd_open() syscall to all architectures
-> at the same time.
+> Reported-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-> +428    common  pidfd_open                      sys_pidfd_open
+> +428    common  open_tree                       sys_open_tree
+> +429    common  move_mount                      sys_move_mount
+> +430    common  fsopen                          sys_fsopen
+> +431    common  fsconfig                        sys_fsconfig
+> +432    common  fsmount                         sys_fsmount
+> +433    common  fspick                          sys_fspick
 
-This number conflicts with "[PATCH 4/4] uapi: Wire up the mount API
-syscalls on non-x86 arches", which is requested to be included before
-rc1.
+The first number conflicts with "[PATCH v1 1/2] pid: add pidfd_open()".
 
 Note that none of this is part of linux-next.
 
@@ -122,7 +84,8 @@ Gr{oetje,eeting}s,
 
                         Geert
 
--- 
+
+--
 Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
 In personal conversations with technical people, I call myself a hacker. But
