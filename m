@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0F3C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AEDC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6553920833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99C2920833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558007189;
-	bh=kmXQqmllIO4CjqQm4UERExzBN0kBl6jy2TCfPzpSBdo=;
+	s=default; t=1558007197;
+	bh=tbOjMBMj6sA81jPJRxjoqNZV/rUdTrG1WpStJ306LTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YVvjlBT8g+AboOFE2MukadHbgVxYixcpU84Zw7vca0ySnVyLSlguDatDQ9GlDUdkS
-	 dQuuBaCo8oU+VZp69IlrQycX/7Cc3jknlqj2f6iyHZ5jUyH8uTivB8KmkVNhjUAdzr
-	 eKEtOz5OfVuu5woGIBINoJv54MXRGFEkjSM21R0A=
+	b=qTMnZ8fZjCaC5TAMSyoE1qLw7Na6vZezlN6GckXc4zlLMfv9kHsIdb4pOhln9rQMF
+	 6bWewB9Cru5SO1LgyCMquyWeacd97VtNXJK2SkjpTLOALbCtv5vX3G14z7PmrKrfAu
+	 puM0fdHtbsYPWy8mds4lzrGfaSepBeCHlBGv+v1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbfEPLq2 (ORCPT
+        id S1728249AbfEPLqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:46:28 -0400
+        Thu, 16 May 2019 07:46:36 -0400
 Received: from mail.kernel.org ([198.145.29.99]:49010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727753AbfEPLkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:40:39 -0400
+        id S1727797AbfEPLki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:40:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 605C320862;
-        Thu, 16 May 2019 11:40:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C95D20833;
+        Thu, 16 May 2019 11:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006839;
-        bh=kmXQqmllIO4CjqQm4UERExzBN0kBl6jy2TCfPzpSBdo=;
+        s=default; t=1558006837;
+        bh=tbOjMBMj6sA81jPJRxjoqNZV/rUdTrG1WpStJ306LTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X61G+txiB/aLtU/FJzsgMUv+AqpTn2mMIJU2fnjBrNI5b2djZmnCUaBxhHZKgjkrc
-         uG0d0KSuxWqEnVBkShBVhI22eK4p65Gdx7Ch0upZ1nPEP5CDbfrSsbyyNJ6TJhJ97R
-         4nkhk87BfUX2V6AM3Ma5Hc8DNZcclWjQGuuJE5fs=
+        b=On1jKOREpnGL7hakuAW9OPVWR9PWM0Hv8Gzjol+eMIzdsjvA0FypNVyhJafoxzwzS
+         kX6I3vx7ufPDA1iLgqOIyx1Om2V8mN13wZkqrAIQ9q3ZqxPZU6dpt8hsIE7C0LeR/Q
+         eipgX3lc72N3cFwi/I+mj5R5Y/jUHp5Td3xGyk5I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sasha Levin <sashal@kernel.org>, linux-clk@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 08/25] clk: sunxi-ng: nkmp: Avoid GENMASK(-1, 0)
-Date:   Thu, 16 May 2019 07:40:11 -0400
-Message-Id: <20190516114029.8682-8-sashal@kernel.org>
+Cc:     Martin Willi <martin@strongswan.org>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 06/25] xfrm: Honor original L3 slave device in xfrmi policy lookup
+Date:   Thu, 16 May 2019 07:40:09 -0400
+Message-Id: <20190516114029.8682-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516114029.8682-1-sashal@kernel.org>
 References: <20190516114029.8682-1-sashal@kernel.org>
@@ -59,139 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jernej Skrabec <jernej.skrabec@siol.net>
+From: Martin Willi <martin@strongswan.org>
 
-[ Upstream commit 2abc330c514fe56c570bb1a6318b054b06a4f72e ]
+[ Upstream commit 025c65e119bf58b610549ca359c9ecc5dee6a8d2 ]
 
-Sometimes one of the nkmp factors is unused. This means that one of the
-factors shift and width values are set to 0. Current nkmp clock code
-generates a mask for each factor with GENMASK(width + shift - 1, shift).
-For unused factor this translates to GENMASK(-1, 0). This code is
-further expanded by C preprocessor to final version:
-(((~0UL) - (1UL << (0)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (-1))))
-or a bit simplified:
-(~0UL & (~0UL >> BITS_PER_LONG))
+If an xfrmi is associated to a vrf layer 3 master device,
+xfrm_policy_check() fails after traffic decapsulation. The input
+interface is replaced by the layer 3 master device, and hence
+xfrmi_decode_session() can't match the xfrmi anymore to satisfy
+policy checking.
 
-It turns out that result of the second part (~0UL >> BITS_PER_LONG) is
-actually undefined by C standard, which clearly specifies:
+Extend ingress xfrmi lookup to honor the original layer 3 slave
+device, allowing xfrm interfaces to operate within a vrf domain.
 
-"If the value of the right operand is negative or is greater than or
-equal to the width of the promoted left operand, the behavior is
-undefined."
-
-Additionally, compiling kernel with aarch64-linux-gnu-gcc 8.3.0 gave
-different results whether literals or variables with same values as
-literals were used. GENMASK with literals -1 and 0 gives zero and with
-variables gives 0xFFFFFFFFFFFFFFF (~0UL). Because nkmp driver uses
-GENMASK with variables as parameter, expression calculates mask as ~0UL
-instead of 0. This has further consequences that LSB in register is
-always set to 1 (1 is neutral value for a factor and shift is 0).
-
-For example, H6 pll-de clock is set to 600 MHz by sun4i-drm driver, but
-due to this bug ends up being 300 MHz. Additionally, 300 MHz seems to be
-too low because following warning can be found in dmesg:
-
-[    1.752763] WARNING: CPU: 2 PID: 41 at drivers/clk/sunxi-ng/ccu_common.c:41 ccu_helper_wait_for_lock.part.0+0x6c/0x90
-[    1.763378] Modules linked in:
-[    1.766441] CPU: 2 PID: 41 Comm: kworker/2:1 Not tainted 5.1.0-rc2-next-20190401 #138
-[    1.774269] Hardware name: Pine H64 (DT)
-[    1.778200] Workqueue: events deferred_probe_work_func
-[    1.783341] pstate: 40000005 (nZcv daif -PAN -UAO)
-[    1.788135] pc : ccu_helper_wait_for_lock.part.0+0x6c/0x90
-[    1.793623] lr : ccu_helper_wait_for_lock.part.0+0x48/0x90
-[    1.799107] sp : ffff000010f93840
-[    1.802422] x29: ffff000010f93840 x28: 0000000000000000
-[    1.807735] x27: ffff800073ce9d80 x26: ffff000010afd1b8
-[    1.813049] x25: ffffffffffffffff x24: 00000000ffffffff
-[    1.818362] x23: 0000000000000001 x22: ffff000010abd5c8
-[    1.823675] x21: 0000000010000000 x20: 00000000685f367e
-[    1.828987] x19: 0000000000001801 x18: 0000000000000001
-[    1.834300] x17: 0000000000000001 x16: 0000000000000000
-[    1.839613] x15: 0000000000000000 x14: ffff000010789858
-[    1.844926] x13: 0000000000000000 x12: 0000000000000001
-[    1.850239] x11: 0000000000000000 x10: 0000000000000970
-[    1.855551] x9 : ffff000010f936c0 x8 : ffff800074cec0d0
-[    1.860864] x7 : 0000800067117000 x6 : 0000000115c30b41
-[    1.866177] x5 : 00ffffffffffffff x4 : 002c959300bfe500
-[    1.871490] x3 : 0000000000000018 x2 : 0000000029aaaaab
-[    1.876802] x1 : 00000000000002e6 x0 : 00000000686072bc
-[    1.882114] Call trace:
-[    1.884565]  ccu_helper_wait_for_lock.part.0+0x6c/0x90
-[    1.889705]  ccu_helper_wait_for_lock+0x10/0x20
-[    1.894236]  ccu_nkmp_set_rate+0x244/0x2a8
-[    1.898334]  clk_change_rate+0x144/0x290
-[    1.902258]  clk_core_set_rate_nolock+0x180/0x1b8
-[    1.906963]  clk_set_rate+0x34/0xa0
-[    1.910455]  sun8i_mixer_bind+0x484/0x558
-[    1.914466]  component_bind_all+0x10c/0x230
-[    1.918651]  sun4i_drv_bind+0xc4/0x1a0
-[    1.922401]  try_to_bring_up_master+0x164/0x1c0
-[    1.926932]  __component_add+0xa0/0x168
-[    1.930769]  component_add+0x10/0x18
-[    1.934346]  sun8i_dw_hdmi_probe+0x18/0x20
-[    1.938443]  platform_drv_probe+0x50/0xa0
-[    1.942455]  really_probe+0xcc/0x280
-[    1.946032]  driver_probe_device+0x54/0xe8
-[    1.950130]  __device_attach_driver+0x80/0xb8
-[    1.954488]  bus_for_each_drv+0x78/0xc8
-[    1.958326]  __device_attach+0xd4/0x130
-[    1.962163]  device_initial_probe+0x10/0x18
-[    1.966348]  bus_probe_device+0x90/0x98
-[    1.970185]  deferred_probe_work_func+0x6c/0xa0
-[    1.974720]  process_one_work+0x1e0/0x320
-[    1.978732]  worker_thread+0x228/0x428
-[    1.982484]  kthread+0x120/0x128
-[    1.985714]  ret_from_fork+0x10/0x18
-[    1.989290] ---[ end trace 9babd42e1ca4b84f ]---
-
-This commit solves the issue by first checking value of the factor
-width. If it is equal to 0 (unused factor), mask is set to 0, otherwise
-GENMASK() macro is used as before.
-
-Fixes: d897ef56faf9 ("clk: sunxi-ng: Mask nkmp factors when setting register")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Fixes: f203b76d7809 ("xfrm: Add virtual xfrm interfaces")
+Signed-off-by: Martin Willi <martin@strongswan.org>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi-ng/ccu_nkmp.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+ include/net/xfrm.h        |  3 ++-
+ net/xfrm/xfrm_interface.c | 17 ++++++++++++++---
+ net/xfrm/xfrm_policy.c    |  2 +-
+ 3 files changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu_nkmp.c b/drivers/clk/sunxi-ng/ccu_nkmp.c
-index ebd9436d2c7cd..1ad53d1016a3e 100644
---- a/drivers/clk/sunxi-ng/ccu_nkmp.c
-+++ b/drivers/clk/sunxi-ng/ccu_nkmp.c
-@@ -160,7 +160,7 @@ static int ccu_nkmp_set_rate(struct clk_hw *hw, unsigned long rate,
- 			   unsigned long parent_rate)
+diff --git a/include/net/xfrm.h b/include/net/xfrm.h
+index 3e966c632f3b2..4ddd2b13ac8d6 100644
+--- a/include/net/xfrm.h
++++ b/include/net/xfrm.h
+@@ -295,7 +295,8 @@ struct xfrm_replay {
+ };
+ 
+ struct xfrm_if_cb {
+-	struct xfrm_if	*(*decode_session)(struct sk_buff *skb);
++	struct xfrm_if	*(*decode_session)(struct sk_buff *skb,
++					   unsigned short family);
+ };
+ 
+ void xfrm_if_register_cb(const struct xfrm_if_cb *ifcb);
+diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
+index 82723ef44db3e..555ee2aca6c01 100644
+--- a/net/xfrm/xfrm_interface.c
++++ b/net/xfrm/xfrm_interface.c
+@@ -70,17 +70,28 @@ static struct xfrm_if *xfrmi_lookup(struct net *net, struct xfrm_state *x)
+ 	return NULL;
+ }
+ 
+-static struct xfrm_if *xfrmi_decode_session(struct sk_buff *skb)
++static struct xfrm_if *xfrmi_decode_session(struct sk_buff *skb,
++					    unsigned short family)
  {
- 	struct ccu_nkmp *nkmp = hw_to_ccu_nkmp(hw);
--	u32 n_mask, k_mask, m_mask, p_mask;
-+	u32 n_mask = 0, k_mask = 0, m_mask = 0, p_mask = 0;
- 	struct _ccu_nkmp _nkmp;
- 	unsigned long flags;
- 	u32 reg;
-@@ -179,10 +179,18 @@ static int ccu_nkmp_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	struct xfrmi_net *xfrmn;
+-	int ifindex;
+ 	struct xfrm_if *xi;
++	int ifindex = 0;
  
- 	ccu_nkmp_find_best(parent_rate, rate, &_nkmp);
+ 	if (!secpath_exists(skb) || !skb->dev)
+ 		return NULL;
  
--	n_mask = GENMASK(nkmp->n.width + nkmp->n.shift - 1, nkmp->n.shift);
--	k_mask = GENMASK(nkmp->k.width + nkmp->k.shift - 1, nkmp->k.shift);
--	m_mask = GENMASK(nkmp->m.width + nkmp->m.shift - 1, nkmp->m.shift);
--	p_mask = GENMASK(nkmp->p.width + nkmp->p.shift - 1, nkmp->p.shift);
-+	if (nkmp->n.width)
-+		n_mask = GENMASK(nkmp->n.width + nkmp->n.shift - 1,
-+				 nkmp->n.shift);
-+	if (nkmp->k.width)
-+		k_mask = GENMASK(nkmp->k.width + nkmp->k.shift - 1,
-+				 nkmp->k.shift);
-+	if (nkmp->m.width)
-+		m_mask = GENMASK(nkmp->m.width + nkmp->m.shift - 1,
-+				 nkmp->m.shift);
-+	if (nkmp->p.width)
-+		p_mask = GENMASK(nkmp->p.width + nkmp->p.shift - 1,
-+				 nkmp->p.shift);
++	switch (family) {
++	case AF_INET6:
++		ifindex = inet6_sdif(skb);
++		break;
++	case AF_INET:
++		ifindex = inet_sdif(skb);
++		break;
++	}
++	if (!ifindex)
++		ifindex = skb->dev->ifindex;
++
+ 	xfrmn = net_generic(xs_net(xfrm_input_state(skb)), xfrmi_net_id);
+-	ifindex = skb->dev->ifindex;
  
- 	spin_lock_irqsave(nkmp->common.lock, flags);
+ 	for_each_xfrmi_rcu(xfrmn->xfrmi[0], xi) {
+ 		if (ifindex == xi->dev->ifindex &&
+diff --git a/net/xfrm/xfrm_policy.c b/net/xfrm/xfrm_policy.c
+index bf5d59270f79d..ce1b262ce9646 100644
+--- a/net/xfrm/xfrm_policy.c
++++ b/net/xfrm/xfrm_policy.c
+@@ -2339,7 +2339,7 @@ int __xfrm_policy_check(struct sock *sk, int dir, struct sk_buff *skb,
+ 	ifcb = xfrm_if_get_cb();
  
+ 	if (ifcb) {
+-		xi = ifcb->decode_session(skb);
++		xi = ifcb->decode_session(skb, family);
+ 		if (xi) {
+ 			if_id = xi->p.if_id;
+ 			net = xi->net;
 -- 
 2.20.1
 
