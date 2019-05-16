@@ -2,192 +2,143 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199D7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E558CC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:37:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E043F20848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6CCD2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 06:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbfEPG2Z convert rfc822-to-8bit (ORCPT
+        id S1726537AbfEPGhU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 02:28:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34732 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726221AbfEPG2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 02:28:24 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 21F1B3DDBE;
-        Thu, 16 May 2019 06:28:23 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F29145D9C3;
-        Thu, 16 May 2019 06:28:22 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 973501806B11;
-        Thu, 16 May 2019 06:28:21 +0000 (UTC)
-Date:   Thu, 16 May 2019 02:28:20 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        KVM list <kvm@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Qemu Developers <qemu-devel@nongnu.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        Ross Zwisler <zwisler@kernel.org>,
-        Vishal L Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Christoph Hellwig <hch@infradead.org>,
-        Len Brown <lenb@kernel.org>, Jan Kara <jack@suse.cz>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        lcapitulino@redhat.com, Kevin Wolf <kwolf@redhat.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        jmoyer <jmoyer@redhat.com>,
-        Nitesh Narayan Lal <nilal@redhat.com>,
-        Rik van Riel <riel@surriel.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        david <david@fromorbit.com>, cohuck@redhat.com,
-        Xiao Guangrong <xiaoguangrong.eric@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Adam Borowski <kilobyte@angband.pl>,
-        yuval shaia <yuval.shaia@oracle.com>, jstaron@google.com
-Message-ID: <1906905099.29162562.1557988100975.JavaMail.zimbra@redhat.com>
-In-Reply-To: <CAPcyv4gEr_zPJEQp3k89v2UXfHp9PQwnJXY+W99HwXfxpvua_w@mail.gmail.com>
-References: <20190514145422.16923-1-pagupta@redhat.com> <20190514145422.16923-2-pagupta@redhat.com> <CAPcyv4gEr_zPJEQp3k89v2UXfHp9PQwnJXY+W99HwXfxpvua_w@mail.gmail.com>
-Subject: Re: [PATCH v9 1/7] libnvdimm: nd_region flush callback support
+        Thu, 16 May 2019 02:37:20 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2956 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726221AbfEPGhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 02:37:20 -0400
+Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 9EFC7766B2DB253AA9B5;
+        Thu, 16 May 2019 14:37:15 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 16 May 2019 14:37:15 +0800
+Received: from szvp000201624.huawei.com (10.120.216.130) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Thu, 16 May 2019 14:37:14 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: fix to do sanity check on segment bitmap of LFS curseg
+Date:   Thu, 16 May 2019 14:36:53 +0800
+Message-ID: <20190516063653.14142-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.65.16.97, 10.4.195.4]
-Thread-Topic: libnvdimm: nd_region flush callback support
-Thread-Index: VrjlK3y+QUdLL94hHE7OyUkrop5Ojw==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 16 May 2019 06:28:23 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-ClientProxiedBy: dggeme714-chm.china.huawei.com (10.1.199.110) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As Jungyeon Reported in bugzilla:
 
-> >
-> > This patch adds functionality to perform flush from guest
-> > to host over VIRTIO. We are registering a callback based
-> > on 'nd_region' type. virtio_pmem driver requires this special
-> > flush function. For rest of the region types we are registering
-> > existing flush function. Report error returned by host fsync
-> > failure to userspace.
-> >
-> > Signed-off-by: Pankaj Gupta <pagupta@redhat.com>
-> > ---
-> >  drivers/acpi/nfit/core.c     |  4 ++--
-> >  drivers/nvdimm/claim.c       |  6 ++++--
-> >  drivers/nvdimm/nd.h          |  1 +
-> >  drivers/nvdimm/pmem.c        | 13 ++++++++-----
-> >  drivers/nvdimm/region_devs.c | 26 ++++++++++++++++++++++++--
-> >  include/linux/libnvdimm.h    |  8 +++++++-
-> >  6 files changed, 46 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/drivers/acpi/nfit/core.c b/drivers/acpi/nfit/core.c
-> > index 5a389a4f4f65..08dde76cf459 100644
-> > --- a/drivers/acpi/nfit/core.c
-> > +++ b/drivers/acpi/nfit/core.c
-> > @@ -2434,7 +2434,7 @@ static void write_blk_ctl(struct nfit_blk *nfit_blk,
-> > unsigned int bw,
-> >                 offset = to_interleave_offset(offset, mmio);
-> >
-> >         writeq(cmd, mmio->addr.base + offset);
-> > -       nvdimm_flush(nfit_blk->nd_region);
-> > +       nvdimm_flush(nfit_blk->nd_region, NULL);
-> >
-> >         if (nfit_blk->dimm_flags & NFIT_BLK_DCR_LATCH)
-> >                 readq(mmio->addr.base + offset);
-> > @@ -2483,7 +2483,7 @@ static int acpi_nfit_blk_single_io(struct nfit_blk
-> > *nfit_blk,
-> >         }
-> >
-> >         if (rw)
-> > -               nvdimm_flush(nfit_blk->nd_region);
-> > +               nvdimm_flush(nfit_blk->nd_region, NULL);
-> >
-> >         rc = read_blk_stat(nfit_blk, lane) ? -EIO : 0;
-> >         return rc;
-> > diff --git a/drivers/nvdimm/claim.c b/drivers/nvdimm/claim.c
-> > index fb667bf469c7..13510bae1e6f 100644
-> > --- a/drivers/nvdimm/claim.c
-> > +++ b/drivers/nvdimm/claim.c
-> > @@ -263,7 +263,7 @@ static int nsio_rw_bytes(struct nd_namespace_common
-> > *ndns,
-> >         struct nd_namespace_io *nsio = to_nd_namespace_io(&ndns->dev);
-> >         unsigned int sz_align = ALIGN(size + (offset & (512 - 1)), 512);
-> >         sector_t sector = offset >> 9;
-> > -       int rc = 0;
-> > +       int rc = 0, ret = 0;
-> >
-> >         if (unlikely(!size))
-> >                 return 0;
-> > @@ -301,7 +301,9 @@ static int nsio_rw_bytes(struct nd_namespace_common
-> > *ndns,
-> >         }
-> >
-> >         memcpy_flushcache(nsio->addr + offset, buf, size);
-> > -       nvdimm_flush(to_nd_region(ndns->dev.parent));
-> > +       ret = nvdimm_flush(to_nd_region(ndns->dev.parent), NULL);
-> > +       if (ret)
-> > +               rc = ret;
-> >
-> >         return rc;
-> >  }
-> > diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-> > index a5ac3b240293..0c74d2428bd7 100644
-> > --- a/drivers/nvdimm/nd.h
-> > +++ b/drivers/nvdimm/nd.h
-> > @@ -159,6 +159,7 @@ struct nd_region {
-> >         struct badblocks bb;
-> >         struct nd_interleave_set *nd_set;
-> >         struct nd_percpu_lane __percpu *lane;
-> > +       int (*flush)(struct nd_region *nd_region, struct bio *bio);
-> 
-> So this triggers:
-> 
-> In file included from drivers/nvdimm/e820.c:7:
-> ./include/linux/libnvdimm.h:140:51: warning: ‘struct bio’ declared
-> inside parameter list will not be visible outside of this definition
-> or declaration
->   int (*flush)(struct nd_region *nd_region, struct bio *bio);
->                                                    ^~~
+https://bugzilla.kernel.org/show_bug.cgi?id=203233
 
-Sorry! for this. Fixed now.
+- Reproduces
+gcc poc_13.c
+./run.sh f2fs
 
-> I was already feeling uneasy about trying to squeeze this into v5.2,
-> but this warning and the continued drip of comments leads me to
-> conclude that this driver would do well to wait one more development
-> cycle. Lets close out the final fixups and let this driver soak in
-> -next. Then for the v5.3 cycle I'll redouble my efforts towards the
-> goal of closing patch acceptance at the -rc6 / -rc7 development
-> milestone.
+- Kernel messages
+ F2FS-fs (sdb): Bitmap was wrongly set, blk:4608
+ kernel BUG at fs/f2fs/segment.c:2133!
+ RIP: 0010:update_sit_entry+0x35d/0x3e0
+ Call Trace:
+  f2fs_allocate_data_block+0x16c/0x5a0
+  do_write_page+0x57/0x100
+  f2fs_do_write_node_page+0x33/0xa0
+  __write_node_page+0x270/0x4e0
+  f2fs_sync_node_pages+0x5df/0x670
+  f2fs_write_checkpoint+0x364/0x13a0
+  f2fs_sync_fs+0xa3/0x130
+  f2fs_do_sync_file+0x1a6/0x810
+  do_fsync+0x33/0x60
+  __x64_sys_fsync+0xb/0x10
+  do_syscall_64+0x43/0x110
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-o.k. Will wait for Mike's ACK on device mapper patch and send the v10
-with final fix-ups. Thank you for your help.
+The testcase fails because that, in fuzzed image, current segment was
+allocated with LFS type, its .next_blkoff should point to an unused
+block address, but actually, its bitmap shows it's not. So during
+allocation, f2fs crash when setting bitmap.
 
-Best regards,
-Pankaj
+Introducing sanity_check_curseg() to check such inconsistence of
+current in-used segment.
 
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/segment.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 8dee063c833f..4a25fb12bdb1 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -4232,6 +4232,35 @@ static int build_dirty_segmap(struct f2fs_sb_info *sbi)
+ 	return init_victim_secmap(sbi);
+ }
+ 
++int sanity_check_curseg(struct f2fs_sb_info *sbi)
++{
++	int i, j;
++
++	/*
++	 * In current segment with LFS allocation type, all space after
++	 * .next_blkoff position should be all valid.
++	 */
++	for (i = 0; i < NO_CHECK_TYPE; i++) {
++		struct curseg_info *curseg = CURSEG_I(sbi, i);
++		struct seg_entry *se = get_seg_entry(sbi, curseg->segno);
++
++		if (curseg->alloc_type == SSR)
++			continue;
++
++		for (j = curseg->next_blkoff; j < sbi->blocks_per_seg; j++) {
++			if (!f2fs_test_bit(j, se->cur_valid_map))
++				continue;
++
++			f2fs_msg(sbi->sb, KERN_ERR,
++				"Current segment:%u, segno:%u, "
++				"next_blkoff:%u, cur:%u",
++				i, curseg->segno, curseg->next_blkoff, j);
++			return -EINVAL;
++		}
++	}
++	return 0;
++}
++
+ /*
+  * Update min, max modified time for cost-benefit GC algorithm
+  */
+@@ -4327,6 +4356,10 @@ int f2fs_build_segment_manager(struct f2fs_sb_info *sbi)
+ 	if (err)
+ 		return err;
+ 
++	err = sanity_check_curseg(sbi);
++	if (err)
++		return err;
++
+ 	init_min_max_mtime(sbi);
+ 	return 0;
+ }
+-- 
+2.18.0.rc1
 
-> 
