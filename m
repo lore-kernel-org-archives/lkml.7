@@ -2,59 +2,55 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408DFC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5E1C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 140D42168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 380672089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558006911;
-	bh=784+EjWS0SibG1tP3WfkhE522F9l2IXl76TL5+xuUbQ=;
+	s=default; t=1558006915;
+	bh=8MsImvtU1gRSs0NVlfx8A4FJNZB6PbUtLhXooho/O2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZzaxLccE7GgZBTstXY2CA/KteZRszMbheLgi4UzcDfX+EsyGyBKnwSgSTuk46ublh
-	 HxBKOU4FszcrSaG0ECmkuiIag6PtP8PxuWgCWur7pM2t/eij1oLQpjMM72OIcXW77k
-	 IUqMkqqmTGBT91XlDFWTC+9nxpEBMRGrDXA/OEoc=
+	b=PJYzh6UCtC+uqjeKXN2RPH/wjRduItYa7PtkPz+EX+Em1C7VnILu4vrSYSYyzr9PU
+	 J7OXj4vy11KGiwg1P5uYzgDv3AqHCiVUp7Mwp1v2bXGFuCRoGSZc0AslMQXNyK4S8t
+	 leKdhyuf89C3o4x/dqs8zoJ00TUPF1dNwqR376zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbfEPLlt (ORCPT
+        id S1728398AbfEPLly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:41:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50538 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:41:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728321AbfEPLlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:41:47 -0400
+        id S1728353AbfEPLlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:41:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A4A02087E;
-        Thu, 16 May 2019 11:41:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76EAA2087E;
+        Thu, 16 May 2019 11:41:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006906;
-        bh=784+EjWS0SibG1tP3WfkhE522F9l2IXl76TL5+xuUbQ=;
+        s=default; t=1558006911;
+        bh=8MsImvtU1gRSs0NVlfx8A4FJNZB6PbUtLhXooho/O2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bgwDyBsR/rpOjTEzequ/1yhBkiLjiJ+7Fgpa/XNq07XuoZeW2fi2+InhBi0uLRMWq
-         58dW+1Y22HJTpsdWzDjmrdsQJFVpE1Uz61hKR3oZOQu+my8pzGXLv5Xk5SIZx0HjSX
-         bcsIqc9LXjMA1OkX21nG/dJ0pRsKLyn7w8pYf8lE=
+        b=FnEqtWurPkWK4vgXkDNlcatenn9lp+6ggFAllWZuAYFthCmNpNmkbwu1wuSvQF0Tw
+         XAsgge+/WG/AmX6X2QcewlUEbjOsLek+alNZUh1NjNyLsnzqWLr79uvwu0Y0RjQuTP
+         0N+7Be/8PYcjCK4niaZVoLBrYt/49Ky1kOD09tcE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jiri Olsa <jolsa@kernel.org>,
-        linux-snps-arc@lists.infradead.org,
-        Namhyung Kim <namhyung@kernel.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 9/9] perf bench numa: Add define for RUSAGE_THREAD if not present
-Date:   Thu, 16 May 2019 07:41:33 -0400
-Message-Id: <20190516114134.9146-9-sashal@kernel.org>
+Cc:     Jeremy Sowden <jeremy@azazel.net>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 3/8] vti4: ipip tunnel deregistration fixes.
+Date:   Thu, 16 May 2019 07:41:41 -0400
+Message-Id: <20190516114146.9267-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190516114134.9146-1-sashal@kernel.org>
-References: <20190516114134.9146-1-sashal@kernel.org>
+In-Reply-To: <20190516114146.9267-1-sashal@kernel.org>
+References: <20190516114146.9267-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,66 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jeremy Sowden <jeremy@azazel.net>
 
-[ Upstream commit bf561d3c13423fc54daa19b5d49dc15fafdb7acc ]
+[ Upstream commit 5483844c3fc18474de29f5d6733003526e0a9f78 ]
 
-While cross building perf to the ARC architecture on a fedora 30 host,
-we were failing with:
+If tunnel registration failed during module initialization, the module
+would fail to deregister the IPPROTO_COMP protocol and would attempt to
+deregister the tunnel.
 
-      CC       /tmp/build/perf/bench/numa.o
-  bench/numa.c: In function ‘worker_thread’:
-  bench/numa.c:1261:12: error: ‘RUSAGE_THREAD’ undeclared (first use in this function); did you mean ‘SIGEV_THREAD’?
-    getrusage(RUSAGE_THREAD, &rusage);
-              ^~~~~~~~~~~~~
-              SIGEV_THREAD
-  bench/numa.c:1261:12: note: each undeclared identifier is reported only once for each function it appears in
+The tunnel was not deregistered during module-exit.
 
-[perfbuilder@60d5802468f6 perf]$ /arc_gnu_2019.03-rc1_prebuilt_uclibc_le_archs_linux_install/bin/arc-linux-gcc --version | head -1
-arc-linux-gcc (ARCv2 ISA Linux uClibc toolchain 2019.03-rc1) 8.3.1 20190225
-[perfbuilder@60d5802468f6 perf]$
-
-Trying to reproduce a report by Vineet, I noticed that, with just
-cross-built zlib and numactl libraries, I ended up with the above
-failure.
-
-So, since RUSAGE_THREAD is available as a define, check for that and
-numactl libraries, I ended up with the above failure.
-
-So, since RUSAGE_THREAD is available as a define in the system headers,
-check if it is defined in the 'perf bench numa' sources and define it if
-not.
-
-Now it builds and I have to figure out if the problem reported by Vineet
-only takes place if we have libelf or some other library available.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: linux-snps-arc@lists.infradead.org
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Link: https://lkml.kernel.org/n/tip-2wb4r1gir9xrevbpq7qp0amk@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: dd9ee3444014e ("vti4: Fix a ipip packet processing bug in 'IPCOMP' virtual tunnel")
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/bench/numa.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/ipv4/ip_vti.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index ee9565a033f47..e58be7eeced83 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -35,6 +35,10 @@
- #include <numa.h>
- #include <numaif.h>
+diff --git a/net/ipv4/ip_vti.c b/net/ipv4/ip_vti.c
+index fcf327ebd1345..bbcbbc1cc2cc6 100644
+--- a/net/ipv4/ip_vti.c
++++ b/net/ipv4/ip_vti.c
+@@ -648,9 +648,9 @@ static int __init vti_init(void)
+ 	return err;
  
-+#ifndef RUSAGE_THREAD
-+# define RUSAGE_THREAD 1
-+#endif
-+
- /*
-  * Regular printout to the terminal, supressed if -q is specified:
-  */
+ rtnl_link_failed:
+-	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
+-xfrm_tunnel_failed:
+ 	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
++xfrm_tunnel_failed:
++	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
+ xfrm_proto_comp_failed:
+ 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
+ xfrm_proto_ah_failed:
+@@ -666,6 +666,7 @@ static int __init vti_init(void)
+ static void __exit vti_fini(void)
+ {
+ 	rtnl_link_unregister(&vti_link_ops);
++	xfrm4_tunnel_deregister(&ipip_handler, AF_INET);
+ 	xfrm4_protocol_deregister(&vti_ipcomp4_protocol, IPPROTO_COMP);
+ 	xfrm4_protocol_deregister(&vti_ah4_protocol, IPPROTO_AH);
+ 	xfrm4_protocol_deregister(&vti_esp4_protocol, IPPROTO_ESP);
 -- 
 2.20.1
 
