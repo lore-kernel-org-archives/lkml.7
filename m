@@ -2,51 +2,52 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34882C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4C5C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F4220848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:48:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D5220881
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558007314;
-	bh=0te2/MatERJ1D9RAWwRpgHkRIsAxhubHijqTPPdWFPk=;
+	s=default; t=1558007320;
+	bh=usTzdBEGevdojQvxpyvI9EUSyB4z1uIxU5u4YtGaaLU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DvtrJDiyLcfmzFvXitxVTVflGGI61AUXQxjCmZ/dE8+y1t39qUWeWWToJ/e50kY/+
-	 C3q/7IbX1iyezE1k6TI+HBej8V3i0d/rjrPTsKstCkuQZdRXVu9zOTK5ZQdwgFi8Xq
-	 XBAVN7U6F1nAh+Aq1kkUKalW0rf8WSK0FOaxLrnw=
+	b=qi1uuh8jdwD4bTl0J/31+21Bw8Xw0lpwMFryCrZC0It48s1NGRWqwE1XgpstJe7Fo
+	 +CH65D+BG1qUgWCDd415LEKB7Lgsr+rxxNRAXq9CQvgEespTOaqmyrR5xlS9AnEyK1
+	 aWZxTZv0CJD/S0AAzmovd7C3NEeAr9pzAkv0Nc4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbfEPLsd (ORCPT
+        id S1727483AbfEPLjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:48:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47956 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:39:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727497AbfEPLjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:39:55 -0400
+        id S1727408AbfEPLju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:39:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCB5720833;
-        Thu, 16 May 2019 11:39:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FC192168B;
+        Thu, 16 May 2019 11:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006794;
-        bh=0te2/MatERJ1D9RAWwRpgHkRIsAxhubHijqTPPdWFPk=;
+        s=default; t=1558006789;
+        bh=usTzdBEGevdojQvxpyvI9EUSyB4z1uIxU5u4YtGaaLU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CCeWWz6x4tX2vvvDAwjjXQpMKee6aGf8pVyVGz1P4BJoIpZfm85km713YJopl2IZ4
-         Z5XN9X8kVUziujj3qVzGxA8Ji7UIJ9wZnAWCToIXsWvvLRdHOFCnjrcUDEj59tjUGS
-         ouf8FiUmuUJG8+uVT+FAwGA0BvHXKzhiKzGhPMbk=
+        b=zySpQXc7WAMPyrjfDF/Zysa8iTPrpp7+iNjRvdq2PLrVwpueOKrbEmoc8TL3zINqI
+         w4Nh6EAtD4gkLiDLKHlHTGK20NWr+fY/tbo/yU6Hr/D2Lr5HESzwmhsKFvr6tW8sz/
+         hz/sDX88NMPNi1dkX4ah3UNVJv8Uitr1ZckMNDIw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 17/34] x86: kvm: hyper-v: deal with buggy TLB flush requests from WS2012
-Date:   Thu, 16 May 2019 07:39:14 -0400
-Message-Id: <20190516113932.8348-17-sashal@kernel.org>
+Cc:     Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Sasha Levin <sashal@kernel.org>, kvm-ppc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH AUTOSEL 5.0 12/34] KVM: PPC: Book3S: Protect memslots while validating user address
+Date:   Thu, 16 May 2019 07:39:09 -0400
+Message-Id: <20190516113932.8348-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516113932.8348-1-sashal@kernel.org>
 References: <20190516113932.8348-1-sashal@kernel.org>
@@ -59,60 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-[ Upstream commit da66761c2d93a46270d69001abb5692717495a68 ]
+[ Upstream commit 345077c8e172c255ea0707214303ccd099e5656b ]
 
-It was reported that with some special Multi Processor Group configuration,
-e.g:
- bcdedit.exe /set groupsize 1
- bcdedit.exe /set maxgroup on
- bcdedit.exe /set groupaware on
-for a 16-vCPU guest WS2012 shows BSOD on boot when PV TLB flush mechanism
-is in use.
+Guest physical to user address translation uses KVM memslots and reading
+these requires holding the kvm->srcu lock. However recently introduced
+kvmppc_tce_validate() broke the rule (see the lockdep warning below).
 
-Tracing kvm_hv_flush_tlb immediately reveals the issue:
+This moves srcu_read_lock(&vcpu->kvm->srcu) earlier to protect
+kvmppc_tce_validate() as well.
 
- kvm_hv_flush_tlb: processor_mask 0x0 address_space 0x0 flags 0x2
+=============================
+WARNING: suspicious RCU usage
+5.1.0-rc2-le_nv2_aikATfstn1-p1 #380 Not tainted
+-----------------------------
+include/linux/kvm_host.h:605 suspicious rcu_dereference_check() usage!
 
-The only flag set in this request is HV_FLUSH_ALL_VIRTUAL_ADDRESS_SPACES,
-however, processor_mask is 0x0 and no HV_FLUSH_ALL_PROCESSORS is specified.
-We don't flush anything and apparently it's not what Windows expects.
+other info that might help us debug this:
 
-TLFS doesn't say anything about such requests and newer Windows versions
-seem to be unaffected. This all feels like a WS2012 bug, which is, however,
-easy to workaround in KVM: let's flush everything when we see an empty
-flush request, over-flushing doesn't hurt.
+rcu_scheduler_active = 2, debug_locks = 1
+1 lock held by qemu-system-ppc/8020:
+ #0: 0000000094972fe9 (&vcpu->mutex){+.+.}, at: kvm_vcpu_ioctl+0xdc/0x850 [kvm]
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+stack backtrace:
+CPU: 44 PID: 8020 Comm: qemu-system-ppc Not tainted 5.1.0-rc2-le_nv2_aikATfstn1-p1 #380
+Call Trace:
+[c000003fece8f740] [c000000000bcc134] dump_stack+0xe8/0x164 (unreliable)
+[c000003fece8f790] [c000000000181be0] lockdep_rcu_suspicious+0x130/0x170
+[c000003fece8f810] [c0000000000d5f50] kvmppc_tce_to_ua+0x280/0x290
+[c000003fece8f870] [c00800001a7e2c78] kvmppc_tce_validate+0x80/0x1b0 [kvm]
+[c000003fece8f8e0] [c00800001a7e3fac] kvmppc_h_put_tce+0x94/0x3e4 [kvm]
+[c000003fece8f9a0] [c00800001a8baac4] kvmppc_pseries_do_hcall+0x30c/0xce0 [kvm_hv]
+[c000003fece8fa10] [c00800001a8bd89c] kvmppc_vcpu_run_hv+0x694/0xec0 [kvm_hv]
+[c000003fece8fae0] [c00800001a7d95dc] kvmppc_vcpu_run+0x34/0x48 [kvm]
+[c000003fece8fb00] [c00800001a7d56bc] kvm_arch_vcpu_ioctl_run+0x2f4/0x400 [kvm]
+[c000003fece8fb90] [c00800001a7c3618] kvm_vcpu_ioctl+0x460/0x850 [kvm]
+[c000003fece8fd00] [c00000000041c4f4] do_vfs_ioctl+0xe4/0x930
+[c000003fece8fdb0] [c00000000041ce04] ksys_ioctl+0xc4/0x110
+[c000003fece8fe00] [c00000000041ce78] sys_ioctl+0x28/0x80
+[c000003fece8fe20] [c00000000000b5a4] system_call+0x5c/0x70
+
+Fixes: 42de7b9e2167 ("KVM: PPC: Validate TCEs against preregistered memory page sizes", 2018-09-10)
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/hyperv.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/powerpc/kvm/book3s_64_vio.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index 371c669696d70..610c0f1fbdd71 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -1371,7 +1371,16 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *current_vcpu, u64 ingpa,
+diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64_vio.c
+index 532ab79734c7a..d43e8fe6d4241 100644
+--- a/arch/powerpc/kvm/book3s_64_vio.c
++++ b/arch/powerpc/kvm/book3s_64_vio.c
+@@ -543,14 +543,14 @@ long kvmppc_h_put_tce(struct kvm_vcpu *vcpu, unsigned long liobn,
+ 	if (ret != H_SUCCESS)
+ 		return ret;
  
- 		valid_bank_mask = BIT_ULL(0);
- 		sparse_banks[0] = flush.processor_mask;
--		all_cpus = flush.flags & HV_FLUSH_ALL_PROCESSORS;
++	idx = srcu_read_lock(&vcpu->kvm->srcu);
 +
-+		/*
-+		 * Work around possible WS2012 bug: it sends hypercalls
-+		 * with processor_mask = 0x0 and HV_FLUSH_ALL_PROCESSORS clear,
-+		 * while also expecting us to flush something and crashing if
-+		 * we don't. Let's treat processor_mask == 0 same as
-+		 * HV_FLUSH_ALL_PROCESSORS.
-+		 */
-+		all_cpus = (flush.flags & HV_FLUSH_ALL_PROCESSORS) ||
-+			flush.processor_mask == 0;
- 	} else {
- 		if (unlikely(kvm_read_guest(kvm, ingpa, &flush_ex,
- 					    sizeof(flush_ex))))
+ 	ret = kvmppc_tce_validate(stt, tce);
+ 	if (ret != H_SUCCESS)
+-		return ret;
++		goto unlock_exit;
+ 
+ 	dir = iommu_tce_direction(tce);
+ 
+-	idx = srcu_read_lock(&vcpu->kvm->srcu);
+-
+ 	if ((dir != DMA_NONE) && kvmppc_tce_to_ua(vcpu->kvm, tce, &ua, NULL)) {
+ 		ret = H_PARAMETER;
+ 		goto unlock_exit;
 -- 
 2.20.1
 
