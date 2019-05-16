@@ -2,103 +2,86 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 198B4C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32651C04E87
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E26FB2087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:43:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RNQR9zjS"
+	by mail.kernel.org (Postfix) with ESMTP id 0270420881
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:47:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1557992837;
+	bh=35Pcf3hpT7bW5WPrnVsVyejHjVQ2cYE9ChhCA99Y7LQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1MCuQGSlrJDvvMo6X7wwGk6AZBbBqVjtcwBcruSoSFaI4VTckWS7sD3dY/WZlGlLR
+	 mCuSq63o0b3qodDNfxtrUcprVlAOiEUW9LAqS+jZW98nf4NWdWkx2Wk8OaIYsYa3kw
+	 IN5WYcDSrNgH+2U2eeA/GUukLoSRoDbEHPMEtYwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfEPHno (ORCPT
+        id S1726589AbfEPHrP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 03:43:44 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:51987 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbfEPHno (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 03:43:44 -0400
-Received: by mail-it1-f196.google.com with SMTP id m3so801919itl.1;
-        Thu, 16 May 2019 00:43:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WX7yELkhCk/Xz3OYn00m0kQOVWLKHq966GGVv+YHK8Q=;
-        b=RNQR9zjSvvtvRK/v9QisZZS943j40S4riO8HEWNxRprDh+wPszMYM+AMwLJYCkxGgg
-         Q0HBrwaklA4Xi1oafck3QfihI+np9fpDX5tnxZO5xnlBy1RFFcy4wJWikuFmHkiB8FlG
-         JhwEDYRX8F4iBBgqwgojdKgUUnLMHRwYOjDFj8qmHpqrv2ft9LFF9Yf4qzPwyaFBZuWD
-         YdmZC+re/cYJQYxNjJL27Zk1TXoML4Mxo0GNr1MXkE9NSgBrIrd1fQUOFMa4p5lBVbJq
-         5z15oFlxr+LDM8Oj2ZnCzGe4Zk9GJA3+F2oVJ4NRAeJtFojljfiJsvmbQpPmrdBv6ZOM
-         Yv/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WX7yELkhCk/Xz3OYn00m0kQOVWLKHq966GGVv+YHK8Q=;
-        b=Uc/FAbEgjMy/pIre03eYKggWJX2GsUe6qv4BDfRorWvppPHu6ToOQWKFBgFdodGJl7
-         g1N/l/EWcx6F7C6EOOuN7bH1tx+27mhKf0L4yaHi8bedIhaOHbmcIF1c19F/ciyaA2to
-         bD0yswtoZInggfnnmgI/R3/mxWAVyVfa8ofz0NP987jTySrbfFGszO8dZ4J64A1H0sQ/
-         b87z5FlJ3NJp7iaCpyBdKFmxAkK/p5SCSdJJDlJP1O9ZCWspO6ibTm+ygsosnKvTA0vx
-         N2tvuqi25P6YrQWHZHRwTsYUjvYlaN0NwFqKmHG2vb5YcGCm45X7VWBtH5ZAfXA4JVTf
-         vxdA==
-X-Gm-Message-State: APjAAAWOkIC3oLnD1wpyLRvlgbeModODAsw/yDxAc6KRS7XAYOxe01hJ
-        GumPmoaW4OPBzhOzl1kzhMZUmjT69nhAog==
-X-Google-Smtp-Source: APXvYqzjLr0Vm6NPaoAWTAxljovveyvL14w+OiIL6Biy9VFGsyCHWjhQxhXy+xzWAXm2eelpXz12nw==
-X-Received: by 2002:a24:d241:: with SMTP id z62mr11183950itf.141.1557992623249;
-        Thu, 16 May 2019 00:43:43 -0700 (PDT)
-Received: from asus (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
-        by smtp.gmail.com with ESMTPSA id i8sm1442743ioj.26.2019.05.16.00.43.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 May 2019 00:43:42 -0700 (PDT)
-Date:   Thu, 16 May 2019 01:43:41 -0600
-From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     shuah@kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] selftests: pidfd: Create .gitignore to include pidfd_test
-Message-ID: <20190516074340.GA12505@asus>
-References: <20190512045711.4507-1-skunberg.kelsey@gmail.com>
- <f0f3c65d-2b1f-3633-ee18-7d49d18eb7a5@linuxfoundation.org>
+        Thu, 16 May 2019 03:47:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50674 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726363AbfEPHrP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 03:47:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CECF8ADCB;
+        Thu, 16 May 2019 07:47:13 +0000 (UTC)
+Date:   Thu, 16 May 2019 09:47:13 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Greg KH <greg@kroah.com>
+Cc:     Oleksandr Natalenko <oleksandr@redhat.com>,
+        linux-kernel@vger.kernel.org, Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Timofey Titovets <nefelim4ag@gmail.com>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Grzegorz Halat <ghalat@redhat.com>, linux-mm@kvack.org,
+        linux-api@vger.kernel.org, Hugh Dickins <hughd@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Minchan Kim <minchan@kernel.org>
+Subject: Re: [PATCH RFC v2 0/4] mm/ksm: add option to automerge VMAs
+Message-ID: <20190516074713.GK16651@dhcp22.suse.cz>
+References: <20190514131654.25463-1-oleksandr@redhat.com>
+ <20190514144105.GF4683@dhcp22.suse.cz>
+ <20190514145122.GG4683@dhcp22.suse.cz>
+ <20190515062523.5ndf7obzfgugilfs@butterfly.localdomain>
+ <20190515065311.GB16651@dhcp22.suse.cz>
+ <20190515145151.GG16651@dhcp22.suse.cz>
+ <20190515151557.GA23969@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f0f3c65d-2b1f-3633-ee18-7d49d18eb7a5@linuxfoundation.org>
+In-Reply-To: <20190515151557.GA23969@kroah.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 05:26:25PM -0600, Shuah Khan wrote:
-> Hi Kelsey,
+On Wed 15-05-19 17:15:57, Greg KH wrote:
+> On Wed, May 15, 2019 at 04:51:51PM +0200, Michal Hocko wrote:
+> > [Cc Suren and Minchan - the email thread starts here 20190514131654.25463-1-oleksandr@redhat.com]
+> > 
+> > On Wed 15-05-19 08:53:11, Michal Hocko wrote:
+> > [...]
+> > > I will try to comment on the interface itself later. But I have to say
+> > > that I am not impressed. Abusing sysfs for per process features is quite
+> > > gross to be honest.
+> > 
+> > I have already commented on this in other email. I consider sysfs an
+> > unsuitable interface for per-process API.
 > 
-> On 5/11/19 10:57 PM, Kelsey Skunberg wrote:
-> > Create /selftests/pidfd/.gitignore which holds the following file name
-> > created after compiling:
-> 
-> This patch generates the following checkpatch warning.
-> 
-> WARNING: use relative pathname instead of absolute in changelog text
-> #85:
-> Create /selftests/drivers/.gitignore which holds the following file name
-> 
-> 
-> I fixed it and applied the patch. Please make sure to run checkpatch
-> before sending patches in the future.
-> 
-> thanks,
-> -- Shuah
+> Wait, what?  A new sysfs file/directory per process?  That's crazy, no
+> one must have benchmarked it :)
 
-Thank you for catching and fixing this! I'll make sure to remember to
-run checkpatch in the future.
+Just to clarify, that was not a per process file but rather per process API.
+Essentially echo $PID > $SYSFS_SPECIAL_FILE
 
-Thanks again!
-
--Kelsey
+-- 
+Michal Hocko
+SUSE Labs
