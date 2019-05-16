@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9286CC04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 595FAC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6462B20833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A5520833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:48:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558007294;
-	bh=Anoh9xdY8HHEQE8H4Fo0vsBCQwnkQmV1/a4MRT0gwvQ=;
+	s=default; t=1558007300;
+	bh=IU7dbmBet8D7PQiNPsgkIHhkDL7DlqrrB8YRpyNY6hA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pVuOQZhPvqrYjivKGaHsGIBHLP9yOMJo6AVtthl8vBrLtc2tvOU2p5yONzIv6Xp7B
-	 epD1OMtbI+8yxIF2hFL4YPXM8jEy8XzYfdd6LSn9mWPf52umLb/wBa7oWLIYlfEp1g
-	 TffBIDI05ZFODv0o0Wr1y2UJGKWZvmCNhfww8100=
+	b=FYQ2xSzGsU8jMXK91a95mtIg56LjbtJA/UtRZrhtoPD/E6DGxUd6uHwYfbpZMctw0
+	 cHrxDV8skGWHFa/hi3OxFlwkv0itg9bDm7JK11O4kqlgGICLgRm0WawtVZk+UJ1rT1
+	 l1mbWieZUxn41v/rr7qKJeu+HTlZ6FcNjeGn6Gac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfEPLj6 (ORCPT
+        id S1728390AbfEPLsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:39:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47936 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:48:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727485AbfEPLjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:39:53 -0400
+        id S1727505AbfEPLj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:39:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3DDC2089E;
-        Thu, 16 May 2019 11:39:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8AB02168B;
+        Thu, 16 May 2019 11:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006793;
-        bh=Anoh9xdY8HHEQE8H4Fo0vsBCQwnkQmV1/a4MRT0gwvQ=;
+        s=default; t=1558006795;
+        bh=IU7dbmBet8D7PQiNPsgkIHhkDL7DlqrrB8YRpyNY6hA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gJyDzA8kqkIDRSAgpNYICpmSEzotW27o2BujG6J/zHT87+quKLJzS/fHmSMipofFn
-         5omzhgj+BJJHSWnzvdQJ1q2LBpUedCMDPhDcP7c+tWUUT+EYAv8GfaTFA3xB4YNhp1
-         xYvJv1Qxy5thBlnRlUcG1vtxIGmn5zbYc23GLU14=
+        b=Sx9PssXZBFlyahF6DfN2rlE7Xua/F2JgFIYrsYqonFH89jKNmjIxv1pBLvaNd3OLp
+         weYGG4pmg3cKlmsXR1o9y2gjUeV5udq/wsOrXfRmnJESEoxpi8hxROjg/FvQ6LpxMK
+         GGtD+JmGBxQOfGaHDRQ8NPQ62jSxDLRoN4C7MkLc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 16/34] PCI: Fix issue with "pci=disable_acs_redir" parameter being ignored
-Date:   Thu, 16 May 2019 07:39:13 -0400
-Message-Id: <20190516113932.8348-16-sashal@kernel.org>
+Cc:     Bhagavathi Perumal S <bperumal@codeaurora.org>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 18/34] mac80211: Fix kernel panic due to use of txq after free
+Date:   Thu, 16 May 2019 07:39:15 -0400
+Message-Id: <20190516113932.8348-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516113932.8348-1-sashal@kernel.org>
 References: <20190516113932.8348-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,61 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Logan Gunthorpe <logang@deltatee.com>
+From: Bhagavathi Perumal S <bperumal@codeaurora.org>
 
-[ Upstream commit d5bc73f34cc97c4b4b9202cc93182c2515076edf ]
+[ Upstream commit f1267cf3c01b12e0f843fb6a7450a7f0b2efab8a ]
 
-In most cases, kmalloc() will not be available early in boot when
-pci_setup() is called.  Thus, the kstrdup() call that was added to fix the
-__initdata bug with the disable_acs_redir parameter usually returns NULL,
-so the parameter is discarded and has no effect.
+The txq of vif is added to active_txqs list for ATF TXQ scheduling
+in the function ieee80211_queue_skb(), but it was not properly removed
+before freeing the txq object. It was causing use after free of the txq
+objects from the active_txqs list, result was kernel panic
+due to invalid memory access.
 
-To fix this, store the string that's in initdata until an initcall function
-can allocate the memory appropriately.  This way we don't need any
-additional static memory.
+Fix kernel invalid memory access by properly removing txq object
+from active_txqs list before free the object.
 
-Fixes: d2fd6e81912a ("PCI: Fix __initdata issue with "pci=disable_acs_redir" parameter")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Bhagavathi Perumal S <bperumal@codeaurora.org>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pci.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ net/mac80211/iface.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e91005d0f20c7..3f77bab698ced 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -6266,8 +6266,7 @@ static int __init pci_setup(char *str)
- 			} else if (!strncmp(str, "pcie_scan_all", 13)) {
- 				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
- 			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
--				disable_acs_redir_param =
--					kstrdup(str + 18, GFP_KERNEL);
-+				disable_acs_redir_param = str + 18;
- 			} else {
- 				printk(KERN_ERR "PCI: Unknown option `%s'\n",
- 						str);
-@@ -6278,3 +6277,19 @@ static int __init pci_setup(char *str)
- 	return 0;
- }
- early_param("pci", pci_setup);
+diff --git a/net/mac80211/iface.c b/net/mac80211/iface.c
+index 4a6ff1482a9ff..02d2e6f11e936 100644
+--- a/net/mac80211/iface.c
++++ b/net/mac80211/iface.c
+@@ -1908,6 +1908,9 @@ void ieee80211_if_remove(struct ieee80211_sub_if_data *sdata)
+ 	list_del_rcu(&sdata->list);
+ 	mutex_unlock(&sdata->local->iflist_mtx);
+ 
++	if (sdata->vif.txq)
++		ieee80211_txq_purge(sdata->local, to_txq_info(sdata->vif.txq));
 +
-+/*
-+ * 'disable_acs_redir_param' is initialized in pci_setup(), above, to point
-+ * to data in the __initdata section which will be freed after the init
-+ * sequence is complete. We can't allocate memory in pci_setup() because some
-+ * architectures do not have any memory allocation service available during
-+ * an early_param() call. So we allocate memory and copy the variable here
-+ * before the init section is freed.
-+ */
-+static int __init pci_realloc_setup_params(void)
-+{
-+	disable_acs_redir_param = kstrdup(disable_acs_redir_param, GFP_KERNEL);
-+
-+	return 0;
-+}
-+pure_initcall(pci_realloc_setup_params);
+ 	synchronize_rcu();
+ 
+ 	if (sdata->dev) {
 -- 
 2.20.1
 
