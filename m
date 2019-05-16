@@ -2,188 +2,104 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E95C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A309C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C386820848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F06982089E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:50:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="axwfrku8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbfEPLt7 (ORCPT
+        id S1727611AbfEPLul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:49:59 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:44390 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727054AbfEPLt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:49:58 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 177252001D3;
-        Thu, 16 May 2019 13:49:56 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 09552200061;
-        Thu, 16 May 2019 13:49:56 +0200 (CEST)
-Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.82.13])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 7D9BF205CD;
-        Thu, 16 May 2019 13:49:55 +0200 (CEST)
-From:   laurentiu.tudor@nxp.com
-To:     hch@lst.de, stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, marex@denx.de
-Cc:     leoyang.li@nxp.com, linux-kernel@vger.kernel.org,
-        robin.murphy@arm.com, noring@nocrew.org, JuergenUrban@gmx.de,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: [PATCH v4 2/3] usb: host: ohci-sm501: init genalloc for local memory
-Date:   Thu, 16 May 2019 14:47:20 +0300
-Message-Id: <20190516114721.27694-3-laurentiu.tudor@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190516114721.27694-1-laurentiu.tudor@nxp.com>
-References: <20190516114721.27694-1-laurentiu.tudor@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 16 May 2019 07:50:41 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44998 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726736AbfEPLuk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:50:40 -0400
+Received: by mail-lj1-f193.google.com with SMTP id e13so2776909ljl.11
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 04:50:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZfZWKHa7k32vSF2Rgion0TnHTAjuA1aCE2qsRonqXP0=;
+        b=axwfrku8av26C74Qcnj8NMFl8LQW3ytVsyxJwHyHrABKFSul4eTIQRAgniBSpRNR2T
+         SUCKllbRVUhjH9a5M8vQ2ZctPU2aRCPW2zzHfrExJfmGQGGJKj+UZ8gMQKIIKMCg8q+W
+         d71EwYTR3Nq/rACyFL4CAxYsp4QgSeBRv2U7Q+fNBUsAFO7pdw4soy6W9pOYAyCeXSbD
+         CqdAcuzevt6wp/8joMtEkxOTMm36jy27fYgJD0kUVC1x24NqeVW7JvAfFlnUf7AVqtb0
+         wSTH5rhMPlygfwvgCPaK4TGfEgwd4+eSNjsCqRVenL0HNST+g99Optp097VsBxKhX9Dm
+         4j2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZfZWKHa7k32vSF2Rgion0TnHTAjuA1aCE2qsRonqXP0=;
+        b=qwfm5GkHBIUQPS6NPEeHYSyt850neH38+1e7fRlIoYRxl+OfoSHJm5Z5611YuKGPfi
+         S1VJhw58QQxXBTE2eFShwSqKP3C1ewxQ9c877cgVdS9OSV7VxTLP8hzAmBS5cLAOJgyX
+         qf6/3HD5qLvfNTNyrkun40FNmvVvphDYgSea4MZf++ZfJi8CmteuZ1eJ0izi7clhL+gY
+         /D/qq3NnmXy+24TT6Vii2lqVfpCxlptgtP5Fp4ZvtyIDPmvskznjkkERlN/O28joYFxO
+         bDqmgDzymOHvX/p9wsmrN62VOayZTUxeWTXZAV49D41WQ8YZ4Hp9gRVK5PxfTqmzFmeI
+         plGQ==
+X-Gm-Message-State: APjAAAUY0ddMPKxDNvbj2ZgGdWyAiit9nrzwRPXs0PAE77XS6gT2AQHD
+        rCWyewK77q8hXMB8jLo9uxcjNdgBhf4UiN5JHsBm6g==
+X-Google-Smtp-Source: APXvYqwaxRjeq7pjR9npAXmwgyhZKdqhC73PwgIVTdnHjqNpDaNtDJResi7MGSU8C3U2sKn8oJY/87TKdcHLFfT0UHI=
+X-Received: by 2002:a2e:60a:: with SMTP id 10mr3127929ljg.126.1558007438447;
+ Thu, 16 May 2019 04:50:38 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1553828158.git.vilhelm.gray@gmail.com> <1cc8b30bb3954ca2a0961ffb0a2eed8a005ed670.1553828158.git.vilhelm.gray@gmail.com>
+In-Reply-To: <1cc8b30bb3954ca2a0961ffb0a2eed8a005ed670.1553828158.git.vilhelm.gray@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 16 May 2019 13:50:26 +0200
+Message-ID: <CACRpkdbCt1PAJ1rBvKvZ2ydLgJmKXuLN4mRtSU8CaW=U7EcFbQ@mail.gmail.com>
+Subject: Re: [PATCH v14 01/11] bitops: Introduce the for_each_set_clump8 macro
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-arch@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Phil Reid <preid@electromag.com.au>,
+        Lukas Wunner <lukas@wunner.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+On Fri, Mar 29, 2019 at 4:03 AM William Breathitt Gray
+<vilhelm.gray@gmail.com> wrote:
 
-In preparation for dropping the existing "coherent" dma mem declaration
-APIs, replace the current dma_declare_coherent_memory() based mechanism
-with the creation of a genalloc pool that will be used in the OHCI
-subsystem as replacement for the DMA APIs.
+> This macro iterates for each 8-bit group of bits (clump) with set bits,
+> within a bitmap memory region. For each iteration, "start" is set to the
+> bit offset of the found clump, while the respective clump value is
+> stored to the location pointed by "clump". Additionally, the
+> bitmap_get_value8 and bitmap_set_value8 functions are introduced to
+> respectively get and set an 8-bit value in a bitmap memory region.
+>
+> Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
-For context, see thread here: https://lkml.org/lkml/2019/4/22/357
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
----
- drivers/usb/host/ohci-sm501.c | 68 +++++++++++++++++++++--------------
- 1 file changed, 41 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/usb/host/ohci-sm501.c b/drivers/usb/host/ohci-sm501.c
-index c26228c25f99..1a25f5396e3e 100644
---- a/drivers/usb/host/ohci-sm501.c
-+++ b/drivers/usb/host/ohci-sm501.c
-@@ -16,6 +16,7 @@
- #include <linux/jiffies.h>
- #include <linux/platform_device.h>
- #include <linux/dma-mapping.h>
-+#include <linux/genalloc.h>
- #include <linux/sm501.h>
- #include <linux/sm501-regs.h>
- 
-@@ -92,6 +93,7 @@ static int ohci_hcd_sm501_drv_probe(struct platform_device *pdev)
- 	struct resource	*res, *mem;
- 	int retval, irq;
- 	struct usb_hcd *hcd = NULL;
-+	void __iomem *local_mem;
- 
- 	irq = retval = platform_get_irq(pdev, 0);
- 	if (retval < 0)
-@@ -110,40 +112,18 @@ static int ohci_hcd_sm501_drv_probe(struct platform_device *pdev)
- 		goto err0;
- 	}
- 
--	/* The sm501 chip is equipped with local memory that may be used
--	 * by on-chip devices such as the video controller and the usb host.
--	 * This driver uses dma_declare_coherent_memory() to make sure
--	 * usb allocations with dma_alloc_coherent() allocate from
--	 * this local memory. The dma_handle returned by dma_alloc_coherent()
--	 * will be an offset starting from 0 for the first local memory byte.
--	 *
--	 * So as long as data is allocated using dma_alloc_coherent() all is
--	 * fine. This is however not always the case - buffers may be allocated
--	 * using kmalloc() - so the usb core needs to be told that it must copy
--	 * data into our local memory if the buffers happen to be placed in
--	 * regular memory. The HCD_LOCAL_MEM flag does just that.
--	 */
--
--	retval = dma_declare_coherent_memory(dev, mem->start,
--					 mem->start - mem->parent->start,
--					 resource_size(mem));
--	if (retval) {
--		dev_err(dev, "cannot declare coherent memory\n");
--		goto err1;
--	}
--
- 	/* allocate, reserve and remap resources for registers */
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (res == NULL) {
- 		dev_err(dev, "no resource definition for registers\n");
- 		retval = -ENOENT;
--		goto err2;
-+		goto err1;
- 	}
- 
- 	hcd = usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
- 	if (!hcd) {
- 		retval = -ENOMEM;
--		goto err2;
-+		goto err1;
- 	}
- 
- 	hcd->rsrc_start = res->start;
-@@ -164,6 +144,43 @@ static int ohci_hcd_sm501_drv_probe(struct platform_device *pdev)
- 
- 	ohci_hcd_init(hcd_to_ohci(hcd));
- 
-+	/* The sm501 chip is equipped with local memory that may be used
-+	 * by on-chip devices such as the video controller and the usb host.
-+	 * This driver uses genalloc so that usb allocations with
-+	 * gen_pool_dma_alloc() allocate from this local memory. The dma_handle
-+	 * returned by gen_pool_dma_alloc() will be an offset starting from 0
-+	 * for the first local memory byte.
-+	 *
-+	 * So as long as data is allocated using gen_pool_dma_alloc() all is
-+	 * fine. This is however not always the case - buffers may be allocated
-+	 * using kmalloc() - so the usb core needs to be told that it must copy
-+	 * data into our local memory if the buffers happen to be placed in
-+	 * regular memory. The HCD_LOCAL_MEM flag does just that.
-+	 */
-+
-+	hcd->localmem_pool = devm_gen_pool_create(dev, PAGE_SHIFT,
-+						  dev_to_node(dev),
-+						  "ohci-sm501");
-+	if (IS_ERR(hcd->localmem_pool)) {
-+		retval = PTR_ERR(hcd->localmem_pool);
-+		goto err5;
-+	}
-+
-+	local_mem = devm_ioremap(dev, mem->start, resource_size(mem));
-+	if (!local_mem) {
-+		retval = -ENOMEM;
-+		goto err5;
-+	}
-+
-+	retval = gen_pool_add_virt(hcd->localmem_pool,
-+				   (unsigned long)local_mem,
-+				   mem->start - mem->parent->start,
-+				   resource_size(mem),
-+				   dev_to_node(dev));
-+	if (retval < 0) {
-+		dev_err(dev, "failed to add to pool: %d\n", retval);
-+		goto err5;
-+	}
- 	retval = usb_add_hcd(hcd, irq, IRQF_SHARED);
- 	if (retval)
- 		goto err5;
-@@ -181,8 +198,6 @@ static int ohci_hcd_sm501_drv_probe(struct platform_device *pdev)
- 	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
- err3:
- 	usb_put_hcd(hcd);
--err2:
--	dma_release_declared_memory(dev);
- err1:
- 	release_mem_region(mem->start, resource_size(mem));
- err0:
-@@ -197,7 +212,6 @@ static int ohci_hcd_sm501_drv_remove(struct platform_device *pdev)
- 	usb_remove_hcd(hcd);
- 	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
- 	usb_put_hcd(hcd);
--	dma_release_declared_memory(&pdev->dev);
- 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
- 	if (mem)
- 		release_mem_region(mem->start, resource_size(mem));
--- 
-2.17.1
-
+Yours,
+Linus Walleij
