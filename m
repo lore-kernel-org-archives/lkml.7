@@ -2,96 +2,98 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A7BAC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75509C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 070BE2087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FEC42087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:11:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558001516;
+	bh=xQPD/ofuqeT7FNWJOv8/4jKECVm6lZ3S6HYpHb1mxQs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y8J3CoLE0FQTxiRsMMs1aNpLuHoG4UOuxRtSYrcfyNeu8QYLQbgyW7HrDHAFa7k28
+	 vF1GorXD3CtovLqK7RWftGXVxNPlC5/dwKxuG5XGKM5b8StdUYPI9t5H1DE5YKlydQ
+	 9razk2n70Zfp3Sqb2zui07QfA4AyjMutkI7Zt3aQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfEPKI5 (ORCPT
+        id S1726917AbfEPKLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 06:08:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43812 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbfEPKIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 06:08:55 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D1C1B3EDBF;
-        Thu, 16 May 2019 10:08:54 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E062D6266C;
-        Thu, 16 May 2019 10:08:51 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, joro@8bytes.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        dwmw2@infradead.org, lorenzo.pieralisi@arm.com,
-        robin.murphy@arm.com, will.deacon@arm.com, hanjun.guo@linaro.org,
-        sudeep.holla@arm.com
-Cc:     alex.williamson@redhat.com, shameerali.kolothum.thodi@huawei.com
-Subject: [PATCH v3 7/7] iommu/vt-d: Differentiate relaxable and non relaxable RMRRs
-Date:   Thu, 16 May 2019 12:08:17 +0200
-Message-Id: <20190516100817.12076-8-eric.auger@redhat.com>
-In-Reply-To: <20190516100817.12076-1-eric.auger@redhat.com>
-References: <20190516100817.12076-1-eric.auger@redhat.com>
+        Thu, 16 May 2019 06:11:55 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43950 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfEPKLy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 06:11:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IzKP9HLNlXee2M6iLMR2LM7xnjvarDZVD2/6gMH+Tcg=; b=GNk6DCqF9bgIUJZ/MEMc9fegQ
+        35Vx2DnTyiPqsu7Y6lI7IgL1vj/3eHS+pUx+lqDfCSVJMJqWIUXs3CB/BXWkuJM3p2TA9Zf/sbg/y
+        ZkklGYCeOADwzVt0vwXha0hmy0KzYr8xO0b8VC31LoqzIqnmf2E2cJXTL3Yc7JW6Xu8r0=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hRDMS-00061J-O3; Thu, 16 May 2019 10:11:40 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id AD4D11126D3F; Thu, 16 May 2019 11:11:36 +0100 (BST)
+Date:   Thu, 16 May 2019 11:11:36 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "brian.austin@cirrus.com" <brian.austin@cirrus.com>,
+        "Paul.Handrigan@cirrus.com" <Paul.Handrigan@cirrus.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2] ASoC: cs42xx8: Add reset gpio handling
+Message-ID: <20190516101136.GC5598@sirena.org.uk>
+References: <95eb314ef6d47ee6581094a406516a6069278d56.1557986457.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Thu, 16 May 2019 10:08:54 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ZwgA9U+XZDXt4+m+"
+Content-Disposition: inline
+In-Reply-To: <95eb314ef6d47ee6581094a406516a6069278d56.1557986457.git.shengjiu.wang@nxp.com>
+X-Cookie: <ahzz_> i figured 17G oughta be enough.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now we have a new IOMMU_RESV_DIRECT_RELAXABLE reserved memory
-region type, let's report USB and GFX RMRRs as relaxable ones.
 
-This allows to have a finer reporting at IOMMU API level of
-reserved memory regions. This will be exploitable by VFIO to
-define the usable IOVA range and detect potential conflicts
-between the guest physical address space and host reserved
-regions.
+--ZwgA9U+XZDXt4+m+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
----
- drivers/iommu/intel-iommu.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+On Thu, May 16, 2019 at 06:04:58AM +0000, S.j. Wang wrote:
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index a36604f4900f..af1d65fdedfc 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -5493,7 +5493,9 @@ static void intel_iommu_get_resv_regions(struct device *device,
- 	for_each_rmrr_units(rmrr) {
- 		for_each_active_dev_scope(rmrr->devices, rmrr->devices_cnt,
- 					  i, i_dev) {
-+			struct pci_dev *pdev = to_pci_dev(device);
- 			struct iommu_resv_region *resv;
-+			enum iommu_resv_type type;
- 			size_t length;
- 
- 			if (i_dev != device &&
-@@ -5501,9 +5503,13 @@ static void intel_iommu_get_resv_regions(struct device *device,
- 				continue;
- 
- 			length = rmrr->end_address - rmrr->base_address + 1;
-+
-+			type = (pdev &&
-+				(IS_USB_DEVICE(pdev) || IS_GFX_DEVICE(pdev))) ?
-+				IOMMU_RESV_DIRECT_RELAXABLE : IOMMU_RESV_DIRECT;
-+
- 			resv = iommu_alloc_resv_region(rmrr->base_address,
--						       length, prot,
--						       IOMMU_RESV_DIRECT,
-+						       length, prot, type,
- 						       GFP_ATOMIC);
- 			if (!resv)
- 				break;
--- 
-2.20.1
+> +	cs42xx8->gpiod_reset = devm_gpiod_get_optional(dev, "reset",
+> +							GPIOD_OUT_HIGH);
+> +	if (IS_ERR(cs42xx8->gpiod_reset))
+> +		return PTR_ERR(cs42xx8->gpiod_reset);
 
+You also need a binding document update for this.
+
+--ZwgA9U+XZDXt4+m+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzdN1cACgkQJNaLcl1U
+h9B77wf6Am2asgXqw+nI5Ts2nEP5jHpq8r6uTGJ7oAsVZ/DvX7MFJgwRwYwmfaiI
+DcGaR6tx0sMwGjHVhLVu4mMG7vAgjkkwNMi7OArvG9hF+c9A4CLy84gQMlxwScqQ
+TR562sJfuDfzwI5sA0+FSuZAg3To/WGO9X+wKcH9IASntblmxesPPuMpxwNwb89M
+xVNTgRrRWSzfjWptZFCbWrRsoFv8BCov9zXx3UfDbjFMT2CQ86l88QuQs1RwHOB9
+/k7pwiObaEGOngMKkg+UIRo34myrsc/RtBNpSwdXX37KpMeXjQ0nIVOIPGbjyxrl
+n9xbKAC+csBlahOJM6VzPQyXiCAQmA==
+=gQpf
+-----END PGP SIGNATURE-----
+
+--ZwgA9U+XZDXt4+m+--
