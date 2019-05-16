@@ -2,143 +2,112 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB24C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A77C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D83B20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A2D20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:11:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cK2GLY8Y"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="i76VpgiQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbfEPOKO (ORCPT
+        id S1727587AbfEPOLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:10:14 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35692 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfEPOKO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:10:14 -0400
-Received: by mail-lj1-f195.google.com with SMTP id h11so1884881ljb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 07:10:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mFiHB0JnWzaNluTTUtWvJbRgr+p3RJ44LiyzUaxVXTw=;
-        b=cK2GLY8YQ0Bq/xAKlSetszCMvf/KRY/LpFGXEQuvtlTQ9GxR66sz89fJpDuD/7XaMr
-         5GU5ODwBJHoDinbs0POt4xQjG0W9u0TXMyPaA0LXqNml1nJPKddpfvTR9Awu1zgyNQj4
-         Pi7CVwZE3OIlIsOe976TkaA4s+05SkOfQP4Gelc+/fIF6557bz8XeV1YdYtT29J3DqLY
-         rXUWo6X/b9H0nKeo9XA8I+WYuHcLYqEhg1CqvZtwsV37gnROVeo+OErwLjcXIL4N9ejV
-         YqyUpBslqj7vr2yEoQr/wNj6FdfN3oAKUnED/RcgVUUIYwK3S3yKNAO4mN7xITczGr/L
-         hp6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mFiHB0JnWzaNluTTUtWvJbRgr+p3RJ44LiyzUaxVXTw=;
-        b=E8Y1/XrclFOxMaMmHkp7VVlGomEOBT+HP1W89M1i0ay5KspBYrbubhVmWjU0iBTcjw
-         ESabRvF+CNWoBHc/pDpzVPAcout4yRXUz0MYj7Lhw4U2z2ArKkasBToDwDRVWxeV9/zJ
-         ICtgLZReL8G6zR1W+282DDZ7Ksi+FcmWR32mbDxobCbsapLX/9oP05N0+h/1LmZonkBD
-         h69JQlTC0ZyKwMVq+sOe3lesTFF4IHFq8Pm/NQJL9tfIhudNPk7PnYkil4CmkVTMMFr8
-         2Ark4MdjQzzNF/R/jAUdAEA41caZ0EG2mm58CjYbew14tyjdXVRF55SG6eQFKsj1G/ga
-         3vGw==
-X-Gm-Message-State: APjAAAViF1Dz/SKzZSsY5s3UJ8lDpKfjl0WLUx2WVFiqVxeZI/7Czvbj
-        dAYRnSnQCeJCnDFpNSqWSqgc10JPJPPLMuJUGm6iFA==
-X-Google-Smtp-Source: APXvYqzbqhv7h1KEK6uOJf+9M7gmK9y1jNCux7oAshoRwUNxXe9xBjt+85je2qOZfn5RZUw3una3C3k5YnoksDinIG4=
-X-Received: by 2002:a2e:7510:: with SMTP id q16mr24734323ljc.160.1558015811786;
- Thu, 16 May 2019 07:10:11 -0700 (PDT)
+        Thu, 16 May 2019 10:11:35 -0400
+Received: from mail-eopbgr10069.outbound.protection.outlook.com ([40.107.1.69]:3726
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726742AbfEPOLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 10:11:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4akrvowfNyYOehKZ9Q5YErSNQPJay5iHlfxaOvuhEPk=;
+ b=i76VpgiQVZoc/X5heZ2agVEU8hhJxMXmZOelbMfCRH5pOoFL7xvLigfWfVTe8pAOtnADo47LCc/esbULrFL8e756tE/puMhRgGrpz4M50BK0Up3mEyWp66SpYImOAwxGI9fw1KvUrlH1o13Mui7pW3vbE01LNznOOgLLhGr1BEI=
+Received: from VI1PR04MB4704.eurprd04.prod.outlook.com (20.177.48.157) by
+ VI1PR04MB4591.eurprd04.prod.outlook.com (20.177.55.225) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.17; Thu, 16 May 2019 14:11:31 +0000
+Received: from VI1PR04MB4704.eurprd04.prod.outlook.com
+ ([fe80::2ce8:d8f5:9745:99df]) by VI1PR04MB4704.eurprd04.prod.outlook.com
+ ([fe80::2ce8:d8f5:9745:99df%6]) with mapi id 15.20.1900.010; Thu, 16 May 2019
+ 14:11:31 +0000
+From:   Viorel Suman <viorel.suman@nxp.com>
+To:     "festevam@gmail.com" <festevam@gmail.com>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "colin.king@canonical.com" <colin.king@canonical.com>,
+        "viorel.suman@gmail.com" <viorel.suman@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        "Julia.Lawall@lip6.fr" <Julia.Lawall@lip6.fr>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Subject: Re: [alsa-devel] [PATCH] ASoC: AK4458: add regulator for ak4458
+Thread-Topic: [alsa-devel] [PATCH] ASoC: AK4458: add regulator for ak4458
+Thread-Index: AQHVC+dix6gnGF9HoUCg65Wy4dJcvqZtutYAgAAP3wA=
+Date:   Thu, 16 May 2019 14:11:31 +0000
+Message-ID: <1558015890.29679.3.camel@nxp.com>
+References: <1558011640-7864-1-git-send-email-viorel.suman@nxp.com>
+         <CAOMZO5C1jm=7tiui221B-N+ptEknK_ZdHvrjvSHfvQ=W-K54Qw@mail.gmail.com>
+In-Reply-To: <CAOMZO5C1jm=7tiui221B-N+ptEknK_ZdHvrjvSHfvQ=W-K54Qw@mail.gmail.com>
+Reply-To: Viorel Suman <viorel.suman@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=viorel.suman@nxp.com; 
+x-originating-ip: [89.37.124.34]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d6493366-7844-4f82-b7fe-08d6da08652f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VI1PR04MB4591;
+x-ms-traffictypediagnostic: VI1PR04MB4591:
+x-microsoft-antispam-prvs: <VI1PR04MB459174B631E2E0546C9B4082920A0@VI1PR04MB4591.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0039C6E5C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(39860400002)(396003)(376002)(346002)(136003)(366004)(199004)(189003)(5660300002)(5640700003)(256004)(186003)(26005)(6512007)(14444005)(53546011)(6506007)(102836004)(25786009)(3450700001)(14454004)(4744005)(76176011)(86362001)(54906003)(1411001)(6436002)(6486002)(99286004)(7416002)(43066004)(2616005)(229853002)(2351001)(11346002)(446003)(486006)(44832011)(103116003)(6916009)(478600001)(36756003)(73956011)(76116006)(64756008)(66446008)(66476007)(66946007)(66556008)(8676002)(4326008)(68736007)(7736002)(316002)(6116002)(3846002)(305945005)(2906002)(476003)(6246003)(71190400001)(71200400001)(66066001)(81156014)(1730700003)(2501003)(1361003)(53936002)(8936002)(81166006)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4591;H:VI1PR04MB4704.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: yd9D9JtUEWpHOI8vI9vZtmh45EI/o928pHF8cDnwL8wQoMMTnzJjRGj6s27TcG23PkRU5z8+c1zYvzEZxAvnjkwFjNxMIQ3DHMomLN4JXbbvpARTFqvSK8ugSrcJKdPpdyABVAtxM68x2a2oZ1vy5lVJLX62h+4XPq4B1fZ8VqdpKMop3D7WKFDcOy65Fmp4sfUunE3z4wH3dtuilDSfVlmDRamU3nGhr6BbtWJWFbJ+2Qa4WLTqC23r8+S20552IpaDe1yooqaO0PGrbspkXzbOxqvcEbbZBUCHy3+yAuWS73A2RWSgVT79i6wM+Vapi/3Lq4sXhzFzjrEuqKi7MHgK17hWCZB9r8PLxwXna2j2KIuW9vyCkVk0iUnBwyFdFicHe7G/T3WkmIEFfRV585W/xv7HS7GWgFiXp29HIcE=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9AFBB40C861ED643B8A18A2B24339827@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190416083852.126786-1-darekm@google.com> <dcb189af-f67f-ede3-b4fb-de1da7b53ccb@xs4all.nl>
- <CALFZZQEoiikyXmHJyEgEJTRNryTN8ScNK4P3bDCp-9v9GtvU8g@mail.gmail.com> <b78864b4-e470-99b2-5505-890d178b72f8@xs4all.nl>
-In-Reply-To: <b78864b4-e470-99b2-5505-890d178b72f8@xs4all.nl>
-From:   Dariusz Marcinkiewicz <darekm@google.com>
-Date:   Thu, 16 May 2019 16:10:00 +0200
-Message-ID: <CALFZZQF9qJbDsG1nzdjTxaG=89Pu0k=pxg3TChMQcf+hDxaeuw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] media: cec: expose HDMI connector to CEC dev mapping
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     linux-media@vger.kernel.org, hans.verkuil@cisco.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d6493366-7844-4f82-b7fe-08d6da08652f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 14:11:31.0134
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4591
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hans.
-
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Date: Thu, May 9, 2019 at 11:31 AM
-To: Dariusz Marcinkiewicz
-Cc: <linux-media@vger.kernel.org>, <hans.verkuil@cisco.com>,
-<linux-kernel@vger.kernel.org>
-
-> On 5/9/19 9:52 AM, Dariusz Marcinkiewicz wrote:
-> > Hi Hans.
-> >
-> > On Wed, Apr 24, 2019 at 2:09 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
-> >>
-> >> Hi Dariusz,
-> >>
-> >> This is getting close, so I think for the next version you can drop
-> >> the RFC tag.
-> >>
-> >> Some comments:
-> >>
-> > ...
-> >>> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-cec.c
-> >>> @@ -261,7 +261,7 @@ static int dw_hdmi_cec_probe(struct platform_device *pdev)
-> >>>       cec->adap = cec_allocate_adapter(&dw_hdmi_cec_ops, cec, "dw_hdmi",
-> >>>                                        CEC_CAP_LOG_ADDRS | CEC_CAP_TRANSMIT |
-> >>>                                        CEC_CAP_RC | CEC_CAP_PASSTHROUGH,
-> >>> -                                      CEC_MAX_LOG_ADDRS);
-> >>> +                                      CEC_MAX_LOG_ADDRS, NULL);
-> >>
-> >> Hmm, the connector information is actually available through cec->hdmi.
-> >>
-> >> I think it would make sense to create a helper function that fills in
-> >> struct cec_connector_info based on a struct drm_connector pointer.
-> >> And add a function to drivers/gpu/drm/bridge/synopsys/dw-hdmi.c that
-> >> dw-hdmi-cec.c can call that does the same.
-> >
-> > Looking at the code here, is the connector info guaranteed to be
-> > available at the time cec_allocate_adapter is called here?
-> > drm_connector won't be initialized until dw_hdmi_bridge_attach is
-> > called, which happens after the cec platform device is created.
->
-> Good point. The creation of the cec platform device should probably
-> be moved to dw_hdmi_bridge_attach.
->
-> > ...
-> >>>       priv->adap = cec_allocate_adapter(&tda9950_cec_ops, priv, "tda9950",
-> >>>                                         CEC_CAP_DEFAULTS,
-> >>> -                                       CEC_MAX_LOG_ADDRS);
-> >>> +                                       CEC_MAX_LOG_ADDRS,
-> >>> +                                       NULL);
-> >>
-> >> Here too the drm_connector can be found via struct tda9950_glue.
-> >> So it is easy to provide proper connector information.
-> >
-> > The same concern as with the comment before.
->
-> Same solution: this has to be moved.
->
-> I have hardware to test patches for both drivers. It might take 2-3 weeks
-> before I can test as I don't always has access to the hardware, but at
-> least I can verify that moving this code won't break anything.
->
-> It's best to first move the code in separate patches before applying the
-> "expose HDMI connector to CEC dev mapping" patch on top of them.
->
-
-I've submitted another revision of the changes, with those 2 patches
-added on top. Hope that is ok.
-
-Please take a look. It would be great if you could give those 2
-patches a go on an actual hardware.
-
-Thank you and best regards.
+T24gSm8sIDIwMTktMDUtMTYgYXQgMTA6MTQgLTAzMDAsIEZhYmlvIEVzdGV2YW0gd3JvdGU6DQo+
+IE9uIFRodSwgTWF5IDE2LCAyMDE5IGF0IDEwOjAyIEFNIFZpb3JlbCBTdW1hbiA8dmlvcmVsLnN1
+bWFuQG54cC5jb20+IHdyb3RlOg0KPiANCj4gPiANCj4gPiArwqDCoMKgwqDCoMKgwqBmb3IgKGkg
+PSAwOyBpIDwgQVJSQVlfU0laRShhazQ0NTgtPnN1cHBsaWVzKTsgaSsrKQ0KPiA+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBhazQ0NTgtPnN1cHBsaWVzW2ldLnN1cHBseSA9IGFrNDQ1
+OF9zdXBwbHlfbmFtZXNbaV07DQo+ID4gKw0KPiA+ICvCoMKgwqDCoMKgwqDCoHJldCA9IGRldm1f
+cmVndWxhdG9yX2J1bGtfZ2V0KGFrNDQ1OC0+ZGV2LCBBUlJBWV9TSVpFKGFrNDQ1OC0+c3VwcGxp
+ZXMpLA0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGFrNDQ1OC0+c3VwcGxpZXMpOw0KPiA+ICvCoMKg
+wqDCoMKgwqDCoGlmIChyZXQgIT0gMCkgew0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqBkZXZfZXJyKGFrNDQ1OC0+ZGV2LCAiRmFpbGVkIHRvIHJlcXVlc3Qgc3VwcGxpZXM6ICVk
+XG4iLCByZXQpOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gcmV0
+Ow0KPiBUaGlzIHdvdWxkIGJyZWFrIGV4aXN0aW5nIHVzZXJzIHRoYXQgZG8gbm90IHBhc3MgdGhl
+IHJlZ3VsYXRvcnMgaW4gZGV2aWNlIHRyZWUuDQo+IA0KPiBPaywgaW4gdGhpcyBjYXNlIHRoZXJl
+IGlzIG5vIGFrNDQ1OCB1c2VyIGluIGFueSBkdHMsIHNvIHRoYXQgd291bGQgbm90DQo+IGJlIGFu
+IGlzc3VlLg0KPiANCj4gUGxlYXNlIHVwZGF0ZSB0aGUgZHQtYmluZGluZ3Mgd2l0aCB0aGUgcmVn
+dWxhdG9yIGVudHJpZXMuDQoNClRoYW5rcywgd2lsbCBzZW5kIGluIFYyLg0KDQovVmlvcmVs
