@@ -6,97 +6,91 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7797C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B543C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 788F2206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07541206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:12:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfEPQLf (ORCPT
+        id S1727110AbfEPQL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:11:35 -0400
-Received: from mga04.intel.com ([192.55.52.120]:25261 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726510AbfEPQLf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:11:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 09:11:34 -0700
-X-ExtLoop1: 1
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga007.jf.intel.com with ESMTP; 16 May 2019 09:11:34 -0700
-Date:   Thu, 16 May 2019 09:14:29 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 09/16] iommu: Introduce guest PASID bind function
-Message-ID: <20190516091429.6d06f7e1@jacob-builder>
-In-Reply-To: <d652546a-c6ca-1cc6-1924-b016bd81a792@arm.com>
-References: <1556922737-76313-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1556922737-76313-10-git-send-email-jacob.jun.pan@linux.intel.com>
-        <d652546a-c6ca-1cc6-1924-b016bd81a792@arm.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Thu, 16 May 2019 12:11:59 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:51275 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726464AbfEPQL6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 12:11:58 -0400
+Received: from [192.168.178.167] ([109.104.36.193]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MiJhW-1gn2TT1ffC-00fP2t; Thu, 16 May 2019 18:11:33 +0200
+Subject: Re: [GIT PULL] Thermal-SoC management changes for v5.2-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Rui Zhang <rui.zhang@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190516044313.GA17751@localhost.localdomain>
+ <CAHk-=wiaO_8SiEB9QM3vOTniiT67K6CBH0uHJ82-Dp_+6kxH3g@mail.gmail.com>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Message-ID: <4803994d-f519-a6b6-f5bb-a2f50d91ecd7@i2se.com>
+Date:   Thu, 16 May 2019 18:11:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAHk-=wiaO_8SiEB9QM3vOTniiT67K6CBH0uHJ82-Dp_+6kxH3g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:HfXg+VerHg3XpZ/wJRmyjEJyPoEOVangfVhRYd6re0+8tLoYnmn
+ oW1tto1qS1QQOe7GOCE7EoevUdRqBEDQ///1l974DU6oDx8+IabIbaeHwU/cfjP4DjKA6Br
+ iX868FUXz7c1nOxAIHoyQKpsGy9mRzS1My2eaC6up74sSVDaK/QmuAXrROr7bb8NTBl3wqX
+ WwVEm4CNLpPMKwjYQor6A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xkwv5xkBN+U=:bwfz0IV+WlLUs6KTbOUP5F
+ m86RxkHI2Kj0QzfcXKAjfZ5U5Tv7ptnKNtgLYdvqIaRk+mynEvOkxWqy/MzaMhk2DxJ8qmr1i
+ FBBq9iBvmcz6A0jmH8HHgyLkeFMI4b1ivawHRk9zA+MuopGSHO7SdkTaytpD95zlyhTHG7ZDQ
+ ucuLHN5pnxVV68A4Nmp9c0lUFiAVLgEK+i/F2C3PPpQ0XCvarGXzmUjPrxOHJqU2QX6PvWsGX
+ 7Q9b4MC3s9hQr7h6v0tAOK3o6Rmu+Uhgbp2eEQrGQ8hdzl6K99Bznt7mBbvxE1z2aXy5hPFUb
+ OV9sLFfI8Kx69V1noe0ltzTDcdPaH2a+ggeMHMgiSZZ9xquruK+FaGafE4VQTIudsJH48+EIl
+ rSt1kfKbUf/shkzxbsBa/sbVRmRUl1D+AK66qqyVbU/BiLoaN6Qynfy/xLAcuVSILSJOY4dbR
+ 7JdgG3YikQQCtVEL1l6/s9BDOO7LESCW0XUCY5LGG+iLrAm3N4R0kYfYfuwW78nhncv8jtp0m
+ sr0lIxldMQxoJvNbROex1vVUYSmoQEQq79zvls/eFyz56tPHv1DY/EovlT4wMNQR251Wjy0dG
+ T1UGNyfAZBE26//8UjJj16wsHH76ZeD17CE+X5ynrrYrtdL0Z6By2LMrwezH072eTf80EEZWU
+ rBOygeHEXUARE33jk7VUERqnLNl4Jm54LKIwbG4Djr1MUF7bzT0Q+/QXFtbrCrW1zLGjwZy74
+ f9Pte2LM5Iz96JyVVZepWzFQnZb4JJPFlHnxWCJVjG0cTnXW3KZNh+p2ZO8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 May 2019 15:14:40 +0100
-Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
+Hi Linus,
 
-> Hi Jacob,
-> 
-> On 03/05/2019 23:32, Jacob Pan wrote:
-> > +/**
-> > + * struct gpasid_bind_data - Information about device and guest
-> > PASID binding
-> > + * @gcr3:	Guest CR3 value from guest mm
-> > + * @pasid:	Process address space ID used for the guest mm
-> > + * @addr_width:	Guest address width. Paging mode can also
-> > be derived.
-> > + */
-> > +struct gpasid_bind_data {
-> > +	__u64 gcr3;
-> > +	__u32 pasid;
-> > +	__u32 addr_width;
-> > +	__u32 flags;
-> > +#define	IOMMU_SVA_GPASID_SRE	BIT(0) /* supervisor
-> > request */
-> > +	__u8 padding[4];
-> > +};  
-> 
-> Could you wrap this structure into a generic one like we now do for
-> bind_pasid_table? It would make the API easier to extend, because if
-> we ever add individual PASID bind on Arm (something I'd like to do for
-> virtio-iommu, eventually) it will have different parameters, as our
-> PASID table entry has a lot of fields describing the page table
-> format.
-> 
-> Maybe something like the following would do?
-> 
-> struct gpasid_bind_data {
-> #define IOMMU_GPASID_BIND_VERSION_1 1
-> 	__u32 version;
-> #define IOMMU_GPASID_BIND_FORMAT_INTEL_VTD	1
-> 	__u32 format;
-> 	union {
-> 		// the current gpasid_bind_data:
-> 		struct gpasid_bind_intel_vtd vtd;
-> 	};
-> };
-> 
-OK, sounds great.
+On 16.05.19 17:07, Linus Torvalds wrote:
+> On Wed, May 15, 2019 at 9:43 PM Eduardo Valentin <edubezval@gmail.com> wrote:
+>> - thermal core has a new devm_* API for registering cooling devices, thanks to Guenter R.
+>>   I took the entire series, that is why you see changes on drivers/hwmon in this pull.
+> This clashed badly with commit 6b1ec4789fb1 ("hwmon: (pwm-fan) Add RPM
+> support via external interrupt"), which added a timer to the pwm-fan
+> handling.
+>
+> In particular, that timer now needed the same kind of cleanup changes,
+> and I'd like you guys (particularly Guenther, who was involved on both
+> sides) to double-check my merge.
+>
+> The way I solved it was to just make the pwm_fan_pwm_disable()
+> callback do both the pwm_diable() _and_ the del_timer_sync() on the
+> new timer. That seemed to be the simplest solution that meshed with
+> the new devm cleanup model, but while I build-tested the result, I
+> obviously did no actual use testing. And maybe there's some reason why
+> that approach is flawed.
+
+i will try to test on our custom i.MX6 board. Unfortunately this take
+some time since it isn't mainline yet (at least until tomorrow).
+
+Stefan
+
+>
+> Guenther?
+>
+>                     Linus
