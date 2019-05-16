@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C22C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BD5C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5A3320833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F379820833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:04:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfEPQEP (ORCPT
+        id S1727073AbfEPQEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:04:15 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42454 "EHLO
+        Thu, 16 May 2019 12:04:14 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42464 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726699AbfEPP6m (ORCPT
+        by vger.kernel.org with ESMTP id S1726705AbfEPP6m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 May 2019 11:58:42 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImE-0006zk-HI; Thu, 16 May 2019 16:58:38 +0100
+        id 1hRImE-0006zl-IF; Thu, 16 May 2019 16:58:38 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImD-0001P9-Hh; Thu, 16 May 2019 16:58:37 +0100
+        id 1hRImD-0001PD-Ig; Thu, 16 May 2019 16:58:37 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,32 +35,33 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Dave Hansen" <dave.hansen@intel.com>,
-        "Andi Kleen" <ak@linux.intel.com>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Asit Mallick" <asit.k.mallick@intel.com>,
-        "David Woodhouse" <dwmw@amazon.co.uk>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Kees Cook" <keescook@chromium.org>,
-        "Jiri Kosina" <jkosina@suse.cz>,
         "Peter Zijlstra" <peterz@infradead.org>,
-        "Josh Poimboeuf" <jpoimboe@redhat.com>,
-        "Tom Lendacky" <thomas.lendacky@amd.com>,
-        "Greg KH" <gregkh@linuxfoundation.org>,
-        "Casey Schaufler" <casey.schaufler@intel.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
+        "Jiri Kosina" <jkosina@suse.cz>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        "Asit Mallick" <asit.k.mallick@intel.com>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@kernel.org>,
+        "Andi Kleen" <ak@linux.intel.com>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        "Arjan van de Ven" <arjan@linux.intel.com>,
+        "Andrea Arcangeli" <aarcange@redhat.com>,
         "Tim Chen" <tim.c.chen@linux.intel.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Casey Schaufler" <casey.schaufler@intel.com>,
+        "Waiman Long" <longman9394@gmail.com>,
+        "Dave Stewart" <david.c.stewart@intel.com>,
         "Linus Torvalds" <torvalds@linux-foundation.org>,
         "Jon Masters" <jcm@redhat.com>,
-        "Dave Stewart" <david.c.stewart@intel.com>,
-        "Waiman Long" <longman9394@gmail.com>,
-        "Arjan van de Ven" <arjan@linux.intel.com>,
-        "Andrea Arcangeli" <aarcange@redhat.com>
+        "Josh Poimboeuf" <jpoimboe@redhat.com>,
+        "Greg KH" <gregkh@linuxfoundation.org>,
+        "Tom Lendacky" <thomas.lendacky@amd.com>
 Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.547613@decadent.org.uk>
+Message-ID: <lsq.1558022133.433705165@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 35/86] x86/speculation: Clean up spectre_v2_parse_cmdline()
+Subject: [PATCH 3.16 36/86] x86/speculation: Remove unnecessary ret
+ variable in cpu_show_common()
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -76,10 +77,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tim Chen <tim.c.chen@linux.intel.com>
 
-commit 24848509aa55eac39d524b587b051f4e86df3c12 upstream.
-
-Remove the unnecessary 'else' statement in spectre_v2_parse_cmdline()
-to save an indentation level.
+commit b86bda0426853bfe8a3506c7d2a5b332760ae46b upstream.
 
 Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
@@ -102,48 +100,36 @@ Cc: Waiman Long <longman9394@gmail.com>
 Cc: Greg KH <gregkh@linuxfoundation.org>
 Cc: Dave Stewart <david.c.stewart@intel.com>
 Cc: Kees Cook <keescook@chromium.org>
-Link: https://lkml.kernel.org/r/20181125185003.688010903@linutronix.de
+Link: https://lkml.kernel.org/r/20181125185003.783903657@linutronix.de
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/cpu/bugs.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ arch/x86/kernel/cpu/bugs.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -336,22 +336,21 @@ static enum spectre_v2_mitigation_cmd __
+@@ -824,8 +824,6 @@ static void __init l1tf_select_mitigatio
+ static ssize_t cpu_show_common(struct device *dev, struct device_attribute *attr,
+ 			       char *buf, unsigned int bug)
+ {
+-	int ret;
+-
+ 	if (!boot_cpu_has_bug(bug))
+ 		return sprintf(buf, "Not affected\n");
  
- 	if (cmdline_find_option_bool(boot_command_line, "nospectre_v2"))
- 		return SPECTRE_V2_CMD_NONE;
--	else {
--		ret = cmdline_find_option(boot_command_line, "spectre_v2", arg, sizeof(arg));
--		if (ret < 0)
--			return SPECTRE_V2_CMD_AUTO;
+@@ -840,13 +838,12 @@ static ssize_t cpu_show_common(struct de
+ 		return sprintf(buf, "Mitigation: __user pointer sanitization\n");
  
--		for (i = 0; i < ARRAY_SIZE(mitigation_options); i++) {
--			if (!match_option(arg, ret, mitigation_options[i].option))
--				continue;
--			cmd = mitigation_options[i].cmd;
--			break;
--		}
-+	ret = cmdline_find_option(boot_command_line, "spectre_v2", arg, sizeof(arg));
-+	if (ret < 0)
-+		return SPECTRE_V2_CMD_AUTO;
+ 	case X86_BUG_SPECTRE_V2:
+-		ret = sprintf(buf, "%s%s%s%s%s%s\n", spectre_v2_strings[spectre_v2_enabled],
++		return sprintf(buf, "%s%s%s%s%s%s\n", spectre_v2_strings[spectre_v2_enabled],
+ 			       boot_cpu_has(X86_FEATURE_USE_IBPB) ? ", IBPB" : "",
+ 			       boot_cpu_has(X86_FEATURE_USE_IBRS_FW) ? ", IBRS_FW" : "",
+ 			       (x86_spec_ctrl_base & SPEC_CTRL_STIBP) ? ", STIBP" : "",
+ 			       boot_cpu_has(X86_FEATURE_RSB_CTXSW) ? ", RSB filling" : "",
+ 			       spectre_v2_module_string());
+-		return ret;
  
--		if (i >= ARRAY_SIZE(mitigation_options)) {
--			pr_err("unknown option (%s). Switching to AUTO select\n", arg);
--			return SPECTRE_V2_CMD_AUTO;
--		}
-+	for (i = 0; i < ARRAY_SIZE(mitigation_options); i++) {
-+		if (!match_option(arg, ret, mitigation_options[i].option))
-+			continue;
-+		cmd = mitigation_options[i].cmd;
-+		break;
-+	}
-+
-+	if (i >= ARRAY_SIZE(mitigation_options)) {
-+		pr_err("unknown option (%s). Switching to AUTO select\n", arg);
-+		return SPECTRE_V2_CMD_AUTO;
- 	}
- 
- 	if ((cmd == SPECTRE_V2_CMD_RETPOLINE ||
+ 	case X86_BUG_SPEC_STORE_BYPASS:
+ 		return sprintf(buf, "%s\n", ssb_strings[ssb_mode]);
 
