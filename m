@@ -2,77 +2,185 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5365EC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1D5C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3462082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF272082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:30:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727172AbfEPL3h (ORCPT
+        id S1727269AbfEPLaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:29:37 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:42573 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbfEPL3g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:29:36 -0400
-Received: by mail-qt1-f194.google.com with SMTP id j53so3363552qta.9;
-        Thu, 16 May 2019 04:29:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rzVcxVnFAhhhwS6SmNGAz5LONQcWFWbAgnrIavt93QM=;
-        b=i5e05YEm2CLkMuCjTAinCSid6d3qF5ZvxR0AdVDFr2b4c5gZEkeGv0h3YOYrMgFAvh
-         J/qbhh/aY+kvytRidKViKCZkpaTHhCDmS8KWKryOZwU9a603/hT69SPKr38VdNogDiIg
-         AJgIcbQt/FS9NI8PZ0HLc7ZN8V6IVPlnJ4RdCl70dn2a+Rc/wq5pz2wh0Gr/K4YovwUg
-         6r5hgb4mN4khhHKOXy/IJlIEj7wrxFyFcKtQZmMxWfCs5kqjuaTxutm1RtbLElSDi6vy
-         Hj53jpIqJKa1bEgKy93iKpo3gELv64skKI6XhY+m+SpqmUzR9gcb7TdXs43KFpvCFTS/
-         EKxQ==
-X-Gm-Message-State: APjAAAU3bl4c+uylYvR0nJ9XzB6BoF6+LxAZjvybEj+7pW/1jv4a9mPh
-        4he/9oL/kubEmi7GqzXEcu8fKgz/dPeoHYAt+28=
-X-Google-Smtp-Source: APXvYqz2d9dZQwnnUk9pUn0cYUvFT0Pdw9MFbIzzIkr6l/rN+HuIopzXxgFtiZa5CopJqIL8faKjbCutlYXzRDoSfhw=
-X-Received: by 2002:ac8:390e:: with SMTP id s14mr18333086qtb.343.1558006175664;
- Thu, 16 May 2019 04:29:35 -0700 (PDT)
+        Thu, 16 May 2019 07:30:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40532 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726260AbfEPLaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:30:12 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 95400308ED53;
+        Thu, 16 May 2019 11:30:11 +0000 (UTC)
+Received: from [10.36.117.217] (ovpn-117-217.ams2.redhat.com [10.36.117.217])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4D61E6C333;
+        Thu, 16 May 2019 11:30:02 +0000 (UTC)
+Subject: Re: [RFC PATCH 2/4] KVM: selftests: Align memory region addresses to
+ 1M on s390x
+To:     Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-s390@vger.kernel.org
+References: <20190516111253.4494-1-thuth@redhat.com>
+ <20190516111253.4494-3-thuth@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <d9c383ef-6f4b-4f51-b627-7565a67005d3@redhat.com>
+Date:   Thu, 16 May 2019 13:30:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <155800581545.26930.2167325198332902897.stgit@warthog.procyon.org.uk>
- <155800583882.26930.17007472666085260160.stgit@warthog.procyon.org.uk>
-In-Reply-To: <155800583882.26930.17007472666085260160.stgit@warthog.procyon.org.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 16 May 2019 13:29:19 +0200
-Message-ID: <CAK8P3a3qtr4kvVRf0bvUOzv342px++wi7iA44zCmNRi_ipUd_w@mail.gmail.com>
-Subject: Re: [PATCH 3/4] uapi, x86: Fix the syscall numbering of the mount API syscalls
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190516111253.4494-3-thuth@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Thu, 16 May 2019 11:30:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 1:24 PM David Howells <dhowells@redhat.com> wrote:
->
-> Fix the syscall numbering of the mount API syscalls so that the numbers
-> match between i386 and x86_64 and that they're in the common numbering
-> scheme space.
->
-> Fixes: a07b20004793 ("vfs: syscall: Add open_tree(2) to reference or clone a mount")
-> Fixes: 2db154b3ea8e ("vfs: syscall: Add move_mount(2) to move mounts around")
-> Fixes: 24dcb3d90a1f ("vfs: syscall: Add fsopen() to prepare for superblock creation")
-> Fixes: ecdab150fddb ("vfs: syscall: Add fsconfig() for configuring and managing a context")
-> Fixes: 93766fbd2696 ("vfs: syscall: Add fsmount() to create a mount for a superblock")
-> Fixes: cf3cba4a429b ("vfs: syscall: Add fspick() to select a superblock for reconfiguration")
-> Reported-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: David Howells <dhowells@redhat.com>
+On 16.05.19 13:12, Thomas Huth wrote:
+> On s390x, there is a constraint that memory regions have to be aligned
+> to 1M (or running the VM will fail). Introduce a new "alignment" variable
+> in the vm_userspace_mem_region_add() function which now can be used for
+> both, huge page and s390x alignment requirements.
+> 
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> ---
+>  tools/testing/selftests/kvm/lib/kvm_util.c | 21 +++++++++++++++++-----
+>  1 file changed, 16 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+> index 8d63ccb93e10..64a0da6efe3d 100644
+> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+> @@ -559,6 +559,7 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
+>  	unsigned long pmem_size = 0;
+>  	struct userspace_mem_region *region;
+>  	size_t huge_page_size = KVM_UTIL_PGS_PER_HUGEPG * vm->page_size;
+> +	size_t alignment;
+>  
+>  	TEST_ASSERT((guest_paddr % vm->page_size) == 0, "Guest physical "
+>  		"address not on a page boundary.\n"
+> @@ -608,9 +609,20 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
+>  	TEST_ASSERT(region != NULL, "Insufficient Memory");
+>  	region->mmap_size = npages * vm->page_size;
+>  
+> -	/* Enough memory to align up to a huge page. */
+> +#ifdef __s390x__
+> +	/* On s390x, the host address must be aligned to 1M (due to PGSTEs) */
+> +	alignment = 0x100000;
 
-Thanks!
+This corresponds to huge_page_size, maybe you can exploit this fact here.
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Something like
+
+alignment = 1;
+
+/* On s390x, the host address must always be aligned to the THP size */
+#ifndef __s390x__
+if (src_type == VM_MEM_SRC_ANONYMOUS_THP)
+#endif
+	alignment = huge_page_size;
+
+Maybe in a nicer fashion. Not sure.
+
+> +#else
+> +	alignment = 1;
+> +#endif
+> +
+>  	if (src_type == VM_MEM_SRC_ANONYMOUS_THP)
+> -		region->mmap_size += huge_page_size;
+> +		alignment = huge_page_size;
+> +
+> +	/* Add enough memory to align up if necessary */
+> +	if (alignment > 1)
+> +		region->mmap_size += alignment;
+> +
+>  	region->mmap_start = mmap(NULL, region->mmap_size,
+>  				  PROT_READ | PROT_WRITE,
+>  				  MAP_PRIVATE | MAP_ANONYMOUS
+> @@ -620,9 +632,8 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
+>  		    "test_malloc failed, mmap_start: %p errno: %i",
+>  		    region->mmap_start, errno);
+>  
+> -	/* Align THP allocation up to start of a huge page. */
+> -	region->host_mem = align(region->mmap_start,
+> -				 src_type == VM_MEM_SRC_ANONYMOUS_THP ?  huge_page_size : 1);
+> +	/* Align host address */
+> +	region->host_mem = align(region->mmap_start, alignment);
+>  
+>  	/* As needed perform madvise */
+>  	if (src_type == VM_MEM_SRC_ANONYMOUS || src_type == VM_MEM_SRC_ANONYMOUS_THP) {
+> 
+
+
+-- 
+
+Thanks,
+
+David / dhildenb
