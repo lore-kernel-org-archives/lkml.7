@@ -2,106 +2,107 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 442A6C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 245CCC04E87
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B903A20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:59:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="O9UDoCee"
+	by mail.kernel.org (Postfix) with ESMTP id F185120862
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 05:01:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726448AbfEPE7u (ORCPT
+        id S1726464AbfEPFBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 00:59:50 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:25337 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfEPE7u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 00:59:50 -0400
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x4G4xWoB014187
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 13:59:33 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x4G4xWoB014187
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1557982773;
-        bh=9Ph0k+grbv6JWNUv54NWUGkLMtwGfMJBcFTvjqQFPk0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=O9UDoCeeGS9Q8UGhX2a1LFreuputm3gZZRI4zDrwBkqGm4URrl6A0cfy5dariKJLf
-         OcpMR2p+o13xSQoNX9D2eXZ9l0zepTXxs8KkSqweT3DvNxcJemxPD5Vbl2LbI6bVjG
-         6nz1877AVC2WEdRhRU8c+Pxhz/ABe/0EPKwRW9GzhBjAU652H1vEiXsopme8SJFlSA
-         J4juxwqhZt0PezcmtFi8utb86FiEtO8Rx4na+xjdO35PaMuj0ZyV57hPQfkVNLcjV3
-         q+D4skKCIElOcf0BoQGTfvmzW5wnhhAAfgVY2kXYgMJIX1vzrziaqahW8Z9RR5WA3Q
-         OnI85dG8aFX1w==
-X-Nifty-SrcIP: [209.85.222.54]
-Received: by mail-ua1-f54.google.com with SMTP id p13so777453uaa.11
-        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 21:59:33 -0700 (PDT)
-X-Gm-Message-State: APjAAAUGPJS5T4zaqzVP4Yb95raj6L6rVZ6D+utTNjASmZ97Uh98bSeT
-        CPK50ZDj4WeIFCLK2ZIshyHSKfAakjq1Eth1hXs=
-X-Google-Smtp-Source: APXvYqwExr/4di8INLQkJrRDaQheWIP5t5xUKnGAEoIV0Jcz144JQr/bNNxhYM9Biw317JwRRcspl7XRbcwfoXMGDrw=
-X-Received: by 2002:ab0:3058:: with SMTP id x24mr19663232ual.95.1557982772314;
- Wed, 15 May 2019 21:59:32 -0700 (PDT)
+        Thu, 16 May 2019 01:01:46 -0400
+Received: from mga18.intel.com ([134.134.136.126]:50290 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725975AbfEPFBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 01:01:46 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 22:01:45 -0700
+X-ExtLoop1: 1
+Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
+  by fmsmga008.fm.intel.com with ESMTP; 15 May 2019 22:01:40 -0700
+Date:   Thu, 16 May 2019 08:01:50 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH v20 00/28] Intel SGX1 support
+Message-ID: <20190516050150.GA6388@linux.intel.com>
+References: <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
+ <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
+ <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+ <20190513102926.GD8743@linux.intel.com>
+ <20190514104323.GA7591@linux.intel.com>
+ <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+ <20190514204527.GC1977@linux.intel.com>
+ <20190515103531.GB10917@linux.intel.com>
+ <20190515132147.GA5875@linux.intel.com>
 MIME-Version: 1.0
-References: <20190515194824.5641-1-labbott@redhat.com>
-In-Reply-To: <20190515194824.5641-1-labbott@redhat.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Thu, 16 May 2019 13:58:56 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASZnRrSsZSrnw41kintGfmpyj3iz-Vjduk7w3k9iSih-w@mail.gmail.com>
-Message-ID: <CAK7LNASZnRrSsZSrnw41kintGfmpyj3iz-Vjduk7w3k9iSih-w@mail.gmail.com>
-Subject: Re: [PATCH] arm64: vdso: Explicitly add build-id option
-To:     Laura Abbott <labbott@redhat.com>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190515132147.GA5875@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 4:51 AM Laura Abbott <labbott@redhat.com> wrote:
->
-> Commit 691efbedc60d ("arm64: vdso: use $(LD) instead of $(CC) to
-> link VDSO") switched to using LD explicitly. The --build-id option
-> needs to be passed explicitly, similar to x86. Add this option.
->
-> Fixes: 691efbedc60d ("arm64: vdso: use $(LD) instead of $(CC) to link VDSO")
-> Signed-off-by: Laura Abbott <labbott@redhat.com>
-> ---
->  arch/arm64/kernel/vdso/Makefile | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
-> index 744b9dbaba03..ca209103cd06 100644
-> --- a/arch/arm64/kernel/vdso/Makefile
-> +++ b/arch/arm64/kernel/vdso/Makefile
-> @@ -13,6 +13,7 @@ targets := $(obj-vdso) vdso.so vdso.so.dbg
->  obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
->
->  ldflags-y := -shared -nostdlib -soname=linux-vdso.so.1 \
-> +               $(call ld-option, --build-id) \
->                 $(call ld-option, --hash-style=sysv) -n -T
->
->  # Disable gcov profiling for VDSO code
+On Wed, May 15, 2019 at 06:21:47AM -0700, Sean Christopherson wrote:
+> On Wed, May 15, 2019 at 01:35:31PM +0300, Jarkko Sakkinen wrote:
+> > On Tue, May 14, 2019 at 01:45:27PM -0700, Sean Christopherson wrote:
+> > > On Tue, May 14, 2019 at 08:13:36AM -0700, Andy Lutomirski wrote:
+> > > > I think it's as simple as requiring that, if SECINFO.X is set, then
+> > > > the src pointer points to the appropriate number of bytes of
+> > > > executable memory.  (Unless there's some way for an enclave to change
+> > > > SECINFO after the fact -- is there?)
+> > > 
+> > > Nit: SECINFO is just the struct passed to EADD, I think what you're really
+> > > asking is "can the EPCM permissions be changed after the fact".
+> > > 
+> > > And the answer is, yes.
+> > > 
+> > > On SGX2 hardware, the enclave can extend the EPCM permissions at runtime
+> > > via ENCLU[EMODPE], e.g. to make a page writable.
+> > 
+> > Small correction: it is EMODPR.
+> 
+> No, I'm referring to EMODPE, note the ENCLU classification.
+> 
+> > Anyway, it is good to mention that these would require EACCEPT from the
+> > enclave side. In order to take advantage of this is in a malicous
+> > enclave, one would require SELinux/IMA/whatnot policy to have permitted
+> > it in the first place.
+> 
+> EMODPE doesn't require EACCEPT or any equivalent from the kernel.  As
+> you alluded to, the page tables would still need to allow PROT_EXEC.  I
+> was simply trying to answer Andy's question regarding SECINFO.
 
+Ah, have to admit that I had totally forgot EMODPE :-) Have not had
+to deal with that opcode that much.
 
-I missed that. Sorry.
-
-You can add  --build-id without $(call ld-option,...)
-because it is supported by our minimal version of toolchain.
-
-See commit log of 1e0221374e for example.
-
-
-Otherwise, looks good to me.
-
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-
-
---
-Best Regards
-
-Masahiro Yamada
+/Jarkko
