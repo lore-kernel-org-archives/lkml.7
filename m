@@ -2,106 +2,171 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC1DC46460
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDFEC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5CC6206A3
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17DAD206A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:40:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="mmqstdaI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vtB7uLy9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I+EvfSN7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfEPSju (ORCPT
+        id S1727753AbfEPSke (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 14:39:50 -0400
-Received: from out4-smtp.messagingengine.com ([66.111.4.28]:36957 "EHLO
-        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726546AbfEPSju (ORCPT
+        Thu, 16 May 2019 14:40:34 -0400
+Received: from mail-vs1-f73.google.com ([209.85.217.73]:44477 "EHLO
+        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726546AbfEPSkd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 14:39:50 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 4E29C250C3;
-        Thu, 16 May 2019 14:39:49 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Thu, 16 May 2019 14:39:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=POHz2NoF6aSMxg1f8AaGhK214rD
-        wUhBISWJ4ubMrIpM=; b=mmqstdaIGKmzgco935nuuIeWgs9JECF/b5zC32nKqG8
-        M/dLTSDyoNvnYxq2/+PVj8lu+XFUAczTEH7BgZx/4EhbPqoPma+Jc1gYla0xDJm5
-        Ih3MGthg/+n9qjZ/+ZTcjnvebxDqLTaPaRn7I5n10bIaiDO0kmln2/7gGjlKeGpW
-        2DCTylr/y0mzt3j4ZKoJT4bQMO3Ouk1B1AWJODTBQKi9mrIaLsMSrrUwkF0C9OYC
-        2KtIW93o/roI5IulHB2UgFmNF7wDxpmjvKThkOSi9rRM/aVqhGG26vT1AN0Aed7V
-        o7ZWqXfvSVb36+U+FtVTSC/Aa2QQrp7jypglTM2oX9w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=POHz2N
-        oF6aSMxg1f8AaGhK214rDwUhBISWJ4ubMrIpM=; b=vtB7uLy9JmvTwxd7RIGskp
-        pr062duYfDJ/Uzd2gUjQr/jDM8dco8dM+jrV74LWiffN2JxdyyfJolsaK+jSyhQJ
-        g2eusJAvzjDOZlJWpQdoQVvs7RUQzCOgVESMivJkPWiv+v+yYJo6Z8a5CJPN0K1x
-        XHErjfqA9+usXiadtMxWZyTyf2TKdu3hyNiKn9Hhd0pbY6a6sxaH++LcyVfCJkFI
-        b3kLY0NVqaixNRo+0bfOeJR0v/5Jsom68rlsH1scV2cWB/GzJT+ndIxe2cwzQPNi
-        wWkSzeubdQymryGiHRPWIfig3Gf/euELe558ZXw9kqPlAqNVz3VP2v4JMi9lHQ5A
-        ==
-X-ME-Sender: <xms:dK7dXEHWPZqhSYJBvYfa5rcm7DN8tNGxCj-biKJrPzcFENoaY_9kyQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddttddguddvgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
-    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrd
-    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
-    ucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:dK7dXNHKjbH1tYYxqBwXEUfDH25-yYwzMV5Qi-uEnCwTjKfe2YYMjw>
-    <xmx:dK7dXArFipAFzPJNnu6GE2p_4wDOWD7ABqWI25atra01qM74kq3BzQ>
-    <xmx:dK7dXFbj-l__0fgqKfIXHN01snvb9h4LJs2a9-AVhD2IfBJIMzBlqA>
-    <xmx:da7dXKgTGCmrE2NxhPMCmb-Z8_R7NFQqWSUFCx5_Ifeo5aEwcIWMpQ>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B901180063;
-        Thu, 16 May 2019 14:39:47 -0400 (EDT)
-Date:   Thu, 16 May 2019 20:39:45 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>, stable <stable@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [GIT PULL] locking fix
-Message-ID: <20190516183945.GA6659@kroah.com>
-References: <20190516160135.GA45760@gmail.com>
- <CAHk-=wgtHi5mT7y=0ij-AksQQOBQJqV1apk2bRaH2tfRTxyFcg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgtHi5mT7y=0ij-AksQQOBQJqV1apk2bRaH2tfRTxyFcg@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Thu, 16 May 2019 14:40:33 -0400
+Received: by mail-vs1-f73.google.com with SMTP id q6so879342vsn.11
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 11:40:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=/qqK7u0fKXYsLjbSznfrVkJ/CBF1xYfCxZF/p/3OEu8=;
+        b=I+EvfSN7hUmC8OZCk8zQfdpm93VNhwHOYngRTuW0QgaSoGdv/2SoAYSRu1+CfCodWT
+         k7k6JMcoWieV2SS8Q9BFdD5nzc4dW9iq9803/G+d31l0yVcwGyEkZkkjXkC3F87+ybQp
+         H8sCEaG3EDT1r69WG3PTmCePtViNeVmoBgJ8caSmJbRrqO6RkIJdo3jlTevMcteGw9e5
+         I/R28Zqrtb7Sy4fZ7k/DoQuSuSPDsIyl98bYqq63qI54rZgYjQs2Vzx4g08FYZb0H+3z
+         gjvHGhyqUaiycSqxDXVCoPkg1fDTQ7lF/0yp8RSfvNb3/i8vUgURXw44wGPR7M6GDqTP
+         SY9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=/qqK7u0fKXYsLjbSznfrVkJ/CBF1xYfCxZF/p/3OEu8=;
+        b=rt79ics5QYi1DYbidfGdKpXpDfdvHL4jq3RiWf+A+oiY1tK9X08tzIgiJVLUljXfw4
+         z6NWYSrAKS2/bxBWJKKgsl2DvzLqmJX/nFcAxS+0ZF1kdLZUl+eKr1pfHa1sUntFfgoE
+         F7LhRhNVZ5UXDPdJJ2L/aNQA9S6LVgPQK9n2LX+EpgIaR+uYknKPR89nTStkoe0gEYUk
+         tn9II5pJiMwaUdWV2wtIDNwD34XckDVyJs0JO1dPzZVjMfdwGZO+z+YQu8ggSM5IYP58
+         vHwqrofjkrY7swCrU5bLNTzNKEpkqs1x8jlK4L9n2SwJQJDik3wHmOllplbAU1AlGCW3
+         Ej4Q==
+X-Gm-Message-State: APjAAAX/xUXJQUHG/E/bfRbBLkM3I1k3ncPOj9PAFesd9EDoQ25vPS9e
+        bJL/SsKA7XxuTSrukISJ0Dp2UzSViQ==
+X-Google-Smtp-Source: APXvYqwOp6tcJFYlA6tTqa+sO8spVWiUjCyNRBW7ZsM2KWGBIT9ujHfP1MRRy4mKH91gCYbB0cYBeOuqI1Q=
+X-Received: by 2002:a67:ef85:: with SMTP id r5mr13582159vsp.237.1558032032672;
+ Thu, 16 May 2019 11:40:32 -0700 (PDT)
+Date:   Thu, 16 May 2019 11:40:10 -0700
+In-Reply-To: <20190515003059.23920-1-yabinc@google.com>
+Message-Id: <20190516184010.167903-1-yabinc@google.com>
+Mime-Version: 1.0
+References: <20190515003059.23920-1-yabinc@google.com>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: [PATCH v2] perf/ring_buffer: Fix exposing a temporarily decreased data_head.
+From:   Yabin Cui <yabinc@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Yabin Cui <yabinc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 10:57:53AM -0700, Linus Torvalds wrote:
-> On Thu, May 16, 2019 at 9:01 AM Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> > A single rwsem fix.
-> 
-> Side note, this one isn't marked for stable, but I'm hoping stable
-> picks it up just from the "Fixes" tag.
-> 
-> Stable people, we're talking about
-> 
->     a9e9bcb45b15 ("locking/rwsem: Prevent decrement of reader count
-> before increment")
-> 
-> that I just pulled into my tree, and needs to go in 4.9 and later.
+In perf_output_put_handle(), an IRQ/NMI can happen in below location and
+write records to the same ring buffer:
+	...
+	local_dec_and_test(&rb->nest)
+	...                          <-- an IRQ/NMI can happen here
+	rb->user_page->data_head = head;
+	...
 
-Thanks, I'll work on that later tonight...
+In this case, a value A is written to data_head in the IRQ, then a value
+B is written to data_head after the IRQ. And A > B. As a result,
+data_head is temporarily decreased from A to B. And a reader may see
+data_head < data_tail if it read the buffer frequently enough, which
+creates unexpected behaviors.
 
+This can be fixed by moving dec(&rb->nest) to after updating data_head,
+which prevents the IRQ/NMI above from updating data_head.
 
-greg k-h
+Signed-off-by: Yabin Cui <yabinc@google.com>
+---
+
+v1 -> v2: change rb->nest from local_t to unsigned int, and add barriers.
+
+---
+ kernel/events/internal.h    |  2 +-
+ kernel/events/ring_buffer.c | 24 ++++++++++++++++++------
+ 2 files changed, 19 insertions(+), 7 deletions(-)
+
+diff --git a/kernel/events/internal.h b/kernel/events/internal.h
+index 79c47076700a..0a8c003b9bcf 100644
+--- a/kernel/events/internal.h
++++ b/kernel/events/internal.h
+@@ -24,7 +24,7 @@ struct ring_buffer {
+ 	atomic_t			poll;		/* POLL_ for wakeups */
+ 
+ 	local_t				head;		/* write position    */
+-	local_t				nest;		/* nested writers    */
++	unsigned int			nest;		/* nested writers    */
+ 	local_t				events;		/* event limit       */
+ 	local_t				wakeup;		/* wakeup stamp      */
+ 	local_t				lost;		/* nr records lost   */
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 674b35383491..c677beb01fb1 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -38,7 +38,8 @@ static void perf_output_get_handle(struct perf_output_handle *handle)
+ 	struct ring_buffer *rb = handle->rb;
+ 
+ 	preempt_disable();
+-	local_inc(&rb->nest);
++	rb->nest++;
++	barrier();
+ 	handle->wakeup = local_read(&rb->wakeup);
+ }
+ 
+@@ -54,8 +55,10 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
+ 	 * IRQ/NMI can happen here, which means we can miss a head update.
+ 	 */
+ 
+-	if (!local_dec_and_test(&rb->nest))
++	if (rb->nest > 1) {
++		rb->nest--;
+ 		goto out;
++	}
+ 
+ 	/*
+ 	 * Since the mmap() consumer (userspace) can run on a different CPU:
+@@ -84,14 +87,23 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
+ 	 * See perf_output_begin().
+ 	 */
+ 	smp_wmb(); /* B, matches C */
+-	rb->user_page->data_head = head;
++	WRITE_ONCE(rb->user_page->data_head, head);
++
++	/*
++	 * Clear rb->nest after updating data_head. This prevents IRQ/NMI from
++	 * updating data_head before us. If that happens, we will expose a
++	 * temporarily decreased data_head.
++	 */
++	WRITE_ONCE(rb->nest, 0);
+ 
+ 	/*
+-	 * Now check if we missed an update -- rely on previous implied
+-	 * compiler barriers to force a re-read.
++	 * Now check if we missed an update -- use barrier() to force a
++	 * re-read.
+ 	 */
++	barrier();
+ 	if (unlikely(head != local_read(&rb->head))) {
+-		local_inc(&rb->nest);
++		rb->nest++;
++		barrier();
+ 		goto again;
+ 	}
+ 
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
