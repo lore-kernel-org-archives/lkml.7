@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B882AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB80C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 899D9206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 901A521473
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 10:28:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="j6TjZjdT"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZQ/kc6aB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbfEPK2g (ORCPT
+        id S1727081AbfEPK2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 06:28:36 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33733 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726573AbfEPK2g (ORCPT
+        Thu, 16 May 2019 06:28:52 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40795 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726980AbfEPK2w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 06:28:36 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z28so1641295pfk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 03:28:36 -0700 (PDT)
+        Thu, 16 May 2019 06:28:52 -0400
+Received: by mail-pl1-f196.google.com with SMTP id g69so1414473plb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 03:28:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zdJ9wOciRCFBg5OhP24ccEPW98TzZ5e0I9CMtzhtP7k=;
-        b=j6TjZjdTvdf6CjCSc4yUwh0w3lHoZrsZkToyITUvilzaKO5fJ0vqwlISOAS2BDbhb6
-         2VbC5h3lCINUHea8eLr5qB7bqHliBCV26+cZHkuc6/kN9BvyoxdDK0mVitXKri3MUivK
-         IbYPCZMbdWKCRDRF9dlx5fQMu94ziC7y43FQI=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=g6nTVnaTPu6u0ik4+YTeRCBKr6f5B4jeaBgRZ5SbxTw=;
+        b=ZQ/kc6aBkZflGhXSDxDpSNRqmjhb6N9q0F7lksh1UBLl2/I6uLpMJ2EFTj5RVV6ZxA
+         IcqVwlZFK1fgG3i5YsdnWHnSvAe8T4bmzMowpcI9tL+lc9gEd+w3HwFB2PVGkTmHiNqw
+         kznERwYCaREsUwnxdTq4nxj3gvx3GkByAOgng=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zdJ9wOciRCFBg5OhP24ccEPW98TzZ5e0I9CMtzhtP7k=;
-        b=P/MuIIfSE7jF50r719BJifFRyUrQdZOZplzZxcswoWRN/CPhVdhs16Ps984OwDbgSr
-         yYIGtYPnmhvn6+mEMVQdhcGuRrNxzQLSY8ooFAuyZDvOLeBhbyuuSX5u9c0EG3facmIi
-         sp121RaRppzFPWlvGapwaP56ztUw/fvkACRlduwTNCGvTRyjFc0fy/eAllzS/jy32dsi
-         evA2QcVMjaDS6lj3VgpLErD7kCwtuppR4fhRT8QPCjovVzg2o5lytNT6ePWyrT6/0wpa
-         k8VsDSJxEzn1aZWLoOEYucNKHdBVa1chHsM99YyLta64K00WurMq1cVsRS8FMKp2SFJE
-         8xng==
-X-Gm-Message-State: APjAAAUj04UQos4Yjmzo1ZE6qRoVHUL/HY27us4NNiWnSnoYp7sEPpPS
-        2+dNw/iADuaCQDWiCVGjJGs1Kg==
-X-Google-Smtp-Source: APXvYqzPTskZH8eYovOCQmHUvgMMgQkqepD4OYCnKFG7nHyDLIhQaMeOn+J/Ld+Xt/Ggq8IM/7Zmkg==
-X-Received: by 2002:a62:e00e:: with SMTP id f14mr52831963pfh.257.1558002515484;
-        Thu, 16 May 2019 03:28:35 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=g6nTVnaTPu6u0ik4+YTeRCBKr6f5B4jeaBgRZ5SbxTw=;
+        b=W/KaPVLug3mjEq8TL9w+aZUtjtkAE6PgIXUOlQ4RucDJEv6JNRRdPD3y0PtzGODj5T
+         bdarxIX68qNsJQwBHW/OpcBKaQKf5CUTmxFUtmr1zKYPvtNK/NrOT2dSm1/+I51Jcuxn
+         IcH/HQOpgYezjuFbnHsvZqCc/ok9kUVkfFvnPA9ZBGDLD6m0Hebg7jgGl9DANkKP4u98
+         gTiOm6mYS3vGPiLE9FXwxbU7sa3GuQBCXSFCXhPD/bBUt/UqloHfu5wWLpIqdXEWQvE5
+         i3/wpA9CujXOl1YL7HdqSU3iIZe3EJJrbIyapKaep5WchULOxzJMYsFFJkkz8IxNzpXB
+         OYHg==
+X-Gm-Message-State: APjAAAURaGncJSKj+7m1Oi2ZdBWXbsGUWgkgC5JV7xhJctL0issfTG88
+        2N1wdXXVhoRwViBLQmfahKMIVQ==
+X-Google-Smtp-Source: APXvYqz6D4VCan2gvNE8/0EMna/+ZpJBgnCigTNFcMqpDIsMc91bUoTxMOxk4U2jcWrjaJnlZy8LoA==
+X-Received: by 2002:a17:902:9a81:: with SMTP id w1mr47668258plp.71.1558002531758;
+        Thu, 16 May 2019 03:28:51 -0700 (PDT)
 Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id h123sm9338048pfe.80.2019.05.16.03.28.31
+        by smtp.gmail.com with ESMTPSA id h123sm9338048pfe.80.2019.05.16.03.28.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 16 May 2019 03:28:34 -0700 (PDT)
+        Thu, 16 May 2019 03:28:51 -0700 (PDT)
 From:   Hsin-Yi Wang <hsinyi@chromium.org>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
@@ -74,10 +74,12 @@ Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Laura Abbott <labbott@redhat.com>,
         Stephen Boyd <swboyd@chromium.org>,
         Kees Cook <keescook@chromium.org>
-Subject: [PATCH v3 1/3] include/of_fdt.h: add a weak arch hook to update fdt pgprot
-Date:   Thu, 16 May 2019 18:28:15 +0800
-Message-Id: <20190516102817.188519-1-hsinyi@chromium.org>
+Subject: [PATCH v3 2/3] arm64: implement update_fdt_pgprot()
+Date:   Thu, 16 May 2019 18:28:16 +0800
+Message-Id: <20190516102817.188519-2-hsinyi@chromium.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190516102817.188519-1-hsinyi@chromium.org>
+References: <20190516102817.188519-1-hsinyi@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -85,52 +87,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Does nothing as default, arch can implement their function to map
-fdt to RO/RW. This is convenient if arch map fdt to RO during init
-but needs to write fdt in some special cases after that.
+Basically does similar things like __fixmap_remap_fdt(). It's supposed
+to be called after fixmap_remap_fdt() is called at least once, so region
+checking can be skipped. Since it needs to know dt physical address, make
+a copy of the value of __fdt_pointer.
 
 Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
 ---
- drivers/of/fdt.c       | 13 +++++++++++++
- include/linux/of_fdt.h |  2 ++
- 2 files changed, 15 insertions(+)
+ arch/arm64/kernel/setup.c |  2 ++
+ arch/arm64/mm/mmu.c       | 17 +++++++++++++++++
+ 2 files changed, 19 insertions(+)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index de893c9616a1..e84971d1e9ea 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -30,6 +30,19 @@
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 413d566405d1..207cbb5f7965 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -66,6 +66,7 @@ static int num_standard_resources;
+ static struct resource *standard_resources;
  
- #include "of_private.h"
+ phys_addr_t __fdt_pointer __initdata;
++phys_addr_t fdt_pointer;
  
-+/*
-+ * update_fdt_pgprot - Arch hook for changing fdt pgprot
-+ *
-+ * @prot: page protection flags for fdt
-+ *
-+ * Architecture can implement this function if they want to chagne
-+ * fdt page protection flags before or after doing modification and
-+ * fixups to fdt.
-+ *
-+ * Default does nothing.
-+ */
-+__weak void update_fdt_pgprot(pgprot_t prot) {}
-+
  /*
-  * of_fdt_limit_memory - limit the number of regions in the /memory node
-  * @limit: maximum entries
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index a713e5d156d8..406c3e7b2b75 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -109,5 +109,7 @@ static inline void unflatten_device_tree(void) {}
- static inline void unflatten_and_copy_device_tree(void) {}
- #endif /* CONFIG_OF_EARLY_FLATTREE */
+  * Standard memory resources
+@@ -292,6 +293,7 @@ void __init setup_arch(char **cmdline_p)
+ 	early_fixmap_init();
+ 	early_ioremap_init();
  
-+extern void update_fdt_pgprot(pgprot_t prot);
++	fdt_pointer = __fdt_pointer;
+ 	setup_machine_fdt(__fdt_pointer);
+ 
+ 	parse_early_param();
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index a170c6369a68..196ab4d9e92a 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -32,6 +32,7 @@
+ #include <linux/io.h>
+ #include <linux/mm.h>
+ #include <linux/vmalloc.h>
++#include <linux/of_fdt.h>
+ 
+ #include <asm/barrier.h>
+ #include <asm/cputype.h>
+@@ -953,6 +954,22 @@ void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
+ 	return dt_virt;
+ }
+ 
++extern phys_addr_t fdt_pointer;
 +
- #endif /* __ASSEMBLY__ */
- #endif /* _LINUX_OF_FDT_H */
++/* Should be called after fixmap_remap_fdt() is called. */
++void update_fdt_pgprot(pgprot_t prot)
++{
++	u64 dt_virt_base = __fix_to_virt(FIX_FDT);
++	int offset, size;
++
++	offset = fdt_pointer % SWAPPER_BLOCK_SIZE;
++	size = fdt_totalsize((void *)dt_virt_base + offset);
++
++	update_mapping_prot(round_down(fdt_pointer, SWAPPER_BLOCK_SIZE),
++			dt_virt_base,
++			round_up(offset + size, SWAPPER_BLOCK_SIZE), prot);
++}
++
+ int __init arch_ioremap_pud_supported(void)
+ {
+ 	/* only 4k granule supports level 1 block mappings */
 -- 
 2.20.1
 
