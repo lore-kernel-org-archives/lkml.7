@@ -2,291 +2,201 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF9A1C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BB0CC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B11D52082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:05:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a4R0aaeS"
+	by mail.kernel.org (Postfix) with ESMTP id 0F4D52070D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:23:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbfEPWF3 (ORCPT
+        id S1728111AbfEPWXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 18:05:29 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43126 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfEPWF3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 18:05:29 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r4so4967345wro.10
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 15:05:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LlkwrnkxL6Kuwe3vR9ngG6Nzl6DUNs31asWepIlCv1s=;
-        b=a4R0aaeSwDfLJQKTkZr3TY6YvpHqzHTCIePnnYIR4P5/p+M1CISVSpu7khkzEqkQ+E
-         qIkzVvbLGMTai+kKM3VALHP2OdhziKtJl3lfJ7D+iXIiiqBRMa60U9fSxigLxAFojkmP
-         CXpn1p+ryomv6MUq+ToYyGgqNItdjtazCj5A3JXpE5qgrlzT90d7AtoYe/rEqRZWSak8
-         2+FEcnIctTmsYqItOXw/pZVuQUdUKRsibzgK/TrOIzjqqx0eWL+cIol6UsQAgiRSwbV8
-         T7btorGQ0DrH2BPcvHC+bBQ6Nwe66GhZbUhs8oxKrQ7gvUM9XupPiFrxfQ+Nq523aI+q
-         TloQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LlkwrnkxL6Kuwe3vR9ngG6Nzl6DUNs31asWepIlCv1s=;
-        b=AtpvXaGAdBG7D9p7ZGX/9kJjWkvC9XPiExgIgkZVzxNSfLdOuBABmY/1pxH2Zq+7fE
-         PCQwOQU2Ijzr/aV3ZQ6eQ8Q8ovk4xjjJnP5xHjsI0UVSk5I7/CUIJ8vmLaYq8Jyx2Bis
-         Hsqla0zfzvMW+qUt4ExMcyxMpt7vFrQVP8KAIWZUY5fH1/zwEhoqRXqApgMMyRgXMvja
-         jC4Zb4xa6NNFnNxV+Bjzcc2emb+QjDviFS2ZAd0kRhhWe0uZPL5gSVKev+nJ78jqf9q2
-         ZqTLgEpqF9KM40fvD25tHr8lSDUa6AcHo3XjjTHquuLyaeMaMg6fx2fW3uPuRFuihkf1
-         PTzQ==
-X-Gm-Message-State: APjAAAUe807oIOWapG48UkOQyUfOOzm0O+jycS0W4E21pe+dCWVhk2WB
-        UtrO2URX7BgVNCy3HQ2w2Y4fpb9I7TSJw8mu5/JvqQ==
-X-Google-Smtp-Source: APXvYqzvQAz9dmPMC9uyEhcxhl0BxI/ugzPqbOEp8kwlx/udnZMz1JR6DSgNnO5/HTt1QOLPW+LG/6hpwsD8rdPfxk0=
-X-Received: by 2002:adf:83c5:: with SMTP id 63mr3165372wre.33.1558044326999;
- Thu, 16 May 2019 15:05:26 -0700 (PDT)
+        Thu, 16 May 2019 18:23:33 -0400
+Received: from mga17.intel.com ([192.55.52.151]:11710 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726762AbfEPWXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 18:23:33 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 15:23:32 -0700
+X-ExtLoop1: 1
+Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
+  by fmsmga007.fm.intel.com with ESMTP; 16 May 2019 15:23:31 -0700
+Received: from orsmsx116.amr.corp.intel.com ([169.254.7.165]) by
+ ORSMSX105.amr.corp.intel.com ([169.254.2.95]) with mapi id 14.03.0415.000;
+ Thu, 16 May 2019 15:23:31 -0700
+From:   "Xing, Cedric" <cedric.xing@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+CC:     James Morris <jmorris@namei.org>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "LSM List" <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: RE: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Thread-Topic: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Thread-Index: AQHVC0vUmIXibKT8TUm/EUnHn2XAfqZtD8kAgAAKXgCAACSqAIAAB3yA//+8UNCAAJ8WgIAAanNw
+Date:   Thu, 16 May 2019 22:23:30 +0000
+Message-ID: <960B34DE67B9E140824F1DCDEC400C0F654E3FB9@ORSMSX116.amr.corp.intel.com>
+References: <8fe520bb-30bd-f246-a3d8-c5443e47a014@intel.com>
+ <358e9b36-230f-eb18-efdb-b472be8438b4@fortanix.com>
+ <960B34DE67B9E140824F1DCDEC400C0F4E886094@ORSMSX116.amr.corp.intel.com>
+ <6da269d8-7ebb-4177-b6a7-50cc5b435cf4@fortanix.com>
+ <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+ <20190513102926.GD8743@linux.intel.com>
+ <20190514104323.GA7591@linux.intel.com>
+ <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+ <20190514204527.GC1977@linux.intel.com>
+ <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
+ <20190515013031.GF1977@linux.intel.com>
+ <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+ <alpine.LRH.2.21.1905160543070.19802@namei.org>
+ <CALCETrX_Q6qwNRNF0TL2tgfm1j6DKLX7NVHHmWbMFtk3WnHDKw@mail.gmail.com>
+ <alpine.LRH.2.21.1905160844130.29250@namei.org>
+ <CALCETrX2ovRx3Rre+1_xC-q6CiybyLjQ-gmB4FZF_qCZ-Qd+4A@mail.gmail.com>
+ <960B34DE67B9E140824F1DCDEC400C0F654E38CD@ORSMSX116.amr.corp.intel.com>
+ <CALCETrUfmyQ7ivNzQic0FyPXe1fmAnoK093jnz0i8DRn2LvdSA@mail.gmail.com>
+In-Reply-To: <CALCETrUfmyQ7ivNzQic0FyPXe1fmAnoK093jnz0i8DRn2LvdSA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOGJiNWQ0ZTgtMzZhZi00NTc5LTkyZTItYTlkNWRjMjFmZGE1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZDY5Z2RZcEo5eUR6elwvMkUzNlR5MDZ2TVpqYVhTek9NK3hRUEQ1VHp6Z0hrbTdCK3hLUStBTnN6UkZmOWZ3dHcifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190513183727.15755-1-john.stultz@linaro.org>
- <20190513183727.15755-5-john.stultz@linaro.org> <0333e2b3-0e3d-360e-c8ac-62f3235d24be@hisilicon.com>
-In-Reply-To: <0333e2b3-0e3d-360e-c8ac-62f3235d24be@hisilicon.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Thu, 16 May 2019 15:05:14 -0700
-Message-ID: <CALAqxLUA7a+-FQs3hmZKNtNULJSZyYAGZ39dmyTeFKA0Sin2OQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH 4/5 v4] dma-buf: heaps: Add CMA heap to dmabuf heaps
-To:     "Xiaqing (A)" <saberlily.xia@hisilicon.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Xu YiPing <xuyiping@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        butao <butao@hisilicon.com>, Yudongbin <yudongbin@hisilicon.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "Liuyi (Daniel)" <daniel.liuyi@hisilicon.com>,
-        Kongfei <kongfei@hisilicon.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 3:40 AM Xiaqing (A) <saberlily.xia@hisilicon.com> wrote:
->
->
->
-> On 2019/5/14 2:37, John Stultz wrote:
-> > This adds a CMA heap, which allows userspace to allocate
-> > a dma-buf of contiguous memory out of a CMA region.
-> >
-> > This code is an evolution of the Android ION implementation, so
-> > thanks to its original author and maintainters:
-> >    Benjamin Gaignard, Laura Abbott, and others!
-> >
-> > Cc: Laura Abbott <labbott@redhat.com>
-> > Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> > Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> > Cc: Liam Mark <lmark@codeaurora.org>
-> > Cc: Pratik Patel <pratikp@codeaurora.org>
-> > Cc: Brian Starkey <Brian.Starkey@arm.com>
-> > Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
-> > Cc: Sudipto Paul <Sudipto.Paul@arm.com>
-> > Cc: Andrew F. Davis <afd@ti.com>
-> > Cc: Xu YiPing <xuyiping@hisilicon.com>
-> > Cc: "Chenfeng (puck)" <puck.chen@hisilicon.com>
-> > Cc: butao <butao@hisilicon.com>
-> > Cc: "Xiaqing (A)" <saberlily.xia@hisilicon.com>
-> > Cc: Yudongbin <yudongbin@hisilicon.com>
-> > Cc: Christoph Hellwig <hch@infradead.org>
-> > Cc: Chenbo Feng <fengc@google.com>
-> > Cc: Alistair Strachan <astrachan@google.com>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > ---
-> > v2:
-> > * Switch allocate to return dmabuf fd
-> > * Simplify init code
-> > * Checkpatch fixups
-> > v3:
-> > * Switch to inline function for to_cma_heap()
-> > * Minor cleanups suggested by Brian
-> > * Fold in new registration style from Andrew
-> > * Folded in changes from Andrew to use simplified page list
-> >    from the heap helpers
-> > * Use the fd_flags when creating dmabuf fd (Suggested by
-> >    Benjamin)
-> > * Use precalculated pagecount (Suggested by Andrew)
-> > ---
-> >   drivers/dma-buf/heaps/Kconfig    |   8 ++
-> >   drivers/dma-buf/heaps/Makefile   |   1 +
-> >   drivers/dma-buf/heaps/cma_heap.c | 169 +++++++++++++++++++++++++++++++
-> >   3 files changed, 178 insertions(+)
-> >   create mode 100644 drivers/dma-buf/heaps/cma_heap.c
-> >
-> > diff --git a/drivers/dma-buf/heaps/Kconfig b/drivers/dma-buf/heaps/Kconfig
-> > index 205052744169..a5eef06c4226 100644
-> > --- a/drivers/dma-buf/heaps/Kconfig
-> > +++ b/drivers/dma-buf/heaps/Kconfig
-> > @@ -4,3 +4,11 @@ config DMABUF_HEAPS_SYSTEM
-> >       help
-> >         Choose this option to enable the system dmabuf heap. The system heap
-> >         is backed by pages from the buddy allocator. If in doubt, say Y.
-> > +
-> > +config DMABUF_HEAPS_CMA
-> > +     bool "DMA-BUF CMA Heap"
-> > +     depends on DMABUF_HEAPS && DMA_CMA
-> > +     help
-> > +       Choose this option to enable dma-buf CMA heap. This heap is backed
-> > +       by the Contiguous Memory Allocator (CMA). If your system has these
-> > +       regions, you should say Y here.
-> > diff --git a/drivers/dma-buf/heaps/Makefile b/drivers/dma-buf/heaps/Makefile
-> > index d1808eca2581..6e54cdec3da0 100644
-> > --- a/drivers/dma-buf/heaps/Makefile
-> > +++ b/drivers/dma-buf/heaps/Makefile
-> > @@ -1,3 +1,4 @@
-> >   # SPDX-License-Identifier: GPL-2.0
-> >   obj-y                                       += heap-helpers.o
-> >   obj-$(CONFIG_DMABUF_HEAPS_SYSTEM)   += system_heap.o
-> > +obj-$(CONFIG_DMABUF_HEAPS_CMA)               += cma_heap.o
-> > diff --git a/drivers/dma-buf/heaps/cma_heap.c b/drivers/dma-buf/heaps/cma_heap.c
-> > new file mode 100644
-> > index 000000000000..3d0ffbbd0a34
-> > --- /dev/null
-> > +++ b/drivers/dma-buf/heaps/cma_heap.c
-> > @@ -0,0 +1,169 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * DMABUF CMA heap exporter
-> > + *
-> > + * Copyright (C) 2012, 2019 Linaro Ltd.
-> > + * Author: <benjamin.gaignard@linaro.org> for ST-Ericsson.
-> > + */
-> > +
-> > +#include <linux/device.h>
-> > +#include <linux/dma-buf.h>
-> > +#include <linux/dma-heap.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/errno.h>
-> > +#include <linux/err.h>
-> > +#include <linux/cma.h>
-> > +#include <linux/scatterlist.h>
-> > +#include <linux/highmem.h>
-> > +
-> > +#include "heap-helpers.h"
-> > +
-> > +struct cma_heap {
-> > +     struct dma_heap *heap;
-> > +     struct cma *cma;
-> > +};
-> > +
-> > +static void cma_heap_free(struct heap_helper_buffer *buffer)
-> > +{
-> > +     struct cma_heap *cma_heap = dma_heap_get_data(buffer->heap_buffer.heap);
-> > +     unsigned long nr_pages = buffer->pagecount;
-> > +     struct page *pages = buffer->priv_virt;
-> > +
-> > +     /* free page list */
-> > +     kfree(buffer->pages);
-> > +     /* release memory */
-> > +     cma_release(cma_heap->cma, pages, nr_pages);
-> > +     kfree(buffer);
-> > +}
-> > +
-> > +/* dmabuf heap CMA operations functions */
-> > +static int cma_heap_allocate(struct dma_heap *heap,
-> > +                             unsigned long len,
-> > +                             unsigned long fd_flags,
-> > +                             unsigned long heap_flags)
-> > +{
-> > +     struct cma_heap *cma_heap = dma_heap_get_data(heap);
-> > +     struct heap_helper_buffer *helper_buffer;
-> > +     struct page *pages;
-> > +     size_t size = PAGE_ALIGN(len);
-> > +     unsigned long nr_pages = size >> PAGE_SHIFT;
-> > +     unsigned long align = get_order(size);
-> > +     DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
-> > +     struct dma_buf *dmabuf;
-> > +     int ret = -ENOMEM;
-> > +     pgoff_t pg;
-> > +
-> > +     if (align > CONFIG_CMA_ALIGNMENT)
-> > +             align = CONFIG_CMA_ALIGNMENT;
-> > +
-> > +     helper_buffer = kzalloc(sizeof(*helper_buffer), GFP_KERNEL);
-> > +     if (!helper_buffer)
-> > +             return -ENOMEM;
-> > +
-> > +     INIT_HEAP_HELPER_BUFFER(helper_buffer, cma_heap_free);
-> > +     helper_buffer->heap_buffer.flags = heap_flags;
-> > +     helper_buffer->heap_buffer.heap = heap;
-> > +     helper_buffer->heap_buffer.size = len;
-> > +
-> > +     pages = cma_alloc(cma_heap->cma, nr_pages, align, false);
-> > +     if (!pages)
-> > +             goto free_buf;
-> > +
-> > +     if (PageHighMem(pages)) {
-> > +             unsigned long nr_clear_pages = nr_pages;
-> > +             struct page *page = pages;
-> > +
-> > +             while (nr_clear_pages > 0) {
-> > +                     void *vaddr = kmap_atomic(page);
-> > +
-> > +                     memset(vaddr, 0, PAGE_SIZE);
-> > +                     kunmap_atomic(vaddr);
-> > +                     page++;
-> > +                     nr_clear_pages--;
-> > +             }
-> > +     } else {
-> > +             memset(page_address(pages), 0, size);
-> > +     }
-> > +
-> > +     helper_buffer->pagecount = nr_pages;
-> > +     helper_buffer->pages = kmalloc_array(helper_buffer->pagecount,
-> > +                                          sizeof(*helper_buffer->pages),
-> > +                                          GFP_KERNEL);
-> > +     if (!helper_buffer->pages) {
-> > +             ret = -ENOMEM;
-> > +             goto free_cma;
-> > +     }
-> > +
-> > +     for (pg = 0; pg < helper_buffer->pagecount; pg++) {
-> > +             helper_buffer->pages[pg] = &pages[pg];
-> > +             if (!helper_buffer->pages[pg])
-> > +                     goto free_pages;
-> > +     }
-> > +
-> > +     /* create the dmabuf */
-> > +     exp_info.ops = &heap_helper_ops;
-> > +     exp_info.size = len;
-> > +     exp_info.flags = fd_flags;
-> > +     exp_info.priv = &helper_buffer->heap_buffer;
-> > +     dmabuf = dma_buf_export(&exp_info);
-> > +     if (IS_ERR(dmabuf)) {
-> > +             ret = PTR_ERR(dmabuf);
-> > +             goto free_pages;
-> > +     }
-> Can the dmabuf be created in the framework layer?
-> each heap needs to add the same code here, which is not very good.
-
-Benjamin's point is true, that it might not be best to try to handle
-it in the framework layer, but there is a fair amount of boilerplate
-that I'll see if I can refactor into some helper functions.
-
-thanks for the feedback!
--john
+SGkgQW5keSwNCg0KPiA+IFNJR1NUUlVDVCBpc24ndCBuZWNlc3NhcmlseSBzdG9yZWQgb24gZGlz
+ayBzbyBtYXkgbm90IGFsd2F5cyBoYXZlIGEgZmQuDQo+IEhvdyBhYm91dCB0aGUgZm9sbG93aW5n
+Pw0KPiA+IHZvaWQgKnNzX3BvaW50ZXIgPSBtbWFwKHNpZ3N0cnVjdF9mZCwgUFJPVF9SRUFELC4u
+Lik7DQo+ID4gaW9jdGwoZW5jbGF2ZV9mZCwgU0dYX0lOSVRfVEhFX0VOQ0xBVkUsIHNzX3BvaW50
+ZXIpOw0KPiA+DQo+ID4gVGhlIGlkZWEgaGVyZSBpcyBTSUdTVFJVQ1Qgd2lsbCBzdGlsbCBiZSBw
+YXNzZWQgaW4gbWVtb3J5IHNvIGl0IHdvcmtzDQo+IHRoZSBzYW1lIHdheSB3aGVuIG5vIExTTSBt
+b2R1bGVzIGFyZSBsb2FkZWQgb3IgYmFzaW5nIGl0cyBkZWNpc2lvbiBvbg0KPiB0aGUgLnNpZ3N0
+cnVjdCBmaWxlLiBPdGhlcndpc2UsIGFuIExTTSBtb2R1bGUgY2FuIGZpZ3VyZSBvdXQgdGhlIGJh
+Y2tpbmcNCj4gZmlsZSAoYW5kIG9mZnNldCB3aXRoaW4gdGhhdCBmaWxlKSBieSBsb29raW5nIGlu
+dG8gdGhlIFZNQSBjb3ZlcmluZw0KPiBzc19wb2ludGVyLg0KPiANCj4gSSBkb27igJl0IGxvdmUg
+dGhpcyBhcHByb2FjaC4gIEFwcGxpY2F0aW9uIGF1dGhvcnMgc2VlbSBsaWtlbHkgdG8gdXNlDQo+
+IHJlYWQoKSBpbnN0ZWFkIG9mIG1tYXAoKSwgYW5kIGl04oCZbGwgc3RpbGwgd29yayBpbiBtYW55
+IGNhcmVzLiBJdCB3b3VsZA0KPiBhbHNvIGNvbXBsaWNhdGUgdGhlIGtlcm5lbCBpbXBsZW1lbnRh
+dGlvbiwgYW5kIGxvb2tpbmcgYXQgdGhlIGlub2RlDQo+IGJhY2tpbmcgdGhlIHZtYSB0aGF0IGJh
+Y2tzIGEgcG9pbnRlciBpcyBhdCBsZWFzdCByYXRoZXIgdW51c3VhbC4NCj4gSW5zdGVhZCwgaWYg
+dGhlIHNpZ3N0cnVjdCBpc27igJl0IG9uIGRpc2sgYmVjYXVzZSBpdOKAmXMgZHluYW1pYyBvciBj
+YW1lDQo+IGZyb20gYSBuZXR3b3JrLCB0aGUgYXBwbGljYXRpb24gY2FuIHB1dCBpdCBpbiBhIG1l
+bWZkLg0KDQpJIHVuZGVyc3RhbmQgeW91ciBjb25jZXJuIGhlcmUuIEJ1dCBJIGd1ZXNzIHdlIGFy
+ZSBtYWtpbmcgdG9vIG11Y2ggYXNzdW1wdGlvbiBvbiBob3cgZW5jbGF2ZXMgYXJlIHN0cnVjdHVy
+ZWQvcGFja2FnZWQuIE15IGNvbmNlcm4gaXMsIHdoYXQgaWYgYSBTSUdTVFJVQ1QgcmVhbGx5IGhh
+cyB0byBiZSBmcm9tIG1lbW9yeT8gRm9yIGV4YW1wbGUsIGFuIGVuY2xhdmUgKGFsb25nIHdpdGgg
+aXRzIFNJR1NUUlVDVCkgY291bGQgYmUgZW1iZWRkZWQgaW5zaWRlIGEgc2hhcmVkIG9iamVjdCAo
+b3IgZXZlbiB0aGUgIm1haW4iIGV4ZWN1dGFibGUpIHNvIGl0IHNob3dzIHVwIGluIG1lbW9yeSB0
+byBiZWdpbiB3aXRoLiBPZiBjb3Vyc2UgaXQgY291bGQgYmUgY29waWVkIHRvIGEgbWVtZmQgYnV0
+IHdoYXRldmVyICJhdHRyaWJ1dGVzIiAoZS5nLiBwYXRoLCBvciBTRUxpbnV4IGNsYXNzL3R5cGUp
+IGFzc29jaWF0ZWQgd2l0aCB0aGUgb3JpZ2luYWwgZmlsZSB3b3VsZCBiZSBsb3N0LCBzbyBJJ20g
+bm90IHN1cmUgaWYgdGhhdCB3b3VsZCB3b3JrLg0KDQpJJ20gYWxzbyB3aXRoIHlvdSB0aGF0IGFw
+cGxpY2F0aW9ucyB0ZW5kIHRvIHVzZSByZWFkKCkgaW5zdGVhZCBvZiBtbWFwKCkgZm9yIGFjY2Vz
+c2luZyBmaWxlcy4gQnV0IGluIG91ciBjYXNlIHRoYXQnZCBiZSBuZWNlc3Nhcnkgb25seSBpZiAu
+c2lnc3RydWN0IGlzIGEgc2VwYXJhdGUgZmlsZSAoaGVuY2UgbmVlZHMgdG8gYmUgcmVhZCBzZXBh
+cmF0ZWx5KS4gV2hhdCBpZiAoYW5kIEkgZ3Vlc3MgbW9zdCBpbXBsZW1lbnRhdGlvbnMgd291bGQp
+IHRoZSBTSUdTVFJVQ1QgaXMgZW1iZWRkZWQgaW4gdGhlIHNhbWUgZmlsZSBhcyB0aGUgZW5jbGF2
+ZT8gbW1hcCgpIGlzIHRoZSBtb3JlIGNvbW1vbiBwcmFjdGljZSB3aGVuIGRlYWxpbmcgd2l0aCBl
+eGVjdXRhYmxlIGltYWdlcywgYW5kIGluIHRoYXQgY2FzZSBTSUdTVFJVQ1Qgd2lsbCBoYXZlIGFs
+cmVhZHkgYmVlbiBtbWFwKCknZC4gDQoNCkknbSB3aXRoIHlvdSBhZ2FpbiB0aGF0IGl0J3Mga2lu
+ZCBvZiB1bnByZWNlZGVudGVkIHRvIGxvb2sgYXQgdGhlIGJhY2tpbmcgaW5vZGUuIEJ1dCBJIGJl
+bGlldmUgd2Ugc2hvdWxkIHN0cml2ZSB0byBhbGxvdyBhcyBsYXJnZSB2YXJpZXR5IG9mIGFwcGxp
+Y2F0aW9ucy91c2FnZXMgYXMgcG9zc2libGUgYW5kIEkgZG9uJ3Qgc2VlIGFueSBhbHRlcm5hdGl2
+ZXMgd2l0aG91dCBsb3NpbmcgZmxleGliaWxpdHkuDQoNCj4gPg0KPiA+Pg0KPiA+PiAvKiBBY3R1
+YWxseSBtYXAgdGhlIHRoaW5nICovDQo+ID4+IG1tYXAoZW5jbGF2ZV9mZCBSTyBzZWN0aW9uLCBQ
+Uk9UX1JFQUQsIC4uLik7DQo+ID4+IG1tYXAoZW5jbGF2ZV9mZCBSVyBzZWN0aW9uLCBQUk9UX1JF
+QUQgfCBQUk9UX1dSSVRFLCAuLi4pOw0KPiA+PiBtbWFwKGVuY2xhdmVfZmQgUlggc2VjdGlvbiwg
+UFJPVF9SRUFEIHwgUFJPVF9FWEVDLCAuLi4pOw0KPiA+Pg0KPiA+PiAvKiBUaGlzIHNob3VsZCBm
+YWlsIHVubGVzcyBFWEVDTU9EIGlzIGF2YWlsYWJsZSwgSSB0aGluayAqLw0KPiA+PiBtbWFwKGVu
+Y2xhdmVfZmQgUldYIHNlY3Rpb24sIFBST1RfUkVBRCB8IFBST1RfV1JJVEUgfCBQUk9UX0VYRUMp
+Ow0KPiA+Pg0KPiA+PiBBbmQgdGhlIGlkZWEgaGVyZSBpcyB0aGF0LCBpZiB0aGUgLmVuY2xhdmUg
+ZmlsZSBpc24ndCBtYXBwZWQNCj4gPj4gUFJPVF9FWEVDLCB0aGVuIG1tYXBwaW5nIHRoZSBSWCBz
+ZWN0aW9uIHdpbGwgYWxzbyByZXF1aXJlIEVYRUNNRU0gb3INCj4gPj4gRVhFQ01PRC4NCj4gPg0K
+PiA+IEZyb20gc2VjdXJpdHkgcGVyc3BlY3RpdmUsIEkgdGhpbmsgaXQgcmVhc29uYWJsZSB0byBn
+aXZlIEVYRUNNRU0gYW5kDQo+IEVYRUNNT0QgdG8gL2Rldi9zZ3gvZW5jbGF2ZSBiZWNhdXNlIHRo
+ZSBhY3R1YWwgcGVybWlzc2lvbnMgYXJlIGd1YXJkZWQNCj4gYnkgRVBDTSBwZXJtaXNzaW9ucywg
+d2hpY2ggYXJlICJpbmhlcml0ZWQiIGZyb20gdGhlIHNvdXJjZSBwYWdlcywgd2hvc2UNCj4gcGVy
+bWlzc2lvbnMgaGF2ZSBwYXNzZWQgTFNNIGNoZWNrcy4NCj4gDQo+IEkgZGlzYWdyZWUuICBJZiB5
+b3UgZGVueSBhIHByb2dyYW0gRVhFQ01PRCwgaXTigJlzIG5vdCBiZWNhdXNlIHlvdQ0KPiBkaXN0
+cnVzdCB0aGUgcHJvZ3JhbS4gSXTigJlzIGJlY2F1c2UgeW91IHdhbnQgdG8gZW5mb3JjZSBnb29k
+IHNlY3VyaXR5DQo+IHByYWN0aWNlcy4gIChPciB5b3XigJlyZSBBcHBsZSBhbmQgd2FudCB0byBk
+aXNhbGxvdyB0aGlyZC1wYXJ0eSBKSVRzLikNCj4gQSBwb2xpY3kgdGhhdCBhY2NlcHRzIGFueSBz
+aWdzdHJ1Y3QgYnV0IHJlcXVpcmVzIHRoYXQgZW5jbGF2ZXMgY29tZQ0KPiBmcm9tIGRpc2sgYW5k
+IHJlc3BlY3QgV15YIHNlZW1zIGVudGlyZWx5IHJlYXNvbmFibGUuDQo+IA0KPiBJIHRoaW5rIHRo
+YXQgYmxvY2tpbmcgRVhFQ01PRCBoYXMgbGlrZWx5IHNlcnZlZCB0d28gdmVyeSByZWFsIHNlY3Vy
+aXR5DQo+IHB1cnBvc2VzLiBJdCBoZWxwcyBmb3JjZSBhcHBsaWNhdGlvbiBhbmQgbGlicmFyeSBk
+ZXZlbG9wZXJzIHRvIHdyaXRlDQo+IGFuZCBjb21waWxlIHRoZWlyIGNvZGUgaW4gYSB3YXkgdGhh
+dCBkb2VzbuKAmXQgcmVseSBvbiBkYW5nZXJvdXMgdHJpY2tzDQo+IGxpa2UgcHV0dGluZyBleGVj
+dXRhYmxlIHRyYW1wb2xpbmVzIG9uIHRoZSBzdGFjay4gIEl0IGFsc28gbWFrZXMgaXQNCj4gZXNz
+ZW50aWFsbHkgaW1wb3NzaWJsZSBmb3IgYW4gZXhwbG9pdCB0byBydW4gYWN0dWFsIGRvd25sb2Fk
+ZWQgbWFjaGluZQ0KPiBjb2RlIOKAlCBpZiB0aGVyZSBpcyBubyB3YXkgdG8gcnVuIGNvZGUgdGhh
+dCBpc27igJl0IGFwcHJvcHJpYXRlbHkNCj4gbGFiZWxlZCwgdGhlbiBhdHRhY2tlcnMgYXJlIG1v
+cmUgbGltaXRlZCBpbiB3aGF0IHRoZXkgY2FuIGRvLg0KDQo+IA0KPiBJIGRvbuKAmXQgdGhpbmsg
+dGhhdCBTR1ggc2hvdWxkIGJlY29tZSBhbiBleGNlcHRpb24gdG8gZWl0aGVyIG9mIHRoZXNlLg0K
+PiBDb2RlIHNob3VsZCBub3QgaGF2ZSBhbiBleGN1c2UgdG8gdXNlIFdYIG1lbW9yeSBqdXN0IGJl
+Y2F1c2UgaXTigJlzIGluDQo+IGFuIGVuY2xhdmUuIFNpbWlsYXJseSwgYW4gZXhwbG9pdCBzaG91
+bGQgbm90IGJlIGFibGUgdG8gcnVuIGFuDQo+IGF0dGFja2VyLXN1cHBsaWVkIGVuY2xhdmUgYXMg
+YSB3YXkgYXJvdW5kIGEgcG9saWN5IHRoYXQgd291bGQNCj4gb3RoZXJ3aXNlIHByZXZlbnQgZG93
+bmxvYWRlZCBjb2RlIGZyb20gcnVubmluZy4NCg0KTXkgYXBvbG9neSBmb3IgdGhlIGNvbmZ1c2lv
+biBoZXJlLg0KDQpJIHRob3VnaHQgRVhFQ01PRCBhcHBsaWVkIHRvIGZpbGVzIChhbmQgbWVtb3J5
+IG1hcHBpbmdzIGJhY2tlZCBieSB0aGVtKSBidXQgSSB3YXMgcHJvYmFibHkgd3JvbmcuIEl0IHNv
+dW5kcyBsaWtlIEVYRUNNT0QgYXBwbGllcyB0byB0aGUgd2hvbGUgcHJvY2VzcyBzbyB3b3VsZCBh
+bGxvdyBhbGwgcGFnZXMgd2l0aGluIGEgcHJvY2VzcydzIGFkZHJlc3Mgc3BhY2UgdG8gYmUgbW9k
+aWZpZWQgdGhlbiBleGVjdXRlZCwgcmVnYXJkbGVzcyB0aGUgYmFja2luZyBmaWxlcy4gQW0gSSBj
+b3JyZWN0IHRoaXMgdGltZT8NCg0KSSB3YXMgbm90IHNheWluZyBlbmNsYXZlcyB3ZXJlIGV4ZW1w
+dCB0byBnb29kIHNlY3VyaXR5IHByYWN0aWNlcy4gV2hhdCBJIHdhcyB0cnlpbmcgdG8gc2F5IHdh
+cywgRVBDIHBhZ2VzIGFyZSAqbm90KiBzdWJqZWN0IHRvIHRoZSBzYW1lIGF0dGFja3MgYXMgcmVn
+dWxhciBwYWdlcyBzbyBJIHN1c3BlY3QgdGhlcmUgd2lsbCBiZSBhIGRlc2lyZSB0byBlbmZvcmNl
+IGRpZmZlcmVudCBwb2xpY2llcyBvbiB0aGVtLCBlc3BlY2lhbGx5IGFmdGVyIG5ldyBTR1gyIGZl
+YXR1cmVzL2FwcGxpY2F0aW9ucyBiZWNvbWUgYXZhaWxhYmxlLiBTbyBJIHRoaW5rIGl0IGJlbmVm
+aWNpYWwgdG8gZGlzdGluZ3Vpc2ggYmV0d2VlbiByZWd1bGFyIHZzLiBlbmNsYXZlIHZpcnR1YWwg
+cmFuZ2VzLiBBbmQgdG8gZG8gdGhhdCwgYSBuZXcgVk1fU0dYIGZsYWcgaW4gVk1BIGlzIHByb2Jh
+Ymx5IGEgdmVyeSBzaW1wbGUvZWFzeSB3YXkuIEFuZCB3aXRoIHRoYXQgVk1fU0dYIGZsYWcsIHdl
+IGNvdWxkIGFkZCBhIG5ldyBzZWN1cml0eV9zZ3hfbXByb3QoKSBob29rIHNvIHRoYXQgTFNNIG1v
+ZHVsZXMvcG9saWNpZXMgY291bGQgYWN0IGRpZmZlcmVudGx5Lg0KDQpBbmQgaWYgeW91IGFyZSB3
+aXRoIG1lIG9uIHRoYXQgYmlnZ2VyIHBpY3R1cmUsIHRoZSBuZXh0IHF1ZXN0aW9uIGlzOiB3aGF0
+IHNob3VsZCBiZSB0aGUgZGVmYXVsdCBiZWhhdmlvciBvZiBzZWN1cml0eV9zZ3hfbXByb3QoKSBm
+b3IgZXhpc3Rpbmcvbm9uLVNHWC1hd2FyZSBMU00gbW9kdWxlcy9wb2xpY2llcz8gSSdkIHNheSBh
+IHJlYXNvbmFibGUgZGVmYXVsdCBpcyB0byBhbGxvdyBSLCBSVyBhbmQgUlgsIGJ1dCBub3QgYW55
+dGhpbmcgZWxzZS4gSXQnZCBzdWZmaWNlIHRvIGdldCByaWQgb2YgRVhFQ01FTS9FWEVDTU9EIHJl
+cXVpcmVtZW50cyBvbiBlbmNsYXZlIGFwcGxpY2F0aW9ucy4gRm9yIFNHWDEsIEVQQ00gcGVybWlz
+c2lvbnMgYXJlIGltbXV0YWJsZSBzbyBpdCByZWFsbHkgZG9lc24ndCBtYXR0ZXIgd2hhdCBzZWN1
+cml0eV9zZ3hfbXByb3QoKSBkb2VzLiBGb3IgU0dYMiBhbmQgYmV5b25kLCB0aGVyZSdzIHN0aWxs
+IHRpbWUgYW5kIG5ldyBTR1gtYXdhcmUgTFNNIG1vZHVsZXMvcG9saWNpZXMgd2lsbCBwcm9iYWJs
+eSBoYXZlIGVtZXJnZWQgYnkgdGhlbi4NCg0KLUNlZHJpYw0K
