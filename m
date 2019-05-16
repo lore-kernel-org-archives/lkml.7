@@ -2,143 +2,160 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DFEC04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC52FC04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D4E62082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 792DC2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:35:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eJk9HEnZ"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="htadwuFh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726709AbfEPHbC (ORCPT
+        id S1726554AbfEPHfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 03:31:02 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:46310 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbfEPHbB (ORCPT
+        Thu, 16 May 2019 03:35:37 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:45853 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726277AbfEPHfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 03:31:01 -0400
-Received: by mail-yb1-f195.google.com with SMTP id z22so219715ybi.13
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 00:31:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GVt+8/S9xZlwwkWG1PlPMVhqKME8gM7ABoyAssUfp34=;
-        b=eJk9HEnZpy5U2y9EOA7OmV1mUJO7aXYGKOLcDadFsBWNQc3uC60k3YTQ1Uh006P22q
-         bifZARk7Fh+rzkH9ZrqlL8cB9coRlD+p9X4cAFVCoJW4TSMWFXCU9HlUiUtWyLgXA5g0
-         sMfgmVrGwO1UY8tRU1fQDwUo9b+G8PGgMT7tcVeCyc/qNb/3KfqBagoV5sSvAsK5+6zf
-         B94OBTVPtZ/UmOHM/+iWfYdeQlt2UasXOkcV5dSG0v4v6xzSDXkM3mSl/vn2wiaQu6rZ
-         J9ZTi5excR5pK2J2z2bvodQHWhrvt5yHXhRW3He2ahkcwP4/WUCNnfW7YmqPVS+NVM1K
-         8BeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GVt+8/S9xZlwwkWG1PlPMVhqKME8gM7ABoyAssUfp34=;
-        b=KTLVBMgRWUFqY3DqfdVblnQ33CsoEFNiayFHMPZ0EPcw2fBZfge/EClEwtOVnCz22z
-         PvnfKTBA6Ksx/hBptvbW9YIaj51zo9Xp7rCeqDx/smTZTcAcDIQJmB9T+QV+5qeCg4ma
-         6eECA4Rtj4T8GQAIuRUi29TLYEMpQB/BA9W6hQbB6+ACIS1AwVjPpcCaGUj+RuZ+NfHm
-         eZnDYWFBr1XTlG+5Jnmgbvwjghcawpjo7zCuBeRgLvokibM1U9zYJ6fTBKbkLH+NJVPe
-         mRWYO1bdKrPHBWLvU0BZHA2bUU/ZkES95R14fMpNysY7bWakAMmEPC+GkQKNenPUXY5Z
-         QrlA==
-X-Gm-Message-State: APjAAAW3Dbfk5L+6XSLJNeNWGA5NSwdhaQ+yr1zlBlqtNj6ky6ezDth4
-        mdrf4H4jPxZKO1TdEKBCyZo9AaPhR4YfxZFAtjA=
-X-Google-Smtp-Source: APXvYqxmH29D0NGJed5QeuA1TJKhB++qYRpIKOeRtLdwclUShZBcDQER2VpLN7ON/03jITGEU8SZMviooA4+7ZRu5QU=
-X-Received: by 2002:a25:9089:: with SMTP id t9mr23802417ybl.369.1557991860971;
- Thu, 16 May 2019 00:31:00 -0700 (PDT)
+        Thu, 16 May 2019 03:35:37 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4G7VXud003310;
+        Thu, 16 May 2019 09:35:25 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=NeStz9nXNfTLRVan7mg48d/XzpugTtixbD8rWuY85vw=;
+ b=htadwuFh2qSEgL9mc4tUg+WlP00M72TUJamH3X68lmPshmg4OTm1PrNUPzq9jpwqL+wQ
+ b0zui4LlvyeYwWzbxI3a4SSmkgYrj3g6WTL8aRRvmlphmSmvPbCCn9zokgQqobqRT1SH
+ J1gfhIxTlXcmyawgIVjWY1ee1Hg/rA4DAVnPxtNZX2d9rytQ4DmXfnTL5nqi1p/vfNjU
+ Kz5jg6gfUh6OHzZGSRtmTPatA6bpLxXPY7CHGtIzcDa8FZZlBH4fiXrsRUlPFekv9kxD
+ gXxFY7cE5mmMNMwcHzXavLd2wy3uBnFVsrZ3cVckA8jDG0uq9E5OhDFVvfoiowVfP8Z4 HA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2sg0anb94y-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 16 May 2019 09:35:25 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D39FA38;
+        Thu, 16 May 2019 07:35:24 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AF09312F6;
+        Thu, 16 May 2019 07:35:24 +0000 (GMT)
+Received: from [10.48.1.93] (10.75.127.49) by SFHDAG5NODE2.st.com
+ (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 16 May
+ 2019 09:35:23 +0200
+Subject: Re: [PATCH] i2c: i2c-stm32f7: fix the get_irq error cases
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>, <wsa@the-dreams.de>
+CC:     <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1557932949-15912-1-git-send-email-fabrice.gasnier@st.com>
+From:   Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Message-ID: <f0f4f7cd-b151-87d4-e1e1-44969a0ba33b@st.com>
+Date:   Thu, 16 May 2019 09:35:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190406183508.25273-1-urezki@gmail.com> <20190406183508.25273-2-urezki@gmail.com>
- <20190514141942.23271725e5d1b8477a44f102@linux-foundation.org> <20190515152415.lcbnqvcjppype7i5@pc636>
-In-Reply-To: <20190515152415.lcbnqvcjppype7i5@pc636>
-From:   Uladzislau Rezki <urezki@gmail.com>
-Date:   Thu, 16 May 2019 09:30:49 +0200
-Message-ID: <CA+KHdyURm1xb1u4=aV97KQYFi0R_3=SJPBCezWqEB8hT=J8pCw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] mm/vmap: keep track of free blocks for vmap allocation
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "Tobin C. Harding" <tobin@kernel.org>
-Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Joel Fernandes <joelaf@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1557932949-15912-1-git-send-email-fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG8NODE3.st.com (10.75.127.24) To SFHDAG5NODE2.st.com
+ (10.75.127.14)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Tobin C. Harding <tobin@kernel.org>
+Hi
 
-On Wed, May 15, 2019 at 5:24 PM Uladzislau Rezki <urezki@gmail.com> wrote:
->
-> Hello, Andrew.
->
-> > An earlier version of this patch was accused of crashing the kernel:
-> >
-> > https://lists.01.org/pipermail/lkp/2019-April/010004.html
-> >
-> > does the v4 series address this?
-> I tried before to narrow down that crash but i did not succeed, so
-> i have never seen that before on my test environment as well as
-> during running lkp-tests including trinity test case:
->
-> test-url: http://codemonkey.org.uk/projects/trinity/
->
-> But after analysis of the Call-trace and slob_alloc():
->
-> <snip>
-> [    0.395722] Call Trace:
-> [    0.395722]  slob_alloc+0x1c9/0x240
-> [    0.395722]  kmem_cache_alloc+0x70/0x80
-> [    0.395722]  acpi_ps_alloc_op+0xc0/0xca
-> [    0.395722]  acpi_ps_get_next_arg+0x3fa/0x6ed
-> <snip>
->
-> <snip>
->     /* Attempt to alloc */
->     prev = sp->lru.prev;
->     b = slob_page_alloc(sp, size, align);
->     if (!b)
->         continue;
->
->     /* Improve fragment distribution and reduce our average
->      * search time by starting our next search here. (see
->      * Knuth vol 1, sec 2.5, pg 449) */
->     if (prev != slob_list->prev &&
->             slob_list->next != prev->next)
->         list_move_tail(slob_list, prev->next); <- Crash is here in __list_add_valid()
->     break;
-> }
-> <snip>
->
-> i see that it tries to manipulate with "prev" node that may be removed
-> from the list by slob_page_alloc() earlier if whole page is used. I think
-> that crash has to be fixed by the below commit:
->
-> https://www.spinics.net/lists/mm-commits/msg137923.html
->
-> it was introduced into 5.1-rc3 kernel.
->
-> Why ("mm/vmalloc.c: keep track of free blocks for vmap allocation")
-> was accused is probably because it uses "kmem cache allocations with struct alignment"
-> instead of kmalloc()/kzalloc(). Maybe because of bigger size requests
-> it became easier to trigger the BUG. But that is theory.
->
-> --
-> Vlad Rezki
+Reviewed-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 
+Thanks
+Regards
 
-
--- 
-Uladzislau Rezki
+On 5/15/19 5:09 PM, Fabrice Gasnier wrote:
+> During probe, return the "get_irq" error value instead of -EINVAL which
+> allows the driver to be deferred probed if needed.
+> Fix also the case where of_irq_get() returns a negative value.
+> Note :
+> On failure of_irq_get() returns 0 or a negative value while
+> platform_get_irq() returns a negative value.
+> 
+> Fixes: aeb068c57214 ("i2c: i2c-stm32f7: add driver")
+> 
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+>  drivers/i2c/busses/i2c-stm32f7.c | 26 ++++++++++++++------------
+>  1 file changed, 14 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+> index 4284fc9..14fb105 100644
+> --- a/drivers/i2c/busses/i2c-stm32f7.c
+> +++ b/drivers/i2c/busses/i2c-stm32f7.c
+> @@ -25,7 +25,6 @@
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> -#include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pinctrl/consumer.h>
+> @@ -1812,15 +1811,14 @@ static struct i2c_algorithm stm32f7_i2c_algo = {
+>  
+>  static int stm32f7_i2c_probe(struct platform_device *pdev)
+>  {
+> -	struct device_node *np = pdev->dev.of_node;
+>  	struct stm32f7_i2c_dev *i2c_dev;
+>  	const struct stm32f7_i2c_setup *setup;
+>  	struct resource *res;
+> -	u32 irq_error, irq_event, clk_rate, rise_time, fall_time;
+> +	u32 clk_rate, rise_time, fall_time;
+>  	struct i2c_adapter *adap;
+>  	struct reset_control *rst;
+>  	dma_addr_t phy_addr;
+> -	int ret;
+> +	int irq_error, irq_event, ret;
+>  
+>  	i2c_dev = devm_kzalloc(&pdev->dev, sizeof(*i2c_dev), GFP_KERNEL);
+>  	if (!i2c_dev)
+> @@ -1832,16 +1830,20 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+>  		return PTR_ERR(i2c_dev->base);
+>  	phy_addr = (dma_addr_t)res->start;
+>  
+> -	irq_event = irq_of_parse_and_map(np, 0);
+> -	if (!irq_event) {
+> -		dev_err(&pdev->dev, "IRQ event missing or invalid\n");
+> -		return -EINVAL;
+> +	irq_event = platform_get_irq(pdev, 0);
+> +	if (irq_event < 0) {
+> +		if (irq_event != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "Failed to get IRQ event: %d\n",
+> +				irq_event);
+> +		return irq_event;
+>  	}
+>  
+> -	irq_error = irq_of_parse_and_map(np, 1);
+> -	if (!irq_error) {
+> -		dev_err(&pdev->dev, "IRQ error missing or invalid\n");
+> -		return -EINVAL;
+> +	irq_error = platform_get_irq(pdev, 1);
+> +	if (irq_error < 0) {
+> +		if (irq_error != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "Failed to get IRQ error: %d\n",
+> +				irq_error);
+> +		return irq_error;
+>  	}
+>  
+>  	i2c_dev->clk = devm_clk_get(&pdev->dev, NULL);
+> 
