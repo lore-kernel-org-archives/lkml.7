@@ -2,97 +2,121 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F12C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8797C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C335520848
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:34:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RQmnmT+X"
+	by mail.kernel.org (Postfix) with ESMTP id B4D192082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 22:38:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558046295;
+	bh=O3aAna4OKLt2YXhiPy3mAYtt6yGXq9TXqns2IOQYDkc=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=rEr2F+ficpNMft0tuub+/U2AAPQ/sZaj6Vjh0aEdkVoc6iZ6FK4mSAkOMLI0NWhQO
+	 DQA4KYLLS3qPnO5nJNS35hVkQamcYolCm+2dDg894JB6FnLICew7DMM5nhNE/iO+6V
+	 39AQsBCcrs9biZ21KK5AV/Gu/B5Y8a2J2wViQFtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728298AbfEPWe1 (ORCPT
+        id S1728379AbfEPWiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 18:34:27 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41749 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726740AbfEPWe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 18:34:27 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 454mSJ2tnYz9s7h;
-        Fri, 17 May 2019 08:34:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1558046064;
-        bh=4WF9tFk6sqWOmZbS/IusM33ZL2tuh/ex1I2D3sr5cf4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=RQmnmT+Xm0upbU+cpgJxpoi+Dxnf+HSV/Q/Q8ZQleXT5OaCWnK9o9HgqgotfDqZko
-         whu2+Ww2KYzrdHxXmxLfn6SiLh7igCNmHq5kMprnq+okuxkF/+3cixWNE6fvyUe011
-         vL3QecZwDOvfJ6kx6+6HIJ87W3Mrtc/ezKRbQj3s81JjpO3D0POWqgsYkWAtra13Ek
-         3UnwdjnMjGpnS76BAbCIX8ZOKRQUBri297spM2hNBoOEOTEHGCUmsmK/1qmckgGMsL
-         mBXH4XYjn+O1aut1WYbKVQ0QimdkRYFZ8huqbrEFnatYEeEovMaD3KCKmvKbG9XtQM
-         cH41P4yZqXmUg==
-Date:   Fri, 17 May 2019 08:34:11 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>
-Subject: linux-next: Fixes tag needs some work in the sound-asoc tree
-Message-ID: <20190517083411.56ae5997@canb.auug.org.au>
+        Thu, 16 May 2019 18:38:14 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33111 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727333AbfEPWiO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 18:38:14 -0400
+Received: by mail-qt1-f194.google.com with SMTP id m32so5980319qtf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 15:38:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=EWXzXtWxkqwu0CPQRvvsDDIoqrmy6tr8WAbR6k8JzAM=;
+        b=OOMTDvz72lqgTdq6+PPpmUMakmyAIeVpw8XEX23d8uoFzmVfMdtjt79froGhRfX+YM
+         uFXNh6TiWVlLUJ/wE5RKoQsCnBmejeQRRdTyNdYF+W/vSKLBICViF4tebAieNf/g7+iW
+         6ucVXtPb6SXZsj3Ii6UBSYZRjq9zg5IujkPYnKYBjR4oHY043Lup1e8On4u8mWNQh1ml
+         TcdSVZBDZg9Xf77tMypcT5IhQwfkaK54Xd4cmalwRcT8W12qL92aWwo95GtlizpFjWFy
+         xlpRocna7WanAwG0m1EHLzBW5+VPksagCmMgQRjKrAMxaCvi6ySXd7BtV7jl208KYqYB
+         dIog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=EWXzXtWxkqwu0CPQRvvsDDIoqrmy6tr8WAbR6k8JzAM=;
+        b=ADYL+MplG084WpVmxTR1SH/rDs2fKdwb3vv1S2Mjx444I8jlZw7pBqok4h611HZXS4
+         VzSiDe7XyMc3X5apY9KNBbQmTbL+pxB1dkPy6yiT0mQ7s6iZhCu80KsH/Qa289+yLmW5
+         iyMiXSEHuvXOjznss6gtJr+byGNNei6BBB1Zbi3Z3VUgda5jt+H1v0MkyZjRWrtJWzzN
+         gCmNuIzYtk5l71EOlTKy3PIIEXXEJLFCg11RvPJDVApfkChNXrFktMCARqxj+umstddd
+         jwSVB1bfPcPJ1RTqCgX5rtKWkpqXKaRtJ+h6PcM3Jq9074h4X+5w8H2auVSkz8AeGosP
+         e6Pg==
+X-Gm-Message-State: APjAAAUtRSiMeJcnwbjsklxsc0LrSMPZqYSi9MM0IfnaLJxiULnIr2O4
+        XyqwYDeN2ZcY4PBhpYXiLbeCH05Y8KY=
+X-Google-Smtp-Source: APXvYqzFnJxEcraxL5XB4XkX9T/ORqzQd7xFl2GLz59pQfn9445Y8q3Cpu1mfyOh4VgYluYlqzN4fg==
+X-Received: by 2002:a0c:8ae9:: with SMTP id 38mr43048207qvw.157.1558046292944;
+        Thu, 16 May 2019 15:38:12 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::3:cd83])
+        by smtp.gmail.com with ESMTPSA id g206sm3169407qkb.75.2019.05.16.15.38.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 16 May 2019 15:38:12 -0700 (PDT)
+Date:   Thu, 16 May 2019 15:38:10 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: [GIT PULL] cgroup fix for v5.2-rc1
+Message-ID: <20190516223752.GE374014@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/wB_apB0HY22uBX=AvE.6aQR"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/wB_apB0HY22uBX=AvE.6aQR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello, Linus.
 
-Hi all,
+The cgroup2 freezer pulled in this cycle broke strace.  This pull
+request includes a workaround for the problem.  It's not a complete
+fix in that it may cause spurious frozen state flip-flops which is
+fairly minor.  Will push a full fix once it's ready.
 
-In commit
+Thanks.
 
-  b06c58c2a1ee ("ASoC: fsl_asrc: Fix the issue about unsupported rate")
+The following changes since commit 8c05f3b965da14e7790711026b32cc10a4c06213:
 
-Fixes tag
+  Merge tag 'for-linus' of git://git.armlinux.org.uk/~rmk/linux-arm (2019-05-16 09:41:54 -0700)
 
-  Fixes: fff6e03c7b65 ("ASoC: fsl_asrc: add support for 8-30kHz
+are available in the Git repository at:
 
-has these problem(s):
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.2-fixes
 
-  - Subject has leading but no trailing parentheses
-  - Subject has leading but no trailing quotes
+for you to fetch changes up to 05b289263772b0698589abc47771264a685cd365:
 
-Please do not split fixes tags over more that one line.
+  signal: unconditionally leave the frozen state in ptrace_stop() (2019-05-16 10:43:58 -0700)
 
---=20
-Cheers,
-Stephen Rothwell
+----------------------------------------------------------------
+Roman Gushchin (1):
+      signal: unconditionally leave the frozen state in ptrace_stop()
 
---Sig_/wB_apB0HY22uBX=AvE.6aQR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+ kernel/signal.c | 1 +
+ 1 file changed, 1 insertion(+)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/kernel/signal.c b/kernel/signal.c
+index c4dd66436fc5..a1eb44dc9ff5 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -2113,6 +2113,7 @@ static void ptrace_stop(int exit_code, int why, int clear_code, kernel_siginfo_t
+ 		preempt_enable_no_resched();
+ 		cgroup_enter_frozen();
+ 		freezable_schedule();
++		cgroup_leave_frozen(true);
+ 	} else {
+ 		/*
+ 		 * By the time we got the lock, our tracer went away.
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzd5WMACgkQAVBC80lX
-0GxAcgf/bi0GX7TE6eiZ1/Y+J09jxCdks7tcJ75ey1IVBxTooVZTYYg3SEKMIIBl
-X2rb5YozHithd6us+XAn58/KNe6z8fGZ9gnhqvISRNfLGb7qcamMwFvJoefs1lI6
-Kc+ZjMwGF2pChp+kQceShsiVLFTCZVs3DCeq4S7mHsHXUe9ZAPHfOFNTo/KvCEDM
-r9PBhzHKh7cFXDFQ63aI8fEDitPr2Dtf8CqAPykMrXHHXs0ckjProfTz/PFV8E1a
-kywKv9nru/tbdGMP5C1qLej4tegLU+JrBDDsCa0OEyDCKFulkAL5PLKD0+1deA/t
-YQ0XJDx/Q00fR9Ivx3odvOJqkFEIow==
-=nwN0
------END PGP SIGNATURE-----
-
---Sig_/wB_apB0HY22uBX=AvE.6aQR--
+-- 
+tejun
