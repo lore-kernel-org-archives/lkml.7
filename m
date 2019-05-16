@@ -2,110 +2,171 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B566AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF2BC04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 915D52082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D3F2082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:57:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="N/UXULef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbfEPO4f (ORCPT
+        id S1727445AbfEPO5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:56:35 -0400
-Received: from mx1.mailbox.org ([80.241.60.212]:43414 "EHLO mx1.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727658AbfEPO4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:56:34 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx1.mailbox.org (Postfix) with ESMTPS id 5BDF94CB10;
-        Thu, 16 May 2019 16:56:30 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
-        with ESMTP id 8d4PMuRmJICT; Thu, 16 May 2019 16:56:27 +0200 (CEST)
-Date:   Fri, 17 May 2019 00:56:07 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
+        Thu, 16 May 2019 10:57:23 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46250 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727507AbfEPO5W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 10:57:22 -0400
+Received: by mail-ed1-f68.google.com with SMTP id f37so5630936edb.13
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 07:57:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zu/DFoA8gurZzDl4gRPBRIxRpOpQplODrEJWOL6D0bE=;
+        b=N/UXULef7deCmqVDFFuhdRP+EE/HVwi/f8Xw9poIWaOZnQrgvAqVWfNExWGd8BOsJf
+         33o1T0+h2MUW+EUGMeLcQHkrt56q01RBA4HuUCpP1HhL+qbKYrx8/hsh8yLGkBvmD49R
+         8+PbTDBAKauvYkDZWTDJ6HTdkLHobcXK0IWVXwUdxsfwEzukIgCacfL1mkKlnh4BufAE
+         cmndL7Y+bK4GfjQMr6DNIgpxClV5ziCpFELiCjoMMwn4lPnJkr6DjWQm5xrMWvDy9MoN
+         9Tz8wKlpHlaRJ+TCJu0UoV0aK7s1NnsOhDY4lT/AMXF5dPM+Twab8dYUty/tvzJmCNb5
+         QTZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zu/DFoA8gurZzDl4gRPBRIxRpOpQplODrEJWOL6D0bE=;
+        b=eMHjqNNhjJlQWHlpXEICSxVRnpkednw5uUjwZXe3HVxRVY0WgPaLPgr6rBWMolMkhI
+         ET2X1EqOJxTF37xETtQ/sqyH86Wsnuvg+H+1QB7y2IxnzhcluWhOtu2W9QthjsoSi6Es
+         E3dGt6I7ploThd68jlnttQP493jUR1Cvu6/EVLW60PT+PNBMmGZm8tuP4qAPazPwDJQO
+         Jm6/Too8wqtk9fFPSCc5XIl8wW1gLqQjKZe/VRqYTjUyw8eD5XhjGL1E9mI4nmAFpITD
+         pRizB8dD+pB4QL6U3rNtZozpBqxjaK0SFFEY4cbZ7z25FTnoTBeuQApVQU5eZQWdo+/i
+         i48A==
+X-Gm-Message-State: APjAAAVghEAps/ykBe6YmTWjyzR5BXEnoY8bUZCvgXnpGBQ19pEdvB/G
+        FnZn9dkxBoSSGRHPVARq+HdSTw==
+X-Google-Smtp-Source: APXvYqwezzg+v8pMXQltznYwK70iO/BCmxK3JFRnM2IhYSWFpsND0L8cwVVVFYHGIM+owfjxdC4+8Q==
+X-Received: by 2002:aa7:c483:: with SMTP id m3mr21927311edq.161.1558018640584;
+        Thu, 16 May 2019 07:57:20 -0700 (PDT)
+Received: from brauner.io ([193.96.224.243])
+        by smtp.gmail.com with ESMTPSA id u11sm1122263ejr.48.2019.05.16.07.57.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 16 May 2019 07:57:20 -0700 (PDT)
+Date:   Thu, 16 May 2019 16:57:17 +0200
+From:   Christian Brauner <christian@brauner.io>
 To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Christian Brauner <christian@brauner.io>, jannh@google.com,
-        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, arnd@arndb.de,
-        akpm@linux-foundation.org, dhowells@redhat.com,
-        ebiederm@xmission.com, elena.reshetova@intel.com,
-        keescook@chromium.org, luto@amacapital.net, luto@kernel.org,
-        tglx@linutronix.de, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, joel@joelfernandes.org,
-        dancol@google.com, serge@hallyn.com,
+Cc:     jannh@google.com, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de, akpm@linux-foundation.org, cyphar@cyphar.com,
+        dhowells@redhat.com, ebiederm@xmission.com,
+        elena.reshetova@intel.com, keescook@chromium.org,
+        luto@amacapital.net, luto@kernel.org, tglx@linutronix.de,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        joel@joelfernandes.org, dancol@google.com, serge@hallyn.com,
         Geert Uytterhoeven <geert@linux-m68k.org>
 Subject: Re: [PATCH v1 1/2] pid: add pidfd_open()
-Message-ID: <20190516145607.j43xyj26k6l5vmbd@yavin>
+Message-ID: <20190516145716.ool2pzdqbfclnnqi@brauner.io>
 References: <20190516135944.7205-1-christian@brauner.io>
  <20190516142659.GB22564@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="asldj7bns6ry6jfo"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 In-Reply-To: <20190516142659.GB22564@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---asldj7bns6ry6jfo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2019-05-16, Oleg Nesterov <oleg@redhat.com> wrote:
+On Thu, May 16, 2019 at 04:27:00PM +0200, Oleg Nesterov wrote:
 > On 05/16, Christian Brauner wrote:
 > >
 > > With the introduction of pidfds through CLONE_PIDFD it is possible to
 > > created pidfds at process creation time.
->=20
+> 
 > Now I am wondering why do we need CLONE_PIDFD, you can just do
->=20
-> 	pid =3D fork();
+> 
+> 	pid = fork();
 > 	pidfd_open(pid);
 
-While the race window would be exceptionally short, there is the
-possibility that the child will die and their pid will be recycled
-before you do pidfd_open(). CLONE_PIDFD removes the race completely.
+CLONE_PIDFD eliminates the race at the source and let's us avoid two
+syscalls for the sake of one. That'll obviously matter even more when we
+enable CLONE_THREAD | CLONE_PIDFD.
+pidfd_open() is really just a necessity for anyone who does non-parent
+process management aka LMK or service managers.
+I also would like to reserve the ability at some point (e.g. with cloneX
+or sm) to be able to specify specific additional flags at process
+creation time that modify pidfd behavior.
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+> 
+> > +SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+> > +{
+> > +	int fd, ret;
+> > +	struct pid *p;
+> > +	struct task_struct *tsk;
+> > +
+> > +	if (flags)
+> > +		return -EINVAL;
+> > +
+> > +	if (pid <= 0)
+> > +		return -EINVAL;
+> > +
+> > +	p = find_get_pid(pid);
+> > +	if (!p)
+> > +		return -ESRCH;
+> > +
+> > +	ret = 0;
+> > +	rcu_read_lock();
+> > +	/*
+> > +	 * If this returns non-NULL the pid was used as a thread-group
+> > +	 * leader. Note, we race with exec here: If it changes the
+> > +	 * thread-group leader we might return the old leader.
+> > +	 */
+> > +	tsk = pid_task(p, PIDTYPE_TGID);
+> > +	if (!tsk)
+> > +		ret = -ESRCH;
+> > +	rcu_read_unlock();
+> > +
+> > +	fd = ret ?: pidfd_create(p);
+> > +	put_pid(p);
+> > +	return fd;
+> > +}
+> 
+> Looks correct, feel free to add Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+> 
+> But why do we need task_struct *tsk?
+> 
+> 	rcu_read_lock();
+> 	if (!pid_task(PIDTYPE_TGID))
+> 		ret = -ESRCH;
+> 	rcu_read_unlock();
 
---asldj7bns6ry6jfo
-Content-Type: application/pgp-signature; name="signature.asc"
+Sure, that's simpler. I'll rework and add your Reviewed-by.
 
------BEGIN PGP SIGNATURE-----
+> 
+> and in fact we do not even need rcu_read_lock(), we could do
+> 
+> 	// shut up rcu_dereference_check()
+> 	rcu_lock_acquire(&rcu_lock_map);
+> 	if (!pid_task(PIDTYPE_TGID))
+> 		ret = -ESRCH;
+> 	rcu_lock_release(&rcu_lock_map);
+> 
+> Well... I won't insist, but the comment about the race with exec looks a bit
+> confusing to me. It is true, but we do not care at all, we are not going to
+> use the task_struct returned by pid_task().
 
-iQIzBAABCAAdFiEEb6Gz4/mhjNy+aiz1Snvnv3Dem58FAlzdegcACgkQSnvnv3De
-m59otQ//cKLIBYu0NRjFiTL/Sy05MLpjdwxWtxgO+bUeTNYJNghTPgEJw+c+25c7
-tNoebC+JCGcAwO8ACNKnZDd3AuaNys1ZrFwNP7s9IcfOhPEHbcgD2OthKJUE5zZJ
-bXypZRJF+JWJYvn8yBVWpV0IKZwytCnY/yDelTQgcZnKQ2fnmPLEIDtYD3zAuab+
-IgkiYZ/oDsrgUIjkgiYs7gHSqU/cZEDI+dxAZawR2xuSOg7nLUlZ9mJmFWiUYwfL
-55w4joeTcTAlRUDEBzsJFemknqCEo+5qrX0C2qoTmZvdiaVqMQKmGiqYbxdTRC/o
-6lH2q4JQE2aYetbZ9Q9gl4fnFsbbAZBADAuAd8xV0rFWbCB+gkTdZS4G3MZ9baAm
-F0o5HofG0TvkzG5K81aRWlipjvnngapLm/xnSCrfe3rIi9Kw+u1+9jMr+1/BTN/5
-dsHnpAqWPt81mJdlzOSqhCfG7aLmJ/AQKvrC8h2JvtKema98vpK7hJhCbAUi+6lU
-1V9iCvnERBIOlmzkE67ZGtKRPXmPSKIxKgbvOhc1f9DAYQID20S+SNtRJcBpSwhH
-+YDqmefCAfqC6+JU/ZySLZrkuNOmoGuHP+T3ku0JyGn4xUayM1ZtKece3ILcafoi
-hRTQy5y2ax/fJ2EPN7o5qc8Oe8DMInckJzKsOvbMe43FldNhKzA=
-=SNKZ
------END PGP SIGNATURE-----
+Yeah, I can remove it.
 
---asldj7bns6ry6jfo--
+Thanks!
+Christian
