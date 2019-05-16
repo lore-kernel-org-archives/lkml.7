@@ -2,125 +2,144 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D46E3C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C42C04E87
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A630F20818
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DED0C20818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 04:34:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IJnJ+h9L"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="MeZbAWvq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfEPEcE (ORCPT
+        id S1726648AbfEPEeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 00:32:04 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54450 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725975AbfEPEcC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 00:32:02 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x4G4W046126411;
-        Wed, 15 May 2019 23:32:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1557981120;
-        bh=uEVCSV19YfhFYWQvWChkq8hxy9erGlYnGHbP6Twl6FI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=IJnJ+h9LVoELo+NxLX3Q+6P599BawnnbHM8YvNgByN7rszhmZtTPvzlmg6ginoTIP
-         Cx+xTK/u3hmAcPWARnRkRgmlACBCYB/K9uZ0ci4XIXrTlgdz1AGqbZihBekazkR/9U
-         3kofJUMXnlESY8OaAnqrM24ElzF6BIXH4Qbe/hws=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x4G4W0WY042242
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 15 May 2019 23:32:00 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 15
- May 2019 23:31:58 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 15 May 2019 23:31:59 -0500
-Received: from a0393675ula.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x4G4Vmio094857;
-        Wed, 15 May 2019 23:31:57 -0500
-From:   Keerthy <j-keerthy@ti.com>
-To:     <lee.jones@linaro.org>, <robh+dt@kernel.org>, <broonie@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <t-kristo@ti.com>, <j-keerthy@ti.com>
-Subject: [PATCH v2 3/3] regulator: lp87565: Add 4-phase lp87561 regulator support
-Date:   Thu, 16 May 2019 10:02:18 +0530
-Message-ID: <20190516043218.8222-4-j-keerthy@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190516043218.8222-1-j-keerthy@ti.com>
-References: <20190516043218.8222-1-j-keerthy@ti.com>
+        Thu, 16 May 2019 00:34:31 -0400
+Received: from mail-eopbgr1310105.outbound.protection.outlook.com ([40.107.131.105]:33523
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726223AbfEPEea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 00:34:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=P4PjJApANutG2feoU2XfuE62+oi9LiaMnBNhrtcvXb6yoTY/QK54o/qR1oyDh37JoSeC3/FBRffOxRrnCMBVUs1orzW55SCZgYpfcmYAMOIS2iWVI8z0nAwqxVVyCLBxuhFSySCIvyVTwNJl7oERNDca3Fqml1Qxc4Q4APxc1Dw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gekgEer85PRnACe5n2c19L+ylZ38usHU2iUz6thQoWo=;
+ b=GJbPsxDnZ7aGq99I6/jYupVC2JJqB8biP7L30D1QpLNd/hUG8DJqWOSB/m8BtntzAoy+/nl0HLQvjFqGMHNoqProXyql3NvtMyQwVp8cAr+SK9OdYnRFnB/+8UhKWZzG2ODkXKm8kai6gVSF2rHkB8zO1pzK8EHpIJ2Njz3oUOQ=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gekgEer85PRnACe5n2c19L+ylZ38usHU2iUz6thQoWo=;
+ b=MeZbAWvq4D5uWCE8Qt7AiqspVr2kqNdpzWYNh2qs0EHneXp/kJv0RZAA1S24TXcHeQSrsXzBcUIx7cINT+HeCkHZ0euUVvgNDNfllxPtuDooZsI0WrcVEUIDbp4txdSSsZ1b70p4jwoJthEnF02eyIhQzO9rfbwZHf0ooP5QfWQ=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0121.APCP153.PROD.OUTLOOK.COM (10.170.188.14) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.4; Thu, 16 May 2019 04:34:22 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::dc7e:e62f:efc9:8564]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::dc7e:e62f:efc9:8564%4]) with mapi id 15.20.1922.002; Thu, 16 May 2019
+ 04:34:22 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] hv_sock: Add support for delayed close
+Thread-Topic: [PATCH v2] hv_sock: Add support for delayed close
+Thread-Index: AdUKtaBXG33lHE0AQU2ynJ9GbZ74UwA3pTOg
+Date:   Thu, 16 May 2019 04:34:21 +0000
+Message-ID: <PU1P153MB01698261307593C5D58AAF4FBF0A0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <BN6PR21MB0465043C08E519774EE73E99C0090@BN6PR21MB0465.namprd21.prod.outlook.com>
+In-Reply-To: <BN6PR21MB0465043C08E519774EE73E99C0090@BN6PR21MB0465.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-16T04:34:19.9899242Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a52563af-82a7-4a5f-aed5-227da8f0af23;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:1760:3901:5c9:f1fc:42c6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 878d9d75-e326-4f7e-110d-08d6d9b7c4bb
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0121;
+x-ms-traffictypediagnostic: PU1P153MB0121:
+x-microsoft-antispam-prvs: <PU1P153MB012108AC43BD1EE0AA06E135BF0A0@PU1P153MB0121.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0039C6E5C5
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(366004)(136003)(346002)(396003)(39860400002)(189003)(199004)(54906003)(99286004)(476003)(110136005)(8676002)(7696005)(486006)(81156014)(8936002)(81166006)(76176011)(74316002)(55016002)(9686003)(10090500001)(305945005)(7736002)(14444005)(46003)(11346002)(256004)(229853002)(10290500003)(76116006)(446003)(8990500004)(5660300002)(53936002)(6246003)(25786009)(102836004)(186003)(6436002)(2906002)(52536014)(68736007)(73956011)(14454004)(66946007)(66476007)(33656002)(316002)(86612001)(6116002)(66556008)(64756008)(66446008)(71200400001)(71190400001)(4326008)(1511001)(6636002)(478600001)(6506007)(86362001)(22452003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0121;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: oqhACWNFxxZiYIW+nA8wLXX/zMq5cn/e1ZhI9G19K4BjR01siMhknvAYgxNNmI2Loc5KZpJhw0RxVNFrXrvAoTQ+k57ir3hOwTljPSD53fakYe5+MXfBt6T2e1HqVr6yI4+rlH+uUmjEc5uiZKHD4197ZY9ELMu8XJP8J1bam7OJ0d7OW94we7GQfJlcZo7PJdDesOcUi5w6ezXQeObx6TST5vFT9vIPyVxqL59E3L6QgJ9ltlum3bZTyoAVfI0Frf9PtAn0KkXJOQCAquEk3nWy6o1Kpab61lEln6jqhwLrXHLi6ZvYHibAem30+vKsamrIBH5T235IoKb4u4XzYYCpJFjwijzj6dPki5v3fzU4Rvevvo3Y6YPFiR748jwtGaBICdkNKAmcDP7/YBfyDbsrV0t9NH2NlfCKIlXw3HQ=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 878d9d75-e326-4f7e-110d-08d6d9b7c4bb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 04:34:21.8222
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LP8756x family has a single output 4-phase regulator
-configuration. Add support for the same. The control
-lies in the master buck which is buck0 for 4-phase
-configuration. Enable/disable/voltage set happen via
-buck0 registers.
+> From: Sunil Muthuswamy <sunilmut@microsoft.com>
+> Sent: Tuesday, May 14, 2019 5:56 PM
+> ...
+> +static bool hvs_close_lock_held(struct vsock_sock *vsk)
+>  {
+> ...
+> +	schedule_delayed_work(&vsk->close_work, HVS_CLOSE_TIMEOUT);
 
-Data Sheet: https://www.ti.com/lit/ds/symlink/lp87561-q1.pdf
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
+The patch looks good to me. Thank you, Sunil!
 
-Changes in v2:
+Next, we're going to remove the "channel->rescind" check in=20
+vmbus_hvsock_device_unregister() -- when doing that, IMO we need to
+fix a potential race revealed by the schedule_delayed_work() in this
+patch:
 
-  * Changed if/else block to switch statement.
+When hvs_close_timeout() finishes, the "sk" struct has been freed, but
+vmbus_onoffer_rescind() -> channel->chn_rescind_callback(), i.e.=20
+hvs_close_connection(), may be still running and referencing the "chan"
+and "sk" structs (), which should no longer be referenced when=20
+hvs_close_timeout() finishes, i.e. "get_per_channel_state(chan)" is no
+longer safe. The problem is: currently there is no sync mechanism
+between vmbus_onoffer_rescind() and hvs_close_timeout().
 
- drivers/regulator/lp87565-regulator.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+The race is a real issue only after we remove the "channel->rescind"
+in vmbus_hvsock_device_unregister().
 
-diff --git a/drivers/regulator/lp87565-regulator.c b/drivers/regulator/lp87565-regulator.c
-index 81eb4b890c0c..af00d1ffcf33 100644
---- a/drivers/regulator/lp87565-regulator.c
-+++ b/drivers/regulator/lp87565-regulator.c
-@@ -153,6 +153,12 @@ static const struct lp87565_regulator regulators[] = {
- 			  LP87565_REG_BUCK2_CTRL_1,
- 			  LP87565_BUCK_CTRL_1_EN, 3230,
- 			  buck0_1_2_3_ranges, LP87565_REG_BUCK2_CTRL_2),
-+	LP87565_REGULATOR("BUCK3210", LP87565_BUCK_3210, "buck3210",
-+			  lp87565_buck_ops, 256, LP87565_REG_BUCK0_VOUT,
-+			  LP87565_BUCK_VSET, LP87565_REG_BUCK0_CTRL_1,
-+			  LP87565_BUCK_CTRL_1_EN |
-+			  LP87565_BUCK_CTRL_1_FPWM_MP_0_2, 3230,
-+			  buck0_1_2_3_ranges, LP87565_REG_BUCK0_CTRL_2),
- };
- 
- static int lp87565_regulator_probe(struct platform_device *pdev)
-@@ -169,9 +175,18 @@ static int lp87565_regulator_probe(struct platform_device *pdev)
- 	config.driver_data = lp87565;
- 	config.regmap = lp87565->regmap;
- 
--	if (lp87565->dev_type == LP87565_DEVICE_TYPE_LP87565_Q1) {
-+	switch (lp87565->dev_type) {
-+	case LP87565_DEVICE_TYPE_LP87565_Q1:
- 		min_idx = LP87565_BUCK_10;
- 		max_idx = LP87565_BUCK_23;
-+		break;
-+	case LP87565_DEVICE_TYPE_LP87561_Q1:
-+		min_idx = LP87565_BUCK_3210;
-+		max_idx = LP87565_BUCK_3210;
-+	default:
-+		dev_err(lp87565->dev, "Invalid lp config %d\n",
-+			lp87565->dev_type);
-+		return -EINVAL;
- 	}
- 
- 	for (i = min_idx; i <= max_idx; i++) {
--- 
-2.17.1
+I guess we need to introduce a new single-threaded workqueue in the
+vmbus driver, and offload both vmbus_onoffer_rescind() and=20
+hvs_close_timeout() onto the new workqueue.
+
+Thanks,
+-- Dexuan
 
