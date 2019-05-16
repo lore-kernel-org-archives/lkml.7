@@ -2,115 +2,71 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 806E9C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47073C04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5192220815
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F5EF20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:56:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mde2YlhG"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="eY4VRSSe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbfEPQzh (ORCPT
+        id S1727274AbfEPQ45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:55:37 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34997 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726317AbfEPQzh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 12:55:37 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t87so2164322pfa.2;
-        Thu, 16 May 2019 09:55:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EAZuaSOFLPgJxOfkuE/RETBPBEFS9w8pXwe5DKxj3jc=;
-        b=Mde2YlhG7yTq8WVVRYWPZKNPot9dDb1OTgQhm/zFDYDcGEXigQoKN8OkBi46VzNrKy
-         gT8PkyM45K9GvYcErJxIbJkUQsREpqAEMDj41efjuvc61FT9Wrjsd/H4MK92+pP6BMh9
-         B0tUFeM9aobU6BIvdQ7aHU1X7fWv0IAqZ49YslhHpHWtaJ+FTEaf4oZIiWRi72CZsoVT
-         cwh5V3MK1XSDSxl5WkV2VLLWAxKJgGux2ejDUj9pqErha4IcqJvlYEEYZK5BpKnAgKKR
-         1bBPXp3j6A9xe2efxc6Pk/wQJayXvE2cTBHRycki3fUIWSXrN0+Xv0c8rJpuiX8xcSPL
-         qKog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EAZuaSOFLPgJxOfkuE/RETBPBEFS9w8pXwe5DKxj3jc=;
-        b=ay38/lMsIKoRs6LQ4o60o2G1Z2f7MjY8RQMrkb66e/GvR16EiaaWz0zcN0LtFQKcKd
-         VJTATk9K5a0spwjLben19PMiHQ0YZUhdicDMzOSI7iylQ7Zk90SZ44NlUZSYRWtFoLg0
-         zYwqAEJiZpfeyry0x3ylw+s9VZy9ySGkgRPzhJL8lKhnC33n5HPBntDoiwhXoF++cs2Y
-         DBaLP98ObfCb99Wxc1EcThIJy9nhIlUzz6VJ4tLXrwOPTcQKXh8Hb3UdmPZSdDWGLYui
-         RjVGHXCaMu0ouifwTdQmauFmdNqC4apKqibnyfF/cSfnNQch7veK+ERTykYd5l5bYaD2
-         F2yw==
-X-Gm-Message-State: APjAAAXm5oMji4yZcjZguEGyfXMv3NdhUNCFQBF36VUztVljF+QhHEXG
-        CdDp1fHy04d0pWGTJokaJ0Tr9cTl
-X-Google-Smtp-Source: APXvYqx7/fR+YFTBealEB1eVL6PMrU8y84ftgQoiHQ9J3my7pDkqFDmJGluga/cEErBpiNrRP8iZSA==
-X-Received: by 2002:a62:164f:: with SMTP id 76mr56070014pfw.172.1558025736036;
-        Thu, 16 May 2019 09:55:36 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q142sm2615058pfc.27.2019.05.16.09.55.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 09:55:34 -0700 (PDT)
-Subject: Re: [GIT PULL] Thermal-SoC management changes for v5.2-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     Rui Zhang <rui.zhang@intel.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190516044313.GA17751@localhost.localdomain>
- <CAHk-=wiaO_8SiEB9QM3vOTniiT67K6CBH0uHJ82-Dp_+6kxH3g@mail.gmail.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <cd06dc28-1076-259a-ba94-bad116771da8@roeck-us.net>
-Date:   Thu, 16 May 2019 09:55:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 16 May 2019 12:56:57 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:48272 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726317AbfEPQ44 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 12:56:56 -0400
+Received: from zn.tnic (p200300EC2F0D4A00F9BFCFFD54267A47.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:4a00:f9bf:cffd:5426:7a47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 7D0301EC0283;
+        Thu, 16 May 2019 18:56:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1558025815;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=iXVl9jF+eNO8KIWfnG/VPhBPxmZYEekynfMzOePeuiQ=;
+        b=eY4VRSSeqxBO4T0Vi8TtP04r08OdJTQWaC2m+wwU4jMfNXi7G+nU+q/x10j8sPQaiamObI
+        u6XrZPlf8AvBBmJsQudYxeuXFtUM11G780IpDFZEj07O0sbNu4e8OWUphBnvTran/+2SH1
+        oiYonk3pVMdeRrOC+VweC1ZmabycX2k=
+Date:   Thu, 16 May 2019 18:56:48 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Message-ID: <20190516165648.GB21857@zn.tnic>
+References: <20190430203206.104163-1-Yazen.Ghannam@amd.com>
+ <20190430203206.104163-6-Yazen.Ghannam@amd.com>
+ <20190516155202.GA11517@agluck-desk>
+ <SN6PR12MB26397B30A120E3426184727FF80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiaO_8SiEB9QM3vOTniiT67K6CBH0uHJ82-Dp_+6kxH3g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <SN6PR12MB26397B30A120E3426184727FF80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/16/19 8:07 AM, Linus Torvalds wrote:
-> On Wed, May 15, 2019 at 9:43 PM Eduardo Valentin <edubezval@gmail.com> wrote:
->>
->> - thermal core has a new devm_* API for registering cooling devices, thanks to Guenter R.
->>    I took the entire series, that is why you see changes on drivers/hwmon in this pull.
-> 
-> This clashed badly with commit 6b1ec4789fb1 ("hwmon: (pwm-fan) Add RPM
-> support via external interrupt"), which added a timer to the pwm-fan
-> handling.
-> 
-> In particular, that timer now needed the same kind of cleanup changes,
-> and I'd like you guys (particularly Guenther, who was involved on both
-> sides) to double-check my merge.
-> 
-> The way I solved it was to just make the pwm_fan_pwm_disable()
-> callback do both the pwm_diable() _and_ the del_timer_sync() on the
-> new timer. That seemed to be the simplest solution that meshed with
-> the new devm cleanup model, but while I build-tested the result, I
-> obviously did no actual use testing. And maybe there's some reason why
-> that approach is flawed.
-> 
-> Guenther?
+On Thu, May 16, 2019 at 04:14:14PM +0000, Ghannam, Yazen wrote:
+> I can put a vendor check on the read. Is that sufficient?
 
-Sorry for the trouble. Looks like I did too much cleanup this time around.
+Or we can drop this patch. Remind me again pls why do we need it?
 
-Looks ok. I'll have to send a follow-up patch - we should check the
-return value of devm_add_action_or_reset(). No idea why I didn't do that
-in this series. I'll do that after the commit window closes (and after
-I am back from vacation).
+-- 
+Regards/Gruss,
+    Boris.
 
-Thanks a lot for sorting this out.
-
-Guenter
+Good mailing practices for 400: avoid top-posting and trim the reply.
