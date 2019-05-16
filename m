@@ -2,102 +2,90 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BF9C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E75B8C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D177220881
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:22:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB59E20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbfEPNWm (ORCPT
+        id S1727700AbfEPNWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:22:42 -0400
-Received: from foss.arm.com ([217.140.101.70]:45626 "EHLO foss.arm.com"
+        Thu, 16 May 2019 09:22:55 -0400
+Received: from foss.arm.com ([217.140.101.70]:45662 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727648AbfEPNWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:22:34 -0400
+        id S1726955AbfEPNWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:22:54 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E62A1715;
-        Thu, 16 May 2019 06:22:34 -0700 (PDT)
-Received: from e121650-lin.cambridge.arm.com (e121650-lin.cambridge.arm.com [10.1.196.108])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C43773F703;
-        Thu, 16 May 2019 06:22:32 -0700 (PDT)
-From:   Raphael Gault <raphael.gault@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
-        will.deacon@arm.com, acme@kernel.org, mark.rutland@arm.com,
-        Raphael Gault <raphael.gault@arm.com>
-Subject: [PATCH 6/6] Documentation: arm64: Document PMU counters access from userspace
-Date:   Thu, 16 May 2019 14:21:48 +0100
-Message-Id: <20190516132148.10085-7-raphael.gault@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190516132148.10085-1-raphael.gault@arm.com>
-References: <20190516132148.10085-1-raphael.gault@arm.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 708481715;
+        Thu, 16 May 2019 06:22:54 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A0F53F703;
+        Thu, 16 May 2019 06:22:52 -0700 (PDT)
+Date:   Thu, 16 May 2019 14:22:50 +0100
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Quentin Perret <quentin.perret@arm.com>
+Cc:     douglas.raillard@arm.com, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
+        dietmar.eggemann@arm.com
+Subject: Re: [RFC PATCH 1/7] PM: Introduce em_pd_get_higher_freq()
+Message-ID: <20190516132250.hedtianse7rnk3wq@e110439-lin>
+References: <20190508174301.4828-1-douglas.raillard@arm.com>
+ <20190508174301.4828-2-douglas.raillard@arm.com>
+ <20190516124200.opxczohjelhvrzmo@e110439-lin>
+ <20190516130148.uhq55ptut47usnae@queper01-lin>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190516130148.uhq55ptut47usnae@queper01-lin>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a documentation file to describe the access to the pmu hardware
-counters from userspace
+On 16-May 14:01, Quentin Perret wrote:
+> On Thursday 16 May 2019 at 13:42:00 (+0100), Patrick Bellasi wrote:
+> > > +static inline unsigned long em_pd_get_higher_freq(struct em_perf_domain *pd,
+> > > +	unsigned long min_freq, unsigned long cost_margin)
+> > > +{
+> > > +	unsigned long max_cost = 0;
+> > > +	struct em_cap_state *cs;
+> > > +	int i;
+> > > +
+> > > +	if (!pd)
+> > > +		return min_freq;
+> > > +
+> > > +	/* Compute the maximum allowed cost */
+> > > +	for (i = 0; i < pd->nr_cap_states; i++) {
+> > > +		cs = &pd->table[i];
+> > > +		if (cs->frequency >= min_freq) {
+> > > +			max_cost = cs->cost + (cs->cost * cost_margin) / 1024;
+> >                                                                          ^^^^
+> > ... end here we should probably better use SCHED_CAPACITY_SCALE
+> > instead of hard-coding in values, isn't it?
+> 
+> I'm not sure to agree. This isn't part of the scheduler per se, and the
+> cost thing isn't in units of capacity, but in units of power, so I don't
+> think SCHED_CAPACITY_SCALE is correct here.
 
-Signed-off-by: Raphael Gault <raphael.gault@arm.com>
----
- .../arm64/pmu_counter_user_access.txt         | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/arm64/pmu_counter_user_access.txt
+Right, I get the units do not match and it would not be elegant to use
+it here...
 
-diff --git a/Documentation/arm64/pmu_counter_user_access.txt b/Documentation/arm64/pmu_counter_user_access.txt
-new file mode 100644
-index 000000000000..bccf5edbf7f5
---- /dev/null
-+++ b/Documentation/arm64/pmu_counter_user_access.txt
-@@ -0,0 +1,42 @@
-+Access to PMU hardware counter from userspace
-+=============================================
-+
-+Overview
-+--------
-+The perf user-space tool relies on the PMU to monitor events. It offers an
-+abstraction layer over the hardware counters since the underlying
-+implementation is cpu-dependent.
-+Arm64 allows userspace tools to have access to the registers storing the
-+hardware counters' values directly.
-+
-+This targets specifically self-monitoring tasks in order to reduce the overhead
-+by directly accessing the registers without having to go through the kernel.
-+
-+How-to
-+------
-+The focus is set on the armv8 pmuv3 which makes sure that the access to the pmu
-+registers is enable and that the userspace have access to the relevent
-+information in order to use them. 
-+
-+In order to have access to the hardware counter it is necessary to open the event
-+using the perf tool interface: the sys_perf_event_open syscall returns a fd which
-+can subsequently be used with the mmap syscall in order to retrieve a page of memory
-+containing information about the event.
-+The PMU driver uses this page to expose to the user the hardware counter's
-+index. Using this index enables the user to access the PMU registers using the
-+`mrs` instruction.
-+
-+Have a look `at tools/perf/arch/arm64/tests/user-events.c` for an example. It can be
-+run using the perf tool to check that the access to the registers works
-+correctly from userspace:
-+
-+./perf test -v
-+
-+About chained events
-+--------------------
-+When the user requests for an event to be counted on 64 bits, two hardware
-+counters are used and need to be combined to retrieve the correct value:
-+
-+val = read_counter(idx);
-+if ((event.attr.config1 & 0x1))
-+	val = (val << 32) | read_counter(idx - 1);
+> But I agree these hard coded values (that one, and the 512 in one of the
+> following patches) could use some motivation :-)
+
+... ultimately SCHED_CAPACITY_SCALE is just SCHED_FIXEDPOINT_SCALE,
+which is adimensional. Perhaps we should use that or yet another alias
+for the same.
+
+> Thanks,
+> Quentin
+
 -- 
-2.17.1
+#include <best/regards.h>
 
+Patrick Bellasi
