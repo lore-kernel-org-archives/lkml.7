@@ -4,118 +4,244 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E17C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1F1C04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6030E20862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E91E12087B
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 07:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726902AbfEPHsH (ORCPT
+        id S1726778AbfEPHr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 03:48:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51626 "EHLO mx1.redhat.com"
+        Thu, 16 May 2019 03:47:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37458 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726864AbfEPHsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 03:48:03 -0400
+        id S1726738AbfEPHrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 03:47:55 -0400
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8E4D33082135;
-        Thu, 16 May 2019 07:48:03 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id E9F3630001EB;
+        Thu, 16 May 2019 07:47:54 +0000 (UTC)
 Received: from hp-dl380pg8-02.lab.eng.pek2.redhat.com (hp-dl380pg8-02.lab.eng.pek2.redhat.com [10.73.8.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3CA365D6A9;
-        Thu, 16 May 2019 07:48:00 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 60187983F;
+        Thu, 16 May 2019 07:47:52 +0000 (UTC)
 From:   Jason Wang <jasowang@redhat.com>
 To:     mst@redhat.com, jasowang@redhat.com,
         virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     pbonzini@redhat.com, stefanha@redhat.com
-Subject: [PATCH net 4/4] vhost: scsi: add weight support
-Date:   Thu, 16 May 2019 03:47:42 -0400
-Message-Id: <1557992862-27320-5-git-send-email-jasowang@redhat.com>
+Subject: [PATCH net 1/4] vhost: introduce vhost_exceeds_weight()
+Date:   Thu, 16 May 2019 03:47:39 -0400
+Message-Id: <1557992862-27320-2-git-send-email-jasowang@redhat.com>
 In-Reply-To: <1557992862-27320-1-git-send-email-jasowang@redhat.com>
 References: <1557992862-27320-1-git-send-email-jasowang@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 16 May 2019 07:48:03 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 16 May 2019 07:47:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch will check the weight and exit the loop if we exceeds the
-weight. This is useful for preventing scsi kthread from hogging cpu
-which is guest triggerable.
+We used to have vhost_exceeds_weight() for vhost-net to:
 
-This addresses CVE-2019-3900.
+- prevent vhost kthread from hogging the cpu
+- balance the time spent between TX and RX
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Stefan Hajnoczi <stefanha@redhat.com>
-Fixes: 057cbf49a1f0 ("tcm_vhost: Initial merge for vhost level target fabric driver")
+This function could be useful for vsock and scsi as well. So move it
+to vhost.c. Device must specify a weight which counts the number of
+requests, or it can also specific a byte_weight which counts the
+number of bytes that has been processed.
+
 Signed-off-by: Jason Wang <jasowang@redhat.com>
 ---
- drivers/vhost/scsi.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/vhost/net.c   | 22 ++++++----------------
+ drivers/vhost/scsi.c  |  9 ++++++++-
+ drivers/vhost/vhost.c | 20 +++++++++++++++++++-
+ drivers/vhost/vhost.h |  5 ++++-
+ drivers/vhost/vsock.c | 12 +++++++++++-
+ 5 files changed, 48 insertions(+), 20 deletions(-)
 
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index df51a35..061a06d 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -604,12 +604,6 @@ static size_t init_iov_iter(struct vhost_virtqueue *vq, struct iov_iter *iter,
+ 	return iov_iter_count(iter);
+ }
+ 
+-static bool vhost_exceeds_weight(int pkts, int total_len)
+-{
+-	return total_len >= VHOST_NET_WEIGHT ||
+-	       pkts >= VHOST_NET_PKT_WEIGHT;
+-}
+-
+ static int get_tx_bufs(struct vhost_net *net,
+ 		       struct vhost_net_virtqueue *nvq,
+ 		       struct msghdr *msg,
+@@ -845,10 +839,8 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
+ 		vq->heads[nvq->done_idx].id = cpu_to_vhost32(vq, head);
+ 		vq->heads[nvq->done_idx].len = 0;
+ 		++nvq->done_idx;
+-		if (vhost_exceeds_weight(++sent_pkts, total_len)) {
+-			vhost_poll_queue(&vq->poll);
++		if (vhost_exceeds_weight(vq, ++sent_pkts, total_len))
+ 			break;
+-		}
+ 	}
+ 
+ 	vhost_tx_batch(net, nvq, sock, &msg);
+@@ -951,10 +943,9 @@ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
+ 		else
+ 			vhost_zerocopy_signal_used(net, vq);
+ 		vhost_net_tx_packet(net);
+-		if (unlikely(vhost_exceeds_weight(++sent_pkts, total_len))) {
+-			vhost_poll_queue(&vq->poll);
++		if (unlikely(vhost_exceeds_weight(vq, ++sent_pkts,
++						  total_len)))
+ 			break;
+-		}
+ 	}
+ }
+ 
+@@ -1239,10 +1230,8 @@ static void handle_rx(struct vhost_net *net)
+ 			vhost_log_write(vq, vq_log, log, vhost_len,
+ 					vq->iov, in);
+ 		total_len += vhost_len;
+-		if (unlikely(vhost_exceeds_weight(++recv_pkts, total_len))) {
+-			vhost_poll_queue(&vq->poll);
++		if (unlikely(vhost_exceeds_weight(vq, ++recv_pkts, total_len)))
+ 			goto out;
+-		}
+ 	}
+ 	if (unlikely(busyloop_intr))
+ 		vhost_poll_queue(&vq->poll);
+@@ -1338,7 +1327,8 @@ static int vhost_net_open(struct inode *inode, struct file *f)
+ 		vhost_net_buf_init(&n->vqs[i].rxq);
+ 	}
+ 	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX,
+-		       UIO_MAXIOV + VHOST_NET_BATCH);
++		       UIO_MAXIOV + VHOST_NET_BATCH,
++		       VHOST_NET_WEIGHT, VHOST_NET_PKT_WEIGHT);
+ 
+ 	vhost_poll_init(n->poll + VHOST_NET_VQ_TX, handle_tx_net, EPOLLOUT, dev);
+ 	vhost_poll_init(n->poll + VHOST_NET_VQ_RX, handle_rx_net, EPOLLIN, dev);
 diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
-index d830579..3a59f47 100644
+index 618fb64..d830579 100644
 --- a/drivers/vhost/scsi.c
 +++ b/drivers/vhost/scsi.c
-@@ -918,7 +918,7 @@ static void vhost_scsi_submission_work(struct work_struct *work)
- 	struct iov_iter in_iter, prot_iter, data_iter;
- 	u64 tag;
- 	u32 exp_data_len, data_direction;
--	int ret, prot_bytes;
-+	int ret, prot_bytes, c = 0;
- 	u16 lun;
- 	u8 task_attr;
- 	bool t10_pi = vhost_has_feature(vq, VIRTIO_SCSI_F_T10_PI);
-@@ -938,7 +938,7 @@ static void vhost_scsi_submission_work(struct work_struct *work)
+@@ -57,6 +57,12 @@
+ #define VHOST_SCSI_PREALLOC_UPAGES 2048
+ #define VHOST_SCSI_PREALLOC_PROT_SGLS 2048
  
- 	vhost_disable_notify(&vs->dev, vq);
++/* Max number of requests before requeueing the job.
++ * Using this limit prevents one virtqueue from starving others with
++ * request.
++ */
++#define VHOST_SCSI_WEIGHT 256
++
+ struct vhost_scsi_inflight {
+ 	/* Wait for the flush operation to finish */
+ 	struct completion comp;
+@@ -1622,7 +1628,8 @@ static int vhost_scsi_open(struct inode *inode, struct file *f)
+ 		vqs[i] = &vs->vqs[i].vq;
+ 		vs->vqs[i].vq.handle_kick = vhost_scsi_handle_kick;
+ 	}
+-	vhost_dev_init(&vs->dev, vqs, VHOST_SCSI_MAX_VQ, UIO_MAXIOV);
++	vhost_dev_init(&vs->dev, vqs, VHOST_SCSI_MAX_VQ, UIO_MAXIOV,
++		       VHOST_SCSI_WEIGHT, 0);
  
--	for (;;) {
-+	do {
- 		ret = vhost_scsi_get_desc(vs, vq, &vc);
- 		if (ret)
- 			goto err;
-@@ -1118,7 +1118,7 @@ static void vhost_scsi_submission_work(struct work_struct *work)
- 			break;
- 		else if (ret == -EIO)
- 			vhost_scsi_send_bad_target(vs, vq, vc.head, vc.out);
--	}
-+	} while (likely(!vhost_exceeds_weight(vq, ++c, 0)));
- out:
- 	mutex_unlock(&vq->mutex);
+ 	vhost_scsi_init_inflight(vs, NULL);
+ 
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index 351af88..290d6e5 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -413,8 +413,24 @@ static void vhost_dev_free_iovecs(struct vhost_dev *dev)
+ 		vhost_vq_free_iovecs(dev->vqs[i]);
  }
-@@ -1177,7 +1177,7 @@ static void vhost_scsi_submission_work(struct work_struct *work)
- 	} v_req;
- 	struct vhost_scsi_ctx vc;
- 	size_t typ_size;
--	int ret;
-+	int ret, c = 0;
  
- 	mutex_lock(&vq->mutex);
- 	/*
-@@ -1191,7 +1191,7 @@ static void vhost_scsi_submission_work(struct work_struct *work)
++bool vhost_exceeds_weight(struct vhost_virtqueue *vq,
++			  int pkts, int total_len)
++{
++	struct vhost_dev *dev = vq->dev;
++
++	if ((dev->byte_weight && total_len >= dev->byte_weight) ||
++	    pkts >= dev->weight) {
++		vhost_poll_queue(&vq->poll);
++		return true;
++	}
++
++	return false;
++}
++EXPORT_SYMBOL_GPL(vhost_exceeds_weight);
++
+ void vhost_dev_init(struct vhost_dev *dev,
+-		    struct vhost_virtqueue **vqs, int nvqs, int iov_limit)
++		    struct vhost_virtqueue **vqs, int nvqs,
++		    int iov_limit, int weight, int byte_weight)
+ {
+ 	struct vhost_virtqueue *vq;
+ 	int i;
+@@ -428,6 +444,8 @@ void vhost_dev_init(struct vhost_dev *dev,
+ 	dev->mm = NULL;
+ 	dev->worker = NULL;
+ 	dev->iov_limit = iov_limit;
++	dev->weight = weight;
++	dev->byte_weight = byte_weight;
+ 	init_llist_head(&dev->work_list);
+ 	init_waitqueue_head(&dev->wait);
+ 	INIT_LIST_HEAD(&dev->read_list);
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index 9490e7d..27a78a9 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -171,10 +171,13 @@ struct vhost_dev {
+ 	struct list_head pending_list;
+ 	wait_queue_head_t wait;
+ 	int iov_limit;
++	int weight;
++	int byte_weight;
+ };
  
- 	vhost_disable_notify(&vs->dev, vq);
++bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int total_len);
+ void vhost_dev_init(struct vhost_dev *, struct vhost_virtqueue **vqs,
+-		    int nvqs, int iov_limit);
++		    int nvqs, int iov_limit, int weight, int byte_weight);
+ long vhost_dev_set_owner(struct vhost_dev *dev);
+ bool vhost_dev_has_owner(struct vhost_dev *dev);
+ long vhost_dev_check_owner(struct vhost_dev *);
+diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+index bb5fc0e..47c6d4d 100644
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -21,6 +21,14 @@
+ #include "vhost.h"
  
--	for (;;) {
-+	do {
- 		ret = vhost_scsi_get_desc(vs, vq, &vc);
- 		if (ret)
- 			goto err;
-@@ -1270,7 +1270,7 @@ static void vhost_scsi_submission_work(struct work_struct *work)
- 			break;
- 		else if (ret == -EIO)
- 			vhost_scsi_send_bad_target(vs, vq, vc.head, vc.out);
--	}
-+	} while (likely(!vhost_exceeds_weight(vq, ++c, 0)));
- out:
- 	mutex_unlock(&vq->mutex);
- }
+ #define VHOST_VSOCK_DEFAULT_HOST_CID	2
++/* Max number of bytes transferred before requeueing the job.
++ * Using this limit prevents one virtqueue from starving others. */
++#define VHOST_VSOCK_WEIGHT 0x80000
++/* Max number of packets transferred before requeueing the job.
++ * Using this limit prevents one virtqueue from starving others with
++ * small pkts.
++ */
++#define VHOST_VSOCK_PKT_WEIGHT 256
+ 
+ enum {
+ 	VHOST_VSOCK_FEATURES = VHOST_FEATURES,
+@@ -531,7 +539,9 @@ static int vhost_vsock_dev_open(struct inode *inode, struct file *file)
+ 	vsock->vqs[VSOCK_VQ_TX].handle_kick = vhost_vsock_handle_tx_kick;
+ 	vsock->vqs[VSOCK_VQ_RX].handle_kick = vhost_vsock_handle_rx_kick;
+ 
+-	vhost_dev_init(&vsock->dev, vqs, ARRAY_SIZE(vsock->vqs), UIO_MAXIOV);
++	vhost_dev_init(&vsock->dev, vqs, ARRAY_SIZE(vsock->vqs),
++		       UIO_MAXIOV, VHOST_VSOCK_PKT_WEIGHT,
++		       VHOST_VSOCK_WEIGHT);
+ 
+ 	file->private_data = vsock;
+ 	spin_lock_init(&vsock->send_pkt_list_lock);
 -- 
 1.8.3.1
 
