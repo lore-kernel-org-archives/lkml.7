@@ -2,302 +2,168 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3ADC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 23:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC717C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 23:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 137FE2070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 23:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B3BF2070D
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 23:32:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I+GUx0x1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbfEPXat (ORCPT
+        id S1727436AbfEPXcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 19:30:49 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:51720 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727324AbfEPXaq (ORCPT
+        Thu, 16 May 2019 19:32:41 -0400
+Received: from mail-it1-f176.google.com ([209.85.166.176]:50269 "EHLO
+        mail-it1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726857AbfEPXck (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 19:30:46 -0400
-Received: from Internal Mail-Server by MTLPINE2 (envelope-from parav@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 17 May 2019 02:30:42 +0300
-Received: from sw-mtx-036.mtx.labs.mlnx (sw-mtx-036.mtx.labs.mlnx [10.12.150.149])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id x4GNUZ9i029611;
-        Fri, 17 May 2019 02:30:41 +0300
-From:   Parav Pandit <parav@mellanox.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cohuck@redhat.com, kwankhede@nvidia.com, alex.williamson@redhat.com
-Cc:     cjia@nvidia.com, parav@mellanox.com
-Subject: [PATCHv3 3/3] vfio/mdev: Synchronize device create/remove with parent removal
-Date:   Thu, 16 May 2019 18:30:34 -0500
-Message-Id: <20190516233034.16407-4-parav@mellanox.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190516233034.16407-1-parav@mellanox.com>
-References: <20190516233034.16407-1-parav@mellanox.com>
+        Thu, 16 May 2019 19:32:40 -0400
+Received: by mail-it1-f176.google.com with SMTP id i10so9086052ite.0;
+        Thu, 16 May 2019 16:32:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EELhI/1e5V7Lj/m7+7oMKAGzKmAB6peQ8kc65u1SZho=;
+        b=I+GUx0x1iqM3SWzh79YpHAqXOd8eK4Y/94PYf5n/KVbRWuPKdsI6KCcA9FKK0nNTiZ
+         jalrCxeq7GM0htHcdDElsId5zkiOwVv2km4OkyOm7araqHoUXUjyH11jJKRrqFRjNH62
+         jfURmRwNxtATEzdXW/7wOHkNiq6GlfGwvzH4BebQAFtclP3HxUXFW8QXFTi+AGWsDcD9
+         3qCMiUBQ91xBxiHZU+LpKwHg3HJ6TUCrVxhV9yF2SvHjkm3Nj2h2TlAqSbkZs2lZG063
+         fC2S/YREoKkVXz0lZzsr0qvTcj9Xq/mPLW6arzvYrio5ht4LBDVK+5JbSCmGCzf4YaSW
+         rmsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EELhI/1e5V7Lj/m7+7oMKAGzKmAB6peQ8kc65u1SZho=;
+        b=T7DnpkUe0VnSpE6X8a9b6Abm8mD47z7zDBzGiTtNmYuc3brNsGr1Py9UQ4vIbIEHps
+         5Xp+mmzc5cls/AVsoCFlOfXPZkVFsSHTaQMiIntVyo/xzQjsGIbc1eGrevaFQIOcTl2y
+         E2a+QWgRDHkiihXp/zkLhWnb8uNsqGVjIfdLX0l27WlCw4p6xPGZks1LbujUjmfM12M9
+         kQADCAYqVZue1gVtrOGLFA1x+qigQt4qJ4XuNF5ST7gydsBSpOuxPs4gv2w6f3ODi11+
+         MOxu+vIudOBVOJopb45Qhq7DH3RANukvXXNZM87w3SN5s68t24HF7Io3lZCRszArA22b
+         ARAw==
+X-Gm-Message-State: APjAAAVYa/mJz4XuzgNJyAbXP5vaGgT6c2YseNDkvgagGChGt6N6KyZo
+        XBdNP2VH/bMSb0sOS07zXtGcBop9Jki7eo+OU1u/DAS4uHYoRg==
+X-Google-Smtp-Source: APXvYqwG2UjxVhphwUAgvvwQPHGBy5z6HV26Jg2b6dtNXBPHQODn2jj7toenETQH2vJlci2kX4c7LljoPaDjps61mNE=
+X-Received: by 2002:a24:d145:: with SMTP id w66mr258367itg.71.1558049559495;
+ Thu, 16 May 2019 16:32:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190502185250.vlsainugtn6zjd6p@csclub.uwaterloo.ca>
+ <CAKgT0Uc_YVzns+26-TL+hhmErqG4_w4evRqLCaa=7nME7Zq+Vg@mail.gmail.com>
+ <20190503151421.akvmu77lghxcouni@csclub.uwaterloo.ca> <CAKgT0UcV2wCr6iUYktZ+Bju_GNpXKzR=M+NLfKhUsw4bsJSiyA@mail.gmail.com>
+ <20190503205935.bg45rsso5jjj3gnx@csclub.uwaterloo.ca> <20190513165547.alkkgcsdelaznw6v@csclub.uwaterloo.ca>
+ <CAKgT0Uf_nqZtCnHmC=-oDFz-3PuSM6=30BvJSDiAgzK062OY6w@mail.gmail.com>
+ <20190514163443.glfjva3ofqcy7lbg@csclub.uwaterloo.ca> <CAKgT0UdPDyCBsShQVwwE5C8fBKkMcfS6_S5m3T7JP-So9fzVgA@mail.gmail.com>
+ <20190516183407.qswotwyjwtjqfdqm@csclub.uwaterloo.ca> <20190516183705.e4zflbli7oujlbek@csclub.uwaterloo.ca>
+In-Reply-To: <20190516183705.e4zflbli7oujlbek@csclub.uwaterloo.ca>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 16 May 2019 16:32:28 -0700
+Message-ID: <CAKgT0UfSa-dM2+7xntK9tB7Zw5N8nDd3U1n4OSK0gbWbkNSKJQ@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] i40e X722 RSS problem with NAT-Traversal IPsec packets
+To:     Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        intel-wired-lan <intel-wired-lan@lists.osuosl.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In following sequences, child devices created while removing mdev parent
-device can be left out, or it may lead to race of removing half
-initialized child mdev devices.
+On Thu, May 16, 2019 at 11:37 AM Lennart Sorensen
+<lsorense@csclub.uwaterloo.ca> wrote:
+>
+> On Thu, May 16, 2019 at 02:34:08PM -0400, Lennart Sorensen wrote:
+> > Here is what I see:
+> >
+> > i40e: Intel(R) Ethernet Connection XL710 Network Driver - version 2.1.7-k
+> > i40e: Copyright (c) 2013 - 2014 Intel Corporation.
+> > i40e 0000:3d:00.0: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
+> > i40e 0000:3d:00.0: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
+> > i40e 0000:3d:00.0: MAC address: a4:bf:01:4e:0c:87
+> > i40e 0000:3d:00.0: flow_type: 63 input_mask:0x0000000000004000
+> > i40e 0000:3d:00.0: flow_type: 46 input_mask:0x0007fff800000000
+> > i40e 0000:3d:00.0: flow_type: 45 input_mask:0x0007fff800000000
+> > i40e 0000:3d:00.0: flow_type: 44 input_mask:0x0007ffff80000000
+> > i40e 0000:3d:00.0: flow_type: 43 input_mask:0x0007fffe00000000
+> > i40e 0000:3d:00.0: flow_type: 42 input_mask:0x0007fffe00000000
+> > i40e 0000:3d:00.0: flow_type: 41 input_mask:0x0007fffe00000000
+> > i40e 0000:3d:00.0: flow_type: 40 input_mask:0x0007fffe00000000
+> > i40e 0000:3d:00.0: flow_type: 39 input_mask:0x0007fffe00000000
+> > i40e 0000:3d:00.0: flow_type: 36 input_mask:0x0006060000000000
+> > i40e 0000:3d:00.0: flow_type: 35 input_mask:0x0006060000000000
+> > i40e 0000:3d:00.0: flow_type: 34 input_mask:0x0006060780000000
+> > i40e 0000:3d:00.0: flow_type: 33 input_mask:0x0006060600000000
+> > i40e 0000:3d:00.0: flow_type: 32 input_mask:0x0006060600000000
+> > i40e 0000:3d:00.0: flow_type: 31 input_mask:0x0006060600000000
+> > i40e 0000:3d:00.0: flow_type: 30 input_mask:0x0006060600000000
+> > i40e 0000:3d:00.0: flow_type: 29 input_mask:0x0006060600000000
+> > i40e 0000:3d:00.0: Features: PF-id[0] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
+> > i40e 0000:3d:00.1: fw 3.10.52896 api 1.6 nvm 4.00 0x80001577 1.1767.0
+> > i40e 0000:3d:00.1: The driver for the device detected a newer version of the NVM image than expected. Please install the most recent version of the network driver.
+> > i40e 0000:3d:00.1: MAC address: a4:bf:01:4e:0c:88
+> > i40e 0000:3d:00.1: flow_type: 63 input_mask:0x0000000000004000
+> > i40e 0000:3d:00.1: flow_type: 46 input_mask:0x0007fff800000000
+> > i40e 0000:3d:00.1: flow_type: 45 input_mask:0x0007fff800000000
+> > i40e 0000:3d:00.1: flow_type: 44 input_mask:0x0007ffff80000000
+> > i40e 0000:3d:00.1: flow_type: 43 input_mask:0x0007fffe00000000
+> > i40e 0000:3d:00.1: flow_type: 42 input_mask:0x0007fffe00000000
+> > i40e 0000:3d:00.1: flow_type: 41 input_mask:0x0007fffe00000000
+> > i40e 0000:3d:00.1: flow_type: 40 input_mask:0x0007fffe00000000
+> > i40e 0000:3d:00.1: flow_type: 39 input_mask:0x0007fffe00000000
+> > i40e 0000:3d:00.1: flow_type: 36 input_mask:0x0006060000000000
+> > i40e 0000:3d:00.1: flow_type: 35 input_mask:0x0006060000000000
+> > i40e 0000:3d:00.1: flow_type: 34 input_mask:0x0006060780000000
+> > i40e 0000:3d:00.1: flow_type: 33 input_mask:0x0006060600000000
+> > i40e 0000:3d:00.1: flow_type: 32 input_mask:0x0006060600000000
+> > i40e 0000:3d:00.1: flow_type: 31 input_mask:0x0006060600000000
+> > i40e 0000:3d:00.1: flow_type: 30 input_mask:0x0006060600000000
+> > i40e 0000:3d:00.1: flow_type: 29 input_mask:0x0006060600000000
+> > i40e 0000:3d:00.1: Features: PF-id[1] VSIs: 34 QP: 12 TXQ: 13 RSS VxLAN Geneve VEPA
+> > i40e 0000:3d:00.1 eth2: NIC Link is Up, 1000 Mbps Full Duplex, Flow Control: None
+> > i40e_ioctl: power down: eth1
+> > i40e_ioctl: power down: eth2
+>
+> Those last two lines is something I added, so ignore those.
 
-issue-1:
---------
-       cpu-0                         cpu-1
-       -----                         -----
-                                  mdev_unregister_device()
-                                    device_for_each_child()
-                                      mdev_device_remove_cb()
-                                        mdev_device_remove()
-create_store()
-  mdev_device_create()                   [...]
-    device_add()
-                                  parent_remove_sysfs_files()
+No problem.
 
-/* BUG: device added by cpu-0
- * whose parent is getting removed
- * and it won't process this mdev.
- */
+So just looking at the data provided I am going to guess that IPv6 w/
+UDP likely works without any issues and it is just going to be IPv4
+that is the problem. When you compare the UDP setup from mine versus
+yours it looks like for some reason somebody swapped around the input
+bits for the L3 src and destination fields. I'm basing that on the
+input set masks in the i40e_txrx.h header:
+/* INPUT SET MASK for RSS, flow director, and flexible payload */
+#define I40E_L3_SRC_SHIFT               47
+#define I40E_L3_SRC_MASK                (0x3ULL << I40E_L3_SRC_SHIFT)
+#define I40E_L3_V6_SRC_SHIFT            43
+#define I40E_L3_V6_SRC_MASK             (0xFFULL << I40E_L3_V6_SRC_SHIFT)
+#define I40E_L3_DST_SHIFT               35
+#define I40E_L3_DST_MASK                (0x3ULL << I40E_L3_DST_SHIFT)
+#define I40E_L3_V6_DST_SHIFT            35
+#define I40E_L3_V6_DST_MASK             (0xFFULL << I40E_L3_V6_DST_SHIFT)
+#define I40E_L4_SRC_SHIFT               34
+#define I40E_L4_SRC_MASK                (0x1ULL << I40E_L4_SRC_SHIFT)
+#define I40E_L4_DST_SHIFT               33
+#define I40E_L4_DST_MASK                (0x1ULL << I40E_L4_DST_SHIFT)
+#define I40E_VERIFY_TAG_SHIFT           31
+#define I40E_VERIFY_TAG_MASK            (0x3ULL << I40E_VERIFY_TAG_SHIFT)
 
-issue-2:
---------
-Below crash is observed when user initiated remove is in progress
-and mdev_unregister_driver() completes parent unregistration.
+The easiest way to verify would be to rewrite the registers for
+flow_type 29, 30, and 31 to match the value that I had shown earlier
+from my dump:
+[  294.687087] i40e 0000:81:00.1: flow_type: 31 input_mask:0x0001801e00000000
 
-       cpu-0                         cpu-1
-       -----                         -----
-remove_store()
-   mdev_device_remove()
-   active = false;
-                                  mdev_unregister_device()
-                                  parent device removed.
-   [...]
-   parents->ops->remove()
- /*
-  * BUG: Accessing invalid parent.
-  */
+I will take a look at putting together a patch that can be tested to
+verify if this is actually the issue tomorrow.
 
-This is similar race like create() racing with mdev_unregister_device().
+Thanks.
 
-BUG: unable to handle kernel paging request at ffffffffc0585668
-PGD e8f618067 P4D e8f618067 PUD e8f61a067 PMD 85adca067 PTE 0
-Oops: 0000 [#1] SMP PTI
-CPU: 41 PID: 37403 Comm: bash Kdump: loaded Not tainted 5.1.0-rc6-vdevbus+ #6
-Hardware name: Supermicro SYS-6028U-TR4+/X10DRU-i+, BIOS 2.0b 08/09/2016
-RIP: 0010:mdev_device_remove+0xfa/0x140 [mdev]
-Call Trace:
- remove_store+0x71/0x90 [mdev]
- kernfs_fop_write+0x113/0x1a0
- vfs_write+0xad/0x1b0
- ksys_write+0x5a/0xe0
- do_syscall_64+0x5a/0x210
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Therefore, mdev core is improved as below to overcome above issues.
-
-Wait for any ongoing mdev create() and remove() to finish before
-unregistering parent device using refcount and completion.
-This continues to allow multiple create and remove to progress in
-parallel for different mdev devices as most common case.
-At the same time guard parent removal while parent is being access by
-create() and remove callbacks.
-
-Code is simplified from kref to use refcount as unregister_device() has
-to wait anyway for all create/remove to finish.
-
-While removing mdev devices during parent unregistration, there isn't
-need to acquire refcount of parent device, hence code is restructured
-using mdev_device_remove_common() to avoid it.
-
-Fixes: 7b96953bc640 ("vfio: Mediated device Core driver")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
----
- drivers/vfio/mdev/mdev_core.c    | 86 ++++++++++++++++++++------------
- drivers/vfio/mdev/mdev_private.h |  6 ++-
- 2 files changed, 60 insertions(+), 32 deletions(-)
-
-diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-index 0bef0cae1d4b..ca33246c1dc3 100644
---- a/drivers/vfio/mdev/mdev_core.c
-+++ b/drivers/vfio/mdev/mdev_core.c
-@@ -78,34 +78,41 @@ static struct mdev_parent *__find_parent_device(struct device *dev)
- 	return NULL;
- }
- 
--static void mdev_release_parent(struct kref *kref)
-+static bool mdev_try_get_parent(struct mdev_parent *parent)
- {
--	struct mdev_parent *parent = container_of(kref, struct mdev_parent,
--						  ref);
--	struct device *dev = parent->dev;
--
--	kfree(parent);
--	put_device(dev);
-+	if (parent)
-+		return refcount_inc_not_zero(&parent->refcount);
-+	return false;
- }
- 
--static struct mdev_parent *mdev_get_parent(struct mdev_parent *parent)
-+static void mdev_put_parent(struct mdev_parent *parent)
- {
--	if (parent)
--		kref_get(&parent->ref);
--
--	return parent;
-+	if (parent && refcount_dec_and_test(&parent->refcount))
-+		complete(&parent->unreg_completion);
- }
- 
--static void mdev_put_parent(struct mdev_parent *parent)
-+static void mdev_device_remove_common(struct mdev_device *mdev)
- {
--	if (parent)
--		kref_put(&parent->ref, mdev_release_parent);
-+	struct mdev_parent *parent;
-+	struct mdev_type *type;
-+	int ret;
-+
-+	type = to_mdev_type(mdev->type_kobj);
-+	mdev_remove_sysfs_files(&mdev->dev, type);
-+	device_del(&mdev->dev);
-+	parent = mdev->parent;
-+	ret = parent->ops->remove(mdev);
-+	if (ret)
-+		dev_err(&mdev->dev, "Remove failed: err=%d\n", ret);
-+
-+	/* Balances with device_initialize() */
-+	put_device(&mdev->dev);
- }
- 
- static int mdev_device_remove_cb(struct device *dev, void *data)
- {
- 	if (dev_is_mdev(dev))
--		mdev_device_remove(dev);
-+		mdev_device_remove_common(to_mdev_device(dev));
- 
- 	return 0;
- }
-@@ -147,7 +154,8 @@ int mdev_register_device(struct device *dev, const struct mdev_parent_ops *ops)
- 		goto add_dev_err;
- 	}
- 
--	kref_init(&parent->ref);
-+	refcount_set(&parent->refcount, 1);
-+	init_completion(&parent->unreg_completion);
- 
- 	parent->dev = dev;
- 	parent->ops = ops;
-@@ -206,14 +214,27 @@ void mdev_unregister_device(struct device *dev)
- 	dev_info(dev, "MDEV: Unregistering\n");
- 
- 	list_del(&parent->next);
-+	mutex_unlock(&parent_list_lock);
-+
-+	/* Release the initial reference so that new create cannot start */
-+	mdev_put_parent(parent);
-+
-+	/*
-+	 * Wait for all the create and remove references to drop.
-+	 */
-+	wait_for_completion(&parent->unreg_completion);
-+
-+	/*
-+	 * New references cannot be taken and all users are done
-+	 * using the parent. So it is safe to unregister parent.
-+	 */
- 	class_compat_remove_link(mdev_bus_compat_class, dev, NULL);
- 
- 	device_for_each_child(dev, NULL, mdev_device_remove_cb);
- 
- 	parent_remove_sysfs_files(parent);
--
--	mutex_unlock(&parent_list_lock);
--	mdev_put_parent(parent);
-+	kfree(parent);
-+	put_device(dev);
- }
- EXPORT_SYMBOL(mdev_unregister_device);
- 
-@@ -237,10 +258,11 @@ int mdev_device_create(struct kobject *kobj,
- 	struct mdev_parent *parent;
- 	struct mdev_type *type = to_mdev_type(kobj);
- 
--	parent = mdev_get_parent(type->parent);
--	if (!parent)
-+	if (!mdev_try_get_parent(type->parent))
- 		return -EINVAL;
- 
-+	parent = type->parent;
-+
- 	mutex_lock(&mdev_list_lock);
- 
- 	/* Check for duplicate */
-@@ -287,6 +309,7 @@ int mdev_device_create(struct kobject *kobj,
- 
- 	mdev->active = true;
- 	dev_dbg(&mdev->dev, "MDEV: created\n");
-+	mdev_put_parent(parent);
- 
- 	return 0;
- 
-@@ -306,7 +329,6 @@ int mdev_device_remove(struct device *dev)
- 	struct mdev_device *mdev, *tmp;
- 	struct mdev_parent *parent;
- 	struct mdev_type *type;
--	int ret;
- 
- 	mdev = to_mdev_device(dev);
- 
-@@ -330,15 +352,17 @@ int mdev_device_remove(struct device *dev)
- 	mutex_unlock(&mdev_list_lock);
- 
- 	type = to_mdev_type(mdev->type_kobj);
--	mdev_remove_sysfs_files(dev, type);
--	device_del(&mdev->dev);
--	parent = mdev->parent;
--	ret = parent->ops->remove(mdev);
--	if (ret)
--		dev_err(&mdev->dev, "Remove failed: err=%d\n", ret);
-+	if (!mdev_try_get_parent(type->parent)) {
-+		/*
-+		 * Parent unregistration have started.
-+		 * No need to remove here.
-+		 */
-+		mutex_unlock(&mdev_list_lock);
-+		return -ENODEV;
-+	}
- 
--	/* Balances with device_initialize() */
--	put_device(&mdev->dev);
-+	parent = mdev->parent;
-+	mdev_device_remove_common(mdev);
- 	mdev_put_parent(parent);
- 
- 	return 0;
-diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
-index 924ed2274941..55ebab0af7b0 100644
---- a/drivers/vfio/mdev/mdev_private.h
-+++ b/drivers/vfio/mdev/mdev_private.h
-@@ -19,7 +19,11 @@ void mdev_bus_unregister(void);
- struct mdev_parent {
- 	struct device *dev;
- 	const struct mdev_parent_ops *ops;
--	struct kref ref;
-+	/* Protects unregistration to wait until create/remove
-+	 * are completed.
-+	 */
-+	refcount_t refcount;
-+	struct completion unreg_completion;
- 	struct list_head next;
- 	struct kset *mdev_types_kset;
- 	struct list_head type_list;
--- 
-2.19.2
-
+- Alex
