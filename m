@@ -2,127 +2,152 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17638C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E34C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B412070D
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:45:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558028728;
-	bh=7Ad1p/8z33o2SK69h7i5zrn0GVnyRDS3xew09n2p3Yk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D91VApeUMuIcKF9aosb9nsGLmW4wnJH2FLIV1FhSiDdTSa9z5VJWLqL5HPuhhuswY
-	 +4Qw+JaIwPiriObisSmeMLVn3rYXJrBS622BsSohzh0Mq062Tq0gxMtcsFGPpfU/XH
-	 GffGtjVsyi4DlDPyN5zf1thjxlgZ017nSEBzfiCM=
+	by mail.kernel.org (Postfix) with ESMTP id EAB8020818
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:49:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="p7z8pf6l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbfEPRp1 (ORCPT
+        id S1728921AbfEPRtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 13:45:27 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41238 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfEPRp1 (ORCPT
+        Thu, 16 May 2019 13:49:13 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:50049 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfEPRtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 13:45:27 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y22so4904850qtn.8;
-        Thu, 16 May 2019 10:45:26 -0700 (PDT)
+        Thu, 16 May 2019 13:49:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TZW9oPjKjF7UuQfNRNZlJhWogoRZGc1JB7uoqoIfv+8=;
-        b=U+/Dsbpe3Ev8qOz5ABegg4QwYrxhkHAqm6TrtgUJZMxYDxJyKNRkrRR2BomF+w8bGA
-         JeXPRak510vhmmzJ8bRXqpXFQtGibDSo/kyK2zYtiw+D7B7H/6Gb/lGYxPaHanLuyx5i
-         gUYWYVTnZ5fNLpvZmPoI1/hpBdL/MlRiTGoXmomSU60h70cP2MeSUERNp3AMtK+BAXOR
-         753TXbfYLlPuastYz2vzgY435v4UWD/63ouWJF2lzPjL0KwD1TPbqNzSVAQQTSmrFxD3
-         BiH4q8vfb1Vc8YX3FlMIFhHYqPuYMeE0fF9Zpl545yER8ygpzwARFTZi9cGlYGk6xKUt
-         f7dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TZW9oPjKjF7UuQfNRNZlJhWogoRZGc1JB7uoqoIfv+8=;
-        b=rALhC8waL0mjiX2VLLZKV3UrmLDWRWQmqRXe6mxhcEVixh6aRsAoqaHuaUl381LHYi
-         1hMLat+r/yvLsRhbH5g4D2DX2mqV28TERoJUSbgN5RG1Gk7ZhY22mDeVVPA7FkaZNlIw
-         gFU9vSMoQD+Lu68clyxRDzIa8qdp2uFVqxflgfkJkwRZxT8foAX+fCdyP/sLHfcO0wvX
-         SbycO0VwzWyvFw8yX0bi7NABzVj8jIWO7IHNg3JpzsIw4Xr55/A5I91vGR9lqvpHCOO2
-         rqX96gSP7a4eYDfMl3Yd724ByPRRok3kNYUJcGIy/zdmPvXWrqC63QJTt7K4ZSdeBieG
-         7T+Q==
-X-Gm-Message-State: APjAAAWT0rh1A0VCPJGtUSxaRscucZqsDfCYlfeY/XZytfilYg/0iSO5
-        BgVB2AderhTof76oBUAccU42NqioRHg=
-X-Google-Smtp-Source: APXvYqyUkVz3sqfNMifhOeY7ZDSeqgmGmjvjqqsICWFuayNjL9C3yjroqXXDBYnZFz5G9EOCbhBW9Q==
-X-Received: by 2002:a05:6214:41:: with SMTP id c1mr33503890qvr.138.1558028725812;
-        Thu, 16 May 2019 10:45:25 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:e390])
-        by smtp.gmail.com with ESMTPSA id e37sm4124575qte.23.2019.05.16.10.45.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 10:45:24 -0700 (PDT)
-Date:   Thu, 16 May 2019 10:45:23 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Alex Xu <alex_y_xu@yahoo.ca>,
-        kernel-team@fb.com, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND] signal: unconditionally leave the frozen state in
- ptrace_stop()
-Message-ID: <20190516174523.GD374014@devbig004.ftw2.facebook.com>
-References: <20190516173821.1498807-1-guro@fb.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1558028951; x=1589564951;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=9nVrkLPFrKFzW5I8vXU9JV7oHZCN/SUECinSigxy+dM=;
+  b=p7z8pf6l5SM6L73FjEss9AbW6394rhnt4c0LO3Xj8gflXVAHYnExujUc
+   wORwvgp+AotEDFma/c0u3U8Ol8QblDW5GrCKu3pW656n2VwIUZdSzeRcZ
+   yU9tqkaRhZ0Npxf69pKyoT+QkdM4FC2moU+saeglRI5zmHBz37fGe6/ft
+   E=;
+X-IronPort-AV: E=Sophos;i="5.60,477,1549929600"; 
+   d="scan'208";a="674736306"
+Received: from sea3-co-svc-lb6-vlan3.sea.amazon.com (HELO email-inbound-relay-2b-baacba05.us-west-2.amazon.com) ([10.47.22.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 16 May 2019 17:49:07 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-2b-baacba05.us-west-2.amazon.com (8.14.7/8.14.7) with ESMTP id x4GHn6De107439
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Thu, 16 May 2019 17:49:07 GMT
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Thu, 16 May 2019 17:49:06 +0000
+Received: from macbook-2.local (10.43.160.4) by EX13D20UWC001.ant.amazon.com
+ (10.43.162.244) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Thu, 16 May
+ 2019 17:49:05 +0000
+Subject: Re: [PATCH v2 2/2] KVM: x86: Implement the arch-specific hook to
+ report the VM UUID
+To:     "Sironi, Filippo" <sironi@amazon.de>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "vasu.srinivasan@oracle.com" <vasu.srinivasan@oracle.com>
+References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-3-git-send-email-sironi@amazon.de>
+ <f51a6a84-b21c-ab75-7e30-bfbe2ac6b98b@amazon.com>
+ <7395EFE9-0B38-4B61-81D4-E8450561AABE@amazon.de>
+ <8c6a2de2-f080-aad5-16af-c4a5eafb31af@amazon.com>
+ <3a9762a2-24e8-a842-862d-fadae563361d@oracle.com>
+ <DD0087B6-094D-4D07-9C85-827881E3DDD0@amazon.de>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <cb50c8a6-58e7-e123-feb9-d9dd2bc33b34@amazon.com>
+Date:   Thu, 16 May 2019 10:49:03 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516173821.1498807-1-guro@fb.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <DD0087B6-094D-4D07-9C85-827881E3DDD0@amazon.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.43.160.4]
+X-ClientProxiedBy: EX13D27UWB001.ant.amazon.com (10.43.161.169) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 10:38:21AM -0700, Roman Gushchin wrote:
-> Alex Xu reported a regression in strace, caused by the introduction of
-> the cgroup v2 freezer. The regression can be reproduced by stracing
-> the following simple program:
-> 
->   #include <unistd.h>
-> 
->   int main() {
->       write(1, "a", 1);
->       return 0;
->   }
-> 
-> An attempt to run strace ./a.out leads to the infinite loop:
->   [ pre-main omitted ]
->   write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
->   write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
->   write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
->   write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
->   write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
->   write(1, "a", 1)                        = ? ERESTARTSYS (To be restarted if SA_RESTART is set)
->   [ repeats forever ]
-> 
-> The problem occurs because the traced task leaves ptrace_stop()
-> (and the signal handling loop) with the frozen bit set. So let's
-> call cgroup_leave_frozen(true) unconditionally after sleeping
-> in ptrace_stop().
-> 
-> With this patch applied, strace works as expected:
->   [ pre-main omitted ]
->   write(1, "a", 1)                        = 1
->   exit_group(0)                           = ?
->   +++ exited with 0 +++
-> 
-> Reported-by: Alex Xu <alex_y_xu@yahoo.ca>
-> Fixes: 76f969e8948d ("cgroup: cgroup v2 freezer")
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
-> Cc: Tejun Heo <tj@kernel.org>
 
-Applied to cgroup/for-5.2-fixes.
+On 16.05.19 10:41, Sironi, Filippo wrote:
+>> On 16. May 2019, at 18:40, Boris Ostrovsky <boris.ostrovsky@oracle.com> wrote:
+>>
+>> On 5/16/19 11:33 AM, Alexander Graf wrote:
+>>> On 16.05.19 08:25, Sironi, Filippo wrote:
+>>>>> On 16. May 2019, at 15:56, Graf, Alexander <graf@amazon.com> wrote:
+>>>>>
+>>>>> On 14.05.19 08:16, Filippo Sironi wrote:
+>>>>>> On x86, we report the UUID in DMI System Information (i.e., DMI Type 1)
+>>>>>> as VM UUID.
+>>>>>>
+>>>>>> Signed-off-by: Filippo Sironi <sironi@amazon.de>
+>>>>>> ---
+>>>>>> arch/x86/kernel/kvm.c | 7 +++++++
+>>>>>> 1 file changed, 7 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+>>>>>> index 5c93a65ee1e5..441cab08a09d 100644
+>>>>>> --- a/arch/x86/kernel/kvm.c
+>>>>>> +++ b/arch/x86/kernel/kvm.c
+>>>>>> @@ -25,6 +25,7 @@
+>>>>>> #include <linux/kernel.h>
+>>>>>> #include <linux/kvm_para.h>
+>>>>>> #include <linux/cpu.h>
+>>>>>> +#include <linux/dmi.h>
+>>>>>> #include <linux/mm.h>
+>>>>>> #include <linux/highmem.h>
+>>>>>> #include <linux/hardirq.h>
+>>>>>> @@ -694,6 +695,12 @@ bool kvm_para_available(void)
+>>>>>> }
+>>>>>> EXPORT_SYMBOL_GPL(kvm_para_available);
+>>>>>>
+>>>>>> +const char *kvm_para_get_uuid(void)
+>>>>>> +{
+>>>>>> +	return dmi_get_system_info(DMI_PRODUCT_UUID);
+>>>>> This adds a new dependency on CONFIG_DMI. Probably best to guard it with
+>>>>> an #if IS_ENABLED(CONFIG_DMI).
+>>>>>
+>>>>> The concept seems sound though.
+>>>>>
+>>>>> Alex
+>>>> include/linux/dmi.h contains a dummy implementation of
+>>>> dmi_get_system_info that returns NULL if CONFIG_DMI isn't defined.
+>>> Oh, I missed that bit. Awesome! Less work :).
+>>>
+>>>
+>>>> This is enough unless we decide to return "<denied>" like in Xen.
+>>>> If then, we can have the check in the generic code to turn NULL
+>>>> into "<denied>".
+>>> Yes. Waiting for someone from Xen to answer this :)
+>> Not sure I am answering your question but on Xen we return UUID value
+>> zero if access permissions are not sufficient. Not <denied>.
+>>
+>> http://xenbits.xen.org/gitweb/?p=xen.git;a=blob;f=xen/common/kernel.c;h=612575430f1ce7faf5bd66e7a99f1758c63fb3cb;hb=HEAD#l506
+>>
+>> -boris
+> Then, I believe that returning 00000000-0000-0000-0000-000000000000
+> instead of NULL in the weak implementation of 1/2 and translating
+> NULL into 00000000-0000-0000-0000-000000000000 is the better approach.
 
-Thanks.
 
--- 
-tejun
+Just keep it at NULL in kvm_para_get_uuid() and convert to the canonical
+00000000-0000-0000-0000-000000000000 in uuid_show().
+
+Alex
+
