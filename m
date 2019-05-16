@@ -7,51 +7,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 739BEC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C819EC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F8120833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:45:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9357F20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558007157;
-	bh=KFdnEqrWENvRuxS/6olHE2piTxs1Uw9mDdItEAg4WkI=;
+	s=default; t=1558007163;
+	bh=QlOB0rWiUQgAkcCtgzVd9Vl2MwcQddiqWv87mwq8LoM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PjpqNTRKzFuPbfP3FvsJUOMKbNDcAhTAUJyw4Xo59fI7eoPj/GEKBVXtQ8lbvuF+1
-	 TdzXllUuTEHNSTsOJv01T3rEVr6gjPlWEd1PsDJLk1npWHpxvd8ONA7eWGtfRWrPnB
-	 iyHQv86F2bQf5gLA9NJn8J+hrN3xYnqMVwus7o1I=
+	b=nqVO0QX14ZJat7RmaAcCMhQJrrjXQfK/yKZgzp55cPw1SwChEdxT4LqpsGwSSlVeU
+	 GNsLDa+Hu/3VUxtfAAnj2khl8z+QerfVSDe/vQUBFN4AAnNxvNrW/cgOoTTJGXoZLQ
+	 JWWZvqgKRU/jE4nSLaGlVGMTuktoijQiqKAT+WQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbfEPLp4 (ORCPT
+        id S1728564AbfEPLqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:45:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49212 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 07:46:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727873AbfEPLkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:40:47 -0400
+        id S1727866AbfEPLkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:40:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2129E20833;
-        Thu, 16 May 2019 11:40:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D273F2089E;
+        Thu, 16 May 2019 11:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558006847;
-        bh=KFdnEqrWENvRuxS/6olHE2piTxs1Uw9mDdItEAg4WkI=;
+        s=default; t=1558006845;
+        bh=QlOB0rWiUQgAkcCtgzVd9Vl2MwcQddiqWv87mwq8LoM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZFAyyxRqshEYgAbObv1e3jKhbqVCBgXthf7V9fttijTZQ1Q3p9lno2ruU/8TtkrPE
-         cFO89V8BI8pzwAwTmtvL152ogQX8EjQccdPeSALdKydfhp4rhCgSLxPE5/q0Uw599T
-         cygySzllHE7zodd71FGoIIkMdFgL709W2smVcwoM=
+        b=QsQcwdMcABbJmfHvfdU0S0fOAPXoaq/Xk6ybr+8fc7HRqIDwnwoHEKZb93FIYxca9
+         K8ir+SbdKtm9izLdcg4RGghOnuqfFK9UuvCyzdoARyzfOxTprl+3lXMO6Oob7sq2FD
+         xMFnYaMjvZCRpnzCSmWAigOsqXplB+jtbvUFJLvU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kangjie Lu <kjlu@umn.edu>, Mukesh Ojha <mojha@codeaurora.org>,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
-        Sasha Levin <sashal@kernel.org>, linux-wpan@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 15/25] net: ieee802154: fix missing checks for regmap_update_bits
-Date:   Thu, 16 May 2019 07:40:18 -0400
-Message-Id: <20190516114029.8682-15-sashal@kernel.org>
+Cc:     Bhagavathi Perumal S <bperumal@codeaurora.org>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 14/25] mac80211: Fix kernel panic due to use of txq after free
+Date:   Thu, 16 May 2019 07:40:17 -0400
+Message-Id: <20190516114029.8682-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190516114029.8682-1-sashal@kernel.org>
 References: <20190516114029.8682-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,52 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kangjie Lu <kjlu@umn.edu>
+From: Bhagavathi Perumal S <bperumal@codeaurora.org>
 
-[ Upstream commit 22e8860cf8f777fbf6a83f2fb7127f682a8e9de4 ]
+[ Upstream commit f1267cf3c01b12e0f843fb6a7450a7f0b2efab8a ]
 
-regmap_update_bits could fail and deserves a check.
+The txq of vif is added to active_txqs list for ATF TXQ scheduling
+in the function ieee80211_queue_skb(), but it was not properly removed
+before freeing the txq object. It was causing use after free of the txq
+objects from the active_txqs list, result was kernel panic
+due to invalid memory access.
 
-The patch adds the checks and if it fails, returns its error
-code upstream.
+Fix kernel invalid memory access by properly removing txq object
+from active_txqs list before free the object.
 
-Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Signed-off-by: Stefan Schmidt <stefan@datenfreihafen.org>
+Signed-off-by: Bhagavathi Perumal S <bperumal@codeaurora.org>
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ieee802154/mcr20a.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ net/mac80211/iface.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/net/ieee802154/mcr20a.c b/drivers/net/ieee802154/mcr20a.c
-index 04891429a5542..fe4057fca83d8 100644
---- a/drivers/net/ieee802154/mcr20a.c
-+++ b/drivers/net/ieee802154/mcr20a.c
-@@ -539,6 +539,8 @@ mcr20a_start(struct ieee802154_hw *hw)
- 	dev_dbg(printdev(lp), "no slotted operation\n");
- 	ret = regmap_update_bits(lp->regmap_dar, DAR_PHY_CTRL1,
- 				 DAR_PHY_CTRL1_SLOTTED, 0x0);
-+	if (ret < 0)
-+		return ret;
+diff --git a/net/mac80211/iface.c b/net/mac80211/iface.c
+index 3a0171a65db32..152d4365f9616 100644
+--- a/net/mac80211/iface.c
++++ b/net/mac80211/iface.c
+@@ -1910,6 +1910,9 @@ void ieee80211_if_remove(struct ieee80211_sub_if_data *sdata)
+ 	list_del_rcu(&sdata->list);
+ 	mutex_unlock(&sdata->local->iflist_mtx);
  
- 	/* enable irq */
- 	enable_irq(lp->spi->irq);
-@@ -546,11 +548,15 @@ mcr20a_start(struct ieee802154_hw *hw)
- 	/* Unmask SEQ interrupt */
- 	ret = regmap_update_bits(lp->regmap_dar, DAR_PHY_CTRL2,
- 				 DAR_PHY_CTRL2_SEQMSK, 0x0);
-+	if (ret < 0)
-+		return ret;
++	if (sdata->vif.txq)
++		ieee80211_txq_purge(sdata->local, to_txq_info(sdata->vif.txq));
++
+ 	synchronize_rcu();
  
- 	/* Start the RX sequence */
- 	dev_dbg(printdev(lp), "start the RX sequence\n");
- 	ret = regmap_update_bits(lp->regmap_dar, DAR_PHY_CTRL1,
- 				 DAR_PHY_CTRL1_XCVSEQ_MASK, MCR20A_XCVSEQ_RX);
-+	if (ret < 0)
-+		return ret;
- 
- 	return 0;
- }
+ 	if (sdata->dev) {
 -- 
 2.20.1
 
