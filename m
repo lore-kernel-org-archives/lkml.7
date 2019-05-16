@@ -2,151 +2,142 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91242C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA59BC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58EFA205ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:16:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="KNGxdyGd"
+	by mail.kernel.org (Postfix) with ESMTP id C421620657
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 17:21:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfEPRQp (ORCPT
+        id S1727375AbfEPRVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 13:16:45 -0400
-Received: from mail-eopbgr1320094.outbound.protection.outlook.com ([40.107.132.94]:36690
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726578AbfEPRQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 13:16:44 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=dTXynS4C7t6AzNtTCYdIX9JS2qW0uJaqV4HfG6ij1/xTVKx3dNZzuoTt78RV5kOxlgAauqwvHMgOKPLCkzttADThXDBvnhqQbEzTR1zGRh/Vf+fYiIiT4g12kNGyjnlBXBQtCdvWY8d83eGNp2D5xCn3V0vIn9OGAA0cQAXJho8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JlvleVwL/PkxyXeqGxFMjgmuDx9G4jJSjxN+URBf1/E=;
- b=cjibX3d07fZm8zfLmHnd987U0IH4Amq9GJCmIQS78pzk2XMsAYxHoxCcHLEZ4pmL2ZaVp8BbqoNwIrrjMEFouymvh4kv64vnlYYDOcngPprVPjACzmqBih7e8iXNjqzAIemOkWIkKh7IZho273Vkb26eMofQTCAdtUSrbI0zVTo=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JlvleVwL/PkxyXeqGxFMjgmuDx9G4jJSjxN+URBf1/E=;
- b=KNGxdyGdtR5TIDu+jqapajqjJIENcZAL8NZRFpAC/CfqxO6KDD6DCjH1QG7tRpcagRGYPyYgJLqHUurZ3jgLBPwgPSlcAkNzP4gVcL63b61cl52BhsVUTtZVjTu9tvFB2vR3J9zOD2KPSyZ2F9RlR85pzHfK2/3aEEJUybHkf7A=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0138.APCP153.PROD.OUTLOOK.COM (10.170.188.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.4; Thu, 16 May 2019 17:16:38 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::dc7e:e62f:efc9:8564]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::dc7e:e62f:efc9:8564%4]) with mapi id 15.20.1922.002; Thu, 16 May 2019
- 17:16:38 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] hv_sock: Add support for delayed close
-Thread-Topic: [PATCH v2] hv_sock: Add support for delayed close
-Thread-Index: AdUKtaBXG33lHE0AQU2ynJ9GbZ74UwA3pTOgAB0ubQA=
-Date:   Thu, 16 May 2019 17:16:37 +0000
-Message-ID: <PU1P153MB01693DB2206CD639AF356DBDBF0A0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <BN6PR21MB0465043C08E519774EE73E99C0090@BN6PR21MB0465.namprd21.prod.outlook.com>
- <PU1P153MB01698261307593C5D58AAF4FBF0A0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-In-Reply-To: <PU1P153MB01698261307593C5D58AAF4FBF0A0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-16T04:34:19.9899242Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a52563af-82a7-4a5f-aed5-227da8f0af23;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:1760:e49c:a88d:95f1:67ea]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a1c6e5aa-7702-436c-15da-08d6da22417d
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0138;
-x-ms-traffictypediagnostic: PU1P153MB0138:
-x-microsoft-antispam-prvs: <PU1P153MB0138FE878ABA1CA15D92C613BF0A0@PU1P153MB0138.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0039C6E5C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(346002)(136003)(396003)(39860400002)(189003)(199004)(186003)(99286004)(486006)(1511001)(102836004)(74316002)(46003)(54906003)(229853002)(256004)(11346002)(316002)(110136005)(22452003)(6436002)(8990500004)(33656002)(14444005)(476003)(446003)(2940100002)(7736002)(478600001)(52536014)(81156014)(68736007)(305945005)(81166006)(5660300002)(8936002)(8676002)(10290500003)(6636002)(2906002)(6116002)(66446008)(73956011)(66476007)(66556008)(64756008)(76116006)(4326008)(9686003)(86612001)(86362001)(6246003)(71190400001)(71200400001)(53936002)(66946007)(6506007)(14454004)(55016002)(25786009)(76176011)(7696005)(10090500001);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0138;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: b+Rxn/rcFA584RGkYnU4XQfQABVYHFdZFqfiaJSyKHvrqKFlSPSQrbMy58Yf5rXjCiLO/W9xCPBxAg/0OhmfB/SAD3ER+G+viSlFB2/Vdrcsnx7wYEClrTF9WOEOaGUhgMoefOBvFKjIOd0XnEwXDDARglTrNONYGSpXBqnYx5h9E2m2GiQjuwJHSZn/R72aMEBZP4okXCEjmliggArQM7s2CsnbipmnrguI1nAM1NOlC8dl3vurBsKtMN+b/rH7gS+wrWzmmvx8CJpr8xbWcijJ41JySit5QV96mZ5BEhmBAloDdj9t7uzFUPc6KAiTYpZqNjnyoxiL41MiIQ3P5OTXPhO9R9XN5rDn8FS3pomD7MAImQ6WSWJ2His1g83mFWl7u5C++kumtdnebIv+ZzJvOlaXxTdpgXSTVnV81nk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 16 May 2019 13:21:19 -0400
+Received: from www.llwyncelyn.cymru ([82.70.14.225]:42792 "EHLO fuzix.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726807AbfEPRVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 13:21:19 -0400
+Received: from alans-desktop (82-70-14-226.dsl.in-addr.zen.co.uk [82.70.14.226])
+        by fuzix.org (8.15.2/8.15.2) with ESMTP id x4GHKxbf002968;
+        Thu, 16 May 2019 18:20:59 +0100
+Date:   Thu, 16 May 2019 18:20:58 +0100
+From:   Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        xiang xiao <xiaoxiang781216@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        Fabien DESSENNE <fabien.dessenne@st.com>
+Subject: Re: [PATCH v2 2/2] tty: add rpmsg driver
+Message-ID: <20190516182058.2a565748@alans-desktop>
+In-Reply-To: <1557500577-22366-3-git-send-email-arnaud.pouliquen@st.com>
+References: <1557500577-22366-1-git-send-email-arnaud.pouliquen@st.com>
+        <1557500577-22366-3-git-send-email-arnaud.pouliquen@st.com>
+Organization: Intel Corporation
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1c6e5aa-7702-436c-15da-08d6da22417d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 17:16:37.7736
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0138
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: linux-hyperv-owner@vger.kernel.org
-> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Dexuan Cui
-> Sent: Wednesday, May 15, 2019 9:34 PM
-> ...
 
-Hi Sunil,
-To make it clear, your patch itself is good, and I was just talking about
-the next change we're going to make. Once we make the next change,
-IMO we need a further patch to schedule hvs_close_timeout() to the new
-single-threaded workqueue rather than the global "system_wq".
+> +static int rpmsg_tty_data_handler(struct rpmsg_device *rpdev, void *data,
+> +				  int len, void *priv, u32 src)
+> +{
+> +	struct rpmsg_tty_port *cport = dev_get_drvdata(&rpdev->dev);
+> +	u8 *cbuf;
+> +	int space;
+> +
+> +	dev_dbg(&rpdev->dev, "msg(<- src 0x%x) len %d\n", src, len);
+> +
+> +	if (!len)
+> +		return 0;
+> +
+> +	dev_dbg(&rpdev->dev, "space available: %d\n",
+> +		tty_buffer_space_avail(&cport->port));
+> +
+> +	space = tty_prepare_flip_string(&cport->port, &cbuf, len);
+> +	if (space <= 0) {
+> +		dev_err(&rpdev->dev, "No memory for tty_prepare_flip_string\n");
+> +		return -ENOMEM;
+> +	}
 
-> Next, we're going to remove the "channel->rescind" check in
-> vmbus_hvsock_device_unregister() -- when doing that, IMO we need to
-> fix a potential race revealed by the schedule_delayed_work() in this
-> patch:
->=20
-> When hvs_close_timeout() finishes, the "sk" struct has been freed, but
-> vmbus_onoffer_rescind() -> channel->chn_rescind_callback(), i.e.
-> hvs_close_connection(), may be still running and referencing the "chan"
-> and "sk" structs (), which should no longer be referenced when
-> hvs_close_timeout() finishes, i.e. "get_per_channel_state(chan)" is no
-> longer safe. The problem is: currently there is no sync mechanism
-> between vmbus_onoffer_rescind() and hvs_close_timeout().
->=20
-> The race is a real issue only after we remove the "channel->rescind"
-> in vmbus_hvsock_device_unregister().
+Really bad idea.
 
-A correction: IMO the race is real even for the current code, i.e. without
-your patch: in vmbus_onoffer_rescind(), between we set channel->rescind
-and we call channel->chn_rescind_callback(), the channel may have been
-freed by vmbus_hvsock_device_unregister().
+1. It's not an 'error'. It's normal that in the case the consumer is
+blocked you can run out of processing space
 
-This race window is small and I guess that's why we never noticed it.
+2. You will trigger this when being hit by a very large fast flow of data
+so responding by burning CPU spewing messages (possibly even out of this
+tty) is bad.
 
-> I guess we need to introduce a new single-threaded workqueue in the
-> vmbus driver, and offload both vmbus_onoffer_rescind() and
-> hvs_close_timeout() onto the new workqueue.
-=20
-Thanks,
--- Dexuan
+It's not a bug - just keep statistics and throw it away. If anyone cares
+they will do flow control.
+
+
+> +
+> +static int rpmsg_tty_write_control(struct tty_struct *tty, u8 ctrl, u8 *values,
+> +				   unsigned int n_value)
+> +{
+> +	struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
+> +	struct rpmsg_tty_payload *msg;
+> +	struct rpmsg_tty_ctrl *m_ctrl;
+> +	struct rpmsg_device *rpdev;
+> +	unsigned int msg_size;
+> +	int ret;
+> +
+> +	if (!cport) {
+> +		dev_err(tty->dev, "cannot get cport\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	rpdev = cport->rpdev;
+> +
+> +	msg_size = sizeof(*msg) + sizeof(*m_ctrl) + n_value;
+> +	msg = kzalloc(msg_size, GFP_KERNEL);
+
+
+Out of memory check ?
+
+> +static int rpmsg_tty_write(struct tty_struct *tty, const u8 *buf, int len)
+> +{
+> +	struct rpmsg_tty_port *cport = idr_find(&tty_idr, tty->index);
+> +	struct rpmsg_device *rpdev;
+> +	int msg_size, msg_max_size, ret = 0;
+> +	int cmd_sz = sizeof(struct rpmsg_tty_payload);
+> +	u8 *tmpbuf;
+> +
+> +	if (!cport) {
+> +		dev_err(tty->dev, "cannot get cport\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	/* If cts not set, the message is not sent*/
+> +	if (!cport->cts)
+> +		return 0;
+> +
+> +	rpdev = cport->rpdev;
+> +
+> +	dev_dbg(&rpdev->dev, "%s: send msg from tty->index = %d, len = %d\n",
+> +		__func__, tty->index, len);
+> +	if (!buf) {
+> +		dev_err(&rpdev->dev, "buf shouldn't be null.\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	msg_max_size = rpmsg_get_buf_payload_size(rpdev->ept);
+> +	if (msg_max_size < 0)
+> +		return msg_max_size;
+> +
+> +	msg_size = min(len + cmd_sz, msg_max_size);
+> +	tmpbuf = kzalloc(msg_size, GFP_KERNEL);
+
+Allocation failure check ?
 
