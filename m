@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB342C04AB4
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC03C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7FF22087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFD320833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfEPP6t (ORCPT
+        id S1727270AbfEPP6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:58:49 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42338 "EHLO
+        Thu, 16 May 2019 11:58:55 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:42416 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726441AbfEPP6k (ORCPT
+        by vger.kernel.org with ESMTP id S1726645AbfEPP6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:58:40 -0400
+        Thu, 16 May 2019 11:58:41 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImC-0006ym-Uw; Thu, 16 May 2019 16:58:37 +0100
+        id 1hRImD-0006z3-HA; Thu, 16 May 2019 16:58:37 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImC-0001Ms-Gm; Thu, 16 May 2019 16:58:36 +0100
+        id 1hRImD-0001Nw-0m; Thu, 16 May 2019 16:58:37 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        "Heiko Carstens" <heiko.carstens@de.ibm.com>
-Date:   Thu, 16 May 2019 16:55:32 +0100
-Message-ID: <lsq.1558022132.735418432@decadent.org.uk>
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Tejun Heo" <tj@kernel.org>
+Date:   Thu, 16 May 2019 16:55:33 +0100
+Message-ID: <lsq.1558022133.853826899@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 07/86] s390/jump label: use different nop instruction
+Subject: [PATCH 3.16 20/86] jump_label: make static_key_enabled() work on
+ static_key_true/false types too
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,84 +56,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Heiko Carstens <heiko.carstens@de.ibm.com>
+From: Tejun Heo <tj@kernel.org>
 
-commit d5caa4dbf9bd2ad8cd7f6be0ca76722be947182b upstream.
+commit fa128fd735bd236b6b04d3fedfed7a784137c185 upstream.
 
-Use a brcl 0,2 instruction for jump label nops during compile time,
-so we don't mix up the different nops during mcount/hotpatch call
-site detection.
-The initial jump label code instruction replacement will exchange
-these instructions with either a branch or a brcl 0,0 instruction.
+static_key_enabled() can be used on struct static_key but not on its
+wrapper types static_key_true and static_key_false.  The function is
+useful for debugging and management of static keys.  Update it so that
+it can be used for the wrapper types too.
 
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/s390/include/asm/jump_label.h |  7 ++++++-
- arch/s390/kernel/jump_label.c      | 19 +++++++++++++------
- 2 files changed, 19 insertions(+), 7 deletions(-)
+ include/linux/jump_label.h | 18 +++++++++++-------
+ 1 file changed, 11 insertions(+), 7 deletions(-)
 
---- a/arch/s390/include/asm/jump_label.h
-+++ b/arch/s390/include/asm/jump_label.h
-@@ -4,6 +4,7 @@
- #include <linux/types.h>
+--- a/include/linux/jump_label.h
++++ b/include/linux/jump_label.h
+@@ -214,11 +214,6 @@ static inline int jump_label_apply_nops(
+ #define STATIC_KEY_INIT STATIC_KEY_INIT_FALSE
+ #define jump_label_enabled static_key_enabled
  
- #define JUMP_LABEL_NOP_SIZE 6
-+#define JUMP_LABEL_NOP_OFFSET 2
- 
- #ifdef CONFIG_64BIT
- #define ASM_PTR ".quad"
-@@ -13,9 +14,13 @@
- #define ASM_ALIGN ".balign 4"
- #endif
- 
-+/*
-+ * We use a brcl 0,2 instruction for jump labels at compile time so it
-+ * can be easily distinguished from a hotpatch generated instruction.
-+ */
- static __always_inline bool arch_static_branch(struct static_key *key)
+-static inline bool static_key_enabled(struct static_key *key)
+-{
+-	return static_key_count(key) > 0;
+-}
+-
+ static inline void static_key_enable(struct static_key *key)
  {
--	asm_volatile_goto("0:	brcl 0,0\n"
-+	asm_volatile_goto("0:	brcl 0,"__stringify(JUMP_LABEL_NOP_OFFSET)"\n"
- 		".pushsection __jump_table, \"aw\"\n"
- 		ASM_ALIGN "\n"
- 		ASM_PTR " 0b, %l[label], %0\n"
---- a/arch/s390/kernel/jump_label.c
-+++ b/arch/s390/kernel/jump_label.c
-@@ -49,6 +49,11 @@ static void jump_label_bug(struct jump_e
- 	panic("Corrupted kernel text");
- }
+ 	int count = static_key_count(key);
+@@ -265,6 +260,17 @@ struct static_key_false {
+ #define DEFINE_STATIC_KEY_FALSE(name)	\
+ 	struct static_key_false name = STATIC_KEY_FALSE_INIT
  
-+static struct insn orignop = {
-+	.opcode = 0xc004,
-+	.offset = JUMP_LABEL_NOP_OFFSET >> 1,
-+};
++extern bool ____wrong_branch_error(void);
 +
- static void __jump_label_transform(struct jump_entry *entry,
- 				   enum jump_label_type type,
- 				   int init)
-@@ -59,14 +64,16 @@ static void __jump_label_transform(struc
- 		jump_label_make_nop(entry, &old);
- 		jump_label_make_branch(entry, &new);
- 	} else {
--		if (init)
--			jump_label_make_nop(entry, &old);
--		else
--			jump_label_make_branch(entry, &old);
-+		jump_label_make_branch(entry, &old);
- 		jump_label_make_nop(entry, &new);
- 	}
--	if (memcmp((void *)entry->code, &old, sizeof(old)))
--		jump_label_bug(entry, &old);
-+	if (init) {
-+		if (memcmp((void *)entry->code, &orignop, sizeof(orignop)))
-+			jump_label_bug(entry, &old);
-+	} else {
-+		if (memcmp((void *)entry->code, &old, sizeof(old)))
-+			jump_label_bug(entry, &old);
-+	}
- 	probe_kernel_write((void *)entry->code, &new, sizeof(new));
- }
++#define static_key_enabled(x)							\
++({										\
++	if (!__builtin_types_compatible_p(typeof(*x), struct static_key) &&	\
++	    !__builtin_types_compatible_p(typeof(*x), struct static_key_true) &&\
++	    !__builtin_types_compatible_p(typeof(*x), struct static_key_false))	\
++		____wrong_branch_error();					\
++	static_key_count((struct static_key *)x) > 0;				\
++})
++
+ #ifdef HAVE_JUMP_LABEL
  
+ /*
+@@ -323,8 +329,6 @@ struct static_key_false {
+  * See jump_label_type() / jump_label_init_type().
+  */
+ 
+-extern bool ____wrong_branch_error(void);
+-
+ #define static_branch_likely(x)							\
+ ({										\
+ 	bool branch;								\
 
