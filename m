@@ -2,99 +2,129 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C20C2C04E53
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36340C04E53
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3BD20873
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECC2420843
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 01:46:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ce87YEoH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfEPBqq (ORCPT
+        id S1726772AbfEPBqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 May 2019 21:46:46 -0400
-Received: from mga14.intel.com ([192.55.52.115]:60718 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbfEPA3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 May 2019 20:29:16 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 May 2019 17:29:15 -0700
-X-ExtLoop1: 1
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by fmsmga007.fm.intel.com with ESMTP; 15 May 2019 17:29:16 -0700
-Received: from FMSMSX110.amr.corp.intel.com (10.18.116.10) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 15 May 2019 17:29:15 -0700
-Received: from fmsmsx113.amr.corp.intel.com ([169.254.13.118]) by
- FMSMSX110.amr.corp.intel.com ([169.254.14.250]) with mapi id 14.03.0415.000;
- Wed, 15 May 2019 17:29:15 -0700
-From:   "Verma, Vishal L" <vishal.l.verma@intel.com>
-To:     "Williams, Dan J" <dan.j.williams@intel.com>
-CC:     "cai@lca.pw" <cai@lca.pw>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "Weiny, Ira" <ira.weiny@intel.com>
+        Wed, 15 May 2019 21:46:51 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:37430 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726569AbfEPAbe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 May 2019 20:31:34 -0400
+Received: by mail-qk1-f196.google.com with SMTP id d10so1224486qko.4
+        for <linux-kernel@vger.kernel.org>; Wed, 15 May 2019 17:31:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=xM+RFeuYKRxsIgkngGYK7F1nhOVwIknDUHFDYwBWS4M=;
+        b=ce87YEoHQ3gEM1Pzl/OZnHRrbCQNF03DWhlezURYXEiSlkgU4w4mEO67/poVC2z5le
+         a7DclrrqaCnPRhZ2hMIjN2Ax7PaZGQci2kVFNksfsJ7RnluEd6LDYlf3M9b871fljHW8
+         4IwjunFUffu8qlpNONdUAYqTISgTgNo/vgKWZWhVNEKDLJeuQ7YzpmGht/RfwqaWBs0W
+         xui8kjZq2sEEOlRIiENHuG6jlYQ24vX5rQyKSmP2pAHBBvk3Bh4P30TSBVU6dpTS/M1B
+         5zKkeAtsOJF7coQpXiBHJpQM2FeqGxb/MyBSa+Ab3Mq1STKRb06LMCoh1j4bRjVF3so5
+         9A4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=xM+RFeuYKRxsIgkngGYK7F1nhOVwIknDUHFDYwBWS4M=;
+        b=gvUg2xX9exLf6N0OqEYepOVvdF2LmxIsvGLBHlvfHG5mOPHmm26F55uQAnBjmlsOZZ
+         mluGoN8lUIElBlEsToFgUbBLhVW73XF8f1VtaGkbP9d1VztL7kuVFbNq0hX0ZFOwxAwC
+         BwAZgkiuJsQwOECNvgUjkGsDS5bqpVCYak7FYREZyZu6UHIuZv5Vr1TS9NWGGzy8Sqrx
+         wYTegJ9esEq+OKN14j1pQQ9HU2TBS7wpIhiUAorh4m72yMImmaLFBhHwF13iNlU7KyQg
+         sLGHqtq4wp1tji4BSzkxi+LCwQC8vy12U78YrPcdb62XKa0mK+EFn8JaVMN73LgVC3JF
+         zXsg==
+X-Gm-Message-State: APjAAAW24Gb33LTWW4oyPZfNdvRu+nL1BpF3a6M3YepBKTcXQLkypfcg
+        04B/VXfAAa+dJt3BWfSPVGbE1Q==
+X-Google-Smtp-Source: APXvYqz3fHzTPnf64v8pB/ZHAteLVwxI4396VUH6eGzP3onjT97IZWc+DOk95vqA8DE+NZSD0H/6lw==
+X-Received: by 2002:a37:aa42:: with SMTP id t63mr35422129qke.353.1557966692992;
+        Wed, 15 May 2019 17:31:32 -0700 (PDT)
+Received: from qians-mbp.fios-router.home (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id m18sm1842826qki.21.2019.05.15.17.31.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 May 2019 17:31:32 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
 Subject: Re: [RESEND PATCH] nvdimm: fix some compilation warnings
-Thread-Topic: [RESEND PATCH] nvdimm: fix some compilation warnings
-Thread-Index: AQHVCmbrIPMA4NdLGku6pgbfwA21dKZtS3IAgAAQxYCAAABlAIAAALUA
-Date:   Thu, 16 May 2019 00:29:15 +0000
-Message-ID: <cd6db786ff5758914c77add4d7a9391886038c84.camel@intel.com>
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <CAPcyv4gGwyPf0j4rXRM3JjsjGSHB6bGdZfwg+v2y8NQ6hNVK8g@mail.gmail.com>
+Date:   Wed, 15 May 2019 20:31:31 -0400
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        "Weiny, Ira" <ira.weiny@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <3D0A6725-A738-4778-BB5B-1617B6184337@lca.pw>
 References: <20190514150735.39625-1-cai@lca.pw>
-         <CAPcyv4gGwyPf0j4rXRM3JjsjGSHB6bGdZfwg+v2y8NQ6hNVK8g@mail.gmail.com>
-         <7ba8164b60be4e41707559ed6623f9462c942735.camel@intel.com>
-         <CAPcyv4gLr_WrNOg58C5tfpZTp2wso1C=kHGDkMvH4+sGniLQMQ@mail.gmail.com>
-In-Reply-To: <CAPcyv4gLr_WrNOg58C5tfpZTp2wso1C=kHGDkMvH4+sGniLQMQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.30.5 (3.30.5-1.fc29) 
-x-originating-ip: [10.232.112.185]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5A3A42854626C34E9EAD584400932357@intel.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+ <CAPcyv4gGwyPf0j4rXRM3JjsjGSHB6bGdZfwg+v2y8NQ6hNVK8g@mail.gmail.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBXZWQsIDIwMTktMDUtMTUgYXQgMTc6MjYgLTA3MDAsIERhbiBXaWxsaWFtcyB3cm90ZToN
-Cj4gT24gV2VkLCBNYXkgMTUsIDIwMTkgYXQgNToyNSBQTSBWZXJtYSwgVmlzaGFsIEwNCj4gPHZp
-c2hhbC5sLnZlcm1hQGludGVsLmNvbT4gd3JvdGU6DQo+ID4gT24gV2VkLCAyMDE5LTA1LTE1IGF0
-IDE2OjI1IC0wNzAwLCBEYW4gV2lsbGlhbXMgd3JvdGU6DQo+ID4gPiA+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL252ZGltbS9idHQuYyBiL2RyaXZlcnMvbnZkaW1tL2J0dC5jDQo+ID4gPiA+IGluZGV4
-IDQ2NzE3NzZmNTYyMy4uOWYwMmE5OWNmYWMwIDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9kcml2ZXJz
-L252ZGltbS9idHQuYw0KPiA+ID4gPiArKysgYi9kcml2ZXJzL252ZGltbS9idHQuYw0KPiA+ID4g
-PiBAQCAtMTI2OSwxMSArMTI2OSw5IEBAIHN0YXRpYyBpbnQgYnR0X3JlYWRfcGcoc3RydWN0IGJ0
-dCAqYnR0LA0KPiA+ID4gPiBzdHJ1Y3QgYmlvX2ludGVncml0eV9wYXlsb2FkICpiaXAsDQo+ID4g
-PiA+IA0KPiA+ID4gPiAgICAgICAgICAgICAgICAgcmV0ID0gYnR0X2RhdGFfcmVhZChhcmVuYSwg
-cGFnZSwgb2ZmLCBwb3N0bWFwLA0KPiA+ID4gPiBjdXJfbGVuKTsNCj4gPiA+ID4gICAgICAgICAg
-ICAgICAgIGlmIChyZXQpIHsNCj4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgaW50IHJj
-Ow0KPiA+ID4gPiAtDQo+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIC8qIE1lZGlhIGVy
-cm9yIC0gc2V0IHRoZSBlX2ZsYWcgKi8NCj4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgICAg
-cmMgPSBidHRfbWFwX3dyaXRlKGFyZW5hLCBwcmVtYXAsDQo+ID4gPiA+IHBvc3RtYXAsIDAsIDEs
-DQo+ID4gPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTlZESU1NX0lPX0FUT01J
-Qyk7DQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGJ0dF9tYXBfd3JpdGUoYXJlbmEs
-IHByZW1hcCwgcG9zdG1hcCwgMCwNCj4gPiA+ID4gMSwNCj4gPiA+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBOVkRJTU1fSU9fQVRPTUlDKTsNCj4gPiA+ID4gICAgICAg
-ICAgICAgICAgICAgICAgICAgZ290byBvdXRfcnR0Ow0KPiA+ID4gDQo+ID4gPiBUaGlzIGRvZXNu
-J3QgbG9vayBjb3JyZWN0IHRvIG1lLCBzaG91bGRuJ3Qgd2UgYXQgbGVhc3QgYmUgbG9nZ2luZw0K
-PiA+ID4gdGhhdA0KPiA+ID4gdGhlIGJhZC1ibG9jayBmYWlsZWQgdG8gYmUgcGVyc2lzdGVudGx5
-IHRyYWNrZWQ/DQo+ID4gDQo+ID4gWWVzIGxvZ2dpbmcgaXQgc291bmRzIGdvb2QgdG8gbWUuIFFp
-YW4sIGNhbiB5b3UgaW5jbHVkZSB0aGlzIGluIHlvdXINCj4gPiByZXNwaW4gb3Igc2hhbGwgSSBz
-ZW5kIGEgZml4IGZvciBpdCBzZXBhcmF0ZWx5IChzaW5jZSB3ZSB3ZXJlIGFsd2F5cw0KPiA+IGln
-bm9yaW5nIHRoZSBmYWlsdXJlIGhlcmUgcmVnYXJkbGVzcyBvZiB0aGlzIHBhdGNoKT8NCj4gDQo+
-IEkgdGhpbmsgYSBzZXBhcmF0ZSBmaXggZm9yIHRoaXMgbWFrZXMgbW9yZSBzZW5zZS4gTGlrZWx5
-IGFsc28gbmVlZHMgdG8NCj4gYmUgYSByYXRlbGltaXRlZCBtZXNzYWdlIGluIGNhc2UgYSBzdG9y
-bSBvZiBlcnJvcnMgaXMgZW5jb3VudGVyZWQuDQoNClllcyBnb29kIHBvaW50IG9uIHJhdGUgbGlt
-aXRpbmcgLSBJIHdhcyB0aGlua2luZyBXQVJOX09OQ0UgYnV0IHRoYXQNCm1pZ2h0IG1hc2sgZXJy
-b3JzIGZvciBkaXN0aW5jdCBibG9ja3MsIGJ1dCBhIHJhdGUgbGltaXRlZCBwcmludGsgc2hvdWxk
-DQp3b3JrIGJlc3QuIEknbGwgcHJlcGFyZSBhIHBhdGNoLg0KDQo=
+
+>>                }
+>>=20
+>> diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
+>> index 7ff684159f29..2eb6a6cfe9e4 100644
+>> --- a/drivers/nvdimm/bus.c
+>> +++ b/drivers/nvdimm/bus.c
+>> @@ -642,7 +642,7 @@ static struct attribute *nd_device_attributes[] =3D=
+ {
+>>        NULL,
+>> };
+>>=20
+>> -/**
+>> +/*
+>>  * nd_device_attribute_group - generic attributes for all devices on =
+an nd bus
+>>  */
+>> struct attribute_group nd_device_attribute_group =3D {
+>> @@ -671,7 +671,7 @@ static umode_t nd_numa_attr_visible(struct =
+kobject *kobj, struct attribute *a,
+>>        return a->mode;
+>> }
+>>=20
+>> -/**
+>> +/*
+>>  * nd_numa_attribute_group - NUMA attributes for all devices on an nd =
+bus
+>>  */
+>=20
+> Lets just fix this to be a valid kernel-doc format for a struct.
+>=20
+> @@ -672,7 +672,7 @@ static umode_t nd_numa_attr_visible(struct kobject
+> *kobj, struct attribute *a,
+> }
+>=20
+> /**
+> - * nd_numa_attribute_group - NUMA attributes for all devices on an nd =
+bus
+> + * struct nd_numa_attribute_group - NUMA attributes for all devices
+> on an nd bus
+>  */
+> struct attribute_group nd_numa_attribute_group =3D {
+>        .attrs =3D nd_numa_attributes,
+
+This won=E2=80=99t work because kernel-doc is to explain a struct =
+definition, but this is a just an assignment.
+The "struct attribute_group=E2=80=9D kernel-doc is in =
+include/linux/sysfs.h.=
