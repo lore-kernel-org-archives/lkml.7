@@ -2,155 +2,72 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D07AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52904C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD30520862
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:14:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T1a1UQAW"
+	by mail.kernel.org (Postfix) with ESMTP id 2A17320848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:20:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558030823;
+	bh=IPUS+eyddhYoad8A7/YFy1sJjhEx+5nPkU4WTrDZxrU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=bC3fg8YgCy8aWO7DOulQ31cnBTQeu7q4FCYGJ6Ek/TOnl+qD4jS+KuWip66hS+omU
+	 bXltEYF3WT30KnmlYxIVADaK5Cf0cFduGyiNAwEV64ig1CcboduPkP26wBWqZ7996B
+	 v1NTVNS542YP+N30s/O0LajurztWIPxNnKsBDVvE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbfEPSOL (ORCPT
+        id S1729029AbfEPSUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 14:14:11 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:38344 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726314AbfEPSOL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 14:14:11 -0400
-Received: by mail-it1-f196.google.com with SMTP id i63so7830387ita.3;
-        Thu, 16 May 2019 11:14:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oYizfKO0iUCkCx87QTv9y+9/yguDDJWHGpNmrjjyMQE=;
-        b=T1a1UQAWEN1zwXTAxJ0W6YsgQvMdJVGrZGrDTxkDkBdftsG7bFuxqMMuyRYIbwpp3N
-         zpUtrb0fyJY34h5ZAqJ5AKxT5uAswqiB8LO5sX7EJZTZgfYEuGvfO/pb8QwJVTKmVOqr
-         MpYvM0qdYL46t4TGTV4SiIP/n20fxoie6h4lu9vHtVeHW6WMLT7uWNa4D7JCmGJdqinU
-         Pff5NHk3/urnJe9KHzJ6+b6680Gwf/AWHqMdWWb+a/6DEl/LFjfmKJv/qzjGlsL+oluN
-         QFRErVrPnqIzZrVDXUDAYofBl17/UhgtMEOjPMZ4uAeyPqGuIKtX1oJjyRayHP/2d5U4
-         lc4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oYizfKO0iUCkCx87QTv9y+9/yguDDJWHGpNmrjjyMQE=;
-        b=aI3BJkR77k41yerUhldC952Lgy/oKTQNv9pFBpp6ZHJXfWHgNppFPPKR63/OgKNvji
-         WOEectIMFLrFFPfkZPpWVc3p+bvNXB7fLNa6FV3/3ZNjO2yw7UW26KV6kxV36U+KWg5U
-         bmlCZOBl7xzdvEVv0lkmUZuT3kxYRUh8ba+ICWZYza8TjF4oCYJbDNVs0w/48Zf6Ie6u
-         xeGx5x3cFESJ2dKxx1GXmfQdsCCB/RMzYNultjszjl/Ux9VUYapFRZ/H6nvcJuLi3IJp
-         J0HnF6EkFzgNjjLUGaEgscd7vcywjSnxUJNUFno03ZVo6wOqQvSShYDvTKkOccxRog08
-         TLeg==
-X-Gm-Message-State: APjAAAXXykYoKxaINn+ab7wg/iSsFv4vFk9F6yssAfPJjgiq8rV5gEe0
-        Ue3/o0J0gJc52+tHt/XwASXbTEd3TW+lgHNXpyQ=
-X-Google-Smtp-Source: APXvYqzg91EbMijFJyKzCeNsU32nhaqbI5CANe+33pKz919XCTOUPyqfIi2K6fq6NPt65fI6+i8jOiwXWRTfBrRl2y4=
-X-Received: by 2002:a05:660c:105:: with SMTP id w5mr1049148itj.37.1558030450144;
- Thu, 16 May 2019 11:14:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190512082614.9045-1-tiny.windzz@gmail.com> <20190512082614.9045-4-tiny.windzz@gmail.com>
- <20190512134152.yrletgtiglxncyo4@flea>
-In-Reply-To: <20190512134152.yrletgtiglxncyo4@flea>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Fri, 17 May 2019 02:13:58 +0800
-Message-ID: <CAEExFWvkM86ajB4io8yopkKEOfRE3UObRpqoi=Sq0RtDnuaRWA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] dt-bindings: thermal: add binding document for h6
- thermal controller
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, catalin.marinas@arm.com,
-        will.deacon@arm.com, David Miller <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan.Cameron@huawei.com,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        paulmck@linux.ibm.com, Andy Gross <andy.gross@linaro.org>,
-        olof@lixom.net, bjorn.andersson@linaro.org,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        marc.w.gonzalez@free.fr, stefan.wahren@i2se.com,
-        enric.balletbo@collabora.com, Linux PM <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 May 2019 14:20:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726651AbfEPSUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 14:20:21 -0400
+Subject: Re: [GIT PULL] core kernel fixes
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558030821;
+        bh=IPUS+eyddhYoad8A7/YFy1sJjhEx+5nPkU4WTrDZxrU=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=Ck2Z0sJSerDwgwUX3nkL6lOetCdpnxYZ0dg5ARTvlSd7WX24DDL64DbaVKksorRwZ
+         ZO+FG6xOyHytwH16o/TV1sLK1UcYZgV1hJB+ljeM1Iu6kvnSIahbxVhQq/n8i9nBAT
+         7rt3Zj6XThYDQR044nfzHjqrEe3nturYOA7rstok=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190516155146.GA48500@gmail.com>
+References: <20190516155146.GA48500@gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190516155146.GA48500@gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+ core-urgent-for-linus
+X-PR-Tracked-Commit-Id: 2decec48b0fd28ffdbf4cc684bd04e735f0839dd
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b2ca74d32bba153a1507e6b7e36d3ec8a89311a1
+Message-Id: <155803082137.23531.2891613963173309469.pr-tracker-bot@kernel.org>
+Date:   Thu, 16 May 2019 18:20:21 +0000
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, May 12, 2019 at 9:41 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> Hi,
->
-> On Sun, May 12, 2019 at 04:26:14AM -0400, Yangtao Li wrote:
-> > This patch adds binding document for allwinner h6 thermal controller.
-> >
-> > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > ---
-> >  .../bindings/thermal/sun50i-thermal.txt       | 32 +++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/thermal/sun50i-thermal.txt
->
-> We're starting to convert to YAML for binding descriptions that will
-> allow to validate that all DT are properly using the binding. It would
-> be great if you could use it as well.
+The pull request you sent on Thu, 16 May 2019 17:51:46 +0200:
 
-What have been changed to this now?
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-urgent-for-linus
 
->
-> > diff --git a/Documentation/devicetree/bindings/thermal/sun50i-thermal.txt b/Documentation/devicetree/bindings/thermal/sun50i-thermal.txt
-> > new file mode 100644
-> > index 000000000000..67eda7794262
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/thermal/sun50i-thermal.txt
-> > @@ -0,0 +1,32 @@
-> > +Binding for Thermal Sensor of Allwinner SOC.
-> > +
-> > +This describes the device tree binding for the Allwinner thermal controller
-> > +which measures the on-SoC temperatures.
-> > +
-> > +Required properties:
-> > +- compatible:
-> > +  - "allwinner,sun50i-h6-ths" : For H6
-> > +- reg: Address range of the thermal controller
-> > +- clocks, clock-names: Clocks needed for the thermal controller.
-> > +                    The required clocks for h6 are: "bus".
->
-> If there's a single clock, then we don't need clock-names
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b2ca74d32bba153a1507e6b7e36d3ec8a89311a1
 
-Yeah, but, IIRC, H3 have two clk.
-So I'd like to keep it.
+Thank you!
 
->
-> > +- resets, reset-names: Reference to the reset controller controlling
-> > +                    the thermal controller.
->
-> Ditto.
-
-Done.
-
-Thx,
-Yangtao
->
-> > +- nvmem-cells: A phandle to the calibration data provided by a nvmem device. If
-> > +            unspecified default values shall be used.
-> > +- nvmem-cell-names: Should be "calib"
->
-> I thought you said that nvmem support was optional in the
-> driver. Maybe we could make it optional in the DT too?
->
-> Thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
