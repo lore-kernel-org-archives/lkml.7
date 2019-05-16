@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 564ABC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E7AC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F2720833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5686C20833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 16:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbfEPQAp (ORCPT
+        id S1727909AbfEPQAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 12:00:45 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43010 "EHLO
+        Thu, 16 May 2019 12:00:41 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43074 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727074AbfEPP6r (ORCPT
+        by vger.kernel.org with ESMTP id S1727096AbfEPP6s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:58:47 -0400
+        Thu, 16 May 2019 11:58:48 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImK-0006zm-AQ; Thu, 16 May 2019 16:58:44 +0100
+        id 1hRImJ-0006zS-Lj; Thu, 16 May 2019 16:58:43 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImE-0001S9-QF; Thu, 16 May 2019 16:58:38 +0100
+        id 1hRImF-0001Se-0y; Thu, 16 May 2019 16:58:39 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jon Masters" <jcm@redhat.com>,
+        "Josh Poimboeuf" <jpoimboe@redhat.com>,
+        "Konrad Rzeszutek Wilk" <konrad.wilk@oracle.com>,
         "Thomas Gleixner" <tglx@linutronix.de>,
-        "Borislav Petkov" <bp@suse.de>
+        "Tyler Hicks" <tyhicks@canonical.com>
 Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.797315136@decadent.org.uk>
+Message-ID: <lsq.1558022133.66611526@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 72/86] x86/speculation/mds: Add mitigation mode VMWERV
+Subject: [PATCH 3.16 78/86] x86/speculation/mds: Print SMT vulnerable on
+ MSBDS with mitigations off
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,120 +58,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 
-commit 22dd8365088b6403630b82423cf906491859b65e upstream.
+commit e2c3c94788b08891dcf3dbe608f9880523ecd71b upstream.
 
-In virtualized environments it can happen that the host has the microcode
-update which utilizes the VERW instruction to clear CPU buffers, but the
-hypervisor is not yet updated to expose the X86_FEATURE_MD_CLEAR CPUID bit
-to guests.
+This code is only for CPUs which are affected by MSBDS, but are *not*
+affected by the other two MDS issues.
 
-Introduce an internal mitigation mode VMWERV which enables the invocation
-of the CPU buffer clearing even if X86_FEATURE_MD_CLEAR is not set. If the
-system has no updated microcode this results in a pointless execution of
-the VERW instruction wasting a few CPU cycles. If the microcode is updated,
-but not exposed to a guest then the CPU buffers will be cleared.
+For such CPUs, enabling the mds_idle_clear mitigation is enough to
+mitigate SMT.
 
-That said: Virtual Machines Will Eventually Receive Vaccine
+However if user boots with 'mds=off' and still has SMT enabled, we should
+not report that SMT is mitigated:
 
+$cat /sys//devices/system/cpu/vulnerabilities/mds
+Vulnerable; SMT mitigated
+
+But rather:
+Vulnerable; SMT vulnerable
+
+Signed-off-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Jon Masters <jcm@redhat.com>
-Tested-by: Jon Masters <jcm@redhat.com>
+Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://lkml.kernel.org/r/20190412215118.294906495@localhost.localdomain
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/Documentation/x86/mds.rst
-+++ b/Documentation/x86/mds.rst
-@@ -93,11 +93,38 @@ The kernel provides a function to invoke
- The mitigation is invoked on kernel/userspace, hypervisor/guest and C-state
- (idle) transitions.
- 
-+As a special quirk to address virtualization scenarios where the host has
-+the microcode updated, but the hypervisor does not (yet) expose the
-+MD_CLEAR CPUID bit to guests, the kernel issues the VERW instruction in the
-+hope that it might actually clear the buffers. The state is reflected
-+accordingly.
-+
- According to current knowledge additional mitigations inside the kernel
- itself are not required because the necessary gadgets to expose the leaked
- data cannot be controlled in a way which allows exploitation from malicious
- user space or VM guests.
- 
-+Kernel internal mitigation modes
-+--------------------------------
-+
-+ ======= ============================================================
-+ off      Mitigation is disabled. Either the CPU is not affected or
-+          mds=off is supplied on the kernel command line
-+
-+ full     Mitigation is eanbled. CPU is affected and MD_CLEAR is
-+          advertised in CPUID.
-+
-+ vmwerv	  Mitigation is enabled. CPU is affected and MD_CLEAR is not
-+	  advertised in CPUID. That is mainly for virtualization
-+	  scenarios where the host has the updated microcode but the
-+	  hypervisor does not expose MD_CLEAR in CPUID. It's a best
-+	  effort approach without guarantee.
-+ ======= ============================================================
-+
-+If the CPU is affected and mds=off is not supplied on the kernel command
-+line then the kernel selects the appropriate mitigation mode depending on
-+the availability of the MD_CLEAR CPUID bit.
-+
- Mitigation points
- -----------------
- 
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -957,6 +957,7 @@ void df_debug(struct pt_regs *regs, long
- enum mds_mitigations {
- 	MDS_MITIGATION_OFF,
- 	MDS_MITIGATION_FULL,
-+	MDS_MITIGATION_VMWERV,
- };
- 
- #endif /* _ASM_X86_PROCESSOR_H */
+ arch/x86/kernel/cpu/bugs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -279,7 +279,8 @@ static enum mds_mitigations mds_mitigati
+@@ -1156,7 +1156,8 @@ static ssize_t mds_show_state(char *buf)
  
- static const char * const mds_strings[] = {
- 	[MDS_MITIGATION_OFF]	= "Vulnerable",
--	[MDS_MITIGATION_FULL]	= "Mitigation: Clear CPU buffers"
-+	[MDS_MITIGATION_FULL]	= "Mitigation: Clear CPU buffers",
-+	[MDS_MITIGATION_VMWERV]	= "Vulnerable: Clear CPU buffers attempted, no microcode",
- };
- 
- static void __init mds_select_mitigation(void)
-@@ -290,10 +291,9 @@ static void __init mds_select_mitigation
+ 	if (boot_cpu_has(X86_BUG_MSBDS_ONLY)) {
+ 		return sprintf(buf, "%s; SMT %s\n", mds_strings[mds_mitigation],
+-			       sched_smt_active() ? "mitigated" : "disabled");
++			       (mds_mitigation == MDS_MITIGATION_OFF ? "vulnerable" :
++			        sched_smt_active() ? "mitigated" : "disabled"));
  	}
  
- 	if (mds_mitigation == MDS_MITIGATION_FULL) {
--		if (boot_cpu_has(X86_FEATURE_MD_CLEAR))
--			static_branch_enable(&mds_user_clear);
--		else
--			mds_mitigation = MDS_MITIGATION_OFF;
-+		if (!boot_cpu_has(X86_FEATURE_MD_CLEAR))
-+			mds_mitigation = MDS_MITIGATION_VMWERV;
-+		static_branch_enable(&mds_user_clear);
- 	}
- 	pr_info("%s\n", mds_strings[mds_mitigation]);
- }
-@@ -753,8 +753,14 @@ void arch_smt_update(void)
- 		break;
- 	}
- 
--	if (mds_mitigation == MDS_MITIGATION_FULL)
-+	switch (mds_mitigation) {
-+	case MDS_MITIGATION_FULL:
-+	case MDS_MITIGATION_VMWERV:
- 		update_mds_branch_idle();
-+		break;
-+	case MDS_MITIGATION_OFF:
-+		break;
-+	}
- 
- 	mutex_unlock(&spec_ctrl_mutex);
- }
+ 	return sprintf(buf, "%s; SMT %s\n", mds_strings[mds_mitigation],
 
