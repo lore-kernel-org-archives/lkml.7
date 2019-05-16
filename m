@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6B6C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E3AC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D1E2087E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 176DD216F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 15:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727497AbfEPP7Q (ORCPT
+        id S1726861AbfEPP7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 11:59:16 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43168 "EHLO
+        Thu, 16 May 2019 11:59:19 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:43342 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727120AbfEPP6t (ORCPT
+        by vger.kernel.org with ESMTP id S1727162AbfEPP6u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 11:58:49 -0400
+        Thu, 16 May 2019 11:58:50 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImK-0006zd-7s; Thu, 16 May 2019 16:58:44 +0100
+        id 1hRImM-0006zQ-OX; Thu, 16 May 2019 16:58:46 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hRImE-0001SJ-SB; Thu, 16 May 2019 16:58:38 +0100
+        id 1hRImE-0001QK-0M; Thu, 16 May 2019 16:58:38 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,33 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Josh Poimboeuf" <jpoimboe@redhat.com>,
+        "Tom Lendacky" <thomas.lendacky@amd.com>,
+        "Greg KH" <gregkh@linuxfoundation.org>,
+        "Casey Schaufler" <casey.schaufler@intel.com>,
+        "Tim Chen" <tim.c.chen@linux.intel.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Dave Stewart" <david.c.stewart@intel.com>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
         "Jon Masters" <jcm@redhat.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>
+        "Waiman Long" <longman9394@gmail.com>,
+        "Arjan van de Ven" <arjan@linux.intel.com>,
+        "Andrea Arcangeli" <aarcange@redhat.com>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        "Andi Kleen" <ak@linux.intel.com>,
+        "Ingo Molnar" <mingo@kernel.org>,
+        "David Woodhouse" <dwmw@amazon.co.uk>,
+        "Asit Mallick" <asit.k.mallick@intel.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Jiri Kosina" <jkosina@suse.cz>
 Date:   Thu, 16 May 2019 16:55:33 +0100
-Message-ID: <lsq.1558022133.445844442@decadent.org.uk>
+Message-ID: <lsq.1558022133.580742350@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 74/86] Documentation: Add MDS vulnerability documentation
+Subject: [PATCH 3.16 50/86] x86/process: Consolidate and simplify
+ switch_to_xtra() code
 In-Reply-To: <lsq.1558022132.52852998@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,336 +77,178 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 5999bbe7a6ea3c62029532ec84dc06003a1fa258 upstream.
+commit ff16701a29cba3aafa0bd1656d766813b2d0a811 upstream.
 
-Add the initial MDS vulnerability documentation.
+Move the conditional invocation of __switch_to_xtra() into an inline
+function so the logic can be shared between 32 and 64 bit.
+
+Remove the handthrough of the TSS pointer and retrieve the pointer directly
+in the bitmap handling function. Use this_cpu_ptr() instead of the
+per_cpu() indirection.
+
+This is a preparatory change so integration of conditional indirect branch
+speculation optimization happens only in one place.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Jon Masters <jcm@redhat.com>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: David Woodhouse <dwmw@amazon.co.uk>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Casey Schaufler <casey.schaufler@intel.com>
+Cc: Asit Mallick <asit.k.mallick@intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Waiman Long <longman9394@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>
+Cc: Dave Stewart <david.c.stewart@intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Link: https://lkml.kernel.org/r/20181125185005.280855518@linutronix.de
 [bwh: Backported to 3.16:
- - Drop the index updates
- - Adjust filename]
+ - Use init_tss instead of cpu_tss_rw
+ - __switch_to() still uses the tss variable, so don't delete it
+ - Adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- /dev/null
-+++ b/Documentation/hw-vuln/mds.rst
-@@ -0,0 +1,307 @@
-+MDS - Microarchitectural Data Sampling
-+======================================
-+
-+Microarchitectural Data Sampling is a hardware vulnerability which allows
-+unprivileged speculative access to data which is available in various CPU
-+internal buffers.
-+
-+Affected processors
-+-------------------
-+
-+This vulnerability affects a wide range of Intel processors. The
-+vulnerability is not present on:
-+
-+   - Processors from AMD, Centaur and other non Intel vendors
-+
-+   - Older processor models, where the CPU family is < 6
-+
-+   - Some Atoms (Bonnell, Saltwell, Goldmont, GoldmontPlus)
-+
-+   - Intel processors which have the ARCH_CAP_MDS_NO bit set in the
-+     IA32_ARCH_CAPABILITIES MSR.
-+
-+Whether a processor is affected or not can be read out from the MDS
-+vulnerability file in sysfs. See :ref:`mds_sys_info`.
-+
-+Not all processors are affected by all variants of MDS, but the mitigation
-+is identical for all of them so the kernel treats them as a single
-+vulnerability.
-+
-+Related CVEs
-+------------
-+
-+The following CVE entries are related to the MDS vulnerability:
-+
-+   ==============  =====  ==============================================
-+   CVE-2018-12126  MSBDS  Microarchitectural Store Buffer Data Sampling
-+   CVE-2018-12130  MFBDS  Microarchitectural Fill Buffer Data Sampling
-+   CVE-2018-12127  MLPDS  Microarchitectural Load Port Data Sampling
-+   ==============  =====  ==============================================
-+
-+Problem
-+-------
-+
-+When performing store, load, L1 refill operations, processors write data
-+into temporary microarchitectural structures (buffers). The data in the
-+buffer can be forwarded to load operations as an optimization.
-+
-+Under certain conditions, usually a fault/assist caused by a load
-+operation, data unrelated to the load memory address can be speculatively
-+forwarded from the buffers. Because the load operation causes a fault or
-+assist and its result will be discarded, the forwarded data will not cause
-+incorrect program execution or state changes. But a malicious operation
-+may be able to forward this speculative data to a disclosure gadget which
-+allows in turn to infer the value via a cache side channel attack.
-+
-+Because the buffers are potentially shared between Hyper-Threads cross
-+Hyper-Thread attacks are possible.
-+
-+Deeper technical information is available in the MDS specific x86
-+architecture section: :ref:`Documentation/x86/mds.rst <mds>`.
-+
-+
-+Attack scenarios
-+----------------
-+
-+Attacks against the MDS vulnerabilities can be mounted from malicious non
-+priviledged user space applications running on hosts or guest. Malicious
-+guest OSes can obviously mount attacks as well.
-+
-+Contrary to other speculation based vulnerabilities the MDS vulnerability
-+does not allow the attacker to control the memory target address. As a
-+consequence the attacks are purely sampling based, but as demonstrated with
-+the TLBleed attack samples can be postprocessed successfully.
-+
-+Web-Browsers
-+^^^^^^^^^^^^
-+
-+  It's unclear whether attacks through Web-Browsers are possible at
-+  all. The exploitation through Java-Script is considered very unlikely,
-+  but other widely used web technologies like Webassembly could possibly be
-+  abused.
-+
-+
-+.. _mds_sys_info:
-+
-+MDS system information
-+-----------------------
-+
-+The Linux kernel provides a sysfs interface to enumerate the current MDS
-+status of the system: whether the system is vulnerable, and which
-+mitigations are active. The relevant sysfs file is:
-+
-+/sys/devices/system/cpu/vulnerabilities/mds
-+
-+The possible values in this file are:
-+
-+  =========================================   =================================
-+  'Not affected'				The processor is not vulnerable
-+
-+  'Vulnerable'					The processor is vulnerable,
-+						but no mitigation enabled
-+
-+  'Vulnerable: Clear CPU buffers attempted'	The processor is vulnerable but
-+						microcode is not updated.
-+						The mitigation is enabled on a
-+						best effort basis.
-+						See :ref:`vmwerv`
-+
-+  'Mitigation: CPU buffer clear'		The processor is vulnerable and the
-+						CPU buffer clearing mitigation is
-+						enabled.
-+  =========================================   =================================
-+
-+If the processor is vulnerable then the following information is appended
-+to the above information:
-+
-+    ========================  ============================================
-+    'SMT vulnerable'          SMT is enabled
-+    'SMT mitigated'           SMT is enabled and mitigated
-+    'SMT disabled'            SMT is disabled
-+    'SMT Host state unknown'  Kernel runs in a VM, Host SMT state unknown
-+    ========================  ============================================
-+
-+.. _vmwerv:
-+
-+Best effort mitigation mode
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+  If the processor is vulnerable, but the availability of the microcode based
-+  mitigation mechanism is not advertised via CPUID the kernel selects a best
-+  effort mitigation mode.  This mode invokes the mitigation instructions
-+  without a guarantee that they clear the CPU buffers.
-+
-+  This is done to address virtualization scenarios where the host has the
-+  microcode update applied, but the hypervisor is not yet updated to expose
-+  the CPUID to the guest. If the host has updated microcode the protection
-+  takes effect otherwise a few cpu cycles are wasted pointlessly.
-+
-+  The state in the mds sysfs file reflects this situation accordingly.
-+
-+
-+Mitigation mechanism
-+-------------------------
-+
-+The kernel detects the affected CPUs and the presence of the microcode
-+which is required.
-+
-+If a CPU is affected and the microcode is available, then the kernel
-+enables the mitigation by default. The mitigation can be controlled at boot
-+time via a kernel command line option. See
-+:ref:`mds_mitigation_control_command_line`.
-+
-+.. _cpu_buffer_clear:
-+
-+CPU buffer clearing
-+^^^^^^^^^^^^^^^^^^^
-+
-+  The mitigation for MDS clears the affected CPU buffers on return to user
-+  space and when entering a guest.
-+
-+  If SMT is enabled it also clears the buffers on idle entry when the CPU
-+  is only affected by MSBDS and not any other MDS variant, because the
-+  other variants cannot be protected against cross Hyper-Thread attacks.
-+
-+  For CPUs which are only affected by MSBDS the user space, guest and idle
-+  transition mitigations are sufficient and SMT is not affected.
-+
-+.. _virt_mechanism:
-+
-+Virtualization mitigation
-+^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+  The protection for host to guest transition depends on the L1TF
-+  vulnerability of the CPU:
-+
-+  - CPU is affected by L1TF:
-+
-+    If the L1D flush mitigation is enabled and up to date microcode is
-+    available, the L1D flush mitigation is automatically protecting the
-+    guest transition.
-+
-+    If the L1D flush mitigation is disabled then the MDS mitigation is
-+    invoked explicit when the host MDS mitigation is enabled.
-+
-+    For details on L1TF and virtualization see:
-+    :ref:`Documentation/hw-vuln//l1tf.rst <mitigation_control_kvm>`.
-+
-+  - CPU is not affected by L1TF:
-+
-+    CPU buffers are flushed before entering the guest when the host MDS
-+    mitigation is enabled.
-+
-+  The resulting MDS protection matrix for the host to guest transition:
-+
-+  ============ ===== ============= ============ =================
-+   L1TF         MDS   VMX-L1FLUSH   Host MDS     MDS-State
-+
-+   Don't care   No    Don't care    N/A          Not affected
-+
-+   Yes          Yes   Disabled      Off          Vulnerable
-+
-+   Yes          Yes   Disabled      Full         Mitigated
-+
-+   Yes          Yes   Enabled       Don't care   Mitigated
-+
-+   No           Yes   N/A           Off          Vulnerable
-+
-+   No           Yes   N/A           Full         Mitigated
-+  ============ ===== ============= ============ =================
-+
-+  This only covers the host to guest transition, i.e. prevents leakage from
-+  host to guest, but does not protect the guest internally. Guests need to
-+  have their own protections.
-+
-+.. _xeon_phi:
-+
-+XEON PHI specific considerations
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+  The XEON PHI processor family is affected by MSBDS which can be exploited
-+  cross Hyper-Threads when entering idle states. Some XEON PHI variants allow
-+  to use MWAIT in user space (Ring 3) which opens an potential attack vector
-+  for malicious user space. The exposure can be disabled on the kernel
-+  command line with the 'ring3mwait=disable' command line option.
-+
-+  XEON PHI is not affected by the other MDS variants and MSBDS is mitigated
-+  before the CPU enters a idle state. As XEON PHI is not affected by L1TF
-+  either disabling SMT is not required for full protection.
-+
-+.. _mds_smt_control:
-+
-+SMT control
-+^^^^^^^^^^^
-+
-+  All MDS variants except MSBDS can be attacked cross Hyper-Threads. That
-+  means on CPUs which are affected by MFBDS or MLPDS it is necessary to
-+  disable SMT for full protection. These are most of the affected CPUs; the
-+  exception is XEON PHI, see :ref:`xeon_phi`.
-+
-+  Disabling SMT can have a significant performance impact, but the impact
-+  depends on the type of workloads.
-+
-+  See the relevant chapter in the L1TF mitigation documentation for details:
-+  :ref:`Documentation/hw-vuln/l1tf.rst <smt_control>`.
-+
-+
-+.. _mds_mitigation_control_command_line:
-+
-+Mitigation control on the kernel command line
-+---------------------------------------------
-+
-+The kernel command line allows to control the MDS mitigations at boot
-+time with the option "mds=". The valid arguments for this option are:
-+
-+  ============  =============================================================
-+  full		If the CPU is vulnerable, enable all available mitigations
-+		for the MDS vulnerability, CPU buffer clearing on exit to
-+		userspace and when entering a VM. Idle transitions are
-+		protected as well if SMT is enabled.
-+
-+		It does not automatically disable SMT.
-+
-+  off		Disables MDS mitigations completely.
-+
-+  ============  =============================================================
-+
-+Not specifying this option is equivalent to "mds=full".
-+
-+
-+Mitigation selection guide
-+--------------------------
-+
-+1. Trusted userspace
-+^^^^^^^^^^^^^^^^^^^^
-+
-+   If all userspace applications are from a trusted source and do not
-+   execute untrusted code which is supplied externally, then the mitigation
-+   can be disabled.
-+
-+
-+2. Virtualization with trusted guests
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+   The same considerations as above versus trusted user space apply.
-+
-+3. Virtualization with untrusted guests
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+   The protection depends on the state of the L1TF mitigations.
-+   See :ref:`virt_mechanism`.
-+
-+   If the MDS mitigation is enabled and SMT is disabled, guest to host and
-+   guest to guest attacks are prevented.
-+
-+.. _mds_default_mitigations:
-+
-+Default mitigations
-+-------------------
-+
-+  The kernel default mitigations for vulnerable processors are:
-+
-+  - Enable CPU buffer clearing
-+
-+  The kernel does not by default enforce the disabling of SMT, which leaves
-+  SMT systems vulnerable when running untrusted code. The same rationale as
-+  for L1TF applies.
-+  See :ref:`Documentation/hw-vuln//l1tf.rst <default_mitigations>`.
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -1796,6 +1796,8 @@ bytes respectively. Such letter suffixes
- 			Not specifying this option is equivalent to
- 			mds=full.
+--- a/arch/x86/include/asm/switch_to.h
++++ b/arch/x86/include/asm/switch_to.h
+@@ -6,9 +6,6 @@
+ struct task_struct; /* one of the stranger aspects of C forward declarations */
+ __visible struct task_struct *__switch_to(struct task_struct *prev,
+ 					   struct task_struct *next);
+-struct tss_struct;
+-void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p,
+-		      struct tss_struct *tss);
  
-+			For details see: Documentation/hw-vuln/mds.rst
+ #ifdef CONFIG_X86_32
+ 
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -32,6 +32,8 @@
+ #include <asm/tlbflush.h>
+ #include <asm/spec-ctrl.h>
+ 
++#include "process.h"
 +
- 	mem=nn[KMG]	[KNL,BOOT] Force usage of a specific amount of memory
- 			Amount of memory to be used when the kernel is not able
- 			to see the whole system memory or for test.
+ /*
+  * per-CPU TSS segments. Threads are completely 'soft' on Linux,
+  * no more per-task TSS's. The TSS size is kept cacheline-aligned
+@@ -197,11 +199,12 @@ int set_tsc_mode(unsigned int val)
+ 	return 0;
+ }
+ 
+-static inline void switch_to_bitmap(struct tss_struct *tss,
+-				    struct thread_struct *prev,
++static inline void switch_to_bitmap(struct thread_struct *prev,
+ 				    struct thread_struct *next,
+ 				    unsigned long tifp, unsigned long tifn)
+ {
++	struct tss_struct *tss = this_cpu_ptr(&init_tss);
++
+ 	if (tifn & _TIF_IO_BITMAP) {
+ 		/*
+ 		 * Copy the relevant range of the IO bitmap.
+@@ -388,8 +391,7 @@ void speculation_ctrl_update(unsigned lo
+ 	preempt_enable();
+ }
+ 
+-void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p,
+-		      struct tss_struct *tss)
++void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p)
+ {
+ 	struct thread_struct *prev, *next;
+ 	unsigned long tifp, tifn;
+@@ -399,7 +401,7 @@ void __switch_to_xtra(struct task_struct
+ 
+ 	tifn = ACCESS_ONCE(task_thread_info(next_p)->flags);
+ 	tifp = ACCESS_ONCE(task_thread_info(prev_p)->flags);
+-	switch_to_bitmap(tss, prev, next, tifp, tifn);
++	switch_to_bitmap(prev, next, tifp, tifn);
+ 
+ 	propagate_user_return_notify(prev_p, next_p);
+ 
+--- /dev/null
++++ b/arch/x86/kernel/process.h
+@@ -0,0 +1,24 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// Code shared between 32 and 64 bit
++
++void __switch_to_xtra(struct task_struct *prev_p, struct task_struct *next_p);
++
++/*
++ * This needs to be inline to optimize for the common case where no extra
++ * work needs to be done.
++ */
++static inline void switch_to_extra(struct task_struct *prev,
++				   struct task_struct *next)
++{
++	unsigned long next_tif = task_thread_info(next)->flags;
++	unsigned long prev_tif = task_thread_info(prev)->flags;
++
++	/*
++	 * __switch_to_xtra() handles debug registers, i/o bitmaps,
++	 * speculation mitigations etc.
++	 */
++	if (unlikely(next_tif & _TIF_WORK_CTXSW_NEXT ||
++		     prev_tif & _TIF_WORK_CTXSW_PREV))
++		__switch_to_xtra(prev, next);
++}
+--- a/arch/x86/kernel/process_32.c
++++ b/arch/x86/kernel/process_32.c
+@@ -55,6 +55,8 @@
+ #include <asm/debugreg.h>
+ #include <asm/switch_to.h>
+ 
++#include "process.h"
++
+ asmlinkage void ret_from_fork(void) __asm__("ret_from_fork");
+ asmlinkage void ret_from_kernel_thread(void) __asm__("ret_from_kernel_thread");
+ 
+@@ -298,12 +300,7 @@ __switch_to(struct task_struct *prev_p,
+ 	task_thread_info(prev_p)->saved_preempt_count = this_cpu_read(__preempt_count);
+ 	this_cpu_write(__preempt_count, task_thread_info(next_p)->saved_preempt_count);
+ 
+-	/*
+-	 * Now maybe handle debug registers and/or IO bitmaps
+-	 */
+-	if (unlikely(task_thread_info(prev_p)->flags & _TIF_WORK_CTXSW_PREV ||
+-		     task_thread_info(next_p)->flags & _TIF_WORK_CTXSW_NEXT))
+-		__switch_to_xtra(prev_p, next_p, tss);
++	switch_to_extra(prev_p, next_p);
+ 
+ 	/*
+ 	 * Leave lazy mode, flushing any hypercalls made here.
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -51,6 +51,8 @@
+ #include <asm/switch_to.h>
+ #include <asm/xen/hypervisor.h>
+ 
++#include "process.h"
++
+ asmlinkage extern void ret_from_fork(void);
+ 
+ __visible DEFINE_PER_CPU_USER_MAPPED(unsigned long, old_rsp);
+@@ -428,12 +430,7 @@ __switch_to(struct task_struct *prev_p,
+ 		  (unsigned long)task_stack_page(next_p) +
+ 		  THREAD_SIZE - KERNEL_STACK_OFFSET);
+ 
+-	/*
+-	 * Now maybe reload the debug registers and handle I/O bitmaps
+-	 */
+-	if (unlikely(task_thread_info(next_p)->flags & _TIF_WORK_CTXSW_NEXT ||
+-		     task_thread_info(prev_p)->flags & _TIF_WORK_CTXSW_PREV))
+-		__switch_to_xtra(prev_p, next_p, tss);
++	switch_to_extra(prev_p, next_p);
+ 
+ #ifdef CONFIG_XEN
+ 	/*
 
