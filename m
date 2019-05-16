@@ -2,217 +2,99 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD37C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 969DDC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D34562082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6146720833
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:23:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="yuAHpEc/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbfEPSV2 (ORCPT
+        id S1727445AbfEPSXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 14:21:28 -0400
-Received: from ja.ssi.bg ([178.16.129.10]:35382 "EHLO ja.ssi.bg"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726648AbfEPSV1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 14:21:27 -0400
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id x4GIKjoZ004285;
-        Thu, 16 May 2019 21:20:45 +0300
-Date:   Thu, 16 May 2019 21:20:45 +0300 (EEST)
-From:   Julian Anastasov <ja@ssi.bg>
-To:     YueHaibing <yuehaibing@huawei.com>
-cc:     davem@davemloft.net, wensong@linux-vs.org, horms@verge.net.au,
-        pablo@netfilter.org, kadlec@blackhole.kfki.hu, fw@strlen.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org
-Subject: Re: [PATCH] ipvs: Fix use-after-free in ip_vs_in
-In-Reply-To: <20190515093614.21176-1-yuehaibing@huawei.com>
-Message-ID: <alpine.LFD.2.21.1905162106550.3687@ja.home.ssi.bg>
-References: <20190515093614.21176-1-yuehaibing@huawei.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Thu, 16 May 2019 14:23:01 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45319 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726357AbfEPSXB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 14:23:01 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w144so3229734oie.12
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 11:23:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b4xg0I4nHSIZDLwgdApekV9qe+c7BH2Awe3q1fKa6Io=;
+        b=yuAHpEc/2FUp4yfXksMyV9luWP6huU5wiNXGn+NIlDFS9bbErRHNSxKlKkYr1GjFOo
+         VQ/bYwSavyf7szedZRsCbovVVYpDm/cygkUfWHeQp7fuDa34VJ6SkAQHC1FVUgQiuUNm
+         tqLbLsHyz7tHWMHdVPJIwK3cYNK21Yknj1tAUuhOgfD8JJmxEk7WU2ytUOSFd8txASrU
+         4+4i06pABRZtWMLf1jaCA6NFasC4kCCUtKyaTopkzsSCcMfDFk0X5iXm43N9EJ/TriM5
+         Rsv7MO7RVg+tG5j+WcR8IXZworhpQ5BKKBk9E93QtYjt1oauxG6cUk1KOgqWhCTLpLl1
+         jEiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b4xg0I4nHSIZDLwgdApekV9qe+c7BH2Awe3q1fKa6Io=;
+        b=ZHrPWcY72ZymTI85+d2zgVndaOlhwuAKWdz+kJVbvnWHP87YYKnEzY4j1tUo2Wn8wi
+         3dKd3H8IrFPd9QYnBhJqMNuBRm5IfGjuLtk5nu89765vY8IVEXyKM1Ee2nouHwAOr6Be
+         A0j0GTxgLj9mDcyknFOw3LrA2ttbfaveWIzJ0YiIXmJRcVOS0g2QSrcepDh2SApc3wfy
+         I0iVnM4IrD/KnDC4fjmdJSlARR/f/SoNSNntNcE6PSy/Fjsp8c8hGCpImQUryeBy5hg/
+         5wdkKOetA5SA8cJa0w9RROeHN3PuqvDsv5MeYWa61SgFHsEm0ZpkdvMDQP1MjKkm4bfc
+         thyg==
+X-Gm-Message-State: APjAAAU+GnBl8Nl6qRvcOxMQXjt30urvYENVCiT2kBvgpyD03oAuKjTf
+        2Q3Z/UdaqMIsWFAo8SoHpHhIAoswG/kH6WIfE/g8qg==
+X-Google-Smtp-Source: APXvYqwg9rOSNakUV6ntAHuPcrnmGPMNTHp9x75smlsew5RpVuQ939PYfxxwI+yczWaxBwHwk8lhj1yhUXwii4EAqnQ=
+X-Received: by 2002:aca:4208:: with SMTP id p8mr12157546oia.105.1558030980537;
+ Thu, 16 May 2019 11:23:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20190516055422.16939-1-vaibhav@linux.ibm.com>
+In-Reply-To: <20190516055422.16939-1-vaibhav@linux.ibm.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 16 May 2019 11:22:49 -0700
+Message-ID: <CAPcyv4j6Jhpqg9SqAAmz2A6PDry7UUtnniNVoc_qG=WXwuVOWA@mail.gmail.com>
+Subject: Re: [PATCH] dax: Fix last_page check in __bdev_dax_supported()
+To:     Vaibhav Jain <vaibhav@linux.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Chandan Rajendra <chandan@linux.ibm.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 15, 2019 at 10:55 PM Vaibhav Jain <vaibhav@linux.ibm.com> wrote:
+>
+> Presently __bdev_dax_supported() checks if first sector of last
+> page ( last_page ) on the block device is aligned to page
+> boundary. However the code to compute 'last_page' assumes that there
+> are 8 sectors/page assuming a 4K page-size.
+>
+> This assumption breaks on architectures which use a different page
+> size specifically PPC64 where page-size == 64K. Hence a warning is
+> seen while trying to mount a xfs/ext4 file-system with dax enabled:
+>
+> $ sudo mount -o dax /dev/pmem0 /mnt/pmem
+> XFS (pmem0): DAX enabled. Warning: EXPERIMENTAL, use at your own risk
+> XFS (pmem0): DAX unsupported by block device. Turning off DAX.
+>
+> The patch fixes this issue by updating calculation of 'last_var' to
+> take into account number-of-sectors/page instead of assuming it to be
+> '8'.
 
-	Hello,
+Yes, I noticed this too and fixed it up in a wider change that also
+allows device-mapper to validate each component device. Does this
+patch work for you?
 
-On Wed, 15 May 2019, YueHaibing wrote:
-
-> BUG: KASAN: use-after-free in ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
-> Read of size 4 at addr ffff8881e9b26e2c by task sshd/5603
-> 
-> CPU: 0 PID: 5603 Comm: sshd Not tainted 4.19.39+ #30
-> Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-> Call Trace:
->  dump_stack+0x71/0xab
->  print_address_description+0x6a/0x270
->  kasan_report+0x179/0x2c0
->  ? ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
->  ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
->  ? tcp_in_window+0xfe0/0xfe0 [nf_conntrack]
->  ? ip_vs_in_icmp+0xcc0/0xcc0 [ip_vs]
->  ? ipt_do_table+0x4f1/0xad0 [ip_tables]
->  ? ip_vs_out+0x126/0x8f0 [ip_vs]
->  ? common_interrupt+0xa/0xf
->  ip_vs_in+0xd8/0x170 [ip_vs]
->  ? ip_vs_in.part.29+0xd20/0xd20 [ip_vs]
->  ? nf_nat_ipv4_fn+0x21/0xc0 [nf_nat_ipv4]
->  ? nf_nat_packet+0x4b/0x90 [nf_nat]
->  ? nf_nat_ipv4_local_fn+0xf9/0x160 [nf_nat_ipv4]
->  ? ip_vs_remote_request4+0x50/0x50 [ip_vs]
->  nf_hook_slow+0x5f/0xe0
->  ? sock_write_iter+0x121/0x1c0
->  __ip_local_out+0x1d5/0x250
->  ? ip_finish_output+0x430/0x430
->  ? ip_forward_options+0x2d0/0x2d0
->  ? ip_copy_addrs+0x2d/0x40
->  ? __ip_queue_xmit+0x2ca/0x730
->  ip_local_out+0x19/0x60
->  __tcp_transmit_skb+0xba1/0x14f0
->  ? __tcp_select_window+0x330/0x330
->  ? pvclock_clocksource_read+0xd1/0x180
->  ? kvm_sched_clock_read+0xd/0x20
->  ? sched_clock+0x5/0x10
->  ? sched_clock_cpu+0x18/0x100
->  tcp_write_xmit+0x41f/0x1ed0
->  ? _copy_from_iter_full+0xca/0x340
->  __tcp_push_pending_frames+0x52/0x140
->  tcp_sendmsg_locked+0x787/0x1600
->  ? __wake_up_common_lock+0x80/0x130
->  ? tcp_sendpage+0x60/0x60
->  ? remove_wait_queue+0x84/0xb0
->  ? mutex_unlock+0x1d/0x40
->  ? n_tty_read+0x4f7/0xd20
->  ? check_stack_object+0x21/0x60
->  ? inet_sk_set_state+0xb0/0xb0
->  tcp_sendmsg+0x27/0x40
->  sock_sendmsg+0x6d/0x80
->  sock_write_iter+0x121/0x1c0
->  ? sock_sendmsg+0x80/0x80
->  ? ldsem_up_read+0x13/0x40
->  ? iov_iter_init+0x77/0xb0
->  __vfs_write+0x23e/0x370
->  ? kernel_read+0xa0/0xa0
->  ? do_vfs_ioctl+0x134/0x900
->  ? __set_current_blocked+0x7e/0x90
->  ? __audit_syscall_entry+0x18e/0x1f0
->  ? ktime_get_coarse_real_ts64+0x51/0x70
->  vfs_write+0xe7/0x230
->  ksys_write+0xa1/0x120
->  ? __ia32_sys_read+0x50/0x50
->  ? __audit_syscall_exit+0x3ce/0x450
->  do_syscall_64+0x73/0x200
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> RIP: 0033:0x7ff6f6147c60
-> Code: 73 01 c3 48 8b 0d 28 12 2d 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 5d 73 2d 00 00 75 10 b8 01 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83
-> RSP: 002b:00007ffd772ead18 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-> RAX: ffffffffffffffda RBX: 0000000000000034 RCX: 00007ff6f6147c60
-> RDX: 0000000000000034 RSI: 000055df30a31270 RDI: 0000000000000003
-> RBP: 000055df30a31270 R08: 0000000000000000 R09: 0000000000000000
-> R10: 00007ffd772ead70 R11: 0000000000000246 R12: 00007ffd772ead74
-> R13: 00007ffd772eae20 R14: 00007ffd772eae24 R15: 000055df2f12ddc0
-> 
-> Allocated by task 6052:
->  kasan_kmalloc+0xa0/0xd0
->  __kmalloc+0x10a/0x220
->  ops_init+0x97/0x190
->  register_pernet_operations+0x1ac/0x360
->  register_pernet_subsys+0x24/0x40
->  0xffffffffc0ea016d
->  do_one_initcall+0x8b/0x253
->  do_init_module+0xe3/0x335
->  load_module+0x2fc0/0x3890
->  __do_sys_finit_module+0x192/0x1c0
->  do_syscall_64+0x73/0x200
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Freed by task 6067:
->  __kasan_slab_free+0x130/0x180
->  kfree+0x90/0x1a0
->  ops_free_list.part.7+0xa6/0xc0
->  unregister_pernet_operations+0x18b/0x1f0
->  unregister_pernet_subsys+0x1d/0x30
->  ip_vs_cleanup+0x1d/0xd2f [ip_vs]
->  __x64_sys_delete_module+0x20c/0x300
->  do_syscall_64+0x73/0x200
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> The buggy address belongs to the object at ffff8881e9b26600 which belongs to the cache kmalloc-4096 of size 4096
-> The buggy address is located 2092 bytes inside of 4096-byte region [ffff8881e9b26600, ffff8881e9b27600)
-> The buggy address belongs to the page:
-> page:ffffea0007a6c800 count:1 mapcount:0 mapping:ffff888107c0e600 index:0x0 compound_mapcount: 0
-> flags: 0x17ffffc0008100(slab|head)
-> raw: 0017ffffc0008100 dead000000000100 dead000000000200 ffff888107c0e600
-> raw: 0000000000000000 0000000080070007 00000001ffffffff 0000000000000000
-> page dumped because: kasan: bad access detected
-> 
-> Memory state around the buggy address:
->  ffff8881e9b26d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->  ffff8881e9b26d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> >ffff8881e9b26e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->                                   ^
->  ffff8881e9b26e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->  ffff8881e9b26f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> 
-> while unregistering ipvs module, ops_free_list calls
-> __ip_vs_cleanup, then nf_unregister_net_hooks be called to
-> do remove nf hook entries. It need a RCU period to finish,
-> however net->ipvs is set to NULL immediately, which will
-> trigger NULL pointer dereference when a packet is hooked
-> and handled by ip_vs_in where net->ipvs is dereferenced.
-> 
-> Another scene is ops_free_list call ops_free to free the
-> net_generic directly while __ip_vs_cleanup finished, then
-> calling ip_vs_in will triggers use-after-free.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: efe41606184e ("ipvs: convert to use pernet nf_hook api")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  net/netfilter/ipvs/ip_vs_core.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
-> index 1445755..33205db 100644
-> --- a/net/netfilter/ipvs/ip_vs_core.c
-> +++ b/net/netfilter/ipvs/ip_vs_core.c
-> @@ -2320,6 +2320,7 @@ static void __net_exit __ip_vs_cleanup(struct net *net)
->  	ip_vs_control_net_cleanup(ipvs);
->  	ip_vs_estimator_net_cleanup(ipvs);
->  	IP_VS_DBG(2, "ipvs netns %d released\n", ipvs->gen);
-> +	synchronize_net();
-
-	Grace period in net_exit handler should be avoided.
-It can be added to ip_vs_cleanup() but may be we have to
-reorder the operations, so that we can have single grace
-period. Note that ip_vs_conn_cleanup() already includes
-rcu_barrier() and we can use it to split the cleanups to
-two steps: 1: unregister hooks (__ip_vs_dev_cleanup) to
-stop traffic and 2: cleanups when traffic is stopped.
-
-	Note that the problem should be only when module
-is removed, the case with netns exit in cleanup_net()
-should not cause problem.
-
-	I'll have more time this weekend to reorganize the
-code...
-
->  	net->ipvs = NULL;
->  }
->  
-> -- 
-> 2.7.4
-
-Regards
-
---
-Julian Anastasov <ja@ssi.bg>
+https://lore.kernel.org/lkml/155789172402.748145.11853718580748830476.stgit@dwillia2-desk3.amr.corp.intel.com/
