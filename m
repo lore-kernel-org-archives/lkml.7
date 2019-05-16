@@ -2,81 +2,86 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F1AC04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:54:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F16DC04E84
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD06F20657
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:54:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC45D20862
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 13:55:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558014956;
+	bh=BvXt+eR4jR0LUyZlbGdZ51x2LIrl45NN9y7NG5dGC9s=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=vJw4vpKacdUPiuIgYnngz7VrkkC4QWzKciBl/LsND26g+O+go9sbmwGFnzgsPTGzb
+	 I8bxORJ31Ua3IV40MtQWoQZvWDJVS+wL3pfjMSYoxfXnYTGHnPoiw6yfS3AH37z7W5
+	 Sq96RFhSzsmJD8m/rIo7ayMxopDxKeH3nITMVaRg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbfEPNyu (ORCPT
+        id S1727658AbfEPNzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 09:54:50 -0400
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:55164 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbfEPNyt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 09:54:49 -0400
-X-Greylist: delayed 441 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 May 2019 09:54:49 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 5EC873F38D;
-        Thu, 16 May 2019 15:47:27 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id JVcPQQ_ePVLB; Thu, 16 May 2019 15:47:27 +0200 (CEST)
-Received: from localhost (h-41-252.A163.priv.bahnhof.se [46.59.41.252])
-        (Authenticated sender: mb547485)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id 60D9F3F4C2;
-        Thu, 16 May 2019 15:47:26 +0200 (CEST)
-Date:   Thu, 16 May 2019 15:47:25 +0200
-From:   Fredrik Noring <noring@nocrew.org>
-To:     Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, "hch@lst.de" <hch@lst.de>,
-        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "marex@denx.de" <marex@denx.de>,
-        "JuergenUrban@gmx.de" <JuergenUrban@gmx.de>,
-        Leo Li <leoyang.li@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 0/3] prerequisites for device reserved local mem
- rework
-Message-ID: <20190516134725.GA53952@sx9>
-References: <20190514143807.7745-1-laurentiu.tudor@nxp.com>
- <9d34015d-c219-179b-3141-4b0de3530ac3@arm.com>
- <20190514182931.GA2559@sx9>
- <0e5f3b86-7a80-eec7-691b-34a123194208@nxp.com>
- <20190515162858.GB17162@sx9>
- <0fea5fa7-e2b0-b34d-3bf8-976007df2dc2@nxp.com>
+        Thu, 16 May 2019 09:55:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38500 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726623AbfEPNzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 09:55:55 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E22F620657;
+        Thu, 16 May 2019 13:55:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558014954;
+        bh=BvXt+eR4jR0LUyZlbGdZ51x2LIrl45NN9y7NG5dGC9s=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=UpoTFQ/JWVo7a9UoCtESEVaHEbqguTunbA6Bw/K9JWTyBGrhJp8JWY7J7m80hF63B
+         R436BoQqvmQRhB77Fx2eUOSUg5e+agLBWYry7rXyriP4BjDKBtDr9DSjvRHn9eWQ9Y
+         Nfe0zHdLcRpbZCfLx4Phi4x47DT8+zM+vAL2lf4Q=
+Subject: Re: [PATCH 5.1 00/46] 5.1.3-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190515090616.670410738@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <38cc4651-4e70-48c8-5793-5857d0f33cc5@kernel.org>
+Date:   Thu, 16 May 2019 07:55:43 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <0fea5fa7-e2b0-b34d-3bf8-976007df2dc2@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190515090616.670410738@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurentiu,
-
-> > The kernel oopses with "unable to handle kernel paging request at virtual
-> > address 000aba0b" in hcd_alloc_coherent via usb_hcd_map_urb_for_dma. 
+On 5/15/19 4:56 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.3 release.
+> There are 46 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> By any chance, does this address looks like the dma_addr that the device 
-> should target?
+> Responses should be made by Fri 17 May 2019 09:04:22 AM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.3-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Yes, that looks like a typical device address suitable for its DMA.
+Compiled and booted on my test system. No dmesg regressions.
 
-> Actually, I think I'm misusing genalloc and also it appears that i need 
-> to add a mapping on the phys address. So my plan is to change the 
-> "unsigned long virt" to be the void * returned by the mapping operation 
-> and the phys_addr_t be the dma_addr_t. I'll return with a patch.
-
-Great, I'm happy to test your next patch revision.
-
-Fredrik
+thanks,
+-- Shuah
