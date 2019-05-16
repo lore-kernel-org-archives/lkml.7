@@ -2,117 +2,111 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB05C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC26C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C59A20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8EE20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:41:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XewtSERX"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mKnvF0Rv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbfEPOjr (ORCPT
+        id S1727355AbfEPOlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:39:47 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42788 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726717AbfEPOjq (ORCPT
+        Thu, 16 May 2019 10:41:05 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:15985 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726856AbfEPOlF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:39:46 -0400
-Received: by mail-ed1-f67.google.com with SMTP id l25so5594529eda.9
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 07:39:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3CyBDin8DCVhqMsm5Y31nNq5E0wYgKjhJ5os3L5pACs=;
-        b=XewtSERXwuRq/hMVzfTTvLn3bup7RL3HYHHiSaecYOcuXF0IYqV7+eahP0uoc2sntm
-         all0N0vBT2cEdbkpmEsZSMOHRpXo6iW0x4s9X85jbF/Gs3irW/ih2LB9XWftHVqFvoxL
-         zLCWkLS84U94nRd2oDZuAQn3I+MZk66knbYg515af60MhANSCel3a9ThgmTA0MVapTqI
-         5zV2XK01YaT/iulH3tvZbCE7lRjnY+IhIzPwTcHf6do6SiNoFYitBpKumOTkoznvSoYZ
-         6KDcV0oC5T1hfz1q7tbHZMWpCM0WYLl0ytkNaqiRTMcFgZuF3edRp1KtFoFaMc9E57Z3
-         le5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3CyBDin8DCVhqMsm5Y31nNq5E0wYgKjhJ5os3L5pACs=;
-        b=EYDfsGCIVlDCZFCNMzG/xJUGZejY9TA3ul+zjXQFMhk+Z9PLIak6/Im21PxUXb+h8L
-         SE9T2bmqoLZ3LkmxQJx+TKBehurCgACCSYknvKMeqaq2kw17eL6eTj71YyOdIW71NO+X
-         Dmnit/AshUdd0A7mhAh9Gqz/ruwWxjeOz9UaQ28Xx2JdiELpenCITSArOt2rXFCrswnB
-         S3BJYu8I5ehIPztogkkmqXaAwjVn36dSNR+SkxmnVOckXGitycNnRsW6LoDInGHhnQro
-         D6jSCbtc+dzYqXMWarMkLWcqKxLBikel+GjuBjj7LPukwKX0usYc5Bh9oW3nEG9xFqlG
-         ha5Q==
-X-Gm-Message-State: APjAAAXX5EiKTCam3TWxFEWk5vW3RrFvemnZLvFxkB5rRv9EpsSWOOdW
-        ojHic4Zzh9IdxuSBAjLJ4EG/d2V8hA2e7bUby4aOlA==
-X-Google-Smtp-Source: APXvYqzVw4+DR7PKEpSfxZo2Bdbylhw3TaXpzTsHymAwtO3mmxyKdPyPNxfkAFlXWKqIm8B6CbcVq2T1cTiJkrYtHQs=
-X-Received: by 2002:a17:906:b6c8:: with SMTP id ec8mr39217179ejb.89.1558017584937;
- Thu, 16 May 2019 07:39:44 -0700 (PDT)
+        Thu, 16 May 2019 10:41:05 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cdd767a0000>; Thu, 16 May 2019 07:41:00 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 16 May 2019 07:41:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 16 May 2019 07:41:04 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 16 May
+ 2019 14:41:02 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Thu, 16 May 2019 14:41:02 +0000
+Received: from jilin-desktop.nvidia.com (Not Verified[10.19.120.147]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cdd767c0004>; Thu, 16 May 2019 07:41:02 -0700
+From:   Jim Lin <jilin@nvidia.com>
+To:     <gregkh@linuxfoundation.org>, <mathias.nyman@intel.com>,
+        <stern@rowland.harvard.edu>, <kai.heng.feng@canonical.com>,
+        <drinkcat@chromium.org>, <keescook@chromium.org>,
+        <nsaenzjulienne@suse.de>, <jflat@chromium.org>, <malat@debian.org>
+CC:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Jim Lin <jilin@nvidia.com>
+Subject: [PATCH v10 0/2] usb: xhci: Add Clear_TT_Buffer
+Date:   Thu, 16 May 2019 22:40:55 +0800
+Message-ID: <1558017657-13835-1-git-send-email-jilin@nvidia.com>
+X-Mailer: git-send-email 2.1.4
 MIME-Version: 1.0
-References: <20190516102817.188519-1-hsinyi@chromium.org> <20190516102817.188519-2-hsinyi@chromium.org>
- <CAL_JsqLx1UdjCnZ69aQm0GU_uOdd7tTdD_oM=D7yhDANoQ0fEA@mail.gmail.com>
-In-Reply-To: <CAL_JsqLx1UdjCnZ69aQm0GU_uOdd7tTdD_oM=D7yhDANoQ0fEA@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 16 May 2019 16:39:32 +0200
-Message-ID: <CAKv+Gu_kgHEhk-p8KoGVgpifdjA67Li-D19_KSLo+1h4ZvL=3g@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] arm64: implement update_fdt_pgprot()
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Hsin-Yi Wang <hsinyi@chromium.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        James Morse <james.morse@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Kees Cook <keescook@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558017660; bh=v2kdg0G9OB35EhsiUGeW5BB34SuON9Dmd2af6lTUn60=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=mKnvF0RvRwNv3ft+9LtXSA+tGcl9pG8thUaoFWxP0h+pNAax3tEW7WCK7DvWo260W
+         /hqBoGm91fR8n6C6ckPlbFmXXKBZWYrqAv6K3qAhaSk+/OOcrwCKA0YgrAEaz95Z0v
+         riB8/wlW0rm5KS7PwWDSqrCE5I4gFmBYgPIaPpSfslfwSyBaRDEWqMVeeTH1vrVvxf
+         tiuFxWRh4gzVGuQjAt738Z5G+dXco2LP7HJ5DzqZ/pvzTiEh0yNJQfsgu8GP31gaAs
+         dD0NmJqvaswtwzqOabgpnvXASWVYR45xKacp7/9SOabZiR4mkCCC4YklvD0J0/BrgR
+         wTmaou7KVmQAg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 May 2019 at 16:37, Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Thu, May 16, 2019 at 5:28 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
-> >
-> > Basically does similar things like __fixmap_remap_fdt(). It's supposed
-> > to be called after fixmap_remap_fdt() is called at least once, so region
-> > checking can be skipped. Since it needs to know dt physical address, make
-> > a copy of the value of __fdt_pointer.
-> >
-> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> > ---
-> >  arch/arm64/kernel/setup.c |  2 ++
-> >  arch/arm64/mm/mmu.c       | 17 +++++++++++++++++
-> >  2 files changed, 19 insertions(+)
->
-> Why not just map the FDT R/W at the start and change it to RO just
-> before calling unflatten_device_tree? Then all the FDT scanning
-> functions or any future fixups we need can just assume R/W. That is
-> essentially what Stephen suggested. However, there's no need for a
-> weak function as it can all be done within the arch code.
->
-> However, I'm still wondering why the FDT needs to be RO in the first place.
->
+USB 2.0 specification chapter 11.17.5 says "as part of endpoint halt
+processing for full-/low-speed endpoints connected via a TT, the host
+software must use the Clear_TT_Buffer request to the TT to ensure
+that the buffer is not in the busy state".
 
-It was RO because it could be RO, and we wanted to ensure that it
-didn't get modified inadvertently (hence the CRC check we added as
-well)
+In our case, a full-speed speaker (ConferenceCam) is behind a high-
+speed hub (ConferenceCam Connect), sometimes once we get STALL on a
+request we may continue to get STALL with the folllowing requests,
+like Set_Interface.
 
-If there is a need for the FDT to be RW, let's make it RW.
+Solution is to invoke usb_hub_clear_tt_buffer() to send
+Clear_TT_Buffer request to the hub of the device for the following
+Set_Interface requests to the device to get ACK successfully.
+
+The Clear_TT_Buffer request sent to the hub includes the address of
+the LS/FS child device in wValue field. usb_hub_clear_tt_buffer()
+uses udev->devnum to set the address wValue. This won't work for
+devices connected to xHC.
+
+For other host controllers udev->devnum is the same as the address of
+the usb device, chosen and set by usb core. With xHC the controller
+hardware assigns the address, and won't be the same as devnum.
+
+Here we have two patches.
+One is to add devaddr in struct usb_device for
+usb_hub_clear_tt_buffer() to use.
+Another is to invoke usb_hub_clear_tt_buffer() for halt processing.
+ 
+Signed-off-by: Jim Lin <jilin@nvidia.com>
+
+Jim Lin (2):
+  usb: xhci : Add devaddr in struct usb_device
+  usb: xhci: Add Clear_TT_Buffer
+
+ drivers/usb/core/hub.c       |  4 +++-
+ drivers/usb/host/xhci-ring.c | 27 ++++++++++++++++++++++++++-
+ drivers/usb/host/xhci.c      | 18 ++++++++++++++++++
+ drivers/usb/host/xhci.h      |  5 +++++
+ include/linux/usb.h          |  2 ++
+ 5 files changed, 54 insertions(+), 2 deletions(-)
+
+-- 
+2.1.4
+
