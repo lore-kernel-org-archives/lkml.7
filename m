@@ -2,31 +2,31 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C0C4C04E84
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C196DC04AB4
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D2DD205C9
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D90C205C9
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 08:47:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726882AbfEPIra (ORCPT
+        id S1726915AbfEPIrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 04:47:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46518 "EHLO mx1.redhat.com"
+        Thu, 16 May 2019 04:47:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48932 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726352AbfEPIra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 04:47:30 -0400
+        id S1726352AbfEPIrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 04:47:35 -0400
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A8AA1308623C;
-        Thu, 16 May 2019 08:47:29 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 608A03001810;
+        Thu, 16 May 2019 08:47:34 +0000 (UTC)
 Received: from laptop.redhat.com (ovpn-116-17.ams2.redhat.com [10.36.116.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5739A5C205;
-        Thu, 16 May 2019 08:47:22 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0AE475C205;
+        Thu, 16 May 2019 08:47:29 +0000 (UTC)
 From:   Eric Auger <eric.auger@redhat.com>
 To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, joro@8bytes.org,
         iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
@@ -34,77 +34,168 @@ To:     eric.auger.pro@gmail.com, eric.auger@redhat.com, joro@8bytes.org,
         robin.murphy@arm.com, will.deacon@arm.com, hanjun.guo@linaro.org,
         sudeep.holla@arm.com
 Cc:     alex.williamson@redhat.com, shameerali.kolothum.thodi@huawei.com
-Subject: [PATCH v2 0/7] RMRR related fixes and enhancements
-Date:   Thu, 16 May 2019 10:47:13 +0200
-Message-Id: <20190516084720.10498-1-eric.auger@redhat.com>
+Subject: [PATCH v2 1/7] iommu: Pass a GFP flag parameter to iommu_alloc_resv_region()
+Date:   Thu, 16 May 2019 10:47:14 +0200
+Message-Id: <20190516084720.10498-2-eric.auger@redhat.com>
+In-Reply-To: <20190516084720.10498-1-eric.auger@redhat.com>
+References: <20190516084720.10498-1-eric.auger@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 16 May 2019 08:47:29 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Thu, 16 May 2019 08:47:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the Intel reserved region is attached to the
-RMRR unit and when building the list of RMRR seen by a device
-we link this unique reserved region without taking care of
-potential multiple usage of this reserved region by several devices.
+We plan to call iommu_alloc_resv_region in a non preemptible section.
+Pass a GFP flag to the function and update all the call sites.
 
-Also while reading the vtd spec it is unclear to me whether
-the RMRR device scope referenced by an RMRR ACPI struct could
-be a PCI-PCI bridge, in which case I think we also need to
-check the device belongs to the PCI sub-hierarchy of the device
-referenced in the scope. This would be true for device_has_rmrr()
-and intel_iommu_get_resv_regions().
+Signed-off-by: Eric Auger <eric.auger@redhat.com>
+---
+ drivers/acpi/arm64/iort.c   | 3 ++-
+ drivers/iommu/amd_iommu.c   | 7 ++++---
+ drivers/iommu/arm-smmu-v3.c | 2 +-
+ drivers/iommu/arm-smmu.c    | 2 +-
+ drivers/iommu/intel-iommu.c | 4 ++--
+ drivers/iommu/iommu.c       | 7 ++++---
+ include/linux/iommu.h       | 2 +-
+ 7 files changed, 15 insertions(+), 12 deletions(-)
 
-Last, the VFIO subsystem would need to compute the usable IOVA range
-by querying the iommu_get_group_resv_regions() API. This would allow,
-for instance, to report potential conflicts between the guest physical
-address space and host reserved regions.
-
-However iommu_get_group_resv_regions() currently fails to differentiate
-RMRRs that are known safe for device assignment and RMRRs that must be
-enforced. So we introduce a new reserved memory region type (relaxable),
-reported when associated to an USB or GFX device. The last 2 patches aim
-at unblocking [1] which is stuck since 4.18.
-
-[1-5] are fixes
-[6-7] are enhancements
-
-References:
-[1] [PATCH v6 0/7] vfio/type1: Add support for valid iova list management
-    https://patchwork.kernel.org/patch/10425309/
-
-The two parts can be considered separately if needed.
-
-History
-
-1->2:
-- introduce is_downstream_to_pci_bridge() in a separate patch, change param
-  names and add kerneldoc comment (Jacob)
-- add 6,7
-
-
-Eric Auger (7):
-  iommu: Pass a GFP flag parameter to iommu_alloc_resv_region()
-  iommu/vt-d: Duplicate iommu_resv_region objects per device list
-  iommu/vt-d: Introduce is_downstream_to_pci_bridge helper
-  iommu/vt-d: Handle RMRR with PCI bridge device scopes
-  iommu/vt-d: Handle PCI bridge RMRR device scopes in
-    intel_iommu_get_resv_regions
-  iommu: Introduce IOMMU_RESV_DIRECT_RELAXABLE reserved memory regions
-  iommu/vt-d: Differentiate relaxable and non relaxable RMRRs
-
- drivers/acpi/arm64/iort.c   |  3 +-
- drivers/iommu/amd_iommu.c   |  7 ++--
- drivers/iommu/arm-smmu-v3.c |  2 +-
- drivers/iommu/arm-smmu.c    |  2 +-
- drivers/iommu/intel-iommu.c | 82 +++++++++++++++++++++++++------------
- drivers/iommu/iommu.c       | 19 +++++----
- include/linux/iommu.h       |  8 +++-
- 7 files changed, 82 insertions(+), 41 deletions(-)
-
+diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
+index 9058cb084b91..8313b2d1b710 100644
+--- a/drivers/acpi/arm64/iort.c
++++ b/drivers/acpi/arm64/iort.c
+@@ -868,7 +868,8 @@ int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head)
+ 			struct iommu_resv_region *region;
+ 
+ 			region = iommu_alloc_resv_region(base + SZ_64K, SZ_64K,
+-							 prot, IOMMU_RESV_MSI);
++							 prot, IOMMU_RESV_MSI,
++							 GFP_KERNEL);
+ 			if (region) {
+ 				list_add_tail(&region->list, head);
+ 				resv++;
+diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+index 09c9e45f7fa2..f2eb8e9cd8a6 100644
+--- a/drivers/iommu/amd_iommu.c
++++ b/drivers/iommu/amd_iommu.c
+@@ -3136,7 +3136,8 @@ static void amd_iommu_get_resv_regions(struct device *dev,
+ 			type = IOMMU_RESV_RESERVED;
+ 
+ 		region = iommu_alloc_resv_region(entry->address_start,
+-						 length, prot, type);
++						 length, prot, type,
++						 GFP_KERNEL);
+ 		if (!region) {
+ 			dev_err(dev, "Out of memory allocating dm-regions\n");
+ 			return;
+@@ -3146,14 +3147,14 @@ static void amd_iommu_get_resv_regions(struct device *dev,
+ 
+ 	region = iommu_alloc_resv_region(MSI_RANGE_START,
+ 					 MSI_RANGE_END - MSI_RANGE_START + 1,
+-					 0, IOMMU_RESV_MSI);
++					 0, IOMMU_RESV_MSI, GFP_KERNEL);
+ 	if (!region)
+ 		return;
+ 	list_add_tail(&region->list, head);
+ 
+ 	region = iommu_alloc_resv_region(HT_RANGE_START,
+ 					 HT_RANGE_END - HT_RANGE_START + 1,
+-					 0, IOMMU_RESV_RESERVED);
++					 0, IOMMU_RESV_RESERVED, GFP_KERNEL);
+ 	if (!region)
+ 		return;
+ 	list_add_tail(&region->list, head);
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 4d5a694f02c2..f9b1279ef5bf 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -2226,7 +2226,7 @@ static void arm_smmu_get_resv_regions(struct device *dev,
+ 	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
+ 
+ 	region = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH,
+-					 prot, IOMMU_RESV_SW_MSI);
++					 prot, IOMMU_RESV_SW_MSI, GFP_KERNEL);
+ 	if (!region)
+ 		return;
+ 
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 5e54cc0a28b3..646e76813e91 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -1670,7 +1670,7 @@ static void arm_smmu_get_resv_regions(struct device *dev,
+ 	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
+ 
+ 	region = iommu_alloc_resv_region(MSI_IOVA_BASE, MSI_IOVA_LENGTH,
+-					 prot, IOMMU_RESV_SW_MSI);
++					 prot, IOMMU_RESV_SW_MSI, GFP_KERNEL);
+ 	if (!region)
+ 		return;
+ 
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index a209199f3af6..2be36dff189a 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -4220,7 +4220,7 @@ int __init dmar_parse_one_rmrr(struct acpi_dmar_header *header, void *arg)
+ 
+ 	length = rmrr->end_address - rmrr->base_address + 1;
+ 	rmrru->resv = iommu_alloc_resv_region(rmrr->base_address, length, prot,
+-					      IOMMU_RESV_DIRECT);
++					      IOMMU_RESV_DIRECT, GFP_KERNEL);
+ 	if (!rmrru->resv)
+ 		goto free_rmrru;
+ 
+@@ -5489,7 +5489,7 @@ static void intel_iommu_get_resv_regions(struct device *device,
+ 
+ 	reg = iommu_alloc_resv_region(IOAPIC_RANGE_START,
+ 				      IOAPIC_RANGE_END - IOAPIC_RANGE_START + 1,
+-				      0, IOMMU_RESV_MSI);
++				      0, IOMMU_RESV_MSI, GFP_KERNEL);
+ 	if (!reg)
+ 		return;
+ 	list_add_tail(&reg->list, head);
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 67ee6623f9b2..ae4ea5c0e6f9 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -256,7 +256,7 @@ static int iommu_insert_resv_region(struct iommu_resv_region *new,
+ 	}
+ insert:
+ 	region = iommu_alloc_resv_region(new->start, new->length,
+-					 new->prot, new->type);
++					 new->prot, new->type, GFP_KERNEL);
+ 	if (!region)
+ 		return -ENOMEM;
+ 
+@@ -1891,11 +1891,12 @@ void iommu_put_resv_regions(struct device *dev, struct list_head *list)
+ 
+ struct iommu_resv_region *iommu_alloc_resv_region(phys_addr_t start,
+ 						  size_t length, int prot,
+-						  enum iommu_resv_type type)
++						  enum iommu_resv_type type,
++						  gfp_t flags)
+ {
+ 	struct iommu_resv_region *region;
+ 
+-	region = kzalloc(sizeof(*region), GFP_KERNEL);
++	region = kzalloc(sizeof(*region), flags);
+ 	if (!region)
+ 		return NULL;
+ 
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index a815cf6f6f47..ba91666998fb 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -364,7 +364,7 @@ extern void iommu_put_resv_regions(struct device *dev, struct list_head *list);
+ extern int iommu_request_dm_for_dev(struct device *dev);
+ extern struct iommu_resv_region *
+ iommu_alloc_resv_region(phys_addr_t start, size_t length, int prot,
+-			enum iommu_resv_type type);
++			enum iommu_resv_type type, gfp_t flags);
+ extern int iommu_get_group_resv_regions(struct iommu_group *group,
+ 					struct list_head *head);
+ 
 -- 
 2.20.1
 
