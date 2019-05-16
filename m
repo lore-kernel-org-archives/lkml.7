@@ -2,88 +2,106 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 777B9C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC1DC46460
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F5B120833
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5CC6206A3
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 18:39:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jUS0eLKx"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="mmqstdaI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vtB7uLy9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729109AbfEPSiC (ORCPT
+        id S1727440AbfEPSju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 14:38:02 -0400
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:49842 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbfEPSiB (ORCPT
+        Thu, 16 May 2019 14:39:50 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:36957 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726546AbfEPSju (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 14:38:01 -0400
-Received: by mail-pg1-f201.google.com with SMTP id e20so2656396pgm.16
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 11:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=3j/4tr8CrKpqGGvqHCEPSLn57jN1xeOSywr/5Ae9rTM=;
-        b=jUS0eLKxVhmfNjWiAtxwVyjVnsmrN2HNyKGU2ySEflldzKc3Gc9TTaoDCfyVzx6/0P
-         4m2criIXsk5HbgXDlNxoyaqLt63pNi4cK7jSx4WgxOunn2tjhE56CVMIfb5g9fpTxMo1
-         SNUypGqklImXvZv/7uG5xzKj3Vk6+eZFVOWG8lETNgsc9jewIY/oiFBa87mS0EicjXXG
-         nHUBpddZgJhNy/NhYVwE2l2yjU1P/97BhtVeVWWNyZYIKSGktrrds+MVJGJ7vAZaYyMN
-         rh6vYMf9LJptDdl6VfPb0k36yPMSqL6c7OM3JQmN3ACkGaTMZmG6DtKPjw+/qvMB3MVS
-         j1wQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=3j/4tr8CrKpqGGvqHCEPSLn57jN1xeOSywr/5Ae9rTM=;
-        b=MVhP1/nVMttdM6hlBURN5xf1tYuiD/PivdP7LrFNtY5uQgcVsHG7M5tq66MFQlPx92
-         XJ0m87cV79Uul1nCJdi6r3ovNilIQ3gkE/f5As8gtGrrpQ2c7piX7BVU+1aIMb3sOlL+
-         3SVAitiIDQH9HP4iZ5wVTviu7xoqZVX54/AUh9ubhlI5qHsP4/eyYZWMPmUDJ0c+VUcm
-         acRo3sbxLrMZ9ePowmGgmpdxDQkkOvS/e8hFiZLv0KMEr9iK7P26CPdgW/9hKv7Jeq5G
-         RT4Fr9DtfsPLSn4cgVL6Lw29Rrh/QKt00mO0Yby/WufCR6fj6j1cuNdVurIPBW7NT5ZK
-         TxPQ==
-X-Gm-Message-State: APjAAAVAY2is/vrzoK0Srk4elAsqvxcYguDsQJCWYaRmk5Vo7vSftlCi
-        l00znOhoA+q6+51VaZRnwroj7nudYw==
-X-Google-Smtp-Source: APXvYqyMwym9Xsow2mBymLy3/VC+EfHHl/uXbkBkH4AUrf9SOyEUTEF+6bTf/FVRxMCnszBMXDP6ncqUM98=
-X-Received: by 2002:a65:478a:: with SMTP id e10mr52135748pgs.310.1558031880782;
- Thu, 16 May 2019 11:38:00 -0700 (PDT)
-Date:   Thu, 16 May 2019 11:37:47 -0700
-In-Reply-To: <20190515104824.GD2623@hirez.programming.kicks-ass.net>
-Message-Id: <20190516183747.166545-1-yabinc@google.com>
-Mime-Version: 1.0
-References: <20190515104824.GD2623@hirez.programming.kicks-ass.net>
-X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
-Subject: Re: [PATCH] perf/ring_buffer: Fix exposing a temporarily decreased data_head.
-From:   Yabin Cui <yabinc@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Yabin Cui <yabinc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 16 May 2019 14:39:50 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 4E29C250C3;
+        Thu, 16 May 2019 14:39:49 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Thu, 16 May 2019 14:39:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=POHz2NoF6aSMxg1f8AaGhK214rD
+        wUhBISWJ4ubMrIpM=; b=mmqstdaIGKmzgco935nuuIeWgs9JECF/b5zC32nKqG8
+        M/dLTSDyoNvnYxq2/+PVj8lu+XFUAczTEH7BgZx/4EhbPqoPma+Jc1gYla0xDJm5
+        Ih3MGthg/+n9qjZ/+ZTcjnvebxDqLTaPaRn7I5n10bIaiDO0kmln2/7gGjlKeGpW
+        2DCTylr/y0mzt3j4ZKoJT4bQMO3Ouk1B1AWJODTBQKi9mrIaLsMSrrUwkF0C9OYC
+        2KtIW93o/roI5IulHB2UgFmNF7wDxpmjvKThkOSi9rRM/aVqhGG26vT1AN0Aed7V
+        o7ZWqXfvSVb36+U+FtVTSC/Aa2QQrp7jypglTM2oX9w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=POHz2N
+        oF6aSMxg1f8AaGhK214rDwUhBISWJ4ubMrIpM=; b=vtB7uLy9JmvTwxd7RIGskp
+        pr062duYfDJ/Uzd2gUjQr/jDM8dco8dM+jrV74LWiffN2JxdyyfJolsaK+jSyhQJ
+        g2eusJAvzjDOZlJWpQdoQVvs7RUQzCOgVESMivJkPWiv+v+yYJo6Z8a5CJPN0K1x
+        XHErjfqA9+usXiadtMxWZyTyf2TKdu3hyNiKn9Hhd0pbY6a6sxaH++LcyVfCJkFI
+        b3kLY0NVqaixNRo+0bfOeJR0v/5Jsom68rlsH1scV2cWB/GzJT+ndIxe2cwzQPNi
+        wWkSzeubdQymryGiHRPWIfig3Gf/euELe558ZXw9kqPlAqNVz3VP2v4JMi9lHQ5A
+        ==
+X-ME-Sender: <xms:dK7dXEHWPZqhSYJBvYfa5rcm7DN8tNGxCj-biKJrPzcFENoaY_9kyQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddruddttddguddvgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgv
+    ghcumffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrd
+    dutdejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhen
+    ucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:dK7dXNHKjbH1tYYxqBwXEUfDH25-yYwzMV5Qi-uEnCwTjKfe2YYMjw>
+    <xmx:dK7dXArFipAFzPJNnu6GE2p_4wDOWD7ABqWI25atra01qM74kq3BzQ>
+    <xmx:dK7dXFbj-l__0fgqKfIXHN01snvb9h4LJs2a9-AVhD2IfBJIMzBlqA>
+    <xmx:da7dXKgTGCmrE2NxhPMCmb-Z8_R7NFQqWSUFCx5_Ifeo5aEwcIWMpQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B901180063;
+        Thu, 16 May 2019 14:39:47 -0400 (EDT)
+Date:   Thu, 16 May 2019 20:39:45 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, stable <stable@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [GIT PULL] locking fix
+Message-ID: <20190516183945.GA6659@kroah.com>
+References: <20190516160135.GA45760@gmail.com>
+ <CAHk-=wgtHi5mT7y=0ij-AksQQOBQJqV1apk2bRaH2tfRTxyFcg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgtHi5mT7y=0ij-AksQQOBQJqV1apk2bRaH2tfRTxyFcg@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->Indeed, good catch! Have you observed this, or is this patch due to code
-inspection?
+On Thu, May 16, 2019 at 10:57:53AM -0700, Linus Torvalds wrote:
+> On Thu, May 16, 2019 at 9:01 AM Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> > A single rwsem fix.
+> 
+> Side note, this one isn't marked for stable, but I'm hoping stable
+> picks it up just from the "Fixes" tag.
+> 
+> Stable people, we're talking about
+> 
+>     a9e9bcb45b15 ("locking/rwsem: Prevent decrement of reader count
+> before increment")
+> 
+> that I just pulled into my tree, and needs to go in 4.9 and later.
 
-I observed this. I was using perf_event_open instead of linux tools perf
-to monitor a process continuously forking new processes, generating a lot
-of mmap records. And a sample record happens while generating a mmap record.
+Thanks, I'll work on that later tonight...
 
-For missing barriers, I thought local_xxx provided implied barriers. But
-I found atomic_ops.txt said not. Thanks for reminding! I will add them in
-path v2.
 
-I also think it's a good idea to use READ_ONCE/WRITE_ONCE for rb->nest. Will
-use it in patch v2.
-
+greg k-h
