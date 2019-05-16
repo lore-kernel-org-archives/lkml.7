@@ -2,138 +2,101 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCB0C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234CDC04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DFE5206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:24:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Sltg+6Ii"
+	by mail.kernel.org (Postfix) with ESMTP id DD0D92082E
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 11:28:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1558006086;
+	bh=75f0Tpj7vgIVS2lmg4rUnHFw3SDykPWg4zcVeoyyIm4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bBUEHi/dNDnB3vqBiCcjSqbdyyaAFOPH389UwJWpXr/v21A08qZPyNBnfnZca1zU5
+	 BbY6S0/KgUGyRGfjOJl6AscP2GmiImq3J9IYflGbH2Rulz2cylbpz/u4GFR0J/qO50
+	 2UvKISp/xzndXSHRQ4QKe/ng5kg1+boT22EEPoBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727412AbfEPLYQ (ORCPT
+        id S1726991AbfEPL2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 07:24:16 -0400
-Received: from mail-eopbgr30042.outbound.protection.outlook.com ([40.107.3.42]:39235
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726537AbfEPLYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 07:24:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o5Pmafg8pm32hRxJ/xCqaP5OyzTxAvzFiL42BtQ5F8I=;
- b=Sltg+6Iih30t/wMTRaOQjsMoL+TUi1LvS1Kb5sr39hgUWoSZ6mzdk+tdBeOF37Bu3S6mYrCiNp26l+X7T9ZJNr73w982PgWt0puvOQrAOL8JnykoP0kOQ1qWsT3v0hoAdn5Ft5JSpzdUCIKo11vNy8oZJb+6wV4C6DQEwZokvac=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1PR04MB6766.eurprd04.prod.outlook.com (20.179.235.219) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Thu, 16 May 2019 11:24:12 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::a5b5:13f5:f89c:9a30]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::a5b5:13f5:f89c:9a30%7]) with mapi id 15.20.1900.010; Thu, 16 May 2019
- 11:24:12 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     "brian.austin@cirrus.com" <brian.austin@cirrus.com>,
+        Thu, 16 May 2019 07:28:05 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58892 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726260AbfEPL2E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 07:28:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dVusMfbG2Jo9MmKeoL96YpYZkVmGycIsx1/10iU5uWo=; b=qexgUKy5sGtN8oiEm4LVB7Jr9
+        cp3losBfgrHOsuKMRclDApQNtL9uPiwculKW65Ux2uytkmOrJ3yoTHyAqhD/UmeM0KiIBzasZAt5C
+        48Lm7/azfg/vfCVeKrM4mAc6SJIaPgiyEqZtrgiPJaOFOUfXmeBoCj+RG7juhCByi5yZ4=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hREYC-00068n-TM; Thu, 16 May 2019 11:27:53 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 457491126D45; Thu, 16 May 2019 12:27:48 +0100 (BST)
+Date:   Thu, 16 May 2019 12:27:48 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "brian.austin@cirrus.com" <brian.austin@cirrus.com>,
         "Paul.Handrigan@cirrus.com" <Paul.Handrigan@cirrus.com>,
         "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
         "perex@perex.cz" <perex@perex.cz>,
         "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH RESEND V3] ASoC: cs42xx8: add reset-gpio in binding document
-Thread-Topic: [PATCH RESEND V3] ASoC: cs42xx8: add reset-gpio in binding
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RESEND V3] ASoC: cs42xx8: add reset-gpio in binding
  document
-Thread-Index: AQHVC9njdHFVpoMQJkaGKICvqNXQ+Q==
-Date:   Thu, 16 May 2019 11:24:12 +0000
-Message-ID: <c2118efa4ee6c915473060405805e6c6c6db681f.1558005661.git.shengjiu.wang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.21.0
-x-clientproxiedby: HK0PR03CA0023.apcprd03.prod.outlook.com
- (2603:1096:203:2e::35) To VE1PR04MB6479.eurprd04.prod.outlook.com
- (2603:10a6:803:11e::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ab6873ed-afa8-4ad8-01ee-08d6d9f1059b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6766;
-x-ms-traffictypediagnostic: VE1PR04MB6766:
-x-microsoft-antispam-prvs: <VE1PR04MB67666A70FBA61614FB0AC262E30A0@VE1PR04MB6766.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0039C6E5C5
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(346002)(396003)(136003)(366004)(189003)(199004)(66066001)(2201001)(71190400001)(6486002)(305945005)(6506007)(386003)(36756003)(7736002)(5660300002)(86362001)(256004)(66946007)(99286004)(52116002)(6436002)(14444005)(476003)(486006)(66556008)(66476007)(64756008)(66446008)(2616005)(73956011)(6116002)(3846002)(478600001)(68736007)(6512007)(102836004)(2501003)(53936002)(8676002)(25786009)(8936002)(81156014)(50226002)(14454004)(81166006)(4326008)(316002)(118296001)(71200400001)(110136005)(2906002)(26005)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6766;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: OWHMZcPDtVaPFrYVdYy2dJ4RSA6rzDPyG+CnCrrUrpzy2w8IG+sGTLmYebleKSC8vJmJNyZ97GqxzfJ75IuRzyMLz/+UODAqstcCUUVlI2f7UEgvI949HtQwvnzJEuyWxNPYBJfzUYOvvGse40buYf2fhUvMV2zm4PbKXLlGonr6tLicfJr4GLu01s90d6CUIlT8k/trSfMyAovDubvIZYAfpeVtaLakkF7Ng8mzt69Y9IHG5hqSisKVcO9G9wyeV8zLapuJz5eKhJDvwiHjJ01Bu1FjlPU+1gP7a7zKVLuzAMn4SJRRlxQk9OyQ07uPvMBeNqauetTndIXn9ncKVX+UiOadchH84GHI9sGt4T07ZPRK/2G4O9cGMcFdZhli1Gotzeq0VSVgNeLA14jVmQMva/YHmcvBoe5J4u7ELmQ=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <B540429D4C6352488F3D67CDEADD7BBC@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <20190516112748.GF5598@sirena.org.uk>
+References: <c2118efa4ee6c915473060405805e6c6c6db681f.1558005661.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab6873ed-afa8-4ad8-01ee-08d6d9f1059b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2019 11:24:12.8371
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6766
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="L2Brqb15TUChFOBK"
+Content-Disposition: inline
+In-Reply-To: <c2118efa4ee6c915473060405805e6c6c6db681f.1558005661.git.shengjiu.wang@nxp.com>
+X-Cookie: <ahzz_> i figured 17G oughta be enough.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add reset-gpio property, which is an optional option
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
-Changes in RESEND v3
-- send updated binding document only
+--L2Brqb15TUChFOBK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Changes in v3
-- update binding document.
+On Thu, May 16, 2019 at 11:24:12AM +0000, S.j. Wang wrote:
 
-Changes in v2
-- use devm_gpiod_get_optional instead of of_get_named_gpio
+> +Optional properties:
+> +
+> +  - reset-gpio : a GPIO spec to define which pin is connected to the chip's
+> +    !RESET pin
 
- Documentation/devicetree/bindings/sound/cs42xx8.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+gpio properties are supposed to be called -gpios even if there's a
+single GPIO possible due to DT rules.  The code will accept plain -gpio
+but the documentation should say gpios.
 
-diff --git a/Documentation/devicetree/bindings/sound/cs42xx8.txt b/Document=
-ation/devicetree/bindings/sound/cs42xx8.txt
-index 8619a156d038..ab8f54095269 100644
---- a/Documentation/devicetree/bindings/sound/cs42xx8.txt
-+++ b/Documentation/devicetree/bindings/sound/cs42xx8.txt
-@@ -14,6 +14,11 @@ Required properties:
-   - VA-supply, VD-supply, VLS-supply, VLC-supply: power supplies for the d=
-evice,
-     as covered in Documentation/devicetree/bindings/regulator/regulator.tx=
-t
-=20
-+Optional properties:
-+
-+  - reset-gpio : a GPIO spec to define which pin is connected to the chip'=
-s
-+    !RESET pin
-+
- Example:
-=20
- cs42888: codec@48 {
-@@ -25,4 +30,5 @@ cs42888: codec@48 {
- 	VD-supply =3D <&reg_audio>;
- 	VLS-supply =3D <&reg_audio>;
- 	VLC-supply =3D <&reg_audio>;
-+	reset-gpio =3D <&pca9557_b 1 1>;
- };
---=20
-2.21.0
+--L2Brqb15TUChFOBK
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlzdSTMACgkQJNaLcl1U
+h9AI0wf9H/v9XOHLGG0s1+nmST8FhMRdMALRocSMlNs0hntuI+4uxBG9/dXi2ST1
+Id5glMJZn5CDpvgp/RUiuTWBAwfejMgpbwxxLtDbrmdqBolGsO0bpnWoEiZTpOop
+gVBPRVGueduh/5HWKPbCn9PRfHuyUKq/0uenLwDGEy9VN4dXP6926tOFzTAIewI2
+BoFx+Chib3VXyep6aG6PuFzTPPLo4XeXckbROsUj5WNaOIP46A4E9e7nK3aRqd6M
+YpPyJN7v/H7BesUV3v9DLZQLcaSCYGxLvfwl07Dz+zI0a3hRQ5eXohzPxWewfqXh
+A6lcsDuR+5dafko56EbffC3HlkMhoA==
+=692j
+-----END PGP SIGNATURE-----
+
+--L2Brqb15TUChFOBK--
