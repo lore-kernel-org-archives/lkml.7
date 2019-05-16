@@ -2,152 +2,117 @@ Return-Path: <SRS0=AMXA=TQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1820C04AAF
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 603A4C04AAF
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6964A2087B
-	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3038B20848
+	for <linux-kernel@archiver.kernel.org>; Thu, 16 May 2019 14:32:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="uhyEV/dQ"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="OMEfpFp+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfEPOcM (ORCPT
+        id S1727523AbfEPOc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 10:32:12 -0400
-Received: from mail-eopbgr820040.outbound.protection.outlook.com ([40.107.82.40]:33952
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727302AbfEPOcK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 10:32:10 -0400
+        Thu, 16 May 2019 10:32:26 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35000 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726995AbfEPOcZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 10:32:25 -0400
+Received: by mail-wr1-f65.google.com with SMTP id m3so3509090wrv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 07:32:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XRhO/WneK8OkvT0vg1J+IkY22eEP8Ai6PE2L8A63r/k=;
- b=uhyEV/dQY8uo4yeEcs3lLbIysbkgQpOMJc9Pdq8C6oqu9Fch4D8eggc+NqB0X6oHBM/z1mdtmAbbuvpDpgICnEK5l7Jo+u+d39P3wSokkbk1Xrl6hZBYWF+zNOztdJdqUSknE3esNhvvvuCz8DYhWUMOFuCD/fhPaYiIDjpcqUw=
-Received: from DM6PR03CA0045.namprd03.prod.outlook.com (2603:10b6:5:100::22)
- by BL2PR03MB545.namprd03.prod.outlook.com (2a01:111:e400:c23::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1878.25; Thu, 16 May
- 2019 14:32:05 +0000
-Received: from SN1NAM02FT020.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::201) by DM6PR03CA0045.outlook.office365.com
- (2603:10b6:5:100::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1900.16 via Frontend
- Transport; Thu, 16 May 2019 14:32:05 +0000
-Authentication-Results: spf=pass (sender IP is 137.71.25.55)
- smtp.mailfrom=analog.com; gmx.de; dkim=none (message not signed)
- header.d=none;gmx.de; dmarc=bestguesspass action=none header.from=analog.com;
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- SN1NAM02FT020.mail.protection.outlook.com (10.152.72.139) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1900.16
- via Frontend Transport; Thu, 16 May 2019 14:32:04 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x4GEW3KM027706
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Thu, 16 May 2019 07:32:03 -0700
-Received: from ben-Latitude-E6540.analog.com (10.50.1.133) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 16 May 2019 10:32:03 -0400
-From:   Beniamin Bia <beniamin.bia@analog.com>
-To:     <jic23@kernel.org>
-CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>,
-        Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH 5/5] iio: adc: ad7606: Add debug mode for ad7616
-Date:   Thu, 16 May 2019 17:32:08 +0300
-Message-ID: <20190516143208.19294-5-beniamin.bia@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190516143208.19294-1-beniamin.bia@analog.com>
-References: <20190516143208.19294-1-beniamin.bia@analog.com>
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MCh2hGUp25ZJxGPePdNkCdsXMQeyI1uh6u/3BErb/Yw=;
+        b=OMEfpFp+KLYfHxBXZQN0DYJBsoAo0sh4lRfrR313ZuB2/XYxZ/vjI6eKK50+gx3Yjw
+         iy/aG0HxJxse2ASHabxUprCKQwTA8S/D9Jbp/D+q6RSfdY/vwPZHD3yNw2YP6SZQLDOx
+         uJOdZbDahQGnPtwFHIFAyPVE6NLig8V9vbihySB31clyVUel3Os3k0hcA+kLwKXzUNqS
+         uJFODNwm8obBwNITLOp+rZ0t76VNSkUFBT8DstnZFCQboxjmJxsgH3AEbja7zzD4+7wM
+         W5qbm0IrBKpwpPVx/zNQO8sDc4DurMp+oNShr2bhF0Vi2T9z/mZrVO8ynoNwX3uuPGXu
+         eA0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MCh2hGUp25ZJxGPePdNkCdsXMQeyI1uh6u/3BErb/Yw=;
+        b=hYxVMKiAv+0/KdkXHu5Hrxp8ehzljLWuo+f0fi/tzWNzbIEXS6leszEmbJmYoGnQLl
+         qMsU6vz9l4ZRDYvgPv3J/ZqdUie0hfJaukkzpqakJt9OiIA1KHQ4yeHxQpHMRdEeSAso
+         ktFQNKIW7OPdykkAaOJa7wATkPnkYuvSTBX9Z9KmERssB6ooohKFtMRhwFK3occaYFuK
+         NpkpM0Go2Ni3kqQLhVeAx57+aFBKSEhJECGt3ktWL1HFqLC/1/XQfYu4YLBric05cRE8
+         lYc05+/ADhbJLh30KhDXkUQt1wbk+DkFJXyTXAcUdRwqnH7X1sqDz58ZNCn5JUvYBtgn
+         ErgA==
+X-Gm-Message-State: APjAAAVHpjVENDzDN7nMGTX3CAghMWUx1Vxf/Fp4kTj82l1e07x+lm48
+        JO8pwh+CZdiwJYVEmsDv0be/yw==
+X-Google-Smtp-Source: APXvYqxh4XiN4cDh/DoIiPtCPuo2gI4Fpj7ttgza+eSTorRPdi7jF2OwizM5OMIMXOYlejycpeH0jw==
+X-Received: by 2002:a5d:45c7:: with SMTP id b7mr7863823wrs.176.1558017143940;
+        Thu, 16 May 2019 07:32:23 -0700 (PDT)
+Received: from boomer.lan (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.googlemail.com with ESMTPSA id h12sm2386548wre.14.2019.05.16.07.32.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 May 2019 07:32:23 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] arm64: dts: meson: g12a: add tohdmitx
+Date:   Thu, 16 May 2019 16:32:16 +0200
+Message-Id: <20190516143216.6193-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(39860400002)(346002)(376002)(136003)(2980300002)(189003)(199004)(77096007)(36756003)(186003)(7416002)(48376002)(26005)(50466002)(47776003)(476003)(8936002)(246002)(126002)(2616005)(2906002)(44832011)(1076003)(8676002)(486006)(7636002)(11346002)(305945005)(53416004)(6916009)(426003)(356004)(446003)(50226002)(336012)(5660300002)(2351001)(76176011)(14444005)(51416003)(7696005)(107886003)(70206006)(70586007)(316002)(4326008)(54906003)(106002)(86362001)(478600001)(16586007)(72206003);DIR:OUT;SFP:1101;SCL:1;SRVR:BL2PR03MB545;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: dfeba55f-a1fa-4757-bd11-08d6da0b448e
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4709054)(2017052603328);SRVR:BL2PR03MB545;
-X-MS-TrafficTypeDiagnostic: BL2PR03MB545:
-X-Microsoft-Antispam-PRVS: <BL2PR03MB545B471AEFA48984997DB4BF00A0@BL2PR03MB545.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1775;
-X-Forefront-PRVS: 0039C6E5C5
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: bKzjliGvFOZU7IxS/cX0B2L9ZRQetumQLRqM1mXNMXGU7+NrBPA7zpOeIu/W8LewiHQ2QfxyNGBYsBHDB4pCOKo3FKUNcr3f4Bg5w6iepD1NKh2H8vO28brznjwmcbUJj7eXICl4w4LF7uvYuc3zlcE8YFjMR93EVtI681BvBNjb91Q5gYa6x5UcdTjUw43j7C3CJaTx7px4E/umdm59PgHBDDy80C4ejAyqR98UJx3jY0Fp9FXhCGLMIvlzHuiI3v2VGZIA22tgi3kjxvy6cO6JFhDJsWgvEblTm5gkv2UnMiLzGAVG8aNxnywqZW+GxQ5gT2QxULEhq1DKnl/mhLYhYWPnuHoXg1bwhKORuVJqY06ZFC+29vbOVIom/mFPfMFfgaNvrH0j/QunKehPLH46etpIZk5mBsoaIFP2Nkc=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2019 14:32:04.3820
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dfeba55f-a1fa-4757-bd11-08d6da0b448e
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL2PR03MB545
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support for register access was added for spi devices.
+Add the hdmitx glue device linking the SoC audio interfaces to the
+embedded Synopsys hdmi controller.
 
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- drivers/iio/adc/ad7606.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-index f77df3efe43f..b03bdce4fd4e 100644
---- a/drivers/iio/adc/ad7606.c
-+++ b/drivers/iio/adc/ad7606.c
-@@ -134,6 +134,30 @@ static int ad7606_spi_write_mask(struct ad7606_state *st,
- 	return ad7606_spi_reg_write(st, addr, readval);
- }
+ Hi Kevin,
+
+ The related device driver and dt-binding have been merged in the ASoC
+ tree, for-5.3 branch [0]
+
+ This patch is based on the audio series I have just sent [1]. Like the
+ patches I have sent this week, they are all based on Linus's master
+ branch. This is done so it applies nicely when setup your branch based
+ on 5.2-rc1
+
+[0]: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git/log/?h=for-5.3
+[1]: https://lkml.kernel.org/r/20190514142649.1127-1-jbrunet@baylibre.com
+
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+index 3c92d165621c..90da7cc81681 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
+@@ -1677,6 +1677,14 @@
+ 					clock-names = "pclk", "mclk";
+ 					status = "disabled";
+ 				};
++
++				tohdmitx: audio-controller@744 {
++					compatible = "amlogic,g12a-tohdmitx";
++					reg = <0x0 0x744 0x0 0x4>;
++					#sound-dai-cells = <1>;
++					sound-name-prefix = "TOHDMITX";
++					status = "disabled";
++				};
+ 			};
  
-+static int ad7606_reg_access(struct iio_dev *indio_dev,
-+			     unsigned int reg,
-+			     unsigned int writeval,
-+			     unsigned int *readval)
-+{
-+	struct ad7606_state *st = iio_priv(indio_dev);
-+	int ret;
-+
-+	mutex_lock(&st->lock);
-+	if (readval) {
-+		ret = ad7606_spi_reg_read(st, reg);
-+		if (ret < 0)
-+			goto err_unlock;
-+		*readval = ret;
-+		ret = 0;
-+	} else {
-+		ret = ad7606_spi_reg_write(st, reg, writeval);
-+	}
-+err_unlock:
-+	mutex_unlock(&st->lock);
-+
-+	return ret;
-+}
-+
- static int ad7606_read_samples(struct ad7606_state *st)
- {
- 	unsigned int num = st->chip_info->num_channels;
-@@ -645,6 +669,7 @@ static const struct iio_info ad7606_info_no_os_or_range = {
- static const struct iio_info ad7606_info_os_and_range = {
- 	.read_raw = &ad7606_read_raw,
- 	.write_raw = &ad7606_write_raw,
-+	.debugfs_reg_access = &ad7606_reg_access,
- 	.attrs = &ad7606_attribute_group_os_and_range,
- 	.validate_trigger = &ad7606_validate_trigger,
- };
+ 			usb3_pcie_phy: phy@46000 {
 -- 
-2.17.1
+2.20.1
 
