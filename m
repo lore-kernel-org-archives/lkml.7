@@ -2,102 +2,241 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C60C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449B6C46460
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA1742166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:40:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b9XzwC9Q"
+	by mail.kernel.org (Postfix) with ESMTP id 1B3D22082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbfEQQke (ORCPT
+        id S1727316AbfEQQlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 12:40:34 -0400
-Received: from mail-pl1-f182.google.com ([209.85.214.182]:34559 "EHLO
-        mail-pl1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726092AbfEQQkd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 12:40:33 -0400
-Received: by mail-pl1-f182.google.com with SMTP id w7so3599713plz.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 09:40:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=4baC9hVmPvCMRjjnr6WrMvdeGCowj8DhAHmgc2PUmc8=;
-        b=b9XzwC9QDGBg9qLVMgJWRML5ZZz5Kd9Me3loTz5rnrV+Gm+nteKj0X6uqTPOiPnXUu
-         AD7VHIV6giGlxx5J7w4vopdCZSjd47gFjQ9n+/adpvlKujkJMtOb2XKfI408I29n0AnW
-         96QnHtqye/BCD+PLwXdbtsaFDBqofGB940e0E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4baC9hVmPvCMRjjnr6WrMvdeGCowj8DhAHmgc2PUmc8=;
-        b=s9FTE6j7QpmbzdscOQHWaiy+lWRLU7FBIqnCU2quWkJBAfzdgSs3amZgnEHs6UQiXL
-         cW70/vICt0w8QocGjHlVak51Dt5u8NERTfSQAfRspwG71DjJNQ4bZecm9mzy+CqBcK5i
-         mJVrs1maQz2N9qJSE0E0aC5mwJ8t5gwg9VQghnWEzsVAQ63PnBDnPpXgXh7lV0FpvvR/
-         zhD44+jXHgVGYTs8u2fp2u4Uhumr6kymfGB7RNH0EteMPUeVfINpxfg1OH6YRO75ca4Q
-         IKNGMi0QJT5pjEo9VNZF1EdeLWaNXPFqYjmvwQMUi0O2I//8PgbLVpRAl4kc7RHUvh23
-         WhnA==
-X-Gm-Message-State: APjAAAUc/3OVRHaYMLPWLw63Yuy4MxWtEdlK9IaCzwfShZF97rAfRPmb
-        7Lh9wmsOueKb1ute1at+UmcJ+Q==
-X-Google-Smtp-Source: APXvYqxT4MWydQqGVRl8y+8BCJCWqRoi8v5dpo8YXASLwcoHuift9vY3I4Y0ejr9OwtLsAO8IKoMAA==
-X-Received: by 2002:a17:902:778d:: with SMTP id o13mr1115077pll.275.1558111233247;
-        Fri, 17 May 2019 09:40:33 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d186sm14225137pfd.183.2019.05.17.09.40.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 May 2019 09:40:32 -0700 (PDT)
-Date:   Fri, 17 May 2019 09:40:31 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Jan Kara' <jack@suse.cz>, Dan Williams <dan.j.williams@intel.com>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Jeff Moyer <jmoyer@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Smits <jeff.smits@intel.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
-Message-ID: <201905170938.99AACF0D@keescook>
-References: <155805321833.867447.3864104616303535270.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190517084739.GB20550@quack2.suse.cz>
- <2d8b1ba7890940bf8a512d4eef0d99b3@AcuMS.aculab.com>
- <201905170845.1B4E2A03@keescook>
- <ac76e29576b14fcb9a18e5a9e6ab8394@AcuMS.aculab.com>
+        Fri, 17 May 2019 12:41:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46002 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726092AbfEQQlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 12:41:51 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 54D34AC2E5;
+        Fri, 17 May 2019 16:41:48 +0000 (UTC)
+Received: from x1.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 83ECD60F9C;
+        Fri, 17 May 2019 16:41:46 +0000 (UTC)
+Date:   Fri, 17 May 2019 10:41:43 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     sebott@linux.vnet.ibm.com, gerald.schaefer@de.ibm.com,
+        pasic@linux.vnet.ibm.com, borntraeger@de.ibm.com,
+        walling@linux.ibm.com, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        robin.murphy@arm.com
+Subject: Re: [PATCH v2 4/4] vfio: vfio_iommu_type1: implement
+ VFIO_IOMMU_INFO_CAPABILITIES
+Message-ID: <20190517104143.240082b5@x1.home>
+In-Reply-To: <1558109810-18683-5-git-send-email-pmorel@linux.ibm.com>
+References: <1558109810-18683-1-git-send-email-pmorel@linux.ibm.com>
+        <1558109810-18683-5-git-send-email-pmorel@linux.ibm.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ac76e29576b14fcb9a18e5a9e6ab8394@AcuMS.aculab.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 17 May 2019 16:41:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 04:14:03PM +0000, David Laight wrote:
-> From: Kees Cook
-> > Sent: 17 May 2019 16:54
-> ...
-> > > I've changed some of our code to use __get_user() to avoid
-> > > these stupid overheads.
-> > 
-> > __get_user() skips even access_ok() checking too, so that doesn't seem
-> > like a good idea. Did you run access_ok() checks separately? (This
-> > generally isn't recommended.)
+On Fri, 17 May 2019 18:16:50 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
+
+> We implement the capability interface for VFIO_IOMMU_GET_INFO.
 > 
-> Of course, I'm not THAT stupid :-)
+> When calling the ioctl, the user must specify
+> VFIO_IOMMU_INFO_CAPABILITIES to retrieve the capabilities and
+> must check in the answer if capabilities are supported.
+> 
+> The iommu get_attr callback will be used to retrieve the specific
+> attributes and fill the capabilities.
+> 
+> Currently two Z-PCI specific capabilities will be queried and
+> filled by the underlying Z specific s390_iommu:
+> VFIO_IOMMU_INFO_CAP_QFN for the PCI query function attributes
+> and
+> VFIO_IOMMU_INFO_CAP_QGRP for the PCI query function group.
+> 
+> Other architectures may add new capabilities in the same way
+> after enhancing the architecture specific IOMMU driver.
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 122 +++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 121 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index d0f731c..9435647 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -1658,6 +1658,97 @@ static int vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
+>  	return ret;
+>  }
+>  
+> +static int vfio_iommu_type1_zpci_fn(struct iommu_domain *domain,
+> +				    struct vfio_info_cap *caps, size_t size)
+> +{
+> +	struct vfio_iommu_type1_info_pcifn *info_fn;
+> +	int ret;
+> +
+> +	info_fn = kzalloc(size, GFP_KERNEL);
+> +	if (!info_fn)
+> +		return -ENOMEM;
+> +
+> +	ret = iommu_domain_get_attr(domain, DOMAIN_ATTR_ZPCI_FN,
+> +				    &info_fn->response);
 
-Right, yes, I know. :) I just wanted to double-check since accidents
-can happen. The number of underscores on these function is not really
-a great way to indicate what they're doing. ;)
+What ensures that the 'struct clp_rsp_query_pci' returned from this
+get_attr remains consistent with a 'struct vfio_iommu_pci_function'?
+Why does the latter contains so many reserved fields (beyond simply
+alignment) for a user API?  What fields of these structures are
+actually useful to userspace?  Should any fields not be exposed to the
+user?  Aren't BAR sizes redundant to what's available through the vfio
+PCI API?  I'm afraid that simply redefining an internal structure as
+the API leaves a lot to be desired too.  Thanks,
 
--- 
-Kees Cook
+Alex
+
+> +	if (ret < 0)
+> +		goto free_fn;
+> +
+> +	info_fn->header.id = VFIO_IOMMU_INFO_CAP_QFN;
+> +	ret = vfio_info_add_capability(caps, &info_fn->header, size);
+> +
+> +free_fn:
+> +	kfree(info_fn);
+> +	return ret;
+> +}
+> +
+> +static int vfio_iommu_type1_zpci_grp(struct iommu_domain *domain,
+> +				     struct vfio_info_cap *caps,
+> +				     size_t grp_size)
+> +{
+> +	struct vfio_iommu_type1_info_pcifg *info_grp;
+> +	int ret;
+> +
+> +	info_grp = kzalloc(grp_size, GFP_KERNEL);
+> +	if (!info_grp)
+> +		return -ENOMEM;
+> +
+> +	ret = iommu_domain_get_attr(domain, DOMAIN_ATTR_ZPCI_GRP,
+> +				    (void *) &info_grp->response);
+> +	if (ret < 0)
+> +		goto free_grp;
+> +	info_grp->header.id = VFIO_IOMMU_INFO_CAP_QGRP;
+> +	ret = vfio_info_add_capability(caps, &info_grp->header, grp_size);
+> +
+> +free_grp:
+> +	kfree(info_grp);
+> +	return ret;
+> +}
+> +
+> +int vfio_iommu_type1_caps(struct vfio_iommu *iommu, struct vfio_info_cap *caps,
+> +			  size_t size)
+> +{
+> +	struct vfio_domain *d;
+> +	unsigned long total_size, fn_size, grp_size;
+> +	int ret;
+> +
+> +	d = list_first_entry(&iommu->domain_list, struct vfio_domain, next);
+> +	if (!d)
+> +		return -ENODEV;
+> +
+> +	/* First compute the size the user must provide */
+> +	total_size = 0;
+> +	fn_size = iommu_domain_get_attr(d->domain,
+> +					DOMAIN_ATTR_ZPCI_FN_SIZE, NULL);
+> +	if (fn_size > 0) {
+> +		fn_size +=  sizeof(struct vfio_info_cap_header);
+> +		total_size += fn_size;
+> +	}
+> +
+> +	grp_size = iommu_domain_get_attr(d->domain,
+> +					 DOMAIN_ATTR_ZPCI_GRP_SIZE, NULL);
+> +	if (grp_size > 0) {
+> +		grp_size +=  sizeof(struct vfio_info_cap_header);
+> +		total_size += grp_size;
+> +	}
+> +
+> +	if (total_size > size) {
+> +		/* Tell caller to call us with a greater buffer */
+> +		caps->size = total_size;
+> +		return 0;
+> +	}
+> +
+> +	if (fn_size) {
+> +		ret = vfio_iommu_type1_zpci_fn(d->domain, caps, fn_size);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	if (grp_size)
+> +		ret = vfio_iommu_type1_zpci_grp(d->domain, caps, grp_size);
+> +
+> +	return ret;
+> +}
+> +
+>  static long vfio_iommu_type1_ioctl(void *iommu_data,
+>  				   unsigned int cmd, unsigned long arg)
+>  {
+> @@ -1679,6 +1770,8 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
+>  		}
+>  	} else if (cmd == VFIO_IOMMU_GET_INFO) {
+>  		struct vfio_iommu_type1_info info;
+> +		struct vfio_info_cap caps = { .buf = NULL, .size = 0 };
+> +		int ret;
+>  
+>  		minsz = offsetofend(struct vfio_iommu_type1_info, iova_pgsizes);
+>  
+> @@ -1688,7 +1781,34 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
+>  		if (info.argsz < minsz)
+>  			return -EINVAL;
+>  
+> -		info.flags = VFIO_IOMMU_INFO_PGSIZES;
+> +		if (info.flags & VFIO_IOMMU_INFO_CAPABILITIES) {
+> +			minsz = offsetofend(struct vfio_iommu_type1_info,
+> +					    cap_offset);
+> +			if (info.argsz < minsz)
+> +				return -EINVAL;
+> +			ret = vfio_iommu_type1_caps(iommu, &caps,
+> +						    info.argsz - sizeof(info));
+> +			if (ret)
+> +				return ret;
+> +		}
+> +		if (caps.size) {
+> +			if (info.argsz < sizeof(info) + caps.size) {
+> +				info.argsz = sizeof(info) + caps.size;
+> +				info.cap_offset = 0;
+> +			} else {
+> +				if (copy_to_user((void __user *)arg +
+> +						 sizeof(info), caps.buf,
+> +						 caps.size)) {
+> +					kfree(caps.buf);
+> +					return -EFAULT;
+> +				}
+> +
+> +				info.cap_offset = sizeof(info);
+> +			}
+> +			kfree(caps.buf);
+> +		}
+> +
+> +		info.flags |= VFIO_IOMMU_INFO_PGSIZES;
+>  
+>  		info.iova_pgsizes = vfio_pgsize_bitmap(iommu);
+>  
+
