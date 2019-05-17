@@ -2,269 +2,729 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AACBC072AF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F0EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E3A820848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:37:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558078632;
-	bh=Km+OeZmRxVBCLZpy7CX/JEHFrTdm4yRqrhyQgyrdlL4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=AH/UVvAyR9IleLJkpDbiCjYvqXnfyG2QynhctUxrLIql6DNcQDD8X6708wXZXNWqQ
-	 739YEFPMQ/n9C+9j0hnRFoPdbJ5EzYOasQHR9JMC31n+Xfq8AmwP7kK3ho967zrTWK
-	 a9AdjVbUt82y69Tl3/DbW9Q642gaDYOTmtnaPSos=
+	by mail.kernel.org (Postfix) with ESMTP id 7327220578
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbfEQHhK (ORCPT
+        id S1728619AbfEQHhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 03:37:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46834 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727727AbfEQHhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 03:37:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00E14206A3;
-        Fri, 17 May 2019 07:37:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558078629;
-        bh=Km+OeZmRxVBCLZpy7CX/JEHFrTdm4yRqrhyQgyrdlL4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=xeBvnna7XdOBE8T/LBHWtm3/H0qs5fYEHbB1k5S+lEBUlpPFzwlL2dMlErh3Knc9+
-         cODernjXIZYOzehhs5wsu64Pa0OZyGDK53Bey8bBS70iqubxPdK7LYcO7bV6AQaf/l
-         y7qHBHKjLIh4XTxKyeoUSxiTyRWN74vdU4LRYbd0=
-Date:   Fri, 17 May 2019 09:37:07 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 5.1.3
-Message-ID: <20190517073706.GA11119@kroah.com>
+        Fri, 17 May 2019 03:37:45 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:56476 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727727AbfEQHho (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 03:37:44 -0400
+X-UUID: c4d6931be54045c099645947bb3ff1f2-20190517
+X-UUID: c4d6931be54045c099645947bb3ff1f2-20190517
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 687581162; Fri, 17 May 2019 15:37:37 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 17 May 2019 15:37:36 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 17 May 2019 15:37:36 +0800
+Message-ID: <1558078656.22995.18.camel@mtksdaap41>
+Subject: Re: [PATCH v3 02/13] [media] mtk-mipicsi: add mediatek mipicsi
+ driver for mt2712
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Stu Hsieh <stu.hsieh@mediatek.com>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
+Date:   Fri, 17 May 2019 15:37:36 +0800
+In-Reply-To: <1557814430-9675-3-git-send-email-stu.hsieh@mediatek.com>
+References: <1557814430-9675-1-git-send-email-stu.hsieh@mediatek.com>
+         <1557814430-9675-3-git-send-email-stu.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
-Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Stu:
 
---AhhlLboLdkugWU4S
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, 2019-05-14 at 14:13 +0800, Stu Hsieh wrote:
+> This patch add mediatek mipicsi driver for mt2712,
+> including probe function to get the value from device tree,
+> and register to v4l2 the host device.
+> 
+> Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+> ---
+>  drivers/media/platform/mtk-mipicsi/Makefile   |   4 +
+>  .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 587 ++++++++++++++++++
+>  2 files changed, 591 insertions(+)
+>  create mode 100644 drivers/media/platform/mtk-mipicsi/Makefile
+>  create mode 100644 drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
+> 
+> diff --git a/drivers/media/platform/mtk-mipicsi/Makefile b/drivers/media/platform/mtk-mipicsi/Makefile
+> new file mode 100644
+> index 000000000000..326a5e3808fa
+> --- /dev/null
+> +++ b/drivers/media/platform/mtk-mipicsi/Makefile
+> @@ -0,0 +1,4 @@
+> +mtk-mipicsi-y += mtk_mipicsi.o
+> +
+> +obj-$(CONFIG_VIDEO_MEDIATEK_MIPICSI) += mtk-mipicsi.o
+> +
+> diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
+> new file mode 100644
+> index 000000000000..4ae5b88abc5f
+> --- /dev/null
+> +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
+> @@ -0,0 +1,587 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2017 MediaTek Inc.
+> + * Author: Ricky Zhang <ricky.zhang@mediatek.com>
+> + *         Baoyin Zhang <baoyin.zhang@mediatek.com>
+> + *         Alan Yue <alan.yue@mediatek.com>
+> + *         Stu Hsieh <stu.hsieh@mediatek.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * http://www.gnu.org/licenses/gpl-2.0.html for more details.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/io.h>
+> +#include <linux/delay.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/err.h>
+> +#include <linux/errno.h>
+> +#include <linux/fs.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mm.h>
+> +#include <linux/moduleparam.h>
+> +#include <linux/device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/clk.h>
+> +#include <linux/sched.h>
+> +#include <linux/slab.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/iommu.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <media/v4l2-common.h>
+> +#include <media/v4l2-dev.h>
+> +#include <media/videobuf2-dma-contig.h>
+> +#include <media/soc_camera.h>
+> +#include <media/drv-intf/soc_mediabus.h>
+> +#include <media/videobuf2-core.h>
+> +#include <linux/videodev2.h>
+> +#include <soc/mediatek/smi.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+> +
+> +#define MTK_MIPICSI_DRV_NAME "mtk-mipicsi"
+> +#define MTK_PLATFORM_STR "platform:mt2712"
+> +#define MIPICSI_COMMON_CLK 2
+> +#define MTK_CAMDMA_MAX_NUM 4U
+> +#define MIPICSI_CLK (MIPICSI_COMMON_CLK + MTK_CAMDMA_MAX_NUM)
+> +
+> +#define MIPI_RX_ANA00_CSI				0x00
+> +#define MIPI_RX_ANA04_CSI				0x04
+> +#define MIPI_RX_ANA08_CSI				0x08
+> +#define MIPI_RX_ANA0C_CSI				0x0c
+> +#define MIPI_RX_ANA10_CSI				0x10
+> +#define MIPI_RX_ANA20_CSI				0x20
+> +#define MIPI_RX_ANA24_CSI				0x24
+> +#define MIPI_RX_ANA4C_CSI				0x4c
+> +#define MIPI_RX_ANA50_CSI				0x50
+> +
+> +#define SENINF_CTRL					0x00
+> +
+> +#define SENINF_NCSI2_CAL_24				0x24
+> +#define SENINF_NCSI2_CAL_38				0x38
+> +#define SENINF_NCSI2_CAL_3C				0x3C
+> +#define SENINF_NCSI2_CTL				0xA0
+> +#define SENINF_NCSI2_LNRD_TIMING			0xA8
+> +#define SENINF_NCSI2_INT_EN				0xB0
+> +#define SENINF_NCSI2_INT_STATUS				0xB4
+> +#define SENINF_NCSI2_DBG_SEL				0xB8
+> +#define SENINF_NCSI2_HSRX_DBG				0xD8
+> +#define SENINF_NCSI2_DI					0xDC
+> +#define SENINF_NCSI2_DI_CTRL				0xE4
+> +
+> +#define SENINF_TOP_CTRL					0x00
+> +#define SENINF_TOP_CMODEL_PAR				0x04
+> +#define SENINF_TOP_MUX					0x08
+> +
+> +#define SENINF_MUX_CTRL					0x00
+> +
+> +#define CAMSV_MODULE_EN					0x10
+> +#define CAMSV_FMT_SEL					0x14
+> +#define CAMSV_INT_EN					0x18
+> +#define CAMSV_CLK_EN					0x30
+> +
+> +#define CAMSV_TG_SEN_MODE				0x500
+> +#define CAMSV_TG_SEN_GRAB_PXL				0x508
+> +#define CAMSV_TG_SEN_GRAB_LIN				0x50C
+> +#define CAMSV_TG_PATH_CFG				0x510
+> +
+> +#define IMGO_XSIZE					0x230
+> +#define IMGO_YSIZE					0x234
+> +#define IMGO_STRIDE					0x238
+> +#define DMA_FRAME_HEADER_EN				0xE00
+> +
+> +struct mtk_mipicsi_dev {
+> +	struct platform_device *pdev;
+> +	unsigned int camsv_num;
+> +	struct device *larb_pdev;
+> +	void __iomem		*ana;
+> +	void __iomem		*seninf_ctrl;
+> +	void __iomem		*seninf;
+> +	struct regmap		*seninf_top;
+> +	void __iomem		*seninf_mux[MTK_CAMDMA_MAX_NUM];
+> +	void __iomem		*camsv[MTK_CAMDMA_MAX_NUM];
+> +	int clk_num;
+> +	struct clk		*clk[MIPICSI_CLK];
+> +};
+> +
+> +#define MTK_MIPICSI_BUS_PARAM (V4L2_MBUS_MASTER |	\
+> +		V4L2_MBUS_HSYNC_ACTIVE_HIGH |	\
+> +		V4L2_MBUS_HSYNC_ACTIVE_LOW |	\
+> +		V4L2_MBUS_VSYNC_ACTIVE_HIGH |	\
+> +		V4L2_MBUS_VSYNC_ACTIVE_LOW |	\
+> +		V4L2_MBUS_PCLK_SAMPLE_RISING |	\
+> +		V4L2_MBUS_PCLK_SAMPLE_FALLING |	\
+> +		V4L2_MBUS_DATA_ACTIVE_HIGH)
+> +
+> +static void mtk_mipicsi_ana_init(void __iomem *base)
+> +{
+> +	writel(0xFEFBEFBEU & readl(base + MIPI_RX_ANA4C_CSI),
+> +		base + MIPI_RX_ANA4C_CSI);
+> +	writel(0xFEFBEFBEU & readl(base + MIPI_RX_ANA50_CSI),
+> +		base + MIPI_RX_ANA50_CSI);
+> +
+> +	/* clock lane and lane0-lane3 input select */
+> +	writel(8UL | readl(base + MIPI_RX_ANA00_CSI),
+> +		base + MIPI_RX_ANA00_CSI);
+> +	writel(8UL | readl(base + MIPI_RX_ANA04_CSI),
+> +		base + MIPI_RX_ANA04_CSI);
+> +	writel(8UL | readl(base + MIPI_RX_ANA08_CSI),
+> +		base + MIPI_RX_ANA08_CSI);
+> +	writel(8UL | readl(base + MIPI_RX_ANA0C_CSI),
+> +		base + MIPI_RX_ANA0C_CSI);
+> +	writel(8UL | readl(base + MIPI_RX_ANA10_CSI),
+> +		base + MIPI_RX_ANA10_CSI);
+> +
+> +	/* BG chopper clock and CSI BG enable */
+> +	writel(11UL | readl(base + MIPI_RX_ANA24_CSI),
+> +		base + MIPI_RX_ANA24_CSI);
+> +	mdelay(1);
+> +
+> +	/* LDO core bias enable */
+> +	writel(0xFF030003U | readl(base + MIPI_RX_ANA20_CSI),
+> +		base + MIPI_RX_ANA20_CSI);
+> +	mdelay(1);
+> +}
+> +
+> +static void mtk_mipicsi_seninf_ctrl_init(void __iomem *base)
+> +{
+> +	/*seninf enable. select NCSI2 as seninif input source */
+> +	writel(0x8001U, base + SENINF_CTRL);
+> +}
+> +
+> +static void mtk_mipicsi_seninf_init(void __iomem *base)
+> +{
+> +	writel(1U, base + SENINF_NCSI2_CAL_38);
+> +	writel(0x00051545U, base + SENINF_NCSI2_CAL_3C);
+> +	writel(5U, base + SENINF_NCSI2_CAL_38);
+> +	mdelay(1);
+> +	writel(4U, base + SENINF_NCSI2_CAL_38);
+> +	writel(0U, base + SENINF_NCSI2_CAL_3C);
+> +	writel(0x11U, base + SENINF_NCSI2_DBG_SEL);
+> +	writel(0x189617FU, base + SENINF_NCSI2_CTL);
+> +	writel(~(1UL << 27) & readl(base + SENINF_NCSI2_CTL),
+> +		base + SENINF_NCSI2_CTL);
+> +	writel((1UL << 27) | readl(base + SENINF_NCSI2_CTL),
+> +		base + SENINF_NCSI2_CTL);
+> +	writel(0x2800U, base + SENINF_NCSI2_LNRD_TIMING);
+> +	writel(0x7FFFU, base + SENINF_NCSI2_INT_STATUS);
+> +	writel(0x7FCFFFFEU, base + SENINF_NCSI2_INT_EN);
+> +	writel(0xE4000000U, base + SENINF_NCSI2_CAL_24);
+> +	writel(0xFFFFFF00U & readl(base + SENINF_NCSI2_DBG_SEL),
+> +		base + SENINF_NCSI2_DBG_SEL);
+> +	writel(0xFFFFFF45U | readl(base + SENINF_NCSI2_DBG_SEL),
+> +		base + SENINF_NCSI2_DBG_SEL);
+> +	writel(0xFFFFFFEFU & readl(base + SENINF_NCSI2_HSRX_DBG),
+> +		base + SENINF_NCSI2_HSRX_DBG);
+> +	writel(0x01010101U, base + SENINF_NCSI2_DI_CTRL);
+> +	writel(0x03020100U, base + SENINF_NCSI2_DI);
+> +	writel(0x10, base + SENINF_NCSI2_DBG_SEL);
+> +}
+> +
+> +static void mtk_mipicsi_seninf_top_init(struct regmap *regmap)
+> +{
+> +	(void)regmap_write(regmap, SENINF_TOP_CTRL, 0x00010C00U);
+> +	(void)regmap_write(regmap, SENINF_TOP_CMODEL_PAR, 0x00079871);
+> +	(void)regmap_write(regmap, SENINF_TOP_MUX, 0x11110000);
 
-I'm announcing the release of the 5.1.3 kernel.
+If the function has return error, why don't you handle the error?
 
-All users of the 5.1 kernel series must upgrade.
+> +}
+> +
+> +static void mtk_mipicsi_seninf_mux_init(void __iomem *base, unsigned int ch)
+> +{
+> +	unsigned int mux_ctrl_val = (((0x9EFF8U + ch) << 12U) | 0x180U);
+> +
+> +	/* select seninf_mux1-4 as input for NCSI2 VC0-3*/
+> +	writel(mux_ctrl_val, base + SENINF_MUX_CTRL);
+> +}
+> +
+> +static void mtk_mipicsi_camsv_csr_init(void __iomem *base)
+> +{
+> +	/* double buffer enable. IMGO enable. PAK sel. TG enable */
+> +	writel(0x40000019U, base + CAMSV_MODULE_EN);
+> +	/* IMGO DP, PAK DP and TG clk enable */
+> +	writel(0x00008005U, base + CAMSV_CLK_EN);
+> +	/* 0: raw8, 1:raw10, 2:raw12, 3:YUV422, 4:raw14, 7:JPEG */
+> +	writel(0x00000003U, base + CAMSV_FMT_SEL);
+> +	/* write clear enable. pass1 down interrupt enable */
+> +	writel(0x80000400U, base + CAMSV_INT_EN);
+> +}
+> +
+> +static void mtk_mipicsi_camsv_tg_init(void __iomem *base, u32 b, u32 h)
+> +{
+> +	/* bit[30:16] grab end pixel clock number.
+> +	 * bit[14:0] grab start pixel clock number
+> +	 */
+> +	writel(b << 16U, base + CAMSV_TG_SEN_GRAB_PXL);
+> +	/* bit[29:16] end line number. bit[13:0] start line number */
+> +	writel(h << 16U, base + CAMSV_TG_SEN_GRAB_LIN);
+> +	/* YUV sensor unsigned to signed enable */
+> +	writel(0x1000U, base + CAMSV_TG_PATH_CFG);
+> +	/* cmos enable YUV422 mode */
+> +	writel(3U, base + CAMSV_TG_SEN_MODE);
+> +}
+> +
+> +static void mtk_mipicsi_camsv_dma_init(void __iomem *base, u32 b, u32 h)
+> +{
+> +	/* enable SW format setting. YUV format. 16bit */
+> +	writel(0x01810000U | b, base + IMGO_STRIDE);
+> +	/* b -1 bytes per line to write */
+> +	writel(b - 1U, base + IMGO_XSIZE);
+> +	/* w - 1 lines to write */
+> +	writel(h - 1U, base + IMGO_YSIZE);
+> +	/* disable frame header function */
+> +	writel(0U, base + DMA_FRAME_HEADER_EN);
+> +}
+> +
+> +static void mtk_mipicsi_camsv_init(void __iomem *base, u32 b, u32 h)
+> +{
+> +	mtk_mipicsi_camsv_csr_init(base);
+> +	mtk_mipicsi_camsv_tg_init(base, b, h);
+> +	mtk_mipicsi_camsv_dma_init(base, b, h);
+> +}
+> +
+> +static void mtk_mipicsi_reg_init(struct mtk_mipicsi_dev *mipicsi)
+> +{
+> +	unsigned int i;
+> +
+> +	mtk_mipicsi_ana_init(mipicsi->ana);
+> +	mtk_mipicsi_seninf_ctrl_init(mipicsi->seninf_ctrl);
+> +	mtk_mipicsi_seninf_init(mipicsi->seninf);
+> +	mtk_mipicsi_seninf_top_init(mipicsi->seninf_top);
+> +
+> +	for (i = 0U; i < mipicsi->camsv_num; ++i) {
+> +		u32 b = mipicsi->bytesperline;
+> +		u32 h = mipicsi->height;
+> +
+> +		mtk_mipicsi_seninf_mux_init(mipicsi->seninf_mux[i], i);
+> +		mtk_mipicsi_camsv_init(mipicsi->camsv[i], b, h);
+> +	}
+> +}
+> +
+> +static int mtk_mipicsi_pm_suspend(struct device *dev)
+> +{
+> +	struct mtk_mipicsi_dev *mipicsi = dev_get_drvdata(dev);
+> +	int ret = 0;
+> +	int i = 0;
+> +
+> +	/* close digtal and analog clock */
+> +	for (i = 0; i < mipicsi->clk_num; ++i)
+> +		clk_disable_unprepare(mipicsi->clk[i]);
+> +
+> +	if (mipicsi->larb_pdev != NULL)
+> +		mtk_smi_larb_put(mipicsi->larb_pdev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int mtk_mipicsi_suspend(struct device *dev)
+> +{
+> +	if (pm_runtime_suspended(dev))
+> +		return 0;
+> +
+> +	return mtk_mipicsi_pm_suspend(dev);
+> +}
+> +
+> +static int mtk_mipicsi_pm_resume(struct device *dev)
+> +{
+> +	struct mtk_mipicsi_dev *mipicsi = dev_get_drvdata(dev);
+> +	int ret = 0;
+> +	int i = 0;
+> +
+> +	if (mipicsi->larb_pdev != NULL) {
+> +		ret = mtk_smi_larb_get(mipicsi->larb_pdev);
+> +		if (ret != 0)
+> +			return ret;
+> +	}
+> +
+> +	/* enable digtal clock */
+> +	for (i = 0; i < mipicsi->clk_num; ++i)
+> +		(void)clk_prepare_enable(mipicsi->clk[i]);
 
-The updated 5.1.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
-x-5.1.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
-ummary
+If the function return error, why don't you handle the error?
 
-thanks,
+> +
+> +	mtk_mipicsi_reg_init(mipicsi);
+> +	return ret;
+> +}
+> +
+> +static int mtk_mipicsi_resume(struct device *dev)
+> +{
+> +	if (pm_runtime_suspended(dev))
+> +		return 0;
+> +
+> +	return mtk_mipicsi_pm_resume(dev);
+> +}
+> +
+> +static const struct dev_pm_ops mtk_mipicsi_pm = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(mtk_mipicsi_suspend, mtk_mipicsi_resume)
+> +	SET_RUNTIME_PM_OPS(mtk_mipicsi_pm_suspend,
+> +		mtk_mipicsi_pm_resume, NULL)
+> +};
+> +
+> +static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
+> +		int index)
+> +{
+> +	struct clk *clk = NULL;
+> +	struct device *dev = NULL;
+> +	struct resource *res = NULL;
+> +	struct platform_device *camdma_pdev = NULL;
+> +	struct platform_device *pdev = NULL;
+> +	struct device_node *np = NULL;
+> +
+> +	if (mipicsi == NULL)
 
-greg k-h
+Why mipicsi is NULL?
 
-------------
+> +		return -EINVAL;
+> +
+> +	dev = &mipicsi->pdev->dev;
+> +	pdev = mipicsi->pdev;
 
- Makefile                                            |    2=20
- arch/powerpc/include/asm/book3s/64/pgalloc.h        |    3=20
- arch/powerpc/include/asm/reg_booke.h                |    2=20
- arch/powerpc/kernel/idle_book3s.S                   |   20 +++++
- drivers/hwmon/occ/sysfs.c                           |    8 +-
- drivers/hwmon/pwm-fan.c                             |    2=20
- drivers/i2c/i2c-core-base.c                         |    5 +
- drivers/isdn/gigaset/bas-gigaset.c                  |    9 +-
- drivers/md/raid5.c                                  |   19 +----
- drivers/net/bonding/bond_options.c                  |    7 -
- drivers/net/ethernet/cadence/macb_main.c            |    6 -
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c      |    2=20
- drivers/net/ethernet/freescale/ucc_geth_ethtool.c   |    8 --
- drivers/net/ethernet/seeq/sgiseeq.c                 |    1=20
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c   |    2=20
- drivers/net/phy/phy_device.c                        |   11 +--
- drivers/net/tun.c                                   |   14 +++
- drivers/net/wireless/marvell/mwl8k.c                |   13 ++-
- drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c |    1=20
- drivers/pci/controller/pci-hyperv.c                 |   23 ++++++
- drivers/platform/x86/dell-laptop.c                  |    6 -
- drivers/platform/x86/sony-laptop.c                  |    8 +-
- drivers/platform/x86/thinkpad_acpi.c                |   72 +++++++++++++++=
-++++-
- drivers/usb/serial/generic.c                        |   39 ++++++++--
- drivers/virt/fsl_hypervisor.c                       |   29 ++++----
- drivers/virt/vboxguest/vboxguest_core.c             |   31 ++++++++
- drivers/virtio/virtio_ring.c                        |    1=20
- fs/f2fs/data.c                                      |   17 +++-
- fs/f2fs/f2fs.h                                      |   13 +++
- fs/f2fs/file.c                                      |    2=20
- fs/f2fs/gc.c                                        |    2=20
- fs/f2fs/segment.c                                   |   13 +--
- fs/kernfs/dir.c                                     |    5 -
- include/linux/i2c.h                                 |    3=20
- net/8021q/vlan_dev.c                                |    4 -
- net/bridge/br_if.c                                  |   13 +--
- net/core/fib_rules.c                                |    6 -
- net/core/flow_dissector.c                           |    3=20
- net/dsa/dsa.c                                       |   11 ++-
- net/ipv4/raw.c                                      |    4 -
- net/ipv6/sit.c                                      |    2=20
- net/packet/af_packet.c                              |   25 +++++-
- net/tipc/socket.c                                   |    4 -
- security/selinux/hooks.c                            |    8 +-
- tools/testing/selftests/seccomp/seccomp_bpf.c       |   43 ++++++-----
- 45 files changed, 375 insertions(+), 147 deletions(-)
+Why do you need pdev?
 
-Andrea Parri (1):
-      kernfs: fix barrier usage in __kernfs_new_node()
+> +
+> +	np = of_parse_phandle(dev->of_node,
+> +		"mediatek,seninf_mux_camsv", index);
+> +	if (np == NULL) {
+> +		dev_err(dev, "no NO.%d mediatek,seninf_mux_camsv node\n",
+> +			index);
+> +		return -ENODEV;
+> +	}
+> +
+> +	camdma_pdev = of_find_device_by_node(np);
+> +	of_node_put(np);
+> +	if (camdma_pdev == NULL) {
+> +		camdma_pdev = of_platform_device_create(np, NULL,
+> +					platform_bus_type.dev_root);
 
-Christophe Leroy (1):
-      net: ucc_geth - fix Oops when changing number of buffers in the ring
+I don't know why do you do this? Could you explain?
 
-Corentin Labbe (1):
-      net: ethernet: stmmac: dwmac-sun8i: enable support of unicast filteri=
-ng
+> +		if (camdma_pdev == NULL)
+> +			return -EPROBE_DEFER;
+> +	}
+> +
+> +	clk = of_clk_get(np, 0);
+> +	if (clk == NULL) {
+> +		dev_err(dev, "get clk fail in %s node\n", np->full_name);
+> +		return -ENODEV;
+> +	}
+> +	mipicsi->clk[index] = clk;
+> +
+> +	res = platform_get_resource(camdma_pdev, IORESOURCE_MEM, 0);
+> +	if (res == NULL) {
+> +		dev_err(dev, "get seninf_mux memory failed in %s node\n",
+> +			np->full_name);
+> +		return -ENODEV;
+> +	}
+> +	mipicsi->seninf_mux[index] =
+> +		devm_ioremap_resource(&camdma_pdev->dev, res);
+> +
+> +	res = platform_get_resource(camdma_pdev, IORESOURCE_MEM, 1);
+> +	if (res == NULL) {
+> +		dev_err(dev, "get camsv memory failed in %s node\n",
+> +			np->full_name);
+> +		return -ENODEV;
+> +	}
+> +	mipicsi->camsv[index] =
+> +		devm_ioremap_resource(&camdma_pdev->dev, res);
 
-Damien Le Moal (1):
-      f2fs: Fix use of number of devices
+In your design, camsv is just a resource device without the driver to
+control it. The control flow is placed in mipicsi driver. I would like
+the camsv resource is controlled by a camsv driver. 
 
-Dan Carpenter (2):
-      drivers/virt/fsl_hypervisor.c: dereferencing error pointers in ioctl
-      drivers/virt/fsl_hypervisor.c: prevent integer overflow in ioctl
+> +
+> +	dev_info(dev, "%s parse done\n", np->full_name);
+> +
+> +	return 0;
+> +}
+> +
+> +static int mtk_mipicsi_common_node_parse(struct mtk_mipicsi_dev *mipicsi,
+> +	struct device_node *node)
+> +{
+> +	int i = 0;
+> +	struct regmap *seninf_top = NULL;
+> +	struct device *dev = NULL;
+> +	struct platform_device *pdev = NULL;
+> +	struct clk *clk = NULL;
+> +
+> +	if ((mipicsi == NULL) || (node == NULL))
 
-David Ahern (1):
-      ipv4: Fix raw socket lookup for local traffic
+Why mipicsi and node is NULL?
 
-Dexuan Cui (3):
-      PCI: hv: Fix a memory leak in hv_eject_device_work()
-      PCI: hv: Add hv_pci_remove_slots() when we unload the driver
-      PCI: hv: Add pci_destroy_slot() in pci_devices_present_work(), if nec=
-essary
+> +		return -EINVAL;
+> +
+> +	dev = &mipicsi->pdev->dev;
+> +	pdev = mipicsi->pdev;
 
-Eric Dumazet (1):
-      flow_dissector: disable preemption around BPF calls
+Why do you need pdev?
 
-Greg Kroah-Hartman (1):
-      Linux 5.1.3
+> +
+> +	/* All the mipicsi HW share the same seninf_top */
+> +	seninf_top = syscon_regmap_lookup_by_phandle(dev->of_node,
+> +			"mediatek,mipicsi");
 
-Gustavo A. R. Silva (2):
-      platform/x86: sony-laptop: Fix unintentional fall-through
-      rtlwifi: rtl8723ae: Fix missing break in switch statement
+Your design let all mipicsi device driver directly write the register of
+mipicsi-common device. Why not let mipicsi-common driver provide
+interface for mipicsi driver, and the register is written by
+mipicsi-common driver?
 
-Hangbin Liu (2):
-      fib_rules: return 0 directly if an exactly same rule exists when NLM_=
-F_EXCL not supplied
-      vlan: disable SIOCSHWTSTAMP in container
+> +	if (seninf_top == NULL) {
+> +		dev_err(dev, "Missing mediadek,mipicsi in %s node\n",
+> +			node->full_name);
+> +		return -EINVAL;
+> +	}
+> +	mipicsi->seninf_top = seninf_top;
+> +
+> +	/* get IMG_SENINF_CAM_EN and IMG_SENINF_SCAM_EN clk*/
+> +	mipicsi->clk_num = mipicsi->camsv_num;
+> +
+> +	for (i = 0; i < MIPICSI_COMMON_CLK; ++i) {
+> +		clk = of_clk_get(node, i);
+> +		if (clk == NULL) {
+> +			dev_err(dev, "get clk fail in %s node\n",
+> +				node->full_name);
+> +			return -EINVAL;
+> +		}
+> +		mipicsi->clk[mipicsi->clk_num] = clk;
+> +		++mipicsi->clk_num;
+> +	}
+> +
+> +	dev_info(dev, "%s parse done\n", node->full_name);
+> +
+> +	return 0;
+> +}
+> +
+> +static int mtk_mipicsi_node_parse(struct mtk_mipicsi_dev *mipicsi)
+> +{
+> +	int ret;
+> +	int camsv_num = 0;
+> +	int i;
+> +	struct device *dev = NULL;
+> +	struct resource *res = NULL;
+> +	struct device_node *common_node = NULL;
+> +	struct platform_device *pdev = NULL;
+> +
+> +	if (mipicsi == NULL)
+> +		return -EINVAL;
+> +
+> +	dev = &mipicsi->pdev->dev;
+> +	pdev = mipicsi->pdev;
+> +
+> +	/* get and parse seninf_mux_camsv */
+> +	camsv_num = of_count_phandle_with_args(dev->of_node,
+> +		"mediatek,seninf_mux_camsv", NULL);
+> +	if (camsv_num <= 0) {
+> +		dev_err(dev, "no mediatek,seninf_mux_camsv\n");
+> +		return -EINVAL;
+> +	}
+> +	mipicsi->camsv_num = camsv_num;
+> +	dev_info(dev, "there are %d camsv node\n", camsv_num);
+> +
+> +	for (i = 0; i < mipicsi->camsv_num; ++i) {
+> +		ret = seninf_mux_camsv_node_parse(mipicsi, i);
+> +		if ((ret < 0) && (ret != -EPROBE_DEFER)) {
 
-Hans de Goede (1):
-      virt: vbox: Sanity-check parameter types for hgcm-calls coming from u=
-serspace
+Why don't return when ret == -EPROBE_DEFER?
 
-Harini Katakam (1):
-      net: macb: Change interrupt and napi enable order in open
+> +			dev_err(dev,
+> +				"NO.%d seninf_mux_camsv node parse fail\n", i);
 
-Heiner Kallweit (1):
-      net: phy: fix phy_validate_pause
+I think you need not to print error message here because
+seninf_mux_camsv_node_parse() has already print it.
 
-Jarod Wilson (1):
-      bonding: fix arp_validate toggling in active-backup mode
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	/* get mediatek,mipicsi node and its resource */
+> +	common_node = of_parse_phandle(dev->of_node, "mediatek,mipicsi", 0);
 
-Jason Wang (2):
-      tuntap: fix dividing by zero in ebpf queue selection
-      tuntap: synchronize through tfiles array instead of tun->numqueues
+You should of_node_put(common_node) somewhere.
 
-Jiaxun Yang (1):
-      platform/x86: thinkpad_acpi: Disable Bluetooth for some machines
+> +	if (common_node == NULL) {
+> +		dev_err(dev, "no mediadek,mipicsi\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = mtk_mipicsi_common_node_parse(mipicsi, common_node);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/*get ana and seninf reg*/
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (res == NULL) {
+> +		dev_err(dev, "get ana register failed\n");
+> +		return -ENODEV;
+> +	}
+> +	mipicsi->ana = devm_ioremap_resource(&pdev->dev, res);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	if (res == NULL) {
+> +		dev_err(dev, "get seninf_ctrl register failed\n");
+> +		return -ENODEV;
+> +	}
+> +	mipicsi->seninf_ctrl = devm_ioremap_resource(&pdev->dev, res);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+> +	if (res == NULL) {
+> +		dev_err(dev, "get seninf register failed\n");
+> +		return -ENODEV;
+> +	}
+> +	mipicsi->seninf = devm_ioremap_resource(&pdev->dev, res);
+> +
+> +	dev_info(dev, "mipicsi node parse done\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static int mtk_mipicsi_probe(struct platform_device *pdev)
+> +{
+> +	struct mtk_mipicsi_dev *mipicsi = NULL;
+> +	int ret = 0;
+> +	struct iommu_domain *iommu = NULL;
+> +	struct device_node *larb_node = NULL;
+> +	struct platform_device *larb_pdev = NULL;
+> +
+> +	iommu = iommu_get_domain_for_dev(&pdev->dev);
+> +	if (iommu == NULL) {
+> +		dev_err(&pdev->dev, "Waiting iommu driver ready...\n");
+> +		return -EPROBE_DEFER;
+> +	}
+> +
+> +	larb_node = of_parse_phandle(pdev->dev.of_node, "mediatek,larb", 0);
+> +	if (larb_node == NULL) {
+> +		dev_err(&pdev->dev, "Missing mediadek,larb in %s node\n",
+> +			pdev->dev.of_node->full_name);
+> +		return -EINVAL;
+> +	}
+> +
+> +	larb_pdev = of_find_device_by_node(larb_node);
+> +	if (larb_pdev == NULL || !larb_pdev->dev.driver) {
+> +		dev_err(&pdev->dev, "Waiting for larb device %s\n",
+> +			larb_node->full_name);
 
-Johan Hovold (1):
-      USB: serial: fix unthrottle races
+of_node_put(larb_node);
 
-Kees Cook (1):
-      selftests/seccomp: Handle namespace failures gracefully
+Regards,
+CK
 
-Laurentiu Tudor (2):
-      dpaa_eth: fix SG frame cleanup
-      powerpc/booke64: set RI in default MSR
+> +		return -EPROBE_DEFER;
+> +	}
+> +	of_node_put(larb_node);
+> +
+> +	mipicsi = devm_kzalloc(&pdev->dev, sizeof(*mipicsi), GFP_KERNEL);
+> +	if (mipicsi == NULL)
+> +		return -ENOMEM;
+> +
+> +	mipicsi->pdev = pdev;
+> +	mipicsi->larb_pdev = &larb_pdev->dev;
+> +
+> +	ret = mtk_mipicsi_node_parse(mipicsi);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	pm_runtime_enable(&pdev->dev);
+> +
+> +	ret = vb2_dma_contig_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32U));
+> +	if (ret != 0) {
+> +		dev_err(&pdev->dev, "dma set max seg size fail\n");
+> +		goto clean;
+> +	}
+> +
+> +	dev_set_drvdata(&pdev->dev, mipicsi);
+> +
+> +	dev_info(&pdev->dev, "probe done\n");
+> +	return ret;
+> +clean:
+> +	pm_runtime_disable(&pdev->dev);
+> +	return ret;
+> +}
+> +
+> +static int mtk_mipicsi_remove(struct platform_device *pdev)
+> +{
+> +	pm_runtime_disable(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id mtk_mipicsi_of_match[] = {
+> +	{ .compatible = "mediatek,mt2712-mipicsi", },
+> +	{},
+> +};
+> +
+> +static struct platform_driver mtk_mipicsi_driver = {
+> +	.driver		= {
+> +		.name	= MTK_MIPICSI_DRV_NAME,
+> +		.pm	= &mtk_mipicsi_pm,
+> +		.of_match_table = of_match_ptr(mtk_mipicsi_of_match),
+> +	},
+> +	.probe		= mtk_mipicsi_probe,
+> +	.remove		= mtk_mipicsi_remove,
+> +};
+> +
+> +module_platform_driver(mtk_mipicsi_driver);
+> +MODULE_DESCRIPTION("MediaTek SoC Camera Host driver");
+> +MODULE_LICENSE("GPL v2");
 
-Lei YU (1):
-      hwmon: (occ) Fix extended status bits
 
-Mario Limonciello (1):
-      platform/x86: dell-laptop: fix rfkill functionality
-
-Nigel Croxon (1):
-      Don't jump to compute_result state from check_result state
-
-Paolo Abeni (1):
-      selinux: do not report error on connect(AF_UNSPEC)
-
-Parthasarathy Bhuvaragan (1):
-      tipc: fix hanging clients using poll with EPOLLOUT flag
-
-Paul Bolle (1):
-      isdn: bas_gigaset: use usb_fill_int_urb() properly
-
-Petr =C5=A0tetiar (1):
-      mwl8k: Fix rate_idx underflow
-
-Rick Lindsley (1):
-      powerpc/book3s/64: check for NULL pointer in pgd_alloc()
-
-Russell Currey (1):
-      powerpc/powernv/idle: Restore IAMR after idle
-
-Stefan Wahren (1):
-      hwmon: (pwm-fan) Disable PWM if fetching cooling data fails
-
-Stephen Suryaputra (1):
-      vrf: sit mtu should not be updated when vrf netdev is the link
-
-Thomas Bogendoerfer (1):
-      net: seeq: fix crash caused by not set dev.parent
-
-Tobin C. Harding (1):
-      bridge: Fix error path for kobject_init_and_add()
-
-Wolfram Sang (1):
-      i2c: core: ratelimit 'transfer when suspended' errors
-
-YueHaibing (3):
-      net: dsa: Fix error cleanup path in dsa_init_module
-      packet: Fix error path in packet_init
-      virtio_ring: Fix potential mem leak in virtqueue_add_indirect_packed
-
-
---AhhlLboLdkugWU4S
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAlzeZKIACgkQONu9yGCS
-aT7e+BAA0t7GYlHXEaPM04PmyGE7kCo6nFqlUmkYpGVhPCP2nKb4XgxsPAO7XJn/
-NX5WO7YSIM4yl0UQmicKAxwpg2nCEMsbg5RH05RSsftr/JGTsFv1pJHED9fTIKtr
-/YLgOuwyB2r1FG6Zd8zimYOdqu+6mW9bgrdYwDW3f3TDnna0qM/JiPy7twJ9pRbi
-Z++7kqsXfuIE511WJ5soKC4Al+UFszTONhXt8locnS2nmHFCvh/4BE7D61QcS34R
-UDdOkJBSxgMUW1QpxEEGYZ9y4gTC9mgQjh9ealqV7P1djr0Tsp0OxTxNNgZJ2+Ly
-v3RAL/pj9wstt9SNls+DE83SfsSdUStGbA8OXf/9k+K0fRAmS+dK+yfV0qYWHFW+
-3tlmKVmWk4EIVH3c4JajFbefisfSMyvhWqESBjIPj90F/log3GThc0pWB6Xu0J0S
-ZjmYUjx8e/C2m6rlDU7lWhmm3vpb1sEYHEPKwZqsHiQyoJectsFpcYWXXHzxzgKe
-YxHd4yFnA0J73rzpP5xpikp9jdZRuzl0XMOxbrIkeRNLbrZRpVpa1xVdHEO9PDPY
-9jditxmZrdGsXm3lQxEs/aTJqHrZV13UErJ75EYo95FOo7BMBX9O2VKuAo2Tomgo
-73K6MrbXpdSECMZ8TdcTTD1huH++LXLc3nMN+WC8FK7Ot8oznHc=
-=jxd3
------END PGP SIGNATURE-----
-
---AhhlLboLdkugWU4S--
