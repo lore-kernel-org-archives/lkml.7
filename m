@@ -2,152 +2,94 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F40C04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 23:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A76DAC04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 23:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AB8E2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 23:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72637216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 23:39:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HN4Hs2kL"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EhXvzRJ2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbfEQXcs (ORCPT
+        id S1727847AbfEQXjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 19:32:48 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41558 "EHLO
+        Fri, 17 May 2019 19:39:03 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46022 "EHLO
         mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726519AbfEQXcr (ORCPT
+        with ESMTP id S1727120AbfEQXjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 19:32:47 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f12so4010762plt.8;
-        Fri, 17 May 2019 16:32:47 -0700 (PDT)
+        Fri, 17 May 2019 19:39:03 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a5so4000853pls.12
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 16:39:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=awtvMvpzZhsaTZUbEfHRJE4Vbfvc7fc0pIJD8NnJozs=;
-        b=HN4Hs2kLz7PmjXNIeyWPid/KV5LSQeemV3ykbNHLA+pyXaVFJvmO1q8/Jry7ro8Bbz
-         26lB/uPzGX4TTL/NAgLs7YQqPI3eDV6W/fP3r+jpaTPuMQmHDTbD2UIepgS4sm5SutqG
-         fqB+j7oVREHQYd2Q57EAHKIqgmgkb8twzRSk4P8neMzFT8j7W+QjCDgrsQbizuvSpm1j
-         q5N+mszjAJpjEcdEt9iGBSl3I1HSssXcYPkjF2FiV4z+olaktv+qI60CxTBjOCtO/trO
-         g7zkmy+06JS9D/fbI+N9SnPsRJzYd2cQPtXfwqSvrMePHjGD3jpgXvNRLKQdZczsvlkV
-         wXpA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8gZh6LcPIYENuLrq70OVrhE14Oi6QufFQBK4s4YRnTA=;
+        b=EhXvzRJ2UNIKuLYIDrYvKv7KlCJ6hRvEdoKK4G+NX9Cy3ga1z8x2Nr1dLy4TCfWI1O
+         qL0ke7KwVeOA+vRJ6MaIRQjOJNX2BIEvwwIdYyAi9G3mbKCsFsQA/hW+8kxDoeg3Suoa
+         0FjzyYPtbOwgzRugPy26xg40vCKMm7clLdCfs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=awtvMvpzZhsaTZUbEfHRJE4Vbfvc7fc0pIJD8NnJozs=;
-        b=G3nDratVo4I3ZSwSZi9wtpL2AiX3ej471cr5LazaZSw/66hCq0MLSmqQIo21Pvj33H
-         kuYdCxuTx7ParBdJYXkPx/Os/X4NQaPwRsyGaHoCdFIWP8wvSCM9VDHPxM4Z+W+ZiuKJ
-         72ojTfvVGurejR9B+alGhuMT9VdJyBq5NrwAXt+Ig9rEUQtqtnUyXjkrWwWsUqty+96P
-         EarohVgsNLIJM19hBpqiglaRNxv+Qz3txDtlrhq4/n+MCPRbOX/EpdGH0TFIO/HytE1n
-         qznM4V7J1exjQFGzlUXTU5w0032ZJprOmv71LoTycf2yjeX1+qqLYiDJKcGHQ9Z7baLE
-         WnBg==
-X-Gm-Message-State: APjAAAUkmZwg2grVWpIDZxeojk5wD+m9rCGD2Y7iOORM4azRYh5x8V4v
-        rQx/zWusm/s1OO/M9xAt37CP2O+KCc4f9HcNj38=
-X-Google-Smtp-Source: APXvYqy7E9jBDRwnw+HbDOS8UC8KzgTl9AzoRrCpdXsoBctksnXrT2KgZgkfiL19AAYeCBKYI9PtZ+r7b8cb0voUgBc=
-X-Received: by 2002:a17:902:112b:: with SMTP id d40mr59939401pla.31.1558135967232;
- Fri, 17 May 2019 16:32:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8gZh6LcPIYENuLrq70OVrhE14Oi6QufFQBK4s4YRnTA=;
+        b=SNY3wnq4R4gpLBAwPn1CFteJwlBcSiYlGXscuM/NcZygKFlG199D5pGkb3PVgvJw/3
+         abG6AwyfbDH349gBcSj4lwFhIAIA427+kSJzRGOSdKT76gLHOiIcAdiH3JeFzjo5m89W
+         1/QRsLAmZLdtIpKJvqM5nbXTM0pUV2aa1PxlJIY4zGaER9CNwNKjj8qXWJvLTrcdP0on
+         9o1jUwk6lX+OaduFozW1IcO4+RaYbS4xXzU/g5rR3LW5FEnI9yrUjP/QG7uLYdipPEj0
+         PFa0Sbhwfj9U/+mVYmBwiPoohYoofGSFttx6vspcNbtXeIZgWAibKT0QCAkeosT1CmPb
+         +ktQ==
+X-Gm-Message-State: APjAAAWDEYxggSs0hD3XMQSIWSJAOQpKnUBbnQuBGnhVvMEj1lN5BFFP
+        ugYTfqi6UJMb5RtLX1yLrvtQTQ==
+X-Google-Smtp-Source: APXvYqwnCjmbdahiVCeyMEGBBy/0dbUgS20VbJ6HKGzQTQ7jzlmlJtcP33gai1+X0v2x8vrlINpAkg==
+X-Received: by 2002:a17:902:56d:: with SMTP id 100mr59564890plf.246.1558136342873;
+        Fri, 17 May 2019 16:39:02 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
+        by smtp.gmail.com with ESMTPSA id j184sm10081827pge.83.2019.05.17.16.39.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 16:39:02 -0700 (PDT)
+From:   Gwendal Grignou <gwendal@chromium.org>
+To:     enric.balletbo@collabora.com, bleung@chromium.org,
+        groeck@chromium.org, lee.jones@linaro.org, jic23@kernel.org
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Gwendal Grignou <gwendal@chromium.org>
+Subject: [PATCH v7 0/2] iio: cros_ec: Add lid angle driver
+Date:   Fri, 17 May 2019 16:38:54 -0700
+Message-Id: <20190517233856.155793-1-gwendal@chromium.org>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 MIME-Version: 1.0
-References: <20190510223744.10154-1-prsriva02@gmail.com> <20190510223744.10154-3-prsriva02@gmail.com>
- <45344b2f-d9ea-f7df-e45f-18037e2ba5ca@huawei.com> <CAEFn8qJVvNivP6Lmx+nVewPcHjH=V2OrR_HyHR6nOeuVQW0A4w@mail.gmail.com>
- <ec8ee6f7-3a1d-6498-e009-f85e677b448a@huawei.com>
-In-Reply-To: <ec8ee6f7-3a1d-6498-e009-f85e677b448a@huawei.com>
-From:   prakhar srivastava <prsriva02@gmail.com>
-Date:   Fri, 17 May 2019 16:32:36 -0700
-Message-ID: <CAEFn8qKgH5FMLaudqTH6W0k7NpSoWV_NHbmiVduaQPbUNF_4Lg@mail.gmail.com>
-Subject: Re: [PATCH 2/3 v5] add a new template field buf to contain the buffer
-To:     Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>, ebiederm@xmission.com,
-        vgoyal@redhat.com, Prakhar Srivastava <prsriva@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 6:22 AM Roberto Sassu <roberto.sassu@huawei.com> wrote:
->
-> On 5/14/2019 7:07 AM, prakhar srivastava wrote:
-> > On Mon, May 13, 2019 at 6:48 AM Roberto Sassu <roberto.sassu@huawei.com> wrote:
-> >>
-> >> On 5/11/2019 12:37 AM, Prakhar Srivastava wrote:
-> >>> From: Prakhar Srivastava <prsriva02@gmail.com>
-> >>>
-> >>> The buffer(cmdline args) added to the ima log cannot be attested
-> >>> without having the actual buffer. Thus to make the measured buffer
-> >>> available to store/read a new ima template (buf) is added.
-> >>
-> >> Hi Prakhar
-> >>
-> >> please fix the typos. More comments below.
-> >>
-> >>
-> >>> +     buffer_event_data->type = IMA_XATTR_BUFFER;
-> >>> +     buffer_event_data->buf_length = size;
-> >>> +     memcpy(buffer_event_data->buf, buf, size);
-> >>> +
-> >>> +     event_data.xattr_value = (struct evm_ima_xattr_data *)buffer_event_data;
-> >>> +     event_data.xattr_len = alloc_length;
-> >>
-> >> I would prefer that you introduce two new fields in the ima_event_data
-> >> structure. You can initialize them directly with the parameters of
-> >> process_buffer_measurement().
-> > I will make the edits, this will definitely save the kzalloc in this code
-> > path.
-> >>
-> >> ima_write_template_field_data() will make
-> >> a copy.
-> >>
-> > Since event_data->type is used to distinguish what the template field
-> >   should contain.
-> > Removing the type and subsequent check in the template_init,
-> >   buf template fmt will result in the whole event_Data structure
-> > being added to the log, which is not the expected output.
-> > For buffer entries, the buf template fmt will contains the buffer itself.
+Add a IIO driver that reports the angle between the lid and the base for
+ChromeOS convertible device.
 
->
-> The purpose of ima_event_data is to pass data to the init method of
-> template fields. Each method takes the data it needs.
->
-> If you pass event_data->buf and event_data->buf_len to
-> ima_write_template_field_data() this should be fine.
+Tested on eve with ToT EC firmware.
+Check driver is loaded and lid angle is correct.
 
-Hi Roberto,
-I did some testing after making the needed code changes,
-the output is as expected the buf template field only contains
-the buf when the ima_event_data.buf is set.
+Changes in v7:
+- Split the patch in two, as there are no build dependency between
+  mfd and iio changes.
 
-However i just want to double check if adding two new fields to
-the struct ima_event_data is approach you want me to take?
-Mimi any concerns?
+Gwendal Grignou (2):
+  mfd: cros_ec: Register cros_ec_lid_angle driver when present
+  iio: cros_ec: Add lid angle driver
 
-what all tests do i need to run to confirm i am not
-in-inadvertently breaking some thing else?
+ drivers/iio/common/cros_ec_sensors/Kconfig    |   9 ++
+ drivers/iio/common/cros_ec_sensors/Makefile   |   1 +
+ .../cros_ec_sensors/cros_ec_lid_angle.c       | 139 ++++++++++++++++++
+ drivers/mfd/cros_ec_dev.c                     |  13 +-
+ 4 files changed, 159 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/iio/common/cros_ec_sensors/cros_ec_lid_angle.c
 
-Thanks,
-Prakhar Srivastava
->
-> Roberto
->
->
-> >>> +      .field_show = ima_show_template_buf},
-> >>
-> >> Please update Documentation/security/IMA-templates.rst
-> > Will update the documentation.
-> >
-> > Thanks,
-> > Prakhar Srivastava
-> >>
-> >> Thanks
-> >>
-> >> Roberto
->
-> --
-> HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-> Managing Director: Bo PENG, Jian LI, Yanli SHI
+-- 
+2.21.0.1020.gf2820cf01a-goog
+
