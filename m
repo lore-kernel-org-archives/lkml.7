@@ -2,207 +2,134 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 231C5C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372BEC04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:34:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA4221734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A368216C4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:34:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="TdcT0ao8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aanZSxaf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfEQRdj (ORCPT
+        id S1728537AbfEQRex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 13:33:39 -0400
-Received: from mail-ed1-f54.google.com ([209.85.208.54]:39317 "EHLO
-        mail-ed1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726578AbfEQRdi (ORCPT
+        Fri, 17 May 2019 13:34:53 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42030 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbfEQRex (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 13:33:38 -0400
-Received: by mail-ed1-f54.google.com with SMTP id e24so11648884edq.6
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 10:33:36 -0700 (PDT)
+        Fri, 17 May 2019 13:34:53 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 13so3996454pfw.9
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 10:34:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PAeoxF2imq2aUNGpWDXhVAfgD9B+GyCzgoCoPFLvAKA=;
-        b=TdcT0ao8wyzDXRR3baDL1GRF+OfLNOeR9/I2TulJt5JsUQb+LG08zQI8xbNjtusE+e
-         ZdO/jwAn1gUii0A+VpoQhVYNUFJMQgMXJE0jIXa7NyqzFSDSf9NlEBwhugR1g8SDpoc9
-         WbyDzdPHcQ0ZQnP1eCgS/i3+C79euoCv7/5ZQdnwdUGsntWsk896+MSq9mpka1A4mHEA
-         vs7k3FEOKaHSHrV1aswiHY8M1nr6xdUi4F5NL9mP9N43DNpQ15spNDa7qSYXSuu0J48r
-         HD4rcSYGHFfhnNYXnCOoC7xqqMm8oJBiw2cM+dwf16YmjI611f/6JfjH7qfpPAGQhBTV
-         wzIA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EQJ+i6iyywaiyvPH5Ae01aI539IGazdRX+wyFdAqzQ8=;
+        b=aanZSxafrgKwxWZXR9j39vx1sCu33cNvgPcDwT6PxgjwJRrkJcbhwxhh51PE7RY2mz
+         AY5Iycj6ZTO24RiG3PvHwStotGD451nVBIT6sjLw6Ynr4Ou4WW/nHdGQxnBOVgBrZ5wt
+         ozAo5veCyhAikOq+8aWu4Ey164M3K+n2/Wa+P9oxiTOfyjTCPDn4hdKDtmWCFA86qyo1
+         Axb84Btin+aZNsep3wfDD5JVAmugrkNPhN/KuwEUOBZq2kj1b2YI8MshZNcuDk1JxQjf
+         NjjY5tUquuwM1gJhMUS6g7ErT/4PZfCb0DdUm/Ng7BhHzt3u3Jsd4i59RFgcck4Z4OUL
+         UBvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PAeoxF2imq2aUNGpWDXhVAfgD9B+GyCzgoCoPFLvAKA=;
-        b=RUrYyVovuxsyHGHAGXUfPOfR8SUguogIVyOZoyPDldpbmVBl28Fg0nuGpUdRYdxRSt
-         AgTp1mClCEKKD0XUI2MFlvepNIeMFfeGRClCsZm3LDmiFQzpxH9wPxbUfumCEmM4jy8c
-         14d4fhex3HLQdzgwGqy3mZILHOHHnaDY8C1pKw894c77yb2hQzMef1LuuTo60f08bxts
-         7TXMZt9VmBZWqTWEbEJmxFQDCj8mm2JJj/uynCvDyWFXDyw1veqzyQIITeElTYOlmqSf
-         c/nZSdC59OkTRT6HPQDdq91rr48nt4ZV/ai3X/EO0ZBsC0urUKGStZQvVb+rISbzhOut
-         pVqA==
-X-Gm-Message-State: APjAAAVj9D3mQ53lZ/RaD1MY0k7H3D1x4GlFo+QutAOUn5yaItabQn2i
-        Hj1cIStyzHWhjTurdoR5wQje45npJWmjhrSrdfoLnQ==
-X-Google-Smtp-Source: APXvYqwjJ4gypFzj7i15z2ynBCtipPcuZRluChX/vOW8Yiaed+BIB651uMRUczuoRSPU78hl+CTC5PEO5Yuy/B61iJ4=
-X-Received: by 2002:a50:ee01:: with SMTP id g1mr58636495eds.263.1558114416186;
- Fri, 17 May 2019 10:33:36 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EQJ+i6iyywaiyvPH5Ae01aI539IGazdRX+wyFdAqzQ8=;
+        b=MlUibSuTDNcXtxn+YAzN5Qs2F2viZrJU0K9Bg+kKvYbkw+s2dtrYCSU85oxaHQl/nE
+         drn5/XnILOsXSqX2c3kZige2hR4S+LdUnPf2yMYSxMNTevBh+b6gkkNvDbQOSdDRt+c3
+         ZTfFtsO4g04wH8+3kQYYF949bICcEDGjtfokf3Mc4WyuCvRE9bNGXot9FVedt4Z4eZWf
+         3Pa+ZkBg3lymILhq7dMmiRaKK3CUT159NX+PdPewqEHjf59sZGgy/JC2mQMMzT8yDhLZ
+         HXpwkN4H03cNn2hbTHpy+rkKzSugExRiEboU6s8F3ix1YH2AR0Au4A9vapGyMtqVS0uc
+         2oYQ==
+X-Gm-Message-State: APjAAAX4q+4S3bhq/Vv8tHG266QqRjA2o46y/Ck18aZCEisPGFpJLiDS
+        gzYyTgkIQHTY8DDU+pkf3J44bg==
+X-Google-Smtp-Source: APXvYqwAR5v9g9Pj7oAhKsdMTbRAYpj8+edIonWgSGveknrjHzEQSgArD/o7pgLUsetiE0m+QRPAzw==
+X-Received: by 2002:aa7:8e59:: with SMTP id d25mr61042439pfr.24.1558114492292;
+        Fri, 17 May 2019 10:34:52 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id p16sm26875608pfq.153.2019.05.17.10.34.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 May 2019 10:34:51 -0700 (PDT)
+Date:   Fri, 17 May 2019 10:35:14 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Evan Green <evgreen@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [RFC/PATCH 0/5] Read-only memremap() proposal
+Message-ID: <20190517173514.GM2085@tuxbook-pro>
+References: <20190517164746.110786-1-swboyd@chromium.org>
 MIME-Version: 1.0
-References: <CA+CK2bBeOJPnnyWBgj0CJ7E1z9GVWVg_EJAmDs07BSJDp3PYfQ@mail.gmail.com>
- <20190517143816.GO6836@dhcp22.suse.cz> <CA+CK2bA+2+HaV4GWNUNP04fjjTPKbEGQHSPrSrmY7HLD57au1Q@mail.gmail.com>
- <CA+CK2bDq+2qu28afO__4kzO4=cnLH1P4DcHjc62rt0UtYwLm0A@mail.gmail.com>
-In-Reply-To: <CA+CK2bDq+2qu28afO__4kzO4=cnLH1P4DcHjc62rt0UtYwLm0A@mail.gmail.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Fri, 17 May 2019 13:33:25 -0400
-Message-ID: <CA+CK2bCgF7z5UHqrGCYu4JgG=5o6uXbjutTo9VSYAkqu3dqn5w@mail.gmail.com>
-Subject: Re: NULL pointer dereference during memory hotremove
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        "tiwai@suse.de" <tiwai@suse.de>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "david@redhat.com" <david@redhat.com>, "bp@suse.de" <bp@suse.de>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "jglisse@redhat.com" <jglisse@redhat.com>,
-        "zwisler@kernel.org" <zwisler@kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        "Wu, Fengguang" <fengguang.wu@intel.com>,
-        "baiyaowei@cmss.chinamobile.com" <baiyaowei@cmss.chinamobile.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190517164746.110786-1-swboyd@chromium.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 1:24 PM Pavel Tatashin
-<pasha.tatashin@soleen.com> wrote:
->
-> On Fri, May 17, 2019 at 1:22 PM Pavel Tatashin
-> <pasha.tatashin@soleen.com> wrote:
-> >
-> > On Fri, May 17, 2019 at 10:38 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > >
-> > > On Fri 17-05-19 10:20:38, Pavel Tatashin wrote:
-> > > > This panic is unrelated to circular lock issue that I reported in a
-> > > > separate thread, that also happens during memory hotremove.
-> > > >
-> > > > xakep ~/x/linux$ git describe
-> > > > v5.1-12317-ga6a4b66bd8f4
-> > >
-> > > Does this happen on 5.0 as well?
-> >
-> > Yes, just reproduced it on 5.0 as well. Unfortunately, I do not have a
-> > script, and have to do it manually, also it does not happen every
-> > time, it happened on 3rd time for me.
->
-> Actually, sorry, I have not tested 5.0, I compiled 5.0, but my script
-> still tested v5.1-12317-ga6a4b66bd8f4 build. I will report later if I
-> am able to reproduce it on 5.0.
+On Fri 17 May 09:47 PDT 2019, Stephen Boyd wrote:
 
-OK, confirmed on 5.0 as well, took 4 tries to reproduce:
-(qemu) [   17.104486] Offlined Pages 32768
-[   17.105543] Built 1 zonelists, mobility grouping on.  Total pages: 1515892
-[   17.106475] Policy zone: Normal
-[   17.107029] BUG: unable to handle kernel NULL pointer dereference
-at 0000000000000698
-[   17.107645] #PF error: [normal kernel read fault]
-[   17.108038] PGD 0 P4D 0
-[   17.108287] Oops: 0000 [#1] SMP PTI
-[   17.108557] CPU: 5 PID: 313 Comm: kworker/u16:5 Not tainted 5.0.0_pt_pmem1 #2
-[   17.109128] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-20181126_142135-anatol 04/01/2014
-[   17.109910] Workqueue: kacpi_hotplug acpi_hotplug_work_fn
-[   17.110323] RIP: 0010:__remove_pages+0x2f/0x520
-[   17.110674] Code: 41 56 41 55 49 89 fd 41 54 55 53 48 89 d3 48 83
-ec 68 48 89 4c 24 08 65 48 8b 04 25 28 00 00 00 48 89 44 24 60 31 c0
-48 89 f8 <48> 2b 47 58 48 3d 00 19 00 00 0f 85 7f 03 00 00 48 85 c9 0f
-84 df
-[   17.112114] RSP: 0018:ffffb43b815f3ca8 EFLAGS: 00010246
-[   17.112518] RAX: 0000000000000640 RBX: 0000000000040000 RCX: 0000000000000000
-[   17.113073] RDX: 0000000000040000 RSI: 0000000000240000 RDI: 0000000000000640
-[   17.113615] RBP: 0000000240000000 R08: 0000000000000000 R09: 0000000040000000
-[   17.114186] R10: 0000000040000000 R11: 0000000240000000 R12: ffffe382c9000000
-[   17.114743] R13: 0000000000000640 R14: 0000000000040000 R15: 0000000000240000
-[   17.115288] FS:  0000000000000000(0000) GS:ffff979539b40000(0000)
-knlGS:0000000000000000
-[   17.115911] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   17.116356] CR2: 0000000000000698 CR3: 0000000133c22004 CR4: 0000000000360ee0
-[   17.116913] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   17.117467] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   17.118016] Call Trace:
-[   17.118214]  ? memblock_isolate_range+0xc4/0x139
-[   17.118570]  ? firmware_map_remove+0x48/0x90
-[   17.118908]  arch_remove_memory+0x7b/0xc0
-[   17.119216]  __remove_memory+0x93/0xc0
-[   17.119528]  acpi_memory_device_remove+0x67/0xe0
-[   17.119890]  acpi_bus_trim+0x50/0x90
-[   17.120167]  acpi_device_hotplug+0x2fc/0x460
-[   17.120498]  acpi_hotplug_work_fn+0x15/0x20
-[   17.120834]  process_one_work+0x2a0/0x650
-[   17.121146]  worker_thread+0x34/0x3d0
-[   17.121432]  ? process_one_work+0x650/0x650
-[   17.121772]  kthread+0x118/0x130
-[   17.122032]  ? kthread_create_on_node+0x60/0x60
-[   17.122413]  ret_from_fork+0x3a/0x50
-[   17.122727] Modules linked in:
-[   17.122983] CR2: 0000000000000698
-[   17.123250] ---[ end trace 389c4034f6d42e6f ]---
-[   17.123618] RIP: 0010:__remove_pages+0x2f/0x520
-[   17.123979] Code: 41 56 41 55 49 89 fd 41 54 55 53 48 89 d3 48 83
-ec 68 48 89 4c 24 08 65 48 8b 04 25 28 00 00 00 48 89 44 24 60 31 c0
-48 89 f8 <48> 2b 47 58 48 3d 00 19 00 00 0f 85 7f 03 00 00 48 85 c9 0f
-84 df
-[   17.125410] RSP: 0018:ffffb43b815f3ca8 EFLAGS: 00010246
-[   17.125818] RAX: 0000000000000640 RBX: 0000000000040000 RCX: 0000000000000000
-[   17.126359] RDX: 0000000000040000 RSI: 0000000000240000 RDI: 0000000000000640
-[   17.126906] RBP: 0000000240000000 R08: 0000000000000000 R09: 0000000040000000
-[   17.127453] R10: 0000000040000000 R11: 0000000240000000 R12: ffffe382c9000000
-[   17.128008] R13: 0000000000000640 R14: 0000000000040000 R15: 0000000000240000
-[   17.128555] FS:  0000000000000000(0000) GS:ffff979539b40000(0000)
-knlGS:0000000000000000
-[   17.129182] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   17.129627] CR2: 0000000000000698 CR3: 0000000133c22004 CR4: 0000000000360ee0
-[   17.130182] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[   17.130744] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   17.131293] BUG: sleeping function called from invalid context at
-include/linux/percpu-rwsem.h:34
-[   17.132050] in_atomic(): 0, irqs_disabled(): 1, pid: 313, name: kworker/u16:5
-[   17.132596] INFO: lockdep is turned off.
-[   17.132908] irq event stamp: 14046
-[   17.133175] hardirqs last  enabled at (14045): [<ffffffffadbf3b1a>]
-kfree+0xba/0x230
-[   17.133777] hardirqs last disabled at (14046): [<ffffffffada01b03>]
-trace_hardirqs_off_thunk+0x1a/0x1c
-[   17.134497] softirqs last  enabled at (13446): [<ffffffffae2c804c>]
-peernet2id+0x4c/0x70
-[   17.135119] softirqs last disabled at (13444): [<ffffffffae2c802d>]
-peernet2id+0x2d/0x70
-[   17.135739] CPU: 5 PID: 313 Comm: kworker/u16:5 Tainted: G      D
-        5.0.0_pt_pmem1 #2
-[   17.136389] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-20181126_142135-anatol 04/01/2014
-[   17.137169] Workqueue: kacpi_hotplug acpi_hotplug_work_fn
-[   17.137589] Call Trace:
-[   17.137792]  dump_stack+0x67/0x90
-[   17.138160]  ___might_sleep.cold.87+0x9f/0xaf
-[   17.138497]  exit_signals+0x2b/0x240
-[   17.138794]  do_exit+0xab/0xc10
-[   17.139055]  ? process_one_work+0x650/0x650
-[   17.139406]  ? kthread+0x118/0x130
-[   17.139686]  rewind_stack_do_exit+0x17/0x20
+> This patch series implements a read-only version of memremap() via
+> a new MEMREMAP_RO flag. If this is passed in the mapping call, we'll
+> try to map the memory region as read-only if it doesn't intersect
+> with an existing mapping. Otherwise, we'll try to fallback to other
+> flags to try to map the memory that way.
+> 
+> The main use case I have is to map the command-db memory region on
+> Qualcomm devices with a read-only mapping. It's already a const marked
+> pointer and the API returns const pointers as well, so this series makes
+> sure that even stray writes can't modify the memory. To get there we
+> introduce a devm version of memremap() for a reserved memory region, add
+> a memremap() flag, and implement support for that flag on arm64.
+> 
 
+I have a few places where the first patch will be useful, and the rest
+looks good.
 
-# uname -a
-Linux pt 5.0.0 #2 SMP Fri May 17 13:28:36 EDT 2019 x86_64 GNU/Linux
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> 
+> Stephen Boyd (5):
+>   reserved_mem: Add a devm_memremap_reserved_mem() API
+>   soc: qcom: cmd-db: Migrate to devm_memremap_reserved_mem()
+>   memremap: Add support for read-only memory mappings
+>   arm64: Add support for arch_memremap_ro()
+>   soc: qcom: cmd-db: Map with read-only mappings
+> 
+>  arch/arm64/include/asm/io.h     |  1 +
+>  drivers/of/of_reserved_mem.c    | 45 +++++++++++++++++++++++++++++++++
+>  drivers/soc/qcom/cmd-db.c       | 14 +++-------
+>  include/linux/io.h              |  1 +
+>  include/linux/of_reserved_mem.h |  6 +++++
+>  kernel/iomem.c                  | 15 +++++++++--
+>  6 files changed, 70 insertions(+), 12 deletions(-)
+> 
+> 
+> base-commit: 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b
+> prerequisite-patch-id: 62119e27c0c0686e02f0cb55c296b878fb7f5e47
+> prerequisite-patch-id: bda32cfc1733c245ae3f141d7c27b18e4adcc628
+> prerequisite-patch-id: b8f8097161bd15e87d54dcfbfa67b9ca1abc7204
+> -- 
+> Sent by a computer through tubes
+> 
