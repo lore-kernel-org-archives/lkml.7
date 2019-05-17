@@ -2,180 +2,206 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F68BC04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C3EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C2621734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D43B20815
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:41:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="pkPNEBpT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729209AbfEQPla (ORCPT
+        id S1729235AbfEQPlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 11:41:30 -0400
-Received: from mga01.intel.com ([192.55.52.88]:12103 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729158AbfEQPla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 11:41:30 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 08:41:29 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga006.jf.intel.com with ESMTP; 17 May 2019 08:41:28 -0700
-Date:   Fri, 17 May 2019 08:41:28 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Xing, Cedric" <cedric.xing@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190517154128.GA15006@linux.intel.com>
-References: <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
- <20190513102926.GD8743@linux.intel.com>
- <20190514104323.GA7591@linux.intel.com>
- <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
- <20190514204527.GC1977@linux.intel.com>
- <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
- <20190515013031.GF1977@linux.intel.com>
- <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
- <20190517000331.GD11204@linux.intel.com>
- <CALCETrWxw7xALE0kmiYBzomaSMAeXEVq-7rX7xeqPtDPeDQiCA@mail.gmail.com>
+        Fri, 17 May 2019 11:41:46 -0400
+Received: from smtp-fw-6002.amazon.com ([52.95.49.90]:13948 "EHLO
+        smtp-fw-6002.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728861AbfEQPlp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 11:41:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1558107704; x=1589643704;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:mime-version:
+   content-transfer-encoding;
+  bh=5PwOvUa2QeUYezBMIw7pLuLH7aeDi9x8dxh6Bcuj1T0=;
+  b=pkPNEBpTfId2pSiHw35G46whRha12mw7LuOjkWbLFW2QpZWK7Pd+iACu
+   O9gxMfRMILX+TNuS8NM+T6gt8jmnEgS3RVQZ97Z/RbsbLBTnGrfhWnprs
+   fGsVAVV/HQWJ2e/faBWiCUigmoPh2x/kKqHIgD7t1w41Cx5QIu+r9lcCa
+   c=;
+X-IronPort-AV: E=Sophos;i="5.60,480,1549929600"; 
+   d="scan'208";a="402579638"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-57e1d233.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-6002.iad6.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 17 May 2019 15:41:43 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-57e1d233.us-east-1.amazon.com (8.14.7/8.14.7) with ESMTP id x4HFffwv037521
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Fri, 17 May 2019 15:41:42 GMT
+Received: from EX13D02EUC004.ant.amazon.com (10.43.164.117) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.82) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 17 May 2019 15:41:41 +0000
+Received: from EX13D02EUC001.ant.amazon.com (10.43.164.92) by
+ EX13D02EUC004.ant.amazon.com (10.43.164.117) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 17 May 2019 15:41:40 +0000
+Received: from EX13D02EUC001.ant.amazon.com ([10.43.164.92]) by
+ EX13D02EUC001.ant.amazon.com ([10.43.164.92]) with mapi id 15.00.1367.000;
+ Fri, 17 May 2019 15:41:40 +0000
+From:   "Sironi, Filippo" <sironi@amazon.de>
+To:     "Graf, Alexander" <graf@amazon.com>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        KVM list <kvm@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Subject: Re: [PATCH v2 1/2] KVM: Start populating /sys/hypervisor with KVM
+ entries
+Thread-Topic: [PATCH v2 1/2] KVM: Start populating /sys/hypervisor with KVM
+ entries
+Thread-Index: AQHVCmguTMwTmVyYP0+tMrT8Z/dQMaZtx8qAgAGxboA=
+Date:   Fri, 17 May 2019 15:41:39 +0000
+Message-ID: <3D2C4EE3-1C2E-4032-9964-31A066E542AA@amazon.de>
+References: <1539078879-4372-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-1-git-send-email-sironi@amazon.de>
+ <1557847002-23519-2-git-send-email-sironi@amazon.de>
+ <e976f31b-2ccd-29ba-6a32-2edde49f867f@amazon.com>
+In-Reply-To: <e976f31b-2ccd-29ba-6a32-2edde49f867f@amazon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.165.155]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <10D2265497ECB941BB8FCEB5614DF2F7@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrWxw7xALE0kmiYBzomaSMAeXEVq-7rX7xeqPtDPeDQiCA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 05:26:15PM -0700, Andy Lutomirski wrote:
-> On Thu, May 16, 2019 at 5:03 PM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > On Wed, May 15, 2019 at 11:27:04AM -0700, Andy Lutomirski wrote:
-> > > Here's a very vague proposal that's kind of like what I've been
-> > > thinking over the past few days.  The SGX inode could track, for each
-> > > page, a "safe-to-execute" bit.  When you first open /dev/sgx/enclave,
-> > > you get a blank enclave and all pages are safe-to-execute.  When you
-> > > do the ioctl to load context (which could be code, data, or anything
-> > > else), the kernel will check whether the *source* VMA is executable
-> > > and, if not, mark the page of the enclave being loaded as unsafe.
-> > > Once the enclave is initialized, the driver will clear the
-> > > safe-to-execute bit for any page that is successfully mapped writably.
-> > >
-> > > The intent is that a page of the enclave is safe-to-execute if that
-> > > page was populated from executable memory and not modified since then.
-> > > LSMs could then enforce a policy that you can map an enclave page RX
-> > > if the page is safe-to-execute, you can map any page you want for
-> > > write if there are no executable mappings, and you can only map a page
-> > > for write and execute simultaneously if you can EXECMOD permission.
-> > > This should allow an enclave to be loaded by userspace from a file
-> > > with EXECUTE rights.
-> >
-> > I'm still confused as to why you want to track execute permissions on the
-> > enclave pages and add SGX-specific LSM hooks.  Is there anything that
-> > prevents userspace from building the enclave like any other DSO and then
-> > copying it into enclave memory?
-> 
-> It's entirely possible that I'm the one missing something.  But here's
-> why I think this:
-> 
-> > I feel like I'm missing something.
-> >
-> >   1. Userspace loads enclave into regular memory, e.g. like a normal DSO.
-> >      All mmap(), mprotect(), etc... calls are subject to all existing
-> >      LSM policies.
-> >
-> >   2. Userspace opens /dev/sgx/enclave to instantiate a new enclave.
-> >
-> >   3. Userspace uses mmap() to allocate virtual memory for its enclave,
-> >      again subject to all existing LSM policies (sane userspaces map it RO
-> >      since the permissions eventually get tossed anyways).
-> 
-> Is userspace actually requred to mmap() the enclave prior to EADDing things?
 
-It was a requirement prior to the API rework in v20, i.e. unless someone
-was really quick on the draw after the v20 update all existing userspace
-implementations mmap() the enclave before ECREATE.   Requiring a valid
-enclave VMA for EADD shoudn't be too onerous.
+> On 16. May 2019, at 15:50, Graf, Alexander <graf@amazon.com> wrote:
+> =
 
-> >   4. SGX subsystem refuses to service page faults for enclaves that have
-> >      not yet been initialized, e.g. signals SIGBUS or SIGSEGV.
-> >
-> >   5. Userspace invokes SGX ioctl() to copy enclave from regulary VMA to
-> >      enclave VMA.
-> >
-> >   6. SGX ioctl() propagates VMA protection-related flags from source VMA
-> >      to enclave VMA, e.g. invokes mprotect_fixup().  Enclave VMA(s) may
-> >      be split as part of this process.
-> 
-> Does this also call the LSM?  If so, what is it expected to do?
+> On 14.05.19 08:16, Filippo Sironi wrote:
+>> Start populating /sys/hypervisor with KVM entries when we're running on
+>> KVM. This is to replicate functionality that's available when we're
+>> running on Xen.
+>> =
 
-Nope.  My reasoning behind skipping LSM checks is that the LSMs have
-already ok'd the source VMAs, similar to how dup_mmap() doesn't redo LSM
-checks.
+>> Start with /sys/hypervisor/uuid, which users prefer over
+>> /sys/devices/virtual/dmi/id/product_uuid as a way to recognize a virtual
+>> machine, since it's also available when running on Xen HVM and on Xen PV
+>> and, on top of that doesn't require root privileges by default.
+>> Let's create arch-specific hooks so that different architectures can
+>> provide different implementations.
+>> =
 
-> What happens if there are different regions with different permissions on
-> the same page?  SGX has 256-byte granularity right?
+>> Signed-off-by: Filippo Sironi <sironi@amazon.de>
+> =
 
-No, EPC pages have 4k granularity.
+> I think this needs something akin to
+> =
 
-  The EPC is divided into EPC pages. An EPC page is 4KB in size and always
-  aligned on a 4KB boundary
+>  https://www.kernel.org/doc/Documentation/ABI/stable/sysfs-hypervisor-xen
+> =
 
-EEXTEND is the only aspect of SGX that works on 256-byte chunks, and that
-goofiness is primarily to keep the latency of EEXTEND low enough so that
-the instruction doesn't have to be interruptible, a la EINIT.
+> to document which files are available.
+> =
 
-> >
-> >   7. At all times, mprotect() calls on the enclave VMA are subject to
-> >      existing LSM policies, i.e. it's not special cased for enclaves.
-> 
-> I don't think the normal behavior actually works here.  An enclave is
-> always MAP_SHARED, so (with SELinux) mprotecting() to X or RX requires
-> EXECUTE and mprotecting() to RWX requires extra permissions.
+>> ---
+>> v2:
+>> * move the retrieval of the VM UUID out of uuid_show and into
+>>  kvm_para_get_uuid, which is a weak function that can be overwritten
+>> =
 
-Requiring extra permissions is good though, right?  My thinking is to make
-the EADD "VMA copy" the happy/easy path, while using mprotect() to convert
-EPC memory to executable would require PROCESS__EXECMEM (assuming we back
-enclaves with anon inodes instead of /dev/sgx/enclave).
+>> drivers/Kconfig              |  2 ++
+>> drivers/Makefile             |  2 ++
+>> drivers/kvm/Kconfig          | 14 ++++++++++++++
+>> drivers/kvm/Makefile         |  1 +
+>> drivers/kvm/sys-hypervisor.c | 30 ++++++++++++++++++++++++++++++
+>> 5 files changed, 49 insertions(+)
+>> create mode 100644 drivers/kvm/Kconfig
+>> create mode 100644 drivers/kvm/Makefile
+>> create mode 100644 drivers/kvm/sys-hypervisor.c
+>> =
 
-> But user code can also mmap() the enclave again.  What is supposed to
-> happen in that case?
+> =
 
-Hmm, it can't effectively re-mmap() the enclave as executable since
-entering the enclave requires using the correct virtual address range,
-i.e. EENTER would fail.  It could, I think, do munmap()->mmap() to change
-the permissions.  We could handle that case fairly easily by invoking
-security_file_mprotect() in SGX's mmap() hook if any pages have been added
-to the enclave, i.e. treat mmap() like mprotect().
+> [...]
+> =
+
+>> +
+>> +__weak const char *kvm_para_get_uuid(void)
+>> +{
+>> +	return NULL;
+>> +}
+>> +
+>> +static ssize_t uuid_show(struct kobject *obj,
+>> +			 struct kobj_attribute *attr,
+>> +			 char *buf)
+>> +{
+>> +	const char *uuid =3D kvm_para_get_uuid();
+>> +	return sprintf(buf, "%s\n", uuid);
+> =
+
+> The usual return value for the Xen /sys/hypervisor interface is
+> "<denied>". Wouldn't it make sense to follow that pattern for the KVM
+> one too? Currently, if we can not determine the UUID this will just
+> return (null).
+> =
+
+> Otherwise, looks good to me. Are you aware of any other files we should
+> provide? Also, is there any reason not to implement ARM as well while at =
+it?
+> =
+
+> Alex
+
+This originated from a customer request that was using /sys/hypervisor/uuid.
+My guess is that we would want to expose "type" and "version" moving
+forward and that's when we hypervisor hooks will be useful on top
+of arch hooks.
+
+On a different note, any idea how to check whether the OS is running
+virtualized on KVM on ARM and ARM64?  kvm_para_available() isn't an
+option and the same is true for S390 where kvm_para_available()
+always returns true and it would even if a KVM enabled kernel would
+be running on bare metal.
+
+I think we will need another arch hook to call a function that says
+whether the OS is running virtualized on KVM.
+
+>> +}
+>> +
+>> +static struct kobj_attribute uuid =3D __ATTR_RO(uuid);
+>> +
+>> +static int __init uuid_init(void)
+>> +{
+>> +	if (!kvm_para_available())
+>> +		return 0;
+>> +	return sysfs_create_file(hypervisor_kobj, &uuid.attr);
+>> +}
+>> +
+>> +device_initcall(uuid_init);
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrer: Christian Schlaeger, Ralf Herbrich
+Ust-ID: DE 289 237 879
+Eingetragen am Amtsgericht Charlottenburg HRB 149173 B
+
+
