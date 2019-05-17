@@ -2,229 +2,122 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE12C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99186C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36BA920862
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6786B20862
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:38:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="2J8eWrbp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbfEQDip (ORCPT
+        id S1727788AbfEQDiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 16 May 2019 23:38:46 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:22897 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbfEQDip (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 16 May 2019 23:38:45 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:33286 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726913AbfEQDiN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 23:38:13 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 76CAE1A01E5;
-        Fri, 17 May 2019 05:38:10 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 969F71A01E6;
-        Fri, 17 May 2019 05:38:04 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5E33D402C8;
-        Fri, 17 May 2019 11:37:57 +0800 (SGT)
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH V2 3/3] soc: fsl: add RCPM driver
-Date:   Fri, 17 May 2019 11:39:46 +0800
-Message-Id: <20190517033946.30763-3-ran.wang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190517033946.30763-1-ran.wang_1@nxp.com>
-References: <20190517033946.30763-1-ran.wang_1@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x4H3cN1D032721;
+        Fri, 17 May 2019 12:38:23 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x4H3cN1D032721
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558064304;
+        bh=srN3/L+Kx9Et/22233UjKG5aslu8L3GpgixAoCxQ5yM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2J8eWrbpwFM7LwNHSWsazJJFrN5fl01HfReLlbmiilaQfPechGIKeZlsWTeya4CFM
+         MZEanIsQXaJaHoOfn5k7faFhGNhcoR/l+dEB3Qw8+Bm1ZJO4QbL9ceOX+tLCqy90I9
+         Qmu+a8rVPNplx2tOmLANdrfvcWqigsbyZwkrWAFij3uGe4Vjpr8ZrFX+XxancqmhR2
+         +39LaUHIK3my8MBHGe+1J9aftycL/czcjV5Qa+aPIOJZZvm1s5DLzi2feDq3lx/Fmd
+         u4W9VtunapeEo7/SD1blIryCl5O/O6shSzBgayIf4i9moqu20qBBUlptVvUMhYwC3z
+         uf5iZ+0pVWFDw==
+X-Nifty-SrcIP: [209.85.222.51]
+Received: by mail-ua1-f51.google.com with SMTP id n7so2140654uap.12;
+        Thu, 16 May 2019 20:38:23 -0700 (PDT)
+X-Gm-Message-State: APjAAAUkqtag2YS5RKdEfhMfOWWbZ6Z5o2cn+3hy1cFRWYn8J8EhHSec
+        Rygm+h7KCxG5EdcjicbB8JBfvvIl4K2iU9BmxWQ=
+X-Google-Smtp-Source: APXvYqy+E3KgmeybTo+0K8ZSAolNzMC/m2XGEox38LXflIwOHcq9J7NMqQNWklD80zDReYHBoxwzEJczldJfvWFYxXw=
+X-Received: by 2002:ab0:3058:: with SMTP id x24mr23025836ual.95.1558064302467;
+ Thu, 16 May 2019 20:38:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190515073818.22486-1-yamada.masahiro@socionext.com>
+ <CAK7LNATUvPMqt93iwzNud0mxk99Si=CEBDyjA8BLEXM_tcTBfQ@mail.gmail.com> <201905151130.87CDB73C0@keescook>
+In-Reply-To: <201905151130.87CDB73C0@keescook>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 17 May 2019 12:37:46 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASKnWkJhw3Hn1vKK=dB_vHOo0MtMd9duTpHoQSdgYoZLA@mail.gmail.com>
+Message-ID: <CAK7LNASKnWkJhw3Hn1vKK=dB_vHOo0MtMd9duTpHoQSdgYoZLA@mail.gmail.com>
+Subject: Re: [RFC PATCH] kbuild: check uniqueness of basename of modules
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The NXP's QorIQ Processors based on ARM Core have RCPM module
-(Run Control and Power Management), which performs all device-level
-tasks associated with power management such as wakeup source control.
+Hi Kees,
 
-This driver depends on PM wakeup source framework which help to
-collect wake information.
+On Thu, May 16, 2019 at 3:31 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Thu, May 16, 2019 at 03:07:54AM +0900, Masahiro Yamada wrote:
+> > On Wed, May 15, 2019 at 4:40 PM Masahiro Yamada
+> > <yamada.masahiro@socionext.com> wrote:
+> >
+> > >         $(Q)$(AWK) '!x[$$0]++' $^ > $(objtree)/modules.builtin
+> > > diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
+> > > new file mode 100755
+> > > index 000000000000..944e68bd22b0
+> > > --- /dev/null
+> > > +++ b/scripts/modules-check.sh
+> > > @@ -0,0 +1,18 @@
+> > > +#!/bin/sh
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +
+> > > +# Warn if two or more modules have the same basename
+> > > +check_same_name_modules()
+> > > +{
+> > > +       same_name_modules=$(cat modules.order modules.builtin | \
+> > > +                               xargs basename -a | sort | uniq -d)
+> >
+> >
+> > I noticed a bug here.
+> >
+> >
+> > allnoconfig + CONFIG_MODULES=y
+> > will create empty modules.order and modules.builtin.
+> >
+> > Then, 'basename -a' will emit the error messages
+> > since it receives zero arguments.
+>
+> You can skip running it by adding "-r" to xargs:
+>
+>        -r, --no-run-if-empty
+>               If the standard input does not contain any nonblanks, do not run
+>               the command.  Normally, the command is run once even if there is
+>               no input.  This option is a GNU extension.
 
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
----
-Change in v2:
-	- Rebase Kconfig and Makefile update to latest mainline.
+Good idea!
 
- drivers/soc/fsl/Kconfig  |    8 +++
- drivers/soc/fsl/Makefile |    1 +
- drivers/soc/fsl/rcpm.c   |  124 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 133 insertions(+), 0 deletions(-)
- create mode 100644 drivers/soc/fsl/rcpm.c
+I will use this in v2.
 
-diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
-index 61f8e14..8e84e40 100644
---- a/drivers/soc/fsl/Kconfig
-+++ b/drivers/soc/fsl/Kconfig
-@@ -29,4 +29,12 @@ config FSL_MC_DPIO
- 	  other DPAA2 objects. This driver does not expose the DPIO
- 	  objects individually, but groups them under a service layer
- 	  API.
-+
-+config FSL_RCPM
-+	bool "Freescale RCPM support"
-+	depends on PM_SLEEP
-+	help
-+	  The NXP's QorIQ Processors based on ARM Core have RCPM module
-+	  (Run Control and Power Management), which performs all device-level
-+	  tasks associated with power management, such as wakeup source control.
- endmenu
-diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
-index 803ef1b..c1be6ee 100644
---- a/drivers/soc/fsl/Makefile
-+++ b/drivers/soc/fsl/Makefile
-@@ -7,3 +7,4 @@ obj-$(CONFIG_QUICC_ENGINE)		+= qe/
- obj-$(CONFIG_CPM)			+= qe/
- obj-$(CONFIG_FSL_GUTS)			+= guts.o
- obj-$(CONFIG_FSL_MC_DPIO) 		+= dpio/
-+obj-$(CONFIG_FSL_RCPM)		+= rcpm.o
-diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c
-new file mode 100644
-index 0000000..b817319
---- /dev/null
-+++ b/drivers/soc/fsl/rcpm.c
-@@ -0,0 +1,124 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// rcpm.c - Freescale QorIQ RCPM driver
-+//
-+// Copyright 2019 NXP
-+//
-+// Author: Ran Wang <ran.wang_1@nxp.com>,
-+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of_address.h>
-+#include <linux/slab.h>
-+#include <linux/suspend.h>
-+#include <linux/kernel.h>
-+
-+#define RCPM_WAKEUP_CELL_MAX_SIZE	7
-+
-+struct rcpm {
-+	unsigned int wakeup_cells;
-+	void __iomem *ippdexpcr_base;
-+	bool	little_endian;
-+};
-+
-+static int rcpm_pm_prepare(struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct wakeup_source *ws;
-+	struct rcpm *rcpm;
-+	u32 value[RCPM_WAKEUP_CELL_MAX_SIZE + 1], tmp;
-+	int i, ret;
-+
-+	rcpm = dev_get_drvdata(dev);
-+	if (!rcpm)
-+		return -EINVAL;
-+
-+	/* Begin with first registered wakeup source */
-+	ws = wakeup_source_get_next(NULL);
-+	while (ws) {
-+		ret = device_property_read_u32_array(ws->attached_dev,
-+				"fsl,rcpm-wakeup", value, rcpm->wakeup_cells + 1);
-+
-+		/*  Wakeup source should refer to current rcpm device */
-+		if (ret || (np->phandle != value[0])) {
-+			dev_info(dev, "%s doesn't refer to this rcpm\n",
-+					ws->name);
-+			ws = wakeup_source_get_next(ws);
-+			continue;
-+		}
-+
-+		for (i = 0; i < rcpm->wakeup_cells; i++) {
-+			/* We can only OR related bits */
-+			if (value[i + 1]) {
-+				if (rcpm->little_endian) {
-+					tmp = ioread32(rcpm->ippdexpcr_base + i * 4);
-+					tmp |= value[i + 1];
-+					iowrite32(tmp, rcpm->ippdexpcr_base + i * 4);
-+				} else {
-+					tmp = ioread32be(rcpm->ippdexpcr_base + i * 4);
-+					tmp |= value[i + 1];
-+					iowrite32be(tmp, rcpm->ippdexpcr_base + i * 4);
-+				}
-+			}
-+		}
-+		ws = wakeup_source_get_next(ws);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops rcpm_pm_ops = {
-+	.prepare =  rcpm_pm_prepare,
-+};
-+
-+static int rcpm_probe(struct platform_device *pdev)
-+{
-+	struct device	*dev = &pdev->dev;
-+	struct resource *r;
-+	struct rcpm		*rcpm;
-+	int ret;
-+
-+	rcpm = devm_kzalloc(dev, sizeof(*rcpm), GFP_KERNEL);
-+	if (!rcpm)
-+		return -ENOMEM;
-+
-+	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!r)
-+		return -ENODEV;
-+
-+	rcpm->ippdexpcr_base = devm_ioremap_resource(&pdev->dev, r);
-+	if (IS_ERR(rcpm->ippdexpcr_base)) {
-+		ret =  PTR_ERR(rcpm->ippdexpcr_base);
-+		return ret;
-+	}
-+
-+	rcpm->little_endian = device_property_read_bool(
-+			&pdev->dev, "little-endian");
-+
-+	ret = device_property_read_u32(&pdev->dev,
-+			"fsl,#rcpm-wakeup-cells", &rcpm->wakeup_cells);
-+	if (ret)
-+		return ret;
-+
-+	dev_set_drvdata(&pdev->dev, rcpm);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id rcpm_of_match[] = {
-+	{ .compatible = "fsl,qoriq-rcpm-2.1+", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, rcpm_of_match);
-+
-+static struct platform_driver rcpm_driver = {
-+	.driver = {
-+		.name = "rcpm",
-+		.of_match_table = rcpm_of_match,
-+		.pm	= &rcpm_pm_ops,
-+	},
-+	.probe = rcpm_probe,
-+};
-+
-+module_platform_driver(rcpm_driver);
+Thanks.
+
+
 -- 
-1.7.1
-
+Best Regards
+Masahiro Yamada
