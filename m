@@ -4,74 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD7FC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D14C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5862020881
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0632B2087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:51:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UyHPsmHC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y/eaNLUq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728462AbfEQKue (ORCPT
+        id S1728611AbfEQKvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 06:50:34 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42330 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727689AbfEQKud (ORCPT
+        Fri, 17 May 2019 06:51:16 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40226 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728036AbfEQKvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 06:50:33 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l2so6597864wrb.9
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 03:50:32 -0700 (PDT)
+        Fri, 17 May 2019 06:51:15 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 15so2246998wmg.5
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 03:51:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=fy6ato0mdZ+343xSDfiKvFVjKi7omzZdGMuv/1R61jE=;
-        b=UyHPsmHCDoLhomdBbMfbRg5J1rPMpuyjchhnP1zKjvFfywm0yvRihlRohB5oD+Dfea
-         S2ixIhoIfAKakOEFgVn/bR76iznUWQ7FdLlnI8HqZuQ3amK/6pS1XhkJ29hQF2R4IStR
-         zepElaDIAMiFHfAEM2QvHgd9L+ADuIiepypLXmD5bMLHnAFxsx9axQCB1cabimwTKhQT
-         iB+Wat5KoDy1NLOvU+MskFh5zn2/e2LpZRW622VacW7T4Mg4vNtZQeh06ufD6+wLAJ9B
-         Eem6DWGWow6S9fdQ5B2efbFRxlWPcQi6ZAwc+RjlcAztHmroeZ2ZPcbE0MPYIQdYWozs
-         +okw==
+        bh=I9rj8wX+8J0bujnI+u0p0sO0A094wMEogFOiqKUHZlk=;
+        b=y/eaNLUqsYgwNrvXFu07+EliHgRZ3HaRERZdf/QAyvcumCWEAv48V/ie7wvBYsRVah
+         S7AG+qg9dUafEBpfYqjE4+dt9fhRPDLIYc6x3a6aqLbePL9Gc7S8mWu7E2kwG6uzfOoR
+         vbpE3priHNrfBaO3G5q6MN3EJ0UHGwtWSqim589t8K2TQpIOw7KtgI1ghYgVb388FGzQ
+         lRvrD7pr6b3YPvmTiz59iYbTBFJ1POfp4hCiHBdQrr7WuyVSmTsOmanwxjUf9+ohJW3Z
+         Wwu2GQMHgCwhMDMR2aiS3I8Zrxi5QNAkCa3qM5lNnOdzBJzwUhKtIwgbFZhtyGsJpYgQ
+         T6SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=fy6ato0mdZ+343xSDfiKvFVjKi7omzZdGMuv/1R61jE=;
-        b=Czj8agVDkttFUN19U/oVH5WG4uFVScBTcMRYsXvcnAMPodvmFnLkASe6UfYmc2FIS3
-         ktzeQvwhEshVzuaSz6uJfhMnmhw5GrxbpwqHXec0/f5ce7GJMWMf3tdt+M0+jwwzidL7
-         pbF+dFW7oS55ptEUS/4DYGir+6fbRahPnTj0o09eYbIU78pJnZ6xIOnTB+z9JZtzUgzm
-         PP8JD8inmVlJhWqJWai/Ye0R6cilM28YRPCuQNFWwC+zXp5XGoXyN79p65S7js67kasO
-         sgnODfKJ4SjT67+xFDKnfmjOS9yYwajsgIRbcH2loYRpPHBUP0Bc3wCO+QzsnFr9+2bz
-         NoIA==
-X-Gm-Message-State: APjAAAU+TdH80/J9/A4A+ak2sUnQM8N/JUyFlNPD7jyZJ9HvhE5k7ZU4
-        pqJ3NUqr7noJ4o8CGt58TWmWXg==
-X-Google-Smtp-Source: APXvYqyqtAU6a63fClrYVQgQgQYERgFK4EvgGfWGRJC5cl2XmpSYtf5nveRsqu1iBqskymWNQq1IIA==
-X-Received: by 2002:a5d:6610:: with SMTP id n16mr25864841wru.250.1558090232250;
-        Fri, 17 May 2019 03:50:32 -0700 (PDT)
+        bh=I9rj8wX+8J0bujnI+u0p0sO0A094wMEogFOiqKUHZlk=;
+        b=F414VuHCkYMvMVpCiGvvgBq/lr1O2OOSDLDC8YP1CaJnxhE0C6tPnTfD3ht3MPy45N
+         j/8tQYUuZWvgYOHr/tLUGAypJYXwvSby7Rh9JWCYsCIzHV5NyeUqgx8rGhKWNNkaiOhm
+         VUkmms9o+yKx6rSc/Qd0btS1Kt0D3GSAOjuXLOnjlRYkEHcYznyQDEvin5jqdTQyukT+
+         a6HS8IAyONPI6WX908bHmendKxhouhyxRbKduz/8+eluS9c6Bi26dvK5Q0mQkv0YAQgr
+         +j2KepaKu/f8W2c6kVK4ODUib6QmSLpfXwGMsRn+g2QE/Y3Fmo0PDihFkX0hOFV8xn03
+         6zkw==
+X-Gm-Message-State: APjAAAX+wWl8EbOl276+9mKoIpCcBd0uKwN1sv/7bWTJTyW08Tr5tJUr
+        XHYCrcSphDEWyW/2W/U6Z7wehw==
+X-Google-Smtp-Source: APXvYqxOX/9KP887aat370qATZZE8CQNkvdb6o3ptCMW7T3KAmlQu5vX96Ik0eNWwdoqpTFHQnlP8A==
+X-Received: by 2002:a1c:1d46:: with SMTP id d67mr21446385wmd.98.1558090273797;
+        Fri, 17 May 2019 03:51:13 -0700 (PDT)
 Received: from dell ([2.27.167.43])
-        by smtp.gmail.com with ESMTPSA id y184sm9227716wmg.7.2019.05.17.03.50.31
+        by smtp.gmail.com with ESMTPSA id v12sm7462554wrw.23.2019.05.17.03.51.13
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 May 2019 03:50:31 -0700 (PDT)
-Date:   Fri, 17 May 2019 11:50:30 +0100
+        Fri, 17 May 2019 03:51:13 -0700 (PDT)
+Date:   Fri, 17 May 2019 11:51:11 +0100
 From:   Lee Jones <lee.jones@linaro.org>
 To:     Philippe Mazenauer <philippe.mazenauer@outlook.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] lib: Correct comment of prandom_seed
-Message-ID: <20190517105030.GV4319@dell>
-References: <AM0PR07MB44176BAB0BA6ACAAA8C6DC88FD0B0@AM0PR07MB4417.eurprd07.prod.outlook.com>
+Cc:     "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rcu: Remove unused variable
+Message-ID: <20190517105111.GW4319@dell>
+References: <AM0PR07MB4417DD6F49126041FFC18864FD0B0@AM0PR07MB4417.eurprd07.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM0PR07MB44176BAB0BA6ACAAA8C6DC88FD0B0@AM0PR07MB4417.eurprd07.prod.outlook.com>
+In-Reply-To: <AM0PR07MB4417DD6F49126041FFC18864FD0B0@AM0PR07MB4417.eurprd07.prod.outlook.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -80,16 +85,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, 17 May 2019, Philippe Mazenauer wrote:
 
-> Variable 'entropy' was wrongly documented as 'seed', changed comment to
-> reflect actual variable name.
+> Variable 'rdp' is set but not used in synchronize_rcu_expidited(). The
+> macro per_cpu_ptr() used to set the value of 'rdp' has no side effect.
 > 
-> ../lib/random32.c:179: warning: Function parameter or member 'entropy' not described in 'prandom_seed'
-> ../lib/random32.c:179: warning: Excess function parameter 'seed' description in 'prandom_seed'
+> ../kernel/rcu/tree_exp.h:768:19: warning: variable ‘rdp’ set but not used [-Wunused-but-set-variable]
+>    struct rcu_data *rdp;
+>                     ^~~
 > 
 > Signed-off-by: Philippe Mazenauer <philippe.mazenauer@outlook.de>
 > ---
->  lib/random32.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  kernel/rcu/tree_exp.h | 2 --
+>  1 file changed, 2 deletions(-)
 
 Looks reasonable:
 
