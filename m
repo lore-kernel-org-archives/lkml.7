@@ -2,114 +2,126 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22313C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F201C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:09:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E85D221726
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EB5A21734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:09:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L7IkwYQo"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="Cgirbte1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbfEQSI3 (ORCPT
+        id S1729163AbfEQSJm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 14:08:29 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:53694 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfEQSI2 (ORCPT
+        Fri, 17 May 2019 14:09:42 -0400
+Received: from alln-iport-3.cisco.com ([173.37.142.90]:33423 "EHLO
+        alln-iport-3.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726422AbfEQSJl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 14:08:28 -0400
-Received: by mail-it1-f193.google.com with SMTP id m141so13373639ita.3
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 11:08:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2aEY7eAQvZ+DH9KTif1OtLivF3PEC9S4LqizD0kDgwI=;
-        b=L7IkwYQoyruj1kcToFk3llJ/wvrHsEq88TWxzTYXgo9ksbnoF12nD7eGVzZvNhOTDw
-         N1HImXNNWsBw5VeJAHSGGxKl0SrQGaAZgt6tN1rX7sgl9doC1aNuxJU9oj20WCcnlurO
-         Kkeqj6F20KogMHQ4BfSaw+vZqHgymnyYyWLHy2OwR3tt4edNKICT8ZGxIbdWAV/l4eW8
-         UIq/TG1NNtgSHZpUGW7mBF6HNgUrN+sS5UyUMTUITLbptpUi3Un8jhX+fZbSW44yjeDY
-         vCXm2xgZ8r0I6tJ4WMwb4meauwDsqU/lJBsSd0i7kXQt7sy+cY4HHXpN2+19yuBvxMSd
-         9eig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2aEY7eAQvZ+DH9KTif1OtLivF3PEC9S4LqizD0kDgwI=;
-        b=pPLAHxud+y89Lrr1lNPsdDNxSF3XJgStC4ZaDDua/9/INfQuXaGugBdc4Cnyq8MoW7
-         R1onrPyGTvYJvUnlh9Kjd7IC4hJZW2Y0PVbryFPZkGvw85OXVHZ6n2lRpKAD1hbRFfME
-         Cf0Fdpn37T48IoxglcIB9L23taNXzbtyzR9DpCG7cIye1alHdXsLy5wpPnHE0E5aR4CS
-         44bCxpAuhSOpVcV3lbSfxwoTb8R9zoWNWGlp3050f8F9HNZ1850sAASdAh2QulA8mnkK
-         nN/5TPiSIlSlhSMONxSGmtU3qu2NnqoMtu7GEPcSgnkGz5wdsYAy67/qTdCrJbFjidrH
-         CaNQ==
-X-Gm-Message-State: APjAAAW/xmGdyROKRi5U7enpOCRKbsEgjrz95UP6t1rJ6s3vTODDw1yy
-        xYkY163IqMoaNuNTudHT4FOthx/Jdns=
-X-Google-Smtp-Source: APXvYqzozIE0JG78e7tF5FBw5vCIm6ssm1WadNcp7ER/a5vIjt1efF4c1vVyitMUHfAp8sKlL4tpXQ==
-X-Received: by 2002:a02:c64a:: with SMTP id k10mr17897522jan.30.1558116507475;
-        Fri, 17 May 2019 11:08:27 -0700 (PDT)
-Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.googlemail.com with ESMTPSA id r6sm2828922iog.38.2019.05.17.11.08.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 11:08:26 -0700 (PDT)
-Subject: Re: [PATCH 09/18] soc: qcom: ipa: GSI transactions
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     David Miller <davem@davemloft.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        syadagir@codeaurora.org, mjavid@codeaurora.org,
-        evgreen@chromium.org, benchan@google.com, ejcaruso@google.com,
-        abhishek.esse@gmail.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190512012508.10608-1-elder@linaro.org>
- <20190512012508.10608-10-elder@linaro.org>
- <CAK8P3a0eYWN6mMwft5OSu8wQQo=kWh5safGFFNkDCELZJyiMmQ@mail.gmail.com>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <14a040b6-8187-3fbc-754d-2e267d587858@linaro.org>
-Date:   Fri, 17 May 2019 13:08:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 17 May 2019 14:09:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=2361; q=dns/txt; s=iport;
+  t=1558116581; x=1559326181;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0g21aU88ovgbJIF975Ro+MDCo4+fJXC5wnaD5d7XJ2M=;
+  b=Cgirbte1hLym+1ErfgvuY1c5SQl4XNgE058c/5Wr7F5lBfwpMjAtOkjT
+   fH7GxAlz0GLNoTx5h+sq5Yt+tAAF9QS8bfGfoBIQFpeWE/AAi48X6w+Jd
+   aVTPy3zZzUWoMmS28wp3NqTU1wnEO+fPI6h959oMhn++EOW/crxvgEAU7
+   A=;
+X-IronPort-AV: E=Sophos;i="5.60,480,1549929600"; 
+   d="scan'208";a="278503039"
+Received: from rcdn-core-4.cisco.com ([173.37.93.155])
+  by alln-iport-3.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 17 May 2019 18:09:40 +0000
+Received: from zorba ([10.24.25.58])
+        by rcdn-core-4.cisco.com (8.15.2/8.15.2) with ESMTPS id x4HI9c3L014192
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 17 May 2019 18:09:40 GMT
+Date:   Fri, 17 May 2019 11:09:36 -0700
+From:   Daniel Walker <danielwa@cisco.com>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "Nikunj Kela (nkela)" <nkela@cisco.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [Intel-wired-lan] [PATCH] igb: add parameter to ignore nvm
+ checksum validation
+Message-ID: <20190517180936.nwsw7brjo2yfvnol@zorba>
+References: <1557357269-9498-1-git-send-email-nkela@cisco.com>
+ <9be117dc6e818ab83376cd8e0f79dbfaaf193aa9.camel@intel.com>
+ <76B41175-0CEE-466C-91BF-89A1CA857061@cisco.com>
+ <4469196a-0705-5459-8aca-3f08e9889d61@gmail.com>
+ <20190517010330.2wynopuhsqycqzuq@zorba>
+ <bd9e6a93-c8e8-a90e-25b0-26ccbf65b7c4@gmail.com>
+ <CAKgT0Uev7sfpOOhusAg9jFLkFeE9JtTntyTd0aAHz2db69L13g@mail.gmail.com>
+ <20190517163643.7tlch7xqplxohoq7@zorba>
+ <CAKgT0Ue0b1QxG2ijegbHFz-2Wpxga0ffvhsfDg4VLDRaDSFvdw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a0eYWN6mMwft5OSu8wQQo=kWh5safGFFNkDCELZJyiMmQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKgT0Ue0b1QxG2ijegbHFz-2Wpxga0ffvhsfDg4VLDRaDSFvdw@mail.gmail.com>
+User-Agent: NeoMutt/20170609 (1.8.3)
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 10.24.25.58, [10.24.25.58]
+X-Outbound-Node: rcdn-core-4.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/15/19 2:34 AM, Arnd Bergmann wrote:
->> +static void gsi_trans_tre_fill(struct gsi_tre *dest_tre, dma_addr_t addr,
->> +                              u32 len, bool last_tre, bool bei,
->> +                              enum ipa_cmd_opcode opcode)
->> +{
->> +       struct gsi_tre tre;
->> +
->> +       tre.addr = cpu_to_le64(addr);
->> +       tre.len_opcode = gsi_tre_len_opcode(opcode, len);
->> +       tre.reserved = 0;
->> +       tre.flags = gsi_tre_flags(last_tre, bei, opcode);
->> +
->> +       *dest_tre = tre;        /* Write TRE as a single (16-byte) unit */
->> +}
-> Have you checked that the atomic write is actually what happens here,
-> but looking at the compiler output? You might need to add a 'volatile'
-> qualifier to the dest_tre argument so the temporary structure doesn't
-> get optimized away here.
+On Fri, May 17, 2019 at 09:58:46AM -0700, Alexander Duyck wrote:
+> > I don't think you can say because the checksum is valid that all data contained
+> > inside is also valid. You can have a valid checksum , and someone screwed up the
+> > data prior to the checksum getting computed.
+> 
+> If someone screwed up the data prior to writing the checksum then that
+> is on them. In theory we could also have a multi-bit error that could
+> similarly be missed. However if the checksum is not valid then the
+> data contained in the NVM does not match what was originally written,
+> so we know we have bad data. Why should we act on the data if we know
+> it is bad?
+ 
+It's hypothetical , but it's likely someone has screwed up the data prior to the
+checksum getting computed.
 
-Currently, the assignment *does* become a "stp" instruction.
-But I don't know that we can *force* the compiler to write it
-as a pair of registers, so I'll soften the comment with
-"Attempt to write" or something similar.
+> > > We need to make the checksum a hard stop. If the part is broken then
+> > > it needs to be addressed. Workarounds just end up being used and
+> > > forgotten, which makes it that much harder to support the product.
+> > > Better to mark the part as being broken, and get it fixed now, than to
+> > > have parts start shipping that require workarounds in order to
+> > > function.o
+> >
+> > I don't think it's realistic to define the development process for large
+> > corporations like Cisco, or like what your doing , to define the development
+> > process for all corporations and products which may use intel parts. It's better
+> > to be flexible.
+> >
+> > Daniel
+> 
+> This isn't about development. If you are doing development you can do
+> whatever you want with your own downstream driver. What you are
+> attempting to do is update the upstream driver which is used in
+> production environments.
+ 
+Cisco has this issue in development, and in production. So your right, it's not
+about development in isolation. People make mistakes..
 
-To my knowledge, adding a volatile qualifier only prevents the
-compiler from performing funny optimizations, but that has no
-effect on whether the 128-bit assignment is made as a single
-unit.  Do you know otherwise?
+> What concerns me is when this module parameter gets used in a
+> development environment and then slips into being required for a
+> production environment. At that point it defeats the whole point of
+> the checksum in the first place.
 
-					-Alex
+I agree .. Ultimately it's the choice of the OEM, if it gets into production
+then it's their product and they support the product. As I was saying in a prior
+email it should be a priority of the driver to give flexibility for mistakes
+people will inevitably make.
+
+Daniel
+
