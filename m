@@ -2,108 +2,117 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB61C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:06:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77ADEC46470
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA562083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:06:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC752166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:08:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="NxNZPHkQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbfEQPGE (ORCPT
+        id S1729196AbfEQPIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 11:06:04 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:39315 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728935AbfEQPGE (ORCPT
+        Fri, 17 May 2019 11:08:39 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:33769 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729162AbfEQPIj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 11:06:04 -0400
-X-Originating-IP: 90.88.22.185
-Received: from localhost.localdomain (aaubervilliers-681-1-80-185.w90-88.abo.wanadoo.fr [90.88.22.185])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 17FCF24000F;
-        Fri, 17 May 2019 15:05:57 +0000 (UTC)
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH] backlight: gpio-backlight: Set power state instead of brightness at probe
-Date:   Fri, 17 May 2019 17:05:46 +0200
-Message-Id: <20190517150546.4508-1-paul.kocialkowski@bootlin.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 17 May 2019 11:08:39 -0400
+Received: by mail-oi1-f195.google.com with SMTP id m204so5435947oib.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 08:08:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OGIfXnKXpW5eMKxUMdzRkt44XId1MoiNVnAxGfKvpiQ=;
+        b=NxNZPHkQ9m7afnPn+MzAQqWjc4b6NDowhfobUzGnErro91DDQhcbPCtV4yyPmQs5K/
+         qHoNY3q3kg21Z1aKKfhVtA51efXEJSWMC+nqJfOqd/6Cxza+N0PESVDd5pxT7+8WWxJ8
+         dZbrryqg4W1sKStoCFp33Wpzb60H7wUxxexYHFYmftwZiHvQx7ag+Qv71q7GSKVtf3Yv
+         0YURKil61RhPfxk/xokqMuqcpKadv25cmmeCfUPGZVYy8ZS45CyPZ/lVBP6QJrWv4/nC
+         v1/j1QVq4xm8msZpqCNnpxMl6+GJA9oIEyJXlJST7m7WnJ1/eAUMStAIB5yhR6N2QBgq
+         J6JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OGIfXnKXpW5eMKxUMdzRkt44XId1MoiNVnAxGfKvpiQ=;
+        b=WgcK1nOC2RwHGxpVzCh/3lTMR62ZQeWMbBEvyicwGzpldMc19iIT0Tav5QyTI0CzBG
+         E4N/hFGvEoGFjuyCeUkrz924slqRZbmCFdlUpHWUKez1byvwkRRBfq9SeQyE6jao6PH4
+         +1gyANY05sKp2U80dCt4eqnYCNNUA2buryhzuZ0TN2RCAEgziwo1q7cqjhTmCucy0aaJ
+         aR8joEHXwp52uKTC529kKzk0zx2rgxq2k2Z5w1xSC9QN2GP6yNLyn38rd+51r70XyYMP
+         2VFF8Zh+0JdJ3qmqOmJJ/3ncmBPMWlco8Ym5+8Ag6MubRBftKwVF/i5JUL/nShWJ+fTb
+         phzA==
+X-Gm-Message-State: APjAAAVmw1PQo34d2TqjFruKaynBBlwACzGBI6E4/y/XmbWjiMV/OOaW
+        7j3R1UexEmyzhmdZDKzvU2tw4ZTppW6l3M6nL+83gQ==
+X-Google-Smtp-Source: APXvYqyTjO/s0rMdx1VgVCXo7bqh4zMktZXJwLahomPBvDpO+I4RjmmwQ75n8Xpfpye+mAWhmlTX6Dis4MloPOV9WcA=
+X-Received: by 2002:aca:b641:: with SMTP id g62mr12196057oif.149.1558105718742;
+ Fri, 17 May 2019 08:08:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <155805321833.867447.3864104616303535270.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190517084739.GB20550@quack2.suse.cz>
+In-Reply-To: <20190517084739.GB20550@quack2.suse.cz>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 17 May 2019 08:08:27 -0700
+Message-ID: <CAPcyv4iZZCgcC657ZOysBP9=1ejp3jfFj=VETVBPrgmfg7xUEw@mail.gmail.com>
+Subject: Re: [PATCH] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
+        stable <stable@vger.kernel.org>, Jeff Moyer <jmoyer@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jeff Smits <jeff.smits@intel.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On a trivial gpio-backlight setup with a panel using the backlight but
-no boot software to enable it beforehand, we fall in a case where the
-backlight is disabled (not just blanked) and thus remains disabled when
-the panel gets enabled.
+On Fri, May 17, 2019 at 1:47 AM Jan Kara <jack@suse.cz> wrote:
+>
+> Let's add Kees to CC for usercopy expertise...
+>
+> On Thu 16-05-19 17:33:38, Dan Williams wrote:
+> > Jeff discovered that performance improves from ~375K iops to ~519K iops
+> > on a simple psync-write fio workload when moving the location of 'struct
+> > page' from the default PMEM location to DRAM. This result is surprising
+> > because the expectation is that 'struct page' for dax is only needed for
+> > third party references to dax mappings. For example, a dax-mapped buffer
+> > passed to another system call for direct-I/O requires 'struct page' for
+> > sending the request down the driver stack and pinning the page. There is
+> > no usage of 'struct page' for first party access to a file via
+> > read(2)/write(2) and friends.
+> >
+> > However, this "no page needed" expectation is violated by
+> > CONFIG_HARDENED_USERCOPY and the check_copy_size() performed in
+> > copy_from_iter_full_nocache() and copy_to_iter_mcsafe(). The
+> > check_heap_object() helper routine assumes the buffer is backed by a
+> > page-allocator DRAM page and applies some checks.  Those checks are
+> > invalid, dax pages are not from the heap, and redundant,
+> > dax_iomap_actor() has already validated that the I/O is within bounds.
+>
+> So this last paragraph is not obvious to me as check_copy_size() does a lot
+> of various checks in CONFIG_HARDENED_USERCOPY case. I agree that some of
+> those checks don't make sense for PMEM pages but I'd rather handle that by
+> refining check_copy_size() and check_object_size() functions to detect and
+> appropriately handle pmem pages rather that generally skip all the checks
+> in pmem_copy_from/to_iter(). And yes, every check in such hot path is going
+> to cost performance but that's what user asked for with
+> CONFIG_HARDENED_USERCOPY... Kees?
 
-Setting gbl->def_value via the device-tree prop allows enabling the
-backlight in this situation, but it will be unblanked straight away,
-in compliance with the binding. This does not work well when there was no
-boot software to display something before, since we really need to unblank
-by the time the panel is enabled, not before.
-
-Resolve the situation by setting the brightness to 1 at probe and
-managing the power state accordingly, a bit like it's done in
-pwm-backlight.
-
-Fixes: 8b770e3c9824 ("backlight: Add GPIO-based backlight driver")
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
----
- drivers/video/backlight/gpio_backlight.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/video/backlight/gpio_backlight.c b/drivers/video/backlight/gpio_backlight.c
-index e470da95d806..c9cb97fa13d0 100644
---- a/drivers/video/backlight/gpio_backlight.c
-+++ b/drivers/video/backlight/gpio_backlight.c
-@@ -57,6 +57,21 @@ static const struct backlight_ops gpio_backlight_ops = {
- 	.check_fb	= gpio_backlight_check_fb,
- };
- 
-+static int gpio_backlight_initial_power_state(struct gpio_backlight *gbl)
-+{
-+	struct device_node *node = gbl->dev->of_node;
-+
-+	/* If we absolutely want the backlight enabled at boot. */
-+	if (gbl->def_value)
-+		return FB_BLANK_UNBLANK;
-+
-+	/* If there's no panel to unblank the backlight later. */
-+	if (!node || !node->phandle)
-+		return FB_BLANK_UNBLANK;
-+
-+	return FB_BLANK_POWERDOWN;
-+}
-+
- static int gpio_backlight_probe_dt(struct platform_device *pdev,
- 				   struct gpio_backlight *gbl)
- {
-@@ -142,7 +157,9 @@ static int gpio_backlight_probe(struct platform_device *pdev)
- 		return PTR_ERR(bl);
- 	}
- 
--	bl->props.brightness = gbl->def_value;
-+	bl->props.brightness = 1;
-+	bl->props.power = gpio_backlight_initial_power_state(gbl);
-+
- 	backlight_update_status(bl);
- 
- 	platform_set_drvdata(pdev, bl);
--- 
-2.21.0
-
+As far as I can see it's mostly check_heap_object() that is the
+problem, so I'm open to finding a way to just bypass that sub-routine.
+However, as far as I can see none of the other block / filesystem user
+copy implementations submit to the hardened checks, like
+bio_copy_from_iter(), and iov_iter_copy_from_user_atomic() . So,
+either those need to grow additional checks, or the hardened copy
+implementation is targeting single object copy use cases, not
+necessarily block-I/O. Yes, Kees, please advise.
