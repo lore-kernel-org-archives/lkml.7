@@ -2,134 +2,89 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9EAC04AAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 00:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E682C04AAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 01:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C5A206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 00:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F41B9206BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 01:00:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="cL3lXi5N"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="W0R/TFST"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbfEQArm (ORCPT
+        id S1727769AbfEQBAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 20:47:42 -0400
-Received: from mail-eopbgr1310094.outbound.protection.outlook.com ([40.107.131.94]:57216
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727709AbfEQArl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 20:47:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=kJPl7b+IGGMt+DCN9+JAOG+iraKdyNBnLYedq+4eKRXNYKO/bKG1u1Lbeo6k/F6uJVn4iUySbNy+UYQ81T5sLdwE/KvKCZKS2hgaFBI5ogZ0aOhDmN/Fqd3j5604rSgCRxtymWYKmSuBk+6MK01BRuT9s8ELOlva73BM8a68g+4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dFGZkSISXDkX/8g6Qz6QbcxO/Igk3YEgRWTs8QYGavA=;
- b=Mmyp5mgvjTrYELaMJV3ndWq5GgYKZpuKjgGN9DefiY2DugydqsW4pvdWWwq1V66kcM0DpSwcL1aAX18L+FMoeRhm+o6Pp9rXV82yxpWmGepKS9bCkggT3mJhMwgqKygkvmBPhCIZ9T6OKPUiDiokvBNe6SoWcuXNSEM9b0IGDLM=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dFGZkSISXDkX/8g6Qz6QbcxO/Igk3YEgRWTs8QYGavA=;
- b=cL3lXi5N5QnNF2k0pnN264+AyfmvhtGLh6r+6mcn20mYnQZgQnUwgjIgKnhQygyCCiUZT79kJhwHPmecSI7KnRwt4+Cxb1gEaUSgEfGALmNxR6M68X6vHHHcrLv9Vs/Q3KUnSIoAqglSwlzhAEheVTZ7accYoKI5U3lpN+0al6U=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0204.APCP153.PROD.OUTLOOK.COM (52.133.194.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1922.4; Fri, 17 May 2019 00:47:31 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::dc7e:e62f:efc9:8564]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::dc7e:e62f:efc9:8564%4]) with mapi id 15.20.1922.002; Fri, 17 May 2019
- 00:47:31 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] hv_sock: perf: Allow the socket buffer size options to
- influence the actual socket buffers
-Thread-Topic: [PATCH] hv_sock: perf: Allow the socket buffer size options to
- influence the actual socket buffers
-Thread-Index: AdULT8Ri+kxJVj56RXiGnzXz8jUENAA+hb4g
-Date:   Fri, 17 May 2019 00:47:31 +0000
-Message-ID: <PU1P153MB01695A75877953399C4E94A6BF0B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <BN6PR21MB046528E2099CDE2C6C2200A7C00B0@BN6PR21MB0465.namprd21.prod.outlook.com>
-In-Reply-To: <BN6PR21MB046528E2099CDE2C6C2200A7C00B0@BN6PR21MB0465.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-17T00:47:28.7028353Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9d1c7d48-1283-4379-a578-6f8b90e813bb;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:1760:e49c:a88d:95f1:67ea]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b8367752-20a8-4c71-5725-08d6da613e87
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0204;
-x-ms-traffictypediagnostic: PU1P153MB0204:
-x-microsoft-antispam-prvs: <PU1P153MB0204715DB77BB38412A66D6FBF0B0@PU1P153MB0204.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0040126723
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(366004)(396003)(346002)(39860400002)(136003)(376002)(199004)(189003)(1511001)(446003)(22452003)(316002)(99286004)(486006)(46003)(476003)(11346002)(102836004)(14454004)(8936002)(81166006)(8676002)(81156014)(6116002)(9686003)(2906002)(10090500001)(68736007)(8990500004)(33656002)(110136005)(54906003)(7696005)(6506007)(5660300002)(186003)(76176011)(229853002)(7736002)(10290500003)(305945005)(6636002)(66556008)(6436002)(25786009)(55016002)(64756008)(4326008)(478600001)(66476007)(76116006)(66446008)(73956011)(66946007)(86612001)(52536014)(71190400001)(71200400001)(86362001)(74316002)(53936002)(6246003)(256004)(4744005)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0204;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: JZmv+FERqA8X8Cha2vgtxjRCTR4d/UTpT3l7HZhKPnQGe2gVDOptkK+JUjGXOfKIcZOLC/KB3Cg3LwEdMrfWpAkXndzj2J8S0fR13yfZdabrBv2muAS6MkccPGmlfxXhDDN8XcKwT5zzgxTKxPW+K5XcJ4GkAcNDi8/xnOVA75SF+NIKcykctKZut1Rk19qf94UQQsHaWdj4W0qxS8el4cnlHD+PkSUr3tMN3sup9HofITkuO4wabhfJgyh1oULLzkmgtaLjgWbouzKUZh9nOnpG9s0UxWMJybyz78FVEy4w5oI/TM9Yap8E4P/tpcFs/mAt7wFq0yVFuhYTC8cXSI0sTzm/BellAtE6JvPB0UY7BbynrgE9pja6/rOMzfPivn2Jas5gljmq6rehZgWSuVbiDYE4jQZUwC7SP40VJ+o=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 16 May 2019 21:00:01 -0400
+Received: from smtp.aristanetworks.com ([52.0.43.43]:39212 "EHLO
+        usvae2-clmxp01.aristanetworks.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726901AbfEQBAA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 21:00:00 -0400
+X-Greylist: delayed 398 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 May 2019 21:00:00 EDT
+Received: from usvae2-clmxp01.aristanetworks.com (localhost [127.0.0.1])
+        by usvae2-clmxp01.aristanetworks.com (Postfix) with ESMTP id 60B3830D51F7;
+        Thu, 16 May 2019 17:53:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
+        s=Arista-A; t=1558054400;
+        bh=gZKRKJcuRQSwe2TyYVhO9ixqNktFM8piGcLI2AKiDUY=;
+        h=From:To:Cc:Subject:Date;
+        b=W0R/TFSTzK9An9pCZ5cWXkyfD+NQGfUw4fj9BddSbmVeI5W9KzH3YhRfLvhMSTLbY
+         XgELyp0YcG37szHF1Wl0s4/1b3fcpwQiGZPFcx6i7mu1suwFAbtPbHor6PXaZZtjI+
+         qd17afeUKsWTE/T7zBFtO1+11PUu+pwBZxz2bb3pOb1pAUSALAUs82ymFrKW5iGgmc
+         yv1jZ4VSZfU+Grw+1Tp2wbCCIfe80NKqZKfCyImCDkP8KBCtHVIzWAQlwAEg99Gg6c
+         Aivf/3fVaDCuC+OjZqJ/VXsXS4jwy6iQPiQPZsOJ7gjJ8U0wZZyF5aM4I1pwCSABYj
+         UOYSSg8c8kZxA==
+Received: from chmeee (unknown [10.95.92.211])
+        by usvae2-clmxp01.aristanetworks.com (Postfix) with ESMTP id 9C78E30D51F6;
+        Thu, 16 May 2019 17:53:19 -0700 (PDT)
+Received: from kevmitch by chmeee with local (Exim 4.92)
+        (envelope-from <kevmitch@chmeee>)
+        id 1hRR7e-00011A-Dt; Thu, 16 May 2019 17:53:18 -0700
+From:   Kevin Mitchell <kevmitch@arista.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Kevin Mitchell <kevmitch@arista.com>
+Subject: [PATCH 0/3] handle init errors more gracefully in amd_iommu
+Date:   Thu, 16 May 2019 17:52:39 -0700
+Message-Id: <20190517005242.20257-1-kevmitch@arista.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8367752-20a8-4c71-5725-08d6da613e87
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 00:47:31.1715
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0204
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Sunil Muthuswamy <sunilmut@microsoft.com>
-> Sent: Thursday, May 16, 2019 5:17 PM
->=20
-> Currently, the hv_sock buffer size is static and can't scale to the
-> bandwidth requirements of the application. This change allows the
-> applications to influence the socket buffer sizes using the SO_SNDBUF and
-> the SO_RCVBUF socket options.
->=20
-> Few interesting points to note:
-> 1. Since the VMBUS does not allow a resize operation of the ring size, th=
-e
-> socket buffer size option should be set prior to establishing the
-> connection for it to take effect.
-> 2. Setting the socket option comes with the cost of that much memory bein=
-g
-> reserved/allocated by the kernel, for the lifetime of the connection.
+This series makes error handling more robust in the amd_iommu init
+code. It was initially motivated by problematic firmware that does not
+set up the physical address of the iommu. This led to a NULL dereference
+panic when iommu_disable was called during cleanup.
 
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
+While the first patch is sufficient to avoid the panic, the subsequent
+two move the cleanup closer to the actual error and avoid calling the
+cleanup code twice when amd_iommu=off is specified on the command line.
 
-The patch looks good to me. Thanks, Sunil!
+I have tested this series on a variety of AMD CPUs with firmware
+exhibiting the issue. I have additionally tested on platforms where the
+firmware has been fixed. I tried both with and without amd_iommu=off. I
+have also tested on older CPUs where no IOMMU is detected and even one
+where the GART driver ends up running.
 
 Thanks,
--- Dexuan
+
+Kevin
+
+Kevin Mitchell (3):
+  iommu/amd: make iommu_disable safer
+  iommu/amd: move gart fallback to amd_iommu_init
+  iommu/amd: only free resources once on init error
+
+ drivers/iommu/amd_iommu_init.c | 45 ++++++++++++++++++----------------
+ 1 file changed, 24 insertions(+), 21 deletions(-)
+
+-- 
+2.20.1
+
