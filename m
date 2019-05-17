@@ -2,114 +2,134 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20ADEC04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 00:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9EAC04AAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 00:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1293206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 00:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C5A206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 00:47:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="cL3lXi5N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727738AbfEQAr0 (ORCPT
+        id S1727779AbfEQArm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 20:47:26 -0400
-Received: from mga09.intel.com ([134.134.136.24]:56689 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727709AbfEQArZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 20:47:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 May 2019 17:47:25 -0700
-X-ExtLoop1: 1
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga008.jf.intel.com with ESMTP; 16 May 2019 17:47:25 -0700
-Subject: [PATCH] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-nvdimm@lists.01.org
-Cc:     Jan Kara <jack@suse.cz>, stable@vger.kernel.org,
-        Jeff Moyer <jmoyer@redhat.com>, Ingo Molnar <mingo@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Smits <jeff.smits@intel.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 16 May 2019 17:33:38 -0700
-Message-ID: <155805321833.867447.3864104616303535270.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-2-gc94f
+        Thu, 16 May 2019 20:47:42 -0400
+Received: from mail-eopbgr1310094.outbound.protection.outlook.com ([40.107.131.94]:57216
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727709AbfEQArl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 20:47:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=kJPl7b+IGGMt+DCN9+JAOG+iraKdyNBnLYedq+4eKRXNYKO/bKG1u1Lbeo6k/F6uJVn4iUySbNy+UYQ81T5sLdwE/KvKCZKS2hgaFBI5ogZ0aOhDmN/Fqd3j5604rSgCRxtymWYKmSuBk+6MK01BRuT9s8ELOlva73BM8a68g+4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dFGZkSISXDkX/8g6Qz6QbcxO/Igk3YEgRWTs8QYGavA=;
+ b=Mmyp5mgvjTrYELaMJV3ndWq5GgYKZpuKjgGN9DefiY2DugydqsW4pvdWWwq1V66kcM0DpSwcL1aAX18L+FMoeRhm+o6Pp9rXV82yxpWmGepKS9bCkggT3mJhMwgqKygkvmBPhCIZ9T6OKPUiDiokvBNe6SoWcuXNSEM9b0IGDLM=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dFGZkSISXDkX/8g6Qz6QbcxO/Igk3YEgRWTs8QYGavA=;
+ b=cL3lXi5N5QnNF2k0pnN264+AyfmvhtGLh6r+6mcn20mYnQZgQnUwgjIgKnhQygyCCiUZT79kJhwHPmecSI7KnRwt4+Cxb1gEaUSgEfGALmNxR6M68X6vHHHcrLv9Vs/Q3KUnSIoAqglSwlzhAEheVTZ7accYoKI5U3lpN+0al6U=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0204.APCP153.PROD.OUTLOOK.COM (52.133.194.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1922.4; Fri, 17 May 2019 00:47:31 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::dc7e:e62f:efc9:8564]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::dc7e:e62f:efc9:8564%4]) with mapi id 15.20.1922.002; Fri, 17 May 2019
+ 00:47:31 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] hv_sock: perf: Allow the socket buffer size options to
+ influence the actual socket buffers
+Thread-Topic: [PATCH] hv_sock: perf: Allow the socket buffer size options to
+ influence the actual socket buffers
+Thread-Index: AdULT8Ri+kxJVj56RXiGnzXz8jUENAA+hb4g
+Date:   Fri, 17 May 2019 00:47:31 +0000
+Message-ID: <PU1P153MB01695A75877953399C4E94A6BF0B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <BN6PR21MB046528E2099CDE2C6C2200A7C00B0@BN6PR21MB0465.namprd21.prod.outlook.com>
+In-Reply-To: <BN6PR21MB046528E2099CDE2C6C2200A7C00B0@BN6PR21MB0465.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-05-17T00:47:28.7028353Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9d1c7d48-1283-4379-a578-6f8b90e813bb;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:1760:e49c:a88d:95f1:67ea]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b8367752-20a8-4c71-5725-08d6da613e87
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0204;
+x-ms-traffictypediagnostic: PU1P153MB0204:
+x-microsoft-antispam-prvs: <PU1P153MB0204715DB77BB38412A66D6FBF0B0@PU1P153MB0204.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0040126723
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(366004)(396003)(346002)(39860400002)(136003)(376002)(199004)(189003)(1511001)(446003)(22452003)(316002)(99286004)(486006)(46003)(476003)(11346002)(102836004)(14454004)(8936002)(81166006)(8676002)(81156014)(6116002)(9686003)(2906002)(10090500001)(68736007)(8990500004)(33656002)(110136005)(54906003)(7696005)(6506007)(5660300002)(186003)(76176011)(229853002)(7736002)(10290500003)(305945005)(6636002)(66556008)(6436002)(25786009)(55016002)(64756008)(4326008)(478600001)(66476007)(76116006)(66446008)(73956011)(66946007)(86612001)(52536014)(71190400001)(71200400001)(86362001)(74316002)(53936002)(6246003)(256004)(4744005)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0204;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: JZmv+FERqA8X8Cha2vgtxjRCTR4d/UTpT3l7HZhKPnQGe2gVDOptkK+JUjGXOfKIcZOLC/KB3Cg3LwEdMrfWpAkXndzj2J8S0fR13yfZdabrBv2muAS6MkccPGmlfxXhDDN8XcKwT5zzgxTKxPW+K5XcJ4GkAcNDi8/xnOVA75SF+NIKcykctKZut1Rk19qf94UQQsHaWdj4W0qxS8el4cnlHD+PkSUr3tMN3sup9HofITkuO4wabhfJgyh1oULLzkmgtaLjgWbouzKUZh9nOnpG9s0UxWMJybyz78FVEy4w5oI/TM9Yap8E4P/tpcFs/mAt7wFq0yVFuhYTC8cXSI0sTzm/BellAtE6JvPB0UY7BbynrgE9pja6/rOMzfPivn2Jas5gljmq6rehZgWSuVbiDYE4jQZUwC7SP40VJ+o=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8367752-20a8-4c71-5725-08d6da613e87
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 00:47:31.1715
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0204
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jeff discovered that performance improves from ~375K iops to ~519K iops
-on a simple psync-write fio workload when moving the location of 'struct
-page' from the default PMEM location to DRAM. This result is surprising
-because the expectation is that 'struct page' for dax is only needed for
-third party references to dax mappings. For example, a dax-mapped buffer
-passed to another system call for direct-I/O requires 'struct page' for
-sending the request down the driver stack and pinning the page. There is
-no usage of 'struct page' for first party access to a file via
-read(2)/write(2) and friends.
+> From: Sunil Muthuswamy <sunilmut@microsoft.com>
+> Sent: Thursday, May 16, 2019 5:17 PM
+>=20
+> Currently, the hv_sock buffer size is static and can't scale to the
+> bandwidth requirements of the application. This change allows the
+> applications to influence the socket buffer sizes using the SO_SNDBUF and
+> the SO_RCVBUF socket options.
+>=20
+> Few interesting points to note:
+> 1. Since the VMBUS does not allow a resize operation of the ring size, th=
+e
+> socket buffer size option should be set prior to establishing the
+> connection for it to take effect.
+> 2. Setting the socket option comes with the cost of that much memory bein=
+g
+> reserved/allocated by the kernel, for the lifetime of the connection.
 
-However, this "no page needed" expectation is violated by
-CONFIG_HARDENED_USERCOPY and the check_copy_size() performed in
-copy_from_iter_full_nocache() and copy_to_iter_mcsafe(). The
-check_heap_object() helper routine assumes the buffer is backed by a
-page-allocator DRAM page and applies some checks.  Those checks are
-invalid, dax pages are not from the heap, and redundant,
-dax_iomap_actor() has already validated that the I/O is within bounds.
+Reviewed-by: Dexuan Cui <decui@microsoft.com>
 
-Bypass this overhead and call the 'no check' versions of the
-copy_{to,from}_iter operations directly.
+The patch looks good to me. Thanks, Sunil!
 
-Fixes: 0aed55af8834 ("x86, uaccess: introduce copy_from_iter_flushcache...")
-Cc: Jan Kara <jack@suse.cz>
-Cc: <stable@vger.kernel.org>
-Cc: Jeff Moyer <jmoyer@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Matthew Wilcox <willy@infradead.org>
-Reported-and-tested-by: Jeff Smits <jeff.smits@intel.com>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/nvdimm/pmem.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index 845c5b430cdd..c894f45e5077 100644
---- a/drivers/nvdimm/pmem.c
-+++ b/drivers/nvdimm/pmem.c
-@@ -281,16 +281,21 @@ static long pmem_dax_direct_access(struct dax_device *dax_dev,
- 	return __pmem_direct_access(pmem, pgoff, nr_pages, kaddr, pfn);
- }
- 
-+/*
-+ * Use the 'no check' versions of copy_from_iter_flushcache() and
-+ * copy_to_iter_mcsafe() to bypass HARDENED_USERCOPY overhead. Bounds
-+ * checking is handled by dax_iomap_actor()
-+ */
- static size_t pmem_copy_from_iter(struct dax_device *dax_dev, pgoff_t pgoff,
- 		void *addr, size_t bytes, struct iov_iter *i)
- {
--	return copy_from_iter_flushcache(addr, bytes, i);
-+	return _copy_from_iter_flushcache(addr, bytes, i);
- }
- 
- static size_t pmem_copy_to_iter(struct dax_device *dax_dev, pgoff_t pgoff,
- 		void *addr, size_t bytes, struct iov_iter *i)
- {
--	return copy_to_iter_mcsafe(addr, bytes, i);
-+	return _copy_to_iter_mcsafe(addr, bytes, i);
- }
- 
- static const struct dax_operations pmem_dax_ops = {
-
+Thanks,
+-- Dexuan
