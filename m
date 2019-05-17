@@ -6,138 +6,96 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBDBC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AAEC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6CA20833
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4866A20833
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:08:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727985AbfEQHHp (ORCPT
+        id S1728103AbfEQHIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 03:07:45 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35406 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727386AbfEQHHp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 03:07:45 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4H6w7v1147047
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 03:07:43 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2shpyxkk04-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 03:07:43 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
-        Fri, 17 May 2019 08:07:41 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 17 May 2019 08:07:38 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4H77bAe48824350
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 May 2019 07:07:37 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D1D552051;
-        Fri, 17 May 2019 07:07:37 +0000 (GMT)
-Received: from mschwideX1 (unknown [9.145.144.159])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 1B8E25204F;
-        Fri, 17 May 2019 07:07:37 +0000 (GMT)
-Date:   Fri, 17 May 2019 09:07:35 +0200
-From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Laura Abbott <labbott@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] s390: mark __cpacf_check_opcode() and
- cpacf_query_func() as __always_inline
-In-Reply-To: <20190517065424.24453-1-yamada.masahiro@socionext.com>
-References: <20190517065424.24453-1-yamada.masahiro@socionext.com>
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Fri, 17 May 2019 03:08:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45252 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727386AbfEQHIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 03:08:06 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EE18081DE6;
+        Fri, 17 May 2019 07:07:42 +0000 (UTC)
+Received: from [10.36.116.17] (ovpn-116-17.ams2.redhat.com [10.36.116.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 274AC5D9C4;
+        Fri, 17 May 2019 07:07:31 +0000 (UTC)
+Subject: Re: [PATCH v3 7/7] iommu/vt-d: Differentiate relaxable and non
+ relaxable RMRRs
+To:     Lu Baolu <baolu.lu@linux.intel.com>, eric.auger.pro@gmail.com,
+        joro@8bytes.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, dwmw2@infradead.org,
+        lorenzo.pieralisi@arm.com, robin.murphy@arm.com,
+        will.deacon@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com
+Cc:     alex.williamson@redhat.com, shameerali.kolothum.thodi@huawei.com
+References: <20190516100817.12076-1-eric.auger@redhat.com>
+ <20190516100817.12076-8-eric.auger@redhat.com>
+ <2ebc33ed-ded6-0eee-96ef-84e6f61f692e@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <65852894-2525-e67e-5fd3-55ba4a323c2f@redhat.com>
+Date:   Fri, 17 May 2019 09:07:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19051707-0012-0000-0000-0000031CA1C3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051707-0013-0000-0000-0000215545F6
-Message-Id: <20190517090735.6906c2fa@mschwideX1>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-17_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905170047
+In-Reply-To: <2ebc33ed-ded6-0eee-96ef-84e6f61f692e@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 17 May 2019 07:08:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 May 2019 15:54:24 +0900
-Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+Hi Lu,
 
-> Commit e60fb8bf68d4 ("s390/cpacf: mark scpacf_query() as __always_inline")
-> was not enough to make sure to meet the 'i' (immediate) constraint for the
-> asm operands.
+On 5/17/19 6:46 AM, Lu Baolu wrote:
+> Hi Eric,
 > 
-> With CONFIG_OPTIMIZE_INLINING enabled, Laura Abbott reported error
-> with gcc 9.1.1:
+> On 5/16/19 6:08 PM, Eric Auger wrote:
+>> Now we have a new IOMMU_RESV_DIRECT_RELAXABLE reserved memory
+>> region type, let's report USB and GFX RMRRs as relaxable ones.
+>>
+>> This allows to have a finer reporting at IOMMU API level of
+>> reserved memory regions. This will be exploitable by VFIO to
+>> define the usable IOVA range and detect potential conflicts
+>> between the guest physical address space and host reserved
+>> regions.
+>>
+>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>> ---
+>>   drivers/iommu/intel-iommu.c | 10 ++++++++--
+>>   1 file changed, 8 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+>> index a36604f4900f..af1d65fdedfc 100644
+>> --- a/drivers/iommu/intel-iommu.c
+>> +++ b/drivers/iommu/intel-iommu.c
+>> @@ -5493,7 +5493,9 @@ static void intel_iommu_get_resv_regions(struct
+>> device *device,
+>>       for_each_rmrr_units(rmrr) {
+>>           for_each_active_dev_scope(rmrr->devices, rmrr->devices_cnt,
+>>                         i, i_dev) {
+>> +            struct pci_dev *pdev = to_pci_dev(device);
 > 
->   In file included from arch/s390/crypto/prng.c:29:
->   ./arch/s390/include/asm/cpacf.h: In function 'cpacf_query_func':
->   ./arch/s390/include/asm/cpacf.h:170:2: warning: asm operand 3 probably doesn't match constraints
->     170 |  asm volatile(
->         |  ^~~
->   ./arch/s390/include/asm/cpacf.h:170:2: error: impossible constraint in 'asm'
+> Probably should be:
 > 
-> Add more __always_inline to force inlining.
-> 
-> Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
-> Reported-by: Laura Abbott <labbott@redhat.com>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> struct pci_dev *pdev = dev_is_pci(device) ? to_pci_dev(device) : NULL;
 
-Added to our internal tree and I will add it to s390/linux soon. Thanks.
+That's correct. I will fix that asap.
 
-Do you have a Kconfig patch in the works to enable OPTIMIZE_INLINING?
-Otherwise we could just add it.
+Thanks!
 
-> ---
+Eric
 > 
->  arch/s390/include/asm/cpacf.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Best regards,
+> Lu Baolu
 > 
-> diff --git a/arch/s390/include/asm/cpacf.h b/arch/s390/include/asm/cpacf.h
-> index f316de40e51b..19459dfb4295 100644
-> --- a/arch/s390/include/asm/cpacf.h
-> +++ b/arch/s390/include/asm/cpacf.h
-> @@ -177,7 +177,7 @@ static inline void __cpacf_query(unsigned int opcode, cpacf_mask_t *mask)
->  		: "cc");
->  }
-> 
-> -static inline int __cpacf_check_opcode(unsigned int opcode)
-> +static __always_inline int __cpacf_check_opcode(unsigned int opcode)
->  {
->  	switch (opcode) {
->  	case CPACF_KMAC:
-> @@ -217,7 +217,7 @@ static inline int cpacf_test_func(cpacf_mask_t *mask, unsigned int func)
->  	return (mask->bytes[func >> 3] & (0x80 >> (func & 7))) != 0;
->  }
-> 
-> -static inline int cpacf_query_func(unsigned int opcode, unsigned int func)
-> +static __always_inline int cpacf_query_func(unsigned int opcode, unsigned int func)
->  {
->  	cpacf_mask_t mask;
-> 
-
-
--- 
-blue skies,
-   Martin.
-
-"Reality continues to ruin my life." - Calvin.
-
