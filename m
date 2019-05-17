@@ -2,117 +2,141 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9343AC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA7AC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:24:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 630632168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:24:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558113873;
-	bh=WxXSWaL3QpOrEgpKs084IjnKXSpNSZZ904f35QLLVA4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W3ffYlX3TabXJL/873LTO1U0T3eRYVM7BRKojcLYMVImh/DYVUPxWSsjaTDgjdykq
-	 HL+ytqKGJ1w0AbZ5Wrytgrm7osM0YVVdf61O6oxnPpT6gSr3ukElwV3nc08DT7hQxX
-	 QWEgM91HbtGmoJ4Lq0AlOaUwMo9lNd2IpaGXH06w=
+	by mail.kernel.org (Postfix) with ESMTP id AA6E82168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:24:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Byc6MLZx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbfEQRYc (ORCPT
+        id S1728426AbfEQRYu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 13:24:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38120 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbfEQRYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 13:24:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9E9820848;
-        Fri, 17 May 2019 17:24:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558113871;
-        bh=WxXSWaL3QpOrEgpKs084IjnKXSpNSZZ904f35QLLVA4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xjySCgF4FaNrp2+ct/3zpw36OkzervYSiIGfEc3YR7ztGWqF5SEeoFfXndGtiUVJg
-         E2/3NiTghwHTC6PlkuWja+NwFSOvLjeFjsHyPgGMw9ppidBJbhmRsuk41xoJysH+06
-         3jbCOCNfN2SaQdhlSzsRZ4nRXki+IrOTjXTxY5Ts=
-Date:   Fri, 17 May 2019 19:24:29 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Julien Freche <jfreche@vmware.com>,
-        Pv-drivers <Pv-drivers@vmware.com>,
-        Jason Wang <jasowang@redhat.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH v4 0/4] vmw_balloon: Compaction and shrinker support
-Message-ID: <20190517172429.GA21509@kroah.com>
-References: <20190425115445.20815-1-namit@vmware.com>
- <8A2D1D43-759A-4B09-B781-31E9002AE3DA@vmware.com>
- <9AD9FE33-1825-4D1A-914F-9C29DF93DC8D@vmware.com>
+        Fri, 17 May 2019 13:24:50 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33379 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfEQRYu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 13:24:50 -0400
+Received: by mail-lj1-f195.google.com with SMTP id w1so7035500ljw.0
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 10:24:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=AmXm4mte+zKcRwUfgm7yrjVf+yzjXJtSQs1xu+wr18Y=;
+        b=Byc6MLZxhstwWrZKbHUArEiROx0Xz+ebzcmQSrUYGLddb+Vr5Rhojy2hsG4A0Ina+E
+         wKN1gSz5nXCgSzkqmbUf1oeEwa0MbmeolFixrDweKEJoJZl6i5ts8H8bdPThFwFvFFTH
+         CmYJo43iBpvPxieQ0bPwp7ByjMMUo9d+3QuW6vC+Hl6O6204m1wVGGd51IgouKwAzgCJ
+         WHtiEGVqm6Azjran2Y75+i8allxtUkDMj7QKlmhBeQcqNhVJeOwvFfn+EqGwM+WG0OYk
+         myalanETQYxQTD/+MvIMp46wbz5N7RcuDGKHTW4vP0JD40SncyQ3Yfhan40e3I40U/l+
+         Mfeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AmXm4mte+zKcRwUfgm7yrjVf+yzjXJtSQs1xu+wr18Y=;
+        b=PsKYyf5qLoMj7gLItLyz+T7D9gf7gvkJAlLEC5+KaFig0bXrc6UNOMOQmA1J6A+sWR
+         jGeqvia/yIJ5TgRxTr4CmnLztHFnHgxuXYf9lIg+gepeYqr+6A1FJKopOccu6nUtCh1N
+         FrrsUknRhr/nID9rrafqksXLilahJmB8Wtv/6Im0YrobN2Wrcf7ISbvIpLzi70WnPBQv
+         U001z32+0ZTP6AA6f/4tWyW4NkayQCMstlBWvg0HCP8g6p94hu5aahwDSJjYanty1X2W
+         Fhs3pEYvJ/gDx/PeBVVWNbAeBiMXrdxV1EJFJjnHIT+Ho4QIK+se6muuYuIoVKom3iUX
+         zIYQ==
+X-Gm-Message-State: APjAAAUFUSbj5s7cgGOhMtch8DLyi7sv3CyUIh7mtpnnYLQowGYuzsOd
+        yTQLqd+XPAt4IV54wSiTSaT77/sGOwbnOdP3frZSfQ==
+X-Google-Smtp-Source: APXvYqzwYIRqHsI7YC50VtLBNAvQFIT93L0uR2LTLAAVvk9GLhBX0BS6TNc+beAueO9JP4gznut0cRdd4JfYqE8uNX4=
+X-Received: by 2002:a2e:2d02:: with SMTP id t2mr26134557ljt.148.1558113887278;
+ Fri, 17 May 2019 10:24:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9AD9FE33-1825-4D1A-914F-9C29DF93DC8D@vmware.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <CAHRSSEy3od0-7HMCOjbHprc9ihu3VqkJi1-5OKew0oN-2BcPvA@mail.gmail.com>
+ <0000000000001165cb058538aaee@google.com> <CACT4Y+bvMEQRcxqM4c9zc-eySQBnuGipwudCNvBv5f+Dgyr3ow@mail.gmail.com>
+ <CAHRSSEyFoGXLnR4RCf-_eefMjf18pPKmJni7GWTROtPmYAnaOA@mail.gmail.com> <CACT4Y+aH8eApRv8u_DKh8Rr4Rr70GK4Lv1Wxac=18DxXu8GWjw@mail.gmail.com>
+In-Reply-To: <CACT4Y+aH8eApRv8u_DKh8Rr4Rr70GK4Lv1Wxac=18DxXu8GWjw@mail.gmail.com>
+From:   Todd Kjos <tkjos@google.com>
+Date:   Fri, 17 May 2019 10:24:36 -0700
+Message-ID: <CAHRSSEx5_Aoa27npJ2gr9xb7kGGBp3bJH9s=EiaYsixZrGh4rQ@mail.gmail.com>
+Subject: Re: kernel BUG at drivers/android/binder_alloc.c:LINE! (3)
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Christian Brauner <christian@brauner.io>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Martijn Coenen <maco@android.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Todd Kjos <tkjos@android.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 05:10:23PM +0000, Nadav Amit wrote:
-> > On May 3, 2019, at 6:25 PM, Nadav Amit <namit@vmware.com> wrote:
-> > 
-> >> On Apr 25, 2019, at 4:54 AM, Nadav Amit <namit@vmware.com> wrote:
-> >> 
-> >> VMware balloon enhancements: adding support for memory compaction,
-> >> memory shrinker (to prevent OOM) and splitting of refused pages to
-> >> prevent recurring inflations.
-> >> 
-> >> Patches 1-2: Support for compaction
-> >> Patch 3: Support for memory shrinker - disabled by default
-> >> Patch 4: Split refused pages to improve performance
-> >> 
-> >> v3->v4:
-> >> * "get around to" comment [Michael]
-> >> * Put list_add under page lock [Michael]
-> >> 
-> >> v2->v3:
-> >> * Fixing wrong argument type (int->size_t) [Michael]
-> >> * Fixing a comment (it) [Michael]
-> >> * Reinstating the BUG_ON() when page is locked [Michael] 
-> >> 
-> >> v1->v2:
-> >> * Return number of pages in list enqueue/dequeue interfaces [Michael]
-> >> * Removed first two patches which were already merged
-> >> 
-> >> Nadav Amit (4):
-> >> mm/balloon_compaction: List interfaces
-> >> vmw_balloon: Compaction support
-> >> vmw_balloon: Add memory shrinker
-> >> vmw_balloon: Split refused pages
-> >> 
-> >> drivers/misc/Kconfig               |   1 +
-> >> drivers/misc/vmw_balloon.c         | 489 ++++++++++++++++++++++++++---
-> >> include/linux/balloon_compaction.h |   4 +
-> >> mm/balloon_compaction.c            | 144 ++++++---
-> >> 4 files changed, 553 insertions(+), 85 deletions(-)
-> >> 
-> >> -- 
-> >> 2.19.1
-> > 
-> > Ping.
-> 
-> Ping.
-> 
-> Greg, did it got lost again?
+On Fri, May 17, 2019 at 8:33 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Fri, May 17, 2019 at 5:26 PM Todd Kjos <tkjos@google.com> wrote:
+> >
+> > Yes (and syzbot seemed to confirm the fix). I didn't realize I needed
+> > to manually close the issue. I guess you closed it yesterday.
+>
+> This is required to auto-close the bug when the commit is merged:
+>
+> > IMPORTANT: if you fix the bug, please add the following tag to the comm=
+it:
+> > Reported-by: syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com
+>
+> Otherwise somebody needs to say:
+>
+> #syz fix: binder: fix BUG_ON found by selinux-testsuite
 
+It looks like you closed it with your #sys comment ^^^
 
-I thought you needed the mm developers to ack the first patch, did that
-ever happen?
-
+>
+>
+> > From: Dmitry Vyukov <dvyukov@google.com>
+> > Date: Fri, May 17, 2019 at 3:08 AM
+> > To: syzbot
+> > Cc: Arve Hj=C3=B8nnev=C3=A5g, Christian Brauner, open list:ANDROID DRIV=
+ERS, Greg
+> > Kroah-Hartman, Joel Fernandes, LKML, Martijn Coenen, syzkaller-bugs,
+> > Todd Kjos <tkjos@android.com>, Todd Kjos <tkjos@google.com>
+> >
+> > > On Fri, Mar 29, 2019 at 10:55 AM syzbot
+> > > <syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com> wrote:
+> > > >
+> > > > Hello,
+> > > >
+> > > > syzbot has tested the proposed patch and the reproducer did not tri=
+gger
+> > > > crash:
+> > > >
+> > > > Reported-and-tested-by:
+> > > > syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com
+> > > >
+> > > > Tested on:
+> > > >
+> > > > commit:         8c2ffd91 Linux 5.1-rc2
+> > > > git tree:
+> > > > git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.g=
+it master
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3D8dcdce2=
+5ea72bedf
+> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > > patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D10fe=
+d663200000
+> > > >
+> > > > Note: testing is done by a robot and is best-effort only.
+> > >
+> > >
+> > > Todd,
+> > >
+> > > Should this patch fix the bug? Should we close the bug as fixed then?
+> > > In my local testing I see this BUG still fires, but if we will leave
+> > > old fixed bugs open, we will not get notifications about new crashes.
