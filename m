@@ -2,108 +2,89 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B44C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB144C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D6FC217D4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:59:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558115971;
-	bh=SWL63IOuJG5gM5oQVFmjLL4N6Eo6juwVs637U8pmW3c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PH3zazdjFsN8UuMDd6CBsUaA5kd9jnuMbr32EGGfuDVTJIEarZQVadRZUH3CjhIK4
-	 m0d+YIhTGd6ZsD6y48z9pMTJblyQHe5EvIxT+QnPrJDIp0A7FoZGvQ5kLcSHJGMbK5
-	 w3bbnePvbk+7H2Kwq9/uK5hXoQkK6bda15cNIXqI=
+	by mail.kernel.org (Postfix) with ESMTP id AD77621743
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:03:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NDgI8+6C";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FQuv3ev3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbfEQR7a (ORCPT
+        id S1729020AbfEQSD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 13:59:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728536AbfEQR73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 13:59:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E16921773;
-        Fri, 17 May 2019 17:59:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558115969;
-        bh=SWL63IOuJG5gM5oQVFmjLL4N6Eo6juwVs637U8pmW3c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Awo8jfRwqiLbT4uODENudpkr3n04WnSim8CidHfOxdmkowkaMyYyxbO/A+pXFKRYB
-         ud7LuUB2+LYBY4084ih5NRclyWBW/sQZLKYGeseqa7U0/d6EvTH923bBN3Sy5OIs4o
-         UdaX4xTRzNjihMcRiAGeutga/17xArb/5I5iTWTE=
-Date:   Fri, 17 May 2019 19:59:26 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Liming Sun <lsun@mellanox.com>
-Cc:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        David Woods <dwoods@mellanox.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>
-Subject: Re: [PATCH v5 2/2] platform/mellanox/mlxbf-bootctl: Add the ABI
- definitions
-Message-ID: <20190517175926.GA24535@kroah.com>
-References: <0b74e9ad12360b56bc0a3c2ca972798c424f2610.1548790896.git.lsun@mellanox.com>
- <1558115345-32476-2-git-send-email-lsun@mellanox.com>
+        Fri, 17 May 2019 14:03:27 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:60836 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727183AbfEQSD1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 14:03:27 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 6CC8660709; Fri, 17 May 2019 18:03:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558116206;
+        bh=IbnAGN0DIJaVE08Oe3a19rRp+gftn7Ija/z3WCGwkO0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=NDgI8+6CYqnF8diJemuqlcWXw/rstDhr6EhAJpNjtQViz20zqZfb/HRBA409/ptji
+         BK9U78AP6MF65458eeJ2yCLPVSqmi/icnfLP3rfEaBTRLoB+toygC420X2ylZmKUIn
+         quFWas97jXQ2y5CfxNmqUzpL9byhGtv9hgbqwL2Y=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id CA38F60709;
+        Fri, 17 May 2019 18:03:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1558116205;
+        bh=IbnAGN0DIJaVE08Oe3a19rRp+gftn7Ija/z3WCGwkO0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FQuv3ev3EX9qWa2YCFlsJLLzSG2NzmK3M4Bqbi5/hsQe6ONxTcLSituDiE5n7nNb0
+         n/d7lWdlwjS0dTCJla9dRqo+2otFs7mN92+PUVBuYjQgl5IwvVKNOZ40uE2tHJkPnH
+         PjGQOez5db7UBgcDNXJXLUC8eahmjBe6eHaz1h1Y=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1558115345-32476-2-git-send-email-lsun@mellanox.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Fri, 17 May 2019 11:03:25 -0700
+From:   Sodagudi Prasad <psodagud@codeaurora.org>
+To:     Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc:     sudeep.holla@arm.com, julien.thierry@arm.com, will.deacon@arm.com,
+        catalin.marinas@arm.com, mark.rutland@arm.com,
+        lorenzo.pieralisi@arm.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] kernel/panic: Use SYSTEM_RESET2 command for warm reset
+In-Reply-To: <20190516182949.GD10985@darkstar.musicnaut.iki.fi>
+References: <ce0b66f5d00e760f87ddeeacbc40b956@codeaurora.org>
+ <1557366432-352469-1-git-send-email-psodagud@codeaurora.org>
+ <20190516182949.GD10985@darkstar.musicnaut.iki.fi>
+Message-ID: <caa4ee48af33b320d8a1bcdbb974ada8@codeaurora.org>
+X-Sender: psodagud@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 01:49:05PM -0400, Liming Sun wrote:
-> This commit adds the ABI definitions exposed to userspace for
-> the platform/mellanox/mlxbf-bootctl driver.
+On 2019-05-16 11:29, Aaro Koskinen wrote:
+> Hi,
 > 
-> Reviewed-by: Vadim Pasternak <vadimp@mellanox.com>
-> Signed-off-by: Liming Sun <lsun@mellanox.com>
-> ---
->  .../ABI/testing/sysfs-platform-mellanox-bootctl    | 58 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 59 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
+> On Wed, May 08, 2019 at 06:47:12PM -0700, Prasad Sodagudi wrote:
+>> Some platforms may need warm reboot support when kernel crashed
+>> for post mortem analysis instead of cold reboot. So use config
+>> CONFIG_WARM_REBOOT_ON_PANIC and SYSTEM_RESET2 psci command
+>> support for warm reset.
 > 
-> diff --git a/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-> new file mode 100644
-> index 0000000..19a14db
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-platform-mellanox-bootctl
-> @@ -0,0 +1,58 @@
-> +What:		/sys/bus/platform/drivers/mlxbf-bootctl/lifecycle_state
-> +Date:		May 2019
-> +KernelVersion:	5.3
-> +Contact:	"Liming Sun <lsun@mellanox.com>"
-> +Description:
-> +		The Life-cycle state of the SoC, which could be one of the
-> +		following values.
-> +		  Production - Production state and can be updated to secure
-> +		  GA Secured - Secure chip and not able to change state
-> +		  GA Non-Secured - Non-Secure chip and not able to change state
-> +		  RMA - Return Merchandise Authorization
+> Please see commit b287a25a7148 - you can now use kernel command
+> line option reboot=panic_warm to get this.
 
-A "driver" does not have a lifecycle state, a "device" does.
+Thanks Aaro. Yes. I can use this option.  Thanks Sudeep and all for 
+discussing.
 
-You are putting all of these attributes in the wrong place.  Put them on
-your device please, not the driver.  driver-specific attributes are
-_VERY_ rare, and only for things that can modify/show for all devices
-attached to that driver.
+> 
+> A.
 
-thanks,
-
-greg k-h
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum,
+Linux Foundation Collaborative Project
