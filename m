@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32B7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB00C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96B8621744
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B313217F5
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558121826;
-	bh=kTlehXX8MAiTkPefmmBKwq5eqXGB0Wl11V20GjQbXIA=;
+	s=default; t=1558121830;
+	bh=uY4Sv2Vln+OIRyZ+Q23EeJ1FcgTrunOAw3hr86lKXxo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ixSiz3c92L4ZbYhBSc0rMiuCnNlsRB2qVuzTzG6dDB7N75spBRKp8voPj4ZGvMTu9
-	 ffl3tG5cAhGtR3t39BoinJ8Cx1eSePQm1meyIfJTGPKgoGYFgF09B4N3rKR4cG3Bbm
-	 dF8BzDB5GHWl9omSw+SPFJNNkOMnLo3eEwspReGY=
+	b=SKtcOWTYdI4ZfV7difJl+WRyKcrAb0yDKrQfLnCE0swqgGe/aJRK3eX/kC5JLrFH7
+	 uZLqh6/OtL8sWHR30TBN29eo3XJKzGpp0WBwx/Ra90dd1BJ0l3A/8k/TDyGS1qjseN
+	 LihNemqJAhVhYFcn2LjsP08G0kUlBLMkrDETZmvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729444AbfEQThF (ORCPT
+        id S1729468AbfEQThJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 15:37:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50838 "EHLO mail.kernel.org"
+        Fri, 17 May 2019 15:37:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729376AbfEQThC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 15:37:02 -0400
+        id S1729435AbfEQThG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 15:37:06 -0400
 Received: from quaco.ghostprotocols.net (unknown [190.15.121.82])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3869C21734;
-        Fri, 17 May 2019 19:36:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC5AE216FD;
+        Fri, 17 May 2019 19:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558121821;
-        bh=kTlehXX8MAiTkPefmmBKwq5eqXGB0Wl11V20GjQbXIA=;
+        s=default; t=1558121824;
+        bh=uY4Sv2Vln+OIRyZ+Q23EeJ1FcgTrunOAw3hr86lKXxo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rByc4PVh16G3SBwzEKiorDFg27EXZi2N+T1MHX8uYAWX3Z18xesuiCf055OEWtN8K
-         gyVu8ht5bYah+D9sYuL+Z4RQpF3KeCBA1WawzRTF0E8Nox+9PyCiFBuEHexi7OCYXI
-         m2bmNF7eF7xTOFWqun4c4pVWmpTscotMFFuIUN9A=
+        b=qATp7PPY658jqowCkOqE0CUU+Du63lykaBXYEXXzIZTzUsyRxZeGiWRkWdYIG7dDM
+         rVCihih7yrxqL+c4MwqnIIisJiyaNejQdYQfDrMw/5ktsGUZbJMToAEkE4t5fbNMup
+         zY4sbdWF5gYiZfOUXMdfvbemSTIO7HxcqtCDrf5I=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,17 +47,17 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 08/73] tools x86 uapi asm: Sync the pt_regs.h copy with the kernel sources
-Date:   Fri, 17 May 2019 16:35:06 -0300
-Message-Id: <20190517193611.4974-9-acme@kernel.org>
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH 09/73] tools pci: Do not delete pcitest.sh in 'make clean'
+Date:   Fri, 17 May 2019 16:35:07 -0300
+Message-Id: <20190517193611.4974-10-acme@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190517193611.4974-1-acme@kernel.org>
 References: <20190517193611.4974-1-acme@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -66,66 +66,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-To get the changes in:
+When running 'make -C tools clean' I noticed that a revision controlled
+file was being deleted:
 
-  878068ea270e ("perf/x86: Support outputting XMM registers")
+  $ git diff
+  diff --git a/tools/pci/pcitest.sh b/tools/pci/pcitest.sh
+  deleted file mode 100644
+  index 75ed48ff2990..000000000000
+  --- a/tools/pci/pcitest.sh
+  +++ /dev/null
+  @@ -1,72 +0,0 @@
+  -#!/bin/sh
+  -# SPDX-License-Identifier: GPL-2.0
+  -
+  -echo "BAR tests"
+  -echo
+  <SNIP>
 
-That will be used in a followup patch to allow users to ask for some or
-all of those registers to be collected in certain contatexts.
+So I changed the make variables to fix that, testing it should produce
+the same intended result while not deleting revision controlled files.
 
-This silences the following perf build warning:
-
-  Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/perf_regs.h' differs from latest version at 'arch/x86/include/uapi/asm/perf_regs.h'
-  diff -u tools/arch/x86/include/uapi/asm/perf_regs.h arch/x86/include/uapi/asm/perf_regs.h
+  $ make O=/tmp/build/pci -C tools/pci install
+  make: Entering directory '/home/acme/git/perf/tools/pci'
+  make -f /home/acme/git/perf/tools/build/Makefile.build dir=. obj=pcitest
+  install -d -m 755 /usr/bin;		\
+  for program in /tmp/build/pci/pcitest pcitest.sh; do	\
+  	install $program /usr/bin;	\
+  done
+  install: cannot change permissions of ‘/usr/bin’: Operation not permitted
+  install: cannot create regular file '/usr/bin/pcitest': Permission denied
+  install: cannot create regular file '/usr/bin/pcitest.sh': Permission denied
+  make: *** [Makefile:46: install] Error 1
+  make: Leaving directory '/home/acme/git/perf/tools/pci'
+  $ ls -la /tmp/build/pci/pcitest
+  -rwxrwxr-x. 1 acme acme 27152 May 13 13:52 /tmp/build/pci/pcitest
+  $ /tmp/build/pci/pcitest
+  can't open PCI Endpoint Test device: No such file or directory
+  $
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lkml.kernel.org/n/tip-6pjnnrzqt3x3n2cd6br3wk7k@git.kernel.org
+Fixes: 1ce78ce09430 ("tools: PCI: Change pcitest compiling process")
+Link: https://lkml.kernel.org/n/tip-9re6bd7eh9epi3koslkv3ocn@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/arch/x86/include/uapi/asm/perf_regs.h | 23 ++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ tools/pci/Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/arch/x86/include/uapi/asm/perf_regs.h b/tools/arch/x86/include/uapi/asm/perf_regs.h
-index f3329cabce5c..ac67bbea10ca 100644
---- a/tools/arch/x86/include/uapi/asm/perf_regs.h
-+++ b/tools/arch/x86/include/uapi/asm/perf_regs.h
-@@ -27,8 +27,29 @@ enum perf_event_x86_regs {
- 	PERF_REG_X86_R13,
- 	PERF_REG_X86_R14,
- 	PERF_REG_X86_R15,
--
-+	/* These are the limits for the GPRs. */
- 	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
- 	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
-+
-+	/* These all need two bits set because they are 128bit */
-+	PERF_REG_X86_XMM0  = 32,
-+	PERF_REG_X86_XMM1  = 34,
-+	PERF_REG_X86_XMM2  = 36,
-+	PERF_REG_X86_XMM3  = 38,
-+	PERF_REG_X86_XMM4  = 40,
-+	PERF_REG_X86_XMM5  = 42,
-+	PERF_REG_X86_XMM6  = 44,
-+	PERF_REG_X86_XMM7  = 46,
-+	PERF_REG_X86_XMM8  = 48,
-+	PERF_REG_X86_XMM9  = 50,
-+	PERF_REG_X86_XMM10 = 52,
-+	PERF_REG_X86_XMM11 = 54,
-+	PERF_REG_X86_XMM12 = 56,
-+	PERF_REG_X86_XMM13 = 58,
-+	PERF_REG_X86_XMM14 = 60,
-+	PERF_REG_X86_XMM15 = 62,
-+
-+	/* These include both GPRs and XMMX registers */
-+	PERF_REG_X86_XMM_MAX = PERF_REG_X86_XMM15 + 2,
- };
- #endif /* _ASM_X86_PERF_REGS_H */
+diff --git a/tools/pci/Makefile b/tools/pci/Makefile
+index 46e4c2f318c9..f64da817bc03 100644
+--- a/tools/pci/Makefile
++++ b/tools/pci/Makefile
+@@ -14,7 +14,7 @@ MAKEFLAGS += -r
+ 
+ CFLAGS += -O2 -Wall -g -D_GNU_SOURCE -I$(OUTPUT)include
+ 
+-ALL_TARGETS := pcitest pcitest.sh
++ALL_TARGETS := pcitest
+ ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+ 
+ all: $(ALL_PROGRAMS)
+@@ -44,7 +44,7 @@ clean:
+ 
+ install: $(ALL_PROGRAMS)
+ 	install -d -m 755 $(DESTDIR)$(bindir);		\
+-	for program in $(ALL_PROGRAMS); do		\
++	for program in $(ALL_PROGRAMS) pcitest.sh; do	\
+ 		install $$program $(DESTDIR)$(bindir);	\
+ 	done
+ 
 -- 
 2.20.1
 
