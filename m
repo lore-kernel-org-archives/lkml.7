@@ -2,126 +2,157 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F201C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6C4EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB5A21734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A09B21734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 18:10:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="Cgirbte1"
+	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="N6AVNHwE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbfEQSJm (ORCPT
+        id S1729171AbfEQSKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 14:09:42 -0400
-Received: from alln-iport-3.cisco.com ([173.37.142.90]:33423 "EHLO
-        alln-iport-3.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfEQSJl (ORCPT
+        Fri, 17 May 2019 14:10:17 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36898 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726532AbfEQSKR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 14:09:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=2361; q=dns/txt; s=iport;
-  t=1558116581; x=1559326181;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0g21aU88ovgbJIF975Ro+MDCo4+fJXC5wnaD5d7XJ2M=;
-  b=Cgirbte1hLym+1ErfgvuY1c5SQl4XNgE058c/5Wr7F5lBfwpMjAtOkjT
-   fH7GxAlz0GLNoTx5h+sq5Yt+tAAF9QS8bfGfoBIQFpeWE/AAi48X6w+Jd
-   aVTPy3zZzUWoMmS28wp3NqTU1wnEO+fPI6h959oMhn++EOW/crxvgEAU7
-   A=;
-X-IronPort-AV: E=Sophos;i="5.60,480,1549929600"; 
-   d="scan'208";a="278503039"
-Received: from rcdn-core-4.cisco.com ([173.37.93.155])
-  by alln-iport-3.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 17 May 2019 18:09:40 +0000
-Received: from zorba ([10.24.25.58])
-        by rcdn-core-4.cisco.com (8.15.2/8.15.2) with ESMTPS id x4HI9c3L014192
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 17 May 2019 18:09:40 GMT
-Date:   Fri, 17 May 2019 11:09:36 -0700
-From:   Daniel Walker <danielwa@cisco.com>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "Nikunj Kela (nkela)" <nkela@cisco.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [Intel-wired-lan] [PATCH] igb: add parameter to ignore nvm
- checksum validation
-Message-ID: <20190517180936.nwsw7brjo2yfvnol@zorba>
-References: <1557357269-9498-1-git-send-email-nkela@cisco.com>
- <9be117dc6e818ab83376cd8e0f79dbfaaf193aa9.camel@intel.com>
- <76B41175-0CEE-466C-91BF-89A1CA857061@cisco.com>
- <4469196a-0705-5459-8aca-3f08e9889d61@gmail.com>
- <20190517010330.2wynopuhsqycqzuq@zorba>
- <bd9e6a93-c8e8-a90e-25b0-26ccbf65b7c4@gmail.com>
- <CAKgT0Uev7sfpOOhusAg9jFLkFeE9JtTntyTd0aAHz2db69L13g@mail.gmail.com>
- <20190517163643.7tlch7xqplxohoq7@zorba>
- <CAKgT0Ue0b1QxG2ijegbHFz-2Wpxga0ffvhsfDg4VLDRaDSFvdw@mail.gmail.com>
+        Fri, 17 May 2019 14:10:17 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w37so11807137edw.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 11:10:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0RAJ8dFkgMXY5OQlUUJ6T1gPWQG4AjdkRmpcqOy8B8o=;
+        b=N6AVNHwED44tjfNeBflxf/4LK+NXnqWsv17JWf6m0n56Z8TxPCSc5PmhLfxKM9WFrq
+         YbKovej0m6JAq0uY+V0fukul3/8snNc7VVGW3uaJCYOv9kESzesDs34u+v4WAStgHP3c
+         sBeltk1m46EU7g2kMwLBL1Xlc9O9R/OxZjl/+/qkgn3IyGRlBAhWR9BgYqAdPvWtybzJ
+         IgFGR1LpSroJPjuo0A0Qc1QBzB29kPQIib6uBuK0f/3Wx8viB4rvGm7IMOZPK6bLo+in
+         ON8O8uP2Me8M1QHTOgHYyJqE46rojKl0mOXRMk3JP5y+xtGruIDjYea+Vte5dqNdk7pj
+         Jbjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0RAJ8dFkgMXY5OQlUUJ6T1gPWQG4AjdkRmpcqOy8B8o=;
+        b=CgQHtdWql8uKzfd5WLs6YbOx/KzUvFhFckZX3KyrFzeIH+XKUJVG0F7PBBosRiwYQc
+         Dhrz0vZ5E9naGLXZ87lAZ8STmdZrKnz7nK4Yo2LRjfTb3stkxJnpfnuTGT/1eZ0JOIVm
+         CoDfNVX0lbeN8c7x8t61W+losEeKlGh52qPSrwtJNg312aSiQXfTYvZ8+ksthflF3nvh
+         18mFyu16TKieLJXrg1u+gK/tgHQdk0vol0vGk1/iRPDTsB4stVCFUNRgUF187JTV/R6f
+         WysBAE6h24MbJe/YvFMD1RWxp3GqAYEYGV2gIpl080QnbFSAI7SgAEkeAGcAoHYKz1fB
+         Wk6w==
+X-Gm-Message-State: APjAAAU8lzQ0Sjn8in6BeJimFXoazU5G2x2IK6sAAMuZ8pm0uQJpnkij
+        8dVHRmML51WeDfE01h9gF/vUNvlyynrdUm3J1ZadJg==
+X-Google-Smtp-Source: APXvYqy265H8YTRxW0fmCC2I6ZxM8EIDTEHONdgksak2H40jR89a0QYHQFohoS/iSUfnFLtzqxC5+RMenGd+voNYkNc=
+X-Received: by 2002:a50:ee01:: with SMTP id g1mr58841265eds.263.1558116615828;
+ Fri, 17 May 2019 11:10:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKgT0Ue0b1QxG2ijegbHFz-2Wpxga0ffvhsfDg4VLDRaDSFvdw@mail.gmail.com>
-User-Agent: NeoMutt/20170609 (1.8.3)
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 10.24.25.58, [10.24.25.58]
-X-Outbound-Node: rcdn-core-4.cisco.com
+References: <20190502184337.20538-1-pasha.tatashin@soleen.com>
+ <20190502184337.20538-3-pasha.tatashin@soleen.com> <cac721ed-c404-19d1-71d1-37c66df9b2a8@intel.com>
+ <CAPcyv4greisKBSorzQWebcVOf2AqUH6DwbvNKMW0MQ5bCwYZrw@mail.gmail.com>
+In-Reply-To: <CAPcyv4greisKBSorzQWebcVOf2AqUH6DwbvNKMW0MQ5bCwYZrw@mail.gmail.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Fri, 17 May 2019 14:10:04 -0400
+Message-ID: <CA+CK2bAeLJFRDTNnUrz_JCP5DVqM2N8+09q1TX7+OCE7b5v+1A@mail.gmail.com>
+Subject: Re: [v5 2/3] mm/hotplug: make remove_memory() interface useable
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        James Morris <jmorris@namei.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Vishal L Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ross Zwisler <zwisler@kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Yaowei Bai <baiyaowei@cmss.chinamobile.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 09:58:46AM -0700, Alexander Duyck wrote:
-> > I don't think you can say because the checksum is valid that all data contained
-> > inside is also valid. You can have a valid checksum , and someone screwed up the
-> > data prior to the checksum getting computed.
-> 
-> If someone screwed up the data prior to writing the checksum then that
-> is on them. In theory we could also have a multi-bit error that could
-> similarly be missed. However if the checksum is not valid then the
-> data contained in the NVM does not match what was originally written,
-> so we know we have bad data. Why should we act on the data if we know
-> it is bad?
- 
-It's hypothetical , but it's likely someone has screwed up the data prior to the
-checksum getting computed.
+Hi Dan,
 
-> > > We need to make the checksum a hard stop. If the part is broken then
-> > > it needs to be addressed. Workarounds just end up being used and
-> > > forgotten, which makes it that much harder to support the product.
-> > > Better to mark the part as being broken, and get it fixed now, than to
-> > > have parts start shipping that require workarounds in order to
-> > > function.o
+Thank you very much for your review, my comments below:
+
+On Mon, May 6, 2019 at 2:01 PM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Mon, May 6, 2019 at 10:57 AM Dave Hansen <dave.hansen@intel.com> wrote:
 > >
-> > I don't think it's realistic to define the development process for large
-> > corporations like Cisco, or like what your doing , to define the development
-> > process for all corporations and products which may use intel parts. It's better
-> > to be flexible.
+> > > -static inline void remove_memory(int nid, u64 start, u64 size) {}
+> > > +static inline bool remove_memory(int nid, u64 start, u64 size)
+> > > +{
+> > > +     return -EBUSY;
+> > > +}
 > >
-> > Daniel
-> 
-> This isn't about development. If you are doing development you can do
-> whatever you want with your own downstream driver. What you are
-> attempting to do is update the upstream driver which is used in
-> production environments.
- 
-Cisco has this issue in development, and in production. So your right, it's not
-about development in isolation. People make mistakes..
+> > This seems like an appropriate place for a WARN_ONCE(), if someone
+> > manages to call remove_memory() with hotplug disabled.
 
-> What concerns me is when this module parameter gets used in a
-> development environment and then slips into being required for a
-> production environment. At that point it defeats the whole point of
-> the checksum in the first place.
+I decided not to do WARN_ONCE(), in all likelihood compiler will
+simply optimize this function out, but with WARN_ONCE() some traces of
+it will remain.
 
-I agree .. Ultimately it's the choice of the OEM, if it gets into production
-then it's their product and they support the product. As I was saying in a prior
-email it should be a priority of the driver to give flexibility for mistakes
-people will inevitably make.
+> >
+> > BTW, I looked and can't think of a better errno, but -EBUSY probably
+> > isn't the best error code, right?
 
-Daniel
+-EBUSY is the only error that is returned in case of error by real
+remove_memory(), so I think it is OK to keep it here.
 
+> >
+> > > -void remove_memory(int nid, u64 start, u64 size)
+> > > +/**
+> > > + * remove_memory
+> > > + * @nid: the node ID
+> > > + * @start: physical address of the region to remove
+> > > + * @size: size of the region to remove
+> > > + *
+> > > + * NOTE: The caller must call lock_device_hotplug() to serialize hotplug
+> > > + * and online/offline operations before this call, as required by
+> > > + * try_offline_node().
+> > > + */
+> > > +void __remove_memory(int nid, u64 start, u64 size)
+> > >  {
+> > > +
+> > > +     /*
+> > > +      * trigger BUG() is some memory is not offlined prior to calling this
+> > > +      * function
+> > > +      */
+> > > +     if (try_remove_memory(nid, start, size))
+> > > +             BUG();
+> > > +}
+> >
+> > Could we call this remove_offline_memory()?  That way, it makes _some_
+> > sense why we would BUG() if the memory isn't offline.
+
+It is this particular code path, the second one: remove_memory(),
+actually tries to remove memory and returns failure if it can't. So, I
+think the current name is OK.
+
+>
+> Please WARN() instead of BUG() because failing to remove memory should
+> not be system fatal.
+
+As mentioned earlier, I will keep BUG(), because existing code does
+that, and there is no good handling of this code to return on error.
+
+Thank you,
+Pavel
