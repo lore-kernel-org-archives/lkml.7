@@ -2,128 +2,132 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 834F0C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:17:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CC9C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B1972087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:17:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558131424;
-	bh=Ub9ywDgQMywBRcVcnaiqdLyL6nucWm3LLTrW2H19UiE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Cdbc1tddTL6n2IRLeCDl5yIJkc2XQpj8nCZ00AGlmbSJUYb37OTiz0cdQDVtbqB2O
-	 nlA0l1GguQ9cRMFSMEZ2yPPGZG8iXFDanlCisa15kDZsb9efCCyO8sLVNJ6JvN7rJD
-	 +iEEPPB+7oBp0UzUt5HP6ReJK0F9V+8LwhzpLyn4=
+	by mail.kernel.org (Postfix) with ESMTP id DE3632168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:17:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NV6J2lEr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729165AbfEQWRD (ORCPT
+        id S1729415AbfEQWRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 18:17:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbfEQWRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 18:17:03 -0400
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03F802133D;
-        Fri, 17 May 2019 22:17:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558131422;
-        bh=Ub9ywDgQMywBRcVcnaiqdLyL6nucWm3LLTrW2H19UiE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GlQ47fjelVwOIBUNPfQPVtZRplhCOXFbklJArqlwOt3X8cNAekcwtl4ovf9ekowFT
-         rxpRgSRuXfWsJi3oreP7IxF7trBEOA8EwhrlnBkfayec6e1QgrAOOIVTLxn0iIO7Tg
-         lW21oFAasHZtJPuV4K/PqeO4ZKdt5jwVfXM6iDII=
-Received: by mail-qt1-f172.google.com with SMTP id f24so9770819qtk.11;
-        Fri, 17 May 2019 15:17:01 -0700 (PDT)
-X-Gm-Message-State: APjAAAWs12YD0TAKhS1vcYqytWDB44ZwOAv75Ufigd6cxwEK08IOrV/p
-        rojSumpPCUdihhcbhu/G6G2HOGHs9kAFhtSn3Q==
-X-Google-Smtp-Source: APXvYqwEyGCXsMdPpd1yKLh5mRTBHM7bqH+ylSdbW3LBM0kM6/GbLYmB3yx3l3fr7fSVgCiND3V4w1ysUhkmpeQirXM=
-X-Received: by 2002:a0c:8aad:: with SMTP id 42mr48554064qvv.200.1558131421268;
- Fri, 17 May 2019 15:17:01 -0700 (PDT)
+        Fri, 17 May 2019 18:17:37 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34098 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727001AbfEQWRg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 18:17:36 -0400
+Received: by mail-qt1-f193.google.com with SMTP id h1so9871005qtp.1;
+        Fri, 17 May 2019 15:17:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4Hl8T+4u/qgIIk8+r4CsaXe+ilR4CzdKuLNrb4mEdnE=;
+        b=NV6J2lErU6kauPc1kdxYtPdNeGXhZZheMQ4RIrEQR9uGKQuH4FGDCUqL7wyIsbrmL2
+         SedIMzzQajeBX/kOSToUXNSVRlHY+qB+iRxAX/xrtGX3IVXJ/tiLfTLLQc0ntNtLp4r4
+         ktTQGzGO/15ZcxMbT24qyow8ZDxjcsIlQz2VrMiMeoWdyMQRzOx7VmKPMnNCuCjVYzkN
+         J//i5uYN7StnsOKqjoJU7u7vIpdBvwsq7bLS6C+9uvNwR9aV1Q4ZjzIi51gFdUtlj6eu
+         cXO/vRglGr6Gl0rW1pE2aKVtQ8lXDvszVctfM2YwH1ZmsQ8/hsL0MfFatbfnP1SEFdrG
+         uHrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4Hl8T+4u/qgIIk8+r4CsaXe+ilR4CzdKuLNrb4mEdnE=;
+        b=OdklydhNB/+vzQslkY3Jf0TSZ8MJ/aawk5df0E+o4LY5JCy2C9D8Scaf/oS/B26y5q
+         CN4T3yrp5plwDepkNHVpaiXVM/SxcwK8u7vzowLkWNPWMzIFPI6P+uruUlIduNfmVAWL
+         ReSorAVk6fVHvMykzCNxtugmcl7CmfNeKV8VYkhRkfnWW2KUfn/XmmFyjN+z9MpnHzcA
+         8HXFoxSu+PGaAjCO9VOlCDo7kFCBGmDxOjY4GwmYujQs5iO7D+kFerhz9UssqAV/HWBk
+         wSquE+R6+mv8tMq5HXQOhyX58KFzd3nqd6mT7tpV7R1Mq71PpVdaxzSXaJ1ywC6GyWwF
+         uRHA==
+X-Gm-Message-State: APjAAAUDJsQSPcbqXfo0Gup6IyC9zEmI4CPQwa10+e5xq2+w/0T6os6W
+        Va5avxB9goEROwoMl0MKRVg=
+X-Google-Smtp-Source: APXvYqxxUYDge47vddAWXjHSnKIL8D9j1YJySwbTD27V4UaA7kVHiSbNMOKcE9PfZBtm16oIHqUGXQ==
+X-Received: by 2002:ac8:32d1:: with SMTP id a17mr43459703qtb.111.1558131454998;
+        Fri, 17 May 2019 15:17:34 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id c16sm5405296qkb.15.2019.05.17.15.17.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 15:17:34 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Fri, 17 May 2019 18:17:32 -0400
+To:     "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        viro@zeniv.linux.org.uk, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, initramfs@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, zohar@linux.vnet.ibm.com,
+        silviu.vlasceanu@huawei.com, dmitry.kasatkin@huawei.com,
+        takondra@cisco.com, kamensky@cisco.com, arnd@arndb.de,
+        rob@landley.net, james.w.mcmechan@gmail.com, niveditas98@gmail.com
+Subject: Re: [PATCH v3 2/2] initramfs: introduce do_readxattrs()
+Message-ID: <20190517221731.GA11358@rani.riverdale.lan>
+References: <20190517165519.11507-1-roberto.sassu@huawei.com>
+ <20190517165519.11507-3-roberto.sassu@huawei.com>
+ <CD9A4F89-7CA5-4329-A06A-F8DEB87905A5@zytor.com>
+ <20190517210219.GA5998@rani.riverdale.lan>
+ <d48f35a1-aab1-2f20-2e91-5e81a84b107f@zytor.com>
 MIME-Version: 1.0
-References: <20190517184659.18828-1-peron.clem@gmail.com> <20190517184659.18828-2-peron.clem@gmail.com>
- <CAL_JsqKPazGn+g1zS4NMwvQZ_6GcAm0tgcOTqyQA0dz0+2dp3g@mail.gmail.com> <CAJiuCcdMxXAXYk=QpRwsvBUW0tvBVMqXvgx0Y7fAKP=ouyBnKQ@mail.gmail.com>
-In-Reply-To: <CAJiuCcdMxXAXYk=QpRwsvBUW0tvBVMqXvgx0Y7fAKP=ouyBnKQ@mail.gmail.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Fri, 17 May 2019 17:16:49 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJgo8NpK00ApBcdtYGW24yuqU=4EMna+r_07=dqceZyyg@mail.gmail.com>
-Message-ID: <CAL_JsqJgo8NpK00ApBcdtYGW24yuqU=4EMna+r_07=dqceZyyg@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] drm: panfrost: add optional bus_clock
-To:     =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Steven Price <steven.price@arm.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <d48f35a1-aab1-2f20-2e91-5e81a84b107f@zytor.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 5:08 PM Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.c=
-om> wrote:
->
-> Hi Rob,
->
-> On Fri, 17 May 2019 at 22:07, Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Fri, May 17, 2019 at 1:47 PM Cl=C3=A9ment P=C3=A9ron <peron.clem@gma=
-il.com> wrote:
-> > >
-> > > Allwinner H6 has an ARM Mali-T720 MP2 which required a bus_clock.
-> > >
-> > > Add an optional bus_clock at the init of the panfrost driver.
-> > >
-> > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > > ---
-> > >  drivers/gpu/drm/panfrost/panfrost_device.c | 25 ++++++++++++++++++++=
-+-
-> > >  drivers/gpu/drm/panfrost/panfrost_device.h |  1 +
-> > >  2 files changed, 25 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu=
-/drm/panfrost/panfrost_device.c
-> > > index 3b2bced1b015..8da6e612d384 100644
-> > > --- a/drivers/gpu/drm/panfrost/panfrost_device.c
-> > > +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
-> > > @@ -44,7 +44,8 @@ static int panfrost_clk_init(struct panfrost_device=
- *pfdev)
-> > >
-> > >         pfdev->clock =3D devm_clk_get(pfdev->dev, NULL);
-> > >         if (IS_ERR(pfdev->clock)) {
-> > > -               dev_err(pfdev->dev, "get clock failed %ld\n", PTR_ERR=
-(pfdev->clock));
-> > > +               dev_err(pfdev->dev, "get clock failed %ld\n",
-> > > +                       PTR_ERR(pfdev->clock));
-> >
-> > Please drop this whitespace change.
->
-> Sorry, I thought it was only a mistake here, I will drop it.
-> Why are they so many lines over 80 characters?
+On Fri, May 17, 2019 at 02:47:31PM -0700, H. Peter Anvin wrote:
+> On 5/17/19 2:02 PM, Arvind Sankar wrote:
+> > On Fri, May 17, 2019 at 01:18:11PM -0700, hpa@zytor.com wrote:
+> >>
+> >> Ok... I just realized this does not work for a modular initramfs, composed at load time from multiple files, which is a very real problem. Should be easy enough to deal with: instead of one large file, use one companion file per source file, perhaps something like filename..xattrs (suggesting double dots to make it less likely to conflict with a "real" file.) No leading dot, as it makes it more likely that archivers will sort them before the file proper.
+> > This version of the patch was changed from the previous one exactly to deal with this case --
+> > it allows for the bootloader to load multiple initramfs archives, each
+> > with its own .xattr-list file, and to have that work properly.
+> > Could you elaborate on the issue that you see?
+> > 
+> 
+> Well, for one thing, how do you define "cpio archive", each with its own
+> .xattr-list file? Second, that would seem to depend on the ordering, no,
+> in which case you depend critically on .xattr-list file following the
+> files, which most archivers won't do.
+> 
+> Either way it seems cleaner to have this per file; especially if/as it
+> can be done without actually mucking up the format.
+> 
+> I need to run, but I'll post a more detailed explanation of what I did
+> in a little bit.
+> 
+> 	-hpa
+> 
+Not sure what you mean by how do I define it? Each cpio archive will
+contain its own .xattr-list file with signatures for the files within
+it, that was the idea.
 
-I'd guess most are prints and/or just slightly over.
+You need to review the code more closely I think -- it does not depend
+on the .xattr-list file following the files to which it applies.
 
-> Is there a specific coding style to follow ?
+The code first extracts .xattr-list as though it was a regular file. If
+a later dupe shows up (presumably from a second archive, although the
+patch will actually allow a second one in the same archive), it will
+then process the existing .xattr-list file and apply the attributes
+listed within it. It then will proceed to read the second one and
+overwrite the first one with it (this is the normal behaviour in the
+kernel cpio parser). At the end once all the archives have been
+extracted, if there is an .xattr-list file in the rootfs it will be
+parsed (it would've been the last one encountered, which hasn't been
+parsed yet, just extracted).
 
-Yes, but generally the 80 character thing is more a guidance. Not
-having unrelated changes in a single commit is more of a hard rule.
-
-Rob
+Regarding the idea to use the high 16 bits of the mode field in
+the header that's another possibility. It would just require additional
+support in the program that actually creates the archive though, which
+the current patch doesn't.
