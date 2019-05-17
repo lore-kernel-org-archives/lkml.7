@@ -2,101 +2,195 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12710C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3449C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEDF7216C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEDD121734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:55:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dsmBerrW"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="klfFRY+V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbfEQQxT (ORCPT
+        id S1727489AbfEQQzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 12:53:19 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41475 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfEQQxT (ORCPT
+        Fri, 17 May 2019 12:55:16 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:24288 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727380AbfEQQzP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 12:53:19 -0400
-Received: by mail-wr1-f66.google.com with SMTP id g12so7572392wro.8
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 09:53:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=eOFVUmpMlxT1rgTfcNFqTqJD4K4q18GK946ds9N3qFU=;
-        b=dsmBerrW0KEWYy8Sd4HFLOergaCVUedn0iM/0tpAMDcku9/23tuGzzqYbJXeCQvMPA
-         jvaYH1a7anzSWWcy+3m7pYYf936uN+DbiE6uMFJIc4GJOOwJ2uCiALJYsRk3R4XEUC2A
-         TX8nC83r+ypCSkA0txqWgOLXwT1yoTIY3rvXmw2bocEOPYR2RKNV7L9b9LfIVEloV6Nb
-         Pl63NU9wi2nEej7cLLykKKZ8Ar1Ty1c0L4JnXRSRp5Jd9qpv+e0EXAKoPiGUwMx8ICWu
-         ofnh+RwSqw9Mi5cr7fqVUUYrMqviHPyvzg9+MxNN7x9NFCsYb/ijwltwIlTIlcofguV1
-         nl6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=eOFVUmpMlxT1rgTfcNFqTqJD4K4q18GK946ds9N3qFU=;
-        b=LL3MeL8/+qALDh3OYzKhg3PQHf0YnMhhm25cHawpmRUealtVQ7rGgK0K1vSI9nDnEp
-         1priLpdLDeuK1wWsp6/zMhSnyGQ5CVq78bq5MlEwkjZMuiwB1cmD1YA13t4sS5BzMpIS
-         vghJ2UwgWZirvETZzvverx0ww4mOjqCL4bxy6/ttIedxfuArhxMIxEgBC0w21CW62IFG
-         yTEwlMPysUCxd6KcwRXJBT8tj7iF3PO1nRmrgXK5WXvlqiOCFXe4j2rjJLpyL9YWykYK
-         4U/MMowhRQw7OAoU2gzbl6a+Hyj3mEAsVGbckFJFtkZ/JQstYQXsywtL5Zm6ofxcjOAA
-         vvAA==
-X-Gm-Message-State: APjAAAVYrzzwzDKJNomwLjrGdamp/UiMYdcQKCQkvFYAJvG4ZkKZhXth
-        oPOLIb5h1EmB2PltI1ca2T4=
-X-Google-Smtp-Source: APXvYqxzwPBkio6lC+ydvkXLCUu+2O2QUexsyscQ50xgHeMpsARvymCIsU28JwUsJd9FhtdDJzY2jA==
-X-Received: by 2002:adf:e344:: with SMTP id n4mr12363332wrj.192.1558111997983;
-        Fri, 17 May 2019 09:53:17 -0700 (PDT)
-Received: from luna.home (2.154.17.217.dyn.user.ono.com. [2.154.17.217])
-        by smtp.gmail.com with ESMTPSA id w185sm12701690wma.39.2019.05.17.09.53.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 17 May 2019 09:53:16 -0700 (PDT)
-From:   Oscar Gomez Fuente <oscargomezf@gmail.com>
-To:     oscargomezf@gmail.com
-Cc:     gregkh@linuxfoundation.org, thesven73@gmail.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: fieldbus: solve warning incorrect type dev_core.c
-Date:   Fri, 17 May 2019 18:53:11 +0200
-Message-Id: <1558111991-30751-1-git-send-email-oscargomezf@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 17 May 2019 12:55:15 -0400
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id x4HGsqSM021729;
+        Sat, 18 May 2019 01:54:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x4HGsqSM021729
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558112093;
+        bh=5EgqDA3uYtlz+L9+XdyrzLf9fP9Nb7aFHjFy8jmb9xk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=klfFRY+V0IcR/WURZ8TUavi5XlMp+z3AAFdWp4hexArEt+1hST4bqXlIR4a9qvopF
+         2cChKs91z2RU14NwGmJe3w/ulbAXctG0MmRjYWVYGPwmrqbSXfHChUNOAuXcDeBBCt
+         ZbPTTx2NRW7QCfIIl85MdiIlqPeogigmlSA1vNnK3uhr/ksbRxnXbIYOXO32bqF0iw
+         8L93IFPZPYsQw6C+xtArZlqhUvymbJpHo47CABsMpF3CF3i2VdaIo4JD16kXo5sbAk
+         0ZzJsFU2YUJ2EZTZ9Co61rcTQn7GCTiudH8miA9548lgCPGiuF7yDzDMn45XwRJ4j3
+         NWP3Fuu6z5CsA==
+X-Nifty-SrcIP: [209.85.217.44]
+Received: by mail-vs1-f44.google.com with SMTP id l20so5072600vsp.3;
+        Fri, 17 May 2019 09:54:53 -0700 (PDT)
+X-Gm-Message-State: APjAAAWPV34yWT++zpwniSuJ4ROafhiKNhCy5M5Wmb5gcEqpfw6zwkqH
+        L5nXKVMJw/kRLKGValOLz/+3wwXNUvNbYhCDxkA=
+X-Google-Smtp-Source: APXvYqzINtt+UP6QYttfJWgL84DbhH2Bi2LMAL/PldGGKhnRzaS4ndVK1dAtfX05W0f3e5v5KRkvEG5WAjb2idT60D4=
+X-Received: by 2002:a67:ad0f:: with SMTP id t15mr9584081vsl.179.1558112092216;
+ Fri, 17 May 2019 09:54:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <1558109235-23042-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1558109235-23042-1-git-send-email-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 18 May 2019 01:54:16 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARDT7MaD1Kw8w0JgLYYXvLntb+tsNo+D9LJ2PmzNQNKdg@mail.gmail.com>
+Message-ID: <CAK7LNARDT7MaD1Kw8w0JgLYYXvLntb+tsNo+D9LJ2PmzNQNKdg@mail.gmail.com>
+Subject: Re: [PATCH v3] kbuild: check uniqueness of module names
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Kees Cook <keescook@chromium.org>,
+        Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
+        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Oscar Gomez Fuente <oscargomezf@gmail.com>
----
- drivers/staging/fieldbus/dev_core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Sat, May 18, 2019 at 1:10 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> In the recent build test of linux-next, Stephen saw a build error
+> caused by a broken .tmp_versions/*.mod file:
+>
+>   https://lkml.org/lkml/2019/5/13/991
+>
+> drivers/net/phy/asix.ko and drivers/net/usb/asix.ko have the same
+> basename, and there is a race in generating .tmp_versions/asix.mod
+>
+> Kbuild has not checked this before, and it suddenly shows up with
+> obscure error message when this kind of race occurs.
+>
+> Non-unique module names cause various sort of problems, but it is
+> not trivial to catch them by eyes.
+>
+> Hence, this script.
+>
+> It checks not only real modules, but also built-in modules (i.e.
+> controlled by tristate CONFIG option, but currently compiled with =y).
+> Non-unique names for built-in modules also cause problems because
+> /sys/modules/ would fall over.
+>
+> I tested allmodconfig on the latest kernel, and it detected the
+> following:
 
-diff --git a/drivers/staging/fieldbus/dev_core.c b/drivers/staging/fieldbus/dev_core.c
-index 60b851406..f6f5b92 100644
---- a/drivers/staging/fieldbus/dev_core.c
-+++ b/drivers/staging/fieldbus/dev_core.c
-@@ -211,16 +211,16 @@ static ssize_t fieldbus_write(struct file *filp, const char __user *buf,
- 	return fbdev->write_area(fbdev, buf, size, offset);
- }
- 
--static unsigned int fieldbus_poll(struct file *filp, poll_table *wait)
-+static __poll_t fieldbus_poll(struct file *filp, poll_table *wait)
- {
- 	struct fb_open_file *of = filp->private_data;
- 	struct fieldbus_dev *fbdev = of->fbdev;
--	unsigned int mask = POLLIN | POLLRDNORM | POLLOUT | POLLWRNORM;
-+	__poll_t mask = EPOLLIN | EPOLLRDNORM | EPOLLOUT | EPOLLWRNORM;
- 
- 	poll_wait(filp, &fbdev->dc_wq, wait);
- 	/* data changed ? */
- 	if (fbdev->dc_event != of->dc_event)
--		mask |= POLLPRI | POLLERR;
-+		mask |= EPOLLPRI | EPOLLERR;
- 	return mask;
- }
- 
--- 
-2.7.4
 
+FYI.
+
+"make -j8 allmodconfig all"
+takes long time to compile
+(my machine is cheap...)
+
+
+If you want to detect modules with non-unique name quickly,
+"make -j8 allyesconfig modules" is much faster.
+
+
+
+
+
+
+> warning: same basename if the following are built as modules:
+>   drivers/regulator/88pm800.ko
+>   drivers/mfd/88pm800.ko
+> warning: same basename if the following are built as modules:
+>   drivers/gpu/drm/bridge/adv7511/adv7511.ko
+>   drivers/media/i2c/adv7511.ko
+> warning: same basename if the following are built as modules:
+>   drivers/net/phy/asix.ko
+>   drivers/net/usb/asix.ko
+> warning: same basename if the following are built as modules:
+>   fs/coda/coda.ko
+>   drivers/media/platform/coda/coda.ko
+> warning: same basename if the following are built as modules:
+>   drivers/net/phy/realtek.ko
+>   drivers/net/dsa/realtek.ko
+>
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
+> ---
+>
+> Changes in v3:
+>  - Simplied sed code (Alexander Kapshuk)
+>
+> Changes in v2:
+>  - redirect messages to stderr
+>  - use '--' after 'basename -a'
+>  - use '-r' for xargs to cope with empty modules.order/modules.builtin
+>
+>  Makefile                 |  1 +
+>  scripts/modules-check.sh | 16 ++++++++++++++++
+>  2 files changed, 17 insertions(+)
+>  create mode 100755 scripts/modules-check.sh
+>
+> diff --git a/Makefile b/Makefile
+> index a61a95b..30792fe 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1290,6 +1290,7 @@ modules: $(vmlinux-dirs) $(if $(KBUILD_BUILTIN),vmlinux) modules.builtin
+>         $(Q)$(AWK) '!x[$$0]++' $(vmlinux-dirs:%=$(objtree)/%/modules.order) > $(objtree)/modules.order
+>         @$(kecho) '  Building modules, stage 2.';
+>         $(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
+> +       $(Q)$(CONFIG_SHELL) $(srctree)/scripts/modules-check.sh
+>
+>  modules.builtin: $(vmlinux-dirs:%=%/modules.builtin)
+>         $(Q)$(AWK) '!x[$$0]++' $^ > $(objtree)/modules.builtin
+> diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
+> new file mode 100755
+> index 0000000..2f65953
+> --- /dev/null
+> +++ b/scripts/modules-check.sh
+> @@ -0,0 +1,16 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set -e
+> +
+> +# Check uniqueness of module names
+> +check_same_name_modules()
+> +{
+> +       for m in $(sed 's:.*/::' modules.order modules.builtin | sort | uniq -d)
+> +       do
+> +               echo "warning: same basename if the following are built as modules:" >&2
+> +               sed "/\/$m/!d;s:^kernel/:  :" modules.order modules.builtin >&2
+> +       done
+> +}
+> +
+> +check_same_name_modules
+> --
+> 2.7.4
+>
+
+
+--
+Best Regards
+Masahiro Yamada
