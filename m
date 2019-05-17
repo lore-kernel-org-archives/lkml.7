@@ -2,169 +2,235 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BB7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 12:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3216EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 12:13:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B9020879
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 12:13:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DmsorBzX"
+	by mail.kernel.org (Postfix) with ESMTP id 04C2820879
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 12:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728720AbfEQMNp (ORCPT
+        id S1728775AbfEQMNs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 17 May 2019 08:13:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56442 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728683AbfEQMNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 17 May 2019 08:13:45 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:42107 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728636AbfEQMNm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 08:13:42 -0400
-Received: by mail-yb1-f194.google.com with SMTP id a21so2541568ybg.9
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 05:13:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=M3s5onH4EKHtLRHaMdmA6OtBScYx3vU5FV884xFkNgc=;
-        b=DmsorBzXRDvon/8kG4JcRIox8FFPMnHLt2Pa3GMNzeTIrY3kOQXjVd2VBrPODbpCa3
-         n050y2TXrw9wMMLA9KR+e/iqa+pf3SLfhWqrKyNx7sVQ7aFg4wnAf8t7TldJrIe152o3
-         UNUCQC+vFQINNOPNJu1oYLW9PArZO3q0eoBIvwOWWnWrjBvnq3k2LJnsCjMZfI6trr1V
-         UztxEjymcEYDQ32K/E4lRBDnX5v4Q0uH61h3RMK7mjXq4FZ4NTgtTEEsn2fqODJkLm7U
-         SyyiGFcg9Tv0i1o4OTp7AbUrzF3DplnUdd5spgSdeF2Jeur5HMIkKz1gvcu1hJF/hmiL
-         1U9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=M3s5onH4EKHtLRHaMdmA6OtBScYx3vU5FV884xFkNgc=;
-        b=ZMpua1OLlnyfOlh0EPzRXTEaCkXGeZSZYO2zxFPz1vf7dGqg98vphbv7iXAms9H3ji
-         PL+fNFz5blcYkuiXHX6kjj8ajRsVEprCo6fR2p5yuEClBnOIj75PCD2N16SODnh9C7EC
-         ZHj4jhDGX8y5WlwMSjDgl1oplKFkVMIjVBv+GrHoA9UQl4Cmh+U+0XRdN7ab7SkY5Ppp
-         U1vhy/DdP5HNtjnfdf3mpPO6hSDJBtuc1TnoopLWL/Y0qJiTs/+FdXZkBCEODSfxpfck
-         WH59mKB8YV4zGekP49hPmMAJS/OcT+Ihg60LbZ1croeLVL9z8xd+p9U89BrLXS13HOVr
-         6LUQ==
-X-Gm-Message-State: APjAAAXDC52l6fH7k7gvuJOWyxH262cDnBllnYugZST5Ei3cQHvaJ6Hl
-        n5MDb3VYjzNmYSZoeOHeW161TspuW4ezYZ7H7QtCBQ==
-X-Google-Smtp-Source: APXvYqxFgKrdchFhbncq+L/DflCvydSU3r588+pQQDqHWgrWJBOXXWXnbpaiVmZjZdH9qR6LbIbNq4yAxWHyN4nmiyo=
-X-Received: by 2002:a25:b30b:: with SMTP id l11mr26189771ybj.172.1558095220713;
- Fri, 17 May 2019 05:13:40 -0700 (PDT)
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 188B2AECB;
+        Fri, 17 May 2019 12:13:44 +0000 (UTC)
+Date:   Fri, 17 May 2019 14:13:42 +0200
+From:   Cyril Hrubis <chrubis@suse.cz>
+To:     ltp@lists.linux.it, linux-kernel@vger.kernel.org,
+        libc-alpha@sourceware.org
+Cc:     lwn@lwn.net, akpm@linux-foundation.org,
+        torvalds@linux-foundation.org
+Subject: [ANNOUNCE] The Linux Test Project has been released for May 2019
+Message-ID: <20190517121342.GA32601@rei>
 MIME-Version: 1.0
-References: <20190517080044.tnwhbeyxcccsymgf@esperanza> <20190517114204.6330-1-jslaby@suse.cz>
-In-Reply-To: <20190517114204.6330-1-jslaby@suse.cz>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Fri, 17 May 2019 05:13:29 -0700
-Message-ID: <CALvZod4w3Hfs1WBsNchp3J_Ymvuni=Ap-rBpaS=iXwd2P+5w5g@mail.gmail.com>
-Subject: Re: [PATCH v2] memcg: make it work on sparse non-0-node systems
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Linux MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Cgroups <cgroups@vger.kernel.org>,
-        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 4:42 AM Jiri Slaby <jslaby@suse.cz> wrote:
->
-> We have a single node system with node 0 disabled:
->   Scanning NUMA topology in Northbridge 24
->   Number of physical nodes 2
->   Skipping disabled node 0
->   Node 1 MemBase 0000000000000000 Limit 00000000fbff0000
->   NODE_DATA(1) allocated [mem 0xfbfda000-0xfbfeffff]
->
-> This causes crashes in memcg when system boots:
->   BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
->   #PF error: [normal kernel read fault]
-> ...
->   RIP: 0010:list_lru_add+0x94/0x170
-> ...
->   Call Trace:
->    d_lru_add+0x44/0x50
->    dput.part.34+0xfc/0x110
->    __fput+0x108/0x230
->    task_work_run+0x9f/0xc0
->    exit_to_usermode_loop+0xf5/0x100
->
-> It is reproducible as far as 4.12. I did not try older kernels. You have
-> to have a new enough systemd, e.g. 241 (the reason is unknown -- was not
-> investigated). Cannot be reproduced with systemd 234.
->
-> The system crashes because the size of lru array is never updated in
-> memcg_update_all_list_lrus and the reads are past the zero-sized array,
-> causing dereferences of random memory.
->
-> The root cause are list_lru_memcg_aware checks in the list_lru code.
-> The test in list_lru_memcg_aware is broken: it assumes node 0 is always
-> present, but it is not true on some systems as can be seen above.
->
-> So fix this by avoiding checks on node 0. Remember the memcg-awareness
-> by a bool flag in struct list_lru.
->
-> [v2] use the idea proposed by Vladimir -- the bool flag.
->
-> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+Good news everyone,
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+the Linux Test Project test suite stable release for *May 2019* has been
+released.
 
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Suggested-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-> Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-> Cc: <cgroups@vger.kernel.org>
-> Cc: <linux-mm@kvack.org>
-> Cc: Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
-> ---
->  include/linux/list_lru.h | 1 +
->  mm/list_lru.c            | 8 +++-----
->  2 files changed, 4 insertions(+), 5 deletions(-)
->
-> diff --git a/include/linux/list_lru.h b/include/linux/list_lru.h
-> index aa5efd9351eb..d5ceb2839a2d 100644
-> --- a/include/linux/list_lru.h
-> +++ b/include/linux/list_lru.h
-> @@ -54,6 +54,7 @@ struct list_lru {
->  #ifdef CONFIG_MEMCG_KMEM
->         struct list_head        list;
->         int                     shrinker_id;
-> +       bool                    memcg_aware;
->  #endif
->  };
->
-> diff --git a/mm/list_lru.c b/mm/list_lru.c
-> index 0730bf8ff39f..d3b538146efd 100644
-> --- a/mm/list_lru.c
-> +++ b/mm/list_lru.c
-> @@ -37,11 +37,7 @@ static int lru_shrinker_id(struct list_lru *lru)
->
->  static inline bool list_lru_memcg_aware(struct list_lru *lru)
->  {
-> -       /*
-> -        * This needs node 0 to be always present, even
-> -        * in the systems supporting sparse numa ids.
-> -        */
-> -       return !!lru->node[0].memcg_lrus;
-> +       return lru->memcg_aware;
->  }
->
->  static inline struct list_lru_one *
-> @@ -451,6 +447,8 @@ static int memcg_init_list_lru(struct list_lru *lru, bool memcg_aware)
->  {
->         int i;
->
-> +       lru->memcg_aware = memcg_aware;
-> +
->         if (!memcg_aware)
->                 return 0;
->
-> --
-> 2.21.0
->
+Since the last release 293 patches by 49 authors were merged.
+
+NOTABLE CHANGES
+===============
+
+* New tests
+  - ioctl_ns{01-07}: Tests for NS_GET_* ioctls
+  - clock_adjtim{01,02}: New tests
+  - userfaultfd01: New test
+  - ioctl08: Test for FIDEDUPERANGE on Btrfs
+  - sigpending02: New test for sigpending/rt_sigpending
+  - pivot_root01: New test
+  - tgkill{01-03}: New tests
+  - set_mempolicy{01-04}: New tests
+  - rt_tgsigqueueinfo01: New test
+  - binfmt_misc02.sh: New functionality test
+  - pwritev2{01-02}: New tests
+  - rt_sigpending02: New test
+  - fanotify12: New test for FAN_OPEN_EXEC event mask
+  - clock_gettime{01,02}: New tests
+  - fdatasync03: New test
+  - fsync04: New test
+  - sync03: New test
+  - syncfs01: New test
+  - setrlimit06: Add new test for RLIMIT_CPU
+  - statx07: Add test for AT_STATX_DONT_SYNC and AT_STATX_FORCE_SYNC
+  - clock_settime{01,02}: New tests
+
+* New regression tests
+  - af_alg06: malformed authenc key 8f9c46934848
+  - af_alg05: skcipher_walk error bug 8088d3dd4d7c
+  - af_alg04: vmac race conditions bb2964810233
+  - af_alg03: rfc7539 hash alg validation e57121d08c38
+  - af_alg02: salsa20 empty message bug ecaaab564978 aka CVE-2017-17805
+  - af_alg01: hmac nesting bug af3ff8045bbf aka CVE-2017-17806
+  - binfmt_misc01.sh: 5cc41e099504 ("fs/binfmt_misc.c: do not allow offset overflow)
+
+* Increased coverage
+  - fanotify01: add FAN_REPORT_FID test cases
+  - fanotify10: increase test coverage to support FAN_OPEN_EXEC mask
+  - fanotify03: add FAN_OPEN_EXEC_PERM
+
+* New test variants API
+  - The LTP test library gained support for test variants, with that we can
+    test family of similar syscalls (i.e. different select syscalls) in a
+    single test.
+
+  - stime: Test 3 variants
+  - sigpending: Test 3 variants
+  - select04: Test 4 variants
+
+* Various fixes for Android Bionic libc (both build and runtime) and musl libc
+  are included in this release
+
+* Additional 22 tests were converted to the new test library
+
+
+NOTABLE CHANGES IN NETWORK TESTS
+================================
+brought to you by Peter Vorel
+
+* New testcases
+  - ipsec: test also randomized message length
+  - features: new checksum testcases
+  - virt: add mode l3s in ipvlan test
+  - netstress: support SO_REUSEPORT, MSG_ZEROCOPY
+
+* Various tests converted into new API
+  - (arping01, broken_ip, clockdiff01, ip_tests.sh, ping0{1|0}, tracepath, traceroute)
+
+* Various small fixes and enhancements, most notable ones:
+  - dhcp: correct prefix for expected IPv6 address)
+  - lower down packet size to minimum, which still be high enough to require
+    fragmentation. This is critical for performance tests, which compare
+    virtual devices with the real ones.
+  - netstress: various fixes to avoid false-positives
+  - dhcp: AppArmor and SELinux fixes, fix paths for non-RHEL distros
+
+
+DOWNLOAD AND LINKS
+==================
+
+The latest version of the test-suite contains 3000+ tests for the Linux
+and can be downloaded at:
+
+https://github.com/linux-test-project/ltp/releases/tag/20190517
+
+The project pages as well as GIT repository are hosted on GitHub:
+
+https://github.com/linux-test-project/ltp
+http://linux-test-project.github.io/
+
+If you ever wondered how to write a LTP testcase, don't miss our developer
+documentation at:
+
+https://github.com/linux-test-project/ltp/wiki/C-Test-Case-Tutorial
+https://github.com/linux-test-project/ltp/wiki/Test-Writing-Guidelines
+https://github.com/linux-test-project/ltp/wiki/BuildSystem
+
+Patches, new tests, bugs, comments or questions should go to to our mailing
+list at ltp@lists.linux.it.
+
+
+CREDITS
+=======
+
+Many thanks to the people contributing to this release:
+
+git shortlog -s -e -n 20190115..
+
+    40  Petr Vorel <pvorel@suse.cz>
+    39  Enji Cooper <yaneurabeya@gmail.com>
+    28  Cyril Hrubis <chrubis@suse.cz>
+    17  Alexey Kodanev <alexey.kodanev@oracle.com>
+    15  Petr Vorel <petr.vorel@gmail.com>
+    15  Xiao Yang <yangx.jy@cn.fujitsu.com>
+    14  Rafael David Tinoco <rafael.tinoco@linaro.org>
+    12  Matthias Maennich <maennich@google.com>
+    11  Sumit Garg <sumit.garg@linaro.org>
+     9  Eric Biggers <ebiggers@google.com>
+     7  Jan Stancek <jstancek@redhat.com>
+     7  Jinhui huang <huangjh.jy@cn.fujitsu.com>
+     7  Li Wang <liwang@redhat.com>
+     7  Steve Muckle <smuckle@google.com>
+     6  Jia Zhang <zhang.jia@linux.alibaba.com>
+     6  Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+     5  Matthew Bobrowski <mbobrowski@mbobrowski.org>
+     4  Shile Zhang <shile.zhang@linux.alibaba.com>
+     3  Christian Amann <camann@suse.com>
+     3  Cristian Marussi <cristian.marussi@arm.com>
+     3  Greg Hackmann <ghackmann@google.com>
+     3  Sandeep Patil <sspatil@android.com>
+     2  Federico Bonfiglio <fedebonfi95@gmail.com>
+     2  Jason Xing <kerneljasonxing@linux.alibaba.com>
+     2  Michael Holzheu <holzheu@linux.vnet.ibm.com>
+     2  Paul Lawrence <paullawrence@google.com>
+     2  Zhengwang Ruan <ruanzw@xiaopeng.com>
+     1  Alistair Strachan <astrachan@google.com>
+     1  Amir Goldstein <mbobrowski@mbobrowski.org>
+     1  Balamuruhan S <bala24@linux.vnet.ibm.com>
+     1  Daniel Diaz <daniel.diaz@linaro.org>
+     1  Daniel Mentz <danielmentz@google.com>
+     1  Elif Aslan <elas@linux.vnet.ibm.com>
+     1  Esteban Flores <esflores@microsoft.com>
+     1  Guangwen Feng <fenggw-fnst@cn.fujitsu.com>
+     1  He Zhe <zhe.he@windriver.com>
+     1  Jan Baier <jbaier@suse.cz>
+     1  Michael Holzheu <holzheu@linux.ibm.com>
+     1  Pengfei Xu <pengfei.xu@intel.com>
+     1  Ramon Pantin <pantin@google.com>
+     1  Richard Palethorpe <rpalethorpe@suse.com>
+     1  Roman Kalashnikov <lunix0x@gmail.com>
+     1  Sandeep Patil <sspatil@google.com>
+     1  Saravana Kannan <saravanak@google.com>
+     1  Tommi Rantala <tommi.t.rantala@nokia.com>
+     1  Vaishnavi <vaishnavi.d@zilogic.com>
+     1  Xiao Liang <xiliang@redhat.com>
+     1  Yixin Zhang <yixin.zhang@intel.com>
+     1  supersojo <suyanjun218@163.com>
+
+And also thanks to patch reviewers:
+
+git log 20190115.. | grep -Ei '(reviewed|acked)-by:' | sed 's/.*by: //' | sort | uniq -c | sort -n -r
+
+     73 Cyril Hrubis <chrubis@suse.cz>
+     20 Petr Vorel <pvorel@suse.cz>
+     20 Jan Stancek <jstancek@redhat.com>
+     11 Xiao Yang <yangx.jy@cn.fujitsu.com>
+     11 Alexey Kodanev <alexey.kodanev@oracle.com>
+      9 Steve Muckle <smuckle@google.com>
+      7 Li Wang <liwang@redhat.com>
+      7 Amir Goldstein <amir73il@gmail.com>
+      5 Mimi Zohar <zohar@linux.ibm.com>
+      5 Enji Cooper <yaneurabeya@gmail.com>
+      3 Sandeep Patil <sspatil@android.com>
+      2 Sumit Garg <sumit.garg@linaro.org>
+      1 Xiong Zhou <xzhou@redhat.com>
+      1 Sandeep Patil <sspatil@google.com>
+      1 Michael Holzheu <holzheu@linux.ibm.com>
+      1 Hendrik Brueckner <brueckner@linux.ibm.com>
+      1 Eric Biggers <ebiggers@google.com>
+      1 Enji Cooper <yaneurabeya@gmail.com
+      1 Cyril Hrubis <metan@ucw.cz>
+      1 Cristian Marussi <cristian.marussi@arm.com>
+      1 Alessio Balsini <balsini@google.com>
+
+-- 
+Cyril Hrubis
+chrubis@suse.cz
