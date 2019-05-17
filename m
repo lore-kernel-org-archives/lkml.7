@@ -2,236 +2,144 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A293C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EC4C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:21:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F26C2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64B4520833
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:21:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbfEQNU2 (ORCPT
+        id S1728706AbfEQNVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 09:20:28 -0400
-Received: from jax4mhob22.registeredsite.com ([64.69.218.110]:49092 "EHLO
-        jax4mhob22.registeredsite.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728365AbfEQNU1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 09:20:27 -0400
-Received: from mailpod.hostingplatform.com ([10.30.71.206])
-        by jax4mhob22.registeredsite.com (8.14.4/8.14.4) with ESMTP id x4HDKOOk165586
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL)
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 09:20:25 -0400
-Received: (qmail 27192 invoked by uid 0); 17 May 2019 13:20:24 -0000
-X-TCPREMOTEIP: 81.173.50.109
-X-Authenticated-UID: mike@milosoftware.com
-Received: from unknown (HELO mikebuntu.TOPIC.LOCAL) (mike@milosoftware.com@81.173.50.109)
-  by 0 with ESMTPA; 17 May 2019 13:20:24 -0000
-From:   Mike Looijmans <mike.looijmans@topic.nl>
-To:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, mturquette@baylibre.com,
-        sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        Mike Looijmans <mike.looijmans@topic.nl>
-Subject: [PATCH v3] dt-bindings: clock: Add silabs,si5341
-Date:   Fri, 17 May 2019 15:20:20 +0200
-Message-Id: <20190517132020.31081-1-mike.looijmans@topic.nl>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190507140413.28335-1-mike.looijmans@topic.nl>
-References: <20190424090216.18417-1-mike.looijmans@topic.nl> <155623344648.15276.18213024444708122458@swboyd.mtv.corp.google.com> <3ea2d720-f49b-586c-e402-07db289b39a8@topic.nl> <155632584222.168659.9675557812377718927@swboyd.mtv.corp.google.com> <cd52a35b-d289-24e1-70db-9d63fd9f6448@topic.nl> <20190507140413.28335-1-mike.looijmans@topic.nl> <20190513203146.GA24085@bogus>
+        Fri, 17 May 2019 09:21:30 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:43528 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728100AbfEQNVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 09:21:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72B8A1715;
+        Fri, 17 May 2019 06:21:29 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ECE1D3F5AF;
+        Fri, 17 May 2019 06:21:27 -0700 (PDT)
+Date:   Fri, 17 May 2019 14:21:25 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Raphael Gault <raphael.gault@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, peterz@infradead.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, acme@kernel.org
+Subject: Re: [PATCH 3/6] arm64: pmu: Add function implementation to update
+ event index in userpage.
+Message-ID: <20190517132124.GB48991@lakrids.cambridge.arm.com>
+References: <20190516132148.10085-1-raphael.gault@arm.com>
+ <20190516132148.10085-4-raphael.gault@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190516132148.10085-4-raphael.gault@arm.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds the devicetree bindings for the Si5341 and Si5340 chips from
-Silicon Labs. These are multiple-input multiple-output clock
-synthesizers.
+On Thu, May 16, 2019 at 02:21:45PM +0100, Raphael Gault wrote:
+> In order to be able to access the counter directly for userspace,
+> we need to provide the index of the counter using the userpage.
+> We thus need to override the event_idx function to retrieve and
+> convert the perf_event index to armv8 hardware index.
 
-Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+It would be worth noting that since the arm_pmu framework can be used
+with other versions of the PMU architecture which could not permit safe
+userspace access, we allow the arch code to opt-in with the
+ARMPMU_EL0_RD_CNTR flag.
 
----
-v3: Remove synthesizers child nodes
-    Fix typo
-v2: Add data sheet reference.
-    Restructured to enable use of "assigned-clock*" properties to set
-    up both outputs and internal synthesizers.
-    Nicer indentation.
-    Updated subject line and body of commit message.
+> Signed-off-by: Raphael Gault <raphael.gault@arm.com>
+> ---
+>  arch/arm64/kernel/perf_event.c |  4 ++++
+>  drivers/perf/arm_pmu.c         | 10 ++++++++++
+>  include/linux/perf/arm_pmu.h   |  2 ++
+>  3 files changed, 16 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
+> index 6164d389eed6..e6316f99f66b 100644
+> --- a/arch/arm64/kernel/perf_event.c
+> +++ b/arch/arm64/kernel/perf_event.c
+> @@ -890,6 +890,8 @@ static int __armv8_pmuv3_map_event(struct perf_event *event,
+>  	if (armv8pmu_event_is_64bit(event))
+>  		event->hw.flags |= ARMPMU_EVT_64BIT;
+>  
+> +	event->hw.flags |= ARMPMU_EL0_RD_CNTR;
+> +
+>  	/* Only expose micro/arch events supported by this PMU */
+>  	if ((hw_event_id > 0) && (hw_event_id < ARMV8_PMUV3_MAX_COMMON_EVENTS)
+>  	    && test_bit(hw_event_id, armpmu->pmceid_bitmap)) {
+> @@ -1188,6 +1190,8 @@ void arch_perf_update_userpage(struct perf_event *event,
+>  	 */
+>  	freq = arch_timer_get_rate();
+>  	userpg->cap_user_time = 1;
+> +	userpg->cap_user_rdpmc =
+> +		!!(event->hw.flags & ARMPMU_EL0_RD_CNTR);
 
- .../bindings/clock/silabs,si5341.txt          | 162 ++++++++++++++++++
- 1 file changed, 162 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/silabs,si5341.txt
+This is under 80 columns when placed on a single line, so it doesn't
+need to be split here.
 
-diff --git a/Documentation/devicetree/bindings/clock/silabs,si5341.txt b/Documentation/devicetree/bindings/clock/silabs,si5341.txt
-new file mode 100644
-index 000000000000..a70c333e4cd4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/silabs,si5341.txt
-@@ -0,0 +1,162 @@
-+Binding for Silicon Labs Si5341 and Si5340 programmable i2c clock generator.
-+
-+Reference
-+[1] Si5341 Data Sheet
-+    https://www.silabs.com/documents/public/data-sheets/Si5341-40-D-DataSheet.pdf
-+[2] Si5341 Reference Manual
-+    https://www.silabs.com/documents/public/reference-manuals/Si5341-40-D-RM.pdf
-+
-+The Si5341 and Si5340 are programmable i2c clock generators with up to 10 output
-+clocks. The chip contains a PLL that sources 5 (or 4) multisynth clocks, which
-+in turn can be directed to any of the 10 (or 4) outputs through a divider.
-+The internal structure of the clock generators can be found in [2].
-+
-+The driver can be used in "as is" mode, reading the current settings from the
-+chip at boot, in case you have a (pre-)programmed device. If the PLL is not
-+configured when the driver probes, it assumes the driver must fully initialize
-+it.
-+
-+The device type, speed grade and revision are determined runtime by probing.
-+
-+The driver currently only supports XTAL input mode, and does not support any
-+fancy input configurations. They can still be programmed into the chip and
-+the driver will leave them "as is".
-+
-+==I2C device node==
-+
-+Required properties:
-+- compatible: shall be one of the following:
-+	"silabs,si5340" - Si5340 A/B/C/D
-+	"silabs,si5341" - Si5341 A/B/C/D
-+- reg: i2c device address, usually 0x74
-+- #clock-cells: from common clock binding; shall be set to 2.
-+	The first value is "0" for outputs, "1" for synthesizers.
-+	The second value is the output or synthesizer index.
-+- clocks: from common clock binding; list of parent clock  handles,
-+	corresponding to inputs. Use a fixed clock for the "xtal" input.
-+	At least one must be present.
-+- clock-names: One of: "xtal", "in0", "in1", "in2"
-+- vdd-supply: Regulator node for VDD
-+
-+Optional properties:
-+- vdda-supply: Regulator node for VDDA
-+- vdds-supply: Regulator node for VDDS
-+- silabs,pll-m-num, silabs,pll-m-den: Numerator and denominator for PLL
-+  feedback divider. Must be such that the PLL output is in the valid range. For
-+  example, to create 14GHz from a 48MHz xtal, use m-num=14000 and m-den=48. Only
-+  the fraction matters, using 3500 and 12 will deliver the exact same result.
-+  If these are not specified, and the PLL is not yet programmed when the driver
-+  probes, the PLL will be set to 14GHz.
-+- silabs,reprogram: When present, the driver will always assume the device must
-+  be initialized, and always performs the soft-reset routine. Since this will
-+  temporarily stop all output clocks, don't do this if the chip is generating
-+  the CPU clock for example.
-+- interrupts: Interrupt for INTRb pin.
-+- #address-cells: shall be set to 1.
-+- #size-cells: shall be set to 0.
-+
-+
-+== Child nodes: Outputs ==
-+
-+The child nodes list the output clocks.
-+
-+Each of the clock outputs can be overwritten individually by using a child node.
-+If a child node for a clock output is not set, the configuration remains
-+unchanged.
-+
-+Required child node properties:
-+- reg: number of clock output.
-+
-+Optional child node properties:
-+- vdd-supply: Regulator node for VDD for this output. The driver selects default
-+	values for common-mode and amplitude based on the voltage.
-+- silabs,format: Output format, one of:
-+	1 = differential (defaults to LVDS levels)
-+	2 = low-power (defaults to HCSL levels)
-+	4 = LVCMOS
-+- silabs,common-mode: Manually override output common mode, see [2] for values
-+- silabs,amplitude: Manually override output amplitude, see [2] for values
-+- silabs,synth-master: boolean. If present, this output is allowed to change the
-+	multisynth frequency dynamically.
-+- silabs,silabs,disable-high: boolean. If set, the clock output is driven HIGH
-+	when disabled, otherwise it's driven LOW.
-+
-+==Example==
-+
-+/* 48MHz reference crystal */
-+ref48: ref48M {
-+	compatible = "fixed-clock";
-+	#clock-cells = <0>;
-+	clock-frequency = <48000000>;
-+};
-+
-+i2c-master-node {
-+	/* Programmable clock (for logic) */
-+	si5341: clock-generator@74 {
-+		reg = <0x74>;
-+		compatible = "silabs,si5341";
-+		#clock-cells = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&ref48>;
-+		clock-names = "xtal";
-+
-+		silabs,pll-m-num = <14000>; /* PLL at 14.0 GHz */
-+		silabs,pll-m-den = <48>;
-+		silabs,reprogram; /* Chips are not programmed, always reset */
-+
-+		out@0 {
-+			reg = <0>;
-+			silabs,format = <1>; /* LVDS 3v3 */
-+			silabs,common-mode = <3>;
-+			silabs,amplitude = <3>;
-+			silabs,synth-master;
-+		};
-+
-+		/*
-+		 * Output 6 configuration:
-+		 *  LVDS 1v8
-+		 */
-+		out@6 {
-+			reg = <6>;
-+			silabs,format = <1>; /* LVDS 1v8 */
-+			silabs,common-mode = <13>;
-+			silabs,amplitude = <3>;
-+		};
-+
-+		/*
-+		 * Output 8 configuration:
-+		 *  HCSL 3v3
-+		 */
-+		out@8 {
-+			reg = <8>;
-+			silabs,format = <2>;
-+			silabs,common-mode = <11>;
-+			silabs,amplitude = <3>;
-+		};
-+	};
-+};
-+
-+some-video-node {
-+	/* Standard clock bindings */
-+	clock-names = "pixel";
-+	clocks = <&si5341 0 7>; /* Output 7 */
-+
-+	/* Set output 7 to use syntesizer 3 as its parent */
-+	assigned-clocks = <&si5341 0 7>, <&si5341 1 3>;
-+	assigned-clock-parents = <&si5341 1 3>;
-+	/* Set output 7 to 148.5 MHz using a synth frequency of 594 MHz */
-+	assigned-clock-rates = <148500000>, <594000000>;
-+};
-+
-+some-audio-node {
-+	clock-names = "i2s-clk";
-+	clocks = <&si5341 0 0>;
-+	/*
-+	 * since output 0 is a synth-master, the synth will be automatically set
-+	 * to an appropriate frequency when the audio driver requests another
-+	 * frequency. We give control over synth 2 to this output here.
-+	 */
-+	assigned-clocks = <&si5341 0 0>;
-+	assigned-clock-parents = <&si5341 1 2>;
-+};
--- 
-2.17.1
+>  
+>  	clocks_calc_mult_shift(&userpg->time_mult, &shift, freq,
+>  			NSEC_PER_SEC, 0);
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index eec75b97e7ea..3f4c2ec7ff89 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -777,6 +777,15 @@ static void cpu_pmu_destroy(struct arm_pmu *cpu_pmu)
+>  					    &cpu_pmu->node);
+>  }
+>  
+> +
+> +static int armpmu_event_idx(struct perf_event *event)
+> +{
+> +	if (!(event->hw.flags & ARMPMU_EL0_RD_CNTR))
+> +		return 0;
+> +
+> +	return event->hw.idx;
 
+I think this needs to remap ARMV8_IDX_CYCLE_COUNTER to 32, to match the
+offset applie to the rest of counter indices.
+
+Otherwise, this looks good to me.
+
+Thanks,
+Mark.
+
+> +}
+> +
+>  static struct arm_pmu *__armpmu_alloc(gfp_t flags)
+>  {
+>  	struct arm_pmu *pmu;
+> @@ -803,6 +812,7 @@ static struct arm_pmu *__armpmu_alloc(gfp_t flags)
+>  		.start		= armpmu_start,
+>  		.stop		= armpmu_stop,
+>  		.read		= armpmu_read,
+> +		.event_idx	= armpmu_event_idx,
+>  		.filter_match	= armpmu_filter_match,
+>  		.attr_groups	= pmu->attr_groups,
+>  		/*
+> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+> index 4641e850b204..3bef390c1069 100644
+> --- a/include/linux/perf/arm_pmu.h
+> +++ b/include/linux/perf/arm_pmu.h
+> @@ -30,6 +30,8 @@
+>   */
+>  /* Event uses a 64bit counter */
+>  #define ARMPMU_EVT_64BIT		1
+> +/* Allow access to hardware counter from userspace */
+> +#define ARMPMU_EL0_RD_CNTR		2
+>  
+>  #define HW_OP_UNSUPPORTED		0xFFFF
+>  #define C(_x)				PERF_COUNT_HW_CACHE_##_x
+> -- 
+> 2.17.1
+> 
