@@ -2,100 +2,92 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AEAC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55EA3C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C3E72087B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A7DC2089E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728466AbfEQKor (ORCPT
+        id S1728536AbfEQKpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 06:44:47 -0400
-Received: from mail-oln040092067065.outbound.protection.outlook.com ([40.92.67.65]:63299
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728390AbfEQKoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 06:44:46 -0400
-Received: from AM5EUR02FT015.eop-EUR02.prod.protection.outlook.com
- (10.152.8.52) by AM5EUR02HT077.eop-EUR02.prod.protection.outlook.com
- (10.152.9.127) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1856.11; Fri, 17 May
- 2019 10:44:44 +0000
-Received: from AM0PR07MB4417.eurprd07.prod.outlook.com (10.152.8.53) by
- AM5EUR02FT015.mail.protection.outlook.com (10.152.8.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16 via Frontend Transport; Fri, 17 May 2019 10:44:44 +0000
-Received: from AM0PR07MB4417.eurprd07.prod.outlook.com
- ([fe80::9046:9a59:4519:d984]) by AM0PR07MB4417.eurprd07.prod.outlook.com
- ([fe80::9046:9a59:4519:d984%3]) with mapi id 15.20.1900.010; Fri, 17 May 2019
- 10:44:44 +0000
-From:   Philippe Mazenauer <philippe.mazenauer@outlook.de>
-CC:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        Philippe Mazenauer <philippe.mazenauer@outlook.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH] lib: Correct comment of prandom_seed
-Thread-Topic: [PATCH] lib: Correct comment of prandom_seed
-Thread-Index: AQHVDJ2JrktfPZmdKU2E7C1BOPHbWQ==
-Date:   Fri, 17 May 2019 10:44:44 +0000
-Message-ID: <AM0PR07MB44176BAB0BA6ACAAA8C6DC88FD0B0@AM0PR07MB4417.eurprd07.prod.outlook.com>
-Accept-Language: de-CH, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR19CA0008.namprd19.prod.outlook.com
- (2603:10b6:300:d4::18) To AM0PR07MB4417.eurprd07.prod.outlook.com
- (2603:10a6:208:b8::26)
-x-incomingtopheadermarker: OriginalChecksum:1526C49DCF19A1AF2281A7A8B1FFF74C1613D059FB95E761CD80E0C5C5FA80FD;UpperCasedChecksum:8FB927AB3F09B3F1D4768817067C5A90509C29872C4E30B87969D7CC7623E61F;SizeAsReceived:7477;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-tmn:  [ZMEojfOnWahuAghcnLd7mLY5syu4NYZc]
-x-microsoft-original-message-id: <20190517104419.26343-1-philippe.mazenauer@outlook.de>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:AM5EUR02HT077;
-x-ms-traffictypediagnostic: AM5EUR02HT077:
-x-microsoft-antispam-message-info: IQDpj6gkCGVqi1Xy+HCS6vd4q6RGROVpHZg44PkcXDTT7ua5pF0Fz7iJtgxEgOSb/J6Kfbqvm0Q8mw705rzAf4dTCI0Ntp8tAhX0w6rtA9G/Z7XzNMnXGsTjdU663sq/X9Z1ySItGD9dyZXnQhVJRAoedM11ToQat4CNDT0Y79vbv3C4ZuPaxp0ECkJ4Gzhh
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 17 May 2019 06:45:19 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38469 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728406AbfEQKpT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 06:45:19 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <sha@pengutronix.de>)
+        id 1hRaMX-0004R0-63; Fri, 17 May 2019 12:45:17 +0200
+Received: from sha by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1hRaMW-0002i5-Oc; Fri, 17 May 2019 12:45:16 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     ecryptfs@vger.kernel.org
+Cc:     Tyler Hicks <tyhicks@canonical.com>, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de, Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH] ecryptfs: use print_hex_dump_bytes for hexdump
+Date:   Fri, 17 May 2019 12:45:15 +0200
+Message-Id: <20190517104515.10371-1-s.hauer@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13ec8b5c-c1da-494e-c165-08d6dab4ac3d
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 10:44:44.1808
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5EUR02HT077
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VmFyaWFibGUgJ2VudHJvcHknIHdhcyB3cm9uZ2x5IGRvY3VtZW50ZWQgYXMgJ3NlZWQnLCBjaGFu
-Z2VkIGNvbW1lbnQgdG8NCnJlZmxlY3QgYWN0dWFsIHZhcmlhYmxlIG5hbWUuDQoNCi4uL2xpYi9y
-YW5kb20zMi5jOjE3OTogd2FybmluZzogRnVuY3Rpb24gcGFyYW1ldGVyIG9yIG1lbWJlciAnZW50
-cm9weScgbm90IGRlc2NyaWJlZCBpbiAncHJhbmRvbV9zZWVkJw0KLi4vbGliL3JhbmRvbTMyLmM6
-MTc5OiB3YXJuaW5nOiBFeGNlc3MgZnVuY3Rpb24gcGFyYW1ldGVyICdzZWVkJyBkZXNjcmlwdGlv
-biBpbiAncHJhbmRvbV9zZWVkJw0KDQpTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBNYXplbmF1ZXIg
-PHBoaWxpcHBlLm1hemVuYXVlckBvdXRsb29rLmRlPg0KLS0tDQogbGliL3JhbmRvbTMyLmMgfCA0
-ICsrLS0NCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0K
-DQpkaWZmIC0tZ2l0IGEvbGliL3JhbmRvbTMyLmMgYi9saWIvcmFuZG9tMzIuYw0KaW5kZXggNGFh
-YTc2NDA0ZDU2Li43NjNiOTIwYTYyMDYgMTAwNjQ0DQotLS0gYS9saWIvcmFuZG9tMzIuYw0KKysr
-IGIvbGliL3JhbmRvbTMyLmMNCkBAIC0xNzEsOSArMTcxLDkgQEAgc3RhdGljIHZvaWQgcHJhbmRv
-bV9zZWVkX2Vhcmx5KHN0cnVjdCBybmRfc3RhdGUgKnN0YXRlLCB1MzIgc2VlZCwNCiANCiAvKioN
-CiAgKglwcmFuZG9tX3NlZWQgLSBhZGQgZW50cm9weSB0byBwc2V1ZG8gcmFuZG9tIG51bWJlciBn
-ZW5lcmF0b3INCi0gKglAc2VlZDogc2VlZCB2YWx1ZQ0KKyAqCUBlbnRyb3B5OiBlbnRyb3B5IHZh
-bHVlDQogICoNCi0gKglBZGQgc29tZSBhZGRpdGlvbmFsIHNlZWRpbmcgdG8gdGhlIHByYW5kb20g
-cG9vbC4NCisgKglBZGQgc29tZSBhZGRpdGlvbmFsIGVudHJvcHkgdG8gdGhlIHByYW5kb20gcG9v
-bC4NCiAgKi8NCiB2b2lkIHByYW5kb21fc2VlZCh1MzIgZW50cm9weSkNCiB7DQotLSANCjIuMTcu
-MQ0KDQo=
+The Kernel has nice hexdump facilities, use them rather a homebrew
+hexdump function.
+
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ fs/ecryptfs/debug.c | 22 +++-------------------
+ 1 file changed, 3 insertions(+), 19 deletions(-)
+
+diff --git a/fs/ecryptfs/debug.c b/fs/ecryptfs/debug.c
+index 3d2bdf546ec6..ee9d8ac4a809 100644
+--- a/fs/ecryptfs/debug.c
++++ b/fs/ecryptfs/debug.c
+@@ -97,25 +97,9 @@ void ecryptfs_dump_auth_tok(struct ecryptfs_auth_tok *auth_tok)
+  */
+ void ecryptfs_dump_hex(char *data, int bytes)
+ {
+-	int i = 0;
+-	int add_newline = 1;
+-
+ 	if (ecryptfs_verbosity < 1)
+ 		return;
+-	if (bytes != 0) {
+-		printk(KERN_DEBUG "0x%.2x.", (unsigned char)data[i]);
+-		i++;
+-	}
+-	while (i < bytes) {
+-		printk("0x%.2x.", (unsigned char)data[i]);
+-		i++;
+-		if (i % 16 == 0) {
+-			printk("\n");
+-			add_newline = 0;
+-		} else
+-			add_newline = 1;
+-	}
+-	if (add_newline)
+-		printk("\n");
+-}
+ 
++	print_hex_dump(KERN_DEBUG, "ecryptfs: ", DUMP_PREFIX_OFFSET, 16, 1,
++		       data, bytes, false);
++}
+-- 
+2.20.1
+
