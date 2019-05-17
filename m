@@ -2,128 +2,122 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F6CDC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 23:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E238AC04E84
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 23:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C65A2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 23:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B599E2166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 23:13:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="Vn3yfw/j"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Amt6e+kH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbfEQXMO (ORCPT
+        id S1728688AbfEQXNp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 19:12:14 -0400
-Received: from onstation.org ([52.200.56.107]:37476 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726757AbfEQXMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 19:12:13 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 3FFDD3E957;
-        Fri, 17 May 2019 23:12:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1558134732;
-        bh=qurT+nMJYRUKyNSe+yc/AIUY3mDFS6CFIis415+foE4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Vn3yfw/jnNsapohuXlzskfz4gwwlrmCgVVz8/V0C5xRjhJeelhjjMS8DOJz6y8PrD
-         vi0aLVvEPz3Z3VRqtNHt4NOdaT+jhb9Pztk4fbqWTEXlFP6I1vJbUEokYc2OcI4sVJ
-         dTotabBBmQRVlsZ/lNKCKXuaEnJKll0PjE8fwsis=
-Date:   Fri, 17 May 2019 19:12:11 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        Dan Murphy <dmurphy@ti.com>, Jonathan Marek <jonathan@marek.ca>
-Subject: Re: [PATCH v6 2/3] dt-bindings: backlight: add lm3630a bindings
-Message-ID: <20190517231211.GA7907@basecamp>
-References: <20190424092505.6578-1-masneyb@onstation.org>
- <20190424092505.6578-3-masneyb@onstation.org>
- <CAL_JsqLdS2SDd-dczZmqDTN3XMY7fwDjdkX5OibXbrksd7qQYA@mail.gmail.com>
+        Fri, 17 May 2019 19:13:45 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:28776 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbfEQXNp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 19:13:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1558134824; x=1589670824;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=QSZH7MhgQ8SSN2c5tgT5vfhoIO9KJ/7q3qvVPDIomGI=;
+  b=Amt6e+kH6pK0zqLLpJ7EFizKb+Zn5fud+cWFcp9tlkRxzvxA3WYpf/XN
+   aBBOrGgeJ3ahwkDIB5F8PEQ5m2mkPEX75tJOoP8ATcYLAlUWWKqjJBheN
+   8SD4enVKsRNJsfuqNweQxxHsdE0prFHNITVkTuwjEZJgpis1/1Pv8qHqx
+   o=;
+X-IronPort-AV: E=Sophos;i="5.60,481,1549929600"; 
+   d="scan'208";a="800301467"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 17 May 2019 23:13:41 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1e-97fdccfd.us-east-1.amazon.com (8.14.7/8.14.7) with ESMTP id x4HNDXfM127436
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Fri, 17 May 2019 23:13:40 GMT
+Received: from EX13D05UWB004.ant.amazon.com (10.43.161.208) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 17 May 2019 23:13:40 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D05UWB004.ant.amazon.com (10.43.161.208) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Fri, 17 May 2019 23:13:39 +0000
+Received: from localhost (10.94.216.44) by mail-relay.amazon.com
+ (10.43.160.118) with Microsoft SMTP Server id 15.0.1367.3 via Frontend
+ Transport; Fri, 17 May 2019 23:13:39 +0000
+From:   Eduardo Valentin <eduval@amazon.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     Eduardo Valentin <eduval@amazon.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/2] hwmon: core: add thermal sensors only if dev->of_node is present
+Date:   Fri, 17 May 2019 16:13:36 -0700
+Message-ID: <20190517231337.27859-2-eduval@amazon.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190517231337.27859-1-eduval@amazon.com>
+References: <20190517231337.27859-1-eduval@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLdS2SDd-dczZmqDTN3XMY7fwDjdkX5OibXbrksd7qQYA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Drivers may register to hwmon and request for also registering
+with the thermal subsystem (HWMON_C_REGISTER_TZ). However,
+some of these driver, e.g. marvell phy, may be probed from
+Device Tree or being dynamically allocated, and in the later
+case, it will not have a dev->of_node entry.
 
-On Fri, May 17, 2019 at 04:11:48PM -0500, Rob Herring wrote:
-> On Wed, Apr 24, 2019 at 4:25 AM Brian Masney <masneyb@onstation.org> wrote:
-> >
-> > Add new backlight bindings for the TI LM3630A dual-string white LED.
-> >
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > ---
-> > Changes since v5:
-> > - Change 'lm3630a_bl@38' in examples to 'led-controller@38'
-> >
-> > Changes since v4:
-> > - Drop $ref from led-sources
-> > - Drop description from reg of i2c address
-> > - Expand description of reg for the control bank
-> > - Drop status from examples
-> >
-> > Changes since v3:
-> > - Add label. I didn't add a description for it since that'll come from
-> >   the common properties once its converted.
-> >
-> > Changes since v2:
-> > - Update description of max-brightness
-> > - Add description for reg
-> > - Correct typo: s/tranisiton/transition
-> > - add reg to control banks
-> > - add additionalProperties
-> >
-> >  .../leds/backlight/lm3630a-backlight.yaml     | 129 ++++++++++++++++++
-> >  1 file changed, 129 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
-> 
-> I'm working on getting the examples to be validated by the schema (in
-> addition to just building with dtc) and there's a couple of errors:
-> 
-> Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
-> '#address-cells', '#size-cells' do not match any of the regexes:
-> '^led@[01]$', 'pinctrl-[0-9]+'
-> Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
-> '#address-cells', '#size-cells' do not match any of the regexes:
-> '^led@[01]$', 'pinctrl-[0-9]+'
-> 
-> You didn't list '#address-cells' and '#size-cells'.
-> 
-> Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
-> led@0: 'ti,linear-mapping-mode' does not match any of the regexes:
-> 'pinctrl-[0-9]+'
-> Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.example.dt.yaml:
-> led@1: 'ti,linear-mapping-mode' does not match any of the regexes:
-> 'pinctrl-[0-9]+'
-> 
-> 'ti,linear-mapping-mode' is not defined in the child nodes.
+Registering with hwmon without the dev->of_node may result in
+different outcomes depending on the device tree, which may
+be a bit misleading. If the device tree blob has no 'thermal-zones'
+node, the *hwmon_device_register*() family functions are going
+to gracefully succeed, because of-thermal,
+*thermal_zone_of_sensor_register() return -ENODEV in this case,
+and the hwmon error path handles this error code as success to
+cover for the case where CONFIG_THERMAL_OF is not set.
+However, if the device tree blob has the 'thermal-zones'
+entry, the *hwmon_device_register*() will always fail on callers
+with no dev->of_node, propagating -EINVAL.
 
-I'm sorry about that. I'll send out a patch this weekend to correct
-this. I have 'make dt_binding_check' in my local build script. Is there
-something else that I should be running as well? Or do you have a
-branch somewhere with your validation work that I can test my changes
-against?
+If dev->of_node is not present, calling of-thermal does not
+make sense. For this reason, this patch checks first if the
+device has a of_node before going over the process of registering
+with the thermal subsystem of-thermal interface. And in this case,
+when a caller of *hwmon_device_register*() with HWMON_C_REGISTER_TZ
+and no dev->of_node will still register with hwmon, but not with
+the thermal subsystem. If all the hwmon part bits are in place,
+the registration will succeed.
 
-Brian
+Cc: Jean Delvare <jdelvare@suse.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-hwmon@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Eduardo Valentin <eduval@amazon.com>
+---
+ drivers/hwmon/hwmon.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/hwmon/hwmon.c b/drivers/hwmon/hwmon.c
+index fcdbac4a56e3..6b3559f58b67 100644
+--- a/drivers/hwmon/hwmon.c
++++ b/drivers/hwmon/hwmon.c
+@@ -619,7 +619,7 @@ __hwmon_device_register(struct device *dev, const char *name, void *drvdata,
+ 	if (err)
+ 		goto free_hwmon;
+ 
+-	if (dev && chip && chip->ops->read &&
++	if (dev && dev->of_node && chip && chip->ops->read &&
+ 	    chip->info[0]->type == hwmon_chip &&
+ 	    (chip->info[0]->config[0] & HWMON_C_REGISTER_TZ)) {
+ 		const struct hwmon_channel_info **info = chip->info;
+-- 
+2.21.0
+
