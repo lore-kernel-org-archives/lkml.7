@@ -2,133 +2,102 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D408BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AC7C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF2120833
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:31:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5900B20833
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:33:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GMduykPv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbfEQGbt (ORCPT
+        id S1727965AbfEQGdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 02:31:49 -0400
-Received: from twhmllg3.macronix.com ([122.147.135.201]:46504 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727218AbfEQGbt (ORCPT
+        Fri, 17 May 2019 02:33:03 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:38578 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727151AbfEQGdD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 02:31:49 -0400
-Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG3.macronix.com with ESMTP id x4H6Vf60076140;
-        Fri, 17 May 2019 14:31:41 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-From:   Mason Yang <masonccyang@mxic.com.tw>
-To:     bbrezillon@kernel.org, marek.vasut@gmail.com,
-        linux-kernel@vger.kernel.org, miquel.raynal@bootlin.com,
-        richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com,
-        linux-mtd@lists.infradead.org, vigneshr@ti.com,
-        frieder.schrempf@kontron.de
-Cc:     juliensu@mxic.com.tw, masonccyang@mxic.com.tw,
-        zhengxunli@mxic.com.tw
-Subject: [PATCH v2] mtd: rawnand: Add Macronix NAND read retry support
-Date:   Fri, 17 May 2019 14:53:21 +0800
-Message-Id: <1558076001-29579-1-git-send-email-masonccyang@mxic.com.tw>
-X-Mailer: git-send-email 1.9.1
-X-MAIL: TWHMLLG3.macronix.com x4H6Vf60076140
+        Fri, 17 May 2019 02:33:03 -0400
+Received: by mail-it1-f195.google.com with SMTP id i63so10247677ita.3;
+        Thu, 16 May 2019 23:33:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=I6XGRwp+Dc9M8zI2ETBG/Sre5AGhZJfAsVgmhaFG05M=;
+        b=GMduykPv6eI8shYSnXZOiT82hZQMC23TnercnCaYA/f8Mfm+fY2UEOlY20UhSLGFn3
+         4PB7S7vV9sazR4mh9AxjRYJhrPJiXD/fKyv39rUDtJkEJ3cUipsI3NF1tWjiRQwjN96o
+         gn24P0bBArld5YXTUtVUzQZ+hnmCjZsB88E+qqWwCvDnTd5aC+TKhJ1/QBSWFmWcDpvt
+         KIF+43H2aIsuENO1xbKQSWcZ11pC7/0sL65wRjiecg1+m6tRucMlYwsmJ58HLimaWB0w
+         9G3MZBa78ay2qOfZTESJQfMPiT0gIa/fLTYi21KzGLn3ACJGppPwKHoI2GXM20fYVu5W
+         Xa8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=I6XGRwp+Dc9M8zI2ETBG/Sre5AGhZJfAsVgmhaFG05M=;
+        b=aIpL0fH3M0oIwDKZpOM7IezXxP1NYrKPj6X6zeVuS/P308tTCJVMu+QNmxL/uVum6/
+         jhs7R6J9eOwkjj/EpF0V+KokdaZgUrMM0/sLGCUeTN2sje44oG+WeNIKQ7qXySObDlre
+         eiZkZKHlZwQxVCZZ69ieu5fcTIydtZkw0FtI6zrY2lpfiGMHSVXNyVVVhpTCS36cp7QL
+         SqpOAF0hAhsNLkNOUKHMmVPW/CtFwdDBd8+0YtNhR35c+th0Wkcr8XjlsMWqvWOv8bwm
+         749mTcUFUwlU5zxotwbCxpyIyEXeM9BybHr30ZGWoNc0r5KhpiQWYiLNxB4y4YSnXB56
+         ZUdw==
+X-Gm-Message-State: APjAAAU9ZGlhlpeYfsrIc9bes9qoN37v9KO23kO1RlREW11S6e5phFn/
+        Yjs9K10WEex7nQq6BjiSsW4ZCFPfejcjLQ==
+X-Google-Smtp-Source: APXvYqw36mwoMV9a8ZQuF6j0qIMSNIEBAWSKLaKLUV//4LwuGtwYCXpNgZznA4fdEdE4lnH0ujsoPQ==
+X-Received: by 2002:a02:c99a:: with SMTP id b26mr36647022jap.32.1558074782227;
+        Thu, 16 May 2019 23:33:02 -0700 (PDT)
+Received: from asus (c-73-243-191-173.hsd1.co.comcast.net. [73.243.191.173])
+        by smtp.gmail.com with ESMTPSA id l25sm2609438ioj.8.2019.05.16.23.33.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 16 May 2019 23:33:01 -0700 (PDT)
+Date:   Fri, 17 May 2019 00:33:00 -0600
+From:   Kelsey Skunberg <skunberg.kelsey@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.9 00/51] 4.9.177-stable review
+Message-ID: <20190517063259.GA2378@asus>
+References: <20190515090616.669619870@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190515090616.669619870@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Macronix NAND read retry.
+On Wed, May 15, 2019 at 12:55:35PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.177 release.
+> There are 51 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Fri 17 May 2019 09:04:42 AM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.177-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Macronix NANDs support specific read operation for data recovery,
-which can be enabled/disabled with a SET/GET_FEATURE.
-Driver checks byte 167 of Vendor Blocks in ONFI parameter page table
-to see if this high-reliability function is supported.
+Compiled and booted with no dmesg regressions on my system.
 
-Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
----
- drivers/mtd/nand/raw/nand_macronix.c | 57 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
-
-diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
-index e287e71..1a4dc92 100644
---- a/drivers/mtd/nand/raw/nand_macronix.c
-+++ b/drivers/mtd/nand/raw/nand_macronix.c
-@@ -17,6 +17,62 @@
- 
- #include "internals.h"
- 
-+#define MACRONIX_READ_RETRY_BIT BIT(0)
-+#define MACRONIX_READ_RETRY_MODE 6
-+
-+struct nand_onfi_vendor_macronix {
-+	u8 reserved[1];
-+	u8 reliability_func;
-+} __packed;
-+
-+/*
-+ * Macronix NANDs support using SET/GET_FEATURES to enter/exit read retry mode
-+ */
-+static int macronix_nand_setup_read_retry(struct nand_chip *chip, int mode)
-+{
-+	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
-+	int ret, feature_addr = ONFI_FEATURE_ADDR_READ_RETRY;
-+
-+	if (chip->parameters.supports_set_get_features &&
-+	    test_bit(feature_addr, chip->parameters.set_feature_list) &&
-+	    test_bit(feature_addr, chip->parameters.get_feature_list)) {
-+		feature[0] = mode;
-+		ret =  nand_set_features(chip, feature_addr, feature);
-+		if (ret)
-+			pr_err("Failed to set read retry moded:%d\n", mode);
-+
-+		ret =  nand_get_features(chip, feature_addr, feature);
-+		if (ret || feature[0] != mode)
-+			pr_err("Failed to verify read retry moded:%d(%d)\n",
-+			       mode, feature[0]);
-+	}
-+
-+	return ret;
-+}
-+
-+static void macronix_nand_onfi_init(struct nand_chip *chip)
-+{
-+	struct nand_parameters *p = &chip->parameters;
-+	struct nand_onfi_vendor_macronix *mxic;
-+
-+	if (!p->onfi)
-+		return;
-+
-+	mxic = (struct nand_onfi_vendor_macronix *)p->onfi->vendor;
-+	if ((mxic->reliability_func & MACRONIX_READ_RETRY_BIT) == 0)
-+		return;
-+
-+	chip->read_retries = MACRONIX_READ_RETRY_MODE;
-+	chip->setup_read_retry = macronix_nand_setup_read_retry;
-+
-+	if (p->supports_set_get_features) {
-+		bitmap_set(p->set_feature_list,
-+			   ONFI_FEATURE_ADDR_READ_RETRY, 1);
-+		bitmap_set(p->get_feature_list,
-+			   ONFI_FEATURE_ADDR_READ_RETRY, 1);
-+	}
-+}
-+
- /*
-  * Macronix AC series does not support using SET/GET_FEATURES to change
-  * the timings unlike what is declared in the parameter page. Unflag
-@@ -65,6 +121,7 @@ static int macronix_nand_init(struct nand_chip *chip)
- 		chip->options |= NAND_BBM_FIRSTPAGE | NAND_BBM_SECONDPAGE;
- 
- 	macronix_nand_fix_broken_get_timings(chip);
-+	macronix_nand_onfi_init(chip);
- 
- 	return 0;
- }
--- 
-1.9.1
+Cheers,
+Kelsey
 
