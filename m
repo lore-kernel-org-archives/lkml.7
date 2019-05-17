@@ -2,109 +2,85 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C5DC04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EB0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9897A2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:25:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="h+8kfPwU"
+	by mail.kernel.org (Postfix) with ESMTP id D8FA220848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:26:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbfEQRZD (ORCPT
+        id S1727843AbfEQR0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 13:25:03 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39330 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbfEQRZD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 13:25:03 -0400
-Received: by mail-ed1-f68.google.com with SMTP id e24so11615326edq.6
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 10:25:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KwxwPmgRkigdfsb2Wkb3RXFjzIqZbXV/qcyPm1HcIzw=;
-        b=h+8kfPwUUJsUPbqk+gDlpRaeblBYE2fVW4Jl93m9L3oQKmknNCCYpao0UAd7gBMUks
-         hPvzLnV7CdDh1/rNOvJ7v46flOg1P7P7cz6XzbCBCYHErwbjvAFHO8kAhowextIXP4K4
-         wzyiG8+QdxKuZNzJAzTPlvWNsDUXruxytbe9VLr0sdzVqplAx0E4U5nvXrgAe4wbMxl6
-         QCdQFy8r/2NXOgZ7Bbo8ZNYPwRVsY0c/6q0Ka037S0t7VHH6Oc7AMl/o6AVCy4Fohq/H
-         1yjg5kwJzWMAQJFZgNugwf1zgUhfH+A3fbYIKv1b5n1rqomPr0aaze9q+ODnrQSUr8zZ
-         LBbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KwxwPmgRkigdfsb2Wkb3RXFjzIqZbXV/qcyPm1HcIzw=;
-        b=NFnlPsJWusUDWfbOeajAbL/ulZCXqMIqDlviadJzhtbXvvQktPBMp0qC3XRtd/fQ+3
-         LtZ3Uluan+Jgoik1uIA078OH685yuFg7PXGN61pvlzibG5UJ+thXb273657SB6w6M9up
-         nwY+Wr389jcdnAgmiFhnU+guXv9q5o/ho+HLI6fuYEfHXJV4kSsS3W5rDKk/GNcBKKjx
-         QEc3MxiWRzJmrSt2os//g8SYgJvXgz3ohxPg5NLa0YQmc6AkiOJqAuCncji0F+FPtdc7
-         iUVJVZkH5ZS5vpabqgDBMtHPEOeKZgh8436GglCLKPcgUieqzv7G5CH9tX/MUo93io5i
-         A0CA==
-X-Gm-Message-State: APjAAAULWaJ0RFv1c81zP2tjwzxo22ikXWK2t7OmPRB+ixcesRQfsufg
-        j/Ifdi7BisGJ0jPVK2Ro6SHZFraKb1pDL2u/+EfUqQ==
-X-Google-Smtp-Source: APXvYqwuyoSofrRAesux3TtniZbFtgeLGQpt/aaMsVyOQkqGRmuP2nmCLcnqBJYgiPbnM95G5HbA4GXqURtKw0f2SUc=
-X-Received: by 2002:a50:ec87:: with SMTP id e7mr58594743edr.126.1558113901537;
- Fri, 17 May 2019 10:25:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <CA+CK2bBeOJPnnyWBgj0CJ7E1z9GVWVg_EJAmDs07BSJDp3PYfQ@mail.gmail.com>
- <20190517143816.GO6836@dhcp22.suse.cz> <CA+CK2bA+2+HaV4GWNUNP04fjjTPKbEGQHSPrSrmY7HLD57au1Q@mail.gmail.com>
-In-Reply-To: <CA+CK2bA+2+HaV4GWNUNP04fjjTPKbEGQHSPrSrmY7HLD57au1Q@mail.gmail.com>
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-Date:   Fri, 17 May 2019 13:24:50 -0400
-Message-ID: <CA+CK2bDq+2qu28afO__4kzO4=cnLH1P4DcHjc62rt0UtYwLm0A@mail.gmail.com>
-Subject: Re: NULL pointer dereference during memory hotremove
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     "Verma, Vishal L" <vishal.l.verma@intel.com>,
+        Fri, 17 May 2019 13:26:50 -0400
+Received: from mga06.intel.com ([134.134.136.31]:33548 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725932AbfEQR0u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 13:26:50 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 10:26:49 -0700
+X-ExtLoop1: 1
+Received: from agluck-desk.sc.intel.com (HELO agluck-desk) ([10.3.52.160])
+  by orsmga003.jf.intel.com with ESMTP; 17 May 2019 10:26:49 -0700
+Date:   Fri, 17 May 2019 10:26:49 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        "tiwai@suse.de" <tiwai@suse.de>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "david@redhat.com" <david@redhat.com>, "bp@suse.de" <bp@suse.de>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "jglisse@redhat.com" <jglisse@redhat.com>,
-        "zwisler@kernel.org" <zwisler@kernel.org>,
-        "Jiang, Dave" <dave.jiang@intel.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        "Wu, Fengguang" <fengguang.wu@intel.com>,
-        "baiyaowei@cmss.chinamobile.com" <baiyaowei@cmss.chinamobile.com>
-Content-Type: text/plain; charset="UTF-8"
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Message-ID: <20190517172648.GA18164@agluck-desk>
+References: <SN6PR12MB26397B30A120E3426184727FF80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516165648.GB21857@zn.tnic>
+ <SN6PR12MB26392B440ED735C26AA2C678F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516172117.GC21857@zn.tnic>
+ <SN6PR12MB26394CD4E1BAC068B0B1AEF6F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516203456.GD21857@zn.tnic>
+ <20190516205943.GA3299@agluck-desk>
+ <20190517101006.GA32065@zn.tnic>
+ <SN6PR12MB26391A0C3979030082EE38F8F80B0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190517163729.GE13482@zn.tnic>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190517163729.GE13482@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 1:22 PM Pavel Tatashin
-<pasha.tatashin@soleen.com> wrote:
->
-> On Fri, May 17, 2019 at 10:38 AM Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> > On Fri 17-05-19 10:20:38, Pavel Tatashin wrote:
-> > > This panic is unrelated to circular lock issue that I reported in a
-> > > separate thread, that also happens during memory hotremove.
-> > >
-> > > xakep ~/x/linux$ git describe
-> > > v5.1-12317-ga6a4b66bd8f4
-> >
-> > Does this happen on 5.0 as well?
->
-> Yes, just reproduced it on 5.0 as well. Unfortunately, I do not have a
-> script, and have to do it manually, also it does not happen every
-> time, it happened on 3rd time for me.
+On Fri, May 17, 2019 at 06:37:29PM +0200, Borislav Petkov wrote:
+> Now, the
+> 
+> 	wrmsrl(msr_ops.ctl(i), -1)
+> 	rdmsrl(msr_ops.ctl(i), val);
+> 
+> method of throwing all 1s to see what sticks is what Intel wants, as
+> Tony said. Is that going to be a problem on AMD?
 
-Actually, sorry, I have not tested 5.0, I compiled 5.0, but my script
-still tested v5.1-12317-ga6a4b66bd8f4 build. I will report later if I
-am able to reproduce it on 5.0.
+It is what we want in general ...  but there is this:
 
-Pasha
+        if (c->x86_vendor == X86_VENDOR_INTEL) {
+                /*
+                 * SDM documents that on family 6 bank 0 should not be written
+                 * because it aliases to another special BIOS controlled
+                 * register.
+                 * But it's not aliased anymore on model 0x1a+
+                 * Don't ignore bank 0 completely because there could be a
+                 * valid event later, merely don't write CTL0.
+                 */
+
+                if (c->x86 == 6 && c->x86_model < 0x1A && cfg->banks > 0)
+                        mce_banks[0].init = 0;
+
+Which is a quirk for some models where we don't want to do
+the "write all 1s and see what sticks"
+
+-Tony
