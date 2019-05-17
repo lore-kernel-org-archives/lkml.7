@@ -2,136 +2,168 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79885C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32545C04E84
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5658520656
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0692020815
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:42:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="ZeBCvFex"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbfEQLmH (ORCPT
+        id S1728771AbfEQLm3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 07:42:07 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52046 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727727AbfEQLmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 07:42:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A5610AECD;
-        Fri, 17 May 2019 11:42:05 +0000 (UTC)
-From:   Jiri Slaby <jslaby@suse.cz>
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        cgroups@vger.kernel.org,
-        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
-Subject: [PATCH v2] memcg: make it work on sparse non-0-node systems
-Date:   Fri, 17 May 2019 13:42:04 +0200
-Message-Id: <20190517114204.6330-1-jslaby@suse.cz>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190517080044.tnwhbeyxcccsymgf@esperanza>
-References: <20190517080044.tnwhbeyxcccsymgf@esperanza>
+        Fri, 17 May 2019 07:42:29 -0400
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:54098 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727727AbfEQLm2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 07:42:28 -0400
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 191932E14DD;
+        Fri, 17 May 2019 14:42:25 +0300 (MSK)
+Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
+        by mxbackcorp2j.mail.yandex.net (nwsmtp/Yandex) with ESMTP id lBau1MQ6yC-gO0uNjAp;
+        Fri, 17 May 2019 14:42:25 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1558093345; bh=DuAu62W6AZc9BLNWjfPvq/8pURNd6AGdCvHd+9yn0vQ=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=ZeBCvFexSzy4eK7HnXw2m4E5GbH4MqlmnqC7eg/bDjugORxk6Zg2cuAreDZwKKW84
+         IglY+I/SVtpVb4zGjn7fFOaVikA0ixgEa/Wpe87mU8GxVjh0oByXvhV2GNYkoND1GK
+         U5BObTMXhRqdbNw1ddlNlHde7uX4NKFs+sTewuzc=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:4cb8:ba55:7b16:beea])
+        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id rncTEwRDdX-gOdCPYWB;
+        Fri, 17 May 2019 14:42:24 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH RFC] proc/meminfo: add KernelMisc counter
+To:     Roman Gushchin <guro@fb.com>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <155792098821.1536.17069603544573830315.stgit@buzz>
+ <20190516175912.GA32262@tower.DHCP.thefacebook.com>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <6bb58fe4-d860-555e-3fb9-17b4ab552da6@yandex-team.ru>
+Date:   Fri, 17 May 2019 14:42:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190516175912.GA32262@tower.DHCP.thefacebook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have a single node system with node 0 disabled:
-  Scanning NUMA topology in Northbridge 24
-  Number of physical nodes 2
-  Skipping disabled node 0
-  Node 1 MemBase 0000000000000000 Limit 00000000fbff0000
-  NODE_DATA(1) allocated [mem 0xfbfda000-0xfbfeffff]
+On 16.05.2019 20:59, Roman Gushchin wrote:
+> On Wed, May 15, 2019 at 02:49:48PM +0300, Konstantin Khlebnikov wrote:
+>> Some kernel memory allocations are not accounted anywhere.
+>> This adds easy-read counter for them by subtracting all tracked kinds.
+>>
+>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> 
+> We have something similar in userspace, and it was very useful several times.
+> In our case, it was mostly vmallocs and percpu stuff (which are now shown
+> in meminfo), but for sure there are other memory users who are not.
+> 
+> I don't particularly like the proposed name, but have no better ideas.
+> It's really a gray area, everything we know, it's that the memory is occupied
+> by something.
+> 
 
-This causes crashes in memcg when system boots:
-  BUG: unable to handle kernel NULL pointer dereference at 0000000000000008
-  #PF error: [normal kernel read fault]
-...
-  RIP: 0010:list_lru_add+0x94/0x170
-...
-  Call Trace:
-   d_lru_add+0x44/0x50
-   dput.part.34+0xfc/0x110
-   __fput+0x108/0x230
-   task_work_run+0x9f/0xc0
-   exit_to_usermode_loop+0xf5/0x100
+Probably it's better to add overall 'MemKernel'.
+Detailed analysis anyway requires special tools.
 
-It is reproducible as far as 4.12. I did not try older kernels. You have
-to have a new enough systemd, e.g. 241 (the reason is unknown -- was not
-investigated). Cannot be reproduced with systemd 234.
+>> ---
+>>   Documentation/filesystems/proc.txt |    2 ++
+>>   fs/proc/meminfo.c                  |   41 +++++++++++++++++++++++++-----------
+>>   2 files changed, 30 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
+>> index 66cad5c86171..f11ce167124c 100644
+>> --- a/Documentation/filesystems/proc.txt
+>> +++ b/Documentation/filesystems/proc.txt
+>> @@ -891,6 +891,7 @@ VmallocTotal:   112216 kB
+>>   VmallocUsed:       428 kB
+>>   VmallocChunk:   111088 kB
+>>   Percpu:          62080 kB
+>> +KernelMisc:     212856 kB
+>>   HardwareCorrupted:   0 kB
+>>   AnonHugePages:   49152 kB
+>>   ShmemHugePages:      0 kB
+>> @@ -988,6 +989,7 @@ VmallocTotal: total size of vmalloc memory area
+>>   VmallocChunk: largest contiguous block of vmalloc area which is free
+>>         Percpu: Memory allocated to the percpu allocator used to back percpu
+>>                 allocations. This stat excludes the cost of metadata.
+>> +  KernelMisc: All other kinds of kernel memory allocaitons
+>                                                         ^^^
+> 						       typo
+>>   
+>>   ..............................................................................
+>>   
+>> diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
+>> index 568d90e17c17..7bc14716fc5d 100644
+>> --- a/fs/proc/meminfo.c
+>> +++ b/fs/proc/meminfo.c
+>> @@ -38,15 +38,21 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
+>>   	long cached;
+>>   	long available;
+>>   	unsigned long pages[NR_LRU_LISTS];
+>> -	unsigned long sreclaimable, sunreclaim;
+>> +	unsigned long sreclaimable, sunreclaim, misc_reclaimable;
+>> +	unsigned long kernel_stack_kb, page_tables, percpu_pages;
+>> +	unsigned long anon_pages, file_pages, swap_cached;
+>> +	long kernel_misc;
+>>   	int lru;
+>>   
+>>   	si_meminfo(&i);
+>>   	si_swapinfo(&i);
+>>   	committed = percpu_counter_read_positive(&vm_committed_as);
+>>   
+>> -	cached = global_node_page_state(NR_FILE_PAGES) -
+>> -			total_swapcache_pages() - i.bufferram;
+>> +	anon_pages = global_node_page_state(NR_ANON_MAPPED);
+>> +	file_pages = global_node_page_state(NR_FILE_PAGES);
+>> +	swap_cached = total_swapcache_pages();
+>> +
+>> +	cached = file_pages - swap_cached - i.bufferram;
+>>   	if (cached < 0)
+>>   		cached = 0;
+>>   
+>> @@ -56,13 +62,25 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
+>>   	available = si_mem_available();
+>>   	sreclaimable = global_node_page_state(NR_SLAB_RECLAIMABLE);
+>>   	sunreclaim = global_node_page_state(NR_SLAB_UNRECLAIMABLE);
+>> +	misc_reclaimable = global_node_page_state(NR_KERNEL_MISC_RECLAIMABLE);
+>> +	kernel_stack_kb = global_zone_page_state(NR_KERNEL_STACK_KB);
+>> +	page_tables = global_zone_page_state(NR_PAGETABLE);
+>> +	percpu_pages = pcpu_nr_pages();
+>> +
+>> +	/* all other kinds of kernel memory allocations */
+>> +	kernel_misc = i.totalram - i.freeram - anon_pages - file_pages
+>> +		      - sreclaimable - sunreclaim - misc_reclaimable
+>> +		      - (kernel_stack_kb >> (PAGE_SHIFT - 10))
+>> +		      - page_tables - percpu_pages;
+>> +	if (kernel_misc < 0)
+>> +		kernel_misc = 0;
+> 
+> Hm, why? Is there any realistic scenario (not caused by the kernel doing
+> the memory accounting wrong) when it's negative?
+> 
+> Maybe it's better to show it as it is, if it's negative? Because
+> it might be a good indication that something's wrong with some of
+> the counters.
 
-The system crashes because the size of lru array is never updated in
-memcg_update_all_list_lrus and the reads are past the zero-sized array,
-causing dereferences of random memory.
+Such kind of sanitisation is a common practice for racy counters.
+See 'cached' above.
 
-The root cause are list_lru_memcg_aware checks in the list_lru code.
-The test in list_lru_memcg_aware is broken: it assumes node 0 is always
-present, but it is not true on some systems as can be seen above.
-
-So fix this by avoiding checks on node 0. Remember the memcg-awareness
-by a bool flag in struct list_lru.
-
-[v2] use the idea proposed by Vladimir -- the bool flag.
-
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Suggested-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: <cgroups@vger.kernel.org>
-Cc: <linux-mm@kvack.org>
-Cc: Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
----
- include/linux/list_lru.h | 1 +
- mm/list_lru.c            | 8 +++-----
- 2 files changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/list_lru.h b/include/linux/list_lru.h
-index aa5efd9351eb..d5ceb2839a2d 100644
---- a/include/linux/list_lru.h
-+++ b/include/linux/list_lru.h
-@@ -54,6 +54,7 @@ struct list_lru {
- #ifdef CONFIG_MEMCG_KMEM
- 	struct list_head	list;
- 	int			shrinker_id;
-+	bool			memcg_aware;
- #endif
- };
- 
-diff --git a/mm/list_lru.c b/mm/list_lru.c
-index 0730bf8ff39f..d3b538146efd 100644
---- a/mm/list_lru.c
-+++ b/mm/list_lru.c
-@@ -37,11 +37,7 @@ static int lru_shrinker_id(struct list_lru *lru)
- 
- static inline bool list_lru_memcg_aware(struct list_lru *lru)
- {
--	/*
--	 * This needs node 0 to be always present, even
--	 * in the systems supporting sparse numa ids.
--	 */
--	return !!lru->node[0].memcg_lrus;
-+	return lru->memcg_aware;
- }
- 
- static inline struct list_lru_one *
-@@ -451,6 +447,8 @@ static int memcg_init_list_lru(struct list_lru *lru, bool memcg_aware)
- {
- 	int i;
- 
-+	lru->memcg_aware = memcg_aware;
-+
- 	if (!memcg_aware)
- 		return 0;
- 
--- 
-2.21.0
-
+> 
+> Thanks!
+> 
