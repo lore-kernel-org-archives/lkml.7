@@ -2,160 +2,130 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6A5C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E33C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC2422087B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F702087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:08:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WNS7fP35"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYUgiQf/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729660AbfEQWHW (ORCPT
+        id S1728806AbfEQWIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 18:07:22 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39611 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726726AbfEQWHW (ORCPT
+        Fri, 17 May 2019 18:08:35 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:44363 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726726AbfEQWIf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 18:07:22 -0400
-Received: by mail-lf1-f68.google.com with SMTP id f1so6358947lfl.6;
-        Fri, 17 May 2019 15:07:20 -0700 (PDT)
+        Fri, 17 May 2019 18:08:35 -0400
+Received: by mail-yw1-f67.google.com with SMTP id e74so3308370ywe.11;
+        Fri, 17 May 2019 15:08:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qAXH8WLS9eXwvjAs7s6ui70yKrWvzvE/cb5xKE1rQoI=;
-        b=WNS7fP35GhJTFDGBVMSs4oo1H9Pfn7Mve3BPbKjxUaJb7enATqoCvxjRpTGSOuTo7U
-         uNHqM9xBRK98LyG5xlf+FW0jo40o8eQPSaBltiK6Z5rs88juL2FxGAsazCACrgQ1Mfem
-         GsEawCOR5RAGRQt9uWnU7homqGIF39miGlupeEmrUOrLhIALyIljfs6j51aWZyipQkl3
-         asMu4S+Ah6k3H8BDmbxybr6Ndaxbzy/c2DPkstE6F1n5m36myVJTqh7Oh4CTL8Y88Zwp
-         7B8VhFDVQzHMAu9CxiG97mvQxp1Z7FrcQzOFJbhxxkyRYpvdbCnNEMfgdvA52wvDpHxC
-         QLwA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=jft35/5eu7LfpLWAoZ01uRn8po613JLoj7AyHoG1GXA=;
+        b=NYUgiQf/XO3wfHvPfBK9JqBrKKj3Wmowkwt6/vjOgQkCDK/v6jvW0oo1OZnPmZfOd6
+         gXIM2YU1dxM65gHmFxomQBCOUKQV3zVEh6vSfVBe+5Nw1XhNUuyzAv724hOrXXhgW8Cn
+         VQkWNIdZVzet1VOC/zC6hyJHTH5bUEGREk5GN72T5tLuAz7M2PAc55Z2kxM6tQ5SMraJ
+         VZtkn8qK6YLUjTu/4tr0kcNDMPH4zIjSprh5Iy1oYW+ZozjdEZzHGQPDCltQ3I55Bt0/
+         elMkVF9psPDUj7MHeBzCfsRcjwvVTi/HiUpy5OLdflq0g+ead+zvm2UIv6NzBHoYmvym
+         E5XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qAXH8WLS9eXwvjAs7s6ui70yKrWvzvE/cb5xKE1rQoI=;
-        b=GTMT/3SLiF7B2J5NDdVkxtRm0zE1kHiahw3vdxBHd4FYsBncxX61xUlIoDPNgcAiTG
-         AgR2t7lZgZsKlGzpYf31M7jWSJmxZBs60IA3Jd6tZqnu72gh1tFAwopxaKmyGGOJcqFU
-         8Dn9nYUM0lT18wQ6mxvxrZobl6/Igg22SOj12fhM4/94AO5qc4we8Tm75+7j265tOo57
-         qgzJxkEDueFLit06Nnjr6XF3OblOlFSCgjZcBFiyINiJj0NWR+7zNh7oa/gKvggfTEoA
-         fYIBEthxn8iHlTUhR2KUcZZMttoLLS+FWrdw1Hh8wf3QPgmwToVNtDhAeK970vw2hK4R
-         /Lmw==
-X-Gm-Message-State: APjAAAWY24oNFtf7MG0Biehyb68KMG5+C9BL8KWF+OlN+HZjULaw/ote
-        1K+aFMH71fBDxjSZLPRfDgI=
-X-Google-Smtp-Source: APXvYqySY595Yxo7NLXzL/BYKTDRIBHssUSW9UsPtOWDnI5m3Nwzfz7CI1SyZOzksQd8ikZjYFnEyQ==
-X-Received: by 2002:ac2:424b:: with SMTP id m11mr14782165lfl.71.1558130840192;
-        Fri, 17 May 2019 15:07:20 -0700 (PDT)
-Received: from z50.localnet (78-10-164-223.static.ip.netia.com.pl. [78.10.164.223])
-        by smtp.gmail.com with ESMTPSA id i7sm1927756lfi.49.2019.05.17.15.07.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 15:07:19 -0700 (PDT)
-From:   Janusz Krzysztofik <jmkrzyszt@gmail.com>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 1/3] media: v4l2-subdev: Verify arguments in v4l2_subdev_call()
-Date:   Sat, 18 May 2019 00:07:17 +0200
-Message-ID: <1625662.l8oChD4zDb@z50>
-In-Reply-To: <20190517155839.khjyor4cy6vg5vwf@paasikivi.fi.intel.com>
-References: <20190514224823.11564-1-jmkrzyszt@gmail.com> <1943741.XiKEDqKQ7m@z50> <20190517155839.khjyor4cy6vg5vwf@paasikivi.fi.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jft35/5eu7LfpLWAoZ01uRn8po613JLoj7AyHoG1GXA=;
+        b=HJG6RYc+r+RNFn+I7tG9g6zkSw2rH97d0ZQVNv69347sZnDdq/wLtiiOg34eDtPE4L
+         Iu7pII45kz3vUZ9YGeICGU7w9I1L+JPdfOOqMxXPZwhvzdjxC1es6wFKgdbOyIQxQBI1
+         KWP1kJpBeK50XBC6XemOtChkPufKVMqyBCfU5D2Fkue/h+Jl74lRdEs+AbO1iLLNrm/k
+         hEk99Xs/WIWMa54zLkQn97gC5NBBhveP+yNDVUPkIhyYdCnnY8YzItrB7B/PhxRlMwgW
+         01ubhrExSQC35D0MYzwBdxfOy5K/7U9zllooLFylTi1/jTze5ytYdHo5oeKeVcJyrQ91
+         cEqQ==
+X-Gm-Message-State: APjAAAUKFASb3mV1kbz5CRF0a277Xhm0rmFazvEbMszG4CbdwkIOtY/T
+        NxoWOBFTwrbv8LVKUA49seFTaGN2M6d/SMi+W90=
+X-Google-Smtp-Source: APXvYqxcSNmzU/oyHvSUYVr+deObwpxqKqFM5P2fsb0esZnQS0M5F0CXJpjeTYUlAVM4uj0CwId57+uwvLalM45wrhw=
+X-Received: by 2002:a81:9a4b:: with SMTP id r72mr5190935ywg.422.1558130914303;
+ Fri, 17 May 2019 15:08:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190517184659.18828-1-peron.clem@gmail.com> <20190517184659.18828-2-peron.clem@gmail.com>
+ <CAL_JsqKPazGn+g1zS4NMwvQZ_6GcAm0tgcOTqyQA0dz0+2dp3g@mail.gmail.com>
+In-Reply-To: <CAL_JsqKPazGn+g1zS4NMwvQZ_6GcAm0tgcOTqyQA0dz0+2dp3g@mail.gmail.com>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Sat, 18 May 2019 00:08:22 +0200
+Message-ID: <CAJiuCcdMxXAXYk=QpRwsvBUW0tvBVMqXvgx0Y7fAKP=ouyBnKQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/6] drm: panfrost: add optional bus_clock
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Steven Price <steven.price@arm.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, May 17, 2019 5:58:40 PM CEST Sakari Ailus wrote:
-> Hi Janusz,
-> 
-> On Wed, May 15, 2019 at 10:56:36PM +0200, Janusz Krzysztofik wrote:
-> > Hi Sakari,
-> > 
-> > On Wednesday, May 15, 2019 9:16:02 AM CEST Sakari Ailus wrote:
-> > > Hi Janusz,
-> > > 
-> > > On Wed, May 15, 2019 at 12:48:21AM +0200, Janusz Krzysztofik wrote:
-> > > > -static int check_crop(struct v4l2_subdev *sd, struct v4l2_subdev_crop 
-> > *crop)
-> > > > +static inline int check_pad(struct v4l2_subdev *sd, __u32 pad)
-> > > >  {
-> > > > -	if (crop->which != V4L2_SUBDEV_FORMAT_TRY &&
-> > > > -	    crop->which != V4L2_SUBDEV_FORMAT_ACTIVE)
-> > > > +#if defined(CONFIG_MEDIA_CONTROLLER)
-> > > > +	if (sd->entity.num_pads && pad >= sd->entity.num_pads)
-> > > 
-> > > One more comment.
-> > > 
-> > > The num_pads doesn't really tell whether a given op is valid for a 
-device.
-> > > Well, in this case it would have to be a bug in the driver, but those do
-> > > happen. How about checking for sd->entity.graph_obj.mdev instead? It's
-> > > non-NULL if the entity is registered with a media device, i.e. when 
-these
-> > > callback functions are supposed to be called.
-> > 
-> > Before I do that, let me undestand your point better.
-> > 
-> > My intentions were:
-> > 1) to provide a check for validity of a pad ID passed to an operation, not 
-ann 
-> > eligibility of a driver to support the operation,
-> > 2) to not break drivers which don't set pad_num, especially when building 
-them 
-> > with CONFIG_MEDIA_CONTROLLER turned on for whatever reason.
-> 
-> Indeed.
-> 
-> But these checks still allow calling the pad operations on sub-devices that
-> have no pads. That should not be allowed. Pads are a Media controller
-> concept, they do not exist outside it; therefore checking for pads only if
-> the subdev is a part of the media device would be entirely correct.
+Hi Rob,
 
-OK, now I see your point.  You don't want the check to succeed if a media 
-entity has num_pads == 0.
+On Fri, 17 May 2019 at 22:07, Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Fri, May 17, 2019 at 1:47 PM Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail=
+.com> wrote:
+> >
+> > Allwinner H6 has an ARM Mali-T720 MP2 which required a bus_clock.
+> >
+> > Add an optional bus_clock at the init of the panfrost driver.
+> >
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  drivers/gpu/drm/panfrost/panfrost_device.c | 25 +++++++++++++++++++++-
+> >  drivers/gpu/drm/panfrost/panfrost_device.h |  1 +
+> >  2 files changed, 25 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/d=
+rm/panfrost/panfrost_device.c
+> > index 3b2bced1b015..8da6e612d384 100644
+> > --- a/drivers/gpu/drm/panfrost/panfrost_device.c
+> > +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+> > @@ -44,7 +44,8 @@ static int panfrost_clk_init(struct panfrost_device *=
+pfdev)
+> >
+> >         pfdev->clock =3D devm_clk_get(pfdev->dev, NULL);
+> >         if (IS_ERR(pfdev->clock)) {
+> > -               dev_err(pfdev->dev, "get clock failed %ld\n", PTR_ERR(p=
+fdev->clock));
+> > +               dev_err(pfdev->dev, "get clock failed %ld\n",
+> > +                       PTR_ERR(pfdev->clock));
+>
+> Please drop this whitespace change.
 
-> It should probably accompany a check that requires the pad number is zero
-> if the subdev doesn't have a graph object, even if the pad field isn't
-> supposedly used for any purpose. Would that address your concern?
-
-Yes, that's acceptable.  Let's require subdevice drivers to register as media 
-entities if they want to use pads > 0.
-
-I'll update the patches and submit as v7 soon.
+Sorry, I thought it was only a mistake here, I will drop it.
+Why are they so many lines over 80 characters?
+Is there a specific coding style to follow ?
 
 Thanks,
-Janusz
+Clement
 
-> > Since pad IDs are verified against pad_num which may be not set, we should 
-> > obviously check validity of pad_num before comparing against it.  Since 
-media 
-> > controller compatible subdevices need at least one pad, I think the check 
-for 
-> > non-zero pad_num is quite reasonable.
-> > 
-> > Moreover, old drivers are actually using those pad operations you describe 
-as 
-> > not supposed to be called.  They are using them because they were 
-converted to 
-> > use them in place of former video ops.  Already dealing with pad IDs, they 
-may 
-> > decide to turn on CONFIG_MEDIA_CONTROLLER and use selected functionality, 
-for 
-> > example register pads, without implementing fulll media controller 
-support.  
-> > Why should we refuse to perform pad ID verification for them?
-> 
-> 
-
-
-
-
+>
+> >                 return PTR_ERR(pfdev->clock);
+> >         }
+> >
