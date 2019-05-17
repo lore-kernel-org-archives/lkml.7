@@ -2,96 +2,127 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB28C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 849E7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6922083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:56:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55472204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:57:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E7oWj3DD"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="daO9zMPt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbfEQP4z (ORCPT
+        id S1729352AbfEQP51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 11:56:55 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46029 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728664AbfEQP4y (ORCPT
+        Fri, 17 May 2019 11:57:27 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:32540 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728664AbfEQP50 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 11:56:54 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a5so3520219pls.12
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 08:56:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nrqjUKLpsCtJJ04ErApfFg0RR5DmaSuhMiOpsYm4b/k=;
-        b=E7oWj3DDjt+kEdZeewfLumYWCuhjVUc/osh0djljunRfkteN7XJXNs5MS+RX5GI/Lq
-         Puj3Z3HgxCD/6AC6HOECerm430xm+nTSbJv05r7At57ftXWvGwRJYxFFEUoVKbSOr4Gr
-         iBqixCpWNw+8db7SWpOHdiN1vkT5zH1by9VEE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nrqjUKLpsCtJJ04ErApfFg0RR5DmaSuhMiOpsYm4b/k=;
-        b=Ti6ojibe1PQlTMHFadCFBMvkBjqOTpPbJ4E1w+TMYmZrbUIojg+eWVT5oSum10gJXB
-         p3V22PIL7P+ALdHjYc2Bq4SJrbztcm8sunMAjTvMCI572EvGUsgHVsx935+oE6rQcdWK
-         e4Yt3n9IPZ5DmvfQq8krgbi6GCuuNZg0MjYZY1MO1x17IOSUi2s98YH/szmcIHfdyEhP
-         M1sLAqBRRK08zf9gV/mgdu+p1XG7P7KFsg1K9dntJMZvpKU7tUEtOdQOxl1MYHjz8OgW
-         o1bNE9SAVp56yIG+d4kxVpmTfQVhYOam1s54gS8heFvdojWEqk55pcb9AMWa72KsG7tA
-         /D/Q==
-X-Gm-Message-State: APjAAAXZ4DiuCBH8Qy8QcZ/OzjG1YfcYEc1+rDz9cLaQyDGHBUj3tMEL
-        371uAZtZvpKlS/1Lrmq7ctj3Bb+GMeM=
-X-Google-Smtp-Source: APXvYqx5L1JIW0KgYJL4c2qH5Z+VHBDccN7Wk+p90g4IAEzcge2qHeMGOakMMnS0HM9WEXWMQfyTKA==
-X-Received: by 2002:a17:902:2bc9:: with SMTP id l67mr21517345plb.171.1558108614314;
-        Fri, 17 May 2019 08:56:54 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 2sm11532199pgc.49.2019.05.17.08.56.53
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 May 2019 08:56:53 -0700 (PDT)
-Date:   Fri, 17 May 2019 08:56:52 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Jan Kara <jack@suse.cz>, linux-nvdimm <linux-nvdimm@lists.01.org>,
-        stable <stable@vger.kernel.org>, Jeff Moyer <jmoyer@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jeff Smits <jeff.smits@intel.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] libnvdimm/pmem: Bypass CONFIG_HARDENED_USERCOPY overhead
-Message-ID: <201905170855.8E2E1AC616@keescook>
-References: <155805321833.867447.3864104616303535270.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190517084739.GB20550@quack2.suse.cz>
- <CAPcyv4iZZCgcC657ZOysBP9=1ejp3jfFj=VETVBPrgmfg7xUEw@mail.gmail.com>
+        Fri, 17 May 2019 11:57:26 -0400
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x4HFvL9n027883;
+        Sat, 18 May 2019 00:57:21 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x4HFvL9n027883
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558108642;
+        bh=201g0kbs2uB+GwEUpx//GJ+uGiu2C1BbNfc9wcMx28M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=daO9zMPtTO1SudT852qzfFXT3zN1kX0AnlrMUt9bNXWbBbYbkGr6Bp6NDxrbHuIHx
+         X/4J1e8+cQATiUnou+PuZ4jmwSMIP5OJFnGVnlrD6kOn3Ctt2fo22qEPJYYwKOe35o
+         DxubPrHMzEI//dZzILv91GxM8H/Jzat7AGctFvqFDUgUou/UAUiqgMl07KWX6bk+zr
+         dqVjgNTW05XspY4Q7YtIYAVKNb3Ubb8A6nwh8VeOSeSGXLwmgNI0598VHRNTGfLHIm
+         WOJEJxBrissBxUkwhDbDtPSnYqTZSrnif84FOELRbi006LEtydsZhJ4nNmmcWUyPmC
+         ebwprQ1qvJN3A==
+X-Nifty-SrcIP: [209.85.222.51]
+Received: by mail-ua1-f51.google.com with SMTP id n7so2856030uap.12;
+        Fri, 17 May 2019 08:57:21 -0700 (PDT)
+X-Gm-Message-State: APjAAAVujX9Un6Cmn8ItI0jnfhOKzZwjn8S4lQ7Abj+gN01VJUZqthnJ
+        1h2xieeq/U1B/94/2QTZ0Ssng575JtMd/P7+FCk=
+X-Google-Smtp-Source: APXvYqxKCJU7FYDbi2z/Ynz5+ClThgGVIlGk5c+MP7LYq+ng9LP99MBRt97KIy7ayu2FnqEy1VXipCTrUsF0p0Cuy3M=
+X-Received: by 2002:ab0:3058:: with SMTP id x24mr24619043ual.95.1558108640471;
+ Fri, 17 May 2019 08:57:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iZZCgcC657ZOysBP9=1ejp3jfFj=VETVBPrgmfg7xUEw@mail.gmail.com>
+References: <20190517042753.25857-1-yamada.masahiro@socionext.com>
+ <CAJ1xhMUxsFR6yLeV1rG1FRZzqwyMGF5PURk6F5_6kN3v2dGN1A@mail.gmail.com>
+ <68270a84-966b-05e3-c82e-893c320febfd@petrovitsch.priv.at> <CAJ1xhMVaeQPoW1v91bcNOkw1FJOr7ddhDc-ir=3AiKRCSzCj=g@mail.gmail.com>
+In-Reply-To: <CAJ1xhMVaeQPoW1v91bcNOkw1FJOr7ddhDc-ir=3AiKRCSzCj=g@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Sat, 18 May 2019 00:56:44 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATm5OS8wUh8boZJ9x65SUxajtDZV9bNdAvXcRgHC2NQdA@mail.gmail.com>
+Message-ID: <CAK7LNATm5OS8wUh8boZJ9x65SUxajtDZV9bNdAvXcRgHC2NQdA@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: check uniqueness of module names
+To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Cc:     Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Kees Cook <keescook@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 08:08:27AM -0700, Dan Williams wrote:
-> As far as I can see it's mostly check_heap_object() that is the
-> problem, so I'm open to finding a way to just bypass that sub-routine.
-> However, as far as I can see none of the other block / filesystem user
-> copy implementations submit to the hardened checks, like
-> bio_copy_from_iter(), and iov_iter_copy_from_user_atomic() . So,
-> either those need to grow additional checks, or the hardened copy
-> implementation is targeting single object copy use cases, not
-> necessarily block-I/O. Yes, Kees, please advise.
+On Fri, May 17, 2019 at 6:25 PM Alexander Kapshuk
+<alexander.kapshuk@gmail.com> wrote:
+>
+> On Fri, May 17, 2019 at 11:58 AM Bernd Petrovitsch
+> <bernd@petrovitsch.priv.at> wrote:
+> >
+> > On 17/05/2019 10:16, Alexander Kapshuk wrote:
+> > [...]
+> > > The 'xargs' '-r' flag is a GNU extension.
+> > > If POSIX compliance is important here, the use of 'cat', 'xargs' and
+> > > 'basename' may be substituted with that of 'sed' to initialise
+> > > same_name_modules:
+> > > sed 's!.*/!!' modules.order modules.builtin | sort | uniq -d
+> >
+> > 's!' is TTBOMK also a GNU-extension:
+> > sed 's/.*\///' modules.order modules.builtin | sort | uniq -d
+>
+> It isn't.
+> Here's an excerpt from the POSIX manpage for 'sed',
+> http://pubs.opengroup.org/onlinepubs/009695399/utilities/sed.html:
+> [2addr]s/BRE/replacement/flags
+> ...  Any character other than backslash or <newline> can be used
+> instead of a slash to delimit the BRE and the replacement....
+>
+> >
+> > > 'Sed' may also be used on its own in the 'for' loop instead of as part
+> > > of a pipeline along with 'grep' to generate the desired output:
+> > > sed '/\/'$m'/!d;s:^kernel/:  :' modules.order modules.builtin
+> >
+> > sed "/\/${m}/!d;s/^kernel\//  /" modules.order modules.builtin
+>
+> The parameter expansion syntax is redundant here.
+> See https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02:
+> The parameter name or symbol can be enclosed in braces, which are
+> optional except for positional parameters with more than one digit or
+> when parameter is a name and is followed by a character that could be
+> interpreted as part of the name.
+>
+> Here's an alternative version using double quotes.
+> sed "/\/$m/!d;s:^kernel/:  :" modules.order modules.builtin
 
-The intention is mainly for copies that haven't had explicit bounds
-checking already performed on them, yes. Is there something getting
-checked out of the slab, or is it literally just the overhead of doing
-the "is this slab?" check that you're seeing?
+
+Awesome!
+This is much shorter.
+I will use it in v3.
+
+Thanks.
+
 
 -- 
-Kees Cook
+Best Regards
+Masahiro Yamada
