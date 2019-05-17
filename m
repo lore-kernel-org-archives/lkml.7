@@ -2,166 +2,125 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FC5C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:25:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43454C04E84
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8416C20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 158172082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:25:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nk2IUJ/k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hwL0cUFx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbfEQJZp (ORCPT
+        id S1728904AbfEQJZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 05:25:45 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34440 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728372AbfEQJZo (ORCPT
+        Fri, 17 May 2019 05:25:49 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39827 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728372AbfEQJZs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 05:25:44 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f8so4937309wrt.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 02:25:43 -0700 (PDT)
+        Fri, 17 May 2019 05:25:48 -0400
+Received: by mail-io1-f65.google.com with SMTP id m7so4937768ioa.6;
+        Fri, 17 May 2019 02:25:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Fq3qggbvMmKlUmJPKM8jOY0rCZq4or8EQED5if34yzQ=;
-        b=nk2IUJ/kjh4krjgUGUKSrTbk3y6M+yF+1hyYfCdswnW9AKfLyX42XFFWO10ikjnMn/
-         rHMjDjjygG2xVnagvqoK5or10W9UitPuzDx8uTsIXTyiuEkNnpoqBWpPhGNU3pJdy0vH
-         RDhlDaiU9oTPV8EbtjAYs8M6v7RLrHqW1CTMpsnWwdYU77OI/dofXVilECl5lx+PzueV
-         SF1MRZ6cGejQ+Oc2Z0aIxFuXsUCdqIn0ClCgXhAHjAKZPQAC0iynzf/iqcTjSMbZo8D6
-         ba+Gu7NAO+TF9Ktxu4/z6bzwvWcRUmkygqoj2uvR/kMeYYC2L/5QeS8S5LtPBHBFU6Cm
-         +RQg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bKzWWnOH9ydjE40E51J019WWbkt1Rysxj2Dtj7CPBxw=;
+        b=hwL0cUFxucCOmv0o3XAkQAKca82DGUJVm1ca/Dbp2gWH7WmayUc1iz4KQeAX1cg5am
+         mWz53Cr0ZUz5Fd7CnD3Xzj99EMSA5ej7m+1b1xv5iCqwvqvzgO8oqwAiuuTG/ISlPZae
+         WduTyb5EDzypBr//Vi3LxBBwbDIBu+4MV5TJgGXnLUh2U6hTyTF9Iic8CofvMlRK1mLu
+         MSYKK486pvy8OUIW8CY02gGCGmlWfQBgaYpb//oWtCdhviFlLKVWBlfr6d09A7XuhohB
+         wB+jfzWuVHh4w9NUythOejL07BsUwYWQyHDeCZf8MB7aCbv23QAcTP4szJKRyd/1blWm
+         ZBMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Fq3qggbvMmKlUmJPKM8jOY0rCZq4or8EQED5if34yzQ=;
-        b=c6PpY+Lk0TcrIHf5Osjb6caamR4/9VNGJ4ADtCkwHy2CjlbYzQil0uUUzthp+r4U2q
-         AN7tPl7rbjb60MjkRleXuPaxEYlCgXxTJJ+ZBbfa3DgDpfafKDkkXsUWPSD1IaCWTmDh
-         GJJ76zWw6G52S/aSddzJ0zOYDLWaeXbZHNcTrUfgTzCqX3NcgV31ZtaxQGW3MJI/9VZ1
-         +7KM+MuLSLhBnnUvp+MLpiecw3qqgyUPP68ZTLFwTjP25FLsGfxvLGU6LYcpEYTi6QK4
-         dYwCDZPtKvwewI9c3Z8C5AtRCmfXXCIW99C74mxhmVJr5vQ2n8VggJI/errB1id7EPCG
-         /2nA==
-X-Gm-Message-State: APjAAAWNAeH14OvSzF5frBw1tURqqK6jj9QmxYsYsDneHOTZlVBcrhev
-        dBUXnPEkIpu9uGCEvVvi2l6wBreK
-X-Google-Smtp-Source: APXvYqzzd6fDMGlW8IDjoJtTwj+KrBrWDkuYeiWyAdgI+X2tVRde4I8tzXBPfJ3mR5RIlKYXChyaIg==
-X-Received: by 2002:adf:9022:: with SMTP id h31mr5594268wrh.46.1558085143149;
-        Fri, 17 May 2019 02:25:43 -0700 (PDT)
-Received: from gmail.com (79.108.96.12.dyn.user.ono.com. [79.108.96.12])
-        by smtp.gmail.com with ESMTPSA id j206sm9003862wma.47.2019.05.17.02.25.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 May 2019 02:25:42 -0700 (PDT)
-Date:   Fri, 17 May 2019 11:25:02 +0200
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] tracing: silence GCC 9 array bounds warning
-Message-ID: <20190517092502.GA22779@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bKzWWnOH9ydjE40E51J019WWbkt1Rysxj2Dtj7CPBxw=;
+        b=pSYyBDU9HBzXqowk1UxznFZcdbCOT2CNOc6dHLizwFQy5RpQyDACvlwJOANI8aPxbw
+         u0lkU5Eul5cbw25ae7IzUIdPqE6Riu/4PODdY2gtS8IwiK6jxYOfIVL5a/eZVWVajOuf
+         C9I2DQONGO/d7qs8b8tENhOYdC1UE4JNlnU3TrGL9/BBUrVBr9TNHEDALlhkdxJz6Tix
+         vLyGFfJRJPTMCyagkPG1EP3mZxenxuGMDDD3JV15Ia7wT+duUt5nH2HmuT73/hEYrVcJ
+         /Ycl5Tr5LBfFmVK1MPrhBs4FHFb4qSF0CXHpp7yvXfyATXNLouVKpRjNCJ8UQwnJY/I9
+         2hPg==
+X-Gm-Message-State: APjAAAUSjiHj5dh7bEhwed/jb/0cy5KpnMgr8JITpXRscleW0BdJrakm
+        U8p+Nk0mfaJSnR8oJTG/FiWUiBHA/K+3O9ltvo8=
+X-Google-Smtp-Source: APXvYqw2PPNT7HlBk7nzmtIlDhS2mkjhDCAmXJhgUZaR1EUfi+er+VoWuqo3lY7upavsMf0+Lqqg1yUF/OS9vQFU+Ro=
+X-Received: by 2002:a6b:8e84:: with SMTP id q126mr12832502iod.118.1558085147348;
+ Fri, 17 May 2019 02:25:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: elm/2
+References: <20190517042753.25857-1-yamada.masahiro@socionext.com>
+ <CAJ1xhMUxsFR6yLeV1rG1FRZzqwyMGF5PURk6F5_6kN3v2dGN1A@mail.gmail.com> <68270a84-966b-05e3-c82e-893c320febfd@petrovitsch.priv.at>
+In-Reply-To: <68270a84-966b-05e3-c82e-893c320febfd@petrovitsch.priv.at>
+From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Date:   Fri, 17 May 2019 12:25:10 +0300
+Message-ID: <CAJ1xhMVaeQPoW1v91bcNOkw1FJOr7ddhDc-ir=3AiKRCSzCj=g@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: check uniqueness of module names
+To:     Bernd Petrovitsch <bernd@petrovitsch.priv.at>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kbuild@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Kees Cook <keescook@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Starting with GCC 9, -Warray-bounds detects cases when memset is called
-starting on a member of a struct but the size to be cleared ends up
-writing over further members.
+On Fri, May 17, 2019 at 11:58 AM Bernd Petrovitsch
+<bernd@petrovitsch.priv.at> wrote:
+>
+> On 17/05/2019 10:16, Alexander Kapshuk wrote:
+> [...]
+> > The 'xargs' '-r' flag is a GNU extension.
+> > If POSIX compliance is important here, the use of 'cat', 'xargs' and
+> > 'basename' may be substituted with that of 'sed' to initialise
+> > same_name_modules:
+> > sed 's!.*/!!' modules.order modules.builtin | sort | uniq -d
+>
+> 's!' is TTBOMK also a GNU-extension:
+> sed 's/.*\///' modules.order modules.builtin | sort | uniq -d
 
-Such a call happens in the trace code to clear, at once, all members
-after and including `seq` on struct trace_iterator:
+It isn't.
+Here's an excerpt from the POSIX manpage for 'sed',
+http://pubs.opengroup.org/onlinepubs/009695399/utilities/sed.html:
+[2addr]s/BRE/replacement/flags
+...  Any character other than backslash or <newline> can be used
+instead of a slash to delimit the BRE and the replacement....
 
-    In function 'memset',
-        inlined from 'ftrace_dump' at kernel/trace/trace.c:8914:3:
-    ./include/linux/string.h:344:9: warning: '__builtin_memset' offset
-    [8505, 8560] from the object at 'iter' is out of the bounds of
-    referenced subobject 'seq' with type 'struct trace_seq' at offset
-    4368 [-Warray-bounds]
-      344 |  return __builtin_memset(p, c, size);
-          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+> > 'Sed' may also be used on its own in the 'for' loop instead of as part
+> > of a pipeline along with 'grep' to generate the desired output:
+> > sed '/\/'$m'/!d;s:^kernel/:  :' modules.order modules.builtin
+>
+> sed "/\/${m}/!d;s/^kernel\//  /" modules.order modules.builtin
 
-In order to avoid GCC complaining about it, we compute the address
-ourselves by adding the offsetof distance instead of referring
-directly to the member.
+The parameter expansion syntax is redundant here.
+See https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02:
+The parameter name or symbol can be enclosed in braces, which are
+optional except for positional parameters with more than one digit or
+when parameter is a name and is followed by a character that could be
+interpreted as part of the name.
 
-Since there are two places doing this clear (trace.c and trace_kdb.c),
-take the chance to move the workaround into a single place in
-the internal header.
+Here's an alternative version using double quotes.
+sed "/\/$m/!d;s:^kernel/:  :" modules.order modules.builtin
 
-Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
----
- kernel/trace/trace.c     |  7 +------
- kernel/trace/trace.h     | 14 ++++++++++++++
- kernel/trace/trace_kdb.c |  7 +------
- 3 files changed, 16 insertions(+), 12 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ca1ee656d6d8..37990532351b 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8627,12 +8627,7 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
- 
- 		cnt++;
- 
--		/* reset all but tr, trace, and overruns */
--		memset(&iter.seq, 0,
--		       sizeof(struct trace_iterator) -
--		       offsetof(struct trace_iterator, seq));
--		iter.iter_flags |= TRACE_FILE_LAT_FMT;
--		iter.pos = -1;
-+		trace_iterator_reset(&iter);
- 
- 		if (trace_find_next_entry_inc(&iter) != NULL) {
- 			int ret;
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index d80cee49e0eb..80ad656f43eb 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1964,4 +1964,18 @@ static inline void tracer_hardirqs_off(unsigned long a0, unsigned long a1) { }
- 
- extern struct trace_iterator *tracepoint_print_iter;
- 
-+/* reset all but tr, trace, and overruns */
-+static __always_inline void trace_iterator_reset(struct trace_iterator * iter)
-+{
-+	/*
-+	 * Equivalent to &iter->seq, but avoids GCC 9 complaining about
-+	 * overwriting more members than just iter->seq (-Warray-bounds)
-+	 */
-+	memset((char *)(iter) + offsetof(struct trace_iterator, seq), 0,
-+	       sizeof(struct trace_iterator) -
-+	       offsetof(struct trace_iterator, seq));
-+	iter->iter_flags |= TRACE_FILE_LAT_FMT;
-+	iter->pos = -1;
-+}
-+
- #endif /* _LINUX_KERNEL_TRACE_H */
-diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
-index 810d78a8d14c..0a2a166ee716 100644
---- a/kernel/trace/trace_kdb.c
-+++ b/kernel/trace/trace_kdb.c
-@@ -41,12 +41,7 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
- 
- 	kdb_printf("Dumping ftrace buffer:\n");
- 
--	/* reset all but tr, trace, and overruns */
--	memset(&iter.seq, 0,
--		   sizeof(struct trace_iterator) -
--		   offsetof(struct trace_iterator, seq));
--	iter.iter_flags |= TRACE_FILE_LAT_FMT;
--	iter.pos = -1;
-+	trace_iterator_reset(&iter);
- 
- 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
- 		for_each_tracing_cpu(cpu) {
--- 
-2.17.1
-
+>
+> MfG,
+>         Bernd
+> --
+> Bernd Petrovitsch                  Email : bernd@petrovitsch.priv.at
+>                      LUGA : http://www.luga.at
