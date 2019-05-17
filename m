@@ -2,92 +2,166 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA7DC04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FC5C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F9F02082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8416C20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:25:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kp1Z2DT/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nk2IUJ/k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728567AbfEQJYl (ORCPT
+        id S1728802AbfEQJZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 05:24:41 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:39500 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728394AbfEQJYk (ORCPT
+        Fri, 17 May 2019 05:25:45 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34440 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728372AbfEQJZo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 05:24:40 -0400
-Received: by mail-it1-f195.google.com with SMTP id 9so10883436itf.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 02:24:40 -0700 (PDT)
+        Fri, 17 May 2019 05:25:44 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f8so4937309wrt.1
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 02:25:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q1hRjgKSwHweZk8dB5JUfhPlYFrMWm3LL+UTvBdMO2U=;
-        b=Kp1Z2DT/3W0yLQXVVl4ufLxOAJJlrRiv4Dqcu//FVib0bsRORina1Clxh30Mhe66cK
-         E5D53/P6TIz3VL3qLtK7u8U7Kx1QUWl37ynrZajaq7Eh3j1IwXPKiU0rPNXswc+oXUGB
-         gFPo6rIuBqhwMsQYdXALxUEi23N82f1NPxqLONoccpUJBJw9Uh+o9QbJ6HVEiIKm1ORT
-         cysucRwvJTDop1Z4tDuuUrORv24g/sInMFpyfo73MmJhyg2YUeKkdmY2hlyjjw01BTm7
-         PVQjYzmZ6ZavAB8o9/m6U9tdt5zXRf65pxGnumjGTeVsZaI4TYyPNSJ50JuldP6pGUVV
-         LSNw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Fq3qggbvMmKlUmJPKM8jOY0rCZq4or8EQED5if34yzQ=;
+        b=nk2IUJ/kjh4krjgUGUKSrTbk3y6M+yF+1hyYfCdswnW9AKfLyX42XFFWO10ikjnMn/
+         rHMjDjjygG2xVnagvqoK5or10W9UitPuzDx8uTsIXTyiuEkNnpoqBWpPhGNU3pJdy0vH
+         RDhlDaiU9oTPV8EbtjAYs8M6v7RLrHqW1CTMpsnWwdYU77OI/dofXVilECl5lx+PzueV
+         SF1MRZ6cGejQ+Oc2Z0aIxFuXsUCdqIn0ClCgXhAHjAKZPQAC0iynzf/iqcTjSMbZo8D6
+         ba+Gu7NAO+TF9Ktxu4/z6bzwvWcRUmkygqoj2uvR/kMeYYC2L/5QeS8S5LtPBHBFU6Cm
+         +RQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q1hRjgKSwHweZk8dB5JUfhPlYFrMWm3LL+UTvBdMO2U=;
-        b=RxDJa3sgtR1IbFbgM+/y+53OO2YcabmoZoGvLnBhnaCa/mmDv0abwO3rU6zpJR56Rm
-         Tyq+mAseNsIBZ3GuMDHkXmmyW44k347PcPomMhJB+IDmuiZST+WE0Q93K+Dr/Uqsq1xI
-         ckZwi6D9ClCl/qxKUbKHOWULIUot3t7dCV2zYohaAiPifY6Hd8uC7FDXP1rX3R1g5bMh
-         2npn+StfKyPV9xL4TiN6xZzLME4pT5hk+ayhgE9ZeN3hW5P3n3MDlNruFq3lzDbzkW1v
-         WUn+rxNue3HRP8H76x+/enxms1FxOPsgAAaKX6tj8qmSHKk32SWmGJbhVfvgeUgWzHMS
-         4ZaA==
-X-Gm-Message-State: APjAAAWFtBpugPjpIsI1YX9yQsW7mIUdzNWUluEv+j2dh6Y1gnr9vg36
-        9puBqrIVo11rR/Cl2Me5bhT8N0IDIF26oiPDtlxrmQ==
-X-Google-Smtp-Source: APXvYqytJXMSh0eWfFOe5vOtUBeNAjTIoGoPnGO7MgQT6P5toncYqfiXlKrthASKsuyH6YeXZy+sb6ra9HCrreFdOdc=
-X-Received: by 2002:a24:d00e:: with SMTP id m14mr15838673itg.153.1558085080212;
- Fri, 17 May 2019 02:24:40 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Fq3qggbvMmKlUmJPKM8jOY0rCZq4or8EQED5if34yzQ=;
+        b=c6PpY+Lk0TcrIHf5Osjb6caamR4/9VNGJ4ADtCkwHy2CjlbYzQil0uUUzthp+r4U2q
+         AN7tPl7rbjb60MjkRleXuPaxEYlCgXxTJJ+ZBbfa3DgDpfafKDkkXsUWPSD1IaCWTmDh
+         GJJ76zWw6G52S/aSddzJ0zOYDLWaeXbZHNcTrUfgTzCqX3NcgV31ZtaxQGW3MJI/9VZ1
+         +7KM+MuLSLhBnnUvp+MLpiecw3qqgyUPP68ZTLFwTjP25FLsGfxvLGU6LYcpEYTi6QK4
+         dYwCDZPtKvwewI9c3Z8C5AtRCmfXXCIW99C74mxhmVJr5vQ2n8VggJI/errB1id7EPCG
+         /2nA==
+X-Gm-Message-State: APjAAAWNAeH14OvSzF5frBw1tURqqK6jj9QmxYsYsDneHOTZlVBcrhev
+        dBUXnPEkIpu9uGCEvVvi2l6wBreK
+X-Google-Smtp-Source: APXvYqzzd6fDMGlW8IDjoJtTwj+KrBrWDkuYeiWyAdgI+X2tVRde4I8tzXBPfJ3mR5RIlKYXChyaIg==
+X-Received: by 2002:adf:9022:: with SMTP id h31mr5594268wrh.46.1558085143149;
+        Fri, 17 May 2019 02:25:43 -0700 (PDT)
+Received: from gmail.com (79.108.96.12.dyn.user.ono.com. [79.108.96.12])
+        by smtp.gmail.com with ESMTPSA id j206sm9003862wma.47.2019.05.17.02.25.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 May 2019 02:25:42 -0700 (PDT)
+Date:   Fri, 17 May 2019 11:25:02 +0200
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] tracing: silence GCC 9 array bounds warning
+Message-ID: <20190517092502.GA22779@gmail.com>
 MIME-Version: 1.0
-References: <20190517082633.GA3890@zhanggen-UX430UQ> <CAKv+Gu98JNK34Q6MNOe3aq0W5rbv6hUFiuc7cHxHJat5aTk_gg@mail.gmail.com>
- <20190517090628.GA4162@zhanggen-UX430UQ>
-In-Reply-To: <20190517090628.GA4162@zhanggen-UX430UQ>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 17 May 2019 11:24:27 +0200
-Message-ID: <CAKv+Gu_mwFpdtNZm9QMFn69+vOMTOpv9gvuhnBL2NBXvwkhXqg@mail.gmail.com>
-Subject: Re: [PATCH] efi_64: Fix a missing-check bug in arch/x86/platform/efi/efi_64.c
- of Linux 5.1
-To:     Gen Zhang <blackgod016574@gmail.com>,
-        linux-efi <linux-efi@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: elm/2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 May 2019 at 11:06, Gen Zhang <blackgod016574@gmail.com> wrote:
->
-> On Fri, May 17, 2019 at 10:41:28AM +0200, Ard Biesheuvel wrote:
-> > Returning an error here is not going to make much difference, given
-> > that the caller of efi_call_phys_prolog() does not bother to check it,
-> > and passes the result straight into efi_call_phys_epilog(), which
-> > happily attempts to dereference it.
-> >
-> > So if you want to fix this properly, please fix it at the call site as
-> > well. I'd prefer to avoid ERR_PTR() and just return NULL for a failed
-> > allocation though.
-> Hi Ard,
-> Thanks for your timely reply!
-> I think returning NULL in efi_call_phys_prolog() and checking in
-> efi_call_phys_epilog() is much better. But I am confused what to return
-> in efi_call_phys_epilog() if save_pgd is NULL. Definitely not return
-> -ENOMEM, because efi_call_phys_epilog() returns unsigned long. Could
-> please light on me to fix this problem?
+Starting with GCC 9, -Warray-bounds detects cases when memset is called
+starting on a member of a struct but the size to be cleared ends up
+writing over further members.
 
+Such a call happens in the trace code to clear, at once, all members
+after and including `seq` on struct trace_iterator:
 
-If efi_call_phys_prolog() returns NULL, the calling function should
-abort and never call efi_call_phys_epilog().
+    In function 'memset',
+        inlined from 'ftrace_dump' at kernel/trace/trace.c:8914:3:
+    ./include/linux/string.h:344:9: warning: '__builtin_memset' offset
+    [8505, 8560] from the object at 'iter' is out of the bounds of
+    referenced subobject 'seq' with type 'struct trace_seq' at offset
+    4368 [-Warray-bounds]
+      344 |  return __builtin_memset(p, c, size);
+          |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In order to avoid GCC complaining about it, we compute the address
+ourselves by adding the offsetof distance instead of referring
+directly to the member.
+
+Since there are two places doing this clear (trace.c and trace_kdb.c),
+take the chance to move the workaround into a single place in
+the internal header.
+
+Signed-off-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+---
+ kernel/trace/trace.c     |  7 +------
+ kernel/trace/trace.h     | 14 ++++++++++++++
+ kernel/trace/trace_kdb.c |  7 +------
+ 3 files changed, 16 insertions(+), 12 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index ca1ee656d6d8..37990532351b 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8627,12 +8627,7 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
+ 
+ 		cnt++;
+ 
+-		/* reset all but tr, trace, and overruns */
+-		memset(&iter.seq, 0,
+-		       sizeof(struct trace_iterator) -
+-		       offsetof(struct trace_iterator, seq));
+-		iter.iter_flags |= TRACE_FILE_LAT_FMT;
+-		iter.pos = -1;
++		trace_iterator_reset(&iter);
+ 
+ 		if (trace_find_next_entry_inc(&iter) != NULL) {
+ 			int ret;
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index d80cee49e0eb..80ad656f43eb 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1964,4 +1964,18 @@ static inline void tracer_hardirqs_off(unsigned long a0, unsigned long a1) { }
+ 
+ extern struct trace_iterator *tracepoint_print_iter;
+ 
++/* reset all but tr, trace, and overruns */
++static __always_inline void trace_iterator_reset(struct trace_iterator * iter)
++{
++	/*
++	 * Equivalent to &iter->seq, but avoids GCC 9 complaining about
++	 * overwriting more members than just iter->seq (-Warray-bounds)
++	 */
++	memset((char *)(iter) + offsetof(struct trace_iterator, seq), 0,
++	       sizeof(struct trace_iterator) -
++	       offsetof(struct trace_iterator, seq));
++	iter->iter_flags |= TRACE_FILE_LAT_FMT;
++	iter->pos = -1;
++}
++
+ #endif /* _LINUX_KERNEL_TRACE_H */
+diff --git a/kernel/trace/trace_kdb.c b/kernel/trace/trace_kdb.c
+index 810d78a8d14c..0a2a166ee716 100644
+--- a/kernel/trace/trace_kdb.c
++++ b/kernel/trace/trace_kdb.c
+@@ -41,12 +41,7 @@ static void ftrace_dump_buf(int skip_lines, long cpu_file)
+ 
+ 	kdb_printf("Dumping ftrace buffer:\n");
+ 
+-	/* reset all but tr, trace, and overruns */
+-	memset(&iter.seq, 0,
+-		   sizeof(struct trace_iterator) -
+-		   offsetof(struct trace_iterator, seq));
+-	iter.iter_flags |= TRACE_FILE_LAT_FMT;
+-	iter.pos = -1;
++	trace_iterator_reset(&iter);
+ 
+ 	if (cpu_file == RING_BUFFER_ALL_CPUS) {
+ 		for_each_tracing_cpu(cpu) {
+-- 
+2.17.1
+
