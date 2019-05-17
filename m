@@ -2,63 +2,67 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA53C46460
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3F7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:09:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513E72087B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA40E2087B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 21:09:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JD5n94i4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fUH9ofFC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729516AbfEQVJZ (ORCPT
+        id S1729539AbfEQVJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 17:09:25 -0400
-Received: from mail-pl1-f169.google.com ([209.85.214.169]:42016 "EHLO
-        mail-pl1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbfEQVJZ (ORCPT
+        Fri, 17 May 2019 17:09:29 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37420 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729518AbfEQVJ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 17:09:25 -0400
-Received: by mail-pl1-f169.google.com with SMTP id x15so3872214pln.9
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 14:09:25 -0700 (PDT)
+        Fri, 17 May 2019 17:09:27 -0400
+Received: by mail-pl1-f195.google.com with SMTP id p15so3890132pll.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 14:09:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5Osr4IBLKvqeoGIhILlOabAONYWC6fq+a0u3OcWitsE=;
-        b=JD5n94i4mKalDB7/QIq6hwmxfHuc3LPfFo3nTv1rqK5hcqf3iPDGRh1EFIOki0v4Wa
-         5eB4nDxybuOB6dUKwutNbxeO8PCEk7HcsT+DbzAoAr2P5dE8pFYxEVgZyzl4G6ZaPCbe
-         hHCRMa8UyiV0LV6JwjoUeakRGvd8LWKz2nEZg=
+        bh=xUs4KzX7CWJigxzrg3FXk071ARVu1l5gjrllphQPJ70=;
+        b=fUH9ofFCLhOWE/+eplpGUDYFizPvxtNGBQtesTIFeafxTA1h0zSx7BAy8TXlukUFHA
+         MCXO2sPQqoMoeL8/MmjyYMBlbCmfcZHqY1+LTUw+wPHwcaGe4uAgqQfx7qAekVSvrkQF
+         dxv8g5AIVuNyhffCnDdhL+ZzQoRhkJLW5NpfQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5Osr4IBLKvqeoGIhILlOabAONYWC6fq+a0u3OcWitsE=;
-        b=gd5xKwouiM6bF4Ya0JAV7wX8qJNVIH5BkaOdau/7xGaUAO1p46lpfE1nR8zIjzggbS
-         u+cwXruwkhECAVhwffgPKJ0pudDiyYPB9/6BYgKu3WmA8Pl/Bq9TIegfIMVjI7Wf6oDD
-         Vdid9HbqS+TH3fXZfwzgaNyfNCopXXf2r4eQPVsSCi6ALcbU16yLLnrDGgg+pFPnQTk/
-         Kfxctz9B0bh20pT0AFkZTtokjzcYVhCZ1ikrOn13t0AKDY3fyiTR2BpBhVbOlaGIoA9p
-         DOyDw5/c8NyEO42R22JFpmZFqhjkjoM+shttChuHRXbueSZgSX80Mdu3tPcIsDS94X+Y
-         2WNQ==
-X-Gm-Message-State: APjAAAWLw43dpQ1K68Z3f/dEOYDLZNKdg+oZnnDEzp8uOtWnyAFNpnjc
-        XwuXHKntJjA7XNdo6j+xCpv4m5qEOI9Eow==
-X-Google-Smtp-Source: APXvYqxEO2VhzyiHpSv9o0CI0H1knnTnrlTCtf/zuChtA/femWc3y8FZABEnlw2/tjPIL9gPSU6oDQ==
-X-Received: by 2002:a17:902:aa95:: with SMTP id d21mr4553546plr.32.1558127364718;
-        Fri, 17 May 2019 14:09:24 -0700 (PDT)
+        bh=xUs4KzX7CWJigxzrg3FXk071ARVu1l5gjrllphQPJ70=;
+        b=h4CEPniHDGzeoOExEg+GEU50nBdehAXi2MMMOny8nKq5PU7hY4CNdh65zHawuUhzL7
+         7Fjzy3F5Ka6LJFZM0N4X8n1jZSGbyjDdqJbniycLHmSwjD6DUjOubH3cnvkyRbNIaEGu
+         2NFSswZDn0rNwpUgEI53pU7ARvQvmaoVgcfP3NNoyzf4sGHKmlcq6B8dpw3b1Uzrij9A
+         K5N5QT2r0ry71k8C3RggKc5HySuG2GWpBkFbsIjlR7ji9wWMA2W9z4pDEDY0NMYzpeM8
+         46YQpYg5PB3s4Mg4S/+A66ZEX1YNFruMbgqeyRu5oIn89/jCAV4eaDyyE8ICdHsuHWne
+         Xu4g==
+X-Gm-Message-State: APjAAAWurn7lYA7Ll7OHY9/OEfqu/DXCu7tckG8PNo+uHFr9Bs2Po8+B
+        I91O01+Oxm8E/wQWn7TsMnli6GKVzNDKcA==
+X-Google-Smtp-Source: APXvYqwg+KNuNv6iQvKM/0JEY8vuqonvkPls25uezBNYAandLnYwUenBqTUhBs/2LWnxSZ9b+q1v4A==
+X-Received: by 2002:a17:902:442:: with SMTP id 60mr20543597ple.325.1558127366677;
+        Fri, 17 May 2019 14:09:26 -0700 (PDT)
 Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id q142sm7890448pfc.27.2019.05.17.14.09.23
+        by smtp.gmail.com with ESMTPSA id q142sm7890448pfc.27.2019.05.17.14.09.25
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 14:09:24 -0700 (PDT)
+        Fri, 17 May 2019 14:09:26 -0700 (PDT)
 From:   Stephen Boyd <swboyd@chromium.org>
 To:     Andy Gross <agross@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH 0/3] qcom_scm: Fix some dma mapping things
-Date:   Fri, 17 May 2019 14:09:20 -0700
-Message-Id: <20190517210923.202131-1-swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Ian Jackson <ian.jackson@citrix.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+Subject: [PATCH 2/3] firmware: qcom_scm: Cleanup code in qcom_scm_assign_mem()
+Date:   Fri, 17 May 2019 14:09:22 -0700
+Message-Id: <20190517210923.202131-3-swboyd@chromium.org>
 X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
 In-Reply-To: <23774.56553.445601.436491@mariner.uk.xensource.com>
 References: <23774.56553.445601.436491@mariner.uk.xensource.com>
@@ -69,23 +73,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series fixes some DMA mapping problems reported
-in the qcom SCM driver. I haven't tested these patches at all
-so it could be totally broken. If someone can test them for
-me I'd appreciate it. Otherwise, I'll spend some time dusting
-off modem loading code to see if it works.
+There are some questionable coding styles in this function. It looks
+quite odd to deref a pointer with array indexing that only uses the
+first element. Also, destroying an input/output variable halfway through
+the function and then overwriting it on success is not clear. It's
+better to use a local variable and the kernel macros to step through
+each bit set in a bitmask and clearly show where outputs are set.
 
-Stephen Boyd (3):
-  firmware: qcom_scm: Use proper types for dma mappings
-  firmware: qcom_scm: Cleanup code in qcom_scm_assign_mem()
-  firmware: qcom_scm: Fix some typos in docs and printks
+Cc: Ian Jackson <ian.jackson@citrix.com>
+Cc: Julien Grall <julien.grall@arm.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ drivers/firmware/qcom_scm.c | 34 ++++++++++++++++------------------
+ include/linux/qcom_scm.h    |  9 +++++----
+ 2 files changed, 21 insertions(+), 22 deletions(-)
 
- drivers/firmware/qcom_scm.c | 47 +++++++++++++++++++------------------
- include/linux/qcom_scm.h    |  9 +++----
- 2 files changed, 29 insertions(+), 27 deletions(-)
-
-
-base-commit: e93c9c99a629c61837d5a7fc2120cd2b6c70dbdd
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 0c63495cf269..153f13f72bac 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -443,7 +443,8 @@ EXPORT_SYMBOL(qcom_scm_set_remote_state);
+  */
+ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 			unsigned int *srcvm,
+-			struct qcom_scm_vmperm *newvm, int dest_cnt)
++			const struct qcom_scm_vmperm *newvm,
++			unsigned int dest_cnt)
+ {
+ 	struct qcom_scm_current_perm_info *destvm;
+ 	struct qcom_scm_mem_map_info *mem_to_map;
+@@ -458,11 +459,10 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 	int next_vm;
+ 	__le32 *src;
+ 	void *ptr;
+-	int ret;
+-	int len;
+-	int i;
++	int ret, i, b;
++	unsigned long srcvm_bits = *srcvm;
+ 
+-	src_sz = hweight_long(*srcvm) * sizeof(*src);
++	src_sz = hweight_long(srcvm_bits) * sizeof(*src);
+ 	mem_to_map_sz = sizeof(*mem_to_map);
+ 	dest_sz = dest_cnt * sizeof(*destvm);
+ 	ptr_sz = ALIGN(src_sz, SZ_64) + ALIGN(mem_to_map_sz, SZ_64) +
+@@ -475,28 +475,26 @@ int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 
+ 	/* Fill source vmid detail */
+ 	src = ptr;
+-	len = hweight_long(*srcvm);
+-	for (i = 0; i < len; i++) {
+-		src[i] = cpu_to_le32(ffs(*srcvm) - 1);
+-		*srcvm ^= 1 << (ffs(*srcvm) - 1);
+-	}
++	i = 0;
++	for_each_set_bit(b, &srcvm_bits, sizeof(srcvm_bits))
++		src[i++] = cpu_to_le32(b);
+ 
+ 	/* Fill details of mem buff to map */
+ 	mem_to_map = ptr + ALIGN(src_sz, SZ_64);
+ 	mem_to_map_phys = ptr_phys + ALIGN(src_sz, SZ_64);
+-	mem_to_map[0].mem_addr = cpu_to_le64(mem_addr);
+-	mem_to_map[0].mem_size = cpu_to_le64(mem_sz);
++	mem_to_map->mem_addr = cpu_to_le64(mem_addr);
++	mem_to_map->mem_size = cpu_to_le64(mem_sz);
+ 
+ 	next_vm = 0;
+ 	/* Fill details of next vmid detail */
+ 	destvm = ptr + ALIGN(mem_to_map_sz, SZ_64) + ALIGN(src_sz, SZ_64);
+ 	dest_phys = ptr_phys + ALIGN(mem_to_map_sz, SZ_64) + ALIGN(src_sz, SZ_64);
+-	for (i = 0; i < dest_cnt; i++) {
+-		destvm[i].vmid = cpu_to_le32(newvm[i].vmid);
+-		destvm[i].perm = cpu_to_le32(newvm[i].perm);
+-		destvm[i].ctx = 0;
+-		destvm[i].ctx_size = 0;
+-		next_vm |= BIT(newvm[i].vmid);
++	for (i = 0; i < dest_cnt; i++, destvm++, newvm++) {
++		destvm->vmid = cpu_to_le32(newvm->vmid);
++		destvm->perm = cpu_to_le32(newvm->perm);
++		destvm->ctx = 0;
++		destvm->ctx_size = 0;
++		next_vm |= BIT(newvm->vmid);
+ 	}
+ 
+ 	ret = __qcom_scm_assign_mem(__scm->dev, mem_to_map_phys, mem_to_map_sz,
+diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
+index d0aecc04c54b..1d406403c843 100644
+--- a/include/linux/qcom_scm.h
++++ b/include/linux/qcom_scm.h
+@@ -57,8 +57,9 @@ extern int qcom_scm_pas_mem_setup(u32 peripheral, phys_addr_t addr,
+ extern int qcom_scm_pas_auth_and_reset(u32 peripheral);
+ extern int qcom_scm_pas_shutdown(u32 peripheral);
+ extern int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+-			       unsigned int *src, struct qcom_scm_vmperm *newvm,
+-			       int dest_cnt);
++			       unsigned int *src,
++			       const struct qcom_scm_vmperm *newvm,
++			       unsigned int dest_cnt);
+ extern void qcom_scm_cpu_power_down(u32 flags);
+ extern u32 qcom_scm_get_version(void);
+ extern int qcom_scm_set_remote_state(u32 state, u32 id);
+@@ -95,8 +96,8 @@ qcom_scm_pas_auth_and_reset(u32 peripheral) { return -ENODEV; }
+ static inline int qcom_scm_pas_shutdown(u32 peripheral) { return -ENODEV; }
+ static inline int qcom_scm_assign_mem(phys_addr_t mem_addr, size_t mem_sz,
+ 				      unsigned int *src,
+-				      struct qcom_scm_vmperm *newvm,
+-				      int dest_cnt) { return -ENODEV; }
++				      const struct qcom_scm_vmperm *newvm,
++				      unsigned int dest_cnt) { return -ENODEV; }
+ static inline void qcom_scm_cpu_power_down(u32 flags) {}
+ static inline u32 qcom_scm_get_version(void) { return 0; }
+ static inline u32
 -- 
 Sent by a computer through tubes
 
