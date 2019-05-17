@@ -2,103 +2,161 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EAFC04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D50EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 009DC2166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8902087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:10:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="EdtEN/AS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729315AbfEQQFH (ORCPT
+        id S1729407AbfEQQKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 12:05:07 -0400
-Received: from mga09.intel.com ([134.134.136.24]:10643 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728482AbfEQQFG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 12:05:06 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 09:05:05 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga006.jf.intel.com with ESMTP; 17 May 2019 09:05:05 -0700
-Date:   Fri, 17 May 2019 09:05:05 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Eric Paris <eparis@parisplace.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jethro Beekman <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Dr. Greg" <greg@enjellic.com>,
+        Fri, 17 May 2019 12:10:05 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:58837 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728482AbfEQQKE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 12:10:04 -0400
+Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id x4HG7US3006312;
+        Sat, 18 May 2019 01:07:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x4HG7US3006312
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558109251;
+        bh=KvvGD13sSEkabVZlqCDEfHGHyy3N71YktjZRCjCmt8c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EdtEN/ASXyFVDslvp+QeBtvFo3NtuxHuv/qoNBnA1EJArY9I8QHWn4EQDLd+2rv8H
+         DdvLOX56xvQxEm+jseJ8UR+7GEkunJtGPMFYzODjXkem0o+UAJRgv78/2+5MPVYjjP
+         DHR/0WdWHnYq2v4uWvlibI1251Z6SQ5ddARPSuI3WnPXHEw4MfdljtpFJkObcu/5F/
+         VLUVJ6JSiEsNSqMN5KZf+FWKFlprwwVF9OUb8TaOWZQuQYJiSIv3RwD6eu9N1gDElm
+         M4zJBB3uEjUldAsVLGPD9dQOyJ2IlBBiFI9SIvKg+CRdf0LRYKBD0VdCp2+C0lQhek
+         sSI4eQaer0xxw==
+X-Nifty-SrcIP: [126.125.154.139]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jessica Yu <jeyu@kernel.org>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michael Schmitz <schmitzmic@gmail.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "npmccallum@redhat.com" <npmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>
-Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
-Message-ID: <20190517160505.GB15006@linux.intel.com>
-References: <20190515013031.GF1977@linux.intel.com>
- <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
- <alpine.LRH.2.21.1905160543070.19802@namei.org>
- <CALCETrX_Q6qwNRNF0TL2tgfm1j6DKLX7NVHHmWbMFtk3WnHDKw@mail.gmail.com>
- <alpine.LRH.2.21.1905160844130.29250@namei.org>
- <CALCETrX2ovRx3Rre+1_xC-q6CiybyLjQ-gmB4FZF_qCZ-Qd+4A@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E38CD@ORSMSX116.amr.corp.intel.com>
- <CALCETrUfmyQ7ivNzQic0FyPXe1fmAnoK093jnz0i8DRn2LvdSA@mail.gmail.com>
- <960B34DE67B9E140824F1DCDEC400C0F654E3FB9@ORSMSX116.amr.corp.intel.com>
- <CALCETrXmyau8Gq-wKHZ5FdNGF+mqd7a+q+HAVR2sqvXA6av9BA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrXmyau8Gq-wKHZ5FdNGF+mqd7a+q+HAVR2sqvXA6av9BA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Rusty Russell <rusty@rustcorp.com.au>,
+        Kees Cook <keescook@chromium.org>,
+        Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
+        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] kbuild: check uniqueness of module names
+Date:   Sat, 18 May 2019 01:07:15 +0900
+Message-Id: <1558109235-23042-1-git-send-email-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 05:35:16PM -0700, Andy Lutomirski wrote:
-> On Thu, May 16, 2019 at 3:23 PM Xing, Cedric <cedric.xing@intel.com> wrote:
-> > And if you are with me on that bigger picture, the next question is: what
-> > should be the default behavior of security_sgx_mprot() for
-> > existing/non-SGX-aware LSM modules/policies? I'd say a reasonable default
-> > is to allow R, RW and RX, but not anything else. It'd suffice to get rid of
-> > EXECMEM/EXECMOD requirements on enclave applications. For SGX1, EPCM
-> > permissions are immutable so it really doesn't matter what
-> > security_sgx_mprot() does. For SGX2 and beyond, there's still time and new
-> > SGX-aware LSM modules/policies will probably have emerged by then.
-> 
-> I hadn't thought about the SGX1 vs SGX2 difference.  If the driver
-> initially only wants to support SGX1, then I guess we really could get
-> away with constraining the EPC flags based on the source page
-> permission and not restricting mprotect() and mmap() permissions on
-> /dev/sgx/enclave at all.
+In the recent build test of linux-next, Stephen saw a build error
+caused by a broken .tmp_versions/*.mod file:
 
-No, SGX1 vs SGX2 support in the kernel is irrelevant.  Well, unless the
-driver simply refuses to load on SGX2 hardware, but I don't think anyone
-wants to go that route.  There is no enabling or attribute bit required
-to execute ENCLU[EMODPE], e.g. an enclave can effect RW->RWX in the EPCM
-on SGX2 hardware regardless of what the kernel is doing.
+  https://lkml.org/lkml/2019/5/13/991
 
-IMO the kernel should ignore the EPCM from an LSM perspective.
+drivers/net/phy/asix.ko and drivers/net/usb/asix.ko have the same
+basename, and there is a race in generating .tmp_versions/asix.mod
+
+Kbuild has not checked this before, and it suddenly shows up with
+obscure error message when this kind of race occurs.
+
+Non-unique module names cause various sort of problems, but it is
+not trivial to catch them by eyes.
+
+Hence, this script.
+
+It checks not only real modules, but also built-in modules (i.e.
+controlled by tristate CONFIG option, but currently compiled with =y).
+Non-unique names for built-in modules also cause problems because
+/sys/modules/ would fall over.
+
+I tested allmodconfig on the latest kernel, and it detected the
+following:
+
+warning: same basename if the following are built as modules:
+  drivers/regulator/88pm800.ko
+  drivers/mfd/88pm800.ko
+warning: same basename if the following are built as modules:
+  drivers/gpu/drm/bridge/adv7511/adv7511.ko
+  drivers/media/i2c/adv7511.ko
+warning: same basename if the following are built as modules:
+  drivers/net/phy/asix.ko
+  drivers/net/usb/asix.ko
+warning: same basename if the following are built as modules:
+  fs/coda/coda.ko
+  drivers/media/platform/coda/coda.ko
+warning: same basename if the following are built as modules:
+  drivers/net/phy/realtek.ko
+  drivers/net/dsa/realtek.ko
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
+---
+
+Changes in v3:
+ - Simplied sed code (Alexander Kapshuk)
+
+Changes in v2:
+ - redirect messages to stderr
+ - use '--' after 'basename -a'
+ - use '-r' for xargs to cope with empty modules.order/modules.builtin
+
+ Makefile                 |  1 +
+ scripts/modules-check.sh | 16 ++++++++++++++++
+ 2 files changed, 17 insertions(+)
+ create mode 100755 scripts/modules-check.sh
+
+diff --git a/Makefile b/Makefile
+index a61a95b..30792fe 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1290,6 +1290,7 @@ modules: $(vmlinux-dirs) $(if $(KBUILD_BUILTIN),vmlinux) modules.builtin
+ 	$(Q)$(AWK) '!x[$$0]++' $(vmlinux-dirs:%=$(objtree)/%/modules.order) > $(objtree)/modules.order
+ 	@$(kecho) '  Building modules, stage 2.';
+ 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
++	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/modules-check.sh
+ 
+ modules.builtin: $(vmlinux-dirs:%=%/modules.builtin)
+ 	$(Q)$(AWK) '!x[$$0]++' $^ > $(objtree)/modules.builtin
+diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
+new file mode 100755
+index 0000000..2f65953
+--- /dev/null
++++ b/scripts/modules-check.sh
+@@ -0,0 +1,16 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++
++set -e
++
++# Check uniqueness of module names
++check_same_name_modules()
++{
++	for m in $(sed 's:.*/::' modules.order modules.builtin | sort | uniq -d)
++	do
++		echo "warning: same basename if the following are built as modules:" >&2
++		sed "/\/$m/!d;s:^kernel/:  :" modules.order modules.builtin >&2
++	done
++}
++
++check_same_name_modules
+-- 
+2.7.4
+
