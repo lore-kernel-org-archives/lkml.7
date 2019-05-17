@@ -2,110 +2,87 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC58C46470
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA75EC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC79E20578
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEAAC20578
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:38:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z97MoOwI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbfEQHia (ORCPT
+        id S1728638AbfEQHid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 03:38:30 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:48389 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727727AbfEQHi3 (ORCPT
+        Fri, 17 May 2019 03:38:33 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:54156 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727727AbfEQHib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 03:38:29 -0400
-X-Originating-IP: 80.215.154.25
-Received: from localhost (unknown [80.215.154.25])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 874A2E001C;
-        Fri, 17 May 2019 07:38:16 +0000 (UTC)
-Date:   Fri, 17 May 2019 09:38:15 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Frank Lee <tiny.windzz@gmail.com>
-Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>, robh+dt@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, catalin.marinas@arm.com,
-        will.deacon@arm.com, David Miller <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan.Cameron@huawei.com,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        paulmck@linux.ibm.com, Andy Gross <andy.gross@linaro.org>,
-        olof@lixom.net, bjorn.andersson@linaro.org,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        marc.w.gonzalez@free.fr, stefan.wahren@i2se.com,
-        enric.balletbo@collabora.com, Linux PM <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: thermal: add binding document for h6
- thermal controller
-Message-ID: <20190517073815.e5h7obnzyaljj4xn@flea>
-References: <20190512082614.9045-1-tiny.windzz@gmail.com>
- <20190512082614.9045-4-tiny.windzz@gmail.com>
- <20190512134152.yrletgtiglxncyo4@flea>
- <CAEExFWvkM86ajB4io8yopkKEOfRE3UObRpqoi=Sq0RtDnuaRWA@mail.gmail.com>
+        Fri, 17 May 2019 03:38:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4y+BMtQWomyB2L1H+6GtRYBBGAXJShvCIuwb2gYi3eg=; b=Z97MoOwIvXidOqh4GUdK7xv98
+        pqxc9+84nplfhaZHP4QkD8vU6ITCgHnOq4B/1WMnA0aHigKsIhTJjbYJcZlmtKnPxfXlwMwgYTsOg
+        LJp2pdjWTyPO1DnTtS4nzdJ2HBc5wC2o07EZItlgTcwr1jf86Ge8ZscBvvUfUN9jlEMGcF96bo7Cf
+        kELfUxwLhNEj7yh4jxWs5XpJ5ngAKmFAoc3s1pB59L/UXU1748TncDr2S7zjMprPl+H6BKmdw60BK
+        ffV050abCdOJx530zSF4wIXYMyAUrK+K7hNUa2rIjofxaJissXVOeQcMUpzYOU7qLLFz2zCLHHZWU
+        pMOE/CbuQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hRXRX-00058s-2j; Fri, 17 May 2019 07:38:15 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 64D192027C9FD; Fri, 17 May 2019 09:38:13 +0200 (CEST)
+Date:   Fri, 17 May 2019 09:38:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Ivan Babrou <ivan@cloudflare.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>
+Subject: Re: Linux 4.19 and GCC 9
+Message-ID: <20190517073813.GB2589@hirez.programming.kicks-ass.net>
+References: <CABWYdi06NUOWRLingNuybgZZsTZPjhmsOx-9oCGK94qZGYbzcw@mail.gmail.com>
+ <CANiq72kvpiC-i53AXM-YsCUvWroHQemmqxsXjnB330ZEeHahUg@mail.gmail.com>
+ <CABWYdi1zhTTaN-GSgH0DnPfz7p=SRw0wts5QVYYVtfvoiS0qnQ@mail.gmail.com>
+ <CANiq72=fsL5m2_e+bNovFCHy3=YVf53EKGtGE_sWvsAD=ONHuQ@mail.gmail.com>
+ <20190516225013.nvhwqi5tfwtby6qb@treble>
+ <CABWYdi29E++jBw8boFZAiDZA7iT5NiJhnNmiHb-Rvd9+97hSVA@mail.gmail.com>
+ <20190517050931.GB32367@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fxtyg6m4voydyy57"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEExFWvkM86ajB4io8yopkKEOfRE3UObRpqoi=Sq0RtDnuaRWA@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190517050931.GB32367@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, May 17, 2019 at 07:09:31AM +0200, Greg KH wrote:
+> On Thu, May 16, 2019 at 08:14:25PM -0700, Ivan Babrou wrote:
+> > We are building the upstream kernel. There are a few patches, but
+> > nothing related to objtool.
+> > 
+> > Unless you mean mainline/stable by upstream, I haven't tried that. We
+> > stick to LTS.
+> 
+> Please work and all of these issues fixed up in Linus's tree and then I
+> will be glad to take the fixed into the stable releases.
 
---fxtyg6m4voydyy57
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, May 17, 2019 at 02:13:58AM +0800, Frank Lee wrote:
-> On Sun, May 12, 2019 at 9:41 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> >
-> > Hi,
-> >
-> > On Sun, May 12, 2019 at 04:26:14AM -0400, Yangtao Li wrote:
-> > > This patch adds binding document for allwinner h6 thermal controller.
-> > >
-> > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > > ---
-> > >  .../bindings/thermal/sun50i-thermal.txt       | 32 +++++++++++++++++++
-> > >  1 file changed, 32 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/thermal/sun50i-thermal.txt
-> >
-> > We're starting to convert to YAML for binding descriptions that will
-> > allow to validate that all DT are properly using the binding. It would
-> > be great if you could use it as well.
->
-> What have been changed to this now?
-
-This needs a YAML file instead of the text file you introduced.
-
-Maxime
-
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---fxtyg6m4voydyy57
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXN5k5wAKCRDj7w1vZxhR
-xVi+AQDjoz3LrnnFNDvlVcYVt1sSrswPkuViJuQuLmCuUtaAxAD/elWxrmZ+1PF9
-BqQU0LtypLWGmBgeF++P6OPWQT10YQQ=
-=3mNs
------END PGP SIGNATURE-----
-
---fxtyg6m4voydyy57--
+Right; if there is anything you can reproduce on linus.git I'll happily
+have a look. If it doesn't reproduce all you have to do is find the
+patches that make it work and ask Greg.
