@@ -2,142 +2,138 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F3BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF39C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 635832087B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BBFA2084A
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:38:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727651AbfEQDc5 (ORCPT
+        id S1727694AbfEQDiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 23:32:57 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:31767 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725929AbfEQDc5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 23:32:57 -0400
-X-UUID: 7c00949786d04952aa8af5a7eec0004e-20190517
-X-UUID: 7c00949786d04952aa8af5a7eec0004e-20190517
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1375638928; Fri, 17 May 2019 11:32:48 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs03n2.mediatek.inc (172.21.101.182) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 17 May 2019 11:32:39 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 17 May 2019 11:32:39 +0800
-Message-ID: <1558063959.14401.18.camel@mtksdaap41>
-Subject: Re: [PATCH v6 08/12] soc: mediatek: cmdq: define the instruction
- struct
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
-CC:     Jassi Brar <jassisinghbrar@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "Philipp Zabel" <p.zabel@pengutronix.de>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        "YT Shen" <yt.shen@mediatek.com>,
-        Daoyuan Huang <daoyuan.huang@mediatek.com>,
-        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
-        Dennis-YC Hsieh 
-        <dennis-yc.hsimediatek/mtkcam/drv/fdvt/4.0/cam_fdvt_v4l2.cppeh@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        <ginny.chen@mediatek.com>
-Date:   Fri, 17 May 2019 11:32:39 +0800
-In-Reply-To: <20190516090224.59070-9-bibby.hsieh@mediatek.com>
-References: <20190516090224.59070-1-bibby.hsieh@mediatek.com>
-         <20190516090224.59070-9-bibby.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: 9C00DE444E660D85CDFD1DC30AAFFABEDB58AFC441998971D133D2E68A8E916E2000:8
-X-MTK:  N
+        Thu, 16 May 2019 23:38:11 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:33224 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725929AbfEQDiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 23:38:10 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F2B0D1A01B9;
+        Fri, 17 May 2019 05:38:07 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 129541A0110;
+        Fri, 17 May 2019 05:38:02 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id CC19E402AE;
+        Fri, 17 May 2019 11:37:54 +0800 (SGT)
+From:   Ran Wang <ran.wang_1@nxp.com>
+To:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH V2 1/3] PM: wakeup: Add routine to help fetch wakeup source object.
+Date:   Fri, 17 May 2019 11:39:44 +0800
+Message-Id: <20190517033946.30763-1-ran.wang_1@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Bibby:
+Some user might want to go through all registered wakeup sources
+and doing things accordingly. For example, SoC PM driver might need to
+do HW programming to prevent powering down specific IP which wakeup
+source depending on. And is user's responsibility to identify if this
+wakeup source he is interested in.
 
-On Thu, 2019-05-16 at 17:02 +0800, Bibby Hsieh wrote:
-> Define a instruction structure for gce driver to append command.
-> This structure can make the client's code more readability.
-> 
-> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-> ---
->  drivers/soc/mediatek/mtk-cmdq-helper.c   | 113 +++++++++++++++--------
->  include/linux/mailbox/mtk-cmdq-mailbox.h |   2 +
->  include/linux/soc/mediatek/mtk-cmdq.h    |  14 +--
->  3 files changed, 84 insertions(+), 45 deletions(-)
-> 
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+---
+Change in v2:
+	- None.
 
-[snip]
+ drivers/base/power/wakeup.c |   18 ++++++++++++++++++
+ include/linux/pm_wakeup.h   |    3 +++
+ 2 files changed, 21 insertions(+), 0 deletions(-)
 
->  
->  /**
->   * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
->   * @pkt:	the CMDQ packet
-> - * @value:	the specified target register value
->   * @subsys:	the CMDQ sub system code
->   * @offset:	register offset from CMDQ sub system
-> + * @value:	the specified target register value
->   * @mask:	the specified target register mask
->   *
->   * Return: 0 for success; else the error code is returned
->   */
-> -int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
-> -			u32 subsys, u32 offset, u32 mask);
-> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys, u16 offset,
-> +			u32 value, u32 mask);
-
-You have do two things for this interface: one is reordering the
-parameter, another one is changing type of subsys from u32 to u8.
-
-Define the instruction struct is not necessary to change the order and
-type. I would like you to separate these two things to another patches.
-So the patch sequence may be:
-
-1. Reorder parameter of cmdq_pkt_write_mask()
-2. Change subsys type to u8
-3. define the instruction struct
-
-Regards,
-CK
-
->  
->  /**
->   * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
-> @@ -88,7 +88,7 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
->   *
->   * Return: 0 for success; else the error code is returned
->   */
-> -int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
-> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u16 event);
->  
->  /**
->   * cmdq_pkt_clear_event() - append clear event command to the CMDQ packet
-> @@ -97,7 +97,7 @@ int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
->   *
->   * Return: 0 for success; else the error code is returned
->   */
-> -int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event);
-> +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u16 event);
->  
->  /**
->   * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
-
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index 5b2b6a0..6904485 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -14,6 +14,7 @@
+ #include <linux/suspend.h>
+ #include <linux/seq_file.h>
+ #include <linux/debugfs.h>
++#include <linux/of_device.h>
+ #include <linux/pm_wakeirq.h>
+ #include <trace/events/power.h>
+ 
+@@ -226,6 +227,22 @@ void wakeup_source_unregister(struct wakeup_source *ws)
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(wakeup_source_unregister);
++/**
++ * wakeup_source_get_next - Get next wakeup source from the list
++ * @ws: Previous wakeup source object, null means caller want first one.
++ */
++struct wakeup_source *wakeup_source_get_next(struct wakeup_source *ws)
++{
++	struct list_head *ws_head = &wakeup_sources;
++
++	if (ws)
++		return list_next_or_null_rcu(ws_head, &ws->entry,
++				struct wakeup_source, entry);
++	else
++		return list_entry_rcu(ws_head->next,
++				struct wakeup_source, entry);
++}
++EXPORT_SYMBOL_GPL(wakeup_source_get_next);
+ 
+ /**
+  * device_wakeup_attach - Attach a wakeup source object to a device object.
+@@ -242,6 +259,7 @@ static int device_wakeup_attach(struct device *dev, struct wakeup_source *ws)
+ 		return -EEXIST;
+ 	}
+ 	dev->power.wakeup = ws;
++	ws->attached_dev = dev;
+ 	if (dev->power.wakeirq)
+ 		device_wakeup_attach_irq(dev, dev->power.wakeirq);
+ 	spin_unlock_irq(&dev->power.lock);
+diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
+index 0ff134d..3d300f5 100644
+--- a/include/linux/pm_wakeup.h
++++ b/include/linux/pm_wakeup.h
+@@ -50,6 +50,7 @@
+  * @wakeup_count: Number of times the wakeup source might abort suspend.
+  * @active: Status of the wakeup source.
+  * @has_timeout: The wakeup source has been activated with a timeout.
++ * @attached_dev: The device it attached to
+  */
+ struct wakeup_source {
+ 	const char 		*name;
+@@ -70,6 +71,7 @@ struct wakeup_source {
+ 	unsigned long		wakeup_count;
+ 	bool			active:1;
+ 	bool			autosleep_enabled:1;
++	struct device	*attached_dev;
+ };
+ 
+ #ifdef CONFIG_PM_SLEEP
+@@ -101,6 +103,7 @@ static inline void device_set_wakeup_path(struct device *dev)
+ extern void wakeup_source_remove(struct wakeup_source *ws);
+ extern struct wakeup_source *wakeup_source_register(const char *name);
+ extern void wakeup_source_unregister(struct wakeup_source *ws);
++extern struct wakeup_source *wakeup_source_get_next(struct wakeup_source *ws);
+ extern int device_wakeup_enable(struct device *dev);
+ extern int device_wakeup_disable(struct device *dev);
+ extern void device_set_wakeup_capable(struct device *dev, bool capable);
+-- 
+1.7.1
 
