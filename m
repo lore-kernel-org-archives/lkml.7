@@ -2,94 +2,228 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3CCC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96A0C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CED81206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:00:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bdwPkfc5"
+	by mail.kernel.org (Postfix) with ESMTP id 97369206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:04:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbfEQIAt (ORCPT
+        id S1728477AbfEQIEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 04:00:49 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43592 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727520AbfEQIAs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 04:00:48 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u27so4621854lfg.10;
-        Fri, 17 May 2019 01:00:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=E30ZwXceSLrrdqkhZETQJSrFB4D6w8xtvQQj0QSh1bk=;
-        b=bdwPkfc51sJvmJvEEnbkjJeee5dDIVMrgrBcQbEWcuq3Gu7xg4Drx7Sxhgj0S7ifcX
-         MHKOMyvUXD9qL1hCSXPCieoxHNgARijo9pvrnOH2EzfYZqXH5Lz7TJtcVndAOVHo4XZw
-         rUwn3YonVOZFmAV/YnXpExobHSwnuBBeUq0GSrlLVM4UVA1/PVAvsvs3x6QuHTGJ4yyD
-         kKNvUUksj1K0U1tcX4QimvxzelNTM+STaUm5uKCtcO3E7D+UqMhcG3yO+T91qZWg5dD+
-         Es9SUG2SdeE2D42NKKLasOMtjhLIsUYe12Is80QapjF0rNGGNHdoPyzrhlywFra9vN0d
-         DceA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=E30ZwXceSLrrdqkhZETQJSrFB4D6w8xtvQQj0QSh1bk=;
-        b=Lg94UA4xaWTncgcl46mE0Uv0BFMjDyVEBTEB1MinSTI119HUT0bQB1xZ5NRdH6gQBE
-         sL1z/LfRVu3JxowHy3oDh04xllCh1TI9nBRIoZ0MlHllhWuF6b7caLmijldAHO3aoQzY
-         RtimCxUcl8yYfpQv1XqohBgrWOaLGwxkf6qYYicijSetjXlAzlLP+GXBb1M2srSQYH1c
-         N9ktw/m/YaK6Bjx6NEwVuOhXKu3c4iK74OjqADHGGOdNg8owc9LLegz7yawYPFI5QhQP
-         OmcYmvtseKCGjWk8+mxq1MKqNeRXe3NP6dX4T22lXGdwljbx43RQ0DAsGXMv8lcZ6piW
-         cQzA==
-X-Gm-Message-State: APjAAAXWlT5faqBNYTMubXvOYgxPaXC1vNhdrp7uxdqPnO5uoPcK3si9
-        QdUqcGTDWXISJkgUAr1zKew=
-X-Google-Smtp-Source: APXvYqyj6/DLX73BQiC/tmB+COsEsDGqOV7JEYLnsSkkybRgysxcV2Grcx3KQm4HBOHGkZXarbVNkw==
-X-Received: by 2002:a19:a8c8:: with SMTP id r191mr26781060lfe.85.1558080047145;
-        Fri, 17 May 2019 01:00:47 -0700 (PDT)
-Received: from esperanza ([185.6.245.156])
-        by smtp.gmail.com with ESMTPSA id a25sm1288972ljd.32.2019.05.17.01.00.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 May 2019 01:00:46 -0700 (PDT)
-Date:   Fri, 17 May 2019 11:00:44 +0300
-From:   Vladimir Davydov <vdavydov.dev@gmail.com>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
-        cgroups@vger.kernel.org,
-        Raghavendra K T <raghavendra.kt@linux.vnet.ibm.com>
-Subject: Re: [PATCH] memcg: make it work on sparse non-0-node systems
-Message-ID: <20190517080044.tnwhbeyxcccsymgf@esperanza>
-References: <359d98e6-044a-7686-8522-bdd2489e9456@suse.cz>
- <20190429105939.11962-1-jslaby@suse.cz>
- <20190509122526.ck25wscwanooxa3t@esperanza>
- <20190516135923.GV16651@dhcp22.suse.cz>
- <68075828-8fd7-adbb-c1d9-5eb39fbf18cb@suse.cz>
+        Fri, 17 May 2019 04:04:12 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7658 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727620AbfEQIEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 04:04:12 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9FD5DA080717BEF5EF82;
+        Fri, 17 May 2019 16:04:09 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 17 May 2019
+ 16:04:07 +0800
+Subject: Re: [PATCH] ipvs: Fix use-after-free in ip_vs_in
+To:     Julian Anastasov <ja@ssi.bg>
+References: <20190515093614.21176-1-yuehaibing@huawei.com>
+ <alpine.LFD.2.21.1905171015040.2233@ja.home.ssi.bg>
+CC:     <davem@davemloft.net>, <wensong@linux-vs.org>,
+        <horms@verge.net.au>, <pablo@netfilter.org>,
+        <kadlec@blackhole.kfki.hu>, <fw@strlen.de>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <lvs-devel@vger.kernel.org>, <netfilter-devel@vger.kernel.org>,
+        <coreteam@netfilter.org>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <9cb4160c-8aa7-8a0b-bbca-0c3ad2809db2@huawei.com>
+Date:   Fri, 17 May 2019 16:04:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <68075828-8fd7-adbb-c1d9-5eb39fbf18cb@suse.cz>
+In-Reply-To: <alpine.LFD.2.21.1905171015040.2233@ja.home.ssi.bg>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 06:48:37AM +0200, Jiri Slaby wrote:
-> On 16. 05. 19, 15:59, Michal Hocko wrote:
-> >> However, I tend to agree with Michal that (ab)using node[0].memcg_lrus
-> >> to check if a list_lru is memcg aware looks confusing. I guess we could
-> >> simply add a bool flag to list_lru instead. Something like this, may be:
-> > 
-> > Yes, this makes much more sense to me!
+On 2019/5/17 15:30, Julian Anastasov wrote:
 > 
-> I am not sure if I should send a patch with this solution or Vladimir
-> will (given he is an author and has a diff already)?
+> 	Hello,
+> 
+> On Wed, 15 May 2019, YueHaibing wrote:
+> 
+>> BUG: KASAN: use-after-free in ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
+>> Read of size 4 at addr ffff8881e9b26e2c by task sshd/5603
+>>
+>> CPU: 0 PID: 5603 Comm: sshd Not tainted 4.19.39+ #30
+>> Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+>> Call Trace:
+>>  dump_stack+0x71/0xab
+>>  print_address_description+0x6a/0x270
+>>  kasan_report+0x179/0x2c0
+>>  ? ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
+>>  ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
+>>  ? tcp_in_window+0xfe0/0xfe0 [nf_conntrack]
+>>  ? ip_vs_in_icmp+0xcc0/0xcc0 [ip_vs]
+>>  ? ipt_do_table+0x4f1/0xad0 [ip_tables]
+>>  ? ip_vs_out+0x126/0x8f0 [ip_vs]
+>>  ? common_interrupt+0xa/0xf
+>>  ip_vs_in+0xd8/0x170 [ip_vs]
+>>  ? ip_vs_in.part.29+0xd20/0xd20 [ip_vs]
+>>  ? nf_nat_ipv4_fn+0x21/0xc0 [nf_nat_ipv4]
+>>  ? nf_nat_packet+0x4b/0x90 [nf_nat]
+>>  ? nf_nat_ipv4_local_fn+0xf9/0x160 [nf_nat_ipv4]
+>>  ? ip_vs_remote_request4+0x50/0x50 [ip_vs]
+>>  nf_hook_slow+0x5f/0xe0
+>>  ? sock_write_iter+0x121/0x1c0
+>>  __ip_local_out+0x1d5/0x250
+>>  ? ip_finish_output+0x430/0x430
+>>  ? ip_forward_options+0x2d0/0x2d0
+>>  ? ip_copy_addrs+0x2d/0x40
+>>  ? __ip_queue_xmit+0x2ca/0x730
+>>  ip_local_out+0x19/0x60
+>>  __tcp_transmit_skb+0xba1/0x14f0
+>>  ? __tcp_select_window+0x330/0x330
+>>  ? pvclock_clocksource_read+0xd1/0x180
+>>  ? kvm_sched_clock_read+0xd/0x20
+>>  ? sched_clock+0x5/0x10
+>>  ? sched_clock_cpu+0x18/0x100
+>>  tcp_write_xmit+0x41f/0x1ed0
+>>  ? _copy_from_iter_full+0xca/0x340
+>>  __tcp_push_pending_frames+0x52/0x140
+>>  tcp_sendmsg_locked+0x787/0x1600
+>>  ? __wake_up_common_lock+0x80/0x130
+>>  ? tcp_sendpage+0x60/0x60
+>>  ? remove_wait_queue+0x84/0xb0
+>>  ? mutex_unlock+0x1d/0x40
+>>  ? n_tty_read+0x4f7/0xd20
+>>  ? check_stack_object+0x21/0x60
+>>  ? inet_sk_set_state+0xb0/0xb0
+>>  tcp_sendmsg+0x27/0x40
+>>  sock_sendmsg+0x6d/0x80
+>>  sock_write_iter+0x121/0x1c0
+>>  ? sock_sendmsg+0x80/0x80
+>>  ? ldsem_up_read+0x13/0x40
+>>  ? iov_iter_init+0x77/0xb0
+>>  __vfs_write+0x23e/0x370
+>>  ? kernel_read+0xa0/0xa0
+>>  ? do_vfs_ioctl+0x134/0x900
+>>  ? __set_current_blocked+0x7e/0x90
+>>  ? __audit_syscall_entry+0x18e/0x1f0
+>>  ? ktime_get_coarse_real_ts64+0x51/0x70
+>>  vfs_write+0xe7/0x230
+>>  ksys_write+0xa1/0x120
+>>  ? __ia32_sys_read+0x50/0x50
+>>  ? __audit_syscall_exit+0x3ce/0x450
+>>  do_syscall_64+0x73/0x200
+>>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>> RIP: 0033:0x7ff6f6147c60
+>> Code: 73 01 c3 48 8b 0d 28 12 2d 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 5d 73 2d 00 00 75 10 b8 01 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83
+>> RSP: 002b:00007ffd772ead18 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+>> RAX: ffffffffffffffda RBX: 0000000000000034 RCX: 00007ff6f6147c60
+>> RDX: 0000000000000034 RSI: 000055df30a31270 RDI: 0000000000000003
+>> RBP: 000055df30a31270 R08: 0000000000000000 R09: 0000000000000000
+>> R10: 00007ffd772ead70 R11: 0000000000000246 R12: 00007ffd772ead74
+>> R13: 00007ffd772eae20 R14: 00007ffd772eae24 R15: 000055df2f12ddc0
+>>
+>> Allocated by task 6052:
+>>  kasan_kmalloc+0xa0/0xd0
+>>  __kmalloc+0x10a/0x220
+>>  ops_init+0x97/0x190
+>>  register_pernet_operations+0x1ac/0x360
+>>  register_pernet_subsys+0x24/0x40
+>>  0xffffffffc0ea016d
+>>  do_one_initcall+0x8b/0x253
+>>  do_init_module+0xe3/0x335
+>>  load_module+0x2fc0/0x3890
+>>  __do_sys_finit_module+0x192/0x1c0
+>>  do_syscall_64+0x73/0x200
+>>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>
+>> Freed by task 6067:
+>>  __kasan_slab_free+0x130/0x180
+>>  kfree+0x90/0x1a0
+>>  ops_free_list.part.7+0xa6/0xc0
+>>  unregister_pernet_operations+0x18b/0x1f0
+>>  unregister_pernet_subsys+0x1d/0x30
+>>  ip_vs_cleanup+0x1d/0xd2f [ip_vs]
+>>  __x64_sys_delete_module+0x20c/0x300
+>>  do_syscall_64+0x73/0x200
+>>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>
+>> The buggy address belongs to the object at ffff8881e9b26600 which belongs to the cache kmalloc-4096 of size 4096
+>> The buggy address is located 2092 bytes inside of 4096-byte region [ffff8881e9b26600, ffff8881e9b27600)
+>> The buggy address belongs to the page:
+>> page:ffffea0007a6c800 count:1 mapcount:0 mapping:ffff888107c0e600 index:0x0 compound_mapcount: 0
+>> flags: 0x17ffffc0008100(slab|head)
+>> raw: 0017ffffc0008100 dead000000000100 dead000000000200 ffff888107c0e600
+>> raw: 0000000000000000 0000000080070007 00000001ffffffff 0000000000000000
+>> page dumped because: kasan: bad access detected
+>>
+>> Memory state around the buggy address:
+>>  ffff8881e9b26d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>>  ffff8881e9b26d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>>> ffff8881e9b26e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>>                                   ^
+>>  ffff8881e9b26e80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>>  ffff8881e9b26f00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>>
+>> while unregistering ipvs module, ops_free_list calls
+>> __ip_vs_cleanup, then nf_unregister_net_hooks be called to
+>> do remove nf hook entries. It need a RCU period to finish,
+>> however net->ipvs is set to NULL immediately, which will
+>> trigger NULL pointer dereference when a packet is hooked
+>> and handled by ip_vs_in where net->ipvs is dereferenced.
+>>
+>> Another scene is ops_free_list call ops_free to free the
+>> net_generic directly while __ip_vs_cleanup finished, then
+>> calling ip_vs_in will triggers use-after-free.
+> 
+> 	OK, can you instead test and post a patch that moves
+> nf_unregister_net_hooks from __ip_vs_cleanup() to
+> __ip_vs_dev_cleanup()? You can add commit efe41606184e
+> in Fixes line. There is rcu_barrier() in unregister_pernet_device ->
+> unregister_pernet_operations that will do the needed grace
+> period.
 
-I didn't even try to compile it, let alone test it. I'd appreciate if
-you could wrap it up and send it out using your authorship. Feel free
-to add my acked-by.
+Ok,  I will try it later, thanks!
+
+> 
+> 	In a followup patch for net-next I'll drop the
+> ipvs->enable flag and will move the nf_register_net_hooks()
+> call to ip_vs_add_service() just before the 'svc = kzalloc'
+> part. So, for now you do not need to move nf_register_net_hooks.
+> As result, hooks will be registered when there are IPVS rules.
+> 
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+>> Fixes: efe41606184e ("ipvs: convert to use pernet nf_hook api")
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  net/netfilter/ipvs/ip_vs_core.c | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+>> index 1445755..33205db 100644
+>> --- a/net/netfilter/ipvs/ip_vs_core.c
+>> +++ b/net/netfilter/ipvs/ip_vs_core.c
+>> @@ -2320,6 +2320,7 @@ static void __net_exit __ip_vs_cleanup(struct net *net)
+>>  	ip_vs_control_net_cleanup(ipvs);
+>>  	ip_vs_estimator_net_cleanup(ipvs);
+>>  	IP_VS_DBG(2, "ipvs netns %d released\n", ipvs->gen);
+>> +	synchronize_net();
+>>  	net->ipvs = NULL;
+>>  }
+> 
+> Regards
+> 
+> --
+> Julian Anastasov <ja@ssi.bg>
+> 
+> .
+> 
+
