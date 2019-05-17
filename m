@@ -2,773 +2,243 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1825C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3B7C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6450520833
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16D2C204EC
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 06:37:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bxL1vJtO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728046AbfEQGgI (ORCPT
+        id S1728054AbfEQGhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 02:36:08 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43208 "EHLO huawei.com"
+        Fri, 17 May 2019 02:37:23 -0400
+Received: from mail-eopbgr30053.outbound.protection.outlook.com ([40.107.3.53]:61953
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727500AbfEQGgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 02:36:08 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DC872949CCF7675792E;
-        Fri, 17 May 2019 14:36:04 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 17 May
- 2019 14:35:55 +0800
-Subject: Re: [PATCH 1/1] LZ4: Port LZ4 1.9.x FAST_DEC_LOOP and enable it on
- x86 and ARM64
-To:     Chenxi Mao <chenxi.mao@sony.com>
-CC:     <akpm@linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <roy.feng@sony.com>, <yuanli.xu@sony.com>, <robert.alm@sony.com>,
-        <masaya.a.takahashi@sony.com>, <yann.collet.73@gmail.com>,
-        <miaoxie@huawei.com>
-References: <20190517055624.52688-1-chenxi.mao@sony.com>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <2f79fc9f-b0e4-a528-b56b-3e7001d9ef89@huawei.com>
-Date:   Fri, 17 May 2019 14:35:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
-MIME-Version: 1.0
-In-Reply-To: <20190517055624.52688-1-chenxi.mao@sony.com>
+        id S1727145AbfEQGhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 02:37:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LUccQsBUjRxK4ygUH5eCieEDkHct8Z6TgaBZ99cFDPk=;
+ b=bxL1vJtOv47E5TsBuDypM+4V0Ri4s9pYaFAuRGKf5KYcmPrGVNcRNwP8PnNE496wKVS0HHmfypvfjUN8EE3tQzNUF241jBCrc9pYPvqMRK24FJCcC7jD2aSe0zAELY44NhwY7v/hxiUbOIKuY9EhrpMd18uI6h2CQjVfLkKAIVY=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3706.eurprd04.prod.outlook.com (52.134.66.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16; Fri, 17 May 2019 06:37:11 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d035:3bd0:a56a:189d]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::d035:3bd0:a56a:189d%2]) with mapi id 15.20.1900.010; Fri, 17 May 2019
+ 06:37:11 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "agross@kernel.org" <agross@kernel.org>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V12 2/5] thermal: of-thermal: add API for getting sensor
+ ID from DT
+Thread-Topic: [PATCH V12 2/5] thermal: of-thermal: add API for getting sensor
+ ID from DT
+Thread-Index: AQHU9AOYmR6BJ3silEqzBa3crqYckaZtrlcAgAFe9pA=
+Date:   Fri, 17 May 2019 06:37:10 +0000
+Message-ID: <DB3PR0402MB39160D163B1EE70182FE4EBEF50B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1555384609-7030-1-git-send-email-Anson.Huang@nxp.com>
+ <1555384609-7030-2-git-send-email-Anson.Huang@nxp.com>
+ <d9c719c4-b5d1-580f-218e-0421126310e1@linaro.org>
+In-Reply-To: <d9c719c4-b5d1-580f-218e-0421126310e1@linaro.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 78325f48-e1d1-4b6d-bdfc-08d6da921760
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3706;
+x-ms-traffictypediagnostic: DB3PR0402MB3706:
+x-ms-exchange-purlcount: 2
+x-microsoft-antispam-prvs: <DB3PR0402MB370655FEA8EB2883A12C9B9AF50B0@DB3PR0402MB3706.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0040126723
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(376002)(366004)(396003)(39860400002)(199004)(189003)(13464003)(3846002)(6116002)(110136005)(25786009)(316002)(102836004)(446003)(11346002)(8676002)(186003)(33656002)(81166006)(81156014)(8936002)(486006)(99286004)(7696005)(7736002)(305945005)(476003)(53546011)(6506007)(44832011)(76176011)(5660300002)(2906002)(66066001)(26005)(66556008)(2501003)(64756008)(66476007)(6246003)(53936002)(71190400001)(71200400001)(9686003)(66446008)(6306002)(74316002)(55016002)(4326008)(6436002)(76116006)(73956011)(66946007)(229853002)(68736007)(256004)(7416002)(86362001)(2201001)(478600001)(52536014)(14454004)(921003)(15866825006)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3706;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: pymYk9XwOJzeu3ov5eqQAKk/FQXC0y2fn+WUXTDFY0v3ICuQJ/R4ikz2Y/UsA22259d1e63QEe7j0c8dA5zj4BHd9eKu/SHzskyvmexBJRSO/3gm2Lx+LquCoc4yHeOTmQau/GlXmtjMww7Ez256aVUC0BP8vJzsHGuck0oX9VmzJfK8Lb/dgZlkucAUhWP9Www+tftgtTP4M8Wm/DCFC8AUFFO8/ZYPODmEX35qdwrgsOerK5km1tPtgC4B17HDIw5r0RgJZOvTD5VYp80qyibTqL65njYq0ee9V+Lmnzy5DCL5wzDB2Ki0UqIN1ubBCSoQV+L4sNp4hUX9Z3n8uk+FY7Za2cTgOCmdocOGlwXdBx6/bV4LUcST31Y5GasHcc7fUqojboIjm65VL1wEPE00SG7SYXuRxZXKVCk8u9A=
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78325f48-e1d1-4b6d-bdfc-08d6da921760
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 06:37:10.9678
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3706
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chenxi,
-
-Some words about the patch format.. not important tho.
-
-One suggestion is that the subject line should be better written
-as "[PATCH v2/v3/...] title" since it's more clear to know
-which patch is the latest patch among these emails.
-
-On 2019/5/17 13:56, Chenxi Mao wrote:
-> FAST_DEC_LOOP was introduced from LZ4 1.9.0[1]
-> This change would be introduce 10% on decompress operation
-> according to LZ4 benchmark result on X86 devices.
-> Meanwhile, LZ4 with FAST_DEC_LOOP could get improvements on ARM64,
-> however clang compiler has downgrade if FAST_DEC_LOOP enabled.
-> 
-> So FAST_DEC_LOOP only enabled on X86/X86-64 or ARM64 with GCC build.
-> 
-> LZ4 FAST_DEC_LOOP bug fixes include as well.
-> 1. fixed read-after input in LZ4_decompress_safe() (issue 681)
-> 2. Fix out-of-bound read in LZ4_decompress_fast() (issue 676)
-> 
-> PS2:
-> 1. Move common API to lz4defs.h
-> 2. Add PPC related inline Macro defination.
-> 3. Force inline new static apis.
-> 
-> Here is the test result on ARM64(cortex-A53)
-> Benchmark via ZRAM:
-> 
-> Test case:
-> taskset 03 /data/fio --bs=32k --randrepeat=1 --randseed=100 --refill_buffers \
-> --buffer_compress_percentage=75  --size=700M \
-> --scramble_buffers=1 --direct=1 --loops=100 --numjobs=1 \
-> --filename=/data/test/test --name=seq-read --rw=read --stonewall
-> 
-> Patched:
->     READ: bw=150MiB/s (157MB/s)
-> Vanilla:
->     READ: bw=135MiB/s (142MB/s)
-> 
-> [1] https://github.com/lz4/lz4/releases/tag/v1.9.0
-> 
-> Signed-off-by: chenxi.mao <chenxi.mao@sony.com>
-> ---
-
-It's perferred to move all changelogs here if you don't want these changelog
-as a part of commit and there are some patches which can be referenced:
-https://lore.kernel.org/lkml/
-
-Thanks,
-Gao Xiang
-
->  lib/lz4/lz4_compress.c   |   4 +-
->  lib/lz4/lz4_decompress.c | 397 ++++++++++++++++++++++++++++++++-------
->  lib/lz4/lz4defs.h        |  60 +++++-
->  lib/lz4/lz4hc_compress.c |   2 +-
->  4 files changed, 392 insertions(+), 71 deletions(-)
-> 
-> diff --git a/lib/lz4/lz4_compress.c b/lib/lz4/lz4_compress.c
-> index cc7b6d4cc7c7..b703ed1ca57d 100644
-> --- a/lib/lz4/lz4_compress.c
-> +++ b/lib/lz4/lz4_compress.c
-> @@ -322,7 +322,7 @@ static FORCE_INLINE int LZ4_compress_generic(
->  				*token = (BYTE)(litLength << ML_BITS);
->  
->  			/* Copy Literals */
-> -			LZ4_wildCopy(op, anchor, op + litLength);
-> +			LZ4_wildCopy8(op, anchor, op + litLength);
->  			op += litLength;
->  		}
->  
-> @@ -628,7 +628,7 @@ static int LZ4_compress_destSize_generic(
->  				*token = (BYTE)(litLength << ML_BITS);
->  
->  			/* Copy Literals */
-> -			LZ4_wildCopy(op, anchor, op + litLength);
-> +			LZ4_wildCopy8(op, anchor, op + litLength);
->  			op += litLength;
->  		}
->  
-> diff --git a/lib/lz4/lz4_decompress.c b/lib/lz4/lz4_decompress.c
-> index 0c9d3ad17e0f..8622922304c3 100644
-> --- a/lib/lz4/lz4_decompress.c
-> +++ b/lib/lz4/lz4_decompress.c
-> @@ -50,6 +50,96 @@
->  #define assert(condition) ((void)0)
->  #endif
->  
-> +#ifndef LZ4_FAST_DEC_LOOP
-> +#if defined(__i386__) || defined(__x86_64__)
-> +#define LZ4_FAST_DEC_LOOP 1
-> +#elif defined(__aarch64__) && !defined(__clang__)
-> +     /* On aarch64, we disable this optimization for clang because on certain
-> +      * mobile chipsets and clang, it reduces performance. For more information
-> +      * refer to https://github.com/lz4/lz4/pull/707. */
-> +#define LZ4_FAST_DEC_LOOP 1
-> +#else
-> +#define LZ4_FAST_DEC_LOOP 0
-> +#endif
-> +#endif
-> +
-> +#if LZ4_FAST_DEC_LOOP
-> +#define FASTLOOP_SAFE_DISTANCE 64
-> +FORCE_O2_INLINE_GCC_PPC64LE void
-> +LZ4_memcpy_using_offset_base(BYTE * dstPtr, const BYTE * srcPtr, BYTE * dstEnd,
-> +			     const size_t offset)
-> +{
-> +	if (offset < 8) {
-> +		dstPtr[0] = srcPtr[0];
-> +
-> +		dstPtr[1] = srcPtr[1];
-> +		dstPtr[2] = srcPtr[2];
-> +		dstPtr[3] = srcPtr[3];
-> +		srcPtr += inc32table[offset];
-> +		memcpy(dstPtr + 4, srcPtr, 4);
-> +		srcPtr -= dec64table[offset];
-> +		dstPtr += 8;
-> +	} else {
-> +		memcpy(dstPtr, srcPtr, 8);
-> +		dstPtr += 8;
-> +		srcPtr += 8;
-> +	}
-> +
-> +	LZ4_wildCopy8(dstPtr, srcPtr, dstEnd);
-> +}
-> +
-> +/* customized variant of memcpy, which can overwrite up to 32 bytes beyond dstEnd
-> + * this version copies two times 16 bytes (instead of one time 32 bytes)
-> + * because it must be compatible with offsets >= 16. */
-> +FORCE_O2_INLINE_GCC_PPC64LE void
-> +LZ4_wildCopy32(void *dstPtr, const void *srcPtr, void *dstEnd)
-> +{
-> +	BYTE *d = (BYTE *) dstPtr;
-> +	const BYTE *s = (const BYTE *)srcPtr;
-> +	BYTE *const e = (BYTE *) dstEnd;
-> +
-> +	do {
-> +		memcpy(d, s, 16);
-> +		memcpy(d + 16, s + 16, 16);
-> +		d += 32;
-> +		s += 32;
-> +	} while (d < e);
-> +}
-> +
-> +FORCE_O2_INLINE_GCC_PPC64LE void
-> +LZ4_memcpy_using_offset(BYTE *dstPtr, const BYTE *srcPtr, BYTE *dstEnd,
-> +			const size_t offset)
-> +{
-> +	BYTE v[8];
-> +	switch (offset) {
-> +
-> +	case 1:
-> +		memset(v, *srcPtr, 8);
-> +		goto copy_loop;
-> +	case 2:
-> +		memcpy(v, srcPtr, 2);
-> +		memcpy(&v[2], srcPtr, 2);
-> +		memcpy(&v[4], &v[0], 4);
-> +		goto copy_loop;
-> +	case 4:
-> +		memcpy(v, srcPtr, 4);
-> +		memcpy(&v[4], srcPtr, 4);
-> +		goto copy_loop;
-> +	default:
-> +		LZ4_memcpy_using_offset_base(dstPtr, srcPtr, dstEnd, offset);
-> +		return;
-> +	}
-> +
-> +      copy_loop:
-> +	memcpy(dstPtr, v, 8);
-> +	dstPtr += 8;
-> +	while (dstPtr < dstEnd) {
-> +		memcpy(dstPtr, v, 8);
-> +		dstPtr += 8;
-> +	}
-> +}
-> +#endif
-> +
->  /*
->   * LZ4_decompress_generic() :
->   * This generic decompression function covers all use cases.
-> @@ -80,25 +170,28 @@ static FORCE_INLINE int LZ4_decompress_generic(
->  	 const size_t dictSize
->  	 )
->  {
-> -	const BYTE *ip = (const BYTE *) src;
-> -	const BYTE * const iend = ip + srcSize;
-> +	const BYTE *ip = (const BYTE *)src;
-> +	const BYTE *const iend = ip + srcSize;
->  
->  	BYTE *op = (BYTE *) dst;
-> -	BYTE * const oend = op + outputSize;
-> +	BYTE *const oend = op + outputSize;
->  	BYTE *cpy;
->  
-> -	const BYTE * const dictEnd = (const BYTE *)dictStart + dictSize;
-> -	static const unsigned int inc32table[8] = {0, 1, 2, 1, 0, 4, 4, 4};
-> -	static const int dec64table[8] = {0, 0, 0, -1, -4, 1, 2, 3};
-> +	const BYTE *const dictEnd = (const BYTE *)dictStart + dictSize;
->  
->  	const int safeDecode = (endOnInput == endOnInputSize);
->  	const int checkOffset = ((safeDecode) && (dictSize < (int)(64 * KB)));
->  
->  	/* Set up the "end" pointers for the shortcut. */
->  	const BYTE *const shortiend = iend -
-> -		(endOnInput ? 14 : 8) /*maxLL*/ - 2 /*offset*/;
-> +	    (endOnInput ? 14 : 8) /*maxLL*/ - 2 /*offset*/;
->  	const BYTE *const shortoend = oend -
-> -		(endOnInput ? 14 : 8) /*maxLL*/ - 18 /*maxML*/;
-> +	    (endOnInput ? 14 : 8) /*maxLL*/ - 18 /*maxML*/;
-> +
-> +	const BYTE *match;
-> +	size_t offset;
-> +	unsigned int token;
-> +	size_t length;
->  
->  	DEBUGLOG(5, "%s (srcSize:%i, dstSize:%i)", __func__,
->  		 srcSize, outputSize);
-> @@ -117,15 +210,195 @@ static FORCE_INLINE int LZ4_decompress_generic(
->  	if ((endOnInput) && unlikely(srcSize == 0))
->  		return -1;
->  
-> -	/* Main Loop : decode sequences */
-> +#if LZ4_FAST_DEC_LOOP
-> +	if ((oend - op) < FASTLOOP_SAFE_DISTANCE) {
-> +		DEBUGLOG(6, "skip fast decode loop");
-> +		goto safe_decode;
-> +	}
-> +
-> +	/* Fast loop : decode sequences as long as output < iend-FASTLOOP_SAFE_DISTANCE */
->  	while (1) {
-> -		size_t length;
-> -		const BYTE *match;
-> -		size_t offset;
-> +		/* Main fastloop assertion: We can always wildcopy FASTLOOP_SAFE_DISTANCE */
-> +		assert(oend - op >= FASTLOOP_SAFE_DISTANCE);
-> +		if (endOnInput) {
-> +			assert(ip < iend);
-> +		}
-> +		token = *ip++;
-> +		length = token >> ML_BITS;	/* literal length */
-> +
-> +		assert(!endOnInput || ip <= iend);	/* ip < iend before the increment */
-> +
-> +		/* decode literal length */
-> +		if (length == RUN_MASK) {
-> +			variable_length_error error = ok;
-> +			length +=
-> +			    read_variable_length(&ip, iend - RUN_MASK,
-> +						 endOnInput, endOnInput,
-> +						 &error);
-> +			if (error == initial_error) {
-> +				goto _output_error;
-> +			}
-> +			if ((safeDecode)
-> +			    && unlikely((uptrval) (op) + length <
-> +					(uptrval) (op))) {
-> +				goto _output_error;
-> +			}	/* overflow detection */
-> +			if ((safeDecode)
-> +			    && unlikely((uptrval) (ip) + length <
-> +					(uptrval) (ip))) {
-> +				goto _output_error;
-> +			}
->  
-> -		/* get literal length */
-> -		unsigned int const token = *ip++;
-> -		length = token>>ML_BITS;
-> +			/* overflow detection */
-> +			/* copy literals */
-> +			cpy = op + length;
-> +			LZ4_STATIC_ASSERT(MFLIMIT >= WILDCOPYLENGTH);
-> +			if (endOnInput) {	/* LZ4_decompress_safe() */
-> +				if ((cpy > oend - 32)
-> +				    || (ip + length > iend - 32)) {
-> +					goto safe_literal_copy;
-> +				}
-> +				LZ4_wildCopy32(op, ip, cpy);
-> +			} else {	/* LZ4_decompress_fast() */
-> +				if (cpy > oend - 8) {
-> +					goto safe_literal_copy;
-> +				}
-> +				LZ4_wildCopy8(op, ip, cpy);
-> +				/* LZ4_decompress_fast() cannot copy more than 8 bytes at a time */
-> +				/* it doesn't know input length, and only relies on end-of-block */
-> +				/* properties */
-> +			}
-> +			ip += length;
-> +			op = cpy;
-> +		} else {
-> +			cpy = op + length;
-> +			if (endOnInput) {	/* LZ4_decompress_safe() */
-> +				DEBUGLOG(7,
-> +					 "copy %u bytes in a 16-bytes stripe",
-> +					 (unsigned)length);
-> +				/* We don't need to check oend */
-> +				/* since we check it once for each loop below */
-> +				if (ip > iend - (16 + 1)) {	/*max lit + offset + nextToken */
-> +					goto safe_literal_copy;
-> +				}
-> +				/* Literals can only be 14, but hope compilers optimize */
-> +				/*if we copy by a register size */
-> +				memcpy(op, ip, 16);
-> +			} else {
-> +				/* LZ4_decompress_fast() cannot copy more than 8 bytes at a time */
-> +				/* it doesn't know input length, and relies on end-of-block */
-> +				/* properties */
-> +				memcpy(op, ip, 8);
-> +				if (length > 8) {
-> +					memcpy(op + 8, ip + 8, 8);
-> +				}
-> +			}
-> +			ip += length;
-> +			op = cpy;
-> +		}
-> +
-> +		/* get offset */
-> +		offset = LZ4_readLE16(ip);
-> +		ip += 2;	/* end-of-block condition violated */
-> +		match = op - offset;
-> +
-> +		/* get matchlength */
-> +		length = token & ML_MASK;
-> +
-> +		if ((checkOffset) && (unlikely(match + dictSize < lowPrefix))) {
-> +			goto _output_error;
-> +		}
-> +		/* Error : offset outside buffers */
-> +		if (length == ML_MASK) {
-> +			variable_length_error error = ok;
-> +			length +=
-> +			    read_variable_length(&ip, iend - LASTLITERALS + 1,
-> +						 endOnInput, 0, &error);
-> +			if (error != ok) {
-> +				goto _output_error;
-> +			}
-> +			if ((safeDecode)
-> +			    && unlikely((uptrval) (op) + length < (uptrval) op)) {
-> +				goto _output_error;
-> +			}	/* overflow detection */
-> +			length += MINMATCH;
-> +			if (op + length >= oend - FASTLOOP_SAFE_DISTANCE) {
-> +				goto safe_match_copy;
-> +			}
-> +		} else {
-> +			length += MINMATCH;
-> +			if (op + length >= oend - FASTLOOP_SAFE_DISTANCE) {
-> +				goto safe_match_copy;
-> +			}
-> +
-> +			/* Fastpath check: Avoids a branch in LZ4_wildCopy32 if true */
-> +			if (!(dict == usingExtDict) || (match >= lowPrefix)) {
-> +				if (offset >= 8) {
-> +					memcpy(op, match, 8);
-> +					memcpy(op + 8, match + 8, 8);
-> +					memcpy(op + 16, match + 16, 2);
-> +					op += length;
-> +					continue;
-> +				}
-> +			}
-> +		}
-> +
-> +		/* match starting within external dictionary */
-> +		if ((dict == usingExtDict) && (match < lowPrefix)) {
-> +			if (unlikely(op + length > oend - LASTLITERALS)) {
-> +				if (partialDecoding) {
-> +					/* reach end of buffer */
-> +					length =
-> +					    min(length, (size_t) (oend - op));
-> +				} else {
-> +					/* end-of-block condition violated */
-> +					goto _output_error;
-> +				}
-> +			}
-> +
-> +			if (length <= (size_t) (lowPrefix - match)) {
-> +				/* match fits entirely within external dictionary : just copy */
-> +				memmove(op, dictEnd - (lowPrefix - match),
-> +					length);
-> +				op += length;
-> +			} else {
-> +				/* match stretches into both external dict and current block */
-> +				size_t const copySize =
-> +				    (size_t) (lowPrefix - match);
-> +				size_t const restSize = length - copySize;
-> +				memcpy(op, dictEnd - copySize, copySize);
-> +				op += copySize;
-> +				if (restSize > (size_t) (op - lowPrefix)) {	/* overlap copy */
-> +					BYTE *const endOfMatch = op + restSize;
-> +					const BYTE *copyFrom = lowPrefix;
-> +					while (op < endOfMatch) {
-> +						*op++ = *copyFrom++;
-> +					}
-> +				} else {
-> +					memcpy(op, lowPrefix, restSize);
-> +					op += restSize;
-> +				}
-> +			}
-> +			continue;
-> +		}
-> +
-> +		/* copy match within block */
-> +		cpy = op + length;
-> +
-> +		assert((op <= oend) && (oend - op >= 32));
-> +		if (unlikely(offset < 16)) {
-> +			LZ4_memcpy_using_offset(op, match, cpy, offset);
-> +		} else {
-> +			LZ4_wildCopy32(op, match, cpy);
-> +		}
-> +
-> +		op = cpy;	/* wildcopy correction */
-> +	}
-> +      safe_decode:
-> +#endif
-> +	/* Main Loop : decode sequences */
-> +	while (1) {
-> +		length = token >> ML_BITS;
->  
->  		/* ip < iend before the increment */
->  		assert(!endOnInput || ip <= iend);
-> @@ -143,26 +416,27 @@ static FORCE_INLINE int LZ4_decompress_generic(
->  		 * combined check for both stages).
->  		 */
->  		if ((endOnInput ? length != RUN_MASK : length <= 8)
-> -		   /*
-> -		    * strictly "less than" on input, to re-enter
-> -		    * the loop with at least one byte
-> -		    */
-> -		   && likely((endOnInput ? ip < shortiend : 1) &
-> -			     (op <= shortoend))) {
-> +		    /*
-> +		     * strictly "less than" on input, to re-enter
-> +		     * the loop with at least one byte
-> +		     */
-> +		    && likely((endOnInput ? ip < shortiend : 1) &
-> +			      (op <= shortoend))) {
->  			/* Copy the literals */
->  			memcpy(op, ip, endOnInput ? 16 : 8);
-> -			op += length; ip += length;
-> +			op += length;
-> +			ip += length;
->  
->  			/*
->  			 * The second stage:
->  			 * prepare for match copying, decode full info.
->  			 * If it doesn't work out, the info won't be wasted.
->  			 */
-> -			length = token & ML_MASK; /* match length */
-> +			length = token & ML_MASK;	/* match length */
->  			offset = LZ4_readLE16(ip);
->  			ip += 2;
->  			match = op - offset;
-> -			assert(match <= op); /* check overflow */
-> +			assert(match <= op);	/* check overflow */
->  
->  			/* Do not deal with overlapping matches. */
->  			if ((length != ML_MASK) &&
-> @@ -187,28 +461,24 @@ static FORCE_INLINE int LZ4_decompress_generic(
->  
->  		/* decode literal length */
->  		if (length == RUN_MASK) {
-> -			unsigned int s;
->  
-> -			if (unlikely(endOnInput ? ip >= iend - RUN_MASK : 0)) {
-> -				/* overflow detection */
-> +			variable_length_error error = ok;
-> +			length +=
-> +			    read_variable_length(&ip, iend - RUN_MASK,
-> +						 endOnInput, endOnInput,
-> +						 &error);
-> +			if (error == initial_error)
->  				goto _output_error;
-> -			}
-> -			do {
-> -				s = *ip++;
-> -				length += s;
-> -			} while (likely(endOnInput
-> -				? ip < iend - RUN_MASK
-> -				: 1) & (s == 255));
->  
->  			if ((safeDecode)
-> -			    && unlikely((uptrval)(op) +
-> -					length < (uptrval)(op))) {
-> +			    && unlikely((uptrval) (op) +
-> +					length < (uptrval) (op))) {
->  				/* overflow detection */
->  				goto _output_error;
->  			}
->  			if ((safeDecode)
-> -			    && unlikely((uptrval)(ip) +
-> -					length < (uptrval)(ip))) {
-> +			    && unlikely((uptrval) (ip) +
-> +					length < (uptrval) (ip))) {
->  				/* overflow detection */
->  				goto _output_error;
->  			}
-> @@ -216,11 +486,15 @@ static FORCE_INLINE int LZ4_decompress_generic(
->  
->  		/* copy literals */
->  		cpy = op + length;
-> +#if LZ4_FAST_DEC_LOOP
-> +	      safe_literal_copy:
-> +#endif
->  		LZ4_STATIC_ASSERT(MFLIMIT >= WILDCOPYLENGTH);
->  
->  		if (((endOnInput) && ((cpy > oend - MFLIMIT)
-> -			|| (ip + length > iend - (2 + 1 + LASTLITERALS))))
-> -			|| ((!endOnInput) && (cpy > oend - WILDCOPYLENGTH))) {
-> +				      || (ip + length >
-> +					  iend - (2 + 1 + LASTLITERALS))))
-> +		    || ((!endOnInput) && (cpy > oend - WILDCOPYLENGTH))) {
->  			if (partialDecoding) {
->  				if (cpy > oend) {
->  					/*
-> @@ -231,7 +505,7 @@ static FORCE_INLINE int LZ4_decompress_generic(
->  					length = oend - op;
->  				}
->  				if ((endOnInput)
-> -					&& (ip + length > iend)) {
-> +				    && (ip + length > iend)) {
->  					/*
->  					 * Error :
->  					 * read attempt beyond
-> @@ -241,7 +515,7 @@ static FORCE_INLINE int LZ4_decompress_generic(
->  				}
->  			} else {
->  				if ((!endOnInput)
-> -					&& (cpy != oend)) {
-> +				    && (cpy != oend)) {
->  					/*
->  					 * Error :
->  					 * block decoding must
-> @@ -250,7 +524,7 @@ static FORCE_INLINE int LZ4_decompress_generic(
->  					goto _output_error;
->  				}
->  				if ((endOnInput)
-> -					&& ((ip + length != iend)
-> +				    && ((ip + length != iend)
->  					|| (cpy > oend))) {
->  					/*
->  					 * Error :
-> @@ -269,7 +543,7 @@ static FORCE_INLINE int LZ4_decompress_generic(
->  				break;
->  		} else {
->  			/* may overwrite up to WILDCOPYLENGTH beyond cpy */
-> -			LZ4_wildCopy(op, ip, cpy);
-> +			LZ4_wildCopy8(op, ip, cpy);
->  			ip += length;
->  			op = cpy;
->  		}
-> @@ -288,29 +562,14 @@ static FORCE_INLINE int LZ4_decompress_generic(
->  			goto _output_error;
->  		}
->  
-> -		/* costs ~1%; silence an msan warning when offset == 0 */
-> -		/*
-> -		 * note : when partialDecoding, there is no guarantee that
-> -		 * at least 4 bytes remain available in output buffer
-> -		 */
-> -		if (!partialDecoding) {
-> -			assert(oend > op);
-> -			assert(oend - op >= 4);
-> -
-> -			LZ4_write32(op, (U32)offset);
-> -		}
-> -
->  		if (length == ML_MASK) {
-> -			unsigned int s;
-> -
-> -			do {
-> -				s = *ip++;
-> -
-> -				if ((endOnInput) && (ip > iend - LASTLITERALS))
-> -					goto _output_error;
->  
-> -				length += s;
-> -			} while (s == 255);
-> +			variable_length_error error = ok;
-> +			length +=
-> +			    read_variable_length(&ip, iend - LASTLITERALS + 1,
-> +						 endOnInput, 0, &error);
-> +			if (error != ok)
-> +				goto _output_error;
->  
->  			if ((safeDecode)
->  				&& unlikely(
-> @@ -322,6 +581,10 @@ static FORCE_INLINE int LZ4_decompress_generic(
->  
->  		length += MINMATCH;
->  
-> +#if LZ4_FAST_DEC_LOOP
-> +safe_match_copy:
-> +#endif
-> +
->  		/* match starting within external dictionary */
->  		if ((dict == usingExtDict) && (match < lowPrefix)) {
->  			if (unlikely(op + length > oend - LASTLITERALS)) {
-> @@ -418,7 +681,7 @@ static FORCE_INLINE int LZ4_decompress_generic(
->  			}
->  
->  			if (op < oCopyLimit) {
-> -				LZ4_wildCopy(op, match, oCopyLimit);
-> +				LZ4_wildCopy8(op, match, oCopyLimit);
->  				match += oCopyLimit - op;
->  				op = oCopyLimit;
->  			}
-> @@ -427,7 +690,7 @@ static FORCE_INLINE int LZ4_decompress_generic(
->  		} else {
->  			LZ4_copy8(op, match);
->  			if (length > 16)
-> -				LZ4_wildCopy(op + 8, match + 8, cpy);
-> +				LZ4_wildCopy8(op + 8, match + 8, cpy);
->  		}
->  		op = cpy; /* wildcopy correction */
->  	}
-> diff --git a/lib/lz4/lz4defs.h b/lib/lz4/lz4defs.h
-> index 1a7fa9d9170f..4cc17cf589ed 100644
-> --- a/lib/lz4/lz4defs.h
-> +++ b/lib/lz4/lz4defs.h
-> @@ -40,6 +40,28 @@
->  
->  #define FORCE_INLINE __always_inline
->  
-> +/* LZ4_FORCE_O2_GCC_PPC64LE and LZ4_FORCE_O2_INLINE_GCC_PPC64LE
-> + * gcc on ppc64le generates an unrolled SIMDized loop for LZ4_wildCopy8,
-> + * together with a simple 8-byte copy loop as a fall-back path.
-> + * However, this optimization hurts the decompression speed by >30%,
-> + * because the execution does not go to the optimized loop
-> + * for typical compressible data, and all of the preamble checks
-> + * before going to the fall-back path become useless overhead.
-> + * This optimization happens only with the -O3 flag, and -O2 generates
-> + * a simple 8-byte copy loop.
-> + * With gcc on ppc64le, all of the LZ4_decompress_* and LZ4_wildCopy8
-> + * functions are annotated with __attribute__((optimize("O2"))),
-> + * and also LZ4_wildCopy8 is forcibly inlined, so that the O2 attribute
-> + * of LZ4_wildCopy8 does not affect the compression speed.
-> + */
-> +#if defined(__PPC64__) && defined(__LITTLE_ENDIAN__) && defined(__GNUC__) && !defined(__clang__)
-> +#  define FORCE_O2_GCC_PPC64LE __attribute__((optimize("O2")))
-> +#  define FORCE_O2_INLINE_GCC_PPC64LE (__attribute__((optimize("O2"))) FORCE_INLINE)
-> +#else
-> +#  define FORCE_O2_GCC_PPC64LE		FORCE_INLINE
-> +#  define FORCE_O2_INLINE_GCC_PPC64LE	FORCE_INLINE
-> +#endif
-> +
->  /*-************************************
->   *	Basic Types
->   **************************************/
-> @@ -99,6 +121,9 @@ typedef uintptr_t uptrval;
->  #define RUN_BITS (8 - ML_BITS)
->  #define RUN_MASK ((1U << RUN_BITS) - 1)
->  
-> +static const unsigned inc32table[8] = { 0, 1, 2, 1, 0, 4, 4, 4 };
-> +static const int dec64table[8] = { 0, 0, 0, -1, -4, 1, 2, 3 };
-> +
->  /*-************************************
->   *	Reading and writing into memory
->   **************************************/
-> @@ -156,7 +181,7 @@ static FORCE_INLINE void LZ4_copy8(void *dst, const void *src)
->   * customized variant of memcpy,
->   * which can overwrite up to 7 bytes beyond dstEnd
->   */
-> -static FORCE_INLINE void LZ4_wildCopy(void *dstPtr,
-> +static FORCE_O2_INLINE_GCC_PPC64LE void LZ4_wildCopy8(void *dstPtr,
->  	const void *srcPtr, void *dstEnd)
->  {
->  	BYTE *d = (BYTE *)dstPtr;
-> @@ -220,6 +245,39 @@ static FORCE_INLINE unsigned int LZ4_count(
->  	return (unsigned int)(pIn - pStart);
->  }
->  
-> +/* Read the variable-length literal or match length.
-> + *
-> + * ip - pointer to use as input.
-> + * lencheck - end ip.  Return an error if ip advances >= lencheck.
-> + * loop_check - check ip >= lencheck in body of loop.  Returns loop_error if so.
-> + * initial_check - check ip >= lencheck before start of loop.  Returns initial_error if so.
-> + * error (output) - error code.  Should be set to 0 before call.
-> + */
-> +typedef enum { loop_error = -2, initial_error = -1, ok = 0} variable_length_error;
-> +static FORCE_INLINE unsigned read_variable_length(const BYTE **ip,
-> +					   const BYTE *lencheck,
-> +					   int loop_check, int initial_check,
-> +					   variable_length_error *error)
-> +{
-> +	unsigned length = 0;
-> +	unsigned s;
-> +	if (initial_check && unlikely((*ip) >= lencheck)) {	/* overflow detection */
-> +		*error = initial_error;
-> +		return length;
-> +	}
-> +	do {
-> +		s = **ip;
-> +		(*ip)++;
-> +		length += s;
-> +		if (loop_check && unlikely((*ip) >= lencheck)) {	/* overflow detection */
-> +			*error = loop_error;
-> +			return length;
-> +		}
-> +	} while (s == 255);
-> +
-> +	return length;
-> +}
-> +
->  typedef enum { noLimit = 0, limitedOutput = 1 } limitedOutput_directive;
->  typedef enum { byPtr, byU32, byU16 } tableType_t;
->  
-> diff --git a/lib/lz4/lz4hc_compress.c b/lib/lz4/lz4hc_compress.c
-> index 176f03b83e56..e02e041a01d9 100644
-> --- a/lib/lz4/lz4hc_compress.c
-> +++ b/lib/lz4/lz4hc_compress.c
-> @@ -293,7 +293,7 @@ static FORCE_INLINE int LZ4HC_encodeSequence(
->  		*token = (BYTE)(length<<ML_BITS);
->  
->  	/* Copy Literals */
-> -	LZ4_wildCopy(*op, *anchor, (*op) + length);
-> +	LZ4_wildCopy8(*op, *anchor, (*op) + length);
->  	*op += length;
->  
->  	/* Encode Offset */
-> 
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRGFuaWVsIExlemNhbm8g
+W21haWx0bzpkYW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnXQ0KPiBTZW50OiBUaHVyc2RheSwgTWF5
+IDE2LCAyMDE5IDU6MzkgUE0NCj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29t
+Pjsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9A
+a2VybmVsLm9yZzsgcy5oYXVlckBwZW5ndXRyb25peC5kZTsNCj4ga2VybmVsQHBlbmd1dHJvbml4
+LmRlOyBmZXN0ZXZhbUBnbWFpbC5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOw0KPiB3aWxs
+LmRlYWNvbkBhcm0uY29tOyBydWkuemhhbmdAaW50ZWwuY29tOyBlZHViZXp2YWxAZ21haWwuY29t
+Ow0KPiBBaXNoZW5nIERvbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPjsgdWxmLmhhbnNzb25AbGlu
+YXJvLm9yZzsgRGFuaWVsDQo+IEJhbHV0YSA8ZGFuaWVsLmJhbHV0YUBueHAuY29tPjsgUGVuZyBG
+YW4gPHBlbmcuZmFuQG54cC5jb20+Ow0KPiBoZWlrb0BzbnRlY2guZGU7IGhvcm1zK3JlbmVzYXNA
+dmVyZ2UubmV0LmF1OyBhZ3Jvc3NAa2VybmVsLm9yZzsNCj4gb2xvZkBsaXhvbS5uZXQ7IGJqb3Ju
+LmFuZGVyc3NvbkBsaW5hcm8ub3JnOyBqYWdhbkBhbWFydWxhc29sdXRpb25zLmNvbTsNCj4gZW5y
+aWMuYmFsbGV0Ym9AY29sbGFib3JhLmNvbTsgbWFyYy53LmdvbnphbGV6QGZyZWUuZnI7DQo+IGRl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBs
+aW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1wbUB2Z2VyLmtl
+cm5lbC5vcmcNCj4gQ2M6IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0ggVjEyIDIvNV0gdGhlcm1hbDogb2YtdGhlcm1hbDogYWRkIEFQSSBmb3Ig
+Z2V0dGluZyBzZW5zb3INCj4gSUQgZnJvbSBEVA0KPiANCj4gT24gMTYvMDQvMjAxOSAwNToyMiwg
+QW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gT24gc29tZSBwbGF0Zm9ybXMgbGlrZSBpLk1YOFFYUCwg
+dGhlIHRoZXJtYWwgZHJpdmVyIG5lZWRzIGEgcmVhbCBIVw0KPiA+IHNlbnNvciBJRCBmcm9tIERU
+IHRoZXJtYWwgem9uZSwgdGhlIEhXIHNlbnNvciBJRCBpcyB1c2VkIHRvIGdldA0KPiA+IHRlbXBl
+cmF0dXJlIGZyb20gU0NVIGZpcm13YXJlLCBhbmQgdGhlIHZpcnR1YWwgc2Vuc29yIElEIHN0YXJ0
+aW5nIGZyb20NCj4gPiAwIHRvIE4gaXMgTk9UIHVzZWQgYXQgYWxsLCB0aGlzIHBhdGNoIGFkZHMg
+bmV3IEFQSQ0KPiA+IHRoZXJtYWxfem9uZV9vZl9nZXRfc2Vuc29yX2lkKCkgdG8gcHJvdmlkZSB0
+aGUgZmVhdHVyZSBvZiBnZXR0aW5nDQo+ID4gc2Vuc29yIElEIGZyb20gRFQgdGhlcm1hbCB6b25l
+J3Mgbm9kZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFu
+Z0BueHAuY29tPg0KPiANCj4gRWR1YXJkbz8NCj4gDQo+IFdoYXQgZG8geW91IHRoaW5rIGFib3V0
+IHRoaXMgcGF0Y2g/DQoNCkkgd291bGQgbGlrZSB0byBoZWFyIEVkdWFyZG8ncyBvcGluaW9uIGFi
+b3V0IHRoaXMgcGF0Y2ggYmVmb3JlIHNlbmRpbmcgb3V0IGEgbmV3IHZlcnNpb24NCmZvciByZXZp
+ZXcsIHRoYW5rcy4NCg0KQW5zb24uDQoNCj4gDQo+ID4gLS0tDQo+ID4gTmV3IHBhdGNoLg0KPiA+
+IC0tLQ0KPiA+ICBkcml2ZXJzL3RoZXJtYWwvb2YtdGhlcm1hbC5jIHwgNTMNCj4gKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0NCj4gPiAgaW5jbHVkZS9saW51eC90
+aGVybWFsLmggICAgICB8IDEwICsrKysrKysrKw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDUxIGlu
+c2VydGlvbnMoKyksIDEyIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvdGhlcm1hbC9vZi10aGVybWFsLmMNCj4gPiBiL2RyaXZlcnMvdGhlcm1hbC9vZi10aGVybWFs
+LmMgaW5kZXggMmRmMDU5Yy4uMmU0MzIwYyAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3RoZXJt
+YWwvb2YtdGhlcm1hbC5jDQo+ID4gKysrIGIvZHJpdmVycy90aGVybWFsL29mLXRoZXJtYWwuYw0K
+PiA+IEBAIC00NDYsNiArNDQ2LDQ2IEBAIHRoZXJtYWxfem9uZV9vZl9hZGRfc2Vuc29yKHN0cnVj
+dCBkZXZpY2Vfbm9kZQ0KPiA+ICp6b25lLCAgfQ0KPiA+DQo+ID4gIC8qKg0KPiA+ICsgKiB0aGVy
+bWFsX3pvbmVfb2ZfZ2V0X3NlbnNvcl9pZCAtIGdldCBzZW5zb3IgSUQgZnJvbSBhIERUIHRoZXJt
+YWwNCj4gPiArIHpvbmUNCj4gPiArICogQHR6X25wOiBhIHZhbGlkIHRoZXJtYWwgem9uZSBkZXZp
+Y2Ugbm9kZS4NCj4gPiArICogQHNlbnNvcl9zcGVjczogcG9pbnRlciB0byBvdXRwdXQgYXJndW1l
+bnRzIHN0cnVjdHVyZSB3aWxsIGJlIHBhc3NlZA0KPiBiYWNrLg0KPiA+ICsgKiBAaWQ6IGEgc2Vu
+c29yIElEIHBvaW50ZXIgd2lsbCBiZSBwYXNzZWQgYmFjay4NCj4gPiArICoNCj4gPiArICogVGhp
+cyBmdW5jdGlvbiB3aWxsIGdldCBzZW5zb3IgSUQgZnJvbSBhIGdpdmVuIHRoZXJtYWwgem9uZSBu
+b2RlLA0KPiA+ICsgdXNlDQo+ID4gKyAqICJ0aGVybWFsLXNlbnNvcnMiIGFzIGxpc3QgbmFtZSwg
+YW5kIGdldCBzZW5zb3IgSUQgZnJvbSBmaXJzdA0KPiA+ICsgcGhhbmRsZSdzDQo+ID4gKyAqIGFy
+Z3VtZW50Lg0KPiA+ICsgKg0KPiA+ICsgKiBSZXR1cm46IDAgb24gc3VjY2VzcywgcHJvcGVyIGVy
+cm9yIGNvZGUgb3RoZXJ3aXNlLg0KPiA+ICsgKi8NCj4gPiArDQo+ID4gK2ludCB0aGVybWFsX3pv
+bmVfb2ZfZ2V0X3NlbnNvcl9pZChzdHJ1Y3QgZGV2aWNlX25vZGUgKnR6X25wLA0KPiA+ICsJCQkJ
+ICBzdHJ1Y3Qgb2ZfcGhhbmRsZV9hcmdzICpzZW5zb3Jfc3BlY3MsDQo+ID4gKwkJCQkgIHUzMiAq
+aWQpDQo+ID4gK3sNCj4gPiArCWludCByZXQ7DQo+ID4gKw0KPiA+ICsJcmV0ID0gb2ZfcGFyc2Vf
+cGhhbmRsZV93aXRoX2FyZ3ModHpfbnAsDQo+ID4gKwkJCQkJICJ0aGVybWFsLXNlbnNvcnMiLA0K
+PiA+ICsJCQkJCSAiI3RoZXJtYWwtc2Vuc29yLWNlbGxzIiwNCj4gPiArCQkJCQkgMCwNCj4gPiAr
+CQkJCQkgc2Vuc29yX3NwZWNzKTsNCj4gPiArCWlmIChyZXQpDQo+ID4gKwkJcmV0dXJuIHJldDsN
+Cj4gPiArDQo+ID4gKwlpZiAoc2Vuc29yX3NwZWNzLT5hcmdzX2NvdW50ID49IDEpIHsNCj4gPiAr
+CQkqaWQgPSBzZW5zb3Jfc3BlY3MtPmFyZ3NbMF07DQo+ID4gKwkJV0FSTihzZW5zb3Jfc3BlY3Mt
+PmFyZ3NfY291bnQgPiAxLA0KPiA+ICsJCSAgICAgIiVwT0ZuOiB0b28gbWFueSBjZWxscyBpbiBz
+ZW5zb3Igc3BlY2lmaWVyICVkXG4iLA0KPiA+ICsJCSAgICAgc2Vuc29yX3NwZWNzLT5ucCwgc2Vu
+c29yX3NwZWNzLT5hcmdzX2NvdW50KTsNCj4gPiArCX0gZWxzZSB7DQo+ID4gKwkJKmlkID0gMDsN
+Cj4gPiArCX0NCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICtFWFBPUlRfU1lN
+Qk9MX0dQTCh0aGVybWFsX3pvbmVfb2ZfZ2V0X3NlbnNvcl9pZCk7DQo+ID4gKw0KPiA+ICsvKioN
+Cj4gPiAgICogdGhlcm1hbF96b25lX29mX3NlbnNvcl9yZWdpc3RlciAtIHJlZ2lzdGVycyBhIHNl
+bnNvciB0byBhIERUIHRoZXJtYWwNCj4gem9uZQ0KPiA+ICAgKiBAZGV2OiBhIHZhbGlkIHN0cnVj
+dCBkZXZpY2UgcG9pbnRlciBvZiBhIHNlbnNvciBkZXZpY2UuIE11c3QgY29udGFpbg0KPiA+ICAg
+KiAgICAgICBhIHZhbGlkIC5vZl9ub2RlLCBmb3IgdGhlIHNlbnNvciBub2RlLg0KPiA+IEBAIC01
+MDAsMjEgKzU0MCwxMCBAQCB0aGVybWFsX3pvbmVfb2Zfc2Vuc29yX3JlZ2lzdGVyKHN0cnVjdCBk
+ZXZpY2UNCj4gKmRldiwgaW50IHNlbnNvcl9pZCwgdm9pZCAqZGF0YSwNCj4gPiAgCQlpbnQgcmV0
+LCBpZDsNCj4gPg0KPiA+ICAJCS8qIEZvciBub3csIHRoZXJtYWwgZnJhbWV3b3JrIHN1cHBvcnRz
+IG9ubHkgMSBzZW5zb3IgcGVyDQo+IHpvbmUgKi8NCj4gPiAtCQlyZXQgPSBvZl9wYXJzZV9waGFu
+ZGxlX3dpdGhfYXJncyhjaGlsZCwgInRoZXJtYWwtc2Vuc29ycyIsDQo+ID4gLQkJCQkJCSAiI3Ro
+ZXJtYWwtc2Vuc29yLWNlbGxzIiwNCj4gPiAtCQkJCQkJIDAsICZzZW5zb3Jfc3BlY3MpOw0KPiA+
+ICsJCXJldCA9IHRoZXJtYWxfem9uZV9vZl9nZXRfc2Vuc29yX2lkKGNoaWxkLCAmc2Vuc29yX3Nw
+ZWNzLA0KPiAmaWQpOw0KPiA+ICAJCWlmIChyZXQpDQo+ID4gIAkJCWNvbnRpbnVlOw0KPiA+DQo+
+ID4gLQkJaWYgKHNlbnNvcl9zcGVjcy5hcmdzX2NvdW50ID49IDEpIHsNCj4gPiAtCQkJaWQgPSBz
+ZW5zb3Jfc3BlY3MuYXJnc1swXTsNCj4gPiAtCQkJV0FSTihzZW5zb3Jfc3BlY3MuYXJnc19jb3Vu
+dCA+IDEsDQo+ID4gLQkJCSAgICAgIiVwT0ZuOiB0b28gbWFueSBjZWxscyBpbiBzZW5zb3Igc3Bl
+Y2lmaWVyICVkXG4iLA0KPiA+IC0JCQkgICAgIHNlbnNvcl9zcGVjcy5ucCwgc2Vuc29yX3NwZWNz
+LmFyZ3NfY291bnQpOw0KPiA+IC0JCX0gZWxzZSB7DQo+ID4gLQkJCWlkID0gMDsNCj4gPiAtCQl9
+DQo+ID4gLQ0KPiA+ICAJCWlmIChzZW5zb3Jfc3BlY3MubnAgPT0gc2Vuc29yX25wICYmIGlkID09
+IHNlbnNvcl9pZCkgew0KPiA+ICAJCQl0emQgPSB0aGVybWFsX3pvbmVfb2ZfYWRkX3NlbnNvcihj
+aGlsZCwgc2Vuc29yX25wLA0KPiA+ICAJCQkJCQkJIGRhdGEsIG9wcyk7DQo+ID4gZGlmZiAtLWdp
+dCBhL2luY2x1ZGUvbGludXgvdGhlcm1hbC5oIGIvaW5jbHVkZS9saW51eC90aGVybWFsLmggaW5k
+ZXgNCj4gPiA1ZjQ3MDVmLi45NzBmYjM3IDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUvbGludXgv
+dGhlcm1hbC5oDQo+ID4gKysrIGIvaW5jbHVkZS9saW51eC90aGVybWFsLmgNCj4gPiBAQCAtMzc1
+LDYgKzM3NSw5IEBAIHN0cnVjdCB0aGVybWFsX3RyaXAgew0KPiA+DQo+ID4gIC8qIEZ1bmN0aW9u
+IGRlY2xhcmF0aW9ucyAqLw0KPiA+ICAjaWZkZWYgQ09ORklHX1RIRVJNQUxfT0YNCj4gPiAraW50
+IHRoZXJtYWxfem9uZV9vZl9nZXRfc2Vuc29yX2lkKHN0cnVjdCBkZXZpY2Vfbm9kZSAqdHpfbnAs
+DQo+ID4gKwkJCQkgIHN0cnVjdCBvZl9waGFuZGxlX2FyZ3MgKnNlbnNvcl9zcGVjcywNCj4gPiAr
+CQkJCSAgdTMyICppZCk7DQo+ID4gIHN0cnVjdCB0aGVybWFsX3pvbmVfZGV2aWNlICoNCj4gPiAg
+dGhlcm1hbF96b25lX29mX3NlbnNvcl9yZWdpc3RlcihzdHJ1Y3QgZGV2aWNlICpkZXYsIGludCBp
+ZCwgdm9pZCAqZGF0YSwNCj4gPiAgCQkJCWNvbnN0IHN0cnVjdCB0aGVybWFsX3pvbmVfb2ZfZGV2
+aWNlX29wcw0KPiAqb3BzKTsgQEAgLTM4Niw2ICszODksMTMNCj4gPiBAQCBzdHJ1Y3QgdGhlcm1h
+bF96b25lX2RldmljZQ0KPiAqZGV2bV90aGVybWFsX3pvbmVfb2Zfc2Vuc29yX3JlZ2lzdGVyKA0K
+PiA+ICB2b2lkIGRldm1fdGhlcm1hbF96b25lX29mX3NlbnNvcl91bnJlZ2lzdGVyKHN0cnVjdCBk
+ZXZpY2UgKmRldiwNCj4gPiAgCQkJCQkgICAgc3RydWN0IHRoZXJtYWxfem9uZV9kZXZpY2UgKnR6
+KTsNCj4gI2Vsc2UNCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgdGhlcm1hbF96b25lX29mX2dldF9z
+ZW5zb3JfaWQoc3RydWN0IGRldmljZV9ub2RlICp0el9ucCwNCj4gPiArCQkJCQkgc3RydWN0IG9m
+X3BoYW5kbGVfYXJncw0KPiAqc2Vuc29yX3NwZWNzLA0KPiA+ICsJCQkJCSB1MzIgKmlkKQ0KPiA+
+ICt7DQo+ID4gKwlyZXR1cm4gLUVOT0VOVDsNCj4gPiArfQ0KPiA+ICBzdGF0aWMgaW5saW5lIHN0
+cnVjdCB0aGVybWFsX3pvbmVfZGV2aWNlICoNCj4gPiB0aGVybWFsX3pvbmVfb2Zfc2Vuc29yX3Jl
+Z2lzdGVyKHN0cnVjdCBkZXZpY2UgKmRldiwgaW50IGlkLCB2b2lkICpkYXRhLA0KPiA+ICAJCQkJ
+Y29uc3Qgc3RydWN0IHRoZXJtYWxfem9uZV9vZl9kZXZpY2Vfb3BzDQo+ICpvcHMpDQo+ID4NCj4g
+DQo+IA0KPiAtLQ0KPiANCj4gPGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0
+bG9vay5jb20vP3VybD1odHRwJTNBJTJGJTJGd3d3Lg0KPiBsaW5hcm8ub3JnJTJGJmFtcDtkYXRh
+PTAyJTdDMDElN0NhbnNvbi5odWFuZyU0MG54cC5jb20lN0NhODliMzENCj4gZTg2OTBkNGZiYTNl
+OGIwOGQ2ZDllMjU0ODglN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3DQo+IEMw
+JTdDMCU3QzYzNjkzNTk2MzQzOTk0ODEzOCZhbXA7c2RhdGE9Z0FZVTVwaTFJc2olMkJoZlJFTjhu
+NnYwMw0KPiBMYiUyRjllUnpEekMyb2NEZGZlJTJCa2MlM0QmYW1wO3Jlc2VydmVkPTA+IExpbmFy
+by5vcmcg4pSCIE9wZW4NCj4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29Dcw0KPiANCj4gRm9s
+bG93IExpbmFybzoNCj4gPGh0dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9v
+ay5jb20vP3VybD1odHRwJTNBJTJGJTJGd3d3Lg0KPiBmYWNlYm9vay5jb20lMkZwYWdlcyUyRkxp
+bmFybyZhbXA7ZGF0YT0wMiU3QzAxJTdDYW5zb24uaHVhbmclNA0KPiAwbnhwLmNvbSU3Q2E4OWIz
+MWU4NjkwZDRmYmEzZThiMDhkNmQ5ZTI1NDg4JTdDNjg2ZWExZDNiYzJiNGM2ZmENCj4gOTJjZDk5
+YzVjMzAxNjM1JTdDMCU3QzAlN0M2MzY5MzU5NjM0Mzk5NDgxMzgmYW1wO3NkYXRhPWolMkZvJTIN
+Cj4gQkZOOG1BTEdCVmhWUWZLb1loaWpEdzUxRmhjR2phY2tDYVVsJTJCWSUyRlElM0QmYW1wO3Jl
+c2VydmVkPQ0KPiAwPiBGYWNlYm9vayB8DQo+IDxodHRwczovL2V1cjAxLnNhZmVsaW5rcy5wcm90
+ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRnR3aXR0ZQ0KPiByLmNvbSUyRiUy
+MyElMkZsaW5hcm9vcmcmYW1wO2RhdGE9MDIlN0MwMSU3Q2Fuc29uLmh1YW5nJTQwbnhwLmMNCj4g
+b20lN0NhODliMzFlODY5MGQ0ZmJhM2U4YjA4ZDZkOWUyNTQ4OCU3QzY4NmVhMWQzYmMyYjRjNmZh
+OTJjZDkNCj4gOWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM2OTM1OTYzNDM5OTQ4MTM4JmFtcDtzZGF0
+YT1PJTJCcnklMkZkaw0KPiBVR3VPMjJicllUTWF6JTJGQ3ZHT1VOdDE1V0pGOHVBTExWZ2l3ayUz
+RCZhbXA7cmVzZXJ2ZWQ9MD4NCj4gVHdpdHRlciB8DQo+IDxodHRwczovL2V1cjAxLnNhZmVsaW5r
+cy5wcm90ZWN0aW9uLm91dGxvb2suY29tLz91cmw9aHR0cCUzQSUyRiUyRnd3dy4NCj4gbGluYXJv
+Lm9yZyUyRmxpbmFyby0NCj4gYmxvZyUyRiZhbXA7ZGF0YT0wMiU3QzAxJTdDYW5zb24uaHVhbmcl
+NDBueHAuY29tJTdDYTg5YjMxZTg2OQ0KPiAwZDRmYmEzZThiMDhkNmQ5ZTI1NDg4JTdDNjg2ZWEx
+ZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0MwJTcNCj4gQzAlN0M2MzY5MzU5NjM0Mzk5NDgx
+MzgmYW1wO3NkYXRhPVdMSGFoeCUyQnJ5dkJwcmRvTlVFdlE0a0NuWQ0KPiBGbVV1cWdBMTR4cUhq
+UzdXSFUlM0QmYW1wO3Jlc2VydmVkPTA+IEJsb2cNCg0K
