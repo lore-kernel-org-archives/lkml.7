@@ -2,140 +2,408 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5689FC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D92C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F35842166E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1FD42166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 22:31:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="RHES6ZLb";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="kDqw/JeX"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bu0IdENP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729156AbfEQWXo (ORCPT
+        id S1729446AbfEQWbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 18:23:44 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:42466 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727133AbfEQWXn (ORCPT
+        Fri, 17 May 2019 18:31:52 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:54382 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729158AbfEQWbv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 18:23:43 -0400
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 182C8C00DF;
-        Fri, 17 May 2019 22:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1558131812; bh=BYWfYHCGDXoKNdrxmjJOY01P58Cl6L/FqwgRGlJb6XE=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=RHES6ZLbx2z/h+HLrEKFQONq3ojzWFq8OlBA8XLoZq5+IM9DfIWomWx2vKUxgay6R
-         AYp8LyNM7S1C3ip4nnxy6fMNOe8b8KTo9piDJT0U2lW3+hcgPOashYfxK2VKZgahRg
-         ftctRxLoSxq1Yb5ywuR4ecScwXNh/zoZEBrhKz1QQpVl7EYEpSIJ5WIBvjCN10zghz
-         5g3fkMGdk5c4xMAlwjWN9zywuk9HGj+0uLb0bPma/91dUhU/NHP3eD2siPtTe0ad6l
-         9fyfPy7gQp8VcQnHlc6nC57TgWyk9mjPsDf4DSLLtZh+xCQzKjctpghPem/5keBldD
-         VtKnP2VNJ+Y6w==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 3FD38A007F;
-        Fri, 17 May 2019 22:23:42 +0000 (UTC)
-Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 17 May 2019 15:23:42 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (10.13.134.195)
- by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 17 May 2019 15:23:41 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector1-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BYWfYHCGDXoKNdrxmjJOY01P58Cl6L/FqwgRGlJb6XE=;
- b=kDqw/JeXcEHBYWX9U6sIaEbWw5xKfdKAOUPFM3OR+QL/ORsq/UjzEOxzOYKH1hImw2MfkDPWY121zq4Qdj0IX1fIgSwmXcSygjJiOfpERCzmW0yElIyYu0eAqMimlwrgeosLRCWxkQ40Kq6Nu2xamFwPg/DNOtrFUV7rYyT/C+k=
-Received: from MWHPR12MB1632.namprd12.prod.outlook.com (10.172.56.21) by
- MWHPR12MB1789.namprd12.prod.outlook.com (10.175.55.136) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Fri, 17 May 2019 22:23:40 +0000
-Received: from MWHPR12MB1632.namprd12.prod.outlook.com
- ([fe80::c5dc:3b4:6ab8:4dc6]) by MWHPR12MB1632.namprd12.prod.outlook.com
- ([fe80::c5dc:3b4:6ab8:4dc6%2]) with mapi id 15.20.1900.010; Fri, 17 May 2019
- 22:23:40 +0000
-From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
-CC:     "paltsev@snyopsys.com" <paltsev@snyopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>
-Subject: Re: [PATCH 4/9] ARC: mm: do_page_fault refactor #3: tidyup vma access
- permission code
-Thread-Topic: [PATCH 4/9] ARC: mm: do_page_fault refactor #3: tidyup vma
- access permission code
-Thread-Index: AQHVCrV7sukeR9XiU0qv5Rc2AMUmg6Zv6JSA
-Date:   Fri, 17 May 2019 22:23:40 +0000
-Message-ID: <1558131743.2682.33.camel@synopsys.com>
-References: <1557880176-24964-1-git-send-email-vgupta@synopsys.com>
-         <1557880176-24964-5-git-send-email-vgupta@synopsys.com>
-         <1558027448.2682.11.camel@synopsys.com>
-         <C2D7FE5348E1B147BCA15975FBA2307501A2517B16@us01wembx1.internal.synopsys.com>
-In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A2517B16@us01wembx1.internal.synopsys.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=paltsev@synopsys.com; 
-x-originating-ip: [5.18.205.96]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ed7d8e9d-994c-4332-7031-08d6db165057
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR12MB1789;
-x-ms-traffictypediagnostic: MWHPR12MB1789:
-x-microsoft-antispam-prvs: <MWHPR12MB17892F96AC45E35CF0A3EB0FDE0B0@MWHPR12MB1789.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0040126723
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(376002)(366004)(39850400004)(136003)(199004)(189003)(256004)(478600001)(6512007)(6246003)(71446004)(2906002)(446003)(229853002)(81156014)(25786009)(5660300002)(103116003)(4326008)(76176011)(6862004)(14454004)(6486002)(305945005)(7736002)(8676002)(99286004)(8936002)(102836004)(6436002)(6506007)(53546011)(11346002)(476003)(2616005)(66066001)(81166006)(86362001)(316002)(54906003)(66556008)(6636002)(68736007)(53936002)(64756008)(71200400001)(36756003)(3846002)(6116002)(66476007)(91956017)(37006003)(186003)(26005)(66446008)(73956011)(71190400001)(76116006)(66946007)(486006);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR12MB1789;H:MWHPR12MB1632.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: rIqhhHc0BAydrvHlRqoGpSf5rkC5OaSmEzKjaQw9vK19Q/zVWkwDZwVkqNcC2IaB+nPVIw+2XPpZCcdPMI/YsOtA5x0qqUVZsIQh6ewjuPc4n1TLQQo0x+kHx6/TbSUZ/M/r06MVRXtsATnpN3JUDowNLGmoGerf3v8O4NL5V6VMEG0YR+fYRHpqkSw/ffxG+QNQSHvOV6LZNTYAG34UarTYWTyyupIg6IqwW11r7OuO2f7BlzHXfpcSeK7ZQeDfFRP6h3CV29Y9R2t+J2YRJXma76KN+/bcOdjsn/xA65s1y0lE8fMvWS3liUe1qZe3/lYYhgnuyaJWQxPpFXQub8qz83r5Uo3MD8b4CCNnR9czNNm9itbZvMYJ+DQ94shNajqHTvu4cp2Z+Zxx1LUelb543T3QI+yz2aWZZDiX2YU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <ED5BCD6560531E4FAC7578F40C955653@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 17 May 2019 18:31:51 -0400
+Received: from localhost.localdomain (cpc89242-aztw30-2-0-cust488.18-1.cable.virginm.net [86.31.129.233])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4C192336;
+        Sat, 18 May 2019 00:31:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1558132308;
+        bh=LDZ60/Ee44rD+jbGQ+7fcgzOj40I+eQ8PFLp7q7HQNI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bu0IdENP7wwO2/3ZLgMtVhzsANbQ3K+FgCk3bb4QAmVnbrLjhB59GYC1ud7N5fDbJ
+         mVKMj4jlgdi4XQBJwHtphhQG8blL1juo34ff4dW6bqqU9xrKZd7dNPyqIXJMXccKud
+         w0fRTZNCKNETBKknkCI/KM/a4zLBPhdCtLSZoAE4=
+From:   Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Cc:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 1/3] media: vsp1: drm: Split vsp1_du_setup_lif()
+Date:   Fri, 17 May 2019 23:31:41 +0100
+Message-Id: <20190517223143.26251-2-kieran.bingham+renesas@ideasonboard.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190517223143.26251-1-kieran.bingham+renesas@ideasonboard.com>
+References: <20190517223143.26251-1-kieran.bingham+renesas@ideasonboard.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed7d8e9d-994c-4332-7031-08d6db165057
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 22:23:40.1443
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR12MB1789
-X-OriginatorOrg: synopsys.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SG1tbSwNCg0Kc28gbG9hZCB0aGUgYm9vbCB2YXJpYWJsZSBmcm9tIG1lbW9yeSBpcyBjb252ZXJ0
-ZWQgdG8gc3VjaCBhc20gY29kZToNCg0KLS0tLS0tLS0tLS0tLS0tLS0+OC0tLS0tLS0tLS0tLS0t
-LS0tLS0gDQpsZGIJcjIsW3NvbWVfYm9vbF9hZGRyZXNzXQ0KZXh0Yl9zCXIyLHIyDQotLS0tLS0t
-LS0tLS0tLS0tLT44LS0tLS0tLS0tLS0tLS0tLS0tLQ0KDQpDb3VsZCB5b3UgcGxlYXNlIGRlc2Ny
-aWJlIHRoYXQgdGhlIG1hZ2ljIGlzIGdvaW5nIG9uIHRoZXJlPw0KDQpUaGlzIGV4dGJfcyBpbnN0
-cnVjdGlvbiBsb29rcyBjb21wbGV0ZWx5IHVzZWxlc3MgaGVyZSwgYWNjb3JkaW5nIG9uIHRoZSBM
-REIgZGVzY3JpcHRpb24gZnJvbSBQUk06DQotLS0tLS0tLS0tLS0tLS0tLT44LS0tLS0tLS0tLS0t
-LS0tLS0tLQ0KTEQgTERIIExEVyBMREIgTEREOg0KVGhlIHNpemUgb2YgdGhlIHJlcXVlc3RlZCBk
-YXRhIGlzIHNwZWNpZmllZCBieSB0aGUgZGF0YSBzaXplIGZpZWxkIDwueno+IGFuZCBieSBkZWZh
-dWx0LCBkYXRhIGlzIHplcm8NCmV4dGVuZGVkIGZyb20gdGhlIG1vc3Qtc2lnbmlmaWNhbnQgYml0
-IG9mIHRoZSBkYXRhIHRvIHRoZSBtb3N0LXNpZ25pZmljYW50IGJpdCBvZiB0aGUgZGVzdGluYXRp
-b24NCnJlZ2lzdGVyLg0KLS0tLS0tLS0tLS0tLS0tLS0+OC0tLS0tLS0tLS0tLS0tLS0tLS0NCg0K
-QW0gSSBtaXNzaW5nIHNvbWV0aGluZz8NCg0KT24gVGh1LCAyMDE5LTA1LTE2IGF0IDE3OjM3ICsw
-MDAwLCBWaW5lZXQgR3VwdGEgd3JvdGU6DQo+IE9uIDUvMTYvMTkgMTA6MjQgQU0sIEV1Z2VuaXkg
-UGFsdHNldiB3cm90ZToNCj4gPiA+ICsgICAgdW5zaWduZWQgaW50IHdyaXRlID0gMCwgZXhlYyA9
-IDAsIG1hc2s7DQo+ID4gDQo+ID4gUHJvYmFibHkgaXQncyBiZXR0ZXIgdG8gdXNlICdib29sJyB0
-eXBlIGZvciAnd3JpdGUnIGFuZCAnZXhlYycgYXMgd2UgcmVhbGx5IHVzZSB0aGVtIGFzIGEgYm9v
-bGVhbiB2YXJpYWJsZXMuDQo+IA0KPiBSaWdodCB0aG9zZSBhcmUgc2VtYW50aWNzLCBidXQgdGhl
-IGdlbmVyYXRlZCBjb2RlIGZvciAiYm9vbCIgaXMgbm90IGlkZWFsIC0gZ2l2ZW4NCj4gaXQgaXMg
-aW5oZXJlbnRseSBhICJjaGFyIiBpdCBpcyBwcm9tb3RlZCBmaXJzdCB0byBhbiBpbnQgd2l0aCBh
-biBhZGRpdGlvbmFsIEVYVEINCj4gd2hpY2ggSSByZWFsbHkgZGlzbGlrZS4NCj4gR3Vlc3MgaXQg
-aXMgbW9yZSBvZiBhIHN0eWxlIHRoaW5nLg0KPiANCj4gLVZpbmVldA0KLS0gDQogRXVnZW5peSBQ
-YWx0c2V2
+Break vsp1_du_setup_lif() into components more suited to the DRM Atomic
+API. The existing vsp1_du_setup_lif() API call is maintained as it is
+still used from the DU.
+
+Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+---
+ drivers/media/platform/vsp1/vsp1_drm.c | 233 ++++++++++++++++++-------
+ include/media/vsp1.h                   |  32 +++-
+ 2 files changed, 199 insertions(+), 66 deletions(-)
+
+diff --git a/drivers/media/platform/vsp1/vsp1_drm.c b/drivers/media/platform/vsp1/vsp1_drm.c
+index a4a45d68a6ef..ce5c0780680f 100644
+--- a/drivers/media/platform/vsp1/vsp1_drm.c
++++ b/drivers/media/platform/vsp1/vsp1_drm.c
+@@ -616,18 +616,15 @@ int vsp1_du_init(struct device *dev)
+ EXPORT_SYMBOL_GPL(vsp1_du_init);
+ 
+ /**
+- * vsp1_du_setup_lif - Setup the output part of the VSP pipeline
++ * vsp1_du_atomic_modeset - Configure the mode as part of an atomic update
+  * @dev: the VSP device
+  * @pipe_index: the DRM pipeline index
+- * @cfg: the LIF configuration
++ * @cfg: the mode configuration
+  *
+  * Configure the output part of VSP DRM pipeline for the given frame @cfg.width
+  * and @cfg.height. This sets up formats on the BRx source pad, the WPF sink and
+  * source pads, and the LIF sink pad.
+  *
+- * The @pipe_index argument selects which DRM pipeline to setup. The number of
+- * available pipelines depend on the VSP instance.
+- *
+  * As the media bus code on the blend unit source pad is conditioned by the
+  * configuration of its sink 0 pad, we also set up the formats on all blend unit
+  * sinks, even if the configuration will be overwritten later by
+@@ -635,15 +632,14 @@ EXPORT_SYMBOL_GPL(vsp1_du_init);
+  * a well defined state.
+  *
+  * Return 0 on success or a negative error code on failure.
++ *
+  */
+-int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
+-		      const struct vsp1_du_lif_config *cfg)
++int vsp1_du_atomic_modeset(struct device *dev, unsigned int pipe_index,
++			   const struct vsp1_du_modeset_config *cfg)
+ {
+ 	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
+ 	struct vsp1_drm_pipeline *drm_pipe;
+ 	struct vsp1_pipeline *pipe;
+-	unsigned long flags;
+-	unsigned int i;
+ 	int ret;
+ 
+ 	if (pipe_index >= vsp1->info->lif_count)
+@@ -652,60 +648,6 @@ int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
+ 	drm_pipe = &vsp1->drm->pipe[pipe_index];
+ 	pipe = &drm_pipe->pipe;
+ 
+-	if (!cfg) {
+-		struct vsp1_brx *brx;
+-
+-		mutex_lock(&vsp1->drm->lock);
+-
+-		brx = to_brx(&pipe->brx->subdev);
+-
+-		/*
+-		 * NULL configuration means the CRTC is being disabled, stop
+-		 * the pipeline and turn the light off.
+-		 */
+-		ret = vsp1_pipeline_stop(pipe);
+-		if (ret == -ETIMEDOUT)
+-			dev_err(vsp1->dev, "DRM pipeline stop timeout\n");
+-
+-		for (i = 0; i < ARRAY_SIZE(pipe->inputs); ++i) {
+-			struct vsp1_rwpf *rpf = pipe->inputs[i];
+-
+-			if (!rpf)
+-				continue;
+-
+-			/*
+-			 * Remove the RPF from the pipe and the list of BRx
+-			 * inputs.
+-			 */
+-			WARN_ON(!rpf->entity.pipe);
+-			rpf->entity.pipe = NULL;
+-			list_del(&rpf->entity.list_pipe);
+-			pipe->inputs[i] = NULL;
+-
+-			brx->inputs[rpf->brx_input].rpf = NULL;
+-		}
+-
+-		drm_pipe->du_complete = NULL;
+-		pipe->num_inputs = 0;
+-
+-		dev_dbg(vsp1->dev, "%s: pipe %u: releasing %s\n",
+-			__func__, pipe->lif->index,
+-			BRX_NAME(pipe->brx));
+-
+-		list_del(&pipe->brx->list_pipe);
+-		pipe->brx->pipe = NULL;
+-		pipe->brx = NULL;
+-
+-		mutex_unlock(&vsp1->drm->lock);
+-
+-		vsp1_dlm_reset(pipe->output->dlm);
+-		vsp1_device_put(vsp1);
+-
+-		dev_dbg(vsp1->dev, "%s: pipeline disabled\n", __func__);
+-
+-		return 0;
+-	}
+-
+ 	drm_pipe->width = cfg->width;
+ 	drm_pipe->height = cfg->height;
+ 	pipe->interlaced = cfg->interlaced;
+@@ -722,8 +664,43 @@ int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
+ 		goto unlock;
+ 
+ 	ret = vsp1_du_pipeline_setup_output(vsp1, pipe);
+-	if (ret < 0)
+-		goto unlock;
++
++unlock:
++	mutex_unlock(&vsp1->drm->lock);
++
++	return ret;
++}
++
++/**
++ * vsp1_du_atomic_enable - Enable and start a DU pipeline
++ * @dev: the VSP device
++ * @pipe_index: the DRM pipeline index
++ * @cfg: the enablement configuration
++ *
++ * The @pipe_index argument selects which DRM pipeline to enable. The number of
++ * available pipelines depend on the VSP instance.
++ *
++ * The configuration passes a callback function to register notification of
++ * frame completion events.
++ *
++ * Return 0 on success or a negative error code on failure.
++ */
++int vsp1_du_atomic_enable(struct device *dev, unsigned int pipe_index,
++			  const struct vsp1_du_enable_config *cfg)
++{
++	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
++	struct vsp1_drm_pipeline *drm_pipe;
++	struct vsp1_pipeline *pipe;
++	unsigned long flags;
++	int ret;
++
++	if (pipe_index >= vsp1->info->lif_count)
++		return -EINVAL;
++
++	drm_pipe = &vsp1->drm->pipe[pipe_index];
++	pipe = &drm_pipe->pipe;
++
++	mutex_lock(&vsp1->drm->lock);
+ 
+ 	/* Enable the VSP1. */
+ 	ret = vsp1_device_get(vsp1);
+@@ -758,6 +735,132 @@ int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
+ 	dev_dbg(vsp1->dev, "%s: pipeline enabled\n", __func__);
+ 
+ 	return 0;
++
++}
++EXPORT_SYMBOL_GPL(vsp1_du_atomic_enable);
++
++
++/**
++ * vsp1_du_atomic_disable - Disable and stop a DU pipeline
++ * @dev: the VSP device
++ * @pipe_index: the DRM pipeline index
++ *
++ * The @pipe_index argument selects which DRM pipeline to disable. The number
++ * of available pipelines depend on the VSP instance.
++ *
++ * Return 0 on success or a negative error code on failure.
++ */
++int vsp1_du_atomic_disable(struct device *dev, unsigned int pipe_index)
++{
++	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
++	struct vsp1_drm_pipeline *drm_pipe;
++	struct vsp1_pipeline *pipe;
++	struct vsp1_brx *brx;
++	unsigned int i;
++	int ret;
++
++	if (pipe_index >= vsp1->info->lif_count)
++		return -EINVAL;
++
++	drm_pipe = &vsp1->drm->pipe[pipe_index];
++	pipe = &drm_pipe->pipe;
++
++	mutex_lock(&vsp1->drm->lock);
++
++	brx = to_brx(&pipe->brx->subdev);
++
++	/*
++	 * NULL configuration means the CRTC is being disabled, stop
++	 * the pipeline and turn the light off.
++	 */
++	ret = vsp1_pipeline_stop(pipe);
++	if (ret == -ETIMEDOUT)
++		dev_err(vsp1->dev, "DRM pipeline stop timeout\n");
++
++	for (i = 0; i < ARRAY_SIZE(pipe->inputs); ++i) {
++		struct vsp1_rwpf *rpf = pipe->inputs[i];
++
++		if (!rpf)
++			continue;
++
++		/*
++		 * Remove the RPF from the pipe and the list of BRx
++		 * inputs.
++		 */
++		WARN_ON(!rpf->entity.pipe);
++		rpf->entity.pipe = NULL;
++		list_del(&rpf->entity.list_pipe);
++		pipe->inputs[i] = NULL;
++
++		brx->inputs[rpf->brx_input].rpf = NULL;
++	}
++
++	drm_pipe->du_complete = NULL;
++	pipe->num_inputs = 0;
++
++	dev_dbg(vsp1->dev, "%s: pipe %u: releasing %s\n",
++		__func__, pipe->lif->index,
++		BRX_NAME(pipe->brx));
++
++	list_del(&pipe->brx->list_pipe);
++	pipe->brx->pipe = NULL;
++	pipe->brx = NULL;
++
++	mutex_unlock(&vsp1->drm->lock);
++
++	vsp1_dlm_reset(pipe->output->dlm);
++	vsp1_device_put(vsp1);
++
++	dev_dbg(vsp1->dev, "%s: pipeline disabled\n", __func__);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(vsp1_du_atomic_disable);
++
++/**
++ * vsp1_du_setup_lif - Setup the output part of the VSP pipeline
++ * @dev: the VSP device
++ * @pipe_index: the DRM pipeline index
++ * @cfg: the LIF configuration
++ *
++ * Configure the output part of VSP DRM pipeline for the given frame @cfg.width
++ * and @cfg.height. This sets up formats on the BRx source pad, the WPF sink and
++ * source pads, and the LIF sink pad.
++ *
++ * The @pipe_index argument selects which DRM pipeline to setup. The number of
++ * available pipelines depend on the VSP instance.
++ *
++ * As the media bus code on the blend unit source pad is conditioned by the
++ * configuration of its sink 0 pad, we also set up the formats on all blend unit
++ * sinks, even if the configuration will be overwritten later by
++ * vsp1_du_setup_rpf(). This ensures that the blend unit configuration is set to
++ * a well defined state.
++ *
++ * Return 0 on success or a negative error code on failure.
++ */
++int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
++		      const struct vsp1_du_lif_config *cfg)
++{
++	int ret;
++
++	struct vsp1_du_modeset_config modes = {
++		.width = cfg->width,
++		.height = cfg->height,
++		.interlaced = cfg->interlaced,
++	};
++	struct vsp1_du_enable_config enable = {
++		.callback = cfg->callback,
++		.callback_data = cfg->callback_data,
++	};
++
++	if (!cfg)
++		return vsp1_du_atomic_disable(dev, pipe_index);
++
++	ret = vsp1_du_atomic_modeset(dev, pipe_index, &modes);
++	if (ret)
++		return ret;
++
++	return vsp1_du_atomic_enable(dev, pipe_index, &enable);
+ }
+ EXPORT_SYMBOL_GPL(vsp1_du_setup_lif);
+ 
+diff --git a/include/media/vsp1.h b/include/media/vsp1.h
+index cc1b0d42ce95..13f5a1c4d45a 100644
+--- a/include/media/vsp1.h
++++ b/include/media/vsp1.h
+@@ -21,7 +21,7 @@ int vsp1_du_init(struct device *dev);
+ #define VSP1_DU_STATUS_WRITEBACK	BIT(1)
+ 
+ /**
+- * struct vsp1_du_lif_config - VSP LIF configuration
++ * struct vsp1_du_lif_config - VSP LIF configuration - Deprecated
+  * @width: output frame width
+  * @height: output frame height
+  * @interlaced: true for interlaced pipelines
+@@ -42,6 +42,30 @@ struct vsp1_du_lif_config {
+ int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
+ 		      const struct vsp1_du_lif_config *cfg);
+ 
++/**
++ * struct vsp1_du_modeset_config - VSP LIF Mode configuration
++ * @width: output frame width
++ * @height: output frame height
++ * @interlaced: true for interlaced pipelines
++ */
++struct vsp1_du_modeset_config {
++	unsigned int width;
++	unsigned int height;
++	bool interlaced;
++};
++
++/**
++ * struct vsp1_du_enable_config - VSP enable configuration
++ * @callback: frame completion callback function (optional). When a callback
++ *	      is provided, the VSP driver guarantees that it will be called once
++ *	      and only once for each vsp1_du_atomic_flush() call.
++ * @callback_data: data to be passed to the frame completion callback
++ */
++struct vsp1_du_enable_config {
++	void (*callback)(void *data, unsigned int status, u32 crc);
++	void *callback_data;
++};
++
+ /**
+  * struct vsp1_du_atomic_config - VSP atomic configuration parameters
+  * @pixelformat: plane pixel format (V4L2 4CC)
+@@ -106,6 +130,12 @@ struct vsp1_du_atomic_pipe_config {
+ 	struct vsp1_du_writeback_config writeback;
+ };
+ 
++
++int vsp1_du_atomic_modeset(struct device *dev, unsigned int pipe_index,
++		    const struct vsp1_du_modeset_config *cfg);
++int vsp1_du_atomic_enable(struct device *dev, unsigned int pipe_index,
++		   const struct vsp1_du_enable_config *cfg);
++int vsp1_du_atomic_disable(struct device *dev, unsigned int pipe_index);
+ void vsp1_du_atomic_begin(struct device *dev, unsigned int pipe_index);
+ int vsp1_du_atomic_update(struct device *dev, unsigned int pipe_index,
+ 			  unsigned int rpf,
+-- 
+2.20.1
+
