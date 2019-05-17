@@ -2,106 +2,98 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC20BC04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F848C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8440220868
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E68372082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:27:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y2BHJ+Pv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbfEQJ1N (ORCPT
+        id S1728528AbfEQJ1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 05:27:13 -0400
-Received: from relmlor1.renesas.com ([210.160.252.171]:59553 "EHLO
-        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728946AbfEQJ1J (ORCPT
+        Fri, 17 May 2019 05:27:54 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42476 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727984AbfEQJ1x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 05:27:09 -0400
-X-IronPort-AV: E=Sophos;i="5.60,479,1549897200"; 
-   d="scan'208";a="16234986"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 17 May 2019 18:27:08 +0900
-Received: from fabrizio-dev.ree.adwin.renesas.com (unknown [10.226.36.196])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 08A9340065BF;
-        Fri, 17 May 2019 18:27:03 +0900 (JST)
-From:   Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Simon Horman <horms@verge.net.au>
-Cc:     Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>, xu_shunji@hoperun.com
-Subject: [PATCH v3 2/2] dt-bindings: arm: renesas: Add HopeRun RZ/G2[M] boards
-Date:   Fri, 17 May 2019 10:26:29 +0100
-Message-Id: <1558085189-22061-3-git-send-email-fabrizio.castro@bp.renesas.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1558085189-22061-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1558085189-22061-1-git-send-email-fabrizio.castro@bp.renesas.com>
+        Fri, 17 May 2019 05:27:53 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y13so4811611lfh.9;
+        Fri, 17 May 2019 02:27:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OFE1ZoeQKcw6uUZSWRVQMV466jgT2gduffrESVPh5GA=;
+        b=Y2BHJ+PvUFT0308yUm6Egg79bIJm/6C6ll08cNjuuzDWQLzsWGHhgOBKmx6wAIilgC
+         DxCDR5yt1pyPc11X/O3cPt0xegyW38hYSi05efGBWi8kuBhpuTRbG/Ceg8Ac9A8ZXrG8
+         ZPadXzk5WE97Q9IqWQS3dsvR2XhFatL+5k9jcw/h9yHroCpmehtxEqFExPJ6xJ1adSeQ
+         rwQfd+dtzXOa0kw/uFs0r23Tfu0eqPP4K/6FiT9SaNdaUjT4xYw2rN9fuxfZ5mdVNK/3
+         4Yh8NHDIAeUtZA15rmquYhfVQr5cPxPPW64lbZ1Jqm8w5IBJ+mP9u5zx+jqnqji9yxO6
+         Ow/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OFE1ZoeQKcw6uUZSWRVQMV466jgT2gduffrESVPh5GA=;
+        b=nW0nUNfVJL9uu28+rt/MNfnYYCUHmJTnAwKDro5rTANp2MY9dXGJYucS6qwha6YhWr
+         ZKg5DeTHQEUH5ephBLVPflolVNNWzOmcDW+dgXlHr9YWWCL/PIBNlVXiGnFQfYK7bepM
+         /i9oWyckOPjI2mRVf74Afl0pFg9I9AUcgLRF5PrC89V8QyYAQLtyULWRPOAa+ZIcjIqC
+         Emj3elYjAm27mHFQ+v+//NuomtCvfWksIl7SPxPb8bJZGfnUOBqAlIx7My00r4RgUx1N
+         iRj42QyljnGW6NLre4cr1Ss8rZ81bUMSIJWbuOzTuFukuWPiaUzslVzRkCW5mnVdWzhT
+         Sd3g==
+X-Gm-Message-State: APjAAAWlZyfbuSNV1NTeeTopbdPC4+YFFQCoJJVbcmpmAqmDPxOsBJlV
+        ikMC1e6sq/sAnK78gTdWoyNrNeJt/65kMzN+daU=
+X-Google-Smtp-Source: APXvYqwVaFLfVJGzEWNA/bihj3MEL3KDOC5eSfhNJJdJVvM8+NnSoqM2q1DWNZ6kK+ft5uSJ4IidpZJm1PUwdrJUyt8=
+X-Received: by 2002:a19:7516:: with SMTP id y22mr6401252lfe.26.1558085271855;
+ Fri, 17 May 2019 02:27:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <CANiq72kvpiC-i53AXM-YsCUvWroHQemmqxsXjnB330ZEeHahUg@mail.gmail.com>
+ <CABWYdi1zhTTaN-GSgH0DnPfz7p=SRw0wts5QVYYVtfvoiS0qnQ@mail.gmail.com>
+ <CANiq72=fsL5m2_e+bNovFCHy3=YVf53EKGtGE_sWvsAD=ONHuQ@mail.gmail.com>
+ <20190516225013.nvhwqi5tfwtby6qb@treble> <CABWYdi29E++jBw8boFZAiDZA7iT5NiJhnNmiHb-Rvd9+97hSVA@mail.gmail.com>
+ <20190517050931.GB32367@kroah.com> <20190517073813.GB2589@hirez.programming.kicks-ass.net>
+ <CANiq72nUPoNHWM-dJuFc3=4D2=8XMuvO0PgGPjviOv+EhrAWUw@mail.gmail.com>
+ <20190517085126.GA3249@kroah.com> <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
+ <20190517092302.GA5235@kroah.com>
+In-Reply-To: <20190517092302.GA5235@kroah.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Fri, 17 May 2019 11:27:41 +0200
+Message-ID: <CANiq72=HpvQx1t+W3YwY-6Rdw1F6UJbVkAzJFdE61H668B8s2g@mail.gmail.com>
+Subject: Re: Linux 4.19 and GCC 9
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds board HiHope RZ/G2M (the main board, powered by
-the R8A774A1) and board HiHope RZ/G2 EX (the expansion board
-that sits on top of the HiHope RZ/G2M). Both boards are made
-by Jiangsu HopeRun Software Co., Ltd. (a.k.a. HopeRun).
+On Fri, May 17, 2019 at 11:23 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Fri, May 17, 2019 at 11:01:45AM +0200, Miguel Ojeda wrote:
+>
+> > a6e60d84989f ("include/linux/module.h: copy __init/__exit attrs to
+> > init/cleanup_module")
+>
+> That patch I applied now.
 
-Useful links:
-http://hihope.org/product/detail/rzg2
-https://item.taobao.com/item.htm?spm=a2oq0.12575281.0.0.6bcf1debQpzkRS&ft=t&id=592177498472
-http://www.hoperun.com/Cn/news/id/379
+Note that this one requires the second one (c0d9782f5b6d).
 
-We already know that the HiHope RZ/G2 EX will also sit on the
-HiHope RZ/G2N, even though the HiHope RZ/G2N doesn't exist just
-yet.
-
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-
----
-v2->v3:
-* Added Reviewed-by Rob
-v1->v2:
-* Fixed according to Rob's comments
----
- Documentation/devicetree/bindings/arm/renesas.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/arm/renesas.yaml b/Documentation/devicetree/bindings/arm/renesas.yaml
-index 19f3798..08c923f 100644
---- a/Documentation/devicetree/bindings/arm/renesas.yaml
-+++ b/Documentation/devicetree/bindings/arm/renesas.yaml
-@@ -106,6 +106,14 @@ properties:
- 
-       - description: RZ/G2M (R8A774A1)
-         items:
-+          - enum:
-+              - hoperun,hihope-rzg2m # HopeRun HiHope RZ/G2M platform
-+          - const: renesas,r8a774a1
-+
-+      - items:
-+          - enum:
-+              - hoperun,hihope-rzg2-ex # HopeRun expansion board for HiHope RZ/G2 platforms
-+          - const: hoperun,hihope-rzg2m
-           - const: renesas,r8a774a1
- 
-       - description: RZ/G2E (R8A774C0)
--- 
-2.7.4
-
+Cheers,
+Miguel
