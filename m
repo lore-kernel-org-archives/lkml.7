@@ -2,125 +2,152 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBC90C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4216C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA78420879
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558079709;
-	bh=qbF3/Hqw/7ip+2ZWKi+N4Olloffuq4ChzZr9IXxoU2o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qsuTt6/i4Vv933KGqQSSrkqLZx01ie5IdLtjsD3JPJ0vqs36RTLH6jTDb/fZBeCWB
-	 A0mxy10Xbo6K0nSU59p/sS/oxfC8JbXal7PxNl21Q1to0fA4s27gB1X4oV14kdW4j0
-	 1+1l4TQgWPY5JpbfoiQjt8f5/ngDwXBjqUVXtX3I=
+	by mail.kernel.org (Postfix) with ESMTP id 6ABD5206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:59:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YW+cgWC5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728693AbfEQHzJ (ORCPT
+        id S1728445AbfEQH7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 03:55:09 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37444 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727942AbfEQHzI (ORCPT
+        Fri, 17 May 2019 03:59:44 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37319 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727800AbfEQH7o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 03:55:08 -0400
-Received: by mail-lj1-f196.google.com with SMTP id h19so5448302ljj.4;
-        Fri, 17 May 2019 00:55:07 -0700 (PDT)
+        Fri, 17 May 2019 03:59:44 -0400
+Received: by mail-pf1-f196.google.com with SMTP id g3so3297959pfi.4;
+        Fri, 17 May 2019 00:59:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=e+cYjn/QHZqjyb98SahRwhYR3b8ZyPa5/0Rrq4E7Mbk=;
+        b=YW+cgWC5iVLIOyziymhXzyaxaHkVoX7DEO0jimcP9LjPY5Grg+sAZWR1M6FqEn7+WN
+         agMLbm6DZSpwXdMZd6eqRiiRRA+N/YZUJpUbRSpUtvVmsqP4CUqqiWJDEMmy1FhB5ilJ
+         H4HXd+ZC66/8B41uMFlBue/Q3w93JpBMt1Zni8Lg6wN+tBoPU21z6Mu+L6ecVdoAtU9D
+         liStQL+1tsn6qoWLf3tMJTAgv4aNiff+u8wFXGiJENbRHACTsB04G8IIskwcftyszN4g
+         GainFm8rzB0DzIQ11LcNuRgeV2yw7FCpk/6Z/cU+AACJIYWXnPaaxnxJxkiJ4yIKFkWA
+         MF3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pEdqxUq2kFPbQG6ltN8L5vlpCirLiiFr+zJtL30RO/Y=;
-        b=QgMtzGY9oyw2QOxL8X1KKLClM4GK3nj8aSvDXaXilCixD15BqPDmEL0dT2lQc3o/gc
-         7Lj5D1+JasXwdRntWWudbnxXFYKqStuUZgTXibSQRTdOwBNMkIcy3IzJoJwOS13eItn0
-         Im+4xPKPqQbK01JVIlhQW5QFrEO0Rs9oH5/neuuLKvX+2aY56wCikD5LuDmqc90kX58O
-         WGhpxK/Om8p3fTK5WoPVSOa30p3vvW4DODagxQs/CQZln+8gFvn9tOxu7cLQo4yC0czh
-         QInijDLaIMFOp9jTBxALIeKj4zyQvAr6tp/7u0M/21lVe5TnrWXvEBRewraVF3rYhLDk
-         YmfA==
-X-Gm-Message-State: APjAAAUFJUFqDTgl5RiHOtRECv3HPHuIAz1XqFnht3FRcWpzm/qI49X3
-        hztxfy+1/hqP7HKGtnHzm/Y=
-X-Google-Smtp-Source: APXvYqyaCo7hyNeRbDAczxTHKhv/KtVGXRBwVH4UKcAudvLikrJqh3bOgouA4ZoMoHZnpHXC1Mfm1w==
-X-Received: by 2002:a2e:4c7:: with SMTP id a68mr9429936ljf.165.1558079706380;
-        Fri, 17 May 2019 00:55:06 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id h11sm1407169lfh.8.2019.05.17.00.55.05
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=e+cYjn/QHZqjyb98SahRwhYR3b8ZyPa5/0Rrq4E7Mbk=;
+        b=lMdscYMCSQg4BE4nORwylop36MuDjjxzz3bxt16WO6RCu6yHip+di+ioT9CahdJVDV
+         O4J3wvhFn5TebxxdoiF60IGNlJPUqW9zfkFvkCCOPohN4WX4HDpuDfTr1PLlINsO8/d/
+         9swbtmRYTRShbhTi4iNM2l0rq9IT7jbdRR/qaRwPd7epce+tUjSFtGZ9MeDFmwEbBhL/
+         Oa/Jt9ykFoMcnkWGa1H6ekrIq14NwqkZRPqlgKvdZ3l8hUeW2zNKaTri+CnPp+hKMpRR
+         sejl8BCMwYHU50tFhaeObbw+svqwgZRUFJSnJeSOi14mqIlHzJxBf0nUNZQWKcg2x+qG
+         Wcow==
+X-Gm-Message-State: APjAAAVDIH6jTWj8NYBAjXZUgMpWwZfRTKD2Dq7RPMfvVFxJ+GuUBPtE
+        BXcEmejL14nWxedQXGg5CRk=
+X-Google-Smtp-Source: APXvYqwaPSO7sciUnMA7lAOuHW97sk00RtZt8QQm+ZKMayoZl+Opd10q6to48YQ2TdPf1TZmgmJFSA==
+X-Received: by 2002:a63:9242:: with SMTP id s2mr38323853pgn.220.1558079983538;
+        Fri, 17 May 2019 00:59:43 -0700 (PDT)
+Received: from localhost.localdomain ([185.241.43.160])
+        by smtp.gmail.com with ESMTPSA id j2sm2911052pfb.157.2019.05.17.00.59.40
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 00:55:05 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hRXhm-0002dA-IX; Fri, 17 May 2019 09:55:02 +0200
-Date:   Fri, 17 May 2019 09:55:02 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     jacmet@sunsite.dk, gregkh@linuxfoundation.org, jslaby@suse.com,
-        shubhrajyoti.datta@xilinx.com, linux-kernel@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH] serial-uartlite: Fix null-ptr-deref in ulite_exit
-Message-ID: <20190517075502.GE28564@localhost>
-References: <20190516040931.16276-1-yuehaibing@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190516040931.16276-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Fri, 17 May 2019 00:59:42 -0700 (PDT)
+From:   Weikang shi <swkhack@gmail.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        swkhack <swkhack@gmail.com>
+Subject: [PATCH] net: caif: fix the value of size argument of snprintf
+Date:   Fri, 17 May 2019 15:59:22 +0800
+Message-Id: <20190517075922.29123-1-swkhack@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 12:09:31PM +0800, YueHaibing wrote:
-> If ulite_probe is not called or failed to registed
-> uart_register_driver, unload the module will call
-> uart_unregister_driver, which will tigger NULL
-> pointer dereference like this:
-> 
-> BUG: KASAN: null-ptr-deref in tty_unregister_driver+0x19/0x100
-> Read of size 4 at addr 0000000000000034 by task syz-executor.0/4246
+From: swkhack <swkhack@gmail.com>
 
-> This patch fix this by moving uart_unregister_driver
-> to ulite_remove.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 415b43bdb008 ("tty: serial: uartlite: Move uart register to probe")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/tty/serial/uartlite.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/uartlite.c b/drivers/tty/serial/uartlite.c
-> index b8b912b..2e49fb6 100644
-> --- a/drivers/tty/serial/uartlite.c
-> +++ b/drivers/tty/serial/uartlite.c
-> @@ -867,6 +867,7 @@ static int ulite_remove(struct platform_device *pdev)
->  	pm_runtime_disable(&pdev->dev);
->  	pm_runtime_set_suspended(&pdev->dev);
->  	pm_runtime_dont_use_autosuspend(&pdev->dev);
-> +	uart_unregister_driver(&ulite_uart_driver);
+Because the function snprintf write at most size bytes(including the
+null byte).So the value of the argument size need not to minus one.
 
-This broken. Consider what happens if you have tho ports registered and
-you unbind the first.
+Signed-off-by: swkhack <swkhack@gmail.com>
+---
+ net/caif/cfdbgl.c  | 2 +-
+ net/caif/cfdgml.c  | 3 +--
+ net/caif/cfutill.c | 2 +-
+ net/caif/cfveil.c  | 2 +-
+ net/caif/cfvidl.c  | 2 +-
+ 5 files changed, 5 insertions(+), 6 deletions(-)
 
-Someone else sent a fix for this here
+diff --git a/net/caif/cfdbgl.c b/net/caif/cfdbgl.c
+index 7aae0b568..cce839bf4 100644
+--- a/net/caif/cfdbgl.c
++++ b/net/caif/cfdbgl.c
+@@ -26,7 +26,7 @@ struct cflayer *cfdbgl_create(u8 channel_id, struct dev_info *dev_info)
+ 	cfsrvl_init(dbg, channel_id, dev_info, false);
+ 	dbg->layer.receive = cfdbgl_receive;
+ 	dbg->layer.transmit = cfdbgl_transmit;
+-	snprintf(dbg->layer.name, CAIF_LAYER_NAME_SZ - 1, "dbg%d", channel_id);
++	snprintf(dbg->layer.name, CAIF_LAYER_NAME_SZ, "dbg%d", channel_id);
+ 	return &dbg->layer;
+ }
+ 
+diff --git a/net/caif/cfdgml.c b/net/caif/cfdgml.c
+index 3bdddb32d..58fdb99a3 100644
+--- a/net/caif/cfdgml.c
++++ b/net/caif/cfdgml.c
+@@ -33,8 +33,7 @@ struct cflayer *cfdgml_create(u8 channel_id, struct dev_info *dev_info)
+ 	cfsrvl_init(dgm, channel_id, dev_info, true);
+ 	dgm->layer.receive = cfdgml_receive;
+ 	dgm->layer.transmit = cfdgml_transmit;
+-	snprintf(dgm->layer.name, CAIF_LAYER_NAME_SZ - 1, "dgm%d", channel_id);
+-	dgm->layer.name[CAIF_LAYER_NAME_SZ - 1] = '\0';
++	snprintf(dgm->layer.name, CAIF_LAYER_NAME_SZ, "dgm%d", channel_id);
+ 	return &dgm->layer;
+ }
+ 
+diff --git a/net/caif/cfutill.c b/net/caif/cfutill.c
+index 1728fa447..be7c43a92 100644
+--- a/net/caif/cfutill.c
++++ b/net/caif/cfutill.c
+@@ -33,7 +33,7 @@ struct cflayer *cfutill_create(u8 channel_id, struct dev_info *dev_info)
+ 	cfsrvl_init(util, channel_id, dev_info, true);
+ 	util->layer.receive = cfutill_receive;
+ 	util->layer.transmit = cfutill_transmit;
+-	snprintf(util->layer.name, CAIF_LAYER_NAME_SZ - 1, "util1");
++	snprintf(util->layer.name, CAIF_LAYER_NAME_SZ, "util1");
+ 	return &util->layer;
+ }
+ 
+diff --git a/net/caif/cfveil.c b/net/caif/cfveil.c
+index 262224581..35dd3a600 100644
+--- a/net/caif/cfveil.c
++++ b/net/caif/cfveil.c
+@@ -32,7 +32,7 @@ struct cflayer *cfvei_create(u8 channel_id, struct dev_info *dev_info)
+ 	cfsrvl_init(vei, channel_id, dev_info, true);
+ 	vei->layer.receive = cfvei_receive;
+ 	vei->layer.transmit = cfvei_transmit;
+-	snprintf(vei->layer.name, CAIF_LAYER_NAME_SZ - 1, "vei%d", channel_id);
++	snprintf(vei->layer.name, CAIF_LAYER_NAME_SZ, "vei%d", channel_id);
+ 	return &vei->layer;
+ }
+ 
+diff --git a/net/caif/cfvidl.c b/net/caif/cfvidl.c
+index b3b110e8a..73615e3b3 100644
+--- a/net/caif/cfvidl.c
++++ b/net/caif/cfvidl.c
+@@ -29,7 +29,7 @@ struct cflayer *cfvidl_create(u8 channel_id, struct dev_info *dev_info)
+ 	cfsrvl_init(vid, channel_id, dev_info, false);
+ 	vid->layer.receive = cfvidl_receive;
+ 	vid->layer.transmit = cfvidl_transmit;
+-	snprintf(vid->layer.name, CAIF_LAYER_NAME_SZ - 1, "vid1");
++	snprintf(vid->layer.name, CAIF_LAYER_NAME_SZ, "vid1");
+ 	return &vid->layer;
+ }
+ 
+-- 
+2.17.1
 
-	https://lkml.kernel.org/r/20190514033219.169947-1-wangkefeng.wang@huawei.com
-
-That fix also has some issues, but is still better given the current
-state this driver is in.
-
->  	return rc;
->  }
->  
-> @@ -897,7 +898,6 @@ static int __init ulite_init(void)
->  static void __exit ulite_exit(void)
->  {
->  	platform_driver_unregister(&ulite_platform_driver);
-> -	uart_unregister_driver(&ulite_uart_driver);
->  }
->  
->  module_init(ulite_init);
-
-Johan
