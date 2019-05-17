@@ -2,158 +2,73 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92698C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93BDEC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5092083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:29:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="lmJWY92e"
+	by mail.kernel.org (Postfix) with ESMTP id 6E11C2083E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:30:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfEQE34 (ORCPT
+        id S1727610AbfEQEaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 00:29:56 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:40507 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbfEQE3z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 00:29:55 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x4H4S6m7020760;
-        Fri, 17 May 2019 13:28:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x4H4S6m7020760
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558067287;
-        bh=S6lUG5wzELNkLDTIQ5q0KxmZoKYRPjFzFvxypw0i15o=;
-        h=From:To:Cc:Subject:Date:From;
-        b=lmJWY92eISyiUDky3rMD3ZyuryoVjAMcuTit/WmqwC8NXp7LrdSs9SUFwZoRYBjqa
-         M4wRPzpxa5JJIArOLFzLBGxR7XDpwmowRFKd7Y6f4JEhGls/6PQPSRmEGKf4onuKCk
-         qiOdjy4a7x6wQyB3FZzdu2Um5sHJpjgmHYVhgLH0W38UROX5QUvbW5QqZZaO3PpsZD
-         vM+R6PSpD3geAyxQxInyiolXsrDb/XLRCAd2d2QC/4Caz3cSmnWbb6KsYg4xVx8rVH
-         pgfFkg1ZnlqXNNy7s7c5oVD6EaY6U+D5nuYJtD+cYMm7HP8GSF3UfXDP/pnUfYP3uH
-         ckE6paHnX6XpA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Sam Ravnborg <sam@ravnborg.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Jessica Yu <jeyu@kernel.org>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rusty Russell <rusty@rustcorp.com.au>,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] kbuild: check uniqueness of module names
-Date:   Fri, 17 May 2019 13:27:53 +0900
-Message-Id: <20190517042753.25857-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 17 May 2019 00:30:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34698 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726078AbfEQEaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 00:30:05 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 79B3630821AE;
+        Fri, 17 May 2019 04:30:02 +0000 (UTC)
+Received: from hp-dl380pg8-02.lab.eng.pek2.redhat.com (hp-dl380pg8-02.lab.eng.pek2.redhat.com [10.73.8.12])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 37C901001E78;
+        Fri, 17 May 2019 04:29:54 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     mst@redhat.com, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     pbonzini@redhat.com, stefanha@redhat.com
+Subject: [PATCH V2 0/4] Prevent vhost kthread from hogging CPU
+Date:   Fri, 17 May 2019 00:29:48 -0400
+Message-Id: <1558067392-11740-1-git-send-email-jasowang@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 17 May 2019 04:30:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the recent build test of linux-next, Stephen saw a build error
-caused by a broken .tmp_versions/*.mod file:
+Hi:
 
-  https://lkml.org/lkml/2019/5/13/991
+This series try to prevent a guest triggerable CPU hogging through
+vhost kthread. This is done by introducing and checking the weight
+after each requrest. The patch has been tested with reproducer of
+vsock and virtio-net. Only compile test is done for vhost-scsi.
 
-drivers/net/phy/asix.ko and drivers/net/usb/asix.ko have the same
-basename, and there is a race in generating .tmp_versions/asix.mod
+Please review.
 
-Kbuild has not checked this before, and it suddenly shows up with
-obscure error message when this kind of race occurs.
+This addresses CVE-2019-3900.
 
-Non-unique module names cause various sort of problems, but it is
-not trivial to catch them by eyes.
+Changs from V1:
+- fix user-ater-free in vosck patch
 
-Hence, this script.
+Jason Wang (4):
+  vhost: introduce vhost_exceeds_weight()
+  vhost_net: fix possible infinite loop
+  vhost: vsock: add weight support
+  vhost: scsi: add weight support
 
-It checks not only real modules, but also built-in modules (i.e.
-controlled by tristate CONFIG option, but currently compiled with =y).
-Non-unique names for built-in modules also cause problems because
-/sys/modules/ would fall over.
+ drivers/vhost/net.c   | 41 ++++++++++++++---------------------------
+ drivers/vhost/scsi.c  | 21 ++++++++++++++-------
+ drivers/vhost/vhost.c | 20 +++++++++++++++++++-
+ drivers/vhost/vhost.h |  5 ++++-
+ drivers/vhost/vsock.c | 28 +++++++++++++++++++++-------
+ 5 files changed, 72 insertions(+), 43 deletions(-)
 
-I tested allmodconfig on the latest kernel, and it detected the
-following:
-
-warning: same basename if the following are built as modules:
-  drivers/regulator/88pm800.ko
-  drivers/mfd/88pm800.ko
-warning: same basename if the following are built as modules:
-  drivers/gpu/drm/bridge/adv7511/adv7511.ko
-  drivers/media/i2c/adv7511.ko
-warning: same basename if the following are built as modules:
-  drivers/net/phy/asix.ko
-  drivers/net/usb/asix.ko
-warning: same basename if the following are built as modules:
-  fs/coda/coda.ko
-  drivers/media/platform/coda/coda.ko
-warning: same basename if the following are built as modules:
-  drivers/net/phy/realtek.ko
-  drivers/net/dsa/realtek.ko
-
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
----
-
-Changes in v2:
- - redirect messages to stderr
- - use '--' after 'basename -a'
- - use '-r' for xargs to cope with empty modules.order/modules.builtin
-
- Makefile                 |  1 +
- scripts/modules-check.sh | 20 ++++++++++++++++++++
- 2 files changed, 21 insertions(+)
- create mode 100755 scripts/modules-check.sh
-
-diff --git a/Makefile b/Makefile
-index a61a95b6b38f..30792fec7a12 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1290,6 +1290,7 @@ modules: $(vmlinux-dirs) $(if $(KBUILD_BUILTIN),vmlinux) modules.builtin
- 	$(Q)$(AWK) '!x[$$0]++' $(vmlinux-dirs:%=$(objtree)/%/modules.order) > $(objtree)/modules.order
- 	@$(kecho) '  Building modules, stage 2.';
- 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost
-+	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/modules-check.sh
- 
- modules.builtin: $(vmlinux-dirs:%=%/modules.builtin)
- 	$(Q)$(AWK) '!x[$$0]++' $^ > $(objtree)/modules.builtin
-diff --git a/scripts/modules-check.sh b/scripts/modules-check.sh
-new file mode 100755
-index 000000000000..c875f6eab01e
---- /dev/null
-+++ b/scripts/modules-check.sh
-@@ -0,0 +1,20 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+# Check uniqueness of module names
-+check_same_name_modules()
-+{
-+	same_name_modules=$(cat modules.order modules.builtin | \
-+				xargs -r basename -a -- | sort | uniq -d)
-+
-+	for m in $same_name_modules
-+	do
-+		echo "warning: same basename if the following are built as modules:" >&2
-+		grep -h -e "/$m" modules.order modules.builtin | \
-+						sed 's:^kernel/:  :' >&2
-+	done
-+}
-+
-+check_same_name_modules
 -- 
-2.17.1
+1.8.3.1
 
