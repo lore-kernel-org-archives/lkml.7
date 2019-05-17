@@ -2,276 +2,91 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08160C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8145C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C63312173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:58:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558115924;
-	bh=6wuDO6C2j5ISFUHqCZvEZgXgmSk5Y1yp2LQuMtU2X3c=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=p8ME7BDE8i7jP70H1IN1jaBUqMzLMBYGZfcu228dSEfzEJu2CSBi4NbtTvix5PaMd
-	 E13gYsYEKT8MyHwK9KDGkN5JIr/ndnKPRGvk2m46TLf+juyhYFrG6B1vzXPt+68/83
-	 V6/ce8rzbzOUIJtCCRWxbqSvhEwuoLPJB1/2bQdA=
+	by mail.kernel.org (Postfix) with ESMTP id A142121783
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:59:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fauEAA2B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbfEQR6o (ORCPT
+        id S1729078AbfEQR7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 13:58:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53426 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728225AbfEQR6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 13:58:43 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3396216FD;
-        Fri, 17 May 2019 17:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558115922;
-        bh=6wuDO6C2j5ISFUHqCZvEZgXgmSk5Y1yp2LQuMtU2X3c=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=sDtAwiFiKEC7wD2Ufzw/udB7/5BWIyScyUaJXH5U6VCsDwlqQoDM/P4m+X1+94VzN
-         UMN8BtoINRqIUVkug6vKVri3xHvdA3/CbFFhbNpR4pZcBbxJrTK6xZUmI6Dk+l/a4V
-         1dq1lsjIu2TctOk9kzXv+Q2ILY/h6f897iZjhR+M=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190514221711.248228-5-brendanhiggins@google.com>
-References: <20190514221711.248228-1-brendanhiggins@google.com> <20190514221711.248228-5-brendanhiggins@google.com>
-Subject: Re: [PATCH v4 04/18] kunit: test: add kunit_stream a std::stream like logger
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
-        tytso@mit.edu, yamada.masahiro@socionext.com
-User-Agent: alot/0.8.1
-Date:   Fri, 17 May 2019 10:58:41 -0700
-Message-Id: <20190517175841.F3396216FD@mail.kernel.org>
+        Fri, 17 May 2019 13:59:15 -0400
+Received: from mail-ua1-f73.google.com ([209.85.222.73]:56110 "EHLO
+        mail-ua1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728536AbfEQR7P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 13:59:15 -0400
+Received: by mail-ua1-f73.google.com with SMTP id j14so1121913ual.22
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 10:59:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=HjnJT2XdDYKQIIRI0wRs7dq5hVXPjCbb+2fdzHD9I4I=;
+        b=fauEAA2BclMEIkmvf+xXGB/nJbN4RY0tU6omsopEkobMhC1+AP5VAckmbkX5Jzqknn
+         SVEFNKrI8VdjzWjxuAHIDw100HFn1N5BdfERXxuB3YqEdUymRmiuuvCgnhg0zI8gHywV
+         7Qhi/OJFgfd6qFzyZLNFC4vtMsHw0uVGtR0X9lmyqps1AWua+9WmmjjPJj+ozK8hqkqR
+         B3mdI8FeOB26VZ7cYJHTRw4WXafKtSS6ERlIDidcVQnabczzRC+N2mZioB3O2ufTKuH+
+         0/y6aO0L9vTt4iqVxTIb4UwKOewXmrx1fWV0uISJi/hzlgJ4OVM9qUngZhkqS0BJnRsN
+         jPcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=HjnJT2XdDYKQIIRI0wRs7dq5hVXPjCbb+2fdzHD9I4I=;
+        b=LXW4DniD3bZZWs5LrytYObYxB13gm3oSGm7rFBPIHZRzMjrJ/gMN+EtfWqdb6/V1gz
+         r4vgCwbMF2cluGpjYCRyRMxsWvZhhBeZGLiYsU92pFTL1OH7Vb83R0b8ndrrJGii84hE
+         Hscx/Bgagjw6MR3cA/eDyqvjecca1qFucyKUqjz4a0f+SVkRoSiPqteBVfq/WFaX2Pq7
+         Gh4jGqzSzcFTXcUeWlHr58rEM3v/YoYqv36lD4qWwg6IknOGOKrgLiS586AQlm8tqivj
+         ozW6FNW0yYVu1vZlxfCjftcKfGM8EtgfVRwMyvYbLCh7VQgTysLELNKbQXCsGoyl4EES
+         IBZw==
+X-Gm-Message-State: APjAAAWdqOf6by/w8pt3uyh73xhHmvey4A2RTtdlQQBbrUI7R9yLTj6R
+        oDzlu66fbAIpXAMflH/SKmxiqGW56g==
+X-Google-Smtp-Source: APXvYqy9+QxqphCtyHxQMDmhE5KTigqQMc819noadvyCGPewgyfNz/3vqRswvnvmOUJeMXqJiDeBGhpIdPA=
+X-Received: by 2002:a1f:b20d:: with SMTP id b13mr13653vkf.75.1558115954425;
+ Fri, 17 May 2019 10:59:14 -0700 (PDT)
+Date:   Fri, 17 May 2019 10:59:06 -0700
+In-Reply-To: <20190517084712.GL2623@hirez.programming.kicks-ass.net>
+Message-Id: <20190517175906.78742-1-yabinc@google.com>
+Mime-Version: 1.0
+References: <20190517084712.GL2623@hirez.programming.kicks-ass.net>
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: Re: [PATCH] perf/ring_buffer: Fix exposing a temporarily decreased data_head.
+From:   Yabin Cui <yabinc@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Yabin Cui <yabinc@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brendan Higgins (2019-05-14 15:16:57)
-> diff --git a/kunit/kunit-stream.c b/kunit/kunit-stream.c
-> new file mode 100644
-> index 0000000000000..1884f1b550888
-> --- /dev/null
-> +++ b/kunit/kunit-stream.c
-> @@ -0,0 +1,152 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * C++ stream style string formatter and printer used in KUnit for outpu=
-tting
-> + * KUnit messages.
-> + *
-> + * Copyright (C) 2019, Google LLC.
-> + * Author: Brendan Higgins <brendanhiggins@google.com>
-> + */
-> +
-> +#include <kunit/test.h>
-> +#include <kunit/kunit-stream.h>
-> +#include <kunit/string-stream.h>
-> +
-> +static const char *kunit_stream_get_level(struct kunit_stream *this)
-> +{
-> +       unsigned long flags;
-> +       const char *level;
-> +
-> +       spin_lock_irqsave(&this->lock, flags);
-> +       level =3D this->level;
-> +       spin_unlock_irqrestore(&this->lock, flags);
-> +
-> +       return level;
+> > -	local_inc(&rb->nest);
+> > +	rb->nest++;
+> > +	barrier();
 
-Please remove this whole function and inline it to the one call-site.
+> Urgh; almost but not quite. You just lost the 'volatile' qualifier and
+> now the compiler can mess things up for you.
 
-> +}
-> +
-> +void kunit_stream_set_level(struct kunit_stream *this, const char *level)
-> +{
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&this->lock, flags);
-> +       this->level =3D level;
-> +       spin_unlock_irqrestore(&this->lock, flags);
+I thought the barriers added could force the compiler to forget what it knows
+about rb->nest, and do the write as been told to. I appreciate it if you can
+tell me more details about it. Anyway, it's a good choice to be protective
+and always use WRITE_ONCE/READ_ONCE for rb->nest.
 
-I don't get the locking here. What are we protecting against? Are tests
-running in parallel using the same kunit_stream? If so, why is the level
-changeable in one call and then adding strings is done in a different
-function call? It would make sense to combine the level setting and
-string adding so that it's one atomic operation if it's truly a parallel
-operation, or remove the locking entirely.
+> What I'm going to do is split this into two patches, one fixes the
+> problem and marked for backport, and one changing away from local_t.
 
-> +}
-> +
-> +void kunit_stream_add(struct kunit_stream *this, const char *fmt, ...)
-> +{
-> +       va_list args;
-> +       struct string_stream *stream =3D this->internal_stream;
-> +
-> +       va_start(args, fmt);
-> +
-> +       if (string_stream_vadd(stream, fmt, args) < 0)
-> +               kunit_err(this->test, "Failed to allocate fragment: %s\n"=
-, fmt);
-> +
-> +       va_end(args);
-> +}
-> +
-> +void kunit_stream_append(struct kunit_stream *this,
-> +                               struct kunit_stream *other)
-> +{
-> +       struct string_stream *other_stream =3D other->internal_stream;
-> +       const char *other_content;
-> +
-> +       other_content =3D string_stream_get_string(other_stream);
-> +
-> +       if (!other_content) {
-> +               kunit_err(this->test,
-> +                         "Failed to get string from second argument for =
-appending.\n");
-> +               return;
-> +       }
-> +
-> +       kunit_stream_add(this, other_content);
-> +}
-> +
-> +void kunit_stream_clear(struct kunit_stream *this)
-> +{
-> +       string_stream_clear(this->internal_stream);
-> +}
-> +
-> +void kunit_stream_commit(struct kunit_stream *this)
-
-Should this be rather called kunit_stream_flush()?
-
-> +{
-> +       struct string_stream *stream =3D this->internal_stream;
-> +       struct string_stream_fragment *fragment;
-> +       const char *level;
-> +       char *buf;
-> +
-> +       level =3D kunit_stream_get_level(this);
-> +       if (!level) {
-> +               kunit_err(this->test,
-> +                         "Stream was committed without a specified log l=
-evel.\n");
-
-Drop the full-stop?
-
-> +               level =3D KERN_ERR;
-> +               kunit_stream_set_level(this, level);
-> +       }
-> +
-> +       buf =3D string_stream_get_string(stream);
-> +       if (!buf) {
-> +               kunit_err(this->test,
-
-Can you grow a local variable for 'this->test'? It's used many times.
-
-Also, 'this' is not very kernel idiomatic. We usually name variables by
-their type instead of 'this' which is a keyword in other languages.
-Perhaps it could be named 'kstream'?
-
-> +                        "Could not allocate buffer, dumping stream:\n");
-> +               list_for_each_entry(fragment, &stream->fragments, node) {
-> +                       kunit_err(this->test, fragment->fragment);
-> +               }
-> +               kunit_err(this->test, "\n");
-> +               goto cleanup;
-> +       }
-> +
-> +       kunit_printk(level, this->test, buf);
-> +       kfree(buf);
-> +
-> +cleanup:
-> +       kunit_stream_clear(this);
-> +}
-> +
-> +static int kunit_stream_init(struct kunit_resource *res, void *context)
-> +{
-> +       struct kunit *test =3D context;
-> +       struct kunit_stream *stream;
-> +
-> +       stream =3D kzalloc(sizeof(*stream), GFP_KERNEL);
-
-Of course, here it's called 'stream', so maybe it should be 'kstream'
-here too.
-
-> +       if (!stream)
-> +               return -ENOMEM;
-> +
-> +       res->allocation =3D stream;
-> +       stream->test =3D test;
-> +       spin_lock_init(&stream->lock);
-> +       stream->internal_stream =3D new_string_stream();
-
-Can new_string_stream() be renamed to alloc_string_stream()? Sorry, I
-just see so much C++ isms in here it's hard to read from the kernel
-developer perspective.
-
-> +
-> +       if (!stream->internal_stream) {
-
-Nitpick: Please join this to the "allocation" event above instead of
-keeping it separated.
-
-> +               kfree(stream);
-> +               return -ENOMEM;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static void kunit_stream_free(struct kunit_resource *res)
-> +{
-> +       struct kunit_stream *stream =3D res->allocation;
-> +
-> +       if (!string_stream_is_empty(stream->internal_stream)) {
-> +               kunit_err(stream->test,
-> +                        "End of test case reached with uncommitted strea=
-m entries.\n");
-> +               kunit_stream_commit(stream);
-> +       }
-> +
-> +       destroy_string_stream(stream->internal_stream);
-> +       kfree(stream);
-> +}
-> +
-> +struct kunit_stream *kunit_new_stream(struct kunit *test)
-> +{
-> +       struct kunit_resource *res;
-> +
-> +       res =3D kunit_alloc_resource(test,
-> +                                  kunit_stream_init,
-> +                                  kunit_stream_free,
-> +                                  test);
-> +
-> +       if (res)
-> +               return res->allocation;
-> +       else
-> +               return NULL;
-
-Don't have if (...) return ...; else return ..., just return instead of
-else.
-
+I read the split patches. They totally LGTM. Thanks for all your help
+and rapid reply! I appreciate it :)
