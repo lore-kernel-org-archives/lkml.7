@@ -2,258 +2,83 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC64C04AAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1A96C04E84
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:36:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACD5920862
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6592420881
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558060547;
-	bh=MAqJb50WiN3kf4StNzeVevskR8Jy9C+9lKFxbUJl71M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gR+fFv7p9ktPfGzgEYfNVO1Og6awq7PHMHhrQuCtQjbG8708Hzr9SSYm3bDf5xUbE
-	 txvmIi98S16FerNbCVP/GF8ctoGeNX7WWzrQ1HpzWApT4wm6ZZRc0DG7cYe/8NZMkD
-	 GZxblLp1rfo4i26E0jQRqVvRvYVswU4ZeNDay0S0=
+	s=default; t=1558060562;
+	bh=UYmAe1IV/++E9IvKgowPVkw/M4qBmZ3jUfv2WsoAlU4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1ngD+oN2jaU5x0t3VGNOeMZwwNiJLyhdcbKVskxs1djYlE4O5hyZv89Q18k6hbOBT
+	 rhu4Bq0Mun34z8gwDMJkPno6jks8M3WyY7xOzbl+HUBmcfBp7BhgyvlqJGC63Ja+U1
+	 mTw9udKx4CVahJRlmm3KW5VVl/d2OCR5dknKfIik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727180AbfEQCfq (ORCPT
+        id S1727401AbfEQCgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 22:35:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48640 "EHLO mail.kernel.org"
+        Thu, 16 May 2019 22:36:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbfEQCfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 22:35:46 -0400
-Received: from dragon (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        id S1725933AbfEQCgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 22:36:01 -0400
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4AA4204EC;
-        Fri, 17 May 2019 02:35:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D86BE20881;
+        Fri, 17 May 2019 02:36:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558060545;
-        bh=MAqJb50WiN3kf4StNzeVevskR8Jy9C+9lKFxbUJl71M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SDYlH75BVrjV8KKH16vbu58ez13GtL5xeIkCFVuwcJsjjdTe6J6GEV47M00zaAPmv
-         jr4ARtXDeFUMjV0GRd5890uHKJc1BftnqRHHo3KpmmThm0NSD0yPWA7vHBY5iYMvBv
-         VEelHKbpGk4qgIe0kCF184bcw68ELJimcEnZbflo=
-Date:   Fri, 17 May 2019 10:35:04 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Pramod Kumar <pramod.kumar_1@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "Michal.Vokac@ysoft.com" <Michal.Vokac@ysoft.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>
-Subject: Re: [PATCH 2/2] add dts file to enable support for ls1046afrwy board.
-Message-ID: <20190517023502.GZ15856@dragon>
-References: <20190508135501.17578-1-pramod.kumar_1@nxp.com>
- <20190508135501.17578-3-pramod.kumar_1@nxp.com>
+        s=default; t=1558060561;
+        bh=UYmAe1IV/++E9IvKgowPVkw/M4qBmZ3jUfv2WsoAlU4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JezreGgfD+cVJDDB8iPEWLRhhOtQxSgCxpIpun5kyNh02ONIJKjdrh0t+ikF2H297
+         BkCWl9XSWqWVN/hax4XLhrkok6uoMNhv6JeQ2/Accr7cOuObSWFu2H/OLG3HQuwImY
+         P/5c4QOGilC90cqAFyR0c+awz9tbpxeCYna6cj6s=
+Received: by mail-qk1-f171.google.com with SMTP id q197so3601392qke.7;
+        Thu, 16 May 2019 19:36:00 -0700 (PDT)
+X-Gm-Message-State: APjAAAWeOEKa6k0GuT89SygjXH98Z1elob+xNvv6UDM7El0kyTuGzu28
+        KJJAKoA6Q0R1HjBqG6otG/xSFU7+ul+KKN+mxg==
+X-Google-Smtp-Source: APXvYqz2joMRNZ9mMZ4ogBSnqyOT54U29XMbxHkz/jIeGjkl3P0GYwD4Bc4JrpD4ogzHg0IOKyai3+0yBV53K0p0oQM=
+X-Received: by 2002:a37:358:: with SMTP id 85mr41442378qkd.174.1558060560115;
+ Thu, 16 May 2019 19:36:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508135501.17578-3-pramod.kumar_1@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <1556016046-31231-1-git-send-email-amergnat@baylibre.com> <1556016046-31231-2-git-send-email-amergnat@baylibre.com>
+In-Reply-To: <1556016046-31231-2-git-send-email-amergnat@baylibre.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 16 May 2019 21:35:49 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ5b23Y-x2Rx7bDrAcs7kDgj-TyoWGeZ6j30M4_xQrodA@mail.gmail.com>
+Message-ID: <CAL_JsqJ5b23Y-x2Rx7bDrAcs7kDgj-TyoWGeZ6j30M4_xQrodA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: Add pixart vendor
+To:     Alexandre Mergnat <amergnat@baylibre.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald <pmeerw@pmeerw.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        baylibre-upstreaming@groups.io
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 01:53:10PM +0000, Pramod Kumar wrote:
-> ls1046afrwy board is based on nxp ls1046a SoC.
-> 
-> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
-> Signed-off-by: Pramod Kumar <pramod.kumar_1@nxp.com>
-
-Please have a subject prefix like 'arm64: dts: ...'
-
-Shawn
-
+On Tue, Apr 23, 2019 at 5:40 AM Alexandre Mergnat <amergnat@baylibre.com> wrote:
+>
+> PixArt Imaging Inc. is expertized in CMOS image sensors (CIS),
+> capacitive touch controllers and related imaging application development.
+>
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 > ---
->  arch/arm64/boot/dts/freescale/Makefile        |   1 +
->  .../boot/dts/freescale/fsl-ls1046a-frwy.dts   | 156 ++++++++++++++++++
->  2 files changed, 157 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 13604e558dc1..84ff6995b41e 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -8,6 +8,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1028a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-rdb.dtb
-> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-frwy.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1088a-qds.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
-> new file mode 100644
-> index 000000000000..de0d19c02944
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-frwy.dts
-> @@ -0,0 +1,156 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Device Tree Include file for Freescale Layerscape-1046A family SoC.
-> + *
-> + * Copyright 2019 NXP.
-> + *
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "fsl-ls1046a.dtsi"
-> +
-> +/ {
-> +	model = "LS1046A FRWY Board";
-> +	compatible = "fsl,ls1046a-frwy", "fsl,ls1046a";
-> +
-> +	aliases {
-> +		serial0 = &duart0;
-> +		serial1 = &duart1;
-> +		serial2 = &duart2;
-> +		serial3 = &duart3;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	sb_3v3: regulator-sb3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "LT8642SEV-3.3V";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
-> +};
-> +
-> +&duart0 {
-> +	status = "okay";
-> +};
-> +
-> +&duart1 {
-> +	status = "okay";
-> +};
-> +
-> +&duart2 {
-> +	status = "okay";
-> +};
-> +
-> +&duart3 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +	status = "okay";
-> +
-> +	i2c-mux@77 {
-> +		compatible = "nxp,pca9546";
-> +		reg = <0x77>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		i2c-mux-never-disable;
-> +
-> +		i2c@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +
-> +			eeprom@52 {
-> +				compatible = "atmel,24c512";
-> +				reg = <0x52>;
-> +			};
-> +
-> +			eeprom@53 {
-> +				compatible = "atmel,24c512";
-> +				reg = <0x53>;
-> +			};
-> +
-> +			power-monitor@40 {
-> +				compatible = "ti,ina220";
-> +				reg = <0x40>;
-> +				shunt-resistor = <1000>;
-> +			};
-> +
-> +			rtc@51 {
-> +				compatible = "nxp,pcf2129";
-> +				reg = <0x51>;
-> +			};
-> +
-> +			temperature-sensor@4c {
-> +				compatible = "nxp,sa56004";
-> +				reg = <0x4c>;
-> +				vcc-supply = <&sb_3v3>;
-> +			};
-> +
-> +		};
-> +	};
-> +};
-> +
-> +&ifc {
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +	/* NAND Flash */
-> +	ranges = <0x0 0x0 0x0 0x7e800000 0x00010000>;
-> +	status = "okay";
-> +
-> +	nand@0,0 {
-> +		compatible = "fsl,ifc-nand";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		reg = <0x0 0x0 0x10000>;
-> +	};
-> +
-> +};
-> +
-> +#include "fsl-ls1046-post.dtsi"
-> +
-> +&fman0 {
-> +	ethernet@e0000 {
-> +		phy-handle = <&qsgmii_phy4>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	ethernet@e8000 {
-> +		phy-handle = <&qsgmii_phy2>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	ethernet@ea000 {
-> +		phy-handle = <&qsgmii_phy1>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	ethernet@f2000 {
-> +		phy-handle = <&qsgmii_phy3>;
-> +		phy-connection-type = "qsgmii";
-> +	};
-> +
-> +	mdio@fd000 {
-> +		qsgmii_phy1: ethernet-phy@1c {
-> +			reg = <0x1c>;
-> +		};
-> +
-> +		qsgmii_phy2: ethernet-phy@1d {
-> +			reg = <0x1d>;
-> +		};
-> +
-> +		qsgmii_phy3: ethernet-phy@1e {
-> +			reg = <0x1e>;
-> +		};
-> +
-> +		qsgmii_phy4: ethernet-phy@1f {
-> +			reg = <0x1f>;
-> +		};
-> +	};
-> +};
-> -- 
-> 2.17.1
-> 
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+
+I've converted this file to json-schema as of v5.2-rc1. See commit
+8122de54602e. Sorry, but you will have to rework this patch.
+
+Rob
