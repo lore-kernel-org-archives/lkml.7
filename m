@@ -2,181 +2,131 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31337C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7AEC04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA1D2204EC
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F23B2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:49:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="hU7nDQHh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729340AbfEQTow (ORCPT
+        id S1728459AbfEQTtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 15:44:52 -0400
-Received: from mga02.intel.com ([134.134.136.20]:49478 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726851AbfEQTov (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 15:44:51 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 12:44:51 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga007.jf.intel.com with ESMTP; 17 May 2019 12:44:50 -0700
-Date:   Fri, 17 May 2019 12:44:50 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>
-Subject: Re: [PATCH v3 4/5] KVM: LAPIC: Delay trace advance expire delta
-Message-ID: <20190517194450.GH15006@linux.intel.com>
-References: <1557975980-9875-1-git-send-email-wanpengli@tencent.com>
- <1557975980-9875-5-git-send-email-wanpengli@tencent.com>
+        Fri, 17 May 2019 15:49:16 -0400
+Received: from mail-eopbgr750052.outbound.protection.outlook.com ([40.107.75.52]:44221
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727183AbfEQTtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 15:49:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iHUI0wqEuX71E/sEHHAQ7A+pgNmrLELpCmC7T5NorFU=;
+ b=hU7nDQHhYM2Bntb0drr+tGDxb1mk3YU5wGGjlc35TraZR1/tQDDLSUXFgfCkrSPNuL6cHnqdLVqTWwsO9/2lbF/pSXXogk3RvbzoYcYhKRKz0hyYAak0zNr1Q+x80fIesnaLhPUWsZNtCg0ZUcaI0uHTX6x+WELDGqlyiYeuceg=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2685.namprd12.prod.outlook.com (52.135.103.26) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.17; Fri, 17 May 2019 19:49:10 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::69b5:19ac:b63d:2b82%3]) with mapi id 15.20.1900.010; Fri, 17 May 2019
+ 19:49:10 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     Borislav Petkov <bp@alien8.de>, "Luck, Tony" <tony.luck@intel.com>
+CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: RE: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Thread-Topic: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Thread-Index: AQHU/5PPbonhoiIaT0+tpMBUt0fOpKZt/3MAgAAEtbCAAA1jAIAAAELggAAGlYCAADB8kIAABZ8AgAAG7YCAANzUAIAAUaUwgAAal4CAAA3JgIAABf+AgAAE/ICAABizgIAAAygA
+Date:   Fri, 17 May 2019 19:49:10 +0000
+Message-ID: <SN6PR12MB2639C5427366AC3004C35CC0F80B0@SN6PR12MB2639.namprd12.prod.outlook.com>
+References: <20190516172117.GC21857@zn.tnic>
+ <SN6PR12MB26394CD4E1BAC068B0B1AEF6F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516203456.GD21857@zn.tnic> <20190516205943.GA3299@agluck-desk>
+ <20190517101006.GA32065@zn.tnic>
+ <SN6PR12MB26391A0C3979030082EE38F8F80B0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190517163729.GE13482@zn.tnic> <20190517172648.GA18164@agluck-desk>
+ <20190517174817.GG13482@zn.tnic> <20190517180607.GA21710@agluck-desk>
+ <20190517193431.GI13482@zn.tnic>
+In-Reply-To: <20190517193431.GI13482@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-originating-ip: [75.66.99.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 6c981d21-edb2-4126-53d1-08d6db00bb2a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2685;
+x-ms-traffictypediagnostic: SN6PR12MB2685:
+x-microsoft-antispam-prvs: <SN6PR12MB26850E65E74615FD9C9E0B9DF80B0@SN6PR12MB2685.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0040126723
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(136003)(396003)(39850400004)(366004)(13464003)(189003)(199004)(54906003)(110136005)(66446008)(68736007)(99286004)(66946007)(76176011)(256004)(64756008)(66556008)(76116006)(66476007)(73956011)(7696005)(7736002)(229853002)(9686003)(55016002)(81166006)(8936002)(33656002)(71190400001)(71200400001)(81156014)(305945005)(8676002)(6436002)(316002)(6116002)(486006)(476003)(25786009)(11346002)(446003)(6246003)(14454004)(52536014)(53936002)(3846002)(4326008)(74316002)(102836004)(53546011)(6506007)(66066001)(478600001)(26005)(186003)(5660300002)(2906002)(72206003)(86362001)(309714004);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2685;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: INIoVFAeS9+T25pDhCZU1G5zNCtVS+kFhUXk5KgH+il622lg+hU5+Lwzsj+BQ6gXz0hAtp29utRqWX383NtBDGl/aPNzDF80eBCv6DeCQyoZYgAPqw+yynvEaoOI65Akpe47BG3g8N1PTXWGWfXgc2wxV1/INFwbZUYY3cBa9oGrpn6ovTW0h8tqwwNkFXtbMCpKQAZ4/NOrN5k+dwWD6uZQPIKzuAzfuDhLdl4y3AdQzLMRl7BP4BO9rqvmX8p2feZE6QJqzn5MLnfDiQl6ZJ3LNwDepLLiQisGA0oVjnDPQMQtqX6YCO473PGj6rVg3h4M9zHw5PEuDLjXCg+uP3sMUDRtE7XLcNHo6LatvQ48GYXtkemc1yMZeWpnppAyiBMOPUk498UADsZVabEQ/yqGEEaYcYiUfv/qmd5FNAI=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1557975980-9875-5-git-send-email-wanpengli@tencent.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c981d21-edb2-4126-53d1-08d6db00bb2a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 19:49:10.4690
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2685
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 11:06:19AM +0800, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> wait_lapic_expire() call was moved above guest_enter_irqoff() because of 
-> its tracepoint, which violated the RCU extended quiescent state invoked 
-> by guest_enter_irqoff()[1][2]. This patch simply moves the tracepoint 
-> below guest_exit_irqoff() in vcpu_enter_guest(). Snapshot the delta before 
-> VM-Enter, but trace it after VM-Exit. This can help us to move 
-> wait_lapic_expire() just before vmentry in the later patch.
-> 
-> [1] Commit 8b89fe1f6c43 ("kvm: x86: move tracepoints outside extended quiescent state")
-> [2] https://patchwork.kernel.org/patch/7821111/
-> 
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Liran Alon <liran.alon@oracle.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/lapic.c | 16 ++++++++--------
->  arch/x86/kvm/lapic.h |  1 +
->  arch/x86/kvm/x86.c   |  2 ++
->  3 files changed, 11 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 2f364fe..af38ece 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -1502,27 +1502,27 @@ static inline void __wait_lapic_expire(struct kvm_vcpu *vcpu, u64 guest_cycles)
->  }
->  
->  static inline void adaptive_tune_timer_advancement(struct kvm_vcpu *vcpu,
-> -				u64 guest_tsc, u64 tsc_deadline)
-> +				s64 advance_expire_delta)
->  {
->  	struct kvm_lapic *apic = vcpu->arch.apic;
->  	u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns;
->  	u64 ns;
->  
->  	/* too early */
-> -	if (guest_tsc < tsc_deadline) {
-> -		ns = (tsc_deadline - guest_tsc) * 1000000ULL;
-> +	if (advance_expire_delta < 0) {
-> +		ns = -advance_expire_delta * 1000000ULL;
->  		do_div(ns, vcpu->arch.virtual_tsc_khz);
->  		timer_advance_ns -= min((u32)ns,
->  			timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
->  	} else {
->  	/* too late */
-> -		ns = (guest_tsc - tsc_deadline) * 1000000ULL;
-> +		ns = advance_expire_delta * 1000000ULL;
->  		do_div(ns, vcpu->arch.virtual_tsc_khz);
->  		timer_advance_ns += min((u32)ns,
->  			timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
->  	}
->  
-> -	if (abs(guest_tsc - tsc_deadline) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
-> +	if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
->  		apic->lapic_timer.timer_advance_adjust_done = true;
->  	if (unlikely(timer_advance_ns > 5000)) {
->  		timer_advance_ns = 0;
-> @@ -1545,13 +1545,13 @@ void wait_lapic_expire(struct kvm_vcpu *vcpu)
->  	tsc_deadline = apic->lapic_timer.expired_tscdeadline;
->  	apic->lapic_timer.expired_tscdeadline = 0;
->  	guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
-> -	trace_kvm_wait_lapic_expire(vcpu->vcpu_id, guest_tsc - tsc_deadline);
-> +	apic->lapic_timer.advance_expire_delta = guest_tsc - tsc_deadline;
->  
-> -	if (guest_tsc < tsc_deadline)
-> +	if (apic->lapic_timer.advance_expire_delta < 0)
-
-I'd prefer to keep "guest_tsc < tsc_deadline" here, just so that it's
-obvious that the call to __wait_lapic_expire() is safe.  My eyes did a
-few double takes reading this code :-)
-
->  		__wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
->  
->  	if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
-> -		adaptive_tune_timer_advancement(vcpu, guest_tsc, tsc_deadline);
-> +		adaptive_tune_timer_advancement(vcpu, apic->lapic_timer.advance_expire_delta);
->  }
->  
->  static void start_sw_tscdeadline(struct kvm_lapic *apic)
-> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> index d6d049b..3e72a25 100644
-> --- a/arch/x86/kvm/lapic.h
-> +++ b/arch/x86/kvm/lapic.h
-> @@ -32,6 +32,7 @@ struct kvm_timer {
->  	u64 tscdeadline;
->  	u64 expired_tscdeadline;
->  	u32 timer_advance_ns;
-> +	s64 advance_expire_delta;
->  	atomic_t pending;			/* accumulated triggered timers */
->  	bool hv_timer_in_use;
->  	bool timer_advance_adjust_done;
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index f2e3847..4a7b00c 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -7961,6 +7961,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->  	++vcpu->stat.exits;
->  
->  	guest_exit_irqoff();
-> +	trace_kvm_wait_lapic_expire(vcpu->vcpu_id,
-> +		vcpu->arch.apic->lapic_timer.advance_expire_delta);
-
-This needs to be guarded with lapic_in_kernel(vcpu).  But, since this is
-all in the same flow, a better approach would be to return the delta from
-wait_lapic_expire().  That saves 8 bytes in struct kvm_timer and avoids
-additional checks for tracing the delta.
-
-E.g.:
-
-	s64 lapic_expire_delta;
-
-	...
-
-        if (lapic_in_kernel(vcpu) &&
-            vcpu->arch.apic->lapic_timer.timer_advance_ns)
-                lapic_expire_delta = wait_lapic_expire(vcpu);
-	else
-		lapic_expire_delta = 0;
-
-	...
-	
-	trace_kvm_wait_lapic_expire(vcpu->vcpu_id, lapic_expire_delta);
->  
->  	local_irq_enable();
->  	preempt_enable();
-> -- 
-> 2.7.4
-> 
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1lZGFjLW93bmVyQHZn
+ZXIua2VybmVsLm9yZyA8bGludXgtZWRhYy1vd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFs
+ZiBPZiBCb3Jpc2xhdiBQZXRrb3YNCj4gU2VudDogRnJpZGF5LCBNYXkgMTcsIDIwMTkgMjozNSBQ
+TQ0KPiBUbzogTHVjaywgVG9ueSA8dG9ueS5sdWNrQGludGVsLmNvbT4NCj4gQ2M6IEdoYW5uYW0s
+IFlhemVuIDxZYXplbi5HaGFubmFtQGFtZC5jb20+OyBsaW51eC1lZGFjQHZnZXIua2VybmVsLm9y
+ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgeDg2QGtlcm5lbC5vcmcNCj4gU3ViamVj
+dDogUmU6IFtQQVRDSCB2MyA1LzZdIHg4Ni9NQ0U6IFNhdmUgTUNBIGNvbnRyb2wgYml0cyB0aGF0
+IGdldCBzZXQgaW4gaGFyZHdhcmUNCj4gDQo+IA0KPiBPbiBGcmksIE1heSAxNywgMjAxOSBhdCAx
+MTowNjowN0FNIC0wNzAwLCBMdWNrLCBUb255IHdyb3RlOg0KPiA+IGFuZCB0aHVzIGVuZCB1cCB3
+aXRoIHRoYXQgZXh0cmEgbGV2ZWwgb24gaW5kZW50IGZvciB0aGUgcmVzdA0KPiA+IG9mIHRoZSBm
+dW5jdGlvbi4NCj4gDQo+IE9rOg0KPiANCj4gLS0tDQo+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9r
+ZXJuZWwvY3B1L21jZS9jb3JlLmMgYi9hcmNoL3g4Ni9rZXJuZWwvY3B1L21jZS9jb3JlLmMNCj4g
+aW5kZXggNWJjZWNhZGNmNGQ5Li4yNWU1MDFhODUzY2QgMTAwNjQ0DQo+IC0tLSBhL2FyY2gveDg2
+L2tlcm5lbC9jcHUvbWNlL2NvcmUuYw0KPiArKysgYi9hcmNoL3g4Ni9rZXJuZWwvY3B1L21jZS9j
+b3JlLmMNCj4gQEAgLTE0OTMsNiArMTQ5MywxMSBAQCBzdGF0aWMgaW50IF9fbWNoZWNrX2NwdV9t
+Y2VfYmFua3NfaW5pdCh2b2lkKQ0KPiAgICAgICAgIGZvciAoaSA9IDA7IGkgPCBuX2JhbmtzOyBp
+KyspIHsNCj4gICAgICAgICAgICAgICAgIHN0cnVjdCBtY2VfYmFuayAqYiA9ICZtY2VfYmFua3Nb
+aV07DQo+IA0KPiArICAgICAgICAgICAgICAgLyoNCj4gKyAgICAgICAgICAgICAgICAqIEluaXQg
+dGhlbSBhbGwsIF9fbWNoZWNrX2NwdV9hcHBseV9xdWlya3MoKSBpcyBnb2luZyB0byBhcHBseQ0K
+PiArICAgICAgICAgICAgICAgICogdGhlIHJlcXVpcmVkIHZlbmRvciBxdWlya3MgYmVmb3JlDQo+
+ICsgICAgICAgICAgICAgICAgKiBfX21jaGVja19jcHVfaW5pdF9jbGVhcl9iYW5rcygpIGRvZXMg
+dGhlIGZpbmFsIGJhbmsgc2V0dXAuDQo+ICsgICAgICAgICAgICAgICAgKi8NCj4gICAgICAgICAg
+ICAgICAgIGItPmN0bCA9IC0xVUxMOw0KPiAgICAgICAgICAgICAgICAgYi0+aW5pdCA9IDE7DQo+
+ICAgICAgICAgfQ0KPiBAQCAtMTU2Miw2ICsxNTY3LDcgQEAgc3RhdGljIHZvaWQgX19tY2hlY2tf
+Y3B1X2luaXRfZ2VuZXJpYyh2b2lkKQ0KPiAgc3RhdGljIHZvaWQgX19tY2hlY2tfY3B1X2luaXRf
+Y2xlYXJfYmFua3Modm9pZCkNCj4gIHsNCj4gICAgICAgICBzdHJ1Y3QgbWNlX2JhbmsgKm1jZV9i
+YW5rcyA9IHRoaXNfY3B1X3JlYWQobWNlX2JhbmtzX2FycmF5KTsNCj4gKyAgICAgICB1NjQgbXNy
+dmFsOw0KPiAgICAgICAgIGludCBpOw0KPiANCj4gICAgICAgICBmb3IgKGkgPSAwOyBpIDwgdGhp
+c19jcHVfcmVhZChtY2VfbnVtX2JhbmtzKTsgaSsrKSB7DQo+IEBAIC0xNTY5LDcgKzE1NzUsMTMg
+QEAgc3RhdGljIHZvaWQgX19tY2hlY2tfY3B1X2luaXRfY2xlYXJfYmFua3Modm9pZCkNCj4gDQo+
+ICAgICAgICAgICAgICAgICBpZiAoIWItPmluaXQpDQo+ICAgICAgICAgICAgICAgICAgICAgICAg
+IGNvbnRpbnVlOw0KPiArDQo+ICsgICAgICAgICAgICAgICAvKiBDaGVjayBpZiBhbnkgYml0cyBh
+cmUgaW1wbGVtZW50ZWQgaW4gaC93ICovDQo+ICAgICAgICAgICAgICAgICB3cm1zcmwobXNyX29w
+cy5jdGwoaSksIGItPmN0bCk7DQo+ICsgICAgICAgICAgICAgICByZG1zcmwobXNyX29wcy5jdGwo
+aSksIG1zcnZhbCk7DQo+ICsNCj4gKyAgICAgICAgICAgICAgIGItPmluaXQgPSAhIW1zcnZhbDsN
+Cj4gKw0KDQpKdXN0IGEgbWlub3Igbml0LCBidXQgY2FuIHdlIGdyb3VwIHRoZSBjb21tZW50LCBS
+RE1TUiwgYW5kIGNoZWNrIHRvZ2V0aGVyPyBUaGUgV1JNU1IgaXMgcGFydCBvZiBub3JtYWwgb3Bl
+cmF0aW9uIGFuZCBpc24ndCB0aWVkIHRvIHRoZSBjaGVjay4NCg0KVGhhbmtzLA0KWWF6ZW4NCg==
