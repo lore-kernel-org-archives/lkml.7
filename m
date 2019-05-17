@@ -2,76 +2,82 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2348FC04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:44:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A621C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E88A220848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EA7520578
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:46:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WlKVIgzc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728660AbfEQHoR (ORCPT
+        id S1728664AbfEQHqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 03:44:17 -0400
-Received: from mail.monom.org ([188.138.9.77]:52138 "EHLO mail.monom.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728323AbfEQHoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 03:44:16 -0400
-Received: from mail.monom.org (localhost [127.0.0.1])
-        by filter.mynetwork.local (Postfix) with ESMTP id 4B8F75006D0;
-        Fri, 17 May 2019 09:44:14 +0200 (CEST)
-Received: from [127.0.0.1] (mail.monom.org [188.138.9.77])
-        by mail.monom.org (Postfix) with ESMTPSA id 61CD55003F5;
-        Fri, 17 May 2019 09:44:13 +0200 (CEST)
-Subject: Re: [PATCH 4.4 000/266] 4.4.180-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jon Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, linux-tegra <linux-tegra@vger.kernel.org>,
-        Michal Hocko <mhocko@suse.com>
-References: <20190515090722.696531131@linuxfoundation.org>
- <f32de22f-c928-2eaa-ee3f-d2b26c184dd4@nvidia.com>
- <75c1f549-9098-933e-ab8b-4d0eeab87ddd@monom.org>
- <20190516164918.GA12641@kroah.com>
-From:   Daniel Wagner <wagi@monom.org>
-Message-ID: <1f9c1d93-0c00-2eea-96ef-10eb078317a4@monom.org>
-Date:   Fri, 17 May 2019 09:44:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 17 May 2019 03:46:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57536 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728300AbfEQHqE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 03:46:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=tmsLUqIFffsMwKQ5rrShy/n7aicGtwKA3Co+5yH2+Eg=; b=WlKVIgzco8hD114GFqSmSVlYG
+        K2zQzSLvlv60DtdYFvgpuRPtl/oRuvEOe+/9ddFbi/jRYzLsKrIum562tmMKMnojsQi9qWDxfXd4p
+        KPha8+/UkXK81SCyePFKP9Pv+zk1veQdlkwEfy0YqrRWn6DmHFAtFf4Z6spJBynUmTsbPe5MDhwwy
+        A5eh+ihjU8UsRYfLvivj2FAk8t3mzch1FlFP9sVLI9hiBSGPSru9eH9opBbR1s0gm20Ub4SQYQy8t
+        0pjVpSrC8oc8EDeZJvqsxYFAEy+FN735BEuHG3Aqgop8K27A+4suNH6R7BZkdK9v8DBL/Fcj01iAz
+        2itne3pmg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hRXZ3-0002Yb-LT; Fri, 17 May 2019 07:46:01 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2256D2027C9FD; Fri, 17 May 2019 09:46:00 +0200 (CEST)
+Date:   Fri, 17 May 2019 09:46:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     "kasong@redhat.com" <kasong@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: Getting empty callchain from perf_callchain_kernel()
+Message-ID: <20190517074600.GJ2623@hirez.programming.kicks-ass.net>
+References: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <20190516164918.GA12641@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Thu, May 16, 2019 at 11:51:55PM +0000, Song Liu wrote:
+> Hi, 
+> 
+> We found a failure with selftests/bpf/tests_prog in test_stacktrace_map (on bpf/master
+> branch). 
+> 
+> After digging into the code, we found that perf_callchain_kernel() is giving empty
+> callchain for tracepoint sched/sched_switch. And it seems related to commit
+> 
+> d15d356887e770c5f2dcf963b52c7cb510c9e42d
+> ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+> 
+> Before this commit, perf_callchain_kernel() returns callchain with regs->ip. With
+> this commit, regs->ip is not sent for !perf_hw_regs(regs) case. 
 
-On 16.05.19 18:49, Greg Kroah-Hartman wrote:
-> Jon, thanks for the testing, I'll go drop this patch now from the final
-> version.
+So while I think the below is indeed right; we should store regs->ip
+regardless of the unwind path chosen, I still think there's something
+fishy if this results in just the 1 entry.
 
-That's fine, I wanted to suggest this too. I have some time to look at
-this next week. So there is no hurry with this patch.
+The sched/sched_switch event really should have a non-trivial stack.
 
-> Daniel, if you can come up with a working series, I'll be glad to take
-> it.  Or, I'd recommend you just move to a newer kernel :)
-
-Sure, I will see what is missing.
-
-@Jon if I get have something to test, would you have time to give it a
-try first?
-
-There is someone constantly updating the v4.4.y tree, which makes me
-update the -rt patches all the time. Don't fear, I am not running 4.4.y,
-this is only for important infrastructure :)
-
-Thanks,
-Daniel
+Let me see if I can reproduce with just perf.
