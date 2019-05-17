@@ -2,129 +2,188 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEABFC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F10C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D4C3206A3
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:42:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="G/PiZd7z"
+	by mail.kernel.org (Postfix) with ESMTP id CF17D206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728591AbfEQImm (ORCPT
+        id S1728207AbfEQIom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 04:42:42 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:65356 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728142AbfEQIma (ORCPT
+        Fri, 17 May 2019 04:44:42 -0400
+Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:51284 "EHLO
+        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727962AbfEQIom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 04:42:30 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4H8bogK025564;
-        Fri, 17 May 2019 10:42:17 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=CTjBmZ/8Y8sJIntk4HY3GIldUOqlwVPxpqC9dk1e2Xg=;
- b=G/PiZd7z5KUU5PMAnzNhU3Dft+T4aENocyHsKOxqSEtQFCeM/f2YVFrHxNlhFv10Zzkl
- LxF2twnLWbhHNTkNBixinxyfq3NMu+Btu6RYo7h+OPlf6SYQcDNNIUijARzN3tCR2rge
- 4epWlQF8H74Bgbg5FuPhAVDxjnKi/YGmwjMsi1wqlZqhx7XJVfHhjrncYjt8FyM40tlK
- 6CNWOMRZ+NJ7st2o4W/iIT1ybhNniqi/+9dsBu3OuO/DzkXys8nxLIAy5fY+NIS/i9HR
- j56P30iE9LkAJ0AAkmS0E2BBu37EtLyfwEhtCh33dGUyNLTJOkvG+My8zT70UHvBnvIO SA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2sdkv0cf0s-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Fri, 17 May 2019 10:42:17 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BC7303F;
-        Fri, 17 May 2019 08:42:14 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 5EFD9246D;
-        Fri, 17 May 2019 08:42:14 +0000 (GMT)
-Received: from localhost (10.75.127.49) by SFHDAG5NODE2.st.com (10.75.127.14)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 17 May 2019 10:42:13
- +0200
-From:   Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [RESEND v2 3/3] ARM: dts: stm32: enable Vivante GPU support on stm32mp157a-dk1 board
-Date:   Fri, 17 May 2019 10:42:08 +0200
-Message-ID: <1558082528-12889-4-git-send-email-pierre-yves.mordret@st.com>
+        Fri, 17 May 2019 04:44:42 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07442085|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.365205-0.0142482-0.620547;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03276;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=6;RT=6;SR=0;TI=SMTPD_---.EZKvgqH_1558082677;
+Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.EZKvgqH_1558082677)
+          by smtp.aliyun-inc.com(10.147.42.16);
+          Fri, 17 May 2019 16:44:37 +0800
+From:   Mao Han <han_mao@c-sky.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mao Han <han_mao@c-sky.com>, Palmer Dabbelt <palmer@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Christoph Hellwig <hch@lst.de>, Guo Ren <guoren@kernel.org>
+Subject: [PATCH V3 2/3] riscv: Add support for perf registers sampling
+Date:   Fri, 17 May 2019 16:43:03 +0800
+Message-Id: <3373fab81a1ab8633ac8f1a79728284576ab1fb5.1558081981.git.han_mao@c-sky.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1558082528-12889-1-git-send-email-pierre-yves.mordret@st.com>
-References: <1558082528-12889-1-git-send-email-pierre-yves.mordret@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG5NODE2.st.com
- (10.75.127.14)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-17_04:,,
- signatures=0
+In-Reply-To: <cover.1558081981.git.han_mao@c-sky.com>
+References: <cover.1558081981.git.han_mao@c-sky.com>
+In-Reply-To: <cover.1558081981.git.han_mao@c-sky.com>
+References: <cover.1558081981.git.han_mao@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable Vivante GPU driver for stm32mp157a-dk1 and dk2 boards.
+This patch implements the perf registers sampling and validation API
+for riscv arch. The valid registers and their register ID are defined in
+perf_regs.h. Perf tool can backtrace in userspace with unwind library
+and the registers/user stack dump support.
 
-Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Signed-off-by: Mao Han <han_mao@c-sky.com>
+CC: Palmer Dabbelt <palmer@sifive.com>
+CC: linux-riscv <linux-riscv@lists.infradead.org>
+CC: Christoph Hellwig <hch@lst.de>
+CC: Guo Ren <guoren@kernel.org>
 ---
-  Version history:
-    v2:
-       * move GPU reserved memeory out of bottom DDR to let free this area for
-         U-Boot
-    v1:
-       * Initial
----
----
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/riscv/Kconfig                      |  2 ++
+ arch/riscv/include/uapi/asm/perf_regs.h | 42 +++++++++++++++++++++++++++++++
+ arch/riscv/kernel/Makefile              |  1 +
+ arch/riscv/kernel/perf_regs.c           | 44 +++++++++++++++++++++++++++++++++
+ 4 files changed, 89 insertions(+)
+ create mode 100644 arch/riscv/include/uapi/asm/perf_regs.h
+ create mode 100644 arch/riscv/kernel/perf_regs.c
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-index 1b1886d..bd06f7b 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -27,6 +27,17 @@
- 		reg = <0xc0000000 0x20000000>;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index eb56c82..effd157 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -33,6 +33,8 @@ config RISCV
+ 	select HAVE_DMA_CONTIGUOUS
+ 	select HAVE_FUTEX_CMPXCHG if FUTEX
+ 	select HAVE_PERF_EVENTS
++	select HAVE_PERF_REGS
++	select HAVE_PERF_USER_STACK_DUMP
+ 	select HAVE_SYSCALL_TRACEPOINTS
+ 	select IRQ_DOMAIN
+ 	select RISCV_ISA_A if SMP
+diff --git a/arch/riscv/include/uapi/asm/perf_regs.h b/arch/riscv/include/uapi/asm/perf_regs.h
+new file mode 100644
+index 0000000..df1a581
+--- /dev/null
++++ b/arch/riscv/include/uapi/asm/perf_regs.h
+@@ -0,0 +1,42 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd. */
 +
-+		gpu_reserved: gpu@d4000000 {
-+			reg = <0xd4000000 0x4000000>;
-+			no-map;
-+		};
-+	};
++#ifndef _ASM_RISCV_PERF_REGS_H
++#define _ASM_RISCV_PERF_REGS_H
 +
- 	led {
- 		compatible = "gpio-leds";
- 		blue {
-@@ -69,6 +80,11 @@
- 	status = "okay";
- };
- 
-+&gpu {
-+	contiguous-area = <&gpu_reserved>;
-+	status = "okay";
++enum perf_event_riscv_regs {
++	PERF_REG_RISCV_PC,
++	PERF_REG_RISCV_RA,
++	PERF_REG_RISCV_SP,
++	PERF_REG_RISCV_GP,
++	PERF_REG_RISCV_TP,
++	PERF_REG_RISCV_T0,
++	PERF_REG_RISCV_T1,
++	PERF_REG_RISCV_T2,
++	PERF_REG_RISCV_S0,
++	PERF_REG_RISCV_S1,
++	PERF_REG_RISCV_A0,
++	PERF_REG_RISCV_A1,
++	PERF_REG_RISCV_A2,
++	PERF_REG_RISCV_A3,
++	PERF_REG_RISCV_A4,
++	PERF_REG_RISCV_A5,
++	PERF_REG_RISCV_A6,
++	PERF_REG_RISCV_A7,
++	PERF_REG_RISCV_S2,
++	PERF_REG_RISCV_S3,
++	PERF_REG_RISCV_S4,
++	PERF_REG_RISCV_S5,
++	PERF_REG_RISCV_S6,
++	PERF_REG_RISCV_S7,
++	PERF_REG_RISCV_S8,
++	PERF_REG_RISCV_S9,
++	PERF_REG_RISCV_S10,
++	PERF_REG_RISCV_S11,
++	PERF_REG_RISCV_T3,
++	PERF_REG_RISCV_T4,
++	PERF_REG_RISCV_T5,
++	PERF_REG_RISCV_T6,
++	PERF_REG_RISCV_MAX,
 +};
++#endif /* _ASM_RISCV_PERF_REGS_H */
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index dd2ba44..024badc 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -39,5 +39,6 @@ obj-$(CONFIG_DYNAMIC_FTRACE)	+= mcount-dyn.o
+ 
+ obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o
+ obj-$(CONFIG_PERF_EVENTS)	+= perf_callchain.o
++obj-$(CONFIG_HAVE_PERF_REGS)	+= perf_regs.o
+ 
+ clean:
+diff --git a/arch/riscv/kernel/perf_regs.c b/arch/riscv/kernel/perf_regs.c
+new file mode 100644
+index 0000000..04a38fb
+--- /dev/null
++++ b/arch/riscv/kernel/perf_regs.c
+@@ -0,0 +1,44 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd. */
 +
- &iwdg2 {
- 	timeout-sec = <32>;
- 	status = "okay";
++#include <linux/errno.h>
++#include <linux/kernel.h>
++#include <linux/perf_event.h>
++#include <linux/bug.h>
++#include <asm/perf_regs.h>
++#include <asm/ptrace.h>
++
++u64 perf_reg_value(struct pt_regs *regs, int idx)
++{
++	if (WARN_ON_ONCE((u32)idx >= PERF_REG_RISCV_MAX))
++		return 0;
++
++	return ((unsigned long *)regs)[idx];
++}
++
++#define REG_RESERVED (~((1ULL << PERF_REG_RISCV_MAX) - 1))
++
++int perf_reg_validate(u64 mask)
++{
++	if (!mask || mask & REG_RESERVED)
++		return -EINVAL;
++
++	return 0;
++}
++
++u64 perf_reg_abi(struct task_struct *task)
++{
++#if __riscv_xlen == 64
++	return PERF_SAMPLE_REGS_ABI_64;
++#else
++	return PERF_SAMPLE_REGS_ABI_32;
++#endif
++}
++
++void perf_get_regs_user(struct perf_regs *regs_user,
++			struct pt_regs *regs,
++			struct pt_regs *regs_user_copy)
++{
++	regs_user->regs = task_pt_regs(current);
++	regs_user->abi = perf_reg_abi(current);
++}
 -- 
 2.7.4
 
