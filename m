@@ -2,138 +2,111 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0767C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F455C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9115520873
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:27:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3791206A3
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:27:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="eKN7cutL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="gd4ihdIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbfEQH1J (ORCPT
+        id S1728258AbfEQH10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 03:27:09 -0400
-Received: from mail-eopbgr80085.outbound.protection.outlook.com ([40.107.8.85]:6658
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726893AbfEQH1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 03:27:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bhZjDN2ZVQoc+RchWUkdNoIkiO7Pz2E3XwsAtc3vEWI=;
- b=eKN7cutLnBTapOgGavIkaxQIwbg9bqqrYwOs1i4xIC0jBJxs1zFHBT1T+VY8VGVtQebqP6VpevxqI0n0+wzxoo+ay2FiTYZQZBdAVsTcbIyUyv/K4iW/mucXjA5gN1d3TIPBUjqepfwRPjnISZQ9JyDzx1tu5iOjxRMHlp0TJbY=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4658.eurprd04.prod.outlook.com (52.135.149.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.17; Fri, 17 May 2019 07:27:03 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::3173:24:d401:2378]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::3173:24:d401:2378%6]) with mapi id 15.20.1900.010; Fri, 17 May 2019
- 07:27:03 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: [PATCH V2] clk: imx: imx8mm: fix int pll clk gate
-Thread-Topic: [PATCH V2] clk: imx: imx8mm: fix int pll clk gate
-Thread-Index: AQHVDIHsPBmx0qvGqk+whAsCcaHkFA==
-Date:   Fri, 17 May 2019 07:27:03 +0000
-Message-ID: <20190517074039.22614-1-peng.fan@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.16.4
-x-clientproxiedby: HK0PR01CA0051.apcprd01.prod.exchangelabs.com
- (2603:1096:203:a6::15) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b53e6245-023d-4cc2-32ec-08d6da990eae
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4658;
-x-ms-traffictypediagnostic: AM0PR04MB4658:
-x-microsoft-antispam-prvs: <AM0PR04MB4658640FBE6C11A0D0029CB6880B0@AM0PR04MB4658.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:336;
-x-forefront-prvs: 0040126723
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(39860400002)(376002)(396003)(136003)(346002)(189003)(199004)(53936002)(386003)(476003)(6486002)(5660300002)(6506007)(4326008)(102836004)(14444005)(7736002)(256004)(36756003)(2616005)(68736007)(66476007)(73956011)(1076003)(66556008)(64756008)(66446008)(50226002)(66946007)(66066001)(2906002)(6436002)(44832011)(486006)(186003)(6512007)(305945005)(52116002)(71200400001)(8936002)(7416002)(99286004)(71190400001)(2201001)(25786009)(81156014)(81166006)(110136005)(26005)(8676002)(6116002)(86362001)(478600001)(14454004)(2501003)(316002)(54906003)(3846002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4658;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: D26b/oY1UZkujZBnI/JK+8WyDvn6GI6v0vcPuRJsRIAUPoBrtmf5xt8WwOA6lvV4J6TX0LuQI29JLyvBcB3DDWUpszHCWpoGmNQB70DFWOXB+SNZJNqBct7WKQyTBlRKWix2dem9yVd/+QK4rPGXHUGz+365kmfTyBFjs1jG+qcEG3UpzH2JyVMwFacjiwb2A6287KKIYZ8LsqknB6HJ9IrXOLjEIeGK/9hsbOonNeKbnqVIwEA6IROjlAXmhEZOAAhsqub5mqpP4USetwGJpNj65vC9Ktj84KiI96Kd5QKwypfteJZ2gmGnVy/UEHBvagcen48xqIsq+3oApZaxAHGTLZdCvYJ6llFVQeB2YXYBIDgOam3pyQbo2zQhKi693PVwUJhQiUHuvCz8+XLZt1ScvUqoQh5q4KtZVTCPY5U=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 17 May 2019 03:27:26 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40365 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728234AbfEQH1Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 03:27:25 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h4so5941675wre.7
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 00:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:user-agent:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=vTuqweVxGrMZpBGY8BN5XjnYyQGBYldr7Afqqc1LBhA=;
+        b=gd4ihdIX6mX+rvFOVH8yz9+aQdPiPDXRPyGcygBqrDuJPwSH7TN47DMl+ER/tOGyUu
+         xlyeywivHbLoa5xLrBhehckK9F+kKqwmeyb4EAZhUHxr2IXUzGnqN6ZesiBIniD6UiYO
+         fYiw4LhVzsq7VkATQTviyydJSSmR99+2Vztmr4mkq7vjs+V954+L5HAp+Qk+FH3T8Pdl
+         vu3JmTTzSUe6qQo4TffL8iJiaiFOEgGPp1kGOVblJcIyWdgM0xUDvde6K6+e4FN6mOk3
+         gdM5vkVzKMUG5dpI3GdBQhdsdVfMqE6HcV4dylRxfvTU1LNMessVH2LAmBI/kYFH50rq
+         4UlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:user-agent:in-reply-to:references
+         :mime-version:content-transfer-encoding:subject:to:cc:from
+         :message-id;
+        bh=vTuqweVxGrMZpBGY8BN5XjnYyQGBYldr7Afqqc1LBhA=;
+        b=XhHXWcWmI4Qtwoarg2wuOQnGRVl5P+KvcKQ3sbx1d84YhvLD8+xzGhYyEc2a51R1kQ
+         HFTYZvs7AgLx8DqOVTPjt7HSf8Jr5dHFUpYjg2ZzmpmCyPZQDNyWEEDYWJfp2FMUY9s6
+         tet7ofXlUN7vYDbh/qHArN2ICPNplp0dBgmA6gQCDF9+A0mNPt47380H8j+Ww7PvOzA5
+         AdnnBN5jRUlD/D61gmBSHeIqaYU+73lHvmpAGv+T1rwslYNTPHKaCehjBQ77i9PzZHZK
+         nMJ27OytFxlCiuVNkg1FElDOlNaNgahSfe0zU5htIupiobxazsujExfK7uh2BLN4fsCG
+         VcIg==
+X-Gm-Message-State: APjAAAXHIrdfPGvK5+oOtl05Ot6EDNdXJwyNcE7Yn3ny284qER/xiUfe
+        L3W7owLRL1yu8X+ycNfmL+YAkw==
+X-Google-Smtp-Source: APXvYqxERZsLWFWop9ybQ/EYVH2Iu9qtuOGzCe7d0WdsYyW3c/Na9+Naf3jGBVUUzB8iDnnSnBJN2A==
+X-Received: by 2002:adf:83c5:: with SMTP id 63mr4523188wre.33.1558078043966;
+        Fri, 17 May 2019 00:27:23 -0700 (PDT)
+Received: from [172.18.135.95] ([46.183.103.8])
+        by smtp.gmail.com with ESMTPSA id c131sm8613450wma.31.2019.05.17.00.27.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 00:27:23 -0700 (PDT)
+Date:   Fri, 17 May 2019 09:27:14 +0200
+User-Agent: K-9 Mail for Android
+In-Reply-To: <11455.1558077206@warthog.procyon.org.uk>
+References: <F67AF221-C576-4424-88D7-7C6074D0A6C6@brauner.io> <155800752418.4037.9567789434648701032.stgit@warthog.procyon.org.uk> <20190516162259.GB17978@ZenIV.linux.org.uk> <20190516163151.urrmrueugockxtdy@brauner.io> <20190516165021.GD17978@ZenIV.linux.org.uk> <11455.1558077206@warthog.procyon.org.uk>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b53e6245-023d-4cc2-32ec-08d6da990eae
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 07:27:03.5709
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4658
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 0/4] uapi, vfs: Change the mount API UAPI [ver #2]
+To:     David Howells <dhowells@redhat.com>
+CC:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
+        torvalds@linux-foundation.org, Arnd Bergmann <arnd@arndb.de>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api <linux-api@vger.kernel.org>
+From:   Christian Brauner <christian@brauner.io>
+Message-ID: <16C5B24F-2D1B-4AD3-BFEC-38BE8FE6AE1A@brauner.io>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rml4ZXM6IGJhNTYyNWMzZTI3ICgiY2xrOiBpbXg6IEFkZCBjbG9jayBkcml2ZXIgc3VwcG9ydCBm
-b3IgaW14OG1tIikNClRvIEZyYWMgcGxsLCB0aGUgZ2F0ZSBzaGlmdCBpcyAxMywgaG93ZXZlciB0
-byBJbnQgUExMIHRoZSBnYXRlIHNoaWZ0DQppcyAxMS4NCg0KQ2M6IDxzdGFibGVAdmdlci5rZXJu
-ZWwub3JnPg0KU2lnbmVkLW9mZi1ieTogUGVuZyBGYW4gPHBlbmcuZmFuQG54cC5jb20+DQpSZXZp
-ZXdlZC1ieTogRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPg0KUmV2aWV3ZWQtYnk6
-IEphY2t5IEJhaSA8cGluZy5iYWlAbnhwLmNvbT4NCi0tLQ0KDQpWMjoNCiBVcGRhdGUgY29tbWl0
-IHdpdGggRml4ZXMsIEFkZCBSLWIgYW5kIGNjIHN0YWJsZQ0KDQogZHJpdmVycy9jbGsvaW14L2Ns
-ay1pbXg4bW0uYyB8IDEyICsrKysrKy0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlv
-bnMoKyksIDYgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9pbXgvY2xr
-LWlteDhtbS5jIGIvZHJpdmVycy9jbGsvaW14L2Nsay1pbXg4bW0uYw0KaW5kZXggMWVmODQzOGUz
-ZDZkLi4xMjJhODFhYjhlNDggMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2Nsay9pbXgvY2xrLWlteDht
-bS5jDQorKysgYi9kcml2ZXJzL2Nsay9pbXgvY2xrLWlteDhtbS5jDQpAQCAtNDQ5LDEyICs0NDks
-MTIgQEAgc3RhdGljIGludCBfX2luaXQgaW14OG1tX2Nsb2Nrc19pbml0KHN0cnVjdCBkZXZpY2Vf
-bm9kZSAqY2NtX25vZGUpDQogCWNsa3NbSU1YOE1NX0FVRElPX1BMTDJfT1VUXSA9IGlteF9jbGtf
-Z2F0ZSgiYXVkaW9fcGxsMl9vdXQiLCAiYXVkaW9fcGxsMl9ieXBhc3MiLCBiYXNlICsgMHgxNCwg
-MTMpOw0KIAljbGtzW0lNWDhNTV9WSURFT19QTEwxX09VVF0gPSBpbXhfY2xrX2dhdGUoInZpZGVv
-X3BsbDFfb3V0IiwgInZpZGVvX3BsbDFfYnlwYXNzIiwgYmFzZSArIDB4MjgsIDEzKTsNCiAJY2xr
-c1tJTVg4TU1fRFJBTV9QTExfT1VUXSA9IGlteF9jbGtfZ2F0ZSgiZHJhbV9wbGxfb3V0IiwgImRy
-YW1fcGxsX2J5cGFzcyIsIGJhc2UgKyAweDUwLCAxMyk7DQotCWNsa3NbSU1YOE1NX0dQVV9QTExf
-T1VUXSA9IGlteF9jbGtfZ2F0ZSgiZ3B1X3BsbF9vdXQiLCAiZ3B1X3BsbF9ieXBhc3MiLCBiYXNl
-ICsgMHg2NCwgMTMpOw0KLQljbGtzW0lNWDhNTV9WUFVfUExMX09VVF0gPSBpbXhfY2xrX2dhdGUo
-InZwdV9wbGxfb3V0IiwgInZwdV9wbGxfYnlwYXNzIiwgYmFzZSArIDB4NzQsIDEzKTsNCi0JY2xr
-c1tJTVg4TU1fQVJNX1BMTF9PVVRdID0gaW14X2Nsa19nYXRlKCJhcm1fcGxsX291dCIsICJhcm1f
-cGxsX2J5cGFzcyIsIGJhc2UgKyAweDg0LCAxMyk7DQotCWNsa3NbSU1YOE1NX1NZU19QTEwxX09V
-VF0gPSBpbXhfY2xrX2dhdGUoInN5c19wbGwxX291dCIsICJzeXNfcGxsMV9ieXBhc3MiLCBiYXNl
-ICsgMHg5NCwgMTMpOw0KLQljbGtzW0lNWDhNTV9TWVNfUExMMl9PVVRdID0gaW14X2Nsa19nYXRl
-KCJzeXNfcGxsMl9vdXQiLCAic3lzX3BsbDJfYnlwYXNzIiwgYmFzZSArIDB4MTA0LCAxMyk7DQot
-CWNsa3NbSU1YOE1NX1NZU19QTEwzX09VVF0gPSBpbXhfY2xrX2dhdGUoInN5c19wbGwzX291dCIs
-ICJzeXNfcGxsM19ieXBhc3MiLCBiYXNlICsgMHgxMTQsIDEzKTsNCisJY2xrc1tJTVg4TU1fR1BV
-X1BMTF9PVVRdID0gaW14X2Nsa19nYXRlKCJncHVfcGxsX291dCIsICJncHVfcGxsX2J5cGFzcyIs
-IGJhc2UgKyAweDY0LCAxMSk7DQorCWNsa3NbSU1YOE1NX1ZQVV9QTExfT1VUXSA9IGlteF9jbGtf
-Z2F0ZSgidnB1X3BsbF9vdXQiLCAidnB1X3BsbF9ieXBhc3MiLCBiYXNlICsgMHg3NCwgMTEpOw0K
-KwljbGtzW0lNWDhNTV9BUk1fUExMX09VVF0gPSBpbXhfY2xrX2dhdGUoImFybV9wbGxfb3V0Iiwg
-ImFybV9wbGxfYnlwYXNzIiwgYmFzZSArIDB4ODQsIDExKTsNCisJY2xrc1tJTVg4TU1fU1lTX1BM
-TDFfT1VUXSA9IGlteF9jbGtfZ2F0ZSgic3lzX3BsbDFfb3V0IiwgInN5c19wbGwxX2J5cGFzcyIs
-IGJhc2UgKyAweDk0LCAxMSk7DQorCWNsa3NbSU1YOE1NX1NZU19QTEwyX09VVF0gPSBpbXhfY2xr
-X2dhdGUoInN5c19wbGwyX291dCIsICJzeXNfcGxsMl9ieXBhc3MiLCBiYXNlICsgMHgxMDQsIDEx
-KTsNCisJY2xrc1tJTVg4TU1fU1lTX1BMTDNfT1VUXSA9IGlteF9jbGtfZ2F0ZSgic3lzX3BsbDNf
-b3V0IiwgInN5c19wbGwzX2J5cGFzcyIsIGJhc2UgKyAweDExNCwgMTEpOw0KIA0KIAkvKiBTWVMg
-UExMIGZpeGVkIG91dHB1dCAqLw0KIAljbGtzW0lNWDhNTV9TWVNfUExMMV80ME1dID0gaW14X2Ns
-a19maXhlZF9mYWN0b3IoInN5c19wbGwxXzQwbSIsICJzeXNfcGxsMV9vdXQiLCAxLCAyMCk7DQot
-LSANCjIuMTYuNA0KDQo=
+On May 17, 2019 9:13:26 AM GMT+02:00, David Howells <dhowells@redhat=2Ecom>=
+ wrote:
+>Christian Brauner <christian@brauner=2Eio> wrote:
+>
+>> If you still prefer to have cloexec flags
+>> for the 4 new syscalls then yes,
+>> if they could at least all have the same name
+>> (FSMOUNT_CLOEXEC?) that would be good=2E
+>
+>They don't all have the same value (see OPEN_TREE_CLOEXEC)=2E
+>
+>Note that I also don't want to blindly #define them to O_CLOEXEC
+>because it's
+>not necessarily the same value on all arches=2E  Currently it can be
+>02000000,
+>010000000 or 0x400000 for instance, which means that if it's sharing a
+>mask
+>with other flags, at least three bits have to be reserved for it or we
+>have to
+>have arch-dependent bit juggling=2E
+
+
+Ugh=2E Right, I forgot about that entirely=2E
+
+Christian
+
+>
+>One thing I like about your approach of just making them O_CLOEXEC by
+>default
+>and removing the constants is that it avoids this mess entirely=2E
+>
+>David
+
