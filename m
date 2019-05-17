@@ -2,89 +2,85 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC98C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356F9C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E443920848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:42:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1558078976;
-	bh=wq+XCTrbx1zUAET7hQKfed4RNF8HmxUCwP221XT7YzY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kOR2wYBQOfUUbknl1eMHIZC0tVYPU0iUjVmEYRwCoePS/C6sMRF3l/0YVIvWbmWAA
-	 pNgCrzhugHI9FlZLgLUqi0bWjoyrqhpCjDpczbsZ1eJ1YSKF9H4WNoUMGBtHFg4/HM
-	 VdHxZuADAU+sDU/d9Mugv+SNZX2gdA5UZOq0WNw8=
+	by mail.kernel.org (Postfix) with ESMTP id 06B722087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728639AbfEQHmz (ORCPT
+        id S1728645AbfEQHoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 03:42:55 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42043 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728540AbfEQHmy (ORCPT
+        Fri, 17 May 2019 03:44:00 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:40767 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728323AbfEQHn7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 03:42:54 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 188so5378670ljf.9;
-        Fri, 17 May 2019 00:42:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oHNi3Q7jru9V7QHeQJrbcvrvhDMwQwJaNTkhpVbOPeY=;
-        b=nlZN5KR0N7jvQqLFbSGPTwgMqSKoaX1LPjdM6GeU9/GZuJbZP7lltcJdgPioCZUBg/
-         IM+F3bzOBkKSue/JToywsm4egduquenAUaHpVJpOt/xIuvEAyayMDk6Dbag9WRppVIRZ
-         leYQM+v4rN89e7x+HTUTWSjKnvp6iP4G+07Wphaw5BI5o4aay0mZqdGjzBJho34c+0fb
-         z1pES0fjwLPl9t5LgYLVVpHpavqzn1iF85ROkTGv9EGt9Kb+3mCK/OQ1FvJ/FhdoFWAn
-         7fF7t5bHcDv/+Psav4h//ww0Z+dSENcTYk/I7wdvsglM8FIrFxpH0lTIIKEb/JUzfENP
-         nl5A==
-X-Gm-Message-State: APjAAAV/PChIFX84d5kI1iqEHOozsWnn4I+hAptMkKRdGarAwdTydSPf
-        Ofdat4jGlhqHaKhDKUF5V/Mq+Czg
-X-Google-Smtp-Source: APXvYqxr66sn/KNjZu/bBP4IB6022Cmga4g3l932SwBwSoNm8SDJXM0CuwDynX5Xkv2GevcPszIh7Q==
-X-Received: by 2002:a2e:84a:: with SMTP id g10mr16425895ljd.98.1558078972663;
-        Fri, 17 May 2019 00:42:52 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id k81sm1290928ljb.77.2019.05.17.00.42.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 00:42:51 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hRXVw-0002Pt-Lr; Fri, 17 May 2019 09:42:48 +0200
-Date:   Fri, 17 May 2019 09:42:48 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     parna.naveenkumar@gmail.com
-Cc:     johan@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: serial: mos7840: Prefer 'unsigned int' to bare use
- of 'unsigned'
-Message-ID: <20190517074248.GD28564@localhost>
-References: <20190516130759.12996-1-parna.naveenkumar@gmail.com>
+        Fri, 17 May 2019 03:43:59 -0400
+X-Originating-IP: 80.215.154.25
+Received: from localhost (unknown [80.215.154.25])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 37CA020009;
+        Fri, 17 May 2019 07:43:51 +0000 (UTC)
+Date:   Fri, 17 May 2019 09:43:50 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     rui.zhang@intel.com, edubezval@gmail.com,
+        daniel.lezcano@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, wens@csie.org, davem@davemloft.net,
+        mchehab+samsung@kernel.org, gregkh@linuxfoundation.org,
+        linus.walleij@linaro.org, Jonathan.Cameron@huawei.com,
+        nicolas.ferre@microchip.com, paulmck@linux.ibm.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] add thermal driver for h6
+Message-ID: <20190517074350.m4wtxn5rgiqkjgnz@flea>
+References: <20190516172633.12607-1-tiny.windzz@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="uiqnaa7feozmkfnb"
 Content-Disposition: inline
-In-Reply-To: <20190516130759.12996-1-parna.naveenkumar@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190516172633.12607-1-tiny.windzz@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 06:37:59PM +0530, parna.naveenkumar@gmail.com wrote:
-> From: Naveen Kumar Parna <parna.naveenkumar@gmail.com>
-> 
-> This fixes checkpatch.pl warning "WARNING: Prefer 'unsigned int' to
-> bare use of 'unsigned'".
 
-Please don't run checkpatch.pl on code that already in the kernel
-(possibly with the exception of staging). Use it on your own patches
-before you submit them if you want, and even then don't blindly follow
-what checkpatch says.
+--uiqnaa7feozmkfnb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Minor coding style issues are better left alone to avoid adding noise
-and making code forensic and backports harder.
+Hi,
 
-And in this case, there's not even anything wrong with the current code.
+On Thu, May 16, 2019 at 01:26:31PM -0400, Yangtao Li wrote:
+> This patchset supprt H6 thermal controller.
 
-Johan
+The discussion is still ongoing on the v1, it would have been better
+to wait a bit on it to settle before sending a new version.
+
+Anyway, some comment made there still apply.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--uiqnaa7feozmkfnb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXN5mNgAKCRDj7w1vZxhR
+xdGaAQDw2HatyDwe99md5xjAb+SPPeYer/Zb4obBMYGlhQuO9AEAkn/HI2qNYsxw
+/7OQTPnikOxNibnfTB1JZq1yrq3HeAs=
+=fhoH
+-----END PGP SIGNATURE-----
+
+--uiqnaa7feozmkfnb--
