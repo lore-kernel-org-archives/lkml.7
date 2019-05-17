@@ -2,158 +2,180 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DB3C04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F68BC04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3779E216FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:41:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YDxdqNv4"
+	by mail.kernel.org (Postfix) with ESMTP id 61C2621734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbfEQPlG (ORCPT
+        id S1729209AbfEQPla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 11:41:06 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42941 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729010AbfEQPlG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 11:41:06 -0400
-Received: by mail-wr1-f66.google.com with SMTP id l2so7612252wrb.9
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 08:41:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Gj/3k+5YXyOcGv0iXoHljfz8L17O8uPATyM/pLVBy5g=;
-        b=YDxdqNv4ZifPg1Yp3qKd9azdnjATJqAOh1+S48lTJkYpukVf6tSBt8AY8GKRB0nh/v
-         pO/Mm586ywpXC7QFqp0LIZwVf2I+HI8qOQfAPRtj22XuALFEPOcoc2VCT9v9jqe8Jvyg
-         /4PZI9MBy+HuCaNzbHlXvazj8LUiQ7DjcoJX4Oo7g+8BtFH/3uRNfPQHv7oYvDAJ7iB9
-         xeziXpDTrlTutWkZPfjzZGOD+KfZ+SZKAJ9J7xCiOv9F/+e4UqNXwu5VimQzHVBbrioz
-         Lh8UaK7kIWxUgyf3IbMj1teiiEnuENq7+AtzJaCbzmO2uOFP24EjEASBKbZlvo7Ufrqk
-         gwNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Gj/3k+5YXyOcGv0iXoHljfz8L17O8uPATyM/pLVBy5g=;
-        b=jSHLvqZGCn9W/2aiRz3CahAPf371CokgnYV+v6Vn9+aHT75ll9N7gvMIaEAXmeG0yj
-         GG7Y8+V6vM4OFS4FhxgcWIBUAmuygu7Tf1I8Rj0HMYQioWiSERwOJRdzVkPL6XUkrtHR
-         bR7sw4uQkGTp4iuRCfKyL/8YNc/DfLJmONJIB2kY2A25yEaRrC2m6oOimyNSaMSn7E4S
-         DmzY+7Ccd8VkikOVcv9TOeTRcJ4cUi3rph/4vUcQdUAf3Vk1xU8ONE1D6jxK1fYRMIeD
-         silMZN9hTVxbarrJWkqFBYFdF3RkFkrAA73Q299oN6o1kKaI3dYMk9w6LA2PILybKwNU
-         U2jA==
-X-Gm-Message-State: APjAAAUewmwHJOfoay6QuM2Z9Vwxs2Y1vngKDtKOaFDSD5G9557ZmfPL
-        QCIkUX7WpCxpb+pNMbmNdb7how==
-X-Google-Smtp-Source: APXvYqxpKXi79qSS1349vVVUIg8A1rucfiWHuUhRntac/YUjAckwQmm4o5RYFw85nlDp8nkt1gQsEA==
-X-Received: by 2002:a5d:5381:: with SMTP id d1mr3544035wrv.333.1558107664290;
-        Fri, 17 May 2019 08:41:04 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id l12sm8244563wmj.0.2019.05.17.08.41.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 08:41:03 -0700 (PDT)
-Subject: Re: [PATCHv1 4/8] arm64: dts: qcom: msm8916: Use more generic idle
- state names
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, andy.gross@linaro.org,
-        David Brown <david.brown@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc:     devicetree@vger.kernel.org
-References: <cover.1557486950.git.amit.kucheria@linaro.org>
- <2a0626da4d8d5a1018c351b24b63e5e0d7a45a10.1557486950.git.amit.kucheria@linaro.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <c4751930-e176-881e-a3dc-cf1a2e8d5257@linaro.org>
-Date:   Fri, 17 May 2019 17:41:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 17 May 2019 11:41:30 -0400
+Received: from mga01.intel.com ([192.55.52.88]:12103 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729158AbfEQPla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 11:41:30 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 08:41:29 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga006.jf.intel.com with ESMTP; 17 May 2019 08:41:28 -0700
+Date:   Fri, 17 May 2019 08:41:28 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Jethro Beekman <jethro@fortanix.com>,
+        "Xing, Cedric" <cedric.xing@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Dr. Greg" <greg@enjellic.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "npmccallum@redhat.com" <npmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: SGX vs LSM (Re: [PATCH v20 00/28] Intel SGX1 support)
+Message-ID: <20190517154128.GA15006@linux.intel.com>
+References: <CALCETrWCZQwg-TUCm58DVG43=xCKRsMe1tVHrR8vdt06hf4fWA@mail.gmail.com>
+ <20190513102926.GD8743@linux.intel.com>
+ <20190514104323.GA7591@linux.intel.com>
+ <CALCETrVbgTCnPo=PAq0-KoaRwt--urrPzn==quAJ8wodCpkBkw@mail.gmail.com>
+ <20190514204527.GC1977@linux.intel.com>
+ <CALCETrX6aL367mMJh5+Y1Seznfu-AvhPV6P7GkWF4Dhu0GV8cw@mail.gmail.com>
+ <20190515013031.GF1977@linux.intel.com>
+ <CALCETrXf8mSK45h7sTK5Wf+pXLVn=Bjsc_RLpgO-h-qdzBRo5Q@mail.gmail.com>
+ <20190517000331.GD11204@linux.intel.com>
+ <CALCETrWxw7xALE0kmiYBzomaSMAeXEVq-7rX7xeqPtDPeDQiCA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <2a0626da4d8d5a1018c351b24b63e5e0d7a45a10.1557486950.git.amit.kucheria@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrWxw7xALE0kmiYBzomaSMAeXEVq-7rX7xeqPtDPeDQiCA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/05/2019 13:29, Amit Kucheria wrote:
-> Instead of using Qualcomm-specific terminology, use generic node names
-> for the idle states that are easier to understand. Move the description
-> into the "idle-state-name" property.
+On Thu, May 16, 2019 at 05:26:15PM -0700, Andy Lutomirski wrote:
+> On Thu, May 16, 2019 at 5:03 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > On Wed, May 15, 2019 at 11:27:04AM -0700, Andy Lutomirski wrote:
+> > > Here's a very vague proposal that's kind of like what I've been
+> > > thinking over the past few days.  The SGX inode could track, for each
+> > > page, a "safe-to-execute" bit.  When you first open /dev/sgx/enclave,
+> > > you get a blank enclave and all pages are safe-to-execute.  When you
+> > > do the ioctl to load context (which could be code, data, or anything
+> > > else), the kernel will check whether the *source* VMA is executable
+> > > and, if not, mark the page of the enclave being loaded as unsafe.
+> > > Once the enclave is initialized, the driver will clear the
+> > > safe-to-execute bit for any page that is successfully mapped writably.
+> > >
+> > > The intent is that a page of the enclave is safe-to-execute if that
+> > > page was populated from executable memory and not modified since then.
+> > > LSMs could then enforce a policy that you can map an enclave page RX
+> > > if the page is safe-to-execute, you can map any page you want for
+> > > write if there are no executable mappings, and you can only map a page
+> > > for write and execute simultaneously if you can EXECMOD permission.
+> > > This should allow an enclave to be loaded by userspace from a file
+> > > with EXECUTE rights.
+> >
+> > I'm still confused as to why you want to track execute permissions on the
+> > enclave pages and add SGX-specific LSM hooks.  Is there anything that
+> > prevents userspace from building the enclave like any other DSO and then
+> > copying it into enclave memory?
 > 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-
-> ---
->  arch/arm64/boot/dts/qcom/msm8916.dtsi | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
+> It's entirely possible that I'm the one missing something.  But here's
+> why I think this:
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> index ded1052e5693..400b609bb3fd 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> @@ -110,7 +110,7 @@
->  			reg = <0x0>;
->  			next-level-cache = <&L2_0>;
->  			enable-method = "psci";
-> -			cpu-idle-states = <&CPU_SPC>;
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  			clocks = <&apcs>;
->  			operating-points-v2 = <&cpu_opp_table>;
->  			#cooling-cells = <2>;
-> @@ -122,7 +122,7 @@
->  			reg = <0x1>;
->  			next-level-cache = <&L2_0>;
->  			enable-method = "psci";
-> -			cpu-idle-states = <&CPU_SPC>;
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  			clocks = <&apcs>;
->  			operating-points-v2 = <&cpu_opp_table>;
->  			#cooling-cells = <2>;
-> @@ -134,7 +134,7 @@
->  			reg = <0x2>;
->  			next-level-cache = <&L2_0>;
->  			enable-method = "psci";
-> -			cpu-idle-states = <&CPU_SPC>;
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  			clocks = <&apcs>;
->  			operating-points-v2 = <&cpu_opp_table>;
->  			#cooling-cells = <2>;
-> @@ -146,7 +146,7 @@
->  			reg = <0x3>;
->  			next-level-cache = <&L2_0>;
->  			enable-method = "psci";
-> -			cpu-idle-states = <&CPU_SPC>;
-> +			cpu-idle-states = <&CPU_SLEEP_0>;
->  			clocks = <&apcs>;
->  			operating-points-v2 = <&cpu_opp_table>;
->  			#cooling-cells = <2>;
-> @@ -160,8 +160,9 @@
->  		idle-states {
->  			entry-method="psci";
->  
-> -			CPU_SPC: spc {
-> +			CPU_SLEEP_0: cpu-sleep-0 {
->  				compatible = "arm,idle-state";
-> +				idle-state-name = "standalone-power-collapse";
->  				arm,psci-suspend-param = <0x40000002>;
->  				entry-latency-us = <130>;
->  				exit-latency-us = <150>;
+> > I feel like I'm missing something.
+> >
+> >   1. Userspace loads enclave into regular memory, e.g. like a normal DSO.
+> >      All mmap(), mprotect(), etc... calls are subject to all existing
+> >      LSM policies.
+> >
+> >   2. Userspace opens /dev/sgx/enclave to instantiate a new enclave.
+> >
+> >   3. Userspace uses mmap() to allocate virtual memory for its enclave,
+> >      again subject to all existing LSM policies (sane userspaces map it RO
+> >      since the permissions eventually get tossed anyways).
 > 
+> Is userspace actually requred to mmap() the enclave prior to EADDing things?
 
+It was a requirement prior to the API rework in v20, i.e. unless someone
+was really quick on the draw after the v20 update all existing userspace
+implementations mmap() the enclave before ECREATE.   Requiring a valid
+enclave VMA for EADD shoudn't be too onerous.
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> >   4. SGX subsystem refuses to service page faults for enclaves that have
+> >      not yet been initialized, e.g. signals SIGBUS or SIGSEGV.
+> >
+> >   5. Userspace invokes SGX ioctl() to copy enclave from regulary VMA to
+> >      enclave VMA.
+> >
+> >   6. SGX ioctl() propagates VMA protection-related flags from source VMA
+> >      to enclave VMA, e.g. invokes mprotect_fixup().  Enclave VMA(s) may
+> >      be split as part of this process.
+> 
+> Does this also call the LSM?  If so, what is it expected to do?
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Nope.  My reasoning behind skipping LSM checks is that the LSMs have
+already ok'd the source VMAs, similar to how dup_mmap() doesn't redo LSM
+checks.
 
+> What happens if there are different regions with different permissions on
+> the same page?  SGX has 256-byte granularity right?
+
+No, EPC pages have 4k granularity.
+
+  The EPC is divided into EPC pages. An EPC page is 4KB in size and always
+  aligned on a 4KB boundary
+
+EEXTEND is the only aspect of SGX that works on 256-byte chunks, and that
+goofiness is primarily to keep the latency of EEXTEND low enough so that
+the instruction doesn't have to be interruptible, a la EINIT.
+
+> >
+> >   7. At all times, mprotect() calls on the enclave VMA are subject to
+> >      existing LSM policies, i.e. it's not special cased for enclaves.
+> 
+> I don't think the normal behavior actually works here.  An enclave is
+> always MAP_SHARED, so (with SELinux) mprotecting() to X or RX requires
+> EXECUTE and mprotecting() to RWX requires extra permissions.
+
+Requiring extra permissions is good though, right?  My thinking is to make
+the EADD "VMA copy" the happy/easy path, while using mprotect() to convert
+EPC memory to executable would require PROCESS__EXECMEM (assuming we back
+enclaves with anon inodes instead of /dev/sgx/enclave).
+
+> But user code can also mmap() the enclave again.  What is supposed to
+> happen in that case?
+
+Hmm, it can't effectively re-mmap() the enclave as executable since
+entering the enclave requires using the correct virtual address range,
+i.e. EENTER would fail.  It could, I think, do munmap()->mmap() to change
+the permissions.  We could handle that case fairly easily by invoking
+security_file_mprotect() in SGX's mmap() hook if any pages have been added
+to the enclave, i.e. treat mmap() like mprotect().
