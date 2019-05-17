@@ -2,93 +2,230 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55479C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E63C04E84
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27FED20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:40:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunchkarty.eu header.i=@lunchkarty.eu header.b="EYvsjSfP"
+	by mail.kernel.org (Postfix) with ESMTP id B55B720578
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728581AbfEQHkm (ORCPT
+        id S1728604AbfEQHmC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 03:40:42 -0400
-Received: from mail.lunchkarty.eu ([80.211.141.150]:54707 "EHLO lunchkarty.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728371AbfEQHkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 03:40:42 -0400
-Received: by lunchkarty.eu (Postfix, from userid 1001)
-        id DFB5A8777A; Fri, 17 May 2019 09:30:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lunchkarty.eu;
-        s=mail; t=1558078256;
-        bh=DRu0vjHfbY7ipkVfR5IVkS8rC2tRt9/vG06AzL2xOt4=;
-        h=Date:From:To:Subject:From;
-        b=EYvsjSfPHrT8S0MNWKUqjaUO/apxwQlQdyqetcE0C4b3yeIPoUO2SOYg2JDUVqOaO
-         2tOx6iyUtcqp+9j5ziiBULu0sAKHzogQw3lT9l3Lw6tOWAi4zzsNJH4+Ec0OYNVOdX
-         ICKhrqmfl4ahk4FjhlXGWTD5l8CdQyr5fLOlY1Xw=
-Received: by mail.lunchkarty.eu for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 07:30:35 GMT
-Message-ID: <20190517084500-0.1.11.2np0.0.9gg70k968m@lunchkarty.eu>
-Date:   Fri, 17 May 2019 07:30:35 GMT
-From:   "Radoslav Dobrev" <radoslav.dobrev@lunchkarty.eu>
-To:     <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?Q?=D0=92=D0=B5=D0=BB=D0=B8=D0=BA=D0=B4=D0=B5=D0=BD=D1=81=D0=BA=D0=B8_=D0=B1=D0=BE=D0=BD=D1=83=D1=81=D0=B8?=
-X-Mailer: mail.lunchkarty.eu
-MIME-Version: 1.0
+        Fri, 17 May 2019 03:42:02 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:36787 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727822AbfEQHmC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 03:42:02 -0400
+X-UUID: b26fe20a10dd4b4f9982c0151debd977-20190517
+X-UUID: b26fe20a10dd4b4f9982c0151debd977-20190517
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        (envelope-from <long.cheng@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1147280947; Fri, 17 May 2019 15:36:44 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by mtkmbs03n1.mediatek.inc
+ (172.21.101.181) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 17 May
+ 2019 15:36:43 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 17 May 2019 15:36:42 +0800
+Message-ID: <1558078602.14150.27.camel@mhfsdcap03>
+Subject: Re: [PATCH 4/4] serial: 8250-mtk: modify uart DMA rx
+From:   Long Cheng <long.cheng@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+CC:     Vinod Koul <vkoul@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Ryder Lee" <ryder.lee@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        "Matthias Brugger" <matthias.bgg@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Sean Wang <sean.wang@mediatek.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        "linux-arm Mailing List" <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        YT Shen <yt.shen@mediatek.com>,
+        Zhenbao Liu <zhenbao.liu@mediatek.com>
+Date:   Fri, 17 May 2019 15:36:42 +0800
+In-Reply-To: <CANMq1KDTyu48joV6uMksGBMz9EmjFH9SEpGAm93YCZ40jxgBpQ@mail.gmail.com>
+References: <1556336193-15198-1-git-send-email-long.cheng@mediatek.com>
+         <1556336193-15198-5-git-send-email-long.cheng@mediatek.com>
+         <CANMq1KDTyu48joV6uMksGBMz9EmjFH9SEpGAm93YCZ40jxgBpQ@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=D0=97=D0=B4=D1=80=D0=B0=D0=B2=D0=B5=D0=B9=D1=82=D0=B5!
+On Wed, 2019-05-15 at 21:48 +0800, Nicolas Boichat wrote:
+> On Sat, Apr 27, 2019 at 11:36 AM Long Cheng <long.cheng@mediatek.com> wrote:
+> >
+> > Modify uart rx and complete for DMA.
+> 
+> I don't know much about the DMA framework, but can you please explain
+> why you are making the changes in this CL? I see that you are dropping
+> dma_sync_single_for_device calls, for example, why?
+> 
 
-=D0=9D=D1=83=D0=B6=D0=B4=D0=B0=D0=B5=D1=82=D0=B5 =D0=BB=D0=B8 =D1=81=D0=B5=
- =D0=BE=D1=82 =D0=BC=D0=BE=D1=82=D0=B8=D0=B2=D0=B0=D1=86=D0=B8=D0=BE=D0=BD=
-=D0=B5=D0=BD =D0=BF=D0=B0=D0=BA=D0=B5=D1=82 =D0=B7=D0=B0 =D0=BF=D0=B5=D1=80=
-=D1=81=D0=BE=D0=BD=D0=B0=D0=BB=D0=B0, =D0=BA=D0=BE=D0=B9=D1=82=D0=BE =D0=B5=
- =D1=83=D0=B4=D0=BE=D0=B1=D0=B5=D0=BD =D0=B8 =D0=BF=D1=80=D0=B8=D0=B2=D0=BB=
-=D0=B5=D0=BA=D0=B0=D1=82=D0=B5=D0=BB=D0=B5=D0=BD, =D0=BA=D0=B0=D0=BA=D1=82=
-=D0=BE =D0=B7=D0=B0 =D1=80=D0=B0=D0=B1=D0=BE=D1=82=D0=BE=D0=B4=D0=B0=D1=82=
-=D0=B5=D0=BB=D1=8F, =D1=82=D0=B0=D0=BA=D0=B0 =D0=B8 =D0=B7=D0=B0 =D1=81=D0=
-=BB=D1=83=D0=B6=D0=B8=D1=82=D0=B5=D0=BB=D0=B8=D1=82=D0=B5?
+the rx buffer is create by 'dma_alloc_coherent'. in the function, the
+buffer is uncache. We don't need to sync between CPU and DMA. So I
+remove it.
 
-=D0=92 =D1=82=D0=B0=D0=BA=D1=8A=D0=B2 =D1=81=D0=BB=D1=83=D1=87=D0=B0=D0=B9=
- =D0=92=D0=B8 =D0=BF=D1=80=D0=B5=D0=BF=D0=BE=D1=80=D1=8A=D1=87=D0=B2=D0=B0=
-=D0=BC=D0=B5 =D0=B4=D0=B0 =D0=BE=D0=B1=D0=BC=D0=B8=D1=81=D0=BB=D0=B8=D1=82=
-=D0=B5 =D0=B8=D0=B7=D0=BF=D0=BE=D0=BB=D0=B7=D0=B2=D0=B0=D0=BD=D0=B5=D1=82=
-=D0=BE =D0=BD=D0=B0 =D0=B2=D1=81=D0=B5 =D0=BF=D0=BE-=D0=BF=D0=BE=D0=BF=D1=
-=83=D0=BB=D1=8F=D1=80=D0=BD=D0=B8=D1=82=D0=B5 =D0=B2=D0=B0=D1=83=D1=87=D0=
-=B5=D1=80=D0=B8 =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=D0=BD=D0=B0 - =D1=80=D0=B0=
-=D0=B1=D0=BE=D1=82=D0=BE=D0=B4=D0=B0=D1=82=D0=B5=D0=BB=D1=8F=D1=82 =D0=BE=
-=D1=81=D0=B8=D0=B3=D1=83=D1=80=D1=8F=D0=B2=D0=B0 =D0=B2=D0=B0=D1=83=D1=87=
-=D0=B5=D1=80=D0=B8 =D0=B7=D0=B0 =D0=BE=D0=BF=D1=80=D0=B5=D0=B4=D0=B5=D0=BB=
-=D0=B5=D0=BD=D0=B0 =D1=81=D1=83=D0=BC=D0=B0, =D0=B0 =D1=81=D0=BB=D1=83=D0=
-=B6=D0=B8=D1=82=D0=B5=D0=BB=D1=8F=D1=82 =D0=BC=D0=BE=D0=B6=D0=B5 =D0=B4=D0=
-=B0 =D1=8F =D0=B8=D0=B7=D0=BF=D0=BE=D0=BB=D0=B7=D0=B2=D0=B0 =D0=B2 =D1=80=
-=D0=B0=D0=B7=D0=BB=D0=B8=D1=87=D0=BD=D0=B8 =D0=B2=D0=B5=D1=80=D0=B8=D0=B3=
-=D0=B8 =D1=85=D1=80=D0=B0=D0=BD=D0=B8=D1=82=D0=B5=D0=BB=D0=BD=D0=B8 =D0=BC=
-=D0=B0=D0=B3=D0=B0=D0=B7=D0=B8=D0=BD=D0=B8 =D0=B8=D0=BB=D0=B8 =D0=B7=D0=B0=
-=D0=B2=D0=B5=D0=B4=D0=B5=D0=BD=D0=B8=D1=8F =D0=B7=D0=B0 =D1=85=D1=80=D0=B0=
-=D0=BD=D0=B5=D0=BD=D0=B5 =D1=81=D0=BF=D0=BE=D1=80=D0=B5=D0=B4 =D1=81=D0=B2=
-=D0=BE=D0=B8=D1=82=D0=B5 =D0=BF=D1=80=D0=B5=D0=B4=D0=BF=D0=BE=D1=87=D0=B8=
-=D1=82=D0=B0=D0=BD=D0=B8=D1=8F.
+> >
+> > Signed-off-by: Long Cheng <long.cheng@mediatek.com>
+> > ---
+> >  drivers/tty/serial/8250/8250_mtk.c |   53 ++++++++++++++++--------------------
+> >  1 file changed, 23 insertions(+), 30 deletions(-)
+> >
+> > diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
+> > index c1fdbc0..04081a6 100644
+> > --- a/drivers/tty/serial/8250/8250_mtk.c
+> > +++ b/drivers/tty/serial/8250/8250_mtk.c
+> > @@ -30,7 +30,6 @@
+> >  #define MTK_UART_DMA_EN_TX     0x2
+> >  #define MTK_UART_DMA_EN_RX     0x5
+> >
+> > -#define MTK_UART_TX_SIZE       UART_XMIT_SIZE
+> >  #define MTK_UART_RX_SIZE       0x8000
+> >  #define MTK_UART_TX_TRIGGER    1
+> >  #define MTK_UART_RX_TRIGGER    MTK_UART_RX_SIZE
+> > @@ -64,28 +63,30 @@ static void mtk8250_dma_rx_complete(void *param)
+> >         struct mtk8250_data *data = up->port.private_data;
+> >         struct tty_port *tty_port = &up->port.state->port;
+> >         struct dma_tx_state state;
+> > +       int copied, cnt, tmp;
+> >         unsigned char *ptr;
+> > -       int copied;
+> >
+> > -       dma_sync_single_for_cpu(dma->rxchan->device->dev, dma->rx_addr,
+> > -                               dma->rx_size, DMA_FROM_DEVICE);
+> > +       if (data->rx_status == DMA_RX_SHUTDOWN)
+> > +               return;
+> >
+> >         dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
+> > +       cnt = dma->rx_size - state.residue;
+> > +       tmp = cnt;
+> 
+> I ponder, maybe we should rename cnt to left? (like, how many bytes
+> are left to transfer, in total) Or maybe "total"
+> Then maybe rename tmp to cnt.
+> 
+like better.
 
-=D0=A9=D0=B5 =D1=81=D0=B5 =D1=80=D0=B0=D0=B4=D0=B2=D0=B0=D0=BC =D0=B4=D0=B0=
- =D0=92=D0=B8 =D0=BF=D1=80=D0=B5=D0=B4=D1=81=D1=82=D0=B0=D0=B2=D1=8F =D0=B2=
-=D1=8A=D0=B7=D0=BC=D0=BE=D0=B6=D0=BD=D0=BE=D1=81=D1=82=D0=B8=D1=82=D0=B5 =
-=D0=BD=D0=B0 =D0=B2=D0=B0=D1=83=D1=87=D0=B5=D1=80=D0=B8=D1=82=D0=B5  =E2=80=
-=93 =D0=BC=D0=BE=D0=B3=D0=B0 =D0=BB=D0=B8 =D0=B4=D0=B0 =D0=92=D0=B8 =D1=81=
-=D0=B5 =D0=BE=D0=B1=D0=B0=D0=B4=D1=8F, =D0=B7=D0=B0 =D0=B4=D0=B0 =D0=BE=D0=
-=B1=D1=81=D1=8A=D0=B4=D0=B8=D0=BC =D0=B2 =D0=B4=D0=B5=D1=82=D0=B0=D0=B9=D0=
-=BB=D0=B8?
+> >
+> > -       if (data->rx_status == DMA_RX_SHUTDOWN)
+> > -               return;
+> > +       if ((data->rx_pos + cnt) > dma->rx_size)
+> > +               tmp = dma->rx_size - data->rx_pos;
+> 
+> Maybe replace this and the line above:
+> tmp = max_t(int, cnt, dma->rx_size - data->rx_pos);
+> 
+Yes. It's better.
+
+> >
+> > -       if ((data->rx_pos + state.residue) <= dma->rx_size) {
+> > -               ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
+> > -               copied = tty_insert_flip_string(tty_port, ptr, state.residue);
+> > -       } else {
+> > -               ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
+> > -               copied = tty_insert_flip_string(tty_port, ptr,
+> > -                                               dma->rx_size - data->rx_pos);
+> > +       ptr = (unsigned char *)(data->rx_pos + dma->rx_buf);
+> > +       copied = tty_insert_flip_string(tty_port, ptr, tmp);
+> > +       data->rx_pos += tmp;
+> > +
+> > +       if (cnt > tmp) {
+> >                 ptr = (unsigned char *)(dma->rx_buf);
+> > -               copied += tty_insert_flip_string(tty_port, ptr,
+> > -                               data->rx_pos + state.residue - dma->rx_size);
+> > +               tmp = cnt - tmp;
+> > +               copied += tty_insert_flip_string(tty_port, ptr, tmp);
+> > +               data->rx_pos = tmp;
+> >         }
+> > +
+> >         up->port.icount.rx += copied;
+> >
+> >         tty_flip_buffer_push(tty_port);
+> > @@ -96,9 +97,7 @@ static void mtk8250_dma_rx_complete(void *param)
+> >  static void mtk8250_rx_dma(struct uart_8250_port *up)
+> >  {
+> >         struct uart_8250_dma *dma = up->dma;
+> > -       struct mtk8250_data *data = up->port.private_data;
+> >         struct dma_async_tx_descriptor  *desc;
+> > -       struct dma_tx_state      state;
+> >
+> >         desc = dmaengine_prep_slave_single(dma->rxchan, dma->rx_addr,
+> >                                            dma->rx_size, DMA_DEV_TO_MEM,
+> > @@ -113,12 +112,6 @@ static void mtk8250_rx_dma(struct uart_8250_port *up)
+> >
+> >         dma->rx_cookie = dmaengine_submit(desc);
+> >
+> > -       dmaengine_tx_status(dma->rxchan, dma->rx_cookie, &state);
+> > -       data->rx_pos = state.residue;
+> > -
+> > -       dma_sync_single_for_device(dma->rxchan->device->dev, dma->rx_addr,
+> > -                                  dma->rx_size, DMA_FROM_DEVICE);
+> > -
+> >         dma_async_issue_pending(dma->rxchan);
+> >  }
+> >
+> > @@ -131,13 +124,13 @@ static void mtk8250_dma_enable(struct uart_8250_port *up)
+> >         if (data->rx_status != DMA_RX_START)
+> >                 return;
+> >
+> > -       dma->rxconf.direction           = DMA_DEV_TO_MEM;
+> > -       dma->rxconf.src_addr_width      = dma->rx_size / 1024;
+> > -       dma->rxconf.src_addr            = dma->rx_addr;
+> > +       dma->rxconf.direction                           = DMA_DEV_TO_MEM;
+> > +       dma->rxconf.src_port_window_size        = dma->rx_size;
+> > +       dma->rxconf.src_addr                            = dma->rx_addr;
+> >
+> > -       dma->txconf.direction           = DMA_MEM_TO_DEV;
+> > -       dma->txconf.dst_addr_width      = MTK_UART_TX_SIZE / 1024;
+> > -       dma->txconf.dst_addr            = dma->tx_addr;
+> > +       dma->txconf.direction                           = DMA_MEM_TO_DEV;
+> > +       dma->txconf.dst_port_window_size        = UART_XMIT_SIZE;
+> > +       dma->txconf.dst_addr                            = dma->tx_addr;
+> >
+> >         serial_out(up, UART_FCR, UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR |
+> >                 UART_FCR_CLEAR_XMIT);
+> > @@ -217,7 +210,7 @@ static void mtk8250_shutdown(struct uart_port *port)
+> >          * Mediatek UARTs use an extra highspeed register (UART_MTK_HIGHS)
+> >          *
+> >          * We need to recalcualte the quot register, as the claculation depends
+> > -        * on the vaule in the highspeed register.
+> > +        * on the value in the highspeed register.
+> 
+> Since you're doing some cosmetic changes here, you might as well fix
+> recalcualte => recalculate and claculation => calculation on the line
+> above.
+> 
+
+I see.
+
+> But technically, this should belong in another patch...
+> 
+> >          *
+> >          * Some baudrates are not supported by the chip, so we use the next
+> >          * lower rate supported and update termios c_flag.
+> > --
+> > 1.7.9.5
+> >
 
 
-=D0=A0=D0=B0=D0=B4=D0=BE=D1=81=D0=BB=D0=B0=D0=B2 =D0=94=D0=BE=D0=B1=D1=80=
-=D0=B5=D0=B2
-Head of HR Benefit Team
-www.lunchkarty.eu 
