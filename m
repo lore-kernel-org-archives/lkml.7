@@ -2,204 +2,113 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D336FC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45912C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE512087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18A242087E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 16:11:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zC8ivZGj"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="fqQDbDar"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729417AbfEQQLE (ORCPT
+        id S1729427AbfEQQLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 12:11:04 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54370 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728482AbfEQQLE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 12:11:04 -0400
-Received: by mail-wm1-f65.google.com with SMTP id i3so7463715wml.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 09:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=o3znglSYE3qWmbHWfVx7bUQXAqGJQvSQXgl1NOhCAVQ=;
-        b=zC8ivZGjYMdfpaM3iFqctfmjEYxiou7E1dRg+77y5lw2eJ0a5+xq0gvLDIQv5iuONp
-         wrei1mpheIyRIM0QyPMLCba4jnj2KksNNGzg1wNwO8eoHfbaqaNyxyH4jdtVf//2Acm9
-         nhQeqxco9Dhbsm891E/BDwsPm2yJUkYx9qM/BpNUZ1ihzeu9Bq0Lf+nJV1RJU55nPzYM
-         ejupTDvwK+3seXgL8TYP8B4UIic8Uvg17r0ZyjVtEi/2+09l5uOpFOqgoqjvlD2XKISW
-         gOM9EYcneCW0/a9AAAZ33cfRefmnkRN/dtBfb4mMLGWrHeUARCBpWqDajaJE5XjLztxy
-         BPHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=o3znglSYE3qWmbHWfVx7bUQXAqGJQvSQXgl1NOhCAVQ=;
-        b=JxsTqu6sY2TXkPkvs/bBWzm+VrUVF3CkHG17aMNPKHwzW5/Agc0vqQe7w56cFQO+1P
-         AzhZB27xFz3ENGSW/ymXfn0gFASXC/oW/wSLInUbN56+8xhADcXa48q22dhvwsCw/rd6
-         5ix+7mQGhRkqAIkkNYNhl6VWrvARGvAQ6+1DZJtxtI7cwlGtwfmXUVwR41AUl1ZReve3
-         GbmouYbpiQ7WrD5yFgqJ0OTDFHpImsJAkx+zW9COjIUMPNPQnVx0jnYaTtPO8+P3kiBU
-         LeU/DKGyv0QzoOS7jelcnKh6pKictG0UsDRoG7u4z6G1heoHNxbqDuzGeBcKGmSRM2xV
-         4OBA==
-X-Gm-Message-State: APjAAAU2wH5y/0JhEkIPmhZIgTQ4iep0zj+ae2DErKem6DMB3rolrYV2
-        FPE/JJsL3gom6PyxGRlb+vfwzg==
-X-Google-Smtp-Source: APXvYqytFb6Lr6UvVt6vABF1Ha5/L0gUrj561kuxWy2jGkrPlViqSGlF3tlPtcq9umuF69+5oH3ZEQ==
-X-Received: by 2002:a1c:7518:: with SMTP id o24mr2624307wmc.42.1558109461904;
-        Fri, 17 May 2019 09:11:01 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id z8sm10116243wrh.48.2019.05.17.09.11.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 17 May 2019 09:11:01 -0700 (PDT)
-Subject: Re: [PATCHv1 7/8] arm64: dts: qcom: msm8998: Add PSCI cpuidle low
- power states
-To:     Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, andy.gross@linaro.org,
-        David Brown <david.brown@linaro.org>,
-        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>, devicetree@vger.kernel.org
-References: <cover.1557486950.git.amit.kucheria@linaro.org>
- <0afe77d25490b10250f9eac4b4e92ccac8c42718.1557486950.git.amit.kucheria@linaro.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <6b60656e-7786-1560-05f9-e2cbd6d1d18d@linaro.org>
-Date:   Fri, 17 May 2019 18:11:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 17 May 2019 12:11:47 -0400
+Received: from mout.gmx.net ([212.227.15.15]:59985 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729163AbfEQQLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 12:11:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1558109490;
+        bh=ObVsCKoy24nyR+PE5lyuwbL6rGIGz6OGgJWXUYTs8Gc=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=fqQDbDarvk1j260RMG1ySbxWBkJAQIhtWUp29JDmoJrZGizSYh620SlDIF13rkOQT
+         t4enlnwpAgGrJ3kuP9k3TRo1xX/qAtpFsMEAkK03M7s1RylbLw7KWPdGT3A6yM91sA
+         IrQLLKxr6F5mp4FMrIApwKuxFBcdtOXp0ozigY8w=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from macchiato.fritz.box ([84.118.159.3]) by mail.gmx.com (mrgmx001
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 0MSdNs-1hHjJ00w68-00RWe0; Fri, 17
+ May 2019 18:11:30 +0200
+From:   Heinrich Schuchardt <xypron.glpk@gmx.de>
+To:     Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 1/1] arm64: dts: marvell: mcbin: enlarge PCI memory window
+Date:   Fri, 17 May 2019 18:11:23 +0200
+Message-Id: <20190517161123.9293-1-xypron.glpk@gmx.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <0afe77d25490b10250f9eac4b4e92ccac8c42718.1557486950.git.amit.kucheria@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:hCNjLnr3ec6akbhn/dmwopTmrwD2ngfwxcwNRx8GXCrYkJA0EpJ
+ L5UcXsGJelQo6uQlfzMgiqLsfqw3RElPw9lrnRcjjwRR9gJcmj1rrRavn1HvVShlaCU+Enq
+ Egozfv7Y/B6s88noZPevX9LpD7kNku6iptetaBWgDjfD10dJMtbxmeENjqoUVoWbJ4oCLar
+ XOelF3caKICXi3KXxsccQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:OcrfSlw1JQ8=:GN1/4inuw1Bj7DI4AR2yOE
+ kenLvJPUoIGFq7CquaGL3nQdBdCj1yHykf2FsJQJHIPVtxiuL7LbrWOhwMHEzLTNDd6YHMLFM
+ py2hQ0SYwIKrHw/1lFlBtN8pJU/FfSJs3RjxBW+ZHwv/uRM0frc2txp2WV8qsNhzvixSLqmeg
+ gPPL73apNRQHlv3euqNA+3OzjZBicRpOukofYNwkuzclIkKX4p2KNqyAjUMAxkmbZNIDJ/gTB
+ 7EeVZmNC6a8YNC1r5z71uhWM0vPITUuD1/lx6kEnd04y+ftqzyoHriL0y727mJDxItIG/M5Jh
+ p5ZxnMHqsC9hhoVnaVdwWHsQhbGgqTi75WnZ/dkSPzj8p52WrUiPdxVLQ3bxQNmxXn68qk6Ki
+ sTP0ULeONcC4xgmdPtOPRhFgRh8rb+fN1wshsiZOm/qr+V4tULGYcOoDMmQgdbRf2gG75yW3T
+ U+xs7MvfZUyP2RVoIjpciq3uzzq5GPxfCefxFoJgR6dxOP8IpSRPOZHMbtVZJBEhCFKKTd7GD
+ aWnaPa6q0LWGlEB9VfBPGngG5MLOZs4TFK4j2RHpui9wxMjwMD9vIaHS2hMIDOHbDwNt7V2Vm
+ My4aO7y53osFxqQleVUXmA4n/VvpZW5nxcl2bIx+8xUD3vFEzpaLCY9GaYPCyh4OlYWA+D8Wt
+ HYT1DH2/UK7Rd2Pe7yBnfOBgeGe3GWmn7uGpT8dHdT0ofIvRcF/0fYqMhuYko3WLq1hjXmdV8
+ lIgJnIEHbHh2ub17m2hQo3yj2OwJFQbwP2XKw0Z1ILw8m+enl7gUZ2m9yoz1XJ24qlJpDHPpS
+ fUou0epAwa2ZNgnPHW7SGFA72qMWSnCM20OB+OdgGgoOhF3g6ozC/1buxhkxnLMR5W0jYjSab
+ TMvM9yFgotVEQK3OamifYbAg0oV3Pnw2muyxD0dKvNWAru6lHOiybnkKjKUfP3J6ooUKtSjBc
+ 6LSRQ7VCs4Jg823WxYvLwdCi4JvvpZCw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/05/2019 13:29, Amit Kucheria wrote:
-> Add device bindings for cpuidle states for cpu devices.
-> 
-> Cc: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Running a graphics adapter on the MACCHIATObin fails due to an
+insufficently sized memory window.
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Enlarge the memory window for the PCIe slot to 512 MiB.
 
-> ---
->  arch/arm64/boot/dts/qcom/msm8998.dtsi | 32 +++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> index 3fd0769fe648..208281f318e2 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> @@ -78,6 +78,7 @@
->  			compatible = "arm,armv8";
->  			reg = <0x0 0x0>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&LITTLE_CPU_PD>;
->  			efficiency = <1024>;
->  			next-level-cache = <&L2_0>;
->  			L2_0: l2-cache {
-> @@ -97,6 +98,7 @@
->  			compatible = "arm,armv8";
->  			reg = <0x0 0x1>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&LITTLE_CPU_PD>;
->  			efficiency = <1024>;
->  			next-level-cache = <&L2_0>;
->  			L1_I_1: l1-icache {
-> @@ -112,6 +114,7 @@
->  			compatible = "arm,armv8";
->  			reg = <0x0 0x2>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&LITTLE_CPU_PD>;
->  			efficiency = <1024>;
->  			next-level-cache = <&L2_0>;
->  			L1_I_2: l1-icache {
-> @@ -127,6 +130,7 @@
->  			compatible = "arm,armv8";
->  			reg = <0x0 0x3>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&LITTLE_CPU_PD>;
->  			efficiency = <1024>;
->  			next-level-cache = <&L2_0>;
->  			L1_I_3: l1-icache {
-> @@ -142,6 +146,7 @@
->  			compatible = "arm,armv8";
->  			reg = <0x0 0x100>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&BIG_CPU_PD>;
->  			efficiency = <1536>;
->  			next-level-cache = <&L2_1>;
->  			L2_1: l2-cache {
-> @@ -161,6 +166,7 @@
->  			compatible = "arm,armv8";
->  			reg = <0x0 0x101>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&BIG_CPU_PD>;
->  			efficiency = <1536>;
->  			next-level-cache = <&L2_1>;
->  			L1_I_101: l1-icache {
-> @@ -176,6 +182,7 @@
->  			compatible = "arm,armv8";
->  			reg = <0x0 0x102>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&BIG_CPU_PD>;
->  			efficiency = <1536>;
->  			next-level-cache = <&L2_1>;
->  			L1_I_102: l1-icache {
-> @@ -191,6 +198,7 @@
->  			compatible = "arm,armv8";
->  			reg = <0x0 0x103>;
->  			enable-method = "psci";
-> +			cpu-idle-states = <&BIG_CPU_PD>;
->  			efficiency = <1536>;
->  			next-level-cache = <&L2_1>;
->  			L1_I_103: l1-icache {
-> @@ -238,6 +246,30 @@
->  				};
->  			};
->  		};
-> +
-> +		idle-states {
-> +			entry-method="psci";
-> +
-> +			LITTLE_CPU_PD: little-power-down {
-> +				compatible = "arm,idle-state";
-> +				idle-state-name = "little-power-down";
-> +				arm,psci-suspend-param = <0x00000002>;
-> +				entry-latency-us = <43>;
-> +				exit-latency-us = <43>;
-> +				min-residency-us = <200>;
-> +				local-timer-stop;
-> +			};
-> +
-> +			BIG_CPU_PD: big-power-down {
-> +				compatible = "arm,idle-state";
-> +				idle-state-name = "big-power-down";
-> +				arm,psci-suspend-param = <0x00000002>;
-> +				entry-latency-us = <41>;
-> +				exit-latency-us = <41>;
-> +				min-residency-us = <200>;
-> +				local-timer-stop;
-> +			};
-> +		};
->  	};
->  
->  	firmware {
-> 
+With the patch I am able to use a GT710 graphics adapter with 1 GB onboard
+memory.
 
+These are the mapped memory areas that the graphics adapter is actually
+using:
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Region 0: Memory at cc000000 (32-bit, non-prefetchable) [size=3D16M]
+Region 1: Memory at c0000000 (64-bit, prefetchable) [size=3D128M]
+Region 3: Memory at c8000000 (64-bit, prefetchable) [size=3D32M]
+Region 5: I/O ports at 1000 [size=3D128]
+Expansion ROM at ca000000 [disabled] [size=3D512K]
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+=2D--
+ arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi b/arch/arm=
+64/boot/dts/marvell/armada-8040-mcbin.dtsi
+index 329f8ceeebea..205071b45a32 100644
+=2D-- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtsi
+@@ -184,6 +184,8 @@
+ 	num-lanes =3D <4>;
+ 	num-viewport =3D <8>;
+ 	reset-gpios =3D <&cp0_gpio2 20 GPIO_ACTIVE_LOW>;
++	ranges =3D <0x81000000 0x0 0xf9010000 0x0 0xf9010000 0x0 0x10000
++		  0x82000000 0x0 0xc0000000 0x0 0xc0000000 0x0 0x20000000>;
+ 	status =3D "okay";
+ };
+
+=2D-
+2.20.1
 
