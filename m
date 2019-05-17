@@ -2,110 +2,356 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1AFC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E024FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A24620833
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:02:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u3toRtS6"
+	by mail.kernel.org (Postfix) with ESMTP id A025820833
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728365AbfEQJB7 (ORCPT
+        id S1728417AbfEQJE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 05:01:59 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35467 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727338AbfEQJB7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 05:01:59 -0400
-Received: by mail-lf1-f68.google.com with SMTP id c17so4793556lfi.2;
-        Fri, 17 May 2019 02:01:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zXhhv+Sa/ff/KB9qp4Lp8NFmvMMZIPlLkNgYtudU3OA=;
-        b=u3toRtS6LS+5LI/R0e0emyIDs6FSGEnXwh4s9f2Y1uUPJJbMz4V6tqvyoZO5PmHd2n
-         NE97is0XlAEICUPRoPADGaj5/ZabVwYT7W7KwO7z1THoRVkBLmCX49GVc31HDLDq7hWh
-         Soqd/4PuAdkwezqZG2UjPA2sCYmUHmdC71A3UmEQYqfoxihfSOBR36gycDdW+Inhvgw8
-         IPmcGwLz279rKCREW6vGHcICm40vRRLR+wuiGVNwwp5ay/PQKr6F7B1szZh5RMQPEpqe
-         XAgcRApsfANNrQ5WsFGGiP6yytOiDr9UhPeQXqzFBAJfXsJXSnsFvb7XmdEJdTg8belT
-         cP2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zXhhv+Sa/ff/KB9qp4Lp8NFmvMMZIPlLkNgYtudU3OA=;
-        b=V3k8RY9AAJygvzqpq8bsaPtk2waudYweBhSiyZLXEWeLf3g8nXFT4ti55t/mBOWb7K
-         N20p9R+9zRMhS+jSQgO0sM/dB2D3YioaFX9CUfiTeQG16QNHGL0tURoe6OESDsYB6tK+
-         O3KhF3z9ycoAEYd+miVoBcUzVYSkz0Z4FW5lJoKpNturkP81RNrzVh3qHOvHZL8Tdbyp
-         nCExXdtKlyaWSy3Qc47fQ76+uqsUrQniX/h5nOWVwWCs5yR4OSrNgevgA4jHhG5J/H6w
-         BYvP7anxVvRJKDpMb0NE/UWmwM/yopFsWcSMIlMzWs84mabx/6rTbcz+h2MZ8SA6TzUI
-         wQ1g==
-X-Gm-Message-State: APjAAAV57OHx4V686TVlB4e7lqSBHYLCkEJzXhhbaMvS4IxKAzpb9hVE
-        9yFDHQiuyyLRUlxevmIt9Sq7eA0sbUbs4M5ms5s=
-X-Google-Smtp-Source: APXvYqwuh8ziBDC6KfJBa90QRUmgFZWmN01Cl4v8ywMPuqHE4hphG9uOeeWrQXxwzmcYDEuXSyZ5bjV6bJbKjLZEqrw=
-X-Received: by 2002:a19:5f56:: with SMTP id a22mr22358969lfj.157.1558083716813;
- Fri, 17 May 2019 02:01:56 -0700 (PDT)
+        Fri, 17 May 2019 05:04:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59816 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727338AbfEQJE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 05:04:59 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BC4B330C0DC8;
+        Fri, 17 May 2019 09:04:58 +0000 (UTC)
+Received: from thuth.com (ovpn-117-142.ams2.redhat.com [10.36.117.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9C8F5348F5;
+        Fri, 17 May 2019 09:04:54 +0000 (UTC)
+From:   Thomas Huth <thuth@redhat.com>
+To:     =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kselftest@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Shuah Khan <shuah@kernel.org>, Andrew Jones <drjones@redhat.com>,
+        Peter Xu <peterx@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] KVM: selftests: Compile code with warnings enabled
+Date:   Fri, 17 May 2019 11:04:45 +0200
+Message-Id: <20190517090445.4502-1-thuth@redhat.com>
 MIME-Version: 1.0
-References: <CABWYdi06NUOWRLingNuybgZZsTZPjhmsOx-9oCGK94qZGYbzcw@mail.gmail.com>
- <CANiq72kvpiC-i53AXM-YsCUvWroHQemmqxsXjnB330ZEeHahUg@mail.gmail.com>
- <CABWYdi1zhTTaN-GSgH0DnPfz7p=SRw0wts5QVYYVtfvoiS0qnQ@mail.gmail.com>
- <CANiq72=fsL5m2_e+bNovFCHy3=YVf53EKGtGE_sWvsAD=ONHuQ@mail.gmail.com>
- <20190516225013.nvhwqi5tfwtby6qb@treble> <CABWYdi29E++jBw8boFZAiDZA7iT5NiJhnNmiHb-Rvd9+97hSVA@mail.gmail.com>
- <20190517050931.GB32367@kroah.com> <20190517073813.GB2589@hirez.programming.kicks-ass.net>
- <CANiq72nUPoNHWM-dJuFc3=4D2=8XMuvO0PgGPjviOv+EhrAWUw@mail.gmail.com> <20190517085126.GA3249@kroah.com>
-In-Reply-To: <20190517085126.GA3249@kroah.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Fri, 17 May 2019 11:01:45 +0200
-Message-ID: <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
-Subject: Re: Linux 4.19 and GCC 9
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 17 May 2019 09:04:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 10:51 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Fri, May 17, 2019 at 10:35:29AM +0200, Miguel Ojeda wrote:
-> > On Fri, May 17, 2019 at 9:38 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > >
-> > > Right; if there is anything you can reproduce on linus.git I'll happily
-> > > have a look. If it doesn't reproduce all you have to do is find the
-> > > patches that make it work and ask Greg.
-> >
-> > Just to clarify: Linus' master is clean of these issues with GCC 9.1.1.
->
-> Great!  Care to find the patches that did that work and send me the git
-> commit ids so that I can queue them up?  I don't have gcc9 here yet on
-> my systems, so I can not test for this.
+So far the KVM selftests are compiled without any compiler warnings
+enabled. That's quite bad, since we miss a lot of possible bugs this
+way. Let's enable at least "-Wall" and some other useful warning flags
+now, and fix at least the trivial problems in the code (like unused
+variables).
 
-I am unsure about the perf and the objtools parts (Peter/Josh?), but
-about the -Wmissing-attributes I cleaned, they were these:
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+---
+ v2:
+ - Rebased to kvm/queue
+ - Fix warnings in state_test.c and evmcs_test.c, too
 
-a6e60d84989f ("include/linux/module.h: copy __init/__exit attrs to
-init/cleanup_module")
-c0d9782f5b6d ("Compiler Attributes: add support for __copy (gcc >= 9)")
-ff98e20ef208 ("lib/crc32.c: mark crc32_le_base/__crc32c_le_base
-aliases as __pure")
+ tools/testing/selftests/kvm/Makefile                       | 4 +++-
+ tools/testing/selftests/kvm/dirty_log_test.c               | 6 +++++-
+ tools/testing/selftests/kvm/lib/kvm_util.c                 | 3 ---
+ tools/testing/selftests/kvm/lib/x86_64/processor.c         | 4 +---
+ tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c   | 1 +
+ tools/testing/selftests/kvm/x86_64/evmcs_test.c            | 7 +------
+ tools/testing/selftests/kvm/x86_64/platform_info_test.c    | 1 -
+ tools/testing/selftests/kvm/x86_64/smm_test.c              | 3 +--
+ tools/testing/selftests/kvm/x86_64/state_test.c            | 7 +------
+ .../selftests/kvm/x86_64/vmx_close_while_nested_test.c     | 5 +----
+ tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c   | 5 ++---
+ 11 files changed, 16 insertions(+), 30 deletions(-)
 
-Cheers,
-Miguel
+diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+index 79c524395ebe..d113eaf2d570 100644
+--- a/tools/testing/selftests/kvm/Makefile
++++ b/tools/testing/selftests/kvm/Makefile
+@@ -34,7 +34,9 @@ LIBKVM += $(LIBKVM_$(UNAME_M))
+ INSTALL_HDR_PATH = $(top_srcdir)/usr
+ LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
+ LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
+-CFLAGS += -O2 -g -std=gnu99 -fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) -I$(LINUX_HDR_PATH) -Iinclude -I$(<D) -Iinclude/$(UNAME_M) -I..
++CFLAGS += -Wall -Wstrict-prototypes -Wuninitialized -O2 -g -std=gnu99 \
++	-fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE) \
++	-I$(LINUX_HDR_PATH) -Iinclude -I$(<D) -Iinclude/$(UNAME_M) -I..
+ 
+ no-pie-option := $(call try-run, echo 'int main() { return 0; }' | \
+         $(CC) -Werror $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -no-pie -x c - -o "$$TMP", -no-pie)
+diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
+index a29d1119ccb3..ff20950aee05 100644
+--- a/tools/testing/selftests/kvm/dirty_log_test.c
++++ b/tools/testing/selftests/kvm/dirty_log_test.c
+@@ -131,6 +131,7 @@ static void *vcpu_worker(void *data)
+ 	while (!READ_ONCE(host_quit)) {
+ 		/* Let the guest dirty the random pages */
+ 		ret = _vcpu_run(vm, VCPU_ID);
++		TEST_ASSERT(ret == 0, "vcpu_run failed: %d\n", ret);
+ 		if (get_ucall(vm, VCPU_ID, &uc) == UCALL_SYNC) {
+ 			pages_count += TEST_PAGES_PER_LOOP;
+ 			generate_random_array(guest_array, TEST_PAGES_PER_LOOP);
+@@ -423,8 +424,11 @@ int main(int argc, char *argv[])
+ 	unsigned long interval = TEST_HOST_LOOP_INTERVAL;
+ 	bool mode_selected = false;
+ 	uint64_t phys_offset = 0;
+-	unsigned int mode, host_ipa_limit;
++	unsigned int mode;
+ 	int opt, i;
++#ifdef __aarch64__
++	unsigned int host_ipa_limit;
++#endif
+ 
+ #ifdef USE_CLEAR_DIRTY_LOG
+ 	if (!kvm_check_cap(KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2)) {
+diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+index e9113857f44e..cf62de377310 100644
+--- a/tools/testing/selftests/kvm/lib/kvm_util.c
++++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+@@ -135,7 +135,6 @@ struct kvm_vm *_vm_create(enum vm_guest_mode mode, uint64_t phy_pages,
+ 			  int perm, unsigned long type)
+ {
+ 	struct kvm_vm *vm;
+-	int kvm_fd;
+ 
+ 	vm = calloc(1, sizeof(*vm));
+ 	TEST_ASSERT(vm != NULL, "Insufficient Memory");
+@@ -556,7 +555,6 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
+ 	uint32_t flags)
+ {
+ 	int ret;
+-	unsigned long pmem_size = 0;
+ 	struct userspace_mem_region *region;
+ 	size_t huge_page_size = KVM_UTIL_PGS_PER_HUGEPG * vm->page_size;
+ 
+@@ -1334,7 +1332,6 @@ void vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_sregs *sregs)
+ int _vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_sregs *sregs)
+ {
+ 	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
+-	int ret;
+ 
+ 	TEST_ASSERT(vcpu != NULL, "vcpu not found, vcpuid: %u", vcpuid);
+ 
+diff --git a/tools/testing/selftests/kvm/lib/x86_64/processor.c b/tools/testing/selftests/kvm/lib/x86_64/processor.c
+index dc7fae9fa424..21f3040d90cb 100644
+--- a/tools/testing/selftests/kvm/lib/x86_64/processor.c
++++ b/tools/testing/selftests/kvm/lib/x86_64/processor.c
+@@ -229,8 +229,6 @@ void sregs_dump(FILE *stream, struct kvm_sregs *sregs,
+ 
+ void virt_pgd_alloc(struct kvm_vm *vm, uint32_t pgd_memslot)
+ {
+-	int rc;
+-
+ 	TEST_ASSERT(vm->mode == VM_MODE_P52V48_4K, "Attempt to use "
+ 		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
+ 
+@@ -549,7 +547,6 @@ vm_paddr_t addr_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva)
+ 	struct pageDirectoryPointerEntry *pdpe;
+ 	struct pageDirectoryEntry *pde;
+ 	struct pageTableEntry *pte;
+-	void *hva;
+ 
+ 	TEST_ASSERT(vm->mode == VM_MODE_P52V48_4K, "Attempt to use "
+ 		"unknown or unsupported guest mode, mode: 0x%x", vm->mode);
+@@ -582,6 +579,7 @@ vm_paddr_t addr_gva2gpa(struct kvm_vm *vm, vm_vaddr_t gva)
+ unmapped_gva:
+ 	TEST_ASSERT(false, "No mapping for vm virtual address, "
+ 		    "gva: 0x%lx", gva);
++	exit(EXIT_FAILURE);
+ }
+ 
+ static void kvm_setup_gdt(struct kvm_vm *vm, struct kvm_dtable *dt, int gdt_memslot,
+diff --git a/tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c b/tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c
+index 7c2c4d4055a8..63cc9c3f5ab6 100644
+--- a/tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c
++++ b/tools/testing/selftests/kvm/x86_64/cr4_cpuid_sync_test.c
+@@ -87,6 +87,7 @@ int main(int argc, char *argv[])
+ 	while (1) {
+ 		rc = _vcpu_run(vm, VCPU_ID);
+ 
++		TEST_ASSERT(rc == 0, "vcpu_run failed: %d\n", rc);
+ 		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
+ 			    "Unexpected exit reason: %u (%s),\n",
+ 			    run->exit_reason,
+diff --git a/tools/testing/selftests/kvm/x86_64/evmcs_test.c b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
+index 36669684eca5..b38260e29775 100644
+--- a/tools/testing/selftests/kvm/x86_64/evmcs_test.c
++++ b/tools/testing/selftests/kvm/x86_64/evmcs_test.c
+@@ -19,8 +19,6 @@
+ 
+ #define VCPU_ID		5
+ 
+-static bool have_nested_state;
+-
+ void l2_guest_code(void)
+ {
+ 	GUEST_SYNC(6);
+@@ -73,7 +71,6 @@ void guest_code(struct vmx_pages *vmx_pages)
+ 
+ int main(int argc, char *argv[])
+ {
+-	struct vmx_pages *vmx_pages = NULL;
+ 	vm_vaddr_t vmx_pages_gva = 0;
+ 
+ 	struct kvm_regs regs1, regs2;
+@@ -88,8 +85,6 @@ int main(int argc, char *argv[])
+ 		 .args[0] = (unsigned long)&evmcs_ver
+ 	};
+ 
+-	struct kvm_cpuid_entry2 *entry = kvm_get_supported_cpuid_entry(1);
+-
+ 	/* Create VM */
+ 	vm = vm_create_default(VCPU_ID, 0, guest_code);
+ 
+@@ -113,7 +108,7 @@ int main(int argc, char *argv[])
+ 
+ 	vcpu_regs_get(vm, VCPU_ID, &regs1);
+ 
+-	vmx_pages = vcpu_alloc_vmx(vm, &vmx_pages_gva);
++	vcpu_alloc_vmx(vm, &vmx_pages_gva);
+ 	vcpu_args_set(vm, VCPU_ID, 1, vmx_pages_gva);
+ 
+ 	for (stage = 1;; stage++) {
+diff --git a/tools/testing/selftests/kvm/x86_64/platform_info_test.c b/tools/testing/selftests/kvm/x86_64/platform_info_test.c
+index eb3e7a838cb4..40050e44ec0a 100644
+--- a/tools/testing/selftests/kvm/x86_64/platform_info_test.c
++++ b/tools/testing/selftests/kvm/x86_64/platform_info_test.c
+@@ -81,7 +81,6 @@ static void test_msr_platform_info_disabled(struct kvm_vm *vm)
+ int main(int argc, char *argv[])
+ {
+ 	struct kvm_vm *vm;
+-	struct kvm_run *state;
+ 	int rv;
+ 	uint64_t msr_platform_info;
+ 
+diff --git a/tools/testing/selftests/kvm/x86_64/smm_test.c b/tools/testing/selftests/kvm/x86_64/smm_test.c
+index fb8086964d83..4daf520bada1 100644
+--- a/tools/testing/selftests/kvm/x86_64/smm_test.c
++++ b/tools/testing/selftests/kvm/x86_64/smm_test.c
+@@ -87,7 +87,6 @@ void guest_code(struct vmx_pages *vmx_pages)
+ 
+ int main(int argc, char *argv[])
+ {
+-	struct vmx_pages *vmx_pages = NULL;
+ 	vm_vaddr_t vmx_pages_gva = 0;
+ 
+ 	struct kvm_regs regs;
+@@ -115,7 +114,7 @@ int main(int argc, char *argv[])
+ 	vcpu_set_msr(vm, VCPU_ID, MSR_IA32_SMBASE, SMRAM_GPA);
+ 
+ 	if (kvm_check_cap(KVM_CAP_NESTED_STATE)) {
+-		vmx_pages = vcpu_alloc_vmx(vm, &vmx_pages_gva);
++		vcpu_alloc_vmx(vm, &vmx_pages_gva);
+ 		vcpu_args_set(vm, VCPU_ID, 1, vmx_pages_gva);
+ 	} else {
+ 		printf("will skip SMM test with VMX enabled\n");
+diff --git a/tools/testing/selftests/kvm/x86_64/state_test.c b/tools/testing/selftests/kvm/x86_64/state_test.c
+index e0a3c0204b7c..2a4121f4de01 100644
+--- a/tools/testing/selftests/kvm/x86_64/state_test.c
++++ b/tools/testing/selftests/kvm/x86_64/state_test.c
+@@ -22,8 +22,6 @@
+ 
+ #define VCPU_ID		5
+ 
+-static bool have_nested_state;
+-
+ void l2_guest_code(void)
+ {
+ 	GUEST_SYNC(6);
+@@ -122,7 +120,6 @@ void guest_code(struct vmx_pages *vmx_pages)
+ 
+ int main(int argc, char *argv[])
+ {
+-	struct vmx_pages *vmx_pages = NULL;
+ 	vm_vaddr_t vmx_pages_gva = 0;
+ 
+ 	struct kvm_regs regs1, regs2;
+@@ -132,8 +129,6 @@ int main(int argc, char *argv[])
+ 	struct ucall uc;
+ 	int stage;
+ 
+-	struct kvm_cpuid_entry2 *entry = kvm_get_supported_cpuid_entry(1);
+-
+ 	/* Create VM */
+ 	vm = vm_create_default(VCPU_ID, 0, guest_code);
+ 	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+@@ -142,7 +137,7 @@ int main(int argc, char *argv[])
+ 	vcpu_regs_get(vm, VCPU_ID, &regs1);
+ 
+ 	if (kvm_check_cap(KVM_CAP_NESTED_STATE)) {
+-		vmx_pages = vcpu_alloc_vmx(vm, &vmx_pages_gva);
++		vcpu_alloc_vmx(vm, &vmx_pages_gva);
+ 		vcpu_args_set(vm, VCPU_ID, 1, vmx_pages_gva);
+ 	} else {
+ 		printf("will skip nested state checks\n");
+diff --git a/tools/testing/selftests/kvm/x86_64/vmx_close_while_nested_test.c b/tools/testing/selftests/kvm/x86_64/vmx_close_while_nested_test.c
+index 6edec6fd790b..97182b47b10c 100644
+--- a/tools/testing/selftests/kvm/x86_64/vmx_close_while_nested_test.c
++++ b/tools/testing/selftests/kvm/x86_64/vmx_close_while_nested_test.c
+@@ -39,8 +39,6 @@ static void l1_guest_code(struct vmx_pages *vmx_pages)
+ {
+ #define L2_GUEST_STACK_SIZE 64
+ 	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
+-	uint32_t control;
+-	uintptr_t save_cr3;
+ 
+ 	GUEST_ASSERT(prepare_for_vmx_operation(vmx_pages));
+ 	GUEST_ASSERT(load_vmcs(vmx_pages));
+@@ -55,7 +53,6 @@ static void l1_guest_code(struct vmx_pages *vmx_pages)
+ 
+ int main(int argc, char *argv[])
+ {
+-	struct vmx_pages *vmx_pages;
+ 	vm_vaddr_t vmx_pages_gva;
+ 	struct kvm_cpuid_entry2 *entry = kvm_get_supported_cpuid_entry(1);
+ 
+@@ -68,7 +65,7 @@ int main(int argc, char *argv[])
+ 	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+ 
+ 	/* Allocate VMX pages and shared descriptors (vmx_pages). */
+-	vmx_pages = vcpu_alloc_vmx(vm, &vmx_pages_gva);
++	vcpu_alloc_vmx(vm, &vmx_pages_gva);
+ 	vcpu_args_set(vm, VCPU_ID, 1, vmx_pages_gva);
+ 
+ 	for (;;) {
+diff --git a/tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c b/tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c
+index 18fa64db0d7a..6d37a3173956 100644
+--- a/tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c
++++ b/tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c
+@@ -121,7 +121,7 @@ static void l1_guest_code(struct vmx_pages *vmx_pages)
+ 	GUEST_DONE();
+ }
+ 
+-void report(int64_t val)
++static void report(int64_t val)
+ {
+ 	printf("IA32_TSC_ADJUST is %ld (%lld * TSC_ADJUST_VALUE + %lld).\n",
+ 	       val, val / TSC_ADJUST_VALUE, val % TSC_ADJUST_VALUE);
+@@ -129,7 +129,6 @@ void report(int64_t val)
+ 
+ int main(int argc, char *argv[])
+ {
+-	struct vmx_pages *vmx_pages;
+ 	vm_vaddr_t vmx_pages_gva;
+ 	struct kvm_cpuid_entry2 *entry = kvm_get_supported_cpuid_entry(1);
+ 
+@@ -142,7 +141,7 @@ int main(int argc, char *argv[])
+ 	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+ 
+ 	/* Allocate VMX pages and shared descriptors (vmx_pages). */
+-	vmx_pages = vcpu_alloc_vmx(vm, &vmx_pages_gva);
++	vcpu_alloc_vmx(vm, &vmx_pages_gva);
+ 	vcpu_args_set(vm, VCPU_ID, 1, vmx_pages_gva);
+ 
+ 	for (;;) {
+-- 
+2.21.0
+
