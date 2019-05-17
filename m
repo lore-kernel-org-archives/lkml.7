@@ -2,142 +2,93 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE877C04E84
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:20:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C0CC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F2B320645
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:20:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PVLNgjcK"
+	by mail.kernel.org (Postfix) with ESMTP id EF29320645
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:20:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728233AbfEQRUG (ORCPT
+        id S1728249AbfEQRUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 13:20:06 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:51323 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725933AbfEQRUG (ORCPT
+        Fri, 17 May 2019 13:20:34 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49326 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfEQRUd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 13:20:06 -0400
-Received: by mail-it1-f196.google.com with SMTP id m3so9390802itl.1;
-        Fri, 17 May 2019 10:20:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=qrLPWyXtnI2gfzaw9iUqYTDRhEhLKXZoqwNA1fL2LAQ=;
-        b=PVLNgjcKPNwuCYgyauLWAWQrbFXd/kKCQoF0bXX5cMltLR7fks84XgVP9aZZbfishf
-         qA1LlwrEEXBuZPwQvyocwKzNmRInN+wqQOWAWuG+YIki49m7RHhvCA+F8PBQgKPenhI2
-         qPJ4eUvcWlE6HJ4q0j9W001nsUtte7prJuBZTU1nlQRKwKBlE4odUnnKHBmhRkJLf0ZB
-         l8CYE6vPxhKetIqu7wPGSDrsBoDVinT/sCwDVzrVrhKIND4nJvNzgjJTMAmkFZdcfHYh
-         DIDYAwoZNktDZOAkxRSjcQXkVdiXsZuMSJpjBC882SGpOYDSiZRVl5I32G0xTmBpsrE0
-         fzAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=qrLPWyXtnI2gfzaw9iUqYTDRhEhLKXZoqwNA1fL2LAQ=;
-        b=smMInCgU/7JAPXW9Dx+F2nUCuFzdbBITaSOJ2JRQ/WP0SAR4XhdyHQwg1lV1ep20kU
-         PpFKwddB80De89DkOiid+mPCafw69s/du0m6FvJ++QrqlZSpnmVB+dnWThEQUVr/UQbk
-         d97pu+OboFAhdpsvGyOLJ4FMxCUvTGqlyVyfEMUB+2Ew1M8dqiuV2EQuUZnAXFSTvAfe
-         KPzPa/aqZIed+BZzNhULBvlbgFjxbv1QLR02irpPEz5Kg/e88RRNopaugjhnbc7tgU2O
-         qkkBu3LbA1vxOlEsuOxSIFV8wAf3NW4ET/Sf558u4fa6qJ4IQ7UNn1KLl8YILvP9u5d2
-         Jeng==
-X-Gm-Message-State: APjAAAVNbLAWt8QfZo543aaY0AzL5ibSj8fYq34waoYLNBcHoHvUn9hM
-        JV83mbSyOHSnaxnjgvQSmA+TiV3BbdZN6uyfCik=
-X-Google-Smtp-Source: APXvYqy9MqNMwuRaX+ELq5rB4d1R7KQAB9+kT1JeKI6HQFvZCY3iw6/M+suGjbSFqWtAaTTx+zCY9kBtBlyqxKMmsos=
-X-Received: by 2002:a05:660c:7cd:: with SMTP id e13mr12523632itl.40.1558113605643;
- Fri, 17 May 2019 10:20:05 -0700 (PDT)
+        Fri, 17 May 2019 13:20:33 -0400
+Received: from localhost.localdomain (unknown [IPv6:2804:431:9718:5766:d14e:219b:d0a:2eb5])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id C9449281CB5;
+        Fri, 17 May 2019 18:20:29 +0100 (BST)
+From:   Helen Koike <helen.koike@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     hverkuil-cisco@xs4all.nl, kernel@collabora.com,
+        ezequiel.garcia@collabora.com, andrealmeid@collabora.com,
+        Helen Koike <helen.koike@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] media: vimc: fix component match compare
+Date:   Fri, 17 May 2019 14:20:11 -0300
+Message-Id: <20190517172011.13257-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190512082614.9045-1-tiny.windzz@gmail.com> <20190512082614.9045-3-tiny.windzz@gmail.com>
- <20190512133930.t5txssl7mou2gljt@flea> <20190512214128.qjyys3vfpwdiacib@core.my.home>
- <20190516150252.hf4u3bloo37chy6q@flea> <CAEExFWu-T2mGQ9Teo7TQOcJsEzXi_dB=S8CFv7MiwHyu5z4-ow@mail.gmail.com>
- <20190517073151.mz6hcmzubk7iqfre@flea>
-In-Reply-To: <20190517073151.mz6hcmzubk7iqfre@flea>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Sat, 18 May 2019 01:19:54 +0800
-Message-ID: <CAEExFWtban8Fjw6aZ5gdeC2GNk1vdqFoaJB_o-JtYZ_z70AJcQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] thermal: sun50i: add thermal driver for h6
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        catalin.marinas@arm.com, will.deacon@arm.com,
-        bjorn.andersson@linaro.org,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        paulmck@linux.ibm.com, stefan.wahren@i2se.com,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Andy Gross <andy.gross@linaro.org>, rui.zhang@intel.com,
-        devicetree@vger.kernel.org, marc.w.gonzalez@free.fr,
-        Eduardo Valentin <edubezval@gmail.com>,
-        enric.balletbo@collabora.com, robh+dt@kernel.org,
-        Jonathan.Cameron@huawei.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        olof@lixom.net, David Miller <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 3:32 PM Maxime Ripard <maxime.ripard@bootlin.com> w=
-rote:
->
-> On Fri, May 17, 2019 at 02:10:47AM +0800, Frank Lee wrote:
-> > > On Sun, May 12, 2019 at 11:41:28PM +0200, Ond=C5=99ej Jirman wrote:
-> > > > > > +static int tsens_get_temp(void *data, int *temp)
-> > > > > > +{
-> > > > > > + struct tsensor *s =3D data;
-> > > > > > + struct tsens_device *tmdev =3D s->tmdev;
-> > > > > > + int val;
-> > > > > > +
-> > > > > > + regmap_read(tmdev->regmap, tmdev->chip->temp_data_base +
-> > > > > > +             0x4 * s->id, &val);
-> > > > > > +
-> > > > > > + if (unlikely(val =3D=3D 0))
-> > > > > > +         return -EBUSY;
-> > > > >
-> > > > > I'm not sure why a val equals to 0 would be associated with EBUSY=
-?
-> > > >
-> > > > Thermal zone driver can (will) call get_temp before we got the
-> > > > first interrupt and the thermal data. In that case val will be 0.
-> > > >
-> > > > Resulting in:
-> > > >
-> > > >  (val + offset) * scale =3D (-2794) * -67 =3D 187198
-> > > >
-> > > > 187=C2=B0C and immediate shutdown during boot - based on cirtical
-> > > > temperature being reached.
-> > > >
-> > > > Busy here means, get_temp does not yet have data. Thermal zone
-> > > > driver just reports any error to dmesg output.
-> > >
-> > > Ah, that makes sense.
-> > >
-> > > I guess if we're switching to an interrupt-based driver, then we can
-> > > just use a waitqueue, or is get_temp supposed to be atomic?
-> >
-> > I think get_temp should not be bloacked.
->
-> Why not?
+If the system has other devices being registered in the component
+framework, the compare function will be called with a device that
+doesn't belong to vimc.
+This device is not necessarily a platform_device, nor have a
+platform_data (which causes a NULL pointer dereference error) and if it
+does have a pdata, it is not necessarily type of struct vimc_platform_data.
+So casting to any of these types is wrong.
 
-Maybe, I am wrong. I also want to know if we should do this.
+Instead of expecting a given pdev with a given pdata, just expect for
+the device it self. vimc-core is the one who creates them, we know in
+advance exactly which object to expect in the match.
 
-Yangtao
+Fixes: 4a29b7090749 ("[media] vimc: Subdevices as modules")
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
 
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+---
+
+ drivers/media/platform/vimc/vimc-core.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/media/platform/vimc/vimc-core.c b/drivers/media/platform/vimc/vimc-core.c
+index 3aa62d7e3d0e..23992affd01f 100644
+--- a/drivers/media/platform/vimc/vimc-core.c
++++ b/drivers/media/platform/vimc/vimc-core.c
+@@ -244,10 +244,7 @@ static void vimc_comp_unbind(struct device *master)
+ 
+ static int vimc_comp_compare(struct device *comp, void *data)
+ {
+-	const struct platform_device *pdev = to_platform_device(comp);
+-	const char *name = data;
+-
+-	return !strcmp(pdev->dev.platform_data, name);
++	return comp == data;
+ }
+ 
+ static struct component_match *vimc_add_subdevs(struct vimc_device *vimc)
+@@ -277,7 +274,7 @@ static struct component_match *vimc_add_subdevs(struct vimc_device *vimc)
+ 		}
+ 
+ 		component_match_add(&vimc->pdev.dev, &match, vimc_comp_compare,
+-				    (void *)vimc->pipe_cfg->ents[i].name);
++				    &vimc->subdevs[i]->dev);
+ 	}
+ 
+ 	return match;
+-- 
+2.20.1
+
