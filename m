@@ -7,101 +7,104 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B3AC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C7FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9151720879
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:06:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6462B20879
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:06:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yIDpDUlK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kCiLjC1o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfEQEGk (ORCPT
+        id S1727748AbfEQEGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 00:06:40 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36218 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbfEQEGk (ORCPT
+        Fri, 17 May 2019 00:06:45 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46178 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726804AbfEQEGp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 00:06:40 -0400
-Received: by mail-pg1-f195.google.com with SMTP id a3so2632235pgb.3
-        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 21:06:40 -0700 (PDT)
+        Fri, 17 May 2019 00:06:45 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y11so2965017pfm.13
+        for <linux-kernel@vger.kernel.org>; Thu, 16 May 2019 21:06:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=YUNM61SbavGzuv3ZLziasFZlDP0wZTIm2rUlcIBaEc4=;
-        b=yIDpDUlKX448aC7IJW7/WLegcIQtNfcka6iCLmWv+QC8U8/MdB2bGFG1VyVS4kpSpw
-         /BO6E+als7fmAJI30vpohsn/1kZAGU+w8hBEM8/jPi5X6BWJckMO70rGA3WR0/ysroC7
-         +Bqe/diruvyW7cYtdcSbqqvjegR3HmFUmeZFKadkyKGTUoOV/xU7JeqKRPkOLKtLavDV
-         5aZumrHxYHdRzO67Oxw1vY9zTqo6oT3XnyuBePyIawE6U4y0cIBf9hJGqEM3AM+Byhcw
-         k5ZiNGp9FBVlgawHroO+EHAMFT6unmCgJUCQM0P2TTZUsJvBcsVZ2N/auobicxfEMTaV
-         GvXg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=6yVenyf0a0qIZedfKSCtttpa0WMwEDTZq8Yud/8Uytg=;
+        b=kCiLjC1owHy+UsjeF60cBtcatNacrggyR9r2TuoTOmaWEe3JT5GGpL6NQCaDV36Umb
+         y/uBj3UO2rVyb7LmO0nPT1LDJ13jKkSjsa+1zBQ8ueyJ9FmLUfe5S/lk0Om0Rfr0OqhB
+         udBzRgih+ZPFfi/pgEjD43225Heo+dB1r0fyB8XDYOUslZvLWhrEHS68MQPN4itx5QCF
+         5G2Si0cxb+SIySRKcJ89o6NK+bzeiKjUPq+YcDJWlujIPilrDaYpFLTrbyPSXFh2hj+S
+         mx9VVpsW1bVQZmZ2Ze6IzHvT3dT9kfO2aRLIUQ1PQFdbLc/kn+Ctg79zCJGwc4LhM4IF
+         pBvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YUNM61SbavGzuv3ZLziasFZlDP0wZTIm2rUlcIBaEc4=;
-        b=QS/c+VV0FlHYujVheiVgLp4O6xPRGheGSW/P0srVui8GOX7NBKLYxpPTo5TuCw206m
-         Nlw1ZITKN0UrKH7X3NYMTw4Qcg5jLv+elqYkcDk29O/NNKZioEdprThSi9J0J4tYtvCw
-         8iRjqoBDrbpKLg7kpicHfwxODwZE1UJIPnlDgOVOvEn0t8K9K+GMs2MinSK7eJAi9BPx
-         V4CNjkj8zv29y/FE6Pubgo8dFbM1KTElKa9uJsG32GCbqWRTAs5tyoJpPSenfoJZ9yGH
-         V9n3a8b0DtCv20B3K3fvGAvkCjjh6CvCw6QkRmxLw8KoN80aUuXtfG7Qvqzslr7UIqlF
-         K+ew==
-X-Gm-Message-State: APjAAAUZ33PpmEhrcXZT8muDm4Q2KdAjelVx1FQsThIIvzF+RQFBxUie
-        LPQmDel9f2yk7a1CU9iye1Nh89jRAA==
-X-Google-Smtp-Source: APXvYqz7kfN3pi13qegdwYdYgGYpAj2q8K5JcWDOsEo7Y6jybA2FcawPknW8Ht4RsODvS+LMWZrI0Q==
-X-Received: by 2002:a62:bd0e:: with SMTP id a14mr38891835pff.44.1558065999551;
-        Thu, 16 May 2019 21:06:39 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=6yVenyf0a0qIZedfKSCtttpa0WMwEDTZq8Yud/8Uytg=;
+        b=OOfc6iuRyKtHsc/S4MQuJhPMW+EIAVzDgCR/NLRibmswDONG/rlTcSXjyxYAfQFMF/
+         WtTlYYWuz5EDgSg1/54kDakGkMh1LHSEKrFCBAO6rNqekLJ+vjJEgQ7y99I1zmRDHTte
+         va2+2NxcBOfSEdD1QzXffS701QmF6qGgiu/3D7eWTGEDMJ8hatm1A+AnugM9usBJhevO
+         WPtSJu2dzZdTINMcdLcnPOsN4BxhJqR6d+Td79RkKVbotjU+DSdSmE2vmYgFmbHMKw5k
+         HOtEaSenT/kypIDkA+/GbG174aX+lPccNL1XQZQNwrWYxYm94gT4lEU7iJSGOKodKoNV
+         eY+Q==
+X-Gm-Message-State: APjAAAXusqwvTRwjl4jCS/IT/zQXD1gRzXPoUgC4TyIGNw/JPQVwEkgt
+        yoEmVcBCd6dokAF2OK1K4wWn
+X-Google-Smtp-Source: APXvYqyVaMd+FX1grTr8/UOs0JxoMs+1pdWe8hTBQCYVIxmgR63mOxmsGCZ0sfjQ08bGQHR+ZiNFjw==
+X-Received: by 2002:a62:e718:: with SMTP id s24mr58695777pfh.247.1558066004331;
+        Thu, 16 May 2019 21:06:44 -0700 (PDT)
 Received: from localhost.localdomain ([2409:4072:6390:5018:b478:7b0e:49e:16a3])
-        by smtp.gmail.com with ESMTPSA id d3sm8628927pfn.113.2019.05.16.21.06.34
+        by smtp.gmail.com with ESMTPSA id d3sm8628927pfn.113.2019.05.16.21.06.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 16 May 2019 21:06:39 -0700 (PDT)
+        Thu, 16 May 2019 21:06:43 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     heiko@sntech.de
 Cc:     linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         ezequiel@collabora.com, tom@vamrs.com, dev@vamrs.com,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 1/2] arm64: dts: rockchip: Enable SPI0 and SPI4 on Rock960
-Date:   Fri, 17 May 2019 09:36:24 +0530
-Message-Id: <20190517040625.14607-1-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 2/2] arm64: dts: rockchip: Enable SPI1 on Ficus
+Date:   Fri, 17 May 2019 09:36:25 +0530
+Message-Id: <20190517040625.14607-2-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190517040625.14607-1-manivannan.sadhasivam@linaro.org>
+References: <20190517040625.14607-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable SPI0 and SPI4 exposed on the Low and High speed expansion
-connectors of Rock960.
+Enable SPI1 exposed on both Low and High speed expansion connectors
+of Ficus. SPI1 has 3 different chip selects wired as below:
+
+CS0 - Serial Flash (unpopulated)
+CS1 - Low Speed expansion
+CS2 - High Speed expansion
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
 
 Changes in v2:
 
-* Dropped the label property since it is not part of SPI binding
+* Used pin constants instead of hardcoding cs-gpios
 
- arch/arm64/boot/dts/rockchip/rk3399-rock960.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-index 12285c51cceb..c624b4e73129 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-@@ -114,6 +114,16 @@
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
+index 027d428917b8..9af02d859dcd 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-ficus.dts
+@@ -146,6 +146,12 @@
  	};
  };
  
-+&spi0 {
-+	/* On Low speed expansion (LS-SPI0) */
-+	status = "okay";
-+};
-+
-+&spi4 {
-+	/* On High speed expansion (HS-SPI1) */
++&spi1 {
++	/* On both Low speed and High speed expansion */
++	cs-gpios = <0>, <&gpio4 RK_PA6 0>, <&gpio4 RK_PA7 0>;
 +	status = "okay";
 +};
 +
  &usbdrd_dwc3_0 {
- 	dr_mode = "otg";
+ 	dr_mode = "host";
  };
 -- 
 2.17.1
