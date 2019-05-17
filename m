@@ -2,117 +2,127 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E47C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3313C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:19:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 820C12087B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C49AB20833
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 04:19:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="GtFN8KxH"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="c0LtECK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbfEQEIa (ORCPT
+        id S1727145AbfEQETZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 00:08:30 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:52590 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726804AbfEQEIa (ORCPT
+        Fri, 17 May 2019 00:19:25 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:47280 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbfEQETY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 00:08:30 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4H44FtQ155156;
-        Fri, 17 May 2019 04:08:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2018-07-02;
- bh=fbs2klJYRwSjh6U92tbSHWsFn2CAbHAkPfwjVASkuvs=;
- b=GtFN8KxHn6BoVU9RO4RbeGh9sRr4R5Oqr7OqunHBPO0lQAOucqb2LpUXXiro7vHZBTpl
- zn18pgC9Ba/pf8L/cAM2wqXlfUTy/kH0wctwMu+ijNvbOCB09Xx4LTYN9GoTMsBVKNTa
- RpqfKvYj/5mGspglKTyxP8OSob8A7li66BNNR/n2bRooyGDYJTzIgQ1k1sHzcDb1j4r6
- F59pNJl70JWFYpgmMrHQvLi5OkjzSRywaXlkYQG1B2mrvXCyvItJbSXjelKlaninmeQA
- igjxy5kXNurF9PKFc7MYWrKOFbbkoAwPrz8gzAU102QwDIbmOiZpZd5p4Cljgyga+WV3 ng== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2sdntu76t2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 May 2019 04:08:24 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x4H47PEL073951;
-        Fri, 17 May 2019 04:08:23 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2sgp33ca87-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 May 2019 04:08:23 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x4H48Lbi020359;
-        Fri, 17 May 2019 04:08:22 GMT
-Received: from brm-x32-03.us.oracle.com (/10.80.150.35)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 17 May 2019 04:08:21 +0000
-From:   Jane Chu <jane.chu@oracle.com>
-To:     n-horiguchi@ah.jp.nec.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     linux-nvdimm@lists.01.org
-Subject: [PATCH] mm, memory-failure: clarify error message
-Date:   Thu, 16 May 2019 22:08:15 -0600
-Message-Id: <1558066095-9495-1-git-send-email-jane.chu@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9259 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=954
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1905170025
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9259 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=984 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1905170025
+        Fri, 17 May 2019 00:19:24 -0400
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x4H4J8rk020004;
+        Fri, 17 May 2019 13:19:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x4H4J8rk020004
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558066749;
+        bh=J7yAUK19cep0kEYDzk4DJ/4J6NgS5gQ7gjFkMhf0nf0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=c0LtECK4wG0ntD78HJSVal1PgIaDPnG3TYgZdKUwPQb1na1TUOyc7O8nFlNd6CaCm
+         AXsspHBBBxyBH+xc+yKwpj4hyYVIlPFcjcW/vHsJL5fSi5Q2gSwjjErNYCHX7DoDJk
+         uzHnaxZfaH6FQsso8f00WBIqbL0o02CmwbkFxF8m6vBwnpe79+CLRENPKmsLOuBRZS
+         H1BuxVeZipFZOyAH3A/7goUgdI8wKHrHt3j0pC8tQP/JX2YVrYwXhbMxIntV2ieT5M
+         FSH/2b85VtqV4XO16MdlVD3fBZ0eNwSQDAHODI3YrVqSmTCnoT21JK380X6v99doLI
+         2TTH2dRT0iNEA==
+X-Nifty-SrcIP: [209.85.222.47]
+Received: by mail-ua1-f47.google.com with SMTP id 49so2202636uas.0;
+        Thu, 16 May 2019 21:19:08 -0700 (PDT)
+X-Gm-Message-State: APjAAAWydtx2tRS6jJKO5xqCPv+Vt3FwVdD9ASPinktF8SumIpi9HPS3
+        i2bpdlZOxCPwGHcr4Eofl46WJIVzZ/yje7rdJvc=
+X-Google-Smtp-Source: APXvYqw2YDleh3v/xnLGvb0ytg007xtjBjm7KsoOOxcHJpN/6dfsgAIRhFvSJ0T46JhQEFnSRL0PruWBvw6llY+KDwI=
+X-Received: by 2002:ab0:3058:: with SMTP id x24mr23094567ual.95.1558066747792;
+ Thu, 16 May 2019 21:19:07 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190423034959.13525-1-yamada.masahiro@socionext.com>
+ <20190423034959.13525-11-yamada.masahiro@socionext.com> <ca74c830-fe1b-7bff-8dfd-353fca57b647@redhat.com>
+In-Reply-To: <ca74c830-fe1b-7bff-8dfd-353fca57b647@redhat.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 17 May 2019 13:18:31 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASjc8rmJvv5kgk6Mxo3mcB4EgB4XJG_8JY47ZQbrsSSXg@mail.gmail.com>
+Message-ID: <CAK7LNASjc8rmJvv5kgk6Mxo3mcB4EgB4XJG_8JY47ZQbrsSSXg@mail.gmail.com>
+Subject: Re: [RESEND PATCH v3 10/11] powerpc/mm/radix: mark as __tlbie_pid()
+ and friends as__always_inline
+To:     Laura Abbott <labbott@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mathieu Malaterre <malat@debian.org>, X86 ML <x86@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some user who install SIGBUS handler that does longjmp out
-therefore keeping the process alive is confused by the error
-message
-  "[188988.765862] Memory failure: 0x1840200: Killing
-   cellsrv:33395 due to hardware memory corruption"
-Slightly modify the error message to improve clarity.
+Hi Laura,
 
-Signed-off-by: Jane Chu <jane.chu@oracle.com>
----
- mm/memory-failure.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index fc8b517..14de5e2 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -216,10 +216,9 @@ static int kill_proc(struct to_kill *tk, unsigned long pfn, int flags)
- 	short addr_lsb = tk->size_shift;
- 	int ret;
- 
--	pr_err("Memory failure: %#lx: Killing %s:%d due to hardware memory corruption\n",
--		pfn, t->comm, t->pid);
--
- 	if ((flags & MF_ACTION_REQUIRED) && t->mm == current->mm) {
-+		pr_err("Memory failure: %#lx: Killing %s:%d due to hardware memory "
-+			"corruption\n", pfn, t->comm, t->pid);
- 		ret = force_sig_mceerr(BUS_MCEERR_AR, (void __user *)tk->addr,
- 				       addr_lsb, current);
- 	} else {
-@@ -229,6 +228,8 @@ static int kill_proc(struct to_kill *tk, unsigned long pfn, int flags)
- 		 * This could cause a loop when the user sets SIGBUS
- 		 * to SIG_IGN, but hopefully no one will do that?
- 		 */
-+		pr_err("Memory failure: %#lx: Sending SIGBUS to %s:%d due to hardware "
-+			"memory corruption\n", pfn, t->comm, t->pid);
- 		ret = send_sig_mceerr(BUS_MCEERR_AO, (void __user *)tk->addr,
- 				      addr_lsb, t);  /* synchronous? */
- 	}
--- 
-1.8.3.1
+On Fri, May 17, 2019 at 7:55 AM Laura Abbott <labbott@redhat.com> wrote:
 
+> What gcc version was this tested with?
+
+I use kernel.org toolchains
+https://mirrors.edge.kernel.org/pub/tools/crosstool/
+
+It is GCC 8.1
+
+
+> We're still seeing errors on
+> Fedora rawhide with gcc 9.1.1 on a version (8c05f3b965da14e7790711026b32cc10a4c06213)
+> that should have this fix in it:
+>
+> BUILDSTDERR: arch/powerpc/mm/book3s64/radix_tlb.c: In function '_tlbiel_pid':
+> BUILDSTDERR: arch/powerpc/mm/book3s64/radix_tlb.c:104:2: warning: asm operand 3 probably doesn't match constraints
+> BUILDSTDERR:   104 |  asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
+> BUILDSTDERR:       |  ^~~
+> BUILDSTDERR: arch/powerpc/mm/book3s64/radix_tlb.c:104:2: error: impossible constraint in 'asm'
+> BUILDSTDERR: make[3]: *** [scripts/Makefile.build:279: arch/powerpc/mm/book3s64/radix_tlb.o] Error 1
+> BUILDSTDERR: make[2]: *** [scripts/Makefile.build:489: arch/powerpc/mm/book3s64] Error 2
+> BUILDSTDERR: make[1]: *** [scripts/Makefile.build:489: arch/powerpc/mm] Error 2
+
+Thanks for the report.
+
+Does this work for you?
+
+
+diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c
+b/arch/powerpc/mm/book3s64/radix_tlb.c
+index 4d841369399f..9a6befdd5e74 100644
+--- a/arch/powerpc/mm/book3s64/radix_tlb.c
++++ b/arch/powerpc/mm/book3s64/radix_tlb.c
+
+@@ -239,7 +239,7 @@ static inline void fixup_tlbie_lpid(unsigned long lpid)
+ /*
+  * We use 128 set in radix mode and 256 set in hpt mode.
+  */
+-static inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
++static __always_inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
+ {
+        int set;
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
