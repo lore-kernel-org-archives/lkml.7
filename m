@@ -2,82 +2,290 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A621C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F2EC04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA7520578
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E3F20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 07:48:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WlKVIgzc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pn1spgbf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbfEQHqE (ORCPT
+        id S1728677AbfEQHsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 03:46:04 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57536 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728300AbfEQHqE (ORCPT
+        Fri, 17 May 2019 03:48:07 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41414 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728300AbfEQHsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 03:46:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tmsLUqIFffsMwKQ5rrShy/n7aicGtwKA3Co+5yH2+Eg=; b=WlKVIgzco8hD114GFqSmSVlYG
-        K2zQzSLvlv60DtdYFvgpuRPtl/oRuvEOe+/9ddFbi/jRYzLsKrIum562tmMKMnojsQi9qWDxfXd4p
-        KPha8+/UkXK81SCyePFKP9Pv+zk1veQdlkwEfy0YqrRWn6DmHFAtFf4Z6spJBynUmTsbPe5MDhwwy
-        A5eh+ihjU8UsRYfLvivj2FAk8t3mzch1FlFP9sVLI9hiBSGPSru9eH9opBbR1s0gm20Ub4SQYQy8t
-        0pjVpSrC8oc8EDeZJvqsxYFAEy+FN735BEuHG3Aqgop8K27A+4suNH6R7BZkdK9v8DBL/Fcj01iAz
-        2itne3pmg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hRXZ3-0002Yb-LT; Fri, 17 May 2019 07:46:01 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2256D2027C9FD; Fri, 17 May 2019 09:46:00 +0200 (CEST)
-Date:   Fri, 17 May 2019 09:46:00 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     "kasong@redhat.com" <kasong@redhat.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: Getting empty callchain from perf_callchain_kernel()
-Message-ID: <20190517074600.GJ2623@hirez.programming.kicks-ass.net>
-References: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com>
+        Fri, 17 May 2019 03:48:06 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f12so2961425plt.8;
+        Fri, 17 May 2019 00:48:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=e7Qp6LKHj/3mNID2lgCFKasc6WOLBr9UOnuN8ZBiMPs=;
+        b=Pn1spgbfnlJ//Sxh/ucpxJMn9BqZcLkyGy5a0seP4zK/hkUIneSIXJ6KlB4n5H7kiy
+         e7ws1VDwKLFVuC47vuyLFgpTzJJOuqEAU6dUKp90dmEh24/46lCuFzSM3k9iBFV1rlRm
+         uy+Au0hPA4xqFwBzys+YfaTQFSl9OouU8DqdtaMXU6Vb7meOMiBVUGGEwW7CZ8zEfYSJ
+         OwheHXcGMzcjwj09s6YshFaQFBfX/SzIWvPSbyaCtjBAcevSONPIn8IYhEYlK4CF8UiA
+         DtjDEHO5Y62GfMUJlnxZFxZf3wX4yZgcXRSlPfzYOz1aMnQmEsDKdIle3JgDBDCOiNUW
+         ph8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=e7Qp6LKHj/3mNID2lgCFKasc6WOLBr9UOnuN8ZBiMPs=;
+        b=DDwBOEAtAp/H3ldtwnrLSYZ7TGTm5m9tvEa8wYV8Jf3wWKQMH5m/eNUYsD28V/gJ0J
+         D75Sav0yX1kKw5nhGh3QqqN5PiY67fuOVydXJsaETBe0Zc7xMICt3tHNO+q8RIxlD5gy
+         /1ALfBSkwPg6g9gJmLlunulN2/YP6YNQY5Do28ZH/xWmtNrxnKPy1zR8r7N3cd0osnbI
+         6PxEd66+j3bWCtSjvEEZtU//8ppz3Wp4FvH3Cfs3Ia/mof/NmQcZmNf0TMIlIPgUlhRj
+         2m9DhQRvVQKUgz/qptWqM7DbWbU2kjOq/0EjY+AWgP0S4Zf66keHOzZdwvT8i4/okOoZ
+         it0g==
+X-Gm-Message-State: APjAAAXnuLv4vxd2fKJ1veeEkxK9G19CQJbtNamjddlibwVwix8nsChl
+        gT8dLLeqZPUmEFasXdUZUW4=
+X-Google-Smtp-Source: APXvYqy526LfwOWppbt2UWvHx7Ut7Cfm8CtpP9cgTXMcWbnWThRyf65ipWkZdCWrjHkLvrSLF1ZCyg==
+X-Received: by 2002:a17:902:9348:: with SMTP id g8mr12771830plp.174.1558079285793;
+        Fri, 17 May 2019 00:48:05 -0700 (PDT)
+Received: from debian ([103.231.91.35])
+        by smtp.gmail.com with ESMTPSA id g17sm13726504pfk.55.2019.05.17.00.47.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 17 May 2019 00:48:04 -0700 (PDT)
+Date:   Fri, 17 May 2019 13:17:52 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org, lwn@lwn.net,
+        Jiri Slaby <jslaby@suse.cz>
+Subject: Re: Linux 5.1.3
+Message-ID: <20190517074752.GA4114@debian>
+References: <20190517073706.GA11119@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="17pEHd4RhPHOinZp"
 Content-Disposition: inline
-In-Reply-To: <3CD3EE63-0CD2-404A-A403-E11DCF2DF8D9@fb.com>
+In-Reply-To: <20190517073706.GA11119@kroah.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 11:51:55PM +0000, Song Liu wrote:
-> Hi, 
-> 
-> We found a failure with selftests/bpf/tests_prog in test_stacktrace_map (on bpf/master
-> branch). 
-> 
-> After digging into the code, we found that perf_callchain_kernel() is giving empty
-> callchain for tracepoint sched/sched_switch. And it seems related to commit
-> 
-> d15d356887e770c5f2dcf963b52c7cb510c9e42d
-> ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
-> 
-> Before this commit, perf_callchain_kernel() returns callchain with regs->ip. With
-> this commit, regs->ip is not sent for !perf_hw_regs(regs) case. 
 
-So while I think the below is indeed right; we should store regs->ip
-regardless of the unwind path chosen, I still think there's something
-fishy if this results in just the 1 entry.
+--17pEHd4RhPHOinZp
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The sched/sched_switch event really should have a non-trivial stack.
+Thanks, a bunch Greg! :)=20
 
-Let me see if I can reproduce with just perf.
+On 09:37 Fri 17 May , Greg KH wrote:
+>I'm announcing the release of the 5.1.3 kernel.
+>
+>All users of the 5.1 kernel series must upgrade.
+>
+>The updated 5.1.y git tree can be found at:
+>	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git lin=
+ux-5.1.y
+>and can be browsed at the normal kernel.org git web browser:
+>	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3D=
+summary
+>
+>thanks,
+>
+>greg k-h
+>
+>------------
+>
+> Makefile                                            |    2
+> arch/powerpc/include/asm/book3s/64/pgalloc.h        |    3
+> arch/powerpc/include/asm/reg_booke.h                |    2
+> arch/powerpc/kernel/idle_book3s.S                   |   20 +++++
+> drivers/hwmon/occ/sysfs.c                           |    8 +-
+> drivers/hwmon/pwm-fan.c                             |    2
+> drivers/i2c/i2c-core-base.c                         |    5 +
+> drivers/isdn/gigaset/bas-gigaset.c                  |    9 +-
+> drivers/md/raid5.c                                  |   19 +----
+> drivers/net/bonding/bond_options.c                  |    7 -
+> drivers/net/ethernet/cadence/macb_main.c            |    6 -
+> drivers/net/ethernet/freescale/dpaa/dpaa_eth.c      |    2
+> drivers/net/ethernet/freescale/ucc_geth_ethtool.c   |    8 --
+> drivers/net/ethernet/seeq/sgiseeq.c                 |    1
+> drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c   |    2
+> drivers/net/phy/phy_device.c                        |   11 +--
+> drivers/net/tun.c                                   |   14 +++
+> drivers/net/wireless/marvell/mwl8k.c                |   13 ++-
+> drivers/net/wireless/realtek/rtlwifi/rtl8723ae/hw.c |    1
+> drivers/pci/controller/pci-hyperv.c                 |   23 ++++++
+> drivers/platform/x86/dell-laptop.c                  |    6 -
+> drivers/platform/x86/sony-laptop.c                  |    8 +-
+> drivers/platform/x86/thinkpad_acpi.c                |   72 ++++++++++++++=
++++++-
+> drivers/usb/serial/generic.c                        |   39 ++++++++--
+> drivers/virt/fsl_hypervisor.c                       |   29 ++++----
+> drivers/virt/vboxguest/vboxguest_core.c             |   31 ++++++++
+> drivers/virtio/virtio_ring.c                        |    1
+> fs/f2fs/data.c                                      |   17 +++-
+> fs/f2fs/f2fs.h                                      |   13 +++
+> fs/f2fs/file.c                                      |    2
+> fs/f2fs/gc.c                                        |    2
+> fs/f2fs/segment.c                                   |   13 +--
+> fs/kernfs/dir.c                                     |    5 -
+> include/linux/i2c.h                                 |    3
+> net/8021q/vlan_dev.c                                |    4 -
+> net/bridge/br_if.c                                  |   13 +--
+> net/core/fib_rules.c                                |    6 -
+> net/core/flow_dissector.c                           |    3
+> net/dsa/dsa.c                                       |   11 ++-
+> net/ipv4/raw.c                                      |    4 -
+> net/ipv6/sit.c                                      |    2
+> net/packet/af_packet.c                              |   25 +++++-
+> net/tipc/socket.c                                   |    4 -
+> security/selinux/hooks.c                            |    8 +-
+> tools/testing/selftests/seccomp/seccomp_bpf.c       |   43 ++++++-----
+> 45 files changed, 375 insertions(+), 147 deletions(-)
+>
+>Andrea Parri (1):
+>      kernfs: fix barrier usage in __kernfs_new_node()
+>
+>Christophe Leroy (1):
+>      net: ucc_geth - fix Oops when changing number of buffers in the ring
+>
+>Corentin Labbe (1):
+>      net: ethernet: stmmac: dwmac-sun8i: enable support of unicast filter=
+ing
+>
+>Damien Le Moal (1):
+>      f2fs: Fix use of number of devices
+>
+>Dan Carpenter (2):
+>      drivers/virt/fsl_hypervisor.c: dereferencing error pointers in ioctl
+>      drivers/virt/fsl_hypervisor.c: prevent integer overflow in ioctl
+>
+>David Ahern (1):
+>      ipv4: Fix raw socket lookup for local traffic
+>
+>Dexuan Cui (3):
+>      PCI: hv: Fix a memory leak in hv_eject_device_work()
+>      PCI: hv: Add hv_pci_remove_slots() when we unload the driver
+>      PCI: hv: Add pci_destroy_slot() in pci_devices_present_work(), if ne=
+cessary
+>
+>Eric Dumazet (1):
+>      flow_dissector: disable preemption around BPF calls
+>
+>Greg Kroah-Hartman (1):
+>      Linux 5.1.3
+>
+>Gustavo A. R. Silva (2):
+>      platform/x86: sony-laptop: Fix unintentional fall-through
+>      rtlwifi: rtl8723ae: Fix missing break in switch statement
+>
+>Hangbin Liu (2):
+>      fib_rules: return 0 directly if an exactly same rule exists when NLM=
+_F_EXCL not supplied
+>      vlan: disable SIOCSHWTSTAMP in container
+>
+>Hans de Goede (1):
+>      virt: vbox: Sanity-check parameter types for hgcm-calls coming from =
+userspace
+>
+>Harini Katakam (1):
+>      net: macb: Change interrupt and napi enable order in open
+>
+>Heiner Kallweit (1):
+>      net: phy: fix phy_validate_pause
+>
+>Jarod Wilson (1):
+>      bonding: fix arp_validate toggling in active-backup mode
+>
+>Jason Wang (2):
+>      tuntap: fix dividing by zero in ebpf queue selection
+>      tuntap: synchronize through tfiles array instead of tun->numqueues
+>
+>Jiaxun Yang (1):
+>      platform/x86: thinkpad_acpi: Disable Bluetooth for some machines
+>
+>Johan Hovold (1):
+>      USB: serial: fix unthrottle races
+>
+>Kees Cook (1):
+>      selftests/seccomp: Handle namespace failures gracefully
+>
+>Laurentiu Tudor (2):
+>      dpaa_eth: fix SG frame cleanup
+>      powerpc/booke64: set RI in default MSR
+>
+>Lei YU (1):
+>      hwmon: (occ) Fix extended status bits
+>
+>Mario Limonciello (1):
+>      platform/x86: dell-laptop: fix rfkill functionality
+>
+>Nigel Croxon (1):
+>      Don't jump to compute_result state from check_result state
+>
+>Paolo Abeni (1):
+>      selinux: do not report error on connect(AF_UNSPEC)
+>
+>Parthasarathy Bhuvaragan (1):
+>      tipc: fix hanging clients using poll with EPOLLOUT flag
+>
+>Paul Bolle (1):
+>      isdn: bas_gigaset: use usb_fill_int_urb() properly
+>
+>Petr =C5=A0tetiar (1):
+>      mwl8k: Fix rate_idx underflow
+>
+>Rick Lindsley (1):
+>      powerpc/book3s/64: check for NULL pointer in pgd_alloc()
+>
+>Russell Currey (1):
+>      powerpc/powernv/idle: Restore IAMR after idle
+>
+>Stefan Wahren (1):
+>      hwmon: (pwm-fan) Disable PWM if fetching cooling data fails
+>
+>Stephen Suryaputra (1):
+>      vrf: sit mtu should not be updated when vrf netdev is the link
+>
+>Thomas Bogendoerfer (1):
+>      net: seeq: fix crash caused by not set dev.parent
+>
+>Tobin C. Harding (1):
+>      bridge: Fix error path for kobject_init_and_add()
+>
+>Wolfram Sang (1):
+>      i2c: core: ratelimit 'transfer when suspended' errors
+>
+>YueHaibing (3):
+>      net: dsa: Fix error cleanup path in dsa_init_module
+>      packet: Fix error path in packet_init
+>      virtio_ring: Fix potential mem leak in virtqueue_add_indirect_packed
+>
+
+
+
+--17pEHd4RhPHOinZp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAlzeZx8ACgkQsjqdtxFL
+KRWf8gf9EZhg53Ncsfyz7mf3h2CmrX6b6DuTqJDzoi8OOduRqsmL51ZLVxGhxzIq
+WVubmvAK+5u/mWEgj5F4tyJDHEhZuEhFhgfQLCrDIbivQM4vv3WwvH5aId5f/3dq
+zGOOiDYiVIqPks1Zzp/x+eAQdd4E4b1kIW1zrxdBOy3F9D7kGfPnKEx7FwiL4TFV
+xnuzpNVvlbWt3mgar/Wb3X4GZ5QS4EVLZDQoBi5KlCxeSsaZLL1Ndhm7fur9Y8iG
+HxD18P1VYrgGY/y4fXce6Q2YMi3MLyHLAqBzEtoc/tNSOltHQv1rwW4LycPi0w8V
+E12CRJ69Dax6L0sfjlDsAdD+b4rcXQ==
+=7K0+
+-----END PGP SIGNATURE-----
+
+--17pEHd4RhPHOinZp--
