@@ -2,66 +2,128 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4446AC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34017C04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F546205ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:43:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00CBE20833
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:43:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d3ofsitp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbfEQJnM (ORCPT
+        id S1728689AbfEQJnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 05:43:12 -0400
-Received: from relay.sw.ru ([185.231.240.75]:36914 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728410AbfEQJnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 05:43:11 -0400
-Received: from [172.16.25.169]
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1hRZOP-0003eq-9y; Fri, 17 May 2019 12:43:09 +0300
-Subject: Re: linux-next: Tree for May 17
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>, atish.patra@wdc.com,
-        palmer@sifive.com,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20190517142152.588edb6e@canb.auug.org.au>
- <a119ca58-6771-cc36-fe5a-187ba500010a@virtuozzo.com>
-Message-ID: <07e1a10a-5348-2d2e-fb6a-c9ef837185fe@virtuozzo.com>
-Date:   Fri, 17 May 2019 12:43:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 17 May 2019 05:43:50 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40612 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727865AbfEQJnt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 05:43:49 -0400
+Received: by mail-pg1-f195.google.com with SMTP id d30so3053399pgm.7;
+        Fri, 17 May 2019 02:43:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+dra/4iX7xwbArwOwB26lkZ4hD6j6efa0Wr5nYhpA0I=;
+        b=d3ofsitpLZcZYJZ/+5+gaaxyS24OPv8VSIWpbTKtgeyh8QcpAYHu7yWy0r2kcH9AAJ
+         46AJhjQK0Jo8DW7t/xby1i0hs2B5tGMKaaWDSXpkHS/n369hHjkYJO7gshEGxRlmmXsP
+         xdrwbEtZ8xdY9OrWP1D+gomU2h1nXj1CtsNPHBotpP5OpOzfTkAJcImS+KYO3j1DXss2
+         Fpc9G+0F71nLe9S2eHK1tszJftkAqCYTAxZczjPYSZZXM5RA5G7AL8da7LeJTH8BvA5y
+         DGW+P/U8AXx3U9biiTHGfimHYCeaptc8Gs9ayWN41Wjew4NIn/eGauByoSCJlhmm/K/Z
+         +UNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+dra/4iX7xwbArwOwB26lkZ4hD6j6efa0Wr5nYhpA0I=;
+        b=WVcsZTSDfsrqXi4iZlQAkmd4Vol/vI3cQe51uGbB8sbEuCPvPcPrCqVeobp5iiVKK9
+         9luq0PBONKneQUwGJ2bw1pmOhjiEg8czqAEfyRZ0HbQ4qt/QDckvnZcERUuwoLXThQIu
+         0VbxHAVKZzVRGKna/QV80SgdN1A+ki0EwRjITlgaJhtj3WelY7rLeWJhxZKiXNWdUjUj
+         /tVfIAZ2AHdkIncxz1SNOxsS6iwxDisTggaAFNmkr9v6RyyGNaWxPglOXWC497wJsUJV
+         acSISv9mHIIbCbQSTucMUPE2dxAObJ+sWq24WVbD0RK4mnCeprWhO1JfJSV9Gr4zpvvt
+         XOpQ==
+X-Gm-Message-State: APjAAAW0U5X2XxHeKhN/wooLWbzNmQaYvyWBYkk87Mr/j6vMswjRbnwU
+        3E+A6bAqtCXU1fhEYAQHkoc=
+X-Google-Smtp-Source: APXvYqwIIbVoXjW6MBWF2yRKlMoZvX28HtwQ16t2WQLeS19JGJtZKtc9PYCCKhMsAUy0pd4iUm4adQ==
+X-Received: by 2002:a63:8342:: with SMTP id h63mr57060699pge.251.1558086228915;
+        Fri, 17 May 2019 02:43:48 -0700 (PDT)
+Received: from zhanggen-UX430UQ ([66.42.35.75])
+        by smtp.gmail.com with ESMTPSA id s72sm11569041pgc.65.2019.05.17.02.43.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 17 May 2019 02:43:48 -0700 (PDT)
+Date:   Fri, 17 May 2019 17:43:36 +0800
+From:   Gen Zhang <blackgod016574@gmail.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-efi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] efi_64: Fix a missing-check bug in
+ arch/x86/platform/efi/efi_64.c of Linux 5.1
+Message-ID: <20190517094336.GA4728@zhanggen-UX430UQ>
+References: <20190517082633.GA3890@zhanggen-UX430UQ>
+ <CAKv+Gu98JNK34Q6MNOe3aq0W5rbv6hUFiuc7cHxHJat5aTk_gg@mail.gmail.com>
+ <20190517090628.GA4162@zhanggen-UX430UQ>
+ <CAKv+Gu_mwFpdtNZm9QMFn69+vOMTOpv9gvuhnBL2NBXvwkhXqg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <a119ca58-6771-cc36-fe5a-187ba500010a@virtuozzo.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu_mwFpdtNZm9QMFn69+vOMTOpv9gvuhnBL2NBXvwkhXqg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.05.2019 12:41, Kirill Tkhai wrote:
-> On 17.05.2019 07:21, Stephen Rothwell wrote:
->> Hi all,
->>
->> Please do not add any v5.3 material to your linux-next included
->> trees/branches until after v5.2-rc1 has been released.
->>
->> Changes since 20190516:
->>
->> The kvm tree gained conflicts against Linus' tree.
->>
->> Non-merge commits (relative to Linus' tree): 1023
->>  1119 files changed, 27058 insertions(+), 7629 deletions(-)
-> 
-> Binary file was added:
-> 
-> ~/linux-next$ git log --oneline ./modules.builtin.modinfo
-> 4cbb0d07b4d1 RISC-V: Support nr_cpus command line option.
+On Fri, May 17, 2019 at 11:24:27AM +0200, Ard Biesheuvel wrote:
+> If efi_call_phys_prolog() returns NULL, the calling function should
+> abort and never call efi_call_phys_epilog().
+Hi Ard,
+I edit the patch and it is as following. Returning EFI_ABORTED would
+be proper, because the return value (status) is checked in 
+__efi_enter_virtual_mode(). And returning EFI_ABORTED can abort the 
+process.
+Thanks
+Gen
 
-CC Palmer.
+
+
+save_pgd is allocated by kmalloc_array. And it is dereferenced in the
+following codes. However, memory allocation functions such as
+kmalloc_array may fail. Dereferencing this save_pgd null pointer may 
+cause the kernel go wrong. Thus we should check this allocation.
+
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+
+---
+diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
+index e1cb01a..a7189a3 100644
+--- a/arch/x86/platform/efi/efi.c
++++ b/arch/x86/platform/efi/efi.c
+@@ -85,6 +85,8 @@ static efi_status_t __init phys_efi_set_virtual_address_map(
+ 	pgd_t *save_pgd;
+ 
+ 	save_pgd = efi_call_phys_prolog();
++	if (!save_pgd)
++		return EFI_ABORTED;
+ 
+ 	/* Disable interrupts around EFI calls: */
+ 	local_irq_save(flags);
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index cf0347f..828460a 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -91,6 +91,8 @@ pgd_t * __init efi_call_phys_prolog(void)
+ 
+ 	n_pgds = DIV_ROUND_UP((max_pfn << PAGE_SHIFT), PGDIR_SIZE);
+ 	save_pgd = kmalloc_array(n_pgds, sizeof(*save_pgd), GFP_KERNEL);
++	if (!save_pgd)
++		return NULL;
+ 
+ 	/*
+ 	 * Build 1:1 identity mapping for efi=old_map usage. Note that
+---
