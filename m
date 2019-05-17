@@ -2,169 +2,100 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE18C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AEAC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:44:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31F962087B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:44:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R6RUDRe4"
+	by mail.kernel.org (Postfix) with ESMTP id 5C3E72087B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbfEQKog (ORCPT
+        id S1728466AbfEQKor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 06:44:36 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:36036 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728193AbfEQKog (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 06:44:36 -0400
-Received: by mail-it1-f196.google.com with SMTP id e184so11245524ite.1
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 03:44:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ae6y0KuXzMG1pHLjgX5VAMMTwD/mpdbSQHyUYqpGa1Y=;
-        b=R6RUDRe47ZibIlkhxQWfsIgH9dt5pFYOUAFW/3Asfdh4QE7ekEXvUMeji89niTUt1k
-         ThSHvMS8k3bXzi1VUy39vktMv6CElxov+TYUYhnWCWo/JeHIl+5X5uTCE/JPXOr9SNxF
-         itX9zP/rxln7zlf7HwFmVYDMS5/xp2TFIkV0GGNN+/7PfpTnpEPE+hJBb0z/BNOLkuD8
-         fM8SBe/WyYf0Wg2moOirFS03wLy6/d548Y2nMjbiOokDeRXQUbUn7dr6gtDP/bnIa6mx
-         aaatnT+JDGwhVfUdZh/oAQz/iZ67xf1VLuE9Sq/dNCVBEWfSOEzycF2eMKOKgKqVT9/q
-         Fw2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ae6y0KuXzMG1pHLjgX5VAMMTwD/mpdbSQHyUYqpGa1Y=;
-        b=a2//Ysxixb3FAr0TKNJnvuUHd+KgzfzSC0Tp+j7y73V1kxfY8YQDYI4pNt1j4PcjjY
-         EdTaAds2xKe063T5aGpIJaKqnZkF5EyraCaS608T7pKIn6mPHGrQUlXyZi2vXWB1XXri
-         Yh5sGrHgKY4JglI1TFYlHDgvyWPPc7BTx8vQAF13lEVcJG8SXBQLbWq8Y6XWRAOHZjtz
-         ngiL3l8BYuTqPnIKvaxY78/o2MG0e6pzwoWv8uJxLAk4/3BOMXdVEW/GPOk03prY2xG3
-         9OKRxe5tFp/gMCIunU29zngrxcZ6wyqiIuBY7n+fQjZuY2OSw+Ll9fNHx00KztbPeCep
-         bJ2w==
-X-Gm-Message-State: APjAAAUT04V4HGdZnrEMEXtK85dt+eKwMniYAd5LKL3fyC5OASifsRbm
-        RQcVNTO1EypSKZz63EI772AegWYcUvs1VOSf+MFPig==
-X-Google-Smtp-Source: APXvYqx3JP27Nk1tvOQBMDUThEQjHMC4TS5L3KtmWKuKzLoARJahORDrcr3fbLBY/dMbMzQj6L5PkULqhdgPoVo6Vr4=
-X-Received: by 2002:a02:1dc7:: with SMTP id 190mr34241024jaj.62.1558089874890;
- Fri, 17 May 2019 03:44:34 -0700 (PDT)
+        Fri, 17 May 2019 06:44:47 -0400
+Received: from mail-oln040092067065.outbound.protection.outlook.com ([40.92.67.65]:63299
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728390AbfEQKoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 06:44:46 -0400
+Received: from AM5EUR02FT015.eop-EUR02.prod.protection.outlook.com
+ (10.152.8.52) by AM5EUR02HT077.eop-EUR02.prod.protection.outlook.com
+ (10.152.9.127) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1856.11; Fri, 17 May
+ 2019 10:44:44 +0000
+Received: from AM0PR07MB4417.eurprd07.prod.outlook.com (10.152.8.53) by
+ AM5EUR02FT015.mail.protection.outlook.com (10.152.8.154) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1900.16 via Frontend Transport; Fri, 17 May 2019 10:44:44 +0000
+Received: from AM0PR07MB4417.eurprd07.prod.outlook.com
+ ([fe80::9046:9a59:4519:d984]) by AM0PR07MB4417.eurprd07.prod.outlook.com
+ ([fe80::9046:9a59:4519:d984%3]) with mapi id 15.20.1900.010; Fri, 17 May 2019
+ 10:44:44 +0000
+From:   Philippe Mazenauer <philippe.mazenauer@outlook.de>
+CC:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        Philippe Mazenauer <philippe.mazenauer@outlook.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH] lib: Correct comment of prandom_seed
+Thread-Topic: [PATCH] lib: Correct comment of prandom_seed
+Thread-Index: AQHVDJ2JrktfPZmdKU2E7C1BOPHbWQ==
+Date:   Fri, 17 May 2019 10:44:44 +0000
+Message-ID: <AM0PR07MB44176BAB0BA6ACAAA8C6DC88FD0B0@AM0PR07MB4417.eurprd07.prod.outlook.com>
+Accept-Language: de-CH, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR19CA0008.namprd19.prod.outlook.com
+ (2603:10b6:300:d4::18) To AM0PR07MB4417.eurprd07.prod.outlook.com
+ (2603:10a6:208:b8::26)
+x-incomingtopheadermarker: OriginalChecksum:1526C49DCF19A1AF2281A7A8B1FFF74C1613D059FB95E761CD80E0C5C5FA80FD;UpperCasedChecksum:8FB927AB3F09B3F1D4768817067C5A90509C29872C4E30B87969D7CC7623E61F;SizeAsReceived:7477;Count:47
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-tmn:  [ZMEojfOnWahuAghcnLd7mLY5syu4NYZc]
+x-microsoft-original-message-id: <20190517104419.26343-1-philippe.mazenauer@outlook.de>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 47
+x-eopattributedmessage: 0
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:AM5EUR02HT077;
+x-ms-traffictypediagnostic: AM5EUR02HT077:
+x-microsoft-antispam-message-info: IQDpj6gkCGVqi1Xy+HCS6vd4q6RGROVpHZg44PkcXDTT7ua5pF0Fz7iJtgxEgOSb/J6Kfbqvm0Q8mw705rzAf4dTCI0Ntp8tAhX0w6rtA9G/Z7XzNMnXGsTjdU663sq/X9Z1ySItGD9dyZXnQhVJRAoedM11ToQat4CNDT0Y79vbv3C4ZuPaxp0ECkJ4Gzhh
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190515072747.39941-1-xiaowei.bao@nxp.com> <20190515072747.39941-2-xiaowei.bao@nxp.com>
- <CAK8P3a3AXRp_v_7hkoJA28tUCiSh1eYzbk4Q4h29OqL6y-KL8A@mail.gmail.com>
- <AM5PR04MB329934765FB8EB1828743D79F50B0@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <CAK8P3a0kKb7njiJvUkwJYwf-yc-hEyErSiWcvbdf0XnMoctzrg@mail.gmail.com>
-In-Reply-To: <CAK8P3a0kKb7njiJvUkwJYwf-yc-hEyErSiWcvbdf0XnMoctzrg@mail.gmail.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Fri, 17 May 2019 12:44:22 +0200
-Message-ID: <CAKv+Gu-WVcVvqPoH3gsz8G3Dwizne81MAQAUGNnGrpthvUiSnw@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH 2/3] arm64: dts: ls1028a: Add PCIe controller DT nodes
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Xiaowei Bao <xiaowei.bao@nxp.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Roy Zang <roy.zang@nxp.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kishon <kishon@ti.com>, "M.h. Lian" <minghuan.lian@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Leo Li <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 13ec8b5c-c1da-494e-c165-08d6dab4ac3d
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 10:44:44.1808
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5EUR02HT077
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 17 May 2019 at 10:59, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Fri, May 17, 2019 at 5:21 AM Xiaowei Bao <xiaowei.bao@nxp.com> wrote:
-> > -----Original Message-----
-> > From: Arnd Bergmann <arnd@arndb.de>
-> > On Wed, May 15, 2019 at 9:36 AM Xiaowei Bao <xiaowei.bao@nxp.com> wrote=
-:
-> > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > ---
-> > >  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi |   52 ++++++++++++++=
-++++++++++
-> > >  1 files changed, 52 insertions(+), 0 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/ar=
-m64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > > index b045812..50b579b 100644
-> > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-> > > @@ -398,6 +398,58 @@
-> > >                         status =3D "disabled";
-> > >                 };
-> > >
-> > > +               pcie@3400000 {
-> > > +                       compatible =3D "fsl,ls1028a-pcie";
-> > > +                       reg =3D <0x00 0x03400000 0x0 0x00100000   /* =
-controller registers */
-> > > +                              0x80 0x00000000 0x0 0x00002000>; /* co=
-nfiguration space */
-> > > +                       reg-names =3D "regs", "config";
-> > > +                       interrupts =3D <GIC_SPI 108 IRQ_TYPE_LEVEL_HI=
-GH>, /* PME interrupt */
-> > > +                                    <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH=
->; /* aer interrupt */
-> > > +                       interrupt-names =3D "pme", "aer";
-> > > +                       #address-cells =3D <3>;
-> > > +                       #size-cells =3D <2>;
-> > > +                       device_type =3D "pci";
-> > > +                       dma-coherent;
-> > > +                       num-lanes =3D <4>;
-> > > +                       bus-range =3D <0x0 0xff>;
-> > > +                       ranges =3D <0x81000000 0x0 0x00000000 0x80 0x=
-00010000 0x0 0x00010000   /* downstream I/O */
-> > > +                                 0x82000000 0x0 0x40000000 0x80 0x40=
-000000 0x0 0x40000000>; /* non-prefetchable memory */
-> >
-> > Are you sure there is no support for 64-bit BARs or prefetchable memory=
-?
-> > [Xiaowei Bao] sorry for late reply, Thought that our Layerscape platfor=
-m has not added prefetchable memory support in DTS, so this platform has no=
-t been added, I will submit a separate patch to add prefetchable memory sup=
-port for all Layerscape platforms.
->
-> Ok, thanks.
->
-> > Of course, the prefetchable PCIE device can work in our boards, because=
- the RC will
-> > assign non-prefetchable memory for this device. We reserve 1G no-prefet=
-chable
-> > memory for PCIE device, it is enough for general devices.
->
-> Sure, many devices work just fine, this is mostly a question of supportin=
-g those
-> devices that do require multiple gigabytes, or that need prefetchable mem=
-ory
-> semantics to get the expected performance. GPUs are the obvious example,
-> but I think there are others (infiniband?).
->
-
-Some implementations of the Synopsys dw PCIe IP contain a 'root port'
-(within quotes because it is not actually a root port but an arbitrary
-set of MMIO registers that looks like a type 01 config region) that
-does not permit the prefetchable bridge window BAR to be written (a
-thing which is apparently permitted by the PCIe spec). So while the
-host bridge is capable of supporting more than one MMIO BAR window,
-the OS visible software interface does not expose this functionality
-
-In practice, it probably doesn't matter, since the driver uses the
-same iATU attributes for prefetchable and non-prefetchable windows,
-but I guess 1 GB of MMIO BAR space is a bit restrictive for modern
-systems.
+VmFyaWFibGUgJ2VudHJvcHknIHdhcyB3cm9uZ2x5IGRvY3VtZW50ZWQgYXMgJ3NlZWQnLCBjaGFu
+Z2VkIGNvbW1lbnQgdG8NCnJlZmxlY3QgYWN0dWFsIHZhcmlhYmxlIG5hbWUuDQoNCi4uL2xpYi9y
+YW5kb20zMi5jOjE3OTogd2FybmluZzogRnVuY3Rpb24gcGFyYW1ldGVyIG9yIG1lbWJlciAnZW50
+cm9weScgbm90IGRlc2NyaWJlZCBpbiAncHJhbmRvbV9zZWVkJw0KLi4vbGliL3JhbmRvbTMyLmM6
+MTc5OiB3YXJuaW5nOiBFeGNlc3MgZnVuY3Rpb24gcGFyYW1ldGVyICdzZWVkJyBkZXNjcmlwdGlv
+biBpbiAncHJhbmRvbV9zZWVkJw0KDQpTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBNYXplbmF1ZXIg
+PHBoaWxpcHBlLm1hemVuYXVlckBvdXRsb29rLmRlPg0KLS0tDQogbGliL3JhbmRvbTMyLmMgfCA0
+ICsrLS0NCiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0K
+DQpkaWZmIC0tZ2l0IGEvbGliL3JhbmRvbTMyLmMgYi9saWIvcmFuZG9tMzIuYw0KaW5kZXggNGFh
+YTc2NDA0ZDU2Li43NjNiOTIwYTYyMDYgMTAwNjQ0DQotLS0gYS9saWIvcmFuZG9tMzIuYw0KKysr
+IGIvbGliL3JhbmRvbTMyLmMNCkBAIC0xNzEsOSArMTcxLDkgQEAgc3RhdGljIHZvaWQgcHJhbmRv
+bV9zZWVkX2Vhcmx5KHN0cnVjdCBybmRfc3RhdGUgKnN0YXRlLCB1MzIgc2VlZCwNCiANCiAvKioN
+CiAgKglwcmFuZG9tX3NlZWQgLSBhZGQgZW50cm9weSB0byBwc2V1ZG8gcmFuZG9tIG51bWJlciBn
+ZW5lcmF0b3INCi0gKglAc2VlZDogc2VlZCB2YWx1ZQ0KKyAqCUBlbnRyb3B5OiBlbnRyb3B5IHZh
+bHVlDQogICoNCi0gKglBZGQgc29tZSBhZGRpdGlvbmFsIHNlZWRpbmcgdG8gdGhlIHByYW5kb20g
+cG9vbC4NCisgKglBZGQgc29tZSBhZGRpdGlvbmFsIGVudHJvcHkgdG8gdGhlIHByYW5kb20gcG9v
+bC4NCiAgKi8NCiB2b2lkIHByYW5kb21fc2VlZCh1MzIgZW50cm9weSkNCiB7DQotLSANCjIuMTcu
+MQ0KDQo=
