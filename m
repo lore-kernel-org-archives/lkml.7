@@ -2,139 +2,86 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11820C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA10C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE3E72087B
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA4A920879
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 11:32:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbfEQL14 (ORCPT
+        id S1728850AbfEQLcg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 07:27:56 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55438 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728336AbfEQL14 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 07:27:56 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9671E22BEA1D63F475B6;
-        Fri, 17 May 2019 19:27:53 +0800 (CST)
-Received: from [127.0.0.1] (10.184.191.73) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 17 May 2019
- 19:27:47 +0800
-To:     <jon.maloy@ericsson.com>, <ying.xue@windriver.com>,
-        <davem@davemloft.net>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        <tipc-discussion@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <mingfangsen@huawei.com>,
-        <zhoukang7@huawei.com>, <mousuanming@huawei.com>
-From:   hujunwei <hujunwei4@huawei.com>
-Subject: [PATCH] tipc: fix modprobe tipc failed after switch order of device
- registration
-Message-ID: <efa87f26-8766-ac92-ccaa-23a6992bd32a@huawei.com>
-Date:   Fri, 17 May 2019 19:27:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 17 May 2019 07:32:36 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:32864 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728336AbfEQLcf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 07:32:35 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id 9A09925AD7D;
+        Fri, 17 May 2019 21:32:33 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id 15FC994048B; Fri, 17 May 2019 13:32:30 +0200 (CEST)
+Date:   Fri, 17 May 2019 13:32:30 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Miller <davem@davemloft.net>,
+        Doug Ledford <dledford@redhat.com>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2] RDMA: Directly cast the sockaddr union to sockaddr
+Message-ID: <20190517113230.6sx5amsm3vsji2mz@verge.net.au>
+References: <20190514005521.GA18085@ziepe.ca>
+ <20190516124428.hytvkwfltfi24lrv@verge.net.au>
+ <20190516152148.GD22587@ziepe.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.191.73]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190516152148.GD22587@ziepe.ca>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junwei Hu <hujunwei4@huawei.com>
+On Thu, May 16, 2019 at 12:21:48PM -0300, Jason Gunthorpe wrote:
+> On Thu, May 16, 2019 at 02:44:28PM +0200, Simon Horman wrote:
+> > On Mon, May 13, 2019 at 09:55:21PM -0300, Jason Gunthorpe wrote:
+> > > gcc 9 now does allocation size tracking and thinks that passing the member
+> > > of a union and then accessing beyond that member's bounds is an overflow.
+> > > 
+> > > Instead of using the union member, use the entire union with a cast to
+> > > get to the sockaddr. gcc will now know that the memory extends the full
+> > > size of the union.
+> > > 
+> > > Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+> > >  drivers/infiniband/core/addr.c           | 16 ++++++++--------
+> > >  drivers/infiniband/hw/ocrdma/ocrdma_ah.c |  5 ++---
+> > >  drivers/infiniband/hw/ocrdma/ocrdma_hw.c |  5 ++---
+> > >  3 files changed, 12 insertions(+), 14 deletions(-)
+> > > 
+> > > I missed the ocrdma files in the v1
+> > > 
+> > > We can revisit what to do with that repetitive union after the merge
+> > > window, but this simple patch will eliminate the warnings for now.
+> > > 
+> > > Linus, I'll send this as a PR tomorrow - there is also a bug fix for
+> > > the rdma-netlink changes posted that should go too.
+> > 
+> > <2c>
+> > I would be very happy to see this revisited in such a way
+> > that some use is made of the C type system (instead of casts).
+> > </2c>
+> 
+> Well, I was thinking of swapping the union to sockaddr_storage ..
+> 
+> Do you propose to add a union to the kernel's sockaddr storage?
 
-Error message printed:
-modprobe: ERROR: could not insert 'tipc': Address family not
-supported by protocol.
-when modprobe tipc after the following patch: switch order of
-device registration, commit 7e27e8d6130c
-("tipc: switch order of device registration to fix a crash")
-
-Because sock_create_kern(net, AF_TIPC, ...) is called by
-tipc_topsrv_create_listener() in the initialization process
-of tipc_net_ops, tipc_socket_init() must be execute before that.
-
-I move tipc_socket_init() into function tipc_init_net().
-
-Fixes: 7e27e8d6130c
-("tipc: switch order of device registration to fix a crash")
-Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
-Reported-by: Wang Wang <wangwang2@huawei.com>
-Reviewed-by: Kang Zhou <zhoukang7@huawei.com>
-Reviewed-by: Suanming Mou <mousuanming@huawei.com>
----
- net/tipc/core.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/net/tipc/core.c b/net/tipc/core.c
-index ddd2e0f67c07..7d05d6823545 100644
---- a/net/tipc/core.c
-+++ b/net/tipc/core.c
-@@ -68,6 +68,10 @@ static int __net_init tipc_init_net(struct net *net)
- 	INIT_LIST_HEAD(&tn->node_list);
- 	spin_lock_init(&tn->node_list_lock);
-
-+	err = tipc_socket_init();
-+	if (err)
-+		goto out_socket;
-+
- 	err = tipc_sk_rht_init(net);
- 	if (err)
- 		goto out_sk_rht;
-@@ -94,6 +98,8 @@ static int __net_init tipc_init_net(struct net *net)
- out_nametbl:
- 	tipc_sk_rht_destroy(net);
- out_sk_rht:
-+	tipc_socket_stop();
-+out_socket:
- 	return err;
- }
-
-@@ -104,6 +110,7 @@ static void __net_exit tipc_exit_net(struct net *net)
- 	tipc_bcast_stop(net);
- 	tipc_nametbl_stop(net);
- 	tipc_sk_rht_destroy(net);
-+	tipc_socket_stop();
- }
-
- static struct pernet_operations tipc_net_ops = {
-@@ -139,10 +146,6 @@ static int __init tipc_init(void)
- 	if (err)
- 		goto out_pernet;
-
--	err = tipc_socket_init();
--	if (err)
--		goto out_socket;
--
- 	err = tipc_bearer_setup();
- 	if (err)
- 		goto out_bearer;
-@@ -150,8 +153,6 @@ static int __init tipc_init(void)
- 	pr_info("Started in single node mode\n");
- 	return 0;
- out_bearer:
--	tipc_socket_stop();
--out_socket:
- 	unregister_pernet_subsys(&tipc_net_ops);
- out_pernet:
- 	tipc_unregister_sysctl();
-@@ -167,7 +168,6 @@ static int __init tipc_init(void)
- static void __exit tipc_exit(void)
- {
- 	tipc_bearer_cleanup();
--	tipc_socket_stop();
- 	unregister_pernet_subsys(&tipc_net_ops);
- 	tipc_netlink_stop();
- 	tipc_netlink_compat_stop();
--- 
-2.21.GIT
-
-
+I understand you have been down that rabbit hole before but,
+yes, in an ideal world that would be my preference.
