@@ -2,237 +2,92 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB061C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA7DC04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 996E12082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9F02082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 09:24:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kp1Z2DT/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728426AbfEQJXo (ORCPT
+        id S1728567AbfEQJYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 05:23:44 -0400
-Received: from mail-vs1-f50.google.com ([209.85.217.50]:37101 "EHLO
-        mail-vs1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbfEQJXo (ORCPT
+        Fri, 17 May 2019 05:24:41 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:39500 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728394AbfEQJYk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 05:23:44 -0400
-Received: by mail-vs1-f50.google.com with SMTP id o5so4203077vsq.4;
-        Fri, 17 May 2019 02:23:43 -0700 (PDT)
+        Fri, 17 May 2019 05:24:40 -0400
+Received: by mail-it1-f195.google.com with SMTP id 9so10883436itf.4
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 02:24:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q1hRjgKSwHweZk8dB5JUfhPlYFrMWm3LL+UTvBdMO2U=;
+        b=Kp1Z2DT/3W0yLQXVVl4ufLxOAJJlrRiv4Dqcu//FVib0bsRORina1Clxh30Mhe66cK
+         E5D53/P6TIz3VL3qLtK7u8U7Kx1QUWl37ynrZajaq7Eh3j1IwXPKiU0rPNXswc+oXUGB
+         gFPo6rIuBqhwMsQYdXALxUEi23N82f1NPxqLONoccpUJBJw9Uh+o9QbJ6HVEiIKm1ORT
+         cysucRwvJTDop1Z4tDuuUrORv24g/sInMFpyfo73MmJhyg2YUeKkdmY2hlyjjw01BTm7
+         PVQjYzmZ6ZavAB8o9/m6U9tdt5zXRf65pxGnumjGTeVsZaI4TYyPNSJ50JuldP6pGUVV
+         LSNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=dBZe0GhTJDosRRgHuciwby6XIBrRrD/9ldTdjrtfLqE=;
-        b=j2Xp+ikEcutYQYfeTKzVgiD0tMfjb8IiKWK7Thy8kbzqDdzAD6kXgzDTOy/UYImREH
-         yYElunRlNeXlIobzU3Q+Kz0A18iEyIBqKlCioFJxHMhhBThoDiocz+HiL8fT5jVCK6bo
-         S2yMxvdkQ6AOY79r9kBMlkl4bNkgcc+26oFGXQFziEVpAF41m7LDXA78W3snfXXR41El
-         mu/xD6x9eEG/OPiRW7vfc01oU7qjoxiXy1YBb+UACaU+9+WR1eCZnmJgeq4mjxqXrswm
-         yTmnAjvNB/gaAzX66f2l6UVsvGn484QUkujYGZ6aPFPJBZPY5byg7YjGrlkHg1ZhcL6t
-         gkLg==
-X-Gm-Message-State: APjAAAUSY7ffwC8i59PVEHwSn+nj37WMA0AcdihuRdBKC0eFmPbyGR5T
-        j4B1ehfllDqeFPCLraSvNBwes7r+MSCgIgwbIaBb8TVS
-X-Google-Smtp-Source: APXvYqyDW2dGLUYFe8TuVccjD8H4FxnSJSk++tWNOrMv2kXMZqXexag5/ShWcGn/j3eC42hCvyvQt60NbOANBxa0a5k=
-X-Received: by 2002:a67:7c93:: with SMTP id x141mr18356348vsc.96.1558085022896;
- Fri, 17 May 2019 02:23:42 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=Q1hRjgKSwHweZk8dB5JUfhPlYFrMWm3LL+UTvBdMO2U=;
+        b=RxDJa3sgtR1IbFbgM+/y+53OO2YcabmoZoGvLnBhnaCa/mmDv0abwO3rU6zpJR56Rm
+         Tyq+mAseNsIBZ3GuMDHkXmmyW44k347PcPomMhJB+IDmuiZST+WE0Q93K+Dr/Uqsq1xI
+         ckZwi6D9ClCl/qxKUbKHOWULIUot3t7dCV2zYohaAiPifY6Hd8uC7FDXP1rX3R1g5bMh
+         2npn+StfKyPV9xL4TiN6xZzLME4pT5hk+ayhgE9ZeN3hW5P3n3MDlNruFq3lzDbzkW1v
+         WUn+rxNue3HRP8H76x+/enxms1FxOPsgAAaKX6tj8qmSHKk32SWmGJbhVfvgeUgWzHMS
+         4ZaA==
+X-Gm-Message-State: APjAAAWFtBpugPjpIsI1YX9yQsW7mIUdzNWUluEv+j2dh6Y1gnr9vg36
+        9puBqrIVo11rR/Cl2Me5bhT8N0IDIF26oiPDtlxrmQ==
+X-Google-Smtp-Source: APXvYqytJXMSh0eWfFOe5vOtUBeNAjTIoGoPnGO7MgQT6P5toncYqfiXlKrthASKsuyH6YeXZy+sb6ra9HCrreFdOdc=
+X-Received: by 2002:a24:d00e:: with SMTP id m14mr15838673itg.153.1558085080212;
+ Fri, 17 May 2019 02:24:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <48BA4A6E-5E2A-478E-A96E-A31FA959964C@internode.on.net>
- <CAFLxGvwnKKHOnM2w8i9hn7LTVYKh5PQP2zYMBmma2k9z7HBpzw@mail.gmail.com> <20190511220659.GB8507@mit.edu>
-In-Reply-To: <20190511220659.GB8507@mit.edu>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 17 May 2019 11:23:31 +0200
-Message-ID: <CAMuHMdWH4Q6YoE1yV8_KhW4ChK+8RMuAqW25o1pg47Yz5f9nYg@mail.gmail.com>
-Subject: Re: ext3/ext4 filesystem corruption under post 5.1.0 kernels
-To:     "Theodore Ts'o" <tytso@mit.edu>,
-        Richard Weinberger <richard.weinberger@gmail.com>,
-        Arthur Marsh <arthur.marsh@internode.on.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>
+References: <20190517082633.GA3890@zhanggen-UX430UQ> <CAKv+Gu98JNK34Q6MNOe3aq0W5rbv6hUFiuc7cHxHJat5aTk_gg@mail.gmail.com>
+ <20190517090628.GA4162@zhanggen-UX430UQ>
+In-Reply-To: <20190517090628.GA4162@zhanggen-UX430UQ>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Fri, 17 May 2019 11:24:27 +0200
+Message-ID: <CAKv+Gu_mwFpdtNZm9QMFn69+vOMTOpv9gvuhnBL2NBXvwkhXqg@mail.gmail.com>
+Subject: Re: [PATCH] efi_64: Fix a missing-check bug in arch/x86/platform/efi/efi_64.c
+ of Linux 5.1
+To:     Gen Zhang <blackgod016574@gmail.com>,
+        linux-efi <linux-efi@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ted,
-
-On Sun, May 12, 2019 at 12:07 AM Theodore Ts'o <tytso@mit.edu> wrote:
-> On Sat, May 11, 2019 at 02:43:16PM +0200, Richard Weinberger wrote:
-> > [CC'in linux-ext4]
+On Fri, 17 May 2019 at 11:06, Gen Zhang <blackgod016574@gmail.com> wrote:
+>
+> On Fri, May 17, 2019 at 10:41:28AM +0200, Ard Biesheuvel wrote:
+> > Returning an error here is not going to make much difference, given
+> > that the caller of efi_call_phys_prolog() does not bother to check it,
+> > and passes the result straight into efi_call_phys_epilog(), which
+> > happily attempts to dereference it.
 > >
-> > On Sat, May 11, 2019 at 1:47 PM Arthur Marsh
-> > <arthur.marsh@internode.on.net> wrote:
-> > >
-> > >
-> > > The filesystem with the kernel source tree is the root file system, ext3, mounted as:
-> > >
-> > > /dev/sdb7 on / type ext3 (rw,relatime,errors=remount-ro)
-> > >
-> > > After the "Compressing objects" stage, the following appears in dmesg:
-> > >
-> > > [  848.968550] EXT4-fs error (device sdb7): ext4_get_branch:171: inode #8: block 30343695: comm jbd2/sdb7-8: invalid block
-> > > [  849.077426] Aborting journal on device sdb7-8.
-> > > [  849.100963] EXT4-fs (sdb7): Remounting filesystem read-only
-> > > [  849.100976] jbd2_journal_bmap: journal block not found at offset 989 on sdb7-8
->
-> This indicates that the extent tree blocks for the journal was found
-> to be corrupt; so the journal couldn't be found.
->
-> > > # fsck -yv
-> > > fsck from util-linux 2.33.1
-> > > e2fsck 1.45.0 (6-Mar-2019)
-> > > /dev/sdb7: recovering journal
-> > > /dev/sdb7 contains a file system with errors, check forced.
->
-> But e2fsck had no problem finding the journal.
->
-> > > Pass 1: Checking inodes, blocks, and sizes
-> > > Pass 2: Checking directory structure
-> > > Pass 3: Checking directory connectivity
-> > > Pass 4: Checking reference counts
-> > > Pass 5: Checking group summary information
-> > > Free blocks count wrong (4619656, counted=4619444).
-> > > Fix? yes
-> > >
-> > > Free inodes count wrong (15884075, counted=15884058).
-> > > Fix? yes
->
-> And no other significant problems were found.  (Ext4 never updates or
-> relies on the summary number of free blocks and free inodes, since
-> updating it is a scalability bottleneck and these values can be
-> calculated from the per block group free block/inodes count.  So the
-> fact that e2fsck needed to update them is not an issue.)
->
-> So that implies that we got one set of values when we read the journal
-> inode when attempting to mount the file system, and a *different* set
-> of values when e2fsck was run.  Which makes means that we need
-> consider the possibility that the problem is below the file system
-> layer (e.g., the block layer, device drivers, etc.).
->
->
-> > > /dev/sdb7: ***** FILE SYSTEM WAS MODIFIED *****
-> > >
-> > > Other times, I have gotten:
-> > >
-> > > "Inodes that were part of a corrupted orphan linked list found."
-> > > "Block bitmap differences:"
-> > > "Free blocks sound wrong for group"
-> > >
->
-> This variety of issues also implies that the issue may be in the data
-> read by the file system, as opposed to an issue in the file system.
->
-> Arthur, can you give us the full details of your hardware
-> configuration and your kernel config file?  Also, what kernel git
-> commit ID were you testing?
+> > So if you want to fix this properly, please fix it at the call site as
+> > well. I'd prefer to avoid ERR_PTR() and just return NULL for a failed
+> > allocation though.
+> Hi Ard,
+> Thanks for your timely reply!
+> I think returning NULL in efi_call_phys_prolog() and checking in
+> efi_call_phys_epilog() is much better. But I am confused what to return
+> in efi_call_phys_epilog() if save_pgd is NULL. Definitely not return
+> -ENOMEM, because efi_call_phys_epilog() returns unsigned long. Could
+> please light on me to fix this problem?
 
-I'm seeing similar things running post v5.1 on ARAnyM (Atari emulator):
 
-    EXT4-fs (sda1): mounting ext3 file system using the ext4 subsystem
-    ...
-    EXT4-fs error (device sda1): ext4_get_branch:171: inode #1980:
-block 27550: comm jbd2/sda1-1980: invalid block
-
-and userspace hung somewhere during initial system startup, so I had to
-kill the instance.
-
------
-
-    EXT4-fs (sda1): mounting ext3 file system using the ext4 subsystem
-    EXT4-fs (sda1): INFO: recovery required on readonly filesystem
-    EXT4-fs (sda1): write access will be enabled during recovery
-    EXT4-fs warning (device sda1): ext4_clear_journal_err:5078:
-Filesystem error recorded from previous mount: IO failure
-    EXT4-fs warning (device sda1): ext4_clear_journal_err:5079:
-Marking fs in need of filesystem check.
-    EXT4-fs (sda1): recovery complete
-    EXT4-fs (sda1): mounted filesystem with ordered data mode. Opts: (null)
-    VFS: Mounted root (ext3 filesystem) readonly on device 8:1.
-    ...
-    Run /sbin/init as init process
-    random: fast init done
-    EXT4-fs (sda1): re-mounted. Opts:
-    random: crng init done
-    EXT4-fs (sda1): re-mounted. Opts: errors=remount-ro
-    EXT4-fs (sda1): error count since last fsck: 1
-    EXT4-fs (sda1): initial error at time 1557931133:
-ext4_get_branch:171: inode 1980: block 27550
-    EXT4-fs (sda1): last error at time 1557931133:
-ext4_get_branch:171: inode 1980: block 27550
-
------
-
-    EXT4-fs (sda1): mounting ext3 file system using the ext4 subsystem
-    EXT4-fs (sda1): mounted filesystem with ordered data mode. Opts: (null)
-    VFS: Mounted root (ext3 filesystem) readonly on device 8:1.
-    ...
-    Run /sbin/init as init process
-    random: fast init done
-    EXT4-fs (sda1): re-mounted. Opts:
-    EXT4-fs (sda1): re-mounted. Opts: errors=remount-ro
-    random: crng init done
-    EXT4-fs error (device sda1): ext4_get_branch:171: inode #1980:
-block 27550: comm jbd2/sda1-1980: invalid block
-    Aborting journal on device sda1-1980.
-    EXT4-fs (sda1): Remounting filesystem read-only
-    jbd2_journal_bmap: journal block not found at offset 426 on sda1-1980
-    EXT4-fs error (device sda1): ext4_journal_check_start:61: Detected
-aborted journal
-    EXT4-fs (sda1): error count since last fsck: 3
-    EXT4-fs (sda1): initial error at time 1557931133:
-ext4_get_branch:171: inode 1980: block 27550
-    EXT4-fs (sda1): last error at time 1558083596:
-ext4_journal_check_start:61: inode 1980: block 27550
-    EXT4-fs error (device sda1): ext4_remount:5328: Abort forced by user
-
----
-
-    EXT4-fs (sda1): mounting ext3 file system using the ext4 subsystem
-    EXT4-fs (sda1): INFO: recovery required on readonly filesystem
-    EXT4-fs (sda1): write access will be enabled during recovery
-    random: fast init done
-    EXT4-fs warning (device sda1): ext4_clear_journal_err:5078:
-Filesystem error recorded from previous mount: IO failure
-    EXT4-fs warning (device sda1): ext4_clear_journal_err:5079:
-Marking fs in need of filesystem check.
-    EXT4-fs (sda1): recovery complete
-    EXT4-fs (sda1): mounted filesystem with ordered data mode. Opts: (null)
-    ...
-    Run /sbin/init as init process
-    random: crng init done
-    EXT4-fs (sda1): re-mounted. Opts:
-    EXT4-fs (sda1): re-mounted. Opts: errors=remount-ro
-    EXT4-fs (sda1): error count since last fsck: 4
-    EXT4-fs (sda1): initial error at time 1557931133:
-ext4_get_branch:171: inode 1980: block 27550
-    EXT4-fs (sda1): last error at time 1558083665: ext4_remount:5328:
-inode 1980: block 27550
-
-Notes:
-  - It's always the same block,
-  - Block device is an image file, accessed using
-    arch/m68k/emu/nfblock.c, which did not receive any recent (bvec)
-    updates.
-  - There are no reported errors for the device containing the image
-    file on the host,
-  - Given Arthur sees the issue on a different class of machines, it's
-    unlikely the issue is related to a problem with the block device
-    (driver). It may still be an issue with the block layer, though,
-  - Both Arthur and I are mounting an ext3 file system using the ext4
-    subsystem.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+If efi_call_phys_prolog() returns NULL, the calling function should
+abort and never call efi_call_phys_epilog().
