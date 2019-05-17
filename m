@@ -2,152 +2,134 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E78B7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0BBC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E4A21734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6030D21734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 15:22:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VoNWRhyT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qy0bVweP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbfEQPQr (ORCPT
+        id S1729225AbfEQPWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 11:16:47 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37137 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729164AbfEQPQq (ORCPT
+        Fri, 17 May 2019 11:22:06 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37402 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728749AbfEQPWG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 11:16:46 -0400
-Received: by mail-io1-f68.google.com with SMTP id u2so5777908ioc.4;
-        Fri, 17 May 2019 08:16:46 -0700 (PDT)
+        Fri, 17 May 2019 11:22:06 -0400
+Received: by mail-qt1-f193.google.com with SMTP id o7so8433928qtp.4;
+        Fri, 17 May 2019 08:22:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=O7EJOOciNikkf5PiuE4H3WoYPiyHO7ThOU93whUfBug=;
-        b=VoNWRhyTiUpJGTcZo1DtkVlKLGI/9YYMnnX6vEykzx5I/hvbqm+Bp0N1y+la0Te5rh
-         zhK3l3qLAtzsppcK3AA/GwIBDccL92xQcfedpg+Mn9qcHHXqQn3Y1S4qJjFQbpcxkJ2r
-         K96LMQGlceMLUSCmocBIpM2nK7HB2AVWcUOzEspl0+rlX9BSe04wDRwe23qzcMLxawgI
-         TLmubmLQc9a5jJaL6Z3ZvpffNVlqGTSCcZ0Xecl4fMWI2+lkosmnrt+EO1wLApiTc2ZD
-         ZRKnwjIAVJeLxKFCEpmIosN+LwRGSCcc5grteFogXctLtY7rzz++Moukthhumj1Tx/Kw
-         Gx6Q==
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tVu9EkldM3onnvk8BPzbzIwspJMsVrSFyKHg7EYG2tA=;
+        b=qy0bVwePhtQ9I7p12Ufs0t1LtV47n7M6OOXey7QmvOHmkhU1FOd7DK9DU1gy5VhAIt
+         8zv3Am1MJNtddZexuwUyDbvTpPINHvWrA1S0pO8PTPNt3EjC4k5Ecm85q2bgnoPWCSH5
+         qZFgCMAFiVB/Dn65U7qDV6NyouMSAY7ntW+aFOrjKZB63eCzp27OSOgJN5X7y1S5MiqM
+         CwAQyONH0sSmt2doRrE+UYSGPQu6+6EBoLD/S4XCHHbaMTuaYV5TsK9V95Zfoy9fYv79
+         plPeNJAAtPkQm+JtcYS8F2p5ScPhVxwkegXp2O8ihmWZ7fajdDy7+Uw090ZPhlm6MNyf
+         41xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=O7EJOOciNikkf5PiuE4H3WoYPiyHO7ThOU93whUfBug=;
-        b=ZCdliEPGTKWMR85DP1+cXCBnagItryuev4VOc6PUYC2xLk4mIgPtelFnFS3cUY1iO3
-         GCSqO8k7kXpxFPMkiTAng3PHy6g98Ogj4h5XDZ4W6U0isYDeo7QJK41m9BiuFxMFJBdD
-         wKsu/VIXLHuCEatyvMFT7akKcmWA0RhHuN97CNByOBWIzW4BCBJ0T54++FaXumo5ozCE
-         Jz6zIctOObR1riEJUTrsrkQ0C4RjdmfVy/7EtJD0wCy4e2DMKGCEjjtNi7DYGPuWqDu5
-         zjZ3l+zq7A0hhiJAV8ttNywhbKVw/7OoZUtIThFOWki+JTLOicUoyuT1R9vdKUaVVxVP
-         jRXQ==
-X-Gm-Message-State: APjAAAWnIyvQo7h2+PYjbIFAJPxVOCMn6+JzzR12vzZNFr/xryopQo+C
-        l2DOhDcewZVE8RSCgrsh8SM27cPqix0EHlBfG8g=
-X-Google-Smtp-Source: APXvYqw8t8xC+aNND57aUm26LmEwNT3jvC+cE1+OL9mdPzhwEpes5kmIIvl0zaN+QSJyxEXGF8GGzNzL/Ol3ZRLqu4o=
-X-Received: by 2002:a5e:c60b:: with SMTP id f11mr718296iok.42.1558106205472;
- Fri, 17 May 2019 08:16:45 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tVu9EkldM3onnvk8BPzbzIwspJMsVrSFyKHg7EYG2tA=;
+        b=UWIrOoI0/i0CbGMjaHtyVAu1a+gSkkg4SewSK5aPdILE2e61tyZF0lwSqKV+/WLhs8
+         TmV3niJI+QV4SWv5/EYxlxRra3kW36dBzarhOfEQiQRwNTFAZkAGTBwOHex4B1wWkhOi
+         rD6adwu5UGU/Y/qRD3YCeSNBXxvw8lrls+hes4lBtSJrK7oc+iPIC0TncbtEAK2NBOWw
+         5hXU/9eLAFn4J3iS+m7MKv4jHAFv5hXo7d8ZUVffl4wcniNdEVecDhwbbEUcoZaSfRMS
+         Qh4WhIfSvLbn02vOaZLLtVTbxtcme3ZtCceuJycakZrk/8/IlXvSWNGMmuWipaHnU1rr
+         fpBQ==
+X-Gm-Message-State: APjAAAXn3LC6zJsX8bhp2iaB478GoBoJ721XhL90b3Mkk9nO0FtzAijV
+        jkv4/R7I/7Bifj5vkGx1p88=
+X-Google-Smtp-Source: APXvYqz0Hl1IYJlqcHlwcyahYtK5SEW/55qvDt4wBQckSvdhrSXx6zCeJEp/bUrgKrHh5ssple74PA==
+X-Received: by 2002:a0c:e64f:: with SMTP id c15mr40321600qvn.239.1558106525270;
+        Fri, 17 May 2019 08:22:05 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([177.195.211.69])
+        by smtp.gmail.com with ESMTPSA id v22sm6089750qtj.29.2019.05.17.08.22.03
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 17 May 2019 08:22:04 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6ECEB404A1; Fri, 17 May 2019 12:22:00 -0300 (-03)
+Date:   Fri, 17 May 2019 12:22:00 -0300
+To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>
+Subject: Re: Linux 4.19 and GCC 9
+Message-ID: <20190517152200.GI8945@kernel.org>
+References: <CANiq72kvpiC-i53AXM-YsCUvWroHQemmqxsXjnB330ZEeHahUg@mail.gmail.com>
+ <CABWYdi1zhTTaN-GSgH0DnPfz7p=SRw0wts5QVYYVtfvoiS0qnQ@mail.gmail.com>
+ <CANiq72=fsL5m2_e+bNovFCHy3=YVf53EKGtGE_sWvsAD=ONHuQ@mail.gmail.com>
+ <20190516225013.nvhwqi5tfwtby6qb@treble>
+ <CABWYdi29E++jBw8boFZAiDZA7iT5NiJhnNmiHb-Rvd9+97hSVA@mail.gmail.com>
+ <20190517050931.GB32367@kroah.com>
+ <20190517073813.GB2589@hirez.programming.kicks-ass.net>
+ <CANiq72nUPoNHWM-dJuFc3=4D2=8XMuvO0PgGPjviOv+EhrAWUw@mail.gmail.com>
+ <20190517085126.GA3249@kroah.com>
+ <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <1557357269-9498-1-git-send-email-nkela@cisco.com>
- <9be117dc6e818ab83376cd8e0f79dbfaaf193aa9.camel@intel.com>
- <76B41175-0CEE-466C-91BF-89A1CA857061@cisco.com> <4469196a-0705-5459-8aca-3f08e9889d61@gmail.com>
- <20190517010330.2wynopuhsqycqzuq@zorba> <bd9e6a93-c8e8-a90e-25b0-26ccbf65b7c4@gmail.com>
-In-Reply-To: <bd9e6a93-c8e8-a90e-25b0-26ccbf65b7c4@gmail.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Fri, 17 May 2019 08:16:34 -0700
-Message-ID: <CAKgT0Uev7sfpOOhusAg9jFLkFeE9JtTntyTd0aAHz2db69L13g@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] [PATCH] igb: add parameter to ignore nvm
- checksum validation
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Daniel Walker <danielwa@cisco.com>,
-        "Nikunj Kela (nkela)" <nkela@cisco.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
-        "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANiq72muyjE3XPjmtQgJpGaqWR=YBi6KVNT3qe-EMXP7x+q_rQ@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, May 16, 2019 at 6:48 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
->
->
-> On 5/16/2019 6:03 PM, Daniel Walker wrote:
-> > On Thu, May 16, 2019 at 03:02:18PM -0700, Florian Fainelli wrote:
-> >> On 5/16/19 12:55 PM, Nikunj Kela (nkela) wrote:
-> >>>
-> >>>
-> >>> On 5/16/19, 12:35 PM, "Jeff Kirsher" <jeffrey.t.kirsher@intel.com> wrote:
-> >>>
-> >>>     On Wed, 2019-05-08 at 23:14 +0000, Nikunj Kela wrote:
-> >>>    >> Some of the broken NICs don't have EEPROM programmed correctly. It
-> >>>    >> results
-> >>>    >> in probe to fail. This change adds a module parameter that can be
-> >>>    >> used to
-> >>>    >> ignore nvm checksum validation.
-> >>>    >>
-> >>>    >> Cc: xe-linux-external@cisco.com
-> >>>    >> Signed-off-by: Nikunj Kela <nkela@cisco.com>
-> >>>    >> ---
-> >>>    >>  drivers/net/ethernet/intel/igb/igb_main.c | 28
-> >>>    >> ++++++++++++++++++++++------
-> >>>    >>  1 file changed, 22 insertions(+), 6 deletions(-)
-> >>>
-> >>>     >NAK for two reasons.  First, module parameters are not desirable
-> >>>     >because their individual to one driver and a global solution should be
-> >>>     >found so that all networking device drivers can use the solution.  This
-> >>>     >will keep the interface to change/setup/modify networking drivers
-> >>>     >consistent for all drivers.
-> >>>
-> >>>
-> >>>     >Second and more importantly, if your NIC is broken, fix it.  Do not try
-> >>>     >and create a software workaround so that you can continue to use a
-> >>>     >broken NIC.  There are methods/tools available to properly reprogram
-> >>>     >the EEPROM on a NIC, which is the right solution for your issue.
-> >>>
-> >>> I am proposing this as a debug parameter. Obviously, we need to fix EEPROM but this helps us continuing the development while manufacturing fixes NIC.
-> >>
-> >> Then why even bother with sending this upstream?
+Em Fri, May 17, 2019 at 11:01:45AM +0200, Miguel Ojeda escreveu:
+> On Fri, May 17, 2019 at 10:51 AM Greg KH <gregkh@linuxfoundation.org> wrote:
 > >
-> > It seems rather drastic to disable the entire driver because the checksum
-> > doesn't match. It really should be a warning, even a big warning, to let people
-> > know something is wrong, but disabling the whole driver doesn't make sense.
->
-> You could generate a random Ethernet MAC address if you don't have a
-> valid one, a lot of drivers do that, and that's a fairly reasonable
-> behavior. At some point in your product development someone will
-> certainly verify that the provisioned MAC address matches the network
-> interface's MAC address.
-> --
-> Florian
+> > On Fri, May 17, 2019 at 10:35:29AM +0200, Miguel Ojeda wrote:
+> > > On Fri, May 17, 2019 at 9:38 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > > >
+> > > > Right; if there is anything you can reproduce on linus.git I'll happily
+> > > > have a look. If it doesn't reproduce all you have to do is find the
+> > > > patches that make it work and ask Greg.
+> > >
+> > > Just to clarify: Linus' master is clean of these issues with GCC 9.1.1.
+> >
+> > Great!  Care to find the patches that did that work and send me the git
+> > commit ids so that I can queue them up?  I don't have gcc9 here yet on
+> > my systems, so I can not test for this.
+> 
+> I am unsure about the perf and the objtools parts (Peter/Josh?), but
 
-The thing is the EEPROM contains much more than just the MAC address.
-There ends up being configuration for some of the PCIe interface in
-the hardware as well as PHY configuration. If that is somehow mangled
-we shouldn't be bringing up the part because there are one or more
-pieces of the device configuration that are likely wrong.
+I'm not noticing these while building upstream perf with gcc 9.1.1 on at
+least fedora:30.
 
-The checksum is being used to make sure the EEPROM is valid, without
-that we would need to go through and validate each individual section
-of the EEPROM before enabling the the portions of the device related
-to it. The concern is that this will become a slippery slope where we
-eventually have to code all the configuration of the EEPROM into the
-driver itself.
+    33	fedora:30                     : Ok   gcc (GCC) 9.1.1 20190503 (Red Hat 9.1.1-1)
 
-We need to make the checksum a hard stop. If the part is broken then
-it needs to be addressed. Workarounds just end up being used and
-forgotten, which makes it that much harder to support the product.
-Better to mark the part as being broken, and get it fixed now, than to
-have parts start shipping that require workarounds in order to
-function.
+> about the -Wmissing-attributes I cleaned, they were these:
+ 
+> a6e60d84989f ("include/linux/module.h: copy __init/__exit attrs to
+> init/cleanup_module")
+> c0d9782f5b6d ("Compiler Attributes: add support for __copy (gcc >= 9)")
+> ff98e20ef208 ("lib/crc32.c: mark crc32_le_base/__crc32c_le_base
+> aliases as __pure")
+> 
+> Cheers,
+> Miguel
 
-- Alex
+-- 
+
+- Arnaldo
