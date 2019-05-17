@@ -2,136 +2,69 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C36C04AAF
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68830C46460
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D32D520815
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 306FB20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 02:56:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="joMy3Udn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbfEQCqc (ORCPT
+        id S1727441AbfEQC4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 22:46:32 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:45766 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725933AbfEQCqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 22:46:32 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id EBB69200065;
-        Fri, 17 May 2019 04:46:28 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4585720025F;
-        Fri, 17 May 2019 04:46:23 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 0A047402AE;
-        Fri, 17 May 2019 10:46:15 +0800 (SGT)
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH 1/3] PM: wakeup: Add routine to help fetch wakeup source object.
-Date:   Fri, 17 May 2019 10:47:46 +0800
-Message-Id: <20190517024748.15534-1-ran.wang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 16 May 2019 22:56:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39282 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbfEQC4a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 22:56:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4HJiSDZ6NVpZlfpbAIE9JY9i5H7mtH87panNL0CH9Zw=; b=joMy3UdnsiCdt1hoeX13+Vv6h
+        LAb/YlelQoJg7XbXDsVeak+AK5oiHXrplz9aGnkr5ikxMvftHA1d864zkhZUa7INRGljf3cop5faP
+        6eLUOQWenVHaZqNYk0FpGvaRzfthCKI//0n63yuNpBVSwQwrM04ognUMtqpwrowWlHP+EzWZwHDQt
+        VYLFo+QzkJp2hyaqrNyEOSkbuF0RdzAkrqLZgtTOJ4MZDZ6aoUA2pHNk19c5b4bJGIndt+0aPROMw
+        uUW5VNR1jtv2m7Vn1ceu8dz9MH/ntT9SeaaiPZaWC+wuizEVbbi/1JlJe5AbV4fOkY5Uv5mVOejYj
+        O/LWOHXmw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hRT2q-000080-Sj; Fri, 17 May 2019 02:56:28 +0000
+Date:   Thu, 16 May 2019 19:56:28 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     sunqiuyang <sunqiuyang@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, yuchao0@huawei.com,
+        miaoxie@huawei.com, fangwei1@huawei.com, stummala@codeaurora.org
+Subject: Re: [PATCH v2 1/1] f2fs: ioctl for removing a range from F2FS
+Message-ID: <20190517025628.GF31704@bombadil.infradead.org>
+References: <20190517021647.43083-1-sunqiuyang@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190517021647.43083-1-sunqiuyang@huawei.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some user might want to go through all registered wakeup sources
-and doing things accordingly. For example, SoC PM driver might need to
-do HW programming to prevent powering down specific IP which wakeup
-source depending on. And is user's responsibility to identify if this
-wakeup source he is interested in.
+On Fri, May 17, 2019 at 10:16:47AM +0800, sunqiuyang wrote:
+> +++ b/fs/f2fs/f2fs.h
+> @@ -423,6 +423,8 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
+>  #define F2FS_IOC_SET_PIN_FILE		_IOW(F2FS_IOCTL_MAGIC, 13, __u32)
+>  #define F2FS_IOC_GET_PIN_FILE		_IOR(F2FS_IOCTL_MAGIC, 14, __u32)
+>  #define F2FS_IOC_PRECACHE_EXTENTS	_IO(F2FS_IOCTL_MAGIC, 15)
+> +#define F2FS_IOC_SHRINK_RESIZE		_IOW(F2FS_IOCTL_MAGIC, 16,	\
+> +						struct f2fs_resize_param)
 
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
----
- drivers/base/power/wakeup.c |   18 ++++++++++++++++++
- include/linux/pm_wakeup.h   |    3 +++
- 2 files changed, 21 insertions(+), 0 deletions(-)
+Why not match ext4?
 
-diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-index 5fa1898..8d75795 100644
---- a/drivers/base/power/wakeup.c
-+++ b/drivers/base/power/wakeup.c
-@@ -14,6 +14,7 @@
- #include <linux/suspend.h>
- #include <linux/seq_file.h>
- #include <linux/debugfs.h>
-+#include <linux/of_device.h>
- #include <linux/pm_wakeirq.h>
- #include <trace/events/power.h>
- 
-@@ -236,6 +237,22 @@ void wakeup_source_unregister(struct wakeup_source *ws)
- 	}
- }
- EXPORT_SYMBOL_GPL(wakeup_source_unregister);
-+/**
-+ * wakeup_source_get_next - Get next wakeup source from the list
-+ * @ws: Previous wakeup source object, null means caller want first one.
-+ */
-+struct wakeup_source *wakeup_source_get_next(struct wakeup_source *ws)
-+{
-+	struct list_head *ws_head = &wakeup_sources;
-+
-+	if (ws)
-+		return list_next_or_null_rcu(ws_head, &ws->entry,
-+				struct wakeup_source, entry);
-+	else
-+		return list_entry_rcu(ws_head->next,
-+				struct wakeup_source, entry);
-+}
-+EXPORT_SYMBOL_GPL(wakeup_source_get_next);
- 
- /**
-  * device_wakeup_attach - Attach a wakeup source object to a device object.
-@@ -252,6 +269,7 @@ static int device_wakeup_attach(struct device *dev, struct wakeup_source *ws)
- 		return -EEXIST;
- 	}
- 	dev->power.wakeup = ws;
-+	ws->attached_dev = dev;
- 	if (dev->power.wakeirq)
- 		device_wakeup_attach_irq(dev, dev->power.wakeirq);
- 	spin_unlock_irq(&dev->power.lock);
-diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
-index 4238dde..1335487 100644
---- a/include/linux/pm_wakeup.h
-+++ b/include/linux/pm_wakeup.h
-@@ -50,6 +50,7 @@
-  * @wakeup_count: Number of times the wakeup source might abort suspend.
-  * @active: Status of the wakeup source.
-  * @has_timeout: The wakeup source has been activated with a timeout.
-+ * @attached_dev: The device it attached to
-  */
- struct wakeup_source {
- 	const char 		*name;
-@@ -70,6 +71,7 @@ struct wakeup_source {
- 	unsigned long		wakeup_count;
- 	bool			active:1;
- 	bool			autosleep_enabled:1;
-+	struct device	*attached_dev;
- };
- 
- #ifdef CONFIG_PM_SLEEP
-@@ -102,6 +104,7 @@ static inline void device_set_wakeup_path(struct device *dev)
- extern void wakeup_source_remove(struct wakeup_source *ws);
- extern struct wakeup_source *wakeup_source_register(const char *name);
- extern void wakeup_source_unregister(struct wakeup_source *ws);
-+extern struct wakeup_source *wakeup_source_get_next(struct wakeup_source *ws);
- extern int device_wakeup_enable(struct device *dev);
- extern int device_wakeup_disable(struct device *dev);
- extern void device_set_wakeup_capable(struct device *dev, bool capable);
--- 
-1.7.1
+fs/ext4/ext4.h:#define EXT4_IOC_RESIZE_FS               _IOW('f', 16, __u64)
 
