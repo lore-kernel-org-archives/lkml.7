@@ -2,163 +2,122 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE70C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D97FC04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 542B720848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4870C20815
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 03:22:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Z7GwFV56"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="iMEg2Y0p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfEQDVn (ORCPT
+        id S1727639AbfEQDWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 23:21:43 -0400
-Received: from mail-eopbgr130085.outbound.protection.outlook.com ([40.107.13.85]:4580
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        Thu, 16 May 2019 23:22:53 -0400
+Received: from mail-eopbgr150087.outbound.protection.outlook.com ([40.107.15.87]:39566
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725929AbfEQDVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 23:21:42 -0400
+        id S1725929AbfEQDWx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 23:22:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3gTHUN+SxCW/yl4z/7DRtX3nEeH0LD0dRIOmis8+cvs=;
- b=Z7GwFV56AV3MKsnOVJ65s+SQ473kQE3zxDivRYeCompvlmUBXw/JBqJHXrm2IVL7J2DSq0Ce0fKBNdVscwIS/czSNdLXdwoOvZRyJrSWZmq0KeO44f3ogOd2/3vR1DT0SNhge4xSYOL6gBwyh0pZh0nQcRD+nnuKJZII82JJR10=
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
- AM5PR04MB3188.eurprd04.prod.outlook.com (10.175.229.140) with Microsoft SMTP
+ bh=KZm7lWpJjhDmiQ7fwwrYZcKVGp4JO1oOfZKBIfTUZQM=;
+ b=iMEg2Y0pgVgzgzrl7w4c0Y59sPFVuxWAzg6hB7aqRZEiXDEq2tfNJq6OELofG9wR0UVjaeCIUw3/DXTABY/AV2ZxHyJ4XPYuO3FEFC+U79UHCLBaJdz0M6iKOC+4bFgXmHGjngqVHIySAfN4E5NsjZrfJMgyfy7P60tTdGZo2sc=
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
+ VE1PR04MB6640.eurprd04.prod.outlook.com (20.179.235.83) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.17; Fri, 17 May 2019 03:21:33 +0000
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::15e3:bb28:7e33:1adb]) by AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::15e3:bb28:7e33:1adb%7]) with mapi id 15.20.1900.010; Fri, 17 May 2019
- 03:21:33 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
-        Kishon <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        gregkh <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [EXT] Re: [PATCH 2/3] arm64: dts: ls1028a: Add PCIe controller DT
- nodes
-Thread-Topic: [EXT] Re: [PATCH 2/3] arm64: dts: ls1028a: Add PCIe controller
- DT nodes
-Thread-Index: AQHVCvDcQiDXhQiDJU+q/k8vTUL4F6Zr0/6AgALH2dA=
-Date:   Fri, 17 May 2019 03:21:33 +0000
-Message-ID: <AM5PR04MB329934765FB8EB1828743D79F50B0@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190515072747.39941-1-xiaowei.bao@nxp.com>
- <20190515072747.39941-2-xiaowei.bao@nxp.com>
- <CAK8P3a3AXRp_v_7hkoJA28tUCiSh1eYzbk4Q4h29OqL6y-KL8A@mail.gmail.com>
-In-Reply-To: <CAK8P3a3AXRp_v_7hkoJA28tUCiSh1eYzbk4Q4h29OqL6y-KL8A@mail.gmail.com>
+ 15.20.1900.16; Fri, 17 May 2019 03:22:48 +0000
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::a5b5:13f5:f89c:9a30]) by VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::a5b5:13f5:f89c:9a30%7]) with mapi id 15.20.1900.010; Fri, 17 May 2019
+ 03:22:48 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     "brian.austin@cirrus.com" <brian.austin@cirrus.com>,
+        "Paul.Handrigan@cirrus.com" <Paul.Handrigan@cirrus.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH V2] ASoC: cs42xx8: Add regcache mask dirty
+Thread-Topic: [PATCH V2] ASoC: cs42xx8: Add regcache mask dirty
+Thread-Index: AQHVDF/NkmTtx09i40uM0x+rPzELzg==
+Date:   Fri, 17 May 2019 03:22:48 +0000
+Message-ID: <a81cd72c3356768df70d6ae052a48a5f92e41ce5.1558063199.git.shengjiu.wang@nxp.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.21.0
+x-clientproxiedby: HK0PR03CA0080.apcprd03.prod.outlook.com
+ (2603:1096:203:72::20) To VE1PR04MB6479.eurprd04.prod.outlook.com
+ (2603:10a6:803:11e::16)
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-originating-ip: [119.31.174.73]
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b5d37032-4b3c-4cc7-c06e-08d6da76c34a
+x-ms-office365-filtering-correlation-id: 6711de96-fe39-4cbd-4358-08d6da76efb2
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM5PR04MB3188;
-x-ms-traffictypediagnostic: AM5PR04MB3188:
-x-microsoft-antispam-prvs: <AM5PR04MB31880D75F534138CDE24E794F50B0@AM5PR04MB3188.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6640;
+x-ms-traffictypediagnostic: VE1PR04MB6640:
+x-microsoft-antispam-prvs: <VE1PR04MB6640A341695C8DF96BB522AEE30B0@VE1PR04MB6640.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:248;
 x-forefront-prvs: 0040126723
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(366004)(39860400002)(396003)(346002)(189003)(199004)(13464003)(74316002)(68736007)(7416002)(81166006)(8676002)(81156014)(5660300002)(305945005)(6916009)(11346002)(476003)(486006)(446003)(316002)(7736002)(71200400001)(71190400001)(86362001)(54906003)(7696005)(44832011)(66066001)(26005)(99286004)(186003)(66946007)(76116006)(73956011)(14454004)(53546011)(66446008)(64756008)(66556008)(66476007)(102836004)(6506007)(25786009)(478600001)(9686003)(33656002)(76176011)(52536014)(6436002)(3846002)(6116002)(55016002)(8936002)(6246003)(53936002)(2906002)(4326008)(256004)(229853002)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3188;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(376002)(396003)(366004)(136003)(346002)(199004)(189003)(66446008)(186003)(102836004)(6506007)(386003)(486006)(6512007)(99286004)(316002)(14454004)(66476007)(476003)(2616005)(6436002)(25786009)(64756008)(66946007)(26005)(66556008)(118296001)(110136005)(68736007)(52116002)(73956011)(66066001)(81166006)(2906002)(2501003)(305945005)(7736002)(53936002)(50226002)(6486002)(6116002)(36756003)(5660300002)(8936002)(3846002)(81156014)(478600001)(2201001)(256004)(14444005)(4744005)(4326008)(86362001)(71190400001)(8676002)(71200400001)(14143004);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6640;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: AdrSs/gr7DF2q+akDsJOjEuADGGgqpM1SDcPKE2EFkM163DuV1nyLbWZgHS8kE3Mx4x1Yyu9cDZDT+royQwUfv0bQiMk0cGcR527MdDoI40UxFuc/82fcP7AMQ3YfAQmP5rTrvQSpcrtykxJOYs3+Za3d13UQW9NVGvTDFKJX/HJ0nQ5IRzf8doSdnQyYLW+zoWfDF+4JGsdavk5dVoT5e/aFI20d1oGjo33IBGyZey6xWLxNIs0n8xyio6U1DqY+ZTsCUBh6FRgXcv5oqZmQYCiBWJjf0J9y6kvx9EFdxuvAf7pzmhhyrNm++8OMSUDOM7yvirKjhwPjmggMcAhYLVl8hHIsa4ppmKDl9yad1nEb1zsaHJwNXV6ZN+gn82N5TNstJwpN723eucqI2Do+g+HbWSt6ZBM+Wv5BMpWFws=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: QQxMXvtmcUolt8215P/YhdmJfjd3PtMFr9y7RwoOdmWJRDYXHnVtSb/ZytteY80daT3EoPGvD/paoVN/2IXVkxTX83I2SL1GxSK41aJbkAZPQl+3LO6ajWK+JxeZzz8tWfED0xb4ikSbzzuxtbTFw5KircgGD+YSqfPCsAOdgGKnnCEzTxSDLCIpxSkd1UXmphwnPOUC3inJ4Ns/H+KHOXijckq1x23v45mjX/6l6bOa4tCHRJRLciIOi2OcFbqGrMezl73MyV5JODyB0Vj3nG87H1S5d4CUSV2opYpHCu9dvRfsH6b6EG5qBL4ZQWLWe75wvJGrHoxEc36zupva07sruis4wwqj+RulROt7X3RffM36EmJTmX3TJuyKA9/AlKWmJt20jKaNxLCOY0pYo66Jih7qjx+qGgQdMbhOkSI=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-ID: <778F5B7AE505E94CBE4D7E1A85E36435@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b5d37032-4b3c-4cc7-c06e-08d6da76c34a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 03:21:33.5276
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6711de96-fe39-4cbd-4358-08d6da76efb2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 03:22:48.6244
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3188
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6640
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQXJuZCwNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IEFybmQgQmVyZ21h
-bm4gPGFybmRAYXJuZGIuZGU+IA0KU2VudDogMjAxOeW5tDXmnIgxNeaXpSAxNjowNQ0KVG86IFhp
-YW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KQ2M6IEJqb3JuIEhlbGdhYXMgPGJoZWxn
-YWFzQGdvb2dsZS5jb20+OyBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBS
-dXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVs
-Lm9yZz47IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgS2lzaG9uIDxraXNob25AdGkuY29t
-PjsgTG9yZW56byBQaWVyYWxpc2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+OyBncmVna2gg
-PGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPjsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFuQG54
-cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kgWmFuZyA8cm95Lnph
-bmdAbnhwLmNvbT47IEthdGUgU3Rld2FydCA8a3N0ZXdhcnRAbGludXhmb3VuZGF0aW9uLm9yZz47
-IFBoaWxpcHBlIE9tYnJlZGFubmUgPHBvbWJyZWRhbm5lQG5leGIuY29tPjsgU2hhd24gTGluIDxz
-aGF3bi5saW5Acm9jay1jaGlwcy5jb20+OyBsaW51eC1wY2kgPGxpbnV4LXBjaUB2Z2VyLmtlcm5l
-bC5vcmc+OyBEVE1MIDxkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZz47IExpbnV4IEtlcm5lbCBN
-YWlsaW5nIExpc3QgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBMaW51eCBBUk0gPGxp
-bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZz47IGxpbnV4cHBjLWRldiA8bGludXhw
-cGMtZGV2QGxpc3RzLm96bGFicy5vcmc+DQpTdWJqZWN0OiBbRVhUXSBSZTogW1BBVENIIDIvM10g
-YXJtNjQ6IGR0czogbHMxMDI4YTogQWRkIFBDSWUgY29udHJvbGxlciBEVCBub2Rlcw0KDQpDYXV0
-aW9uOiBFWFQgRW1haWwNCg0KT24gV2VkLCBNYXkgMTUsIDIwMTkgYXQgOTozNiBBTSBYaWFvd2Vp
-IEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4gd3JvdGU6DQo+IFNpZ25lZC1vZmYtYnk6IFhpYW93
-ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiAtLS0NCj4gIGFyY2gvYXJtNjQvYm9vdC9k
-dHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0c2kgfCAgIDUyICsrKysrKysrKysrKysrKysrKysr
-KysrKw0KPiAgMSBmaWxlcyBjaGFuZ2VkLCA1MiBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygt
-KQ0KPg0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxz
-MTAyOGEuZHRzaSBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwMjhhLmR0
-c2kNCj4gaW5kZXggYjA0NTgxMi4uNTBiNTc5YiAxMDA2NDQNCj4gLS0tIGEvYXJjaC9hcm02NC9i
-b290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTAyOGEuZHRzaQ0KPiArKysgYi9hcmNoL2FybTY0L2Jv
-b3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDI4YS5kdHNpDQo+IEBAIC0zOTgsNiArMzk4LDU4IEBA
-DQo+ICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ICAgICAg
-ICAgICAgICAgICB9Ow0KPg0KPiArICAgICAgICAgICAgICAgcGNpZUAzNDAwMDAwIHsNCj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJmc2wsbHMxMDI4YS1wY2llIjsNCj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MDAgMHgwMzQwMDAwMCAweDAgMHgwMDEw
-MDAwMCAgIC8qIGNvbnRyb2xsZXIgcmVnaXN0ZXJzICovDQo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAweDgwIDB4MDAwMDAwMDAgMHgwIDB4MDAwMDIwMDA+OyAvKiBjb25maWd1cmF0
-aW9uIHNwYWNlICovDQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJyZWdz
-IiwgImNvbmZpZyI7DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lD
-X1NQSSAxMDggSVJRX1RZUEVfTEVWRUxfSElHSD4sIC8qIFBNRSBpbnRlcnJ1cHQgKi8NCj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxHSUNfU1BJIDEwOSBJUlFfVFlQRV9M
-RVZFTF9ISUdIPjsgLyogYWVyIGludGVycnVwdCAqLw0KPiArICAgICAgICAgICAgICAgICAgICAg
-ICBpbnRlcnJ1cHQtbmFtZXMgPSAicG1lIiwgImFlciI7DQo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICNhZGRyZXNzLWNlbGxzID0gPDM+Ow0KPiArICAgICAgICAgICAgICAgICAgICAgICAjc2l6
-ZS1jZWxscyA9IDwyPjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgZGV2aWNlX3R5cGUgPSAi
-cGNpIjsNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgZG1hLWNvaGVyZW50Ow0KPiArICAgICAg
-ICAgICAgICAgICAgICAgICBudW0tbGFuZXMgPSA8ND47DQo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgIGJ1cy1yYW5nZSA9IDwweDAgMHhmZj47DQo+ICsgICAgICAgICAgICAgICAgICAgICAgIHJh
-bmdlcyA9IDwweDgxMDAwMDAwIDB4MCAweDAwMDAwMDAwIDB4ODAgMHgwMDAxMDAwMCAweDAgMHgw
-MDAxMDAwMCAgIC8qIGRvd25zdHJlYW0gSS9PICovDQo+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAweDgyMDAwMDAwIDB4MCAweDQwMDAwMDAwIDB4ODAgMHg0MDAwMDAwMCAweDAg
-MHg0MDAwMDAwMD47IC8qIG5vbi1wcmVmZXRjaGFibGUgbWVtb3J5ICovDQoNCkFyZSB5b3Ugc3Vy
-ZSB0aGVyZSBpcyBubyBzdXBwb3J0IGZvciA2NC1iaXQgQkFScyBvciBwcmVmZXRjaGFibGUgbWVt
-b3J5Pw0KW1hpYW93ZWkgQmFvXSBzb3JyeSBmb3IgbGF0ZSByZXBseSwgVGhvdWdodCB0aGF0IG91
-ciBMYXllcnNjYXBlIHBsYXRmb3JtIGhhcyBub3QgYWRkZWQgcHJlZmV0Y2hhYmxlIG1lbW9yeSBz
-dXBwb3J0IGluIERUUywgc28gdGhpcyBwbGF0Zm9ybSBoYXMgbm90IGJlZW4gYWRkZWQsIEkgd2ls
-bCBzdWJtaXQgYSBzZXBhcmF0ZSBwYXRjaCB0byBhZGQgcHJlZmV0Y2hhYmxlIG1lbW9yeSBzdXBw
-b3J0IGZvciBhbGwgTGF5ZXJzY2FwZSBwbGF0Zm9ybXMuIA0KT2YgY291cnNlLCB0aGUgcHJlZmV0
-Y2hhYmxlIFBDSUUgZGV2aWNlIGNhbiB3b3JrIGluIG91ciBib2FyZHMsIGJlY2F1c2UgdGhlIFJD
-IHdpbGwgYXNzaWduIG5vbi1wcmVmZXRjaGFibGUgbWVtb3J5IGZvciB0aGlzIGRldmljZS4gV2Ug
-cmVzZXJ2ZSAxRyBuby1wcmVmZXRjaGFibGUgbWVtb3J5IGZvciBQQ0lFIGRldmljZSwgaXQgaXMg
-ZW5vdWdoIGZvciBnZW5lcmFsIGRldmljZXMuICANCg0KSXMgdGhpcyBhIGhhcmR3YXJlIGJ1Zywg
-b3Igc29tZXRoaW5nIHRoYXQgY2FuIGJlIGZpeGVkIGluIGZpcm13YXJlPw0KW1hpYW93ZWkgQmFv
-XSB0aGlzIGlzIG5vdCBhIGhhcmR3YXJlIGJ1Zywgb3VyIEhXIHN1cHBvcnQgdGhlIDY0LWJpdCBw
-cmVmZXRjaGFibGUgbWVtb3J5Lg0KDQogICAgICAgQXJuZA0K
+Add regcache_mark_dirty before regcache_sync for power
+of codec may be lost at suspend, then all the register
+need to be reconfigured.
+
+Fixes: 0c516b4ff85c ("ASoC: cs42xx8: Add codec driver support for CS42448/C=
+S42888")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+Changs in V2
+- Don't split Fixes tag.
+
+ sound/soc/codecs/cs42xx8.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/sound/soc/codecs/cs42xx8.c b/sound/soc/codecs/cs42xx8.c
+index ebb9e0cf8364..28a4ac36c4f8 100644
+--- a/sound/soc/codecs/cs42xx8.c
++++ b/sound/soc/codecs/cs42xx8.c
+@@ -558,6 +558,7 @@ static int cs42xx8_runtime_resume(struct device *dev)
+ 	msleep(5);
+=20
+ 	regcache_cache_only(cs42xx8->regmap, false);
++	regcache_mark_dirty(cs42xx8->regmap);
+=20
+ 	ret =3D regcache_sync(cs42xx8->regmap);
+ 	if (ret) {
+--=20
+2.21.0
+
