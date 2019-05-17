@@ -2,134 +2,103 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 372BEC04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA001C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A368216C4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A70AF20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:39:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aanZSxaf"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="QoXQysgM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbfEQRex (ORCPT
+        id S1728653AbfEQRje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 13:34:53 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42030 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727769AbfEQRex (ORCPT
+        Fri, 17 May 2019 13:39:34 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:38735 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbfEQRjd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 13:34:53 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 13so3996454pfw.9
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 10:34:52 -0700 (PDT)
+        Fri, 17 May 2019 13:39:33 -0400
+Received: by mail-it1-f196.google.com with SMTP id i63so13299859ita.3
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 10:39:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EQJ+i6iyywaiyvPH5Ae01aI539IGazdRX+wyFdAqzQ8=;
-        b=aanZSxafrgKwxWZXR9j39vx1sCu33cNvgPcDwT6PxgjwJRrkJcbhwxhh51PE7RY2mz
-         AY5Iycj6ZTO24RiG3PvHwStotGD451nVBIT6sjLw6Ynr4Ou4WW/nHdGQxnBOVgBrZ5wt
-         ozAo5veCyhAikOq+8aWu4Ey164M3K+n2/Wa+P9oxiTOfyjTCPDn4hdKDtmWCFA86qyo1
-         Axb84Btin+aZNsep3wfDD5JVAmugrkNPhN/KuwEUOBZq2kj1b2YI8MshZNcuDk1JxQjf
-         NjjY5tUquuwM1gJhMUS6g7ErT/4PZfCb0DdUm/Ng7BhHzt3u3Jsd4i59RFgcck4Z4OUL
-         UBvA==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=sjlzL8sYzuwHRaKiYXlCL9BHKp701p8pybnhyPt408A=;
+        b=QoXQysgMhGAQhTO1LjXz8Ww4aJB4vAaO5w19dLg7CJHuNGCNkFQaHGo6RXZq259AwD
+         5nPkXc2b7LBEnTtOOrI+WLOp+5W0xiXJ0rP7H1H1dxERDC6982aIH4sObvHmRwdokojd
+         KIw8ZLBZHmqTpNMzajYjFTGD+cYXryXtJn1sGNI6pCEICSkG9oP1Ro96TNLaPerwlJuS
+         joPFC7DKURMrOVCYXjkJSKemvJ1sUtSL0ISluneoSOehPdly8ykqRrmSR2VyCYjLRn1V
+         rgOnrVQtLQb30diSBsABdhkRYVjVlKhomzbH/5Z68i7jnaw6LqMLE1G0aWjZhKe5l1Eh
+         G1Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EQJ+i6iyywaiyvPH5Ae01aI539IGazdRX+wyFdAqzQ8=;
-        b=MlUibSuTDNcXtxn+YAzN5Qs2F2viZrJU0K9Bg+kKvYbkw+s2dtrYCSU85oxaHQl/nE
-         drn5/XnILOsXSqX2c3kZige2hR4S+LdUnPf2yMYSxMNTevBh+b6gkkNvDbQOSdDRt+c3
-         ZTfFtsO4g04wH8+3kQYYF949bICcEDGjtfokf3Mc4WyuCvRE9bNGXot9FVedt4Z4eZWf
-         3Pa+ZkBg3lymILhq7dMmiRaKK3CUT159NX+PdPewqEHjf59sZGgy/JC2mQMMzT8yDhLZ
-         HXpwkN4H03cNn2hbTHpy+rkKzSugExRiEboU6s8F3ix1YH2AR0Au4A9vapGyMtqVS0uc
-         2oYQ==
-X-Gm-Message-State: APjAAAX4q+4S3bhq/Vv8tHG266QqRjA2o46y/Ck18aZCEisPGFpJLiDS
-        gzYyTgkIQHTY8DDU+pkf3J44bg==
-X-Google-Smtp-Source: APXvYqwAR5v9g9Pj7oAhKsdMTbRAYpj8+edIonWgSGveknrjHzEQSgArD/o7pgLUsetiE0m+QRPAzw==
-X-Received: by 2002:aa7:8e59:: with SMTP id d25mr61042439pfr.24.1558114492292;
-        Fri, 17 May 2019 10:34:52 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id p16sm26875608pfq.153.2019.05.17.10.34.50
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=sjlzL8sYzuwHRaKiYXlCL9BHKp701p8pybnhyPt408A=;
+        b=Cg+8bn3xOE2AhAyvL8fcw0PhS6S6cqThBf/+a4IJFk1CDsDtINvzGWzElVE2FQBYEF
+         7lWi1ZMh6gU+o3qal8BDDLt3uzuYE7eJJFTcII2h9Zyfg3p6MCkP2FuUZk/f/YNy52m5
+         uhw5ViXePlgzMiKsQjRhVA/u6662nxDmsS3wUVqKG2dJVJE25DlDp1nv4VjhS9zE46uZ
+         agP8gOjvtzxBtjnRCd+jRbBJsiTfE7QOeJKM9iFvJUGnmbcaw/hxAAoesvks0tpfRU1R
+         0sH64kKOFPbny6AbMAJ7bCE+7fHYp3fG4mfToFkZNDbH51nSofG04qtEwJGHsCbYctER
+         Q4EA==
+X-Gm-Message-State: APjAAAV4l4H56QJBjVEpSpzLFy3GbVtaZRuBZZfjaKBzPiW1a1nAlpJB
+        /zlnObXHcL2CTbeoFcmLIZH9qg==
+X-Google-Smtp-Source: APXvYqz3C1G85l/Iijqw79DjIedtJARC46pAFcwSo2FJ+khWMuvvNQiU0ee/YPbw0XfRYFsR2ABxbQ==
+X-Received: by 2002:a24:6588:: with SMTP id u130mr3713595itb.138.1558114772807;
+        Fri, 17 May 2019 10:39:32 -0700 (PDT)
+Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
+        by smtp.gmail.com with ESMTPSA id d7sm527923itd.32.2019.05.17.10.39.31
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 17 May 2019 10:34:51 -0700 (PDT)
-Date:   Fri, 17 May 2019 10:35:14 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Evan Green <evgreen@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [RFC/PATCH 0/5] Read-only memremap() proposal
-Message-ID: <20190517173514.GM2085@tuxbook-pro>
-References: <20190517164746.110786-1-swboyd@chromium.org>
+        Fri, 17 May 2019 10:39:32 -0700 (PDT)
+Date:   Fri, 17 May 2019 10:39:31 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Atish Patra <atish.patra@wdc.com>
+cc:     linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Zong Li <zong@andestech.com>, merker@debian.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [v2 PATCH] RISC-V: Add a PE/COFF compliant Image header.
+In-Reply-To: <20190501195607.32553-1-atish.patra@wdc.com>
+Message-ID: <alpine.DEB.2.21.9999.1905171017510.9104@viisi.sifive.com>
+References: <20190501195607.32553-1-atish.patra@wdc.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190517164746.110786-1-swboyd@chromium.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 17 May 09:47 PDT 2019, Stephen Boyd wrote:
 
-> This patch series implements a read-only version of memremap() via
-> a new MEMREMAP_RO flag. If this is passed in the mapping call, we'll
-> try to map the memory region as read-only if it doesn't intersect
-> with an existing mapping. Otherwise, we'll try to fallback to other
-> flags to try to map the memory that way.
-> 
-> The main use case I have is to map the command-db memory region on
-> Qualcomm devices with a read-only mapping. It's already a const marked
-> pointer and the API returns const pointers as well, so this series makes
-> sure that even stray writes can't modify the memory. To get there we
-> introduce a devm version of memremap() for a reserved memory region, add
-> a memremap() flag, and implement support for that flag on arm64.
-> 
+On Wed, 1 May 2019, Atish Patra wrote:
 
-I have a few places where the first patch will be useful, and the rest
-looks good.
+> Currently, last stage boot loaders such as U-Boot can accept only
+> uImage which is an unnecessary additional step in automating boot flows.
+> 
+> Add a PE/COFF compliant image header that boot loaders can parse and
+> directly load kernel flat Image. The existing booting methods will continue
+> to work as it is.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+One other thought: as I think you or someone else may have pointed out, 
+this isn't the PE/COFF header itself, but rather an ersatz DOS stub 
+header, that is apparently quite close to what some EFI bootloaders 
+require.  So from that point of view, it's probably best to just write in 
+the patch description that the idea is to add something that resembles an 
+MS-DOS stub header, and that the motivations are that:
 
-Regards,
-Bjorn
+1. it resembles what ARM64 is doing, and there's not much point in 
+inventing another boot header format that's completely different
 
-> Cc: Evan Green <evgreen@chromium.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Andy Gross <agross@kernel.org>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> 
-> Stephen Boyd (5):
->   reserved_mem: Add a devm_memremap_reserved_mem() API
->   soc: qcom: cmd-db: Migrate to devm_memremap_reserved_mem()
->   memremap: Add support for read-only memory mappings
->   arm64: Add support for arch_memremap_ro()
->   soc: qcom: cmd-db: Map with read-only mappings
-> 
->  arch/arm64/include/asm/io.h     |  1 +
->  drivers/of/of_reserved_mem.c    | 45 +++++++++++++++++++++++++++++++++
->  drivers/soc/qcom/cmd-db.c       | 14 +++-------
->  include/linux/io.h              |  1 +
->  include/linux/of_reserved_mem.h |  6 +++++
->  kernel/iomem.c                  | 15 +++++++++--
->  6 files changed, 70 insertions(+), 12 deletions(-)
-> 
-> 
-> base-commit: 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b
-> prerequisite-patch-id: 62119e27c0c0686e02f0cb55c296b878fb7f5e47
-> prerequisite-patch-id: bda32cfc1733c245ae3f141d7c27b18e4adcc628
-> prerequisite-patch-id: b8f8097161bd15e87d54dcfbfa67b9ca1abc7204
-> -- 
-> Sent by a computer through tubes
-> 
+2. it can be easily converted into an MS-DOS header that some EFI 
+bootloaders apparently require, by tweaking a few bytes at the beginning
+
+
+- Paul
