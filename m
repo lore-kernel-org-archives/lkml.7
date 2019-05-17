@@ -2,133 +2,132 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAD9C46470
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 01:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 014E3C04AAF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 01:05:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2EF20862
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 01:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F08E206BF
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 01:05:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="DsE9agfS"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="CgdytqRU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbfEQBBy (ORCPT
+        id S1727825AbfEQBFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 16 May 2019 21:01:54 -0400
-Received: from smtp.aristanetworks.com ([54.193.82.35]:34210 "EHLO
-        uscaw2-clmxp01.aristanetworks.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726575AbfEQBBy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 16 May 2019 21:01:54 -0400
-X-Greylist: delayed 499 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 May 2019 21:01:53 EDT
-Received: from uscaw2-clmxp01.aristanetworks.com (localhost [127.0.0.1])
-        by uscaw2-clmxp01.aristanetworks.com (Postfix) with ESMTP id 7BFD02142F2C;
-        Thu, 16 May 2019 17:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arista.com;
-        s=Arista-A; t=1558054414;
-        bh=OG5iz7Y2otWoE83PZVl2kJS3N6qNz01B8T1Adm2jXHQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=DsE9agfSmEgHGM52X4MfwYzUb6XZR6v7Ry+wDsxvPmdRfhSV1hL4rAazo1quosqIQ
-         bTOT4VsS8sxiHRnObTd2n+6in1OSpaQMDTNbBpEmiBiDLmYGbfRSBznD6wBi5HZNYE
-         owV7Ru5mgO3pCae53Phq7ZkorCPtAN3YvR1YE5h+epSwAc95TeLi9XEtrwgADmARlH
-         UnzxNcUxc87j0Lg1Quhg9TeeuHIHP34tXjf6z81bOqc5G6VD793OV8Ho0LJS0TkMmi
-         JgAjcNJiAcoWXycnpZ26PmHwa7XvjbmYxc0VFX1TCRLQq0W2ehgHShx2grjWgOhec+
-         EyHc+vw8X+nVA==
-Received: from chmeee (unknown [10.95.92.211])
-        by uscaw2-clmxp01.aristanetworks.com (Postfix) with ESMTP id 69B3931110E3;
-        Thu, 16 May 2019 17:53:34 -0700 (PDT)
-Received: from kevmitch by chmeee with local (Exim 4.92)
-        (envelope-from <kevmitch@chmeee>)
-        id 1hRR7t-00029G-MG; Thu, 16 May 2019 17:53:33 -0700
-From:   Kevin Mitchell <kevmitch@arista.com>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Kevin Mitchell <kevmitch@arista.com>
-Subject: [PATCH 3/3] iommu/amd: only free resources once on init error
-Date:   Thu, 16 May 2019 17:52:42 -0700
-Message-Id: <20190517005242.20257-4-kevmitch@arista.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190517005242.20257-1-kevmitch@arista.com>
-References: <20190517005242.20257-1-kevmitch@arista.com>
+        Thu, 16 May 2019 21:05:09 -0400
+Received: from ozlabs.org ([203.11.71.1]:35041 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726575AbfEQBFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 16 May 2019 21:05:09 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 454qp943VNz9s9y;
+        Fri, 17 May 2019 11:05:05 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1558055105;
+        bh=ooupRwlzmgFq0MFwFv3NKtnYvDLGwPP8J9xeQL+ZykQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=CgdytqRUncOwEPckLArZr8pyeLLPfMwXL2UdRxDu0rgPfN110WWIHvouxbDaIiztb
+         VFTPie0DDU3W9NP0VijAo7x1vdF5FnyMSb1lZ/1hF85ZNJJ4jK+uIki0ftPRKhIzha
+         HJ8Iod6twuI6WToHMTpO2w2urlan6YYjgvriUhPDRe6EqvpdSnwyi1ug73IUz7LtBR
+         0zHifRYp9EY334caSvmCgGGS+SmNKssQt5DEv1LfrIRSF2IlMWErUfv/d8bwBXmItK
+         YmegUKfWiE/lFQ9lsKL93lcv9umgALeipFqBkXmuRYri4/N7FfReySpJ27yor3Tjzg
+         IjdTI9ViXiU6g==
+Date:   Fri, 17 May 2019 11:04:47 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        KVM <kvm@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Jones <drjones@redhat.com>, Peter Xu <peterx@redhat.com>
+Subject: linux-next: manual merge of the kvm tree with Linus' tree
+Message-ID: <20190517110447.34e65beb@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/GkhwStloeVvNpPg8oh+2H7f"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When amd_iommu=off was specified on the command line, free_X_resources
-functions were called immediately after early_amd_iommu_init. They were
-then called again when amd_iommu_init also failed (as expected).
+--Sig_/GkhwStloeVvNpPg8oh+2H7f
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Instead, call them only once: at the end of state_next() whenever
-there's an error. These functions should be safe to call any time and
-any number of times. However, since state_next is never called again in
-an error state, the cleanup will only ever be run once.
+Hi all,
 
-This also ensures that cleanup code is run as soon as possible after an
-error is detected rather than waiting for amd_iommu_init() to be called.
+Today's linux-next merge of the kvm tree got a conflict in:
 
-Signed-off-by: Kevin Mitchell <kevmitch@arista.com>
----
- drivers/iommu/amd_iommu_init.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+  Documentation/virtual/kvm/api.txt
 
-diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-index 5f3df5ae6ba8..24fc060fe596 100644
---- a/drivers/iommu/amd_iommu_init.c
-+++ b/drivers/iommu/amd_iommu_init.c
-@@ -2638,8 +2638,6 @@ static int __init state_next(void)
- 		init_state = ret ? IOMMU_INIT_ERROR : IOMMU_ACPI_FINISHED;
- 		if (init_state == IOMMU_ACPI_FINISHED && amd_iommu_disabled) {
- 			pr_info("AMD IOMMU disabled on kernel command-line\n");
--			free_dma_resources();
--			free_iommu_resources();
- 			init_state = IOMMU_CMDLINE_DISABLED;
- 			ret = -EINVAL;
- 		}
-@@ -2680,6 +2678,19 @@ static int __init state_next(void)
- 		BUG();
- 	}
- 
-+	if (ret) {
-+		free_dma_resources();
-+		if (!irq_remapping_enabled) {
-+			disable_iommus();
-+			free_iommu_resources();
-+		} else {
-+			struct amd_iommu *iommu;
-+
-+			uninit_device_table_dma();
-+			for_each_iommu(iommu)
-+				iommu_flush_all_caches(iommu);
-+		}
-+	}
- 	return ret;
- }
- 
-@@ -2753,18 +2764,6 @@ static int __init amd_iommu_init(void)
- 	int ret;
- 
- 	ret = iommu_go_to_state(IOMMU_INITIALIZED);
--	if (ret) {
--		free_dma_resources();
--		if (!irq_remapping_enabled) {
--			disable_iommus();
--			free_iommu_resources();
--		} else {
--			uninit_device_table_dma();
--			for_each_iommu(iommu)
--				iommu_flush_all_caches(iommu);
--		}
--	}
--
- #ifdef CONFIG_GART_IOMMU
- 	if (ret && list_empty(&amd_iommu_list)) {
- 		/*
--- 
-2.20.1
+between commit:
 
+  dbcdae185a70 ("Documentation: kvm: fix dirty log ioctl arch lists")
+
+from Linus' tree and commit:
+
+  d7547c55cbe7 ("KVM: Introduce KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2")
+
+from the kvm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc Documentation/virtual/kvm/api.txt
+index 64b38dfcc243,73a501eb9291..000000000000
+--- a/Documentation/virtual/kvm/api.txt
++++ b/Documentation/virtual/kvm/api.txt
+@@@ -3809,8 -3936,8 +3936,8 @@@ to I/O ports
+ =20
+  4.117 KVM_CLEAR_DIRTY_LOG (vm ioctl)
+ =20
+- Capability: KVM_CAP_MANUAL_DIRTY_LOG_PROTECT
++ Capability: KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2
+ -Architectures: x86
+ +Architectures: x86, arm, arm64, mips
+  Type: vm ioctl
+  Parameters: struct kvm_dirty_log (in)
+  Returns: 0 on success, -1 on error
+@@@ -4798,9 -4968,9 +4968,9 @@@ and injected exceptions
+  * For the new DR6 bits, note that bit 16 is set iff the #DB exception
+    will clear DR6.RTM.
+ =20
+- 7.18 KVM_CAP_MANUAL_DIRTY_LOG_PROTECT
++ 7.18 KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2
+ =20
+ -Architectures: all
+ +Architectures: x86, arm, arm64, mips
+  Parameters: args[0] whether feature should be enabled or not
+ =20
+  With this capability enabled, KVM_GET_DIRTY_LOG will not automatically
+
+--Sig_/GkhwStloeVvNpPg8oh+2H7f
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlzeCK8ACgkQAVBC80lX
+0Gweegf/cRv0YebzAmqhtNeCTu4uNeuma3G+ITfHVHUGsEZ8zQxGInYyu1GPxfB4
+A219pIl1/hwzZ0LAnGi0h9QDSudZUlIsvQ49DY5Cw2Gojf4WnbfwZgQY3Pa6ii0M
+PR0hQicg9KeeHIDwu/Y+qiczAB36jA8XxlPr+FqJ10YtrdYn3iM67Em/CWwat2Dh
+cwZCdBUVoG1HPTDaxv7DTyRjHnCdDG7sR0Y+W+2XHeLK1mMeC/IuTZKLfgaOi4cO
+1jZSL14SIkqyUibpbIa2A3WVXVX0mGItW/YWQLC8bHD/86XgID5KfYNnv1sDQxE6
+wcydxA+pQ1K1PGlw1ZrmW2J1xf/oVQ==
+=n3xT
+-----END PGP SIGNATURE-----
+
+--Sig_/GkhwStloeVvNpPg8oh+2H7f--
