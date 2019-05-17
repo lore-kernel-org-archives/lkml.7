@@ -2,291 +2,244 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5EAC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE00C04E84
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B398020815
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:50:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FA520645
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 17:53:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Pg2tALWA"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Xul60TJi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbfEQRu4 (ORCPT
+        id S1728700AbfEQRxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 13:50:56 -0400
-Received: from mail-eopbgr150054.outbound.protection.outlook.com ([40.107.15.54]:31963
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725932AbfEQRu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 13:50:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xH+3CcibR/tt3qiUEzwSRKtqK9B/InMpL3gybeDa1Hw=;
- b=Pg2tALWAHjBwB8NLt7fc97uNARwOToJPJJ/evCdg3AMGv537lz4Vtakc2H3DnW5YQALLOSvQ0IIneTEwAFRGt5rgGKdFgb7NcP40J7VlZzhqDRIwESYfQP4BNlGCUJ6nM+OBw9Rc0d45IWzDeVuljkpj9K1AX29aGpqtO4Tpkkg=
-Received: from DB6PR05MB3223.eurprd05.prod.outlook.com (10.175.232.149) by
- DB6PR05MB3400.eurprd05.prod.outlook.com (10.175.235.25) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1900.16; Fri, 17 May 2019 17:49:36 +0000
-Received: from DB6PR05MB3223.eurprd05.prod.outlook.com
- ([fe80::244a:2b0:6510:9864]) by DB6PR05MB3223.eurprd05.prod.outlook.com
- ([fe80::244a:2b0:6510:9864%7]) with mapi id 15.20.1900.010; Fri, 17 May 2019
- 17:49:36 +0000
-From:   Liming Sun <lsun@mellanox.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Vadim Pasternak <vadimp@mellanox.com>,
-        David Woods <dwoods@mellanox.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4] platform/mellanox: Add bootctl driver for Mellanox
- BlueField Soc
-Thread-Topic: [PATCH v4] platform/mellanox: Add bootctl driver for Mellanox
- BlueField Soc
-Thread-Index: AQHUum9M75fRF8XEo0+A+QtP1mPobKXReZmAgJz1luA=
-Date:   Fri, 17 May 2019 17:49:36 +0000
-Message-ID: <DB6PR05MB3223FA0536546FE0016EF589A10B0@DB6PR05MB3223.eurprd05.prod.outlook.com>
-References: <0b74e9ad12360b56bc0a3c2ca972798c424f2610.1548790896.git.lsun@mellanox.com>
- <1549054016-167128-1-git-send-email-lsun@mellanox.com>
- <CAHp75Vd2Rk=+CK6sR87R-2VvW8EPz7aSH8XF1_unBo6_Ww5+TQ@mail.gmail.com>
-In-Reply-To: <CAHp75Vd2Rk=+CK6sR87R-2VvW8EPz7aSH8XF1_unBo6_Ww5+TQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=lsun@mellanox.com; 
-x-originating-ip: [216.156.69.42]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6c56b821-fdf0-4bc4-9977-08d6daf00748
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600141)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DB6PR05MB3400;
-x-ms-traffictypediagnostic: DB6PR05MB3400:
-x-microsoft-antispam-prvs: <DB6PR05MB34009AA09D5E5938F5EE25D7A10B0@DB6PR05MB3400.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:381;
-x-forefront-prvs: 0040126723
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(366004)(136003)(376002)(396003)(199004)(189003)(13464003)(53546011)(6246003)(6436002)(4326008)(229853002)(478600001)(6506007)(25786009)(305945005)(53936002)(54906003)(76176011)(55016002)(52536014)(9686003)(74316002)(14444005)(256004)(14454004)(8676002)(316002)(7696005)(102836004)(71190400001)(2906002)(81156014)(81166006)(71200400001)(68736007)(66476007)(66446008)(86362001)(64756008)(66556008)(446003)(11346002)(26005)(73956011)(33656002)(3846002)(7736002)(6916009)(5660300002)(99286004)(8936002)(66066001)(6116002)(186003)(476003)(486006)(66946007)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR05MB3400;H:DB6PR05MB3223.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: hXnnksxRZifiHYly4Iu6C0V6eu3bwnpm/QGiPFKwDEH/hhwy7eZk8WJHAdrsZUS7nnhnphBKF4/Gaopey2f7F6ayB3HvIay41ddtLuFnubF+tdNH1Fwjm2hAcFUvP2re4nGMeGHYBVlyySPsQ5MFEfb9XFNz3d9X8waM2jXwgeXI8+BtbnuJBWa2u2jLbzj7RSFitOd8A13hZ38HxsqoLmv0cAM9q/0Z4WjeUStJd8LJsa/RT9pOHkHwwF0JPbciE9SqcV/yHyxbcO6YefLVVfu/O/Z74CxCg+7ueZQoGbsNuXr6bzqFEl/EaTZ35yb7scoGzQLNYOgugy+2gmt897PVGvkB/nHIS1lMoCIcNvXBnLRi8TukKlo238Pv9SdhqVYZfYZ08EJhTYOmsCvkq1TeaLEygZ91usqsUsBWXEE=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 17 May 2019 13:53:48 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:13989 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbfEQRxs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 13:53:48 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cdef5290000>; Fri, 17 May 2019 10:53:45 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 17 May 2019 10:53:45 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 17 May 2019 10:53:45 -0700
+Received: from [10.25.74.217] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 17 May
+ 2019 17:53:39 +0000
+Subject: Re: [PATCH V6 02/15] PCI/PME: Export pcie_pme_disable_msi() &
+ pcie_pme_no_msi() APIs
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Christoph Hellwig <hch@infradead.org>, <lorenzo.pieralisi@arm.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <kishon@ti.com>, <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190513050626.14991-1-vidyas@nvidia.com>
+ <20190513050626.14991-3-vidyas@nvidia.com>
+ <20190513072539.GA27708@infradead.org>
+ <3a8cea93-2aeb-e5e2-4d56-f0c6449073c3@nvidia.com>
+ <20190516133426.GC101793@google.com>
+ <bd08ccaa-c6ee-f966-91e4-bcd5d99d5cf2@nvidia.com>
+ <20190517132453.GA30700@google.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <ba611a45-9589-8dce-58e1-d99dd463265d@nvidia.com>
+Date:   Fri, 17 May 2019 23:23:36 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6c56b821-fdf0-4bc4-9977-08d6daf00748
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 May 2019 17:49:36.7599
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR05MB3400
+In-Reply-To: <20190517132453.GA30700@google.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1558115625; bh=S553ZW6Nijmi8SUtms6x6JKfl27DkEODdk7pag1sbso=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Xul60TJi1MVs+cON0NOpGElEKV54OfMmyV1hp6LiCcAy81On3Kb4S/d9sorNNbvLM
+         PApV3g1P/ojfkI2JCzMO7M9twM0Q+DJEaWsXijlafmNXTFqngzj0OBwWNcuVjJCa0o
+         p9Sx7MkdWczoyUDZk8XYSwGbRKpA+O/aceo8k6En0MFq10NWgQbnBhAoCHf5M3l87P
+         YapBNOuexpS+0fns+OwhBgVVlSrSOG05p41rK7RPYs6zN2QEYJC+MN51qFwd142nAh
+         5i3jyv2laOcMkABHG+aXEmPQ7o7zw/lO4bLy4Dl++ufTa4u8rswp9pgXNsKirKqJsk
+         kBXNzXg/fENFA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhhbmtzIEFuZHkhDQoNCnY1IGhhcyBiZWVuIHBvc3RlZCB0byBhZGRyZXNzIGFsbCB0aGUgY29t
-bWVudHMuIFlvdSBjb3VsZCBhbHNvIHNlZSB0aGUgZGV0YWlsZWQgcmVzcG9uc2UgYmVsb3cuDQoN
-ClJlZ2FyZHMsDQpMaW1pbmcNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9t
-OiBsaW51eC1rZXJuZWwtb3duZXJAdmdlci5rZXJuZWwub3JnIDxsaW51eC1rZXJuZWwtb3duZXJA
-dmdlci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgQW5keSBTaGV2Y2hlbmtvDQo+IFNlbnQ6IFR1
-ZXNkYXksIEZlYnJ1YXJ5IDUsIDIwMTkgMTI6MjIgUE0NCj4gVG86IExpbWluZyBTdW4gPGxzdW5A
-bWVsbGFub3guY29tPg0KPiBDYzogQW5keSBTaGV2Y2hlbmtvIDxhbmR5QGluZnJhZGVhZC5vcmc+
-OyBEYXJyZW4gSGFydCA8ZHZoYXJ0QGluZnJhZGVhZC5vcmc+OyBWYWRpbSBQYXN0ZXJuYWsgPHZh
-ZGltcEBtZWxsYW5veC5jb20+OyBEYXZpZA0KPiBXb29kcyA8ZHdvb2RzQG1lbGxhbm94LmNvbT47
-IFBsYXRmb3JtIERyaXZlciA8cGxhdGZvcm0tZHJpdmVyLXg4NkB2Z2VyLmtlcm5lbC5vcmc+OyBM
-aW51eCBLZXJuZWwgTWFpbGluZyBMaXN0IDxsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9y
-Zz4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NF0gcGxhdGZvcm0vbWVsbGFub3g6IEFkZCBib290
-Y3RsIGRyaXZlciBmb3IgTWVsbGFub3ggQmx1ZUZpZWxkIFNvYw0KPiANCj4gT24gRnJpLCBGZWIg
-MSwgMjAxOSBhdCAxMDo0NyBQTSBMaW1pbmcgU3VuIDxsc3VuQG1lbGxhbm94LmNvbT4gd3JvdGU6
-DQo+IA0KPiBUaGFua3MgZm9yIGFuIHVwZGF0ZSwgbXkgY29tbWVudHMgYmVsb3cuDQo+IA0KPiAo
-VG8gTWVsbGFub3gga2VybmVsIGRldmVsb3BlciB0ZWFtOiBndXlzLCBwZXJoYXBzIHlvdSBuZWVk
-IHRvDQo+IGVzdGFibGlzaCBhIGZldyByb3VuZHMgb2YgaW50ZXJuYWwgcmV2aWV3IGJlZm9yZSBz
-ZW5kaW5nIHRoZSBzdHVmZg0KPiBvdXRzaWRlKQ0KDQpZZXMsIHdlIGRpZCBpbnRlcm5hbCByZXZp
-ZXcgb24gdjUgYW5kIHVwZGF0ZWQgdGhlICdSZXZpZXdlZC1ieScuDQoNCj4gDQo+IEZpcnN0IG9m
-IGFsbCwgSSBkaWRuJ3QgZmluZCBBQkkgZG9jdW1lbnRhdGlvbiBmb3IgaW50ZXJmYWNlIHRoaXMg
-cGF0Y2gNCj4gaW50cm9kdWNlcy4NCj4gTXVzdCBiZSBhZGRlZC4NCg0KQWRkZWQgaW4gdjUuDQoN
-Cj4gDQo+ID4gKy8qIFVVSUQgdXNlZCB0byBwcm9iZSBBVEYgc2VydmljZS4gKi8NCj4gPiArc3Rh
-dGljIGNvbnN0IGNoYXIgKiBjb25zdCBtbHhiZl9ib290Y3RsX3N2Y191dWlkX3N0ciA9DQo+ID4g
-KyAgICAgICAiODljMDM2YjQtZTdkNy0xMWU2LTg3OTctMDAxYWNhMDBiZmM0IjsNCj4gDQo+IHN0
-YXRpYyBjb25zdCBjaGFyICouLi5fc3RyID0gLi4uOw0KDQpVcGRhdGVkIGluIHY1Lg0KDQo+IA0K
-PiA+ICsvKiBTeW50YWN0aWMgc3VnYXIgdG8gYXZvaWQgaGF2aW5nIHRvIHNwZWNpZnkgYW4gdW51
-c2VkIGFyZ3VtZW50LiAqLw0KPiA+ICsjZGVmaW5lIG1seGJmX2Jvb3RjdGxfc21jX2NhbGwwKHNt
-Y19vcCkgbWx4YmZfYm9vdGN0bF9zbWNfY2FsbDEoc21jX29wLCAwKQ0KPiANCj4gTm8uDQo+IFBs
-ZWFzZSwgZG8gaXQgZXhwbGljaXRseS4NCg0KVXBkYXRlZCBpbiB2NS4gUmVuYW1lZCBtbHhiZl9i
-b290Y3RsX3NtY19jYWxsMSgpIHRvIG1seGJmX2Jvb3RjdGxfc21jKCkuDQoNCj4gDQo+ID4gK3N0
-YXRpYyBjb25zdCBjaGFyICptbHhiZl9ib290Y3RsX3Jlc2V0X2FjdGlvbl90b19zdHJpbmcoaW50
-IGFjdGlvbikNCj4gPiArew0KPiA+ICsgICAgICAgaW50IGk7DQo+ID4gKw0KPiA+ICsgICAgICAg
-Zm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUoYm9vdF9uYW1lcyk7IGkrKykNCj4gPiArICAgICAg
-ICAgICAgICAgaWYgKGJvb3RfbmFtZXNbaV0udmFsdWUgPT0gYWN0aW9uKQ0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgIHJldHVybiBib290X25hbWVzW2ldLm5hbWU7DQo+ID4gKw0KPiANCj4g
-PiArICAgICAgIHJldHVybiAiIjsNCj4gDQo+IEhtbS4uLg0KPiBTaG91bGRuJ3QgYmUgbW9yZSBk
-ZXNjcmlwdGl2ZT8NCg0KVXBkYXRlZCBpbiB2NSB0byByZXR1cm4gImludmFsaWQgYWN0aW9uIiBp
-biBzdWNoIGNhc2UuDQoNCj4gDQo+ID4gK30NCj4gDQo+ID4gK3N0YXRpYyBzc2l6ZV90IHBvc3Rf
-cmVzZXRfd2RvZ19zaG93KHN0cnVjdCBkZXZpY2VfZHJpdmVyICpkcnYsIGNoYXIgKmJ1ZikNCj4g
-PiArew0KPiA+ICsgICAgICAgcmV0dXJuIHNwcmludGYoYnVmLCAiJWRcbiIsDQo+ID4gKyAgICAg
-ICAgICAgICAgIG1seGJmX2Jvb3RjdGxfc21jX2NhbGwwKE1MWEJGX0JPT1RDVExfR0VUX1BPU1Rf
-UkVTRVRfV0RPRykpOw0KPiANCj4gV2hhdCBpZiBjYWxsIHJldHVybiBuZWdhdGl2ZSBlcnJvcj8N
-Cg0KRml4ZWQgaW4gdjUgdG8gY2hlY2sgdGhpcyByZXR1cm4gdmFsdWUuDQoNCj4gDQo+ID4gK30N
-Cj4gDQo+ID4gK3N0YXRpYyBzc2l6ZV90IHJlc2V0X2FjdGlvbl9zaG93KHN0cnVjdCBkZXZpY2Vf
-ZHJpdmVyICpkcnYsIGNoYXIgKmJ1ZikNCj4gPiArew0KPiA+ICsgICAgICAgaW50IGFjdGlvbjsN
-Cj4gPiArDQo+ID4gKyAgICAgICBhY3Rpb24gPSBtbHhiZl9ib290Y3RsX3NtY19jYWxsMChNTFhC
-Rl9CT09UQ1RMX0dFVF9SRVNFVF9BQ1RJT04pOw0KPiANCj4gV2hhdCBpZiBhY3Rpb24gZ29lcyBu
-ZWdhdGl2ZT8NCg0KRml4ZWQgaW4gdjUgdG8gY2hlY2sgdGhpcyByZXR1cm4gdmFsdWUuDQoNCj4g
-DQo+ID4gKyAgICAgICByZXR1cm4gc3ByaW50ZihidWYsICIlc1xuIiwNCj4gPiArICAgICAgICAg
-ICAgICAgICAgICAgIG1seGJmX2Jvb3RjdGxfcmVzZXRfYWN0aW9uX3RvX3N0cmluZyhhY3Rpb24p
-KTsNCj4gDQo+IFdvdWxkbid0IGJlIG9uZSBsaW5lPw0KDQpVcGRhdGVkIGluIHY1IChvbmUgbGlu
-ZSkuDQoNCj4gDQo+ID4gK30NCj4gDQo+ID4gK3N0YXRpYyBzc2l6ZV90IHJlc2V0X2FjdGlvbl9z
-dG9yZShzdHJ1Y3QgZGV2aWNlX2RyaXZlciAqZHJ2LA0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBjb25zdCBjaGFyICpidWYsIHNpemVfdCBjb3VudCkNCj4gPiArew0KPiAN
-Cj4gPiArICAgICAgIGludCByZXQsIGFjdGlvbiA9IG1seGJmX2Jvb3RjdGxfcmVzZXRfYWN0aW9u
-X3RvX3ZhbChidWYpOw0KPiANCj4gVGhpcyBzaG91bGQgYmUgbGlrZQ0KPiBpbnQgYWN0aW9uOw0K
-PiBpbnQgcmV0Ow0KPiANCj4gYWN0aW9uID0gLi4uOw0KPiBpZiAoYWN0aW9uIC4uLikNCg0KVXBk
-YXRlZCBpbiB2NS4NCg0KPiANCj4gDQo+ID4gKyAgICAgICBpZiAoYWN0aW9uID09IE1MWEJGX0JP
-T1RDVExfSU5WQUxJRCB8fCBhY3Rpb24gPT0gTUxYQkZfQk9PVENUTF9OT05FKQ0KPiA+ICsgICAg
-ICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCj4gDQo+IFRoZSBtbHhiZl9ib290Y3RsX3Jlc2V0
-X2FjdGlvbl90b192YWwoKSBoYXMgdG8gcmV0dXJuIGEgcHJvcGVyIExpbnV4IGVycm9yIGNvZGUu
-DQo+IEFmdGVyIHRoaXMgY29kZSBzaG91bGQgYmUgbW9kaWZpZWQgdG8gc29tZXRoaW5nIGxpa2UN
-Cj4gDQo+IGlmIChhY3Rpb24gPCAwKQ0KPiAgcmV0dXJuIGFjdGlvbjsNCg0KVXBkYXRlZCBpbiB2
-NS4NCg0KPiANCj4gPiArDQo+ID4gKyAgICAgICByZXQgPSAobWx4YmZfYm9vdGN0bF9zbWNfY2Fs
-bDEoTUxYQkZfQk9PVENUTF9TRVRfUkVTRVRfQUNUSU9OLCBhY3Rpb24pKTsNCj4gDQo+IFJlZHVu
-ZGFudCBwYXJlbnMuDQoNCkZpeGVkIGluIHY1Lg0KDQo+IA0KPiA+ICsgICAgICAgaWYgKHJldCA8
-IDApDQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKw0KPiA+ICsgICAgICAg
-cmV0dXJuIGNvdW50Ow0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgc3NpemVfdCBzZWNvbmRf
-cmVzZXRfYWN0aW9uX3Nob3coc3RydWN0IGRldmljZV9kcml2ZXIgKmRydiwgY2hhciAqYnVmKQ0K
-PiA+ICt7DQo+ID4gKyAgICAgICBpbnQgYWN0aW9uOw0KPiA+ICsgICAgICAgY29uc3QgY2hhciAq
-bmFtZTsNCj4gPiArDQo+ID4gKyAgICAgICBhY3Rpb24gPSBtbHhiZl9ib290Y3RsX3NtY19jYWxs
-MChNTFhCRl9CT09UQ1RMX0dFVF9TRUNPTkRfUkVTRVRfQUNUSU9OKTsNCj4gDQo+IFdoYXQgaWYg
-YWN0aW9uIGlzIG5lZ2F0aXZlPw0KDQpVcGRhdGVkIGluIHY1Lg0KDQo+IA0KPiA+ICsgICAgICAg
-bmFtZSA9IG1seGJmX2Jvb3RjdGxfcmVzZXRfYWN0aW9uX3RvX3N0cmluZyhhY3Rpb24pOw0KPiA+
-ICsNCj4gPiArICAgICAgIHJldHVybiBzcHJpbnRmKGJ1ZiwgIiVzXG4iLCBuYW1lKTsNCj4gDQo+
-IHJldHVybiBzcHJpbnRmKC4uLiBfdG9fc3RyaW5nKC4uLikpOw0KPiA/DQoNClVwZGF0ZWQgaW4g
-djUgYXMgc3VnZ2VzdGVkLg0KDQo+IA0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgc3NpemVf
-dCBzZWNvbmRfcmVzZXRfYWN0aW9uX3N0b3JlKHN0cnVjdCBkZXZpY2VfZHJpdmVyICpkcnYsDQo+
-ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb25zdCBjaGFyICpi
-dWYsIHNpemVfdCBjb3VudCkNCj4gPiArew0KPiANCj4gPiArICAgICAgIGludCByZXQsIGFjdGlv
-biA9IG1seGJmX2Jvb3RjdGxfcmVzZXRfYWN0aW9uX3RvX3ZhbChidWYpOw0KPiANCj4gaW50IGFj
-dGlvbjsNCj4gaW50IHJldDsNCj4gDQo+IGFjdGlvbiA9IC4uLg0KPiBpZiAoYWN0aW9uIC4uLikN
-Cg0KVXBkYXRlZCBpbiB2NS4NCg0KPiANCj4gPiArDQo+ID4gKyAgICAgICBpZiAoYWN0aW9uIDwg
-MCkNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIGFjdGlvbjsNCj4gPiArDQo+ID4gKyAgICAg
-ICByZXQgPSBtbHhiZl9ib290Y3RsX3NtY19jYWxsMShNTFhCRl9CT09UQ1RMX1NFVF9TRUNPTkRf
-UkVTRVRfQUNUSU9OLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-YWN0aW9uKTsNCj4gPiArICAgICAgIGlmIChyZXQgPCAwKQ0KPiA+ICsgICAgICAgICAgICAgICBy
-ZXR1cm4gcmV0Ow0KPiA+ICsNCj4gPiArICAgICAgIHJldHVybiBjb3VudDsNCj4gPiArfQ0KPiA+
-ICsNCj4gPiArc3RhdGljIHNzaXplX3QgbGlmZWN5Y2xlX3N0YXRlX3Nob3coc3RydWN0IGRldmlj
-ZV9kcml2ZXIgKmRydiwgY2hhciAqYnVmKQ0KPiA+ICt7DQo+ID4gKyAgICAgICBpbnQgbGNfc3Rh
-dGU7DQo+ID4gKw0KPiA+ICsgICAgICAgbGNfc3RhdGUgPSBtbHhiZl9ib290Y3RsX3NtY19jYWxs
-MSgNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTUxYQkZf
-Qk9PVENUTF9HRVRfVEJCX0ZVU0VfU1RBVFVTLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBNTFhCRl9CT09UQ1RMX0ZVU0VfU1RBVFVTX0xJRkVDWUNMRSk7
-DQo+IA0KPiA+ICsNCj4gDQo+IFJlZHVuZGFudCBibGFuayBsaW5lLg0KDQpVcGRhdGVkIGluIHY1
-Lg0KDQo+IA0KPiA+ICsgICAgICAgaWYgKGxjX3N0YXRlIDwgMCkNCj4gPiArICAgICAgICAgICAg
-ICAgcmV0dXJuIGxjX3N0YXRlOw0KPiA+ICsNCj4gPiArICAgICAgIGxjX3N0YXRlICY9DQo+ID4g
-KyAgICAgICAgICAgICAgIChNTFhCRl9CT09UQ1RMX1NCX1RFU1RfTUFTSyB8IE1MWEJGX0JPT1RD
-VExfU0JfU0VDVVJFX01BU0spOw0KPiANCj4gQWN0dWFsbHkgcGFyZW5zIGFyZSBub3QgbmVlZGVk
-LiBTb3JyeSwgSSBmb3Jnb3QgdG8gcG9pbnQgdG8gdGhpcyBlYXJsaWVyLg0KDQpVcGRhdGVkIGlu
-IHY1Lg0KDQo+IA0KPiA+ICsNCj4gPiArICAgICAgIC8qDQo+ID4gKyAgICAgICAgKiBJZiB0aGUg
-dGVzdCBiaXRzIGFyZSBzZXQsIHdlIHNwZWNpZnkgdGhhdCB0aGUgY3VycmVudCBzdGF0ZSBtYXkg
-YmUNCj4gPiArICAgICAgICAqIGR1ZSB0byB1c2luZyB0aGUgdGVzdCBiaXRzLg0KPiA+ICsgICAg
-ICAgICovDQo+ID4gKyAgICAgICBpZiAobGNfc3RhdGUgJiBNTFhCRl9CT09UQ1RMX1NCX1RFU1Rf
-TUFTSykgew0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgbGNfc3RhdGUgJj0gTUxYQkZfQk9P
-VENUTF9TQl9TRUNVUkVfTUFTSzsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiBz
-cHJpbnRmKGJ1ZiwgIiVzKHRlc3QpXG4iLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBtbHhiZl9ib290Y3RsX2xpZmVjeWNsZV9zdGF0ZXNbbGNfc3RhdGVdKTsNCj4gPiArICAg
-ICAgIH0NCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gc3ByaW50ZihidWYsICIlc1xuIiwgbWx4
-YmZfYm9vdGN0bF9saWZlY3ljbGVfc3RhdGVzW2xjX3N0YXRlXSk7DQo+ID4gK30NCj4gPiArDQo+
-ID4gK3N0YXRpYyBzc2l6ZV90IHNlY3VyZV9ib290X2Z1c2Vfc3RhdGVfc2hvdyhzdHJ1Y3QgZGV2
-aWNlX2RyaXZlciAqZHJ2LCBjaGFyICpidWYpDQo+ID4gK3sNCj4gPiArICAgICAgIGludCBzYl9r
-ZXlfc3RhdGUgPSBtbHhiZl9ib290Y3RsX3NtY19jYWxsMSgNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIE1MWEJGX0JPT1RDVExfR0VUX1RCQl9GVVNFX1NUQVRVUywNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIE1MWEJGX0JPT1RDVExfRlVTRV9TVEFUVVNf
-S0VZUyk7DQo+IA0KPiBTcGxpdCBpdCB0byBkZWNsYXJhdGlvbiBhbmQgYXNzaWdubWVudC4NCg0K
-VXBkYXRlZCBpbiB2NS4NCg0KPiANCj4gPiArICAgICAgIGludCB1cHBlcl9rZXlfdXNlZCA9IDA7
-DQo+ID4gKyAgICAgICBpbnQgYnVmX2xlbiA9IDA7DQo+ID4gKyAgICAgICBjb25zdCBjaGFyICpz
-dGF0dXM7DQo+ID4gKyAgICAgICBpbnQga2V5Ow0KPiA+ICsNCj4gPiArICAgICAgIGlmIChzYl9r
-ZXlfc3RhdGUgPCAwKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gc2Jfa2V5X3N0YXRlOw0K
-PiA+ICsNCj4gPiArICAgICAgIGZvciAoa2V5ID0gTUxYQkZfU0JfS0VZX05VTSAtIDE7IGtleSA+
-PSAwOyBrZXktLSkgew0KPiANCj4gPiArICAgICAgICAgICAgICAgaW50IGJ1cm50ID0gc2Jfa2V5
-X3N0YXRlICYgKDEgPDwga2V5KTsNCj4gDQo+IEJJVCgpID8NCg0KVXBkYXRlZCBpbiB2NS4NCg0K
-PiANCj4gPiArICAgICAgICAgICAgICAgaW50IHZhbGlkID0gc2Jfa2V5X3N0YXRlICYNCj4gPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAoMSA8PCAoa2V5ICsgTUxYQkZfU0JfS0VZX05V
-TSkpOw0KPiANCj4gRGl0dG8uIEFuZCBwdXQgdG8gb25lIGxpbmU/DQoNClVwZGF0ZWQgaW4gdjUu
-DQoNCj4gDQo+ID4gKyAgICAgICAgICAgICAgIGJ1Zl9sZW4gKz0gc3ByaW50ZihidWYgKyBidWZf
-bGVuLCAiJWQ6Iiwga2V5KTsNCj4gDQo+IFdoeSB0aGlzIGNhbid0IGJlIHBhcnQgb2YgdGhlIGJl
-bG93IHNwcmludGYoKSBjYWxsPw0KDQpVcGRhdGVkIGluIHY1Lg0KDQo+IA0KPiA+ICsgICAgICAg
-ICAgICAgICBpZiAodXBwZXJfa2V5X3VzZWQpIHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICBpZiAoYnVybnQpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0dXMg
-PSB2YWxpZCA/ICJVc2VkIiA6ICJXYXN0ZWQiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IGVsc2UNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9IHZhbGlk
-ID8gIkludmFsaWQiIDogIlNraXBwZWQiOw0KPiA+ICsgICAgICAgICAgICAgICB9IGVsc2Ugew0K
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGlmIChidXJudCkgew0KPiA+ICsgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgc3RhdHVzID0gdmFsaWQgPyAiSW4gdXNlIiA6ICJCdXJuIGlu
-Y29tcGxldGUiOw0KPiANCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmICh2
-YWxpZCkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdXBwZXJf
-a2V5X3VzZWQgPSAxOw0KPiANCj4gTW92ZSB0aGlzIG91dCBvZiB0aGlzIGlmLWVsc2UtaWYgYmxv
-Y2suIFRoZSByYXRpb25hbGUgaXMgdG8gc3BsaXQgdHdvDQo+IGxvZ2ljYWwgcGFydHM6DQo+IDEp
-IG1lc3NhZ2UgY2hvaWNlDQo+IDIpIGZsYWcgZmxpcA0KDQpVcGRhdGVkIHRoZSBsb2dpYyBpbiB2
-NSBhcyBzdWdnZXN0ZWQuDQoNCj4gDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgfSBlbHNl
-DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0dXMgPSB2YWxpZCA/ICJJ
-bnZhbGlkIiA6ICJGcmVlIjsNCj4gPiArICAgICAgICAgICAgICAgfQ0KPiA+ICsgICAgICAgICAg
-ICAgICBidWZfbGVuICs9IHNwcmludGYoYnVmICsgYnVmX2xlbiwgc3RhdHVzKTsNCj4gDQo+ID4g
-KyAgICAgICAgICAgICAgIGlmIChrZXkgIT0gMCkNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICBidWZfbGVuICs9IHNwcmludGYoYnVmICsgYnVmX2xlbiwgIjsgIik7DQo+IA0KPiBXaHkgZG8g
-eW91IG5lZWQgdG8gY2hlY2sgdGhpcz8NCg0KVXBkYXRlZCBpbiB2NSB0byByZW1vdmUgdGhlIGNo
-ZWNrIGFuZCBtZXJnZSBpdCB3aXRoIHRoZSBsaW5lIGFib3ZlLg0KDQo+IA0KPiA+ICsgICAgICAg
-fQ0KPiA+ICsgICAgICAgYnVmX2xlbiArPSBzcHJpbnRmKGJ1ZiArIGJ1Zl9sZW4sICJcbiIpOw0K
-PiA+ICsNCj4gPiArICAgICAgIHJldHVybiBidWZfbGVuOw0KPiA+ICt9DQo+IA0KPiA+ICtzdGF0
-aWMgc3RydWN0IGF0dHJpYnV0ZV9ncm91cCBtbHhiZl9ib290Y3RsX2F0dHJfZ3JvdXAgPSB7DQo+
-ID4gKyAgICAgICAuYXR0cnMgPSBtbHhiZl9ib290Y3RsX2Rldl9hdHRycw0KPiANCj4gKyBjb21t
-YS4NCg0KVXBkYXRlZCBpbiB2NS4NCg0KPiANCj4gPiArfTsNCj4gDQo+ID4gK3N0YXRpYyBib29s
-IG1seGJmX2Jvb3RjdGxfZ3VpZF9tYXRjaChjb25zdCBndWlkX3QgKmd1aWQsDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IHN0cnVjdCBhcm1fc21jY2NfcmVz
-ICpyZXMpDQo+ID4gK3sNCj4gDQo+ID4gKyAgICAgICBndWlkX3QgaWQgPSBHVUlEX0lOSVQocmVz
-LT5hMCwgcmVzLT5hMSAmIDB4RkZGRiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAocmVzLT5hMSA+PiAxNikgJiAweEZGRkYsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgcmVzLT5hMiAmIDB4ZmYsIChyZXMtPmEyID4+IDgpICYgMHhGRiwNCj4gPiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAocmVzLT5hMiA+PiAxNikgJiAweEZGLCAocmVzLT5hMiA+
-PiAyNCkgJiAweEZGLA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlcy0+YTMg
-JiAweGZmLCAocmVzLT5hMyA+PiA4KSAmIDB4RkYsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgKHJlcy0+YTMgPj4gMTYpICYgMHhGRiwgKHJlcy0+YTMgPj4gMjQpICYgMHhGRik7
-DQo+IA0KPiBBbGwgJiAweEZGKiBhcmUgZG9uZSBpbnNpZGUgdGhlIG1hY3JvLCBubyBuZWVkIHRv
-IGR1cGxpY2F0ZS4NCg0KVXBkYXRlZCBpbiB2NS4NCg0KPiANCj4gPiArDQo+ID4gKyAgICAgICBy
-ZXR1cm4gZ3VpZF9lcXVhbChndWlkLCAmaWQpOw0KPiA+ICt9DQo+IA0KPiA+ICtzdGF0aWMgaW50
-IG1seGJmX2Jvb3RjdGxfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiAr
-ew0KPiA+ICsgICAgICAgc3RydWN0IGFybV9zbWNjY19yZXMgcmVzOw0KPiA+ICsgICAgICAgZ3Vp
-ZF90IGd1aWQ7DQo+ID4gKw0KPiA+ICsgICAgICAgLyogRW5zdXJlIHdlIGhhdmUgdGhlIFVVSUQg
-d2UgZXhwZWN0IGZvciB0aGlzIHNlcnZpY2UuICovDQo+ID4gKyAgICAgICBhcm1fc21jY2Nfc21j
-KE1MWEJGX0JPT1RDVExfU0lQX1NWQ19VSUQsIDAsIDAsIDAsIDAsIDAsIDAsIDAsICZyZXMpOw0K
-PiA+ICsgICAgICAgZ3VpZF9wYXJzZShtbHhiZl9ib290Y3RsX3N2Y191dWlkX3N0ciwgJmd1aWQp
-Ow0KPiA+ICsgICAgICAgaWYgKCFtbHhiZl9ib290Y3RsX2d1aWRfbWF0Y2goJmd1aWQsICZyZXMp
-KQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT0RFVjsNCj4gPiArDQo+ID4gKyAgICAg
-ICAvKg0KPiA+ICsgICAgICAgICogV2hlbiB3YXRjaGRvZyBpcyB1c2VkLCBpdCBzZXRzIGJvb3Qg
-bW9kZSB0byBNTFhCRl9CT09UQ1RMX1NXQVBfRU1NQw0KPiA+ICsgICAgICAgICogaW4gY2FzZSBv
-ZiBib290IGZhaWx1cmVzLiBIb3dldmVyIGl0IGRvZXNuJ3QgY2xlYXIgdGhlIHN0YXRlIGlmIHRo
-ZXJlDQo+ID4gKyAgICAgICAgKiBpcyBubyBmYWlsdXJlLiBSZXN0b3JlIHRoZSBkZWZhdWx0IGJv
-b3QgbW9kZSBoZXJlIHRvIGF2b2lkIGFueQ0KPiA+ICsgICAgICAgICogdW5uZWNlc3NhcnkgYm9v
-dCBwYXJ0aXRpb24gc3dhcHBpbmcuDQo+ID4gKyAgICAgICAgKi8NCj4gDQo+ID4gKyAgICAgICBp
-ZiAobWx4YmZfYm9vdGN0bF9zbWNfY2FsbDEoTUxYQkZfQk9PVENUTF9TRVRfUkVTRVRfQUNUSU9O
-LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIE1MWEJGX0JPT1RDVExf
-RU1NQykgPCAwKQ0KPiANCj4gVXNlIHRlbXBvcmFyeSB2YXJpYWJsZSBoZXJlLg0KDQpVcGRhdGVk
-IGluIHY1Lg0KDQo+IA0KPiBpbnQgcmV0Oz4gKw0KPiANCj4gLi4uDQo+IHJldCA9IC4uLl9jYWxs
-MSguLi4pOw0KPiBpZiAocmV0IDwgMCkNCj4gDQo+ID4gKyAgICAgICAgICAgICAgIGRldl9lcnIo
-JnBkZXYtPmRldiwgIlVuYWJsZSB0byByZXNldCB0aGUgRU1NQyBib290IG1vZGVcbiIpOw0KPiAN
-Cj4gSWYgaXQncyBlcnJvciwgd2h5IHdlIHJldHVybiAwPw0KPiBPdGhlcndpc2UsIHVzZSB3YXJu
-IGxldmVsIGhlcmUuDQoNClVwZGF0ZWQgdG8gdXNlIGRldl93YXJuKCkgdG8gYXZvaWQgbW9kdWxl
-IHByb2JlIGZhaWx1cmUgc2luY2Ugb3RoZXINCmZ1bmN0aW9uYWxpdGllcyBjYW4gc3RpbGwgYmUg
-dXNlZC4NCg0KPiANCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsN
-Cj4gPiArc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgbWx4YmZfYm9vdGN0bF9kcml2ZXIg
-PSB7DQo+ID4gKyAgICAgICAucHJvYmUgPSBtbHhiZl9ib290Y3RsX3Byb2JlLA0KPiA+ICsgICAg
-ICAgLmRyaXZlciA9IHsNCj4gPiArICAgICAgICAgICAgICAgLm5hbWUgPSAibWx4YmYtYm9vdGN0
-bCIsDQo+ID4gKyAgICAgICAgICAgICAgIC5ncm91cHMgPSBtbHhiZl9ib290Y3RsX2F0dHJfZ3Jv
-dXBzLA0KPiANCj4gPiArICAgICAgICAgICAgICAgLmFjcGlfbWF0Y2hfdGFibGUgPSBBQ1BJX1BU
-UihtbHhiZl9ib290Y3RsX2FjcGlfaWRzKSwNCj4gDQo+IEFDUElfUFRSIGlzIHJlZHVuZGFudCBm
-b3IgdGhlIEFDUEkgZGVwZW5kZW50IGRyaXZlci4NCg0KVXBkYXRlZCBpbiB2NS4NCg0KPiANCj4g
-PiArICAgICAgIH0NCj4gPiArfTsNCj4gDQo+IC0tDQo+IFdpdGggQmVzdCBSZWdhcmRzLA0KPiBB
-bmR5IFNoZXZjaGVua28NCg==
+On 5/17/2019 6:54 PM, Bjorn Helgaas wrote:
+> On Fri, May 17, 2019 at 01:49:49PM +0530, Vidya Sagar wrote:
+>> On 5/16/2019 7:04 PM, Bjorn Helgaas wrote:
+>>> On Tue, May 14, 2019 at 09:00:19AM +0530, Vidya Sagar wrote:
+>>>> On 5/13/2019 12:55 PM, Christoph Hellwig wrote:
+>>>>> On Mon, May 13, 2019 at 10:36:13AM +0530, Vidya Sagar wrote:
+>>>>>> Export pcie_pme_disable_msi() & pcie_pme_no_msi() APIs to enable drivers
+>>>>>> using these APIs be able to build as loadable modules.
+>>>>>
+>>>>> But this is a global setting.  If you root port is broken you need
+>>>>> a per-rootport quirk instead.
+>>>>>
+>>>> There is nothing broken in Tegra194 root port as such, rather, this
+>>>> is more of software configuration choice and we are going with
+>>>> legacy interrupts than MSI interrupts (as Tegra194 doesn't support
+>>>> raising PME interrupts through MSI and please note that this doesn't
+>>>> mean root port is broken).
+>>>
+>>> I think the port *is* broken.  PCIe r4.0, sec 6.1.6, says
+>>>
+>>>     If the Root Port is enabled for edge-triggered interrupt signaling
+>>>     using MSI or MSI-X, an interrupt message must be sent every time the
+>>>     logical AND of the following conditions transitions from FALSE to
+>>>     TRUE:
+>>>
+>>>       * The associated vector is unmasked (not applicable if MSI does
+>>>         not support PVM).
+>>>
+>>>       * The PME Interrupt Enable bit in the Root Control register is set
+>>>         to 1b.
+>>>
+>>>       * The PME Status bit in the Root Status register is set.
+>>>
+>>> The Tegra194 root port advertises MSI support, so the above should
+>>> apply.
+>> I had a discussion with our hardware engineers and we are of the
+>> opinion that the root port is not really broken w.r.t MSI as spec
+>> doesn't clearly say that if root port advertises MSI support, it
+>> must generate MSI interrupts for PME. All that it says is, if MSI is
+>> enabled, then MSI should be raised for PME events. Here, by
+>> 'enable', we understand that as enabling at hardware level to
+>> generate MSI interrupt which is not the case with Tegra194.  In
+>> Tegra194, root port is enabled to generate MSI only for hot-plug
+>> events and legacy interrupts are used for PME, AER.
+> 
+> Do you have "lspci -vvxxx" output for the root ports handy?
+> 
+> If there's some clue in the standard config space that would tell us
+> that MSI works for some events but not others, we could make the PCI
+> core pay attention it.  That would be the best solution because it
+> wouldn't require Tegra-specific code.
+
+Here is the output of 'lspci vvxxx' for one of Tegra194's root ports.
+
+0005:00:00.0 PCI bridge: NVIDIA Corporation Device 1ad0 (rev a1) (prog-if 00 [Normal decode])
+	Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR+ FastB2B- DisINTx-
+	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+	Latency: 0
+	Interrupt: pin A routed to IRQ 50
+	Bus: primary=00, secondary=01, subordinate=ff, sec-latency=0
+	I/O behind bridge: None
+	Memory behind bridge: 40000000-400fffff [size=1M]
+	Prefetchable memory behind bridge: None
+	Secondary status: 66MHz- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- <SERR- <PERR-
+	BridgeCtl: Parity- SERR+ NoISA- VGA- VGA16- MAbort- >Reset- FastB2B-
+		PriDiscTmr- SecDiscTmr- DiscTmrStat- DiscTmrSERREn-
+	Capabilities: [40] Power Management version 3
+		Flags: PMEClk- DSI- D1- D2- AuxCurrent=375mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
+		Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+	Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
+		Address: 0000000000000000  Data: 0000
+		Masking: 00000000  Pending: 00000000
+	Capabilities: [70] Express (v2) Root Port (Slot-), MSI 00
+		DevCap:	MaxPayload 256 bytes, PhantFunc 0
+			ExtTag- RBE+
+		DevCtl:	CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
+			RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+
+			MaxPayload 128 bytes, MaxReadReq 512 bytes
+		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
+		LnkCap:	Port #0, Speed 16GT/s, Width x8, ASPM L0s L1, Exit Latency L0s <1us, L1 <64us
+			ClockPM- Surprise+ LLActRep+ BwNot+ ASPMOptComp+
+		LnkCtl:	ASPM Disabled; RCB 64 bytes Disabled- CommClk+
+			ExtSynch- ClockPM- AutWidDis- BWInt+ AutBWInt-
+		LnkSta:	Speed 5GT/s (downgraded), Width x1 (downgraded)
+			TrErr- Train- SlotClk+ DLActive+ BWMgmt+ ABWMgmt+
+		RootCtl: ErrCorrectable- ErrNon-Fatal- ErrFatal- PMEIntEna+ CRSVisible+
+		RootCap: CRSVisible+
+		RootSta: PME ReqID 0000, PMEStatus- PMEPending-
+		DevCap2: Completion Timeout: Range ABCD, TimeoutDis+, LTR+, OBFF Not Supported ARIFwd-
+			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
+		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR+, OBFF Disabled ARIFwd-
+			 AtomicOpsCtl: ReqEn- EgressBlck-
+		LnkCtl2: Target Link Speed: 16GT/s, EnterCompliance- SpeedDis-
+			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+			 Compliance De-emphasis: -6dB
+		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete-, EqualizationPhase1-
+			 EqualizationPhase2-, EqualizationPhase3-, LinkEqualizationRequest-
+	Capabilities: [b0] MSI-X: Enable- Count=8 Masked-
+		Vector table: BAR=2 offset=00000000
+		PBA: BAR=2 offset=00010000
+	Capabilities: [100 v2] Advanced Error Reporting
+		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+		UESvrt:	DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
+		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
+		AERCap:	First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+			MultHdrRecCap+ MultHdrRecEn- TLPPfxPres- HdrLogCap-
+		HeaderLog: 00000000 00000000 00000000 00000000
+		RootCmd: CERptEn+ NFERptEn+ FERptEn+
+		RootSta: CERcvd- MultCERcvd- UERcvd- MultUERcvd-
+			 FirstFatal- NonFatalMsg- FatalMsg- IntMsg 0
+		ErrorSrc: ERR_COR: 0000 ERR_FATAL/NONFATAL: 0000
+	Capabilities: [148 v1] Secondary PCI Express <?>
+	Capabilities: [168 v1] Physical Layer 16.0 GT/s <?>
+	Capabilities: [190 v1] Lane Margining at the Receiver <?>
+	Capabilities: [1c0 v1] L1 PM Substates
+		L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+			  PortCommonModeRestoreTime=60us PortTPowerOnTime=40us
+		L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
+			   T_CommonMode=10us LTR1.2_Threshold=0ns
+		L1SubCtl2: T_PwrOn=10us
+	Capabilities: [1d0 v1] Vendor Specific Information: ID=0002 Rev=4 Len=100 <?>
+	Capabilities: [2d0 v1] Vendor Specific Information: ID=0001 Rev=1 Len=038 <?>
+	Capabilities: [308 v1] Data Link Feature <?>
+	Capabilities: [314 v1] Precision Time Measurement
+		PTMCap: Requester:+ Responder:+ Root:+
+		PTMClockGranularity: 16ns
+		PTMControl: Enabled:- RootSelected:-
+		PTMEffectiveGranularity: Unknown
+	Capabilities: [320 v1] Vendor Specific Information: ID=0004 Rev=1 Len=054 <?>
+	Kernel driver in use: pcieport
+00: de 10 d0 1a 07 01 10 00 a1 00 04 06 00 00 01 00
+10: 00 00 00 00 00 00 00 00 00 01 ff 00 f0 00 00 00
+20: 00 40 00 40 f1 ff 01 00 00 00 00 00 00 00 00 00
+30: 00 00 00 00 40 00 00 00 00 00 00 00 32 01 02 00
+40: 01 50 c3 c9 08 00 00 00 00 00 00 00 00 00 00 00
+50: 05 70 80 01 00 00 00 00 00 00 00 00 00 00 00 00
+60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+70: 10 b0 42 00 01 80 00 00 1f 28 10 00 84 4c 7b 00
+80: 40 04 12 f0 00 00 00 00 c0 03 40 00 18 00 01 00
+90: 00 00 00 00 1f 0c 01 00 00 04 00 00 1e 00 80 01
+a0: 04 00 00 02 00 00 00 00 00 00 00 00 00 00 00 00
+b0: 11 00 07 00 02 00 00 00 02 00 01 00 00 00 00 00
+c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+> 
+> If this situation requires Tegra-specific code, that becomes an issue
+> if you ever want to use the part in an ACPI system because the ACPI
+> host bridge driver is generic and there isn't a place to put
+> device-specific code.
+Thanks for bringing it up. I'll make a note of this and discuss about it internally.
+
+> 
+> Bjorn
+> 
+
