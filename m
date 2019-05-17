@@ -2,105 +2,230 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25124C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB087C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E65F620848
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:08:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8D020848
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 10:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ABq07RSi"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="klVdSO4F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbfEQKId (ORCPT
+        id S1728530AbfEQKKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 06:08:33 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37185 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727758AbfEQKIc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 06:08:32 -0400
-Received: by mail-io1-f65.google.com with SMTP id u2so5032433ioc.4
-        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 03:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dYic2P+6ud2BLpzg39R0w8EtXyHQz8gOx45AtfjtiR8=;
-        b=ABq07RSiGAWIk0DyhQtRbQ4+sNALkDk3FtcRTZYJ5CyrBcva8qLEokN/3bAybveOCT
-         txSMgGCGrnMiKYTpmCd/0+gXBoDXi0S+KaUM3JRrQTZsrykrM8UAjWof6IKTfH0GtVcO
-         NZLmuMhxkSlU5E9o6voqi1E8J4alq/30kJ7RytfDbKPK2GnrdyU5zt2A4qne+bofGkRD
-         CUus1EWBCw8KFV3rIq57+59sBQYphwsb1nw9VICZR5LJWX2hqsMTYIyTuv/iFOJkPMmv
-         2oblBW/ztdufoKxfXglFxQv9J+1KHYof7YlVu0hmrjLPKHHUam16JJYe1ceDEaTawHQq
-         yJfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dYic2P+6ud2BLpzg39R0w8EtXyHQz8gOx45AtfjtiR8=;
-        b=duIiWLukJBQoYRsq05kThiNVG8C3sqAXsGEcVa9DusAPyo3yKNqPNflowc3I6tjuqJ
-         sqc7MVRAf7zSZVN68XTjz7J/hXI+FvgfU6+DYZvFhel0IoFJkDJ7f31j2c4qjTo1/kwq
-         zpRNLr0pDTsPsS8AXRqGWVo5TobQf3bimdx3P01CuaYjlo1D2gX3wRF2P1pf30epr0k3
-         ALeV4kBgy/Gh3PX9LNT6WyZwax8XuyUYMtOr/lV3Zs310q0RkkdxFLfLM56ks6QcD3Ml
-         8ZUvdJ50abcQyTp/PPdQC3mcNFjiiS43JJh4NtH5qrJLmsBtnoSiZD666j1c8fDkkYeb
-         NsUQ==
-X-Gm-Message-State: APjAAAVbZXa9DddO83nEXZw9wyczqID0Xut76Q0PiOfB9VWG1/Ev9I0W
-        UOeFIHg14VZoibf1VL6edEx58Ka5mHrwn1LXCNQQgw==
-X-Google-Smtp-Source: APXvYqwEEZ2yXkAnVJjBdQFDFEn8Qtyca+gitm77OgT4AIzInew3bWhqh6K5bO0rSsvDl6TnCPyWQ/h/MGw1wLEkF7g=
-X-Received: by 2002:a5d:9dc2:: with SMTP id 2mr4521348ioo.3.1558087711591;
- Fri, 17 May 2019 03:08:31 -0700 (PDT)
+        Fri, 17 May 2019 06:10:10 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:49482 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727758AbfEQKKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 06:10:10 -0400
+Received: from zn.tnic (p200300EC2F0C500058FF0EE6A54CD1FB.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:5000:58ff:ee6:a54c:d1fb])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 76A611EC0283;
+        Fri, 17 May 2019 12:10:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1558087808;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=tuDeMaO7OLd0hq29haI35+LnUBzOtHJxdEaRXdXIzYY=;
+        b=klVdSO4Ff0pC+sz1HXFdIAyT5RdIjCIOqRWtifeeQqZhmAKjVu/L8xyGvsgyfghOMJa1L+
+        71JblgD7tVrj6vJfry40JsuxrgviJGG+1cCEJp9IsL6FHFSmDl356p6LtIDWbvyvgYlCgR
+        PTOmFtuvjfAiYU9+mpGJwSYEcEAp4ks=
+Date:   Fri, 17 May 2019 12:10:06 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Message-ID: <20190517101006.GA32065@zn.tnic>
+References: <20190430203206.104163-1-Yazen.Ghannam@amd.com>
+ <20190430203206.104163-6-Yazen.Ghannam@amd.com>
+ <20190516155202.GA11517@agluck-desk>
+ <SN6PR12MB26397B30A120E3426184727FF80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516165648.GB21857@zn.tnic>
+ <SN6PR12MB26392B440ED735C26AA2C678F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516172117.GC21857@zn.tnic>
+ <SN6PR12MB26394CD4E1BAC068B0B1AEF6F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516203456.GD21857@zn.tnic>
+ <20190516205943.GA3299@agluck-desk>
 MIME-Version: 1.0
-References: <CAHRSSEy3od0-7HMCOjbHprc9ihu3VqkJi1-5OKew0oN-2BcPvA@mail.gmail.com>
- <0000000000001165cb058538aaee@google.com>
-In-Reply-To: <0000000000001165cb058538aaee@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 17 May 2019 12:08:20 +0200
-Message-ID: <CACT4Y+bvMEQRcxqM4c9zc-eySQBnuGipwudCNvBv5f+Dgyr3ow@mail.gmail.com>
-Subject: Re: kernel BUG at drivers/android/binder_alloc.c:LINE! (3)
-To:     syzbot <syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com>
-Cc:     =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
-        Christian Brauner <christian@brauner.io>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Martijn Coenen <maco@android.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Todd Kjos <tkjos@android.com>, Todd Kjos <tkjos@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190516205943.GA3299@agluck-desk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 29, 2019 at 10:55 AM syzbot
-<syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot has tested the proposed patch and the reproducer did not trigger
-> crash:
->
-> Reported-and-tested-by:
-> syzbot+f9f3f388440283da2965@syzkaller.appspotmail.com
->
-> Tested on:
->
-> commit:         8c2ffd91 Linux 5.1-rc2
-> git tree:
-> git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git master
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=8dcdce25ea72bedf
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> patch:          https://syzkaller.appspot.com/x/patch.diff?x=10fed663200000
->
-> Note: testing is done by a robot and is best-effort only.
+On Thu, May 16, 2019 at 01:59:43PM -0700, Luck, Tony wrote:
+> I think the intent of the original patch was to find out
+> which bits are "implemented in hardware". I.e. throw all
+> 1's at the register and see if any of them stick.
 
+And, in addition, check ->init before showing/setting a bank:
 
-Todd,
+---
+@@ -2095,6 +2098,9 @@ static ssize_t show_bank(struct device *s, struct device_attribute *attr,
+ 
+        b = &per_cpu(mce_banks_array, s->id)[bank];
+ 
++       if (!b->init)
++               return -ENODEV;
++
+        return sprintf(buf, "%llx\n", b->ctl);
+ }
+ 
+@@ -2113,6 +2119,9 @@ static ssize_t set_bank(struct device *s, struct device_attribute *attr,
+ 
+        b = &per_cpu(mce_banks_array, s->id)[bank];
+ 
++       if (!b->init)
++               return -ENODEV;
++
+        b->ctl = new;
+        mce_restart();
+---
 
-Should this patch fix the bug? Should we close the bug as fixed then?
-In my local testing I see this BUG still fires, but if we will leave
-old fixed bugs open, we will not get notifications about new crashes.
+so that you get a feedback whether the setting has even succeeded or
+not. Right now we're doing "something" blindly and accepting any b->ctl
+from userspace. Yeah, it is root-only but still...
+
+> I don't object to the idea behind the patch. But if you want
+> to do this you just should not modify b->ctl.
+> 
+> So something like:
+> 	
+> 
+> static void __mcheck_cpu_init_clear_banks(void)
+> {
+>         struct mce_bank *mce_banks = this_cpu_read(mce_banks_array);
+> 	u64 tmp;
+>         int i;
+> 
+>         for (i = 0; i < this_cpu_read(mce_num_banks); i++) {
+>                 struct mce_bank *b = &mce_banks[i];
+> 
+>                 if (b->init) {
+>                         wrmsrl(msr_ops.ctl(i), b->ctl);
+>                         wrmsrl(msr_ops.status(i), 0);
+> 			rdmsrl(msr_ops.ctl(i), tmp);
+> 
+> 			/* Check if any bits implemented in h/w */
+> 			b->init = !!tmp;
+>                 }
+
+... except that we unconditionally set ->init to 1 in
+__mcheck_cpu_mce_banks_init() and I think we should query it. Btw, that
+name __mcheck_cpu_mce_banks_init() is hideous too. I'll fix those up. In
+the meantime, how does the below look like? The change is to tickle out
+from the hw whether some CTL bits stick and then use that to determine
+b->init setting:
+
+---
+From: Yazen Ghannam <yazen.ghannam@amd.com>
+Date: Tue, 30 Apr 2019 20:32:21 +0000
+Subject: [PATCH] x86/MCE: Determine MCA banks' init state properly
+
+The OS is expected to write all bits to MCA_CTL for each bank,
+thus enabling error reporting in all banks. However, some banks
+may be unused in which case the registers for such banks are
+Read-as-Zero/Writes-Ignored. Also, the OS may avoid setting some control
+bits because of quirks, etc.
+
+A bank can be considered uninitialized if the MCA_CTL register returns
+zero. This is because either the OS did not write anything or because
+the hardware is enforcing RAZ/WI for the bank.
+
+Set a bank's init value based on if the control bits are set or not in
+hardware. Return an error code in the sysfs interface for uninitialized
+banks.
+
+ [ bp: Massage a bit. Discover bank init state at boot. ]
+
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: "x86@kernel.org" <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190430203206.104163-7-Yazen.Ghannam@amd.com
+---
+ arch/x86/kernel/cpu/mce/core.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 5bcecadcf4d9..d84b0c707d0e 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1492,9 +1492,16 @@ static int __mcheck_cpu_mce_banks_init(void)
+ 
+ 	for (i = 0; i < n_banks; i++) {
+ 		struct mce_bank *b = &mce_banks[i];
++		u64 val;
+ 
+ 		b->ctl = -1ULL;
+-		b->init = 1;
++
++		/* Check if any bits are implemented in h/w */
++		wrmsrl(msr_ops.ctl(i), b->ctl);
++		rdmsrl(msr_ops.ctl(i), val);
++		b->init = !!val;
++
++		wrmsrl(msr_ops.status(i), 0);
+ 	}
+ 
+ 	per_cpu(mce_banks_array, smp_processor_id()) = mce_banks;
+@@ -1567,10 +1574,10 @@ static void __mcheck_cpu_init_clear_banks(void)
+ 	for (i = 0; i < this_cpu_read(mce_num_banks); i++) {
+ 		struct mce_bank *b = &mce_banks[i];
+ 
+-		if (!b->init)
+-			continue;
+-		wrmsrl(msr_ops.ctl(i), b->ctl);
+-		wrmsrl(msr_ops.status(i), 0);
++		if (b->init) {
++			wrmsrl(msr_ops.ctl(i), b->ctl);
++			wrmsrl(msr_ops.status(i), 0);
++		}
+ 	}
+ }
+ 
+@@ -2095,6 +2102,9 @@ static ssize_t show_bank(struct device *s, struct device_attribute *attr,
+ 
+ 	b = &per_cpu(mce_banks_array, s->id)[bank];
+ 
++	if (!b->init)
++		return -ENODEV;
++
+ 	return sprintf(buf, "%llx\n", b->ctl);
+ }
+ 
+@@ -2113,6 +2123,9 @@ static ssize_t set_bank(struct device *s, struct device_attribute *attr,
+ 
+ 	b = &per_cpu(mce_banks_array, s->id)[bank];
+ 
++	if (!b->init)
++		return -ENODEV;
++
+ 	b->ctl = new;
+ 	mce_restart();
+ 
+-- 
+2.21.0
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
