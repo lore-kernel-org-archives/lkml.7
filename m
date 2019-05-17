@@ -2,152 +2,300 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DC0C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:05:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBD6C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3DF12087E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 949012087B
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 13:12:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QISLHjwa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728997AbfEQNFW (ORCPT
+        id S1728410AbfEQNMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 09:05:22 -0400
-Received: from mga09.intel.com ([134.134.136.24]:60150 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728683AbfEQNFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 09:05:22 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 May 2019 06:05:21 -0700
-X-ExtLoop1: 1
-Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 17 May 2019 06:05:12 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Fri, 17 May 2019 16:05:11 +0300
-Date:   Fri, 17 May 2019 16:05:11 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
-        Li Jun <jun.li@nxp.com>,
-        Badhri Jagan Sridharan <badhri@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Min Guo <min.guo@mediatek.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Biju Das <biju.das@bp.renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 4/6] usb: roles: add API to get usb_role_switch by node
-Message-ID: <20190517130511.GA1887@kuha.fi.intel.com>
-References: <1557823643-8616-1-git-send-email-chunfeng.yun@mediatek.com>
- <1557823643-8616-5-git-send-email-chunfeng.yun@mediatek.com>
- <20190517103736.GA1490@kuha.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190517103736.GA1490@kuha.fi.intel.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Fri, 17 May 2019 09:12:38 -0400
+Received: from mail-oi1-f202.google.com ([209.85.167.202]:50186 "EHLO
+        mail-oi1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728315AbfEQNMi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 09:12:38 -0400
+Received: by mail-oi1-f202.google.com with SMTP id p83so2745404oih.17
+        for <linux-kernel@vger.kernel.org>; Fri, 17 May 2019 06:12:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=FJs+O5o+cz5HCB5KlHNqWYoyNOZwk4659YdHbrsYlV8=;
+        b=QISLHjwatyyS68LYxu91gfHOGzQZkApgwV9mJCFI2+RWppkrWl5mmmoYiRBI29wN1I
+         uyOsslA27pzcBpqGEwQ6sWUys8fIjXCVlf29bhf3n+LidYegLvtgPa2YvKFvOwaT72I9
+         Hq840HxLmkBAUD61Jlm6ud0G+pc9jJi/oNgB74UhaXMiyrcxNIlenwLyGKBC3JFjWYY2
+         joOK7FiIbMpz4pd+YfikGAnZMNyopEgOVy0D9mFONqOaiFKWsLbbRR93udxpZzczyMXX
+         uPh4kunT6noNrJYvnRdozUC0MUS1xDN3RQo86J2HGbtZ3vncn8AtsSc3/ABUf5UbEAZL
+         4o7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=FJs+O5o+cz5HCB5KlHNqWYoyNOZwk4659YdHbrsYlV8=;
+        b=XDbVnniS7FCTe66zydhs2OZEKAXg6QM62XRLGtA9p1gc0iyKGKpVZdpdjPkFrSg97G
+         QtmvqPMFMYXoLhlB5x6WXzJbDglSGyzLJ/3o7qExupq6AAWBn/oI3aBRgVhQi7o8r/Z2
+         kw0l3phXRSJm+ZbrgO1djke0JWjKUIrn4EoAZLtxTXcag2JVg1TfG7Sd8YWIwJthQJ/T
+         GByiqj3NfEkYecFayMStqXxHa6YonkjIIriTfVcbgGXYHjw/RUIP0JslF8YOyZnLndRl
+         5T8qNOfAc2HGyx57QCPIC5eEloKjR/6CgesJ5ThXhK4g10isT57n9mYE9OpIfEcccCRq
+         SpCw==
+X-Gm-Message-State: APjAAAUG4zVZjkk5yF5gca/Sd71/cULjikB0IyqkqfD3kP5IrXZ26GNz
+        cZYSzFPqQ7xpN6Bh2zAwGmaoIv1hww==
+X-Google-Smtp-Source: APXvYqxmOCq/WWsSZJAMIRC2Pm/Zl7/sWdlJ9DsC/yZBgEQ30AhwQnCY8jEe8fPbKfuPtPxzZLyGdrUOaQ==
+X-Received: by 2002:a9d:400d:: with SMTP id m13mr14229666ote.100.1558098757436;
+ Fri, 17 May 2019 06:12:37 -0700 (PDT)
+Date:   Fri, 17 May 2019 15:10:46 +0200
+Message-Id: <20190517131046.164100-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.21.0.1020.gf2820cf01a-goog
+Subject: [PATCH] mm/kasan: Print frame description for stack bugs
+From:   Marco Elver <elver@google.com>
+To:     aryabinin@virtuozzo.com, dvyukov@google.com, glider@google.com,
+        andreyknvl@google.com, akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kasan-dev@googlegroups.com, Marco Elver <elver@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This adds support for printing stack frame description on invalid stack
+accesses. The frame description is embedded by the compiler, which is
+parsed and then pretty-printed.
 
-On Fri, May 17, 2019 at 01:37:36PM +0300, Heikki Krogerus wrote:
-> On Tue, May 14, 2019 at 04:47:21PM +0800, Chunfeng Yun wrote:
-> > Add fwnode_usb_role_switch_get() to make easier to get
-> > usb_role_switch by fwnode which register it.
-> > It's useful when there is not device_connection registered
-> > between two drivers and only knows the fwnode which register
-> > usb_role_switch.
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > Tested-by: Biju Das <biju.das@bp.renesas.com>
-> 
-> Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Currently, we can only print the stack frame info for accesses to the
+task's own stack, but not accesses to other tasks' stacks.
 
-Hold on. I just noticed Rob's comment on patch 2/6, where he points out
-that you don't need to use device graph since the controller is the
-parent of the connector. Doesn't that mean you don't really need this
-API?
+Example of what it looks like:
 
-> > ---
-> > v5 changes:
-> >  1. remove linux/of.h suggested by Biju
-> >  2. add tested by Biju
-> > 
-> > Note: still depends on [1]
-> >  [1]: [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
-> >       https://patchwork.kernel.org/patch/10909971/
-> > 
-> > v4 changes:
-> >   1. use switch_fwnode_match() to find fwnode suggested by Heikki
-> >   2. this patch now depends on [1]
-> > 
-> >  [1] [v6,08/13] usb: roles: Introduce stubs for the exiting functions in role.h
-> >     https://patchwork.kernel.org/patch/10909971/
-> > 
-> > v3 changes:
-> >   1. use fwnodes instead of node suggested by Andy
-> >   2. rebuild the API suggested by Heikki
-> > 
-> > v2 no changes
-> > ---
-> >  drivers/usb/roles/class.c | 24 ++++++++++++++++++++++++
-> >  include/linux/usb/role.h  |  8 ++++++++
-> >  2 files changed, 32 insertions(+)
-> > 
-> > diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-> > index f45d8df5cfb8..4a1f09a41ec0 100644
-> > --- a/drivers/usb/roles/class.c
-> > +++ b/drivers/usb/roles/class.c
-> > @@ -135,6 +135,30 @@ struct usb_role_switch *usb_role_switch_get(struct device *dev)
-> >  }
-> >  EXPORT_SYMBOL_GPL(usb_role_switch_get);
-> >  
-> > +/**
-> > + * fwnode_usb_role_switch_get - Find USB role switch by it's parent fwnode
-> > + * @fwnode: The fwnode that register USB role switch
-> > + *
-> > + * Finds and returns role switch registered by @fwnode. The reference count
-> > + * for the found switch is incremented.
-> > + */
-> > +struct usb_role_switch *
-> > +fwnode_usb_role_switch_get(struct fwnode_handle *fwnode)
-> > +{
-> > +	struct usb_role_switch *sw;
-> > +	struct device *dev;
-> > +
-> > +	dev = class_find_device(role_class, NULL, fwnode, switch_fwnode_match);
-> > +	if (!dev)
-> > +		return ERR_PTR(-EPROBE_DEFER);
-> > +
-> > +	sw = to_role_switch(dev);
-> > +	WARN_ON(!try_module_get(sw->dev.parent->driver->owner));
-> > +
-> > +	return sw;
-> > +}
-> > +EXPORT_SYMBOL_GPL(fwnode_usb_role_switch_get);
+[   17.924050] page dumped because: kasan: bad access detected
+[   17.924908]
+[   17.925153] addr ffff8880673ef98a is located in stack of task insmod/2008 at offset 106 in frame:
+[   17.926542]  kasan_stack_oob+0x0/0xf5 [test_kasan]
+[   17.927932]
+[   17.928206] this frame has 2 objects:
+[   17.928783]  [32, 36) 'i'
+[   17.928784]  [96, 106) 'stack_array'
+[   17.929216]
+[   17.930031] Memory state around the buggy address:
 
-This function only basically converts the fwnode to usb_role_switch,
-but I would actually prefer that we walked through the device graph
-here instead of expecting the caller to do that.
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=198435
+Signed-off-by: Marco Elver <elver@google.com>
+---
+Change-Id: I4836cde103052991ac8871796a45b4c977c9e2e7
+---
+ mm/kasan/kasan.h  |   5 ++
+ mm/kasan/report.c | 160 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 165 insertions(+)
 
-So this function should probable be called fwnode_to_usb_role_switch()
-and not fwnode_usb_role_switch_get(), but I guess you don't need it
-at all, right?
-
-
-thanks,
-
+diff --git a/mm/kasan/kasan.h b/mm/kasan/kasan.h
+index 3ce956efa0cb..1979db4763e2 100644
+--- a/mm/kasan/kasan.h
++++ b/mm/kasan/kasan.h
+@@ -43,6 +43,11 @@
+ 
+ #define KASAN_ALLOCA_REDZONE_SIZE	32
+ 
++/*
++ * Stack frame marker (compiler ABI).
++ */
++#define KASAN_CURRENT_STACK_FRAME_MAGIC 0x41B58AB3
++
+ /* Don't break randconfig/all*config builds */
+ #ifndef KASAN_ABI_VERSION
+ #define KASAN_ABI_VERSION 1
+diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+index 03a443579386..c6ad8462c0dc 100644
+--- a/mm/kasan/report.c
++++ b/mm/kasan/report.c
+@@ -28,6 +28,7 @@
+ #include <linux/types.h>
+ #include <linux/kasan.h>
+ #include <linux/module.h>
++#include <linux/sched/task_stack.h>
+ 
+ #include <asm/sections.h>
+ 
+@@ -181,6 +182,163 @@ static inline bool init_task_stack_addr(const void *addr)
+ 			sizeof(init_thread_union.stack));
+ }
+ 
++static bool __must_check tokenize_frame_descr(const char **frame_descr,
++					      char *token, size_t max_tok_len,
++					      unsigned long *value)
++{
++	const char *sep = strchr(*frame_descr, ' ');
++	const ptrdiff_t tok_len = sep - *frame_descr;
++
++	if (sep == NULL)
++		sep = *frame_descr + strlen(*frame_descr);
++
++	if (token != NULL) {
++		if (tok_len + 1 > max_tok_len) {
++			pr_err("KASAN internal error: frame description too long: %s\n",
++			       *frame_descr);
++			return false;
++		}
++		/* Copy token (+ 1 byte for '\0'). */
++		strlcpy(token, *frame_descr, tok_len + 1);
++	}
++	/* Advance frame_descr past separator. */
++	*frame_descr = sep + 1;
++
++	if (value != NULL && kstrtoul(token, 10, value)) {
++		pr_err("KASAN internal error: not a valid number: %s\n", token);
++		return false;
++	}
++
++	return true;
++}
++
++static void print_decoded_frame_descr(const char *frame_descr)
++{
++	/*
++	 * We need to parse the following string:
++	 *    "n alloc_1 alloc_2 ... alloc_n"
++	 * where alloc_i looks like
++	 *    "offset size len name"
++	 * or "offset size len name:line".
++	 */
++
++	char token[64];
++	unsigned long num_objects;
++
++	if (!tokenize_frame_descr(&frame_descr, token, sizeof(token),
++				  &num_objects))
++		return;
++
++	pr_err("\n");
++	pr_err("this frame has %zu %s:\n", num_objects,
++	       num_objects == 1 ? "object" : "objects");
++
++	while (num_objects--) {
++		unsigned long offset;
++		unsigned long size;
++
++		/* access offset */
++		if (!tokenize_frame_descr(&frame_descr, token, sizeof(token),
++					  &offset))
++			return;
++		/* access size */
++		if (!tokenize_frame_descr(&frame_descr, token, sizeof(token),
++					  &size))
++			return;
++		/* name length (unused) */
++		if (!tokenize_frame_descr(&frame_descr, NULL, 0, NULL))
++			return;
++		/* object name */
++		if (!tokenize_frame_descr(&frame_descr, token, sizeof(token),
++					  NULL))
++			return;
++
++		/* Strip line number, if it exists. */
++		strreplace(token, ':', '\0');
++
++		/* Finally, print object information. */
++		pr_err(" [%zu, %zu) '%s'", offset, offset + size, token);
++	}
++}
++
++static bool __must_check get_address_stack_frame_info(const void *addr,
++						      size_t *offset,
++						      const char **frame_descr,
++						      const void **frame_pc)
++{
++	size_t aligned_addr;
++	size_t mem_ptr;
++	const u8 *shadow_bottom;
++	const u8 *shadow_ptr;
++	const size_t *frame;
++
++	/*
++	 * NOTE: We currently only support printing frame information for
++	 * accesses to the task's own stack.
++	 */
++	if (!object_is_on_stack(addr))
++		return false;
++
++	aligned_addr = round_down((size_t)addr, sizeof(long));
++	mem_ptr = round_down(aligned_addr, KASAN_SHADOW_SCALE_SIZE);
++	shadow_ptr = kasan_mem_to_shadow((void *)aligned_addr);
++	shadow_bottom = kasan_mem_to_shadow(end_of_stack(current));
++
++	while (shadow_ptr >= shadow_bottom && *shadow_ptr != KASAN_STACK_LEFT) {
++		shadow_ptr--;
++		mem_ptr -= KASAN_SHADOW_SCALE_SIZE;
++	}
++
++	while (shadow_ptr >= shadow_bottom && *shadow_ptr == KASAN_STACK_LEFT) {
++		shadow_ptr--;
++		mem_ptr -= KASAN_SHADOW_SCALE_SIZE;
++	}
++
++	if (shadow_ptr < shadow_bottom)
++		return false;
++
++	frame = (const size_t *)(mem_ptr + KASAN_SHADOW_SCALE_SIZE);
++	if (frame[0] != KASAN_CURRENT_STACK_FRAME_MAGIC) {
++		pr_err("KASAN internal error: frame info validation failed; invalid marker: %zu\n",
++		       frame[0]);
++		return false;
++	}
++
++	*offset = (size_t)addr - (size_t)frame;
++	*frame_descr = (const char *)frame[1];
++	*frame_pc = (void *)frame[2];
++
++	return true;
++}
++
++static void print_address_stack_frame(const void *addr)
++{
++	size_t offset;
++	const char *frame_descr;
++	const void *frame_pc;
++
++	if (IS_ENABLED(CONFIG_KASAN_SW_TAGS))
++		return;
++
++	if (!get_address_stack_frame_info(addr, &offset, &frame_descr,
++					  &frame_pc))
++		return;
++
++	/*
++	 * get_address_stack_frame_info only returns true if the given addr is
++	 * on the current task's stack.
++	 */
++	pr_err("\n");
++	pr_err("addr %px is located in stack of task %s/%d at offset %zu in frame:\n",
++	       addr, current->comm, task_pid_nr(current), offset);
++	pr_err(" %pS\n", frame_pc);
++
++	if (!frame_descr)
++		return;
++
++	print_decoded_frame_descr(frame_descr);
++}
++
+ static void print_address_description(void *addr)
+ {
+ 	struct page *page = addr_to_page(addr);
+@@ -204,6 +362,8 @@ static void print_address_description(void *addr)
+ 		pr_err("The buggy address belongs to the page:\n");
+ 		dump_page(page, "kasan: bad access detected");
+ 	}
++
++	print_address_stack_frame(addr);
+ }
+ 
+ static bool row_is_guilty(const void *row, const void *guilty)
 -- 
-heikki
+2.21.0.1020.gf2820cf01a-goog
+
