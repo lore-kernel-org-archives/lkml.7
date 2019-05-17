@@ -2,97 +2,138 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C31B7C04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE9CC04E87
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94E5521734
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5AA21734
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 19:34:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="dNekFo8c"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ML39BKb0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbfEQTcf (ORCPT
+        id S1727970AbfEQTej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 15:32:35 -0400
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:34304 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727380AbfEQTcd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 15:32:33 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        Fri, 17 May 2019 15:34:39 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:47184 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726293AbfEQTei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 15:34:38 -0400
+Received: from zn.tnic (p200300EC2F0C500031BA4AEE98C6BAA9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0c:5000:31ba:4aee:98c6:baa9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 72D71C0089;
-        Fri, 17 May 2019 19:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1558121559; bh=fJs/HSiAhXUEn2Cz8WRmlEPH8/xvYZ14fMXCFI524Ts=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References:From;
-        b=dNekFo8czcbjoji+F6/Bfn+oN+EN0UEZjOikgritLfYv6cwgPuO2mXlAbotqNEY82
-         VZuEvwLY5TWiA5kIWPZRbB+Ct4AFHdfuRSHw8JeDkKh9fzDjx8FFWJ/+PrV6jC0yJU
-         CP43GpvNQPjGjCuapjuZvKx0jHeYGhPzFYwXxdJwcnkg4G6objvIptckZascFO574O
-         ZM7Pb1qQ7klzIC3CusnpjC4XET595c6JJTRv5W8HE7PWRFu5pL78YS4uk89E/CWjPn
-         B4CG6PZkKeLsg18u+wd4SjryT68OBsDE4+d5S9EoRoYT8T0Q9oqfdEd2EmS+AM5/5H
-         pUNKZMMBA2CrQ==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 68973A0070;
-        Fri, 17 May 2019 19:32:31 +0000 (UTC)
-Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.104) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 17 May 2019 12:32:31 -0700
-Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.105) by
- IN01WEHTCA.internal.synopsys.com (10.144.199.103) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Sat, 18 May 2019 01:02:39 +0530
-Received: from vineetg-Latitude-E7450.internal.synopsys.com (10.10.161.89) by
- IN01WEHTCB.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Sat, 18 May 2019 01:02:27 +0530
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     <linux-snps-arc@lists.infradead.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH 3/5] ARCv2: entry: avoid a branch
-Date:   Fri, 17 May 2019 12:32:06 -0700
-Message-ID: <1558121528-30184-4-git-send-email-vgupta@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1558121528-30184-1-git-send-email-vgupta@synopsys.com>
-References: <1558121528-30184-1-git-send-email-vgupta@synopsys.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 501B51EC027A;
+        Fri, 17 May 2019 21:34:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1558121677;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=AxcGA5Tne+rDJAVSXdY9zOHvZXqAqISJf11PxE2ArSc=;
+        b=ML39BKb02xH1lGw/s3vL9g6LieqALp11/8MSRt4jHYc2GuXt7E0Ac3pa+PLsAClU+u769F
+        uDtThA7MHcY1k2nrMo4kB3SyThXFOwaNSkdVZWILSZ18DDj6IFAbXukTfzz5CiaMqUo80H
+        rCw+YCPZZUSbgLUuzoZRKfa9tDa9FY0=
+Date:   Fri, 17 May 2019 21:34:31 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH v3 5/6] x86/MCE: Save MCA control bits that get set in
+ hardware
+Message-ID: <20190517193431.GI13482@zn.tnic>
+References: <20190516172117.GC21857@zn.tnic>
+ <SN6PR12MB26394CD4E1BAC068B0B1AEF6F80A0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190516203456.GD21857@zn.tnic>
+ <20190516205943.GA3299@agluck-desk>
+ <20190517101006.GA32065@zn.tnic>
+ <SN6PR12MB26391A0C3979030082EE38F8F80B0@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20190517163729.GE13482@zn.tnic>
+ <20190517172648.GA18164@agluck-desk>
+ <20190517174817.GG13482@zn.tnic>
+ <20190517180607.GA21710@agluck-desk>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.10.161.89]
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190517180607.GA21710@agluck-desk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+On Fri, May 17, 2019 at 11:06:07AM -0700, Luck, Tony wrote:
+> and thus end up with that extra level on indent for the rest
+> of the function.
+
+Ok:
+
 ---
- arch/arc/include/asm/entry-arcv2.h | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arc/include/asm/entry-arcv2.h b/arch/arc/include/asm/entry-arcv2.h
-index 3209a6762960..beaf655666cb 100644
---- a/arch/arc/include/asm/entry-arcv2.h
-+++ b/arch/arc/include/asm/entry-arcv2.h
-@@ -100,12 +100,11 @@
- 	; 2. Upon entry SP is always saved (for any inspection, unwinding etc),
- 	;    but on return, restored only if U mode
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 5bcecadcf4d9..25e501a853cd 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -1493,6 +1493,11 @@ static int __mcheck_cpu_mce_banks_init(void)
+ 	for (i = 0; i < n_banks; i++) {
+ 		struct mce_bank *b = &mce_banks[i];
  
-+	lr	r9, [AUX_USER_SP]			; U mode SP
++		/*
++		 * Init them all, __mcheck_cpu_apply_quirks() is going to apply
++		 * the required vendor quirks before
++		 * __mcheck_cpu_init_clear_banks() does the final bank setup.
++		 */
+ 		b->ctl = -1ULL;
+ 		b->init = 1;
+ 	}
+@@ -1562,6 +1567,7 @@ static void __mcheck_cpu_init_generic(void)
+ static void __mcheck_cpu_init_clear_banks(void)
+ {
+ 	struct mce_bank *mce_banks = this_cpu_read(mce_banks_array);
++	u64 msrval;
+ 	int i;
+ 
+ 	for (i = 0; i < this_cpu_read(mce_num_banks); i++) {
+@@ -1569,7 +1575,13 @@ static void __mcheck_cpu_init_clear_banks(void)
+ 
+ 		if (!b->init)
+ 			continue;
 +
- 	mov.nz	r9, sp
- 	add.nz	r9, r9, SZ_PT_REGS - PT_sp - 4		; K mode SP
--	bnz	1f
++		/* Check if any bits are implemented in h/w */
+ 		wrmsrl(msr_ops.ctl(i), b->ctl);
++		rdmsrl(msr_ops.ctl(i), msrval);
++
++		b->init = !!msrval;
++
+ 		wrmsrl(msr_ops.status(i), 0);
+ 	}
+ }
+@@ -2095,6 +2107,9 @@ static ssize_t show_bank(struct device *s, struct device_attribute *attr,
  
--	lr	r9, [AUX_USER_SP]			; U mode SP
--1:
- 	PUSH	r9					; SP (pt_regs->sp)
+ 	b = &per_cpu(mce_banks_array, s->id)[bank];
  
- 	PUSH	fp
--- 
-2.7.4
++	if (!b->init)
++		return -ENODEV;
++
+ 	return sprintf(buf, "%llx\n", b->ctl);
+ }
+ 
+@@ -2113,6 +2128,9 @@ static ssize_t set_bank(struct device *s, struct device_attribute *attr,
+ 
+ 	b = &per_cpu(mce_banks_array, s->id)[bank];
+ 
++	if (!b->init)
++		return -ENODEV;
++
+ 	b->ctl = new;
+ 	mce_restart();
+ 
 
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
