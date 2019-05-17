@@ -2,163 +2,73 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 011D7C04E87
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 14:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D10C04AB4
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 14:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D05CE2083E
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 14:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FCC02166E
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 14:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbfEQOmE (ORCPT
+        id S1728968AbfEQOnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 10:42:04 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60502 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728383AbfEQOmE (ORCPT
+        Fri, 17 May 2019 10:43:53 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:63008 "EHLO
+        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728383AbfEQOnx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 10:42:04 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4HEXnDk046730;
-        Fri, 17 May 2019 10:41:59 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2shwdqcmfc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 May 2019 10:41:59 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x4H8jQA6019723;
-        Fri, 17 May 2019 08:46:26 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma01dal.us.ibm.com with ESMTP id 2sdp158ktp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 May 2019 08:46:25 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4HEfuOb5636416
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 May 2019 14:41:56 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7021678064;
-        Fri, 17 May 2019 14:41:56 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DB16478060;
-        Fri, 17 May 2019 14:41:55 +0000 (GMT)
-Received: from [9.2.202.76] (unknown [9.2.202.76])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 17 May 2019 14:41:55 +0000 (GMT)
-Subject: Re: [PATCH 0/2] public key: IMA signer logging: Log public key of IMA
- Signature signer in IMA log
-To:     Lakshmi <nramas@linux.microsoft.com>,
-        Linux Integrity <linux-integrity@vger.kernel.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Cc:     Balaji Balasubramanyan <balajib@linux.microsoft.com>,
-        Prakhar Srivastava <prsriva@linux.microsoft.com>
-References: <6b69f115-96cf-890a-c92b-0b2b05798357@linux.microsoft.com>
- <750fdb9f-fc9b-24bf-42c3-32156ecdc16f@linux.ibm.com>
- <9c944ba6-f520-96e1-3631-1e21bbc4c327@linux.microsoft.com>
-From:   Ken Goldman <kgold@linux.ibm.com>
-Message-ID: <0b5ae493-6564-40e9-343b-e6781c229a25@linux.ibm.com>
-Date:   Fri, 17 May 2019 10:41:55 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 17 May 2019 10:43:53 -0400
+Received: from svr-orw-mbx-01.mgc.mentorg.com ([147.34.90.201])
+        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+        id 1hRe5N-0006kV-DH from George_Davis@mentor.com ; Fri, 17 May 2019 07:43:49 -0700
+Received: from localhost (147.34.91.1) by svr-orw-mbx-01.mgc.mentorg.com
+ (147.34.90.201) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Fri, 17 May
+ 2019 07:43:47 -0700
+Date:   Fri, 17 May 2019 10:43:46 -0400
+From:   "George G. Davis" <george_davis@mentor.com>
+To:     David Miller <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: sysctl: cleanup net_sysctl_init error exit paths
+Message-ID: <20190517144345.GA16926@mam-gdavis-lt>
+References: <1558020189-16843-1-git-send-email-george_davis@mentor.com>
+ <20190516.142744.1107545161556108780.davem@davemloft.net>
 MIME-Version: 1.0
-In-Reply-To: <9c944ba6-f520-96e1-3631-1e21bbc4c327@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-17_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905170091
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190516.142744.1107545161556108780.davem@davemloft.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: SVR-ORW-MBX-07.mgc.mentorg.com (147.34.90.207) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/16/2019 9:29 PM, Lakshmi wrote:
-> On 5/16/19 7:34 AM, Ken Goldman wrote:
+Hello David,
+
+On Thu, May 16, 2019 at 02:27:44PM -0700, David Miller wrote:
+> From: "George G. Davis" <george_davis@mentor.com>
+> Date: Thu, 16 May 2019 11:23:08 -0400
 > 
->>> But outside the client machine this key id is not sufficient to
->>> uniquely determine which key the signature corresponds to.
->>
->> Why is this not sufficient?
->>
->> In my implementation, I create a lookup table at the attestation 
->> service that maps the 4-byte IMA log key identifier to the signing 
->> public key.
->>
->> Are you concerned about collisions?  Something else?
+> > Unwind net_sysctl_init error exit goto spaghetti code
+> > 
+> > Suggested-by: Joshua Frkuska <joshua_frkuska@mentor.com>
+> > Signed-off-by: George G. Davis <george_davis@mentor.com>
 > 
-> Yes - the concern is collision.
+> Cleanups are not appropriate until the net-next tree opens back up.
 > 
-> The "Subject Key Identifier" (SKI) for no two certificate can be the 
-> same. But since we are using only the last 4 bytes of the SKI it can 
-> collide. That's mainly the reason I want to log the entire public key.
+> So please resubmit at that time.
+
+I fear that I may be distracted by other shiny objects by then but
+I'll make a reminder and try to resubmit during the next merge window.
+
+Thanks!
+
 > 
+> Thank you.
 
-Since a platform typically uses only a few signing keys, 4 bytes makes 
-the chance of a collision quite small.  The collision would have to be 
-within the same log, not global.
-
-In that worst case, the verifier would have to try two keys.  It's a
-slight performance penalty, but does anything break?
-
-A new template with a larger SKI, perhaps 8 bytes, might be safer.  It 
-doesn't expand the log size nearly as much as having a full public key.
-
->> Are you suggesting that the client supply the verification public key 
->> and that the verifier trust it?  Wouldn't that make the log self signed?
->>
->> How would the verifier determine that the key from the IMA log is 
->> valid / trusted / not revoked from the log itself?
-> 
-> IMA log is backed by the TPM. So if the public key is added to the IMA 
-> log the attestation service can validate the key information.
-> I am not sure if that answers your question.
-
-The TPM just ensures that the log has not been altered.  It does nothing 
-for signature verification, right?
-
-The verifier can check that the supplied signature matches the supplied 
-public key.  However, how could it verify that the public key is trusted 
-to sign the code?  Doesn't that have to be out of band?
-
-E.g., an attacker could create a log with their own signatures and 
-public keys.  The signature would verify, but it's the attacker's key.
-
-It's essentially a self-signed file.
-
->> A minor question here.
->>
->> Are you proposing that the IMA log contain a single ima-sigkey entry 
->> per public key followed by ima-sig entries?
->>
->> Or are you proposing that ima-sig be replaced by ima-sigkey, and that 
->> each event would contain both the signature and the public key?
->>
->> If the latter, this could add 25M to a server's 100K log.  Would that 
->> increase in size concern anyone?  Could it be a concern on the other 
->> end, an IoT device with limited memory?
-> 
-> Mimi had raised the same concern. I will update my implementation to 
-> include the certification information in the IMA log only once per key - 
-> when that key is added to the IMA or Platform keyring.
-
-If you include the public key only once, don't you have the same 
-collision problem?  Two log entries could (in theory) and the same SKI. 
-How would the verifier know which public key to use.
-
-However, I think the fundamental question is whether the verifier can 
-accept public keys supplied by the untrusted client.  I believe that the 
-verifier has to receive the public keys out of band, from a trusted 
-source - not the client.
-
-
+-- 
+Regards,
+George
