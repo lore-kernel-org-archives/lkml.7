@@ -2,96 +2,149 @@ Return-Path: <SRS0=M1fl=TR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8164BC04AB4
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DF0C04E84
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56FC720868
-	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:27:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dxo3Z7lp"
+	by mail.kernel.org (Postfix) with ESMTP id 6FA4E20818
+	for <linux-kernel@archiver.kernel.org>; Fri, 17 May 2019 08:29:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbfEQI1C (ORCPT
+        id S1728225AbfEQI3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 17 May 2019 04:27:02 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47222 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728440AbfEQI1A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 17 May 2019 04:27:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DxTgOA1MvoZbEcmYpNT3av6BYoBNWtcV/wannGz3kYo=; b=dxo3Z7lpOQrR3muTMMz9EqdV7
-        +O4VRS6lrXM4tXsBi4r4d3e6vWHTW8zlVi3v+bCEFaoj66V93tbKWUJP+3pwLFZPOVczJ0NBy7tPZ
-        CQgygYAsmD7oftH/si/cSaqU0vLMUJIycXasK9F6vYZ7J+dnT/APz3xDzC4N4xITpNkyrUhQEyGwm
-        iiF4fJjHwku//g9UcnDt0t/3L7j7tYT/J1XsoGH0ONCumVhL8XZygxuLW4MkKy2Ph04PPJmeQcBcd
-        N69afedinB9POL8Duu73ijD+HWd34zO9qdrvoPYxYOK1Kq/Qdr2uPmUKLhv6RQ4e9jXYUMuvquN4l
-        /TkCEUC0A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hRYCf-0001bw-3l; Fri, 17 May 2019 08:26:57 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 126B52029F888; Fri, 17 May 2019 10:26:55 +0200 (CEST)
-Date:   Fri, 17 May 2019 10:26:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Raphael Gault <raphael.gault@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, catalin.marinas@arm.com, will.deacon@arm.com,
-        acme@kernel.org
-Subject: Re: [PATCH 4/6] arm64: pmu: Add hook to handle pmu-related undefined
- instructions
-Message-ID: <20190517082655.GK2623@hirez.programming.kicks-ass.net>
-References: <20190516132148.10085-1-raphael.gault@arm.com>
- <20190516132148.10085-5-raphael.gault@arm.com>
- <20190517071018.GH2623@hirez.programming.kicks-ass.net>
- <20190517080419.dziz4iqc7t4mpoej@blommer>
+        Fri, 17 May 2019 04:29:23 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49918 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727825AbfEQI3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 17 May 2019 04:29:23 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 55426AE3E;
+        Fri, 17 May 2019 08:29:21 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id E7E501E3ED6; Fri, 17 May 2019 10:29:18 +0200 (CEST)
+Date:   Fri, 17 May 2019 10:29:18 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Gaowei Pu <pugaowei@gmail.com>
+Cc:     tytso@mit.edu, jack@suse.com, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] jbd2: fix some print format mistakes
+Message-ID: <20190517082918.GA20550@quack2.suse.cz>
+References: <20190517061951.13730-1-pugaowei@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190517080419.dziz4iqc7t4mpoej@blommer>
+In-Reply-To: <20190517061951.13730-1-pugaowei@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 09:04:20AM +0100, Mark Rutland wrote:
-
-> Remember that this is in an undefined (trap) handler.
+On Fri 17-05-19 14:19:51, Gaowei Pu wrote:
+> There are some print format mistakes in debug messages. Fix them.
 > 
-> If userspace _attempts_ to write to the registers, the CPU will trap to the
-> kernel. The comment is perhaps misleading; when we "do nothing", the common
-> trap handling code will send a SIGILL to userspace.
-> 
-> It would probably be better to say something like:
-> 
-> 	/*
-> 	 * If userspace is tries to read a counter that doesn't exist on this
-> 	 * CPU, we emulate it as reading as zero. This happens if userspace is
-> 	 * preempted between reading the idx and actually reading the counter,
-> 	 * and the seqlock and idx have already changed, so it's as-if the
-> 	 * counter has been reprogrammed with a different event.
+> Signed-off-by: Gaowei Pu <pugaowei@gmail.com>
 
-Might be good to mention that userspace will/should discard the value it
-reads, and therefore any value is good (including 0).
+Looks good. You can add:
 
-> 	 * We don't permit userspace to write to these registers, and will
-> 	 * inject a SIGILL.
-> 	 */
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/jbd2/journal.c | 18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
 > 
-> There is one caveat: userspace can write to PMSELR without trapping, so we will
-> have to context-switch with the task. That only affects indirect addressing of
-> PMU registers, and doesn't have a functional effect on the behaviour of the
-> PMU, so that's benign from the PoV of perf.
-
-Sad though; ideally you'd state that indirect addressing is
-out-of-bounds and they get to keep the pieces. But I suspect you're
-right that people will do it anyway and complain once it comes apart.
+> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+> index 37e16d969925..565e99b67b30 100644
+> --- a/fs/jbd2/journal.c
+> +++ b/fs/jbd2/journal.c
+> @@ -203,7 +203,7 @@ static int kjournald2(void *arg)
+>  	if (journal->j_flags & JBD2_UNMOUNT)
+>  		goto end_loop;
+>  
+> -	jbd_debug(1, "commit_sequence=%d, commit_request=%d\n",
+> +	jbd_debug(1, "commit_sequence=%u, commit_request=%u\n",
+>  		journal->j_commit_sequence, journal->j_commit_request);
+>  
+>  	if (journal->j_commit_sequence != journal->j_commit_request) {
+> @@ -324,7 +324,7 @@ static void journal_kill_thread(journal_t *journal)
+>   * IO is in progress. do_get_write_access() handles this.
+>   *
+>   * The function returns a pointer to the buffer_head to be used for IO.
+> - * 
+> + *
+>   *
+>   * Return value:
+>   *  <0: Error
+> @@ -500,7 +500,7 @@ int __jbd2_log_start_commit(journal_t *journal, tid_t target)
+>  		 */
+>  
+>  		journal->j_commit_request = target;
+> -		jbd_debug(1, "JBD2: requesting commit %d/%d\n",
+> +		jbd_debug(1, "JBD2: requesting commit %u/%u\n",
+>  			  journal->j_commit_request,
+>  			  journal->j_commit_sequence);
+>  		journal->j_running_transaction->t_requested = jiffies;
+> @@ -513,7 +513,7 @@ int __jbd2_log_start_commit(journal_t *journal, tid_t target)
+>  		WARN_ONCE(1, "JBD2: bad log_start_commit: %u %u %u %u\n",
+>  			  journal->j_commit_request,
+>  			  journal->j_commit_sequence,
+> -			  target, journal->j_running_transaction ? 
+> +			  target, journal->j_running_transaction ?
+>  			  journal->j_running_transaction->t_tid : 0);
+>  	return 0;
+>  }
+> @@ -698,12 +698,12 @@ int jbd2_log_wait_commit(journal_t *journal, tid_t tid)
+>  #ifdef CONFIG_JBD2_DEBUG
+>  	if (!tid_geq(journal->j_commit_request, tid)) {
+>  		printk(KERN_ERR
+> -		       "%s: error: j_commit_request=%d, tid=%d\n",
+> +		       "%s: error: j_commit_request=%u, tid=%u\n",
+>  		       __func__, journal->j_commit_request, tid);
+>  	}
+>  #endif
+>  	while (tid_gt(tid, journal->j_commit_sequence)) {
+> -		jbd_debug(1, "JBD2: want %d, j_commit_sequence=%d\n",
+> +		jbd_debug(1, "JBD2: want %u, j_commit_sequence=%u\n",
+>  				  tid, journal->j_commit_sequence);
+>  		read_unlock(&journal->j_state_lock);
+>  		wake_up(&journal->j_wait_commit);
+> @@ -944,7 +944,7 @@ int __jbd2_update_log_tail(journal_t *journal, tid_t tid, unsigned long block)
+>  
+>  	trace_jbd2_update_log_tail(journal, tid, block, freed);
+>  	jbd_debug(1,
+> -		  "Cleaning journal tail from %d to %d (offset %lu), "
+> +		  "Cleaning journal tail from %u to %u (offset %lu), "
+>  		  "freeing %lu\n",
+>  		  journal->j_tail_sequence, tid, block, freed);
+>  
+> @@ -1318,7 +1318,7 @@ static int journal_reset(journal_t *journal)
+>  	 */
+>  	if (sb->s_start == 0) {
+>  		jbd_debug(1, "JBD2: Skipping superblock update on recovered sb "
+> -			"(start %ld, seq %d, errno %d)\n",
+> +			"(start %ld, seq %u, errno %d)\n",
+>  			journal->j_tail, journal->j_tail_sequence,
+>  			journal->j_errno);
+>  		journal->j_flags |= JBD2_FLUSHED;
+> @@ -1453,7 +1453,7 @@ static void jbd2_mark_journal_empty(journal_t *journal, int write_op)
+>  		return;
+>  	}
+>  
+> -	jbd_debug(1, "JBD2: Marking journal as empty (seq %d)\n",
+> +	jbd_debug(1, "JBD2: Marking journal as empty (seq %u)\n",
+>  		  journal->j_tail_sequence);
+>  
+>  	sb->s_sequence = cpu_to_be32(journal->j_tail_sequence);
+> -- 
+> 2.21.0
+> 
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
